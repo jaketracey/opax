@@ -38,7 +38,9 @@ function validSeat(s: Seat): boolean {
     && Array.isArray(s.members) && s.members.length === (s.kind === 'district' ? 1 : 5) && s.members.every(validMember)
     && (s.result === null || s.kind === 'district' && object(s.result) && validContest(s.result.general) && (s.result.since === null || validContest(s.result.since)))
     && (s.candidates === null || object(s.candidates) && validDate(s.candidates.published) && https(s.candidates.url)
-      && Array.isArray(s.candidates.list) && s.candidates.list.every(c=>fields(c,['name','party'],text)))
+      && Array.isArray(s.candidates.list) && s.candidates.list.every(c=>fields(c,['name','party'],text)
+        && (c.group == null || text(c.group) && /^[A-Z]$/.test(c.group))
+        && (c.group_name == null || text(c.group_name))))
 }
 
 export function validateVicElection(value: unknown): VicElection {

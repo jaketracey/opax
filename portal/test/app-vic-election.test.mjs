@@ -7,6 +7,7 @@ import {join} from 'node:path';
 import {buildVicElection} from '../../scripts/build_vic_election.mjs';
 import {withVicElectionBuild} from './helpers/vic-election-build.mjs';
 import {APP_CACHE} from '../src/app-http.ts';
+import {personNameKey} from '../public/canonical-urls.js';
 import {VIC_ELECTION_ASSET, VIC_ELECTION_PLACES, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_POLLS_OPEN, VIC_ELECTION_POLLS_CLOSE} from '../public/vic-election.js';
 
 const ROOT = '/api/app/v1/vic-election';
@@ -16,6 +17,7 @@ const jsonFile = async path=>JSON.parse(await readFile(new URL(path,publicRoot),
 // Exact response pins always use these committed inputs, never nightly exports.
 const data = JSON.parse(await readFile(new URL('hub-input.json',fixtures),'utf8'));
 const places = JSON.parse(await readFile(new URL('places-input.json',fixtures),'utf8'));
+const councilCandidates = JSON.parse(await readFile(new URL('northern-metropolitan-candidates-input.json',fixtures),'utf8'));
 const liveData = await jsonFile(VIC_ELECTION_ASSET.slice(1));
 const livePlaces = await jsonFile(VIC_ELECTION_PLACES.slice(1));
 async function compile(entry) {
@@ -55,6 +57,11 @@ const candidateData=()=>{
   d.seats[0].candidates={published:'2026-11-10',url:data.sources.election,list:[
     {name:'Wren Halloway',party:''},{name:'Avery Quill',party:'Independent'},{name:'Rowan Ketch',party:'Example Party'},
   ]};
+  return d;
+};
+const councilCandidateData=()=>{
+  const d=structuredClone(data);
+  d.seats.find(s=>slug(s)==='northern-metropolitan').candidates=structuredClone(councilCandidates);
   return d;
 };
 
@@ -152,6 +159,31 @@ test('injected candidates keep ballot order, normalise empty party to null, and 
   assert.deepEqual(api.candidates.list,d.seats[0].candidates.list.map(c=>({...c,party:c.party||null})));
   const overview=await payload('',environment(d));assert.equal(overview.candidates_published,'2026-11-10');
   assert.equal(overview.districts[0].candidates,3);await pin('albert-park-candidates','/seat/albert-park',d);
+});
+
+test('frozen Council candidates retain ballot groups and normalise blank or absent group names to null',async()=>{
+  const d=councilCandidateData(),api=await payload('/seat/northern-metropolitan',environment(d));
+  assert.equal(api.schema_version,1);
+  assert.deepEqual(api.candidates.list.map(c=>c.name),councilCandidates.list.map(c=>c.name));
+  assert.deepEqual(api.candidates.list.map(c=>[c.group,c.group_name]),[
+    ['A','Example Alliance'],['A','Example Alliance'],['B',null],['Z',null],[null,null],[null,null],
+  ]);
+  assert.equal(api.candidates.list[2].party,null);
+  await pin('northern-metropolitan-candidates','/seat/northern-metropolitan',d);
+  const district=candidateData();
+  Object.assign(district.seats[0].candidates.list[0],{group:'A',group_name:'Example Alliance',private_field:'hidden'});
+  const districtApi=await payload('/seat/albert-park',environment(district));
+  assert.deepEqual(districtApi.candidates.list[0],{name:'Wren Halloway',party:null});
+});
+
+test('invalid Council group letters or names make the reader reject the asset',async()=>{
+  for(const invalid of [{group:''},{group:'AA'},{group:'a'},{group:1},{group_name:1},{group_name:{}}]) {
+    const d=councilCandidateData();
+    Object.assign(d.seats.find(s=>slug(s)==='northern-metropolitan').candidates.list[0],invalid);
+    const response=await get('/seat/northern-metropolitan',environment(d));
+    assert.equal(response.status,503,JSON.stringify(invalid));
+    assert.deepEqual(await response.json(),{error:'vic_election_unavailable'});
+  }
 });
 
 test('unknown and invalid seat slugs answer JSON 404 without caching',async()=>{
@@ -343,6 +375,8 @@ test('shape pin covers every response and nested contract type; internal fields 
   }
   const candidate=(await payload('/seat/albert-park',environment(candidateData()))).candidates;
   keys(candidate,'published url list');candidate.list.forEach(c=>keys(c,'name party'));
+  const council=(await payload('/seat/northern-metropolitan',environment(councilCandidateData()))).candidates;
+  keys(council,'published url list');council.list.forEach(c=>keys(c,'name party group group_name'));
   const notice=(await payload('',environment({...data,notice:{text:'Election update.',link:{label:'VEC',url:data.sources.election}}}))).notice;
   keys(notice,'text link');keys(notice.link,'label url');
   for(const q of ['3350','Bass','Metropolitan','allan']) {
@@ -383,7 +417,11 @@ async function liveParity(election,index) {
       for(const key of ['party','href','source_url','speeches','speech_gap','votes'])assert.deepEqual(detail.members[i][key],m[key]);
       assert.deepEqual(detail.members[i].recent_votes,titledVotes(m));
     }
-    assert.deepEqual(detail.candidates,seat.candidates?{...seat.candidates,list:seat.candidates.list.map(c=>({...c,party:c.party||null}))}:null);
+    assert.deepEqual(detail.candidates,seat.candidates?{
+      published:seat.candidates.published,url:seat.candidates.url,
+      list:seat.candidates.list.map(c=>({name:c.name,party:c.party||null,
+        ...seat.kind==='region'?{group:c.group??null,group_name:c.group_name?.trim()||null}:{}})),
+    }:null);
     const row=[...overview.districts,...overview.regions].find(s=>s.slug===detail.slug);
     assert.equal(row.candidates,seat.candidates?.list.length??0);
     if(seat.kind==='district') {
@@ -404,19 +442,36 @@ test('current built hub and finder retain contract shape and page parity without
   await liveParity(liveData,livePlaces);
 });
 
-test('a scratch build with the next corpus date preserves live parity and every frozen response pin',async()=>{
+test('a scratch nightly build with changed date, speech and vote counts preserves live parity and every frozen pin',async()=>{
   await withVicElectionBuild(async({root,configPath})=>{
     const corpusPath=join(root,'corpus.json'),corpus=JSON.parse(await readFile(corpusPath,'utf8'));
-    const next=new Date(Date.parse(liveData.updated+'T00:00:00Z')+24*60*60*1000).toISOString();
+    const next=new Date(Date.parse(liveData.updated+'T00:00:00Z')+24*60*60*1000).toISOString().slice(0,10);
     corpus.version=next;await writeFile(corpusPath,JSON.stringify(corpus));
+    const beforeSeat=liveData.seats.find(s=>s.members.some(m=>m.speeches&&m.votes));
+    assert.ok(beforeSeat,'a current member has both speech and vote coverage');
+    const before=beforeSeat.members.find(m=>m.speeches&&m.votes),house=beforeSeat.kind==='district'?'vic_la':'vic_lc';
+    const rosterPath=join(root,'parliamentarians.json'),roster=JSON.parse(await readFile(rosterPath,'utf8'));
+    const person=roster.people.find(p=>personNameKey(p.name)===personNameKey(before.name));
+    assert.equal(person.speeches,before.speeches.count);
+    person.speeches++;await writeFile(rosterPath,JSON.stringify(roster));
+    const votesPath=join(root,'votes.json'),votes=JSON.parse(await readFile(votesPath,'utf8'));
+    const rows=Object.values(votes).filter(v=>v.jurisdiction==='vic'&&v.house===house&&personNameKey(v.name)===personNameKey(before.name));
+    assert.equal(rows.length,1);assert.equal(rows[0].divisions_total,before.votes.count);
+    rows[0].divisions_total++;rows[0].ayes++;await writeFile(votesPath,JSON.stringify(votes));
     await buildVicElection(root,configPath);
     const rebuilt=JSON.parse(await readFile(join(root,VIC_ELECTION_ASSET),'utf8'));
     const rebuiltPlaces=JSON.parse(await readFile(join(root,VIC_ELECTION_PLACES),'utf8'));
-    assert.equal(rebuilt.updated,next.slice(0,10));assert.notEqual(rebuilt.updated,data.updated);
+    assert.equal(rebuilt.updated,next);assert.notEqual(rebuilt.updated,data.updated);
+    const after=rebuilt.seats.flatMap(s=>s.members).find(m=>m.href===before.href);
+    assert.equal(after.speeches.count,before.speeches.count+1);
+    assert.equal(after.votes.count,before.votes.count+1);assert.equal(after.votes.ayes,before.votes.ayes+1);
+    assert.ok(rebuilt.seats.some(s=>s.kind==='region'&&s.candidates?.list.some(c=>c.group)),
+      'the scratch build consumes the committed Council candidates and groups');
     await liveParity(rebuilt,rebuiltPlaces);
     await pin('overview','');
     for(const name of ['albert-park','werribee','eureka','bendigo-west','southern-metropolitan'])await pin(name,'/seat/'+name);
     for(const q of ['3350','st kilda','bass','allan','9999'])await pin('find-'+q.replaceAll(' ','-'),'/find?q='+encodeURIComponent(q==='st kilda'?'St Kilda':q==='bass'?'Bass':q));
     await pin('albert-park-candidates','/seat/albert-park',candidateData());
+    await pin('northern-metropolitan-candidates','/seat/northern-metropolitan',councilCandidateData());
   });
 });

@@ -13,7 +13,7 @@ export interface Member {
   detailed_count: number; divisions: Division[];
 }
 export interface Contest { date: string; kind: 'general' | 'by-election' | 'supplementary'; party: string; share: number; against: string; against_share: number; margin: number; url: string }
-interface Candidate {name: string; party: string; group?: string | null; group_name?: string}
+interface Candidate {name: string; party: string; group?: string | null; group_name?: string | null}
 export interface Seat {
   name: string; kind: 'district' | 'region'; path: string; source_url: string; region: string | null;
   districts: string[]; boundary_note: string | null; formerly: string | null; created: boolean;

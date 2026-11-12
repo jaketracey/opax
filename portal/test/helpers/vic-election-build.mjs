@@ -21,7 +21,7 @@ export async function withVicElectionBuild(run) {
       await copyFile(new URL(path,publicRoot),join(root,path));
     }
     await mkdir(configRoot,{recursive:true});
-    for(const name of ['vic-election-2026.json','vic-results-2022.json','vic-places-2025.json'])
+    for(const name of ['vic-election-2026.json','vic-results-2022.json','vic-places-2025.json','vic-candidates-2026.json'])
       await copyFile(new URL(name,sources),join(configRoot,name));
     await run({root,configRoot,configPath:join(configRoot,'vic-election-2026.json')});
   } finally {await rm(scratch,{recursive:true,force:true});}

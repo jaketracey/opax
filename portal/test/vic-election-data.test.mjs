@@ -28,7 +28,12 @@ test('the offline build and reader share validation, rejecting bad notices or ca
       {notice:{...notice,text:'<b>Update</b>'}},
       {candidates:{...candidates,published:'2026-11-10T12:00:00+11:00'}},
       {candidates:{...candidates,published:'2026-02-30'}},
-      {candidates:{...candidates,url:'http://example.com'}},
+      {candidates:{...candidates,published:'not-a-date'}},
+      ...['', 'AA', 'a', 1].map(group=>({candidates:{...candidates,
+        regions:{[config.regions[0].name]:[{name:'Rowan Ketch',party:'',group,group_name:''}]}}})),
+      {candidates:{...candidates,regions:{[config.regions[0].name]:[
+        {name:'Rowan Ketch',party:'',group:'A',group_name:1},
+      ]}}},
     ];
     for(const bad of badInputs) {
       await writeFile(configPath,JSON.stringify({...config,notice:bad.notice??notice}));

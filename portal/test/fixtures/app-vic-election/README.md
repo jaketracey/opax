@@ -4,6 +4,10 @@
 from 12 November 2026, before candidates were loaded. Response pins are generated
 through the real `appVicElection` handler from these inputs. The candidates
 variant injects invented names into the frozen hub and preserves ballot order.
+`northern-metropolitan-candidates-input.json` supplies frozen invented Council
+candidates for the `northern-metropolitan-candidates.json` response pin, covering
+named groups, blank unnamed groups and ungrouped candidates. Region candidates
+include nullable `group` and `group_name`; district candidates omit those fields.
 
 The tests also read the current built hub and places assets for shape and page
 parity checks. Those checks compare against the current inputs and do not pin
