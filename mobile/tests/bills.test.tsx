@@ -1,3 +1,5 @@
+import { Screen } from '../src/design/layout';
+import { ContentUnavailable } from '../src/design/states';
 import { RouteOptions } from '../src/navigation/preview';
 import { billsScreens } from '../src/navigation/stack/bills';
 // Wave 4, lane B (specs/bills.md): the status event (2.1), the vote order
@@ -10,7 +12,7 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { act } from 'react';
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { Platform, StyleSheet, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { billTimeline } from '../src/api/bill-transforms';
 import * as d from '../src/api/catalogs';
@@ -1061,3 +1063,24 @@ describe('the bill page', () => {
     );
   });
 });
+
+test.each(['ios', 'android'] as const)(
+  '%s missing bill has a centred symbol, title, body and Search bills capsule',
+  async (platform) => {
+    jest.replaceProperty(Platform, 'OS', platform);
+    mockParams.key = 'invalid-fixture-key';
+    const root = await render();
+    expect(root.findByType(Screen).props.centred).toBe(true);
+    const state = root.findByType(ContentUnavailable);
+    expect(state.props).toMatchObject({
+      symbol: 'doc.text.magnifyingglass',
+      title: 'Bill not found',
+      body: 'This link may be old.',
+      action: { label: 'Search bills' },
+    });
+    act(() => state.props.action.onPress());
+    expect(router.push).toHaveBeenCalledWith(
+      expect.objectContaining({ pathname: '/bill-list' }),
+    );
+  },
+);

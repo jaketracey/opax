@@ -49,6 +49,9 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     visible:
       id: bill-follow-on
     timeout: 15000
+- assertVisible:
+    id: bill-follow-message
+    text: Changes will show on Today.
 - takeScreenshot: ${EVIDENCE}/26-bill-following
 # Back to Today's root, so the Today tab opens there later.
 - tapOn: Today

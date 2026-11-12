@@ -1,10 +1,22 @@
+import * as accessibility from '../src/design/accessibility';
+import * as myMember from '../src/features/your-mp/useIsMyMember';
+import { Screen } from '../src/design/layout';
+import { router } from 'expo-router';
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
-import { ActionSheetIOS, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  AccessibilityInfo,
+  Animated,
+  ActionSheetIOS,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import * as c from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
-import { FollowButton } from '../src/design/controls';
+import { Button, FollowButton } from '../src/design/controls';
 import { Card, Text } from '../src/design/primitives';
 import { LinkRow } from '../src/design/rows';
 import { StatusCapsule } from '../src/design/labels';
@@ -29,6 +41,7 @@ import {
   decodeFollows,
   follow,
   followKey,
+  followWithFeedback,
   loadFollows,
   markSeen,
   resetFollowsForTests,
@@ -1054,4 +1067,181 @@ describe('Following', () => {
     );
     await act(async () => r.unmount());
   });
+});
+
+describe('delight follow moments', () => {
+  beforeEach(() => {
+    mockDisk.clear();
+    resetFollowsForTests();
+    jest.clearAllMocks();
+    mockParams = {};
+    mockOptions = {};
+    jest.mocked(runtime.followSources).mockResolvedValue(sources());
+  });
+  afterEach(() => {
+    jest.restoreAllMocks();
+    jest.useRealTimers();
+  });
+  async function mount(element: React.ReactElement) {
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(element);
+    });
+    return r;
+  }
+  test.each(['ios', 'android'] as const)(
+    '%s fresh first follow renders once, holds four seconds, then fades; fourth never renders',
+    async (platform) => {
+      jest.replaceProperty(Platform, 'OS', platform);
+      jest.useFakeTimers();
+      const announce = jest.spyOn(
+        AccessibilityInfo,
+        'announceForAccessibility',
+      );
+      const timing = jest.spyOn(Animated, 'timing');
+      const r = await mount(
+        <FollowButton
+          kind="party"
+          id="fixture-party"
+          title="Fixture party"
+          testID="moment"
+        />,
+      );
+      await act(async () => r.root.findByType(Button).props.onPress());
+      expect(r.root.findByType(Button).props).toMatchObject({
+        label: 'Following',
+        symbol: 'checkmark',
+        symbolAnimation: 'bounce',
+      });
+      expect(
+        r.root
+          .findAllByType(Text)
+          .some((n) => n.props.children === 'Changes will show on Today.'),
+      ).toBe(true);
+      expect(announce).toHaveBeenCalledTimes(1);
+      expect(announce).toHaveBeenCalledWith('Changes will show on Today.');
+      expect(timing.mock.calls.map(([, config]) => config.duration)).toEqual([
+        150, 150,
+      ]);
+      act(() => jest.advanceTimersByTime(4000));
+      expect(
+        r.root
+          .findAllByType(Text)
+          .some((n) => n.props.children === 'Changes will show on Today.'),
+      ).toBe(true);
+      act(() => jest.advanceTimersByTime(500));
+      expect(
+        r.root
+          .findAllByType(Text)
+          .some((n) => n.props.children === 'Changes will show on Today.'),
+      ).toBe(false);
+      act(() => r.unmount());
+      for (const id of ['fixture-two', 'fixture-three'])
+        await follow({ kind: 'party', id, title: id });
+      // Restart memory only: the counter remains in the on-device two-slot file.
+      resetFollowsForTests();
+      const fourth = await mount(
+        <FollowButton kind="party" id="fixture-four" title="Fixture Four" />,
+      );
+      await act(async () => fourth.root.findByType(Button).props.onPress());
+      expect(fourth.root.findByType(Button).props.label).toBe('Following');
+      expect(
+        fourth.root
+          .findAllByType(Text)
+          .some((n) => n.props.children === 'Changes will show on Today.'),
+      ).toBe(false);
+      expect(announce).toHaveBeenCalledTimes(1);
+      act(() => fourth.unmount());
+    },
+  );
+  test('Reduce Motion uses zero-duration opacity and a four-second hold', async () => {
+    jest.useFakeTimers();
+    jest.spyOn(accessibility, 'useReduceMotion').mockReturnValue(true);
+    const timing = jest.spyOn(Animated, 'timing');
+    const r = await mount(
+      <FollowButton kind="party" id="fixture-party" title="Fixture party" />,
+    );
+    await act(async () => r.root.findByType(Button).props.onPress());
+    expect(timing.mock.calls.map(([, config]) => config.duration)).toEqual([
+      0, 0,
+    ]);
+    act(() => jest.advanceTimersByTime(3999));
+    expect(
+      r.root
+        .findAllByType(Text)
+        .some((n) => n.props.children === 'Changes will show on Today.'),
+    ).toBe(true);
+    act(() => jest.advanceTimersByTime(100));
+    expect(
+      r.root
+        .findAllByType(Text)
+        .some((n) => n.props.children === 'Changes will show on Today.'),
+    ).toBe(false);
+    act(() => r.unmount());
+  });
+  test('clearing and duplicate follows never reset or spend the counter', async () => {
+    const item = {
+      kind: 'party' as const,
+      id: 'fixture-party',
+      title: 'Fixture party',
+    };
+    expect(await followWithFeedback(item)).toEqual({
+      status: 'followed',
+      showMessage: true,
+    });
+    expect(await followWithFeedback(item)).toEqual({
+      status: 'already',
+      showMessage: false,
+    });
+    await clearFollows();
+    expect((await followWithFeedback(item)).showMessage).toBe(true);
+    await clearFollows();
+    expect((await followWithFeedback(item)).showMessage).toBe(true);
+    await clearFollows();
+    resetFollowsForTests();
+    expect((await followWithFeedback(item)).showMessage).toBe(false);
+  });
+  test.each(['ios', 'android'] as const)(
+    '%s empty Following with no seat centres and opens the chooser',
+    async (platform) => {
+      jest.replaceProperty(Platform, 'OS', platform);
+      jest.spyOn(myMember, 'useSavedMember').mockReturnValue(null);
+      const r = await mount(<Following />);
+      expect(r.root.findByType(Screen).props.centred).toBe(true);
+      const action = r.root
+        .findAllByType(Button)
+        .find((n) => n.props.testID === 'follows-empty-action')!;
+      expect(action.props.label).toBe('Find your MP');
+      act(() => action.props.onPress());
+      expect(router.push).toHaveBeenCalledWith('/seat');
+      act(() => r.unmount());
+    },
+  );
+  test.each(['ios', 'android'] as const)(
+    '%s saved member follows in place and the row replaces the empty state',
+    async (platform) => {
+      jest.replaceProperty(Platform, 'OS', platform);
+      jest.spyOn(myMember, 'useSavedMember').mockReturnValue({
+        canonicalPersonId: ALBANESE,
+        slug: 'fixture-member',
+        name: 'Casey Example',
+      } as never);
+      const r = await mount(<Following />);
+      const action = r.root
+        .findAllByType(Button)
+        .find((n) => n.props.testID === 'follows-empty-action')!;
+      expect(action.props.label).toBe('Follow Casey Example');
+      await act(async () => action.props.onPress());
+      expect(
+        r.root.findAll((n) => n.props.testID === 'follows-empty'),
+      ).toHaveLength(0);
+      expect(
+        r.root.findAll(
+          (n) => n.props.testID === `follows-row-person-${ALBANESE}`,
+        ).length,
+      ).toBeGreaterThan(0);
+      expect(r.root.findByType(Screen).props.centred).toBe(false);
+      act(() => r.unmount());
+    },
+  );
 });

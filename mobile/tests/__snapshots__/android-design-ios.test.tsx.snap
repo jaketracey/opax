@@ -5817,48 +5817,37 @@ exports[`iOS design at font scale 1 StatTile retains its iOS output 1`] = `
   >
     123
   </Text>
-  <View
+  <Text
+    accessibilityLanguage="en-AU"
+    allowFontScaling={true}
+    dynamicTypeRamp="footnote"
+    maxFontSizeMultiplier={0}
+    onLayout={[Function]}
+    onTextLayout={[Function]}
     style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "gap": 4,
-      }
+      [
+        {
+          "color": {
+            "dynamic": {
+              "dark": "#A9AEA2",
+              "highContrastDark": "#ECEAE2",
+              "highContrastLight": "#23271F",
+              "light": "#575C52",
+            },
+          },
+          "flexShrink": 1,
+          "fontSize": 13,
+          "fontWeight": "400",
+          "lineHeight": 18.00100300902708,
+        },
+        null,
+        null,
+        undefined,
+      ]
     }
   >
-    <Text
-      accessibilityLanguage="en-AU"
-      allowFontScaling={true}
-      dynamicTypeRamp="footnote"
-      maxFontSizeMultiplier={0}
-      onLayout={[Function]}
-      onTextLayout={[Function]}
-      style={
-        [
-          {
-            "color": {
-              "dynamic": {
-                "dark": "#A9AEA2",
-                "highContrastDark": "#ECEAE2",
-                "highContrastLight": "#23271F",
-                "light": "#575C52",
-              },
-            },
-            "flexShrink": 1,
-            "fontSize": 13,
-            "fontWeight": "400",
-            "lineHeight": 18.00100300902708,
-          },
-          null,
-          null,
-          {
-            "flexShrink": 1,
-          },
-        ]
-      }
-    >
-      Bills
-    </Text>
+    Bills
+     
     <ViewManagerAdapter_SymbolModule
       accessibilityElementsHidden={true}
       accessible={false}
@@ -5903,7 +5892,7 @@ exports[`iOS design at font scale 1 StatTile retains its iOS output 1`] = `
       type="monochrome"
       weight="regular"
     />
-  </View>
+  </Text>
 </View>
 `;
 
@@ -13296,48 +13285,37 @@ exports[`iOS design at font scale 2 StatTile retains its iOS output 1`] = `
   >
     123
   </Text>
-  <View
+  <Text
+    accessibilityLanguage="en-AU"
+    allowFontScaling={true}
+    dynamicTypeRamp="footnote"
+    maxFontSizeMultiplier={0}
+    onLayout={[Function]}
+    onTextLayout={[Function]}
     style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "gap": 4,
-      }
+      [
+        {
+          "color": {
+            "dynamic": {
+              "dark": "#A9AEA2",
+              "highContrastDark": "#ECEAE2",
+              "highContrastLight": "#23271F",
+              "light": "#575C52",
+            },
+          },
+          "flexShrink": 1,
+          "fontSize": 13,
+          "fontWeight": "400",
+          "lineHeight": 18.00100300902708,
+        },
+        null,
+        null,
+        undefined,
+      ]
     }
   >
-    <Text
-      accessibilityLanguage="en-AU"
-      allowFontScaling={true}
-      dynamicTypeRamp="footnote"
-      maxFontSizeMultiplier={0}
-      onLayout={[Function]}
-      onTextLayout={[Function]}
-      style={
-        [
-          {
-            "color": {
-              "dynamic": {
-                "dark": "#A9AEA2",
-                "highContrastDark": "#ECEAE2",
-                "highContrastLight": "#23271F",
-                "light": "#575C52",
-              },
-            },
-            "flexShrink": 1,
-            "fontSize": 13,
-            "fontWeight": "400",
-            "lineHeight": 18.00100300902708,
-          },
-          null,
-          null,
-          {
-            "flexShrink": 1,
-          },
-        ]
-      }
-    >
-      Bills
-    </Text>
+    Bills
+     
     <ViewManagerAdapter_SymbolModule
       accessibilityElementsHidden={true}
       accessible={false}
@@ -13382,7 +13360,7 @@ exports[`iOS design at font scale 2 StatTile retains its iOS output 1`] = `
       type="monochrome"
       weight="regular"
     />
-  </View>
+  </Text>
 </View>
 `;
 

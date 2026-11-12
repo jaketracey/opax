@@ -310,7 +310,6 @@ export function cleanPassage(text: string | undefined) {
  */
 export const PROFILE_SECTIONS = [
   'votes',
-  'speeches',
   'interests',
   'pay',
   'expenses',
@@ -359,6 +358,22 @@ export function roleLine(
     current.map(([, , post]) => post).filter((post) => post !== now.post),
   ).size;
   return others ? `${now.post} and ${others} more` : now.post;
+}
+
+/** Last dated representation, with no guessed place or service years. */
+export function formerMemberLine(identity: PersonProfile): string | null {
+  if (identity.partyStatus !== 'former') return null;
+  const row = seatRows(identity).at(-1);
+  if (row) return [row.title, row.detail].filter(Boolean).join(', ');
+  const last = identity.rosterRow?.representation?.at(-1);
+  if (!last) return 'Former member';
+  const state = last.state
+    ? (jurisdictionName(last.state) ?? last.state)
+    : null;
+  const place = [last.electorate, state].filter(Boolean).join(', ');
+  return place
+    ? `Former ${last.chamber === 'senate' ? 'senator' : 'member'} for ${place}`
+    : 'Former member';
 }
 
 /**

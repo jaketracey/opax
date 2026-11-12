@@ -100,7 +100,7 @@ name: 08 Independent profile blocks, current senator, former member and local sh
     text: .*Formerly Labor.*
 - assertVisible:
     id: person-former
-    text: Former member
+    text: Former member for Lalor, Victoria, 1998 to 2013
 - runFlow:
     file: review-pages.yaml
     env:

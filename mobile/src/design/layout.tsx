@@ -143,6 +143,7 @@ export function Screen({
   onScroll,
   column = 'readable',
   grouped = false,
+  centred = false,
   barTitle,
   offline,
   onLayout: onPageLayout,
@@ -164,6 +165,8 @@ export function Screen({
   clampScrollOnContentChange?: boolean;
   testID?: string;
   grouped?: boolean;
+  /** Centre a whole-screen state while allowing AX content to scroll. */
+  centred?: boolean;
   barTitle?: string;
   offline?: { savedAt: DateInput | null } | null;
   scrollRef?: Ref<ScrollView>;
@@ -295,6 +298,9 @@ export function Screen({
                       onLayout={onContentLayout}
                       style={{
                         gap: regular ? rhythmRegular.section : rhythm.section,
+                        ...(centred
+                          ? { flexGrow: 1, justifyContent: 'center' as const }
+                          : {}),
                       }}
                     >
                       {bar}

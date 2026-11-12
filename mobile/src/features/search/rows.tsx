@@ -170,7 +170,6 @@ const matched = (q: string) => (q.trim() ? [q.trim()] : []);
 
 function PersonMatch({
   person,
-  q,
   sources,
   variant,
   testID,
@@ -209,39 +208,23 @@ function PersonMatch({
             : undefined;
         return (
           <View>
-            {variant === 'suggestion' ? (
-              <SuggestionRow
-                kind="person"
-                name={person.name}
-                secondary={
-                  [party, place].filter(Boolean).join(' · ') || undefined
-                }
-                portrait={null}
-                matches={matched(q)}
-                href={href}
-                onPress={href ? undefined : open}
-                menu={menu}
-                testID={rowID}
-              />
-            ) : (
-              <PersonRow
-                name={person.name}
-                party={party}
-                partyStatus={person.current === false ? 'former' : 'current'}
-                place={place}
-                portrait={
-                  <CachedPortrait
-                    name={person.name}
-                    testID={`${rowID}-portrait`}
-                  />
-                }
-                href={href}
-                {...split}
-                onPress={href ? undefined : open}
-                menu={menu}
-                testID={rowID}
-              />
-            )}
+            <PersonRow
+              name={person.name}
+              party={party}
+              partyStatus={person.current === false ? 'former' : 'current'}
+              place={place}
+              portrait={
+                <CachedPortrait
+                  name={person.name}
+                  testID={`${rowID}-portrait`}
+                />
+              }
+              href={href}
+              {...split}
+              onPress={href ? undefined : open}
+              menu={menu}
+              testID={rowID}
+            />
             {failed ? (
               <InlineError
                 subject="This page"

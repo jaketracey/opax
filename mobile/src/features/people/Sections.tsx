@@ -22,6 +22,7 @@ import { colors, hairline, rhythm } from '../../design/tokens';
 import {
   fromWebPath,
   recordListRoute,
+  personSpeechesRoute,
   topicRoute,
 } from '../../navigation/routes';
 import { openOnWeb } from '../../navigation/external';
@@ -295,7 +296,11 @@ export function MoreFromRecord({
               key={kind}
               title={recordListTitle[kind]}
               symbol={kind === 'news' ? 'newspaper' : 'quote.bubble'}
-              href={recordListRoute({ ...filters, kind }, subject.name)}
+              href={
+                kind === 'speeches' && subject.person
+                  ? personSpeechesRoute(subject.person, subject.name)
+                  : recordListRoute({ ...filters, kind }, subject.name)
+              }
               testID={`${prefix}-${kind}`}
             />
           ))}

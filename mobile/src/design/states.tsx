@@ -913,6 +913,7 @@ const styles = StyleSheet.create({
   },
   shrink: { flexShrink: 1 },
   unavailable: {
+    justifyContent: 'center',
     alignItems: 'center',
     gap: rhythm.heading,
     alignSelf: 'stretch',

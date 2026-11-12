@@ -1,3 +1,6 @@
+import { RouteOptions } from '../src/navigation/preview';
+import { ContentUnavailable } from '../src/design/states';
+import { StatStrip } from '../src/design/record';
 // Lane P, part 2 (people.md 2.1, 2.2): the person profile and the party
 // page on the shared templates. Each block holds one acceptance check.
 import { act } from 'react';
@@ -15,7 +18,7 @@ import {
   formatMoneyCompact,
   moneyAccessibilityLabel,
 } from '../src/design/format';
-import { Section } from '../src/design/layout';
+import { Screen, Section } from '../src/design/layout';
 import { PaneHost } from '../src/design/split';
 import { useReduceMotion } from '../src/design/accessibility';
 import { SegmentedPicker } from '../src/design/controls';
@@ -124,7 +127,13 @@ jest.mock('expo-router', () => ({
   }),
   useSegments: () => [],
   useLocalSearchParams: () => mockParams,
-  router: { push: jest.fn(), navigate: jest.fn() },
+  router: {
+    push: jest.fn(),
+    navigate: jest.fn(),
+    canGoBack: () => true,
+    back: jest.fn(),
+    replace: jest.fn(),
+  },
   Stack: { Screen: () => null },
 }));
 jest.mock('../src/features/follows/store', () => ({
@@ -1100,7 +1109,7 @@ describe('profile', () => {
           n.props.testID === 'person-figure-votes' &&
           typeof n.props.label === 'string',
       ).props.label,
-    ).toMatch(/^vote( since|$)/);
+    ).toBe('division voted in');
     await act(async () => r.unmount());
   });
 
@@ -1137,12 +1146,12 @@ describe('profile', () => {
       expect(profile.blocks[block].data).not.toBeNull();
     const ORDER = [
       'person-votes',
-      'person-speeches',
       'person-interests',
       'person-pay',
       'person-expenses',
       'person-receipts',
       'person-more',
+      'person-speeches',
     ];
     const drawnOrder = r.root
       .findAll(
@@ -1839,3 +1848,119 @@ describe('record list', () => {
     await act(async () => r.unmount());
   });
 });
+
+test.each(['ios', 'android'] as const)(
+  '%s former profile has a full-width count, dated identity and titled Speeches',
+  async (platform) => {
+    jest.replaceProperty(Platform, 'OS', platform);
+    const { r: initial, person, profile } = await wong();
+    act(() => initial.unmount());
+    const identity = {
+      ...person,
+      name: 'Casey Example',
+      partyStatus: 'former' as const,
+      seats: [],
+      rosterRow: {
+        ...person.rosterRow!,
+        name: 'Casey Example',
+        representation: [
+          {
+            jurisdiction: 'federal',
+            chamber: 'representatives',
+            electorate: 'Example Vale',
+            state: 'VIC',
+          },
+        ],
+      },
+    };
+    const lastSeat = {
+      ...person.seats[0]!,
+      current: false,
+      jurisdiction: 'federal',
+      chamber: 'representatives',
+      name: 'Example Vale',
+      periods: [{ start: '1998-10-03', end: '2013-08-05' }],
+    };
+    mock.person.mockResolvedValue(result(identity));
+    mock.directory.mockResolvedValue({
+      ...directory,
+      people: result({
+        ...people,
+        people: people.people.map((p) =>
+          p.person_id === identity.canonicalPersonId
+            ? { ...p, electorates: [lastSeat] }
+            : p,
+        ),
+      }),
+    } as never);
+    const blocks = {
+      ...profile.blocks,
+      identity: { ...profile.blocks.identity, data: identity },
+      interests: { ...profile.blocks.interests, data: null },
+      pay: { ...profile.blocks.pay, data: null },
+    };
+    mock.profileFor.mockResolvedValue({ ...profile, blocks });
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(<Person />);
+    });
+    expect(r.root.findAllByType(StatStrip)).toHaveLength(0);
+    expect(host(r, 'person-former').props.children).toBe(
+      'Former member for Example Vale, Victoria, 1998 to 2013',
+    );
+    const summary = r.root
+      .findAllByType(LinkRow)
+      .find((n) => n.props.testID === 'person-figure-votes')!;
+    expect(summary.props.title).toMatch(
+      /^[\d,]+ divisions voted in, \d{4} to \d{4}$/,
+    );
+    const more = r.root.findByType(MoreFromRecord);
+    expect(
+      more
+        .findAllByType(LinkRow)
+        .find((n) => n.props.testID === 'person-speeches'),
+    ).toBeDefined();
+    act(() => r.unmount());
+  },
+);
+
+test.each(['ios', 'android'] as const)(
+  '%s unknown person centres its recovery and keeps a Done bar',
+  async (platform) => {
+    jest.replaceProperty(Platform, 'OS', platform);
+    mockParams.slug = 'casey-missing';
+    mock.person.mockRejectedValue(
+      new ApiError('not-found', 'Missing fixture person'),
+    );
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(<Person />);
+    });
+    expect(r.root.findByType(Screen).props.centred).toBe(true);
+    const unavailable = r.root.findByType(ContentUnavailable);
+    expect(unavailable.props.symbol).toBe(
+      'person.crop.circle.badge.questionmark',
+    );
+    expect(unavailable.props.action.label).toBe('Search parliamentarians');
+    const options = r.root.findByType(RouteOptions).props.options;
+    expect(options).toMatchObject({
+      headerShown: true,
+      headerTitle: 'No profile',
+      headerLargeTitleEnabled: false,
+    });
+    if (platform === 'ios') {
+      const items = options.unstable_headerRightItems();
+      expect(items[0].label).toBe('Done');
+      act(() => items[0].onPress());
+      expect(router.back).toHaveBeenCalled();
+    }
+    act(() => unavailable.props.action.onPress());
+    expect(router.navigate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        pathname: '/search',
+        params: expect.objectContaining({ scope: 'people' }),
+      }),
+    );
+    act(() => r.unmount());
+  },
+);

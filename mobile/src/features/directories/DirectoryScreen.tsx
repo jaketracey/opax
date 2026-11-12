@@ -1,3 +1,4 @@
+import { MyMemberProvider } from '../your-mp/useIsMyMember';
 import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -190,7 +191,7 @@ function activeFilters(kind: DirectoryKind, filters: Filters): string[] {
   ];
 }
 
-export default function DirectoryScreen() {
+function DirectoryContent() {
   const adaptive = useAdaptiveDevice();
   const params = useLocalSearchParams<{ kind: string }>();
   const kind = directoryKind(params.kind);
@@ -627,3 +628,11 @@ const styles = StyleSheet.create({
   empty: { gap: rhythm.block, paddingTop: rhythm.block },
   footer: { gap: rhythm.tight, paddingTop: rhythm.block },
 });
+
+export default function DirectoryScreen() {
+  return (
+    <MyMemberProvider>
+      <DirectoryContent />
+    </MyMemberProvider>
+  );
+}

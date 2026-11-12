@@ -1,3 +1,4 @@
+import { useRowIsMyMember } from '../your-mp/MyMemberContext';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import type { Block } from '../../api/catalogs';
@@ -10,7 +11,11 @@ import { formatDate } from '../../design/format';
 import { Icon } from '../../design/icon';
 import { chamberName } from '../../design/parliament';
 import { partyText, isPartyLabel } from '../../design/party';
-import { PartyLabel, type PersonRowProps } from '../../design/people';
+import {
+  PartyLabel,
+  YourMPMark,
+  type PersonRowProps,
+} from '../../design/people';
 import { RowLink, type RowMenuAction } from '../../design/row-link';
 import {
   ownsRowPadding,
@@ -136,6 +141,7 @@ export function DeclarationEntry({
   item: Declaration;
   index: number;
 }) {
+  const yourMP = useRowIsMyMember(item.profileSlug ?? undefined);
   const stacked = useAccessibilitySize();
   const cellStyle = useRowCellStyle();
   const highlight = useRowHighlight();
@@ -172,7 +178,12 @@ export function DeclarationEntry({
       <Pressable
         accessible
         accessibilityRole="link"
-        accessibilityLabel={[person.accessibilityLabel, preview, spokenChange]
+        accessibilityLabel={[
+          person.accessibilityLabel,
+          preview,
+          spokenChange,
+          yourMP ? 'Your MP' : null,
+        ]
           .filter(Boolean)
           .join('. ')}
         accessibilityHint="Opens Just declared for this member"
@@ -228,6 +239,7 @@ export function DeclarationEntry({
                 />
               </View>
             ) : null}
+            {yourMP ? <YourMPMark testID={`${person.testID}-your-mp`} /> : null}
             {preview ? (
               <Text
                 wordSafe

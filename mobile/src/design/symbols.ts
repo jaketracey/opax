@@ -47,6 +47,7 @@ export const symbols = Object.freeze({
   money: 'australiandollarsign.circle',
   speech: 'quote.bubble',
   person: 'person.crop.circle',
+  personNotFound: 'person.crop.circle.badge.questionmark',
   party: 'person.3',
   electorate: 'map',
   location: 'location.fill',

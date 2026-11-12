@@ -167,6 +167,8 @@ export function decodeFollows(v: unknown): SavedFollow[] {
 // The slot holding the newest saved copy, and its number; slot -1 is none.
 let newest = { slot: -1, generation: 0 };
 let topicNewest = { slot: -1, generation: 0 };
+// Saturates at three and survives unfollowing, clearing and app restarts.
+let firstFollowCount = 0;
 let primaryEntries: SavedFollow[] = [];
 let topicEntries: SavedFollow[] = [];
 async function readFollows(): Promise<Follow[]> {
@@ -174,14 +176,28 @@ async function readFollows(): Promise<Follow[]> {
     isRecord(raw) && raw.version === 1 && Array.isArray(raw.follows)
       ? decodeFollows(raw)
       : null;
+  let savedCount: number | undefined;
   const [copy, topics] = await Promise.all([
-    readCopies(SLOTS, decode),
+    readCopies(SLOTS, (raw) => {
+      const follows = decode(raw);
+      return follows === null
+        ? null
+        : { follows, count: isRecord(raw) ? raw.firstFollowCount : undefined };
+    }),
     readCopies(TOPIC_SLOTS, decode),
   ]);
   newest = { slot: copy.slot, generation: copy.generation };
   topicNewest = { slot: topics.slot, generation: topics.generation };
   const seed = copy.value == null ? seededFollows() : null;
-  primaryEntries = seed ?? copy.value ?? [];
+  primaryEntries = seed ?? copy.value?.follows ?? [];
+  savedCount =
+    typeof copy.value?.count === 'number' &&
+    Number.isInteger(copy.value.count) &&
+    copy.value.count >= 0
+      ? copy.value.count
+      : undefined;
+  // Existing installs start with their saved follow count, never a reset.
+  firstFollowCount = Math.min(3, savedCount ?? primaryEntries.length);
   if (seed) newest = writeCopy(SLOTS, newest, { version: 1, follows: seed });
   topicEntries = topics.value ?? [];
   return [...primaryEntries, ...topicEntries].filter(isKnownFollow);
@@ -211,7 +227,14 @@ function writeFollows(follows: Follow[]) {
   ];
   // Ordinarily only the primary file changes. Leave future/topic bytes alone.
   if (JSON.stringify(primary) !== JSON.stringify(primaryEntries)) {
-    newest = writeCopy(SLOTS, newest, { version: 1, follows: primary });
+    const added = primary.filter((f) => !primaryKeys.has(followKey(f))).length;
+    const nextCount = Math.min(3, firstFollowCount + added);
+    newest = writeCopy(SLOTS, newest, {
+      version: 1,
+      follows: primary,
+      firstFollowCount: nextCount,
+    });
+    firstFollowCount = nextCount;
     primaryEntries = primary;
   }
   if (JSON.stringify(topics) !== JSON.stringify(topicEntries)) {
@@ -255,18 +278,28 @@ function update<T>(change: (follows: Follow[]) => [Follow[], T]): Promise<T> {
   return run;
 }
 export type FollowResult = 'followed' | 'already' | 'limit';
-export function follow(item: {
+type FollowItem = {
   kind: FollowKind;
   id: string;
   title: string;
-}): Promise<FollowResult> {
-  return update((follows) => {
+};
+export function follow(item: FollowItem): Promise<FollowResult> {
+  return followWithFeedback(item).then((result) => result.status);
+}
+/** The confirmation decision belongs to the same serial save as the follow. */
+export function followWithFeedback(item: {
+  kind: FollowKind;
+  id: string;
+  title: string;
+}): Promise<{ status: FollowResult; showMessage: boolean }> {
+  return update<{ status: FollowResult; showMessage: boolean }>((follows) => {
     if (follows.some((f) => followKey(f) === followKey(item)))
-      return [follows, 'already'];
+      return [follows, { status: 'already', showMessage: false }];
     const allKeys = new Set(
       [...primaryEntries, ...topicEntries].map(followKey),
     );
-    if (allKeys.size >= FOLLOW_LIMIT) return [follows, 'limit'];
+    if (allKeys.size >= FOLLOW_LIMIT)
+      return [follows, { status: 'limit', showMessage: false }];
     return [
       [
         ...follows,
@@ -279,7 +312,7 @@ export function follow(item: {
           seenAt: null,
         },
       ],
-      'followed',
+      { status: 'followed', showMessage: firstFollowCount < 3 },
     ];
   });
 }
@@ -368,6 +401,7 @@ export function resetFollowsForTests() {
   topicNewest = { slot: -1, generation: 0 };
   primaryEntries = [];
   topicEntries = [];
+  firstFollowCount = 0;
 }
 /** Marks every ready follow using the shared catalogs already read by follows. */
 export async function markAllSeen(): Promise<void> {
