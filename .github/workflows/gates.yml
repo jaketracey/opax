@@ -1,0 +1,129 @@
+name: Gates
+
+on:
+  pull_request:
+    branches: [main, ios/apple-design]
+  push:
+    branches: ['ci/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gates-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: 'true'
+  TZ: Australia/Melbourne
+  LANG: C.UTF-8
+  WRANGLER_SEND_METRICS: 'false'
+
+jobs:
+  mobile-static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      # main has no mobile tree yet. A partial mobile tree must fail installation.
+      - name: Identify mobile sources
+        id: mobile
+        run: |
+          if [ -d mobile ]; then
+            echo 'present=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'No mobile tree in this commit; mobile checks do not apply.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        if: steps.mobile.outputs.present == 'true'
+        with:
+          node-version: 24.21.0
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - name: Install
+        if: steps.mobile.outputs.present == 'true'
+        working-directory: mobile
+        run: npm ci
+      - name: Typecheck, lint and static QA
+        if: steps.mobile.outputs.present == 'true'
+        working-directory: mobile
+        run: npx tsc --noEmit && npm run -s lint && npm run -s qa-static
+
+  mobile-jest:
+    name: mobile-jest (${{ matrix.shard }}/6)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Identify mobile sources
+        id: mobile
+        run: |
+          if [ -d mobile ]; then
+            echo 'present=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'No mobile tree in this commit; mobile checks do not apply.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        if: steps.mobile.outputs.present == 'true'
+        with:
+          node-version: 24.21.0
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - name: Install
+        if: steps.mobile.outputs.present == 'true'
+        working-directory: mobile
+        run: npm ci
+      # Call Jest directly: the package script puts --maxWorkers=2 first.
+      - name: Run Jest shard
+        if: steps.mobile.outputs.present == 'true'
+        working-directory: mobile
+        run: npx jest --silent --shard=${{ matrix.shard }}/6 --maxWorkers=4
+
+  portal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: portal
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24.21.0
+          cache: npm
+          cache-dependency-path: portal/package-lock.json
+      - name: Install
+        run: npm ci
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+      - name: Install locked Python dependencies
+        working-directory: .
+        run: |
+          uv sync --frozen --python "$(cat .python-version)"
+          echo "$GITHUB_WORKSPACE/.venv/bin" >> "$GITHUB_PATH"
+      - name: Generate Worker types
+        run: npx wrangler types
+      - name: Build release assets
+        run: npm run build:release
+        env:
+          OPAX_TABLE_METADATA_ONLY: '1'
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Test portal
+        run: npm test
+      - name: Test portal Python loaders
+        working-directory: .
+        run: python3 -m unittest discover -s portal/test -p '*_test.py'
