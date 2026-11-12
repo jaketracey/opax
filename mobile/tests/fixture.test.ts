@@ -320,6 +320,7 @@ test('fixture rejects POST even for an approved GET catalog', async () => {
     req.end();
   });
   expect(status).toBe(404);
+  await waitForOutput('OUTSIDE_ALLOW_LIST POST /pay.json');
   expect(output).toContain('OUTSIDE_ALLOW_LIST POST /pay.json');
 });
 
@@ -331,6 +332,7 @@ test('a production Host header is rejected even on the loopback socket', async (
     (await request('/parliamentarians.json', { Host: `10.0.2.2:${port}` }))
       .status,
   ).toBe(404);
+  await waitForOutput('Host is outside the loopback fixture boundary');
   expect(output).toContain('Host is outside the loopback fixture boundary');
 });
 
