@@ -117,14 +117,38 @@ export function latestRecords(
         });
       }
   const interests = profile.blocks.interests;
+  // The register can repeat a declaration for different household holders.
+  // Lately does not show the holder: collapse identical activity here while
+  // preserving every source row on the full register page. Compare the full
+  // text before previews or limits; additions and removals remain distinct.
+  const declarationIds = new Set<string>();
+  const declarations = new Set<string>();
   if (interests.status !== 'error' && interests.data)
     for (const [category, bucket] of Object.entries(interests.data.buckets))
       for (const row of bucket.items) {
         if (!row.date || (row.kind !== 'addition' && row.kind !== 'deletion'))
           continue;
+        const key =
+          row.key ?? (row.id !== undefined ? `register:${row.id}` : undefined);
+        const ids: string[] = [];
+        if (row.key) ids.push(`key:${row.key}`);
+        if (row.id !== undefined) ids.push(`id:${row.id}`);
+        const identity = JSON.stringify([
+          profile.personId ?? profile.slug,
+          category,
+          row.date,
+          row.kind,
+          row.description,
+        ]);
+        const duplicate =
+          ids.some((id) => declarationIds.has(id)) ||
+          declarations.has(identity);
+        for (const id of ids) declarationIds.add(id);
+        declarations.add(identity);
+        if (duplicate) continue;
         records.push({
           key:
-            (row as typeof row & { key?: string }).key ??
+            key ??
             `register:${category}:${row.date}:${row.kind}:${row.holder}:${row.description}`,
           kind: 'register',
           date: row.date,

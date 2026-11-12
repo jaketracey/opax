@@ -8,11 +8,14 @@ import {
 import { decodeChoice } from '../src/features/your-mp/model';
 import { tenureYear } from '../src/features/your-mp/RepresentativesGroup';
 import { stateInRunningCopy } from '../src/features/your-mp/state-names';
+import { decodeInterest } from '../src/api/catalog-decoders';
 
 // Hoisted above the imports by babel-jest.
 jest.mock('../src/api/runtime', () => ({ catalogs: {}, portraits: null }));
 jest.mock('expo-router', () => ({
-  useIsPreview: () => false, router: { push: jest.fn() } }));
+  useIsPreview: () => false,
+  router: { push: jest.fn() },
+}));
 
 type Vote = {
   name: string;
@@ -36,10 +39,20 @@ function profile({
   votesAgainst = [] as Vote[],
   interests = {} as Record<
     string,
-    { holder: string; description: string; kind: string; date: string | null }[]
+    {
+      holder: string;
+      description: string;
+      kind: string;
+      date: string | null;
+      key?: string;
+      id?: number | string;
+    }[]
   >,
   failVotes = false,
   failInterests = false,
+  name = 'Evelyn Harbour',
+  slug = 'evelyn-harbour',
+  personId = 'person_aaaaaaaaaaaaaaaaaaaaaaaa',
 } = {}) {
   const error = {
     status: 'error' as const,
@@ -50,10 +63,10 @@ function profile({
     savedAt: null,
   };
   return {
-    personId: 'person_aaaaaaaaaaaaaaaaaaaaaaaa',
-    slug: 'anthony-albanese',
+    personId,
+    slug,
     blocks: {
-      identity: ready({ name: 'Anthony Albanese' }),
+      identity: ready({ name }),
       votes: failVotes
         ? error
         : ready({ for: votesFor, against: votesAgainst }),
@@ -100,6 +113,119 @@ describe('the question rule', () => {
 });
 
 describe('Lately', () => {
+  const gift = {
+    holder: 'self',
+    description: 'Two tickets to the Lakeside theatre festival',
+    kind: 'addition',
+    date: '2026-09-28',
+  };
+  const recordsFor = (
+    items: (typeof gift & { key?: string; id?: number | string })[],
+    limit = 10,
+  ) => {
+    const state = latelyFor(profile({ interests: { gifts: items } }), null, {
+      limit,
+    });
+    if (state.status !== 'ready') throw new Error(state.status);
+    return state.records;
+  };
+  test('exact duplicates and household copies collapse before the Today limit', () => {
+    const records = recordsFor(
+      [
+        gift,
+        { ...gift },
+        { ...gift, holder: 'spouse', key: 'different-source-row' },
+        { ...gift, description: 'Membership of the Lakeside arts association' },
+        { ...gift, description: 'A printed festival programme' },
+      ],
+      3,
+    );
+    expect(records).toHaveLength(3);
+    expect(records.filter((r) => r.title === gift.description)).toHaveLength(1);
+  });
+  test.each(['key', 'id'] as const)(
+    'the same source %s appears once',
+    (field) => {
+      expect(
+        recordsFor([
+          { ...gift, [field]: 'source-row-1' },
+          {
+            ...gift,
+            [field]: 'source-row-1',
+            description: 'The same source row repeated',
+          },
+        ]),
+      ).toHaveLength(1);
+    },
+  );
+  test('different dates, full texts and operations remain separate', () => {
+    const common = 'A festival invitation with a long description '.repeat(3);
+    const records = recordsFor([
+      gift,
+      { ...gift, date: '2026-09-27' },
+      { ...gift, description: `${common}morning performance` },
+      { ...gift, description: `${common}evening performance` },
+      { ...gift, kind: 'deletion' },
+    ]);
+    expect(records).toHaveLength(5);
+  });
+  test('a shared source ID still deduplicates rows with different display keys', () => {
+    expect(
+      recordsFor([
+        { ...gift, id: 42, key: 'holder-copy-1' },
+        {
+          ...gift,
+          id: 42,
+          key: 'holder-copy-2',
+          description: 'The same record with refreshed wording',
+        },
+      ]),
+    ).toHaveLength(1);
+  });
+  test('different categories and members never share a deduplication scope', () => {
+    const state = latelyFor(
+      profile({ interests: { gifts: [gift], travel: [gift] } }),
+      null,
+    );
+    if (state.status !== 'ready') throw new Error(state.status);
+    expect(state.records).toHaveLength(2);
+    expect(recordsFor([gift])).toHaveLength(1);
+    const other = latelyFor(
+      profile({
+        name: 'Morgan Banks',
+        slug: 'morgan-banks',
+        personId: 'person_bbbbbbbbbbbbbbbbbbbbbbbb',
+        interests: { gifts: [gift] },
+      }),
+      null,
+    );
+    if (other.status !== 'ready') throw new Error(other.status);
+    expect(other.records).toHaveLength(1);
+    expect(other.records[0]!.slug).toBe('morgan-banks');
+  });
+  test('the API decoder preserves source record identities for defensive deduplication', () => {
+    const data = decodeInterest({
+      name: 'Evelyn Harbour',
+      jurisdiction: 'federal',
+      chamber: 'house',
+      parliament: 48,
+      source_url: 'https://example.org/register',
+      as_at: gift.date,
+      total: 1,
+      ocr_rows: 0,
+      alterations: { added: 1, deleted: 0 },
+      buckets: {
+        gifts: {
+          count: 1,
+          items: [{ ...gift, key: 'register-row-1', id: 42 }],
+        },
+      },
+    });
+    expect(data.buckets.gifts!.items[0]).toMatchObject({
+      key: 'register-row-1',
+      id: 42,
+    });
+  });
   test('loading before the profile, error when every source fails', () => {
     expect(latelyFor(null, null)).toEqual({ status: 'loading' });
     expect(

@@ -547,6 +547,10 @@ const tie = shape({
   industry: maybeText,
 });
 const registerRow = shape({
+  key: optional(nonempty),
+  id: optional((v: unknown) =>
+    typeof v === 'number' ? count(v) : nonempty(v),
+  ),
   holder: nonempty,
   description: text,
   kind: nonempty,
