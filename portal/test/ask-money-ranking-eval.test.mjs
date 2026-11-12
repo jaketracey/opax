@@ -19,7 +19,8 @@ for(const [label,g,store] of [['typed',graph,assets],['untyped',untypedGraph,unt
 // Public exporter subset from receipt-types a51f2d872; amounts and typed cells are unchanged.
 const typedGraph=JSON.parse(await readFile(new URL('./fixtures/money-ranking-exporter.json',import.meta.url)))
 const typedAssets={fetch:async()=>Response.json(typedGraph)}
-const typedCases=moneyRankingCases.filter(c=>c.industry)
+// The exporter subset holds the original industries; a published-only case needs the full graph.
+const typedCases=moneyRankingCases.filter(c=>c.industry&&!c.publishedOnly)
 for(const c of typedCases)test('exporter money accuracy and directness: '+c.id,async()=>{
  const result=await api.federalPartyMoneyAnswer({question:c.question},typedAssets)
  const score=scoreMoneyRanking(result,graphRanking(typedGraph,c),c,typedGraph)

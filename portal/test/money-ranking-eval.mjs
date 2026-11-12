@@ -99,6 +99,8 @@ export function scoreMoneyRanking(payload,expected,selection,graph){
   source.allRows.forEach(r=>{amounts.add(dollars(r.cents));amounts.add(dollars(r.allCents))})
  }
  if(selection.party){const rest=expected.cents-expected.rows.reduce((sum,r)=>sum+r.cents,0);if(rest)amounts.add(dollars(rest));const allRest=expected.allCents-expected.rows.reduce((sum,r)=>sum+r.allCents,0);amounts.add(dollars(allRest))}
+ // Recipient rankings also carry donation-only amounts per financial year and in total.
+ if(expected.typed&&!selection.party)for(const amount of donationAmounts(graph,selection))amounts.add(dollars(amount))
  for(const amount of answer.match(/\$\d+(?:,\d{3})*(?:\.\d{2})?/g)??[])check(amounts.has(amount),'unbound amount '+amount)
  const map=answer.match(/\[(?:See these|See all receipt types) on the money map\]\(([^)]+)\)/)?.[1]
  check(!!map,'map link')
@@ -124,4 +126,27 @@ export function scoreMoneyRanking(payload,expected,selection,graph){
  const defects=Number(negatives.length>0)+Number(!periodFirst)+Number(!mapFiltered)+Number(caveatSentences!==1||caveatWords>35)
  const directness=!answer.includes('$')||payload?.answer_status!=='calculated'?0:!amountFirst||negatives.length>=2||!map||caveatWords>60?1:labelFirst&&defects===0?3:labelFirst&&defects===1?2:1
  return {accuracy:errors.filter(e=>!['negative clause before first amount','one short caveat','map link','opening word budget','prose word budget'].includes(e)).length===0,directness,errors}
+}
+
+/** Donation-only cents ("Donation Received") per recipient, per financial year and in total, summed independently of the calculator. */
+export function donationAmounts(graph,{industry,from,to}){
+ const nodes=new Map(graph.nodes.map(n=>[n.id,n])),perYear=new Map(),perParty=new Map(),out=new Set([0])
+ const fyStart=key=>/^(\d{4})-(\d{2})$/.test(key)?Number(key.slice(0,4)):undefined
+ for(const e of graph.edges){
+  if(e.flow||e.grant||nodes.get(e.source)?.kind!=='donor'||nodes.get(e.target)?.kind!=='party'||industry&&nodes.get(e.source).industry!==industry)continue
+  let total=from===undefined&&to===undefined?Math.round((e.by_type?.donation_received??0)*100):0
+  for(const [key,cells]of Object.entries(e.by_type_year??{})){
+   const year=fyStart(key),cell=cells.donation_received
+   if(year===undefined||!cell||year<(from??0)||year>(to??9999))continue
+   const cents=Math.round(cell[0]*100)
+   if(from!==undefined||to!==undefined)total+=cents
+   perYear.set(e.target+'|'+year,(perYear.get(e.target+'|'+year)??0)+cents)
+   perYear.set('*|'+year,(perYear.get('*|'+year)??0)+cents)
+  }
+  perParty.set(e.target,(perParty.get(e.target)??0)+total)
+ }
+ for(const v of perYear.values())out.add(v)
+ for(const v of perParty.values())out.add(v)
+ out.add([...perParty.values()].reduce((a,b)=>a+b,0))
+ return out
 }

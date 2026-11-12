@@ -2,8 +2,7 @@ import {personUrl} from '../public/party-page.js'
 import type {RecordQuestion} from './ask-records'
 import {federalPartyRankingIntent} from './ask-money-family'
 import {isReceiptGraph, mentionedReceiptIndustries, receiptAnswer, receiptDonorChoices, receiptGraphForQuestion, unmatchedReceiptRankingScope} from './voice-money'
-import {calculatedMoneyAnswer,rankedMoneyAnswer} from './ask-money'
-import {receiptPeriodQuery} from './receipt-period'
+import {calculatedMoneyAnswer,rankedMoneyAnswer,readingChoices,withReading} from './ask-money'
 
 /** Financial recipient questions must resolve before topic retrieval or cached prose. */
 export function industryMoneyIntent(question:string):{subject:string;recipient?:string;total:boolean;period:string}|null {
@@ -36,8 +35,6 @@ export async function industryMoneyAnswer(input:RecordQuestion,assets:Fetcher) {
  if(!intent)return null
  const gap=(answer:string,answer_status='needs_scope')=>({answer,answer_status,money_ranking:true,citations:{},sources:[]})
  if(input.speaker||input.chamber||input.topic||input.kind&&!['all','receipt','speech'].includes(input.kind))return gap('Choose receipt records and clear the speaker, chamber and topic filters to calculate this ranking.')
- const period=receiptPeriodQuery(input.question??'')
- if(period.error)return gap(period.error,'needs_period')
  const selection=await receiptGraphForQuestion(input.question??'',async file=>{
   const response=await assets.fetch(new Request('https://opax.com.au'+file))
   if(!response.ok)return null
@@ -67,8 +64,10 @@ export async function industryMoneyAnswer(input:RecordQuestion,assets:Fetcher) {
  const cleaned=subject.replace(/\b(?:companies|company|lobby|lobbies|donors?)\b/gi,' ').replace(/\s+/g,' ').trim()
  const query=`Who receives the most disclosed receipts from ${bankOnly?'finance':cleaned}${recipient?' to '+recipient:''}${intent.period?' '+intent.period:''}?`
  const result=receiptAnswer(graph,query,jurisdiction,'https://opax.com.au',scoped)
- if(!result||'needs_scope' in result||'needs_period' in result)return await rankedMoneyAnswer({...scoped,question:query,kind:'all'},assets)??gap(result?.answer??'Choose a named source or industry in the [money map](/money).')
- const unmatched=unmatchedReceiptRankingScope(graph,receiptPeriodQuery(query).query,result,scoped.party)
+ if(!result||'needs_scope' in result)return await rankedMoneyAnswer({...scoped,question:query,kind:'all'},assets)??gap(result?.answer??'Choose a named source or industry in the [money map](/money).')
+ const unmatched=unmatchedReceiptRankingScope(graph,result.read_query,result,scoped.party)
  if(unmatched)return gap(`Choose a published source, industry or party for **${safe(unmatched)}** in the [money map](/money) so the calculation covers the whole question.`)
- return calculatedMoneyAnswer(result,graph,query,file,scoped,{total:intent.total,bankGrouping:bankOnly,member})
+ // The period read from the question is stated, and the other readings offered.
+ const answer=calculatedMoneyAnswer(result,graph,query,file,scoped,{total:intent.total,bankGrouping:bankOnly,member})
+ return withReading(answer,[result.period_reading,bankOnly?undefined:result.scope_reading],readingChoices(result,result.period_options)(recipient?'donors':'parties'),input.question??'')
 }

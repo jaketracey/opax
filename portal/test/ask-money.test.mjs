@@ -122,8 +122,10 @@ test('unknown follow-up scope and relative years never reuse a stale winner',asy
   const result=await ask(question,{context});assert.equal(result?.answer_status,'needs_scope',question);
   assert.deepEqual(result.citations,{});assert.deepEqual(result.sources,[]);assert.doesNotMatch(result.answer,/\$[\d,]+/);
  }
- for(const question of ['And last year?','What about January 2021?','And in 2020 and 2022?']) {
-  const result=await ask(question,{context});assert.equal(result?.answer_status,'needs_period',question);assert.deepEqual(result.sources,[]);
+ // A follow-up period is read, stated and answered for the same selection.
+ for(const [question,reading,from,to] of [['And last year?',/Reading “last year” as 2024–25/,'2024','2024'],['What about January 2021?',/reads the period as 2020–21/,'2020','2020'],['And in 2020 and 2022?',/continuous span 2020–21 to 2022–23/,'2020','2022']]) {
+  const result=await ask(question,{context});assert.equal(result?.answer_status,'calculated',question);assert.match(result.money_reading,reading,question);
+  assert.ok(result.sources.some(s=>s.href.includes(`from=${from}&to=${to}`)),question);
  }
  const missing=await ask('And in 1900?',{context});assert.equal(missing.answer_status,'calculated');assert.equal(missing.coverage.matched,false);assert.match(missing.answer,/Held-period figures/);
 });
@@ -190,7 +192,10 @@ test('explicit date and party controls win; from an industry is not since a year
  assert.match(r.answer,/2020–21/);assert.doesNotMatch(r.answer,/2020–21 to 2020–21/);assert.ok(r.sources.some(s=>s.href.includes('from=2020&to=2020')));
  const filtered=await ask('Who donates the most to Labor?',{party:'Liberal',from:'2020',to:'2020'});
  assert.match(filtered.answer,/to Liberal/);assert.ok(filtered.sources.some(s=>s.href.includes('party=party%3ALiberal')));
- assert.equal((await ask('Who donates the most to Labor recently?')).answer_status,'needs_period');
+ const recent=await ask('Who donates the most to Labor recently?');
+ assert.equal(recent.answer_status,'calculated');assert.match(recent.money_reading,/Reading “recently” as the last three published disclosure years, 2022–23 to 2024–25/);
+ assert.ok(recent.sources.some(s=>s.href.includes('from=2022&to=2024')));
+ assert.ok(recent.money_followups.some(f=>f.label==='All years'&&!/\b20\d{2}\b/.test(f.question)));
 });
 test('unsupported questions are not silently replaced by lifetime or party totals',async()=>{
  for(const q of ['Who donates the most to an unknown party?','Who donates the most to Labor from the unicorn lobby?']) {const r=await ask(q);assert.equal(r.answer_status,'needs_scope');assert.deepEqual(r.sources,[]);assert.doesNotMatch(r.answer,/\$[\d,]+/);}
@@ -391,18 +396,23 @@ test('an explicit year answers a period clarification without losing the funding
 
 
 const choiceQuestions=answer=>[...answer.matchAll(/\]\(\/ask\?q=([^)]*)\)/g)].map(m=>decodeURIComponent(m[1]));
-test('short donor names offer explicit choices without pooling organisations',async()=>{
+test('short donor names answer for one organisation and offer the others, never pooling them',async()=>{
+ // The match with the most disclosed receipts is answered and named in the
+ // reading; every other match is a one-tap question with its own figures.
  for(const [name,expected] of [['Tabcorp',['Tabcorp Holdings Limited']],['Pratt',['Pratt Holdings Pty Ltd']],['Macquarie',['Macquarie Group Limited','Macquarie Technology Group Ltd']]]){
   const result=await ask(`Who receives the most disclosed receipts from ${name}?`);
   if(name==='Tabcorp'){assert.equal(result.answer_status,'calculated');assert.match(result.answer,/Tabcorp Holdings Limited/);continue;}
-  assert.equal(result.answer_status,'needs_scope');assert.deepEqual(result.sources,[]);assert.deepEqual(result.citations,{});assert.doesNotMatch(result.answer,/\$[\d,]+/);
-  const choices=choiceQuestions(result.answer);assert.equal(choices.length,expected.length);
-  for(const label of expected)assert.ok(choices.some(q=>q.includes(label)),label);
-  for(const question of choices){const resolved=await ask(question);assert.equal(resolved.answer_status,'calculated');assert.ok(resolved.sources.every(x=>!x.href.startsWith('/money?')||new URL(x.href,'https://opax.test').searchParams.has('focus')));}
+  assert.equal(result.answer_status,'calculated',name);assert.ok(result.sources.length>0,name);
+  const answered=expected.filter(label=>result.money_reading.includes(`this answer is for ${label}`)||result.money_reading.includes(`as ${label}.`));
+  assert.equal(answered.length,1,result.money_reading);
+  const offered=(result.money_followups??[]).map(f=>f.question);
+  for(const label of expected.filter(l=>!answered.includes(l)))assert.ok(offered.some(q=>q.includes(label)),label);
+  assert.ok(result.sources.every(x=>!x.href.startsWith('/money?')||new URL(x.href,'https://opax.test').searchParams.has('focus')),name);
+  for(const question of offered.filter(q=>expected.some(l=>q.includes(l)))){const resolved=await ask(question);assert.equal(resolved.answer_status,'calculated');assert.ok(resolved.sources.every(x=>!x.href.startsWith('/money?')||new URL(x.href,'https://opax.test').searchParams.has('focus')));}
  }
  // A donor without organisation evidence is never offered as a choice, ranked or matched by name.
  const crown=await ask('Who receives the most disclosed receipts from Crown?');
- assert.equal(crown.answer_status,'needs_scope');assert.match(crown.answer,/Crown Resorts Limited/);assert.match(crown.answer,/Crown Castle/);
+ assert.equal(crown.answer_status,'calculated');assert.match(crown.answer,/Crown Resorts Limited/);assert.match(crown.answer,/Crown Castle/);
  const castle=await ask('Who receives the most disclosed receipts from Crown Castle Australia?');
  assert.equal(castle.answer_status,'calculated');assert.match(castle.answer,/Crown Castle Australia/);
 });
