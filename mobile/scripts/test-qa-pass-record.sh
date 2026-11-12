@@ -44,7 +44,8 @@ passed = 0
 command(['git', 'init', '-q'])
 write(seed/'.gitignore', 'node_modules/\n.qa.local.env\n')
 (seed/'mobile/scripts').mkdir(parents=True, exist_ok=True)
-for name in ('qa.sh', 'qa-env.sh', 'qa-pass-record.sh', 'lint.sh', 'jest-changed.sh',
+for name in ('qa.sh', 'qa-env.sh', 'qa-pass-record.sh', 'lint.sh',
+             'eslint-file.config.cjs', 'eslint-hermes.config.cjs', 'jest-changed.sh',
              'sim-health.sh', 'qa-simulator.sh', 'android-gradle.sh', 'build-play.sh', 'release-ios.sh'):
     shutil.copyfile(scripts/name, seed/'mobile/scripts'/name)
 for name in ('test-release-tooling.py', 'test-privacy-scan.py', 'test-android-harness.py', 'test-android-results.py'):
@@ -239,12 +240,35 @@ ok('non-code test fixtures force a full Jest run')
 shutil.rmtree(mobile/'node_modules')
 (mobile/'node_modules/.bin').mkdir(parents=True)
 (mobile/'node_modules/.bin/eslint').symlink_to(scripts.parent/'node_modules/.bin/eslint')
-write(mobile/'eslint.config.js', "const plugin = require("+json.dumps(str(scripts.parent/'node_modules/eslint-plugin-import'))+");\nmodule.exports = [{files:['**/*.mjs'], plugins:{import:plugin}, rules:{'import/no-unresolved':'error'}}];\n")
+lint_visits = scratch/'lint-visits'
+env['QA_TEST_LINT_VISITS'] = str(lint_visits)
+write(mobile/'scripts/cache-rule.js', "module.exports = {create(context) { require('fs').appendFileSync(process.env.QA_TEST_LINT_VISITS, context.filename+'\\n'); return {}; }};\n")
+write(mobile/'eslint.config.js', "const plugin = require("+json.dumps(str(scripts.parent/'node_modules/eslint-plugin-import'))+");\nmodule.exports = [{files:['**/*.mjs'], plugins:{import:plugin, audit:{rules:{visit:require('./scripts/cache-rule')}}}, rules:{'import/no-unresolved':'error','audit/visit':'error'}}];\n")
 a = mobile/'src/a.mjs'; b = mobile/'src/b.mjs'
 a.write_text("import { value } from './b.mjs';\nexport { value };\n"); b.write_text('export const value = 1;\n')
 command(['git', 'add', '.'], repo); command(['git', 'commit', '-qm', 'Lint fixture'], repo)
 command(['bash', 'scripts/lint.sh', 'src/a.mjs'], mobile)
 command(['bash', 'scripts/lint.sh', 'src/a.mjs'], mobile)
+cache = next((mobile/'node_modules/.cache/eslint').glob('*.cache'))
+lint_visits.write_text('')
+b.write_text('export const value = 2;\n')
+command(['bash', 'scripts/lint.sh'], mobile)
+assert lint_visits.read_text().splitlines() == [str(b)]
+assert cache.exists() and len(list(cache.parent.glob('*.cache'))) == 1
+command(['git', 'add', '.'], repo)
+lint_visits.write_text(''); command(['bash', 'scripts/lint.sh'], mobile)
+assert not lint_visits.read_text() and cache.exists()
+command(['git', 'commit', '-qm', 'Edited one lint source'], repo)
+command(['bash', 'scripts/lint.sh'], mobile)
+assert not lint_visits.read_text() and cache.exists()
+ok('one-file unstaged, staged and committed edits reuse unchanged files in the lint cache')
+for changed in (mobile/'eslint.config.js', mobile/'scripts/cache-rule.js',
+                mobile/'package-lock.json', mobile/'node_modules/.package-lock.json'):
+    write(changed, (changed.read_text() if changed.exists() else '{}\n')+'\n')
+    lint_visits.write_text(''); command(['bash', 'scripts/lint.sh'], mobile)
+    assert str(a) in lint_visits.read_text().splitlines() and not cache.exists()
+    cache = next(cache.parent.glob('*.cache'))
+ok('lint config, plugin, lockfile and installed dependency edits invalidate cached rules')
 b.unlink()
 result = command(['bash', 'scripts/lint.sh', 'src/a.mjs'], mobile, expect=1)
 assert 'import/no-unresolved' in result
@@ -283,7 +307,7 @@ dependency.write_text(iterator_version)
 assert 'Hermes lacks Iterator.map' in command(['bash', 'scripts/lint.sh', 'src/zz/a.ts'], mobile, expect=1)
 command(['git', 'add', '.'], repo)
 assert 'Hermes lacks Iterator.map' in command(['bash', 'scripts/lint.sh', 'src/zz/a.ts'], mobile, expect=1)
-ok('warm Hermes cache observes committed, unstaged and staged cross-file type changes')
+ok('uncached Hermes pass rejects committed, unstaged and staged cross-file type changes (rc=1)')
 # The incremental typecheck must observe a newly introduced type error.
 write(mobile/'tsconfig.json', json.dumps({'compilerOptions': {'noEmit': True, 'strict': True,
       'incremental': True, 'tsBuildInfoFile': 'node_modules/.cache/typecheck.tsbuildinfo', 'types': []},

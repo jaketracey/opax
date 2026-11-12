@@ -268,6 +268,7 @@ module.exports = defineConfig([
   {
     files: ['src/**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}'],
     languageOptions: {
+      parser: require('@typescript-eslint/parser'),
       parserOptions: {
         projectService: { allowDefaultProject: ['src/app.ts'] },
         tsconfigRootDir: __dirname,
