@@ -159,6 +159,16 @@ export function BarTitle({
   const ready =
     candidates.every((text) => measured(text) !== undefined) &&
     (!backTitle || backWidth !== undefined);
+  const [unmeasuredKey, setUnmeasuredKey] = useState<string | null>(null);
+  useEffect(() => {
+    setUnmeasuredKey(null);
+    if (!shown || ready) return;
+    // Native text layout can fail to report. Keep the previous full,
+    // tail-truncated title available once the heading has left the content.
+    const timeout = setTimeout(() => setUnmeasuredKey(key), 300);
+    return () => clearTimeout(timeout);
+  }, [shown, ready, key]);
+  const fallback = !ready && unmeasuredKey === key;
   const namedRoom = barTitleWidth(
     safeWidth,
     trailing,
@@ -174,15 +184,16 @@ export function BarTitle({
     measured,
     person,
   );
-  const fits = ready && retreat.text !== null;
+  const fits = fallback || (ready && retreat.text !== null);
   const visible = shown && fits;
+  const backMode = fallback ? 'default' : retreat.mode;
   const [opacity] = useState(() => new Animated.Value(0));
   useLayoutEffect(() => {
-    if (Platform.OS === 'ios' && ready)
+    if (Platform.OS === 'ios' && (ready || fallback))
       setOptions({
-        headerBackButtonDisplayMode: shown ? retreat.mode : 'default',
+        headerBackButtonDisplayMode: shown ? backMode : 'default',
       });
-  }, [setOptions, ready, shown, retreat.mode]);
+  }, [setOptions, ready, fallback, shown, backMode]);
   useEffect(() => {
     if (reduceMotion !== false) {
       opacity.setValue(visible ? 1 : 0);
@@ -220,7 +231,7 @@ export function BarTitle({
       Animated.Text,
       {
         numberOfLines: 1,
-        ellipsizeMode: 'clip',
+        ellipsizeMode: fallback ? 'tail' : 'clip',
         maxFontSizeMultiplier: inlineTitleScaleCap,
         accessibilityLabel: title,
         accessibilityElementsHidden: !visible,
@@ -237,6 +248,7 @@ export function BarTitle({
       ScrollView,
       {
         horizontal: true,
+        testID: 'bar-title-probes',
         scrollEnabled: false,
         pointerEvents: 'none',
         accessibilityElementsHidden: true,
@@ -244,7 +256,6 @@ export function BarTitle({
         style: {
           position: 'absolute',
           width: safeWidth,
-          height: 0,
           opacity: 0,
         },
       },

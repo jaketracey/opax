@@ -586,6 +586,75 @@ test('hidden bar titles stay out of accessibility and fade over 150 ms', () => {
   );
   act(() => view.unmount());
 });
+test.each([false, true])(
+  'missing native metrics show the full, tail-truncated title after 300 ms (Reduce Motion: %s)',
+  (reduceMotion) => {
+    jest.useFakeTimers();
+    mockReducedMotion = reduceMotion;
+    const animation = jest.spyOn(Animated, 'timing');
+    const title = 'Interactive Gambling Amendment Bill';
+    let view!: TestRenderer.ReactTestRenderer;
+    try {
+      // Deliberately never deliver onTextLayout, including while at rest.
+      act(() => {
+        view = TestRenderer.create(
+          <BarTitle title={title} backTitle="Bills" shown={false} />,
+        );
+      });
+      act(() => jest.advanceTimersByTime(1000));
+      act(() =>
+        view.update(<BarTitle title={title} backTitle="Bills" shown />),
+      );
+      act(() => jest.advanceTimersByTime(299));
+      expect(
+        view.root.findByType(Animated.Text).props.accessibilityElementsHidden,
+      ).toBe(true);
+      act(() => jest.advanceTimersByTime(1));
+      const text = view.root.findByType(Animated.Text);
+      expect(text.props).toMatchObject({
+        children: title,
+        accessibilityLabel: title,
+        accessibilityElementsHidden: false,
+        importantForAccessibility: 'auto',
+        numberOfLines: 1,
+        ellipsizeMode: 'tail',
+      });
+      if (reduceMotion) {
+        expect(animation).not.toHaveBeenCalled();
+        expect(StyleSheet.flatten(text.props.style).opacity.__getValue()).toBe(
+          1,
+        );
+      } else {
+        expect(animation).toHaveBeenLastCalledWith(
+          expect.anything(),
+          expect.objectContaining({ toValue: 1, duration: 150 }),
+        );
+      }
+      // Late metrics still restore the measured title and its back mode.
+      measureBarTitle(view, { [title]: 80, Bills: 30 });
+      expect(text.props.ellipsizeMode).toBe('clip');
+      act(() => view.update(<BarTitle title={title} shown={false} />));
+      expect(text.props.accessibilityElementsHidden).toBe(true);
+    } finally {
+      act(() => view?.unmount());
+      jest.useRealTimers();
+    }
+  },
+);
+test('native width probes have intrinsic height and stay hidden and untouchable', () => {
+  const view = tree(<BarTitle title="Interactive Gambling Bill" shown />);
+  const probes = view.root.findAllByProps({ testID: 'bar-title-probes' })[0]!;
+  const style = StyleSheet.flatten(probes.props.style);
+  expect(style).toMatchObject({ position: 'absolute', opacity: 0 });
+  expect(style).not.toHaveProperty('height');
+  expect(style).not.toHaveProperty('maxHeight');
+  expect(probes.props).toMatchObject({
+    pointerEvents: 'none',
+    accessibilityElementsHidden: true,
+    importantForAccessibility: 'no-hide-descendants',
+  });
+  act(() => view.unmount());
+});
 test('debug and e2e record the opened destination in a hidden text element; release renders nothing', () => {
   const insets = { top: 59, left: 20, right: 20, bottom: 34 };
   const probe = () => (
