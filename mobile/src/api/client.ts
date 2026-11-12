@@ -297,7 +297,16 @@ export class ApiClient {
     for (let attempt = 0; attempt <= retries; attempt++) {
       cancelled();
       const remaining = deadline - this.now();
-      if (remaining <= 0) break;
+      if (remaining <= 0) {
+        // Cache work consumes the deadline too. Before a network attempt,
+        // expiry is a timeout; subsequent attempts retain their last error.
+        if (attempt === 0)
+          lastError = new ApiError(
+            'timeout',
+            'The public record took too long to load.',
+          );
+        break;
+      }
       let retryDelay = 300 * 2 ** attempt;
       const controller = new AbortController();
       const abort = () => controller.abort();
