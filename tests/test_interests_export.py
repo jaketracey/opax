@@ -10,8 +10,8 @@ from scripts import export_interests as exporter
 
 
 @pytest.mark.parametrize("value", [None, "", " ", "unspecified", " Unspecified "])
-def test_missing_holder_is_null(value):
-    assert exporter.holder_value(value) is None
+def test_missing_holder_keeps_the_released_app_wire_string(value):
+    assert exporter.holder_value(value) == "unspecified"
 
 
 @pytest.mark.parametrize("value", ["self", "spouse", "children", "Self and spouse"])
@@ -47,23 +47,23 @@ def test_db_export_projects_missing_holder_in_every_location(tmp_path, monkeypat
                                     "--access", str(access), "--fits", str(fits)])
     exporter.main()
     person = json.loads((out / "12345.json").read_text())
-    assert [r["holder"] for r in person["buckets"]["shareholdings"]["items"]] == ["self", None, None, None]
-    assert sum(t["register"]["holder"] is None for t in person["ties"]) == 3
-    assert sum(r["holder"] is None for r in json.loads((out / "recent.json").read_text())["items"]) == 3
+    assert [r["holder"] for r in person["buckets"]["shareholdings"]["items"]] == ["self", "unspecified", "unspecified", "unspecified"]
+    assert sum(t["register"]["holder"] == "unspecified" for t in person["ties"]) == 3
+    assert sum(r["holder"] == "unspecified" for r in json.loads((out / "recent.json").read_text())["items"]) == 3
     donor_rows = json.loads((out / "ties-by-donor.json").read_text())["donors"]["Example Network Ltd"]
-    assert sum(r["holder"] is None for r in donor_rows) == 3
+    assert sum(r["holder"] == "unspecified" for r in donor_rows) == 3
 
 
-def test_replay_real_registers_preserves_every_non_holder_value(tmp_path):
+def test_replay_real_registers_repairs_nullable_wire_values_without_changing_other_values(tmp_path):
     source = Path(__file__).resolve().parents[1] / "portal/public/interests"
     retained = tmp_path / "retained"
     retained.mkdir()
 
-    def legacy(value):
+    def nullable_snapshot(value):
         if isinstance(value, dict):
-            return {k: "unspecified" if k == "holder" and v is None else legacy(v) for k, v in value.items()}
+            return {k: None if k == "holder" and v == "unspecified" else nullable_snapshot(v) for k, v in value.items()}
         if isinstance(value, list):
-            return [legacy(v) for v in value]
+            return [nullable_snapshot(v) for v in value]
         return value
 
     def expected(value):
@@ -74,7 +74,7 @@ def test_replay_real_registers_preserves_every_non_holder_value(tmp_path):
         return value
 
     for file in source.glob("*.json"):
-        (retained / file.name).write_text(json.dumps(legacy(json.loads(file.read_text()))))
+        (retained / file.name).write_text(json.dumps(nullable_snapshot(json.loads(file.read_text()))))
     exporter.replay_export(retained, tmp_path / "out")
     for file in source.glob("*.json"):
         assert json.loads((tmp_path / "out" / file.name).read_text()) == expected(json.loads(file.read_text()))

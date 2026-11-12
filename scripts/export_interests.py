@@ -398,9 +398,13 @@ def is_nil_row(fields_json, desc):
 
 
 def holder_value(value):
-    """The loaders also store the old placeholder literally, not just as SQL NULL."""
+    """Keep the non-empty wire string required by the released iOS 1.1.3 decoders.
+
+    The web's interestHolder display adapter treats this sentinel as absent.
+    Changing these four shared fields to null breaks existing installations.
+    """
     if not value or not str(value).strip() or str(value).strip().lower() == "unspecified":
-        return None
+        return "unspecified"
     return value
 
 

@@ -14,6 +14,7 @@ import { payPersonRecord, payPersonOrder, payGeneralRecords } from '../portal/sr
 import { reportsPublished } from './reports_flag.mjs';
 import { pageSearchRecords } from './search_catalog_pages.mjs';
 import { buildReportCatalog } from './build_report_catalog.mjs';
+import { interestHolder } from '../portal/public/interest-holder.js';
 const root = fileURLToPath(new URL('../portal/public/', import.meta.url));
 const read = async p => JSON.parse(await readFile(join(root,p),'utf8'));
 const files = async p => (await readdir(join(root,p))).filter(n=>n.endsWith('.json')).sort();
@@ -157,7 +158,7 @@ async function main() {
   const href=interestHref(p,person,speakerNames);
   for(const [category,b] of Object.entries(p.buckets||{})) for(const [i,item] of (b.items||[]).entries()) {
    const date=item.date||p.as_at||p.statement_date||null;
-   add(`interest:${file}:${category}:${i}`,'interest',`${p.name} — ${category.replaceAll('_',' ')}`,href,`${item.description}. ${item.holder||''}. ${item.kind||''}.`,{aliases:person?.name||'',date,chamber:p.chamber,from:year(date),to:year(date),dateLabel:item.date?undefined:(date?'Register as at '+date:undefined),state:p.jurisdiction,speakers:[...new Set([p.name,person?.name].filter(Boolean))],parties:[person?.party_now||person?.party||''],source:'Register of interests',url:p.source_url});
+   add(`interest:${file}:${category}:${i}`,'interest',`${p.name} — ${category.replaceAll('_',' ')}`,href,`${item.description}. ${interestHolder(item.holder)||''}. ${item.kind||''}.`,{aliases:person?.name||'',date,chamber:p.chamber,from:year(date),to:year(date),dateLabel:item.date?undefined:(date?'Register as at '+date:undefined),state:p.jurisdiction,speakers:[...new Set([p.name,person?.name].filter(Boolean))],parties:[person?.party_now||person?.party||''],source:'Register of interests',url:p.source_url});
   }
  }
  const recent=await read('interests/recent.json');
