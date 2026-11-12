@@ -153,7 +153,11 @@ export function ResultsScreen() {
           ...headerItems(controls.items),
         }}
       />
-      <Screen testID="results-screen" scrollRef={scroll}>
+      <Screen
+        testID="results-screen"
+        scrollRef={scroll}
+        scrollToOverflowEnabled
+      >
         {Platform.OS === 'android' ? (
           <SearchField
             inputRef={input}

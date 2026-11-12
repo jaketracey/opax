@@ -148,6 +148,7 @@ export function Screen({
   onLayout: onPageLayout,
   maintainVisibleContentPosition,
   contentInsetAdjustmentBehavior = 'automatic',
+  scrollToOverflowEnabled = false,
   clampScrollOnContentChange = false,
 }: {
   onLayout?: ViewProps['onLayout'];
@@ -157,6 +158,8 @@ export function Screen({
   contentInsetAdjustmentBehavior?: React.ComponentProps<
     typeof ScrollView
   >['contentInsetAdjustmentBehavior'];
+  /** Opt in only for header-aware top resets; ordinary anchor scrolls clamp. */
+  scrollToOverflowEnabled?: boolean;
   /** Async front pages may lose blocks while the reader is at the end. */
   clampScrollOnContentChange?: boolean;
   testID?: string;
@@ -237,6 +240,7 @@ export function Screen({
           testID={testID}
           style={[styles.screen, { backgroundColor: colors[ground] }]}
           contentInsetAdjustmentBehavior={contentInsetAdjustmentBehavior}
+          scrollToOverflowEnabled={scrollToOverflowEnabled}
           alwaysBounceVertical={Platform.OS === 'ios'}
           keyboardShouldPersistTaps="handled"
           automaticallyAdjustKeyboardInsets

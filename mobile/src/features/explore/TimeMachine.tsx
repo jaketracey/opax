@@ -173,6 +173,7 @@ function YearPage({
       testID="explore-tm-screen"
       barTitle="Time machine"
       scrollRef={scrollRef as React.Ref<ScrollView>}
+      scrollToOverflowEnabled
       offline={offline && !nothing ? offline : null}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={refresh} />

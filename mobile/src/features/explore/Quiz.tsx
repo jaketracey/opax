@@ -263,6 +263,7 @@ export default function Quiz({
       <Screen
         grouped
         scrollRef={scrollRef}
+        scrollToOverflowEnabled
         barTitle={fixedTitle ? undefined : quizName}
         testID="explore-quiz-screen"
       >

@@ -230,6 +230,7 @@ export function SearchScreen({
         testID="search-screen"
         grouped={phase === 'idle'}
         scrollRef={scroll}
+        scrollToOverflowEnabled
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={retry} />
         }
