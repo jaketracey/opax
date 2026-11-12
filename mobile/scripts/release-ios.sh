@@ -3,7 +3,7 @@
 set +x
 set -euo pipefail
 # The store version; keep in step with appVersion in app.config.ts.
-VERSION=1.1.3
+VERSION=1.1.4
 umask 077
 cd "$(dirname "$0")/.."
 UPLOAD=0

@@ -131,7 +131,7 @@ const webOrigin = variant === 'e2e' ? 'https://opax.invalid' : origin;
 // The one app version: the store version, the API User-Agent
 // (extra.appVersion) and analytics' app_version all read it, so they cannot
 // drift apart again (extra.appVersion was a stale '1.0.0' until 1.1.0).
-const appVersion = '1.1.3';
+const appVersion = '1.1.4';
 const config: ExpoConfig = {
   name: 'OPAX',
   slug: 'opax',
