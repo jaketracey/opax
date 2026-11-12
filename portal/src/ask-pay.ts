@@ -3,7 +3,7 @@ import { inferPeriod } from './ask-period'
 import type { RecordQuestion } from './ask-records'
 import type { CatalogRecord } from './catalog-search'
 import { payPersonRecord, payGeneralRecords } from './pay-records.mjs'
-import { personUrl } from '../public/canonical-urls.js'
+import { personUrl } from '../public/party-page.js'
 
 /**
  * "Who is the highest paid politician?" has an answer, and it is not in any

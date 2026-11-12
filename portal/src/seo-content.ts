@@ -2,7 +2,7 @@ import {supplierContractsHTML} from '../public/contracts-table.js'
 import {decodeHTMLStrict} from 'entities'
 import {donorDisclosure,donorLabelHTML,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import { shortDate } from '../public/format.js'
-import { personUrl, partyUrl } from '../public/canonical-urls.js'
+import { personUrl, partyUrl } from '../public/party-page.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
 import sponsorParties from '../public/facts/sponsor-parties.json' with {type:'json'}
 import {rosterSeatParty, type RosterSeatParty} from '../public/roster-party.js'
@@ -10,7 +10,7 @@ import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
 import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../public/datatable.js'
 import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
-import {chamberLabel, machineLabelHTML} from '../public/labels.js'
+import {chamberLabel, machineLabelHTML} from '../public/party-page.js'
 import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML} from '../public/held-back-transcripts.js'
 import {divisionTableConfig, voteTableConfig, personVoteKeys, personVoteRecords, divisionRows, votingRows, voteTablePage, voteTableHTML} from '../public/vote-tables.js'
 import type {Query} from '../public/datatable.js'
@@ -20,6 +20,7 @@ import {recentVotesBucket, recentVotesBucketPath, votesBucketPath, VOTES_NAMES_P
 import {partyFold, partyMoneyBucket, partyMoneyBucketPath} from '../public/party-money-buckets.js'
 import {SUPPLIER_ID_RE, supplierRowsPath, SUPPLIERS_META_PATH} from '../public/supplier-row-buckets.js'
 import {BILL_TITLES_PATH} from '../public/bill-titles.js'
+import {readPartyPages, partyPageCoverage} from '../public/party-page.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
 export type ReadAsset = <T>(path: string) => Promise<T>
@@ -187,7 +188,7 @@ function paginate(url: URL, rows: { href: string; label: string; detail?: string
   const page = Number.isSafeInteger(requested) && requested > 0 ? Math.min(requested,pageCount) : 1
   const href = (n: number) => { const next = new URL(url); next.searchParams.set('page', String(n)); return next.pathname + next.search }
   const prev = page > 1 ? href(page - 1) : undefined, next = page < pageCount ? href(page + 1) : undefined
-  const body = `<p>${count(rows.length)} entries. Page ${page} of ${pageCount}.</p><ul>${rows.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE).map(r => `<li>${link(r.href,r.label)}${r.detail ? ` — ${escapeHtml(r.detail)}` : ''}</li>`).join('')}</ul>` +
+  const body = `<p>${count(rows.length)} entries. Page ${page} of ${pageCount}.</p><ul>${rows.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE).map(r => `<li>${link(r.href,r.label)}${r.detail ? `: ${escapeHtml(r.detail)}` : ''}</li>`).join('')}</ul>` +
     `<nav aria-label="Directory pages">${prev ? link(prev,'Previous page','prev') : ''}${prev && next ? ' · ' : ''}${next ? link(next,'Next page','next') : ''}</nav>`
   return { html: answerBlock(title,description,body), prev, next, page }
 }
@@ -408,11 +409,15 @@ export async function renderDirectory(dir: string, url: URL, read: ReadAsset, pe
     }))).flat()
     return paginate(url,rows,'Grant recipients','Published grants by recipient. Awarded values are commitments, not payments. Source: GrantConnect and Queensland published grant records.')
   }
-  if (dir==='party' || dir==='donor') {
+  if (dir==='party') {
+    const pages = await readPartyPages(read)
+    return paginate(url,pages.map(p=>({href:p.href,label:p.name,detail:partyPageCoverage(p)})),'Parties and independents','Party affiliations in the parliamentary and political receipts records. Coverage differs by affiliation.')
+  }
+  if (dir==='donor') {
     const graphs = await Promise.all(['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json'].map(path=>read<MoneyGraph>(path)))
     const rows = new Map<string,{href:string;label:string;detail?:string}>()
-    for (const graph of graphs) for (const n of graph.nodes) if (n.kind===dir) rows.set(fold(n.label),{href:dir==='party' ? partyUrl(n.label) : donorDisclosure(n).href || '',label:n.label})
-    return paginate(url,[...rows.values()],dir==='party' ? 'Parties' : 'Disclosed donors','Published political receipts from AEC, ECQ and VEC; federal and state returns remain separate.')
+    for (const graph of graphs) for (const n of graph.nodes) if (n.kind===dir) rows.set(fold(n.label),{href:donorDisclosure(n).href || '',label:n.label})
+    return paginate(url,[...rows.values()],'Disclosed donors','Published political receipts from AEC, ECQ and VEC; federal and state returns remain separate.')
   }
   const sources: Record<string,[string,string,string]> = {supplier:['/suppliers.json','suppliers','Government suppliers'],agency:['/agencies.json','agencies','Government agencies'],campaigner:['/graph/campaigners.json','entities','Campaigners']}
   const source = sources[dir]

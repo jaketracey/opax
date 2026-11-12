@@ -2,7 +2,7 @@ import { FRL_ID, catalogueComplete, unpack, instrumentTableRows, type CatalogueR
 import { catalogueReader } from './catalogue-reader.mjs'
 import {applyQuery, dataTableHTML, guardTableURL, serializeQuery, type Page, type Query} from '../public/datatable.js'
 import {instrumentTableConfig,registerTableQuery} from '../public/register-tables.js'
-import { sourceLineHTML } from '../public/labels.js'
+import { sourceLineHTML } from '../public/party-page.js'
 import { shortDate } from '../public/format.js'
 import type { Crumb } from './seo-content'
 import { trail } from './nav-model.mjs'

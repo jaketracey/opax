@@ -9,7 +9,7 @@
  * holds the two to the same answers.
  */
 import { printSpeakers, splitSpeakers, type SpeechScope } from '../public/speech-attribution.js'
-import { personNameKey } from '../public/canonical-urls.js'
+import { personNameKey } from '../public/party-page.js'
 
 export function personSlug(name: string): string {
   return String(name ?? '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase()

@@ -15,8 +15,8 @@ const root = new URL('../public/',import.meta.url);
 const read = path => readFileSync(new URL(path,root),'utf8');
 const json = path => JSON.parse(read(path));
 const source = readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
-const compiled = await build({entryPoints:[new URL('../src/index.ts',import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'omit-renderer',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'renderer',namespace:'crawl-test'}));b.onLoad({filter:/.*/,namespace:'crawl-test'},()=>({contents:'export const renderOgPng = async()=>null; export const renderOgJpeg=renderOgPng;',loader:'js'}));}}]});
-const {default:worker} = await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
+const compiled = await build({stdin:{contents:source+'\nexport {moneySubjectMeta,loadPartyLabels,loadPartyPages,loadDivisionSummaries,loadPeople};',resolveDir:new URL('../src/',import.meta.url).pathname,sourcefile:'index.ts',loader:'ts'},metafile:true,bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'omit-renderer',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'renderer',namespace:'crawl-test'}));b.onLoad({filter:/.*/,namespace:'crawl-test'},()=>({contents:'export const renderOgPng = async()=>null; export const renderOgJpeg=renderOgPng;',loader:'js'}));}}]});
+const {default:worker,moneySubjectMeta,loadPartyLabels,loadPartyPages,loadDivisionSummaries,loadPeople} = await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
 globalThis.HTMLRewriter = class { on(){return this;} transform(res){return res;} };
 const assetPaths = [];
 const env = {COMMUNITY_ORIGIN:'https://opax.com.au',ASSETS:{async fetch(req){
@@ -26,6 +26,64 @@ const env = {COMMUNITY_ORIGIN:'https://opax.com.au',ASSETS:{async fetch(req){
   return existsSync(file) ? new Response(readFileSync(file),{headers:{'content-type':path.endsWith('.json')?'application/json':'text/html'}}) : new Response('Not found',{status:404});
 }}};
 const get = (path,method='GET') => worker.fetch(new Request('https://opax.com.au'+path,{method}),env,{});
+
+test('canonical party sitemap pages serve successfully and known aliases redirect to one page', async () => {
+  const {readPartyPages} = await import('../public/party-page.js');
+  const pages = await readPartyPages(async path => json(path.replace(/^\//, '')));
+  for (const page of pages) assert.equal((await get(page.href)).status, 200, page.href);
+  const listed = read('crawl/sitemaps/parties-1.xml');
+  for (const [alias, canonical] of [['jln', 'jacqui-lambie-network'], ['pauline-hansons-one-nation-party', 'one-nation'],
+    ['australian-labor-party', 'labor'], ['liberal-party', 'liberal'], ['the-nationals', 'nationals'], ['australian-greens', 'greens'], ['democratic-labour-party', 'dlp']]) {
+    const response = await get('/subject/party/' + alias);
+    assert.equal(response.status, 301);
+    assert.equal(response.headers.get('location'), 'https://opax.com.au/subject/party/' + canonical);
+    assert.ok(!listed.includes(`/subject/party/${alias}</loc>`));
+    assert.ok(listed.includes(`/subject/party/${canonical}</loc>`));
+  }
+});
+
+test('the Worker bundles each shared party identity and URL module once', () => {
+  for (const file of ['labels.js', 'canonical-urls.js']) {
+    const copies = Object.keys(compiled.metafile.inputs).filter(path => path.split('?')[0].endsWith('/' + file));
+    assert.equal(copies.length, 1, copies.join(', '));
+  }
+});
+
+test('party discovery and repeated division lookups parse the large division index only once', async () => {
+  const before = assetPaths.filter(path => path === '/divisions/index.json').length;
+  await Promise.all([loadDivisionSummaries(env), loadDivisionSummaries(env), loadPartyLabels(env), loadPartyPages(env)]);
+  assert.equal(assetPaths.filter(path => path === '/divisions/index.json').length - before, 1);
+  await Promise.all([loadDivisionSummaries(env), loadPartyLabels(env), loadPartyPages(env)]);
+  assert.equal(assetPaths.filter(path => path === '/divisions/index.json').length - before, 1);
+});
+
+test('independents have collection wording and markup, and DLP keeps its short URL with its full display name', async () => {
+  const url = new URL('https://opax.com.au/subject/party/independent');
+  const meta = await moneySubjectMeta('party', 'independent', url, env);
+  assert.equal(meta.title, 'Independents · OPAX');
+  assert.ok(meta.prerender.includes('Parliamentarians who sat without a party. Not a party organisation.'));
+  assert.doesNotMatch(meta.prerender, /its members|<h2>Members<\/h2>/);
+  assert.equal(meta.card.kicker, 'Independent parliamentarians');
+  assert.equal(meta.card.title, 'Independents');
+  assert.equal(meta.jsonLd['@type'], 'CollectionPage');
+  const dlp = await moneySubjectMeta('party', 'dlp', new URL('https://opax.com.au/subject/party/dlp'), env);
+  assert.equal(dlp.title, 'Democratic Labour Party · OPAX');
+  assert.equal(dlp.canonical, 'https://opax.com.au/subject/party/dlp');
+});
+
+test('server page counts use the same distinct-person membership rule as the directory', async () => {
+  const {partyMembers} = await import('../public/party-page.js');
+  const roster = await loadPeople(env), divisions = json('graph/party-members.json');
+  for (const [label, slug] of [['Independent', 'independent'], ['Jacqui Lambie Network', 'jacqui-lambie-network'], ['Labor', 'labor'], ['Liberal', 'liberal'], ['Greens', 'greens']]) {
+    const members = partyMembers(label, {roster, divisions});
+    const total = members.current.length + members.former.length;
+    assert.ok(total > 0);
+    if (label === 'Liberal') assert.equal(total, 314);
+    if (label === 'Greens') assert.equal(total, 41);
+    const meta = await moneySubjectMeta('party', slug, new URL('https://opax.com.au/subject/party/' + slug), env);
+    assert.ok(meta.prerender.includes(`${total.toLocaleString('en-AU')} parliamentarian${total === 1 ? '' : 's'}`));
+  }
+});
 
 test('sitemap index and every type file have export lastmod, unique canonical URLs and accurate counts',async()=>{
   const manifest = json('crawl/manifest.json');

@@ -4,7 +4,7 @@
 // newest first; the rest is a compact list of YouTube links, titled as the Senate published them.
 // The kind filter is a plain link (?kind=), so it works without a script. Nothing on the page
 // asks YouTube for anything until a card is pressed.
-import { sourceLineHTML } from '../public/labels.js'
+import { sourceLineHTML } from '../public/party-page.js'
 import { shortDate } from '../public/format.js'
 import { videoCardHTML, watchUrl } from '../public/video-card.js'
 import { escapeHtml as esc, type ReadAsset } from './seo-content'

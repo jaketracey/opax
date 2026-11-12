@@ -1,6 +1,6 @@
 import {dataTableHTML,guardTableURL,toCSV,type Query,type Row} from '../public/datatable.js'
 import {vicGiftsTableConfig,vicGiftsQuery} from '../public/register-tables.js'
-import {PERSON_PATHS} from '../public/canonical-urls.js'
+import {PERSON_PATHS} from '../public/party-page.js'
 
 const INDEX='https://www.vic.gov.au/ministerial-gifts-benefits-and-hospitality-register'
 const CC='https://creativecommons.org/licenses/by/4.0/'
