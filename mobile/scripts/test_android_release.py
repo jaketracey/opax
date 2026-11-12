@@ -92,6 +92,7 @@ class AndroidReleaseTests(unittest.TestCase):
         for name in ('build-play.sh', 'android-gradle.sh', 'capacity.sh', 'qa-lock.sh', 'android_release.py', 'release_inputs.py', 'release_support.py'):
             shutil.copyfile(Path(__file__).parent/name, scripts/name)
         (scripts/'qa-env.sh').write_text('build_command() { "$@"; }\n')
+        (scripts/'android-host.sh').write_text('')  # host guard has its own test; keep fixtures host-independent
         (root/'.gitignore').write_text('mobile/private/\nmobile/android/\nmobile/node_modules/\nnative.lock/\n')
         (mobile/'app.config.ts').write_text("  version: '1.1.0',\n")
         binpath = mobile/'node_modules/.bin'; binpath.mkdir(parents=True)

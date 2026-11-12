@@ -20,6 +20,7 @@ class AndroidHarnessTests(unittest.TestCase):
             root = Path(d); mobile = root/'mobile'; scripts = mobile/'scripts'; scripts.mkdir(parents=True)
             for name in ('e2e-android-device.sh','qa-env.sh','qa-maestro.sh','qa-flows.sh','maestro-watch.py','android-parity-results.py','android-adb-socket.py'):
                 shutil.copyfile(SCRIPTS/name, scripts/name)
+            (scripts/'android-host.sh').write_text('')  # host guard has its own test
             tools = root/'bin'; tools.mkdir(); out = root/'out'; out.mkdir()
             (root/'proc').mkdir()
             for index, name in enumerate(local_avds):
@@ -217,7 +218,7 @@ elif name=='git': print('a'*40)
             root=Path(d); mobile=root/'mobile'; scripts=mobile/'scripts'; scripts.mkdir(parents=True)
             shutil.copyfile(SCRIPTS/'e2e-android.sh',scripts/'e2e-android.sh')
             shutil.copyfile(SCRIPTS/'android-adb-socket.py',scripts/'android-adb-socket.py')
-            for name in ('qa-env.sh','qa-lock.sh'): (scripts/name).write_text('')
+            for name in ('qa-env.sh','qa-lock.sh','android-host.sh'): (scripts/name).write_text('')
             (scripts/'qa-java.sh').write_text('configure_java() { :; }\n')
             (scripts/'prepare-android-flows.py').write_text('')
             (scripts/'e2e-android-device.sh').write_text('''#!/bin/bash
