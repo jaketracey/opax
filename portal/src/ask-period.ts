@@ -79,5 +79,6 @@ export function inferPeriod(question: string, override?: unknown, now = new Date
     const year = now.getFullYear()
     return { kind: 'window', since: `${year}-01-01`, until: `${year}-12-31`, label: `Calendar year ${year}.` }
   }
+  if (/\b(?:is|are)\s+(?:\S+\s+){0,4}(?:making|speaking|debating|discussing|talking)\b|\b(?:speaks|says|mentions|debates|discusses)\b|\b(?:is|are)\s+(?:\S+\s+){0,3}(?:debated|discussed)\b/.test(q)) return { kind: 'current', since: TERMS['48th'][0], label: 'Counting speeches in the current parliament since July 2025.' }
   return { kind: 'all', label: 'Counting speeches across the whole record.' }
 }
