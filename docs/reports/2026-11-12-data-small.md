@@ -1,5 +1,10 @@
 # Three data correctness fixes, 12 November 2026
 
+This is the original round 0 report. Its nullable shared interest payloads are
+superseded by the [round 1 compatibility correction](2026-11-12-data-small-r1.md),
+which retains the released app's required wire strings and normalises only web
+display values. The round 1 report and inventory contain the current results.
+
 Base: `c37df29d334008d98dfe13c82fa03b3b8eb42fbd`, branch `im/data-small`.
 Local commits: `86fd85779c7558a80222c0f9f2a86fb9cb21c547` (interests), `643c2c8bb743bc7ac034e144888638bbf83e4fca` (agency metadata), `07913a484b51455d2263e29ce5c50e9d646cf47b` (annual-report dates).
 
