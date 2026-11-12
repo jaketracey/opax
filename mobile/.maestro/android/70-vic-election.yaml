@@ -1,0 +1,119 @@
+appId: au.com.opax.app
+name: 70 Victorian election on Android
+---
+# OPAX_FIXTURE_VIC_ELECTION=on. QA links pin this feature’s clock only.
+- launchApp:
+    clearState: true
+- openLink: opax:///vic-election?fixture=ahead
+- extendedWaitUntil:
+    visible:
+      id: vic-election-screen
+    timeout: 120000
+- openLink: opax://today
+- openLink: opax://seat
+- extendedWaitUntil:
+    visible:
+      id: seat-sheet
+    timeout: 30000
+- tapOn: Electorate or member.s name
+- inputText: Melbourne
+- extendedWaitUntil:
+    visible:
+      id: seat-row-federal-representatives-vic-melbourne
+    timeout: 30000
+- tapOn:
+    id: seat-row-federal-representatives-vic-melbourne
+- extendedWaitUntil:
+    notVisible:
+      id: seat-sheet
+    timeout: 10000
+- scrollUntilVisible:
+    element:
+      id: today-vic-election-status
+    centerElement: true
+    timeout: 60000
+- assertVisible: In 8 days
+- takeScreenshot: ${EVIDENCE}/70-android-today-ahead
+- tapOn:
+    id: today-vic-election-status
+- tapOn:
+    id: header-more
+- assertVisible: Share
+- pressKey: Back
+- assertNotVisible: Share
+- assertVisible:
+    id: vic-election-screen
+- tapOn: Suburb, postcode or district
+- inputText: '3350'
+- hideKeyboard
+- extendedWaitUntil:
+    visible: Wendouree
+    timeout: 30000
+- assertVisible: 55%
+- assertVisible: of residents
+- takeScreenshot: ${EVIDENCE}/70-android-finder
+- tapOn:
+    id: vic-election-district-wendouree
+- assertVisible: Last held by
+- scrollUntilVisible:
+    element:
+      id: vic-seat-foot
+    centerElement: true
+    timeout: 90000
+- assertVisible: Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.
+- takeScreenshot: ${EVIDENCE}/70-android-district
+- pressKey: Back
+- pressKey: Back
+- openLink: opax:///vic-election/southern-metropolitan
+- extendedWaitUntil:
+    visible: Southern Metropolitan Region
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      text: Districts in this region
+    centerElement: true
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/70-android-region
+- pressKey: Back
+- openLink: opax:///vic-election
+- scrollUntilVisible:
+    element:
+      id: vic-election-foot
+    centerElement: true
+    timeout: 120000
+- assertVisible: corrections@opax.com.au
+- takeScreenshot: ${EVIDENCE}/70-android-hub-foot
+
+- openLink: opax:///vic-election?fixture=today
+- extendedWaitUntil:
+    visible: Election day is today
+    timeout: 30000
+- assertVisible: Polls are open from 8 am to 6 pm.
+- takeScreenshot: ${EVIDENCE}/70-android-election-day
+- openLink: opax://today
+- scrollUntilVisible:
+    element:
+      id: today-vic-election-status
+    centerElement: true
+    timeout: 60000
+- assertVisible: Election day is today
+- assertVisible: Polls are open from 8 am to 6 pm
+- takeScreenshot: ${EVIDENCE}/70-android-today-election-day
+- openLink: opax:///vic-election?fixture=closed
+- extendedWaitUntil:
+    visible: Voting has closed
+    timeout: 30000
+- assertNotVisible:
+    id: vic-election-days
+- assertNotVisible: Key dates
+- assertNotVisible: Apply for a postal vote by
+- takeScreenshot: ${EVIDENCE}/70-android-closed
+
+- openLink: opax://today
+- scrollUntilVisible:
+    element:
+      id: today-vic-election-status
+    centerElement: true
+    timeout: 60000
+- assertVisible: Voting has closed
+- takeScreenshot: ${EVIDENCE}/70-android-today-closed

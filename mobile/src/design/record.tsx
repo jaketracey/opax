@@ -218,20 +218,22 @@ export function StatStrip({
   );
 }
 /** One correction entry point, including a copy fallback when Mail is unavailable. */
-export async function openCorrection() {
+export async function openCorrection(email: string = copy.correctionsEmail) {
+  const contact =
+    email === copy.correctionsEmail ? CORRECTION_CONTACT : `mailto:${email}`;
   try {
-    if (await Linking.canOpenURL(CORRECTION_CONTACT)) {
-      await Linking.openURL(CORRECTION_CONTACT);
+    if (await Linking.canOpenURL(contact)) {
+      await Linking.openURL(contact);
       return;
     }
   } catch {
     /* Offer the address when Mail cannot open. */
   }
-  confirmAction(copy.correctionsEmail, [
+  confirmAction(email, [
     {
       title: copy.copyAddress,
       onPress: () => {
-        void copyText(copy.correctionsEmail).then((copied) => {
+        void copyText(email).then((copied) => {
           if (copied) haptic('success');
         });
       },
@@ -240,11 +242,15 @@ export async function openCorrection() {
 }
 export function PageFoot({
   variant,
+  line = AUTHORISATION_LINE,
+  corrections,
   testID,
   independenceTestID,
   correctionTestID,
 }: {
   variant: 'today' | 'authorised';
+  line?: string;
+  corrections?: { email: string; response: string };
   testID?: string;
   independenceTestID?: string;
   correctionTestID?: string;
@@ -274,7 +280,7 @@ export function PageFoot({
             style={{ height: hairline, backgroundColor: colors.dividerSubtle }}
           />
           <Text wordSafe variant="footnote" tone="inkSoft">
-            {AUTHORISATION_LINE}
+            {line}
           </Text>
         </>
       )}
@@ -283,10 +289,10 @@ export function PageFoot({
         accessibilityRole="link"
         accessibilityLabel={
           variant === 'authorised'
-            ? `Report a correction by email to ${copy.correctionsEmail}`
+            ? `Report a correction by email to ${corrections?.email ?? copy.correctionsEmail}`
             : copy.reportCorrection
         }
-        onPress={() => void openCorrection()}
+        onPress={() => void openCorrection(corrections?.email)}
         style={({ pressed }) => [
           { minHeight: minimumTarget, justifyContent: 'center' },
           pressed ? { backgroundColor: highlight } : null,
@@ -308,14 +314,14 @@ export function PageFoot({
               adjustsFontSizeToFit
               minimumFontScale={0.5}
             >
-              {copy.correctionsEmail}
+              {corrections?.email ?? copy.correctionsEmail}
             </Text>
           </>
         )}
       </Pressable>
       {variant === 'authorised' ? (
         <Text wordSafe variant="footnote" tone="inkSoft">
-          We aim to respond within 2 business days.
+          {corrections?.response ?? 'We aim to respond within 2 business days.'}
         </Text>
       ) : null}
     </View>

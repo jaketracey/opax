@@ -532,3 +532,20 @@ describe('Android system surfaces', () => {
     expect(config.match(/withAndroidTheme/g)).toHaveLength(1);
   });
 });
+
+test('Victorian election screens use shared routes and native cross-platform controls', () => {
+  const hub = readFileSync(
+    join(MOBILE, 'src/features/vic-election/Hub.tsx'),
+    'utf8',
+  );
+  const seat = readFileSync(
+    join(MOBILE, 'src/features/vic-election/Seat.tsx'),
+    'utf8',
+  );
+  expect(hub).toContain('useListSearchBar');
+  expect(hub).toContain('ElectionList');
+  expect(seat).toContain('vic-seat-screen');
+  expect(seat).toContain('Candidates');
+  for (const source of [hub, seat])
+    expect(source).not.toMatch(/ActionSheetIOS|@expo\/ui\/swift-ui/);
+});

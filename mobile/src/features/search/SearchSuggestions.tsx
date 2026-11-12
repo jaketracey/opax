@@ -1,3 +1,4 @@
+import { ElectionSearchRow } from '../vic-election/SearchRow';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { formatCount } from '../../design/format';
 import {
@@ -61,6 +62,7 @@ export function SearchSuggestions({
   return (
     <Group gap={rhythm.group} testID="search-suggestions">
       <InsetGroup>
+        <ElectionSearchRow q={q} />
         {list.top ? (
           <MatchRow
             match={list.top}

@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "q": "St Kilda",
+  "places_searched": true,
+  "hits": [
+    {
+      "name": "St Kilda",
+      "kind": "Suburb",
+      "seats": [
+        {
+          "kind": "district",
+          "slug": "albert-park",
+          "name": "Albert Park",
+          "region": "Southern Metropolitan",
+          "electorate_url": "/subject/electorate/vic-vic-la-vic-albert-park",
+          "member": {
+            "name": "Nina Taylor",
+            "party": "Labor"
+          },
+          "result": {
+            "date": "2022-11-26",
+            "kind": "general",
+            "party": "Labor",
+            "margin": 11.15
+          },
+          "candidates": 0,
+          "share": 67.2
+        },
+        {
+          "kind": "district",
+          "slug": "prahran",
+          "name": "Prahran",
+          "region": "Southern Metropolitan",
+          "electorate_url": "/subject/electorate/vic-vic-la-vic-prahran",
+          "member": {
+            "name": "Rachel Westaway",
+            "party": "Liberal"
+          },
+          "result": {
+            "date": "2025-02-08",
+            "kind": "by-election",
+            "party": "Liberal",
+            "margin": 1.35
+          },
+          "candidates": 0,
+          "share": 31.4
+        },
+        {
+          "kind": "district",
+          "slug": "caulfield",
+          "name": "Caulfield",
+          "region": "Southern Metropolitan",
+          "electorate_url": "/subject/electorate/vic-vic-la-vic-caulfield",
+          "member": {
+            "name": "David Southwick",
+            "party": "Liberal"
+          },
+          "result": {
+            "date": "2022-11-26",
+            "kind": "general",
+            "party": "Liberal",
+            "margin": 2.07
+          },
+          "candidates": 0,
+          "share": 1.3
+        }
+      ]
+    },
+    {
+      "name": "St Kilda East",
+      "kind": "Suburb",
+      "seats": [
+        {
+          "kind": "district",
+          "slug": "caulfield",
+          "name": "Caulfield",
+          "region": "Southern Metropolitan",
+          "electorate_url": "/subject/electorate/vic-vic-la-vic-caulfield",
+          "member": {
+            "name": "David Southwick",
+            "party": "Liberal"
+          },
+          "result": {
+            "date": "2022-11-26",
+            "kind": "general",
+            "party": "Liberal",
+            "margin": 2.07
+          },
+          "candidates": 0,
+          "share": 69.1
+        },
+        {
+          "kind": "district",
+          "slug": "prahran",
+          "name": "Prahran",
+          "region": "Southern Metropolitan",
+          "electorate_url": "/subject/electorate/vic-vic-la-vic-prahran",
+          "member": {
+            "name": "Rachel Westaway",
+            "party": "Liberal"
+          },
+          "result": {
+            "date": "2025-02-08",
+            "kind": "by-election",
+            "party": "Liberal",
+            "margin": 1.35
+          },
+          "candidates": 0,
+          "share": 30.9
+        }
+      ]
+    },
+    {
+      "name": "St Kilda West",
+      "kind": "Suburb",
+      "seats": [
+        {
+          "kind": "district",
+          "slug": "albert-park",
+          "name": "Albert Park",
+          "region": "Southern Metropolitan",
+          "electorate_url": "/subject/electorate/vic-vic-la-vic-albert-park",
+          "member": {
+            "name": "Nina Taylor",
+            "party": "Labor"
+          },
+          "result": {
+            "date": "2022-11-26",
+            "kind": "general",
+            "party": "Labor",
+            "margin": 11.15
+          },
+          "candidates": 0,
+          "share": null
+        }
+      ]
+    }
+  ],
+  "split": true,
+  "empty": null,
+  "address_url": "https://www.vec.vic.gov.au/electoral-boundaries/which-boundaries-cover-where-i-live",
+  "attribution": "Source: Australian Bureau of Statistics, ASGS Edition 3 allocation files and 2021 Census mesh block counts (CC BY 4.0).",
+  "note": "Places are split by usual residents at the 2021 Census. Postcodes are ABS postal areas, an approximation of delivery postcodes."
+}

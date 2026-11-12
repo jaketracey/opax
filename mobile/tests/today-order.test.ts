@@ -16,7 +16,10 @@ const order = (
   seat: boolean,
   invitation: InvitationDates = none,
   day = today,
-) => todayOrder({ seat, invitation, launchCase: kase, today: day }).slots;
+) =>
+  todayOrder({ seat, invitation, launchCase: kase, today: day }).slots.filter(
+    (slot) => slot !== 'vic-election',
+  );
 
 describe('launchCase', () => {
   test('a saved edition fresh today is case A, 0 to 3 days old', () => {
@@ -84,7 +87,11 @@ describe('todayOrder', () => {
     ).toBe(false);
   });
   test('case C: the lead block, the edition skeleton, then the pair', () => {
-    expect(order('C', true).slice(0, 3)).toEqual(['your-mp', 'edition', 'pair']);
+    expect(order('C', true).slice(0, 3)).toEqual([
+      'your-mp',
+      'edition',
+      'pair',
+    ]);
     expect(order('C', false).slice(0, 3)).toEqual([
       'invitation',
       'edition',
@@ -94,7 +101,10 @@ describe('todayOrder', () => {
   });
   test('a hidden invitation takes no slot and the next block moves up', () => {
     const hidden = { ...none, hiddenUntil: addDays(today, 12) };
-    expect(order('B', false, hidden).slice(0, 2)).toEqual(['pair', 'following']);
+    expect(order('B', false, hidden).slice(0, 2)).toEqual([
+      'pair',
+      'following',
+    ]);
     expect(order('A', false, hidden).slice(0, 2)).toEqual([
       'edition',
       'following',
@@ -149,7 +159,11 @@ describe('todayOrder', () => {
       today: '2026-11-09',
     });
     expect(before.slots[0]).toBe('edition');
-    expect(after.slots.slice(0, 2)).toEqual(['invitation', 'pair']);
+    expect(after.slots.slice(0, 3)).toEqual([
+      'invitation',
+      'vic-election',
+      'pair',
+    ]);
   });
 });
 
@@ -183,7 +197,11 @@ describe('todayColumns (iPad)', () => {
     const columns = todayColumns(
       todayOrder({ seat: true, invitation: none, launchCase: 'B', today }),
     );
-    expect(columns.trailing.slice(0, 2)).toEqual(['your-mp', 'pair']);
+    expect(columns.trailing.slice(0, 3)).toEqual([
+      'your-mp',
+      'vic-election',
+      'pair',
+    ]);
     expect(columns.leading).toEqual([
       'bills',
       'votes',
@@ -217,4 +235,26 @@ test('sydneyDay reads Sydney’s calendar, not the device zone', () => {
   // 13:30 UTC on 7 November is 00:30 on 8 November in Sydney (AEDT).
   expect(sydneyDay(Date.UTC(2026, 10, 7, 13, 30))).toBe('2026-11-08');
   expect(sydneyDay(Date.UTC(2026, 10, 7, 12, 30))).toBe('2026-11-07');
+});
+
+for (const launchCase of ['A', 'B', 'C'] as const) {
+  for (const seat of [true, false])
+    test(`election is second in ${launchCase}, seat ${seat}`, () => {
+      const result = todayOrder({ seat, invitation: none, launchCase, today });
+      expect(result.slots[1]).toBe('vic-election');
+      expect(todayColumns(result).trailing).toContain('vic-election');
+    });
+}
+
+test('the iPad election block follows the leading pair when the invitation is hidden', () => {
+  const result = todayOrder({
+    seat: false,
+    invitation: { ...none, hiddenUntil: '2026-12-01' },
+    launchCase: 'B',
+    today,
+  });
+  expect(todayColumns(result).trailing.slice(0, 2)).toEqual([
+    'pair',
+    'vic-election',
+  ]);
 });

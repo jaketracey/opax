@@ -59,7 +59,12 @@ export function linkTab(pathname: string, initial: boolean): TabSegment | null {
   )
     return null;
   for (const [pattern, tab] of tabPages) if (pattern.test(pathname)) return tab;
-  if (moneyMap.test(pathname) && !initial && selected) return selected;
+  if (
+    (moneyMap.test(pathname) || /^\/vic-election(?:\/|$)/.test(pathname)) &&
+    !initial &&
+    selected
+  )
+    return selected;
   return '(today)';
 }
 

@@ -62,6 +62,7 @@ export function invitationPlace(
 }
 
 export type TodaySlot =
+  | 'vic-election'
   | 'your-mp'
   | 'invitation'
   | 'edition'
@@ -124,6 +125,7 @@ export function todayOrder({
     'ask',
     'foot',
   ];
+  slots.splice(1, 0, 'vic-election');
   return { launchCase: kase, slots, pairInMore: kase === 'A' };
 }
 
@@ -167,8 +169,16 @@ export function todayColumns(order: TodayOrder): {
     'edition-late',
   ]);
   const body = order.slots.filter((slot) => slot !== 'foot');
+  const trailing = body.filter(
+    (slot) => !leadingSet.has(slot) && slot !== 'vic-election',
+  );
+  const lead = trailing.findIndex(
+    (slot) => slot === 'your-mp' || slot === 'invitation',
+  );
+  const insertion = lead >= 0 ? lead + 1 : order.slots[0] === 'pair' ? 1 : 0;
+  trailing.splice(insertion, 0, 'vic-election');
   return {
     leading: body.filter((slot) => leadingSet.has(slot)),
-    trailing: body.filter((slot) => !leadingSet.has(slot)),
+    trailing,
   };
 }

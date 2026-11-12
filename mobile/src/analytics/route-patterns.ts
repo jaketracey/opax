@@ -104,6 +104,8 @@ const routePatterns = new Set([
   '/welcome',
   '/welcome/seat',
   '/welcome/seat/state/[code]',
+  '/vic-election',
+  '/vic-election/[district]',
   '/your-mp',
 ]);
 

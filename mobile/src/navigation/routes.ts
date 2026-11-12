@@ -15,3 +15,5 @@ export * from './routes/seat';
 export * from './routes/sheets';
 export * from './routes/today';
 export * from './routes/your-mp';
+
+export * from './routes/vic-election';

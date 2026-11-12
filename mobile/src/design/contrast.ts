@@ -334,6 +334,8 @@ export const componentPairs: ColourPair[] = [
       pair(`Accent deep ground (${deep}) under onNavy`, 'rest', 'onNavy', deep),
   ),
   pair('Accent deep ground (navy) under onNavy', 'rest', 'onNavy', 'navy'),
+  pair('Victorian election figure', 'rest', 'votesInk', 'paper'),
+  pair('Victorian election symbol', 'rest', 'votesInk', 'raised'),
   // EmptyState pane: the title on paper.
   pair('EmptyState pane title', 'rest', 'ink', 'paper'),
   pair('EmptyState pane line', 'rest', 'inkSoft', 'paper'),

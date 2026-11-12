@@ -92,3 +92,39 @@ export function fixtureDeclinedAt(
 export function resetTodayFixtureForTests() {
   read = null;
 }
+
+/** Election-only clock, independent of the edition fixture's date. */
+export function vicElectionFixtureNow(): Date | null {
+  if (!isE2E) return null;
+  const value = arg('OPAXVicElection') ?? electionClock;
+  const instant =
+    value === 'ahead'
+      ? '2026-11-20T10:00:00+11:00'
+      : value === 'today'
+        ? '2026-11-28T10:00:00+11:00'
+        : value === 'closed'
+          ? '2026-11-28T19:00:00+11:00'
+          : null;
+  return instant ? new Date(instant) : null;
+}
+
+// Android QA links supply the same election-only clock as iOS launch arguments.
+let electionClock: string | null = null;
+const electionClockListeners = new Set<() => void>();
+export const electionClockSnapshot = () => electionClock;
+export const subscribeElectionClock = (listener: () => void) => {
+  electionClockListeners.add(listener);
+  return () => {
+    electionClockListeners.delete(listener);
+  };
+};
+export function setElectionClock(value: string) {
+  if (
+    !isE2E ||
+    !['ahead', 'today', 'closed'].includes(value) ||
+    electionClock === value
+  )
+    return;
+  electionClock = value;
+  electionClockListeners.forEach((listener) => listener());
+}

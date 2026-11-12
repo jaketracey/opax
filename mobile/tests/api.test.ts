@@ -1606,3 +1606,26 @@ test('an explicit action timing out while reading JSON reports a retryable timeo
   });
   expect(transport).toHaveBeenCalledTimes(1);
 });
+
+// Anonymous Victorian election reads, including the finder query boundary.
+test('Victorian election GET policy admits only the published paths', () => {
+  for (const path of [
+    '/api/app/v1/vic-election',
+    '/api/app/v1/vic-election/seat/albert-park',
+    '/api/app/v1/vic-election/find?q=St%20Kilda',
+    '/api/app/v1/vic-election/find?q=3350',
+  ])
+    expect(() => assertAllowedPath(path)).not.toThrow();
+  for (const path of [
+    '/api/app/v1/vic-election?x=1',
+    '/api/app/v1/vic-election/seat/Bad_slug',
+    '/api/app/v1/vic-election/seat/albert-park?q=x',
+    '/api/app/v1/vic-election/find',
+    '/api/app/v1/vic-election/find?q=',
+    '/api/app/v1/vic-election/find?q=%20',
+    '/api/app/v1/vic-election/find?q=x&q=y',
+    '/api/app/v1/vic-election/find?q=x&x=y',
+    `/api/app/v1/vic-election/find?q=${'x'.repeat(61)}`,
+  ])
+    expect(() => assertAllowedPath(path)).toThrow();
+});

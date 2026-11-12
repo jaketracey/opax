@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "title": "Victorian election 2026",
+  "web_url": "https://opax.com.au/vic-election-2026",
+  "updated": "2026-11-12",
+  "election_day": "2026-11-28",
+  "polls_open": "2026-11-28T08:00:00+11:00",
+  "polls_close": "2026-11-28T18:00:00+11:00",
+  "term_start": "2022-11-26",
+  "term_end": "2026-11-28",
+  "key_dates": [
+    {
+      "id": "enrolment",
+      "label": "Enrol or update your details by",
+      "when": "8 pm Tuesday 3 November 2026",
+      "passes_at": "2026-11-03T20:00:00+11:00",
+      "passed_label": "Enrolment closed",
+      "passed_when": null,
+      "link": {
+        "label": "Check your enrolment",
+        "url": "https://www.vec.vic.gov.au/enrolment/check-my-enrolment"
+      }
+    },
+    {
+      "id": "caretaker",
+      "label": "Caretaker period begins",
+      "when": "6 pm Tuesday 3 November 2026",
+      "passes_at": "2026-11-03T20:00:00+11:00",
+      "passed_label": "Caretaker period began",
+      "passed_when": null,
+      "link": null
+    },
+    {
+      "id": "nominations",
+      "label": "Candidates confirmed",
+      "when": "After nominations close at noon on Monday 9 November 2026",
+      "passes_at": "2026-11-09T12:00:00+11:00",
+      "passed_label": null,
+      "passed_when": "Nominations closed at noon on Monday 9 November 2026",
+      "link": {
+        "label": "VEC election page",
+        "url": "https://www.vec.vic.gov.au/voting/2026-state-election"
+      }
+    },
+    {
+      "id": "postal",
+      "label": "Apply for a postal vote by",
+      "when": "6 pm Wednesday 25 November 2026",
+      "passes_at": "2026-11-25T18:00:00+11:00",
+      "passed_label": "Postal vote applications closed",
+      "passed_when": null,
+      "link": null
+    },
+    {
+      "id": "early",
+      "label": "Early voting",
+      "when": "18–27 November 2026, 9 am to 6 pm. Closed Sunday 22 November",
+      "passes_at": null,
+      "passed_label": null,
+      "passed_when": null,
+      "link": {
+        "label": "Where and how to vote",
+        "url": "https://www.vec.vic.gov.au/voting/2026-state-election/voting-options"
+      }
+    },
+    {
+      "id": "election_day",
+      "label": "Election day",
+      "when": "Saturday 28 November 2026, 8 am to 6 pm",
+      "passes_at": null,
+      "passed_label": null,
+      "passed_when": null,
+      "link": null
+    }
+  ],
+  "notice": null,
+  "candidates_published": null,
+  "results_fetched": "2026-10-13",
+  "roster_date": "2026-09-09",
+  "districts": [
+    {
+      "kind": "district",
+      "slug": "albert-park",
+      "name": "Albert Park",
+      "region": "Southern Metropolitan",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-albert-park",
+      "member": {
+        "name": "Nina Taylor",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 11.15
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "bass",
+      "name": "Bass",
+      "region": "Eastern Victoria",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-bass",
+      "member": {
+        "name": "Jordan Crugnale",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 0.24
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "prahran",
+      "name": "Prahran",
+      "region": "Southern Metropolitan",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-prahran",
+      "member": {
+        "name": "Rachel Westaway",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2025-02-08",
+        "kind": "by-election",
+        "party": "Liberal",
+        "margin": 1.35
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "werribee",
+      "name": "Werribee",
+      "region": "Western Metropolitan",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-werribee",
+      "member": {
+        "name": "John Lister",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2025-02-08",
+        "kind": "by-election",
+        "party": "Labor",
+        "margin": 0.82
+      },
+      "candidates": 0
+    }
+  ],
+  "regions": [
+    {
+      "kind": "region",
+      "slug": "southern-metropolitan",
+      "name": "Southern Metropolitan",
+      "electorate_url": "/subject/electorate/vic-vic-lc-vic-southern-metropolitan",
+      "members": [
+        {
+          "name": "Ryan Batchelor",
+          "party": "Labor"
+        },
+        {
+          "name": "John Berger",
+          "party": "Labor"
+        },
+        {
+          "name": "Katherine Copsey",
+          "party": "Greens"
+        },
+        {
+          "name": "Georgie Crozier",
+          "party": "Liberal"
+        },
+        {
+          "name": "David Davis",
+          "party": "Liberal"
+        }
+      ],
+      "districts": 11,
+      "candidates": 0
+    }
+  ],
+  "sources": {
+    "election": "https://www.vec.vic.gov.au/voting/2026-state-election",
+    "voting": "https://www.vec.vic.gov.au/voting/2026-state-election/voting-options",
+    "enrolment": "https://www.vec.vic.gov.au/enrolment/check-my-enrolment",
+    "address": "https://www.vec.vic.gov.au/electoral-boundaries/which-boundaries-cover-where-i-live",
+    "results": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results",
+    "licence": "https://www.vec.vic.gov.au/legal"
+  },
+  "about": "Dates, boundaries and results © Victorian Electoral Commission; suburb and postcode splits from the Australian Bureau of Statistics (both CC BY 4.0); speeches and votes from OPAX’s parliamentary record.",
+  "methods_url": "https://opax.com.au/methods#vic-election",
+  "authorisation": "Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.",
+  "corrections": {
+    "email": "corrections@opax.com.au",
+    "response": "We aim to respond within 2 business days."
+  }
+}

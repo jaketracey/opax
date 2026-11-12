@@ -133,6 +133,20 @@ export class CatalogCache {
     if (!(await this.loadIndex()).some((entry) => entry.url === url)) return;
     return this.readCatalog(url);
   }
+  /** An authoritative withdrawal removes both the disk and memory copy. */
+  async remove(url: string): Promise<void> {
+    const task = this.queue.then(async () => {
+      const index = await this.loadIndex();
+      const next = index.filter((entry) => entry.url !== url);
+      await this.store.remove(url);
+      await this.store.writeIndex(next);
+      this.index = next;
+      this.forget(url);
+      this.searches.delete(url);
+    });
+    this.queue = task.catch(() => undefined);
+    return task;
+  }
   // Serialized compare-and-write; catalog search queries and bodies stay in
   // memory, everything else (document search too) goes to disk. A caller
   // receives the retained entry when its response loses a validation/date race.
