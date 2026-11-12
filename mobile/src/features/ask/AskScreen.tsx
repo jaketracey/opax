@@ -204,21 +204,25 @@ export default function AskScreen() {
     wasBusy.current = s.busy;
   }, [s.busy]);
   // The new question goes just under the bar once its turn is laid out.
-  const reveal = () => {
+  const reveal = (laidOut = true) => {
     if (!pin.current) return;
-    pin.current = false;
+    if (laidOut) pin.current = false;
     scroll.current?.scrollTo({
       y: Math.max(turnY.current - headerBottom - rhythm.heading, -headerBottom),
       animated: !reduceMotion,
     });
   };
   useEffect(() => {
-    if (topRequest) scrollToTop(scroll.current, headerBottom);
+    if (!topRequest) return;
+    pin.current = false;
+    scrollToTop(scroll.current, headerBottom);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topRequest]);
   const pinTurn = () => {
     pin.current = true;
-    requestAnimationFrame(() => requestAnimationFrame(reveal));
+    // These frames may beat layout and still have the previous turn's y.
+    // Keep the measured reveal pending so it wins in either order.
+    requestAnimationFrame(() => requestAnimationFrame(() => reveal(false)));
   };
   // A claim moves just above the half-height citation sheet's top edge.
   const revealClaim = useCallback(

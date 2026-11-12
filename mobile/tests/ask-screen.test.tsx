@@ -925,6 +925,80 @@ test('a starter asks at once; the seat starter only fills the composer', async (
   });
 });
 
+test.each(['before', 'after'] as const)(
+  'turn layouts win when fallback frames run %s layout, including Ask next',
+  async (frameOrder) => {
+    const frames: FrameRequestCallback[] = [];
+    let frameId = 0;
+    const frame = jest
+      .spyOn(global, 'requestAnimationFrame')
+      .mockImplementation((callback) => {
+        frames.push(callback);
+        return ++frameId;
+      });
+    const reset = jest.spyOn(ScrollTop, 'scrollToTop');
+    const runFrame = async () => {
+      await act(async () => {
+        // Frames queued by this frame belong to the next frame.
+        frames.splice(0).forEach((callback) => callback(0));
+      });
+    };
+    const fallback = async () => {
+      await runFrame();
+      await runFrame();
+    };
+    jest
+      .mocked(client.askPost)
+      .mockResolvedValueOnce(answer)
+      .mockResolvedValueOnce({
+        questions: [{ question: 'A grounded fixture follow-up?' }],
+      })
+      .mockResolvedValueOnce(answer)
+      .mockResolvedValueOnce({ questions: [] });
+    try {
+      await mount();
+      await type('A fixture question?');
+      for (const [button, y] of [
+        ['ask-submit', 400],
+        ['ask-followup-0', 900],
+      ] as const) {
+        scrollTo.mockClear();
+        await press(button);
+        expect(frames.length).toBeGreaterThan(0);
+        if (frameOrder === 'before') await fallback();
+        await act(async () => {
+          byId('ask-turn')[0]!.props.onLayout({
+            nativeEvent: { layout: { y } },
+          });
+        });
+        if (frameOrder === 'after') await fallback();
+        // The fallback can also produce -44, without a New question reset.
+        expect(reset).not.toHaveBeenCalled();
+        expect(scrollTo).toHaveBeenLastCalledWith(
+          expect.objectContaining({ y: y - 44 - rhythm.heading }),
+        );
+        expect(scrollTo).toHaveBeenCalledTimes(frameOrder === 'before' ? 2 : 1);
+      }
+      // Clearing a conversation cancels a reveal that has not had its layout.
+      jest
+        .mocked(client.askPost)
+        .mockResolvedValueOnce(answer)
+        .mockResolvedValueOnce({ questions: [] });
+      await type('Another fixture question?');
+      await press('ask-submit');
+      await act(async () => barButton('New question')!.onPress());
+      expect(scrollTo).toHaveBeenLastCalledWith({ y: -44, animated: false });
+      expect(reset).toHaveBeenCalledTimes(1);
+      scrollTo.mockClear();
+      await fallback();
+      expect(scrollTo).not.toHaveBeenCalled();
+    } finally {
+      frame.mockRestore();
+      reset.mockRestore();
+    }
+  },
+);
+
 test('a sent question shows the status line, Stop, and is revealed below the header', async () => {
   let on: StreamHandlers | undefined,
     fail: (e: unknown) => void = () => {};
