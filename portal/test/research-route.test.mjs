@@ -164,7 +164,7 @@ test('shadow skips unmetered requests, samples at default 0.2, and fails closed 
 });
 test('failed shadow inference never invokes a second planner',async()=>{
  h.env.RESEARCH_LOOP='shadow';const fake=new MockLanguageModelV4({doGenerate:()=>{throw Error('fixture provider failure')}});globalThis.__researchModel=fake;const before=plannerCalls;
- await(await post()).text();await flush();assert.equal(plannerCalls,before+1);assert.equal(fake.doGenerateCalls.length,1);assert.equal(logs.findLast(r=>r.kind==='research_loop_shadow').loop.failure,'error');
+ await(await post()).text();await flush();assert.equal(plannerCalls,before+1);assert.equal(fake.doGenerateCalls.length,2,'a failed provider gets one final answer call, which fails too');assert.equal(logs.findLast(r=>r.kind==='research_loop_shadow').loop.failure,'error');
 });
 test('route money and pay calculations are chosen by the agent in JSON and SSE',async()=>{
  const fixtures=h.env.ASSETS;h.env.ASSETS=realAssets;h.env.RESEARCH_LOOP='route';

@@ -22,8 +22,10 @@ test('loop answer instructions require a direct first point, unique facts and se
  const f=fixtures(model([reply([call('decline',{reason:'out_of_scope'})])]));await f.run();
  const generation=f.model.doGenerateCalls[0],instructions=JSON.stringify(generation.prompt.filter(p=>['system','developer'].includes(p.role)));
  assert.match(instructions,/first point directly answers the question with the requested name, date or outcome/);
- assert.match(instructions,/never restate the question/);
- assert.match(instructions,/never paste raw tool rows/);
+ assert.match(instructions,/never restating the question/);
+ assert.match(instructions,/pasting raw tool rows/);
+ assert.match(instructions,/for who, name the people and their roles; for why, give the reason; for what happened, give the outcome/);
+ assert.match(instructions,/say who said it/);assert.match(instructions,/by the name on the record/);
  assert.match(instructions,/Select each fact once/);
  assert.match(instructions,/Each figure comes from one selected fact with its supporting citation/);
  assert.match(instructions,/the response coverage note carries them/);
@@ -55,7 +57,7 @@ test('identical scoped calls dedupe despite different property order',async()=>{
 test('default eight turns, eight hard ceiling and bounded parallel call batches; surplus calls are refused, not fatal',async()=>{
  assert.equal(api.researchLimits({}).rounds,8);assert.equal(api.researchLimits({steps:99}).rounds,8);
  // Searches that find nothing give no evidence, so no turn is forced to finish and the round cap ends the run.
- for(const [steps,wanted] of [[undefined,8],[99,8]]){const m=model(Array.from({length:9},(_,i)=>reply([call('search',{query:'gambling '+i},String(i))]))),f=fixtures(m,{steps,inputPrice:0.1,outputPrice:0.3}),run=await f.run();assert.equal(run.research.mode,'planner');assert.equal(f.failures[0].reason,'steps');assert.equal(m.doGenerateCalls.length,wanted);assert.equal(f.plannerCalls,1);}
+ for(const [steps,wanted] of [[undefined,8],[99,8]]){const m=model(Array.from({length:9},(_,i)=>reply([call('search',{query:'gambling '+i},String(i))]))),f=fixtures(m,{steps,inputPrice:0.1,outputPrice:0.3}),run=await f.run();assert.equal(run.research.mode,'planner');assert.equal(f.failures[0].reason,'steps');assert.equal(m.doGenerateCalls.length,wanted+1,'the round cap is followed by one final answer call');assert.equal(f.plannerCalls,1);}
  const f=fixtures(model([reply(Array.from({length:18},(_,i)=>call('count_speeches',{...args,limit:i%15+1,venue:i>=15?'committee':'chamber'},String(i)))),reply([call('finish',{facts:[1]},'f')])])),run=await f.run();
  assert.equal(run.research.mode,'loop');assert.equal(f.failures.length,0);assert.equal(run.steps.filter(s=>s.tool==='count_speeches').length,api.RESEARCH_MAX_CALLS);assert.ok(f.lookups<=2*api.RESEARCH_MAX_CALLS);
  const surplus=f.model.doGenerateCalls[1].prompt.filter(m=>m.role==='tool').flatMap(m=>m.content).filter(c=>JSON.stringify(c).includes('call limit reached'));assert.equal(surplus.length,18-api.RESEARCH_MAX_CALLS);
@@ -68,7 +70,9 @@ test('token cap refuses inference and detects reported overspend before tools',a
  const n=model([reply([call('count_speeches',args)],160001)]),g=fixtures(n,{tokens:160000});await g.run();assert.equal(g.failures[0].reason,'tokens');assert.equal(g.lookups,2,'only fallback planner lookups');assert.equal(n.doGenerateCalls.length,1);
 });
 test('MODEL_LIMITER checks every turn and refuses the next provider call',async()=>{
- const m=model([reply([call('count_speeches',args)]),reply([call('finish',{facts:[1]})])]),f=fixtures(m,{refuseAt:2});await f.run();assert.equal(f.turns,2);assert.equal(m.doGenerateCalls.length,1);assert.equal(f.failures[0].reason,'limiter');assert.equal(f.plannerCalls,1);
+ const m=model([reply([call('count_speeches',args)]),reply([call('finish',{facts:[1]})])]),f=fixtures(m,{refuseAt:2}),run=await f.run();assert.equal(f.turns,2);assert.equal(m.doGenerateCalls.length,1);
+ // A limiter stop after a lookup keeps the count research gathered; no final call and no planner run past the limiter.
+ assert.equal(f.failures.length,0);assert.equal(f.plannerCalls,0);assert.equal(run.answered,true);assert.match(run.answer,/Taylor Example: 87/);
 });
 test('daily dollar admission refuses inference and fails closed when its ledger is unavailable',async()=>{
  for(const [reserve,reason] of [[async()=>null,'daily_budget'],[async()=>{throw Error('private D1 details')},'daily_budget_unavailable']]){
@@ -102,8 +106,9 @@ test('a credit refund that stalls cannot delay the planner fallback',async()=>{
 test('disconnect aborts the model without a paid fallback',async()=>{
  const controller=new AbortController();let providerSignal,start;const started=new Promise(r=>start=r),m=model(options=>{providerSignal=options.abortSignal;start();return new Promise(()=>{})}),f=fixtures(m,{signal:controller.signal});const work=f.run();await started;controller.abort();await assert.rejects(work);assert.equal(providerSignal.aborted,true);assert.equal(f.plannerCalls,0);assert.equal(f.failures[0].reason,'aborted');
 });
-test('thrown provider errors, malformed JSON and invalid tool args fall back once',async()=>{
- for(const response of [()=>{throw Error('private upstream error')},[reply([call('count_speeches','{')])],[reply([call('count_speeches',{...args,group_by:3})])]]){const f=fixtures(model(response)),run=await f.run();assert.equal(f.plannerCalls,1);assert.equal(run.research.mode,'planner');assert.equal(run.answered,true);assert.ok(['error','malformed_args'].includes(f.failures[0].reason));assert.doesNotMatch(f.failures[0].message,/private/);}
+test('thrown provider errors and malformed JSON fall back once; an invalid tool argument does not end research',async()=>{
+ const invalid=fixtures(model([reply([call('count_speeches',{...args,group_by:3})])])),carried=await invalid.run();assert.equal(invalid.plannerCalls,0);assert.equal(carried.research.mode,'loop');assert.equal(carried.answered,true);assert.equal(invalid.failures.length,0)
+ for(const response of [()=>{throw Error('private upstream error')},[reply([call('count_speeches','{')])]]){const f=fixtures(model(response)),run=await f.run();assert.equal(f.plannerCalls,1);assert.equal(run.research.mode,'planner');assert.equal(run.answered,true);assert.ok(['error','malformed_args'].includes(f.failures[0].reason));assert.doesNotMatch(f.failures[0].message,/private/);}
 });
 test('periodPlan applies request dates before a loop lookup',async()=>{
  const f=fixtures(model([reply([call('count_speeches',{...args,since:'1990-01-01',until:'1991-01-01'})]),reply([call('finish',{facts:[1]})])])),run=await api.runAgentic(question,f.deps,async()=>{},40_000,{kind:'window',since:'2023-01-01',until:'2023-12-31',label:'2023 scope.'},{},emptyScope);assert.equal(run.steps[0].args.since,'2023-01-01');assert.equal(run.steps[0].args.until,'2023-12-31');

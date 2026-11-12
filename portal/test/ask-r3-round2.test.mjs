@@ -132,7 +132,8 @@ test('TT-YDEB-003: the saved four-turn usage permits further recovery instead of
   assert.equal(fixture.answer_stats.salvaged, 'tokens');
   const model = new MockLanguageModelV4({ doGenerate: Array.from({ length: 8 }, (_, i) => reply([call('search', { query: 'drought exceptional circumstances farmers ' + i })], fixture.turns[i]?.input ?? 24000)) });
   const out = await run(fixture.question, model);
-  assert.equal(model.doGenerateCalls.length, 8);
+  // Eight research turns, then one final answer call after the round cap.
+  assert.equal(model.doGenerateCalls.length, 9);
   assert.equal(out.research.failure, 'steps');
 });
 

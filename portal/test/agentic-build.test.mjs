@@ -11,8 +11,9 @@ const {recordAgenticRun}=await load('../src/agentic-monitor.ts');
 const {partyDonations}=await load('../src/agentic-tools.ts');
 import {question,fixtureDeps as deps} from './fixtures/agentic-route.mjs';
 
-test('period defaults to the whole record whatever the tense; explicit windows override it',()=>{
- for(const q of [question,'Is gambling debated more?','Who speaks most about health?','Who is debating housing most?','Who has spoken most about housing?','Who spoke most about health?'])assert.equal(inferPeriod(q).kind,'all',q);
+test('period defaults follow tense; explicit windows and whole record override it',()=>{
+ for(const q of [question,'Is gambling debated more?','Who speaks most about health?','Who is debating housing most?'])assert.equal(inferPeriod(q).kind,'current',q);
+ for(const q of ['Who has spoken most about housing?','Who spoke most about health?'])assert.equal(inferPeriod(q).kind,'all',q);
  assert.equal(inferPeriod(question+' across the whole record').kind,'all');
  assert.equal(inferPeriod(question+' since 2022').since,'2022-01-01');
  assert.equal(inferPeriod('Who spoke most in the 2010s?').until,'2019-12-31');
@@ -23,7 +24,7 @@ test('planner junk declines; a timeout uses a complete rule plan with the actual
  assert.equal(parsePlan('{"shape":"comparison","steps":[{"tool":"member_votes","args":{"person":"Alex Example"}}]}'),null);
  for(const generate of [async()=>{throw new Error('planner timeout')}]){
   const r=await runAgentic('Who in the ACT Legislative Assembly speaks most about health?',{...deps,generate});
-  assert.equal(r.answered,true);assert.equal(r.steps[0].args.topic,'health');assert.equal(r.steps[0].args.state,'act');assert.equal(r.steps[0].args.since,undefined);
+  assert.equal(r.answered,true);assert.equal(r.steps[0].args.topic,'health');assert.equal(r.steps[0].args.state,'act');assert.equal(r.steps[0].args.since,'2025-07-22');
  }
  const junk=await runAgentic('Who has spoken most about gambling?',{...deps,generate:async()=>({text:'junk'})});
  assert.equal(junk.answered,false);assert.equal(junk.reason,'declined');assert.equal(junk.steps.length,0);
@@ -37,7 +38,7 @@ test('budgets reject providers that ignore abort, stop lookups and preserve the 
 test('cache varies with period, epoch, ASK_MODEL, tools version and scope; hash never holds the question',async()=>{
  const a=await agenticCacheKey(question,'e1','m1');
  assert.equal(a,await agenticCacheKey('  WHO is making the most speeches about gambling reform? ','e1','m1'));
- for(const b of [await agenticCacheKey(question,'e2','m1'),await agenticCacheKey(question,'e1','m2'),await agenticCacheKey(question,'e1','m1',inferPeriod(question+' since 2022')),await agenticCacheKey(question,'e1','m1',inferPeriod(question),'v3'),await agenticCacheKey(question,'e1','m1',inferPeriod(question),'agentic-tools-2',{state:'nsw'})])assert.notEqual(a,b);
+ for(const b of [await agenticCacheKey(question,'e2','m1'),await agenticCacheKey(question,'e1','m2'),await agenticCacheKey(question,'e1','m1',inferPeriod(question,'all')),await agenticCacheKey(question,'e1','m1',inferPeriod(question),'v3'),await agenticCacheKey(question,'e1','m1',inferPeriod(question),'agentic-tools-2',{state:'nsw'})])assert.notEqual(a,b);
  assert.match(await questionHash('private@example.invalid 123'),/^[a-f0-9]{64}$/);
 });
 test('monitoring inserts only a hash, shape, latency and dollars, never any text or tool arguments',async()=>{
@@ -52,7 +53,7 @@ test('steps are real-time, fixed text and escaped/bounded args; the answer keeps
  assert.equal(toolStarted,true);assert.ok(events.some(([,d])=>d.step?.label==='Checking committee hearings'));
  assert.ok(events.every(([,d])=>['step','writing'].includes(d.phase)));
  assert.ok(r.events.every(s=>['done','failed'].includes(s.state)&&s.ms>=0));
- assert.match(r.answer,/Counting speeches across the whole record\./);
+ assert.match(r.answer,/Counting speeches in the current parliament since July 2025\./);
  assert.match(r.answer,/Including committee hearings: Alex Example: 130 \[\d+\], Sam Sample: 94 \[\d+\], Casey Sample: 65/);
  assert.equal(stepEvent({tool:'party_receipts',args:{party:'Jordan Private Name'}},1).arg,undefined);
  const safe=stepEvent({tool:'member_votes',args:{keyword:'<script>'+('x'.repeat(80))}},1);assert.ok(safe.arg.length<=40);assert.doesNotMatch(safe.arg,/[<>]/);
@@ -83,7 +84,7 @@ test('a routed done payload renders exactly like a normal Ask payload, with the 
  context.renderAnswer(a,payload.answer,payload);const {agentic,...normal}=payload;context.renderAnswer(b,normal.answer,normal);
  assert.equal(a.innerHTML,b.innerHTML);assert.ok(a.querySelectorAll('button.ask-citation').length>=3);assert.doesNotMatch(a.textContent,/agentic|multi-step|working on it|\[\d+\]/i);
  assert.ok(payload.sources.some(s=>s.href.includes('/search?')));
- assert.equal(payload.agentic.steps.length,run.events.length);assert.match(a.textContent,/Counting speeches across the whole record/);
+ assert.equal(payload.agentic.steps.length,run.events.length);assert.match(a.textContent,/current parliament since July 2025/);
 });
 
 test('planner partial-FY donations render an exact scoped limitation without companion figures',async()=>{
@@ -156,7 +157,7 @@ test('a valid planner cannot override the parliament explicitly named in the que
 
 test('cached follow-up suggestions use the validated topic and never echo personal question details',async()=>{
  const q=question+'; please email me at private@example.invalid',r=await runAgentic(q,deps),p=agenticAskPayload(r,q);
- assert.equal(p.followups[0].question,'Who has spoken most about gambling in the current parliament?');assert.doesNotMatch(JSON.stringify(p),/private@example.invalid|please email me/);
+ assert.equal(p.followups[0].question,'Who has spoken most about gambling across the whole record?');assert.doesNotMatch(JSON.stringify(p),/private@example.invalid|please email me/);
 });
 
 test('the most-active year is selected from DB totals, not ranked by a composer or hidden behind old years',async()=>{

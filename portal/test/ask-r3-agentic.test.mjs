@@ -120,7 +120,8 @@ test('round, token, wall and dollar budgets stop inference; spend exhaustion nev
     assert.equal(run.research.failure, expected);
     assert.equal(failures[0].reason, expected);
     assert.equal(fallbacks, 0);
-    if (expected === 'steps') assert.equal(model.doGenerateCalls.length, 2);
+    // The round cap is followed by one final answer call; the time, token and spend caps never are.
+    if (expected === 'steps') assert.equal(model.doGenerateCalls.length, 3);
     if (['tokens', 'spend'].includes(expected)) assert.equal(model.doGenerateCalls.length, 0);
   }
 });
