@@ -1,6 +1,6 @@
 // Shared, dependency-free table renderer and query engine. Safe to import in a Worker.
 import {shortDate} from './format.js';
-import {repeatedTableKeys} from './datatable-query.js?v=3853f95c92';
+import {repeatedTableKeys} from './datatable-query.js?v=ebe706f523';
 import {readServerCSV} from './server-csv.js?v=4edac7bbc0';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
