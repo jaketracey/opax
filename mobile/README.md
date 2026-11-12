@@ -149,6 +149,12 @@ live holder, a live group member or no owner file is never removed, whatever its
 which are cleaned once their pid is dead. `scripts/test-qa-lock.sh`, part of
 `npm run qa`, tests all of this with a mocked gate in a scratch directory.
 
+A machine can keep Android work off itself. Create `~/.config/opax/no-android`, or set
+`OPAX_NO_ANDROID=1` in `.qa.local.env`. Then `build-android.sh`, `build-play.sh`,
+`e2e-android.sh` and `e2e-android-device.sh` stop before any Gradle, NDK or emulator step,
+with exit 3 and a pointer to the Android host. `OPAX_ANDROID_HERE=1` allows one run.
+`scripts/test-android-host.sh`, part of `npm run qa`, tests the guard.
+
 The fixture port must be in `8900..8999`; Maestro uses `--driver-host-port` at
 fixture port + 100 (`9000..9099`). Occupied fixture or driver ports fail before
 boot, and the driver port is checked again under the lock. No listener is stopped

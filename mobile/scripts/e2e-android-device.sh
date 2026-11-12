@@ -3,6 +3,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 source scripts/qa-env.sh
+source scripts/android-host.sh
 source scripts/qa-maestro.sh
 source scripts/qa-flows.sh
 AVD=${1:?}; OUT=${2:?}; shift 2
