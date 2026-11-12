@@ -5,8 +5,9 @@ contact fields are deliberately populated to check that they are discarded.
 
 It contains three district candidates and five region candidates. The region
 rows model two groups followed by an ungrouped candidate. The VEC spreadsheet
-flattens group headings, so order must be retained without sorting on party or
-candidate name. Blank party cells represent independents, unnamed groups and
+flattens group headings. `region.html` models the nominations page's repeated
+mobile/desktop headings, matched against the workbook's candidate order.
+Blank party cells represent independents, unnamed groups and
 ungrouped candidates. One candidate has no comma in their name, and one party
 label has trailing whitespace, as the real report can contain both.
 

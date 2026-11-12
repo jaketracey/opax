@@ -79,7 +79,61 @@ export const PARTY_NAMES = {
   UAP: ['UAP', 'United Australia Party'], AD: ['Democrats', 'Australian Democrats'],
   FF: ['Family First', 'Family First'], DLP: ['DLP', 'Democratic Labour Party'],
   JLN: ['JLN', 'Jacqui Lambie Network'],
+  SAP: ['Sustainable Australia', 'Affordable Housing Now - Sustainable Australia Party'], AJP: ['Animal Justice', 'Animal Justice Party'],
+  ACP: ['Citizens Party', 'Australian Citizens Party'], CAP: ['Christian Alliance', 'Christian Alliance Party - Reform AU'],
+  CAN: ['Climate Action Now', 'Climate Action Now'], FP: ['Free Palestine', 'Free Palestine'],
+  FINE: ["I'm Voting to Avoid the Fine", "I'm Voting to Avoid the Fine"], LCP: ['Legalise Cannabis', 'Legalise Cannabis Party'],
+  LDP: ['Libertarian', 'Libertarian Party'], SAFE: ['Safety Victoria', 'Safety Victoria - Violent Crime Prevention'],
+  SFF: ['Shooters, Fishers and Farmers', 'Shooters, Fishers and Farmers Party'],
+  SAL: ['Socialist Alliance', 'Socialist Alliance'], REP: ['The Republican', 'The Republican Make Australia Great Again'],
+  WEST: ['The West Party', 'The West Party'], VS: ['Victorian Socialists', 'Victorian Socialists'],
 };
+/** Registered VEC names and nominations-page variants, used by browser labels
+ *  and Worker-rendered pages. The source data keeps its full names.
+ *  Minor parties use the site's existing neutral `oth` dot. */
+export const PARTY_ALIASES = {
+  'Affordable Housing Now – Sustainable Australia Party': 'SAP',
+  'Animal Justice Party': 'AJP',
+  'Australian Citizens Party (Victorian Division)': 'ACP',
+  'Australian Democrats': 'AD',
+  'Australian Greens Victoria': 'GRN',
+  'Australian Labor Party - Victorian Branch': 'ALP',
+  'Christian Alliance Party – Reform AU': 'CAP',
+  'Climate Action Now': 'CAN',
+  'Democratic Labour Party (DLP)': 'DLP',
+  'Family First Victoria': 'FF',
+  'Free Palestine': 'FP',
+  "I'm Voting to Avoid the Fine": 'FINE',
+  'Legalise Cannabis Victoria': 'LCP',
+  'Liberal Party of Australia - Victorian Division': 'LIB',
+  'Libertarian Party (formerly Liberal Democrats)': 'LDP',
+  'National Party of Australia - Victoria': 'NAT',
+  'One Nation Victoria': 'ONP',
+  'Safety Victoria – Violent Crime Prevention': 'SAFE',
+  'Shooters, Fishers and Farmers Party Victoria': 'SFF',
+  'Socialist Alliance': 'SAL',
+  'The Republican Make Australia Great Again': 'REP',
+  'The West Party': 'WEST',
+  'Victorian Socialists': 'VS',
+  'The Greens': 'GRN', 'The Nationals': 'NAT', 'Labour DLP': 'DLP',
+  'Libertarian (formerly Liberal Democrats)': 'LDP',
+  'Christian Alliance Party - Reform AU': 'CAP',
+};
+// Expand aliases into the existing map so every consumer uses one identity table.
+const partyByCode = {};
+for (const [code, [short, long]] of Object.entries(PARTY_NAMES)) {
+  const colour = Object.values(PARTY_MAP).find(([, value]) => value === code)?.[0] || 'oth';
+  partyByCode[code] = [colour, code];
+  for (const name of [short, long]) PARTY_MAP[name.toLowerCase()] = partyByCode[code];
+}
+for (const [name, code] of Object.entries(PARTY_ALIASES)) PARTY_MAP[name.toLowerCase()] = partyByCode[code];
+/** The short readable name, including combined Council group names. */
+export function partyShortName(party) {
+  return String(party ?? '').trim().split(' / ').map(name => {
+    const code = PARTY_MAP[name.toLowerCase()]?.[1];
+    return PARTY_NAMES[code]?.[0] || name;
+  }).join(' / ');
+}
 /* A party field that says there is no party is not a party: no dot, no label. */
 const PARTY_PLACEHOLDER = /^(?:not recorded|unknown|none|n\/?a|-|—)$/i;
 

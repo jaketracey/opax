@@ -56,8 +56,9 @@ def publication(page: bytes) -> tuple[str, str]:
 def parse_rows(rows: list[list], config: dict) -> tuple[dict, str]:
     """Keep report row order across Council groups, including ungrouped rows.
 
-    Only the candidate and RPP Name columns are retained. RPP labels are the
-    spreadsheet's full registered names, not the website's shorter party labels.
+    Only the candidate and RPP Name columns are retained. Party labels are the
+    spreadsheet's registered names, with surrounding whitespace removed.
+    Council group headings are absent from this five-column report.
     """
     if len(rows) < 9 or any(len(row) != 5 for row in rows):
         raise ValueError('Expected the five-column VEC candidate report')
@@ -115,7 +116,7 @@ def parse_rows(rows: list[list], config: dict) -> tuple[dict, str]:
             candidates = output[current[0]][current[1]]
             if any(c['name'] == label for c in candidates):
                 raise ValueError(f'Duplicate candidate: {current[1]}')
-            candidates.append({'name': label, 'party': row[4]})
+            candidates.append({'name': label, 'party': row[4].strip()})
     finish()
     for kind in output:
         missing = {c['name'] for c in config[kind]} - output[kind].keys()
@@ -148,29 +149,123 @@ def fetch(url: str, path: Path, client: HonestHTTP) -> bytes:
     return body
 
 
+def parse_region_groups(body: bytes, name: str, candidates: list[dict]) -> list[dict]:
+    """Add only group letters/names, after an exact candidate-order check.
+
+    VEC repeats each heading for mobile and desktop. Unnamed-N is a source
+    placeholder, not a group name. A blank party is never used to infer a group.
+    """
+    soup = BeautifulSoup(body, 'html.parser')
+    main = soup.find('main')
+    if main is None or main.find('h1') is None or main.h1.get_text(' ', strip=True) != f'Candidates for {name} Region':
+        raise ValueError(f'Not the VEC nominations page for {name}')
+    tables = main.select('table.js-responsive-table')
+    if len(tables) != 1:
+        raise ValueError(f'Expected one candidate table: {name}')
+    group = None
+    mobile = None
+    used = set()
+    output = []
+    group_start = 0
+    for row in tables[0].select('tbody > tr'):
+        classes = row.get('class', [])
+        if 'party-row' in classes:
+            heading = row.select_one('.party-name')
+            if heading is None:
+                raise ValueError(f'Missing group heading: {name}')
+            text = heading.get_text(' ', strip=True)
+            if 'mobile' in classes:
+                if mobile is not None:
+                    raise ValueError(f'Duplicate mobile group heading: {name}')
+                mobile = text
+                continue
+            if 'desktop' not in classes or mobile != text:
+                raise ValueError(f'Inconsistent group headings: {name}')
+            mobile = None
+            if group is not None and len(output) == group_start:
+                raise ValueError(f'Empty Council group: {name}')
+            if text == 'Ungrouped':
+                letter, label = None, ''
+            else:
+                match = re.fullmatch(r'([A-Z])\. (.+)', text)
+                if not match or match[1] != chr(ord('A') + len(used)) or None in used:
+                    raise ValueError(f'Invalid group ballot order: {name}')
+                letter, label = match.groups()
+                if re.fullmatch(r'Unnamed-\d+', label):
+                    label = ''
+            if letter in used:
+                raise ValueError(f'Duplicate Council group: {name}')
+            used.add(letter)
+            group = (letter, label)
+            group_start = len(output)
+        elif 'candidate-row' in classes:
+            cells = row.find_all('td', recursive=False)
+            if group is None or mobile is not None or not cells:
+                raise ValueError(f'Candidate outside a Council group: {name}')
+            # Only the direct name text; paragraphs contain party and locality.
+            printed = ' '.join(str(n).strip() for n in cells[0].find_all(string=True, recursive=False)).strip()
+            index = len(output)
+            if index >= len(candidates) or printed != candidates[index]['name']:
+                raise ValueError(f'Council candidate order differs from workbook: {name}, row {index + 1}')
+            output.append({**candidates[index], 'group': group[0], 'group_name': group[1]})
+        else:
+            raise ValueError(f'Unexpected nominations row: {name}')
+    if mobile is not None or not output or len(output) != len(candidates) or group_start == len(output):
+        raise ValueError(f'Incomplete Council candidate list: {name}')
+    return output
+
+
+def add_region_groups(lists: dict, cache: Path, config: dict, client: HonestHTTP):
+    for region in config['regions']:
+        url = region['source_url'].rstrip('/') + '/nominations'
+        path = cache / (Path(urlsplit(region['source_url']).path).name + '.html')
+        body = fetch(url, path, client)
+        lists['regions'][region['name']] = parse_region_groups(body, region['name'], lists['regions'][region['name']])
+
+
+def write_result(result: dict, out: Path):
+    temp = out.with_suffix('.tmp')
+    temp.write_text(json.dumps(result, indent=2, ensure_ascii=False) + '\n')
+    temp.replace(out)
+
+
+def enrich_snapshot(cache: Path, out: Path = OUT, config_path: Path = CONFIG) -> dict:
+    """Add groups to the saved JSON without requesting the landing page or XLS."""
+    cache.mkdir(parents=True, exist_ok=True)
+    result = json.loads(out.read_text())
+    for kind in ('districts', 'regions'):
+        for candidates in result[kind].values():
+            for candidate in candidates:
+                candidate['party'] = candidate['party'].strip()
+    add_region_groups(result, cache, json.loads(config_path.read_text()), HonestHTTP())
+    write_result(result, out)
+    return result
+
+
 def generate(cache: Path, out: Path = OUT, config_path: Path = CONFIG) -> dict:
     cache.mkdir(parents=True, exist_ok=True)
     client = HonestHTTP()
     page = fetch(PAGE, cache / 'election.html', client)
     published, download = publication(page)
-    # Key the cached workbook to the actual linked URL, so a new report is fetched.
+    # Both the landing page and its linked workbook are cached. A fresh cache
+    # directory is required to discover a replacement report URL.
     body = fetch(download, cache / Path(urlsplit(download).path).name, client)
     config = json.loads(config_path.read_text())
     lists, snapshot = parse_workbook(body, config)
     if snapshot > published:
         raise ValueError('Workbook snapshot is newer than the dated publication notice')
+    add_region_groups(lists, cache, config, client)
     result = {'published': published, 'url': PAGE, **lists}
-    temp = out.with_suffix('.tmp')
-    temp.write_text(json.dumps(result, indent=2, ensure_ascii=False) + '\n')
-    temp.replace(out)
+    write_result(result, out)
     return result
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--cache', type=Path, default=ROOT / 'portal/private/vec-candidates-2026')
+    ap.add_argument('--groups-only', action='store_true', help='Enrich the saved JSON using only the eight region nominations pages')
     args = ap.parse_args()
-    result = generate(args.cache)
+    result = (enrich_snapshot if args.groups_only else generate)(args.cache)
     total = sum(len(c) for kind in ('districts', 'regions') for c in result[kind].values())
     print(f'{len(result["districts"])} districts, {len(result["regions"])} regions, {total} candidates -> {OUT}')
 
