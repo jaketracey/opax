@@ -25,6 +25,8 @@ import { GroupResults, useGroupList } from './GroupResults';
 import { ResultsHeader } from './ResultsHeader';
 import { ResultsView, localSource } from './ResultsView';
 import { SEARCH_PLACEHOLDER } from './SearchScreen';
+import { scrollToTop } from '../../design/scroll-to-top';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { SearchField } from './SearchField';
 import { useResultsControls } from './controls';
 import { filtersFromParams } from './filters';
@@ -60,6 +62,7 @@ export function ResultsScreen() {
   const [text, setText] = useState(q);
   const owner = `results-${useId()}`;
   const scroll = useRef<ScrollView>(null);
+  const headerBottom = useHeaderBottom();
   const input = useRef<TextInput>(null);
   useAndroidSearchKeyboard(input, () => setText(q));
   const { sources, failed, retry } = useSearchSources();
@@ -76,7 +79,7 @@ export function ResultsScreen() {
     onQuery: (next) => submit(next),
     onScope: (scope) => {
       setTarget({ scope });
-      scroll.current?.scrollTo({ y: 0, animated: false });
+      scrollToTop(scroll.current, headerBottom);
     },
   });
   function submit(raw: string) {
@@ -93,7 +96,7 @@ export function ResultsScreen() {
       (search.ref as RefObject<SearchBarCommands | null>).current?.blur();
       Keyboard.dismiss();
     }
-    scroll.current?.scrollTo({ y: 0, animated: false });
+    scrollToTop(scroll.current, headerBottom);
   }
   const search = useListSearchBar({
     placeholder: SEARCH_PLACEHOLDER,
@@ -128,7 +131,7 @@ export function ResultsScreen() {
     (search.ref as RefObject<SearchBarCommands | null>).current?.setText(
       capQuery(params.q ?? ''),
     );
-    scroll.current?.scrollTo({ y: 0, animated: false });
+    scrollToTop(scroll.current, headerBottom);
     // Only a changed arrival resets choices made within the screen.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [arrivalKey]);
@@ -150,7 +153,11 @@ export function ResultsScreen() {
           ...headerItems(controls.items),
         }}
       />
-      <Screen testID="results-screen" scrollRef={scroll}>
+      <Screen
+        testID="results-screen"
+        scrollRef={scroll}
+        scrollToOverflowEnabled
+      >
         {Platform.OS === 'android' ? (
           <SearchField
             inputRef={input}
@@ -173,7 +180,7 @@ export function ResultsScreen() {
             scope={target.scope}
             onScope={(scope) => {
               setTarget({ scope });
-              scroll.current?.scrollTo({ y: 0, animated: false });
+              scrollToTop(scroll.current, headerBottom);
             }}
             filters={controls.filters}
             sort={controls.sort}

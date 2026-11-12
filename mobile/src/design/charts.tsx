@@ -297,7 +297,7 @@ function StageTimelineContent({
         ) : null}
         {stages.map((stage, index) => (
           <View
-            key={keys[index]}
+            key={index}
             accessible
             accessibilityLabel={`${stage.label}, ${stage.date}${index === latestIndex ? ', latest stage' : ''}`}
             style={
@@ -697,7 +697,7 @@ function BarSeriesContent({
               ];
               return onSelect ? (
                 <Pressable
-                  key={keys[index]}
+                  key={index}
                   {...a11y}
                   accessibilityRole="button"
                   accessibilityState={{ selected: selectedIndex === index }}
@@ -705,7 +705,7 @@ function BarSeriesContent({
                   onPress={() => onSelect(index)}
                 />
               ) : (
-                <View key={keys[index]} {...a11y} accessible style={style} />
+                <View key={index} {...a11y} accessible style={style} />
               );
             })
           : null}

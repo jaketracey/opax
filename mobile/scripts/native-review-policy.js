@@ -1,6 +1,8 @@
 // Exact (source file, native module name) grants. Register new bridges only after
 // review; neither a reviewed file nor a module directory grants other names.
 const reviewedNativeModules = Object.freeze({
+  // Pure SP/DP conversion through RN's own metrics; no data or permissions.
+  'modules/opax-text-metrics/index.ts': Object.freeze(['OpaxTextMetrics']),
   'modules/opax-share/index.ts': Object.freeze(['OpaxShare']),
   'modules/opax-ipad/index.ts': Object.freeze(['OpaxIPad']),
   // UIKit backing and divider only; no transport or new permissions.

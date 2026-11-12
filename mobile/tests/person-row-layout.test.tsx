@@ -110,6 +110,10 @@ test('word-safe text keeps the fractional AX5 final line inside its rounded draw
   expect(StyleSheet.flatten(name().props.style).maxHeight).toBeUndefined();
   // A smaller Dynamic Type setting must measure afresh rather than retain
   // the larger name's minimum height.
+  let committed!: (x: number, y: number, width: number, height: number) => void;
+  name().instance.measure = jest.fn((callback) => {
+    committed = callback;
+  });
   jest.mocked(useWindowDimensions).mockReturnValue({
     width: 390,
     height: 844,
@@ -118,7 +122,10 @@ test('word-safe text keeps the fractional AX5 final line inside its rounded draw
   });
   act(() => renderer.update(<Text wordSafe>Anthony Albanese</Text>));
   expect(StyleSheet.flatten(name().props.style).minHeight).toBeUndefined();
+  layout(141); // A queued AX5 frame cannot establish Large's floor.
   layout(25);
+  expect(StyleSheet.flatten(name().props.style).minHeight).toBeUndefined();
+  act(() => committed(0, 0, 298, 25));
   expect(StyleSheet.flatten(name().props.style).minHeight).toBe(26);
   act(() => renderer.unmount());
 });

@@ -298,8 +298,17 @@ function ValueRowContent({
   value: string;
   accessibilitySize: boolean;
 }) {
+  const { fontScale } = useWindowDimensions();
+  const measurementKey = `${fontScale}:${value}`;
   const [width, setWidth] = useState(0);
-  const [valueWidth, setValueWidth] = useState(0);
+  const [measuredValue, setMeasuredValue] = useState({
+    key: measurementKey,
+    width: 0,
+  });
+  // Reset the measurement in place when text or Dynamic Type changes, keeping
+  // the row's native text and accessibility elements mounted.
+  const valueWidth =
+    measuredValue.key === measurementKey ? measuredValue.width : 0;
   // Leave the label its 35% minimum and the gap. Measure the actual column,
   // including narrower groups and the space reserved for a link's chevron.
   const stacked =
@@ -326,8 +335,14 @@ function ValueRowContent({
           const lines = event.nativeEvent.lines;
           // A value wider than the whole column may arrive on several lines.
           // Keep its combined width so stacking does not toggle on each layout.
-          if (lines.length)
-            setValueWidth(lines.reduce((sum, line) => sum + line.width, 0));
+          if (lines.length) {
+            const nextWidth = lines.reduce((sum, line) => sum + line.width, 0);
+            setMeasuredValue((previous) =>
+              previous.key === measurementKey && previous.width === nextWidth
+                ? previous
+                : { key: measurementKey, width: nextWidth },
+            );
+          }
         }}
       >
         {value}
@@ -348,15 +363,12 @@ export function ValueRow({
   testID?: string;
 }) {
   const stacked = useAccessibilitySize();
-  const { fontScale } = useWindowDimensions();
   const highlight = useRowHighlight();
   const cellStyle = useRowCellStyle();
   useRowInset();
   const body = (
     <>
       <ValueRowContent
-        // New text or Dynamic Type must start with fresh native measurements.
-        key={`${fontScale}:${value}`}
         label={label}
         value={value}
         accessibilitySize={stacked}
