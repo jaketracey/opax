@@ -180,12 +180,12 @@ test('no page draws the "How to read this record" box; a caveat that qualifies a
   assert.match(block('Information about remuneration for key management personnel'), /part-year amounts are not annual salaries/);
 });
 test('a commission with no report held says so with the inquiry, not as an empty Recommendations section', () => {
-  const sa = projected.find(p => p.detail.slug === 'royal-commission-sa-domestic-family-sexual-violence').detail;
-  const html = renderReport(sa);
+  const nt = projected.find(p => p.detail.slug === 'royal-commission-nt-hydraulic-fracturing').detail;
+  const html = renderReport(nt);
   assert.doesNotMatch(html, /id="recommendations"/);
   assert.match(html, /<dt>Report<\/dt><dd>No report is held for this inquiry, so no recommendations are reproduced\.<\/dd>/);
   assert.doesNotMatch(html, /Type of inquiry/);
-  assert.match(html, /<p class="ui-page-meta">Royal commission · South Australia · No report date recorded<\/p>/);
+  assert.match(html, /<p class="ui-page-meta">Commission of inquiry · Northern Territory · No report date recorded<\/p>/);
 });
 test('transcript rows are one compact line each; what every transcript shares is said once', () => {
   const section = html => (/<section[^>]*id="transcripts"[\s\S]*?<\/section>/.exec(html) || [''])[0];
@@ -236,4 +236,14 @@ test('hearing transcripts get their own section, grouped by month newest first, 
   for (const t of belcarra.record.transcripts.items) assert.ok(itx.includes(escapeHtml(t.url)), t.id);
   const plain = projected.find(p => p.detail.report_type === 'integrity_report' && !p.detail.record.transcripts).detail;
   assert.doesNotMatch(renderReport(plain), /id="transcripts"/);
+});
+
+test('SA DFSV: the final report and its 136 recommendations, cited to the report pages', async () => {
+  const c = JSON.parse(await readFile(new URL('../public/royal-commissions/commission-sa-domestic-family-sexual-violence.json', import.meta.url), 'utf8')).commission;
+  assert.equal(c.recommendations_status, 'extracted');
+  assert.equal(c.recommendations.length, 136);
+  assert.deepEqual(c.recommendations.map(r => r.number), Array.from({ length: 136 }, (_, i) => String(i + 1)));
+  assert.ok(c.recommendations.every(r => r.cite.page >= 31 && r.cite.page <= 62 && /royalcommissiondfsv\.sa\.gov\.au/.test(r.cite.url)));
+  assert.match(c.reports[0].rights, /Creative Commons Attribution 4\.0 Australia/);
+  assert.equal(c.commissioners[0].name, 'Natasha Stott Despoja AO');
 });
