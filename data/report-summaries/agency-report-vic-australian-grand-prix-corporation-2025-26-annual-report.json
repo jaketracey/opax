@@ -1,0 +1,81 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-australian-grand-prix-corporation-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Australian Grand Prix Corporation 2025-26 annual report",
+ "body": "Australian Grand Prix Corporation",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab395/globalassets/tabled-paper-documents/tabled-paper-10681/agpc-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "7f0b28d0086804d37f96c817120868f58593e4eab4085d0671479fa608d6c6e0",
+  "pages": 100,
+  "rights": null
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Australian Grand Prix Corporation reported for the year ending 30 June 2026 as a statutory authority established under the Australian Grands Prix Act 1994.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab395/globalassets/tabled-paper-documents/tabled-paper-10681/agpc-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 52
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab395/globalassets/tabled-paper-documents/tabled-paper-10681/agpc-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 58
+     }
+    ],
+    "section": "Basis of preparation"
+   },
+   {
+    "text": "The Corporation reported an estimated crowd of 483,934 at the 2026 Australian Formula 1 Grand Prix.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab395/globalassets/tabled-paper-documents/tabled-paper-10681/agpc-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The Corporation reported an estimated attendance of 91,245 at the 2025 Australian Motorcycle Grand Prix, held from 17 to 19 October.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab395/globalassets/tabled-paper-documents/tabled-paper-10681/agpc-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Held from 17-19 October at the scenic Phillip Island Grand Prix Circuit, the Liqui Moly Australian Motorcycle Grand Prix 2025 had an estimated attendance of 91,245.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab395/globalassets/tabled-paper-documents/tabled-paper-10681/agpc-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 12
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2017-09-18-tp3169-operation-tone-special-report-concerning-drug-use-and",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Tone: Special report concerning drug use and associated corrupt conduct involving Ambulance Victoria paramedics",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a26f1/globalassets/tabled-paper-documents/tabled-paper-3169/operation_tone_special_report_september_2017_rhfx9xns.pdf",
+  "document": "Operation_Tone_special_report_September_2017_rhFX9xNs",
+  "sha256": "8e2fe93dcdc702644e5976b10f42c648a76347b99fb927cd644a54a6507c0ef2",
+  "pages": 38,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "1 Summary of investigation and outcomes",
+  "first_page": 7,
+  "last_page": 12,
+  "link": "https://www.parliament.vic.gov.au/4a26f1/globalassets/tabled-paper-documents/tabled-paper-3169/operation_tone_special_report_september_2017_rhfx9xns.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC investigated allegations that Ambulance Victoria paramedics stole, trafficked or used drugs of dependence and misappropriated equipment.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a26f1/globalassets/tabled-paper-documents/tabled-paper-3169/operation_tone_special_report_september_2017_rhfx9xns.pdf",
+      "document": "Operation_Tone_special_report_September_2017_rhFX9xNs",
+      "page": 8
+     }
+    ],
+    "section": "1.1 Introduction"
+   },
+   {
+    "text": "IBAC identified illicit drug use and equipment misuse among some paramedics, particularly in the Barwon South West region.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a26f1/globalassets/tabled-paper-documents/tabled-paper-3169/operation_tone_special_report_september_2017_rhfx9xns.pdf",
+      "document": "Operation_Tone_special_report_September_2017_rhFX9xNs",
+      "page": 32
+     }
+    ],
+    "section": "4.1 Conclusion"
+   },
+   {
+    "text": "IBAC acknowledged that Ambulance Victoria had responded quickly to the weaknesses identified by the investigation.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a26f1/globalassets/tabled-paper-documents/tabled-paper-3169/operation_tone_special_report_september_2017_rhfx9xns.pdf",
+      "document": "Operation_Tone_special_report_September_2017_rhFX9xNs",
+      "page": 32
+     }
+    ],
+    "section": "4.1 Conclusion"
+   },
+   {
+    "text": "IBAC made two recommendations covering drug controls at Ambulance Victoria and consideration of similar risks across other Victorian health services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a26f1/globalassets/tabled-paper-documents/tabled-paper-3169/operation_tone_special_report_september_2017_rhfx9xns.pdf",
+      "document": "Operation_Tone_special_report_September_2017_rhFX9xNs",
+      "page": 12
+     }
+    ],
+    "section": "1.6 Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "However, Operation Tone identified a culture of illicit drug use and misappropriation of AV equipment among certain groups and individuals, particularly in the Barwon South West region.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a26f1/globalassets/tabled-paper-documents/tabled-paper-3169/operation_tone_special_report_september_2017_rhfx9xns.pdf",
+     "document": "Operation_Tone_special_report_September_2017_rhFX9xNs",
+     "page": 32
+    }
+   },
+   {
+    "quote": "On the balance of evidence, this conduct likely occurs beyond that identified in Operation Tone.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a26f1/globalassets/tabled-paper-documents/tabled-paper-3169/operation_tone_special_report_september_2017_rhfx9xns.pdf",
+     "document": "Operation_Tone_special_report_September_2017_rhFX9xNs",
+     "page": 32
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

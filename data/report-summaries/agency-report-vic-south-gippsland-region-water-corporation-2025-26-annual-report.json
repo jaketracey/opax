@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-south-gippsland-region-water-corporation-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "South Gippsland Region Water Corporation 2025-26 annual report",
+ "body": "South Gippsland Region Water Corporation",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab360/globalassets/tabled-paper-documents/tabled-paper-10631/south-gippsland-water-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "726d0b749715afc696caa4e3c10d658a5dad89a10d6642a39baeb13c5af957a0",
+  "pages": 138,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Statement by the Chair and Managing Director",
+  "first_page": 8,
+  "last_page": 9,
+  "link": "https://www.parliament.vic.gov.au/4ab360/globalassets/tabled-paper-documents/tabled-paper-10631/south-gippsland-water-annual-report-2025-26.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Gippsland Water’s 2025-26 report described water services to 22,875 customer connections and wastewater services to 21,135 connections.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab360/globalassets/tabled-paper-documents/tabled-paper-10631/south-gippsland-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Statement by the Chair and Managing Director"
+   },
+   {
+    "text": "The corporation reported completing a temporary Korumburra-to-Leongatha pipeline and adding 4.5 megalitres of clear water storage at Lance Creek.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab360/globalassets/tabled-paper-documents/tabled-paper-10631/south-gippsland-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Statement by the Chair and Managing Director"
+   },
+   {
+    "text": "It reported moving its operations to 100 per cent renewable electricity and reducing emissions by 45 per cent.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab360/globalassets/tabled-paper-documents/tabled-paper-10631/south-gippsland-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Statement by the Chair and Managing Director"
+   },
+   {
+    "text": "South Gippsland Water reported delivering 79% of planned capital expenditure, spending $26.0 million against $33.1 million in its corporate plan.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab360/globalassets/tabled-paper-documents/tabled-paper-10631/south-gippsland-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 64
+     }
+    ],
+    "section": "Financial performance overview"
+   },
+   {
+    "text": "The corporation reported a loss before tax of $20.7 million for 2025-26.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab360/globalassets/tabled-paper-documents/tabled-paper-10631/south-gippsland-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 64
+     }
+    ],
+    "section": "Financial performance overview"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The full year operating result for 2025–26 was a loss before tax of $20.7m.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab360/globalassets/tabled-paper-documents/tabled-paper-10631/south-gippsland-water-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 64
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

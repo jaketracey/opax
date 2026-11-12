@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "agency-report-nsw-new-south-wales-treasury-corporation-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "New South Wales Treasury Corporation 2025-26 annual report",
+ "body": "New South Wales Treasury Corporation",
+ "source": {
+  "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212457%2FAttachment%20A%20-%20TCorp%20Annual%20Report%202026.pdf.pdf",
+  "document": "annual report",
+  "sha256": "cd8c030715e3ad954743ae5b34f1874f30880acbab5e571e0d173807e94ef811",
+  "pages": 160,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Chair",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212457%2FAttachment%20A%20-%20TCorp%20Annual%20Report%202026.pdf.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "New South Wales Treasury Corporation reported for the year ended 30 June 2026, providing financial management and advice to the NSW public sector.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212457%2FAttachment%20A%20-%20TCorp%20Annual%20Report%202026.pdf.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212457%2FAttachment%20A%20-%20TCorp%20Annual%20Report%202026.pdf.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ]
+   },
+   {
+    "text": "TCorp reported raising $28.5bn, including $6.7bn to fund the following year’s borrowing program in advance.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212457%2FAttachment%20A%20-%20TCorp%20Annual%20Report%202026.pdf.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "It reported a 9.9% return across client portfolios, generating $11.8bn in value for clients and the state.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212457%2FAttachment%20A%20-%20TCorp%20Annual%20Report%202026.pdf.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "TCorp reported meeting budget expectations for risk revenues, profit after tax and expenses.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212457%2FAttachment%20A%20-%20TCorp%20Annual%20Report%202026.pdf.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "It also reported generating a $164mn dividend for the state.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212457%2FAttachment%20A%20-%20TCorp%20Annual%20Report%202026.pdf.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "OneFund grew to $70.5bn in assets under management and generated an investment return of 11.2%, exceeding its investment objective by 2.9%.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212457%2FAttachment%20A%20-%20TCorp%20Annual%20Report%202026.pdf.pdf",
+     "document": "annual report",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

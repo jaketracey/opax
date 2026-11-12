@@ -1,0 +1,90 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-department-of-treasury-and-finance-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Department of Treasury and Finance 2025-26 annual report",
+ "body": "Department of Treasury and Finance",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab36c/globalassets/tabled-paper-documents/tabled-paper-10657/2025-26-dtf-annual-report.pdf",
+  "document": "annual report",
+  "sha256": "d6dc9a64fa38e5658fa963bebb9a965f8a9f3563376b7f725874f8afe6a43249",
+  "pages": 164,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Secretary’s foreword",
+  "first_page": 15,
+  "last_page": 17,
+  "link": "https://www.parliament.vic.gov.au/4ab36c/globalassets/tabled-paper-documents/tabled-paper-10657/2025-26-dtf-annual-report.pdf#page=15"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Department of Treasury and Finance’s 2025–26 report covers its economic, financial, infrastructure, industrial relations and commercial policy advice to the Victorian Government.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab36c/globalassets/tabled-paper-documents/tabled-paper-10657/2025-26-dtf-annual-report.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab36c/globalassets/tabled-paper-documents/tabled-paper-10657/2025-26-dtf-annual-report.pdf",
+      "document": "annual report",
+      "page": 15
+     }
+    ],
+    "section": "Our role"
+   },
+   {
+    "text": "The department reported preparing the 2026–27 Budget and other financial publications, and strengthening financial management accountability requirements.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab36c/globalassets/tabled-paper-documents/tabled-paper-10657/2025-26-dtf-annual-report.pdf",
+      "document": "annual report",
+      "page": 15
+     }
+    ],
+    "section": "Secretary’s foreword"
+   },
+   {
+    "text": "It reported supporting more than 70 business reform projects through the Business Acceleration Fund, with a benefit to cost ratio of 4:1.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab36c/globalassets/tabled-paper-documents/tabled-paper-10657/2025-26-dtf-annual-report.pdf",
+      "document": "annual report",
+      "page": 15
+     }
+    ],
+    "section": "Secretary’s foreword"
+   },
+   {
+    "text": "It recorded a surplus from transactions of $0.4 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab36c/globalassets/tabled-paper-documents/tabled-paper-10657/2025-26-dtf-annual-report.pdf",
+      "document": "annual report",
+      "page": 48
+     }
+    ],
+    "section": "Financial performance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

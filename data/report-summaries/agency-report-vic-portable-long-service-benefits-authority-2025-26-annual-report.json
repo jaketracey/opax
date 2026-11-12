@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-portable-long-service-benefits-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Portable Long Service Benefits Authority 2025-26 annual report",
+ "body": "Portable Long Service Benefits Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10659/portable-long-service-authority---2025-26---annual-report.pdf",
+  "document": "annual report",
+  "sha256": "4b890ba08ba36725120b2c7ddf42f66ff97d9c4d4bec26d37bd498babff4b7bb",
+  "pages": 108,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chairperson and Chief Executive Officer/ Registrar’s Report",
+  "first_page": 8,
+  "last_page": 9,
+  "link": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10659/portable-long-service-authority---2025-26---annual-report.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Portable Long Service Benefits Authority reported for the year ended 30 June 2026 on its administration of portable long service benefits for community services, contract cleaning and security workers.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10659/portable-long-service-authority---2025-26---annual-report.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10659/portable-long-service-authority---2025-26---annual-report.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Chairperson and Chief Executive Officer/ Registrar’s Report"
+   },
+   {
+    "text": "The Authority reported that it was preparing for eligible workers to access benefits after seven years of recognised service.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10659/portable-long-service-authority---2025-26---annual-report.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Chairperson and Chief Executive Officer/ Registrar’s Report"
+   },
+   {
+    "text": "It reported more than 80 compliance activities and investigations during the year, alongside targeted engagement and audits.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10659/portable-long-service-authority---2025-26---annual-report.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Chairperson and Chief Executive Officer/ Registrar’s Report"
+   },
+   {
+    "text": "The Authority reported scheme assets of $983.2 million at 30 June 2026 and investment returns above the schemes’ required rate.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10659/portable-long-service-authority---2025-26---annual-report.pdf",
+      "document": "annual report",
+      "page": 8
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10659/portable-long-service-authority---2025-26---annual-report.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Chairperson and Chief Executive Officer/ Registrar’s Report"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "As at 30 June 2026, the schemes held total assets of $983.2 million to meet the future long service benefit obligations of registered workers.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10659/portable-long-service-authority---2025-26---annual-report.pdf",
+     "document": "annual report",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

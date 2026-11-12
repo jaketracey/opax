@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-heywood-rural-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Heywood Rural Health 2025-26 annual report",
+ "body": "Heywood Rural Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10744/heywood-rural-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "6591d8b5d4690a9ce611f8093cf4d30b010e7aeca38e1ced3c21805e9655da69",
+  "pages": 94,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Board Chair and Chief Executive Officer Report",
+  "first_page": 5,
+  "last_page": 12,
+  "link": "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10744/heywood-rural-health-annual-report-2025-26.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "In its 2025-26 report, Heywood Rural Health describes its purpose as improving health outcomes, care experiences, equity and sustainability throughout life.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10744/heywood-rural-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Our Purpose"
+   },
+   {
+    "text": "Heywood Rural Health reported receiving the 2025 Premier’s Small Health Service of the Year award.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10744/heywood-rural-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Board Chair and Chief Executive Officer Report"
+   },
+   {
+    "text": "It reported that 97 per cent of staff and Board members participated in On Country cultural training through its partnership with Winda-Mara Aboriginal Corporation.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10744/heywood-rural-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Board Chair and Chief Executive Officer Report"
+   },
+   {
+    "text": "Heywood Rural Health reported increasing its medical workforce from one doctor in late 2025 to four by mid-2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10744/heywood-rural-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Board Chair and Chief Executive Officer Report"
+   },
+   {
+    "text": "It reported an operating surplus of $24 thousand, exceeding its budget target to break even.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10744/heywood-rural-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 14
+     }
+    ],
+    "section": "Performance at a glance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Heywood Rural Health reported an operating surplus of $24K for the 2025-26 financial year which exceeded the operational and budgetary break-even target.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10744/heywood-rural-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 14
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

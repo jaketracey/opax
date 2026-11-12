@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2014-09-01-conduct-senior-medical-officers-treating-and-billing-private",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Conduct of Senior Medical Officers in treating and billing private patients in public hospitals",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Conduct-of-Senior-Medical-Officers-Report-2014.pdf",
+  "document": "Conduct of Senior Medical Officers in treating and billing private patients in public hospitals",
+  "sha256": "11529b480c74d0e4a05c79b4e68d07a0611945a3efd57af074a5a59da112d733",
+  "pages": 12,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary",
+  "first_page": 3,
+  "last_page": 4,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Conduct-of-Senior-Medical-Officers-Report-2014.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission assessed an audit referral about senior medical officers’ attendance and private patient billing in Queensland public hospitals.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Conduct-of-Senior-Medical-Officers-Report-2014.pdf",
+      "document": "Conduct of Senior Medical Officers in treating and billing private patients in public hospitals",
+      "page": 3
+     }
+    ]
+   },
+   {
+    "text": "The CCC accepted an independent assessment that there was insufficient evidence of official misconduct to justify its own investigation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Conduct-of-Senior-Medical-Officers-Report-2014.pdf",
+      "document": "Conduct of Senior Medical Officers in treating and billing private patients in public hospitals",
+      "page": 3
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Conduct-of-Senior-Medical-Officers-Report-2014.pdf",
+      "document": "Conduct of Senior Medical Officers in treating and billing private patients in public hospitals",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The CCC referred information about two practitioners to the relevant hospital services and took no further action concerning the others.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Conduct-of-Senior-Medical-Officers-Report-2014.pdf",
+      "document": "Conduct of Senior Medical Officers in treating and billing private patients in public hospitals",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "For unrecorded leave, the CCC asked hospital services to investigate and take remedial action, adopting the audit office’s recommendation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Conduct-of-Senior-Medical-Officers-Report-2014.pdf",
+      "document": "Conduct of Senior Medical Officers in treating and billing private patients in public hospitals",
+      "page": 3
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "While the material in some instances did expose conduct which justified the concerns raised by QAO, there was insufficient evidence of official misconduct such as to warrant investigation by the CCC, particularly given the absence of any other adverse conduct.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Conduct-of-Senior-Medical-Officers-Report-2014.pdf",
+     "document": "Conduct of Senior Medical Officers in treating and billing private patients in public hospitals",
+     "page": 3
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-orbost-regional-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Orbost Regional Health 2025-26 annual report",
+ "body": "Orbost Regional Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10735/orbost-regional-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "036ab2b65e51c4eb9c7b19c4bc940c972830d0d4d5ed14adaf6e5ef639561165",
+  "pages": 79,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chair and CEO's Report – The Year in Review",
+  "first_page": 8,
+  "last_page": 10,
+  "link": "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10735/orbost-regional-health-annual-report-2025-26.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Orbost Regional Health reported on 2025–2026, providing acute, urgent, community and aged care services in Far East Gippsland.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10735/orbost-regional-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10735/orbost-regional-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "It reported completing its new residential care facility, with residents moving in during June 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10735/orbost-regional-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "It reported a 12 per cent increase in urgent care presentations and a 12.5 per cent increase in acute inpatient bed days.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10735/orbost-regional-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "It reported an operating deficit of $774,000 against a projected deficit of $107,000.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10735/orbost-regional-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 15
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Operating Result for the year is a deficit of $774,000 compared to a projected deficit of $107,000.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10735/orbost-regional-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 15
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2005-08-01-arrest-samuel-hogan-cmc-investigation",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "The arrest of Samuel Hogan: A CMC Investigation",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-arrest-of-Samuel-Hogan-Report-2005.pdf",
+  "document": "The arrest of Samuel Hogan: A CMC Investigation (August 2005)",
+  "sha256": "8f157004db58953e895ad9acabf2457466cc0d8125892fdab918e0a08216d0ae",
+  "pages": 34,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-arrest-of-Samuel-Hogan-Report-2005.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission investigated whether an arrest that left a young man seriously injured was lawful and whether police used excessive force.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-arrest-of-Samuel-Hogan-Report-2005.pdf",
+      "document": "The arrest of Samuel Hogan: A CMC Investigation (August 2005)",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The CMC concluded that the arrest was lawful, the force was not excessive in the circumstances and criminal or disciplinary action against the officers was not warranted.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-arrest-of-Samuel-Hogan-Report-2005.pdf",
+      "document": "The arrest of Samuel Hogan: A CMC Investigation (August 2005)",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The CMC considered a neck restraint more likely than capsicum spray to have caused or contributed to the injury.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-arrest-of-Samuel-Hogan-Report-2005.pdf",
+      "document": "The arrest of Samuel Hogan: A CMC Investigation (August 2005)",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "Its six recommendations concerned mental illness training, decisions about detention and restraint, and monitoring restrained people’s breathing.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-arrest-of-Samuel-Hogan-Report-2005.pdf",
+      "document": "The arrest of Samuel Hogan: A CMC Investigation (August 2005)",
+      "page": 17
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-arrest-of-Samuel-Hogan-Report-2005.pdf",
+      "document": "The arrest of Samuel Hogan: A CMC Investigation (August 2005)",
+      "page": 18
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There is no basis for referring the matter to the Commissioner of Police for disciplinary action.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-arrest-of-Samuel-Hogan-Report-2005.pdf",
+     "document": "The arrest of Samuel Hogan: A CMC Investigation (August 2005)",
+     "page": 17
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

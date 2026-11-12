@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2004-08-04-tugun-bypass-investigation",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "The Tugun Bypass investigation",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Tugun-Bypass-Investigation-Report-2004.pdf",
+  "document": "The Tugun Bypass investigation (July 2004)",
+  "sha256": "5737ef6db8e380119874d86a66846793c0ba7f6c5766158f847986186e67a672",
+  "pages": 40,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY",
+  "first_page": 7,
+  "last_page": 7,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Tugun-Bypass-Investigation-Report-2004.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission investigated complaints about caretaker conventions during the announcement of the proposed Tugun Bypass route.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Tugun-Bypass-Investigation-Report-2004.pdf",
+      "document": "The Tugun Bypass investigation (July 2004)",
+      "page": 7
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "It examined departmental letters to affected residents and complaints about access to information for the Opposition.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Tugun-Bypass-Investigation-Report-2004.pdf",
+      "document": "The Tugun Bypass investigation (July 2004)",
+      "page": 7
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "The CMC found no official misconduct, but concluded that the letter’s wording breached the requirement for departments to avoid political partisanship during election campaigns.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Tugun-Bypass-Investigation-Report-2004.pdf",
+      "document": "The Tugun Bypass investigation (July 2004)",
+      "page": 7
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "It made four recommendations on training, advice and impartiality to improve compliance with caretaker conventions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Tugun-Bypass-Investigation-Report-2004.pdf",
+      "document": "The Tugun Bypass investigation (July 2004)",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Tugun-Bypass-Investigation-Report-2004.pdf",
+      "document": "The Tugun Bypass investigation (July 2004)",
+      "page": 39
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Tugun-Bypass-Investigation-Report-2004.pdf",
+      "document": "The Tugun Bypass investigation (July 2004)",
+      "page": 40
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In relation to the first allegation, the Commission does not consider that any officer attempted to implement a policy in breach of the caretaker conventions.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Tugun-Bypass-Investigation-Report-2004.pdf",
+     "document": "The Tugun Bypass investigation (July 2004)",
+     "page": 37
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

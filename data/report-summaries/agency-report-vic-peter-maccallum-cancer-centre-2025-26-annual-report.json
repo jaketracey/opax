@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-peter-maccallum-cancer-centre-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Peter MacCallum Cancer Centre 2025-26 annual report",
+ "body": "Peter MacCallum Cancer Centre",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3fe/globalassets/tabled-paper-documents/tabled-paper-10745/peter-maccallum-cancer-institute-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "11d508525166608d0434e786082b6f33b180f2f4bf96734ea051d8a36814de6f",
+  "pages": 134,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Foreword",
+  "first_page": 8,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4ab3fe/globalassets/tabled-paper-documents/tabled-paper-10745/peter-maccallum-cancer-institute-annual-report-2025-26.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Peter MacCallum Cancer Centre reported on 2025–2026 as a public service combining cancer care, research and education.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fe/globalassets/tabled-paper-documents/tabled-paper-10745/peter-maccallum-cancer-institute-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fe/globalassets/tabled-paper-documents/tabled-paper-10745/peter-maccallum-cancer-institute-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The centre reported launching a new organisational strategy for research-led cancer care.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fe/globalassets/tabled-paper-documents/tabled-paper-10745/peter-maccallum-cancer-institute-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "It reported 513 active clinical trials and interventional studies, including 15 CAR-T trials.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fe/globalassets/tabled-paper-documents/tabled-paper-10745/peter-maccallum-cancer-institute-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ]
+   },
+   {
+    "text": "It reported an operating deficit of $10,349,000.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fe/globalassets/tabled-paper-documents/tabled-paper-10745/peter-maccallum-cancer-institute-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We have 4,226 staff including 700 researchers working across laboratory, clinical, translational and health services research to continue to provide improved treatments, better care and potential cures for cancer.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3fe/globalassets/tabled-paper-documents/tabled-paper-10745/peter-maccallum-cancer-institute-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

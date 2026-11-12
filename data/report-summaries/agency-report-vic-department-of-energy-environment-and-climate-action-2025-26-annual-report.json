@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-department-of-energy-environment-and-climate-action-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Department of Energy, Environment and Climate Action 2025-26 annual report",
+ "body": "Department of Energy, Environment and Climate Action",
+ "source": {
+  "url": "https://www.deeca.vic.gov.au/__data/assets/pdf_file/0027/807480/deeca-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "58762f2b8e0fdd388b694b73a3af01f14bbd9d36f10e4246cbfae766e301db81",
+  "pages": 304,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Secretary’s message",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.deeca.vic.gov.au/__data/assets/pdf_file/0027/807480/deeca-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Department of Energy, Environment and Climate Action reported on its 2025–26 work across climate action, energy, resources, the environment, water and agriculture.",
+    "cites": [
+     {
+      "url": "https://www.deeca.vic.gov.au/__data/assets/pdf_file/0027/807480/deeca-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.deeca.vic.gov.au/__data/assets/pdf_file/0027/807480/deeca-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "About DEECA"
+   },
+   {
+    "text": "The department reported approving more than 6,600 drought support grants for farms and leading responses to 382 bushfires.",
+    "cites": [
+     {
+      "url": "https://www.deeca.vic.gov.au/__data/assets/pdf_file/0027/807480/deeca-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Secretary’s message"
+   },
+   {
+    "text": "It reported that provisional statewide bushfire risk was 66%, below its 70% target.",
+    "cites": [
+     {
+      "url": "https://www.deeca.vic.gov.au/__data/assets/pdf_file/0027/807480/deeca-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Secretary’s message"
+   },
+   {
+    "text": "The department reported employing almost 5,700 staff across more than 80 locations in Victoria.",
+    "cites": [
+     {
+      "url": "https://www.deeca.vic.gov.au/__data/assets/pdf_file/0027/807480/deeca-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "About DEECA"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The department also approved 132 million tonnes of new quarry resources, exceeding the annual target of 80 million tonnes.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.deeca.vic.gov.au/__data/assets/pdf_file/0027/807480/deeca-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

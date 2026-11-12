@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-shrine-of-remembrance-trustees-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Shrine of Remembrance Trustees 2025-26 annual report",
+ "body": "Shrine of Remembrance Trustees",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10583/shrine-of-remembrance-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "20b5c27a62eed90f8c38015b522a76be391f53526dc1f13573b2ef5d3fca282c",
+  "pages": 86,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "CHAIR’S REPORT",
+  "first_page": 6,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10583/shrine-of-remembrance-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Shrine of Remembrance Trustees reported for 2025-26 on their care of the memorial and its commemorative and educational role.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10583/shrine-of-remembrance-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10583/shrine-of-remembrance-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "THE SHRINE OF REMEMBRANCE ACT 1978"
+   },
+   {
+    "text": "The trustees reported adopting a 2025-2045 conceptual master plan in August 2025 after consultation and development.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10583/shrine-of-remembrance-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "CHAIR’S REPORT"
+   },
+   {
+    "text": "The Shrine reported restoring visitor access to the whole reserve following Metro Tunnel works and holding more than 180 commemorative services and three special exhibitions.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10583/shrine-of-remembrance-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "CHIEF EXECUTIVE OFFICER’S REPORT"
+   },
+   {
+    "text": "The trustees described short-term financial stability supported by one-off commercial receipts, while identifying sustainable funding and capital renewal as continuing priorities.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10583/shrine-of-remembrance-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "CHAIR’S REPORT"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "While the Shrine remains financially stable in the short term, supported by one-off commercial receipts during the year, long-term financial sustainability continues to require careful attention.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10583/shrine-of-remembrance-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2025-12-19-report-corrupt-conduct-public-transport-authority",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on Corrupt Conduct at the Public Transport Authority",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corrupt%20Conduct%20at%20the%20Public%20Transport%20Authority_0.pdf",
+  "document": "Report on Corrupt Conduct at the Public Transport Authority. pdf",
+  "sha256": "d469f15da36dd62d8f10fc1d77b68c76a7a224af3f75c9346dbac94ae0a98e7a",
+  "pages": 53,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "AN OVERVIEW OF THE COMMISSION’S INVESTIGATION",
+  "first_page": 3,
+  "last_page": 11,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corrupt%20Conduct%20at%20the%20Public%20Transport%20Authority_0.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated whether a Public Transport Authority safety manager used his role to benefit himself or a rail training supplier.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corrupt%20Conduct%20at%20the%20Public%20Transport%20Authority_0.pdf",
+      "document": "Report on Corrupt Conduct at the Public Transport Authority. pdf",
+      "page": 3
+     }
+    ],
+    "section": "What the Commission investigated"
+   },
+   {
+    "text": "It examined external employment, training purchases, disclosure of conflicts and the Authority’s management of those risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corrupt%20Conduct%20at%20the%20Public%20Transport%20Authority_0.pdf",
+      "document": "Report on Corrupt Conduct at the Public Transport Authority. pdf",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corrupt%20Conduct%20at%20the%20Public%20Transport%20Authority_0.pdf",
+      "document": "Report on Corrupt Conduct at the Public Transport Authority. pdf",
+      "page": 5
+     }
+    ],
+    "section": "Why the Commission investigated"
+   },
+   {
+    "text": "The Commission formed an opinion that the manager engaged in serious misconduct by using his position to benefit himself and the supplier and disadvantage a competitor.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corrupt%20Conduct%20at%20the%20Public%20Transport%20Authority_0.pdf",
+      "document": "Report on Corrupt Conduct at the Public Transport Authority. pdf",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corrupt%20Conduct%20at%20the%20Public%20Transport%20Authority_0.pdf",
+      "document": "Report on Corrupt Conduct at the Public Transport Authority. pdf",
+      "page": 11
+     }
+    ],
+    "section": "The Commission’s opinion"
+   },
+   {
+    "text": "The Commission made four recommendations on external employment scrutiny, conflict of interest policies, central oversight and staff training.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corrupt%20Conduct%20at%20the%20Public%20Transport%20Authority_0.pdf",
+      "document": "Report on Corrupt Conduct at the Public Transport Authority. pdf",
+      "page": 52
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corrupt%20Conduct%20at%20the%20Public%20Transport%20Authority_0.pdf",
+      "document": "Report on Corrupt Conduct at the Public Transport Authority. pdf",
+      "page": 53
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:54+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

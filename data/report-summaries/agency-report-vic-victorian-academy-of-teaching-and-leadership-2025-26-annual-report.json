@@ -1,0 +1,90 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-academy-of-teaching-and-leadership-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Academy of Teaching and Leadership 2025-26 annual report",
+ "body": "Victorian Academy of Teaching and Leadership",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab35f/globalassets/tabled-paper-documents/tabled-paper-10620/victorian-academy-of-teaching-and-leadership-2025-26-annual-report.pdf",
+  "document": "annual report",
+  "sha256": "0304fa57ebadd5032ccd03a051ed726fdc65ba34749c60463682abad51b89508",
+  "pages": 88,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "CEO and Chair’s Report",
+  "first_page": 9,
+  "last_page": 10,
+  "link": "https://www.parliament.vic.gov.au/4ab35f/globalassets/tabled-paper-documents/tabled-paper-10620/victorian-academy-of-teaching-and-leadership-2025-26-annual-report.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Academy of Teaching and Leadership reported on 2025–26, providing professional learning to improve teaching, school leadership and student outcomes.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab35f/globalassets/tabled-paper-documents/tabled-paper-10620/victorian-academy-of-teaching-and-leadership-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "CEO and Chair’s Report"
+   },
+   {
+    "text": "The Academy reported that more than 800 teachers began its Teaching Excellence Program and 46 Teaching Impact Fellowships were awarded.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab35f/globalassets/tabled-paper-documents/tabled-paper-10620/victorian-academy-of-teaching-and-leadership-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "CEO and Chair’s Report"
+   },
+   {
+    "text": "It reported exceeding all participation and satisfaction output targets, measured using the 2025 calendar year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab35f/globalassets/tabled-paper-documents/tabled-paper-10620/victorian-academy-of-teaching-and-leadership-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 9
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab35f/globalassets/tabled-paper-documents/tabled-paper-10620/victorian-academy-of-teaching-and-leadership-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 25
+     }
+    ],
+    "section": "Academy measures of success and indicators and targets (outputs)"
+   },
+   {
+    "text": "The Academy reported a net deficit of $916,631 for the period ending June 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab35f/globalassets/tabled-paper-documents/tabled-paper-10620/victorian-academy-of-teaching-and-leadership-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 26
+     }
+    ],
+    "section": "Financial summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

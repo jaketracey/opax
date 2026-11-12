@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-seymour-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Seymour Health 2025-26 annual report",
+ "body": "Seymour Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab42e/globalassets/tabled-paper-documents/tabled-paper-10752/seymour-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "32504b8e1ef6fce9aefa702cc26387996f11d26aa95c8028c0268a8c84f5b4ea",
+  "pages": 74,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chief Executive Officer and Board Chair report",
+  "first_page": 7,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4ab42e/globalassets/tabled-paper-documents/tabled-paper-10752/seymour-health-annual-report-2025-26.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Seymour Health’s report for the year ended 30 June 2026 covered health services ranging from primary and acute care to residential aged care.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab42e/globalassets/tabled-paper-documents/tabled-paper-10752/seymour-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Director of Business Services report"
+   },
+   {
+    "text": "The health service reported developing its 2026-29 strategic plan, expanding pharmacy services and introducing after-hours palliative care support.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab42e/globalassets/tabled-paper-documents/tabled-paper-10752/seymour-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Chief Executive Officer and Board Chair report"
+   },
+   {
+    "text": "It reported 8,661 urgent care presentations and completion of the first stage of its theatre redevelopment, including a new sterilisation department.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab42e/globalassets/tabled-paper-documents/tabled-paper-10752/seymour-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab42e/globalassets/tabled-paper-documents/tabled-paper-10752/seymour-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Chief Executive Officer and Board Chair report"
+   },
+   {
+    "text": "Seymour Health reported an operating deficit before capital and specific items, and a net deficit of $1.583 million after those items.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab42e/globalassets/tabled-paper-documents/tabled-paper-10752/seymour-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Director of Business Services report"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Services managed within the available funding and were adequately resourced during the year.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab42e/globalassets/tabled-paper-documents/tabled-paper-10752/seymour-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

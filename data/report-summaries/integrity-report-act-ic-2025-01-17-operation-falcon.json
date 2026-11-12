@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-act-ic-2025-01-17-operation-falcon",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Falcon Investigation Report: An investigation into the allegations of the omission of required medical observations and falsification of observation records at the Alexander Maconochie Centre.",
+ "body": "ACT Integrity Commission",
+ "source": {
+  "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/2790246/Investigation-Report-Operation-Falcon.pdf",
+  "document": "Operation Falcon Investigation Report: An investigation into the allegations of the omission of required medical observations and falsification of observation records at the Alexander Maconochie Centre.",
+  "sha256": "c0aba965bc5f3de67322074eb8aba5ec9bab761030e68d92d0ce07edbd63ab9d",
+  "pages": 54,
+  "rights": "commission-copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Introduction",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/2790246/Investigation-Report-Operation-Falcon.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The ACT Integrity Commission investigated allegations that corrections officers missed required detainee observations at the Alexander Maconochie Centre.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/2790246/Investigation-Report-Operation-Falcon.pdf",
+      "document": "Operation Falcon Investigation Report: An investigation into the allegations of the omission of required medical observations and falsification of observation records at the Alexander Maconochie Centre.",
+      "page": 4
+     }
+    ],
+    "section": "Investigation report"
+   },
+   {
+    "text": "The Commission found that a corrections officer missed mandatory medical observations and made four false entries in a detainee’s observation record.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/2790246/Investigation-Report-Operation-Falcon.pdf",
+      "document": "Operation Falcon Investigation Report: An investigation into the allegations of the omission of required medical observations and falsification of observation records at the Alexander Maconochie Centre.",
+      "page": 47
+     }
+    ],
+    "section": "Findings"
+   },
+   {
+    "text": "It also found that the general manager neglected to follow up the complaint, arranged misleading information for the Official Visitor and failed to address compliance problems.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/2790246/Investigation-Report-Operation-Falcon.pdf",
+      "document": "Operation Falcon Investigation Report: An investigation into the allegations of the omission of required medical observations and falsification of observation records at the Alexander Maconochie Centre.",
+      "page": 47
+     }
+    ],
+    "section": "Findings"
+   },
+   {
+    "text": "Despite its adverse findings about the officer and general manager, the Commission made no finding of corrupt conduct against either.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/2790246/Investigation-Report-Operation-Falcon.pdf",
+      "document": "Operation Falcon Investigation Report: An investigation into the allegations of the omission of required medical observations and falsification of observation records at the Alexander Maconochie Centre.",
+      "page": 5
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/2790246/Investigation-Report-Operation-Falcon.pdf",
+      "document": "Operation Falcon Investigation Report: An investigation into the allegations of the omission of required medical observations and falsification of observation records at the Alexander Maconochie Centre.",
+      "page": 49
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/2790246/Investigation-Report-Operation-Falcon.pdf",
+      "document": "Operation Falcon Investigation Report: An investigation into the allegations of the omission of required medical observations and falsification of observation records at the Alexander Maconochie Centre.",
+      "page": 54
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

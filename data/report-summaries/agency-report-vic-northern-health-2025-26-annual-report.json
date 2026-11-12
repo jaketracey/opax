@@ -1,0 +1,91 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-northern-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Northern Health 2025-26 annual report",
+ "body": "Northern Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10726/northern-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "ff808325bf41373e013a3a990ad4bdad30268941593f33fb9be9c1e3eb141b47",
+  "pages": 144,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the \nBoard Chair and Chief Executive",
+  "first_page": 8,
+  "last_page": 9,
+  "link": "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10726/northern-health-annual-report-2025-26.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Northern Health reported on 2025–26 as a major healthcare provider for Melbourne’s northern region.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10726/northern-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "It reported opening community hospitals at Craigieburn and Mernda and recording 320,129 presentations to its statewide Virtual Emergency Department.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10726/northern-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "It reported meeting all requirements in its healthcare accreditation survey.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10726/northern-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "It reported an operating surplus of $2.5 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10726/northern-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Notwithstanding sector-wide challenges, Northern Health maintained a clear focus on its priorities and delivered an operating surplus of $2.5m.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10726/northern-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

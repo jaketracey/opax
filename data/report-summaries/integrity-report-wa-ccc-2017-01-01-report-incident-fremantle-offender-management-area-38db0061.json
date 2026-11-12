@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2017-01-01-report-incident-fremantle-offender-management-area-38db0061",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on an incident in the Fremantle Offender Management Area 1 January 2017",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20an%20incident%20in%20the%20Fremantle%20Offender%20Management%20Area%201%20January%202017.pdf",
+  "document": "Report on an incident in the Fremantle Offender Management Area 1 January 2017",
+  "sha256": "c2d7c082768891865fc0e19755913d17288a38f1d7b90321cb6099cb49bd460f",
+  "pages": 20,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "An overview",
+  "first_page": 5,
+  "last_page": 7,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20an%20incident%20in%20the%20Fremantle%20Offender%20Management%20Area%201%20January%202017.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated a woman’s treatment in police custody at Fremantle in cooperation with the police Internal Affairs Unit.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20an%20incident%20in%20the%20Fremantle%20Offender%20Management%20Area%201%20January%202017.pdf",
+      "document": "Report on an incident in the Fremantle Offender Management Area 1 January 2017",
+      "page": 6
+     }
+    ],
+    "section": "An overview"
+   },
+   {
+    "text": "Its investigation concentrated on police conduct after the woman was injured during her arrest.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20an%20incident%20in%20the%20Fremantle%20Offender%20Management%20Area%201%20January%202017.pdf",
+      "document": "Report on an incident in the Fremantle Offender Management Area 1 January 2017",
+      "page": 9
+     }
+    ],
+    "section": "The arrest and its aftermath"
+   },
+   {
+    "text": "The Commission concluded that the collective failure to obtain medical care amounted to serious misconduct, despite adequate policies for injured detainees.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20an%20incident%20in%20the%20Fremantle%20Offender%20Management%20Area%201%20January%202017.pdf",
+      "document": "Report on an incident in the Fremantle Offender Management Area 1 January 2017",
+      "page": 19
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "Its recommendation called for urgent consideration of an upgrade to the custody area to meet the Police Building Code.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20an%20incident%20in%20the%20Fremantle%20Offender%20Management%20Area%201%20January%202017.pdf",
+      "document": "Report on an incident in the Fremantle Offender Management Area 1 January 2017",
+      "page": 12
+     }
+    ],
+    "section": "Recommendation"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Together, the failure of duty amounts to serious misconduct in the form of reviewable police action.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20an%20incident%20in%20the%20Fremantle%20Offender%20Management%20Area%201%20January%202017.pdf",
+     "document": "Report on an incident in the Fremantle Offender Management Area 1 January 2017",
+     "page": 19
+    }
+   },
+   {
+    "quote": "Current WA Police Force policies and procedures in relation to dealing with injured detained persons are comprehensive and sufficient.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20an%20incident%20in%20the%20Fremantle%20Offender%20Management%20Area%201%20January%202017.pdf",
+     "document": "Report on an incident in the Fremantle Offender Management Area 1 January 2017",
+     "page": 19
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

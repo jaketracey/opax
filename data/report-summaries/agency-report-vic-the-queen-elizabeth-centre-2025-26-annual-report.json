@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-the-queen-elizabeth-centre-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "The Queen Elizabeth Centre 2025-26 annual report",
+ "body": "The Queen Elizabeth Centre",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab424/globalassets/tabled-paper-documents/tabled-paper-10759/the-queen-elizabeth-centre-annual-report-2025-2026.pdf",
+  "document": "annual report",
+  "sha256": "cc955352a2da97646edeb829cc1110a0f9c6d66e032f9d1926c5114a88e22ae1",
+  "pages": 96,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Board Chair and Chief Executive Officer Report",
+  "first_page": 4,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab424/globalassets/tabled-paper-documents/tabled-paper-10759/the-queen-elizabeth-centre-annual-report-2025-2026.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Queen Elizabeth Centre reported on 2025–26, with a role in helping families and communities through early parenting support.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab424/globalassets/tabled-paper-documents/tabled-paper-10759/the-queen-elizabeth-centre-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab424/globalassets/tabled-paper-documents/tabled-paper-10759/the-queen-elizabeth-centre-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "The centre reported that 2,387 families used its services during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab424/globalassets/tabled-paper-documents/tabled-paper-10759/the-queen-elizabeth-centre-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Board Chair and Chief Executive Officer Report"
+   },
+   {
+    "text": "It reported the opening of its Hastings early parenting centre in May 2026, with overnight services planned for later that year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab424/globalassets/tabled-paper-documents/tabled-paper-10759/the-queen-elizabeth-centre-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Board Chair and Chief Executive Officer Report"
+   },
+   {
+    "text": "The centre reported that its board and Tweddle’s board recommended a voluntary merger in June 2026, with the proposal awaiting government consideration.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab424/globalassets/tabled-paper-documents/tabled-paper-10759/the-queen-elizabeth-centre-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Board Chair and Chief Executive Officer Report"
+   },
+   {
+    "text": "The centre reported average monthly staffing of 106.93 full-time equivalents for 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab424/globalassets/tabled-paper-documents/tabled-paper-10759/the-queen-elizabeth-centre-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 29
+     }
+    ],
+    "section": "5.3 Workforce data"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Having considered all available evidence, both Boards concluded that a merger would deliver lasting benefits for children, families and carers, the early parenting workforce and the broader Victorian community.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab424/globalassets/tabled-paper-documents/tabled-paper-10759/the-queen-elizabeth-centre-annual-report-2025-2026.pdf",
+     "document": "annual report",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,145 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2008-11-21-report-investigation-alleged-public-sector-miscondu-fcd81b67",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - The Hon Anthony David McRae MLA and Mr Rewi Edward Lyall",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons.pdf",
+  "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons.pdf",
+  "sha256": "bea1bba2973094ae4242da249ffb7c30b7cefd008335cf9f723ccc8970913996",
+  "pages": 229,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 11,
+  "last_page": 35,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated a planning minister’s dealings with a lobbyist and related conduct by his chief of staff.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons.pdf",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons.pdf",
+      "page": 30
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The inquiry examined a telephone conversation linking a development proposal with political fundraising.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons.pdf",
+      "page": 24
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons.pdf",
+      "page": 25
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission formed a serious misconduct opinion about the minister’s attempt to obtain fundraising help by implying that a favourable decision remained to be made.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons.pdf",
+      "page": 28
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons.pdf",
+      "page": 29
+     }
+    ],
+    "section": "Serious Misconduct Opinion"
+   },
+   {
+    "text": "The Commission found no improper basis for the planning decision itself and no misconduct by the chief of staff concerning the development or an arts organisation’s fundraising.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons.pdf",
+      "page": 135
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons.pdf",
+      "page": 32
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons.pdf",
+      "page": 35
+     }
+    ],
+    "section": "Commission assessments"
+   },
+   {
+    "text": "It recommended against prosecuting the former minister because he had already properly made the relevant official decision.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons.pdf",
+      "page": 29
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons.pdf",
+      "page": 30
+     }
+    ],
+    "section": "Recommendation"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The necessary four elements having been established on the balance of probabilities, it is the Commission’s opinion that Mr McRae’s conduct constitutes serious misconduct under sections 3 and 4(b) of the Act.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons.pdf",
+     "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons.pdf",
+     "page": 29
+    }
+   },
+   {
+    "quote": "There is no evidence of misconduct by Mr Lyall in his dealings with Mr Grill concerning the Millbank on Moore development.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons.pdf",
+     "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons.pdf",
+     "page": 32
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

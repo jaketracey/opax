@@ -1,0 +1,134 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2022-07-04-investigation-workshop-investigation-allegations-disclosure",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Investigation Workshop: An investigation into allegations of disclosure of confidential information at the Office of the Integrity Commissioner",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Workshop-report.pdf",
+  "document": "Investigation Workshop - July 2022 (PDF)",
+  "sha256": "d533b049a4fb16b580bf358975d696a1b659479d2b3a54c6f43dd8f46dba1bc9",
+  "pages": 18,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Why issue a public report?",
+  "first_page": 6,
+  "last_page": 6,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Workshop-report.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Queensland’s Crime and Corruption Commission examined alleged improper disclosure from the Integrity Commissioner’s office, removal of laptops and protection of confidential information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Workshop-report.pdf",
+      "document": "Investigation Workshop - July 2022 (PDF)",
+      "page": 6
+     }
+    ],
+    "section": "Why issue a public report?"
+   },
+   {
+    "text": "The CCC found no evidence that an executive officer disclosed confidential information by email or that it had been disclosed by other means.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Workshop-report.pdf",
+      "document": "Investigation Workshop - July 2022 (PDF)",
+      "page": 11
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The CCC concluded that collecting two laptops and reimaging one was ordinary administration and that descriptions of a raid and seizure misrepresented events.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Workshop-report.pdf",
+      "document": "Investigation Workshop - July 2022 (PDF)",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Workshop-report.pdf",
+      "document": "Investigation Workshop - July 2022 (PDF)",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Workshop-report.pdf",
+      "document": "Investigation Workshop - July 2022 (PDF)",
+      "page": 15
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The CCC identified longstanding security vulnerabilities but concluded that the events had exposed, rather than exploited, them.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Workshop-report.pdf",
+      "document": "Investigation Workshop - July 2022 (PDF)",
+      "page": 17
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "Its closing recommendations concern prioritising sensitive information when extending access-log retention and reviewing security arrangements, alongside support for broader governance changes.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Workshop-report.pdf",
+      "document": "Investigation Workshop - July 2022 (PDF)",
+      "page": 17
+     }
+    ],
+    "section": "Recommendations arising from this investigation"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Having investigated this issue, the CCC found no evidence that the Executive Officer had disclosed confidential information by email.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Workshop-report.pdf",
+     "document": "Investigation Workshop - July 2022 (PDF)",
+     "page": 11
+    }
+   },
+   {
+    "quote": "In light of the above, the commentary which has suggested that laptops were ‘seized’ and ‘wiped’ as a result of a ‘raid’ on the Integrity Commissioner’s offices is, in the CCC’s view, a mischaracterisation of what occurred.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Workshop-report.pdf",
+     "document": "Investigation Workshop - July 2022 (PDF)",
+     "page": 15
+    }
+   },
+   {
+    "quote": "Ultimately this investigation did not reveal any particular concerns about the security of information held by the Integrity Commissioner.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Workshop-report.pdf",
+     "document": "Investigation Workshop - July 2022 (PDF)",
+     "page": 17
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

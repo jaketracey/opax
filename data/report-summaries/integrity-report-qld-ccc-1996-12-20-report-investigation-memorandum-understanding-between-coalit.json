@@ -1,0 +1,131 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1996-12-20-report-investigation-memorandum-understanding-between-coalit",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on an investigation into a Memorandum of Understanding between the Coalition and the QPUE and an investigation into an alleged deal between the ALP and the SSAA",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/A-report-on-an-investigation-into-a-memorandum-of-understanding-between-the-Coalition-and-the-QPUE-Carruthers/An-investigation-into-a-MoU-and-an-investigation-into-an-alleged-deal-Report-1996.pdf",
+  "document": "Report on an investigation into a Memorandum of Understanding between the Coalition and the QPUE ... (20 December 1996)",
+  "sha256": "e4e9efc254d19d57e3b6c86115dafdb0db23bfabe5926e365e5c0b1a70075d62",
+  "pages": 158,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "FOREWORD",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/A-report-on-an-investigation-into-a-memorandum-of-understanding-between-the-Coalition-and-the-QPUE-Carruthers/An-investigation-into-a-MoU-and-an-investigation-into-an-alleged-deal-Report-1996.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission published legal advice following inquiries into a Coalition agreement with the police union and an alleged Labor agreement with shooting organisations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/A-report-on-an-investigation-into-a-memorandum-of-understanding-between-the-Coalition-and-the-QPUE-Carruthers/An-investigation-into-a-MoU-and-an-investigation-into-an-alleged-deal-Report-1996.pdf",
+      "document": "Report on an investigation into a Memorandum of Understanding between the Coalition and the QPUE ... (20 December 1996)",
+      "page": 3
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/A-report-on-an-investigation-into-a-memorandum-of-understanding-between-the-Coalition-and-the-QPUE-Carruthers/An-investigation-into-a-MoU-and-an-investigation-into-an-alleged-deal-Report-1996.pdf",
+      "document": "Report on an investigation into a Memorandum of Understanding between the Coalition and the QPUE ... (20 December 1996)",
+      "page": 5
+     }
+    ],
+    "section": "FOREWORD"
+   },
+   {
+    "text": "The inquiries considered whether either arrangement warranted criminal, official-misconduct or disciplinary proceedings.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/A-report-on-an-investigation-into-a-memorandum-of-understanding-between-the-Coalition-and-the-QPUE-Carruthers/An-investigation-into-a-MoU-and-an-investigation-into-an-alleged-deal-Report-1996.pdf",
+      "document": "Report on an investigation into a Memorandum of Understanding between the Coalition and the QPUE ... (20 December 1996)",
+      "page": 5
+     }
+    ],
+    "section": "FOREWORD"
+   },
+   {
+    "text": "The advice reported that neither matter justified referral for criminal action or official-misconduct proceedings.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/A-report-on-an-investigation-into-a-memorandum-of-understanding-between-the-Coalition-and-the-QPUE-Carruthers/An-investigation-into-a-MoU-and-an-investigation-into-an-alleged-deal-Report-1996.pdf",
+      "document": "Report on an investigation into a Memorandum of Understanding between the Coalition and the QPUE ... (20 December 1996)",
+      "page": 5
+     }
+    ],
+    "section": "FOREWORD"
+   },
+   {
+    "text": "Separate advice considered that the evidence supported a prima facie disciplinary case against several police officers, while leaving any action to the responsible police decision-maker.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/A-report-on-an-investigation-into-a-memorandum-of-understanding-between-the-Coalition-and-the-QPUE-Carruthers/An-investigation-into-a-MoU-and-an-investigation-into-an-alleged-deal-Report-1996.pdf",
+      "document": "Report on an investigation into a Memorandum of Understanding between the Coalition and the QPUE ... (20 December 1996)",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/A-report-on-an-investigation-into-a-memorandum-of-understanding-between-the-Coalition-and-the-QPUE-Carruthers/An-investigation-into-a-MoU-and-an-investigation-into-an-alleged-deal-Report-1996.pdf",
+      "document": "Report on an investigation into a Memorandum of Understanding between the Coalition and the QPUE ... (20 December 1996)",
+      "page": 121
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/A-report-on-an-investigation-into-a-memorandum-of-understanding-between-the-Coalition-and-the-QPUE-Carruthers/An-investigation-into-a-MoU-and-an-investigation-into-an-alleged-deal-Report-1996.pdf",
+      "document": "Report on an investigation into a Memorandum of Understanding between the Coalition and the QPUE ... (20 December 1996)",
+      "page": 122
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "The Commission said it intended to act on the advice.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/A-report-on-an-investigation-into-a-memorandum-of-understanding-between-the-Coalition-and-the-QPUE-Carruthers/An-investigation-into-a-MoU-and-an-investigation-into-an-alleged-deal-Report-1996.pdf",
+      "document": "Report on an investigation into a Memorandum of Understanding between the Coalition and the QPUE ... (20 December 1996)",
+      "page": 6
+     }
+    ],
+    "section": "FOREWORD"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In our opinion, the circumstances do not warrant the making of reports pursuant to subsections 33(2)(a) or 33(2)(b) CJ Act.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/A-report-on-an-investigation-into-a-memorandum-of-understanding-between-the-Coalition-and-the-QPUE-Carruthers/An-investigation-into-a-MoU-and-an-investigation-into-an-alleged-deal-Report-1996.pdf",
+     "document": "Report on an investigation into a Memorandum of Understanding between the Coalition and the QPUE ... (20 December 1996)",
+     "page": 93
+    }
+   },
+   {
+    "quote": "The Commissioner of Police or the responsible prescribed officer must exercise an independent discretion in determining whether or not disciplinary action should be taken.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/A-report-on-an-investigation-into-a-memorandum-of-understanding-between-the-Coalition-and-the-QPUE-Carruthers/An-investigation-into-a-MoU-and-an-investigation-into-an-alleged-deal-Report-1996.pdf",
+     "document": "Report on an investigation into a Memorandum of Understanding between the Coalition and the QPUE ... (20 December 1996)",
+     "page": 122
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

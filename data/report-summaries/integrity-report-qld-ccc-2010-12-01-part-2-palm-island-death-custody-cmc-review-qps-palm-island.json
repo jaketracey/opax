@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2010-12-01-part-2-palm-island-death-custody-cmc-review-qps-palm-island",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Part 2: The Palm Island death in custody - CMC review of the QPS' Palm Island Review",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Palm-Island-death-in-custody-Part-2-Report-2010.pdf",
+  "document": "Part 2: The Palm Island death in custody - CMC review of the QPS' Palm Island Review",
+  "sha256": "4181c8b051d9160955a6ad9efb0c79aef62b905203bba9e2bb2c77049b9ef21b",
+  "pages": 16,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission set out the rules for investigating deaths in custody and reconstructed the initial response to a death on Palm Island.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Palm-Island-death-in-custody-Part-2-Report-2010.pdf",
+      "document": "Part 2: The Palm Island death in custody - CMC review of the QPS' Palm Island Review",
+      "page": 2
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Palm-Island-death-in-custody-Part-2-Report-2010.pdf",
+      "document": "Part 2: The Palm Island death in custody - CMC review of the QPS' Palm Island Review",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "It examined police procedures, the police code of conduct, coronial guidelines and recommendations from the Royal Commission into Aboriginal Deaths in Custody.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Palm-Island-death-in-custody-Part-2-Report-2010.pdf",
+      "document": "Part 2: The Palm Island death in custody - CMC review of the QPS' Palm Island Review",
+      "page": 2
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Palm-Island-death-in-custody-Part-2-Report-2010.pdf",
+      "document": "Part 2: The Palm Island death in custody - CMC review of the QPS' Palm Island Review",
+      "page": 3
+     }
+    ]
+   },
+   {
+    "text": "The CMC noted that police procedures at the time did not explicitly require investigators to approach a death in custody as a possible homicide.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Palm-Island-death-in-custody-Part-2-Report-2010.pdf",
+      "document": "Part 2: The Palm Island death in custody - CMC review of the QPS' Palm Island Review",
+      "page": 3
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The CMC is not aware of any section of the OPM which placed a specific obligation on an Assistant Commissioner, Operations Coordinator (or Chief Superintendent) or District Officer in relation to a death in custody investigation.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Palm-Island-death-in-custody-Part-2-Report-2010.pdf",
+     "document": "Part 2: The Palm Island death in custody - CMC review of the QPS' Palm Island Review",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

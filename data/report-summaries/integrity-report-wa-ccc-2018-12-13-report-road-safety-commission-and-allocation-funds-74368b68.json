@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2018-12-13-report-road-safety-commission-and-allocation-funds-74368b68",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report into the Road Safety Commission and an allocation of funds to Western Force",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20the%20Road%20Safety%20Commission%20and%20an%20allocation%20of%20funds%20to%20Western%20Force.pdf",
+  "document": "Report into the Road Safety Commission and an allocation of funds to Western Force",
+  "sha256": "77aa38a5d563636b621946858650d0b387fbe3059d111ffddc8402b806ad3b43",
+  "pages": 29,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Introduction and overview",
+  "first_page": 4,
+  "last_page": 7,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20the%20Road%20Safety%20Commission%20and%20an%20allocation%20of%20funds%20to%20Western%20Force.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated the redirection of road safety funds to Western Force following a referral alleging serious misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20the%20Road%20Safety%20Commission%20and%20an%20allocation%20of%20funds%20to%20Western%20Force.pdf",
+      "document": "Report into the Road Safety Commission and an allocation of funds to Western Force",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20the%20Road%20Safety%20Commission%20and%20an%20allocation%20of%20funds%20to%20Western%20Force.pdf",
+      "document": "Report into the Road Safety Commission and an allocation of funds to Western Force",
+      "page": 6
+     }
+    ],
+    "section": "Introduction and overview"
+   },
+   {
+    "text": "The Commission examined the allocation process and the Road Safety Council’s exclusion from its statutory role.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20the%20Road%20Safety%20Commission%20and%20an%20allocation%20of%20funds%20to%20Western%20Force.pdf",
+      "document": "Report into the Road Safety Commission and an allocation of funds to Western Force",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20the%20Road%20Safety%20Commission%20and%20an%20allocation%20of%20funds%20to%20Western%20Force.pdf",
+      "document": "Report into the Road Safety Commission and an allocation of funds to Western Force",
+      "page": 7
+     }
+    ],
+    "section": "Introduction and overview"
+   },
+   {
+    "text": "The Commission considered that excluding the Council invalidated the redirection of funds, but formed no opinion of serious misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20the%20Road%20Safety%20Commission%20and%20an%20allocation%20of%20funds%20to%20Western%20Force.pdf",
+      "document": "Report into the Road Safety Commission and an allocation of funds to Western Force",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20the%20Road%20Safety%20Commission%20and%20an%20allocation%20of%20funds%20to%20Western%20Force.pdf",
+      "document": "Report into the Road Safety Commission and an allocation of funds to Western Force",
+      "page": 29
+     }
+    ],
+    "section": "Introduction and overview"
+   },
+   {
+    "text": "The Commission reported that its investigation found no evidence of political interference or financial benefit to Road Safety Commission officers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20the%20Road%20Safety%20Commission%20and%20an%20allocation%20of%20funds%20to%20Western%20Force.pdf",
+      "document": "Report into the Road Safety Commission and an allocation of funds to Western Force",
+      "page": 28
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20the%20Road%20Safety%20Commission%20and%20an%20allocation%20of%20funds%20to%20Western%20Force.pdf",
+      "document": "Report into the Road Safety Commission and an allocation of funds to Western Force",
+      "page": 29
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

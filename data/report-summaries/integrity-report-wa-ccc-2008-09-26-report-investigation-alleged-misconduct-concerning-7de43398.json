@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2008-09-26-report-investigation-alleged-misconduct-concerning-7de43398",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Investigation of Alleged Misconduct Concerning Mr Stephen Lee, Mayor of the City of Cockburn",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Mr%20Stephen%20Lee%2C%20Mayor%20of%20the%20City%20of%20Cockburn.pdf",
+  "document": "Report on the Investigation of Alleged Misconduct Concerning Mr Stephen Lee, Mayor of the City of Cockburn.pdf",
+  "sha256": "f10e707af275a120e787a38a307bd21ccf1086d55afb4488cb52f824139f6c4c",
+  "pages": 129,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 9,
+  "last_page": 19,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Mr%20Stephen%20Lee%2C%20Mayor%20of%20the%20City%20of%20Cockburn.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated funding for the City of Cockburn mayor’s re-election campaign.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Mr%20Stephen%20Lee%2C%20Mayor%20of%20the%20City%20of%20Cockburn.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Mr Stephen Lee, Mayor of the City of Cockburn.pdf",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Mr%20Stephen%20Lee%2C%20Mayor%20of%20the%20City%20of%20Cockburn.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Mr Stephen Lee, Mayor of the City of Cockburn.pdf",
+      "page": 10
+     }
+    ],
+    "section": "Investigation"
+   },
+   {
+    "text": "It examined campaign donations, a developer’s financial contribution and the mayor’s involvement in council matters affecting that developer.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Mr%20Stephen%20Lee%2C%20Mayor%20of%20the%20City%20of%20Cockburn.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Mr Stephen Lee, Mayor of the City of Cockburn.pdf",
+      "page": 11
+     }
+    ],
+    "section": "Investigation"
+   },
+   {
+    "text": "The Commission formed five misconduct opinions concerning failure to declare a developer’s gift and failure to disclose interests affecting impartiality at council meetings.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Mr%20Stephen%20Lee%2C%20Mayor%20of%20the%20City%20of%20Cockburn.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Mr Stephen Lee, Mayor of the City of Cockburn.pdf",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Mr%20Stephen%20Lee%2C%20Mayor%20of%20the%20City%20of%20Cockburn.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Mr Stephen Lee, Mayor of the City of Cockburn.pdf",
+      "page": 16
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Mr%20Stephen%20Lee%2C%20Mayor%20of%20the%20City%20of%20Cockburn.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Mr Stephen Lee, Mayor of the City of Cockburn.pdf",
+      "page": 17
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Mr%20Stephen%20Lee%2C%20Mayor%20of%20the%20City%20of%20Cockburn.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Mr Stephen Lee, Mayor of the City of Cockburn.pdf",
+      "page": 18
+     }
+    ],
+    "section": "Commission Assessment and Opinions"
+   },
+   {
+    "text": "It made one new recommendation to review gift disclosure rules, including gaps that could conceal the amount and true source of gifts received after the election disclosure period.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Mr%20Stephen%20Lee%2C%20Mayor%20of%20the%20City%20of%20Cockburn.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Mr Stephen Lee, Mayor of the City of Cockburn.pdf",
+      "page": 19
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

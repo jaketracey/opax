@@ -1,0 +1,139 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2012-07-16-report-investigation-alleged-public-sector-miscondu-38c9de55",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Investigation of Alleged Public Sector Misconduct by the Commissioner of Police in Relation to the Use of the Western Australian Government Purchasing Card or Any Other Entitlement",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20the%20Commissioner%20of%20Police%20in%20Relation%20to%20the%20Use%20of%20the%20WA%20Government%20Purchasing%20Card%20or%20Any%20Other%20Entitlement.pdf",
+  "document": "Report on the Investigation of Alleged Public Sector Misconduct by the Commissioner of Police in Relation to the Use of the Western Australian Government Purchasing Card or Any Other Entitlement",
+  "sha256": "3d68c0c05247aeaf5cfa9d5f781f3f8ef95f98d7629967933715abc35e0e54e6",
+  "pages": 82,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "FOREWORD",
+  "first_page": 6,
+  "last_page": 6,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20the%20Commissioner%20of%20Police%20in%20Relation%20to%20the%20Use%20of%20the%20WA%20Government%20Purchasing%20Card%20or%20Any%20Other%20Entitlement.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated suspected misconduct involving police purchasing cards, entitlements and official travel, including the Commissioner of Police’s expenditure.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20the%20Commissioner%20of%20Police%20in%20Relation%20to%20the%20Use%20of%20the%20WA%20Government%20Purchasing%20Card%20or%20Any%20Other%20Entitlement.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by the Commissioner of Police in Relation to the Use of the Western Australian Government Purchasing Card or Any Other Entitlement",
+      "page": 6
+     }
+    ],
+    "section": "FOREWORD"
+   },
+   {
+    "text": "It examined personal spending on official cards, reimbursement and approval practices, and the division between private and official travel.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20the%20Commissioner%20of%20Police%20in%20Relation%20to%20the%20Use%20of%20the%20WA%20Government%20Purchasing%20Card%20or%20Any%20Other%20Entitlement.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by the Commissioner of Police in Relation to the Use of the Western Australian Government Purchasing Card or Any Other Entitlement",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20the%20Commissioner%20of%20Police%20in%20Relation%20to%20the%20Use%20of%20the%20WA%20Government%20Purchasing%20Card%20or%20Any%20Other%20Entitlement.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by the Commissioner of Police in Relation to the Use of the Western Australian Government Purchasing Card or Any Other Entitlement",
+      "page": 80
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commission identified poor administrative practices and compliance weaknesses, but concluded that the available material did not support misconduct findings against the Commissioner or other police officers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20the%20Commissioner%20of%20Police%20in%20Relation%20to%20the%20Use%20of%20the%20WA%20Government%20Purchasing%20Card%20or%20Any%20Other%20Entitlement.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by the Commissioner of Police in Relation to the Use of the Western Australian Government Purchasing Card or Any Other Entitlement",
+      "page": 76
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20the%20Commissioner%20of%20Police%20in%20Relation%20to%20the%20Use%20of%20the%20WA%20Government%20Purchasing%20Card%20or%20Any%20Other%20Entitlement.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by the Commissioner of Police in Relation to the Use of the Western Australian Government Purchasing Card or Any Other Entitlement",
+      "page": 80
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "Its five recommendations address purchasing card guidance, personal spending rules, compliance procedures, independent approval and clearer overseas travel proposals and reports.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20the%20Commissioner%20of%20Police%20in%20Relation%20to%20the%20Use%20of%20the%20WA%20Government%20Purchasing%20Card%20or%20Any%20Other%20Entitlement.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by the Commissioner of Police in Relation to the Use of the Western Australian Government Purchasing Card or Any Other Entitlement",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20the%20Commissioner%20of%20Police%20in%20Relation%20to%20the%20Use%20of%20the%20WA%20Government%20Purchasing%20Card%20or%20Any%20Other%20Entitlement.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by the Commissioner of Police in Relation to the Use of the Western Australian Government Purchasing Card or Any Other Entitlement",
+      "page": 74
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20the%20Commissioner%20of%20Police%20in%20Relation%20to%20the%20Use%20of%20the%20WA%20Government%20Purchasing%20Card%20or%20Any%20Other%20Entitlement.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by the Commissioner of Police in Relation to the Use of the Western Australian Government Purchasing Card or Any Other Entitlement",
+      "page": 75
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20the%20Commissioner%20of%20Police%20in%20Relation%20to%20the%20Use%20of%20the%20WA%20Government%20Purchasing%20Card%20or%20Any%20Other%20Entitlement.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by the Commissioner of Police in Relation to the Use of the Western Australian Government Purchasing Card or Any Other Entitlement",
+      "page": 76
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20the%20Commissioner%20of%20Police%20in%20Relation%20to%20the%20Use%20of%20the%20WA%20Government%20Purchasing%20Card%20or%20Any%20Other%20Entitlement.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by the Commissioner of Police in Relation to the Use of the Western Australian Government Purchasing Card or Any Other Entitlement",
+      "page": 78
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20the%20Commissioner%20of%20Police%20in%20Relation%20to%20the%20Use%20of%20the%20WA%20Government%20Purchasing%20Card%20or%20Any%20Other%20Entitlement.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by the Commissioner of Police in Relation to the Use of the Western Australian Government Purchasing Card or Any Other Entitlement",
+      "page": 79
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Although in the course of the Commission investigation a number of anomalous practices in relation to the use of WAPOL Corporate Credit Cards were identified, these practices are not in themselves misconduct.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20the%20Commissioner%20of%20Police%20in%20Relation%20to%20the%20Use%20of%20the%20WA%20Government%20Purchasing%20Card%20or%20Any%20Other%20Entitlement.pdf",
+     "document": "Report on the Investigation of Alleged Public Sector Misconduct by the Commissioner of Police in Relation to the Use of the Western Australian Government Purchasing Card or Any Other Entitlement",
+     "page": 80
+    }
+   },
+   {
+    "quote": "However, in the opinion of the Commission, compliance by WAPOL with those policies and procedures is inadequate, at least insofar as the Office of the Commissioner is concerned.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20the%20Commissioner%20of%20Police%20in%20Relation%20to%20the%20Use%20of%20the%20WA%20Government%20Purchasing%20Card%20or%20Any%20Other%20Entitlement.pdf",
+     "document": "Report on the Investigation of Alleged Public Sector Misconduct by the Commissioner of Police in Relation to the Use of the Western Australian Government Purchasing Card or Any Other Entitlement",
+     "page": 76
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

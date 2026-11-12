@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2018-10-18-report-unauthorised-release-confidential-informatio-14d73e62",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report into unauthorised release of confidential information of the Public Transport Authority",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20unauthorised%20release%20of%20confidential%20information%20of%20the%20Public%20Transport%20Authority.pdf",
+  "document": "Report into unauthorised release of confidential information of the Public Transport Authority",
+  "sha256": "5d0a5e2b20d9d0984ea4134b08870b798bbdd02596e4daa58030216e029af2f0",
+  "pages": 10,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Introduction",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20unauthorised%20release%20of%20confidential%20information%20of%20the%20Public%20Transport%20Authority.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated unauthorised disclosure of personal information about Public Transport Authority employees to a union.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20unauthorised%20release%20of%20confidential%20information%20of%20the%20Public%20Transport%20Authority.pdf",
+      "document": "Report into unauthorised release of confidential information of the Public Transport Authority",
+      "page": 4
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission concluded that an employee copied personal details concerning 1,750 staff and transferred them to a union organiser’s computer.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20unauthorised%20release%20of%20confidential%20information%20of%20the%20Public%20Transport%20Authority.pdf",
+      "document": "Report into unauthorised release of confidential information of the Public Transport Authority",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20unauthorised%20release%20of%20confidential%20information%20of%20the%20Public%20Transport%20Authority.pdf",
+      "document": "Report into unauthorised release of confidential information of the Public Transport Authority",
+      "page": 7
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission formed a serious misconduct opinion about the disclosure and left the unauthorised access issue to the Authority’s investigation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20unauthorised%20release%20of%20confidential%20information%20of%20the%20Public%20Transport%20Authority.pdf",
+      "document": "Report into unauthorised release of confidential information of the Public Transport Authority",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20unauthorised%20release%20of%20confidential%20information%20of%20the%20Public%20Transport%20Authority.pdf",
+      "document": "Report into unauthorised release of confidential information of the Public Transport Authority",
+      "page": 10
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commission made one recommendation asking the Authority to strengthen confidential information access controls and reinforce staff understanding of the seriousness of accessing it.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20unauthorised%20release%20of%20confidential%20information%20of%20the%20Public%20Transport%20Authority.pdf",
+      "document": "Report into unauthorised release of confidential information of the Public Transport Authority",
+      "page": 10
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

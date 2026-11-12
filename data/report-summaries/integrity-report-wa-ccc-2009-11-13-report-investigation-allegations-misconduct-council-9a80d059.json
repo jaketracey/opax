@@ -1,0 +1,124 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2009-11-13-report-investigation-allegations-misconduct-council-9a80d059",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Investigation into Allegations of Misconduct by Councillors or Employees of the City of Bayswater",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20into%20Allegations%20of%20Misconduct%20by%20Councillors%20or%20Employees%20of%20the%20City%20of%20Bayswater.pdf",
+  "document": "Report on the Investigation into Allegations of Misconduct by Councillors or Employees of the City of Bayswater.pdf",
+  "sha256": "8cb17e60bfc98395578a7d84641311cb24d1eac63f62523ab37379e75d56a314",
+  "pages": 113,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 11,
+  "last_page": 28,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20into%20Allegations%20of%20Misconduct%20by%20Councillors%20or%20Employees%20of%20the%20City%20of%20Bayswater.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission continued an investigation begun by the Anti-Corruption Commission into councillors and staff at the City of Bayswater.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20into%20Allegations%20of%20Misconduct%20by%20Councillors%20or%20Employees%20of%20the%20City%20of%20Bayswater.pdf",
+      "document": "Report on the Investigation into Allegations of Misconduct by Councillors or Employees of the City of Bayswater.pdf",
+      "page": 11
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It examined procurement, contracts, employee records and disclosures of interests, gifts and benefits.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20into%20Allegations%20of%20Misconduct%20by%20Councillors%20or%20Employees%20of%20the%20City%20of%20Bayswater.pdf",
+      "document": "Report on the Investigation into Allegations of Misconduct by Councillors or Employees of the City of Bayswater.pdf",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20into%20Allegations%20of%20Misconduct%20by%20Councillors%20or%20Employees%20of%20the%20City%20of%20Bayswater.pdf",
+      "document": "Report on the Investigation into Allegations of Misconduct by Councillors or Employees of the City of Bayswater.pdf",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20into%20Allegations%20of%20Misconduct%20by%20Councillors%20or%20Employees%20of%20the%20City%20of%20Bayswater.pdf",
+      "document": "Report on the Investigation into Allegations of Misconduct by Councillors or Employees of the City of Bayswater.pdf",
+      "page": 16
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20into%20Allegations%20of%20Misconduct%20by%20Councillors%20or%20Employees%20of%20the%20City%20of%20Bayswater.pdf",
+      "document": "Report on the Investigation into Allegations of Misconduct by Councillors or Employees of the City of Bayswater.pdf",
+      "page": 17
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission formed misconduct opinions about a director’s involvement in a contract despite a conflict of interest and a manager’s repeated failure to obtain quotations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20into%20Allegations%20of%20Misconduct%20by%20Councillors%20or%20Employees%20of%20the%20City%20of%20Bayswater.pdf",
+      "document": "Report on the Investigation into Allegations of Misconduct by Councillors or Employees of the City of Bayswater.pdf",
+      "page": 95
+     }
+    ],
+    "section": "Commission Opinions as to Misconduct"
+   },
+   {
+    "text": "It made four recommendations covering checks on employee records, training about interests and gifts, and better management of conflicts of interest.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20into%20Allegations%20of%20Misconduct%20by%20Councillors%20or%20Employees%20of%20the%20City%20of%20Bayswater.pdf",
+      "document": "Report on the Investigation into Allegations of Misconduct by Councillors or Employees of the City of Bayswater.pdf",
+      "page": 95
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20into%20Allegations%20of%20Misconduct%20by%20Councillors%20or%20Employees%20of%20the%20City%20of%20Bayswater.pdf",
+      "document": "Report on the Investigation into Allegations of Misconduct by Councillors or Employees of the City of Bayswater.pdf",
+      "page": 96
+     }
+    ],
+    "section": "Commission Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission’s investigation revealed that during 2003-2004 there was a lack of financial control, supervision and accountability at a practical level within the City of Bayswater.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20into%20Allegations%20of%20Misconduct%20by%20Councillors%20or%20Employees%20of%20the%20City%20of%20Bayswater.pdf",
+     "document": "Report on the Investigation into Allegations of Misconduct by Councillors or Employees of the City of Bayswater.pdf",
+     "page": 14
+    }
+   },
+   {
+    "quote": "In the opinion of the Commission it follows that Mr Casilli engaged in misconduct under section 4(d)(i), (ii) and (vi) of the Act.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20into%20Allegations%20of%20Misconduct%20by%20Councillors%20or%20Employees%20of%20the%20City%20of%20Bayswater.pdf",
+     "document": "Report on the Investigation into Allegations of Misconduct by Councillors or Employees of the City of Bayswater.pdf",
+     "page": 24
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

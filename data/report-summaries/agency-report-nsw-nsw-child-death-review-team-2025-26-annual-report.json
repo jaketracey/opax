@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-nsw-nsw-child-death-review-team-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "NSW Child Death Review Team 2025-26 annual report",
+ "body": "NSW Child Death Review Team",
+ "source": {
+  "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212451%2FNSW-Child-Death-Review-Team-Annual-Report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "c0b964f2690b08a898b42b9632dc78d42b628ef6ca304704298dd58480d57570",
+  "pages": 51,
+  "rights": null
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Child Death Review Team reported on 2025–26, analysing child deaths and recommending ways to prevent them.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212451%2FNSW-Child-Death-Review-Team-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212451%2FNSW-Child-Death-Review-Team-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212451%2FNSW-Child-Death-Review-Team-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ]
+   },
+   {
+    "text": "The Team reported tabling its biennial analysis of 885 child deaths in NSW during 2022 and 2023.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212451%2FNSW-Child-Death-Review-Team-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 15
+     }
+    ]
+   },
+   {
+    "text": "It also tabled research on preventing suicide among Aboriginal and Torres Strait Islander young people in December 2025.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212451%2FNSW-Child-Death-Review-Team-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 16
+     }
+    ]
+   },
+   {
+    "text": "The Team reported monitoring earlier recommendations about children left in vehicles, suicide prevention and substance use during pregnancy.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212451%2FNSW-Child-Death-Review-Team-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 15
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The report analysed the 885 deaths of children and young people in NSW during 2022 and 2023 from natural and external causes, and tracks long-term changes in child mortality rates.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212451%2FNSW-Child-Death-Review-Team-Annual-Report-2025-26.pdf",
+     "document": "annual report",
+     "page": 15
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

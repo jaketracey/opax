@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-nsw-nsw-ageing-and-disability-commission-2025-26-information-statement",
+ "report_type": "agency_report",
+ "subtype": "annual information statement",
+ "title": "NSW Ageing and Disability Commission 2025-26 annual information statement",
+ "body": "NSW Ageing and Disability Commission",
+ "source": {
+  "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212480%2FADC-Annual-Information-Statement-2026.pdf",
+  "document": "annual information statement",
+  "sha256": "2966d7a1bdbf0f71cb8e2c6166abeaba70d73c36c0e18b5fe07dfe3ec464418b",
+  "pages": 72,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s message",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212480%2FADC-Annual-Information-Statement-2026.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Ageing and Disability Commission reported on 2025–2026, protecting older people and adults with disability from abuse, neglect and exploitation.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212480%2FADC-Annual-Information-Statement-2026.pdf",
+      "document": "annual information statement",
+      "page": 5
+     },
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212480%2FADC-Annual-Information-Statement-2026.pdf",
+      "document": "annual information statement",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The Commission reported 15,990 calls to its helpline and 6,265 reports and enquiries during the year.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212480%2FADC-Annual-Information-Statement-2026.pdf",
+      "document": "annual information statement",
+      "page": 14
+     }
+    ]
+   },
+   {
+    "text": "It said changes to its intake process in August 2025 allowed more contacts seeking advice or referrals to be handled as enquiries rather than statutory reports.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212480%2FADC-Annual-Information-Statement-2026.pdf",
+      "document": "annual information statement",
+      "page": 14
+     }
+    ]
+   },
+   {
+    "text": "The Commission also reported participating in more than 130 events and drafting a report assessing safeguarding arrangements in NSW.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212480%2FADC-Annual-Information-Statement-2026.pdf",
+      "document": "annual information statement",
+      "page": 5
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In 2025-26, the Helpline received 15,990 calls, which was 8.8% lower than the previous year (17,527).",
+    "kind": "finding",
+    "cite": {
+     "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212480%2FADC-Annual-Information-Statement-2026.pdf",
+     "document": "annual information statement",
+     "page": 14
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

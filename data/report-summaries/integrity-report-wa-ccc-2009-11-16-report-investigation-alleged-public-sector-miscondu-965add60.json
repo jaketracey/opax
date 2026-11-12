@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2009-11-16-report-investigation-alleged-public-sector-miscondu-965add60",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Applications for a Mining Tenement at Yeelirrie",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Applications%20for%20a%20Mining%20Tenement.pdf",
+  "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Applications for a Mining Tenement.pdf",
+  "sha256": "628fea16ff95926dde68ef69d34bdd60b81f5307e064d7b7c0dd36b6a86faeb9",
+  "pages": 112,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 9,
+  "last_page": 16,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Applications%20for%20a%20Mining%20Tenement.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated how ministerial powers were exercised over applications for mining tenements at Yeelirrie.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Applications%20for%20a%20Mining%20Tenement.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Applications for a Mining Tenement.pdf",
+      "page": 9
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It examined whether the then resources minister’s handling of exploration licence applications amounted to misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Applications%20for%20a%20Mining%20Tenement.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Applications for a Mining Tenement.pdf",
+      "page": 19
+     }
+    ],
+    "section": "Allegation"
+   },
+   {
+    "text": "The Commission formed the opinion that the minister committed serious misconduct by delaying decisions to help lobbyists obtain a financial benefit for their client.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Applications%20for%20a%20Mining%20Tenement.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Applications for a Mining Tenement.pdf",
+      "page": 14
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It did not recommend further consideration of a corruption prosecution because it considered the likely admissible evidence insufficient to support a charge.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Applications%20for%20a%20Mining%20Tenement.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Applications for a Mining Tenement.pdf",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Applications%20for%20a%20Mining%20Tenement.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Applications for a Mining Tenement.pdf",
+      "page": 16
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "On the evidence set out above, the Commission is satisfied that Mr Bowler took advantage of his Ministerial position for the purpose of obtaining a benefit for Mr Grill and Mr Burke and their client PMA.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Applications%20for%20a%20Mining%20Tenement.pdf",
+     "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Applications for a Mining Tenement.pdf",
+     "page": 104
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

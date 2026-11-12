@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-dhelkaya-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Dhelkaya Health 2025-26 annual report",
+ "body": "Dhelkaya Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10729/dhelkaya-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "6d18458f86a96fafe17cbc955f9c7af85a6ae2c5d965c4038261567ed3eeb663",
+  "pages": 95,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Our Message to the Community",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10729/dhelkaya-health-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Dhelkaya Health’s 2025–26 report covers hospital care, primary care, residential aged care and community and home services in central Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10729/dhelkaya-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10729/dhelkaya-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Our Organisation"
+   },
+   {
+    "text": "The service reported providing health advice, mental health support, referrals and housing coordination after the January 2026 bushfires.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10729/dhelkaya-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Our Message to the Community"
+   },
+   {
+    "text": "It reported opening a Learning Hub with Bendigo TAFE in August 2025, with the first Diploma of Nursing intake following in April 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10729/dhelkaya-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Our Message to the Community"
+   },
+   {
+    "text": "It reported 563.17 full-time equivalent staff in June 2026, with an average monthly level of 540.54 during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10729/dhelkaya-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 14
+     }
+    ],
+    "section": "Our People"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The People Matter Survey results showed continued improvement, with highlights including improvement in collaboration, speaking up for safety and responsiveness.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10729/dhelkaya-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

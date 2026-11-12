@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-rolling-stock-holdings-victoria-vl-pty-limited-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Rolling Stock Holdings (Victoria-VL) Pty Limited 2025-26 annual report",
+ "body": "Rolling Stock Holdings (Victoria-VL) Pty Limited",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab311/globalassets/tabled-paper-documents/tabled-paper-10586/rolling-stock-victoria-_-vl-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "f2ea9ec7b960825bc0315ae9f6d157f8423ba6557dba0aee7752095b33b6b0a4",
+  "pages": 101,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Directors' report",
+  "first_page": 3,
+  "last_page": 5,
+  "link": "https://www.parliament.vic.gov.au/4ab311/globalassets/tabled-paper-documents/tabled-paper-10586/rolling-stock-victoria-_-vl-annual-report-2025-26.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The directors of Rolling Stock (Victoria-VL) Pty Limited reported on the company and its controlled entities for the year ended 30 June 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab311/globalassets/tabled-paper-documents/tabled-paper-10586/rolling-stock-victoria-_-vl-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "Directors' report"
+   },
+   {
+    "text": "The directors described leasing rolling stock to V/Line Corporation for the State as the consolidated entity’s principal activity.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab311/globalassets/tabled-paper-documents/tabled-paper-10586/rolling-stock-victoria-_-vl-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "Principal activities"
+   },
+   {
+    "text": "The report described the parent as dormant, with no employees at 30 June 2026, and reported a consolidated after-tax loss of $8,767,090.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab311/globalassets/tabled-paper-documents/tabled-paper-10586/rolling-stock-victoria-_-vl-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "Review of result and operations"
+   },
+   {
+    "text": "The directors reported that the company had paid or declared no dividends since the previous financial year ended.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab311/globalassets/tabled-paper-documents/tabled-paper-10586/rolling-stock-victoria-_-vl-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "Dividends"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Company employed no employees as at 30 June 2026 (2025: Nil).",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab311/globalassets/tabled-paper-documents/tabled-paper-10586/rolling-stock-victoria-_-vl-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 3
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

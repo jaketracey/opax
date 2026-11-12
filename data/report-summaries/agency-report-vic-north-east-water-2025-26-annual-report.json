@@ -1,0 +1,91 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-north-east-water-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "North East Water 2025-26 annual report",
+ "body": "North East Water",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab363/globalassets/tabled-paper-documents/tabled-paper-10632/north-east-water-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "5ffa116faf7c7a6636f9317f325b15ba119c559a1651757cf32999f2f8923812",
+  "pages": 168,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from \nthe Chair and \nManaging Director",
+  "first_page": 8,
+  "last_page": 9,
+  "link": "https://www.parliament.vic.gov.au/4ab363/globalassets/tabled-paper-documents/tabled-paper-10632/north-east-water-annual-report-2025-26.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "North East Water reported on 2025–26, providing water and wastewater services across 39 cities and towns in north-east Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab363/globalassets/tabled-paper-documents/tabled-paper-10632/north-east-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The corporation reported approval of its five-year price plan in June 2026, including a $280 million capital program.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab363/globalassets/tabled-paper-documents/tabled-paper-10632/north-east-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "It reported drinking water compliance of 99.7 per cent against a 100 per cent target, while wastewater compliance exceeded its target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab363/globalassets/tabled-paper-documents/tabled-paper-10632/north-east-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ]
+   },
+   {
+    "text": "It reported an operating surplus before tax of $8.6 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab363/globalassets/tabled-paper-documents/tabled-paper-10632/north-east-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 28
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "From a cash flow perspective, the corporation invested $78.4 million in new and renewed capital infrastructure.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab363/globalassets/tabled-paper-documents/tabled-paper-10632/north-east-water-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 28
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2009-07-22-dangerous-liaisons-report-arising-cmc-investigation-allegati",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Dangerous liaisons: A report arising from a CMC investigation into allegations of police misconduct (Operation Capri)",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Operation-Capri-Dangerous-liasons-A-report-arising-from-a-CMC-investigation-into-allegations-of-police-misconduct-Report-2009.pdf",
+  "document": "Dangerous liaisons: A report arising from a CMC investigation into allegations of police misconduct-Operation... (22 July 2009)",
+  "sha256": "d7e663b271a52d04f890d1c80dd693a79e7302b972da3c542bf5eaf77caaf728",
+  "pages": 140,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Prologue",
+  "first_page": 11,
+  "last_page": 12,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Operation-Capri-Dangerous-liasons-A-report-arising-from-a-CMC-investigation-into-allegations-of-police-misconduct-Report-2009.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission investigated police dealings with prison informants through Operation Capri.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Operation-Capri-Dangerous-liasons-A-report-arising-from-a-CMC-investigation-into-allegations-of-police-misconduct-Report-2009.pdf",
+      "document": "Dangerous liaisons: A report arising from a CMC investigation into allegations of police misconduct-Operation... (22 July 2009)",
+      "page": 11
+     }
+    ]
+   },
+   {
+    "text": "The inquiry examined informant payments, prisoner removals, diverted telephone calls and disclosure of confidential police information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Operation-Capri-Dangerous-liasons-A-report-arising-from-a-CMC-investigation-into-allegations-of-police-misconduct-Report-2009.pdf",
+      "document": "Dangerous liaisons: A report arising from a CMC investigation into allegations of police misconduct-Operation... (22 July 2009)",
+      "page": 19
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Operation-Capri-Dangerous-liasons-A-report-arising-from-a-CMC-investigation-into-allegations-of-police-misconduct-Report-2009.pdf",
+      "document": "Dangerous liaisons: A report arising from a CMC investigation into allegations of police misconduct-Operation... (22 July 2009)",
+      "page": 20
+     }
+    ]
+   },
+   {
+    "text": "The CMC concluded that deliberate non-compliance with existing rules and failures of supervision were central problems.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Operation-Capri-Dangerous-liasons-A-report-arising-from-a-CMC-investigation-into-allegations-of-police-misconduct-Report-2009.pdf",
+      "document": "Dangerous liaisons: A report arising from a CMC investigation into allegations of police misconduct-Operation... (22 July 2009)",
+      "page": 127
+     }
+    ]
+   },
+   {
+    "text": "The CMC recommended consideration of disciplinary action against 17 serving officers and managerial guidance for six others.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Operation-Capri-Dangerous-liasons-A-report-arising-from-a-CMC-investigation-into-allegations-of-police-misconduct-Report-2009.pdf",
+      "document": "Dangerous liaisons: A report arising from a CMC investigation into allegations of police misconduct-Operation... (22 July 2009)",
+      "page": 16
+     }
+    ]
+   },
+   {
+    "text": "The CMC called for renewed professional standards and accountability, and reported reforms to procedures for removing prisoners from custody.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Operation-Capri-Dangerous-liasons-A-report-arising-from-a-CMC-investigation-into-allegations-of-police-misconduct-Report-2009.pdf",
+      "document": "Dangerous liaisons: A report arising from a CMC investigation into allegations of police misconduct-Operation... (22 July 2009)",
+      "page": 17
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Operation-Capri-Dangerous-liasons-A-report-arising-from-a-CMC-investigation-into-allegations-of-police-misconduct-Report-2009.pdf",
+      "document": "Dangerous liaisons: A report arising from a CMC investigation into allegations of police misconduct-Operation... (22 July 2009)",
+      "page": 127
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The problem exposed by Operation Capri is not the absence of appropriate legislation, policy or procedure, but the wilful failure of individual police officers to comply with the requirements imposed by that legislation, policy and procedure, and the acquiescence in that non-compliance by those tasked with supervising the individual officers.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Operation-Capri-Dangerous-liasons-A-report-arising-from-a-CMC-investigation-into-allegations-of-police-misconduct-Report-2009.pdf",
+     "document": "Dangerous liaisons: A report arising from a CMC investigation into allegations of police misconduct-Operation... (22 July 2009)",
+     "page": 127
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

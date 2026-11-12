@@ -1,0 +1,91 @@
+{
+ "schema": 1,
+ "slug": "agency-report-nsw-independent-biosecurity-commissioner-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Independent Biosecurity Commissioner 2025-26 annual report",
+ "body": "Independent Biosecurity Commissioner",
+ "source": {
+  "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212091%2FIndependent%20Biosecurity%20Commissioner%20Annual%20report%202025-26.pdf",
+  "document": "annual report",
+  "sha256": "bc06084fa1f738e529cac9336d9cede7a194ca701f76c81088de231cb270f0b0",
+  "pages": 59,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner foreword",
+  "first_page": 7,
+  "last_page": 9,
+  "link": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212091%2FIndependent%20Biosecurity%20Commissioner%20Annual%20report%202025-26.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Biosecurity Commissioner reported on 2025–26, providing independent advice about pests and weeds to ministers and the NSW Government.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212091%2FIndependent%20Biosecurity%20Commissioner%20Annual%20report%202025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212091%2FIndependent%20Biosecurity%20Commissioner%20Annual%20report%202025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ]
+   },
+   {
+    "text": "The Commissioner reported completing a review of the NSW Cattle Tick Program and providing its advice report to the Minister in March 2026.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212091%2FIndependent%20Biosecurity%20Commissioner%20Annual%20report%202025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     },
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212091%2FIndependent%20Biosecurity%20Commissioner%20Annual%20report%202025-26.pdf",
+      "document": "annual report",
+      "page": 19
+     }
+    ]
+   },
+   {
+    "text": "A review of feral pig and deer management produced preliminary advice in June 2026, with further work continuing into the next financial year.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212091%2FIndependent%20Biosecurity%20Commissioner%20Annual%20report%202025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The Commissioner recorded 208 stakeholder meetings and 20 recommendations during the year.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212091%2FIndependent%20Biosecurity%20Commissioner%20Annual%20report%202025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

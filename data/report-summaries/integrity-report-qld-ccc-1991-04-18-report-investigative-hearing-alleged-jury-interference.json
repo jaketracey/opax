@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1991-04-18-report-investigative-hearing-alleged-jury-interference",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Report of an investigative hearing into alleged jury interference",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigative-hearing-alleged-jury-interference/An-investigative-hearing-into-alleged-jury-interference-Report-1991.pdf",
+  "document": "Report of an investigative hearing into alleged jury interference (March 1991)",
+  "sha256": "c05bee0678afae0f22fba6aac1772dcfb91499eef07bc95f5b31e3d7f7c4f99c",
+  "pages": 52,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY OF FACTUAL FINDINGS",
+  "first_page": 37,
+  "last_page": 37,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigative-hearing-alleged-jury-interference/An-investigative-hearing-into-alleged-jury-interference-Report-1991.pdf#page=37"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission investigated approaches to members of Queensland jury panels in November 1990.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigative-hearing-alleged-jury-interference/An-investigative-hearing-into-alleged-jury-interference-Report-1991.pdf",
+      "document": "Report of an investigative hearing into alleged jury interference (March 1991)",
+      "page": 3
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The inquiry considered approaches to prospective jurors and possible unauthorised disclosure of jury information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigative-hearing-alleged-jury-interference/An-investigative-hearing-into-alleged-jury-interference-Report-1991.pdf",
+      "document": "Report of an investigative hearing into alleged jury interference (March 1991)",
+      "page": 37
+     }
+    ],
+    "section": "SUMMARY OF FACTUAL FINDINGS"
+   },
+   {
+    "text": "The Commission concluded that there were no grounds for criminal proceedings or adverse inferences against anyone involved in the relevant trials.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigative-hearing-alleged-jury-interference/An-investigative-hearing-into-alleged-jury-interference-Report-1991.pdf",
+      "document": "Report of an investigative hearing into alleged jury interference (March 1991)",
+      "page": 3
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "Its two recommendations sought interim advice for jurors about reporting concerning approaches and a committee review of jury lists and inquiries about prospective jurors.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigative-hearing-alleged-jury-interference/An-investigative-hearing-into-alleged-jury-interference-Report-1991.pdf",
+      "document": "Report of an investigative hearing into alleged jury interference (March 1991)",
+      "page": 38
+     }
+    ],
+    "section": "SUMMARY OF RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Ultimately, the investigation disclosed no grounds for criminal proceedings against any party and no grounds on which to draw adverse inferences against any one concerned with the relevant trials.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigative-hearing-alleged-jury-interference/An-investigative-hearing-into-alleged-jury-interference-Report-1991.pdf",
+     "document": "Report of an investigative hearing into alleged jury interference (March 1991)",
+     "page": 3
+    }
+   },
+   {
+    "quote": "There is no evidence of any unauthorised disclosure of information or like impropriety on the part of any officer employed by the Sheriff's office.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigative-hearing-alleged-jury-interference/An-investigative-hearing-into-alleged-jury-interference-Report-1991.pdf",
+     "document": "Report of an investigative hearing into alleged jury interference (March 1991)",
+     "page": 37
+    }
+   },
+   {
+    "quote": "The law at present leaves doubt about the type of conduct which is permissible.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigative-hearing-alleged-jury-interference/An-investigative-hearing-into-alleged-jury-interference-Report-1991.pdf",
+     "document": "Report of an investigative hearing into alleged jury interference (March 1991)",
+     "page": 29
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

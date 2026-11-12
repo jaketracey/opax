@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2012-11-02-report-investigation-alleged-public-sector-miscondu-3511441d",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the investigation of alleged public sector misconduct in relation to contact with students and the accessing of child pornography by a Department of Education employee",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20contact%20with%20students%20and%20the%20accessing%20of%20child%20pornography%20by%20a%20Department%20of%20Education%20employee.pdf",
+  "document": "Report on the investigation of alleged public sector misconduct in relation to contact with students and the accessing of child pornography by a Department of Education employee",
+  "sha256": "68d5d7af5154fb6df5a997254b76b06ccf4a7a9fc0f179a8d96b42566db75f7c",
+  "pages": 85,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 11,
+  "last_page": 16,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20contact%20with%20students%20and%20the%20accessing%20of%20child%20pornography%20by%20a%20Department%20of%20Education%20employee.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated alleged misconduct by a Department of Education teacher, examining historical allegations and the teacher’s activities at the time.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20contact%20with%20students%20and%20the%20accessing%20of%20child%20pornography%20by%20a%20Department%20of%20Education%20employee.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to contact with students and the accessing of child pornography by a Department of Education employee",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20contact%20with%20students%20and%20the%20accessing%20of%20child%20pornography%20by%20a%20Department%20of%20Education%20employee.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to contact with students and the accessing of child pornography by a Department of Education employee",
+      "page": 12
+     }
+    ],
+    "section": "Commission Investigation"
+   },
+   {
+    "text": "It also examined how education, teacher registration and child screening bodies responded to risks to children.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20contact%20with%20students%20and%20the%20accessing%20of%20child%20pornography%20by%20a%20Department%20of%20Education%20employee.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to contact with students and the accessing of child pornography by a Department of Education employee",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20contact%20with%20students%20and%20the%20accessing%20of%20child%20pornography%20by%20a%20Department%20of%20Education%20employee.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to contact with students and the accessing of child pornography by a Department of Education employee",
+      "page": 13
+     }
+    ],
+    "section": "Systemic Issues"
+   },
+   {
+    "text": "The Commission concluded that the systems collectively failed to establish the teacher’s suitability for work with children and that conduct resulting in criminal convictions constituted misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20contact%20with%20students%20and%20the%20accessing%20of%20child%20pornography%20by%20a%20Department%20of%20Education%20employee.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to contact with students and the accessing of child pornography by a Department of Education employee",
+      "page": 13
+     }
+    ],
+    "section": "Commission Opinion"
+   },
+   {
+    "text": "Its six recommendations address school exclusion orders, staff and volunteer suitability, teacher registration, child screening, conduct standards and proactive child protection work.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20contact%20with%20students%20and%20the%20accessing%20of%20child%20pornography%20by%20a%20Department%20of%20Education%20employee.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to contact with students and the accessing of child pornography by a Department of Education employee",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20contact%20with%20students%20and%20the%20accessing%20of%20child%20pornography%20by%20a%20Department%20of%20Education%20employee.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to contact with students and the accessing of child pornography by a Department of Education employee",
+      "page": 15
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In the Commission’s opinion, the systems that were in place collectively failed to ensure Teacher A’s suitability to work with children.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20contact%20with%20students%20and%20the%20accessing%20of%20child%20pornography%20by%20a%20Department%20of%20Education%20employee.pdf",
+     "document": "Report on the investigation of alleged public sector misconduct in relation to contact with students and the accessing of child pornography by a Department of Education employee",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,121 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-grampians-wimmera-mallee-water-corporation-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Grampians Wimmera Mallee Water Corporation 2025-26 annual report",
+ "body": "Grampians Wimmera Mallee Water Corporation",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab34a/globalassets/tabled-paper-documents/tabled-paper-10626/grampians-wimmera-mallee-water-annual-repor-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "1079eda49a3355bc891ce4dc2f1eab33e92259a26d5e4d0608dd32a4cb0cb9ef",
+  "pages": 143,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Chair and Managing Director",
+  "first_page": 6,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4ab34a/globalassets/tabled-paper-documents/tabled-paper-10626/grampians-wimmera-mallee-water-annual-repor-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "In its report for the year ending 30 June 2026, GWMWater describes its purpose as supporting communities through sustainable and affordable water and essential services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34a/globalassets/tabled-paper-documents/tabled-paper-10626/grampians-wimmera-mallee-water-annual-repor-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34a/globalassets/tabled-paper-documents/tabled-paper-10626/grampians-wimmera-mallee-water-annual-repor-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34a/globalassets/tabled-paper-documents/tabled-paper-10626/grampians-wimmera-mallee-water-annual-repor-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Our vision, purpose and organisational values"
+   },
+   {
+    "text": "GWMWater reported maintaining water supplies without the prospect of restrictions despite low rainfall and inflows.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34a/globalassets/tabled-paper-documents/tabled-paper-10626/grampians-wimmera-mallee-water-annual-repor-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Message from the Chair and Managing Director"
+   },
+   {
+    "text": "It reported completing the East Grampians component of its rural pipeline project and declaring Kaniva a drinking water supply in June 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34a/globalassets/tabled-paper-documents/tabled-paper-10626/grampians-wimmera-mallee-water-annual-repor-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34a/globalassets/tabled-paper-documents/tabled-paper-10626/grampians-wimmera-mallee-water-annual-repor-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Message from the Chair and Managing Director"
+   },
+   {
+    "text": "GWMWater reported that the Nhill renewable energy facility and its other renewable investments met all its energy requirements.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34a/globalassets/tabled-paper-documents/tabled-paper-10626/grampians-wimmera-mallee-water-annual-repor-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Message from the Chair and Managing Director"
+   },
+   {
+    "text": "It reported a pre-tax loss of $28.27 million and total revenue of $78.55 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34a/globalassets/tabled-paper-documents/tabled-paper-10626/grampians-wimmera-mallee-water-annual-repor-2025-26.pdf",
+      "document": "annual report",
+      "page": 45
+     }
+    ],
+    "section": "Economic sustainability"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Nhill facility, along with other renewable energy investments has enabled GWMWater to have all its energy requirements met from renewable sources.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab34a/globalassets/tabled-paper-documents/tabled-paper-10626/grampians-wimmera-mallee-water-annual-repor-2025-26.pdf",
+     "document": "annual report",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

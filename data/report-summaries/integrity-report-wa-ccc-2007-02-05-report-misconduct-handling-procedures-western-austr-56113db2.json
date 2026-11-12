@@ -1,0 +1,130 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2007-02-05-report-misconduct-handling-procedures-western-austr-56113db2",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department for Community Development",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20for%20Community%20Development.pdf",
+  "document": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department for Community Development.pdf",
+  "sha256": "30355cfcc89d299c6cd53d1d9ac7a80da9f75ce876918b54b0e65c83dca8824e",
+  "pages": 35,
+  "rights": "copyright-commission",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 9,
+  "last_page": 9,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20for%20Community%20Development.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed how the Department for Community Development managed misconduct and how its approach could improve.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20for%20Community%20Development.pdf",
+      "document": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department for Community Development.pdf",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20for%20Community%20Development.pdf",
+      "document": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department for Community Development.pdf",
+      "page": 9
+     }
+    ],
+    "section": "FOREWORD"
+   },
+   {
+    "text": "It examined the Department’s misconduct strategy and management arrangements.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20for%20Community%20Development.pdf",
+      "document": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department for Community Development.pdf",
+      "page": 9
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission’s opinion was that the Department lacked an adequate, integrated system for managing misconduct across the organisation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20for%20Community%20Development.pdf",
+      "document": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department for Community Development.pdf",
+      "page": 23
+     }
+    ],
+    "section": "3.2 Commission’s Opinion"
+   },
+   {
+    "text": "Its five recommendations covered misconduct planning, risk identification, organisation-wide management, senior responsibility for conduct standards and staff education.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20for%20Community%20Development.pdf",
+      "document": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department for Community Development.pdf",
+      "page": 9
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Department accepted the recommendations and prepared an implementation plan with the Commission.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20for%20Community%20Development.pdf",
+      "document": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department for Community Development.pdf",
+      "page": 25
+     }
+    ],
+    "section": "3.4 DCD Implementation"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Based on the information gathered in the review, it is the Commission's opinion that DCD has not yet developed an effective, organisational misconduct management strategy and does not yet have in place an adequate and integrated misconduct management mechanism.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20for%20Community%20Development.pdf",
+     "document": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department for Community Development.pdf",
+     "page": 23
+    }
+   },
+   {
+    "quote": "From the misconduct notifications provided by DCD it is evident that misconduct occurs within DCD, but also that it is under-notifying.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20for%20Community%20Development.pdf",
+     "document": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department for Community Development.pdf",
+     "page": 23
+    }
+   },
+   {
+    "quote": "That DCD reviews its risk management plan and clearly identifies and details the misconduct risks that exist.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20for%20Community%20Development.pdf",
+     "document": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department for Community Development.pdf",
+     "page": 24
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,74 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-act-ic-2025-06-13-operation-athena",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Athena Investigation Report: An investigation into an alleged Conflict of Interest.",
+ "body": "ACT Integrity Commission",
+ "source": {
+  "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0007/2864176/Investigation-Report-Operation-Athena.pdf",
+  "document": "Operation Athena Investigation Report: An investigation into an alleged Conflict of Interest.",
+  "sha256": "fd62e9cbffd1df535316e1213724169a37b52d2e43e9be7c108c170e8ec76b98",
+  "pages": 40,
+  "rights": "commission-copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0007/2864176/Investigation-Report-Operation-Athena.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The ACT Integrity Commission investigated an alleged conflict of interest involving the Commissioner for Fair Trading in handling complaints and threatened litigation.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0007/2864176/Investigation-Report-Operation-Athena.pdf",
+      "document": "Operation Athena Investigation Report: An investigation into an alleged Conflict of Interest.",
+      "page": 4
+     }
+    ],
+    "section": "Investigation report"
+   },
+   {
+    "text": "The Commission found minor shortcomings and errors of judgement in managing a perceived and potential conflict, but concluded that the conduct did not meet the statutory definition of corruption.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0007/2864176/Investigation-Report-Operation-Athena.pdf",
+      "document": "Operation Athena Investigation Report: An investigation into an alleged Conflict of Interest.",
+      "page": 5
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "The Commission made no finding of corrupt conduct against anyone discussed in the report.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0007/2864176/Investigation-Report-Operation-Athena.pdf",
+      "document": "Operation Athena Investigation Report: An investigation into an alleged Conflict of Interest.",
+      "page": 40
+     }
+    ],
+    "section": "Findings"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-tas-integrity-commission-tasmania-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Integrity Commission Tasmania 2025-26 annual report",
+ "body": "Integrity Commission Tasmania",
+ "source": {
+  "url": "https://integrity.tas.gov.au/__data/assets/pdf_file/0007/952126/Annual-Report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "35db6c84e47ef2347294f603e583ffa8848221e0f719a2ca99dc252bb3cc43dd",
+  "pages": 83,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Foreword",
+  "first_page": 6,
+  "last_page": 6,
+  "link": "https://integrity.tas.gov.au/__data/assets/pdf_file/0007/952126/Annual-Report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Tasmania’s Integrity Commission reported for 2025–26 on misconduct prevention, complaint handling, investigations and oversight of public authorities and police.",
+    "cites": [
+     {
+      "url": "https://integrity.tas.gov.au/__data/assets/pdf_file/0007/952126/Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Foreword"
+   },
+   {
+    "text": "The Commission reported receiving 209 misconduct complaints and completing 11 assessments and two complaint investigations.",
+    "cites": [
+     {
+      "url": "https://integrity.tas.gov.au/__data/assets/pdf_file/0007/952126/Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Snapshot"
+   },
+   {
+    "text": "The Commission reported 36 training sessions attended by 503 officers from 11 authorities, alongside 364 completions of its introductory online module.",
+    "cites": [
+     {
+      "url": "https://integrity.tas.gov.au/__data/assets/pdf_file/0007/952126/Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 16
+     }
+    ],
+    "section": "TRAINING DELIVERY"
+   },
+   {
+    "text": "The Commission reported employing 16.9 full-time equivalent officers at 30 June 2026, including its chief executive.",
+    "cites": [
+     {
+      "url": "https://integrity.tas.gov.au/__data/assets/pdf_file/0007/952126/Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 41
+     }
+    ],
+    "section": "WORKFORCE"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We delivered 36 training sessions, reaching 503 public officers from 11 public authorities across the State.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://integrity.tas.gov.au/__data/assets/pdf_file/0007/952126/Annual-Report-2025-26.pdf",
+     "document": "annual report",
+     "page": 16
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

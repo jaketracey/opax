@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2023-08-29-integrity-trade-off",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Integrity Trade-off",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937613/Integrity-Trade-off.pdf",
+  "document": "Integrity Trade-off",
+  "sha256": "8fa6bd88e89586d6f29d003911918e52980cc695a80a899d00cf71e6e9861cdb",
+  "pages": 12,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 2,
+  "last_page": 3,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937613/Integrity-Trade-off.pdf#page=2"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commission Against Corruption revisited governance risks in SA Health following its earlier Troubling Ambiguity report.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937613/Integrity-Trade-off.pdf",
+      "document": "Integrity Trade-off",
+      "page": 2
+     }
+    ]
+   },
+   {
+    "text": "It examined clinicians’ working hours, attendance records and the arrangements allowing private practice alongside public duties.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937613/Integrity-Trade-off.pdf",
+      "document": "Integrity Trade-off",
+      "page": 2
+     }
+    ]
+   },
+   {
+    "text": "The Commissioner concluded that unresolved ambiguity continued to obstruct investigations and accountability.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937613/Integrity-Trade-off.pdf",
+      "document": "Integrity Trade-off",
+      "page": 11
+     }
+    ]
+   },
+   {
+    "text": "The Commission made three recommendations on accurate timesheets, monitoring private practice and a strategy to reform relevant industrial arrangements.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937613/Integrity-Trade-off.pdf",
+      "document": "Integrity Trade-off",
+      "page": 11
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The vulnerabilities which exist in relation to clinicians’ attendance and rights of private practice have not been adequately addressed, despite a new industrial agreement commencing in February 2022.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937613/Integrity-Trade-off.pdf",
+     "document": "Integrity Trade-off",
+     "page": 2
+    }
+   },
+   {
+    "quote": "Opportunities to hold individuals to account continues to be undermined by the existing scheme.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937613/Integrity-Trade-off.pdf",
+     "document": "Integrity Trade-off",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

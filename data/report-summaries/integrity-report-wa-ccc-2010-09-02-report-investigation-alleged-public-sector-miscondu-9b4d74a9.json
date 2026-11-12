@@ -1,0 +1,125 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2010-09-02-report-investigation-alleged-public-sector-miscondu-9b4d74a9",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the investigation of alleged public sector misconduct by Dr Nasrul Ameer Ali as a sessional academic employed by Curtin University of Technology",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20Dr%20Nasrul%20Ameer%20Ali%20as%20a%20sessional%20academic%20employed%20by%20Curtin%20University%20of%20Technology.pdf",
+  "document": "Report on the investigation of alleged public sector misconduct by Dr Nasrul Ameer Ali as a sessional academic employed by Curtin University of Technology",
+  "sha256": "9d23346fe4166dfdfb84825dca555fa339fdf8afa504d7e2dd76e645676bfec8",
+  "pages": 137,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 11,
+  "last_page": 24,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20Dr%20Nasrul%20Ameer%20Ali%20as%20a%20sessional%20academic%20employed%20by%20Curtin%20University%20of%20Technology.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated an allegation that a Curtin University sessional academic sought sexual favours from a student in return for better marks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20Dr%20Nasrul%20Ameer%20Ali%20as%20a%20sessional%20academic%20employed%20by%20Curtin%20University%20of%20Technology.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by Dr Nasrul Ameer Ali as a sessional academic employed by Curtin University of Technology",
+      "page": 11
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It also examined the university’s systems for preventing and managing misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20Dr%20Nasrul%20Ameer%20Ali%20as%20a%20sessional%20academic%20employed%20by%20Curtin%20University%20of%20Technology.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by Dr Nasrul Ameer Ali as a sessional academic employed by Curtin University of Technology",
+      "page": 12
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission formed the opinion that the academic committed serious misconduct by seeking sexual favours from three students and disadvantaging another over a personal grievance.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20Dr%20Nasrul%20Ameer%20Ali%20as%20a%20sessional%20academic%20employed%20by%20Curtin%20University%20of%20Technology.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by Dr Nasrul Ameer Ali as a sessional academic employed by Curtin University of Technology",
+      "page": 19
+     }
+    ],
+    "section": "Commission Opinions"
+   },
+   {
+    "text": "The Commission concluded that deficiencies in recruitment, induction and supervision gave the academic opportunities to exploit overseas students.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20Dr%20Nasrul%20Ameer%20Ali%20as%20a%20sessional%20academic%20employed%20by%20Curtin%20University%20of%20Technology.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by Dr Nasrul Ameer Ali as a sessional academic employed by Curtin University of Technology",
+      "page": 111
+     }
+    ],
+    "section": "Conclusions"
+   },
+   {
+    "text": "It made five recommendations addressing international student support, assessment safeguards, a business school review, complaints management and academic staff practices.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20Dr%20Nasrul%20Ameer%20Ali%20as%20a%20sessional%20academic%20employed%20by%20Curtin%20University%20of%20Technology.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by Dr Nasrul Ameer Ali as a sessional academic employed by Curtin University of Technology",
+      "page": 112
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20Dr%20Nasrul%20Ameer%20Ali%20as%20a%20sessional%20academic%20employed%20by%20Curtin%20University%20of%20Technology.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by Dr Nasrul Ameer Ali as a sessional academic employed by Curtin University of Technology",
+      "page": 113
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20Dr%20Nasrul%20Ameer%20Ali%20as%20a%20sessional%20academic%20employed%20by%20Curtin%20University%20of%20Technology.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by Dr Nasrul Ameer Ali as a sessional academic employed by Curtin University of Technology",
+      "page": 114
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "It is significant that, having been subjected to Dr Ali’s attempts to exploit them, none of the students knew where to go to complain about or report his actions.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20Dr%20Nasrul%20Ameer%20Ali%20as%20a%20sessional%20academic%20employed%20by%20Curtin%20University%20of%20Technology.pdf",
+     "document": "Report on the investigation of alleged public sector misconduct by Dr Nasrul Ameer Ali as a sessional academic employed by Curtin University of Technology",
+     "page": 111
+    }
+   },
+   {
+    "quote": "There was a lack of protection and recourse afforded to these overseas students who were in a largely powerless situation when they were sexually pressured by Dr Ali.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20Dr%20Nasrul%20Ameer%20Ali%20as%20a%20sessional%20academic%20employed%20by%20Curtin%20University%20of%20Technology.pdf",
+     "document": "Report on the investigation of alleged public sector misconduct by Dr Nasrul Ameer Ali as a sessional academic employed by Curtin University of Technology",
+     "page": 20
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

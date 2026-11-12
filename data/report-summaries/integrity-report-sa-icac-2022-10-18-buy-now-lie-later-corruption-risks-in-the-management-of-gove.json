@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2022-10-18-buy-now-lie-later-corruption-risks-in-the-management-of-gove",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Buy Now, Lie Later: Corruption risks in the management of government issued purchase cards",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/documents/Buy-Now-Lie-Later.pdf",
+  "document": "Buy Now, Lie Later: Corruption risks in the management of government issued purchase cards",
+  "sha256": "34a323d5a8317060cd092e8983ea43fe144aa5d83b757a2065a9adb2bd1a9be5",
+  "pages": 16,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://icac.sa.gov.au/documents/Buy-Now-Lie-Later.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commission Against Corruption investigated alleged misuse of government purchase cards by two Department for Infrastructure and Transport officers.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Buy-Now-Lie-Later.pdf",
+      "document": "Buy Now, Lie Later: Corruption risks in the management of government issued purchase cards",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "It examined purchasing records, transaction approval and whether goods could be accounted for.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Buy-Now-Lie-Later.pdf",
+      "document": "Buy Now, Lie Later: Corruption risks in the management of government issued purchase cards",
+      "page": 6
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/Buy-Now-Lie-Later.pdf",
+      "document": "Buy Now, Lie Later: Corruption risks in the management of government issued purchase cards",
+      "page": 10
+     }
+    ]
+   },
+   {
+    "text": "The Commission reported that poor record keeping prevented it from proving corruption, despite indications of inappropriate conduct.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Buy-Now-Lie-Later.pdf",
+      "document": "Buy Now, Lie Later: Corruption risks in the management of government issued purchase cards",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "It made five recommendations addressing the need for cards, internal audits, periodic reviews of cardholders, guidance on use and the recording of purchased assets.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Buy-Now-Lie-Later.pdf",
+      "document": "Buy Now, Lie Later: Corruption risks in the management of government issued purchase cards",
+      "page": 12
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "While the Department’s policies and procedures are sound, they alone are not sufficient to prevent or detect purchase card misuse.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/Buy-Now-Lie-Later.pdf",
+     "document": "Buy Now, Lie Later: Corruption risks in the management of government issued purchase cards",
+     "page": 10
+    }
+   },
+   {
+    "quote": "However, all public sector agencies should review the effectiveness of their own purchase card corruption prevention and detection strategies.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/Buy-Now-Lie-Later.pdf",
+     "document": "Buy Now, Lie Later: Corruption risks in the management of government issued purchase cards",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

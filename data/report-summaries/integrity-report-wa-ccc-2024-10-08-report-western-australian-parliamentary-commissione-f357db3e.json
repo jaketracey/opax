@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2024-10-08-report-western-australian-parliamentary-commissione-f357db3e",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Western Australian Parliamentary Commissioner for Administrative Investigations (Ombudsman)",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_the_Western_Australian_Parliamentary_Commissioner_for_Administrative_Investigations_%28Ombudsman%29_0.pdf",
+  "document": "Report on the Western Australian Parliamentary Commissioner for Administrative Investigations (Ombudsman)",
+  "sha256": "f439ff24f3968755b19a3e44f3ec87d5a0883d61e9c5a3a11d5cab375b8b1acb",
+  "pages": 130,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION AND OVERVIEW",
+  "first_page": 7,
+  "last_page": 10,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_the_Western_Australian_Parliamentary_Commissioner_for_Administrative_Investigations_%28Ombudsman%29_0.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission examined the Western Australian Ombudsman’s overseas activities, use of public resources and procurement of an international research project.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_the_Western_Australian_Parliamentary_Commissioner_for_Administrative_Investigations_%28Ombudsman%29_0.pdf",
+      "document": "Report on the Western Australian Parliamentary Commissioner for Administrative Investigations (Ombudsman)",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_the_Western_Australian_Parliamentary_Commissioner_for_Administrative_Investigations_%28Ombudsman%29_0.pdf",
+      "document": "Report on the Western Australian Parliamentary Commissioner for Administrative Investigations (Ombudsman)",
+      "page": 10
+     }
+    ],
+    "section": "INTRODUCTION AND OVERVIEW"
+   },
+   {
+    "text": "The Commission concluded that conflicts of interest compromised decisions and benefited an international ombudsman organisation at the State’s expense.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_the_Western_Australian_Parliamentary_Commissioner_for_Administrative_Investigations_%28Ombudsman%29_0.pdf",
+      "document": "Report on the Western Australian Parliamentary Commissioner for Administrative Investigations (Ombudsman)",
+      "page": 125
+     }
+    ],
+    "section": "Conclusion on the Ombudsman Mr Field - opinion of serious misconduct"
+   },
+   {
+    "text": "The Commission formed serious misconduct opinions concerning attempts to mislead the Treasurer and senior officials through procurement memoranda containing false information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_the_Western_Australian_Parliamentary_Commissioner_for_Administrative_Investigations_%28Ombudsman%29_0.pdf",
+      "document": "Report on the Western Australian Parliamentary Commissioner for Administrative Investigations (Ombudsman)",
+      "page": 126
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_the_Western_Australian_Parliamentary_Commissioner_for_Administrative_Investigations_%28Ombudsman%29_0.pdf",
+      "document": "Report on the Western Australian Parliamentary Commissioner for Administrative Investigations (Ombudsman)",
+      "page": 127
+     }
+    ],
+    "section": "Conclusion on the Ombudsman Mr Field - opinion of serious misconduct"
+   },
+   {
+    "text": "The Commission made two recommendations for Parliament to consider a joint oversight committee and expanded oversight by the Parliamentary Inspector.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_the_Western_Australian_Parliamentary_Commissioner_for_Administrative_Investigations_%28Ombudsman%29_0.pdf",
+      "document": "Report on the Western Australian Parliamentary Commissioner for Administrative Investigations (Ombudsman)",
+      "page": 130
+     }
+    ],
+    "section": "Conclusion on the Ombudsman Mr Field - opinion of serious misconduct"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:54+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-judicial-college-of-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Judicial College of Victoria 2025-26 annual report",
+ "body": "Judicial College of Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab350/globalassets/tabled-paper-documents/tabled-paper-10616/judicial-college-of-victoria-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "25dffd67e5d08ab0f0260d4f3c2e51291624ebac4448a49028f2e0bdf54a347b",
+  "pages": 72,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Chair.",
+  "first_page": 6,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab350/globalassets/tabled-paper-documents/tabled-paper-10616/judicial-college-of-victoria-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Judicial College of Victoria reported on its 2025-2026 work providing continuing education, professional development and legal resources for judicial officers.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab350/globalassets/tabled-paper-documents/tabled-paper-10616/judicial-college-of-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab350/globalassets/tabled-paper-documents/tabled-paper-10616/judicial-college-of-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Message from the Chair."
+   },
+   {
+    "text": "The College reported running programs on judicial ethics, preventing judicial discrimination and on-Country learning.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab350/globalassets/tabled-paper-documents/tabled-paper-10616/judicial-college-of-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Message from the Chair."
+   },
+   {
+    "text": "It reported updating the Criminal Charge Book throughout the year to cover legislative changes and emerging practice, and developing an annotated Jury Directions Act resource.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab350/globalassets/tabled-paper-documents/tabled-paper-10616/judicial-college-of-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "Criminal Charge Book."
+   },
+   {
+    "text": "The College reported a net surplus of $92,429 for 2025-26.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab350/globalassets/tabled-paper-documents/tabled-paper-10616/judicial-college-of-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 59
+     }
+    ],
+    "section": "Financial information"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The College’s judgment writing program continued this year, supporting judicial officers to refine this essential skill through immersive, practice-based learning.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab350/globalassets/tabled-paper-documents/tabled-paper-10616/judicial-college-of-victoria-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

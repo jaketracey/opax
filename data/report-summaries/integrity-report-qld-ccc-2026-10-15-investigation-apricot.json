@@ -1,0 +1,125 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2026-10-15-investigation-apricot",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Investigation Apricot: An investigation into alleged corrupt conduct at the Parole Board Queensland",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Apricot_Oct-2026.pdf",
+  "document": "Investigation Apricot – October 2026 (PDF)",
+  "sha256": "56361acc7ae9835590b178e041e216c1080aac576eed301caba8c12fb0bd79f3",
+  "pages": 22,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Purpose of this public report",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Apricot_Oct-2026.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Queensland’s Crime and Corruption Commission investigated conduct at Parole Board Queensland, including allegations involving its former president and the former corrective services minister.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Apricot_Oct-2026.pdf",
+      "document": "Investigation Apricot – October 2026 (PDF)",
+      "page": 5
+     }
+    ],
+    "section": "Purpose of this public report"
+   },
+   {
+    "text": "The CCC identified weaknesses in governance, staffing, recordkeeping and performance reporting, including unclear authority over board members’ entitlements.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Apricot_Oct-2026.pdf",
+      "document": "Investigation Apricot – October 2026 (PDF)",
+      "page": 15
+     }
+    ],
+    "section": "Corruption risks identified through the investigation"
+   },
+   {
+    "text": "The CCC reported that the former president received no education allowance money beyond his entitlement and that the former minister obtained appropriate advice before accepting his resignation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Apricot_Oct-2026.pdf",
+      "document": "Investigation Apricot – October 2026 (PDF)",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Apricot_Oct-2026.pdf",
+      "document": "Investigation Apricot – October 2026 (PDF)",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Apricot_Oct-2026.pdf",
+      "document": "Investigation Apricot – October 2026 (PDF)",
+      "page": 14
+     }
+    ],
+    "section": "Complaints received by the CCC"
+   },
+   {
+    "text": "It made 17 recommendations directly to the board, its secretariat and Queensland Corrective Services about governance, training, appointments, records and reporting.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Apricot_Oct-2026.pdf",
+      "document": "Investigation Apricot – October 2026 (PDF)",
+      "page": 16
+     }
+    ],
+    "section": "Current governance reforms"
+   },
+   {
+    "text": "The CCC also recommended stronger internal controls across public entities and a government review of how entities and their secretariats are established.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Apricot_Oct-2026.pdf",
+      "document": "Investigation Apricot – October 2026 (PDF)",
+      "page": 18
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The lack of governance, policies and a clear demarcation of roles and responsibilities put both the PBQ and the PBQS at risk of fraud and maladministration.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Apricot_Oct-2026.pdf",
+     "document": "Investigation Apricot – October 2026 (PDF)",
+     "page": 18
+    }
+   },
+   {
+    "quote": "The CCC recommends that all public sector and public service entities have appropriate internal controls and governance frameworks in place to ensure probity, transparency and accountability in their day-to-day operations and decision-making about the use of public funds.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Apricot_Oct-2026.pdf",
+     "document": "Investigation Apricot – October 2026 (PDF)",
+     "page": 18
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

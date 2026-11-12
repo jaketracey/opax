@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-cth-national-anti-corruption-commission-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "National Anti-Corruption Commission 2025-26 annual report",
+ "body": "National Anti-Corruption Commission",
+ "source": {
+  "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Annual%20Report%202025-26_0.pdf",
+  "document": "annual report",
+  "sha256": "6a3f3928358ee07743a00ca7287b5240d40c24549d0c6fa2873d47eb26fadc46",
+  "pages": 188,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 12,
+  "last_page": 13,
+  "link": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Annual%20Report%202025-26_0.pdf#page=12"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The National Anti-Corruption Commission reported on 2025–26, with a remit covering prevention, detection, investigation and reporting of serious or systemic Commonwealth public sector corruption.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Annual%20Report%202025-26_0.pdf",
+      "document": "annual report",
+      "page": 12
+     },
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Annual%20Report%202025-26_0.pdf",
+      "document": "annual report",
+      "page": 18
+     }
+    ]
+   },
+   {
+    "text": "The Commission reported assessing 2,603 referrals and starting 16 corruption investigations.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Annual%20Report%202025-26_0.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ]
+   },
+   {
+    "text": "It also published four corruption investigation reports and held 130 engagements about its role and corruption prevention.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Annual%20Report%202025-26_0.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ]
+   },
+   {
+    "text": "The Commission met its targets for investigation timeliness and prevention activity, but missed its referral assessment target, with 68.5% assessed within 90 days against an 80% target.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Annual%20Report%202025-26_0.pdf",
+      "document": "annual report",
+      "page": 29
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We also published 4 corruption investigation reports, for Operation Myrtleford, Operation Pelican, Operation Pentecost and Operation Young.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Annual%20Report%202025-26_0.pdf",
+     "document": "annual report",
+     "page": 12
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

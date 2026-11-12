@@ -1,0 +1,94 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2021-11-16-exposing-corruption-department-communities",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Exposing Corruption in Department of Communities",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Exposing%20Corruption%20in%20Department%20of%20Communities.pdf",
+  "document": "Exposing Corruption in Department of Communities",
+  "sha256": "f53fa47f02f4928927c34811151ab32e485033d2bee02856b13deddc58443e9f",
+  "pages": 10,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reported how it uncovered corruption by a senior Department of Communities official through Operation Taurus.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Exposing%20Corruption%20in%20Department%20of%20Communities.pdf",
+      "document": "Exposing Corruption in Department of Communities",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Exposing%20Corruption%20in%20Department%20of%20Communities.pdf",
+      "document": "Exposing Corruption in Department of Communities",
+      "page": 7
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "Its analysts examined financial records and linked corporate credit card payments to companies controlled by the official.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Exposing%20Corruption%20in%20Department%20of%20Communities.pdf",
+      "document": "Exposing Corruption in Department of Communities",
+      "page": 7
+     }
+    ],
+    "section": "A breakthrough"
+   },
+   {
+    "text": "The Commission established that the official approved monthly false invoices to companies providing nothing to the Department.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Exposing%20Corruption%20in%20Department%20of%20Communities.pdf",
+      "document": "Exposing Corruption in Department of Communities",
+      "page": 8
+     }
+    ],
+    "section": "October 2019"
+   },
+   {
+    "text": "The Commission described a joint investigation with police and confiscation action covering properties, superannuation and proceeds from racehorse interests.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Exposing%20Corruption%20in%20Department%20of%20Communities.pdf",
+      "document": "Exposing Corruption in Department of Communities",
+      "page": 9
+     }
+    ],
+    "section": "WA Police Force joins the investigation"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The companies to which the funds were directed provided no products, services or works to the Department of Communities.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Exposing%20Corruption%20in%20Department%20of%20Communities.pdf",
+     "document": "Exposing Corruption in Department of Communities",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

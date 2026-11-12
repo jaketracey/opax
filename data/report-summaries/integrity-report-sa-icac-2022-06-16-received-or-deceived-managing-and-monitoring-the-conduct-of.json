@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2022-06-16-received-or-deceived-managing-and-monitoring-the-conduct-of",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Received or Deceived? Managing and monitoring the conduct of government contractors",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/documents/Received-or-Deceived-Copy.pdf",
+  "document": "Received or Deceived? Managing and monitoring the conduct of government contractors",
+  "sha256": "a82bb8507b7bfbd6776868f53164e485184480742baa232bc20b2af92c4510bc",
+  "pages": 14,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://icac.sa.gov.au/documents/Received-or-Deceived-Copy.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commission Against Corruption examined contract-management risks arising from an investigation into a training provider’s subsidy claims.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Received-or-Deceived-Copy.pdf",
+      "document": "Received or Deceived? Managing and monitoring the conduct of government contractors",
+      "page": 5
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/Received-or-Deceived-Copy.pdf",
+      "document": "Received or Deceived? Managing and monitoring the conduct of government contractors",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The Commission reported that subsidy manipulation had continued for years without detection by the Department for Innovation and Skills.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Received-or-Deceived-Copy.pdf",
+      "document": "Received or Deceived? Managing and monitoring the conduct of government contractors",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "It reported that criminal proceedings were not pursued because the investigation could not conclusively identify who authorised or was responsible for the manipulation.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Received-or-Deceived-Copy.pdf",
+      "document": "Received or Deceived? Managing and monitoring the conduct of government contractors",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The Commissioner decided against issuing proposed recommendations after the Department outlined reforms addressing contract compliance, claim verification and monitoring.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Received-or-Deceived-Copy.pdf",
+      "document": "Received or Deceived? Managing and monitoring the conduct of government contractors",
+      "page": 12
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The investigation established that manipulation of subsidies had occurred for many years, undetected by the Department.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/Received-or-Deceived-Copy.pdf",
+     "document": "Received or Deceived? Managing and monitoring the conduct of government contractors",
+     "page": 6
+    }
+   },
+   {
+    "quote": "I also hold the view that the potential for contractors and suppliers to government to dishonestly gain from manipulation of their contracts is a continuing threat to integrity in public administration.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/Received-or-Deceived-Copy.pdf",
+     "document": "Received or Deceived? Managing and monitoring the conduct of government contractors",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

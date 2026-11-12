@@ -1,0 +1,101 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-v-line-corporation-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "V/Line Corporation 2025-26 annual report",
+ "body": "V/Line Corporation",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab31b/globalassets/tabled-paper-documents/tabled-paper-10588/vline-corporation-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "bcd72d9773cb9f8de8ab8ffd2e269616e2cf4a8ff31e9857de2ccc63ea7151e2",
+  "pages": 154,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chief Executive Officer’s report",
+  "first_page": 7,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4ab31b/globalassets/tabled-paper-documents/tabled-paper-10588/vline-corporation-annual-report-2025-26.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "V/Line Corporation reported on the year ending 30 June 2026, with a purpose of connecting Victorians through transport that is safe, reliable and accessible.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab31b/globalassets/tabled-paper-documents/tabled-paper-10588/vline-corporation-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab31b/globalassets/tabled-paper-documents/tabled-paper-10588/vline-corporation-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Purpose, vision and values"
+   },
+   {
+    "text": "V/Line reported more than 28.5 million passenger trips on its train and coach services in 2025–26.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab31b/globalassets/tabled-paper-documents/tabled-paper-10588/vline-corporation-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Chief Executive Officer’s report"
+   },
+   {
+    "text": "It reported annual customer experience scores of 79.9 for rail and 81.5 for coaches, against targets of 80.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab31b/globalassets/tabled-paper-documents/tabled-paper-10588/vline-corporation-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Chief Executive Officer’s report"
+   },
+   {
+    "text": "V/Line reported accessibility upgrades at 16 stations and finalisation of its Accessibility Action Plan.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab31b/globalassets/tabled-paper-documents/tabled-paper-10588/vline-corporation-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Chief Executive Officer’s report"
+   },
+   {
+    "text": "V/Line reported a net result after tax of $14.3 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab31b/globalassets/tabled-paper-documents/tabled-paper-10588/vline-corporation-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 16
+     }
+    ],
+    "section": "Performance overview"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

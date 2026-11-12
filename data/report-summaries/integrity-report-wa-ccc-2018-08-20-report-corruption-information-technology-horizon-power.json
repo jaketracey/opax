@@ -1,0 +1,101 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2018-08-20-report-corruption-information-technology-horizon-power",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on corruption in Information Technology at Horizon Power",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20in%20Information%20Technology%20at%20Horizon%20Power.pdf",
+  "document": "Report on corruption in Information Technology at Horizon Power",
+  "sha256": "5e1777aeceed6d799d54cd0579ccacb800c4d445d68dced3ba5fd8dfbab6f678",
+  "pages": 68,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 5,
+  "last_page": 7,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20in%20Information%20Technology%20at%20Horizon%20Power.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated procurement and private business interests involving Horizon Power’s technology manager and associates.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20in%20Information%20Technology%20at%20Horizon%20Power.pdf",
+      "document": "Report on corruption in Information Technology at Horizon Power",
+      "page": 5
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission formed serious misconduct opinions about the manager’s use of his position to obtain benefits for his business and family.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20in%20Information%20Technology%20at%20Horizon%20Power.pdf",
+      "document": "Report on corruption in Information Technology at Horizon Power",
+      "page": 65
+     }
+    ],
+    "section": "Opinions of serious misconduct and recommendations"
+   },
+   {
+    "text": "The Commission concluded that the manager and two associates conspired to defraud Horizon Power through a business they intended to control.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20in%20Information%20Technology%20at%20Horizon%20Power.pdf",
+      "document": "Report on corruption in Information Technology at Horizon Power",
+      "page": 65
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20in%20Information%20Technology%20at%20Horizon%20Power.pdf",
+      "document": "Report on corruption in Information Technology at Horizon Power",
+      "page": 66
+     }
+    ],
+    "section": "Opinions of serious misconduct and recommendations"
+   },
+   {
+    "text": "The Commission did not form a serious misconduct opinion about the contractor’s conduct, distinguishing its connection to his employment from that of the manager.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20in%20Information%20Technology%20at%20Horizon%20Power.pdf",
+      "document": "Report on corruption in Information Technology at Horizon Power",
+      "page": 67
+     }
+    ],
+    "section": "Mr Anthony Raspa"
+   },
+   {
+    "text": "The Commission made two recommendations to consider prosecutions for corruption in public office and conspiracy to commit fraud.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20in%20Information%20Technology%20at%20Horizon%20Power.pdf",
+      "document": "Report on corruption in Information Technology at Horizon Power",
+      "page": 68
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

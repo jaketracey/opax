@@ -1,0 +1,124 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2009-12-03-report-investigation-alleged-public-sector-miscondu-f4ee5e71",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Investigation of Alleged Public Sector Misconduct at the City of Wanneroo",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20at%20the%20City%20of%20Wanneroo.pdf",
+  "document": "Report on the Investigation of Alleged Public Sector Misconduct at the City of Wanneroo.pdf",
+  "sha256": "a0f420fa1e4d2fed91c08073d44d025cefbe5b1d0d9dbbb5dc10e93b028603cc",
+  "pages": 297,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 11,
+  "last_page": 24,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20at%20the%20City%20of%20Wanneroo.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission examined misconduct risks arising from relationships between City of Wanneroo elected members and lobbyists.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20at%20the%20City%20of%20Wanneroo.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct at the City of Wanneroo.pdf",
+      "page": 11
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "Its inquiries covered development proposals, a power line dispute and the election of a regional council chairperson.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20at%20the%20City%20of%20Wanneroo.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct at the City of Wanneroo.pdf",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20at%20the%20City%20of%20Wanneroo.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct at the City of Wanneroo.pdf",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20at%20the%20City%20of%20Wanneroo.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct at the City of Wanneroo.pdf",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20at%20the%20City%20of%20Wanneroo.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct at the City of Wanneroo.pdf",
+      "page": 17
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission formed misconduct opinions about the deputy mayor’s failure to disclose an impartiality interest and his assistance in concealing prohibited retail trading.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20at%20the%20City%20of%20Wanneroo.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct at the City of Wanneroo.pdf",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20at%20the%20City%20of%20Wanneroo.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct at the City of Wanneroo.pdf",
+      "page": 16
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It concluded that relationships based on favours or influence exposed public officers to misconduct risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20at%20the%20City%20of%20Wanneroo.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct at the City of Wanneroo.pdf",
+      "page": 24
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "A relationship between a public officer and a lobbyist which is founded on favours or influence gives rise to a very obvious risk of misconduct by the public officer.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20at%20the%20City%20of%20Wanneroo.pdf",
+     "document": "Report on the Investigation of Alleged Public Sector Misconduct at the City of Wanneroo.pdf",
+     "page": 24
+    }
+   },
+   {
+    "quote": "In those circumstances, Mr Salpietro’s conduct in sending the letter does not constitute misconduct under section 4 of the CCC Act.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20at%20the%20City%20of%20Wanneroo.pdf",
+     "document": "Report on the Investigation of Alleged Public Sector Misconduct at the City of Wanneroo.pdf",
+     "page": 15
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

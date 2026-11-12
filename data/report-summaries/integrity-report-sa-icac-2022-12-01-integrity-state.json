@@ -1,0 +1,91 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2022-12-01-integrity-state",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Integrity State",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/documents/Integrity-State-report.pdf",
+  "document": "Integrity State Corruption prevention recommendations",
+  "sha256": "bcb97b36283522fcdfa49d12bbcfa4850db572e27cb6aa99bb1635b1c25920f1",
+  "pages": 24,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://icac.sa.gov.au/documents/Integrity-State-report.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commission Against Corruption reported on prevention recommendations sent to public authorities during the 2021/2022 financial year.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Integrity-State-report.pdf",
+      "document": "Integrity State Corruption prevention recommendations",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "Its 15 letters covered conflicts of interest, supervision and workplace culture, and controls for activities with higher corruption risks.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Integrity-State-report.pdf",
+      "document": "Integrity State Corruption prevention recommendations",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The Commissioner identified undeclared or unmanaged conflicts as relevant to many investigations and discussed them in more than half the letters.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Integrity-State-report.pdf",
+      "document": "Integrity State Corruption prevention recommendations",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The Commission concluded that authorities had substantial opportunities to reduce corruption risks through stronger policies, practices and procedures.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Integrity-State-report.pdf",
+      "document": "Integrity State Corruption prevention recommendations",
+      "page": 22
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The observations and recommendations made by the Commissioner suggest that there are significant opportunities for many public authorities to strengthen their practices, policies and procedures to reduce corruption risks.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/Integrity-State-report.pdf",
+     "document": "Integrity State Corruption prevention recommendations",
+     "page": 22
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

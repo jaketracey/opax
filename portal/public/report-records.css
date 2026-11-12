@@ -41,10 +41,6 @@
 .rr-source-more { margin: var(--space-row) 0 0; padding: var(--space-tight) 0 0; list-style: none; border-top: var(--border-hairline) solid var(--divider-subtle); font: var(--type-metadata); }
 .rr-source-more li { padding-block: var(--space-line); }
 
-/* How to read this record: the record's own caveats, kept in view, in fine print. */
-.rr-caveats { margin: 0 0 var(--space-block); padding: var(--sp-16); border-radius: var(--radius-md); background: var(--paper-sunken); }
-.rr-caveats-title { margin: 0 0 var(--space-tight); font: var(--type-label); color: var(--ink); }
-.rr-caveats .rr-notes { font: var(--type-fine); color: var(--ink-soft); }
 
 /* Contents. */
 .rr-toc { margin: 0 0 var(--space-block); }
@@ -111,6 +107,13 @@
 .rr-doc-files { margin: var(--space-line) 0 0; padding: 0; list-style: none; font: var(--type-metadata); }
 .rr-doc-detail { margin-top: var(--space-tight); }
 .rr-doc-detail > summary { font: var(--type-metadata); color: var(--ink-soft); }
+.rr-doc-note { margin: var(--space-line) 0 0; font: var(--type-fine); color: var(--ink-soft); }
+
+/* Hearing transcripts: a month to a fold, the month and its count on one line; one compact row per transcript. */
+.rr-month > summary > span { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-line) var(--space-tight); }
+.rr-month + .rr-month { border-top: var(--border-hairline) solid var(--divider-subtle); }
+.rr-transcripts .rr-doc { padding-block: var(--space-tight); }
+.rr-transcripts .rr-doc:first-child { padding-top: 0; }
 
 /* Annual report figures and tables. */
 .rr-figure-group + .rr-figure-group { margin-top: var(--space-group); }
@@ -153,3 +156,4 @@
   .rr-section .ui-section-title { break-after: avoid; }
   .rr-table-scroll { overflow: visible; border: 0; }
 }
+.rr-copies { margin-bottom: var(--space-row); }

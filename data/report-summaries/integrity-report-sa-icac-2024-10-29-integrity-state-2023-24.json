@@ -1,0 +1,91 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2024-10-29-integrity-state-2023-24",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Integrity State 2023–24",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0014/1085000/Integrity-State-Vol-3-2023-2024-Report-21.10.2024.pdf",
+  "document": "Integrity State 2023–24",
+  "sha256": "60d7901616a736bd3fb3d90be823614927eb3f9fd95d03528279453ffd3a6cbf",
+  "pages": 18,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0014/1085000/Integrity-State-Vol-3-2023-2024-Report-21.10.2024.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commission Against Corruption reported on prevention recommendations arising from investigations during the 2023/2024 financial year.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0014/1085000/Integrity-State-Vol-3-2023-2024-Report-21.10.2024.pdf",
+      "document": "Integrity State 2023–24",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The Commission identified conflicts in human resources processes and insufficient guidance and training as the main areas of vulnerability.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0014/1085000/Integrity-State-Vol-3-2023-2024-Report-21.10.2024.pdf",
+      "document": "Integrity State 2023–24",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "It summarised nine prevention letters arising from investigations that did not lead to criminal proceedings, with one matter referred for further investigation and disciplinary action.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0014/1085000/Integrity-State-Vol-3-2023-2024-Report-21.10.2024.pdf",
+      "document": "Integrity State 2023–24",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The Commission concluded that conflicts of interest remained an integrity risk and emphasised clear, current procedures and training.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0014/1085000/Integrity-State-Vol-3-2023-2024-Report-21.10.2024.pdf",
+      "document": "Integrity State 2023–24",
+      "page": 17
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Like previous Integrity State reports, this report demonstrates that integrity risks associated with undisclosed and poorly managed conflicts of interest continue to occur in public administration.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0014/1085000/Integrity-State-Vol-3-2023-2024-Report-21.10.2024.pdf",
+     "document": "Integrity State 2023–24",
+     "page": 17
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

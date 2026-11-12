@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-parks-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Parks Victoria 2025-26 annual report",
+ "body": "Parks Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab341/globalassets/tabled-paper-documents/tabled-paper-10601/parks-victoira--annual-report.pdf",
+  "document": "annual report",
+  "sha256": "0c8315bb0be4870924e9e3792bd4623d222297ef09ca133f676d8ca60b0d16ed",
+  "pages": 125,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Joint message from the \nDeputy Chairperson and \nChief Executive Officer",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.parliament.vic.gov.au/4ab341/globalassets/tabled-paper-documents/tabled-paper-10601/parks-victoira--annual-report.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Parks Victoria reported on 2025–2026 as the body managing parks, reserves, community facilities and designated ports and waterways.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab341/globalassets/tabled-paper-documents/tabled-paper-10601/parks-victoira--annual-report.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab341/globalassets/tabled-paper-documents/tabled-paper-10601/parks-victoira--annual-report.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "It reported reopening the Grampians Peaks Trail after bushfire recovery works and treating 1.5 million hectares for pest plants and animals.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab341/globalassets/tabled-paper-documents/tabled-paper-10601/parks-victoira--annual-report.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "It reported achieving 10 of 14 annual delivery plan measures and five of six departmental output measures.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab341/globalassets/tabled-paper-documents/tabled-paper-10601/parks-victoira--annual-report.pdf",
+      "document": "annual report",
+      "page": 16
+     }
+    ]
+   },
+   {
+    "text": "It reported a deficit from transactions of $14.9 million, alongside a comprehensive result of $543.6 million that included asset revaluation gains.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab341/globalassets/tabled-paper-documents/tabled-paper-10601/parks-victoira--annual-report.pdf",
+      "document": "annual report",
+      "page": 18
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We delivered 1.5 million hectares of pest plant and animal control, focused on reducing deer, pigs and foxes.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab341/globalassets/tabled-paper-documents/tabled-paper-10601/parks-victoira--annual-report.pdf",
+     "document": "annual report",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

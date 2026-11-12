@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-heathcote-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Heathcote Health 2025-26 annual report",
+ "body": "Heathcote Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab410/globalassets/tabled-paper-documents/tabled-paper-10741/heathcote-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "fe4bdd6f6b931c6a3e75ede9f0efe9067c587c2c2f424bb3d97dc83900ec7b45",
+  "pages": 123,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Board Chair and Chief Executive Officer Report",
+  "first_page": 6,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4ab410/globalassets/tabled-paper-documents/tabled-paper-10741/heathcote-health-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "In its report for 2025-2026, Heathcote Health describes its urgent care, hospital, residential aged care and community health services for Heathcote and nearby communities.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab410/globalassets/tabled-paper-documents/tabled-paper-10741/heathcote-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab410/globalassets/tabled-paper-documents/tabled-paper-10741/heathcote-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Who We Are"
+   },
+   {
+    "text": "Heathcote Health reported working on improvements required for national safety and quality accreditation, including clinical governance, audits and medication safety.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab410/globalassets/tabled-paper-documents/tabled-paper-10741/heathcote-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Quality and Safety"
+   },
+   {
+    "text": "It reported reviewing aged care services and preparing improvement plans to address stronger standards and regulatory requirements.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab410/globalassets/tabled-paper-documents/tabled-paper-10741/heathcote-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Residential Aged Care"
+   },
+   {
+    "text": "Heathcote Health reported strengthening staff capability through mandatory training, professional development and leadership initiatives.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab410/globalassets/tabled-paper-documents/tabled-paper-10741/heathcote-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Workforce and Culture"
+   },
+   {
+    "text": "Heathcote Health reported an operating deficit of $68 thousand, mainly attributed to repairs, maintenance and information technology costs.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab410/globalassets/tabled-paper-documents/tabled-paper-10741/heathcote-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 67
+     }
+    ],
+    "section": "Performance against operational and budgetary objectives"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Improvements to audit processes, risk management systems and performance monitoring have established a stronger foundation for continual improvement and informed decision-making.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab410/globalassets/tabled-paper-documents/tabled-paper-10741/heathcote-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

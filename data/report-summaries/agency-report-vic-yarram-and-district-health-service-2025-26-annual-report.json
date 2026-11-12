@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-yarram-and-district-health-service-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Yarram and District Health Service 2025-26 annual report",
+ "body": "Yarram and District Health Service",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab441/globalassets/tabled-paper-documents/tabled-paper-10769/yarram-and-district-health-service-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "ab611c48751d6e68a1bfc0a75cba16324a2a6bcb2fe51df4d490cdef2ec0fa3d",
+  "pages": 96,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "The Year in Review",
+  "first_page": 6,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab441/globalassets/tabled-paper-documents/tabled-paper-10769/yarram-and-district-health-service-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Yarram and District Health Service reported for the year ending 30 June 2026 on hospital, aged care, primary care and community health services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab441/globalassets/tabled-paper-documents/tabled-paper-10769/yarram-and-district-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab441/globalassets/tabled-paper-documents/tabled-paper-10769/yarram-and-district-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Delivering for our community"
+   },
+   {
+    "text": "The Service reported securing government capital grants for two aged care redevelopments, starting refurbishment at one and progressing design and procurement at the other.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab441/globalassets/tabled-paper-documents/tabled-paper-10769/yarram-and-district-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Investing in the Future"
+   },
+   {
+    "text": "The Service reported investing in staff accommodation and recruiting medical practitioners to improve access to local care.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab441/globalassets/tabled-paper-documents/tabled-paper-10769/yarram-and-district-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "Building a Sustainable Workforce"
+   },
+   {
+    "text": "The Service reported an operating surplus before capital and specific items of $2.34 million against a break-even target, while recording an overall net deficit.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab441/globalassets/tabled-paper-documents/tabled-paper-10769/yarram-and-district-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 27
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab441/globalassets/tabled-paper-documents/tabled-paper-10769/yarram-and-district-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 28
+     }
+    ],
+    "section": "Performance against operational and budgetary objectives"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "YDHS recorded a net operating surplus of $2.34m before capital and specific items in 2025-2026 resulting in better than budgeted objectives.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab441/globalassets/tabled-paper-documents/tabled-paper-10769/yarram-and-district-health-service-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 28
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

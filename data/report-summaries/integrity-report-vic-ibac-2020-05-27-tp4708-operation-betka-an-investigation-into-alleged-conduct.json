@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2020-05-27-tp4708-operation-betka-an-investigation-into-alleged-conduct",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Betka: An investigation into alleged conduct by a former contractor of the Department of Education and Training",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a2633/globalassets/tabled-paper-documents/tabled-paper-4708/ibac_-_operation_betka_hdktd95p.pdf",
+  "document": "IBAC_-_Operation_Betka_HDKtd95P",
+  "sha256": "ca12c803526ec4fff2564584f280f1c49140e94f1aef3093988cedb714208060",
+  "pages": 40,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of investigation and outcomes",
+  "first_page": 7,
+  "last_page": 12,
+  "link": "https://www.parliament.vic.gov.au/4a2633/globalassets/tabled-paper-documents/tabled-paper-4708/ibac_-_operation_betka_hdktd95p.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Broad-based Anti-corruption Commission investigated alleged corrupt conduct by a contracted senior project manager at the Department of Education and Training in Operation Betka.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2633/globalassets/tabled-paper-documents/tabled-paper-4708/ibac_-_operation_betka_hdktd95p.pdf",
+      "document": "IBAC_-_Operation_Betka_HDKtd95P",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "It examined whether the project manager used his departmental position to benefit a company he owned, and how conflicts of interest were disclosed and managed.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2633/globalassets/tabled-paper-documents/tabled-paper-4708/ibac_-_operation_betka_hdktd95p.pdf",
+      "document": "IBAC_-_Operation_Betka_HDKtd95P",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "IBAC found that inadequate disclosure and management of the conflict allowed him to influence staffing decisions to benefit his company, but the evidence did not support criminal charges.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2633/globalassets/tabled-paper-documents/tabled-paper-4708/ibac_-_operation_betka_hdktd95p.pdf",
+      "document": "IBAC_-_Operation_Betka_HDKtd95P",
+      "page": 32
+     }
+    ]
+   },
+   {
+    "text": "IBAC also found that supervisors failed to record, report and monitor his conflict of interest.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2633/globalassets/tabled-paper-documents/tabled-paper-4708/ibac_-_operation_betka_hdktd95p.pdf",
+      "document": "IBAC_-_Operation_Betka_HDKtd95P",
+      "page": 32
+     }
+    ]
+   },
+   {
+    "text": "Its two recommendations sought stronger contractor procurement and oversight, and effective compliance with the Department’s conflicts framework.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2633/globalassets/tabled-paper-documents/tabled-paper-4708/ibac_-_operation_betka_hdktd95p.pdf",
+      "document": "IBAC_-_Operation_Betka_HDKtd95P",
+      "page": 12
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "IBAC found those responsible for supervising the Project Manager failed to document, report and monitor his conflict of interest.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2633/globalassets/tabled-paper-documents/tabled-paper-4708/ibac_-_operation_betka_hdktd95p.pdf",
+     "document": "IBAC_-_Operation_Betka_HDKtd95P",
+     "page": 32
+    }
+   },
+   {
+    "quote": "Operation Betka has further exposed weaknesses in the Department’s processes around the procurement of contractors and the management of conflicts of interest.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2633/globalassets/tabled-paper-documents/tabled-paper-4708/ibac_-_operation_betka_hdktd95p.pdf",
+     "document": "IBAC_-_Operation_Betka_HDKtd95P",
+     "page": 32
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

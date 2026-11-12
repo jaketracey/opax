@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-melbourne-arts-precinct-corporation-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Melbourne Arts Precinct Corporation 2025-26 annual report",
+ "body": "Melbourne Arts Precinct Corporation",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab39a/globalassets/tabled-paper-documents/tabled-paper-10669/melbourne_arts_precinct_corporation_annual_report_2025-26.pdf",
+  "document": "annual report",
+  "sha256": "ecc0b235eec5cb03176787210141e70757f89759ffa825a5b7e9e7718218f982",
+  "pages": 215,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "FROM THE\nCHAIR",
+  "first_page": 6,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab39a/globalassets/tabled-paper-documents/tabled-paper-10669/melbourne_arts_precinct_corporation_annual_report_2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Melbourne Arts Precinct Corporation reported on 2025–26, when its responsibilities included leading the precinct transformation and operating Federation Square.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab39a/globalassets/tabled-paper-documents/tabled-paper-10669/melbourne_arts_precinct_corporation_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab39a/globalassets/tabled-paper-documents/tabled-paper-10669/melbourne_arts_precinct_corporation_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The corporation reported that the project team returned the Ian Potter State Theatre to Arts Centre Melbourne in June.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab39a/globalassets/tabled-paper-documents/tabled-paper-10669/melbourne_arts_precinct_corporation_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "It reported record visitation at Fed Square during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab39a/globalassets/tabled-paper-documents/tabled-paper-10669/melbourne_arts_precinct_corporation_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "It also reported launching its first Reconciliation Action Plan in December.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab39a/globalassets/tabled-paper-documents/tabled-paper-10669/melbourne_arts_precinct_corporation_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We welcomed record visitor numbers to Fed Square, growing our impact as one of Melbourne’s most popular attractions and the city’s town square.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab39a/globalassets/tabled-paper-documents/tabled-paper-10669/melbourne_arts_precinct_corporation_annual_report_2025-26.pdf",
+     "document": "annual report",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,115 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2017-04-10-tp3011-operation-nepean-an-investigation-into-the-conduct-of",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Nepean: An investigation into the conduct of former employee of the Dame Phyllis Frost Centre, Jeff Finlow",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a261a/globalassets/tabled-paper-documents/tabled-paper-3011/operation_nepean_special_report_april_2017_z69srzwh.pdf",
+  "document": "Operation_Nepean_special_report_April_2017_Z69srzwh",
+  "sha256": "2e60f347452e82622d300acff2cd253f5502fc1cbc891f375b2a3efd8aca129f",
+  "pages": 36,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "1 Summary of investigation and outcomes",
+  "first_page": 7,
+  "last_page": 12,
+  "link": "https://www.parliament.vic.gov.au/4a261a/globalassets/tabled-paper-documents/tabled-paper-3011/operation_nepean_special_report_april_2017_z69srzwh.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC investigated allegations about procurement, conflicts of interest and recruitment involving the former facilities manager at the Dame Phyllis Frost Centre.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a261a/globalassets/tabled-paper-documents/tabled-paper-3011/operation_nepean_special_report_april_2017_z69srzwh.pdf",
+      "document": "Operation_Nepean_special_report_April_2017_Z69srzwh",
+      "page": 8
+     }
+    ],
+    "section": "1.1 Introduction"
+   },
+   {
+    "text": "IBAC found that the manager circumvented procurement requirements to award contracts to his son and failed to manage the resulting conflict of interest.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a261a/globalassets/tabled-paper-documents/tabled-paper-3011/operation_nepean_special_report_april_2017_z69srzwh.pdf",
+      "document": "Operation_Nepean_special_report_April_2017_Z69srzwh",
+      "page": 30
+     }
+    ],
+    "section": "5.1 Conclusion"
+   },
+   {
+    "text": "IBAC also identified inadequate supervision and a failure to address staff complaints about the manager.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a261a/globalassets/tabled-paper-documents/tabled-paper-3011/operation_nepean_special_report_april_2017_z69srzwh.pdf",
+      "document": "Operation_Nepean_special_report_April_2017_Z69srzwh",
+      "page": 8
+     }
+    ],
+    "section": "1.1 Introduction"
+   },
+   {
+    "text": "IBAC decided that there was insufficient evidence to substantiate allegations that might constitute criminal behaviour by the manager.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a261a/globalassets/tabled-paper-documents/tabled-paper-3011/operation_nepean_special_report_april_2017_z69srzwh.pdf",
+      "document": "Operation_Nepean_special_report_April_2017_Z69srzwh",
+      "page": 30
+     }
+    ],
+    "section": "5.1 Conclusion"
+   },
+   {
+    "text": "IBAC made four recommendations for the prison and Corrections Victoria to address procurement, supervision, reporting and recruitment risks and report on implementation.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a261a/globalassets/tabled-paper-documents/tabled-paper-3011/operation_nepean_special_report_april_2017_z69srzwh.pdf",
+      "document": "Operation_Nepean_special_report_April_2017_Z69srzwh",
+      "page": 12
+     }
+    ],
+    "section": "1.6 Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "IBAC’s investigation resulted in the allegations against Mr Finlow being substantiated.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a261a/globalassets/tabled-paper-documents/tabled-paper-3011/operation_nepean_special_report_april_2017_z69srzwh.pdf",
+     "document": "Operation_Nepean_special_report_April_2017_Z69srzwh",
+     "page": 30
+    }
+   },
+   {
+    "quote": "After due consideration, IBAC decided there was insufficient evidence to substantiate allegations which might amount to criminal behaviour on the part of Mr Finlow.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a261a/globalassets/tabled-paper-documents/tabled-paper-3011/operation_nepean_special_report_april_2017_z69srzwh.pdf",
+     "document": "Operation_Nepean_special_report_April_2017_Z69srzwh",
+     "page": 30
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

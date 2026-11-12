@@ -300,7 +300,7 @@ def publish(draft: dict, res: dict, meta: dict, lane: str | None) -> dict:
         "title": meta["title"],
         "body": meta.get("body"),
         "source": {"url": url, "document": doc, "sha256": meta.get("sha256"), "pages": meta.get("pages"),
-                   "rights": meta.get("rights")},
+                   "rights": meta.get("rights"), **({"text": "ocr"} if meta.get("text_source") == "ocr" else {})},
         "own_summary": None if not own else {
             "label": OWN_LABEL, "heading": own["heading"], "first_page": own["first_page"],
             "last_page": own.get("last_page") or own["first_page"], "link": f"{url}#page={own['first_page']}"},

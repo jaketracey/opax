@@ -1,0 +1,90 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2016-12-16-report-corruption-respect-drivers-licence-applications",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "A Report on Corruption in Respect of Drivers Licence Applications",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20Report%20on%20Corruption%20in%20Respect%20of%20Drivers%20Licence%20Applications.pdf",
+  "document": "A Report on Corruption in Respect of Drivers Licence Applications",
+  "sha256": "5facb59b5cc3844a2ead2d9f695e31c701f22081b0bfe3391cb91303c8a2626e",
+  "pages": 18,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "The corrupt actions of a vehicle examiner",
+  "first_page": 7,
+  "last_page": 8,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20Report%20on%20Corruption%20in%20Respect%20of%20Drivers%20Licence%20Applications.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated a contracted driving examiner after a notification from the Department of Transport.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20Report%20on%20Corruption%20in%20Respect%20of%20Drivers%20Licence%20Applications.pdf",
+      "document": "A Report on Corruption in Respect of Drivers Licence Applications",
+      "page": 7
+     }
+    ],
+    "section": "The corrupt actions of a vehicle examiner"
+   },
+   {
+    "text": "It examined payments for assessments that had not taken place and the processing of false results by rural local government staff.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20Report%20on%20Corruption%20in%20Respect%20of%20Drivers%20Licence%20Applications.pdf",
+      "document": "A Report on Corruption in Respect of Drivers Licence Applications",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20Report%20on%20Corruption%20in%20Respect%20of%20Drivers%20Licence%20Applications.pdf",
+      "document": "A Report on Corruption in Respect of Drivers Licence Applications",
+      "page": 8
+     }
+    ],
+    "section": "The enablers: (2) the assisters"
+   },
+   {
+    "text": "The Commission formed an opinion of serious misconduct about the examiner’s acceptance of money for assessments he had not conducted.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20Report%20on%20Corruption%20in%20Respect%20of%20Drivers%20Licence%20Applications.pdf",
+      "document": "A Report on Corruption in Respect of Drivers Licence Applications",
+      "page": 7
+     }
+    ],
+    "section": "The corrupt actions of a vehicle examiner"
+   },
+   {
+    "text": "It recommended that the Director of Public Prosecutions consider criminal proceedings against the examiner.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20Report%20on%20Corruption%20in%20Respect%20of%20Drivers%20Licence%20Applications.pdf",
+      "document": "A Report on Corruption in Respect of Drivers Licence Applications",
+      "page": 7
+     }
+    ],
+    "section": "The corrupt actions of a vehicle examiner"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

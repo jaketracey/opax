@@ -1,0 +1,108 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2005-06-10-report-investigation-department-treasury-leaks",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on Investigation into Department of Treasury Leaks",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20into%20Department%20of%20Treasury%20Leaks.pdf",
+  "document": "Report on Investigation into Department of Treasury Leaks.pdf",
+  "sha256": "2216084bccf072fc550f83f606f8ddeebb8ba30ad96c462b6d8b26ac041530d4",
+  "pages": 11,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated suspected unauthorised disclosure of Treasury budget information before its scheduled release.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20into%20Department%20of%20Treasury%20Leaks.pdf",
+      "document": "Report on Investigation into Department of Treasury Leaks.pdf",
+      "page": 5
+     }
+    ],
+    "section": "What is this Report About?"
+   },
+   {
+    "text": "Its inquiries focused on possible misconduct by public officers and improvements to information handling.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20into%20Department%20of%20Treasury%20Leaks.pdf",
+      "document": "Report on Investigation into Department of Treasury Leaks.pdf",
+      "page": 7
+     }
+    ],
+    "section": "Scope of the Investigation"
+   },
+   {
+    "text": "The Commission concluded that serious misconduct had occurred but could not identify the source of the leak, and found weaknesses in document access and tracking.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20into%20Department%20of%20Treasury%20Leaks.pdf",
+      "document": "Report on Investigation into Department of Treasury Leaks.pdf",
+      "page": 8
+     }
+    ],
+    "section": "Assessment"
+   },
+   {
+    "text": "Its seven recommendations addressed disclosure laws, disciplinary provisions, staff screening and training, media releases and information security.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20into%20Department%20of%20Treasury%20Leaks.pdf",
+      "document": "Report on Investigation into Department of Treasury Leaks.pdf",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20into%20Department%20of%20Treasury%20Leaks.pdf",
+      "document": "Report on Investigation into Department of Treasury Leaks.pdf",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20into%20Department%20of%20Treasury%20Leaks.pdf",
+      "document": "Report on Investigation into Department of Treasury Leaks.pdf",
+      "page": 11
+     }
+    ],
+    "section": "Opinions and Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Although there was serious misconduct in this case, the Commission’s investigation was unable to identify the source of the information leak.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20into%20Department%20of%20Treasury%20Leaks.pdf",
+     "document": "Report on Investigation into Department of Treasury Leaks.pdf",
+     "page": 8
+    }
+   },
+   {
+    "quote": "Therefore, the Commission has concluded that there is not an adequate legislative base for the prosecution of persons involved in the unauthorised access and disclosure of official information.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20into%20Department%20of%20Treasury%20Leaks.pdf",
+     "document": "Report on Investigation into Department of Treasury Leaks.pdf",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

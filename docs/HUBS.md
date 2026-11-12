@@ -79,10 +79,10 @@ state electorate index, validated roster, existing canonical person-path table,
 `votes.json` and Victorian division shards. It writes the uncommitted,
 deployed `portal/public/hubs/vic-election-2026.json`; run the full search build
 first to refresh canonical person paths. There is no new identity
-join, cron, candidate list or donor read. The projection uses an explicit field
-allowlist.
+join, cron or donor read. The projection reads the optional, separately fetched
+VEC candidate report using an explicit name/party field allowlist.
 
-Two committed source files sit beside the VEC config in `scripts/hubs/`:
+Three committed source files sit beside the VEC config in `scripts/hubs/`:
 
 - `vic-results-2022.json`, from `python3 -I scripts/fetch_vec_results.py`: each
   district's 2022 result and any by-election or supplementary election since
@@ -96,6 +96,43 @@ Two committed source files sit beside the VEC config in `scripts/hubs/`:
   and 2021 Census mesh block counts: every Victorian suburb, postal area and council
   area split across districts by usual residents. The builder checks that the ABS
   names and regions match the VEC's 88 districts. ABS data is CC BY 4.0.
+- `vic-candidates-2026.json`, from
+  `uv run python scripts/fetch_vec_candidates.py`: **1,037 candidates**, comprising
+  **734 across all 88 districts** and **303 across all 8 regions**. No constituency
+  is empty. The [VEC election page](https://www.vec.vic.gov.au/voting/2026-state-election)
+  links the [official XLS candidate report](https://www.vec.vic.gov.au/-/media/f487c2abe7274ed4b5bb60daa2b001ad.xls).
+  The output's `published` date, **11 November 2026**, comes from that page's
+  “Get to know your candidates - published Wednesday 11 November” notice. The
+  workbook's own snapshot is earlier: **9 November 2026, 7:58 pm**. The notice date
+  records the VEC's dated candidate publication, not an inferred first upload
+  time or the OPAX fetch date (12 November).
+
+  Candidate names and full registered party labels come verbatim from the XLS
+  `Candidates` and `RPP Name` columns. The website sometimes uses shorter party
+  labels. Blank party cells remain blank, including independents, unnamed groups
+  and ungrouped candidates. Row order is retained, including the order within
+  and across Council groups; the hub's flat list does not reproduce group headings.
+  Albert Park and Eastern Victoria were checked against the VEC's
+  [district ballot order](https://www.vec.vic.gov.au/electoral-boundaries/state-districts/albert-park-district/nominations)
+  and [region ballot order](https://www.vec.vic.gov.au/electoral-boundaries/state-regions/eastern-victoria-region/nominations).
+  Contact people, telephone numbers, email addresses and locality fields are
+  excluded from the JSON. The text is **CC BY 4.0**, attributed **© Victorian
+  Electoral Commission**, under the [VEC legal terms](https://www.vec.vic.gov.au/legal).
+
+  Fetching uses `parli.ingest.honest_http.HonestHTTP` and the shared
+  `parli/ingest/http.py` identity, serial rate limits, robots checks and refusal
+  receipts. On refusal it exits with code 4 and preserves existing output;
+  the receipt defaults to `~/.cache/autoresearch/pipeline/source-access.json`
+  (`OPAX_SOURCE_STATUS_FILE` can override this). Successfully fetched source
+  responses, including the workbook's contact columns, stay in the gitignored
+  `portal/private/vec-candidates-2026/` cache. Use `--cache <fresh-directory>` to
+  refresh; an existing cache is reused for reproducible offline conversion.
+  Every constituency, vacancy count, candidate count and the report total must
+  validate before the generated JSON replaces the previous file. The small
+  saved XLS test fixture uses invented names only:
+  `uv run pytest tests/test_vec_candidates.py`. Rebuild with
+  `npm run build:vic-election` from `portal/`; the portal tests check that Albert
+  Park and Eastern Victoria render the committed candidate lists in source order.
 
 The build writes the places into a separate `/hubs/vic-election-2026-places.json`,
 read only by the hub's "Which seat am I in?" finder. The finder is a plain GET form
@@ -126,8 +163,8 @@ records hashes of the checked pages and EBC report; local source copies are in
 The current [VEC timeline](https://www.vec.vic.gov.au/voting/types-of-elections/state-elections)
 and [2026 election page](https://www.vec.vic.gov.au/voting/2026-state-election)
 put nominations closing at **noon 9 November**, superseding the older draft
-service plan's 13 November. The hub points to VEC candidate publication after
-nominations close and carries no candidate names. Early voting is 18–27 November
+service plan's 13 November. The hub now carries the VEC's published candidate
+lists on every constituency page. Early voting is 18–27 November
 (closed Sunday 22 November); election day is Saturday 28 November. Caretaker
 starts at 6 pm 3 November unless Parliament is dissolved earlier, sourced to
 the [Victorian caretaker guidelines](https://www.vic.gov.au/guidelines-caretaker-conventions/introduction).

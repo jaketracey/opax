@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1994-08-05-reports-relating-improper-disposal-liquid-waste-south-east-q",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Reports relating to the improper disposal of liquid waste in south-east Queensland - Volume I & II",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Improper-disposal-liquid-waste/An-investigation-into-the-improper-disposal-of-liquid-waste-in-south-east-qld-volume-1-Report-1994.pdf",
+  "document": "Report by the Criminal Justice Commission on its public hearings conducted by the Honourable... Volume I (July 1994)",
+  "sha256": "9cc6bb1439b90111c894076b80f21938a191f62a9d6cd8f509151330710227c0",
+  "pages": 32,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission published an independent inquiry into mining issues raised during its investigation of liquid-waste disposal.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Improper-disposal-liquid-waste/An-investigation-into-the-improper-disposal-of-liquid-waste-in-south-east-qld-volume-1-Report-1994.pdf",
+      "document": "Report by the Criminal Justice Commission on its public hearings conducted by the Honourable... Volume I (July 1994)",
+      "page": 3
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Improper-disposal-liquid-waste/An-investigation-into-the-improper-disposal-of-liquid-waste-in-south-east-qld-volume-1-Report-1994.pdf",
+      "document": "Report by the Criminal Justice Commission on its public hearings conducted by the Honourable... Volume I (July 1994)",
+      "page": 4
+     }
+    ],
+    "section": "BACKGROUND TO INVESTIGATION"
+   },
+   {
+    "text": "The inquiry considered mine waste, rehabilitation costs, security deposits and departmental environmental oversight.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Improper-disposal-liquid-waste/An-investigation-into-the-improper-disposal-of-liquid-waste-in-south-east-qld-volume-1-Report-1994.pdf",
+      "document": "Report by the Criminal Justice Commission on its public hearings conducted by the Honourable... Volume I (July 1994)",
+      "page": 30
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Improper-disposal-liquid-waste/An-investigation-into-the-improper-disposal-of-liquid-waste-in-south-east-qld-volume-1-Report-1994.pdf",
+      "document": "Report by the Criminal Justice Commission on its public hearings conducted by the Honourable... Volume I (July 1994)",
+      "page": 31
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Improper-disposal-liquid-waste/An-investigation-into-the-improper-disposal-of-liquid-waste-in-south-east-qld-volume-1-Report-1994.pdf",
+      "document": "Report by the Criminal Justice Commission on its public hearings conducted by the Honourable... Volume I (July 1994)",
+      "page": 32
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "It concluded that the mining evidence disclosed no official misconduct by public officials and did not justify further investigation within the Commission’s remit.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Improper-disposal-liquid-waste/An-investigation-into-the-improper-disposal-of-liquid-waste-in-south-east-qld-volume-1-Report-1994.pdf",
+      "document": "Report by the Criminal Justice Commission on its public hearings conducted by the Honourable... Volume I (July 1994)",
+      "page": 32
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "The inquiry urged a broader investigation by a body with suitable powers and expertise, together with legislation to underpin mining environmental policies.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Improper-disposal-liquid-waste/An-investigation-into-the-improper-disposal-of-liquid-waste-in-south-east-qld-volume-1-Report-1994.pdf",
+      "document": "Report by the Criminal Justice Commission on its public hearings conducted by the Honourable... Volume I (July 1994)",
+      "page": 30
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Improper-disposal-liquid-waste/An-investigation-into-the-improper-disposal-of-liquid-waste-in-south-east-qld-volume-1-Report-1994.pdf",
+      "document": "Report by the Criminal Justice Commission on its public hearings conducted by the Honourable... Volume I (July 1994)",
+      "page": 32
+     }
+    ],
+    "section": "CONCLUSION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The evidence I have heard to date, in my opinion, does not warrant any further investigation of this particular issue by the Commission.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Improper-disposal-liquid-waste/An-investigation-into-the-improper-disposal-of-liquid-waste-in-south-east-qld-volume-1-Report-1994.pdf",
+     "document": "Report by the Criminal Justice Commission on its public hearings conducted by the Honourable... Volume I (July 1994)",
+     "page": 32
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:50+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

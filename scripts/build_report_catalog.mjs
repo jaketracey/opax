@@ -168,7 +168,8 @@ export function projectSummary(d) {
   const held = !SHOW_NAMED_PERSON_QUOTES && NAMED_PERSON_QUOTES.has(d.slug);
   const quotes = held ? [] : rows(d.findings?.items).map(q => ({ quote: String(q.quote), kind: String(q.kind), cite: citeOf(q.cite) })).filter(q => q.quote && q.cite);
   return { own_summary: own,
-    generated: { label: 'Generated summary: written by an AI model from the report text and checked against the cited pages.',
+    generated: { label: 'Generated summary: written by an AI model from the report text and checked against the cited pages.'
+      + (d.source?.text === 'ocr' ? ' This report is a scanned document, so its text was read by on-device OCR, which can misread words.' : ''),
       model: String(d.generation?.engine || ''), checked_at: d.gate?.checked_at || null, sentences },
     quotes: { label: "In the body's own words", items: quotes } };
 }

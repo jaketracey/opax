@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-central-highlands-rural-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Central Highlands Rural Health 2025-26 annual report",
+ "body": "Central Highlands Rural Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3e7/globalassets/tabled-paper-documents/tabled-paper-10723/central-highlands-rural-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "890ca2f7c49c45c200cfdf2edd0faf82e49ca55ae8aef659acae0f3f7f4aa00e",
+  "pages": 104,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "YEAR IN REVIEW",
+  "first_page": 14,
+  "last_page": 15,
+  "link": "https://www.parliament.vic.gov.au/4ab3e7/globalassets/tabled-paper-documents/tabled-paper-10723/central-highlands-rural-health-annual-report-2025-26.pdf#page=14"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Central Highlands Rural Health reported for 2025-2026 on its hospital, community, residential aged care and home support services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e7/globalassets/tabled-paper-documents/tabled-paper-10723/central-highlands-rural-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 15
+     }
+    ],
+    "section": "YEAR IN REVIEW"
+   },
+   {
+    "text": "Central Highlands Rural Health reported appointing its first nurse practitioner in Daylesford and developing advanced nursing pathways to support local care.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e7/globalassets/tabled-paper-documents/tabled-paper-10723/central-highlands-rural-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 14
+     }
+    ],
+    "section": "YEAR IN REVIEW"
+   },
+   {
+    "text": "Central Highlands Rural Health reported introducing a client management system in July 2025 to support home services and aged care reform.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e7/globalassets/tabled-paper-documents/tabled-paper-10723/central-highlands-rural-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 14
+     }
+    ],
+    "section": "Aged Care Reforms"
+   },
+   {
+    "text": "Central Highlands Rural Health reported an operating surplus of $0.53 million against a breakeven target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e7/globalassets/tabled-paper-documents/tabled-paper-10723/central-highlands-rural-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 28
+     }
+    ],
+    "section": "Summary of financial position"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Central Highlands Rural Health reported a $0.53 million operating surplus against a breakeven target.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3e7/globalassets/tabled-paper-documents/tabled-paper-10723/central-highlands-rural-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 28
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

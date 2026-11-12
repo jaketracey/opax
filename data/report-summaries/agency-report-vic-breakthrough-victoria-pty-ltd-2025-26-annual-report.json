@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-breakthrough-victoria-pty-ltd-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Breakthrough Victoria Pty Ltd 2025-26 annual report",
+ "body": "Breakthrough Victoria Pty Ltd",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab39d/globalassets/tabled-paper-documents/tabled-paper-10682/breakthrough-victoria-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "181a30a03bbeff43fa23962a02af558928a9aa587b9a61eca225d75d7b88366c",
+  "pages": 106,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the CEO",
+  "first_page": 10,
+  "last_page": 11,
+  "link": "https://www.parliament.vic.gov.au/4ab39d/globalassets/tabled-paper-documents/tabled-paper-10682/breakthrough-victoria-annual-report-2025-26.pdf#page=10"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Breakthrough Victoria reported for 2025-26 on its investment work to commercialise research and support innovation, economic growth and jobs in Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab39d/globalassets/tabled-paper-documents/tabled-paper-10682/breakthrough-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 2
+     }
+    ],
+    "section": "Investing in innovation for Victoria’s economic future"
+   },
+   {
+    "text": "Breakthrough Victoria reported making 22 investments and committing $50 million to new opportunities during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab39d/globalassets/tabled-paper-documents/tabled-paper-10682/breakthrough-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Message from the Chair"
+   },
+   {
+    "text": "Breakthrough Victoria reported its first cumulative capital returns of $83.7 million during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab39d/globalassets/tabled-paper-documents/tabled-paper-10682/breakthrough-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Message from the CEO"
+   },
+   {
+    "text": "Breakthrough Victoria reported a positive net financial result of $165.8 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab39d/globalassets/tabled-paper-documents/tabled-paper-10682/breakthrough-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Message from the CEO"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "This year the Company delivered a positive net financial result of $165.8 million, while continuing to increase assets under management and reduce expenses.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab39d/globalassets/tabled-paper-documents/tabled-paper-10682/breakthrough-victoria-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

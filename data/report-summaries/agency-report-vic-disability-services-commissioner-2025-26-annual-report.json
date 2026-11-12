@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-disability-services-commissioner-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Disability Services Commissioner 2025-26 annual report",
+ "body": "Disability Services Commissioner",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4aa286/globalassets/tabled-paper-documents/tabled-paper-10560/disability-services-commissioner-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "5bb02d6c3fec9a57ff58aa4bc25f04311c24a22eb02ac2d7ac2c3394d6b40e45",
+  "pages": 14,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from Jen Jackson-Hall",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.parliament.vic.gov.au/4aa286/globalassets/tabled-paper-documents/tabled-paper-10560/disability-services-commissioner-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The office of the Disability Services Commissioner’s 2025–26 report covers its role in resolving complaints and protecting the rights of Victorians with disability.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa286/globalassets/tabled-paper-documents/tabled-paper-10560/disability-services-commissioner-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 2
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa286/globalassets/tabled-paper-documents/tabled-paper-10560/disability-services-commissioner-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "Letter to the Minister"
+   },
+   {
+    "text": "The office reported receiving 56 new complaints, with one within its jurisdiction and 55 outside it.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa286/globalassets/tabled-paper-documents/tabled-paper-10560/disability-services-commissioner-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Complaints"
+   },
+   {
+    "text": "It reported issuing three Notices of Advice through an education project about disability advocacy services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa286/globalassets/tabled-paper-documents/tabled-paper-10560/disability-services-commissioner-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Notices of Advice"
+   },
+   {
+    "text": "The former Commissioner identified sustainability challenges arising from a small workforce and few matters within the office’s jurisdiction.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa286/globalassets/tabled-paper-documents/tabled-paper-10560/disability-services-commissioner-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Message from Jen Jackson-Hall"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Merging DSC functions or having a shared Commissioner, as we had in the past, could provide the support and expertise needed for DSC functions into the future.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4aa286/globalassets/tabled-paper-documents/tabled-paper-10560/disability-services-commissioner-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

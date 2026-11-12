@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2023-08-29-off-the-radar",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Off the Radar",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/937709/Off-the-Radar.pdf",
+  "document": "Off the Radar",
+  "sha256": "811e119a8d7d171d3fb7f71549278ba2d95f38257b49605939ab8a5b922a34d2",
+  "pages": 10,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/937709/Off-the-Radar.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commission Against Corruption used investigations to examine how inadequate supervision can enable inappropriate conduct.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/937709/Off-the-Radar.pdf",
+      "document": "Off the Radar",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "It considered physically separate worksites and specialised business units operating with limited oversight.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/937709/Off-the-Radar.pdf",
+      "document": "Off the Radar",
+      "page": 5
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/937709/Off-the-Radar.pdf",
+      "document": "Off the Radar",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The Commission concluded that unclear roles and reporting obligations could weaken accountability and make corruption harder to detect.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/937709/Off-the-Radar.pdf",
+      "document": "Off the Radar",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "It proposed six prevention measures covering unit functions, individual responsibilities, reporting, communication, policy compliance and governance oversight.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/937709/Off-the-Radar.pdf",
+      "document": "Off the Radar",
+      "page": 9
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "As the Commission has seen, inadequate supervision can foster a culture of low accountability, inappropriate conduct and even corruption that is difficult to detect.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/937709/Off-the-Radar.pdf",
+     "document": "Off the Radar",
+     "page": 9
+    }
+   },
+   {
+    "quote": "Ensure all functions are appropriately captured in departmental governance and risk committee structures.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/937709/Off-the-Radar.pdf",
+     "document": "Off the Radar",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

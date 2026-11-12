@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2007-02-07-alleged-police-assault-aurukun-resident-warren-bell-report-c",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Alleged police assault of Aurukun resident Warren Bell: A report from the CMC",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Alleged-police-assault-of-Aurukun-resident-Warren-Bell-Report-2007.pdf",
+  "document": "Alleged police assault of Aurukun resident Warren Bell: A report from the CMC (7 February 2007)",
+  "sha256": "77335c67d975f2517231a08f02c01fb737bb07f1562b4723f1bd58d8fe1b75fb",
+  "pages": 27,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "The investigation — an overview",
+  "first_page": 4,
+  "last_page": 6,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Alleged-police-assault-of-Aurukun-resident-Warren-Bell-Report-2007.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission and police ethical standards investigators examined an allegation that a man had been assaulted in police custody at Aurukun.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Alleged-police-assault-of-Aurukun-resident-Warren-Bell-Report-2007.pdf",
+      "document": "Alleged police assault of Aurukun resident Warren Bell: A report from the CMC (7 February 2007)",
+      "page": 1
+     }
+    ]
+   },
+   {
+    "text": "The CMC assessed interviews, medical information and forensic examinations to decide whether criminal or disciplinary action should be considered.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Alleged-police-assault-of-Aurukun-resident-Warren-Bell-Report-2007.pdf",
+      "document": "Alleged police assault of Aurukun resident Warren Bell: A report from the CMC (7 February 2007)",
+      "page": 3
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Alleged-police-assault-of-Aurukun-resident-Warren-Bell-Report-2007.pdf",
+      "document": "Alleged police assault of Aurukun resident Warren Bell: A report from the CMC (7 February 2007)",
+      "page": 26
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Alleged-police-assault-of-Aurukun-resident-Warren-Bell-Report-2007.pdf",
+      "document": "Alleged police assault of Aurukun resident Warren Bell: A report from the CMC (7 February 2007)",
+      "page": 27
+     }
+    ]
+   },
+   {
+    "text": "The CMC concluded that there were no grounds for referring possible criminal charges and made no adverse assault findings against police officers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Alleged-police-assault-of-Aurukun-resident-Warren-Bell-Report-2007.pdf",
+      "document": "Alleged police assault of Aurukun resident Warren Bell: A report from the CMC (7 February 2007)",
+      "page": 27
+     }
+    ]
+   },
+   {
+    "text": "Its recommendation referred the failure to record the man in his cell for police consideration of possible disciplinary action.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Alleged-police-assault-of-Aurukun-resident-Warren-Bell-Report-2007.pdf",
+      "document": "Alleged police assault of Aurukun resident Warren Bell: A report from the CMC (7 February 2007)",
+      "page": 27
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Therefore, the CMC concludes that there is no ground for referring anything to the Director of Public Prosecutions for possible criminal charges.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Alleged-police-assault-of-Aurukun-resident-Warren-Bell-Report-2007.pdf",
+     "document": "Alleged police assault of Aurukun resident Warren Bell: A report from the CMC (7 February 2007)",
+     "page": 27
+    }
+   },
+   {
+    "quote": "The CMC makes no adverse findings against any police officer in relation to an assault.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Alleged-police-assault-of-Aurukun-resident-Warren-Bell-Report-2007.pdf",
+     "document": "Alleged police assault of Aurukun resident Warren Bell: A report from the CMC (7 February 2007)",
+     "page": 27
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -200,11 +200,18 @@ function summaryPart(r: ReportDetail, mainDocument: string): Part | null {
 
 // ---- documents (commission reports, responses, transcripts; integrity documents)
 function documentRow(d: RecordRow, mainDocument: string, extra = '', flag = true): string {
-  const href = url(d.page_url) || url(d.url)
+  const page = url(d.page_url) || url(d.url)
   const title = d.title || human(d.key || d.kind || d.role) || 'Document'
   const kind = human(d.document_kind || d.kind || d.role)
   const files = records(d.files)
-  const meta = [kind && kind !== title ? esc(kind) : '', d.date ? dated(d.date_basis, d.date) : '', finite(d.pages) ? plural(d.pages, 'page') : ''].filter(Boolean).join(' · ')
+  // One file: the title opens it, and pages, type and size follow, as on transcript rows. The record's own page
+  // (often a parliament's tabled-document listing) closes the meta line when it is not the file itself.
+  const lone = files.length === 1 ? object(files[0]) : null, file = lone ? url(lone.url) : ''
+  const href = file || page
+  const pages = d.pages ?? lone?.pages
+  const fileMeta = lone ? `${file && isPdf(file) ? 'PDF' : 'File'}${bytes(lone.bytes) ? `, ${esc(bytes(lone.bytes))}` : ''}` : ''
+  const pageLink = file && page && page !== file ? link(page, `Page on ${host(page)}`).replace('</a>', `<span class="visually-hidden">: ${esc(title)}</span></a>`) : ''
+  const meta = [kind && kind !== title ? esc(kind) : '', d.date ? dated(d.date_basis, d.date) : '', finite(pages) ? plural(pages, 'page') : '', fileMeta, pageLink].filter(Boolean).join(' · ')
   const detail = kv([
     ['Recommendations', d.recommendations != null ? esc(d.recommendations) : ''],
     ['Recommendations status', d.recommendations_status ? esc(human(d.recommendations_status)) : ''],
@@ -218,8 +225,8 @@ function documentRow(d: RecordRow, mainDocument: string, extra = '', flag = true
   return `<li class="rr-doc"><h3 class="rr-doc-title">${href ? link(href, title) : esc(title)}</h3>` +
     (flag && d.kind === 'hearing_transcript' ? text('Hearing transcript: evidence, not findings.', 'rr-doc-flag') : '') +
     (meta ? `<p class="rr-doc-meta">${meta}</p>` : '') +
-    (files.length ? `<ul class="rr-doc-files" role="list">${files.map(f => `<li>${link(f.url, `${isPdf(String(f.url)) ? 'PDF' : 'File'}: ${f.name || 'report file'}`)}${[finite(f.pages) ? plural(f.pages, 'page') : '', bytes(f.bytes)].filter(Boolean).map(x => ` · ${esc(x)}`).join('')}</li>`).join('')}</ul>` : '') +
-    (d.text ? text(d.text) : '') + (d.cite && url(object(d.cite).url) !== href ? citeLine(d.cite, mainDocument) : '') +
+    (files.length > 1 ? `<ul class="rr-doc-files" role="list">${files.map((f, i) => `<li>${link(f.url, `${isPdf(String(f.url)) ? 'PDF' : 'File'} ${i + 1} of ${files.length}`)}${[finite(f.pages) ? plural(f.pages, 'page') : '', bytes(f.bytes)].filter(Boolean).map(x => ` · ${esc(x)}`).join('')}</li>`).join('')}</ul>` : '') +
+    (d.text ? text(d.text) : '') + (d.cite && ![href, page].includes(url(object(d.cite).url)) ? citeLine(d.cite, mainDocument) : '') +
     extra + (detail ? `<details class="ui-disclosure rr-doc-detail"><summary>Document details</summary><div class="ui-disclosure-body">${detail}</div></details>` : '') + `</li>`
 }
 const documentList = (docs: RecordRow[], mainDocument: string) => `<ul class="rr-docs" role="list">${docs.map(d => documentRow(d, mainDocument)).join('')}</ul>`
@@ -270,16 +277,43 @@ export function reportApiBody(r: ReportDetail) {
   const env = reportTranscriptEnvelope(r)
   return env.count ? { ...r, transcripts: env } : r
 }
-function transcriptRow(t: RecordRow, mainDocument: string): string {
-  // Integrity transcripts hold the PDF as `url` and the case page as `page_url`; the PDF is the document.
-  const row = t.files ? t : { ...t, page_url: url(t.url) || t.page_url, files: [] }
-  const note = [t.publisher_redacted ? 'The publisher\'s copy is redacted.' : '', ...(Array.isArray(t.orders) ? t.orders : []), ...(Array.isArray(t.notes) ? t.notes : []),
-    t.transcript_pages ? `Transcript pages ${t.transcript_pages}.` : '', t.session_time ? `Session: ${t.session_time}.` : ''].filter(Boolean).map(String).join(' ')
-  return documentRow({ ...row, pages: row.pages ?? object(records(t.files)[0]).pages, note: note || t.note }, mainDocument, '', false)
+/** What every transcript in the list holds alike (the case, its hearings page, how OPAX got them, the rights), said
+ * once above the list instead of in each row. */
+type Shared = { case?: string; page?: string; kind?: string; acquisition?: string; rights?: string }
+function transcriptRow(t: RecordRow, shared: Shared): string {
+  const file = object(records(t.files)[0])
+  // Integrity transcripts hold the PDF as `url`; commission transcripts hold it in `files` and their day page as `page_url`.
+  const pdf = url(file.url) || url(t.url), page = url(t.page_url)
+  let title = String(t.title || 'Hearing transcript')
+  if (shared.case && title.toLowerCase().startsWith(shared.case.toLowerCase()) && title.length > shared.case.length) {
+    const rest = title.slice(shared.case.length).trim()
+    title = rest[0].toUpperCase() + rest.slice(1)
+  }
+  const pages = t.pages ?? file.pages, size = t.bytes ?? file.bytes
+  const kind = shared.kind ? '' : human(t.document_kind || t.document_type)
+  const when = t.date && !title.includes(day(t.date)) ? time(t.date) : ''
+  // The day's own hearing page, where the list has one per day, ends the meta line; its hidden words name the day.
+  const dayPage = page && page !== pdf && page !== shared.page ? link(page, 'Hearing page').replace('</a>', `<span class="visually-hidden">: ${esc(title)}</span></a>`) : ''
+  const meta = [kind && !same(kind, 'hearing transcript') ? esc(kind) : '', when, finite(pages) ? esc(plural(pages, 'page')) : '',
+    pdf && isPdf(pdf) ? `PDF${bytes(size) ? `, ${esc(bytes(size))}` : ''}` : esc(bytes(size)), dayPage].filter(Boolean).join(' · ')
+  const notes = [t.publisher_redacted ? 'The publisher\'s copy is redacted.' : '', ...(Array.isArray(t.orders) ? t.orders : []).filter(o => !url(o)).map(String), ...(Array.isArray(t.notes) ? t.notes : []).map(String),
+    t.note ? String(t.note) : '', t.transcript_pages ? `Transcript pages ${t.transcript_pages}.` : '', t.session_time ? `Session: ${t.session_time}.` : ''].filter(Boolean)
+  const orders = (Array.isArray(t.orders) ? t.orders : []).filter(o => url(o)).map((o, i, all) => link(o, `Publication order${all.length > 1 ? ` ${i + 1}` : ''} on ${host(String(o))}`))
+  const detail = kv([['How OPAX got it', !shared.acquisition && t.acquisition ? esc(t.acquisition) : ''],
+    ['Rights', !shared.rights && t.rights ? esc(typeof t.rights === 'object' ? Object.values(object(t.rights)).join(' ') : t.rights) : '']])
+  return `<li class="rr-doc"><h3 class="rr-doc-title">${link(pdf || page, title) || esc(title)}</h3>` +
+    (meta ? `<p class="rr-doc-meta">${meta}</p>` : '') +
+    (notes.length ? `<p class="rr-doc-note">${esc(notes.join(' '))}</p>` : '') +
+    (orders.length ? `<p class="rr-doc-meta">${orders.join(' · ')}</p>` : '') +
+    (detail ? `<details class="ui-disclosure rr-doc-detail"><summary>Document details</summary><div class="ui-disclosure-body">${detail}</div></details>` : '') + `</li>`
 }
-function transcriptsPart(r: ReportDetail, mainDocument: string): Part | null {
+function transcriptsPart(r: ReportDetail): Part | null {
   const items = reportTranscripts(r)
   if (!items.length) return null
+  const alike = (k: string) => { const v = items[0][k]; return v != null && v !== '' && typeof v !== 'object' && items.every(t => t[k] === v) ? String(v) : undefined }
+  const shared: Shared = { case: alike('case'), page: url(alike('page_url')) || undefined, kind: alike('document_kind') || alike('document_type'), acquisition: alike('acquisition'), rights: alike('rights') }
+  // Within a month, a day's parts read in order ("part 1 of 6" before "part 2 of 6"); the API's order is unchanged.
+  const natural = (a: RecordRow, b: RecordRow) => String(b.date ?? '').localeCompare(String(a.date ?? '')) || String(a.title ?? '').localeCompare(String(b.title ?? ''), 'en', { numeric: true })
   const months = new Map<string, RecordRow[]>()
   for (const t of items) {
     const m = /^(\d{4})-(\d{2})/.exec(String(t.date ?? ''))
@@ -287,9 +321,12 @@ function transcriptsPart(r: ReportDetail, mainDocument: string): Part | null {
     months.set(label, [...(months.get(label) ?? []), t])
   }
   const folds = [...months].map(([label, ts], i) => `<details class="ui-disclosure rr-month"${i === 0 ? ' open' : ''}><summary><span>${esc(label)}<span class="rr-summary-meta">${esc(plural(ts.length, 'transcript'))}</span></span></summary>` +
-    `<div class="ui-disclosure-body"><ul class="rr-docs" role="list">${ts.map(t => transcriptRow(t, mainDocument)).join('')}</ul></div></details>`).join('')
+    `<div class="ui-disclosure-body"><ul class="rr-docs rr-transcripts" role="list">${[...ts].sort(natural).map(t => transcriptRow(t, shared)).join('')}</ul></div></details>`).join('')
+  const copies = kv([['Kind', esc(human(shared.kind))], ['How OPAX got them', esc(shared.acquisition)], ['Rights', esc(shared.rights)]])
+  const common = kv([['Case', esc(shared.case)], ['Hearings page', shared.page ? link(shared.page, `Hearings page on ${host(shared.page)}`) : '']]) +
+    (copies ? `<details class="ui-disclosure rr-doc-detail rr-copies"><summary>About these copies</summary><div class="ui-disclosure-body">${copies}</div></details>` : '')
   return { id: 'transcripts', title: TRANSCRIPTS_TITLE, count: items.length,
-    html: `<p class="ui-section-note">What a witness or counsel says at a hearing is evidence or submission, not a finding. Transcripts are the publisher's copies, including its redactions, listed newest first by month.</p>${folds}` }
+    html: `<p class="ui-section-note">What a witness or counsel says at a hearing is evidence or submission, not a finding. Transcripts are the publisher's copies, including its redactions, listed newest first by month.</p>${common}${folds}` }
 }
 
 // ---- annual reports (Transparency Portal body-years)
@@ -331,6 +368,8 @@ function annualTable(t: RecordRow): string {
 }
 function annual(r: ReportDetail, parts: Part[]): Stat[] {
   const h = object(r.headline), stats: Stat[] = []
+  // The record's own caveat, verbatim, beside the figures it qualifies (the record keeps them all in its caveats).
+  const caveat = (re: RegExp) => { const x = r.caveats.find(c => re.test(c)); return x ? `<p class="rr-figure-note">${esc(x)}</p>` : '' }
   // Each link names its table, so a list of links still says where each one goes.
   const tableLink = (v: RecordRow, what: string) => v.codename ? `<p class="rr-cite-line">${link(`https://previewapi.transparency.gov.au/delivery/items?system.codename=${encodeURIComponent(String(v.codename))}&depth=1`, `${what} table on the Transparency Portal (JSON)`, 'rr-cite')}</p>` : ''
   const thousands = (n: unknown) => finite(n) ? `${dollars(n * 1000)}` : ''
@@ -348,7 +387,7 @@ function annual(r: ReportDetail, parts: Part[]): Stat[] {
   const staff = [['Ongoing staff', object(h.ongoing_staff)], ['Non-ongoing staff', object(h.non_ongoing_staff)]] as const
   if (staff.some(([, v]) => finite(v.headcount))) {
     for (const [label, v] of staff) if (finite(v.headcount)) stats.push({ label, value: figure(v.headcount) })
-    blocks.push(`<div class="rr-figure-group"><h3 class="ui-subsection-title">Staff</h3>${kv(staff.filter(([, v]) => finite(v.headcount)).map(([label, v]) => [label, `${figure(v.headcount as number)} people${tableLink(v, label)}`]))}</div>`)
+    blocks.push(`<div class="rr-figure-group"><h3 class="ui-subsection-title">Staff</h3>${kv(staff.filter(([, v]) => finite(v.headcount)).map(([label, v]) => [label, `${figure(v.headcount as number)} people${tableLink(v, label)}`]))}${caveat(/^Staff numbers are headcounts/)}</div>`)
   }
   for (const [key, label] of [['consultancy', 'Consultancy contracts'], ['non_consultancy', 'Non-consultancy contracts']] as const) {
     const v = object(h[key])
@@ -363,12 +402,15 @@ function annual(r: ReportDetail, parts: Part[]): Stat[] {
   parts.push({ id: 'tables', title: 'Published disclosure tables', count: tables.length || undefined, html: tables.length ? tables.map(t => {
     const rows = records(t.rows)
     const meta = [plural(rows.length, 'row'), t.unit ? `Unit: ${t.unit}` : ''].filter(Boolean).join(' · ')
+    const kinds = new Set(rows.map(x => String(x.kind)))
+    const note = kinds.has('kmp') ? caveat(/^Key management personnel remuneration is reported on an accrual basis/)
+      : kinds.has('senior_executive_band') || kinds.has('highly_paid_band') ? caveat(/^Senior executive and other highly paid staff rows are bands/) : ''
     return `<details class="ui-disclosure rr-table-block"${rows.length <= 8 ? ' open' : ''}><summary><span>${esc(t.title)}<span class="rr-summary-meta">${esc(meta)}</span></span></summary><div class="ui-disclosure-body">` +
       `<p class="rr-cite-line rr-table-source">${t.source_file ? link(t.source_url, `Data file: ${t.source_file}`, 'rr-cite')
         : link(t.source_url, 'Source table on the Transparency Portal', 'rr-cite').replace('</a>', `<span class="visually-hidden">: ${esc(t.title)}</span></a>`)}` +
       `${t.licence ? `<span class="rr-licence"> · Licence ${esc(LICENCE[String(t.licence)] || t.licence)}</span>` : ''}</p>` +
       kv([['Entity as published', t.entity_as_published && t.entity_as_published !== r.body ? esc(t.entity_as_published) : ''], ['Data file page', t.source_page ? link(t.source_page, host(String(t.source_page))) : '']]) +
-      annualTable(t) + `</div></details>`
+      note + annualTable(t) + `</div></details>`
   }).join('') : text('No disclosure tables are loaded for this body and year.') })
   return stats
 }
@@ -446,7 +488,7 @@ export function renderReport(r: ReportDetail) {
   const titled = (type === 'annual_report' || type === 'agency_report') && !!r.body && r.title.toLowerCase().includes(String(r.body).toLowerCase())
   const named = titled || same(r.body, r.title)
   const metaBits = [titled && r.publisher.type_as_published ? esc(r.publisher.type_as_published) : esc(kindLabel), r.body && !named ? esc(who) : '', esc(jurisdiction),
-    r.date ? dated(r.date_basis, r.date) : 'No published or tabled day is recorded'].filter(Boolean)
+    r.date ? dated(r.date_basis, r.date) : 'No report date recorded'].filter(Boolean)
 
   if (type === 'royal_commission') {
     const reports = records(c.reports), final = reports.find(d => d.kind === 'final_report') || reports[0]
@@ -463,9 +505,11 @@ export function renderReport(r: ReportDetail) {
     if (est.date) stats.push({ label: 'Established', value: time(est.date) })
     if (finite(file?.pages)) stats.push({ label: 'Report length', value: esc(plural(file!.pages as number, 'page')) })
     court = records(c.court_context)
-    parts.push(items('recommendations', r, mainDocument))
+    // With no report held, there is no list to show: say so once, with the inquiry, not as an empty section.
+    const noReport = c.recommendations_status === 'no_report' && !recs.length
+    if (!noReport) parts.push(items('recommendations', r, mainDocument))
     const commission = kv([
-      ['Type of inquiry', esc(human(c.inquiry_type))],
+      ['Report', noReport ? 'No report is held for this inquiry, so no recommendations are reproduced.' : ''],
       ['Established', est.quote ? `${esc(est.quote)} ${citeLink(est.cite, mainDocument)}` : est.date ? time(est.date) : ''],
       ...records(c.commissioners).map(p => [human(p.role) || 'Commissioner', `${esc(p.quote || p.name)} ${citeLink(p.cite, mainDocument)}`] as [string, string]),
       ['Interim report', c.interim_report_date ? time(c.interim_report_date) : ''],
@@ -475,7 +519,7 @@ export function renderReport(r: ReportDetail) {
     if (commission) parts.push({ id: 'commission', title: 'About the inquiry', html: commission })
     const docs = [...reports, ...records(c.responses)]
     if (docs.length) parts.push({ id: 'documents', title: 'Official documents', count: docs.length, html: documentList(docs, mainDocument) })
-    const heard = transcriptsPart(r, mainDocument)
+    const heard = transcriptsPart(r)
     if (heard) parts.push(heard)
     const status = object(c.status_source)
     if (status.url) parts.push({ id: 'status-source', title: 'Where the status comes from', html: `<p class="rr-record-text">${link(status.url, status.name || 'Government status pages')}${finite(status.pages) ? ` (${esc(plural(status.pages, 'page'))})` : ''}</p>` })
@@ -502,7 +546,7 @@ export function renderReport(r: ReportDetail) {
     // A lone document that is the source card's own, with nothing more to say, is not listed twice.
     const lone = docs.length === 1 && docs[0].url === citeHref && !docs[0].acquisition && !docs[0].note && !docs[0].rights
     if (docs.length && !lone) parts.push({ id: 'documents', title: 'Official documents', count: docs.length, html: documentList(docs, mainDocument) })
-    const heard = transcriptsPart(r, mainDocument)
+    const heard = transcriptsPart(r)
     if (heard) parts.push(heard)
     const about = kv([['Period', esc(c.period)], ['How OPAX got it', esc(c.acquisition)], ['Rights', esc(typeof c.rights === 'object' ? object(c.rights).statement : c.rights)]])
     if (about) parts.push({ id: 'about', title: 'About the report', html: about })
@@ -528,9 +572,8 @@ export function renderReport(r: ReportDetail) {
     (refs.length ? `<h3 class="ui-subsection-title">Official reference pages</h3><ul class="rr-notes" role="list">${refs.map(x => `<li>${link(x.url, x.title)}</li>`).join('')}</ul>` : '') })
 
   const head = `<section id="prerender" class="wrap rr-head"><div class="ui-page-head"><h1>${esc(r.title)}</h1><p class="ui-page-meta">${metaBits.join(' · ')}</p></div></section>`
-  const caveats = r.caveats.length ? `<aside class="rr-caveats" aria-labelledby="rr-caveats-title"><h2 id="rr-caveats-title" class="rr-caveats-title">How to read this record</h2>${notes(r.caveats)}</aside>` : ''
   const toc = parts.length > 1 ? `<nav class="rr-toc" aria-labelledby="rr-toc-title"><p class="ui-toc-head" id="rr-toc-title">On this page</p><ul class="ui-toc-list" role="list">${parts.map(p => `<li><a href="#${p.id}"><span>${esc(p.title)}</span>${p.count != null ? `<span class="rr-toc-count">${figure(p.count)}</span>` : ''}</a></li>`).join('')}</ul></nav>` : ''
   const footer = `<p class="rr-footer">Record snapshot: ${time(r.snapshot_at)} · <a href="/api/report/${esc(r.slug)}">This record as JSON</a></p>`
   const courtNote = court.length ? `<section class="rr-court" aria-labelledby="rr-court-title"><h2 id="rr-court-title" class="rr-court-title">A court has ruled on parts of this report</h2>${court.map(x => `${text(x.text)}${citeLine(x.cite)}`).join('')}</section>` : ''
-  return head + `<div class="wrap rr-record"><div class="rr-layout"><div class="rr-summary">${glance(stats)}${courtNote}${sourceCard(main, more)}${caveats}</div>${toc}<div class="rr-body">${parts.map(sectionHTML).join('')}${footer}</div></div></div>`
+  return head + `<div class="wrap rr-record"><div class="rr-layout"><div class="rr-summary">${glance(stats)}${courtNote}${sourceCard(main, more)}</div>${toc}<div class="rr-body">${parts.map(sectionHTML).join('')}${footer}</div></div></div>`
 }

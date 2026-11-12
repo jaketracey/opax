@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2009-09-01-allegation-against-honourable-tm-mackenroth-respect-land-eli",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Allegation against the Honourable TM Mackenroth in respect of land at Elimbah East: A report from the CMC",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Allegation-against-the-Honourable-TM-Mackenroth-in-respect-of-land-at-Elimbah-East-Report-2009.pdf",
+  "document": "Allegation against the Honourable TM Mackenroth in respect of land at Elimbah East: A report from the CMC (September 2009)",
+  "sha256": "e8854e660825b28a4e2b4bc31b818c79abcd649c567be279c1b4ee4b81aec81a",
+  "pages": 15,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "The report in context",
+  "first_page": 1,
+  "last_page": 1,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Allegation-against-the-Honourable-TM-Mackenroth-in-respect-of-land-at-Elimbah-East-Report-2009.pdf#page=1"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "At the Premier’s request, the Crime and Misconduct Commission investigated an allegation that a former deputy premier had improperly influenced the inclusion of Elimbah East land in a regional development plan.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Allegation-against-the-Honourable-TM-Mackenroth-in-respect-of-land-at-Elimbah-East-Report-2009.pdf",
+      "document": "Allegation against the Honourable TM Mackenroth in respect of land at Elimbah East: A report from the CMC (September 2009)",
+      "page": 1
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Allegation-against-the-Honourable-TM-Mackenroth-in-respect-of-land-at-Elimbah-East-Report-2009.pdf",
+      "document": "Allegation against the Honourable TM Mackenroth in respect of land at Elimbah East: A report from the CMC (September 2009)",
+      "page": 3
+     }
+    ]
+   },
+   {
+    "text": "The CMC examined departmental records and accounts of meetings about the land’s inclusion in the urban footprint.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Allegation-against-the-Honourable-TM-Mackenroth-in-respect-of-land-at-Elimbah-East-Report-2009.pdf",
+      "document": "Allegation against the Honourable TM Mackenroth in respect of land at Elimbah East: A report from the CMC (September 2009)",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Allegation-against-the-Honourable-TM-Mackenroth-in-respect-of-land-at-Elimbah-East-Report-2009.pdf",
+      "document": "Allegation against the Honourable TM Mackenroth in respect of land at Elimbah East: A report from the CMC (September 2009)",
+      "page": 15
+     }
+    ]
+   },
+   {
+    "text": "The CMC concluded that the suggestion of undue influence was unwarranted and that there was no evidence of official misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Allegation-against-the-Honourable-TM-Mackenroth-in-respect-of-land-at-Elimbah-East-Report-2009.pdf",
+      "document": "Allegation against the Honourable TM Mackenroth in respect of land at Elimbah East: A report from the CMC (September 2009)",
+      "page": 15
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There is no evidence of any act of official misconduct having been committed by any person.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Allegation-against-the-Honourable-TM-Mackenroth-in-respect-of-land-at-Elimbah-East-Report-2009.pdf",
+     "document": "Allegation against the Honourable TM Mackenroth in respect of land at Elimbah East: A report from the CMC (September 2009)",
+     "page": 15
+    }
+   },
+   {
+    "quote": "To suggest that undue influence has occurred would require more than the mere fact that a government decision was made following the involvement of a lobbyist.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Allegation-against-the-Honourable-TM-Mackenroth-in-respect-of-land-at-Elimbah-East-Report-2009.pdf",
+     "document": "Allegation against the Honourable TM Mackenroth in respect of land at Elimbah East: A report from the CMC (September 2009)",
+     "page": 15
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

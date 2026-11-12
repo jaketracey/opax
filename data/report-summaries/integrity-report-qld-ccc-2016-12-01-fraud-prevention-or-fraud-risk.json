@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2016-12-01-fraud-prevention-or-fraud-risk",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Fraud prevention or fraud risk?",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Fraud-prevention-or-fraud-risk-Report-2016.PDF",
+  "document": "Fraud prevention or fraud risk?",
+  "sha256": "a658570e906d61e85a484a70bbe03a741a8ffd2c72622a519795f2c029ae1172",
+  "pages": 34,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY OF INVESTIGATION",
+  "first_page": 11,
+  "last_page": 14,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Fraud-prevention-or-fraud-risk-Report-2016.PDF#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission investigated allegations about Project Synergy, a fraud prevention project within the Queensland Police Service.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Fraud-prevention-or-fraud-risk-Report-2016.PDF",
+      "document": "Fraud prevention or fraud risk?",
+      "page": 11
+     }
+    ]
+   },
+   {
+    "text": "The CCC considered that prosecution was not warranted, but referred financial management and policy compliance matters for possible disciplinary action.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Fraud-prevention-or-fraud-risk-Report-2016.PDF",
+      "document": "Fraud prevention or fraud risk?",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Fraud-prevention-or-fraud-risk-Report-2016.PDF",
+      "document": "Fraud prevention or fraud risk?",
+      "page": 13
+     }
+    ]
+   },
+   {
+    "text": "The CCC concluded that officers’ workarounds, inadequate records and lack of formal risk assessment had exposed police to fraud risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Fraud-prevention-or-fraud-risk-Report-2016.PDF",
+      "document": "Fraud prevention or fraud risk?",
+      "page": 31
+     }
+    ]
+   },
+   {
+    "text": "The CCC made four recommendations on sponsorship and financial audits, alongside ten procedural recommendations to police on spending, approvals and project management.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Fraud-prevention-or-fraud-risk-Report-2016.PDF",
+      "document": "Fraud prevention or fraud risk?",
+      "page": 24
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Fraud-prevention-or-fraud-risk-Report-2016.PDF",
+      "document": "Fraud prevention or fraud risk?",
+      "page": 27
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Fraud-prevention-or-fraud-risk-Report-2016.PDF",
+      "document": "Fraud prevention or fraud risk?",
+      "page": 29
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Fraud-prevention-or-fraud-risk-Report-2016.PDF",
+      "document": "Fraud prevention or fraud risk?",
+      "page": 30
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "After considering all the available evidence, the CCC is of the view there are insufficient grounds for consideration of prosecution proceedings against any of the subject officers.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Fraud-prevention-or-fraud-risk-Report-2016.PDF",
+     "document": "Fraud prevention or fraud risk?",
+     "page": 12
+    }
+   },
+   {
+    "quote": "A formal risk assessment was not conducted, there was no fraud prevention plan in place and internal records were incomplete and inaccurate.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Fraud-prevention-or-fraud-risk-Report-2016.PDF",
+     "document": "Fraud prevention or fraud risk?",
+     "page": 31
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

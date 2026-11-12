@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2017-12-01-australias-first-criminal-prosecution-research-fraud-case-st",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Australia's first criminal prosecution for research fraud: a case study from the University of Queensland",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Australias-first-criminal-prosecution-for-research-fraud-Case-study-2017.pdf",
+  "document": "Australia's first criminal prosecution for research fraud: a case study from the University of Queensland",
+  "sha256": "688dbeebebf9ad1ddbef79e637b4be63f5ad276216493b18233d4935ad69ec00",
+  "pages": 24,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission examined research fraud at the University of Queensland to explain the investigation and identify weaknesses in university governance.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Australias-first-criminal-prosecution-for-research-fraud-Case-study-2017.pdf",
+      "document": "Australia's first criminal prosecution for research fraud: a case study from the University of Queensland",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The CCC concluded that fabricated research and fraudulent grant applications involved criminal offences as well as research misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Australias-first-criminal-prosecution-for-research-fraud-Case-study-2017.pdf",
+      "document": "Australia's first criminal prosecution for research fraud: a case study from the University of Queensland",
+      "page": 8
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Australias-first-criminal-prosecution-for-research-fraud-Case-study-2017.pdf",
+      "document": "Australia's first criminal prosecution for research fraud: a case study from the University of Queensland",
+      "page": 18
+     }
+    ]
+   },
+   {
+    "text": "The CCC found that grant application quality controls had failed and urged universities to strengthen oversight and fraud prevention.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Australias-first-criminal-prosecution-for-research-fraud-Case-study-2017.pdf",
+      "document": "Australia's first criminal prosecution for research fraud: a case study from the University of Queensland",
+      "page": 21
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Australias-first-criminal-prosecution-for-research-fraud-Case-study-2017.pdf",
+      "document": "Australia's first criminal prosecution for research fraud: a case study from the University of Queensland",
+      "page": 22
+     }
+    ]
+   },
+   {
+    "text": "The CCC proposed prevention measures including independent checks of research, staff training and tracking grant applications and publications.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Australias-first-criminal-prosecution-for-research-fraud-Case-study-2017.pdf",
+      "document": "Australia's first criminal prosecution for research fraud: a case study from the University of Queensland",
+      "page": 22
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "This investigation reveals that the grant application process, including the article citation process that supports grant applications, is open to being corrupted.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Australias-first-criminal-prosecution-for-research-fraud-Case-study-2017.pdf",
+     "document": "Australia's first criminal prosecution for research fraud: a case study from the University of Queensland",
+     "page": 21
+    }
+   },
+   {
+    "quote": "In this instance, the quality control in the application process broke down and this needs to be addressed in order to ensure the ongoing integrity of the process.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Australias-first-criminal-prosecution-for-research-fraud-Case-study-2017.pdf",
+     "document": "Australia's first criminal prosecution for research fraud: a case study from the University of Queensland",
+     "page": 21
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

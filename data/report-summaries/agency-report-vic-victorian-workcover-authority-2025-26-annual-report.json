@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-workcover-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian WorkCover Authority 2025-26 annual report",
+ "body": "Victorian WorkCover Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab381/globalassets/tabled-paper-documents/tabled-paper-10652/worksafe-2025-26-annual-report.pdf",
+  "document": "annual report",
+  "sha256": "ed9a8f21d8ad2f71fc40145d0b0616d9a057b7c268593305e581b8d89e0db7ba",
+  "pages": 123,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Report from the Chair",
+  "first_page": 6,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab381/globalassets/tabled-paper-documents/tabled-paper-10652/worksafe-2025-26-annual-report.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "WorkSafe Victoria’s 2025–26 report described its role as workplace safety regulator and injury insurer, seeking to prevent harm and support injured workers.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab381/globalassets/tabled-paper-documents/tabled-paper-10652/worksafe-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "About WorkSafe"
+   },
+   {
+    "text": "WorkSafe reported 58,163 workplace visits and support for 26,892 injured workers to return to employment.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab381/globalassets/tabled-paper-documents/tabled-paper-10652/worksafe-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "2025-26 Snapshot"
+   },
+   {
+    "text": "The Board reported improving return-to-work results but noted actuarial advice that the full effect of scheme reforms could not yet be assessed.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab381/globalassets/tabled-paper-documents/tabled-paper-10652/worksafe-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Report from the Chair"
+   },
+   {
+    "text": "WorkSafe reported an insurance funding ratio of 120%, while cautioning that investment and economic conditions could change.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab381/globalassets/tabled-paper-documents/tabled-paper-10652/worksafe-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Report from the Chair"
+   },
+   {
+    "text": "WorkSafe reported an after-tax profit of $1 billion, exceeding its budget by $1 billion.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab381/globalassets/tabled-paper-documents/tabled-paper-10652/worksafe-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Report from the Chair"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "These positive developments should be considered alongside the advice from our actuaries that it is too early to assess the full impact of reforms.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab381/globalassets/tabled-paper-documents/tabled-paper-10652/worksafe-2025-26-annual-report.pdf",
+     "document": "annual report",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

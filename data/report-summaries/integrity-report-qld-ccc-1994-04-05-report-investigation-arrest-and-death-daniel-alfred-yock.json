@@ -1,0 +1,156 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1994-04-05-report-investigation-arrest-and-death-daniel-alfred-yock",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "A report of an investigation into the arrest and death of Daniel Alfred Yock",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigation-arrest-death-Daniel-Alfred-Yock/An-investigation-into-the-arrest-and-death-of-Daniel-Alfred-Yock-Report-1994.pdf",
+  "document": "A report of an investigation into the arrest and death of Daniel Alfred Yock (5 April 1994)",
+  "sha256": "a5b8782d23879b760d65b0fa2b7b4e2f006b9ae48ea51fd44c716859cdf3d7a1",
+  "pages": 169,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 11,
+  "last_page": 29,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigation-arrest-death-Daniel-Alfred-Yock/An-investigation-into-the-arrest-and-death-of-Daniel-Alfred-Yock-Report-1994.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission investigated a death following an arrest by police in Brisbane.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigation-arrest-death-Daniel-Alfred-Yock/An-investigation-into-the-arrest-and-death-of-Daniel-Alfred-Yock-Report-1994.pdf",
+      "document": "A report of an investigation into the arrest and death of Daniel Alfred Yock (5 April 1994)",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigation-arrest-death-Daniel-Alfred-Yock/An-investigation-into-the-arrest-and-death-of-Daniel-Alfred-Yock-Report-1994.pdf",
+      "document": "A report of an investigation into the arrest and death of Daniel Alfred Yock (5 April 1994)",
+      "page": 12
+     }
+    ],
+    "section": "THE CRIMINAL JUSTICE COMMISSION’S INVOLVEMENT IN THE MATTER"
+   },
+   {
+    "text": "The inquiry examined the arrest, treatment in custody, medical care and whether police-community relations influenced the apprehension.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigation-arrest-death-Daniel-Alfred-Yock/An-investigation-into-the-arrest-and-death-of-Daniel-Alfred-Yock-Report-1994.pdf",
+      "document": "A report of an investigation into the arrest and death of Daniel Alfred Yock (5 April 1994)",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigation-arrest-death-Daniel-Alfred-Yock/An-investigation-into-the-arrest-and-death-of-Daniel-Alfred-Yock-Report-1994.pdf",
+      "document": "A report of an investigation into the arrest and death of Daniel Alfred Yock (5 April 1994)",
+      "page": 19
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigation-arrest-death-Daniel-Alfred-Yock/An-investigation-into-the-arrest-and-death-of-Daniel-Alfred-Yock-Report-1994.pdf",
+      "document": "A report of an investigation into the arrest and death of Daniel Alfred Yock (5 April 1994)",
+      "page": 20
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigation-arrest-death-Daniel-Alfred-Yock/An-investigation-into-the-arrest-and-death-of-Daniel-Alfred-Yock-Report-1994.pdf",
+      "document": "A report of an investigation into the arrest and death of Daniel Alfred Yock (5 April 1994)",
+      "page": 21
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigation-arrest-death-Daniel-Alfred-Yock/An-investigation-into-the-arrest-and-death-of-Daniel-Alfred-Yock-Report-1994.pdf",
+      "document": "A report of an investigation into the arrest and death of Daniel Alfred Yock (5 April 1994)",
+      "page": 22
+     }
+    ],
+    "section": "Issues and Conclusions"
+   },
+   {
+    "text": "It concluded that the evidence did not establish excessive arrest force or subsequent mistreatment.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigation-arrest-death-Daniel-Alfred-Yock/An-investigation-into-the-arrest-and-death-of-Daniel-Alfred-Yock-Report-1994.pdf",
+      "document": "A report of an investigation into the arrest and death of Daniel Alfred Yock (5 April 1994)",
+      "page": 19
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigation-arrest-death-Daniel-Alfred-Yock/An-investigation-into-the-arrest-and-death-of-Daniel-Alfred-Yock-Report-1994.pdf",
+      "document": "A report of an investigation into the arrest and death of Daniel Alfred Yock (5 April 1994)",
+      "page": 21
+     }
+    ],
+    "section": "Issues and Conclusions"
+   },
+   {
+    "text": "The inquiry found insufficient evidence for manslaughter, official-misconduct or misconduct proceedings against police.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigation-arrest-death-Daniel-Alfred-Yock/An-investigation-into-the-arrest-and-death-of-Daniel-Alfred-Yock-Report-1994.pdf",
+      "document": "A report of an investigation into the arrest and death of Daniel Alfred Yock (5 April 1994)",
+      "page": 23
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigation-arrest-death-Daniel-Alfred-Yock/An-investigation-into-the-arrest-and-death-of-Daniel-Alfred-Yock-Report-1994.pdf",
+      "document": "A report of an investigation into the arrest and death of Daniel Alfred Yock (5 April 1994)",
+      "page": 24
+     }
+    ],
+    "section": "Issues and Conclusions"
+   },
+   {
+    "text": "It made six recommendations on custody assessments, training, vehicle communication, handcuffs and debriefing, and also supported the proposed local beat-policing strategy.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigation-arrest-death-Daniel-Alfred-Yock/An-investigation-into-the-arrest-and-death-of-Daniel-Alfred-Yock-Report-1994.pdf",
+      "document": "A report of an investigation into the arrest and death of Daniel Alfred Yock (5 April 1994)",
+      "page": 28
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigation-arrest-death-Daniel-Alfred-Yock/An-investigation-into-the-arrest-and-death-of-Daniel-Alfred-Yock-Report-1994.pdf",
+      "document": "A report of an investigation into the arrest and death of Daniel Alfred Yock (5 April 1994)",
+      "page": 29
+     }
+    ],
+    "section": "RECOMMENDATIONS WITH RESPECT TO MATTERS REVEALED BY THE EVIDENCE"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There is not sufficient evidence to support a prima facie case against any member of the Police Service on a charge of manslaughter.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigation-arrest-death-Daniel-Alfred-Yock/An-investigation-into-the-arrest-and-death-of-Daniel-Alfred-Yock-Report-1994.pdf",
+     "document": "A report of an investigation into the arrest and death of Daniel Alfred Yock (5 April 1994)",
+     "page": 23
+    }
+   },
+   {
+    "quote": "There was not sufficient evidence to support proceedings for official misconduct or misconduct against any police officer in relation to any of these allegations.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Investigation-arrest-death-Daniel-Alfred-Yock/An-investigation-into-the-arrest-and-death-of-Daniel-Alfred-Yock-Report-1994.pdf",
+     "document": "A report of an investigation into the arrest and death of Daniel Alfred Yock (5 April 1994)",
+     "page": 24
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:50+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

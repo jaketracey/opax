@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2017-05-02-report-matters-serious-misconduct-shire-exmouth",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "A report on matters of serious misconduct in the Shire of Exmouth",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20matters%20of%20serious%20misconduct%20in%20the%20Shire%20of%20Exmouth.pdf",
+  "document": "A report on matters of serious misconduct in the Shire of Exmouth",
+  "sha256": "f5eb085d43fcc4ed294aa1acee0addf10af36ec84c32653de686ac69d4da500b",
+  "pages": 79,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 7,
+  "last_page": 7,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20matters%20of%20serious%20misconduct%20in%20the%20Shire%20of%20Exmouth.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated suspected serious misconduct by Shire of Exmouth officers, using seized records, telephone intercepts and examinations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20matters%20of%20serious%20misconduct%20in%20the%20Shire%20of%20Exmouth.pdf",
+      "document": "A report on matters of serious misconduct in the Shire of Exmouth",
+      "page": 9
+     }
+    ],
+    "section": "THE INVESTIGATION"
+   },
+   {
+    "text": "Its inquiries covered the chief executive’s benefits, an aquarium contract and misleading documents supplied to the council and Commission.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20matters%20of%20serious%20misconduct%20in%20the%20Shire%20of%20Exmouth.pdf",
+      "document": "A report on matters of serious misconduct in the Shire of Exmouth",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20matters%20of%20serious%20misconduct%20in%20the%20Shire%20of%20Exmouth.pdf",
+      "document": "A report on matters of serious misconduct in the Shire of Exmouth",
+      "page": 47
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission formed serious misconduct opinions about two senior officers’ misleading conduct and identified weaknesses in council oversight.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20matters%20of%20serious%20misconduct%20in%20the%20Shire%20of%20Exmouth.pdf",
+      "document": "A report on matters of serious misconduct in the Shire of Exmouth",
+      "page": 47
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20matters%20of%20serious%20misconduct%20in%20the%20Shire%20of%20Exmouth.pdf",
+      "document": "A report on matters of serious misconduct in the Shire of Exmouth",
+      "page": 55
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "It recommended that prosecution of those officers be considered, while stressing that this was not a finding of criminal guilt.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20matters%20of%20serious%20misconduct%20in%20the%20Shire%20of%20Exmouth.pdf",
+      "document": "A report on matters of serious misconduct in the Shire of Exmouth",
+      "page": 47
+     }
+    ],
+    "section": "Conclusion as to Attachment 'F'"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}
