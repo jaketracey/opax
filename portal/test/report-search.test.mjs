@@ -204,6 +204,22 @@ test('transcript rows are one compact line each; what every transcript shares is
   }
   assert.doesNotMatch(rtx, /PDF: [^<]*\.pdf/);
 });
+test('report documents with one file link the title to it, then pages, type and size, with no raw file labels', async () => {
+  let seen = 0;
+  for (const { detail } of projected.filter(p => p.detail.report_type === 'royal_commission')) {
+    const html = renderReport(detail);
+    assert.doesNotMatch(html, />(?:PDF|File): /, detail.slug);
+    for (const d of [...(detail.record.reports || []), ...(detail.record.responses || [])].filter(d => d.files?.length === 1)) {
+      assert.ok(html.includes(`href="${escapeHtml(d.files[0].url)}"`), d.title);
+      if (d.page_url) assert.ok(html.includes(`href="${escapeHtml(d.page_url)}"`), d.title);
+      seen++;
+    }
+  }
+  assert.ok(seen >= 20, `${seen} single-file documents`);
+  const robodebt = renderReport(projected.find(p => p.detail.slug === 'royal-commission-cth-robodebt').detail);
+  assert.match(robodebt, /<h3 class="rr-doc-title"><a href="https:\/\/www\.royalcommission\.gov\.au\/system\/files\/2023-09\/robodebt-accessible-full-report\.PDF"[^>]*>Report of the Royal Commission into the Robodebt Scheme<\/a><\/h3>/);
+  assert.match(robodebt, /1,052 pages · PDF, 20\.2 MB/);
+});
 test('hearing transcripts get their own section, grouped by month newest first, and leave Official documents', async () => {
   const section = (html, id) => (new RegExp(`<section[^>]*id="${id}"[\\s\\S]*?</section>`).exec(html) || [''])[0];
   const rc = projected.find(p => p.detail.slug === 'royal-commission-cth-robodebt').detail;
