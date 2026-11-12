@@ -1,0 +1,9 @@
+appId: au.com.opax.app
+name: Android typing leaves results unsubmitted
+---
+- assertVisible:
+    id: search-input
+- assertVisible:
+    id: search-speeches-row
+- assertNotVisible:
+    id: search-count

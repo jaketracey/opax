@@ -15,13 +15,18 @@ import {
   assertNoVoiceFixtures,
 } from './release-bundle-policy';
 const productionVoice = productionVoiceEnabled('production');
-function config(variant: string) {
+function config(variant: string, analyticsSwitch = '0') {
   return JSON.parse(
     execFileSync(
       './node_modules/.bin/expo',
       ['config', '--json', '--type', 'public'],
       {
-        env: { ...process.env, OPAX_VARIANT: variant, EXPO_NO_TELEMETRY: '1' },
+        env: {
+          ...process.env,
+          OPAX_VARIANT: variant,
+          OPAX_ANALYTICS: analyticsSwitch,
+          EXPO_NO_TELEMETRY: '1',
+        },
         encoding: 'utf8',
       },
     ),
@@ -133,19 +138,20 @@ assert(
 );
 assert(!JSON.stringify(e2e).includes('opax.com.au'));
 // Analytics: iOS production sends through the opax.com.au proxy; e2e and
-// development (without OPAX_ANALYTICS=1) carry no analytics configuration.
+// development carry no analytics configuration, even with the old opt-in.
 assert.deepEqual(release.extra.analytics, {
   host: 'https://opax.com.au/ingest',
   projectToken: 'phc_AsHnQM2UrGBubA5HU9sagkGbg8vqQLNXu3WjEhPRDejr',
   environment: 'production',
 });
 assert.equal(e2e.extra.analytics, undefined, 'E2E builds send no analytics');
-if (process.env.OPAX_ANALYTICS !== '1')
-  assert.equal(
-    config('development').extra.analytics,
-    undefined,
-    'Development builds send analytics only with OPAX_ANALYTICS=1',
-  );
+for (const variant of ['development', 'e2e'])
+  for (const optIn of ['0', '1'])
+    assert.equal(
+      config(variant, optIn).extra.analytics,
+      undefined,
+      `${variant} builds send no analytics, including OPAX_ANALYTICS=${optIn}`,
+    );
 assert.deepEqual(
   release.ios.privacyManifests.NSPrivacyCollectedDataTypes.filter(
     (entry: { NSPrivacyCollectedDataTypePurposes: string[] }) =>
@@ -156,7 +162,10 @@ assert.deepEqual(
     (entry: {
       NSPrivacyCollectedDataType: string;
       NSPrivacyCollectedDataTypeTracking: boolean;
-    }) => [entry.NSPrivacyCollectedDataType, entry.NSPrivacyCollectedDataTypeTracking],
+    }) => [
+      entry.NSPrivacyCollectedDataType,
+      entry.NSPrivacyCollectedDataTypeTracking,
+    ],
   ),
   [
     ['NSPrivacyCollectedDataTypeProductInteraction', false],

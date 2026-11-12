@@ -3,6 +3,7 @@ import { useState, useSyncExternalStore, type Ref } from 'react';
 import {
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   TextInput,
   View,
@@ -24,7 +25,7 @@ import {
   rhythm,
   textStyles,
 } from '../../design/tokens';
-import { chips, defaultOptions } from './model';
+import { chips, clearChip, defaultOptions } from './model';
 import { askSession } from './session';
 import { topics } from './topics';
 
@@ -182,7 +183,75 @@ export function AskDock({
       style={styles.body}
       onLayout={(e) => setBodyHeight(e.nativeEvent.layout.height)}
     >
-      {line ? (
+      {Platform.OS === 'android' && line ? (
+        <View style={styles.androidOptions}>
+          <ScrollView
+            horizontal
+            keyboardShouldPersistTaps="handled"
+            showsHorizontalScrollIndicator={false}
+            style={styles.optionScroller}
+            testID={s.fresh ? 'ask-draft-new-conversation' : 'ask-options-line'}
+          >
+            <View style={styles.chips}>
+              {s.fresh ? (
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={composerCopy.fresh}
+                  accessibilityHint="Opens Options"
+                  onPress={onOptions}
+                  android_ripple={{ color: colors.dividerSubtle }}
+                  style={styles.chip}
+                >
+                  <Text variant="footnote" tone="inkSoft">
+                    {composerCopy.fresh}
+                  </Text>
+                </Pressable>
+              ) : null}
+              {tags.map((tag) => (
+                <Pressable
+                  key={tag.id}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Remove ${tag.key}, ${tag.value}`}
+                  disabled={s.busy && !s.fresh}
+                  accessibilityState={{ disabled: s.busy && !s.fresh }}
+                  onPress={() => askSession.options(clearChip(options, tag.id))}
+                  android_ripple={{ color: colors.dividerSubtle }}
+                  style={styles.chip}
+                  testID={`ask-option-remove-${tag.id}`}
+                >
+                  <Text variant="footnote">{tag.value}</Text>
+                  <Icon
+                    name={symbols.close}
+                    size={18}
+                    tone="inkSoft"
+                    maxScale={1}
+                  />
+                </Pressable>
+              ))}
+            </View>
+          </ScrollView>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={composerCopy.clear}
+            disabled={s.busy && !s.fresh}
+            accessibilityState={{ disabled: s.busy && !s.fresh }}
+            onPress={() => {
+              if (s.fresh) askSession.clearFresh();
+              else askSession.options({ ...defaultOptions });
+            }}
+            android_ripple={{ color: colors.dividerSubtle }}
+            style={styles.androidClear}
+            testID="ask-options-clear"
+          >
+            <Icon
+              name={symbols.clearOptions}
+              size={20}
+              tone="inkSoft"
+              maxScale={1}
+            />
+          </Pressable>
+        </View>
+      ) : line ? (
         <View style={styles.optionsLine}>
           <Pressable
             accessibilityRole="button"
@@ -259,7 +328,23 @@ export function AskDock({
             if (!s.busy && !empty && !offline) onSend();
           }}
           allowFontScaling
-          style={[styles.input, { maxHeight }]}
+          style={[
+            styles.input,
+            { maxHeight },
+            Platform.OS === 'android'
+              ? {
+                  minHeight: Math.max(
+                    48,
+                    textStyles.body.lineHeight * fontScale + 22,
+                  ),
+                  maxHeight: Math.max(
+                    maxHeight,
+                    textStyles.body.lineHeight * fontScale + 22,
+                  ),
+                  textAlignVertical: 'top',
+                }
+              : null,
+          ]}
           onLayout={(e) => setFieldHeight(e.nativeEvent.layout.height)}
           testID="ask-question"
         />
@@ -284,7 +369,14 @@ export function AskDock({
           {content}
         </GlassView>
       ) : (
-        <View style={styles.fallback}>{content}</View>
+        <View
+          style={[
+            styles.fallback,
+            Platform.OS === 'android' ? styles.androidSurface : null,
+          ]}
+        >
+          {content}
+        </View>
       )}
     </View>
   );
@@ -306,6 +398,36 @@ const styles = StyleSheet.create({
     borderCurve: 'continuous',
     borderWidth: hairline,
     borderColor: colors.dividerSubtle,
+  },
+  androidSurface: { elevation: 2, shadowColor: colors.navy },
+  androidOptions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+    paddingHorizontal: rhythm.tight,
+  },
+  optionScroller: { flex: 1, minWidth: 0 },
+  androidClear: {
+    minWidth: 48,
+    minHeight: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    borderCurve: 'continuous',
+    overflow: 'hidden',
+  },
+  chips: { flexDirection: 'row', gap: rhythm.tight },
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+    minHeight: 48,
+    paddingHorizontal: rhythm.tight,
+    paddingVertical: rhythm.line,
+    borderRadius: 8,
+    borderCurve: 'continuous',
+    overflow: 'hidden',
+    backgroundColor: colors.sunken,
   },
   optionsLine: {
     flexDirection: 'row',

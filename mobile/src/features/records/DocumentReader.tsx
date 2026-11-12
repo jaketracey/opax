@@ -85,6 +85,7 @@ import {
 } from './ReaderList';
 import { recordBarItems } from './RecordActions';
 import { RecordLoadError } from './RecordLoadError';
+import { FindControls } from './FindControls';
 import { records } from './runtime';
 import { recordCaveat, recordOriginal, recordSource } from './source';
 import { useRead } from './useRead';
@@ -407,6 +408,16 @@ export default function DocumentReader({
           }}
         />
       )}
+      {android && !embedded && shown && find.open ? (
+        <FindControls
+          query={find.query}
+          current={find.current}
+          total={find.total}
+          onPrevious={find.previous}
+          onNext={find.next}
+          onDone={find.done}
+        />
+      ) : null}
       <ReaderList
         testID="doc-reader"
         parts={shown ? parts : []}

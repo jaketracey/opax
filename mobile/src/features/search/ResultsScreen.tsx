@@ -6,7 +6,6 @@ import type { SearchBarCommands } from 'react-native-screens';
 import { countLabel } from './present';
 import {
   ContentUnavailable,
-  Field,
   Group,
   InsetGroup,
   Screen,
@@ -26,6 +25,7 @@ import { GroupResults, useGroupList } from './GroupResults';
 import { ResultsHeader } from './ResultsHeader';
 import { ResultsView, localSource } from './ResultsView';
 import { SEARCH_PLACEHOLDER } from './SearchScreen';
+import { SearchField } from './SearchField';
 import { useResultsControls } from './controls';
 import { filtersFromParams } from './filters';
 import { matchAll } from './ranking';
@@ -41,6 +41,7 @@ import {
   type Scope,
 } from './scopes';
 import { useSearchSources, type SearchSources } from './sources';
+import { useAndroidSearchKeyboard } from './useAndroidSearchKeyboard';
 import { speechSorts } from './speeches';
 
 /**
@@ -60,6 +61,7 @@ export function ResultsScreen() {
   const owner = `results-${useId()}`;
   const scroll = useRef<ScrollView>(null);
   const input = useRef<TextInput>(null);
+  useAndroidSearchKeyboard(input, () => setText(q));
   const { sources, failed, retry } = useSearchSources();
   const arrivalSort =
     speechSorts.find((sort) => sort.value === params.sort)?.value ??
@@ -80,6 +82,10 @@ export function ResultsScreen() {
   function submit(raw: string) {
     const words = raw.trim();
     if (!words) return;
+    if (Platform.OS === 'android') {
+      input.current?.blur();
+      Keyboard.dismiss();
+    }
     setQ(words);
     setText(words);
     (search.ref as RefObject<SearchBarCommands | null>).current?.setText(words);
@@ -146,17 +152,12 @@ export function ResultsScreen() {
       />
       <Screen testID="results-screen" scrollRef={scroll}>
         {Platform.OS === 'android' ? (
-          <Field
-            label="Search"
-            labelHidden
+          <SearchField
             inputRef={input}
             value={text}
             placeholder={SEARCH_PLACEHOLDER}
             onChangeText={setText}
             onSubmitEditing={() => submit(text)}
-            returnKeyType="search"
-            autoCapitalize="none"
-            autoCorrect={false}
             testID="results-input"
           />
         ) : null}

@@ -83,9 +83,21 @@ const pressables = (root: ReactTestInstance) => {
       node.props.style !== undefined &&
       'accessibilityRole' in node.props,
   );
-  // The memo wrapper and its inner component share one props object.
+  // Count the native control once when a platform touch wrapper delegates to it.
   return found.filter(
-    (node, index) => found.findIndex((n) => n.props === node.props) === index,
+    (node) =>
+      !found.some((other) => {
+        // Only collapse delegates of this same control. A row can also
+        // contain a distinct party link, which must not replace the row.
+        if (other === node || other.props.onPress !== node.props.onPress)
+          return false;
+        let parent = other.parent;
+        while (parent) {
+          if (parent === node) return true;
+          parent = parent.parent;
+        }
+        return false;
+      }),
   );
 };
 const flat = (style: unknown) =>

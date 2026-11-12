@@ -6,6 +6,7 @@ import { withNavigationOptions } from './navigation-options';
 import { router } from 'expo-router';
 import { act } from 'react';
 import {
+  Platform,
   Text as NativeText,
   StyleSheet,
   useWindowDimensions,
@@ -24,6 +25,7 @@ import {
 } from '../src/design/primitives';
 import { useReduceMotion } from '../src/design/accessibility';
 import DocumentReader from '../src/features/records/DocumentReader';
+import { FindControls } from '../src/features/records/FindControls';
 import { ReaderList } from '../src/features/records/ReaderList';
 import {
   publishContents,
@@ -412,6 +414,7 @@ test('an incoming search query puts the find controls in the bar, above the tab 
   mockParams = { slug: 'speech-1205524', q: 'paragraph' };
   const view = await mount(<DocumentReader />);
   expect(toolbars(view)).toHaveLength(0);
+  expect(view.root.findAllByType(FindControls)).toHaveLength(0);
   expect(barItems().map((item) => item.label)).toEqual([
     'Previous match',
     'Next match',
@@ -439,6 +442,34 @@ test('an incoming search query puts the find controls in the bar, above the tab 
     0,
   );
   await act(async () => view.unmount());
+});
+
+test('Android search arrivals expose Previous, Next and Done while the native selection remains available', async () => {
+  const original = Platform.OS;
+  Platform.OS = 'android';
+  try {
+    mockParams = { slug: 'speech-1205524', q: 'paragraph' };
+    const view = await mount(<DocumentReader />);
+    const controls = () => view.root.findByType(FindControls);
+    expect(controls().props.total).toBeGreaterThan(1);
+    expect(controls().props.current).toBe(0);
+    await act(async () => controls().props.onNext());
+    expect(view.root.findByType(ReaderList).props.jumpTo).toMatchObject({
+      position: 0.33,
+    });
+    await act(async () => controls().props.onNext());
+    expect(controls().props.current).toBe(1);
+    expect(barItems().map((item) => item.label)).toContain('More');
+    expect(
+      view.root.findAllByType(NativeText).some((n) => n.props.selectable),
+    ).toBe(true);
+    await act(async () => controls().props.onDone());
+    expect(view.root.findAllByType(FindControls)).toHaveLength(0);
+    expect(view.root.findByType(ReaderList).props.find).toBeNull();
+    await act(async () => view.unmount());
+  } finally {
+    Platform.OS = original;
+  }
 });
 
 test('the Citation formats deep link opens the record, then the sheet', async () => {

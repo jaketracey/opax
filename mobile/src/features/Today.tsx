@@ -1,4 +1,5 @@
 import * as Router from 'expo-router';
+import { useScreenReady, useTodayRendered } from '../analytics/timing';
 import {
   Fragment,
   useCallback,
@@ -226,6 +227,7 @@ function useSeatFixture(seat: ReturnType<typeof useSeat>) {
  * on its own, keeps its saved copy and ends in its own dated line.
  */
 export default function Today() {
+  useTodayRendered();
   const dots = useTodayDotsScroll();
   const offline = useOffline();
   const now = useNow();
@@ -257,6 +259,7 @@ export default function Today() {
       : null;
   const home = federal && house(federal) ? federal : null;
   const ready = !!launch && seat.status !== 'loading';
+  useScreenReady('/', ready);
 
   const order = launch
     ? todayOrder({

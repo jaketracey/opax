@@ -3,16 +3,24 @@ import { withNavigationOptions } from './navigation-options';
 // tab, and Browse showed placeholder rows that "disappear without loading
 // anything". Both came from the suggestion catalogs Search loads on focus.
 import { act } from 'react';
-import { Platform, RefreshControl, ScrollView, StyleSheet } from 'react-native';
+import {
+  Platform,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import Search from '../src/features/Search';
 import { catalogs } from '../src/api/runtime';
 import { memberSuggestionRoster } from '../src/api/catalog-search';
-import { Skeleton } from '../src/design/primitives';
+import { Skeleton, Screen } from '../src/design/primitives';
+import { useScreenReady } from '../src/analytics/timing';
 import { bills, index, roster, people, manifest, slugs } from './pinned';
 import { SearchIdle } from '../src/features/search/SearchIdle';
 import { SearchSuggestions } from '../src/features/search/SearchSuggestions';
 import { ResultsView } from '../src/features/search/ResultsView';
+jest.mock('../src/analytics/timing', () => ({ useScreenReady: jest.fn() }));
 
 jest.mock('../src/api/runtime', () => ({
   recordSearch: { search: jest.fn(), summary: jest.fn() },
@@ -91,6 +99,46 @@ const sourceFor = (
     ...over,
   } as unknown as Awaited<ReturnType<typeof catalogs.suggestionSources>>;
 };
+
+test.each(['ios', 'android'] as const)(
+  'Search on %s waits for the rendered Browse content layout',
+  async (platform) => {
+    const os = jest.replaceProperty(Platform, 'OS', platform);
+    jest
+      .mocked(catalogs.suggestionSourcesOnFocus)
+      .mockReturnValue(new Promise(() => {}));
+    let renderer!: TestRenderer.ReactTestRenderer;
+    try {
+      await act(async () => {
+        renderer = TestRenderer.create(
+          withNavigationOptions(<Search />, () => {}),
+        );
+      });
+      expect(ids(renderer)).toContain('search-browse-person');
+      expect(useScreenReady).toHaveBeenLastCalledWith('/search', false);
+      // A viewport measurement alone is not the content-ready signal.
+      const scroll = renderer.root.findByType(ScrollView);
+      const frame = (width: number, height: number) => ({
+        nativeEvent: { layout: { width, height, x: 0, y: 0 } },
+      });
+      act(() => scroll.props.onLayout(frame(390, 800)));
+      expect(useScreenReady).toHaveBeenLastCalledWith('/search', false);
+      const onContentLayout =
+        renderer.root.findByType(Screen).props.onContentLayout;
+      const content = renderer.root
+        .findAllByType(View)
+        .find((node) => node.props.onLayout === onContentLayout)!;
+      expect(content).toBeDefined();
+      act(() => content.props.onLayout(frame(390, 0)));
+      expect(useScreenReady).toHaveBeenLastCalledWith('/search', false);
+      act(() => content.props.onLayout(frame(390, 400)));
+      expect(useScreenReady).toHaveBeenLastCalledWith('/search', true);
+    } finally {
+      if (renderer) act(() => renderer.unmount());
+      os.restore();
+    }
+  },
+);
 
 test('idle Browse never shows a placeholder for suggestions it does not draw', async () => {
   let resolve!: (value: ReturnType<typeof sourceFor>) => void;

@@ -1,5 +1,5 @@
 import { screen, sheetOptions } from './screen';
-import { PixelRatio } from 'react-native';
+import { PixelRatio, Platform } from 'react-native';
 import { isAccessibilityCategory } from '../../design/tokens';
 export function filtersScreens() {
   return [
@@ -13,6 +13,9 @@ export function filtersScreens() {
       )
         ? 1
         : 0,
+      ...(Platform.OS === 'android'
+        ? { presentation: 'fullScreenModal' as const }
+        : {}),
     }),
   ];
 }

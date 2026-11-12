@@ -1,0 +1,56 @@
+appId: au.com.opax.app
+name: 12 Android keyboard submits once, dismisses without submitting and keeps results readable
+---
+# Android uses a Material top bar and an inline field. Its IME and layout are
+# checked through visible content, rather than the iOS-only UIKit geometry probe.
+- launchApp:
+    clearState: true
+- tapOn:
+    id: tab-search
+- assertVisible:
+    id: search-screen
+- runFlow:
+    file: ../support/search-query.yaml
+    env:
+      QUERY: Albanese
+      PREFIX: 12-android-keyboard
+- assertNotVisible:
+    id: search-count
+- takeScreenshot: ${EVIDENCE}/12-keyboard-before-submit
+- pressKey: Enter
+- extendedWaitUntil:
+    visible:
+      id: search-count
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: search-result-anthony-albanese
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/12-keyboard-after-submit
+- runFlow: ../support/search-clear.yaml
+- runFlow:
+    file: ../support/search-query.yaml
+    env:
+      QUERY: Albanese
+      PREFIX: 12-android-keyboard-repeat
+- assertNotVisible:
+    id: search-count
+- pressKey: Enter
+- extendedWaitUntil:
+    visible:
+      id: search-count
+    timeout: 30000
+- runFlow: ../support/search-clear.yaml
+- runFlow:
+    file: ../support/search-query.yaml
+    env:
+      QUERY: Albanese
+      PREFIX: 12-android-keyboard-dismiss
+- back
+- assertNotVisible:
+    id: search-count
+- assertVisible:
+    id: search-screen
+- assertVisible:
+    id: search-speeches-row
+- takeScreenshot: ${EVIDENCE}/12-keyboard-dismissed

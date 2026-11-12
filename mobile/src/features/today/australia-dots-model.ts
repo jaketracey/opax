@@ -1,4 +1,5 @@
 import type { Electorate } from '../../api/catalogs';
+import outline from './australia-outline.json';
 
 /** West to east, with the ACT sharing New South Wales' light. */
 export const dotStates = [
@@ -12,6 +13,9 @@ export const dotStates = [
 ] as const;
 export type DotState = (typeof dotStates)[number];
 export const dotWidth = 192;
+export const dotHeight = (outline.height / outline.width) * dotWidth;
+/** Android's opaque app bar leaves the art beside the date in content. */
+export const androidDotScale = 0.75;
 export const dotFadeDistance = 90;
 export const dotCrossfadeSeconds = 0.9;
 

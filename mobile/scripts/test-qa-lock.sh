@@ -8,6 +8,10 @@ SCRATCH=$(mktemp -d "${TMPDIR:-/tmp}/opax-qa-lock-test.XXXXXX")
 LOCK="$SCRATCH/paste.lock"
 STATE="$LOCK.opax"
 WORKTREE=$(basename "$(cd "$SCRIPTS/../.." && pwd)")
+# These are observation bounds, rather than protocol timing assertions. WSL
+# can delay the sampled active clock while three Android devices are busy.
+WAIT_DEFAULT=15
+[ "$(uname -s)" != Linux ] || WAIT_DEFAULT=60
 LIVE=()
 cleanup() {
   for pid in "${LIVE[@]:-}"; do [ -n "$pid" ] && { kill "$pid"; wait "$pid"; } 2>/dev/null || true; done
@@ -89,14 +93,14 @@ run_locked() {
   LIVE+=("$!")
 }
 wait_for() {
-  local deadline=$((SECONDS + ${2:-15}))
+  local deadline=$((SECONDS + ${2:-$WAIT_DEFAULT}))
   until [ -e "$1" ]; do [ "$SECONDS" -lt "$deadline" ] || return 1; sleep 0.1; done
 }
 wait_for_line() {
-  local deadline=$((SECONDS + ${3:-15}))
+  local deadline=$((SECONDS + ${3:-$WAIT_DEFAULT}))
   until grep -q -- "$2" "$1" 2>/dev/null; do [ "$SECONDS" -lt "$deadline" ] || return 1; sleep 0.1; done
 }
-rc_of() { wait_for "$SCRATCH/$1.rc" "${2:-15}" || fail "$1 did not finish"; cat "$SCRATCH/$1.rc"; }
+rc_of() { wait_for "$SCRATCH/$1.rc" "${2:-$WAIT_DEFAULT}" || fail "$1 did not finish"; cat "$SCRATCH/$1.rc"; }
 dead_pid() { bash -c 'echo $$'; }
 no_litter() { [ -z "$(/bin/ls "$STATE" 2>/dev/null | grep -v '^reap$')" ]; }
 # in_leader '<code>': runs code in a new process-group leader with the library sourced.
@@ -291,7 +295,7 @@ pass "one stale lock is removed once and held by one waiter at a time"
 loads 50
 : > "$SCRATCH/violations"
 ( while [ ! -e "$SCRATCH/stop-watch" ]; do
-    i1=$(stat -f %i "$LOCK" 2>/dev/null) && [ ! -f "$LOCK/owner" ] && i2=$(stat -f %i "$LOCK" 2>/dev/null) && [ "$i1" = "$i2" ] && echo ownerless >> "$SCRATCH/violations"
+    i1=$(python3 -c 'import os,sys; print(os.stat(sys.argv[1]).st_ino)' "$LOCK" 2>/dev/null) && [ ! -f "$LOCK/owner" ] && i2=$(python3 -c 'import os,sys; print(os.stat(sys.argv[1]).st_ino)' "$LOCK" 2>/dev/null) && [ "$i1" = "$i2" ] && echo ownerless >> "$SCRATCH/violations"
   done ) &
 watcher=$!; LIVE+=("$watcher")
 for r in a b c; do
@@ -305,7 +309,7 @@ touch "$SCRATCH/stop-watch"; wait "$watcher" 2>/dev/null || true
 pass "nine racing locked runs never overlap or expose an owner-less lock"
 
 # 17. Release leaves a lock that carries another owner's token.
-in_leader 'qa_paste_lock_try; sed -i "" "s/^token=.*/token=0000000000000000/" "$OPAX_PASTE_LOCK/owner"; qa_paste_lock_release' || true
+in_leader 'qa_paste_lock_try; perl -pi -e "s/^token=.*/token=0000000000000000/" "$OPAX_PASTE_LOCK/owner"; qa_paste_lock_release' || true
 [ -f "$LOCK/owner" ] && grep -q 'no longer ours' "$SCRATCH/leader.log" || fail "released a lock with another token"
 /bin/rm -f "$LOCK/owner"; rmdir "$LOCK"
 pass "release leaves a lock carrying another owner's token"
@@ -357,7 +361,7 @@ mkdir "$LOCK"; stale_owner "$identity_pid" "$(dead_pid)" > "$LOCK/owner"
 printf 'lstart=%s\n' "$identity_start" >> "$LOCK/owner"
 run_locked matched-owner OPAX_PASTE_WAIT_SECONDS=1 -- quick
 [ "$(rc_of matched-owner)" = 1 ] && [ -d "$LOCK" ] || fail "matching live owner reaped"
-sed -i '' 's/^lstart=.*/lstart=Wed Oct  7 01:00:00 2026/' "$LOCK/owner"
+perl -pi -e 's/^lstart=.*/lstart=Wed Oct  7 01:00:00 2026/' "$LOCK/owner"
 run_locked reused-owner -- quick
 [ "$(rc_of reused-owner)" = 0 ] && kill -0 "$identity_pid" || fail "reused owner PID not safely reaped"
 grep -q 'verified pid + lstart' "$SCRATCH/reused-owner.log" || fail "identity reap not logged"

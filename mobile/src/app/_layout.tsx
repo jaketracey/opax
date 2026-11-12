@@ -4,9 +4,10 @@ import { useFonts } from 'expo-font';
 import { Stack, router, useRootNavigationState, type Href } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Linking, StyleSheet, View } from 'react-native';
+import { Linking, Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { startAnalytics, useScreenTracking } from '../analytics';
+import { useNavigationTiming } from '../analytics/timing';
 import { isPad, useWindowTraits } from '../design/adaptive';
 import { hasSourcePreview } from '../design/environment';
 import { AndroidMenuHost } from '../design/menu';
@@ -35,7 +36,7 @@ import {
 } from '../onboarding/state';
 export const unstable_settings = rootSettings;
 // Last resort: a page that fails to draw shows Try again instead of closing.
-export { RouteErrorBoundary as ErrorBoundary } from '../design/route-error';
+export { RouteErrorBoundary as ErrorBoundary } from '../navigation/RouteErrorBoundary';
 
 export default function Layout() {
   // Keep traits and adaptive-device detection live throughout this session.
@@ -54,6 +55,7 @@ export default function Layout() {
   const endHandoff = useCallback(() => setHandedOver(true), []);
   const launch = useLaunchWelcome(tour);
   useScreenTracking();
+  useNavigationTiming();
   useEffect(() => {
     void checkFirstLaunch();
     // Beside the first-launch check: which splash sequence a plain launch
@@ -97,7 +99,7 @@ export default function Layout() {
   if (!loaded && !error) return null;
   return (
     <SafeAreaProvider>
-      <StatusBar style="auto" />
+      <StatusBar style={Platform.OS === 'android' ? 'dark' : 'auto'} />
       <View style={styles.app}>
         <AndroidMenuHost />
         <ExternalURLProbe />

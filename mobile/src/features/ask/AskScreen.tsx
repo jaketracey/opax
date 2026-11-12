@@ -1,4 +1,6 @@
 import { RouteOptions } from '../../navigation/preview';
+import { useAndroidRootScroll } from '../../navigation/useAndroidRootScroll';
+import { useScreenReady } from '../../analytics/timing';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
   useCallback,
@@ -12,6 +14,7 @@ import {
   AccessibilityInfo,
   Keyboard,
   LayoutAnimation,
+  Platform,
   ScrollView,
   StyleSheet,
   View,
@@ -107,11 +110,17 @@ export default function AskScreen() {
   const [profiles, setProfiles] = useState<Map<string, AskPerson>>(new Map());
   const [names, setNames] = useState<string[]>([]);
   const [dockHeight, setDockHeight] = useState(0);
+  const [contentReady, setContentReady] = useState(false);
+  useScreenReady('/ask', dockHeight > 0 && contentReady);
+  const onContentSizeChange = useCallback((width: number, height: number) => {
+    if (width > 0 && height > 0) setContentReady(true);
+  }, []);
   // Bar items are built during render, so New question touches no refs:
   // it asks for the top, and an effect scrolls there.
   const [topRequest, setTopRequest] = useState(0);
   const input = useRef<TextInput>(null);
   const scroll = useRef<ScrollView>(null);
+  const androidRoot = useAndroidRootScroll(scroll, colors[ground]);
   const root = useRef<View>(null);
   const turnY = useRef(0);
   const pin = useRef(false);
@@ -126,7 +135,8 @@ export default function AskScreen() {
     adaptive &&
     sizeClassFor(room?.width ?? outer.width, outer.rule) === 'regular';
   const column = useScreenColumn('readable');
-  const keyboard = useKeyboardOverlap(root);
+  const { overlap: keyboard, visible: keyboardVisible } =
+    useKeyboardOverlap(root);
   const anchor = useConversationAnchor(
     scroll,
     `${outer.rule}:${outer.width}:${outer.height}:${room?.width}:${docked}`,
@@ -304,14 +314,18 @@ export default function AskScreen() {
       contentInsetAdjustmentBehavior="automatic"
       keyboardShouldPersistTaps="handled"
       automaticallyAdjustKeyboardInsets={false}
-      keyboardDismissMode="interactive"
+      keyboardDismissMode={
+        Platform.OS === 'android' ? 'on-drag' : 'interactive'
+      }
       scrollToOverflowEnabled
       maintainVisibleContentPosition={
         adaptive ? { minIndexForVisible: 0 } : undefined
       }
       onLayout={column.onLayout}
+      onContentSizeChange={onContentSizeChange}
       onScroll={(event) => {
         atTop.current = event.nativeEvent.contentOffset.y <= 4;
+        if (Platform.OS === 'android') androidRoot.onScroll(event);
         if (adaptive) anchor.onScroll(event.nativeEvent.contentOffset.y);
         if (docked) sources.onScroll();
       }}
@@ -325,6 +339,7 @@ export default function AskScreen() {
         },
       ]}
     >
+      {androidRoot.title}
       <RegionProvider value={column.inner}>
         {idle ? (
           <AskIdle
@@ -388,6 +403,7 @@ export default function AskScreen() {
                       dock={dock}
                       sources={docked ? sources.pane : null}
                       keyboard={keyboard}
+                      keyboardVisible={keyboardVisible}
                       ground={ground}
                     />
                   </AskPaneProvider>
@@ -404,7 +420,39 @@ export default function AskScreen() {
 /** How far the software keyboard overlaps the bottom of `ref`, animated with it. */
 function useKeyboardOverlap(ref: RefObject<View | null>) {
   const [overlap, setOverlap] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const { height: windowHeight } = useWindowDimensions();
+  // Android resizes the native window with the IME. Measure the remaining
+  // overlap after that resize, including when the window changes late, so
+  // its height is never subtracted a second time in JS.
   useEffect(() => {
+    if (Platform.OS !== 'android') return;
+    let active = true;
+    const measure = (top: number) => {
+      ref.current?.measureInWindow((_x, y, _w, height) => {
+        if (!active || !Keyboard.isVisible()) return;
+        setVisible(Keyboard.isVisible());
+        setOverlap(Math.max(0, Math.round(y + height - top)));
+      });
+    };
+    const metrics = Keyboard.metrics();
+    if (metrics) measure(metrics.screenY);
+    const show = Keyboard.addListener('keyboardDidShow', (event) => {
+      setVisible(true);
+      measure(event.endCoordinates.screenY);
+    });
+    const hide = Keyboard.addListener('keyboardDidHide', () => {
+      setVisible(false);
+      setOverlap(0);
+    });
+    return () => {
+      active = false;
+      show.remove();
+      hide.remove();
+    };
+  }, [ref, windowHeight]);
+  useEffect(() => {
+    if (Platform.OS === 'android') return;
     const animate = (event: KeyboardEvent) => {
       if (event.duration)
         LayoutAnimation.configureNext({
@@ -428,7 +476,10 @@ function useKeyboardOverlap(ref: RefObject<View | null>) {
       hide.remove();
     };
   }, [ref]);
-  return overlap;
+  return {
+    overlap,
+    visible: Platform.OS === 'android' ? visible : overlap > 0,
+  };
 }
 const styles = StyleSheet.create({
   fill: { flex: 1 },

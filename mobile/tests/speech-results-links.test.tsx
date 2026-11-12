@@ -222,7 +222,9 @@ test.each(['ios', 'android'] as const)(
     expect(reader.props.accessibilityLabel).toContain('Don Farrell, Labor');
     expect(container.props.accessible).toBe(false);
     expect(container.props.accessibilityLabel).toBeUndefined();
-    expect(StyleSheet.flatten(speaker.props.style).minHeight).toBe(44);
+    expect(StyleSheet.flatten(speaker.props.style).minHeight).toBe(
+      platform === 'android' ? 48 : 44,
+    );
     const stopPropagation = jest.fn();
     fireEvent.press(speaker, { stopPropagation });
     expect(stopPropagation).toHaveBeenCalledTimes(1);

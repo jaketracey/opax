@@ -1,5 +1,5 @@
 import { act, useEffect } from 'react';
-import { AppState, type AppStateStatus } from 'react-native';
+import { AppState, Platform, type AppStateStatus } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import * as voice from '../src/voice';
 import * as bridge from '../src/features/talk/bridge';
@@ -273,6 +273,38 @@ test('consent stored by the sheet starts the call without asking again', async (
   expect(mockVoice.start).toHaveBeenCalledTimes(1);
   expect(mockBridge.setConsent).not.toHaveBeenCalled();
 });
+test.each(['android', 'ios'] as const)(
+  '%s handles Agree during the return-to-Talk status refresh',
+  async (os) => {
+    const original = Platform.OS;
+    Object.defineProperty(Platform, 'OS', { configurable: true, value: os });
+    try {
+      await mount();
+      const pending = deferred<voice.VoiceResult<VoiceStatus>>();
+      mockVoice.status.mockReturnValueOnce(pending.promise);
+      mockBridge.readConsent.mockResolvedValue(true);
+      act(() => {
+        mockFocus.cleanup = mockFocus.effect?.();
+      });
+      let starting!: Promise<void>;
+      await act(async () => {
+        starting = call.startConsented();
+      });
+      expect(mockVoice.start).toHaveBeenCalledTimes(os === 'android' ? 0 : 1);
+      await act(async () => {
+        pending.resolve({ ok: true, value: status });
+        await starting;
+      });
+      expect(mockVoice.start).toHaveBeenCalledTimes(1);
+      expect(call.consent).toBe(true);
+    } finally {
+      Object.defineProperty(Platform, 'OS', {
+        configurable: true,
+        value: original,
+      });
+    }
+  },
+);
 test('inactive does not end; background delegates a specific reason; foreground refreshes and recovers', async () => {
   let lifecycle!: (state: AppStateStatus) => void;
   jest.spyOn(AppState, 'addEventListener').mockImplementation((_name, fn) => {

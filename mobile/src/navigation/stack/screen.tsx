@@ -20,9 +20,8 @@ import { emptyBarTitle } from '../useTitleOnScroll';
  * blanked that title too, so a screen pushed from a reader or the edition
  * showed a bare chevron (wave 4 bills-15).
  */
-export const untitled: NativeStackNavigationOptions = {
-  headerTitle: Platform.OS === 'ios' ? emptyBarTitle : '',
-};
+export const untitled: NativeStackNavigationOptions =
+  Platform.OS === 'ios' ? { headerTitle: emptyBarTitle } : {};
 
 /** Stable tab and list titles, available before destination data or layout. */
 const rootTitles: Record<string, string> = {
@@ -211,6 +210,7 @@ export function screen(
           ? doneItems
           : {}),
         ...options,
+        ...(Platform.OS === 'android' ? { headerTitleAlign: 'left' } : {}),
       })}
     />
   );
@@ -219,7 +219,9 @@ export const sheetOptions: NativeStackNavigationOptions = {
   headerShown: true,
   ...shortSheet,
   ...headerItems(() => [closeSheetItem()]),
-  ...(Platform.OS === 'android' ? { header: AndroidReadingHeader } : {}),
+  ...(Platform.OS === 'android'
+    ? { header: AndroidReadingHeader, headerRight: () => null }
+    : {}),
 };
 
 export function tabRootScreen(

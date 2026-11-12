@@ -1,4 +1,5 @@
 import { RouteOptions } from '../navigation/preview';
+import { useScreenReady } from '../analytics/timing';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
@@ -211,6 +212,7 @@ export function ProfileScreen({
   embedded?: boolean;
 }) {
   const [load, setLoad] = useState<Load>({ status: 'loading' });
+  useScreenReady('/person/[slug]', load.status !== 'loading', !embedded);
   const [attempt, setAttempt] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {

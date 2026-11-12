@@ -1,4 +1,5 @@
-import { Linking, Pressable, View, type TextProps } from 'react-native';
+import { Linking, View, type TextProps } from 'react-native';
+import { Pressable } from './pressable';
 import type { Href } from 'expo-router';
 import { useRecordLink } from '../navigation/record-link';
 import { copyText } from '../features/records/actions';

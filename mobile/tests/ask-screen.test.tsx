@@ -13,12 +13,14 @@ import {
   Dimensions,
   InteractionManager,
   Keyboard,
+  Platform,
   ScrollView,
   StyleSheet,
   TextInput,
   View,
 } from 'react-native';
 import AskScreen, { PhoneDock } from '../src/features/ask/AskScreen';
+import { useScreenReady } from '../src/analytics/timing';
 import {
   AskDock,
   COMPOSER_HEIGHT_SHARE,
@@ -54,6 +56,7 @@ import { emptyReservedRegions } from '../src/design/fold';
 
 // The bar's items, as AskScreen sets them through Stack.Screen.
 const mockBar: { options: Record<string, unknown> } = { options: {} };
+jest.mock('../src/analytics/timing', () => ({ useScreenReady: jest.fn() }));
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
   Stack: {
@@ -226,6 +229,54 @@ async function mount(screen = <AskScreen />) {
   });
   return view!;
 }
+
+test.each([
+  ['ios', 'composer'],
+  ['ios', 'content'],
+  ['android', 'composer'],
+  ['android', 'content'],
+] as const)(
+  'Ask on %s waits for both layouts, with %s arriving first',
+  async (platform, first) => {
+    const os = jest.replaceProperty(Platform, 'OS', platform);
+    try {
+      await mount();
+      expect(byId('ask-idle')).not.toHaveLength(0);
+      expect(useScreenReady).toHaveBeenLastCalledWith('/ask', false);
+      const content = byId('ask-screen').find(
+        (node) => typeof node.props.onContentSizeChange === 'function',
+      )!.props.onContentSizeChange;
+      const composer = byId('ask-dock').find(
+        (node) => typeof node.props.onLayout === 'function',
+      )!.props.onLayout;
+      const dockLayout = (height: number) => ({
+        nativeEvent: { layout: { width: 390, height, x: 0, y: 0 } },
+      });
+      act(() => {
+        content(0, 400);
+        composer(dockLayout(0));
+      });
+      expect(useScreenReady).toHaveBeenLastCalledWith('/ask', false);
+      act(() => {
+        if (first === 'composer') composer(dockLayout(100));
+        else content(390, 400);
+      });
+      expect(useScreenReady).toHaveBeenLastCalledWith('/ask', false);
+      act(() => {
+        if (first === 'composer') content(390, 400);
+        else composer(dockLayout(100));
+      });
+      expect(useScreenReady).toHaveBeenLastCalledWith('/ask', true);
+      act(() => {
+        content(390, 450);
+        composer(dockLayout(110));
+      });
+      expect(useScreenReady).toHaveBeenLastCalledWith('/ask', true);
+    } finally {
+      os.restore();
+    }
+  },
+);
 
 function immediateFocusRequests() {
   const interactions = jest
@@ -1282,6 +1333,152 @@ test('with the keyboard up the composer sits on a band of ground: nothing reads 
   );
   expect(band().backgroundColor).toBeUndefined();
   act(() => r.unmount());
+});
+
+test('Android observes IME show/hide and removes the bottom inset after native resize; iOS keeps will-change events', async () => {
+  const original = Platform.OS;
+  const measured: ((
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+  ) => void)[] = [];
+  const visible = jest.spyOn(Keyboard, 'isVisible').mockReturnValue(true);
+  const measure = jest
+    .spyOn(View.prototype, 'measureInWindow')
+    .mockImplementation((callback) => {
+      measured.push(callback);
+    });
+  const handlers = new Map<string, (event: unknown) => void>();
+  const listener = jest
+    .spyOn(Keyboard, 'addListener')
+    .mockImplementation((name, handler) => {
+      handlers.set(name, handler as (event: unknown) => void);
+      return { remove: jest.fn() };
+    });
+  try {
+    Platform.OS = 'android';
+    const screen = await mount();
+    expect(handlers.has('keyboardDidShow')).toBe(true);
+    expect(handlers.has('keyboardWillChangeFrame')).toBe(false);
+    act(() =>
+      handlers.get('keyboardDidShow')!({ endCoordinates: { screenY: 500 } }),
+    );
+    expect(measured.length).toBeGreaterThan(0);
+    const phone = () => screen.root.findByType(PhoneDock);
+    expect(phone().props).toMatchObject({ keyboard: 0, keyboardVisible: true });
+    act(() => handlers.get('keyboardDidHide')!({}));
+    // A native measure that arrives after IME Back must not lift the dock again.
+    visible.mockReturnValue(false);
+    act(() => measured.forEach((callback) => callback(0, 0, 402, 900)));
+    expect(phone().props).toMatchObject({
+      keyboard: 0,
+      keyboardVisible: false,
+    });
+    act(() => screen.unmount());
+    view = null;
+    handlers.clear();
+    Platform.OS = 'ios';
+    await mount();
+    expect(handlers.has('keyboardWillChangeFrame')).toBe(true);
+    expect(handlers.has('keyboardWillHide')).toBe(true);
+    expect(handlers.has('keyboardDidShow')).toBe(false);
+  } finally {
+    listener.mockRestore();
+    visible.mockRestore();
+    measure.mockRestore();
+    Platform.OS = original;
+  }
+});
+
+test('Android dock has a tonal raised surface and removable option chips; iOS keeps its options line', () => {
+  const original = Platform.OS;
+  let dock!: ReactTestRenderer;
+  try {
+    Platform.OS = 'android';
+    act(() => {
+      askSession.options({
+        ...askSession.composerOptions(),
+        topic: 'housing',
+        from: '2024',
+        to: '2025',
+      });
+      dock = create(
+        <AskDock
+          onSend={() => {}}
+          onStop={() => {}}
+          onOptions={() => {}}
+          offline={false}
+        />,
+      );
+    });
+    const surfaces = dock.root.findAll(
+      (n) =>
+        n.props.style && StyleSheet.flatten(n.props.style)?.elevation === 2,
+    );
+    expect(surfaces.length).toBeGreaterThan(0);
+    const inputStyle = () =>
+      StyleSheet.flatten(dock.root.findByType(TextInput).props.style);
+    expect(inputStyle().minHeight).toBeGreaterThanOrEqual(48);
+    expect(inputStyle().textAlignVertical).toBe('top');
+    const remove = dock.root.find(
+      (n) =>
+        n.props.testID === 'ask-option-remove-years' &&
+        typeof n.props.onPress === 'function',
+    );
+    expect(remove.props.accessibilityLabel).toBe('Remove Years, 2024 to 2025');
+    act(() => remove.props.onPress());
+    expect(askSession.composerOptions()).toMatchObject({
+      from: '',
+      to: '',
+      topic: 'housing',
+    });
+    expect(
+      dock.root.findAllByProps({ testID: 'ask-options-line' }).length,
+    ).toBeGreaterThan(0);
+    const clear = dock.root.find(
+      (n) =>
+        n.props.testID === 'ask-options-clear' &&
+        typeof n.props.onPress === 'function',
+    );
+    expect(StyleSheet.flatten(clear.props.style).minHeight).toBe(48);
+    act(() => clear.props.onPress());
+    expect(askSession.composerOptions().topic).toBe('');
+    expect(
+      dock.root.findAllByProps({ testID: 'ask-options-line' }),
+    ).toHaveLength(0);
+    act(() =>
+      askSession.options({ ...askSession.composerOptions(), topic: 'housing' }),
+    );
+    Platform.OS = 'ios';
+    act(() =>
+      dock.update(
+        <AskDock
+          onSend={() => {}}
+          onStop={() => {}}
+          onOptions={() => {}}
+          offline={false}
+        />,
+      ),
+    );
+    expect(
+      dock.root.findAllByProps({ testID: 'ask-option-remove-topic' }),
+    ).toHaveLength(0);
+    expect(inputStyle().minHeight).toBe(44);
+    expect(inputStyle().textAlignVertical).toBeUndefined();
+    expect(
+      dock.root.findAllByProps({ testID: 'ask-options-line' }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      dock.root.findAll(
+        (n) =>
+          n.props.style && StyleSheet.flatten(n.props.style)?.elevation === 2,
+      ),
+    ).toHaveLength(0);
+  } finally {
+    act(() => dock?.unmount());
+    Platform.OS = original;
+  }
 });
 
 test('while an answer runs, Options and Clear are unavailable; an arrival waiting brings them back', async () => {

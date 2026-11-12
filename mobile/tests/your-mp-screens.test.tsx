@@ -10,6 +10,7 @@ import {
   ActionSheetIOS,
   Image,
   Linking,
+  Platform,
   RefreshControl,
   StyleSheet,
 } from 'react-native';
@@ -32,6 +33,7 @@ import {
 } from '../src/design/primitives';
 import { minimumTarget } from '../src/design/tokens';
 import { RowLink } from '../src/design/row-link';
+import * as menus from '../src/design/menu';
 import Electorate from '../src/features/Electorate';
 import { MemberVoteRow } from '../src/features/people/MemberVoteRow';
 import Person from '../src/features/Person';
@@ -1145,10 +1147,77 @@ describe('Your MP tab', () => {
     expect(has(r, 'your-member-anthony-albanese')).toBe(true);
     await act(async () => last.items![0]!.onPress!());
     expect(sheet).toHaveBeenCalledTimes(1);
+    expect(sheet.mock.calls[0]![0]).toMatchObject({
+      title: 'Forget your electorate?',
+      message: 'Today and Your MP stop showing your representatives.',
+      options: ['Forget', 'Cancel'],
+      destructiveButtonIndex: 0,
+      cancelButtonIndex: 1,
+    });
     expect(has(r, 'your-invitation')).toBe(true);
     expect(ids(r, 'your-member-')).toHaveLength(0);
     sheet.mockRestore();
     await act(async () => r.unmount());
+  });
+
+  test('Android keeps the forget consequence and waits for confirmation before clearing the seat', async () => {
+    const platform = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
+    Object.defineProperty(Platform, 'OS', {
+      configurable: true,
+      value: 'android',
+    });
+    const confirm = jest
+      .spyOn(menus, 'confirmAction')
+      .mockImplementation(() => {});
+    const seat = seatNamed('Grayndler');
+    choose(seat.electorate_id);
+    mock.yourMP.mockResolvedValue(
+      c.yourMPFor(seat.electorate_id, index, manifest),
+    );
+    mock.profileFor.mockImplementation(async (id) =>
+      c.profileFor(id, catalogs),
+    );
+    jest
+      .mocked(forgetChoice)
+      .mockImplementation(async () =>
+        (subscribeChoice as jest.Mock).mock.calls.at(-1)?.[0](null),
+      );
+    let r: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      r = await render(<YourMP />);
+      type Menu = {
+        type: string;
+        menu?: { items: { items?: { onPress: () => void }[] }[] };
+      };
+      const header = mockOptions
+        .filter((o) => o.unstable_headerRightItems)
+        .at(-1)!.unstable_headerRightItems as () => Menu[];
+      const forget = header()
+        .find((item) => item.type === 'menu')!
+        .menu!.items.at(-1)!.items![0]!;
+      act(() => forget.onPress());
+      expect(confirm).toHaveBeenCalledWith(
+        'Forget your electorate?',
+        [
+          expect.objectContaining({
+            title: 'Forget',
+            destructive: true,
+            onPress: expect.any(Function),
+          }),
+        ],
+        undefined,
+        'Today and Your MP stop showing your representatives.',
+      );
+      expect(forgetChoice).not.toHaveBeenCalled();
+      expect(has(r, 'your-member-anthony-albanese')).toBe(true);
+      await act(async () => confirm.mock.calls[0]![1][0]!.onPress());
+      expect(forgetChoice).toHaveBeenCalledTimes(1);
+      expect(has(r, 'your-invitation')).toBe(true);
+    } finally {
+      if (r) await act(async () => r!.unmount());
+      confirm.mockRestore();
+      Object.defineProperty(Platform, 'OS', platform);
+    }
   });
 
   test('Forget waits for a state removal still being written', async () => {

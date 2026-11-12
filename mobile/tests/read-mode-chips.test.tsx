@@ -66,7 +66,7 @@ test.each([
       expect(chip.text.numberOfLines).toBeUndefined();
       expect(chip.style).toMatchObject({
         alignSelf: 'stretch',
-        minHeight: 36,
+        minHeight: 48,
       });
       expect(chip.style.height).toBeUndefined();
     }
@@ -85,7 +85,7 @@ test.each([
   for (const chip of draw(width, 1, 'passages')) {
     expect(chip.text.children).toMatch(/^\w+$/);
     expect(chip.text.numberOfLines).toBeUndefined();
-    expect(chip.style).toMatchObject({ minHeight: 36, maxWidth: '100%' });
+    expect(chip.style).toMatchObject({ minHeight: 48, maxWidth: '100%' });
     expect(chip.style.alignSelf).toBeUndefined();
   }
 });

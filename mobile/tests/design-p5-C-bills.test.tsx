@@ -1,6 +1,6 @@
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { Platform, StyleSheet, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { router } from 'expo-router';
 import { Catalogs } from '../src/api/catalogs';
@@ -15,6 +15,7 @@ import {
 import { SegmentedPicker } from '../src/design/controls';
 import BillDetail, { rulerPoints } from '../src/features/bills/BillDetail';
 import BillsList from '../src/features/bills/BillsList';
+import { ScopeChips } from '../src/features/search/ScopeChips';
 import { billTextRoute } from '../src/navigation/routes';
 import { divisionHistoryRoute } from '../src/navigation/routes/bills';
 import { pinned, slugs } from './pinned';
@@ -234,7 +235,9 @@ describe('bill header (P1-3)', () => {
 
   test("the bar's ⋯ holds the links; Ask and Share are the toolbar (P3-12)", async () => {
     mockParams.key = 'au-federal-r7534';
-    await render(<BillDetail />);
+    const root = await render(<BillDetail />);
+    expect(root.findAllByType(ScopeChips)).toHaveLength(0);
+    expect(root.findAllByProps({ testID: 'bill-share' })).toHaveLength(0);
     const menu = barItems().find((item) => item.type === 'menu')!;
     expect(menu.menu!.items.map((item) => item.label)).toEqual([
       'Copy link',
@@ -242,6 +245,40 @@ describe('bill header (P1-3)', () => {
       'Open on opax.com.au',
     ]);
   });
+});
+
+test('Android bills keep whole scope labels at 2x and wrap the bottom actions; iOS uses the existing picker', async () => {
+  const original = Platform.OS;
+  try {
+    Platform.OS = 'android';
+    window(402, 2);
+    const list = await render(<BillsList />);
+    expect(
+      list
+        .findByType(ScopeChips)
+        .props.options.map((o: { label: string }) => o.label),
+    ).toEqual(['Before parliament', 'Passed', 'All']);
+    expect(list.findAllByType(SegmentedPicker)).toHaveLength(0);
+    mockParams.key = 'au-federal-r7534';
+    const detail = await render(<BillDetail />);
+    const toolbar = detail.find((n) => {
+      if (typeof n.type !== 'string' || !n.props.style) return false;
+      const style = StyleSheet.flatten(n.props.style);
+      return (
+        style?.flexWrap === 'wrap' && style?.justifyContent === 'space-between'
+      );
+    });
+    expect(toolbar).toBeTruthy();
+    expect(
+      detail.findAllByProps({ testID: 'bill-share' }).length,
+    ).toBeGreaterThan(0);
+    Platform.OS = 'ios';
+    const ios = await render(<BillsList />);
+    expect(ios.findAllByType(ScopeChips)).toHaveLength(0);
+    expect(ios.findAllByType(SegmentedPicker).length).toBeGreaterThan(0);
+  } finally {
+    Platform.OS = original;
+  }
 });
 
 describe('how it moved: a terminal status names the last stop (P2-9)', () => {

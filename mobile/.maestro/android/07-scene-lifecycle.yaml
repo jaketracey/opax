@@ -1,0 +1,17 @@
+appId: au.com.opax.app
+name: 07 Android cold and warm links, native share and system Back
+---
+- stopApp
+- openLink: opax://person/anthony-albanese
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 30000
+- assertVisible: Anthony Albanese
+- takeScreenshot: ${EVIDENCE}/07-link-cold
+- openLink: opax://person/julia-gillard
+- extendedWaitUntil:
+    visible: Julia Gillard
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/07-link-warm
+- runFlow: native-share.yaml

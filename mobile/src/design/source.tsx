@@ -1,5 +1,6 @@
+import { Pressable } from './pressable';
 import { useState, type ReactNode, type Ref } from 'react';
-import { Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { presentSource } from '../navigation/sheets';
 import { useAccessibilitySize } from './accessibility';
 import { calendarDate, formatDate, sourceName, type DateInput } from './format';

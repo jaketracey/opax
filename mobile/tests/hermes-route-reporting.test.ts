@@ -25,9 +25,14 @@ jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
 jest.mock('expo-constants', () => ({
   __esModule: true,
   default: {
+    platform: { ios: { buildNumber: '46' } },
     expoConfig: {
       version: '1.1.0',
+      ios: { buildNumber: '46' },
+      android: { versionCode: 46 },
       extra: {
+        variant: 'production',
+        appBuild: '46',
         analytics: {
           host: 'https://opax.com.au/ingest',
           projectToken: 'phc_fixture000000000000000000000000',
@@ -37,6 +42,14 @@ jest.mock('expo-constants', () => ({
     },
   },
 }));
+
+const originalDev = __DEV__;
+beforeAll(() => {
+  Reflect.set(globalThis, '__DEV__', false);
+});
+afterAll(() => {
+  Reflect.set(globalThis, '__DEV__', originalDev);
+});
 
 const context = {
   platform: 'ios',
@@ -101,9 +114,9 @@ test('every route file has an explicitly allowlisted error pattern', () => {
     // Development routes are stripped from release builds, and naming them
     // here would put their names in production JS (verify-ios-release.py).
     if (DEVELOPMENT_ROUTE.test(pattern)) {
-      expect(cleanEvent('opax_route_error', { route_pattern: pattern })).toEqual(
-        {},
-      );
+      expect(
+        cleanEvent('opax_route_error', { route_pattern: pattern }),
+      ).toEqual({});
       continue;
     }
     expect(cleanEvent('opax_route_error', { route_pattern: pattern })).toEqual({
@@ -118,6 +131,26 @@ test('the allowlist never names a development route', () => {
     'utf8',
   );
   expect(source).not.toMatch(DEVELOPMENT_ROUTE);
+});
+
+test('root and every tab layout export the reporting recoverable boundary', () => {
+  const root = join(__dirname, '../src/app');
+  function layouts(dir: string): string[] {
+    return readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
+      entry.isDirectory()
+        ? layouts(join(dir, entry.name))
+        : entry.name === '_layout.tsx'
+          ? [join(dir, entry.name)]
+          : [],
+    );
+  }
+  for (const path of [
+    join(root, '_layout.tsx'),
+    ...layouts(join(root, '(tabs)')),
+  ])
+    expect(readFileSync(path, 'utf8')).toMatch(
+      /RouteErrorBoundary as ErrorBoundary.*navigation\/RouteErrorBoundary/,
+    );
 });
 
 test('the reporting boundary captures once per caught error, without error text or route params', () => {
@@ -149,11 +182,12 @@ test('the reporting boundary captures once per caught error, without error text 
     );
   });
   expect(mockCapture).toHaveBeenCalledTimes(2);
+  expect(tree.root.findAllByProps({ testID: 'route-error' })).not.toHaveLength(0);
   expect(JSON.stringify(tree.toJSON())).not.toContain(privateText);
   act(() => tree.unmount());
 });
 
-test('reporting respects the existing build gate, Android exclusion and anonymous SDK options', () => {
+test('reporting respects the release gate on both platforms and anonymous SDK options', () => {
   const original = Constants.expoConfig!.extra;
   const report = (
     extra: typeof original,
@@ -177,10 +211,14 @@ test('reporting respects the existing build gate, Android exclusion and anonymou
   expect(mockClient).not.toHaveBeenCalled();
   report({ analytics: { ...original!.analytics, environment: 'e2e' } });
   expect(mockClient).not.toHaveBeenCalled();
-  report(original, 'android');
+  report({ ...original, variant: 'development' });
+  report({ ...original, variant: 'e2e' });
+  report({ ...original, appBuild: '0' });
+  report({ ...original, appBuild: undefined });
   expect(mockClient).not.toHaveBeenCalled();
+  report(original, 'android');
   report(original);
-  expect(mockClient).toHaveBeenCalledTimes(1);
+  expect(mockClient).toHaveBeenCalledTimes(2);
   expect(mockClient.mock.calls[0]![1]).toMatchObject({
     personProfiles: 'never',
     enableSessionReplay: false,
