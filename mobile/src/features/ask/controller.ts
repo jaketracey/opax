@@ -310,13 +310,16 @@ export class AskController {
       this.update({ draft: question, pending: null });
     }
   }
-  /** A queued question goes once nothing is running; never twice. */
+  /**
+   * A queued question goes once the answer it waited for has been written
+   * (or the reader stopped it); never twice.
+   */
   private flushQueued() {
     const s = this.state;
     if (!s.queued || s.busy) return;
     this.update({ queued: false });
     if (!s.draft.trim()) return;
-    // After the ended answer's own bookkeeping (its save and account sync).
+    // After the ended answer's save, on the next tick.
     setTimeout(() => {
       if (this.state.busy || !this.state.draft.trim()) return;
       void (this.io.sendQueued ? this.io.sendQueued() : this.sendDraft());
@@ -522,6 +525,9 @@ export class AskController {
           streaming: '',
           clarify: { question: q, ...(suggestion ? { suggestion } : {}) },
           ...(before.length ? {} : { id: null }),
+          // The clarify request stays on screen; the waiting question stays
+          // in the composer for the reader to send.
+          queued: false,
         });
         return;
       }
@@ -549,6 +555,18 @@ export class AskController {
       });
       await this.persist();
       if (mine !== this.sequence) return;
+      if (this.state.queued && this.state.id) {
+        // A tapped question waited for this answer: it goes now, and this
+        // conversation's Ask next rows and account push finish in the
+        // background against the saved copy.
+        const id = this.state.id;
+        const thread = this.state.thread;
+        this.update({ nextLoading: false });
+        this.flushQueued();
+        await this.savedFollowups(id, thread, answer, data, q, passages);
+        await this.io.sync?.(id).catch(() => undefined);
+        return;
+      }
       // Generated only once for this answer. Calculated answers have fixed steps.
       await this.followups(answer, data, q, mine, passages);
       // A failed account push shows only in Conversations, never here.
@@ -576,12 +594,48 @@ export class AskController {
         failed: { question: q, ...(carry ? { carry } : {}) },
         streaming: failure.code === 'cancelled' ? '' : this.state.streaming,
         ...(restore && failure.code !== 'cancelled' ? { draft: q } : {}),
+        // A failure (rate limit, offline, timeout) stays on screen with its
+        // countdown and Try again; a waiting question is not sent into it.
+        // It stays in the composer, marked "Starts a new conversation".
+        queued: false,
       });
     } finally {
-      if (mine === this.sequence) {
-        this.abort = null;
-        this.flushQueued();
-      }
+      if (mine === this.sequence) this.abort = null;
+    }
+  }
+  /**
+   * Ask next for an answer whose conversation has left the screen (a queued
+   * question took over): generated once and written to the saved copy only.
+   */
+  private async savedFollowups(
+    id: string,
+    thread: Turn[],
+    turn: Turn,
+    data: Answer,
+    q: string,
+    passages: ReturnType<typeof followupPassages>,
+  ) {
+    if (turn.followupsRequested) return;
+    turn.followupsRequested = true;
+    if (!passages.length) return;
+    try {
+      turn.next = decodeFollowups(
+        await this.io.post(
+          '/api/followups',
+          { question: q, answer: data.answer, passages },
+          new AbortController().signal,
+        ),
+      );
+      const store = this.io.read();
+      if (!store.chats.some((c) => c.id === id)) return;
+      await this.io.save({
+        ...store,
+        chats: store.chats.map((c) =>
+          c.id === id ? { ...c, thread: thread.slice() } : c,
+        ),
+      });
+    } catch {
+      /* The saved conversation keeps its answer without Ask next. */
     }
   }
   private async followups(
