@@ -91,6 +91,63 @@ describe('cleanEvent', () => {
       });
   });
 
+  test('first run: the step, how it ended and which control chose, as fixed words only', () => {
+    expect(
+      cleanEvent('opax_first_run', {
+        step: 'seat',
+        outcome: 'chosen',
+        method: 'location',
+      }),
+    ).toEqual({ step: 'seat', outcome: 'chosen', method: 'location' });
+    expect(
+      cleanEvent('opax_first_run', { step: 'state', outcome: 'skipped' }),
+    ).toEqual({ step: 'state', outcome: 'skipped' });
+    // A seat, a state, a postcode, a position or typed text is never kept,
+    // whether as an extra property or in place of a listed one.
+    expect(
+      cleanEvent('opax_first_run', {
+        step: 'welcome',
+        outcome: 'skipped',
+        seat: 'Example Seat',
+        state: 'nsw',
+        postcode: '2042',
+        query: '2042',
+        latitude: -33.9,
+        longitude: 151.1,
+      }),
+    ).toEqual({ step: 'welcome', outcome: 'skipped' });
+    for (const value of ['Example Seat', 'nsw', '2042', '-33.9,151.1', 2042])
+      expect(
+        cleanEvent('opax_first_run', {
+          step: value,
+          outcome: value,
+          method: value,
+        }),
+      ).toEqual({});
+    const scrubbed = scrubEvent(
+      {
+        event: 'opax_first_run',
+        properties: {
+          step: 'seat',
+          outcome: 'chosen',
+          method: 'search',
+          seat: 'Example Seat',
+          postcode: '2042',
+          $screen_name: '/welcome/seat',
+        },
+      },
+      context,
+    );
+    expect(scrubbed?.properties).toMatchObject({
+      step: 'seat',
+      outcome: 'chosen',
+      method: 'search',
+      $screen_name: '/welcome/seat',
+    });
+    expect(JSON.stringify(scrubbed)).not.toContain('Example Seat');
+    expect(JSON.stringify(scrubbed)).not.toContain('2042');
+  });
+
   test('every rule rejects free text', () => {
     for (const [event, rules] of Object.entries(eventFields)) {
       const properties = Object.fromEntries(

@@ -172,6 +172,13 @@ export const eventFields = {
     action: oneOf('open'),
     account: oneOf('signed_in', 'signed_out'),
   },
+  // The welcome's electorate step: which screen, how it ended and which
+  // control chose. Never a seat, a state, typed text or a position.
+  opax_first_run: {
+    step: oneOf('welcome', 'seat', 'state'),
+    outcome: oneOf('chosen', 'skipped'),
+    method: oneOf('search', 'location', 'browse'),
+  },
 } as const satisfies Record<string, Record<string, Rule>>;
 export type AnalyticsEvent = keyof typeof eventFields;
 export type EventProperties<E extends AnalyticsEvent> = {
