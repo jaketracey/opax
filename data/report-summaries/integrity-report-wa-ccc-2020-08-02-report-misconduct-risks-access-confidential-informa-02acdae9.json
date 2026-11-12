@@ -1,0 +1,116 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2020-08-02-report-misconduct-risks-access-confidential-informa-02acdae9",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report into misconduct risks with access to confidential information in the Office of the Auditor General v2",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20with%20access%20to%20confidential%20information%20in%20the%20Office%20of%20the%20Auditor%20General%20v2.pdf",
+  "document": "Report into misconduct risks with access to confidential information in the Office of the Auditor General v2",
+  "sha256": "932beaa01396ce69fa1613a66318d801dbc08c3f00c7fed761f200bddfdf358f",
+  "pages": 29,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 4,
+  "last_page": 7,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20with%20access%20to%20confidential%20information%20in%20the%20Office%20of%20the%20Auditor%20General%20v2.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated risks involving confidential information at the Office of the Auditor General.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20with%20access%20to%20confidential%20information%20in%20the%20Office%20of%20the%20Auditor%20General%20v2.pdf",
+      "document": "Report into misconduct risks with access to confidential information in the Office of the Auditor General v2",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The Commission found that inadequate access controls allowed two auditors to obtain private information about colleagues.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20with%20access%20to%20confidential%20information%20in%20the%20Office%20of%20the%20Auditor%20General%20v2.pdf",
+      "document": "Report into misconduct risks with access to confidential information in the Office of the Auditor General v2",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20with%20access%20to%20confidential%20information%20in%20the%20Office%20of%20the%20Auditor%20General%20v2.pdf",
+      "document": "Report into misconduct risks with access to confidential information in the Office of the Auditor General v2",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The Commission identified a risk from police names and addresses retained on a laptop after an audit, while finding no evidence that the information was shared.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20with%20access%20to%20confidential%20information%20in%20the%20Office%20of%20the%20Auditor%20General%20v2.pdf",
+      "document": "Report into misconduct risks with access to confidential information in the Office of the Auditor General v2",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The Commission formed an opinion of serious misconduct concerning an auditor's deliberate destruction of an encrypted storage device and its data.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20with%20access%20to%20confidential%20information%20in%20the%20Office%20of%20the%20Auditor%20General%20v2.pdf",
+      "document": "Report into misconduct risks with access to confidential information in the Office of the Auditor General v2",
+      "page": 26
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20with%20access%20to%20confidential%20information%20in%20the%20Office%20of%20the%20Auditor%20General%20v2.pdf",
+      "document": "Report into misconduct risks with access to confidential information in the Office of the Auditor General v2",
+      "page": 27
+     }
+    ]
+   },
+   {
+    "text": "The Commission stressed that its misconduct opinion did not establish guilt of a criminal or disciplinary offence.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20with%20access%20to%20confidential%20information%20in%20the%20Office%20of%20the%20Auditor%20General%20v2.pdf",
+      "document": "Report into misconduct risks with access to confidential information in the Office of the Auditor General v2",
+      "page": 27
+     }
+    ]
+   },
+   {
+    "text": "The Commission made five recommendations covering access restrictions, secure retention of audit data, internal checks and staff education.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20with%20access%20to%20confidential%20information%20in%20the%20Office%20of%20the%20Auditor%20General%20v2.pdf",
+      "document": "Report into misconduct risks with access to confidential information in the Office of the Auditor General v2",
+      "page": 28
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20with%20access%20to%20confidential%20information%20in%20the%20Office%20of%20the%20Auditor%20General%20v2.pdf",
+      "document": "Report into misconduct risks with access to confidential information in the Office of the Auditor General v2",
+      "page": 29
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

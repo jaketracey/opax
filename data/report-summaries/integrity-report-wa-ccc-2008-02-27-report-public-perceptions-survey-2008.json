@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2008-02-27-report-public-perceptions-survey-2008",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on the Public Perceptions Survey 2008",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Public%20Perceptions%20Survey%202008.pdf",
+  "document": "Report on the Public Perceptions Survey 2008.pdf",
+  "sha256": "e54986f7112ca0d953347ea5333bca8b92eb92ef78ade830415c36d09aef42c3",
+  "pages": 78,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Public%20Perceptions%20Survey%202008.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission commissioned an independent survey of 380 WA adults about the Commission and the public sector.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Public%20Perceptions%20Survey%202008.pdf",
+      "document": "Report on the Public Perceptions Survey 2008.pdf",
+      "page": 5
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission reported high public awareness and confidence in its complaint investigations, alongside broad support for its independence.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Public%20Perceptions%20Survey%202008.pdf",
+      "document": "Report on the Public Perceptions Survey 2008.pdf",
+      "page": 5
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It also reported public concern about the detection of misconduct and possible consequences for people who complain.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Public%20Perceptions%20Survey%202008.pdf",
+      "document": "Report on the Public Perceptions Survey 2008.pdf",
+      "page": 5
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission cautioned that the results indicated possible issues and did not provide definitive answers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Public%20Perceptions%20Survey%202008.pdf",
+      "document": "Report on the Public Perceptions Survey 2008.pdf",
+      "page": 8
+     }
+    ],
+    "section": "Interpretation of survey results"
+   },
+   {
+    "text": "It identified understanding of its role, confidence in complaints processes and expectations about preventing misconduct as areas to address.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Public%20Perceptions%20Survey%202008.pdf",
+      "document": "Report on the Public Perceptions Survey 2008.pdf",
+      "page": 10
+     }
+    ],
+    "section": "Conclusions"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Overall, the survey indicates a generally high level of recognition of and support for the Corruption and Crime Commission by the Western Australian community.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Public%20Perceptions%20Survey%202008.pdf",
+     "document": "Report on the Public Perceptions Survey 2008.pdf",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

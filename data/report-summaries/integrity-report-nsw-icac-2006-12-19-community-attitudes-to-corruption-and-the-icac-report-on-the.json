@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2006-12-19-community-attitudes-to-corruption-and-the-icac-report-on-the",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Community attitudes to corruption and the ICAC Report on the 2006 survey",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC,%20Report%20on%20the%202006%20survey.pdf.aspx",
+  "document": "Community attitudes to corruption and the ICAC Report on the 2006 survey",
+  "sha256": "06310e879bdb8f95ce1a203376b899646277ee114a0bed943714104ac00501ca",
+  "pages": 35,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 5,
+  "last_page": 7,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC,%20Report%20on%20the%202006%20survey.pdf.aspx#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Commission Against Corruption surveyed 502 NSW residents in May and June 2006 to inform and monitor its prevention and education work.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC,%20Report%20on%20the%202006%20survey.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC Report on the 2006 survey",
+      "page": 5
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The survey examined perceptions of corruption, attitudes to reporting it and knowledge of ICAC.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC,%20Report%20on%20the%202006%20survey.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC Report on the 2006 survey",
+      "page": 7
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "ICAC reported that 92% supported reporting corruption, but 68% expected people who reported it to suffer and only about a third knew where to report.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC,%20Report%20on%20the%202006%20survey.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC Report on the 2006 survey",
+      "page": 6
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "ICAC concluded that attitudes had largely remained stable since 2003 and cautioned that the survey could not establish actual corruption levels or how people would act.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC,%20Report%20on%20the%202006%20survey.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC Report on the 2006 survey",
+      "page": 34
+     }
+    ],
+    "section": "Discussion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In conclusion, the present survey indicated that community attitudes towards corruption and the ICAC have remained relatively stable in most respects since 2003.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC,%20Report%20on%20the%202006%20survey.pdf.aspx",
+     "document": "Community attitudes to corruption and the ICAC Report on the 2006 survey",
+     "page": 34
+    }
+   },
+   {
+    "quote": "Only one-third of the sample believed they knew where to report corruption.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC,%20Report%20on%20the%202006%20survey.pdf.aspx",
+     "document": "Community attitudes to corruption and the ICAC Report on the 2006 survey",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

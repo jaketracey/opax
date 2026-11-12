@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2019-09-12-local-government-integrity-insights-a-third-report-from-the",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Local Government Integrity Insights: A Third Report from the ICAC Public Integrity Survey 2018",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/387806/Local-Government-Integrity-Insights.pdf",
+  "document": "Local Government Integrity Insights: A Third Report from the Public Integrity Survey 2018",
+  "sha256": "3ca09621724b41f7eff92dd2de4bc9d26d4ab783d99d0828bf080ab1b2f8b6cd",
+  "pages": 38,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/387806/Local-Government-Integrity-Insights.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commissioner Against Corruption analysed local government responses to the Public Integrity Survey 2018.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/387806/Local-Government-Integrity-Insights.pdf",
+      "document": "Local Government Integrity Insights: A Third Report from the Public Integrity Survey 2018",
+      "page": 4
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The survey examined perceptions of corruption risks, workplace conduct and reporting, without establishing findings about individual councils.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/387806/Local-Government-Integrity-Insights.pdf",
+      "document": "Local Government Integrity Insights: A Third Report from the Public Integrity Survey 2018",
+      "page": 4
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/387806/Local-Government-Integrity-Insights.pdf",
+      "document": "Local Government Integrity Insights: A Third Report from the Public Integrity Survey 2018",
+      "page": 5
+     }
+    ],
+    "section": "ICAC Public Integrity Survey 2018"
+   },
+   {
+    "text": "The Commissioner reported that council respondents were often more positive than the wider sample but raised concerns about reporting protections and reprisals.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/387806/Local-Government-Integrity-Insights.pdf",
+      "document": "Local Government Integrity Insights: A Third Report from the Public Integrity Survey 2018",
+      "page": 4
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The Commissioner encouraged councils to improve reporting training, review information access and conflict controls, and check recruitment qualifications.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/387806/Local-Government-Integrity-Insights.pdf",
+      "document": "Local Government Integrity Insights: A Third Report from the Public Integrity Survey 2018",
+      "page": 30
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "While awareness of ICAC / OPI was high there remains a need for ongoing training.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/387806/Local-Government-Integrity-Insights.pdf",
+     "document": "Local Government Integrity Insights: A Third Report from the Public Integrity Survey 2018",
+     "page": 30
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

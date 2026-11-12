@@ -1,0 +1,145 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2023-04-19-tp7323-special-report-on-operation-daintree",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Special report on Operation Daintree",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a24ac/globalassets/tabled-paper-documents/tabled-paper-7323/special_report_-_operation_daintree_-_april_2023_60msbhkw.pdf",
+  "document": "Special_report_-_Operation_Daintree_-_April_2023_60msbHkw",
+  "sha256": "0bf14f1fe422f9c30096096f9a8f40c382bb47e967e54f0320bc52c9c8d5e4a5",
+  "pages": 132,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of the investigation and outcomes",
+  "first_page": 6,
+  "last_page": 15,
+  "link": "https://www.parliament.vic.gov.au/4a24ac/globalassets/tabled-paper-documents/tabled-paper-7323/special_report_-_operation_daintree_-_april_2023_60msbhkw.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC’s Operation Daintree examined the award and management of a health worker training contract after a referral from the Victorian Ombudsman.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a24ac/globalassets/tabled-paper-documents/tabled-paper-7323/special_report_-_operation_daintree_-_april_2023_60msbhkw.pdf",
+      "document": "Special_report_-_Operation_Daintree_-_April_2023_60msbHkw",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a24ac/globalassets/tabled-paper-documents/tabled-paper-7323/special_report_-_operation_daintree_-_april_2023_60msbhkw.pdf",
+      "document": "Special_report_-_Operation_Daintree_-_April_2023_60msbHkw",
+      "page": 7
+     }
+    ],
+    "section": "Summary of the investigation and outcomes"
+   },
+   {
+    "text": "It considered a $1.2 million contract with the Health Education Federation and a related election promise for further training.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a24ac/globalassets/tabled-paper-documents/tabled-paper-7323/special_report_-_operation_daintree_-_april_2023_60msbhkw.pdf",
+      "document": "Special_report_-_Operation_Daintree_-_April_2023_60msbHkw",
+      "page": 6
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "IBAC found that ministerial advisers improperly influenced procurement and contract management, while senior departmental officers allowed perceived government preferences to affect their work.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a24ac/globalassets/tabled-paper-documents/tabled-paper-7323/special_report_-_operation_daintree_-_april_2023_60msbhkw.pdf",
+      "document": "Special_report_-_Operation_Daintree_-_April_2023_60msbHkw",
+      "page": 8
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a24ac/globalassets/tabled-paper-documents/tabled-paper-7323/special_report_-_operation_daintree_-_april_2023_60msbhkw.pdf",
+      "document": "Special_report_-_Operation_Daintree_-_April_2023_60msbHkw",
+      "page": 31
+     }
+    ],
+    "section": "What IBAC’s investigation found"
+   },
+   {
+    "text": "It did not find sufficient evidence to establish corrupt conduct under the IBAC Act.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a24ac/globalassets/tabled-paper-documents/tabled-paper-7323/special_report_-_operation_daintree_-_april_2023_60msbhkw.pdf",
+      "document": "Special_report_-_Operation_Daintree_-_April_2023_60msbHkw",
+      "page": 82
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "IBAC made 17 recommendations on lobbying, ministerial and adviser accountability, complaints protections, training and procurement controls.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a24ac/globalassets/tabled-paper-documents/tabled-paper-7323/special_report_-_operation_daintree_-_april_2023_60msbhkw.pdf",
+      "document": "Special_report_-_Operation_Daintree_-_April_2023_60msbHkw",
+      "page": 11
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a24ac/globalassets/tabled-paper-documents/tabled-paper-7323/special_report_-_operation_daintree_-_april_2023_60msbhkw.pdf",
+      "document": "Special_report_-_Operation_Daintree_-_April_2023_60msbHkw",
+      "page": 12
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a24ac/globalassets/tabled-paper-documents/tabled-paper-7323/special_report_-_operation_daintree_-_april_2023_60msbhkw.pdf",
+      "document": "Special_report_-_Operation_Daintree_-_April_2023_60msbHkw",
+      "page": 13
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a24ac/globalassets/tabled-paper-documents/tabled-paper-7323/special_report_-_operation_daintree_-_april_2023_60msbhkw.pdf",
+      "document": "Special_report_-_Operation_Daintree_-_April_2023_60msbHkw",
+      "page": 14
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a24ac/globalassets/tabled-paper-documents/tabled-paper-7323/special_report_-_operation_daintree_-_april_2023_60msbhkw.pdf",
+      "document": "Special_report_-_Operation_Daintree_-_April_2023_60msbHkw",
+      "page": 15
+     }
+    ],
+    "section": "Section 159 recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The investigation found that a senior advisor to the Health Minister improperly intruded into the process of DHHS awarding the contract to the HEF.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a24ac/globalassets/tabled-paper-documents/tabled-paper-7323/special_report_-_operation_daintree_-_april_2023_60msbhkw.pdf",
+     "document": "Special_report_-_Operation_Daintree_-_April_2023_60msbHkw",
+     "page": 8
+    }
+   },
+   {
+    "quote": "Operation Daintree did not find sufficient evidence to establish that any person had committed corrupt conduct within the meaning of the IBAC Act - noting that this would include a requirement to be satisfied that a relevant offence had been committed.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a24ac/globalassets/tabled-paper-documents/tabled-paper-7323/special_report_-_operation_daintree_-_april_2023_60msbhkw.pdf",
+     "document": "Special_report_-_Operation_Daintree_-_April_2023_60msbHkw",
+     "page": 82
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

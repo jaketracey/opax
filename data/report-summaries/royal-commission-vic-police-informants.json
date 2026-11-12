@@ -1,0 +1,145 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-vic-police-informants",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "Royal Commission into the Management of Police Informants",
+ "body": "Royal Commission into the Management of Police Informants",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a27cc/globalassets/tabled-paper-documents/tabled-paper-5102/0214_rc_final_report_01_summary_z8yqydk7.pdf",
+  "document": "Royal Commission into the Management of Police Informants",
+  "sha256": "f46b3d61fd0c2435462fe538f7804369f21d0332002aa28c500212f707d1552b",
+  "pages": 65,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Final Report Summary",
+  "first_page": 6,
+  "last_page": 37,
+  "link": "https://www.parliament.vic.gov.au/4a27cc/globalassets/tabled-paper-documents/tabled-paper-5102/0214_rc_final_report_01_summary_z8yqydk7.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Victoria’s Royal Commission into the Management of Police Informants examined police use of a defence barrister as an informant and how criminal cases might have been affected.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27cc/globalassets/tabled-paper-documents/tabled-paper-5102/0214_rc_final_report_01_summary_z8yqydk7.pdf",
+      "document": "Royal Commission into the Management of Police Informants",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27cc/globalassets/tabled-paper-documents/tabled-paper-5102/0214_rc_final_report_01_summary_z8yqydk7.pdf",
+      "document": "Royal Commission into the Management of Police Informants",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27cc/globalassets/tabled-paper-documents/tabled-paper-5102/0214_rc_final_report_01_summary_z8yqydk7.pdf",
+      "document": "Royal Commission into the Management of Police Informants",
+      "page": 8
+     }
+    ],
+    "section": "The Commission’s task"
+   },
+   {
+    "text": "It also examined safeguards for informants with confidentiality obligations, disclosure to prosecutors and courts, and reforms to prevent similar conduct.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27cc/globalassets/tabled-paper-documents/tabled-paper-5102/0214_rc_final_report_01_summary_z8yqydk7.pdf",
+      "document": "Royal Commission into the Management of Police Informants",
+      "page": 8
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27cc/globalassets/tabled-paper-documents/tabled-paper-5102/0214_rc_final_report_01_summary_z8yqydk7.pdf",
+      "document": "Royal Commission into the Management of Police Informants",
+      "page": 33
+     }
+    ],
+    "section": "The Commission’s task"
+   },
+   {
+    "text": "The Commission concluded that convictions or findings of guilt involving 1,011 people may have been affected by police use of the barrister.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27cc/globalassets/tabled-paper-documents/tabled-paper-5102/0214_rc_final_report_01_summary_z8yqydk7.pdf",
+      "document": "Royal Commission into the Management of Police Informants",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27cc/globalassets/tabled-paper-documents/tabled-paper-5102/0214_rc_final_report_01_summary_z8yqydk7.pdf",
+      "document": "Royal Commission into the Management of Police Informants",
+      "page": 17
+     }
+    ],
+    "section": "Final Report Summary"
+   },
+   {
+    "text": "It identified failures in leadership, governance, supervision, training and risk management that allowed the conduct to continue.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27cc/globalassets/tabled-paper-documents/tabled-paper-5102/0214_rc_final_report_01_summary_z8yqydk7.pdf",
+      "document": "Royal Commission into the Management of Police Informants",
+      "page": 23
+     }
+    ],
+    "section": "Victoria Police’s conduct: systemic issues and causal factors"
+   },
+   {
+    "text": "Its 111 recommendations cover further investigation, disclosure to affected people, informant management, independent oversight and implementation monitoring.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27cc/globalassets/tabled-paper-documents/tabled-paper-5102/0214_rc_final_report_01_summary_z8yqydk7.pdf",
+      "document": "Royal Commission into the Management of Police Informants",
+      "page": 36
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27cc/globalassets/tabled-paper-documents/tabled-paper-5102/0214_rc_final_report_01_summary_z8yqydk7.pdf",
+      "document": "Royal Commission into the Management of Police Informants",
+      "page": 37
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27cc/globalassets/tabled-paper-documents/tabled-paper-5102/0214_rc_final_report_01_summary_z8yqydk7.pdf",
+      "document": "Royal Commission into the Management of Police Informants",
+      "page": 38
+     }
+    ],
+    "section": "Work beyond the Commission; Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "After a rigorous analysis of the evidence, including all relevant submissions, the Commission has concluded that the convictions or findings of guilt of 1,011 people may have been affected by Victoria Police’s use of Ms Gobbo as a human source.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a27cc/globalassets/tabled-paper-documents/tabled-paper-5102/0214_rc_final_report_01_summary_z8yqydk7.pdf",
+     "document": "Royal Commission into the Management of Police Informants",
+     "page": 17
+    }
+   },
+   {
+    "quote": "The conduct of some officers fell well short of an acceptable standard.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a27cc/globalassets/tabled-paper-documents/tabled-paper-5102/0214_rc_final_report_01_summary_z8yqydk7.pdf",
+     "document": "Royal Commission into the Management of Police Informants",
+     "page": 23
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:21+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,119 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2016-10-20-tp2847-special-report-on-operation-exmouth",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Special report on Operation Exmouth",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a25a3/globalassets/tabled-paper-documents/tabled-paper-2847/ibac_-_operation_exmouth_special_report_-_web_version_b70cbvlp.pdf",
+  "document": "IBAC_-_Operation_Exmouth_Special_Report_-_web_version_b70CBVLP",
+  "sha256": "e612ed504a14d69a64f2722b5bbf848d7547df77e94497c78b0f3aff69dc0084",
+  "pages": 29,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4a25a3/globalassets/tabled-paper-documents/tabled-paper-2847/ibac_-_operation_exmouth_special_report_-_web_version_b70cbvlp.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC’s Operation Exmouth investigated allegations that a senior Places Victoria manager improperly awarded work to related businesses under its Fibre to the Home project.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25a3/globalassets/tabled-paper-documents/tabled-paper-2847/ibac_-_operation_exmouth_special_report_-_web_version_b70cbvlp.pdf",
+      "document": "IBAC_-_Operation_Exmouth_Special_Report_-_web_version_b70CBVLP",
+      "page": 6
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "IBAC found that the manager helped a related family secure a financial advantage while disregarding procurement and conflict of interest rules.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25a3/globalassets/tabled-paper-documents/tabled-paper-2847/ibac_-_operation_exmouth_special_report_-_web_version_b70cbvlp.pdf",
+      "document": "IBAC_-_Operation_Exmouth_Special_Report_-_web_version_b70CBVLP",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25a3/globalassets/tabled-paper-documents/tabled-paper-2847/ibac_-_operation_exmouth_special_report_-_web_version_b70cbvlp.pdf",
+      "document": "IBAC_-_Operation_Exmouth_Special_Report_-_web_version_b70CBVLP",
+      "page": 20
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "It also found inadequate guidance and missed opportunities to detect the conduct, but considered the evidence insufficient to substantiate allegations of criminal behaviour.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25a3/globalassets/tabled-paper-documents/tabled-paper-2847/ibac_-_operation_exmouth_special_report_-_web_version_b70cbvlp.pdf",
+      "document": "IBAC_-_Operation_Exmouth_Special_Report_-_web_version_b70CBVLP",
+      "page": 20
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "IBAC made three recommendations on controls and reporting at Places Victoria, and contractors’ understanding of public sector integrity obligations.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25a3/globalassets/tabled-paper-documents/tabled-paper-2847/ibac_-_operation_exmouth_special_report_-_web_version_b70cbvlp.pdf",
+      "document": "IBAC_-_Operation_Exmouth_Special_Report_-_web_version_b70CBVLP",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25a3/globalassets/tabled-paper-documents/tabled-paper-2847/ibac_-_operation_exmouth_special_report_-_web_version_b70cbvlp.pdf",
+      "document": "IBAC_-_Operation_Exmouth_Special_Report_-_web_version_b70CBVLP",
+      "page": 20
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25a3/globalassets/tabled-paper-documents/tabled-paper-2847/ibac_-_operation_exmouth_special_report_-_web_version_b70cbvlp.pdf",
+      "document": "IBAC_-_Operation_Exmouth_Special_Report_-_web_version_b70CBVLP",
+      "page": 21
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "IBAC’s investigation found that Mr Petrone played a critical role in one family (with whom he has a familial relationship) obtaining a large financial advantage through their subcontracting businesses.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a25a3/globalassets/tabled-paper-documents/tabled-paper-2847/ibac_-_operation_exmouth_special_report_-_web_version_b70cbvlp.pdf",
+     "document": "IBAC_-_Operation_Exmouth_Special_Report_-_web_version_b70CBVLP",
+     "page": 6
+    }
+   },
+   {
+    "quote": "After due consideration of the available evidence, IBAC considered it was insufficient to substantiate allegations which might amount to criminal behaviour on the part of Mr Petrone.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a25a3/globalassets/tabled-paper-documents/tabled-paper-2847/ibac_-_operation_exmouth_special_report_-_web_version_b70cbvlp.pdf",
+     "document": "IBAC_-_Operation_Exmouth_Special_Report_-_web_version_b70CBVLP",
+     "page": 20
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,139 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2019-05-09-corruption-audits-2019-2021",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Corruption Audits 2019—2021",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-audit-report-Reducing-the-risk-of-research-fraud-2020.pdf",
+  "document": "Summary Audit Report - Reducing the risk of research fraud – July 2020",
+  "sha256": "94bc648d72ed7748d879c482507c6e28fee1aecc45dd800e51cdaeffc6036caf",
+  "pages": 26,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of audit",
+  "first_page": 10,
+  "last_page": 10,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-audit-report-Reducing-the-risk-of-research-fraud-2020.pdf#page=10"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission audited three Queensland universities to assess how effectively they prevented and dealt with research fraud.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-audit-report-Reducing-the-risk-of-research-fraud-2020.pdf",
+      "document": "Summary Audit Report - Reducing the risk of research fraud – July 2020",
+      "page": 8
+     }
+    ],
+    "section": "Scope and objective"
+   },
+   {
+    "text": "It reviewed research governance, sampled funded projects and examined corruption complaints and serious research-misconduct allegations, excluding technical reviews of research data and teaching-related academic integrity.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-audit-report-Reducing-the-risk-of-research-fraud-2020.pdf",
+      "document": "Summary Audit Report - Reducing the risk of research fraud – July 2020",
+      "page": 8
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-audit-report-Reducing-the-risk-of-research-fraud-2020.pdf",
+      "document": "Summary Audit Report - Reducing the risk of research fraud – July 2020",
+      "page": 9
+     }
+    ],
+    "section": "Scope and objective"
+   },
+   {
+    "text": "The CCC found satisfactory prevention and complaints systems overall, while identifying improvements needed in governance, conflicts of interest, peer review, investigations and disciplinary responses.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-audit-report-Reducing-the-risk-of-research-fraud-2020.pdf",
+      "document": "Summary Audit Report - Reducing the risk of research fraud – July 2020",
+      "page": 10
+     }
+    ],
+    "section": "Summary of audit"
+   },
+   {
+    "text": "The CCC made twenty numbered recommendations across separate lists, addressing governance, training, compliance reporting, conflicts, peer review, investigation practices and university assets.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-audit-report-Reducing-the-risk-of-research-fraud-2020.pdf",
+      "document": "Summary Audit Report - Reducing the risk of research fraud – July 2020",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-audit-report-Reducing-the-risk-of-research-fraud-2020.pdf",
+      "document": "Summary Audit Report - Reducing the risk of research fraud – July 2020",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-audit-report-Reducing-the-risk-of-research-fraud-2020.pdf",
+      "document": "Summary Audit Report - Reducing the risk of research fraud – July 2020",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-audit-report-Reducing-the-risk-of-research-fraud-2020.pdf",
+      "document": "Summary Audit Report - Reducing the risk of research fraud – July 2020",
+      "page": 17
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-audit-report-Reducing-the-risk-of-research-fraud-2020.pdf",
+      "document": "Summary Audit Report - Reducing the risk of research fraud – July 2020",
+      "page": 18
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-audit-report-Reducing-the-risk-of-research-fraud-2020.pdf",
+      "document": "Summary Audit Report - Reducing the risk of research fraud – July 2020",
+      "page": 20
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-audit-report-Reducing-the-risk-of-research-fraud-2020.pdf",
+      "document": "Summary Audit Report - Reducing the risk of research fraud – July 2020",
+      "page": 22
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The CCC’s audit found that one university’s investigation into research fraud did not adequately deal with one of the most serious allegations of corrupt conduct made as a public interest disclosure (the complaint).",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-audit-report-Reducing-the-risk-of-research-fraud-2020.pdf",
+     "document": "Summary Audit Report - Reducing the risk of research fraud – July 2020",
+     "page": 18
+    }
+   },
+   {
+    "quote": "The CCC is of the view that in this matter consideration of further disciplinary action would have been appropriate to promote public confidence in the integrity of the university.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-audit-report-Reducing-the-risk-of-research-fraud-2020.pdf",
+     "document": "Summary Audit Report - Reducing the risk of research fraud – July 2020",
+     "page": 22
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

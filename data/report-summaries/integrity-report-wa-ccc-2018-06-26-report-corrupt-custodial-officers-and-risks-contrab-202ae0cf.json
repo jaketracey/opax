@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2018-06-26-report-corrupt-custodial-officers-and-risks-contrab-202ae0cf",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on corrupt custodial officers and the risks of contraband entering prisons",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corrupt%20custodial%20officers%20and%20the%20risks%20of%20contraband%20entering%20prisons.pdf",
+  "document": "Report on corrupt custodial officers and the risks of contraband entering prisons",
+  "sha256": "cfe9b053c0009cb05cbeb550f096d051380bc05c176e7b08a9e852b9ec3d4778",
+  "pages": 32,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated conduct by former Acacia prison custodial officers as part of a joint investigation with the Department of Justice.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corrupt%20custodial%20officers%20and%20the%20risks%20of%20contraband%20entering%20prisons.pdf",
+      "document": "Report on corrupt custodial officers and the risks of contraband entering prisons",
+      "page": 4
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The investigation examined drug supply, bribery and the risks of prisoners and organised crime groups corrupting staff.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corrupt%20custodial%20officers%20and%20the%20risks%20of%20contraband%20entering%20prisons.pdf",
+      "document": "Report on corrupt custodial officers and the risks of contraband entering prisons",
+      "page": 4
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission formed serious misconduct opinions against two former custodial officers over drug activities and corruption.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corrupt%20custodial%20officers%20and%20the%20risks%20of%20contraband%20entering%20prisons.pdf",
+      "document": "Report on corrupt custodial officers and the risks of contraband entering prisons",
+      "page": 29
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corrupt%20custodial%20officers%20and%20the%20risks%20of%20contraband%20entering%20prisons.pdf",
+      "document": "Report on corrupt custodial officers and the risks of contraband entering prisons",
+      "page": 30
+     }
+    ],
+    "section": "Conclusions and opinions of serious misconduct"
+   },
+   {
+    "text": "Its five recommendations addressed prison entry screening, steroid education, drug testing, staff vulnerabilities and the analysis of security reports.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corrupt%20custodial%20officers%20and%20the%20risks%20of%20contraband%20entering%20prisons.pdf",
+      "document": "Report on corrupt custodial officers and the risks of contraband entering prisons",
+      "page": 31
+     }
+    ],
+    "section": "Recommendations"
+   },
+   {
+    "text": "The Commission planned to report on implementation after a year.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corrupt%20custodial%20officers%20and%20the%20risks%20of%20contraband%20entering%20prisons.pdf",
+      "document": "Report on corrupt custodial officers and the risks of contraband entering prisons",
+      "page": 31
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

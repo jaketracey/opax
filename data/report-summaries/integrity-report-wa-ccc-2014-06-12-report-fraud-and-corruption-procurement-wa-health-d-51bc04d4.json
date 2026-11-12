@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2014-06-12-report-fraud-and-corruption-procurement-wa-health-d-51bc04d4",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on Fraud and Corruption in Procurement in WA Health - Dealing with the Risks",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Fraud%20and%20Corruption%20in%20Procurement%20in%20WA%20Health%20-%20Dealing%20with%20the%20Risks.pdf",
+  "document": "Report on Fraud and Corruption in Procurement in WA Health - Dealing with the Risks",
+  "sha256": "93efd3e5d9069445a087cab3e4490936c8a5b26ef65734c8c3a3c0c862b2a133",
+  "pages": 35,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 11,
+  "last_page": 11,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Fraud%20and%20Corruption%20in%20Procurement%20in%20WA%20Health%20-%20Dealing%20with%20the%20Risks.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission examined WA Health's ability to manage procurement fraud and corruption risks following an investigation of a hospital facilities manager.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Fraud%20and%20Corruption%20in%20Procurement%20in%20WA%20Health%20-%20Dealing%20with%20the%20Risks.pdf",
+      "document": "Report on Fraud and Corruption in Procurement in WA Health - Dealing with the Risks",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Fraud%20and%20Corruption%20in%20Procurement%20in%20WA%20Health%20-%20Dealing%20with%20the%20Risks.pdf",
+      "document": "Report on Fraud and Corruption in Procurement in WA Health - Dealing with the Risks",
+      "page": 13
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission found that weak financial controls and supervision had enabled corrupt conduct to remain undetected for six years.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Fraud%20and%20Corruption%20in%20Procurement%20in%20WA%20Health%20-%20Dealing%20with%20the%20Risks.pdf",
+      "document": "Report on Fraud and Corruption in Procurement in WA Health - Dealing with the Risks",
+      "page": 33
+     }
+    ],
+    "section": "Conclusions"
+   },
+   {
+    "text": "It concluded that these weaknesses reflected a systemic failure across WA Health to manage procurement fraud and corruption risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Fraud%20and%20Corruption%20in%20Procurement%20in%20WA%20Health%20-%20Dealing%20with%20the%20Risks.pdf",
+      "document": "Report on Fraud and Corruption in Procurement in WA Health - Dealing with the Risks",
+      "page": 34
+     }
+    ],
+    "section": "Conclusions"
+   },
+   {
+    "text": "Its five recommendations covered risk assessment, compliance and transparency, internal audit, staff training, conflicts of interest, gifts and outside employment.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Fraud%20and%20Corruption%20in%20Procurement%20in%20WA%20Health%20-%20Dealing%20with%20the%20Risks.pdf",
+      "document": "Report on Fraud and Corruption in Procurement in WA Health - Dealing with the Risks",
+      "page": 35
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "WA Health has limited capacity to effectively manage conflicts of interest, gifts and benefits and outside employment.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Fraud%20and%20Corruption%20in%20Procurement%20in%20WA%20Health%20-%20Dealing%20with%20the%20Risks.pdf",
+     "document": "Report on Fraud and Corruption in Procurement in WA Health - Dealing with the Risks",
+     "page": 33
+    }
+   },
+   {
+    "quote": "There is no systematic training in recognising and reporting fraud and corruption for WA Health staff engaged in procurement.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Fraud%20and%20Corruption%20in%20Procurement%20in%20WA%20Health%20-%20Dealing%20with%20the%20Risks.pdf",
+     "document": "Report on Fraud and Corruption in Procurement in WA Health - Dealing with the Risks",
+     "page": 34
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

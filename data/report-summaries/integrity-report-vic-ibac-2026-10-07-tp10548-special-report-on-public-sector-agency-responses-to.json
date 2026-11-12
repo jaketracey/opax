@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2026-10-07-tp10548-special-report-on-public-sector-agency-responses-to",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Special report on public sector agency responses to IBAC’s recommendations",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a8175/globalassets/tabled-paper-documents/tabled-paper-10548/ibac-special-report_public-sector-agency-responses-to-ibac-s-recommendations.pdf",
+  "document": "IBAC special report_Public sector agency responses to IBAC s recommendations",
+  "sha256": "5212fadc095b26282df84e4bcafcb4c15fe10c02c5b5e5c68fa6640321b72e8a",
+  "pages": 24,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.parliament.vic.gov.au/4a8175/globalassets/tabled-paper-documents/tabled-paper-10548/ibac-special-report_public-sector-agency-responses-to-ibac-s-recommendations.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC reviewed its recommendations to Victorian public sector agencies to explain their scope and how agencies responded.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a8175/globalassets/tabled-paper-documents/tabled-paper-10548/ibac-special-report_public-sector-agency-responses-to-ibac-s-recommendations.pdf",
+      "document": "IBAC special report_Public sector agency responses to IBAC s recommendations",
+      "page": 5
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "It analysed 260 recommendations issued between 2014 and 2025, excluding recommendations to Victoria Police.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a8175/globalassets/tabled-paper-documents/tabled-paper-10548/ibac-special-report_public-sector-agency-responses-to-ibac-s-recommendations.pdf",
+      "document": "IBAC special report_Public sector agency responses to IBAC s recommendations",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a8175/globalassets/tabled-paper-documents/tabled-paper-10548/ibac-special-report_public-sector-agency-responses-to-ibac-s-recommendations.pdf",
+      "document": "IBAC special report_Public sector agency responses to IBAC s recommendations",
+      "page": 6
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "IBAC reported that agencies had fully implemented 84 per cent of recommendations after excluding those still in progress or not yet started.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a8175/globalassets/tabled-paper-documents/tabled-paper-10548/ibac-special-report_public-sector-agency-responses-to-ibac-s-recommendations.pdf",
+      "document": "IBAC special report_Public sector agency responses to IBAC s recommendations",
+      "page": 5
+     }
+    ],
+    "section": "Key findings about IBAC’s recommendations to the public sector"
+   },
+   {
+    "text": "It found that conflicts of interest, complaint handling, corruption reporting and procurement were the risks most commonly addressed.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a8175/globalassets/tabled-paper-documents/tabled-paper-10548/ibac-special-report_public-sector-agency-responses-to-ibac-s-recommendations.pdf",
+      "document": "IBAC special report_Public sector agency responses to IBAC s recommendations",
+      "page": 5
+     }
+    ],
+    "section": "Key findings about IBAC’s recommendations to the public sector"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "IBAC assessed 168 recommendations as fully implemented, meaning IBAC is satisfied with the responses provided by agencies to demonstrate how the recommendations have been implemented.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a8175/globalassets/tabled-paper-documents/tabled-paper-10548/ibac-special-report_public-sector-agency-responses-to-ibac-s-recommendations.pdf",
+     "document": "IBAC special report_Public sector agency responses to IBAC s recommendations",
+     "page": 18
+    }
+   },
+   {
+    "quote": "The median time taken for agencies to fully implement IBAC’s recommendations was 13 months.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a8175/globalassets/tabled-paper-documents/tabled-paper-10548/ibac-special-report_public-sector-agency-responses-to-ibac-s-recommendations.pdf",
+     "document": "IBAC special report_Public sector agency responses to IBAC s recommendations",
+     "page": 20
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

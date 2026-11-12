@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2017-03-14-keeping-it-together-systems-and-structures-in-organisational",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Keeping it together - systems and structures in organisational change",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Keeping%20it%20together%20systems%20and%20structures%20in%20organisational%20change%2014March17.pdf.aspx",
+  "document": "Keeping it together - systems and structures in organisational change",
+  "sha256": "c46842425941f67646c217747104eb6deef1048d60384ce40dd2162e53cc8bc0",
+  "pages": 24,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Keeping%20it%20together%20systems%20and%20structures%20in%20organisational%20change%2014March17.pdf.aspx#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption provides advice on corruption risks during public sector mergers and restructures.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Keeping%20it%20together%20systems%20and%20structures%20in%20organisational%20change%2014March17.pdf.aspx",
+      "document": "Keeping it together - systems and structures in organisational change",
+      "page": 6
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "It examines how large organisational changes affect controls, incentives and opportunities for misconduct, using investigation case studies.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Keeping%20it%20together%20systems%20and%20structures%20in%20organisational%20change%2014March17.pdf.aspx",
+      "document": "Keeping it together - systems and structures in organisational change",
+      "page": 6
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "The Commission concludes that poorly managed change can create corruption opportunities through inadequate processes or unrecognised shifts in incentives.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Keeping%20it%20together%20systems%20and%20structures%20in%20organisational%20change%2014March17.pdf.aspx",
+      "document": "Keeping it together - systems and structures in organisational change",
+      "page": 6
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "The Commission advises agencies to build continuing change-management capacity, conduct early due diligence, strengthen high-risk controls and monitor progress against planned milestones.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Keeping%20it%20together%20systems%20and%20structures%20in%20organisational%20change%2014March17.pdf.aspx",
+      "document": "Keeping it together - systems and structures in organisational change",
+      "page": 6
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Keeping%20it%20together%20systems%20and%20structures%20in%20organisational%20change%2014March17.pdf.aspx",
+      "document": "Keeping it together - systems and structures in organisational change",
+      "page": 7
+     }
+    ],
+    "section": "Overview"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "If not managed well, organisational change can provide opportunities for corruption.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Keeping%20it%20together%20systems%20and%20structures%20in%20organisational%20change%2014March17.pdf.aspx",
+     "document": "Keeping it together - systems and structures in organisational change",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,130 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2019-11-27-evaluation-of-the-practices-policies-and-procedures-of-the-c",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Evaluation of the Practices, Policies and Procedures of the City of Playford",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362950/Evaluation_of_the_City_of_Playford.pdf",
+  "document": "Evaluation of the Practices, Policies and Procedures of the City of Playford Council",
+  "sha256": "2d4e40be67120f4b04ea6b339941fb29b84354bb3dc049e02d99e59e264f06ed",
+  "pages": 110,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive Summary",
+  "first_page": 8,
+  "last_page": 10,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362950/Evaluation_of_the_City_of_Playford.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Deputy Independent Commissioner Against Corruption evaluated practices at the City of Playford Council to identify improvements to integrity controls.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362950/Evaluation_of_the_City_of_Playford.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the City of Playford Council",
+      "page": 6
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362950/Evaluation_of_the_City_of_Playford.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the City of Playford Council",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362950/Evaluation_of_the_City_of_Playford.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the City of Playford Council",
+      "page": 9
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "The evaluation focused on current administration practices, including policies, records, procurement and human resources.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362950/Evaluation_of_the_City_of_Playford.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the City of Playford Council",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362950/Evaluation_of_the_City_of_Playford.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the City of Playford Council",
+      "page": 9
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362950/Evaluation_of_the_City_of_Playford.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the City of Playford Council",
+      "page": 10
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "The Deputy Commissioner identified weaknesses in policy implementation, compliance and records management that exposed the council to integrity risks.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362950/Evaluation_of_the_City_of_Playford.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the City of Playford Council",
+      "page": 9
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "The Deputy Commissioner made 21 recommendations covering governance, records, recruitment, performance management and procurement.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362950/Evaluation_of_the_City_of_Playford.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the City of Playford Council",
+      "page": 10
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362950/Evaluation_of_the_City_of_Playford.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the City of Playford Council",
+      "page": 12
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362950/Evaluation_of_the_City_of_Playford.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the City of Playford Council",
+      "page": 13
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362950/Evaluation_of_the_City_of_Playford.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the City of Playford Council",
+      "page": 14
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "However, there remain a number of weaknesses in current council operations that leave it susceptible to corruption, misconduct or maladministration.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362950/Evaluation_of_the_City_of_Playford.pdf",
+     "document": "Evaluation of the Practices, Policies and Procedures of the City of Playford Council",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

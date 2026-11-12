@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2016-06-22-community-attitudes-survey-report-on-the-2015-survey",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Community Attitudes Survey - Report on the 2015 survey",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20Attitudes%20Survey%20Report%20on%20the%202015%20survey%20(June%202016).pdf.aspx",
+  "document": "Community Attitudes Survey - Report on the 2015 survey",
+  "sha256": "d0b706e839995bc5ab70c1f21f30c86bb4783dafad7996cac5706faa5477fa05",
+  "pages": 21,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption surveyed community views about corruption, its work and willingness to report wrongdoing.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20Attitudes%20Survey%20Report%20on%20the%202015%20survey%20(June%202016).pdf.aspx",
+      "document": "Community Attitudes Survey - Report on the 2015 survey",
+      "page": 6
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The 2015 telephone survey included 501 NSW adults, with quotas for age, gender and location.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20Attitudes%20Survey%20Report%20on%20the%202015%20survey%20(June%202016).pdf.aspx",
+      "document": "Community Attitudes Survey - Report on the 2015 survey",
+      "page": 7
+     }
+    ],
+    "section": "Methodology"
+   },
+   {
+    "text": "The Commission found that most respondents regarded public sector corruption as a community problem and half believed it affected them or their families.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20Attitudes%20Survey%20Report%20on%20the%202015%20survey%20(June%202016).pdf.aspx",
+      "document": "Community Attitudes Survey - Report on the 2015 survey",
+      "page": 11
+     }
+    ],
+    "section": "Conclusions"
+   },
+   {
+    "text": "The Commission found that most respondents were willing to report serious corruption, with overall willingness broadly stable since the previous survey.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20Attitudes%20Survey%20Report%20on%20the%202015%20survey%20(June%202016).pdf.aspx",
+      "document": "Community Attitudes Survey - Report on the 2015 survey",
+      "page": 19
+     }
+    ],
+    "section": "Conclusions"
+   },
+   {
+    "text": "The Commission suggests further education for public employees and forums for suppliers about corruption and reporting.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20Attitudes%20Survey%20Report%20on%20the%202015%20survey%20(June%202016).pdf.aspx",
+      "document": "Community Attitudes Survey - Report on the 2015 survey",
+      "page": 19
+     }
+    ],
+    "section": "Conclusions"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Most respondents reported that corruption in the NSW public sector is a problem for the community.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20Attitudes%20Survey%20Report%20on%20the%202015%20survey%20(June%202016).pdf.aspx",
+     "document": "Community Attitudes Survey - Report on the 2015 survey",
+     "page": 11
+    }
+   },
+   {
+    "quote": "Half of the survey respondents indicated that corruption affects them or their families.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20Attitudes%20Survey%20Report%20on%20the%202015%20survey%20(June%202016).pdf.aspx",
+     "document": "Community Attitudes Survey - Report on the 2015 survey",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2018-12-07-icac-public-integrity-survey-2018",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "ICAC Public Integrity Survey 2018",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/387808/ICAC_Public_Integrity_Survey_2018.pdf",
+  "document": "ICAC Public Integrity Survey 2018",
+  "sha256": "cb31965fe13aefa98fa788ed69e6e5a480e74d229b222cd9e5e90ef21c1622c0",
+  "pages": 56,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 6,
+  "last_page": 8,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/387808/ICAC_Public_Integrity_Survey_2018.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commissioner Against Corruption surveyed state and local government public officers to identify integrity risks and areas for improvement.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/387808/ICAC_Public_Integrity_Survey_2018.pdf",
+      "document": "ICAC Public Integrity Survey 2018",
+      "page": 6
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The report analysed quantitative responses about reporting, perceived workplace risks and experiences of inappropriate conduct.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/387808/ICAC_Public_Integrity_Survey_2018.pdf",
+      "document": "ICAC Public Integrity Survey 2018",
+      "page": 6
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The Commissioner reported widespread anxiety about reporting and low confidence that agencies would act or protect reporters.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/387808/ICAC_Public_Integrity_Survey_2018.pdf",
+      "document": "ICAC Public Integrity Survey 2018",
+      "page": 7
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The Commissioner urged agencies to improve safe reporting and examine differences between the views of leaders and other staff.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/387808/ICAC_Public_Integrity_Survey_2018.pdf",
+      "document": "ICAC Public Integrity Survey 2018",
+      "page": 45
+     }
+    ],
+    "section": "Research conclusions"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There is a disconnect of perceptions and attitudes between ‘Senior’ and ‘Other’ staff.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/387808/ICAC_Public_Integrity_Survey_2018.pdf",
+     "document": "ICAC Public Integrity Survey 2018",
+     "page": 45
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

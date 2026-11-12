@@ -1,0 +1,118 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2004-01-23-prosecution-pauline-hanson-and-david-ettridge-report-inquiry",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "The prosecution of Pauline Hanson and David Ettridge: A report on an Inquiry into issues raised in a resolution of Parliament",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-prosecution-of-Pauline-Hanson-and-David-Ettridge-Report-2004.pdf",
+  "document": "The prosecution of Pauline Hanson and David Ettridge: A report on an Inquiry into issues raised... (23 January 2004)",
+  "sha256": "bf81e1b758f3040173114434e200c9414979593f0972b32fb22cdc9d90ad48ec",
+  "pages": 26,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-prosecution-of-Pauline-Hanson-and-David-Ettridge-Report-2004.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The CMC responded to Parliament’s request by examining whether litigation involving the founders of One Nation had involved unfairness or political interference.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-prosecution-of-Pauline-Hanson-and-David-Ettridge-Report-2004.pdf",
+      "document": "The prosecution of Pauline Hanson and David Ettridge: A report on an Inquiry into issues raised... (23 January 2004)",
+      "page": 5
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "It reviewed police and prosecution files, trial and appeal records, interviews and submissions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-prosecution-of-Pauline-Hanson-and-David-Ettridge-Report-2004.pdf",
+      "document": "The prosecution of Pauline Hanson and David Ettridge: A report on an Inquiry into issues raised... (23 January 2004)",
+      "page": 5
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "The Commission found no demonstrated misconduct in the litigation or police investigation, no evidence of political interference and no denial of due process.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-prosecution-of-Pauline-Hanson-and-David-Ettridge-Report-2004.pdf",
+      "document": "The prosecution of Pauline Hanson and David Ettridge: A report on an Inquiry into issues raised... (23 January 2004)",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-prosecution-of-Pauline-Hanson-and-David-Ettridge-Report-2004.pdf",
+      "document": "The prosecution of Pauline Hanson and David Ettridge: A report on an Inquiry into issues raised... (23 January 2004)",
+      "page": 25
+     }
+    ],
+    "section": "SUMMARY; FINDINGS"
+   },
+   {
+    "text": "The Commission reserved the systemic issue of prosecution-service funding for a later report.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-prosecution-of-Pauline-Hanson-and-David-Ettridge-Report-2004.pdf",
+      "document": "The prosecution of Pauline Hanson and David Ettridge: A report on an Inquiry into issues raised... (23 January 2004)",
+      "page": 25
+     }
+    ],
+    "section": "CONCLUSION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission is of the opinion that no misconduct or other impropriety has been shown to have been associated with the conduct of the litigation concerning Ms Hanson and Mr Ettridge, or with the police investigations leading to the prosecution.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-prosecution-of-Pauline-Hanson-and-David-Ettridge-Report-2004.pdf",
+     "document": "The prosecution of Pauline Hanson and David Ettridge: A report on an Inquiry into issues raised... (23 January 2004)",
+     "page": 25
+    }
+   },
+   {
+    "quote": "The Commission also found no evidence of political pressure or other improper influence or impropriety.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-prosecution-of-Pauline-Hanson-and-David-Ettridge-Report-2004.pdf",
+     "document": "The prosecution of Pauline Hanson and David Ettridge: A report on an Inquiry into issues raised... (23 January 2004)",
+     "page": 25
+    }
+   },
+   {
+    "quote": "The Commission found nothing to show a failure to accord due process, in accordance with the rule of law, to Ms Hanson and Mr Ettridge.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-prosecution-of-Pauline-Hanson-and-David-Ettridge-Report-2004.pdf",
+     "document": "The prosecution of Pauline Hanson and David Ettridge: A report on an Inquiry into issues raised... (23 January 2004)",
+     "page": 25
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,135 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2014-02-19-tp1173-special-report-concerning-allegations-about-the-condu",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Special Report concerning allegations about the conduct of Sir Ken Jones QPM in relation to his dealings with certain confidential Victoria Police information",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a2777/globalassets/tabled-paper-documents/tabled-paper-1173/iba2680_report_web_z3fmy9yj.pdf",
+  "document": "IBA2680_Report_web_Z3fmY9Yj",
+  "sha256": "a82e6a468eabe56ef8a01ec7fef9f5dcdbee193ee65a5cb53917709e955c6c8e",
+  "pages": 74,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "IBAC Foreword",
+  "first_page": 7,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4a2777/globalassets/tabled-paper-documents/tabled-paper-1173/iba2680_report_web_z3fmy9yj.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC’s delegated commissioner reviewed the Victorian Ombudsman’s report about an Office of Police Integrity investigation into a former deputy police commissioner.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2777/globalassets/tabled-paper-documents/tabled-paper-1173/iba2680_report_web_z3fmy9yj.pdf",
+      "document": "IBA2680_Report_web_Z3fmY9Yj",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2777/globalassets/tabled-paper-documents/tabled-paper-1173/iba2680_report_web_z3fmy9yj.pdf",
+      "document": "IBA2680_Report_web_Z3fmY9Yj",
+      "page": 8
+     }
+    ],
+    "section": "IBAC Foreword"
+   },
+   {
+    "text": "The review assessed whether the material supported allegations of serious misconduct through leaking confidential police information to the media.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2777/globalassets/tabled-paper-documents/tabled-paper-1173/iba2680_report_web_z3fmy9yj.pdf",
+      "document": "IBA2680_Report_web_Z3fmY9Yj",
+      "page": 7
+     }
+    ],
+    "section": "IBAC Foreword"
+   },
+   {
+    "text": "The delegated commissioner concluded that the material did not support that allegation or establish a scheme to have information passed to the media.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2777/globalassets/tabled-paper-documents/tabled-paper-1173/iba2680_report_web_z3fmy9yj.pdf",
+      "document": "IBA2680_Report_web_Z3fmY9Yj",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2777/globalassets/tabled-paper-documents/tabled-paper-1173/iba2680_report_web_z3fmy9yj.pdf",
+      "document": "IBA2680_Report_web_Z3fmY9Yj",
+      "page": 67
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "He nevertheless concluded that the former deputy commissioner had shared confidential information with others and acted without appropriate discretion.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2777/globalassets/tabled-paper-documents/tabled-paper-1173/iba2680_report_web_z3fmy9yj.pdf",
+      "document": "IBA2680_Report_web_Z3fmY9Yj",
+      "page": 66
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2777/globalassets/tabled-paper-documents/tabled-paper-1173/iba2680_report_web_z3fmy9yj.pdf",
+      "document": "IBA2680_Report_web_Z3fmY9Yj",
+      "page": 67
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "He decided against further IBAC investigation or tabling the earlier investigation report, while referring relevant material to the Chief Commissioner of Police to consider further action.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2777/globalassets/tabled-paper-documents/tabled-paper-1173/iba2680_report_web_z3fmy9yj.pdf",
+      "document": "IBA2680_Report_web_Z3fmY9Yj",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2777/globalassets/tabled-paper-documents/tabled-paper-1173/iba2680_report_web_z3fmy9yj.pdf",
+      "document": "IBA2680_Report_web_Z3fmY9Yj",
+      "page": 69
+     }
+    ],
+    "section": "Final determination"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Mr Kellam has concluded that the evidence available to OPI and set out in OPI’s final investigation report to the Ombudsman did not support an allegation that Sir Ken had engaged in serious misconduct by leaking or facilitating leaking to the media of confidential police information.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2777/globalassets/tabled-paper-documents/tabled-paper-1173/iba2680_report_web_z3fmy9yj.pdf",
+     "document": "IBA2680_Report_web_Z3fmY9Yj",
+     "page": 7
+    }
+   },
+   {
+    "quote": "There is no public interest to be served by further investigation.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2777/globalassets/tabled-paper-documents/tabled-paper-1173/iba2680_report_web_z3fmy9yj.pdf",
+     "document": "IBA2680_Report_web_Z3fmY9Yj",
+     "page": 69
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

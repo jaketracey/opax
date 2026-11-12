@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2024-06-11-common-forms-of-corrupt-conduct-risks-faced-by-nsw-public-se",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Common forms of corrupt conduct - risks faced by NSW public sector agencies (June 2024)",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Common-forms-of-corrupt-conduct_June2024.pdf.aspx",
+  "document": "Common forms of corrupt conduct - risks faced by NSW public sector agencies (June 2024)",
+  "sha256": "ef0f6cd953c40bb43b57b0a899f1d0dc974a433859983ed0cee0d5e694a79efb",
+  "pages": 66,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary",
+  "first_page": 8,
+  "last_page": 8,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Common-forms-of-corrupt-conduct_June2024.pdf.aspx#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption prepared this guidance to help public agencies identify common corruption risks and assess their controls.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Common-forms-of-corrupt-conduct_June2024.pdf.aspx",
+      "document": "Common forms of corrupt conduct - risks faced by NSW public sector agencies (June 2024)",
+      "page": 7
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Common-forms-of-corrupt-conduct_June2024.pdf.aspx",
+      "document": "Common forms of corrupt conduct - risks faced by NSW public sector agencies (June 2024)",
+      "page": 8
+     }
+    ],
+    "section": "Purpose of this publication"
+   },
+   {
+    "text": "The Commission reviewed five years of its information holdings to identify recurring types of reported misconduct.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Common-forms-of-corrupt-conduct_June2024.pdf.aspx",
+      "document": "Common forms of corrupt conduct - risks faced by NSW public sector agencies (June 2024)",
+      "page": 8
+     }
+    ],
+    "section": "Purpose of this publication"
+   },
+   {
+    "text": "The Commission identifies human resources and staff administration as the workplace function most commonly reported by agencies, followed by allocation of funds, materials and services.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Common-forms-of-corrupt-conduct_June2024.pdf.aspx",
+      "document": "Common forms of corrupt conduct - risks faced by NSW public sector agencies (June 2024)",
+      "page": 8
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "Its guidance covers corruption controls, warning signs, detection and investigation across these functions and related issues such as conflicts of interest and gifts.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Common-forms-of-corrupt-conduct_June2024.pdf.aspx",
+      "document": "Common forms of corrupt conduct - risks faced by NSW public sector agencies (June 2024)",
+      "page": 8
+     }
+    ],
+    "section": "Purpose of this publication"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission’s annual reports have consistently shown that human resources and staff administration is the most common workplace function in matters reported by agencies.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Common-forms-of-corrupt-conduct_June2024.pdf.aspx",
+     "document": "Common forms of corrupt conduct - risks faced by NSW public sector agencies (June 2024)",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

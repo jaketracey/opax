@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2014-04-15-tp1241-special-report-following-ibac-s-first-year-of-being-f",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Special report following IBAC's first year of being fully operational",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a279d/globalassets/tabled-paper-documents/tabled-paper-1241/iba2710_ibac_special_report_web_ppm6jch8.pdf",
+  "document": "IBA2710_IBAC_Special_Report_Web_pPM6JCh8",
+  "sha256": "c706a8be0dd68470e035b0fadf76752466df28de1a723ef0701c75c9827e6de6",
+  "pages": 36,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Introduction",
+  "first_page": 7,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4a279d/globalassets/tabled-paper-documents/tabled-paper-1241/iba2710_ibac_special_report_web_ppm6jch8.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC reported on its first year of full operations, covering public sector corruption investigations and police misconduct oversight.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a279d/globalassets/tabled-paper-documents/tabled-paper-1241/iba2710_ibac_special_report_web_ppm6jch8.pdf",
+      "document": "IBA2710_IBAC_Special_Report_Web_pPM6JCh8",
+      "page": 7
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It also reviewed internal police investigations, prevention and education work, and the operation of the new integrity legislation.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a279d/globalassets/tabled-paper-documents/tabled-paper-1241/iba2710_ibac_special_report_web_ppm6jch8.pdf",
+      "document": "IBA2710_IBAC_Special_Report_Web_pPM6JCh8",
+      "page": 7
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "In Operation Continent, IBAC confirmed fraudulent purchasing at a council depot and identified weaknesses in records, assets, controls and contractor relationships, while other allegations remained unsubstantiated.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a279d/globalassets/tabled-paper-documents/tabled-paper-1241/iba2710_ibac_special_report_web_ppm6jch8.pdf",
+      "document": "IBA2710_IBAC_Special_Report_Web_pPM6JCh8",
+      "page": 10
+     }
+    ],
+    "section": "Investigations"
+   },
+   {
+    "text": "It reported that Victoria Police had implemented 20 of 40 outstanding recommendations inherited from the former Office of Police Integrity.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a279d/globalassets/tabled-paper-documents/tabled-paper-1241/iba2710_ibac_special_report_web_ppm6jch8.pdf",
+      "document": "IBA2710_IBAC_Special_Report_Web_pPM6JCh8",
+      "page": 18
+     }
+    ],
+    "section": "Reviews and recommendations"
+   },
+   {
+    "text": "IBAC raised legislative issues for Parliament, including its investigation threshold, preliminary inquiries and mandatory corruption notifications.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a279d/globalassets/tabled-paper-documents/tabled-paper-1241/iba2710_ibac_special_report_web_ppm6jch8.pdf",
+      "document": "IBA2710_IBAC_Special_Report_Web_pPM6JCh8",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a279d/globalassets/tabled-paper-documents/tabled-paper-1241/iba2710_ibac_special_report_web_ppm6jch8.pdf",
+      "document": "IBA2710_IBAC_Special_Report_Web_pPM6JCh8",
+      "page": 31
+     }
+    ],
+    "section": "Introduction"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Victoria Police’s oversight and review of the investigation was inadequate.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a279d/globalassets/tabled-paper-documents/tabled-paper-1241/iba2710_ibac_special_report_web_ppm6jch8.pdf",
+     "document": "IBA2710_IBAC_Special_Report_Web_pPM6JCh8",
+     "page": 10
+    }
+   },
+   {
+    "quote": "IBAC’s investigation led it to conclude that the complaint was unfounded and the complainant was informed accordingly.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a279d/globalassets/tabled-paper-documents/tabled-paper-1241/iba2710_ibac_special_report_web_ppm6jch8.pdf",
+     "document": "IBA2710_IBAC_Special_Report_Web_pPM6JCh8",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

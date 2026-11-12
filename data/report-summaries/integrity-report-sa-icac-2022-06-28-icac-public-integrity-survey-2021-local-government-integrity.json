@@ -1,0 +1,89 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2022-06-28-icac-public-integrity-survey-2021-local-government-integrity",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "ICAC Public Integrity Survey 2021: Local Government Integrity Insights",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/documents/web-ICAC-Local-Public-Integrity-Survey-2022-27.6.2022.pdf",
+  "document": "ICAC Public Integrity Survey 2021 – Local Government Integrity Insights",
+  "sha256": "36b1c64bf3b6559c35c1810e5a868a7ac6355b1954741930981d45fffe74cc6e",
+  "pages": 52,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption examined local government responses to its public integrity survey.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/web-ICAC-Local-Public-Integrity-Survey-2022-27.6.2022.pdf",
+      "document": "ICAC Public Integrity Survey 2021 – Local Government Integrity Insights",
+      "page": 4
+     }
+    ],
+    "section": "COMMISSIONER’S FOREWORD"
+   },
+   {
+    "text": "The voluntary survey received 1114 responses from local government public officers and asked about perceived risks, experiences and reporting.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/web-ICAC-Local-Public-Integrity-Survey-2022-27.6.2022.pdf",
+      "document": "ICAC Public Integrity Survey 2021 – Local Government Integrity Insights",
+      "page": 6
+     }
+    ],
+    "section": "THE SURVEY"
+   },
+   {
+    "text": "The Commission reported lower perceived corruption than in its earlier survey, with recruitment favouritism still seen as the leading risk.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/web-ICAC-Local-Public-Integrity-Survey-2022-27.6.2022.pdf",
+      "document": "ICAC Public Integrity Survey 2021 – Local Government Integrity Insights",
+      "page": 4
+     }
+    ],
+    "section": "COMMISSIONER’S FOREWORD"
+   },
+   {
+    "text": "The Commission recommended further training, clearer employment decisions, controls on outside employment, scrutiny of contracts and protection for people reporting concerns.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/web-ICAC-Local-Public-Integrity-Survey-2022-27.6.2022.pdf",
+      "document": "ICAC Public Integrity Survey 2021 – Local Government Integrity Insights",
+      "page": 42
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "All public officers should feel safe to report.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/web-ICAC-Local-Public-Integrity-Survey-2022-27.6.2022.pdf",
+     "document": "ICAC Public Integrity Survey 2021 – Local Government Integrity Insights",
+     "page": 42
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

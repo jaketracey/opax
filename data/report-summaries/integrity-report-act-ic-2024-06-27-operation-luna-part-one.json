@@ -1,0 +1,94 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-act-ic-2024-06-27-operation-luna-part-one",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Operation Luna Part One: A report into an aspect of the broader Operation Luna investigation, which examines the procurement processes at the Canberra Institute of Technology, focusing on contracts awarded between July 2017 and March 2022.",
+ "body": "ACT Integrity Commission",
+ "source": {
+  "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0009/2516391/Operation-Luna-Special-Report-27-June-2024.pdf",
+  "document": "Operation Luna Part One: A report into an aspect of the broader Operation Luna investigation, which examines the procurement processes at the Canberra Institute of Technology, focusing on contracts awarded between July 2017 and March 2022.",
+  "sha256": "93371f0696a88876c68e52ad808be06c4285d17432b38ccafb07454109fbd97e",
+  "pages": 312,
+  "rights": "commission-copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The ACT Integrity Commission investigated consultancy contracts awarded by the Canberra Institute of Technology, with this report addressing disclosure to its board and responsible minister.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0009/2516391/Operation-Luna-Special-Report-27-June-2024.pdf",
+      "document": "Operation Luna Part One: A report into an aspect of the broader Operation Luna investigation, which examines the procurement processes at the Canberra Institute of Technology, focusing on contracts awarded between July 2017 and March 2022.",
+      "page": 7
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0009/2516391/Operation-Luna-Special-Report-27-June-2024.pdf",
+      "document": "Operation Luna Part One: A report into an aspect of the broader Operation Luna investigation, which examines the procurement processes at the Canberra Institute of Technology, focusing on contracts awarded between July 2017 and March 2022.",
+      "page": 8
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It examined whether the chief executive and board chair disclosed important information about the contracts.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0009/2516391/Operation-Luna-Special-Report-27-June-2024.pdf",
+      "document": "Operation Luna Part One: A report into an aspect of the broader Operation Luna investigation, which examines the procurement processes at the Canberra Institute of Technology, focusing on contracts awarded between July 2017 and March 2022.",
+      "page": 8
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission found that the chief executive deliberately concealed information from the board and engaged in serious corrupt conduct.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0009/2516391/Operation-Luna-Special-Report-27-June-2024.pdf",
+      "document": "Operation Luna Part One: A report into an aspect of the broader Operation Luna investigation, which examines the procurement processes at the Canberra Institute of Technology, focusing on contracts awarded between July 2017 and March 2022.",
+      "page": 274
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0009/2516391/Operation-Luna-Special-Report-27-June-2024.pdf",
+      "document": "Operation Luna Part One: A report into an aspect of the broader Operation Luna investigation, which examines the procurement processes at the Canberra Institute of Technology, focusing on contracts awarded between July 2017 and March 2022.",
+      "page": 275
+     }
+    ],
+    "section": "Conclusion: Ms Cover"
+   },
+   {
+    "text": "It found that the board chair seriously failed to exercise care and diligence, but could not make a corruption finding because intentional or reckless conduct was not established.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0009/2516391/Operation-Luna-Special-Report-27-June-2024.pdf",
+      "document": "Operation Luna Part One: A report into an aspect of the broader Operation Luna investigation, which examines the procurement processes at the Canberra Institute of Technology, focusing on contracts awarded between July 2017 and March 2022.",
+      "page": 276
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0009/2516391/Operation-Luna-Special-Report-27-June-2024.pdf",
+      "document": "Operation Luna Part One: A report into an aspect of the broader Operation Luna investigation, which examines the procurement processes at the Canberra Institute of Technology, focusing on contracts awarded between July 2017 and March 2022.",
+      "page": 277
+     }
+    ],
+    "section": "Conclusion: Mr Sloan"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2020-12-03-icac-university-integrity-survey-2020",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "ICAC University Integrity Survey 2020",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/387811/ICAC_University_Integrity_Survey.pdf",
+  "document": "ICAC University Integrity Survey 2020",
+  "sha256": "68eaf4a2bb90f9051866c0cdb2668a091ce79c585173e7f3a2a9725dfb53250a",
+  "pages": 74,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 6,
+  "last_page": 8,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/387811/ICAC_University_Integrity_Survey.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commissioner Against Corruption surveyed staff at the state’s three public universities about integrity and workplace experiences.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/387811/ICAC_University_Integrity_Survey.pdf",
+      "document": "ICAC University Integrity Survey 2020",
+      "page": 5
+     }
+    ],
+    "section": "COMMISSIONER’S FOREWORD"
+   },
+   {
+    "text": "The Commissioner reported concerns among respondents about safe reporting, protection from reprisals and whether universities would act on reports.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/387811/ICAC_University_Integrity_Survey.pdf",
+      "document": "ICAC University Integrity Survey 2020",
+      "page": 6
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commissioner concluded that integrity risks and workplace cultures differed across university areas, requiring attention to local circumstances.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/387811/ICAC_University_Integrity_Survey.pdf",
+      "document": "ICAC University Integrity Survey 2020",
+      "page": 7
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/387811/ICAC_University_Integrity_Survey.pdf",
+      "document": "ICAC University Integrity Survey 2020",
+      "page": 61
+     }
+    ],
+    "section": "RESEARCH CONCLUSIONS"
+   },
+   {
+    "text": "The Commissioner urged universities to improve reporting cultures and check whether staff understood and followed existing policies.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/387811/ICAC_University_Integrity_Survey.pdf",
+      "document": "ICAC University Integrity Survey 2020",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/387811/ICAC_University_Integrity_Survey.pdf",
+      "document": "ICAC University Integrity Survey 2020",
+      "page": 65
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/387811/ICAC_University_Integrity_Survey.pdf",
+      "document": "ICAC University Integrity Survey 2020",
+      "page": 66
+     }
+    ],
+    "section": "RESEARCH CONCLUSIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "It is clear that the experiences and attitudes of university public officers can vary markedly between different areas of a university.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/387811/ICAC_University_Integrity_Survey.pdf",
+     "document": "ICAC University Integrity Survey 2020",
+     "page": 61
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

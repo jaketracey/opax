@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2024-08-29-the-room-where-it-happens-lobbying-and-influence-in-south-au",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "The Room Where it Happens – Lobbying and Influence in South Australia",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1065873/The-Room-Where-it-Happens-Lobbying-and-Influence-report-August-2024.pdf",
+  "document": "The Room Where it Happens – Lobbying and Influence in South Australia",
+  "sha256": "22cdc66061b7265316ff87f79ce90813f969940a9f627ab2f62adc489ba7dd58",
+  "pages": 114,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption examined corruption risks arising from lobbying public officials and the effectiveness of the state’s regulatory scheme.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1065873/The-Room-Where-it-Happens-Lobbying-and-Influence-report-August-2024.pdf",
+      "document": "The Room Where it Happens – Lobbying and Influence in South Australia",
+      "page": 22
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1065873/The-Room-Where-it-Happens-Lobbying-and-Influence-report-August-2024.pdf",
+      "document": "The Room Where it Happens – Lobbying and Influence in South Australia",
+      "page": 24
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission considered the scope of regulation, transparency, former officials’ lobbying, local government and administration of the scheme.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1065873/The-Room-Where-it-Happens-Lobbying-and-Influence-report-August-2024.pdf",
+      "document": "The Room Where it Happens – Lobbying and Influence in South Australia",
+      "page": 112
+     }
+    ],
+    "section": "CONCLUDING REMARKS"
+   },
+   {
+    "text": "The Commission concluded that the scheme exposed only a small proportion of influencing activity to public scrutiny.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1065873/The-Room-Where-it-Happens-Lobbying-and-Influence-report-August-2024.pdf",
+      "document": "The Room Where it Happens – Lobbying and Influence in South Australia",
+      "page": 112
+     }
+    ],
+    "section": "CONCLUDING REMARKS"
+   },
+   {
+    "text": "Its 31 recommendations proposed broader coverage, disclosure of lobbying contacts, restrictions after public office, local government coverage and oversight by the Ombudsman.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1065873/The-Room-Where-it-Happens-Lobbying-and-Influence-report-August-2024.pdf",
+      "document": "The Room Where it Happens – Lobbying and Influence in South Australia",
+      "page": 11
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1065873/The-Room-Where-it-Happens-Lobbying-and-Influence-report-August-2024.pdf",
+      "document": "The Room Where it Happens – Lobbying and Influence in South Australia",
+      "page": 14
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1065873/The-Room-Where-it-Happens-Lobbying-and-Influence-report-August-2024.pdf",
+      "document": "The Room Where it Happens – Lobbying and Influence in South Australia",
+      "page": 15
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1065873/The-Room-Where-it-Happens-Lobbying-and-Influence-report-August-2024.pdf",
+      "document": "The Room Where it Happens – Lobbying and Influence in South Australia",
+      "page": 17
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1065873/The-Room-Where-it-Happens-Lobbying-and-Influence-report-August-2024.pdf",
+      "document": "The Room Where it Happens – Lobbying and Influence in South Australia",
+      "page": 18
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Transparency is the best measure to combat the corruption risks associated with influencing activity.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1065873/The-Room-Where-it-Happens-Lobbying-and-Influence-report-August-2024.pdf",
+     "document": "The Room Where it Happens – Lobbying and Influence in South Australia",
+     "page": 112
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

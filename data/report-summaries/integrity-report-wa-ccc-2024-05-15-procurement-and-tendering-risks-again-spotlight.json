@@ -1,0 +1,71 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2024-05-15-procurement-and-tendering-risks-again-spotlight",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Procurement and tendering risks again in the spotlight",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct_risks_at_Mid_West_Ports_Authority.pdf",
+  "document": "Misconduct risks at Mid West Ports Authority",
+  "sha256": "f67eb002831939552ff0ec744a875622317a3d3a3a1eb36fd98a09960619c7cd",
+  "pages": 15,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct_risks_at_Mid_West_Ports_Authority.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated whether serious misconduct occurred in the award of a security services tender by the Mid West Ports Authority.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct_risks_at_Mid_West_Ports_Authority.pdf",
+      "document": "Misconduct risks at Mid West Ports Authority",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The Commission identified risks arising from departures from ordinary procurement and tender procedures.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct_risks_at_Mid_West_Ports_Authority.pdf",
+      "document": "Misconduct risks at Mid West Ports Authority",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The Commission made no serious misconduct finding against any employee of the authority and reported the risks to assist public authorities with prevention.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct_risks_at_Mid_West_Ports_Authority.pdf",
+      "document": "Misconduct risks at Mid West Ports Authority",
+      "page": 15
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

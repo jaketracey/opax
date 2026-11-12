@@ -1,0 +1,94 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2023-03-13-mature-corruption-control-the-key-outcomes-of-better-practic",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Mature corruption control: the key outcomes of better practice (March 2023)",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Mature%20corruption%20control-the%20key%20outcomes%20of%20better%20practice_March2023.pdf.aspx",
+  "document": "Mature corruption control: the key outcomes of better practice (March 2023)",
+  "sha256": "ca5b111fecb590d023a35411beb318eec841128dbe507c4e943dee94be201f85",
+  "pages": 6,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption outlines better practice to help agencies assess and improve their corruption controls.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Mature%20corruption%20control-the%20key%20outcomes%20of%20better%20practice_March2023.pdf.aspx",
+      "document": "Mature corruption control: the key outcomes of better practice (March 2023)",
+      "page": 1
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Mature%20corruption%20control-the%20key%20outcomes%20of%20better%20practice_March2023.pdf.aspx",
+      "document": "Mature corruption control: the key outcomes of better practice (March 2023)",
+      "page": 6
+     }
+    ],
+    "section": "Mature corruption control: the key outcomes of better practice"
+   },
+   {
+    "text": "Its framework covers building integrity, prevention, detection and responses to integrity breaches.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Mature%20corruption%20control-the%20key%20outcomes%20of%20better%20practice_March2023.pdf.aspx",
+      "document": "Mature corruption control: the key outcomes of better practice (March 2023)",
+      "page": 1
+     }
+    ],
+    "section": "Pillars of control"
+   },
+   {
+    "text": "The Commission cautions that adopting many controls is insufficient if they do not match agency risks or are poorly implemented.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Mature%20corruption%20control-the%20key%20outcomes%20of%20better%20practice_March2023.pdf.aspx",
+      "document": "Mature corruption control: the key outcomes of better practice (March 2023)",
+      "page": 4
+     }
+    ],
+    "section": "Supporting systems and processes"
+   },
+   {
+    "text": "Its guidance calls for supporting arrangements for risk management, control frameworks, staff responsibilities and competence.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Mature%20corruption%20control-the%20key%20outcomes%20of%20better%20practice_March2023.pdf.aspx",
+      "document": "Mature corruption control: the key outcomes of better practice (March 2023)",
+      "page": 4
+     }
+    ],
+    "section": "Supporting systems and processes"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The adoption of a broad range of controls is, by itself, insufficient to ensure good corruption control.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Mature%20corruption%20control-the%20key%20outcomes%20of%20better%20practice_March2023.pdf.aspx",
+     "document": "Mature corruption control: the key outcomes of better practice (March 2023)",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

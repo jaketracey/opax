@@ -1,0 +1,125 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2012-12-18-funding-ngo-delivery-of-human-services-in-nsw-a-period-of-tr",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Funding NGO delivery of human services in NSW - A period of transition - position paper",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Position_paper_(December_2012).pdf.aspx",
+  "document": "Funding NGO delivery of human services in NSW - A period of transition - position paper",
+  "sha256": "3c6f03d2a7552882f24b951f7155cb73631719ef94eeb22d48a12fbe7d23deb3",
+  "pages": 26,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption examines controls over government funding for non-government providers of human services.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Position_paper_(December_2012).pdf.aspx",
+      "document": "Funding NGO delivery of human services in NSW - A period of transition - position paper",
+      "page": 6
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Position_paper_(December_2012).pdf.aspx",
+      "document": "Funding NGO delivery of human services in NSW - A period of transition - position paper",
+      "page": 7
+     }
+    ],
+    "section": "Corruption prevention context"
+   },
+   {
+    "text": "Its research included more than 75 consultation sessions, 33 submissions and case studies of Victoria and Scotland.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Position_paper_(December_2012).pdf.aspx",
+      "document": "Funding NGO delivery of human services in NSW - A period of transition - position paper",
+      "page": 8
+     }
+    ],
+    "section": "Research and consultation"
+   },
+   {
+    "text": "The Commission considers that Victoria’s model of local service areas is more suitable for NSW than Scotland’s council-based model without substantial council amalgamations.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Position_paper_(December_2012).pdf.aspx",
+      "document": "Funding NGO delivery of human services in NSW - A period of transition - position paper",
+      "page": 9
+     }
+    ],
+    "section": "Research and consultation"
+   },
+   {
+    "text": "Its 18 recommendations address local decision-making, funding accountability, shared information, central oversight and provider accreditation.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Position_paper_(December_2012).pdf.aspx",
+      "document": "Funding NGO delivery of human services in NSW - A period of transition - position paper",
+      "page": 13
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Position_paper_(December_2012).pdf.aspx",
+      "document": "Funding NGO delivery of human services in NSW - A period of transition - position paper",
+      "page": 14
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Position_paper_(December_2012).pdf.aspx",
+      "document": "Funding NGO delivery of human services in NSW - A period of transition - position paper",
+      "page": 16
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Position_paper_(December_2012).pdf.aspx",
+      "document": "Funding NGO delivery of human services in NSW - A period of transition - position paper",
+      "page": 23
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Position_paper_(December_2012).pdf.aspx",
+      "document": "Funding NGO delivery of human services in NSW - A period of transition - position paper",
+      "page": 25
+     }
+    ],
+    "section": "Recommendations"
+   },
+   {
+    "text": "The Commission also recommends extending the NSW Auditor-General’s powers to audit government-funded non-government organisations.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Position_paper_(December_2012).pdf.aspx",
+      "document": "Funding NGO delivery of human services in NSW - A period of transition - position paper",
+      "page": 8
+     }
+    ],
+    "section": "Recommendation 1"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "That legislation be amended to provide the NSW Auditor-General with power to inspect, examine and audit the accounts of NGOs that have been provided with government funding.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Position_paper_(December_2012).pdf.aspx",
+     "document": "Funding NGO delivery of human services in NSW - A period of transition - position paper",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

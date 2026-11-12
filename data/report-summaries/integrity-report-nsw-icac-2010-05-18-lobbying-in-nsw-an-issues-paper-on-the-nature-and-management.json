@@ -1,0 +1,84 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2010-05-18-lobbying-in-nsw-an-issues-paper-on-the-nature-and-management",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Lobbying in NSW - an issues paper on the nature and management of lobbying in NSW",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Lobbying%20in%20NSW%20-%20an%20issues%20paper%20on%20the%20nature%20and%20management%20of%20lobbying%20in%20NSW.pdf.aspx",
+  "document": "Lobbying in NSW - an issues paper on the nature and management of lobbying in NSW",
+  "sha256": "6ef6f5cec41b622e61c1b8170a59b61c8c8b11a5fd3790153a24e04415b3ae08",
+  "pages": 65,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption examines relationships between lobbyists and public officials to identify corruption risks and possible regulatory changes.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Lobbying%20in%20NSW%20-%20an%20issues%20paper%20on%20the%20nature%20and%20management%20of%20lobbying%20in%20NSW.pdf.aspx",
+      "document": "Lobbying in NSW - an issues paper on the nature and management of lobbying in NSW",
+      "page": 8
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It compares regulatory arrangements in NSW and other jurisdictions and raises 26 principal issues about lobbying and its oversight.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Lobbying%20in%20NSW%20-%20an%20issues%20paper%20on%20the%20nature%20and%20management%20of%20lobbying%20in%20NSW.pdf.aspx",
+      "document": "Lobbying in NSW - an issues paper on the nature and management of lobbying in NSW",
+      "page": 8
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission raises potential weaknesses involving exclusions from regulation, limited disclosure, record-keeping and the independence of oversight.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Lobbying%20in%20NSW%20-%20an%20issues%20paper%20on%20the%20nature%20and%20management%20of%20lobbying%20in%20NSW.pdf.aspx",
+      "document": "Lobbying in NSW - an issues paper on the nature and management of lobbying in NSW",
+      "page": 18
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Lobbying%20in%20NSW%20-%20an%20issues%20paper%20on%20the%20nature%20and%20management%20of%20lobbying%20in%20NSW.pdf.aspx",
+      "document": "Lobbying in NSW - an issues paper on the nature and management of lobbying in NSW",
+      "page": 19
+     }
+    ],
+    "section": "10. What are the weaknesses of the current NSW regulatory system?"
+   },
+   {
+    "text": "It invites submissions to inform the investigation and proposes a public inquiry and report.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Lobbying%20in%20NSW%20-%20an%20issues%20paper%20on%20the%20nature%20and%20management%20of%20lobbying%20in%20NSW.pdf.aspx",
+      "document": "Lobbying in NSW - an issues paper on the nature and management of lobbying in NSW",
+      "page": 9
+     }
+    ],
+    "section": "Introduction"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-1995-05-01-community-attitudes-to-corruption-and-the-icac-1994",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Community attitudes to corruption and the ICAC 1994",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201994.pdf.aspx",
+  "document": "Community attitudes to corruption and the ICAC 1994",
+  "sha256": "35a2c801186386e1d0ea777e362428c73964931aceeaf4677717b90fb5e9b557",
+  "pages": 57,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY",
+  "first_page": 5,
+  "last_page": 8,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201994.pdf.aspx#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "ICAC surveyed 402 randomly selected NSW adults by telephone in November 1994 to inform its prevention and education work.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201994.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC 1994",
+      "page": 5
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "The survey examined perceptions of corruption, its effects, reporting attitudes, and public understanding and support of ICAC.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201994.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC 1994",
+      "page": 5
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201994.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC 1994",
+      "page": 6
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201994.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC 1994",
+      "page": 7
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "ICAC reported that 44% regarded public sector corruption as a major problem and 47% as a minor problem, while warning that respondents’ images did not establish corruption’s existence.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201994.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC 1994",
+      "page": 5
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "ICAC reported that 91% supported its existence, but respondents were more aware of its investigative work than its prevention and education functions.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201994.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC 1994",
+      "page": 7
+     }
+    ],
+    "section": "SUMMARY"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "It appears that people have more difficulty identifying how corruption actually impacts upon their own lives than in thinking about the effects of corruption in more global terms (Section 3, p. 9).",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201994.pdf.aspx",
+     "document": "Community attitudes to corruption and the ICAC 1994",
+     "page": 6
+    }
+   },
+   {
+    "quote": "It may be valuable to further explore community concern about the use and misuse of public funds and public trust.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201994.pdf.aspx",
+     "document": "Community attitudes to corruption and the ICAC 1994",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

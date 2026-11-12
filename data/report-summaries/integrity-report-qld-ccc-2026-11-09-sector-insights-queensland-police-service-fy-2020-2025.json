@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2026-11-09-sector-insights-queensland-police-service-fy-2020-2025",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Sector insights – Queensland Police Service (FY 2020–2025)",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Queensland-Police-Service_%28FY2020%E2%80%932025%29.pdf",
+  "document": "CCC Sector insights – Queensland Police Service (FY 2020–2025)",
+  "sha256": "77cb7099b816c7935ba36b399a3ce17f96e5e12e9ec796cf309fa05cc25e530f",
+  "pages": 20,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 3,
+  "last_page": 4,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Queensland-Police-Service_%28FY2020%E2%80%932025%29.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission analysed Queensland Police Service corruption risks using complaints, investigations, intelligence and public information from July 2020 to June 2025.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Queensland-Police-Service_%28FY2020%E2%80%932025%29.pdf",
+      "document": "CCC Sector insights – Queensland Police Service (FY 2020–2025)",
+      "page": 3
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "Its analysis includes both corrupt conduct and police misconduct, with risks varying between operational policing and corporate or administrative work.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Queensland-Police-Service_%28FY2020%E2%80%932025%29.pdf",
+      "document": "CCC Sector insights – Queensland Police Service (FY 2020–2025)",
+      "page": 3
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Queensland-Police-Service_%28FY2020%E2%80%932025%29.pdf",
+      "document": "CCC Sector insights – Queensland Police Service (FY 2020–2025)",
+      "page": 5
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "The CCC identified incident responses, offence investigations and confidential information management as high-risk activities, while noting that most complaints were referred to the police service.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Queensland-Police-Service_%28FY2020%E2%80%932025%29.pdf",
+      "document": "CCC Sector insights – Queensland Police Service (FY 2020–2025)",
+      "page": 5
+     }
+    ],
+    "section": "Complaint trends and insights"
+   },
+   {
+    "text": "The CCC outlined prevention measures including employee screening, ongoing training, supervision, information controls and audits of policing and corporate activities.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Queensland-Police-Service_%28FY2020%E2%80%932025%29.pdf",
+      "document": "CCC Sector insights – Queensland Police Service (FY 2020–2025)",
+      "page": 17
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Queensland-Police-Service_%28FY2020%E2%80%932025%29.pdf",
+      "document": "CCC Sector insights – Queensland Police Service (FY 2020–2025)",
+      "page": 18
+     }
+    ],
+    "section": "Prevention strategies and resources"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Responding to incidents, investigating offences and managing confidential information are high-risk activities for the sector.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Queensland-Police-Service_%28FY2020%E2%80%932025%29.pdf",
+     "document": "CCC Sector insights – Queensland Police Service (FY 2020–2025)",
+     "page": 5
+    }
+   },
+   {
+    "quote": "Corruption risks vary based on role and level of interaction with the community.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Queensland-Police-Service_%28FY2020%E2%80%932025%29.pdf",
+     "document": "CCC Sector insights – Queensland Police Service (FY 2020–2025)",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

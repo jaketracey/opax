@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2016-10-10-report-matter-governance-shire-dowerin",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on a matter of governance at the Shire of Dowerin",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20matter%20of%20governance%20at%20the%20Shire%20of%20Dowerin.pdf",
+  "document": "Report on a matter of governance at the Shire of Dowerin",
+  "sha256": "adcb95ad0338790f63fd13e5cebb3e4a22b71dd8334cbab69fd0e55459bf193e",
+  "pages": 60,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "OVERVIEW",
+  "first_page": 7,
+  "last_page": 9,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20matter%20of%20governance%20at%20the%20Shire%20of%20Dowerin.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated how the Shire of Dowerin's chief executive officer could steal public money over several years without detection.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20matter%20of%20governance%20at%20the%20Shire%20of%20Dowerin.pdf",
+      "document": "Report on a matter of governance at the Shire of Dowerin",
+      "page": 7
+     }
+    ],
+    "section": "OVERVIEW"
+   },
+   {
+    "text": "Its examination covered council oversight, financial controls and the failure of successive audits to detect the theft.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20matter%20of%20governance%20at%20the%20Shire%20of%20Dowerin.pdf",
+      "document": "Report on a matter of governance at the Shire of Dowerin",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20matter%20of%20governance%20at%20the%20Shire%20of%20Dowerin.pdf",
+      "document": "Report on a matter of governance at the Shire of Dowerin",
+      "page": 8
+     }
+    ],
+    "section": "OVERVIEW"
+   },
+   {
+    "text": "The Commission concluded that stronger policies, an audit committee and scrutiny of credit card statements would probably have exposed the theft earlier.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20matter%20of%20governance%20at%20the%20Shire%20of%20Dowerin.pdf",
+      "document": "Report on a matter of governance at the Shire of Dowerin",
+      "page": 8
+     }
+    ],
+    "section": "OVERVIEW"
+   },
+   {
+    "text": "It formed no serious misconduct opinions about Shire officers or councillors and stressed councils' responsibility for governing local government affairs.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20matter%20of%20governance%20at%20the%20Shire%20of%20Dowerin.pdf",
+      "document": "Report on a matter of governance at the Shire of Dowerin",
+      "page": 8
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20matter%20of%20governance%20at%20the%20Shire%20of%20Dowerin.pdf",
+      "document": "Report on a matter of governance at the Shire of Dowerin",
+      "page": 9
+     }
+    ],
+    "section": "OVERVIEW"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2013-11-26-tp1068-special-report-concerning-certain-operations-in-2013",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Special report concerning certain operations in 2013",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a273c/globalassets/tabled-paper-documents/tabled-paper-1068/iba2632_report_web_2_cc1ykwzd.pdf",
+  "document": "IBA2632_Report_Web_2_CC1yKWZD",
+  "sha256": "8fd126b2168a2882a23a401941222df8f6ba200dc1aea743d3974055ba544818",
+  "pages": 32,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Introduction",
+  "first_page": 7,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4a273c/globalassets/tabled-paper-documents/tabled-paper-1068/iba2632_report_web_2_cc1ykwzd.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC reported on its handling of matters largely predating its full jurisdiction, including unfinished investigations inherited from the Office of Police Integrity.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a273c/globalassets/tabled-paper-documents/tabled-paper-1068/iba2632_report_web_2_cc1ykwzd.pdf",
+      "document": "IBA2632_Report_Web_2_CC1yKWZD",
+      "page": 3
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a273c/globalassets/tabled-paper-documents/tabled-paper-1068/iba2632_report_web_2_cc1ykwzd.pdf",
+      "document": "IBA2632_Report_Web_2_CC1yKWZD",
+      "page": 7
+     }
+    ],
+    "section": "Letter of transmittal"
+   },
+   {
+    "text": "It covered early operations, police contact involving death or serious injury, agency notifications and investigations involving alleged police misconduct.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a273c/globalassets/tabled-paper-documents/tabled-paper-1068/iba2632_report_web_2_cc1ykwzd.pdf",
+      "document": "IBA2632_Report_Web_2_CC1yKWZD",
+      "page": 7
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "IBAC concluded that its work to that point showed the legislation substantially enabled it to operate effectively as Parliament intended.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a273c/globalassets/tabled-paper-documents/tabled-paper-1068/iba2632_report_web_2_cc1ykwzd.pdf",
+      "document": "IBA2632_Report_Web_2_CC1yKWZD",
+      "page": 23
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "It proposed maintaining capacity for both police oversight and public sector corruption investigations and reporting again after its first full year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a273c/globalassets/tabled-paper-documents/tabled-paper-1068/iba2632_report_web_2_cc1ykwzd.pdf",
+      "document": "IBA2632_Report_Web_2_CC1yKWZD",
+      "page": 23
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The substantive work done by IBAC in 2013 means that the IBAC legislation, at least in substantial part and thus far, has enabled IBAC to work effectively and as intended by Parliament.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a273c/globalassets/tabled-paper-documents/tabled-paper-1068/iba2632_report_web_2_cc1ykwzd.pdf",
+     "document": "IBA2632_Report_Web_2_CC1yKWZD",
+     "page": 23
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

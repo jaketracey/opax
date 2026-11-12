@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2021-06-17-final-review-wa-police-force-response-incident-lock-5313ee93",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Final review of the WA Police Force response to an incident in the lock up of a country town",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20review%20of%20the%20WA%20Police%20Force%20response%20to%20an%20incident%20in%20the%20lock%20up%20of%20a%20country%20town.pdf",
+  "document": "Final review of the WA Police Force response to an incident in the lock up of a country town",
+  "sha256": "6fee7223d2b528c7ec3d76cf9f80a71d320334b7e19fd1116ee702a3cdd53206",
+  "pages": 8,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission conducted a final review of one outstanding recommendation arising from a police use of force incident in a country town lock-up.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20review%20of%20the%20WA%20Police%20Force%20response%20to%20an%20incident%20in%20the%20lock%20up%20of%20a%20country%20town.pdf",
+      "document": "Final review of the WA Police Force response to an incident in the lock up of a country town",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20review%20of%20the%20WA%20Police%20Force%20response%20to%20an%20incident%20in%20the%20lock%20up%20of%20a%20country%20town.pdf",
+      "document": "Final review of the WA Police Force response to an incident in the lock up of a country town",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The review considered revised rules requiring force reports when an officer identifies bodily injury or the person subjected to force identifies or claims it, regardless of medical care.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20review%20of%20the%20WA%20Police%20Force%20response%20to%20an%20incident%20in%20the%20lock%20up%20of%20a%20country%20town.pdf",
+      "document": "Final review of the WA Police Force response to an incident in the lock up of a country town",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The Commission considered the reporting instructions clearer and closed the remaining recommendation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20review%20of%20the%20WA%20Police%20Force%20response%20to%20an%20incident%20in%20the%20lock%20up%20of%20a%20country%20town.pdf",
+      "document": "Final review of the WA Police Force response to an incident in the lock up of a country town",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20review%20of%20the%20WA%20Police%20Force%20response%20to%20an%20incident%20in%20the%20lock%20up%20of%20a%20country%20town.pdf",
+      "document": "Final review of the WA Police Force response to an incident in the lock up of a country town",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The Commission said the effect of the changes would depend on their application by officers and committed to continued monitoring.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20review%20of%20the%20WA%20Police%20Force%20response%20to%20an%20incident%20in%20the%20lock%20up%20of%20a%20country%20town.pdf",
+      "document": "Final review of the WA Police Force response to an incident in the lock up of a country town",
+      "page": 8
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission considers this recommendation is complete.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20review%20of%20the%20WA%20Police%20Force%20response%20to%20an%20incident%20in%20the%20lock%20up%20of%20a%20country%20town.pdf",
+     "document": "Final review of the WA Police Force response to an incident in the lock up of a country town",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

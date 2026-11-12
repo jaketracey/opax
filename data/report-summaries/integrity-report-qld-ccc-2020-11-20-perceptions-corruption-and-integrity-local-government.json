@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2020-11-20-perceptions-corruption-and-integrity-local-government",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Perceptions of corruption and integrity in local government",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-local-government.pdf",
+  "document": "Perceptions of corruption and integrity in local government",
+  "sha256": "b496cc51bdc50efb70f7f239e4b2e698f0af947a259106e2dc339cb8a38a9d30",
+  "pages": 4,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "WHAT WE FOUND",
+  "first_page": 1,
+  "last_page": 3,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-local-government.pdf#page=1"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission surveyed Queensland council employees to assess perceived corruption risks, reporting barriers and opportunities for prevention.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-local-government.pdf",
+      "document": "Perceptions of corruption and integrity in local government",
+      "page": 1
+     }
+    ],
+    "section": "WHAT WE DID"
+   },
+   {
+    "text": "The online survey ran from mid-May to early June 2020 and analysed responses from more than 6500 employees across 68 councils.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-local-government.pdf",
+      "document": "Perceptions of corruption and integrity in local government",
+      "page": 1
+     }
+    ],
+    "section": "WHAT WE DID"
+   },
+   {
+    "text": "The CCC reported that employees more often perceived corruption in the wider sector than in their own workplace, and identified misuse of authority and conflicts of interest as common concerns.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-local-government.pdf",
+      "document": "Perceptions of corruption and integrity in local government",
+      "page": 1
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-local-government.pdf",
+      "document": "Perceptions of corruption and integrity in local government",
+      "page": 2
+     }
+    ],
+    "section": "WHAT WE FOUND"
+   },
+   {
+    "text": "The CCC reported strong willingness to report corruption, alongside uncertainty about reporting channels and concerns about management inaction, careers and workplace relationships.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-local-government.pdf",
+      "document": "Perceptions of corruption and integrity in local government",
+      "page": 2
+     }
+    ],
+    "section": "REPORTING CORRUPTION"
+   },
+   {
+    "text": "The CCC called for targeted reporting education, support from managers and accessible, practical internal guidance.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-local-government.pdf",
+      "document": "Perceptions of corruption and integrity in local government",
+      "page": 4
+     }
+    ],
+    "section": "WHERE TO FROM HERE?"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There is a high level of willingness among council employees to report corruption.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-local-government.pdf",
+     "document": "Perceptions of corruption and integrity in local government",
+     "page": 2
+    }
+   },
+   {
+    "quote": "Local governments should ensure their internal resources are accessible, up-to-date and provide clear and practical advice to their employees.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-local-government.pdf",
+     "document": "Perceptions of corruption and integrity in local government",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

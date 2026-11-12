@@ -1,5 +1,5 @@
 // Offline projection of the four published datasets. Never fetches source sites.
-import { readFile, mkdir, writeFile, rm } from 'node:fs/promises';
+import { readFile, readdir, mkdir, writeFile, rm } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { resolve, join } from 'node:path';
 
@@ -115,6 +115,72 @@ export async function projectReports(read) {
       ] });
   }
   if (new Set(out.map(r => r.row.slug)).size !== out.length) throw new Error('Duplicate report slug');
+  const summaries = await readSummaries();
+  const bySlug = new Map(out.map(r => [r.row.slug, r.detail]));
+  for (const [slug, s] of summaries) {
+    const detail = bySlug.get(slug);
+    if (!detail) throw new Error(`Report summary has no record: ${slug}`);
+    // A summary describes one file. If the record no longer holds that file, the summary is stale and is left off.
+    if (shas(detail.record).has(s.sha256)) detail.summary = s.summary;
+  }
+  return out;
+}
+
+// ---- generated summaries (data/report-summaries, written by Codex lanes and checked by
+// scripts/report_summaries/gate.py). Outside public/, so only this projection is served.
+const summaryRoot = fileURLToPath(new URL('../data/report-summaries/', import.meta.url));
+/** Findings quotes that name a person are shown only when this is true. Off until Jake rules on named-person quotes;
+ * the records' summary sentences still show. */
+export const SHOW_NAMED_PERSON_QUOTES = false;
+/** Records whose "In the body's own words" quotes name a person (adverse findings or favourable outcomes). */
+export const NAMED_PERSON_QUOTES = new Set([
+  'integrity-report-vic-ibac-2016-10-20-tp2847-special-report-on-operation-exmouth',
+  'integrity-report-vic-ibac-2019-09-30-tp4287-special-report-on-corruption-risks-associated-with-pr',
+  'integrity-report-vic-ibac-2023-02-22-tp7086-special-report-on-operation-clara',
+  'royal-commission-act-criminal-justice',
+  'royal-commission-vic-police-informants',
+  'integrity-report-qld-ccc-2004-01-23-prosecution-pauline-hanson-and-david-ettridge-report-inquiry',
+  'integrity-report-vic-ibac-2014-02-19-tp1173-special-report-concerning-allegations-about-the-condu',
+  'integrity-report-vic-ibac-2014-02-19-tp1174-special-report-concerning-allegations-about-the-condu',
+]);
+/** Summaries not shown: two blank NSW ICAC 2007 survey questionnaires (forms, not reports), and tp1174, which is the
+ * same IBAC special report as tp1173 recorded twice (the duplicate record is for the next intake fix). */
+export const SUMMARY_LEFT_OFF = new Set([
+  'integrity-report-nsw-icac-2009-05-19-profiling-the-nsw-public-sector-2007-functions-risks-and-cor',
+  'integrity-report-nsw-icac-2009-05-19-profiling-the-nsw-public-sector-2007-understanding-and-manag',
+  'integrity-report-vic-ibac-2014-02-19-tp1174-special-report-concerning-allegations-about-the-condu',
+]);
+const shas = (value, found = new Set()) => {
+  if (Array.isArray(value)) for (const v of value) shas(v, found);
+  else if (value && typeof value === 'object') for (const [k, v] of Object.entries(value)) k === 'sha256' && typeof v === 'string' ? found.add(v) : shas(v, found);
+  return found;
+};
+const citeOf = c => official(c?.url) ? { url: c.url, document: String(c.document || ''), ...(Number.isInteger(c.page) ? { page: c.page } : {}) } : null;
+/** One published summary file as the record's `summary` field, or null when it is not shown. */
+export function projectSummary(d) {
+  const s = d?.summary;
+  if (d?.schema !== 1 || s?.status !== 'ready' || SUMMARY_LEFT_OFF.has(d.slug)) return null;
+  const sentences = rows(s.sentences).map(x => ({ text: String(x.text), cites: rows(x.cites).map(citeOf).filter(Boolean), ...(x.section ? { section: String(x.section) } : {}) }))
+    .filter(x => x.text && x.cites.length);
+  if (!sentences.length) return null;
+  const own = d.own_summary && official(d.own_summary.link) ? { label: "The report's own summary", heading: String(d.own_summary.heading || ''),
+    url: d.own_summary.link, first_page: d.own_summary.first_page, last_page: d.own_summary.last_page } : null;
+  const held = !SHOW_NAMED_PERSON_QUOTES && NAMED_PERSON_QUOTES.has(d.slug);
+  const quotes = held ? [] : rows(d.findings?.items).map(q => ({ quote: String(q.quote), kind: String(q.kind), cite: citeOf(q.cite) })).filter(q => q.quote && q.cite);
+  return { own_summary: own,
+    generated: { label: 'Generated summary: written by an AI model from the report text and checked against the cited pages.',
+      model: String(d.generation?.engine || ''), checked_at: d.gate?.checked_at || null, sentences },
+    quotes: { label: "In the body's own words", items: quotes } };
+}
+async function readSummaries(dir = summaryRoot) {
+  const out = new Map();
+  let names = [];
+  try { names = (await readdir(dir)).filter(n => n.endsWith('.json')).sort(); } catch (e) { if (e.code !== 'ENOENT') throw e; }
+  for (const name of names) {
+    const d = JSON.parse(await readFile(join(dir, name), 'utf8'));
+    const summary = projectSummary(d);
+    if (summary) out.set(d.slug, { sha256: d.source?.sha256, summary });
+  }
   return out;
 }
 

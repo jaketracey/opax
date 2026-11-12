@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2023-10-12-deployment-police-dogs-recommendation-review",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Deployment of Police Dogs Recommendation Review",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Deployment_of_Police_Dogs_Recommendation_Review_0.pdf",
+  "document": "Deployment of Police Dogs Recommendation Review",
+  "sha256": "3dae27bc349ed7ef9896c5a0d7399a3791b5798baf681bf69933061c791fa39e",
+  "pages": 9,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "OVERVIEW",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Deployment_of_Police_Dogs_Recommendation_Review_0.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed WA Police's response to its earlier recommendations about the deployment of police dogs.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Deployment_of_Police_Dogs_Recommendation_Review_0.pdf",
+      "document": "Deployment of Police Dogs Recommendation Review",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The two recommendations sought clearer operational rules and analysis of why Aboriginal and Torres Strait Islander people were overrepresented in dog deployments.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Deployment_of_Police_Dogs_Recommendation_Review_0.pdf",
+      "document": "Deployment of Police Dogs Recommendation Review",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The Commission recognised the proposed changes but concluded that it was too early to assess whether the recommendations had been addressed.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Deployment_of_Police_Dogs_Recommendation_Review_0.pdf",
+      "document": "Deployment of Police Dogs Recommendation Review",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The Commission planned to review progress by WA Police again after 12 months.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Deployment_of_Police_Dogs_Recommendation_Review_0.pdf",
+      "document": "Deployment of Police Dogs Recommendation Review",
+      "page": 9
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission acknowledges the commitment of WA Police to addressing the inherent risks associated with the use of police dogs.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Deployment_of_Police_Dogs_Recommendation_Review_0.pdf",
+     "document": "Deployment of Police Dogs Recommendation Review",
+     "page": 9
+    }
+   },
+   {
+    "quote": "However, it is considered too early to assess whether the two recommendations have been addressed.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Deployment_of_Police_Dogs_Recommendation_Review_0.pdf",
+     "document": "Deployment of Police Dogs Recommendation Review",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

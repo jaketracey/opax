@@ -1,0 +1,119 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2003-02-01-profiling-the-nsw-public-sector-functions-risks-and-corrupti",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector,%20Functions,%20risks%20and%20corruption%20resistance%20strategie.pdf.aspx",
+  "document": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+  "sha256": "395718fb16fc2ef9d638202ba4116394e42fece85da4ad53c8da090c8d06b4d5",
+  "pages": 119,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "E X E C U T I V E S U M M A RY",
+  "first_page": 10,
+  "last_page": 14,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector,%20Functions,%20risks%20and%20corruption%20resistance%20strategie.pdf.aspx#page=10"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Commission Against Corruption surveyed NSW public sector organisations and staff to identify perceived corruption risks and existing prevention practices.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector,%20Functions,%20risks%20and%20corruption%20resistance%20strategie.pdf.aspx",
+      "document": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+      "page": 10
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "It received completed surveys from 265 organisations and 357 staff across 20 organisations; the research explored potential opportunities for corruption rather than measuring existing corruption.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector,%20Functions,%20risks%20and%20corruption%20resistance%20strategie.pdf.aspx",
+      "document": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+      "page": 10
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "ICAC identified misuse of confidential information, misuse of public assets and corrupt tendering as the main perceived risks confronting organisations.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector,%20Functions,%20risks%20and%20corruption%20resistance%20strategie.pdf.aspx",
+      "document": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+      "page": 79
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "ICAC made 29 recommendations covering risk management, conduct codes, gifts, information security, recruitment, procurement, audit, protected disclosures and internal investigations.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector,%20Functions,%20risks%20and%20corruption%20resistance%20strategie.pdf.aspx",
+      "document": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+      "page": 11
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector,%20Functions,%20risks%20and%20corruption%20resistance%20strategie.pdf.aspx",
+      "document": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+      "page": 12
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector,%20Functions,%20risks%20and%20corruption%20resistance%20strategie.pdf.aspx",
+      "document": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+      "page": 13
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector,%20Functions,%20risks%20and%20corruption%20resistance%20strategie.pdf.aspx",
+      "document": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+      "page": 14
+     }
+    ],
+    "section": "Executive summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "However, public sector organisations must remain vigilant in monitoring and reviewing their risk management practices.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector,%20Functions,%20risks%20and%20corruption%20resistance%20strategie.pdf.aspx",
+     "document": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+     "page": 79
+    }
+   },
+   {
+    "quote": "The ICAC encourages all organisations to adopt the seven-step risk management process as a general approach to identifying and treating risks.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector,%20Functions,%20risks%20and%20corruption%20resistance%20strategie.pdf.aspx",
+     "document": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+     "page": 80
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

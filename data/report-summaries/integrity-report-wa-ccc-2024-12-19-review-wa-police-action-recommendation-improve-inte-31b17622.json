@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2024-12-19-review-wa-police-action-recommendation-improve-inte-31b17622",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Review of WA Police action into recommendation to improve internal investigation processes",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Review_of_WA_Police_action_into_recommendation_to_improve_investigation_processes.pdf",
+  "document": "REPORT - Review of WA Police action into recommendation to improve investigation process",
+  "sha256": "78ade96e314725216fa10fb78a66dda1ed4e9d51291d35f2fd5cd6e030a9f5ce",
+  "pages": 8,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "OVERVIEW",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Review_of_WA_Police_action_into_recommendation_to_improve_investigation_processes.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed progress on an earlier recommendation to improve WA Police’s internal investigation and review timeframes.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Review_of_WA_Police_action_into_recommendation_to_improve_investigation_processes.pdf",
+      "document": "REPORT - Review of WA Police action into recommendation to improve investigation process",
+      "page": 4
+     }
+    ],
+    "section": "OVERVIEW"
+   },
+   {
+    "text": "The review examined an escalation process, a rapid investigation pilot and the planned revision of police integrity procedures.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Review_of_WA_Police_action_into_recommendation_to_improve_investigation_processes.pdf",
+      "document": "REPORT - Review of WA Police action into recommendation to improve investigation process",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Review_of_WA_Police_action_into_recommendation_to_improve_investigation_processes.pdf",
+      "document": "REPORT - Review of WA Police action into recommendation to improve investigation process",
+      "page": 6
+     }
+    ],
+    "section": "REVIEW OF THE RECOMMENDATION"
+   },
+   {
+    "text": "The Commission acknowledged progress but concluded that the integrity manual and quality assurance process still needed review and the new initiatives were at an early stage.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Review_of_WA_Police_action_into_recommendation_to_improve_investigation_processes.pdf",
+      "document": "REPORT - Review of WA Police action into recommendation to improve investigation process",
+      "page": 8
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "The Commission kept the recommendation open and planned another update and further review.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Review_of_WA_Police_action_into_recommendation_to_improve_investigation_processes.pdf",
+      "document": "REPORT - Review of WA Police action into recommendation to improve investigation process",
+      "page": 8
+     }
+    ],
+    "section": "CONCLUSION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Despite the actions taken to date by WA Police, the Commission's recommendation will remain open.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Review_of_WA_Police_action_into_recommendation_to_improve_investigation_processes.pdf",
+     "document": "REPORT - Review of WA Police action into recommendation to improve investigation process",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

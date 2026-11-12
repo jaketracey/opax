@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2021-12-02-report-wa-police-forces-identification-and-manageme-e574b722",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "A report into WA Police Force's identification and management of at risk officers",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20into%20WA%20Police%20Force%26%23039%3Bs%20identification%20and%20management%20of%20at%20risk%20officers.pdf",
+  "document": "A report into WA Police Force's identification and management of at risk officers",
+  "sha256": "858789a35d488e5f52ab4763c4c8738a9515108c1f5924b7233381b2539f83f1",
+  "pages": 22,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 4,
+  "last_page": 6,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20into%20WA%20Police%20Force%26%23039%3Bs%20identification%20and%20management%20of%20at%20risk%20officers.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed two WA Police investigations into allegations of excessive force by an officer.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20into%20WA%20Police%20Force%26%23039%3Bs%20identification%20and%20management%20of%20at%20risk%20officers.pdf",
+      "document": "A report into WA Police Force's identification and management of at risk officers",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The Commission considered both investigations inadequate and their conclusions unsupported by adequate inquiries.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20into%20WA%20Police%20Force%26%23039%3Bs%20identification%20and%20management%20of%20at%20risk%20officers.pdf",
+      "document": "A report into WA Police Force's identification and management of at risk officers",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The Commission made two recommendations about early support for officers at risk of misconduct and broader reporting of force to the head or neck.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20into%20WA%20Police%20Force%26%23039%3Bs%20identification%20and%20management%20of%20at%20risk%20officers.pdf",
+      "document": "A report into WA Police Force's identification and management of at risk officers",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "WA Police rejected both recommendations, but the Commission retained them.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20into%20WA%20Police%20Force%26%23039%3Bs%20identification%20and%20management%20of%20at%20risk%20officers.pdf",
+      "document": "A report into WA Police Force's identification and management of at risk officers",
+      "page": 20
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20into%20WA%20Police%20Force%26%23039%3Bs%20identification%20and%20management%20of%20at%20risk%20officers.pdf",
+      "document": "A report into WA Police Force's identification and management of at risk officers",
+      "page": 22
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In the Commission's opinion, both investigations were inadequate and therefore the findings were not reasonably open.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20into%20WA%20Police%20Force%26%23039%3Bs%20identification%20and%20management%20of%20at%20risk%20officers.pdf",
+     "document": "A report into WA Police Force's identification and management of at risk officers",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

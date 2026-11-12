@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2015-08-27-tp1894-special-report-concerning-police-oversight",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Special report concerning police oversight",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a245f/globalassets/tabled-paper-documents/tabled-paper-1894/cd_15_31788__web_pdf_-_special_report_concerning_police_oversight_-_august_2015_hmvptyph.pdf",
+  "document": "CD_15_31788__WEB_PDF_-_Special_report_concerning_police_oversight_-_August_2015_hmvPtYpH",
+  "sha256": "b8cae4c45f7d8db750f9490f79829d67e302dd931df123b8951c1373086095a6",
+  "pages": 44,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Foreword",
+  "first_page": 9,
+  "last_page": 9,
+  "link": "https://www.parliament.vic.gov.au/4a245f/globalassets/tabled-paper-documents/tabled-paper-1894/cd_15_31788__web_pdf_-_special_report_concerning_police_oversight_-_august_2015_hmvptyph.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC reported on its oversight of Victoria Police since becoming fully operational in early 2013.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a245f/globalassets/tabled-paper-documents/tabled-paper-1894/cd_15_31788__web_pdf_-_special_report_concerning_police_oversight_-_august_2015_hmvptyph.pdf",
+      "document": "CD_15_31788__WEB_PDF_-_Special_report_concerning_police_oversight_-_August_2015_hmvPtYpH",
+      "page": 9
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a245f/globalassets/tabled-paper-documents/tabled-paper-1894/cd_15_31788__web_pdf_-_special_report_concerning_police_oversight_-_august_2015_hmvptyph.pdf",
+      "document": "CD_15_31788__WEB_PDF_-_Special_report_concerning_police_oversight_-_August_2015_hmvPtYpH",
+      "page": 15
+     }
+    ],
+    "section": "Foreword"
+   },
+   {
+    "text": "It covered prevention projects, reviews of police investigations and the progress and outcomes of IBAC investigations.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a245f/globalassets/tabled-paper-documents/tabled-paper-1894/cd_15_31788__web_pdf_-_special_report_concerning_police_oversight_-_august_2015_hmvptyph.pdf",
+      "document": "CD_15_31788__WEB_PDF_-_Special_report_concerning_police_oversight_-_August_2015_hmvPtYpH",
+      "page": 15
+     }
+    ],
+    "section": "About this report"
+   },
+   {
+    "text": "A delegated inquiry found serious negligence in handling human source information and failures to follow policy, while making no finding of unlawful behaviour.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a245f/globalassets/tabled-paper-documents/tabled-paper-1894/cd_15_31788__web_pdf_-_special_report_concerning_police_oversight_-_august_2015_hmvptyph.pdf",
+      "document": "CD_15_31788__WEB_PDF_-_Special_report_concerning_police_oversight_-_August_2015_hmvPtYpH",
+      "page": 35
+     }
+    ],
+    "section": "Inquiry findings and recommendations"
+   },
+   {
+    "text": "IBAC recorded 20 statutory recommendations to Victoria Police, addressing matters including human sources, subpoenas, victims of crime assistance and oversight of prosecutors.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a245f/globalassets/tabled-paper-documents/tabled-paper-1894/cd_15_31788__web_pdf_-_special_report_concerning_police_oversight_-_august_2015_hmvptyph.pdf",
+      "document": "CD_15_31788__WEB_PDF_-_Special_report_concerning_police_oversight_-_August_2015_hmvPtYpH",
+      "page": 38
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a245f/globalassets/tabled-paper-documents/tabled-paper-1894/cd_15_31788__web_pdf_-_special_report_concerning_police_oversight_-_august_2015_hmvptyph.pdf",
+      "document": "CD_15_31788__WEB_PDF_-_Special_report_concerning_police_oversight_-_August_2015_hmvPtYpH",
+      "page": 39
+     }
+    ],
+    "section": "Progress on recommendations arising from previous investigations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In his final report, Mr Kellam found negligence of a high order in the management of human source information by Victoria Police and he concluded that Victoria Police had failed to act in accordance with appropriate policies and guidelines.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a245f/globalassets/tabled-paper-documents/tabled-paper-1894/cd_15_31788__web_pdf_-_special_report_concerning_police_oversight_-_august_2015_hmvptyph.pdf",
+     "document": "CD_15_31788__WEB_PDF_-_Special_report_concerning_police_oversight_-_August_2015_hmvPtYpH",
+     "page": 35
+    }
+   },
+   {
+    "quote": "This matter highlighted a systemic issue: the significant authority granted to often junior police prosecutors operating with little or no oversight.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a245f/globalassets/tabled-paper-documents/tabled-paper-1894/cd_15_31788__web_pdf_-_special_report_concerning_police_oversight_-_august_2015_hmvptyph.pdf",
+     "document": "CD_15_31788__WEB_PDF_-_Special_report_concerning_police_oversight_-_August_2015_hmvPtYpH",
+     "page": 38
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

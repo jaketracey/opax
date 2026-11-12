@@ -1,0 +1,116 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2024-12-05-operation-mantis",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+  "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+  "sha256": "cb09df88c16582211cd81366ee7975d2064702a82fd04be180e6e258553fff2c",
+  "pages": 140,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chapter 1: Overview",
+  "first_page": 9,
+  "last_page": 17,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption investigated conduct involving a senior Canterbury-Bankstown Council manager and a former council contractor.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+      "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+      "page": 9
+     }
+    ],
+    "section": "Chapter 1: Overview"
+   },
+   {
+    "text": "The investigation examined alleged financial benefits linked to temporary-worker recruitment and assistance in obtaining council contracts.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+      "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+      "page": 10
+     }
+    ],
+    "section": "The allegations"
+   },
+   {
+    "text": "The Commission found serious corrupt conduct by the manager and former contractor in a recruitment scheme that provided the manager with about $208,000.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+      "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+      "page": 13
+     }
+    ],
+    "section": "Corrupt conduct findings in relation to recruitment"
+   },
+   {
+    "text": "The Commission also found serious corrupt conduct by the former contractor and a construction company director involving payments for help in securing council projects.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+      "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+      "page": 9
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+      "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+      "page": 14
+     }
+    ],
+    "section": "Corrupt conduct findings in relation to procurement"
+   },
+   {
+    "text": "The Commission made 19 corruption-prevention recommendations covering recruitment checks, temporary-worker oversight, capital works procurement, contract variations and conflicts of interest.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+      "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+      "page": 14
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+      "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+      "page": 15
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+      "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+      "page": 16
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+      "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+      "page": 17
+     }
+    ],
+    "section": "Recommendations for corruption prevention"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

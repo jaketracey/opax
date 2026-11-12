@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2012-12-20-regulation-political-donation-and-gifts-queensland-comparati",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "The regulation of political donation and gifts in Queensland: a comparative analysis",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-regulation-of-political-donations-and-gifts-in-qld-Report-2012.pdf",
+  "document": "The regulation of political donations and gifts in Queensland: A comparative analysis (20 December 2012)",
+  "sha256": "31fe2b8111c8d4272c3d0e8b0862579e3f45c8570e5dc8f816e08688dade0b3a",
+  "pages": 76,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY",
+  "first_page": 11,
+  "last_page": 12,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-regulation-of-political-donations-and-gifts-in-qld-Report-2012.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission compared Queensland laws on political donations and gifts with Australian and overseas jurisdictions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-regulation-of-political-donations-and-gifts-in-qld-Report-2012.pdf",
+      "document": "The regulation of political donations and gifts in Queensland: A comparative analysis (20 December 2012)",
+      "page": 11
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "It examined donation restrictions, disclosure rules and the enforcement of state and local government requirements.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-regulation-of-political-donations-and-gifts-in-qld-Report-2012.pdf",
+      "document": "The regulation of political donations and gifts in Queensland: A comparative analysis (20 December 2012)",
+      "page": 11
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "The CMC found that Queensland state disclosure obligations were generally comparable to or stricter than elsewhere, with weaker regulation of special reporting for large gifts.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-regulation-of-political-donations-and-gifts-in-qld-Report-2012.pdf",
+      "document": "The regulation of political donations and gifts in Queensland: A comparative analysis (20 December 2012)",
+      "page": 11
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "For local government, it found that Queensland took considerably longer than other jurisdictions to release disclosure returns publicly.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-regulation-of-political-donations-and-gifts-in-qld-Report-2012.pdf",
+      "document": "The regulation of political donations and gifts in Queensland: A comparative analysis (20 December 2012)",
+      "page": 12
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "The CMC made no recommendations, intending the comparison to inform debate and policy decisions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-regulation-of-political-donations-and-gifts-in-qld-Report-2012.pdf",
+      "document": "The regulation of political donations and gifts in Queensland: A comparative analysis (20 December 2012)",
+      "page": 11
+     }
+    ],
+    "section": "SUMMARY"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Queensland’s electoral donation caps are among the lowest of all comparable jurisdictions, and therefore provide the most regulation of electoral donations.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-regulation-of-political-donations-and-gifts-in-qld-Report-2012.pdf",
+     "document": "The regulation of political donations and gifts in Queensland: A comparative analysis (20 December 2012)",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

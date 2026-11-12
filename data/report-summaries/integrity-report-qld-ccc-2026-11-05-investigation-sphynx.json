@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2026-11-05-investigation-sphynx",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Investigation Sphynx: An investigation into allegations of corrupt conduct surrounding the QPS’s decision to enter into the Stones Corner lease",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+  "document": "Investigation Sphynx – November 2026 (PDF)",
+  "sha256": "34a4faa0d498f32ff8bece65ce71bf72658dee49e0cfdf66f7bf4d9f813fbe85",
+  "pages": 32,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission investigated how the Queensland Police Service decided to lease a commercial property at Stones Corner in Brisbane.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+      "document": "Investigation Sphynx – November 2026 (PDF)",
+      "page": 2
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+      "document": "Investigation Sphynx – November 2026 (PDF)",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+      "document": "Investigation Sphynx – November 2026 (PDF)",
+      "page": 6
+     }
+    ],
+    "section": "Overview of investigation"
+   },
+   {
+    "text": "The CCC reported that the police service committed about $116 million over 15 years to premises subsequently assessed as unsuitable and never occupied by the service.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+      "document": "Investigation Sphynx – November 2026 (PDF)",
+      "page": 5
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The CCC identified failures in governance, scrutiny and due diligence, while finding no dishonesty, improper relationship or personal benefit involving any person.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+      "document": "Investigation Sphynx – November 2026 (PDF)",
+      "page": 5
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The CCC made nine recommendations to the police service on leasing oversight, committee practices, financial authority, organisational culture and risk management.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+      "document": "Investigation Sphynx – November 2026 (PDF)",
+      "page": 15
+     }
+    ],
+    "section": "Recommendations"
+   },
+   {
+    "text": "The CCC also recommended two Queensland Government reviews covering accommodation policy and leasing approvals.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+      "document": "Investigation Sphynx – November 2026 (PDF)",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+      "document": "Investigation Sphynx – November 2026 (PDF)",
+      "page": 16
+     }
+    ],
+    "section": "The broader reforms required"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

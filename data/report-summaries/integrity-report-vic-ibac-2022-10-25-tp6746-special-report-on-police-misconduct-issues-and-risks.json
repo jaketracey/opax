@@ -1,0 +1,140 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2022-10-25-tp6746-special-report-on-police-misconduct-issues-and-risks",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Special report on police misconduct issues and risks associated with Victoria Police's Critical Incident Response Team",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a2877/globalassets/tabled-paper-documents/tabled-paper-6746/attachment_a_the_cirt_special_report_vgkvks3j.pdf",
+  "document": "Attachment_A_The_CIRT_Special_Report_vgkVKs3j",
+  "sha256": "2df64a332ee672ba15155047a103328f805b092d461e16d5f27f32e2d79f087a",
+  "pages": 68,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview, main findings, and recommendations",
+  "first_page": 7,
+  "last_page": 14,
+  "link": "https://www.parliament.vic.gov.au/4a2877/globalassets/tabled-paper-documents/tabled-paper-6746/attachment_a_the_cirt_special_report_vgkvks3j.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC reviewed misconduct risks involving Victoria Police’s Critical Incident Response Team through investigations, oversight and research.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2877/globalassets/tabled-paper-documents/tabled-paper-6746/attachment_a_the_cirt_special_report_vgkvks3j.pdf",
+      "document": "Attachment_A_The_CIRT_Special_Report_vgkVKs3j",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2877/globalassets/tabled-paper-documents/tabled-paper-6746/attachment_a_the_cirt_special_report_vgkvks3j.pdf",
+      "document": "Attachment_A_The_CIRT_Special_Report_vgkVKs3j",
+      "page": 8
+     }
+    ],
+    "section": "Reason for this report"
+   },
+   {
+    "text": "It focused on the Inflation Nightclub incident and Operations Lynd and Wingan, while drawing on other police and coronial work.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2877/globalassets/tabled-paper-documents/tabled-paper-6746/attachment_a_the_cirt_special_report_vgkvks3j.pdf",
+      "document": "Attachment_A_The_CIRT_Special_Report_vgkVKs3j",
+      "page": 8
+     }
+    ],
+    "section": "Reason for this report"
+   },
+   {
+    "text": "IBAC found that force was proportionate in Lynd and Wingan, but officers failed to tell detained people why they were being held, contrary to human rights requirements.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2877/globalassets/tabled-paper-documents/tabled-paper-6746/attachment_a_the_cirt_special_report_vgkvks3j.pdf",
+      "document": "Attachment_A_The_CIRT_Special_Report_vgkVKs3j",
+      "page": 9
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It identified recurring weaknesses in force reporting, risk assessment, deployment communication and gender diversity.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2877/globalassets/tabled-paper-documents/tabled-paper-6746/attachment_a_the_cirt_special_report_vgkvks3j.pdf",
+      "document": "Attachment_A_The_CIRT_Special_Report_vgkVKs3j",
+      "page": 10
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2877/globalassets/tabled-paper-documents/tabled-paper-6746/attachment_a_the_cirt_special_report_vgkvks3j.pdf",
+      "document": "Attachment_A_The_CIRT_Special_Report_vgkVKs3j",
+      "page": 11
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2877/globalassets/tabled-paper-documents/tabled-paper-6746/attachment_a_the_cirt_special_report_vgkvks3j.pdf",
+      "document": "Attachment_A_The_CIRT_Special_Report_vgkVKs3j",
+      "page": 12
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2877/globalassets/tabled-paper-documents/tabled-paper-6746/attachment_a_the_cirt_special_report_vgkvks3j.pdf",
+      "document": "Attachment_A_The_CIRT_Special_Report_vgkVKs3j",
+      "page": 53
+     }
+    ],
+    "section": "Main misconduct risks and issues"
+   },
+   {
+    "text": "IBAC made six further recommendations on force reporting, operational risk, deployment responsibilities and diversity.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2877/globalassets/tabled-paper-documents/tabled-paper-6746/attachment_a_the_cirt_special_report_vgkvks3j.pdf",
+      "document": "Attachment_A_The_CIRT_Special_Report_vgkVKs3j",
+      "page": 13
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2877/globalassets/tabled-paper-documents/tabled-paper-6746/attachment_a_the_cirt_special_report_vgkvks3j.pdf",
+      "document": "Attachment_A_The_CIRT_Special_Report_vgkVKs3j",
+      "page": 14
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "CIRT officers have repeatedly failed to accurately and comprehensively report their use of force.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2877/globalassets/tabled-paper-documents/tabled-paper-6746/attachment_a_the_cirt_special_report_vgkvks3j.pdf",
+     "document": "Attachment_A_The_CIRT_Special_Report_vgkVKs3j",
+     "page": 10
+    }
+   },
+   {
+    "quote": "In Operation Lynd, IBAC found that CIRT lacked a handover procedure for individuals in its custody, and that CIRT officers did not understand their arrest and handover responsibilities, placing them at risk of acting inconsistently with the human rights of persons in their custody.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2877/globalassets/tabled-paper-documents/tabled-paper-6746/attachment_a_the_cirt_special_report_vgkvks3j.pdf",
+     "document": "Attachment_A_The_CIRT_Special_Report_vgkVKs3j",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

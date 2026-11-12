@@ -1,0 +1,185 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2018-11-29-evaluation-of-the-practices-policies-and-procedures-of-safew",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+  "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+  "sha256": "a0d152be9756787bf0144f9d522cb4d5176dc2b3f87ef5ec5066d71969a9e46e",
+  "pages": 264,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 8,
+  "last_page": 10,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commissioner Against Corruption evaluated the regulatory arm of SafeWork SA to identify ways to reduce corruption and other integrity risks.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 6
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 234
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The evaluation examined governance, policies, inspections, investigations, staff management and information controls.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 12
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 13
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 14
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 15
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 16
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 17
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 18
+     }
+    ],
+    "section": "Recommendations"
+   },
+   {
+    "text": "The Commissioner concluded that weak policies, poor oversight and limited understanding of risks exposed the agency to corruption, misconduct and maladministration.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 8
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commissioner also found that a communication barrier prevented safety risks identified by education staff from reaching regulatory inspectors.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 10
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commissioner made 39 recommendations covering communication, governance, inspection safeguards, investigations, training and confidential information.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 10
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 12
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 13
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 14
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 15
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 16
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 17
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+      "page": 18
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "All of these factors create a working environment at serious risk of corruption, misconduct and maladministration.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+     "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+     "page": 8
+    }
+   },
+   {
+    "quote": "One of the most significant findings in this evaluation has been the intentional creation of a communication barrier between SafeWork SA’s educator arm and its regulatory arm.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/362949/Evaluation_of_the_Practices_Policies_-and-_Procedures_of_SafeWork_SA.pdf",
+     "document": "Evaluation of the Practices, Policies and Procedures of SafeWork SA",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

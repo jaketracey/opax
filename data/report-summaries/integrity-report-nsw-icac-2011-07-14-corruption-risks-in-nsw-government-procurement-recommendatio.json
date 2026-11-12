@@ -1,0 +1,115 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2011-07-14-corruption-risks-in-nsw-government-procurement-recommendatio",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Corruption risks in NSW Government procurement - Recommendations to government",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Recommendations%20to%20government.pdf.aspx",
+  "document": "Corruption risks in NSW Government procurement - Recommendations to government",
+  "sha256": "ee6b195e89ab3e3470ccda155687b740d7e9dc5550ec631abaecedfe93ca5668",
+  "pages": 19,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "NSW government procurement: the Commission’s interest",
+  "first_page": 4,
+  "last_page": 7,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Recommendations%20to%20government.pdf.aspx#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption reviews systemic weaknesses in public procurement and proposes reforms for government.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Recommendations%20to%20government.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - Recommendations to government",
+      "page": 4
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Recommendations%20to%20government.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - Recommendations to government",
+      "page": 5
+     }
+    ],
+    "section": "NSW government procurement: the Commission’s interest"
+   },
+   {
+    "text": "Its research includes surveys of agencies and suppliers, interviews, focus groups, policy analysis and review of investigation and complaint data.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Recommendations%20to%20government.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - Recommendations to government",
+      "page": 4
+     }
+    ],
+    "section": "NSW government procurement: the Commission’s interest"
+   },
+   {
+    "text": "The Commission concludes that unclear leadership, fragmented structures and complex rules weaken procurement, alongside inadequate support and compliance oversight.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Recommendations%20to%20government.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - Recommendations to government",
+      "page": 5
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Recommendations%20to%20government.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - Recommendations to government",
+      "page": 18
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "Its seven recommendations cover central leadership, a system review, simpler and aligned rules, better advice, staff competence and compliance monitoring.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Recommendations%20to%20government.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - Recommendations to government",
+      "page": 5
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Recommendations%20to%20government.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - Recommendations to government",
+      "page": 6
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Recommendations%20to%20government.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - Recommendations to government",
+      "page": 7
+     }
+    ],
+    "section": "NSW government procurement: the Commission’s interest"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The central agencies have focused on their policy considerations at the expense of providing assistance through effective information, advice, and support.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Recommendations%20to%20government.pdf.aspx",
+     "document": "Corruption risks in NSW Government procurement - Recommendations to government",
+     "page": 18
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-1994-03-01-community-attitudes-to-corruption-and-the-icac-public-attitu",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Community attitudes to Corruption and the ICAC public attitudes survey 1993",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20Corruption%20and%20the%20ICAC%20public%20attitudes%20survey%201993.pdf.aspx",
+  "document": "Community attitudes to Corruption and the ICAC public attitudes survey 1993",
+  "sha256": "a37aa929a771632b7005cd5ea16151b22e4dc62d0b4be54097338b0ac0036419",
+  "pages": 23,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY",
+  "first_page": 3,
+  "last_page": 3,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20Corruption%20and%20the%20ICAC%20public%20attitudes%20survey%201993.pdf.aspx#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Commission Against Corruption surveyed 502 randomly selected NSW adults in November 1993 about corruption and understanding and support of its work.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20Corruption%20and%20the%20ICAC%20public%20attitudes%20survey%201993.pdf.aspx",
+      "document": "Community attitudes to Corruption and the ICAC public attitudes survey 1993",
+      "page": 3
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "The survey examined perceived corruption, its effects, reporting attitudes and awareness and opinions of ICAC.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20Corruption%20and%20the%20ICAC%20public%20attitudes%20survey%201993.pdf.aspx",
+      "document": "Community attitudes to Corruption and the ICAC public attitudes survey 1993",
+      "page": 3
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "ICAC reported that 55% considered public sector corruption a serious problem and 37% considered it a minor problem.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20Corruption%20and%20the%20ICAC%20public%20attitudes%20survey%201993.pdf.aspx",
+      "document": "Community attitudes to Corruption and the ICAC public attitudes survey 1993",
+      "page": 3
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "ICAC reported that 92% supported its existence, while 80% considered it successful at exposing corruption and 53% at reducing it.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20Corruption%20and%20the%20ICAC%20public%20attitudes%20survey%201993.pdf.aspx",
+      "document": "Community attitudes to Corruption and the ICAC public attitudes survey 1993",
+      "page": 3
+     }
+    ],
+    "section": "SUMMARY"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "68% disagreed or strongly disagreed that There is no point in reporting corruption in the NSW public sector because nothing useful will be done about it.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20Corruption%20and%20the%20ICAC%20public%20attitudes%20survey%201993.pdf.aspx",
+     "document": "Community attitudes to Corruption and the ICAC public attitudes survey 1993",
+     "page": 3
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

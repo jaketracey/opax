@@ -1,0 +1,119 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2017-05-15-governance-and-regulation-in-the-nsw-aboriginal-land-council",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Governance and Regulation in the NSW Aboriginal Land Council Network",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Governance%20and%20Regulation%20in%20the%20NSW%20Aboriginal%20Land%20Council%20Network%20-%2015%20May%202017.pdf.aspx",
+  "document": "Governance and Regulation in the NSW Aboriginal Land Council Network",
+  "sha256": "36597bfe4cab1e4735b788921b64b5427e75170bcbaffb2dab113fdbba4ecf8a",
+  "pages": 48,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 7,
+  "last_page": 9,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Governance%20and%20Regulation%20in%20the%20NSW%20Aboriginal%20Land%20Council%20Network%20-%2015%20May%202017.pdf.aspx#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption examines governance challenges in local Aboriginal land councils and how accountability and regulation could be improved.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Governance%20and%20Regulation%20in%20the%20NSW%20Aboriginal%20Land%20Council%20Network%20-%2015%20May%202017.pdf.aspx",
+      "document": "Governance and Regulation in the NSW Aboriginal Land Council Network",
+      "page": 7
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "It considers member participation, board capacity, conflicts of interest and oversight by the NSW Aboriginal Land Council and the Registrar.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Governance%20and%20Regulation%20in%20the%20NSW%20Aboriginal%20Land%20Council%20Network%20-%2015%20May%202017.pdf.aspx",
+      "document": "Governance and Regulation in the NSW Aboriginal Land Council Network",
+      "page": 7
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Governance%20and%20Regulation%20in%20the%20NSW%20Aboriginal%20Land%20Council%20Network%20-%2015%20May%202017.pdf.aspx",
+      "document": "Governance and Regulation in the NSW Aboriginal Land Council Network",
+      "page": 8
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commission identifies low participation, limits to board training and overlapping regulatory functions as barriers to effective accountability.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Governance%20and%20Regulation%20in%20the%20NSW%20Aboriginal%20Land%20Council%20Network%20-%2015%20May%202017.pdf.aspx",
+      "document": "Governance and Regulation in the NSW Aboriginal Land Council Network",
+      "page": 7
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Governance%20and%20Regulation%20in%20the%20NSW%20Aboriginal%20Land%20Council%20Network%20-%2015%20May%202017.pdf.aspx",
+      "document": "Governance and Regulation in the NSW Aboriginal Land Council Network",
+      "page": 8
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commission makes 11 improvement suggestions covering member engagement, governance rules, board skills, regulatory coordination, resources and oversight of council entities.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Governance%20and%20Regulation%20in%20the%20NSW%20Aboriginal%20Land%20Council%20Network%20-%2015%20May%202017.pdf.aspx",
+      "document": "Governance and Regulation in the NSW Aboriginal Land Council Network",
+      "page": 8
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Governance%20and%20Regulation%20in%20the%20NSW%20Aboriginal%20Land%20Council%20Network%20-%2015%20May%202017.pdf.aspx",
+      "document": "Governance and Regulation in the NSW Aboriginal Land Council Network",
+      "page": 9
+     }
+    ],
+    "section": "Suggestions for improvement"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There is scope to strengthen the effectiveness of both the Registrar and NSWALC in overseeing LALCs.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Governance%20and%20Regulation%20in%20the%20NSW%20Aboriginal%20Land%20Council%20Network%20-%2015%20May%202017.pdf.aspx",
+     "document": "Governance and Regulation in the NSW Aboriginal Land Council Network",
+     "page": 40
+    }
+   },
+   {
+    "quote": "There is potential to strengthen members’ ability to hold the leadership of LALCs accountable.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Governance%20and%20Regulation%20in%20the%20NSW%20Aboriginal%20Land%20Council%20Network%20-%2015%20May%202017.pdf.aspx",
+     "document": "Governance and Regulation in the NSW Aboriginal Land Council Network",
+     "page": 22
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

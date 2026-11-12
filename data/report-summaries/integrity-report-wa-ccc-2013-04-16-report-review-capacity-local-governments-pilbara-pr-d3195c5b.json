@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2013-04-16-report-review-capacity-local-governments-pilbara-pr-d3195c5b",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on the review of the capacity of local governments in the Pilbara to prevent, identify and deal with misconduct",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20review%20of%20the%20capacity%20of%20local%20governments%20in%20the%20Pilbara%20to%20prevent%2C%20identify%20and%20deal%20with%20misconduct.pdf",
+  "document": "Report on the review of the capacity of local governments in the Pilbara to prevent, identify and deal with misconduct",
+  "sha256": "acfeeea0c317019f2b34a1a67015f7eae7653f60e9e1a6c879b03dcd37ddbe7f",
+  "pages": 44,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 11,
+  "last_page": 13,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20review%20of%20the%20capacity%20of%20local%20governments%20in%20the%20Pilbara%20to%20prevent%2C%20identify%20and%20deal%20with%20misconduct.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed the capacity of all four Pilbara local governments to prevent and handle misconduct between 2010 and 2012.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20review%20of%20the%20capacity%20of%20local%20governments%20in%20the%20Pilbara%20to%20prevent%2C%20identify%20and%20deal%20with%20misconduct.pdf",
+      "document": "Report on the review of the capacity of local governments in the Pilbara to prevent, identify and deal with misconduct",
+      "page": 11
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It examined organisational systems, policies and practices rather than conducting a compliance audit or seeking individual misconduct cases.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20review%20of%20the%20capacity%20of%20local%20governments%20in%20the%20Pilbara%20to%20prevent%2C%20identify%20and%20deal%20with%20misconduct.pdf",
+      "document": "Report on the review of the capacity of local governments in the Pilbara to prevent, identify and deal with misconduct",
+      "page": 41
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20review%20of%20the%20capacity%20of%20local%20governments%20in%20the%20Pilbara%20to%20prevent%2C%20identify%20and%20deal%20with%20misconduct.pdf",
+      "document": "Report on the review of the capacity of local governments in the Pilbara to prevent, identify and deal with misconduct",
+      "page": 42
+     }
+    ],
+    "section": "Misconduct and the Local Government Legislative Framework"
+   },
+   {
+    "text": "The Commission found that all four councils were addressing their exposure, although their progress differed and earlier systematic prevention had been limited.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20review%20of%20the%20capacity%20of%20local%20governments%20in%20the%20Pilbara%20to%20prevent%2C%20identify%20and%20deal%20with%20misconduct.pdf",
+      "document": "Report on the review of the capacity of local governments in the Pilbara to prevent, identify and deal with misconduct",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20review%20of%20the%20capacity%20of%20local%20governments%20in%20the%20Pilbara%20to%20prevent%2C%20identify%20and%20deal%20with%20misconduct.pdf",
+      "document": "Report on the review of the capacity of local governments in the Pilbara to prevent, identify and deal with misconduct",
+      "page": 12
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "Its two recommendations sought continued development of comprehensive misconduct systems and progress reports to the Department of Local Government by 30 June 2013.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20review%20of%20the%20capacity%20of%20local%20governments%20in%20the%20Pilbara%20to%20prevent%2C%20identify%20and%20deal%20with%20misconduct.pdf",
+      "document": "Report on the review of the capacity of local governments in the Pilbara to prevent, identify and deal with misconduct",
+      "page": 43
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission views the work both planned and undertaken as positive.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20review%20of%20the%20capacity%20of%20local%20governments%20in%20the%20Pilbara%20to%20prevent%2C%20identify%20and%20deal%20with%20misconduct.pdf",
+     "document": "Report on the review of the capacity of local governments in the Pilbara to prevent, identify and deal with misconduct",
+     "page": 12
+    }
+   },
+   {
+    "quote": "Whatever community perceptions about the existence of such cases, the review did not identify any.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20review%20of%20the%20capacity%20of%20local%20governments%20in%20the%20Pilbara%20to%20prevent%2C%20identify%20and%20deal%20with%20misconduct.pdf",
+     "document": "Report on the review of the capacity of local governments in the Pilbara to prevent, identify and deal with misconduct",
+     "page": 42
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,119 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2019-09-30-tp4287-special-report-on-corruption-risks-associated-with-pr",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Special report on corruption risks associated with procurement in local government: Operations Dorset, Royston and others",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a2862/globalassets/tabled-paper-documents/tabled-paper-4287/special_report_-_procurement_in_local_government__operation_dorset__royston_and_others__-_september_2019_3qjvxrs1.pdf",
+  "document": "SPECIAL_REPORT_-_Procurement_in_Local_Government__Operation_Dorset__Royston_and_others__-_September_2019_3QjVXrs1",
+  "sha256": "68716fa71e6655e126cd0f2cf7b68af9c4a139e9fdf7c5a1257f4ceae40bef45",
+  "pages": 58,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of investigations and key findings",
+  "first_page": 7,
+  "last_page": 12,
+  "link": "https://www.parliament.vic.gov.au/4a2862/globalassets/tabled-paper-documents/tabled-paper-4287/special_report_-_procurement_in_local_government__operation_dorset__royston_and_others__-_september_2019_3qjvxrs1.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC examined procurement corruption in Victorian councils through Operations Dorset and Royston, drawing also on other investigations.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2862/globalassets/tabled-paper-documents/tabled-paper-4287/special_report_-_procurement_in_local_government__operation_dorset__royston_and_others__-_september_2019_3qjvxrs1.pdf",
+      "document": "SPECIAL_REPORT_-_Procurement_in_Local_Government__Operation_Dorset__Royston_and_others__-_September_2019_3QjVXrs1",
+      "page": 8
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2862/globalassets/tabled-paper-documents/tabled-paper-4287/special_report_-_procurement_in_local_government__operation_dorset__royston_and_others__-_september_2019_3qjvxrs1.pdf",
+      "document": "SPECIAL_REPORT_-_Procurement_in_Local_Government__Operation_Dorset__Royston_and_others__-_September_2019_3QjVXrs1",
+      "page": 9
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The investigations concerned procurement and conflicts of interest at Darebin City Council and the City of Ballarat Council.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2862/globalassets/tabled-paper-documents/tabled-paper-4287/special_report_-_procurement_in_local_government__operation_dorset__royston_and_others__-_september_2019_3qjvxrs1.pdf",
+      "document": "SPECIAL_REPORT_-_Procurement_in_Local_Government__Operation_Dorset__Royston_and_others__-_September_2019_3QjVXrs1",
+      "page": 9
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2862/globalassets/tabled-paper-documents/tabled-paper-4287/special_report_-_procurement_in_local_government__operation_dorset__royston_and_others__-_september_2019_3qjvxrs1.pdf",
+      "document": "SPECIAL_REPORT_-_Procurement_in_Local_Government__Operation_Dorset__Royston_and_others__-_September_2019_3QjVXrs1",
+      "page": 10
+     }
+    ],
+    "section": "IBAC’s investigations"
+   },
+   {
+    "text": "IBAC found that a Darebin project manager helped an associate gain financially and that a Ballarat manager unlawfully authorised payments and obtained benefits.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2862/globalassets/tabled-paper-documents/tabled-paper-4287/special_report_-_procurement_in_local_government__operation_dorset__royston_and_others__-_september_2019_3qjvxrs1.pdf",
+      "document": "SPECIAL_REPORT_-_Procurement_in_Local_Government__Operation_Dorset__Royston_and_others__-_September_2019_3QjVXrs1",
+      "page": 9
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2862/globalassets/tabled-paper-documents/tabled-paper-4287/special_report_-_procurement_in_local_government__operation_dorset__royston_and_others__-_september_2019_3qjvxrs1.pdf",
+      "document": "SPECIAL_REPORT_-_Procurement_in_Local_Government__Operation_Dorset__Royston_and_others__-_September_2019_3QjVXrs1",
+      "page": 10
+     }
+    ],
+    "section": "IBAC’s investigations"
+   },
+   {
+    "text": "It made two recommendations for the councils to strengthen procurement controls and for Local Government Victoria to consider a supplier code of conduct.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2862/globalassets/tabled-paper-documents/tabled-paper-4287/special_report_-_procurement_in_local_government__operation_dorset__royston_and_others__-_september_2019_3qjvxrs1.pdf",
+      "document": "SPECIAL_REPORT_-_Procurement_in_Local_Government__Operation_Dorset__Royston_and_others__-_September_2019_3QjVXrs1",
+      "page": 12
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "IBAC found the project manager played a critical role in an associate obtaining a large financial advantage from the council.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2862/globalassets/tabled-paper-documents/tabled-paper-4287/special_report_-_procurement_in_local_government__operation_dorset__royston_and_others__-_september_2019_3qjvxrs1.pdf",
+     "document": "SPECIAL_REPORT_-_Procurement_in_Local_Government__Operation_Dorset__Royston_and_others__-_September_2019_3QjVXrs1",
+     "page": 9
+    }
+   },
+   {
+    "quote": "IBAC found that over a two-year period, Mr Carey unlawfully authorised payments totalling $184,123 and that he obtained $103,630 in benefits by way of direct pecuniary interest or secret commissions.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2862/globalassets/tabled-paper-documents/tabled-paper-4287/special_report_-_procurement_in_local_government__operation_dorset__royston_and_others__-_september_2019_3qjvxrs1.pdf",
+     "document": "SPECIAL_REPORT_-_Procurement_in_Local_Government__Operation_Dorset__Royston_and_others__-_September_2019_3QjVXrs1",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

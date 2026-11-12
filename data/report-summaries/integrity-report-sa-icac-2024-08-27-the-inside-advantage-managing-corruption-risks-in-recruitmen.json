@@ -1,0 +1,103 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2024-08-27-the-inside-advantage-managing-corruption-risks-in-recruitmen",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "The Inside Advantage: Managing corruption risks in recruitment processes involving internal candidates",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/1065169/The-Inside-Advantage-report-July-2024.pdf",
+  "document": "The Inside Advantage: Managing corruption risks in recruitment processes involving internal candidates",
+  "sha256": "bfb9a344f40359ef0ef26919de15c675184104f76d8cdc549dafff5c9c1b784f",
+  "pages": 8,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption investigated allegations that public funds paid for selected internal applicants to obtain recruitment assistance.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/1065169/The-Inside-Advantage-report-July-2024.pdf",
+      "document": "The Inside Advantage: Managing corruption risks in recruitment processes involving internal candidates",
+      "page": 4
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The Commission established that a chief executive approved assistance for four internal applicants, while a fifth applicant received no equivalent funding.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/1065169/The-Inside-Advantage-report-July-2024.pdf",
+      "document": "The Inside Advantage: Managing corruption risks in recruitment processes involving internal candidates",
+      "page": 5
+     }
+    ],
+    "section": "The investigation"
+   },
+   {
+    "text": "The Commission found no corruption because there was no intention to favour candidates unfairly, but considered that the process could reasonably appear to give some an unfair advantage.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/1065169/The-Inside-Advantage-report-July-2024.pdf",
+      "document": "The Inside Advantage: Managing corruption risks in recruitment processes involving internal candidates",
+      "page": 5
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/1065169/The-Inside-Advantage-report-July-2024.pdf",
+      "document": "The Inside Advantage: Managing corruption risks in recruitment processes involving internal candidates",
+      "page": 7
+     }
+    ],
+    "section": "The investigation; Conclusion"
+   },
+   {
+    "text": "Its recommended safeguards covered conflict declarations, disclosure of prior development assistance, equal access to support, independent panel members and alternative referees.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/1065169/The-Inside-Advantage-report-July-2024.pdf",
+      "document": "The Inside Advantage: Managing corruption risks in recruitment processes involving internal candidates",
+      "page": 6
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission determined that there was no intention to unfairly favour any candidate and therefore that there was no corruption.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/1065169/The-Inside-Advantage-report-July-2024.pdf",
+     "document": "The Inside Advantage: Managing corruption risks in recruitment processes involving internal candidates",
+     "page": 5
+    }
+   },
+   {
+    "quote": "While it may not have been the Chief Executive’s intention to unfairly advantage some applicants, it would be a reasonable perception that such an advantage was afforded to some applicants.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/1065169/The-Inside-Advantage-report-July-2024.pdf",
+     "document": "The Inside Advantage: Managing corruption risks in recruitment processes involving internal candidates",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

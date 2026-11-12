@@ -1,0 +1,159 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2000-08-15-police-strip-searches-queensland-inquiry-law-and-practice",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Police strip searches in Queensland: An inquiry into the law and practice",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+  "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+  "sha256": "9b3e136d9ece5ee74ba74d0994bc1459a5f72177b57f12631f12bc5fc61e2bad",
+  "pages": 140,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 26,
+  "last_page": 29,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf#page=26"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission examined police strip-search powers and practices in Queensland following public concern.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+      "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+      "page": 10
+     }
+    ],
+    "section": "List of recommendations"
+   },
+   {
+    "text": "It considered when searches were justified, how they were conducted and recorded, safeguards for detainees and the responsibilities of watchhouse staff.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+      "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+      "page": 26
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+      "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+      "page": 27
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+      "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+      "page": 28
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "The Commission found no evidence of widespread abuse, but identified inconsistent procedures, confusing rules and concerns about routine searches of some detainees.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+      "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+      "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+      "page": 27
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+      "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+      "page": 28
+     }
+    ],
+    "section": "Foreword; Overview"
+   },
+   {
+    "text": "The Commission’s sixty-five recommendations covered definitions, individual risk assessments, search procedures, reasons and records, support people, recording safeguards and training.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+      "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+      "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+      "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+      "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+      "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+      "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+      "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+      "page": 16
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+      "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+      "page": 17
+     }
+    ],
+    "section": "List of recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The fact that not all watchhouses conduct strip searches routinely indicates that it is not necessary to strip search detainees routinely to meet the safety and other concerns of the watchhouse manager.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+     "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+     "page": 44
+    }
+   },
+   {
+    "quote": "The current legislation and QPS directives relating to strip searches by QPS officers are confusing and inconsistent, and may very well have resulted in officers conducting strip searches in situations where they would not otherwise have done so.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Police-strip-searches/Police-strip-searches-in-qld-Report-2000.pdf",
+     "document": "Police strip searches in Queensland: An inquiry into the law and practice (June 2000)",
+     "page": 27
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

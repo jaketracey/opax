@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2023-11-28-evaluation-of-grants-administration-phase-one-commercial-gra",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Evaluation of grants administration Phase one: Commercial grants",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/962006/Evaluation-of-Grants-Administration-Phase-one.pdf",
+  "document": "Evaluation of grants administration phase one: Commercial grants",
+  "sha256": "42c286c0bb25fafddfc8b4cbf56bb54db47e5f5ee852e40c959041f4a420d205",
+  "pages": 66,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption evaluated commercial grants administered by the industry and trade departments.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/962006/Evaluation-of-Grants-Administration-Phase-one.pdf",
+      "document": "Evaluation of grants administration phase one: Commercial grants",
+      "page": 6
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/962006/Evaluation-of-Grants-Administration-Phase-one.pdf",
+      "document": "Evaluation of grants administration phase one: Commercial grants",
+      "page": 14
+     }
+    ],
+    "section": "The evaluation function and process"
+   },
+   {
+    "text": "It examined policies, staff interviews and a sample of recipients, focusing on three programs supporting research, new businesses and exports.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/962006/Evaluation-of-Grants-Administration-Phase-one.pdf",
+      "document": "Evaluation of grants administration phase one: Commercial grants",
+      "page": 15
+     }
+    ],
+    "section": "The evaluation function and process"
+   },
+   {
+    "text": "The Commission found many sound features in grants management while identifying ways to strengthen controls against corruption.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/962006/Evaluation-of-Grants-Administration-Phase-one.pdf",
+      "document": "Evaluation of grants administration phase one: Commercial grants",
+      "page": 6
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "Its 29 recommendations addressed conflicts of interest, training, records, due diligence, information security and program review across the two departments.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/962006/Evaluation-of-Grants-Administration-Phase-one.pdf",
+      "document": "Evaluation of grants administration phase one: Commercial grants",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/962006/Evaluation-of-Grants-Administration-Phase-one.pdf",
+      "document": "Evaluation of grants administration phase one: Commercial grants",
+      "page": 9
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/962006/Evaluation-of-Grants-Administration-Phase-one.pdf",
+      "document": "Evaluation of grants administration phase one: Commercial grants",
+      "page": 10
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/962006/Evaluation-of-Grants-Administration-Phase-one.pdf",
+      "document": "Evaluation of grants administration phase one: Commercial grants",
+      "page": 11
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/962006/Evaluation-of-Grants-Administration-Phase-one.pdf",
+      "document": "Evaluation of grants administration phase one: Commercial grants",
+      "page": 12
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Despite the exposure of these two departments to considerable corruption risks, the Commission was encouraged to find many sound features in the practices, policies and procedures underpinning grants management.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/962006/Evaluation-of-Grants-Administration-Phase-one.pdf",
+     "document": "Evaluation of grants administration phase one: Commercial grants",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

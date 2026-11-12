@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2018-02-26-strengthening-employment-screening-practices-in-the-nsw-publ",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Strengthening employment screening practices in the NSW public sector",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Strengthening%20employment%20screening%20practices%20in%20the%20NSW%20public%20sector.pdf.aspx",
+  "document": "Strengthening employment screening practices in the NSW public sector",
+  "sha256": "d607f13dbc3506e5a538c41dc4f050d0505854afe6a43842c2c034aaf65c2136",
+  "pages": 48,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 7,
+  "last_page": 8,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Strengthening%20employment%20screening%20practices%20in%20the%20NSW%20public%20sector.pdf.aspx#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption provides tools for public agencies to reduce fraud in job applications.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Strengthening%20employment%20screening%20practices%20in%20the%20NSW%20public%20sector.pdf.aspx",
+      "document": "Strengthening employment screening practices in the NSW public sector",
+      "page": 7
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "It examines screening frameworks, responsibility for checks, checking methods and the screening of temporary workers.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Strengthening%20employment%20screening%20practices%20in%20the%20NSW%20public%20sector.pdf.aspx",
+      "document": "Strengthening employment screening practices in the NSW public sector",
+      "page": 7
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commission reports that inadequate screening contributed to corruption exposed in several of its investigations.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Strengthening%20employment%20screening%20practices%20in%20the%20NSW%20public%20sector.pdf.aspx",
+      "document": "Strengthening employment screening practices in the NSW public sector",
+      "page": 7
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commission recommends screening tailored to each role’s risks and comparable checks for permanent and non-permanent workers.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Strengthening%20employment%20screening%20practices%20in%20the%20NSW%20public%20sector.pdf.aspx",
+      "document": "Strengthening employment screening practices in the NSW public sector",
+      "page": 7
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Strengthening%20employment%20screening%20practices%20in%20the%20NSW%20public%20sector.pdf.aspx",
+      "document": "Strengthening employment screening practices in the NSW public sector",
+      "page": 8
+     }
+    ],
+    "section": "Executive summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "This report recommends that agencies adopt a risk-based approach for preventing employment application fraud and ensure that any screening checks are standardised and justifiable.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Strengthening%20employment%20screening%20practices%20in%20the%20NSW%20public%20sector.pdf.aspx",
+     "document": "Strengthening employment screening practices in the NSW public sector",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

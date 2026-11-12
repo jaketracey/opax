@@ -1,0 +1,150 @@
+{
+ "schema": 1,
+ "slug": "agency-report-cth-australian-public-service-commission-and-merit-protection-commissioner-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "combined annual report",
+ "title": "Australian Public Service Commission and Merit Protection Commissioner 2025-26 combined annual report",
+ "body": "Australian Public Service Commission and Merit Protection Commissioner",
+ "source": {
+  "url": "https://www.apsc.gov.au/sites/default/files/2026-10/Australian%20Public%20Service%20Commission%202025-26%20Annual%20Report%20%28Incorporating%20the%20report%20of%20the%20Merit%20Protection%20Commissioner%29%20Accessible.pdf",
+  "document": "combined annual report",
+  "sha256": "ea5fac3c89eb6152abbcb8cfaed5ed2383c8baf78782016296028e0e2be5a03c",
+  "pages": 214,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s review",
+  "first_page": 8,
+  "last_page": 9,
+  "link": "https://www.apsc.gov.au/sites/default/files/2026-10/Australian%20Public%20Service%20Commission%202025-26%20Annual%20Report%20%28Incorporating%20the%20report%20of%20the%20Merit%20Protection%20Commissioner%29%20Accessible.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Australian Public Service Commission and Merit Protection Commissioner reported on their work in 2025–26, covering public service capability, integrity, workforce management and employment reviews.",
+    "cites": [
+     {
+      "url": "https://www.apsc.gov.au/sites/default/files/2026-10/Australian%20Public%20Service%20Commission%202025-26%20Annual%20Report%20%28Incorporating%20the%20report%20of%20the%20Merit%20Protection%20Commissioner%29%20Accessible.pdf",
+      "document": "combined annual report",
+      "page": 8
+     },
+     {
+      "url": "https://www.apsc.gov.au/sites/default/files/2026-10/Australian%20Public%20Service%20Commission%202025-26%20Annual%20Report%20%28Incorporating%20the%20report%20of%20the%20Merit%20Protection%20Commissioner%29%20Accessible.pdf",
+      "document": "combined annual report",
+      "page": 138
+     },
+     {
+      "url": "https://www.apsc.gov.au/sites/default/files/2026-10/Australian%20Public%20Service%20Commission%202025-26%20Annual%20Report%20%28Incorporating%20the%20report%20of%20the%20Merit%20Protection%20Commissioner%29%20Accessible.pdf",
+      "document": "combined annual report",
+      "page": 145
+     }
+    ],
+    "section": "Commissioner’s review; About the MPC"
+   },
+   {
+    "text": "The Commission assessed six measures of its performance and reported achieving four, substantially achieving one and partly achieving one.",
+    "cites": [
+     {
+      "url": "https://www.apsc.gov.au/sites/default/files/2026-10/Australian%20Public%20Service%20Commission%202025-26%20Annual%20Report%20%28Incorporating%20the%20report%20of%20the%20Merit%20Protection%20Commissioner%29%20Accessible.pdf",
+      "document": "combined annual report",
+      "page": 35
+     }
+    ],
+    "section": "Overview of our 2025–26 performance results"
+   },
+   {
+    "text": "The Merit Protection Commissioner reported receiving 109 applications to review Code of Conduct decisions and 199 applications concerning other employment decisions.",
+    "cites": [
+     {
+      "url": "https://www.apsc.gov.au/sites/default/files/2026-10/Australian%20Public%20Service%20Commission%202025-26%20Annual%20Report%20%28Incorporating%20the%20report%20of%20the%20Merit%20Protection%20Commissioner%29%20Accessible.pdf",
+      "document": "combined annual report",
+      "page": 144
+     }
+    ],
+    "section": "Our year at a glance"
+   },
+   {
+    "text": "The Merit Protection Commissioner reported recommending that 40% of reviewed Code of Conduct breach or sanction decisions be set aside or varied.",
+    "cites": [
+     {
+      "url": "https://www.apsc.gov.au/sites/default/files/2026-10/Australian%20Public%20Service%20Commission%202025-26%20Annual%20Report%20%28Incorporating%20the%20report%20of%20the%20Merit%20Protection%20Commissioner%29%20Accessible.pdf",
+      "document": "combined annual report",
+      "page": 144
+     },
+     {
+      "url": "https://www.apsc.gov.au/sites/default/files/2026-10/Australian%20Public%20Service%20Commission%202025-26%20Annual%20Report%20%28Incorporating%20the%20report%20of%20the%20Merit%20Protection%20Commissioner%29%20Accessible.pdf",
+      "document": "combined annual report",
+      "page": 157
+     }
+    ],
+    "section": "Our year at a glance; Review outcomes"
+   },
+   {
+    "text": "The Merit Protection Commissioner concluded that recurring problems in these decisions showed a continuing gap in agencies' ability to manage misconduct and apply the Code of Conduct.",
+    "cites": [
+     {
+      "url": "https://www.apsc.gov.au/sites/default/files/2026-10/Australian%20Public%20Service%20Commission%202025-26%20Annual%20Report%20%28Incorporating%20the%20report%20of%20the%20Merit%20Protection%20Commissioner%29%20Accessible.pdf",
+      "document": "combined annual report",
+      "page": 140
+     }
+    ],
+    "section": "Merit Protection Commissioner’s foreword"
+   },
+   {
+    "text": "The Merit Protection Commissioner reported that all recommendations it made to agency heads in 2025–26 were accepted and implemented.",
+    "cites": [
+     {
+      "url": "https://www.apsc.gov.au/sites/default/files/2026-10/Australian%20Public%20Service%20Commission%202025-26%20Annual%20Report%20%28Incorporating%20the%20report%20of%20the%20Merit%20Protection%20Commissioner%29%20Accessible.pdf",
+      "document": "combined annual report",
+      "page": 157
+     }
+    ],
+    "section": "Review outcomes"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "However, we did observe that, once a declaration is made, the consideration of specific and relevant strategies on how to best manage the conflict is often cursory and seemingly perfunctory.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.apsc.gov.au/sites/default/files/2026-10/Australian%20Public%20Service%20Commission%202025-26%20Annual%20Report%20%28Incorporating%20the%20report%20of%20the%20Merit%20Protection%20Commissioner%29%20Accessible.pdf",
+     "document": "combined annual report",
+     "page": 163
+    }
+   },
+   {
+    "quote": "Overall, the Commission achieved its purpose for the reporting period.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.apsc.gov.au/sites/default/files/2026-10/Australian%20Public%20Service%20Commission%202025-26%20Annual%20Report%20%28Incorporating%20the%20report%20of%20the%20Merit%20Protection%20Commissioner%29%20Accessible.pdf",
+     "document": "combined annual report",
+     "page": 35
+    }
+   },
+   {
+    "quote": "All the recommendations made by the MPC to agency heads in 2025–26 were accepted and implemented.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.apsc.gov.au/sites/default/files/2026-10/Australian%20Public%20Service%20Commission%202025-26%20Annual%20Report%20%28Incorporating%20the%20report%20of%20the%20Merit%20Protection%20Commissioner%29%20Accessible.pdf",
+     "document": "combined annual report",
+     "page": 157
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

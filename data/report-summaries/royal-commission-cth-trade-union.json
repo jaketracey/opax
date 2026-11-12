@@ -1,0 +1,103 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-cth-trade-union",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "Royal Commission into Trade Union Governance and Corruption",
+ "body": "Royal Commission into Trade Union Governance and Corruption",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a25be/globalassets/tabled-paper-documents/tabled-paper-2249/final-report-volume-5_crhzx7nd.pdf",
+  "document": "Royal Commission into Trade Union Governance and Corruption - Part 2",
+  "sha256": "77dd517b6ad044d36f876de29d543cfe5236de55788ed8902b0674503b8809f8",
+  "pages": 678,
+  "rights": null
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Royal Commission into Trade Union Governance and Corruption devoted this volume to proposals for law reform.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25be/globalassets/tabled-paper-documents/tabled-paper-2249/final-report-volume-5_crhzx7nd.pdf",
+      "document": "Royal Commission into Trade Union Governance and Corruption - Part 2",
+      "page": 19
+     }
+    ],
+    "section": "A – INTRODUCTION"
+   },
+   {
+    "text": "It considered union regulation, officials’ duties, corrupting benefits, enterprise bargaining, competition, construction, entry rights and Royal Commission powers.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25be/globalassets/tabled-paper-documents/tabled-paper-2249/final-report-volume-5_crhzx7nd.pdf",
+      "document": "Royal Commission into Trade Union Governance and Corruption - Part 2",
+      "page": 19
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25be/globalassets/tabled-paper-documents/tabled-paper-2249/final-report-volume-5_crhzx7nd.pdf",
+      "document": "Royal Commission into Trade Union Governance and Corruption - Part 2",
+      "page": 22
+     }
+    ],
+    "section": "B – STRUCTURE OF VOLUME"
+   },
+   {
+    "text": "The Commission considered that the benefits of national regulation justified governments exploring a single regime for employee and employer organisations.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25be/globalassets/tabled-paper-documents/tabled-paper-2249/final-report-volume-5_crhzx7nd.pdf",
+      "document": "Royal Commission into Trade Union Governance and Corruption - Part 2",
+      "page": 68
+     }
+    ],
+    "section": "Dual State and Commonwealth regulation"
+   },
+   {
+    "text": "It recommended a separate, independent regulator for registered organisations and funding sufficient for that regulator to carry out its functions.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25be/globalassets/tabled-paper-documents/tabled-paper-2249/final-report-volume-5_crhzx7nd.pdf",
+      "document": "Royal Commission into Trade Union Governance and Corruption - Part 2",
+      "page": 80
+     }
+    ],
+    "section": "Registered organisations regulator"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Registered Organisations Commission should be an independent stand-alone regulator.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a25be/globalassets/tabled-paper-documents/tabled-paper-2249/final-report-volume-5_crhzx7nd.pdf",
+     "document": "Royal Commission into Trade Union Governance and Corruption - Part 2",
+     "page": 80
+    }
+   },
+   {
+    "quote": "The Commonwealth government ensure that the registered organisations regulator is properly resourced to carry out its functions, with a separate budget for which it is accountable.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a25be/globalassets/tabled-paper-documents/tabled-paper-2249/final-report-volume-5_crhzx7nd.pdf",
+     "document": "Royal Commission into Trade Union Governance and Corruption - Part 2",
+     "page": 80
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:21+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

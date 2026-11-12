@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2019-10-16-looking-back-october-2019",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Looking Back: October 2019",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/370827/ICAC-Looking-Back.pdf",
+  "document": "ICAC Report – Looking Back: October 2019",
+  "sha256": "c4ac11321cad15477108e653a22ddf61a0786e6090d663a805236cf1f1726d8e",
+  "pages": 14,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commissioner Against Corruption reflected on the integrity system after six years in office.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/370827/ICAC-Looking-Back.pdf",
+      "document": "ICAC Report – Looking Back: October 2019",
+      "page": 4
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/370827/ICAC-Looking-Back.pdf",
+      "document": "ICAC Report – Looking Back: October 2019",
+      "page": 6
+     }
+    ],
+    "section": "The ICAC Act"
+   },
+   {
+    "text": "The Commissioner discussed maladministration, staff conduct, conflicts of interest, recruitment and barriers to reporting wrongdoing.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/370827/ICAC-Looking-Back.pdf",
+      "document": "ICAC Report – Looking Back: October 2019",
+      "page": 6
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/370827/ICAC-Looking-Back.pdf",
+      "document": "ICAC Report – Looking Back: October 2019",
+      "page": 7
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/370827/ICAC-Looking-Back.pdf",
+      "document": "ICAC Report – Looking Back: October 2019",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/370827/ICAC-Looking-Back.pdf",
+      "document": "ICAC Report – Looking Back: October 2019",
+      "page": 9
+     }
+    ],
+    "section": "Reporting Obligations"
+   },
+   {
+    "text": "The Commissioner concluded that maladministration and poor conduct created conditions for individual corruption even though public administration was not systemically corrupt.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/370827/ICAC-Looking-Back.pdf",
+      "document": "ICAC Report – Looking Back: October 2019",
+      "page": 6
+     }
+    ],
+    "section": "Maladministration"
+   },
+   {
+    "text": "The Commissioner urged authorities to strengthen workforce and records oversight, review conflict policies and verify essential recruitment qualifications.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/370827/ICAC-Looking-Back.pdf",
+      "document": "ICAC Report – Looking Back: October 2019",
+      "page": 7
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/370827/ICAC-Looking-Back.pdf",
+      "document": "ICAC Report – Looking Back: October 2019",
+      "page": 8
+     }
+    ],
+    "section": "Recruitment"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Public administration must ensure it is managing its workforce and records appropriately through utilising proper systems and processes and applying appropriate oversight.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/370827/ICAC-Looking-Back.pdf",
+     "document": "ICAC Report – Looking Back: October 2019",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2006-08-03-report-first-two-years-wa-police-reform-program",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on the first two years of the WA Police Reform Program",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20The%20first%20two%20years%20of%20the%20WA%20Police%20Reform%20Program.pdf",
+  "document": "Report on The first two years of the WA Police Reform Program.pdf",
+  "sha256": "a3c1e8349d312c73b0b237f2761041300c80b7173a656fa8e73003c7cdad6dec",
+  "pages": 121,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 4,
+  "last_page": 7,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20The%20first%20two%20years%20of%20the%20WA%20Police%20Reform%20Program.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission evaluated the first two years of WA Police reform following the royal commission's request that it monitor implementation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20The%20first%20two%20years%20of%20the%20WA%20Police%20Reform%20Program.pdf",
+      "document": "Report on The first two years of the WA Police Reform Program.pdf",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20The%20first%20two%20years%20of%20the%20WA%20Police%20Reform%20Program.pdf",
+      "document": "Report on The first two years of the WA Police Reform Program.pdf",
+      "page": 7
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It examined recruitment and training, management, service delivery, complaint investigations and corruption prevention.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20The%20first%20two%20years%20of%20the%20WA%20Police%20Reform%20Program.pdf",
+      "document": "Report on The first two years of the WA Police Reform Program.pdf",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20The%20first%20two%20years%20of%20the%20WA%20Police%20Reform%20Program.pdf",
+      "document": "Report on The first two years of the WA Police Reform Program.pdf",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20The%20first%20two%20years%20of%20the%20WA%20Police%20Reform%20Program.pdf",
+      "document": "Report on The first two years of the WA Police Reform Program.pdf",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20The%20first%20two%20years%20of%20the%20WA%20Police%20Reform%20Program.pdf",
+      "document": "Report on The first two years of the WA Police Reform Program.pdf",
+      "page": 7
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission concluded that police had begun reform and strengthened organisational integrity and governance.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20The%20first%20two%20years%20of%20the%20WA%20Police%20Reform%20Program.pdf",
+      "document": "Report on The first two years of the WA Police Reform Program.pdf",
+      "page": 81
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "It identified continuing challenges in serious complaint investigations, individual performance management, policy development and organisational change.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20The%20first%20two%20years%20of%20the%20WA%20Police%20Reform%20Program.pdf",
+      "document": "Report on The first two years of the WA Police Reform Program.pdf",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20The%20first%20two%20years%20of%20the%20WA%20Police%20Reform%20Program.pdf",
+      "document": "Report on The first two years of the WA Police Reform Program.pdf",
+      "page": 81
+     }
+    ],
+    "section": "CONCLUSION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There is no doubt that WAPOL has gone some way toward building stronger organisational integrity and sound corporate governance systems and processes.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20The%20first%20two%20years%20of%20the%20WA%20Police%20Reform%20Program.pdf",
+     "document": "Report on The first two years of the WA Police Reform Program.pdf",
+     "page": 81
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

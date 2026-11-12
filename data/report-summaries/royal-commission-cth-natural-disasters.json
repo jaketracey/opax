@@ -1,0 +1,134 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-cth-natural-disasters",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "Royal Commission into National Natural Disaster Arrangements",
+ "body": "Royal Commission into National Natural Disaster Arrangements",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a27a6/globalassets/tabled-paper-documents/tabled-paper-5052/rcnda_-_report_-_volume_1_-_compressed_pdpplzzp.pdf",
+  "document": "Report of the Royal Commission into National Natural Disasters Arrangements",
+  "sha256": "5a32cb4c6157fe90c4366e13e82cbddc70dba43eafc2be0e412502c100b38f91",
+  "pages": 579,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 19,
+  "last_page": 33,
+  "link": "https://www.parliament.vic.gov.au/4a27a6/globalassets/tabled-paper-documents/tabled-paper-5052/rcnda_-_report_-_volume_1_-_compressed_pdpplzzp.pdf#page=19"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Royal Commission into National Natural Disaster Arrangements examined how Australia prepares for, responds to and recovers from natural disasters, and how it reduces disaster risks.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27a6/globalassets/tabled-paper-documents/tabled-paper-5052/rcnda_-_report_-_volume_1_-_compressed_pdpplzzp.pdf",
+      "document": "Report of the Royal Commission into National Natural Disasters Arrangements",
+      "page": 19
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "It considered government responsibilities, coordination, resilience, climate adaptation and the Commonwealth’s legal role in national emergencies.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27a6/globalassets/tabled-paper-documents/tabled-paper-5052/rcnda_-_report_-_volume_1_-_compressed_pdpplzzp.pdf",
+      "document": "Report of the Royal Commission into National Natural Disasters Arrangements",
+      "page": 19
+     }
+    ],
+    "section": "Our inquiry"
+   },
+   {
+    "text": "The Commission concluded that Australia needed a national approach, with greater cooperation and resource sharing while states and territories retained primary responsibility.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27a6/globalassets/tabled-paper-documents/tabled-paper-5052/rcnda_-_report_-_volume_1_-_compressed_pdpplzzp.pdf",
+      "document": "Report of the Royal Commission into National Natural Disasters Arrangements",
+      "page": 20
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27a6/globalassets/tabled-paper-documents/tabled-paper-5052/rcnda_-_report_-_volume_1_-_compressed_pdpplzzp.pdf",
+      "document": "Report of the Royal Commission into National Natural Disasters Arrangements",
+      "page": 23
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27a6/globalassets/tabled-paper-documents/tabled-paper-5052/rcnda_-_report_-_volume_1_-_compressed_pdpplzzp.pdf",
+      "document": "Report of the Royal Commission into National Natural Disasters Arrangements",
+      "page": 27
+     }
+    ],
+    "section": "We need a national approach"
+   },
+   {
+    "text": "It recommended stronger national coordination, permanent resilience and recovery arrangements, compatible emergency communications, consistent public warnings and better recovery support.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27a6/globalassets/tabled-paper-documents/tabled-paper-5052/rcnda_-_report_-_volume_1_-_compressed_pdpplzzp.pdf",
+      "document": "Report of the Royal Commission into National Natural Disasters Arrangements",
+      "page": 25
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27a6/globalassets/tabled-paper-documents/tabled-paper-5052/rcnda_-_report_-_volume_1_-_compressed_pdpplzzp.pdf",
+      "document": "Report of the Royal Commission into National Natural Disasters Arrangements",
+      "page": 26
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27a6/globalassets/tabled-paper-documents/tabled-paper-5052/rcnda_-_report_-_volume_1_-_compressed_pdpplzzp.pdf",
+      "document": "Report of the Royal Commission into National Natural Disasters Arrangements",
+      "page": 28
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27a6/globalassets/tabled-paper-documents/tabled-paper-5052/rcnda_-_report_-_volume_1_-_compressed_pdpplzzp.pdf",
+      "document": "Report of the Royal Commission into National Natural Disasters Arrangements",
+      "page": 31
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27a6/globalassets/tabled-paper-documents/tabled-paper-5052/rcnda_-_report_-_volume_1_-_compressed_pdpplzzp.pdf",
+      "document": "Report of the Royal Commission into National Natural Disasters Arrangements",
+      "page": 32
+     }
+    ],
+    "section": "Overview"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We have concluded that Australia needs a national approach to natural disasters.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a27a6/globalassets/tabled-paper-documents/tabled-paper-5052/rcnda_-_report_-_volume_1_-_compressed_pdpplzzp.pdf",
+     "document": "Report of the Royal Commission into National Natural Disasters Arrangements",
+     "page": 23
+    }
+   },
+   {
+    "quote": "A narrow focus on response and recovery will leave Australia vulnerable.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a27a6/globalassets/tabled-paper-documents/tabled-paper-5052/rcnda_-_report_-_volume_1_-_compressed_pdpplzzp.pdf",
+     "document": "Report of the Royal Commission into National Natural Disasters Arrangements",
+     "page": 26
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

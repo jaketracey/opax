@@ -1,0 +1,119 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2009-12-04-report-wa-police-property-management-practices-prog-407e5eb1",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on WA Police Property Management Practices-the Progress of Recommendations Contained in the 2005 Joint Inquiry by WA Police and the Corruption and Crime Commission",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices-the%20Progress%20of%20Recommendations%20Contained%20in%20the%202005%20Joint%20Inquiry%20by%20WA%20Police%20and%20the%20Corruption%20and%20Crime%20Commission.pdf",
+  "document": "Report on WA Police Property Management Practices-the Progress of Recommendations Contained in the 2005 Joint Inquiry by WA Police and the Corruption and Crime Commission.pdf",
+  "sha256": "ef9c8cbe8494870d51c12a88b97ecfc7a7050284fe65e891a961a20b3a0dc8a9",
+  "pages": 57,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 11,
+  "last_page": 12,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices-the%20Progress%20of%20Recommendations%20Contained%20in%20the%202005%20Joint%20Inquiry%20by%20WA%20Police%20and%20the%20Corruption%20and%20Crime%20Commission.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission and WA Police jointly evaluated progress on the 42 recommendations from their 2005 property management inquiry.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices-the%20Progress%20of%20Recommendations%20Contained%20in%20the%202005%20Joint%20Inquiry%20by%20WA%20Police%20and%20the%20Corruption%20and%20Crime%20Commission.pdf",
+      "document": "Report on WA Police Property Management Practices-the Progress of Recommendations Contained in the 2005 Joint Inquiry by WA Police and the Corruption and Crime Commission.pdf",
+      "page": 11
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The evaluation found twenty-three recommendations completed, twelve moving towards completion, one unable to be addressed and six no longer relevant.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices-the%20Progress%20of%20Recommendations%20Contained%20in%20the%202005%20Joint%20Inquiry%20by%20WA%20Police%20and%20the%20Corruption%20and%20Crime%20Commission.pdf",
+      "document": "Report on WA Police Property Management Practices-the Progress of Recommendations Contained in the 2005 Joint Inquiry by WA Police and the Corruption and Crime Commission.pdf",
+      "page": 11
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission concluded that police had improved property management through organisational changes, new storage premises and stronger security.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices-the%20Progress%20of%20Recommendations%20Contained%20in%20the%202005%20Joint%20Inquiry%20by%20WA%20Police%20and%20the%20Corruption%20and%20Crime%20Commission.pdf",
+      "document": "Report on WA Police Property Management Practices-the Progress of Recommendations Contained in the 2005 Joint Inquiry by WA Police and the Corruption and Crime Commission.pdf",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices-the%20Progress%20of%20Recommendations%20Contained%20in%20the%202005%20Joint%20Inquiry%20by%20WA%20Police%20and%20the%20Corruption%20and%20Crime%20Commission.pdf",
+      "document": "Report on WA Police Property Management Practices-the Progress of Recommendations Contained in the 2005 Joint Inquiry by WA Police and the Corruption and Crime Commission.pdf",
+      "page": 31
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "It identified remaining work on old property holdings, security assurance and clarifying responsibilities with prosecuting authorities.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices-the%20Progress%20of%20Recommendations%20Contained%20in%20the%202005%20Joint%20Inquiry%20by%20WA%20Police%20and%20the%20Corruption%20and%20Crime%20Commission.pdf",
+      "document": "Report on WA Police Property Management Practices-the Progress of Recommendations Contained in the 2005 Joint Inquiry by WA Police and the Corruption and Crime Commission.pdf",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices-the%20Progress%20of%20Recommendations%20Contained%20in%20the%202005%20Joint%20Inquiry%20by%20WA%20Police%20and%20the%20Corruption%20and%20Crime%20Commission.pdf",
+      "document": "Report on WA Police Property Management Practices-the Progress of Recommendations Contained in the 2005 Joint Inquiry by WA Police and the Corruption and Crime Commission.pdf",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices-the%20Progress%20of%20Recommendations%20Contained%20in%20the%202005%20Joint%20Inquiry%20by%20WA%20Police%20and%20the%20Corruption%20and%20Crime%20Commission.pdf",
+      "document": "Report on WA Police Property Management Practices-the Progress of Recommendations Contained in the 2005 Joint Inquiry by WA Police and the Corruption and Crime Commission.pdf",
+      "page": 31
+     }
+    ],
+    "section": "CONCLUSION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "WAPOL has made good progress in relation to the management of property.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices-the%20Progress%20of%20Recommendations%20Contained%20in%20the%202005%20Joint%20Inquiry%20by%20WA%20Police%20and%20the%20Corruption%20and%20Crime%20Commission.pdf",
+     "document": "Report on WA Police Property Management Practices-the Progress of Recommendations Contained in the 2005 Joint Inquiry by WA Police and the Corruption and Crime Commission.pdf",
+     "page": 31
+    }
+   },
+   {
+    "quote": "In these areas, WAPOL has met the letter of the recommendation, but has been unable to achieve the outcome the recommendations suggested.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices-the%20Progress%20of%20Recommendations%20Contained%20in%20the%202005%20Joint%20Inquiry%20by%20WA%20Police%20and%20the%20Corruption%20and%20Crime%20Commission.pdf",
+     "document": "Report on WA Police Property Management Practices-the Progress of Recommendations Contained in the 2005 Joint Inquiry by WA Police and the Corruption and Crime Commission.pdf",
+     "page": 31
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

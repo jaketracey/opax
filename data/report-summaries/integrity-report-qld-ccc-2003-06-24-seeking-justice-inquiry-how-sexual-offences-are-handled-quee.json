@@ -1,0 +1,124 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2003-06-24-seeking-justice-inquiry-how-sexual-offences-are-handled-quee",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Seeking Justice: An inquiry into how sexual offences are handled by the Queensland criminal justice system",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/Seeking-justice-Report-2003.pdf",
+  "document": "Seeking Justice: An inquiry into how sexual offences are handled by the Queensland criminal justice system (24 June 2003)",
+  "sha256": "52d14cf060fdba8bc8c5a2f87b8c66e483ec116c14fc31cf2bd4467b54e2f09e",
+  "pages": 224,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 15,
+  "last_page": 21,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/Seeking-justice-Report-2003.pdf#page=15"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission inquired into Queensland’s handling of sexual offences against adults and children.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/Seeking-justice-Report-2003.pdf",
+      "document": "Seeking Justice: An inquiry into how sexual offences are handled by the Queensland criminal justice system (24 June 2003)",
+      "page": 15
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It examined police training and supervision, decisions to prosecute or discontinue cases, and restrictions on publishing identifying information about accused people.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/Seeking-justice-Report-2003.pdf",
+      "document": "Seeking Justice: An inquiry into how sexual offences are handled by the Queensland criminal justice system (24 June 2003)",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/Seeking-justice-Report-2003.pdf",
+      "document": "Seeking Justice: An inquiry into how sexual offences are handled by the Queensland criminal justice system (24 June 2003)",
+      "page": 16
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission identified management issues that could address some concerns about police and prosecution services, and opposed a limitation period for historical sexual offences.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/Seeking-justice-Report-2003.pdf",
+      "document": "Seeking Justice: An inquiry into how sexual offences are handled by the Queensland criminal justice system (24 June 2003)",
+      "page": 17
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/Seeking-justice-Report-2003.pdf",
+      "document": "Seeking Justice: An inquiry into how sexual offences are handled by the Queensland criminal justice system (24 June 2003)",
+      "page": 18
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission made 24 recommendations covering specialist training, documented decisions, communication, victim support, publication restrictions and a review of implementation after two years.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/Seeking-justice-Report-2003.pdf",
+      "document": "Seeking Justice: An inquiry into how sexual offences are handled by the Queensland criminal justice system (24 June 2003)",
+      "page": 181
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/Seeking-justice-Report-2003.pdf",
+      "document": "Seeking Justice: An inquiry into how sexual offences are handled by the Queensland criminal justice system (24 June 2003)",
+      "page": 182
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/Seeking-justice-Report-2003.pdf",
+      "document": "Seeking Justice: An inquiry into how sexual offences are handled by the Queensland criminal justice system (24 June 2003)",
+      "page": 183
+     }
+    ],
+    "section": "LIST OF RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission does not favour a statute of limitations for sexual offence matters.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/Seeking-justice-Report-2003.pdf",
+     "document": "Seeking Justice: An inquiry into how sexual offences are handled by the Queensland criminal justice system (24 June 2003)",
+     "page": 178
+    }
+   },
+   {
+    "quote": "The Commission believes that the identity of an accused in a sexual offence matter should be suppressed.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/Seeking-justice-Report-2003.pdf",
+     "document": "Seeking Justice: An inquiry into how sexual offences are handled by the Queensland criminal justice system (24 June 2003)",
+     "page": 181
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

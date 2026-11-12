@@ -1,0 +1,150 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-cth-financial-services",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry",
+ "body": "Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry",
+ "source": {
+  "url": "https://treasury.gov.au/sites/default/files/2019-03/fsrc-volume1.pdf",
+  "document": "Final Report, Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, Volume 1",
+  "sha256": "f2fc6d213b659ad033b2799453671a555f73cfb1e278952f90c4391cab4b5382",
+  "pages": 530,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "1. Introduction",
+  "first_page": 35,
+  "last_page": 84,
+  "link": "https://treasury.gov.au/sites/default/files/2019-03/fsrc-volume1.pdf#page=35"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The financial services Royal Commission examined misconduct and behaviour that fell below community expectations in financial services businesses.",
+    "cites": [
+     {
+      "url": "https://treasury.gov.au/sites/default/files/2019-03/fsrc-volume1.pdf",
+      "document": "Final Report, Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, Volume 1",
+      "page": 35
+     }
+    ],
+    "section": "1. Introduction"
+   },
+   {
+    "text": "It considered banking, financial advice, superannuation and insurance, as well as industry culture, governance, remuneration and regulators.",
+    "cites": [
+     {
+      "url": "https://treasury.gov.au/sites/default/files/2019-03/fsrc-volume1.pdf",
+      "document": "Final Report, Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, Volume 1",
+      "page": 42
+     }
+    ],
+    "section": "1. Introduction"
+   },
+   {
+    "text": "The Commission concluded that rewards encouraged misconduct, customers faced unequal power and information, conflicts harmed clients’ interests and wrongdoing too often escaped proper accountability.",
+    "cites": [
+     {
+      "url": "https://treasury.gov.au/sites/default/files/2019-03/fsrc-volume1.pdf",
+      "document": "Final Report, Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, Volume 1",
+      "page": 35
+     },
+     {
+      "url": "https://treasury.gov.au/sites/default/files/2019-03/fsrc-volume1.pdf",
+      "document": "Final Report, Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, Volume 1",
+      "page": 36
+     },
+     {
+      "url": "https://treasury.gov.au/sites/default/files/2019-03/fsrc-volume1.pdf",
+      "document": "Final Report, Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, Volume 1",
+      "page": 37
+     }
+    ],
+    "section": "Four observations"
+   },
+   {
+    "text": "It placed primary responsibility on the businesses concerned and their boards and senior managers.",
+    "cites": [
+     {
+      "url": "https://treasury.gov.au/sites/default/files/2019-03/fsrc-volume1.pdf",
+      "document": "Final Report, Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, Volume 1",
+      "page": 38
+     }
+    ],
+    "section": "Primary responsibility"
+   },
+   {
+    "text": "The Commission recommended changes to lending, advice fees, insurance, superannuation, remuneration and regulatory oversight, including duties for mortgage brokers to prioritise borrowers’ interests.",
+    "cites": [
+     {
+      "url": "https://treasury.gov.au/sites/default/files/2019-03/fsrc-volume1.pdf",
+      "document": "Final Report, Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, Volume 1",
+      "page": 54
+     },
+     {
+      "url": "https://treasury.gov.au/sites/default/files/2019-03/fsrc-volume1.pdf",
+      "document": "Final Report, Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, Volume 1",
+      "page": 59
+     },
+     {
+      "url": "https://treasury.gov.au/sites/default/files/2019-03/fsrc-volume1.pdf",
+      "document": "Final Report, Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, Volume 1",
+      "page": 63
+     },
+     {
+      "url": "https://treasury.gov.au/sites/default/files/2019-03/fsrc-volume1.pdf",
+      "document": "Final Report, Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, Volume 1",
+      "page": 65
+     },
+     {
+      "url": "https://treasury.gov.au/sites/default/files/2019-03/fsrc-volume1.pdf",
+      "document": "Final Report, Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, Volume 1",
+      "page": 69
+     },
+     {
+      "url": "https://treasury.gov.au/sites/default/files/2019-03/fsrc-volume1.pdf",
+      "document": "Final Report, Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, Volume 1",
+      "page": 75
+     }
+    ],
+    "section": "Recommendations by subject matter"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Fourth, too often, financial services entities that broke the law were not properly held to account.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://treasury.gov.au/sites/default/files/2019-03/fsrc-volume1.pdf",
+     "document": "Final Report, Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, Volume 1",
+     "page": 37
+    }
+   },
+   {
+    "quote": "There can be no doubt that the primary responsibility for misconduct in the financial services industry lies with the entities concerned and those who managed and controlled those entities: their boards and senior management.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://treasury.gov.au/sites/default/files/2019-03/fsrc-volume1.pdf",
+     "document": "Final Report, Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, Volume 1",
+     "page": 38
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

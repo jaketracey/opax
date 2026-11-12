@@ -1,0 +1,134 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2007-09-04-corruption-risks-in-nsw-development-approval-processes-posit",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Corruption risks in NSW development approval processes - Position paper",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20development%20approval%20processes%20-%20Position%20paper.pdf.aspx",
+  "document": "Corruption risks in NSW development approval processes - Position paper",
+  "sha256": "d26f92dc54b25c5222029bba02139d9ce6cd4a8a169a7448f30a839a3875c058",
+  "pages": 100,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 6,
+  "last_page": 9,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20development%20approval%20processes%20-%20Position%20paper.pdf.aspx#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Commission Against Corruption examined whether NSW development approval processes contained corruption risks that were not being managed.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20development%20approval%20processes%20-%20Position%20paper.pdf.aspx",
+      "document": "Corruption risks in NSW development approval processes - Position paper",
+      "page": 6
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "It considered 187 submissions alongside its inquiries, complaints and research, covering councillor roles, conflicts of interest, council land, consultants, planning agreements and political donations.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20development%20approval%20processes%20-%20Position%20paper.pdf.aspx",
+      "document": "Corruption risks in NSW development approval processes - Position paper",
+      "page": 6
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20development%20approval%20processes%20-%20Position%20paper.pdf.aspx",
+      "document": "Corruption risks in NSW development approval processes - Position paper",
+      "page": 7
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20development%20approval%20processes%20-%20Position%20paper.pdf.aspx",
+      "document": "Corruption risks in NSW development approval processes - Position paper",
+      "page": 8
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20development%20approval%20processes%20-%20Position%20paper.pdf.aspx",
+      "document": "Corruption risks in NSW development approval processes - Position paper",
+      "page": 9
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commission concluded that councillors’ different roles did not themselves create a corruption risk, but supported clearer reasons for decisions and greater transparency.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20development%20approval%20processes%20-%20Position%20paper.pdf.aspx",
+      "document": "Corruption risks in NSW development approval processes - Position paper",
+      "page": 7
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "Its 24 recommendations address decision reasons, conflicts of interest, voting records, appeals, land dealings, consultants, planning agreements and political donations.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20development%20approval%20processes%20-%20Position%20paper.pdf.aspx",
+      "document": "Corruption risks in NSW development approval processes - Position paper",
+      "page": 10
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20development%20approval%20processes%20-%20Position%20paper.pdf.aspx",
+      "document": "Corruption risks in NSW development approval processes - Position paper",
+      "page": 11
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20development%20approval%20processes%20-%20Position%20paper.pdf.aspx",
+      "document": "Corruption risks in NSW development approval processes - Position paper",
+      "page": 12
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20development%20approval%20processes%20-%20Position%20paper.pdf.aspx",
+      "document": "Corruption risks in NSW development approval processes - Position paper",
+      "page": 13
+     }
+    ],
+    "section": "List of recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission has concluded that these different roles are not in themselves a corruption risk, and that its further consideration of most of these options is not warranted.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20development%20approval%20processes%20-%20Position%20paper.pdf.aspx",
+     "document": "Corruption risks in NSW development approval processes - Position paper",
+     "page": 7
+    }
+   },
+   {
+    "quote": "The Commission is of the view that the absence of reasons does not necessarily suggest corrupt conduct, however, it considers that reasons should be given for all development decisions.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20development%20approval%20processes%20-%20Position%20paper.pdf.aspx",
+     "document": "Corruption risks in NSW development approval processes - Position paper",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

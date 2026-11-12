@@ -1,0 +1,145 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-vic-bushfires-2009",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "2009 Victorian Bushfires Royal Commission",
+ "body": "2009 Victorian Bushfires Royal Commission",
+ "source": {
+  "url": "https://www.ffm.vic.gov.au/__data/assets/pdf_file/0018/531225/Final-2009-Victorian-Bushfires-Royal-Commission-report.pdf",
+  "document": "2009 Victorian Bushfires Royal Commission, Final Report: Summary",
+  "sha256": "a58888e40660967c293bb7562d8b23afd480127546fe66ecfff8483feae68413",
+  "pages": 52,
+  "rights": "Published by the Parliament of Victoria (imprint, page 4); the document carries no reuse notice. OPAX quotes the recommendations with attribution and links to the publisher's copy."
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of the report",
+  "first_page": 11,
+  "last_page": 32,
+  "link": "https://www.ffm.vic.gov.au/__data/assets/pdf_file/0018/531225/Final-2009-Victorian-Bushfires-Royal-Commission-report.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The 2009 Victorian Bushfires Royal Commission examined the causes of the January and February fires, preparation, emergency response and measures to reduce future risks.",
+    "cites": [
+     {
+      "url": "https://www.ffm.vic.gov.au/__data/assets/pdf_file/0018/531225/Final-2009-Victorian-Bushfires-Royal-Commission-report.pdf",
+      "document": "2009 Victorian Bushfires Royal Commission, Final Report: Summary",
+      "page": 12
+     }
+    ],
+    "section": "Summary of the report"
+   },
+   {
+    "text": "It investigated fifteen fires in detail, including the circumstances of deaths and the operation of bushfire safety policies.",
+    "cites": [
+     {
+      "url": "https://www.ffm.vic.gov.au/__data/assets/pdf_file/0018/531225/Final-2009-Victorian-Bushfires-Royal-Commission-report.pdf",
+      "document": "2009 Victorian Bushfires Royal Commission, Final Report: Summary",
+      "page": 11
+     },
+     {
+      "url": "https://www.ffm.vic.gov.au/__data/assets/pdf_file/0018/531225/Final-2009-Victorian-Bushfires-Royal-Commission-report.pdf",
+      "document": "2009 Victorian Bushfires Royal Commission, Final Report: Summary",
+      "page": 15
+     }
+    ],
+    "section": "Summary of the report"
+   },
+   {
+    "text": "The Commission concluded that the stay or go policy retained sound principles but did not adequately account for the most severe fires or provide enough alternatives.",
+    "cites": [
+     {
+      "url": "https://www.ffm.vic.gov.au/__data/assets/pdf_file/0018/531225/Final-2009-Victorian-Bushfires-Royal-Commission-report.pdf",
+      "document": "2009 Victorian Bushfires Royal Commission, Final Report: Summary",
+      "page": 15
+     }
+    ],
+    "section": "Victoria’s bushfire safety policy"
+   },
+   {
+    "text": "It also found that divided leadership responsibilities and incompatible agency systems hindered the emergency response.",
+    "cites": [
+     {
+      "url": "https://www.ffm.vic.gov.au/__data/assets/pdf_file/0018/531225/Final-2009-Victorian-Bushfires-Royal-Commission-report.pdf",
+      "document": "2009 Victorian Bushfires Royal Commission, Final Report: Summary",
+      "page": 28
+     }
+    ],
+    "section": "Organisational structure"
+   },
+   {
+    "text": "Its 67 numbered recommendations address safety policy, emergency operations, infrastructure, planning, land management, research and implementation oversight.",
+    "cites": [
+     {
+      "url": "https://www.ffm.vic.gov.au/__data/assets/pdf_file/0018/531225/Final-2009-Victorian-Bushfires-Royal-Commission-report.pdf",
+      "document": "2009 Victorian Bushfires Royal Commission, Final Report: Summary",
+      "page": 33
+     },
+     {
+      "url": "https://www.ffm.vic.gov.au/__data/assets/pdf_file/0018/531225/Final-2009-Victorian-Bushfires-Royal-Commission-report.pdf",
+      "document": "2009 Victorian Bushfires Royal Commission, Final Report: Summary",
+      "page": 35
+     },
+     {
+      "url": "https://www.ffm.vic.gov.au/__data/assets/pdf_file/0018/531225/Final-2009-Victorian-Bushfires-Royal-Commission-report.pdf",
+      "document": "2009 Victorian Bushfires Royal Commission, Final Report: Summary",
+      "page": 40
+     },
+     {
+      "url": "https://www.ffm.vic.gov.au/__data/assets/pdf_file/0018/531225/Final-2009-Victorian-Bushfires-Royal-Commission-report.pdf",
+      "document": "2009 Victorian Bushfires Royal Commission, Final Report: Summary",
+      "page": 43
+     },
+     {
+      "url": "https://www.ffm.vic.gov.au/__data/assets/pdf_file/0018/531225/Final-2009-Victorian-Bushfires-Royal-Commission-report.pdf",
+      "document": "2009 Victorian Bushfires Royal Commission, Final Report: Summary",
+      "page": 45
+     },
+     {
+      "url": "https://www.ffm.vic.gov.au/__data/assets/pdf_file/0018/531225/Final-2009-Victorian-Bushfires-Royal-Commission-report.pdf",
+      "document": "2009 Victorian Bushfires Royal Commission, Final Report: Summary",
+      "page": 47
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The 7 February fires did, however, severely test the policy and exposed weaknesses in the way it was applied.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ffm.vic.gov.au/__data/assets/pdf_file/0018/531225/Final-2009-Victorian-Bushfires-Royal-Commission-report.pdf",
+     "document": "2009 Victorian Bushfires Royal Commission, Final Report: Summary",
+     "page": 15
+    }
+   },
+   {
+    "quote": "The absolute priority is to improve operational performance.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ffm.vic.gov.au/__data/assets/pdf_file/0018/531225/Final-2009-Victorian-Bushfires-Royal-Commission-report.pdf",
+     "document": "2009 Victorian Bushfires Royal Commission, Final Report: Summary",
+     "page": 28
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:21+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}
