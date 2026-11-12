@@ -16,8 +16,9 @@
 #   The lock's `owner` file records pid, lstart and pgid (both the wrapper), script,
 #   worktree basename, UTC start and a random token.
 # - Publication is atomic: the lock is built as a staging directory holding its
-#   owner file, then renamed into place with renamex_np(RENAME_EXCL), which
-#   fails if any directory is there (another project's empty lock included). An
+#   owner file, then renamed into place with renamex_np(RENAME_EXCL) on macOS
+#   or renameat2(RENAME_NOREPLACE) on Linux. Both fail if any directory is there
+#   (another project's empty lock included). An
 #   OPAX lock never exists without its owner file.
 # - Release stops and waits for every other process in the group, then renames
 #   the lock aside in one step and deletes the retired copy.
@@ -64,10 +65,6 @@ qa_load5() {
   if [ -n "${OPAX_LOAD_PROBE:-}" ]; then
     bash -c "$OPAX_LOAD_PROBE" | awk '{print int($1); exit}'
   else
-    if [ "$(uname -s)" = Linux ]; then
-      awk '{print int($2)}' /proc/loadavg
-      return
-    fi
     /usr/sbin/sysctl -n vm.loadavg | awk '{print int($3)}'
   fi
 }
@@ -111,18 +108,31 @@ qa_lstart() { /bin/ps -o lstart= -p "$1" 2>/dev/null | sed 's/^ *//;s/ *$//'; }
 # Atomic no-replace rename: 0 renamed, 1 the target exists, 2 any other error.
 qa_rename_excl() {
   /usr/bin/python3 -c '
-import ctypes, ctypes.util, errno, sys
+import ctypes, ctypes.util, errno, os, sys
 libc = ctypes.CDLL(ctypes.util.find_library("c"), use_errno=True)
-if sys.platform == "linux":
-    result = libc.renameat2(-100, sys.argv[1].encode(), -100, sys.argv[2].encode(), 1)
+if sys.platform.startswith("linux"):
+    # The kernel checks and publishes in one operation, including for an
+    # existing empty directory. Never fall back to check-then-rename.
+    operation = "renameat2"
+    try:
+        rename = libc.renameat2
+    except AttributeError:
+        sys.stderr.write("renameat2: libc lacks atomic no-replace rename\n")
+        sys.exit(2)
+    rename.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p, ctypes.c_uint]
+    rename.restype = ctypes.c_int
+    AT_FDCWD, RENAME_NOREPLACE = -100, 1
+    result = rename(AT_FDCWD, os.fsencode(sys.argv[1]), AT_FDCWD, os.fsencode(sys.argv[2]), RENAME_NOREPLACE)
 else:
-    result = libc.renamex_np(sys.argv[1].encode(), sys.argv[2].encode(), 0x4)
+    operation = "renamex_np"
+    RENAME_EXCL = 0x4
+    result = libc.renamex_np(sys.argv[1].encode(), sys.argv[2].encode(), RENAME_EXCL)
 if result == 0:
     sys.exit(0)
 code = ctypes.get_errno()
 if code == errno.EEXIST:
     sys.exit(1)
-sys.stderr.write("exclusive rename: %s\n" % errno.errorcode.get(code, code))
+sys.stderr.write("%s: %s\n" % (operation, errno.errorcode.get(code, code)))
 sys.exit(2)
 ' "$1" "$2"
 }
@@ -343,53 +353,3 @@ qa_paste_lock_wait() {
     sleep "${OPAX_PASTE_POLL_SECONDS:-5}"
   done
 }
-
-# Desktop native builds share this mkdir/PID protocol with all Android lanes.
-# Device/JS sessions do not take it. A missing PID is never assumed stale.
-qa_assert_native_lock() {
-  local lock=${OPAX_ANDROID_NATIVE_LOCK:-/tmp/opax-android-native.lock}
-  [ "${OPAX_ANDROID_NATIVE_LOCK_PID:-}" = "$(cat "$lock/pid" 2>/dev/null)" ] &&
-    [ -n "${OPAX_ANDROID_NATIVE_LOCK_PID:-}" ] && kill -0 "$OPAX_ANDROID_NATIVE_LOCK_PID" 2>/dev/null || {
-      echo 'Android native build requires the desktop native lock.' >&2; return 1;
-    }
-}
-
-qa_native_lock_run() (
-  local lock=${OPAX_ANDROID_NATIVE_LOCK:-/tmp/opax-android-native.lock} holder deadline
-  deadline=$((SECONDS + ${OPAX_NATIVE_WAIT_SECONDS:-7200}))
-  until mkdir "$lock" 2>/dev/null; do
-    holder=$(cat "$lock/pid" 2>/dev/null) || holder=
-    case "$holder" in
-      ''|*[!0-9]*) ;;
-      *) if ! kill -0 "$holder" 2>/dev/null; then
-           # Multiple desktop waiters must not retire a newly acquired lock
-           # after observing the same old PID. Serialize reaping and recheck.
-           if python3 - "$lock" "$holder" <<'PYREAP'
-import fcntl, os, pathlib, sys
-lock=pathlib.Path(sys.argv[1])
-with open(str(lock)+'.reap', 'a') as guard:
-    fcntl.flock(guard, fcntl.LOCK_EX)
-    try:
-        pid=(lock/'pid').read_text().strip()
-        if pid != sys.argv[2]: raise SystemExit(1)
-        try: os.kill(int(pid), 0)
-        except ProcessLookupError: pass
-        else: raise SystemExit(1)
-        (lock/'pid').unlink()
-        lock.rmdir()
-    except (OSError, ValueError): raise SystemExit(1)
-PYREAP
-           then continue; fi
-         fi ;;
-    esac
-    [ "$SECONDS" -lt "$deadline" ] || { echo 'Desktop native lock wait expired.' >&2; return 1; }
-    qa_log "Waiting for desktop native lock (pid ${holder:-unpublished})."
-    sleep "${OPAX_NATIVE_POLL_SECONDS:-20}"
-  done
-  export OPAX_ANDROID_NATIVE_LOCK_PID=${BASHPID:-$$}
-  printf '%s\n' "$OPAX_ANDROID_NATIVE_LOCK_PID" > "$lock/pid"
-  trap '[ "$(cat "$lock/pid" 2>/dev/null)" != "$OPAX_ANDROID_NATIVE_LOCK_PID" ] || { rm -f "$lock/pid"; rmdir "$lock"; }' EXIT
-  trap 'exit 130' INT
-  trap 'exit 143' TERM
-  "$@"
-)

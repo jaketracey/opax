@@ -7,6 +7,24 @@ export EXPO_NO_TELEMETRY=1
 # tree, tool versions, dependencies and test environment is skipped; see
 # scripts/qa-pass-record.sh. qa-static and qa-advisories always run.
 passed() { bash scripts/qa-pass-record.sh check "$1"; }
+# Only worker budgets preserve full-suite coverage. Subsets must execute even
+# when a full gate record exists, and cannot publish a full gate record.
+full_suite_args() {
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --maxWorkers=*) [[ "$1" =~ ^--maxWorkers=[1-9][0-9]*$ ]] || return 1; shift ;;
+      -w) [ "$#" -ge 2 ] && [[ "$2" =~ ^[1-9][0-9]*$ ]] || return 1; shift 2 ;;
+      *) return 1 ;;
+    esac
+  done
+}
+FULL_GATE=0
+if full_suite_args "$@"; then FULL_GATE=1; fi
+GATE_COMMAND='nice -n 10 npm run typecheck && nice -n 10 npm run lint && nice -n 10 npm run test --'
+if [ "$#" -gt 0 ]; then
+  printf -v test_args ' %q' "$@"
+  GATE_COMMAND+=$test_args
+fi
 if record=$(passed harness); then
   echo "OPAX QA: harness self-tests skipped: $record"
 else
@@ -29,14 +47,20 @@ nice -n 10 python3 scripts/test-android-harness.py
 nice -n 10 python3 scripts/test-android-results.py
 echo 'OPAX QA: design tokens'
 nice -n 10 node scripts/build-design-tokens.mjs --check
-if record=$(passed gate); then
+if [ "$FULL_GATE" = 1 ] && record=$(passed gate); then
   echo "OPAX QA: typecheck, lint and test skipped: $record"
 else
   for gate in typecheck lint test; do
     echo "OPAX QA: $gate"
-    nice -n 10 npm run "$gate"
+    if [ "$gate" = test ]; then
+      nice -n 10 npm run "$gate" -- "$@"
+    else
+      nice -n 10 npm run "$gate"
+    fi
   done
-  bash scripts/qa-pass-record.sh write gate 0 'for gate in typecheck lint test; do nice -n 10 npm run "$gate"; done'
+  if [ "$FULL_GATE" = 1 ]; then
+    bash scripts/qa-pass-record.sh write gate 0 "$GATE_COMMAND"
+  fi
 fi
 for gate in qa-static qa-advisories; do
   echo "OPAX QA: $gate"

@@ -103,7 +103,14 @@ export function fixtureBytes(
         writeFileSync(temporary, bytes);
         renameSync(temporary, file);
       } catch {
-        rmSync(temporary, { force: true });
+        // Retain verified bytes when persistence is unavailable. Copy this
+        // blob so a small read does not retain the whole batch buffer.
+        cached.set(p, Buffer.from(bytes));
+        try {
+          rmSync(temporary, { force: true });
+        } catch {
+          // The verified in-memory bytes remain available.
+        }
       }
     }
     const bytes = blobs.get(path);

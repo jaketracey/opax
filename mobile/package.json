@@ -8,7 +8,7 @@
     "ios": "bash scripts/run-ios.sh",
     "typecheck": "mkdir -p node_modules/.cache && tsc --noEmit --incremental --tsBuildInfoFile node_modules/.cache/tsconfig.tsbuildinfo",
     "lint": "bash scripts/lint.sh",
-    "test": "bash scripts/jest-retry.sh --maxWorkers=2",
+    "test": "bash scripts/jest-retry.sh",
     "format": "prettier --write src scripts tests plugins app.config.ts *.js *.json .maestro README.md",
     "qa-advisories": "tsx scripts/qa-advisories.ts",
     "qa-static": "tsx scripts/qa-static.ts",

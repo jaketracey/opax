@@ -1,6 +1,6 @@
-import { execFileSync } from 'node:child_process';
+import childProcess, { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import {
+import fs, {
   mkdtempSync,
   mkdirSync,
   readFileSync,
@@ -23,6 +23,9 @@ test('a newer committed catalog or dirty worktree cannot change pinned bytes at 
     const bytes = pinnedBytes('/corpus.json');
     const path = join(root, 'portal/public/corpus.json');
     writeFileSync(path, bytes);
+    // Binary contents include newlines, so batch records must use byte lengths.
+    const binary = Buffer.from([0, 10, 255, 13, 10, 42]);
+    writeFileSync(join(root, 'portal/public/binary.webp'), binary);
     git('add', '.');
     git(
       '-c',
@@ -39,8 +42,9 @@ test('a newer committed catalog or dirty worktree cannot change pinned bytes at 
       sourceCommit,
       files: {
         '/corpus.json': createHash('sha256').update(bytes).digest('hex'),
+        '/binary.webp': createHash('sha256').update(binary).digest('hex'),
       },
-      sizes: { '/corpus.json': bytes.length },
+      sizes: { '/corpus.json': bytes.length, '/binary.webp': binary.length },
     };
     writeFileSync(path, Buffer.concat([bytes, Buffer.from('\n')]));
     git('add', '.');
@@ -55,21 +59,46 @@ test('a newer committed catalog or dirty worktree cannot change pinned bytes at 
       'New catalog',
     );
     expect(git('rev-parse', 'HEAD')).not.toBe(sourceCommit);
-    expect(fixtureBytes(snapshot, root)('/corpus.json')).toEqual(bytes);
+    const gitReads = jest.spyOn(childProcess, 'execFileSync');
+    const read = fixtureBytes(snapshot, root);
+    expect(read('/corpus.json')).toEqual(bytes);
+    expect(read('/binary.webp')).toEqual(binary);
+    expect(gitReads).toHaveBeenCalledTimes(1);
+    expect(gitReads).toHaveBeenCalledWith(
+      'git',
+      ['cat-file', '--batch'],
+      expect.objectContaining({ cwd: root }),
+    );
+    // A fresh reader uses verified on-disk bytes without another git process.
+    expect(fixtureBytes(snapshot, root)('/binary.webp')).toEqual(binary);
+    expect(gitReads).toHaveBeenCalledTimes(1);
     writeFileSync(path, Buffer.concat([bytes, Buffer.from('\n\n')]));
     expect(fixtureBytes(snapshot, root)('/corpus.json')).toEqual(bytes);
-    // The verified blob is cached under its commit; a tampered cache file
-    // is never served, only replaced from git.
+    const cacheRoot = join(root, 'mobile/node_modules/.cache/opax-fixture');
     const cachedFile = join(
-      root,
-      'mobile/node_modules/.cache/opax-fixture',
+      cacheRoot,
       sourceCommit,
       'portal/public/corpus.json',
     );
     expect(readFileSync(cachedFile)).toEqual(bytes);
-    writeFileSync(cachedFile, Buffer.concat([bytes, Buffer.from('\n')]));
+    const tampered = Buffer.from(bytes);
+    tampered[0] = tampered[0]! ^ 1;
+    writeFileSync(cachedFile, tampered);
     expect(fixtureBytes(snapshot, root)('/corpus.json')).toEqual(bytes);
     expect(readFileSync(cachedFile)).toEqual(bytes);
+
+    // A read-only cache must not turn N fixture reads back into N git children.
+    rmSync(cacheRoot, { recursive: true, force: true });
+    const writes = jest.spyOn(fs, 'writeFileSync').mockImplementation(() => {
+      throw new Error('Read-only cache');
+    });
+    const before = gitReads.mock.calls.length;
+    const memoryOnly = fixtureBytes(snapshot, root);
+    expect(memoryOnly('/corpus.json')).toEqual(bytes);
+    expect(memoryOnly('/binary.webp')).toEqual(binary);
+    expect(gitReads.mock.calls.length - before).toBe(1);
+    writes.mockRestore();
+
     expect(() =>
       fixtureBytes(
         { ...snapshot, sourceCommit: '0'.repeat(40) },
@@ -86,6 +115,7 @@ test('a newer committed catalog or dirty worktree cannot change pinned bytes at 
       /Unpinned/,
     );
   } finally {
+    jest.restoreAllMocks();
     rmSync(root, { recursive: true, force: true });
   }
 });

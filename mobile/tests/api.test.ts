@@ -358,6 +358,24 @@ test('GET retries with bounded exponential backoff on transient failure', async 
   expect(sleep.mock.calls).toEqual([[300], [600]]);
   expect(transport).toHaveBeenCalledTimes(3);
 });
+test.each([5, 20])(
+  'a cache lookup reaching the read deadline reports timeout before transport (%dms)',
+  async (elapsed) => {
+    let now = 1000;
+    const transport = jest.fn();
+    const { client, cache } = setup(transport, () => now, { timeoutMs: 5 });
+    jest.spyOn(cache, 'get').mockImplementationOnce(async () => {
+      now += elapsed;
+      return undefined;
+    });
+    await expect(
+      client.get('/parliamentarians.json', decode),
+    ).rejects.toMatchObject({
+      code: 'timeout',
+    });
+    expect(transport).not.toHaveBeenCalled();
+  },
+);
 test('timeout maps distinctly, redirect response and broken JSON fail closed', async () => {
   const transport: typeof fetch = (_url, init) =>
     new Promise((_resolve, reject) =>
