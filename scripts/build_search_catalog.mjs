@@ -14,6 +14,9 @@ import { payPersonRecord, payPersonOrder, payGeneralRecords } from '../portal/sr
 import { reportsPublished } from './reports_flag.mjs';
 import { pageSearchRecords } from './search_catalog_pages.mjs';
 import { buildReportCatalog } from './build_report_catalog.mjs';
+import {programKey, resolveProgram} from '../portal/public/facts/grant-programs.js';
+export {programKey};
+import { interestHolder } from '../portal/public/interest-holder.js';
 const root = fileURLToPath(new URL('../portal/public/', import.meta.url));
 const read = async p => JSON.parse(await readFile(join(root,p),'utf8'));
 const files = async p => (await readdir(join(root,p))).filter(n=>n.endsWith('.json')).sort();
@@ -40,10 +43,11 @@ function add(key, kind, title, href, text, extra={}) {
 // Grant program rows (contract 2026-09-13, section 3): one record per listed program, kind grant.
 // The key mirrors the program file name rule in section 1; the slug is stable so the MCP can
 // recognise a program row without relying on catalog position.
-export const programKey = id => String(id).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80);
-export function programRecord(jur, row, agencies=[]) {
+export function programRecord(jur, row, agencies=[], programs=[row]) {
  if (typeof row?.id !== 'string' || !row.id.trim() || /^(null|undefined)$/i.test(row.id)) return null;
- const id=row.id, key=programKey(id), name=String(row.n||id);
+ row=resolveProgram(programs,row.id);
+ if (!row) return null;
+ const id=row.id, key=row.key || programKey(id), name=String(row.n||id);
  const agency=Number.isInteger(row.ag)?agencies[row.ag]:typeof row.ag==='string'?row.ag:'';
  const cnc=Number(row.cnc)||0, selk=Number(row.selk)||0;
  const clause=selk>0?`; ${Math.round(100*cnc/selk)}% closed non-competitive where recorded`:'';
@@ -133,7 +137,7 @@ async function main() {
  }
  for(const jur of ['federal','qld']) {
   const index=await read(`graph/grants.${jur}.json`);
-  for(const p of index.programs||[]){const r=programRecord(jur,p,index.agencies||[]);if(!r)continue;add(r.key,r.kind,r.title,r.href,r.snippet,r.extra)}
+  for(const p of index.programs||[]){const r=programRecord(jur,p,index.agencies||[],index.programs);if(!r)continue;add(r.key,r.kind,r.title,r.href,r.snippet,r.extra)}
   for(const file of await files('grants/'+jur)) for(const r of Object.values(await read(`grants/${jur}/${file}`))) {
    if (typeof r.id !== 'string' || !r.id.trim() || /^(null|undefined)$/i.test(r.id)) continue;
    const href='/money/grants/'+jur+'/recipient/'+encodeURIComponent(r.id);
@@ -157,7 +161,7 @@ async function main() {
   const href=interestHref(p,person,speakerNames);
   for(const [category,b] of Object.entries(p.buckets||{})) for(const [i,item] of (b.items||[]).entries()) {
    const date=item.date||p.as_at||p.statement_date||null;
-   add(`interest:${file}:${category}:${i}`,'interest',`${p.name} — ${category.replaceAll('_',' ')}`,href,`${item.description}. ${item.holder||''}. ${item.kind||''}.`,{aliases:person?.name||'',date,chamber:p.chamber,from:year(date),to:year(date),dateLabel:item.date?undefined:(date?'Register as at '+date:undefined),state:p.jurisdiction,speakers:[...new Set([p.name,person?.name].filter(Boolean))],parties:[person?.party_now||person?.party||''],source:'Register of interests',url:p.source_url});
+   add(`interest:${file}:${category}:${i}`,'interest',`${p.name} — ${category.replaceAll('_',' ')}`,href,`${item.description}. ${interestHolder(item.holder)||''}. ${item.kind||''}.`,{aliases:person?.name||'',date,chamber:p.chamber,from:year(date),to:year(date),dateLabel:item.date?undefined:(date?'Register as at '+date:undefined),state:p.jurisdiction,speakers:[...new Set([p.name,person?.name].filter(Boolean))],parties:[person?.party_now||person?.party||''],source:'Register of interests',url:p.source_url});
   }
  }
  const recent=await read('interests/recent.json');

@@ -219,7 +219,7 @@
    "key": "federal-senate-5050",
    "date": "2015-11-23",
    "house": "senate",
-   "question": "No motion text available",
+   "question": null,
    "stage": "In committee",
    "ayes": 25,
    "noes": 39,

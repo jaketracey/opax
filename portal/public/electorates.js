@@ -1,4 +1,4 @@
-import { vicElectionFooterHTML } from './vic-election.js?v=c6e1bad2ff';
+import { vicElectionFooterHTML } from './vic-election.js?v=6642b187d4';
 import { personUrl, partyUrl } from './canonical-urls.js?v=0079b1f2db';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';

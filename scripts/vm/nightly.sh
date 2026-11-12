@@ -11,8 +11,8 @@
 #   OPAX_NIGHTLY_NO_PUSH=1 scripts/vm/nightly.sh   # do everything but push and publish the status
 #
 # The deploy is not started from here: .github/workflows/deploy.yml runs on any push to main
-# that changes portal/public/corpus.json, and every nightly commit does (the manifest's
-# refresh.checked_at is stamped each night). Alerts are not sent from here either:
+# that changes portal/ (its `paths` list), and every nightly commit does (at least the
+# manifest's refresh.checked_at, stamped each night). Alerts are not sent from here either:
 # .github/workflows/refresh-watchdog.yml reads the published corpus.json and the status this
 # script publishes to the `nightly-status` branch, and fails (so GitHub emails) when the
 # chain has not run, or the last run reported problems.
@@ -437,6 +437,11 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "$DIVISIONS_ACQUISITION_FAILE
     DIVISIONS_PAGES_ROLLED_BACK=0
     retained=$("$PY" -c 'import json; print(json.load(open("portal/public/divisions/index.json"))["coverage"]["retained_count"])')
     [ "$retained" = 0 ] || warn "division export retained $retained pinned records; explicit coverage flags identify degraded source coverage"
+    # Bills can be retained while the division projection receives reviewed
+    # corrections. Refresh and validate persisted embedded tallies without APH.
+    if ! run "$PY" scripts/export_bills.py --refresh-division-facts portal/public/bills; then
+      fail "bill division facts could not be reconciled with the accepted division pages"
+    fi
   fi
   # SEO links depend on the accepted division pages, never just the DB rows.
   if [ "${DIVISIONS_EXPORT_FAILED:-0}" = 1 ]; then
@@ -813,9 +818,9 @@ fi
 
 # ---- 5. corpus manifest + cache epoch ---------------------------------------------------------------------
 RESULT_JSON=$(mktemp)
-# corpus.json is what starts the deploy (deploy.yml runs on pushes that change it). So it must change
-# whenever anything else is about to be pushed, and at least once a day even when nothing else moved:
-# that daily stamp is also what the watchdog reads to know the whole chain is alive.
+# Any pushed change under portal/ starts the deploy (deploy.yml). corpus.json still changes whenever
+# anything else is about to be pushed, and at least once a day even when nothing else moved:
+# that daily stamp is what the watchdog reads to know the whole chain is alive.
 stamp_args=(--stamp-after-hours "${OPAX_STAMP_AFTER_HOURS:-12}")
 if [ -n "$(git status --porcelain -- "${DATA_PATHS[@]}")" ]; then stamp_args=(--always-stamp); fi
 log "updating portal/public/corpus.json from the live knowledge box (${stamp_args[*]})"
@@ -938,12 +943,12 @@ if [ "$pushed" != true ]; then
 fi
 COMMIT_SHA=$(git rev-parse --short HEAD)
 log "pushed $COMMIT_SHA to origin/$BRANCH"
-# deploy.yml runs on pushes that change corpus.json; say whether this one will
-if git diff --quiet "$BASE_BEFORE" HEAD -- portal/public/corpus.json; then
-  DEPLOY="NOT started: this push did not change corpus.json (data is on $BRANCH but not deployed)"
-  fail "pushed $COMMIT_SHA but corpus.json did not change, so the deploy workflow did not start; run it by hand (Actions > Deploy > Run workflow)"
+# deploy.yml runs on pushes that change portal/ or the other Worker inputs; say whether this one will
+if git diff --quiet "$BASE_BEFORE" HEAD -- portal scripts pyproject.toml uv.lock; then
+  DEPLOY="NOT started: this push changed nothing the deploy watches (data is on $BRANCH but not deployed)"
+  fail "pushed $COMMIT_SHA but it changed nothing under portal/, so the deploy workflow did not start; run it by hand (Actions > Deploy > Run workflow)"
 else
-  DEPLOY="started by the push (deploy.yml, corpus.json changed)"
+  DEPLOY="started by the push (deploy.yml, portal/ changed)"
 fi
 # A local commit is not publication. Preserve catch-up and active input state
 # when NO_PUSH is requested or the push failed.

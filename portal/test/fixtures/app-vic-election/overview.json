@@ -1,0 +1,1923 @@
+{
+  "schema_version": 1,
+  "title": "Victorian election 2026",
+  "web_url": "https://opax.com.au/vic-election-2026",
+  "updated": "2026-11-12",
+  "election_day": "2026-11-28",
+  "polls_open": "2026-11-28T08:00:00+11:00",
+  "polls_close": "2026-11-28T18:00:00+11:00",
+  "term_start": "2022-11-26",
+  "term_end": "2026-11-28",
+  "key_dates": [
+    {
+      "id": "enrolment",
+      "label": "Enrol or update your details by",
+      "when": "8 pm Tuesday 3 November 2026",
+      "passes_at": "2026-11-03T20:00:00+11:00",
+      "passed_label": "Enrolment closed",
+      "passed_when": null,
+      "link": {
+        "label": "Check your enrolment",
+        "url": "https://www.vec.vic.gov.au/enrolment/check-my-enrolment"
+      }
+    },
+    {
+      "id": "caretaker",
+      "label": "Caretaker period begins",
+      "when": "6 pm Tuesday 3 November 2026",
+      "passes_at": "2026-11-03T20:00:00+11:00",
+      "passed_label": "Caretaker period began",
+      "passed_when": null,
+      "link": null
+    },
+    {
+      "id": "nominations",
+      "label": "Candidates confirmed",
+      "when": "After nominations close at noon on Monday 9 November 2026",
+      "passes_at": "2026-11-09T12:00:00+11:00",
+      "passed_label": null,
+      "passed_when": "Nominations closed at noon on Monday 9 November 2026",
+      "link": {
+        "label": "VEC election page",
+        "url": "https://www.vec.vic.gov.au/voting/2026-state-election"
+      }
+    },
+    {
+      "id": "postal",
+      "label": "Apply for a postal vote by",
+      "when": "6 pm Wednesday 25 November 2026",
+      "passes_at": "2026-11-25T18:00:00+11:00",
+      "passed_label": "Postal vote applications closed",
+      "passed_when": null,
+      "link": null
+    },
+    {
+      "id": "early",
+      "label": "Early voting",
+      "when": "18–27 November 2026, 9 am to 6 pm. Closed Sunday 22 November",
+      "passes_at": null,
+      "passed_label": null,
+      "passed_when": null,
+      "link": {
+        "label": "Where and how to vote",
+        "url": "https://www.vec.vic.gov.au/voting/2026-state-election/voting-options"
+      }
+    },
+    {
+      "id": "election_day",
+      "label": "Election day",
+      "when": "Saturday 28 November 2026, 8 am to 6 pm",
+      "passes_at": null,
+      "passed_label": null,
+      "passed_when": null,
+      "link": null
+    }
+  ],
+  "notice": null,
+  "candidates_published": null,
+  "results_fetched": "2026-10-13",
+  "roster_date": "2026-09-09",
+  "districts": [
+    {
+      "kind": "district",
+      "slug": "albert-park",
+      "name": "Albert Park",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-albert-park",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "Nina Taylor",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 11.15
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "ashwood",
+      "name": "Ashwood",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-ashwood",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "Matt Fregon",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 6.15
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "bass",
+      "name": "Bass",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-bass",
+      "region": "Eastern Victoria",
+      "member": {
+        "name": "Jordan Crugnale",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 0.24
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "bayswater",
+      "name": "Bayswater",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-bayswater",
+      "region": "North-Eastern Metropolitan",
+      "member": {
+        "name": "Jackson Taylor",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 4.23
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "bellarine",
+      "name": "Bellarine",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-bellarine",
+      "region": "Western Victoria",
+      "member": {
+        "name": "Alison Marchant",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 8.46
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "benambra",
+      "name": "Benambra",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-benambra",
+      "region": "Northern Victoria",
+      "member": {
+        "name": "Bill Tilley",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 0.94
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "bendigo-east",
+      "name": "Bendigo East",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-bendigo-east",
+      "region": "Northern Victoria",
+      "member": {
+        "name": "Jacinta Allan",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 10.91
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "bendigo-west",
+      "name": "Bendigo West",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-bendigo-west",
+      "region": "Northern Victoria",
+      "member": {
+        "name": "Maree Edwards",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 14.35
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "bentleigh",
+      "name": "Bentleigh",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-bentleigh",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "Nick Staikos",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 8.04
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "berwick",
+      "name": "Berwick",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-berwick",
+      "region": "South-Eastern Metropolitan",
+      "member": {
+        "name": "Brad Battin",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 4.71
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "box-hill",
+      "name": "Box Hill",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-box-hill",
+      "region": "North-Eastern Metropolitan",
+      "member": {
+        "name": "Paul Hamer",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 7.23
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "brighton",
+      "name": "Brighton",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-brighton",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "James Newbury",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 4.21
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "broadmeadows",
+      "name": "Broadmeadows",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-broadmeadows",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Kathleen Matthews-Ward",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 15.45
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "brunswick",
+      "name": "Brunswick",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-brunswick",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Tim Read",
+        "party": "Greens"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Greens",
+        "margin": 13.46
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "bulleen",
+      "name": "Bulleen",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-bulleen",
+      "region": "North-Eastern Metropolitan",
+      "member": {
+        "name": "Matthew Guy",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 5.94
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "bundoora",
+      "name": "Bundoora",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-bundoora",
+      "region": "North-Eastern Metropolitan",
+      "member": {
+        "name": "Colin Brooks",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 12.74
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "carrum",
+      "name": "Carrum",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-carrum",
+      "region": "South-Eastern Metropolitan",
+      "member": {
+        "name": "Sonya Kilkenny",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 9.94
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "caulfield",
+      "name": "Caulfield",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-caulfield",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "David Southwick",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 2.07
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "clarinda",
+      "name": "Clarinda",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-clarinda",
+      "region": "South-Eastern Metropolitan",
+      "member": {
+        "name": "Meng Heang Tak",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 10.37
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "cranbourne",
+      "name": "Cranbourne",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-cranbourne",
+      "region": "South-Eastern Metropolitan",
+      "member": {
+        "name": "Pauline Richards",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 9
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "croydon",
+      "name": "Croydon",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-croydon",
+      "region": "North-Eastern Metropolitan",
+      "member": {
+        "name": "David Hodgett",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 1.37
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "dandenong",
+      "name": "Dandenong",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-dandenong",
+      "region": "South-Eastern Metropolitan",
+      "member": {
+        "name": "Gabrielle Williams",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 19.11
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "eildon",
+      "name": "Eildon",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-eildon",
+      "region": "Northern Victoria",
+      "member": {
+        "name": "Cindy McLeish",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 7.08
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "eltham",
+      "name": "Eltham",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-eltham",
+      "region": "North-Eastern Metropolitan",
+      "member": {
+        "name": "Vicki Ward",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 9
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "essendon",
+      "name": "Essendon",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-essendon",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Danny Pearson",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 12.45
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "eureka",
+      "name": "Eureka",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-eureka",
+      "region": "Western Victoria",
+      "member": {
+        "name": "Michaela Settle",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 7.17
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "euroa",
+      "name": "Euroa",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-euroa",
+      "region": "Northern Victoria",
+      "member": {
+        "name": "Annabelle Cleeland",
+        "party": "Nationals"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Nationals",
+        "margin": 9.93
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "evelyn",
+      "name": "Evelyn",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-evelyn",
+      "region": "Eastern Victoria",
+      "member": {
+        "name": "Bridget Vallence",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 5.21
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "footscray",
+      "name": "Footscray",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-footscray",
+      "region": "Western Metropolitan",
+      "member": {
+        "name": "Katie Hall",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 4.24
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "frankston",
+      "name": "Frankston",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-frankston",
+      "region": "South-Eastern Metropolitan",
+      "member": {
+        "name": "Paul Edbrooke",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 8.66
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "geelong",
+      "name": "Geelong",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-geelong",
+      "region": "Western Victoria",
+      "member": {
+        "name": "Chris Couzens",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 14.71
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "gippsland-east",
+      "name": "Gippsland East",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-gippsland-east",
+      "region": "Eastern Victoria",
+      "member": {
+        "name": "Tim Bull",
+        "party": "Nationals"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Nationals",
+        "margin": 23.92
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "gippsland-south",
+      "name": "Gippsland South",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-gippsland-south",
+      "region": "Eastern Victoria",
+      "member": {
+        "name": "Danny O'Brien",
+        "party": "Nationals"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Nationals",
+        "margin": 15.25
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "glen-waverley",
+      "name": "Glen Waverley",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-glen-waverley",
+      "region": "North-Eastern Metropolitan",
+      "member": {
+        "name": "John Mullahy",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 3.3
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "greenvale",
+      "name": "Greenvale",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-greenvale",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Iwan Walters",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 6.92
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "hastings",
+      "name": "Hastings",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-hastings",
+      "region": "Eastern Victoria",
+      "member": {
+        "name": "Paul Mercurio",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 1.35
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "hawthorn",
+      "name": "Hawthorn",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-hawthorn",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "John Pesutto",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 1.74
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "ivanhoe",
+      "name": "Ivanhoe",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-ivanhoe",
+      "region": "North-Eastern Metropolitan",
+      "member": {
+        "name": "Anthony Carbines",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 12.75
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "kalkallo",
+      "name": "Kalkallo",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-kalkallo",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Ros Spence",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 16.43
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "kew",
+      "name": "Kew",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-kew",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "Jess Wilson",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 3.98
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "kororoit",
+      "name": "Kororoit",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-kororoit",
+      "region": "Western Metropolitan",
+      "member": {
+        "name": "Luba Grigorovitch",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 14.25
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "lara",
+      "name": "Lara",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-lara",
+      "region": "Western Victoria",
+      "member": {
+        "name": "Ella George",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 16.15
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "laverton",
+      "name": "Laverton",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-laverton",
+      "region": "Western Metropolitan",
+      "member": {
+        "name": "Sarah Connolly",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 18.01
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "lowan",
+      "name": "Lowan",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-lowan",
+      "region": "Western Victoria",
+      "member": {
+        "name": "Emma Kealy",
+        "party": "Nationals"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Nationals",
+        "margin": 21.61
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "macedon",
+      "name": "Macedon",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-macedon",
+      "region": "Northern Victoria",
+      "member": {
+        "name": "Mary-Anne Thomas",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 9.54
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "malvern",
+      "name": "Malvern",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-malvern",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "Michael O'Brien",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 8.28
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "melbourne",
+      "name": "Melbourne",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-melbourne",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Ellen Sandell",
+        "party": "Greens"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Greens",
+        "margin": 10.19
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "melton",
+      "name": "Melton",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-melton",
+      "region": "Western Victoria",
+      "member": {
+        "name": "Steve McGhie",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 4.59
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "mildura",
+      "name": "Mildura",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-mildura",
+      "region": "Northern Victoria",
+      "member": {
+        "name": "Jade Benham",
+        "party": "Nationals"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Nationals",
+        "margin": 1.18
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "mill-park",
+      "name": "Mill Park",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-mill-park",
+      "region": "North-Eastern Metropolitan",
+      "member": {
+        "name": "Lily D'Ambrosio",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 11.43
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "monbulk",
+      "name": "Monbulk",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-monbulk",
+      "region": "Eastern Victoria",
+      "member": {
+        "name": "Daniela De Martino",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 7.55
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "mordialloc",
+      "name": "Mordialloc",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-mordialloc",
+      "region": "South-Eastern Metropolitan",
+      "member": {
+        "name": "Tim Richardson",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 8.19
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "mornington",
+      "name": "Mornington",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-mornington",
+      "region": "Eastern Victoria",
+      "member": {
+        "name": "Chris Crewther",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 0.7
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "morwell",
+      "name": "Morwell",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-morwell",
+      "region": "Eastern Victoria",
+      "member": {
+        "name": "Martin Cameron",
+        "party": "Nationals"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Nationals",
+        "margin": 4.42
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "mulgrave",
+      "name": "Mulgrave",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-mulgrave",
+      "region": "South-Eastern Metropolitan",
+      "member": {
+        "name": "Eden Foster",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2023-11-18",
+        "kind": "by-election",
+        "party": "Labor",
+        "margin": 6.49
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "murray-plains",
+      "name": "Murray Plains",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-murray-plains",
+      "region": "Northern Victoria",
+      "member": {
+        "name": "Peter Walsh",
+        "party": "Nationals"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Nationals",
+        "margin": 22.89
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "narracan",
+      "name": "Narracan",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-narracan",
+      "region": "Eastern Victoria",
+      "member": {
+        "name": "Wayne Farnham",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2023-01-28",
+        "kind": "supplementary",
+        "party": "Liberal",
+        "margin": 12.9
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "narre-warren-north",
+      "name": "Narre Warren North",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-narre-warren-north",
+      "region": "South-Eastern Metropolitan",
+      "member": {
+        "name": "Belinda Wilson",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 9.16
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "narre-warren-south",
+      "name": "Narre Warren South",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-narre-warren-south",
+      "region": "South-Eastern Metropolitan",
+      "member": {
+        "name": "Gary Maas",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 8.5
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "nepean",
+      "name": "Nepean",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-nepean",
+      "region": "Eastern Victoria",
+      "member": {
+        "name": "Anthony Marsh",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2026-05-02",
+        "kind": "by-election",
+        "party": "Liberal",
+        "margin": 13.24
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "niddrie",
+      "name": "Niddrie",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-niddrie",
+      "region": "Western Metropolitan",
+      "member": {
+        "name": "Ben Carroll",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 6.69
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "northcote",
+      "name": "Northcote",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-northcote",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Kat Theophanous",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 0.22
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "oakleigh",
+      "name": "Oakleigh",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-oakleigh",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "Steve Dimopoulos",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 13.48
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "ovens-valley",
+      "name": "Ovens Valley",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-ovens-valley",
+      "region": "Northern Victoria",
+      "member": {
+        "name": "Tim McCurdy",
+        "party": "Nationals"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Nationals",
+        "margin": 17.97
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "pakenham",
+      "name": "Pakenham",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-pakenham",
+      "region": "Eastern Victoria",
+      "member": {
+        "name": "Emma Vulin",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 0.39
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "pascoe-vale",
+      "name": "Pascoe Vale",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-pascoe-vale",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Anthony Cianflone",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 2.02
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "point-cook",
+      "name": "Point Cook",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-point-cook",
+      "region": "Western Metropolitan",
+      "member": {
+        "name": "Mathew Hilakari",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 8.34
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "polwarth",
+      "name": "Polwarth",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-polwarth",
+      "region": "Western Victoria",
+      "member": {
+        "name": "Richard Riordan",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 1.79
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "prahran",
+      "name": "Prahran",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-prahran",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "Rachel Westaway",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2025-02-08",
+        "kind": "by-election",
+        "party": "Liberal",
+        "margin": 1.35
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "preston",
+      "name": "Preston",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-preston",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Nathan Lambert",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 2.09
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "richmond",
+      "name": "Richmond",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-richmond",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Gabrielle de Vietri",
+        "party": "Greens"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Greens",
+        "margin": 7.32
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "ringwood",
+      "name": "Ringwood",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-ringwood",
+      "region": "North-Eastern Metropolitan",
+      "member": {
+        "name": "Will Fowles",
+        "party": "Independent"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 7.53
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "ripon",
+      "name": "Ripon",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-ripon",
+      "region": "Western Victoria",
+      "member": {
+        "name": "Martha Haylett",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 2.99
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "rowville",
+      "name": "Rowville",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-rowville",
+      "region": "South-Eastern Metropolitan",
+      "member": {
+        "name": "Kim Wells",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 3.67
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "sandringham",
+      "name": "Sandringham",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-sandringham",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "Brad Rowswell",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 5.15
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "shepparton",
+      "name": "Shepparton",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-shepparton",
+      "region": "Northern Victoria",
+      "member": {
+        "name": "Kim O'Keeffe",
+        "party": "Nationals"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Nationals",
+        "margin": 6.79
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "south-barwon",
+      "name": "South Barwon",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-south-barwon",
+      "region": "Western Victoria",
+      "member": {
+        "name": "Darren Cheeseman",
+        "party": "Independent"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 9.8
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "south-west-coast",
+      "name": "South-West Coast",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-south-west-coast",
+      "region": "Western Victoria",
+      "member": {
+        "name": "Roma Britnell",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 8.05
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "st-albans",
+      "name": "St Albans",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-st-albans",
+      "region": "Western Metropolitan",
+      "member": {
+        "name": "Natalie Suleyman",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 9.56
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "sunbury",
+      "name": "Sunbury",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-sunbury",
+      "region": "Western Metropolitan",
+      "member": {
+        "name": "Josh Bull",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 6.41
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "sydenham",
+      "name": "Sydenham",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-sydenham",
+      "region": "Western Metropolitan",
+      "member": {
+        "name": "Natalie Hutchins",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 8.73
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "tarneit",
+      "name": "Tarneit",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-tarneit",
+      "region": "Western Metropolitan",
+      "member": {
+        "name": "Dylan Wight",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 12.58
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "thomastown",
+      "name": "Thomastown",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-thomastown",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Bronwyn Halfpenny",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 16
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "warrandyte",
+      "name": "Warrandyte",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-warrandyte",
+      "region": "North-Eastern Metropolitan",
+      "member": {
+        "name": "Nicole Werner",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2023-08-26",
+        "kind": "by-election",
+        "party": "Liberal",
+        "margin": 20.99
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "wendouree",
+      "name": "Wendouree",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-wendouree",
+      "region": "Western Victoria",
+      "member": {
+        "name": "Juliana Addison",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 13.46
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "werribee",
+      "name": "Werribee",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-werribee",
+      "region": "Western Metropolitan",
+      "member": {
+        "name": "John Lister",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2025-02-08",
+        "kind": "by-election",
+        "party": "Labor",
+        "margin": 0.82
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "williamstown",
+      "name": "Williamstown",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-williamstown",
+      "region": "Western Metropolitan",
+      "member": {
+        "name": "Melissa Horne",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 13.44
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "yan-yean",
+      "name": "Yan Yean",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-yan-yean",
+      "region": "Northern Victoria",
+      "member": {
+        "name": "Lauren Kathage",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 4.45
+      },
+      "candidates": 0
+    }
+  ],
+  "regions": [
+    {
+      "kind": "region",
+      "slug": "eastern-victoria",
+      "name": "Eastern Victoria",
+      "electorate_url": "/subject/electorate/vic-vic-lc-vic-eastern-victoria",
+      "members": [
+        {
+          "name": "Melina Bath",
+          "party": "Nationals"
+        },
+        {
+          "name": "Jeff Bourman",
+          "party": "Shooters, Fishers and Farmers Party Victoria"
+        },
+        {
+          "name": "Renee Heath",
+          "party": "Liberal"
+        },
+        {
+          "name": "Tom McINTOSH",
+          "party": "Labor"
+        },
+        {
+          "name": "Harriet Shing",
+          "party": "Labor"
+        }
+      ],
+      "districts": 11,
+      "candidates": 0
+    },
+    {
+      "kind": "region",
+      "slug": "north-eastern-metropolitan",
+      "name": "North-Eastern Metropolitan",
+      "electorate_url": "/subject/electorate/vic-vic-lc-vic-north-eastern-metropolitan",
+      "members": [
+        {
+          "name": "Shaun Leane",
+          "party": "Labor"
+        },
+        {
+          "name": "Nick McGowan",
+          "party": "Liberal"
+        },
+        {
+          "name": "Aiv Puglielli",
+          "party": "Greens"
+        },
+        {
+          "name": "Sonja Terpstra",
+          "party": "Labor"
+        },
+        {
+          "name": "Richard Welch",
+          "party": "Liberal"
+        }
+      ],
+      "districts": 11,
+      "candidates": 0
+    },
+    {
+      "kind": "region",
+      "slug": "northern-metropolitan",
+      "name": "Northern Metropolitan",
+      "electorate_url": "/subject/electorate/vic-vic-lc-vic-northern-metropolitan",
+      "members": [
+        {
+          "name": "Enver Erdogan",
+          "party": "Labor"
+        },
+        {
+          "name": "Anasina Gray-Barberio",
+          "party": "Greens"
+        },
+        {
+          "name": "Evan Mulholland",
+          "party": "Liberal"
+        },
+        {
+          "name": "Adem Somyurek",
+          "party": "Independent"
+        },
+        {
+          "name": "Sheena Watt",
+          "party": "Labor"
+        }
+      ],
+      "districts": 11,
+      "candidates": 0
+    },
+    {
+      "kind": "region",
+      "slug": "northern-victoria",
+      "name": "Northern Victoria",
+      "electorate_url": "/subject/electorate/vic-vic-lc-vic-northern-victoria",
+      "members": [
+        {
+          "name": "Gaelle Broad",
+          "party": "Nationals"
+        },
+        {
+          "name": "Wendy Lovell",
+          "party": "Liberal"
+        },
+        {
+          "name": "Georgie Purcell",
+          "party": "Animal Justice Party"
+        },
+        {
+          "name": "Jaclyn Symes",
+          "party": "Labor"
+        },
+        {
+          "name": "Rikkie-Lee Tyrrell",
+          "party": "Pauline Hanson's One Nation"
+        }
+      ],
+      "districts": 11,
+      "candidates": 0
+    },
+    {
+      "kind": "region",
+      "slug": "south-eastern-metropolitan",
+      "name": "South-Eastern Metropolitan",
+      "electorate_url": "/subject/electorate/vic-vic-lc-vic-south-eastern-metropolitan",
+      "members": [
+        {
+          "name": "Michael Galea",
+          "party": "Labor"
+        },
+        {
+          "name": "Ann-Marie Hermans",
+          "party": "Liberal"
+        },
+        {
+          "name": "David Limbrick",
+          "party": "Libertarian Party"
+        },
+        {
+          "name": "Rachel Payne",
+          "party": "Legalise Cannabis Victoria"
+        },
+        {
+          "name": "Lee Tarlamis",
+          "party": "Labor"
+        }
+      ],
+      "districts": 11,
+      "candidates": 0
+    },
+    {
+      "kind": "region",
+      "slug": "southern-metropolitan",
+      "name": "Southern Metropolitan",
+      "electorate_url": "/subject/electorate/vic-vic-lc-vic-southern-metropolitan",
+      "members": [
+        {
+          "name": "Ryan Batchelor",
+          "party": "Labor"
+        },
+        {
+          "name": "John Berger",
+          "party": "Labor"
+        },
+        {
+          "name": "Katherine Copsey",
+          "party": "Greens"
+        },
+        {
+          "name": "Georgie Crozier",
+          "party": "Liberal"
+        },
+        {
+          "name": "David Davis",
+          "party": "Liberal"
+        }
+      ],
+      "districts": 11,
+      "candidates": 0
+    },
+    {
+      "kind": "region",
+      "slug": "western-metropolitan",
+      "name": "Western Metropolitan",
+      "electorate_url": "/subject/electorate/vic-vic-lc-vic-western-metropolitan",
+      "members": [
+        {
+          "name": "Lizzie Blandthorn",
+          "party": "Labor"
+        },
+        {
+          "name": "Moira Deeming",
+          "party": "Independent"
+        },
+        {
+          "name": "David Ettershank",
+          "party": "Legalise Cannabis Victoria"
+        },
+        {
+          "name": "Trung Luu",
+          "party": "Liberal"
+        },
+        {
+          "name": "Ingrid Stitt",
+          "party": "Labor"
+        }
+      ],
+      "districts": 11,
+      "candidates": 0
+    },
+    {
+      "kind": "region",
+      "slug": "western-victoria",
+      "name": "Western Victoria",
+      "electorate_url": "/subject/electorate/vic-vic-lc-vic-western-victoria",
+      "members": [
+        {
+          "name": "Jacinta Ermacora",
+          "party": "Labor"
+        },
+        {
+          "name": "Sarah Mansfield",
+          "party": "Greens"
+        },
+        {
+          "name": "Bev McArthur",
+          "party": "Liberal"
+        },
+        {
+          "name": "Joe McCracken",
+          "party": "Liberal"
+        },
+        {
+          "name": "Gayle Tierney",
+          "party": "Labor"
+        }
+      ],
+      "districts": 11,
+      "candidates": 0
+    }
+  ],
+  "sources": {
+    "election": "https://www.vec.vic.gov.au/voting/2026-state-election",
+    "voting": "https://www.vec.vic.gov.au/voting/2026-state-election/voting-options",
+    "enrolment": "https://www.vec.vic.gov.au/enrolment/check-my-enrolment",
+    "address": "https://www.vec.vic.gov.au/electoral-boundaries/which-boundaries-cover-where-i-live",
+    "results": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results",
+    "licence": "https://www.vec.vic.gov.au/legal"
+  },
+  "about": "Dates, boundaries and results © Victorian Electoral Commission; suburb and postcode splits from the Australian Bureau of Statistics (both CC BY 4.0); speeches and votes from OPAX’s parliamentary record.",
+  "methods_url": "https://opax.com.au/methods#vic-election",
+  "authorisation": "Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.",
+  "corrections": {
+    "email": "corrections@opax.com.au",
+    "response": "We aim to respond within 2 business days."
+  }
+}

@@ -19,6 +19,24 @@ const assets = { fetch: async request => {
 } };
 const state = (type, values = {}) => reportState(new URLSearchParams(values), type);
 
+test('annual report projections carry valid dates for the three day-first publication inputs', () => {
+  const expected = new Map([
+    ['national_commission_for_aboriginal_and_torres_stra', '2026-05-21'],
+    ['office_of_the_auditing_and_assurance_standards_boa_17974c4', '2026-05-21'],
+    ['royal_australian_air_force_welfare_trust_fund', '2026-05-25'],
+  ]);
+  for (const { row, detail } of projected.filter(p => p.detail.report_type === 'annual_report')) {
+    if (detail.date) assert.equal(new Date(detail.date).toISOString().slice(0, 10), detail.date);
+    if (detail.year === '2024-25' && expected.has(detail.publisher.id)) {
+      const want = expected.get(detail.publisher.id);
+      assert.equal(detail.date, want); assert.equal(detail.record.published_on, want); assert.equal(row.date, want);
+      assert.equal(indexes.annual_report.rows.find(b => b.id === detail.publisher.id).years.find(y => y.year === detail.year).date, want);
+      expected.delete(detail.publisher.id);
+    }
+  }
+  assert.equal(expected.size, 0);
+});
+
 test('compact indexes reconcile all records, omit detail payloads and preserve transcript counts', async () => {
   for (const [type, index] of Object.entries(indexes)) {
     const held = projected.filter(p => p.detail.report_type === type);
