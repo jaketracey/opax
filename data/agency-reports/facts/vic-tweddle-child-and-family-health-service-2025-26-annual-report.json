@@ -1,0 +1,186 @@
+{
+ "report_id": "vic-tweddle-child-and-family-health-service-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_fte"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total Revenue and Income from Transactions",
+   "column_as_published": "2026",
+   "value": 15590180,
+   "value_as_published": "15,590,180",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 35,
+   "quote": "Total Revenue and Income from Transactions 15,590,180 14,242,062"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses from Transactions",
+   "column_as_published": "2026",
+   "value": -14673933,
+   "value_as_published": "(14,673,933)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 35,
+   "quote": "Total Expenses from Transactions (14,673,933) (14,031,267)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -11434209,
+   "value_as_published": "(11,434,209)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 35,
+   "quote": "Employee expenses 3.1 (11,434,209) (10,862,775)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net Result for the year",
+   "column_as_published": "2026",
+   "value": 916247,
+   "value_as_published": "916,247",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 35,
+   "quote": "Net Result for the year 916,247 210,795"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "our workforce comprised 121 staff",
+   "value": 121,
+   "value_as_published": "121",
+   "unit": "people",
+   "period": "as of 30 June 2026",
+   "page": 16,
+   "quote": "As of 30 June 2026, our workforce comprised 121 staff"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total Number of Executives",
+   "column_as_published": "2026",
+   "value": 6,
+   "value_as_published": "6",
+   "unit": "count",
+   "period": "2026",
+   "page": 72,
+   "quote": "Total Number of Executives 6 4"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total Remuneration",
+   "column_as_published": "2026",
+   "value": 1128243,
+   "value_as_published": "1,128,243",
+   "unit": "dollars",
+   "period": "2026 (executive officers including Key Management Personnel)",
+   "page": 72,
+   "quote": "Total Remuneration i 1,128,243 594,346"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025-26 in relation to these consultancies",
+   "value": 282592,
+   "value_as_published": "$282,592",
+   "unit": "dollars",
+   "period": "2025-26 (six consultancies of $10,000 or greater)",
+   "page": 18,
+   "quote": "consultancies is $282,592 (excl. GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-2026 (ex GST)",
+   "column_as_published": "Expenditure 2025-2026 (ex GST)",
+   "value": 12650,
+   "value_as_published": "12,650",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 18,
+   "quote": "Redbridge Consultants Governance Sept 2025 Sept 2025 12,650 12,650 0",
+   "counterparty": "Redbridge Consultants",
+   "purpose": "Governance"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-2026 (ex GST)",
+   "column_as_published": "Expenditure 2025-2026 (ex GST)",
+   "value": 14991,
+   "value_as_published": "14,991",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 18,
+   "quote": "Hall & Wilcox Merger exploration Mar 2026 June 2026 14,991 14,991 0",
+   "counterparty": "Hall & Wilcox",
+   "purpose": "Merger exploration"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-2026 (ex GST)",
+   "column_as_published": "Expenditure 2025-2026 (ex GST)",
+   "value": 18022,
+   "value_as_published": "18,022",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 18,
+   "quote": "Russell Kennedy Merger exploration Mar 2026 June 2026 18,022 18,022 0",
+   "counterparty": "Russell Kennedy",
+   "purpose": "Merger exploration"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-2026 (ex GST)",
+   "column_as_published": "Expenditure 2025-2026 (ex GST)",
+   "value": 46500,
+   "value_as_published": "46,500",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 18,
+   "quote": "Workwell Consulting Merger exploration Jun 2025 Aug 2025 46,500 46,500 0",
+   "counterparty": "Workwell Consulting",
+   "purpose": "Merger exploration"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-2026 (ex GST)",
+   "column_as_published": "Expenditure 2025-2026 (ex GST)",
+   "value": 55000,
+   "value_as_published": "55,000",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 18,
+   "quote": "RSM Merger exploration Jan 2026 Apr 2026 55,000 55,000 0",
+   "counterparty": "RSM",
+   "purpose": "Merger exploration"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-2026 (ex GST)",
+   "column_as_published": "Expenditure 2025-2026 (ex GST)",
+   "value": 99878,
+   "value_as_published": "99,878",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 18,
+   "quote": "Twofold Consulting Merger exploration Jul 2025 June 2026 99,878 99,878 0",
+   "counterparty": "Twofold Consulting",
+   "purpose": "Merger exploration"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "families shared their feedback",
+   "value": 565,
+   "value_as_published": "565",
+   "unit": "count",
+   "period": "2025-2026",
+   "page": 26,
+   "quote": "565 families shared their feedback"
+  }
+ ]
+}

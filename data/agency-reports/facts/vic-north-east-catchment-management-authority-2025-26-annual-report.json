@@ -1,0 +1,130 @@
+{
+ "report_id": "vic-north-east-catchment-management-authority-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "executive_band",
+  "named_remuneration"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 11022259,
+   "value_as_published": "11,022,259",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 89,
+   "quote": "Total revenue and income from transactions 11,022,259 10,828,797"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": 11115011,
+   "value_as_published": "11,115,011",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 89,
+   "quote": "Total expenses from transactions 11,115,011 9,817,609"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": 4396607,
+   "value_as_published": "4,396,607",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 89,
+   "quote": "Employee expenses 3.1.1 4,396,607 3,936,220"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": 42634,
+   "value_as_published": "42,634",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 89,
+   "quote": "Net result 42,634 984,381"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "2025-26",
+   "value": 34.45,
+   "value_as_published": "34.45",
+   "unit": "fte",
+   "period": "as at 30 June 2026",
+   "page": 82,
+   "quote": "Total 40 34.45 39 33.7"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total",
+   "column_as_published": "2025-26",
+   "value": 40,
+   "value_as_published": "40",
+   "unit": "people",
+   "period": "as at 30 June 2026",
+   "page": 82,
+   "quote": "Total 40 34.45 39 33.7"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Executive Officers",
+   "column_as_published": "2025-26",
+   "value": 1,
+   "value_as_published": "1",
+   "unit": "count",
+   "period": "as at 30 June 2026",
+   "page": 82,
+   "quote": "Executive Officers 1 1.0 1 1.0"
+  },
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Remuneration received or receivable by the Accountable Officer",
+   "column_as_published": "2026",
+   "value": null,
+   "value_as_published": "$300,000 - $310,000",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 114,
+   "quote": "Remuneration received or receivable by the Accountable Officer in connection with the management of the Authority during the reporting period was in the range: $300,000 - $310,000 (2025: $290,000 - $300,000)"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 449740,
+   "value_as_published": "449,740",
+   "unit": "dollars",
+   "period": "2025-26 (key management personnel)",
+   "page": 115,
+   "quote": "Total remuneration 449,740 436,000"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Details of consultancies (valued at $10,000 or greater)",
+   "value": 557024,
+   "value_as_published": "$557,024",
+   "unit": "dollars",
+   "period": "2025-26 (13 consultancies of $10,000 or greater, excl. GST)",
+   "page": 67,
+   "quote": "The total expenditure incurred during 2025-26 in relation to these consultancies was $557,024 (excl. GST)"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "total ICT expenditure",
+   "value": 524265,
+   "value_as_published": "$524,265",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 67,
+   "quote": "North East CMA had a total ICT expenditure of $524,265"
+  }
+ ]
+}

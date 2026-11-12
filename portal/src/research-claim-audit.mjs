@@ -233,6 +233,12 @@ export function auditPayload(question,payload,{roster=[]}={}){
   const named=mentions(text,[...entities,...unknownActors.map(a=>a.name)]).map(n=>({...n,name:personAliases.get(n.name)??n.name})),numeric=figures(text),ps=periods(text)
   const citedIds=Object.entries(payload.citations??{}).filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(range=>Array.isArray(range)&&range.length===2&&range.every(Number.isSafeInteger)&&range[0]<Array.from(body.slice(0,sentenceAt+text.length)).length&&range[1]>Array.from(body.slice(0,sentenceAt)).length)).map(([id])=>id)
   const selected=citedIds.length?rows.filter(r=>citedIds.some(id=>id===r.id||id.startsWith(r.id+'/'))):rows
+  // A typed member's recorded parliament is a parenthetical qualifier, not the owner of their speech count.
+  // Its identity is still audited below, against the separately cited OPAX member record.
+  const memberQualifiers=(payload.sources??[]).filter(s=>s.member&&citedIds.some(id=>id===s.resource||id.startsWith(s.resource+'/'))).flatMap(s=>{
+   const label=s.member.name+' ('+s.member.parliaments.join('; ')+')',at=text.indexOf(label)
+   return at<0?[]:[{from:at+s.member.name.length+2,to:at+label.length-1}]
+  })
   const headScope=claimScope(text,0,named,speakers),head=headScope.owner
   const speaker=reporterIn(text,headScope,named,selected)
   const speech=!!speaker
@@ -246,7 +252,8 @@ export function auditPayload(question,payload,{roster=[]}={}){
    add({type:'entity',entity:name,metric:attribution?'attribution':'identity',value:name,period:[],text,offset:sentenceAt+nameAt},attribution?candidates.filter(r=>samePerson(r.speaker,name)&&topicsMatch(text.slice(scope.start,scope.end),r)):candidates,'named entity or speaker/topic association is not established by selected evidence')
   }
   for(const f of numeric){
-   const availableNames=f.metric==='salary'&&f.unit.startsWith('AUD')?named.filter(n=>!['Labor','Liberal','Coalition','Greens','Nationals','ALP'].includes(n.name)):named
+   const quantityNames=named.filter(n=>!memberQualifiers.some(q=>n.at>=q.from&&n.end<=q.to))
+   const availableNames=f.metric==='salary'&&f.unit.startsWith('AUD')?quantityNames.filter(n=>!['Labor','Liberal','Coalition','Greens','Nationals','ALP'].includes(n.name)):quantityNames
    const boundary=[...text.slice(0,f.at).matchAll(/,\s*(?:and|but|while|whereas|because)\s+|;\s+/g)].at(-1);const clauseFrom=boundary?boundary.index+boundary[0].length:0
    const preceding=availableNames.filter(n=>n.end<=f.at&&n.at>=clauseFrom),following=availableNames.filter(n=>n.at>=f.end)
    const paidTo=/^\s*(?:was )?(?:paid|awarded|given) to\b/i.test(text.slice(f.end))||/^\s*(?:to|for)\b/i.test(text.slice(f.end))

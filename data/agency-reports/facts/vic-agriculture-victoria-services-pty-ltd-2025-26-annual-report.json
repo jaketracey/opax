@@ -1,0 +1,121 @@
+{
+ "report_id": "vic-agriculture-victoria-services-pty-ltd-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "executive_band",
+  "staff_fte",
+  "staff_headcount",
+  "consultancy_total",
+  "consultancy"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total Revenue and Income From Transactions",
+   "column_as_published": "2026",
+   "value": 25452,
+   "value_as_published": "25,452",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 61,
+   "quote": "Total Revenue and Income From Transactions 25,452 23,615"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses From Transactions",
+   "column_as_published": "2026",
+   "value": 20272,
+   "value_as_published": "20,272",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 61,
+   "quote": "Total Expenses From Transactions 20,272 17,995"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employment Expenses",
+   "column_as_published": "2026",
+   "value": 3356,
+   "value_as_published": "3,356",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 61,
+   "quote": "Employment Expenses 3.2 & 7.3.3 3,356 3,221"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net Result",
+   "column_as_published": "2026",
+   "value": 4422,
+   "value_as_published": "4,422",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 61,
+   "quote": "Net Result 4,422 5,805"
+  },
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Remuneration received or receivable by the Accountable Officer",
+   "value": null,
+   "value_as_published": "$390,000 to $400,000",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 95,
+   "quote": "Remuneration received or receivable by the Accountable Officer in connection with management of the Group in the reporting period was in the range $390,000 to $400,000"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total Number of Executives",
+   "column_as_published": "2026",
+   "value": 4,
+   "value_as_published": "4",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 96,
+   "quote": "Total Number of Executives 4 3"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total Remuneration",
+   "column_as_published": "2026",
+   "value": 788,
+   "value_as_published": "788",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (executive officers other than directors and the accountable officer)",
+   "page": 96,
+   "quote": "Total Remuneration(a) 788 756"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total Remuneration",
+   "column_as_published": "2026",
+   "value": 1318,
+   "value_as_published": "1,318",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (compensation of key management personnel)",
+   "page": 97,
+   "quote": "Total Remuneration 1,318 1,253"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "commercial licence agreements",
+   "value": 12,
+   "value_as_published": "12",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 32,
+   "quote": "During the year, AVS finalised 12 commercial licence agreements"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "patent families",
+   "value": 34,
+   "value_as_published": "34",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 34,
+   "quote": "AVS holds 34 patent families in 33 countries."
+  }
+ ]
+}

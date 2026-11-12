@@ -1,0 +1,145 @@
+{
+ "report_id": "vic-alpine-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 44465,
+   "value_as_published": "44,465",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 40,
+   "quote": "Total revenue and income from transactions 44,465 42,737"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -47167,
+   "value_as_published": "(47,167)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 40,
+   "quote": "Total expenses from transactions (47,167) (44,135)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -30939,
+   "value_as_published": "(30,939)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 40,
+   "quote": "Employee expenses 3.1 (a) (30,939) (29,266)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -2681,
+   "value_as_published": "(2,681)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 40,
+   "quote": "Net result (2,681) (1,226)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "Current Month FTE",
+   "value": 227.05,
+   "value_as_published": "227.05",
+   "unit": "fte",
+   "period": "June 2026 (current month FTE)",
+   "page": 22,
+   "quote": "Total 219.15 227.05 220.51 219.39"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 5,
+   "value_as_published": "5",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 73,
+   "quote": "Total number of executives 5 6"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 951,
+   "value_as_published": "951",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 73,
+   "quote": "Total remuneration i 951 860"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "The total expenditure incurred during 2025-26 in relation to these consultancies",
+   "value": 32720,
+   "value_as_published": "$32,720",
+   "unit": "dollars",
+   "period": "2025-26 (two consultancies of $10,000 or greater, excluding GST)",
+   "page": 25,
+   "quote": "The total expenditure incurred during 2025-26 in relation to these consultancies was $32,720 (excluding GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (exc GST)",
+   "column_as_published": "Expenditure 2025-26 (exc GST)",
+   "value": 10400,
+   "value_as_published": "$10,400",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 25,
+   "quote": "Paul Angus Robertson Support at Home Program Review April 2026 June 2026 $48.800 $10,400 $38,400",
+   "counterparty": "Paul Angus Robertson",
+   "purpose": "Support at Home Program Review"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (exc GST)",
+   "column_as_published": "Expenditure 2025-26 (exc GST)",
+   "value": 22320,
+   "value_as_published": "$22,320",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 25,
+   "quote": "JWP Architects Mount Beauty Theatre Upgrade October 2025 March 2026 $22,320 $22,320 0",
+   "counterparty": "JWP Architects",
+   "purpose": "Mount Beauty Theatre Upgrade"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "District nursing (occasions of service)",
+   "value": 5319,
+   "value_as_published": "5319",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 25,
+   "quote": "District nursing (occasions of service) 5319"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Consultations by Murray Primary Health Network",
+   "value": 446,
+   "value_as_published": "446",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 25,
+   "quote": "Consultations by Murray Primary Health Network 446"
+  }
+ ]
+}

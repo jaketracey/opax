@@ -494,8 +494,9 @@ test('policy voting aggregates the full union of bill and motion matches, not th
   assert.equal(result.by_kind.find(r=>r.category==='bill').divisions,3)
   assert.equal(result.by_kind.find(r=>r.category==='motion').divisions,3)
   assert.ok(result.rows.length>1)
-  assert.ok(result.rows.some(r=>r.title==='Motions — Climate change'))
-  assert.ok(result.citations.some(c=>c.text==='On 2 December 2019, Greens senators voted 0 ayes and 1 no on Motions — Climate change.'))
+  assert.ok(result.rows.some(r=>r.title==='Motions — Climate change'),'the record retains its title punctuation')
+  assert.ok(result.citations.every(c=>!c.text.includes('—')),'answer prose uses no em dashes')
+  assert.ok(result.citations.some(c=>c.text==='On 2 December 2019, Greens senators voted 0 ayes and 1 no on Motions - Climate change.'))
   assert.match(result.citations[0].text,/^Across 6 matching divisions on climate from 8 November 2011 to 1 February 2023, a majority of Greens members voted aye in 2 and no in 2; 1 had a tied aye\/no vote; 1 had no party-labelled vote\./)
   assert.ok(result.citations.every(c=>!(/\b\d{4}-\d{2}-\d{2}\b/).test(c.text)))
   assert.ok(result.citations[0].related.length>=4)
@@ -522,7 +523,7 @@ test('policy vote prose omits zero categories and empty breakdowns, keeping zero
     assert.doesNotMatch(result.citations.filter(c=>c.kind==='count').map(c=>c.text).join(' '), /\bin 0\b|\b0 had\b|\b0 matching\b|\d{4}-\d{2}-\d{2}/)
     assert.doesNotMatch(result.notes.join(' '), /\b0 divisions\b|\b0 had\b/)
     const representative = result.citations.find(c=>c.kind==='record')
-    assert.equal(representative.text, `On 16 May 2024, Greens senators voted ${representativeVotes} on Climate Bill — Second Reading.`)
+    assert.equal(representative.text, `On 16 May 2024, Greens senators voted ${representativeVotes} on Climate Bill - Second Reading.`)
   }
 })
 

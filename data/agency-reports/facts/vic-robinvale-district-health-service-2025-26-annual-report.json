@@ -1,0 +1,113 @@
+{
+ "report_id": "vic-robinvale-district-health-service-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_fte",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 21799,
+   "value_as_published": "21,799",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 39,
+   "quote": "Total revenue and income from transactions 21,799 19,759"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -23142,
+   "value_as_published": "(23,142)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 39,
+   "quote": "Total expenses from transactions (23,142) (21,741)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -14888,
+   "value_as_published": "(14,888)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 39,
+   "quote": "Employee expenses 3.1 (a) (14,888) (14,258)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -1294,
+   "value_as_published": "(1,294)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 39,
+   "quote": "Net result (1,294) (1,913)"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 4,
+   "value_as_published": "4",
+   "unit": "count",
+   "period": "2026",
+   "page": 73,
+   "quote": "Total number of executives 4 6"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 558,
+   "value_as_published": "558",
+   "unit": "thousands_of_dollars",
+   "period": "2026 (executive officers including Key Management Personnel disclosed in Note 8.4)",
+   "page": 73,
+   "quote": "Total remuneration i 558 596"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMPs",
+   "column_as_published": "2026",
+   "value": 268,
+   "value_as_published": "268",
+   "unit": "thousands_of_dollars",
+   "period": "2026 (key management personnel)",
+   "page": 75,
+   "quote": "Total compensation - KMPs i 268 251"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025–2026 in relation to this consultancy",
+   "value": 29400,
+   "value_as_published": "$29,400",
+   "unit": "dollars",
+   "period": "2025-26 (one consultancy of $10,000 or greater)",
+   "page": 20,
+   "quote": "to this consultancy was $29,400 (excl. GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025–2026 (Excluding GST)",
+   "column_as_published": "Expenditure 2025–2026 (Excluding GST)",
+   "value": 29400,
+   "value_as_published": "$29,400",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 20,
+   "quote": "Synchronicity Consulting Strategic Planning 1/06/2026 30/11/2026 $58,800 $29,400 $29,400",
+   "counterparty": "Synchronicity Consulting",
+   "purpose": "Strategic Planning"
+  }
+ ]
+}

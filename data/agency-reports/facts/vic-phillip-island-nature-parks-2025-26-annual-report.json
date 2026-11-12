@@ -1,0 +1,184 @@
+{
+ "report_id": "vic-phillip-island-nature-parks-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "executive_band",
+  "executive_average_remuneration"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total income from transactions",
+   "column_as_published": "2026",
+   "value": 41908,
+   "value_as_published": "41,908",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 68,
+   "quote": "Total income from transactions 41,908 38,890"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -36006,
+   "value_as_published": "(36,006)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 68,
+   "quote": "Total expenses from transactions (36,006) (40,555)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -19286,
+   "value_as_published": "(19,286)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 68,
+   "quote": "Employee expenses 3.1.1 (19,286) (17,138)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": 5945,
+   "value_as_published": "5,945",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 68,
+   "quote": "Net result 5,945 (1,660)"
+  },
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Remuneration of the Accountable Officer",
+   "value": null,
+   "value_as_published": "$300,000–309,999",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 101,
+   "quote": "Remuneration received or receivable by the Accountable Officer in connection with the management of the Nature Parks during the reporting period was in the range: $300,000–309,999"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 5,
+   "value_as_published": "5",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 101,
+   "quote": "Total number of executives 5 4"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remunerations",
+   "column_as_published": "2026",
+   "value": 837,
+   "value_as_published": "837",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 101,
+   "quote": "Total remunerations 837 847"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remunerations(a)",
+   "column_as_published": "2026",
+   "value": 483,
+   "value_as_published": "483",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (key management personnel)",
+   "page": 102,
+   "quote": "Compensation of KMPs 2026 2025 $ $ Total remunerations(a) 483 480"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "The total expenditure incurred during 2025–26 in relation to these consultancies",
+   "value": 0.3,
+   "value_as_published": "$0.3 million",
+   "unit": "millions_of_dollars",
+   "period": "2025-26 (two consultancies of $10,000 or greater, excluding GST)",
+   "page": 51,
+   "quote": "The total expenditure incurred during 2025–26 in relation to these consultancies is $0.3 million (excluding GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excl. GST)",
+   "column_as_published": "Expenditure 2025-26 (excl. GST)",
+   "value": 219,
+   "value_as_published": "219",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 51,
+   "quote": "Taylor&Cullity Lethlean - TCL Business consulting 307 219 88",
+   "counterparty": "Taylor&Cullity Lethlean - TCL",
+   "purpose": "Business consulting"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excl. GST)",
+   "column_as_published": "Expenditure 2025-26 (excl. GST)",
+   "value": 84,
+   "value_as_published": "84",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 51,
+   "quote": "KELP Creative Business consulting 226 84 142",
+   "counterparty": "KELP Creative",
+   "purpose": "Business consulting"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "employees",
+   "value": 256,
+   "value_as_published": "256",
+   "unit": "people",
+   "period": "as at 30 June 2026",
+   "page": 36,
+   "quote": "256 employees (153.8 FTE)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "FTE",
+   "value": 153.8,
+   "value_as_published": "153.8",
+   "unit": "fte",
+   "period": "as at 30 June 2026",
+   "page": 36,
+   "quote": "256 employees (153.8 FTE)"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "sell-out nights at the Penguin Parade",
+   "value": 145,
+   "value_as_published": "145",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 8,
+   "quote": "a record 145 sell-out nights at the Penguin Parade"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "hectares of conservation land",
+   "value": 193.5,
+   "value_as_published": "193.5",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 14,
+   "quote": "treating 193.5 hectares of conservation land"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "penguins per night",
+   "value": 842,
+   "value_as_published": "842",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 15,
+   "quote": "an average of 842 penguins per night"
+  }
+ ]
+}

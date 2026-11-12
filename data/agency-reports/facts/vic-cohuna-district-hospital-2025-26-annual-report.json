@@ -1,0 +1,80 @@
+{
+ "report_id": "vic-cohuna-district-hospital-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_fte",
+  "staff_headcount",
+  "consultancy_total"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value_as_published": "34,491",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 48,
+   "quote": "Total revenue and income from transactions 34,491 25,086",
+   "value": 34491
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value_as_published": "(16,366)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 48,
+   "quote": "Total expenses from transactions (16,366) (15,002)",
+   "value": -16366
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value_as_published": "(11,298)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 48,
+   "quote": "Employee expenses 3.1 (a) (11,298) (10,279)",
+   "value": -11298
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value_as_published": "18,157",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 48,
+   "quote": "Net result 18,157 10,032",
+   "value": 18157
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value_as_published": "1",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 86,
+   "quote": "Total number of executives 1 1",
+   "value": 1
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration i",
+   "column_as_published": "2026",
+   "value_as_published": "182",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 86,
+   "quote": "Total remuneration i 182 188",
+   "value": 182
+  }
+ ]
+}

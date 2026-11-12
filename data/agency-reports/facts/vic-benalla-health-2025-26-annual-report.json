@@ -1,0 +1,204 @@
+{
+ "report_id": "vic-benalla-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "staff_headcount",
+  "executive_band"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 43313,
+   "value_as_published": "43,313",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 47,
+   "quote": "Total revenue and income from transactions 43,313 39,846"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -44642,
+   "value_as_published": "(44,642)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 47,
+   "quote": "Total expenses from transactions (44,642) (42,180)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -31478,
+   "value_as_published": "(31,478)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 47,
+   "quote": "Employee expenses 3.1 (a) (31,478) (30,872)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -1209,
+   "value_as_published": "(1,209)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 47,
+   "quote": "Net result (1,209) (2,226)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "2026",
+   "value": 211.9,
+   "value_as_published": "211.90",
+   "unit": "fte",
+   "period": "June 2026",
+   "page": 19,
+   "quote": "Total 217.40 211.90 213.80 214.64"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 3,
+   "value_as_published": "3",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 80,
+   "quote": "Total number of executives 3 3"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 591,
+   "value_as_published": "591",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 80,
+   "quote": "Total remuneration i 591 617"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Details of consultancies (valued at $10,000 or greater)",
+   "value": 168870,
+   "value_as_published": "$168,870",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 21,
+   "quote": "The total expenditure incurred during 2025-2026 in relation to these consultancies is $168,870 (excl. GST)"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Details of consultancies (under $10,000)",
+   "value": 22629,
+   "value_as_published": "$22,629",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 21,
+   "quote": "The total expenditure incurred during 2025-2026 in relation to these consultancies is $22,629 (excl. GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Adara Building Services Group",
+   "column_as_published": "Expenditure 2025-2026 (excluding GST)",
+   "value": 17400,
+   "value_as_published": "$17,400",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 21,
+   "quote": "Adara Building Services Group Boiler RHIF Application -Electrification Report & Schematic Design Jun 2026 Jun 2026 $17,400 $17,400 Nil",
+   "counterparty": "Adara Building Services Group",
+   "purpose": "Boiler RHIF Application -Electrification Report & Schematic Design"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Health Legal Pty Ltd",
+   "column_as_published": "Expenditure 2025-2026 (excluding GST)",
+   "value": 23151,
+   "value_as_published": "$23,151",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 21,
+   "quote": "Health Legal Pty Ltd Residential based Aged Care Services & Staff Accommodation Projects Nov 2025 Nov 2025 $23,151 $23,151 Nil",
+   "counterparty": "Health Legal Pty Ltd",
+   "purpose": "Residential based Aged Care Services & Staff Accommodation Projects"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Konzepte Melbourne Pty Ltd",
+   "column_as_published": "Expenditure 2025-2026 (excluding GST)",
+   "value": 49000,
+   "value_as_published": "$49,000",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 21,
+   "quote": "Konzepte Melbourne Pty Ltd UCC RHIF Application - Architectural Services Jun 2026 Jun 2026 $49,000 $49,000 Nil",
+   "counterparty": "Konzepte Melbourne Pty Ltd",
+   "purpose": "UCC RHIF Application - Architectural Services"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "The Trustee for Health Recruitment Specialists",
+   "column_as_published": "Expenditure 2025-2026 (excluding GST)",
+   "value": 24347,
+   "value_as_published": "$24,347",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 21,
+   "quote": "The Trustee for Health Recruitment Specialists CEO Recruitment Feb 2026 Jun 2026 $24,347 $24,347 Nil",
+   "counterparty": "The Trustee for Health Recruitment Specialists",
+   "purpose": "CEO Recruitment"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "The Writing Room",
+   "column_as_published": "Expenditure 2025-2026 (excluding GST)",
+   "value": 54972,
+   "value_as_published": "$54,972",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 21,
+   "quote": "The Writing Room Project Management - Maternity Service Implementation Oct 2025 Jun 2026 $54,972 $54,972 Nil",
+   "counterparty": "The Writing Room",
+   "purpose": "Project Management - Maternity Service Implementation"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Urgent Care presentations",
+   "value": 7392,
+   "value_as_published": "7,392",
+   "unit": "count",
+   "period": "2025-2026",
+   "page": 7,
+   "quote": "Urgent Care presentations: 7,392"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Inpatient separations/procedures",
+   "value": 3982,
+   "value_as_published": "3,982",
+   "unit": "count",
+   "period": "2025-2026",
+   "page": 7,
+   "quote": "Inpatient separations/procedures: 3,982"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Community and home-based care episodes",
+   "value": 10154,
+   "value_as_published": "10,154",
+   "unit": "count",
+   "period": "2025-2026",
+   "page": 7,
+   "quote": "Community and home-based care episodes: 10,154"
+  }
+ ]
+}

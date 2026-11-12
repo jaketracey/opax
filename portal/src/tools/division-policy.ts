@@ -77,6 +77,6 @@ export async function policyVotes(env: ToolEnv, args: ToolArgs, candidates: Divi
   return { operation: 'policy_votes', rows, total: selected.length, summary, by_kind: byKind, search_complete: complete.every(Boolean),
     coverage: { since: dates[0] ?? null, until: dates.at(-1) ?? null, as_of: null },
     citations: [{ kind: 'count', text: lead, url, related }, ...breakdown.map(text => ({ kind: 'count' as const, text, url, related })),
-      ...rows.map(r => ({ kind: 'record' as const, text: `On ${readableDate(r.date)}, ${party} ${r.id.startsWith('federal-senate-') ? 'senators' : 'members'} voted ${r.ayes} ${r.ayes === 1 ? 'aye' : 'ayes'} and ${r.noes} ${r.noes === 1 ? 'no' : 'noes'} on ${r.title}.`, url: r.url }))],
+      ...rows.map(r => ({ kind: 'record' as const, text: `On ${readableDate(r.date)}, ${party} ${r.id.startsWith('federal-senate-') ? 'senators' : 'members'} voted ${r.ayes} ${r.ayes === 1 ? 'aye' : 'ayes'} and ${r.noes} ${r.noes === 1 ? 'no' : 'noes'} on ${r.title.replace(/—/g, '-')}.`, url: r.url }))],
     notes: [selection, qualifications, ...(!complete.every(Boolean) ? ['The title search reached a search window; these counts are lower bounds for that selection.'] : [])] }
 }

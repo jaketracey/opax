@@ -10,13 +10,19 @@ const constraints=(q,scope=named)=>api.extractAskConstraints(q,api.inferPeriod(q
 test('speech ranking grain follows the requested people or parties, with the date and party filter retained',()=>{
  for(const [q,group]of [['Which members have spoken most about housing affordability since 2022?','speaker'],['Which party has spoken most about housing affordability since 2022?','party'],['Which senators have spoken most about climate change this term?','speaker']]){
   const c=constraints(q)
-  const step=api.constrainStep({tool:'count_speeches',args:{group_by:group==='party'?'speaker':'party',speaker:'Invented Person'}},c,{group_by:{},speaker:{},since:{},until:{},chamber:{}})
+  const step=api.constrainStep({tool:'count_speeches',args:{group_by:group==='party'?'speaker':'party',speaker:'Invented Person',state:'federal',chamber:'representatives',party:'Liberal'}},c,{group_by:{},speaker:{},since:{},until:{},chamber:{},state:{},party:{}})
   assert.equal(step.args.group_by,group);assert.equal(step.args.speaker,undefined)
   if(q.includes('2022'))assert.equal(step.args.since,'2022-01-01')
   if(q.includes('senators'))assert.equal(step.args.chamber,'senate')
+  else if(group==='speaker')assert.equal(step.args.chamber,undefined)
+  if(group==='speaker')assert.equal(step.args.state,undefined)
+  if(group==='speaker')assert.equal(step.args.party,undefined)
  }
  assert.equal(api.speechRankingGrain('Which industries gave the most to the Liberal Party?'),undefined)
  assert.equal(api.speechRankingGrain('How have housing speeches changed each year?'),undefined)
+ const scoped=constraints('Which Liberal senators have spoken most about housing since 2022?',{...named,parties:['Liberal']})
+ const filtered=api.constrainStep({tool:'count_speeches',args:{party:'Labor',chamber:'representatives'}},scoped,{group_by:{},party:{},chamber:{},since:{}})
+ assert.equal(filtered.args.party,'Liberal');assert.equal(filtered.args.chamber,'senate');assert.equal(filtered.args.since,'2022-01-01')
 })
 test('industry questions keep the industry unit instead of a party total or named donor',()=>{
  const c=constraints('Which industries gave the most to the Liberal Party in 2023-24?',{...named,parties:['Liberal']})
@@ -117,7 +123,7 @@ test('member and party ranking prose keeps the complete requested grain and orde
   const out=api.proseFallback({question:q,period:api.inferPeriod(q),constraints:constraints(q),facts})
   assert.ok(out.answer.startsWith(names[0]),out.answer)
   for(const name of names)assert.ok(out.answer.includes(name))
-  assert.equal((out.answer.match(/from 1 January 2022/g)??[]).length,3)
+  assert.equal((out.answer.match(/from 1 January 2022/g)??[]).length,1)
   assert.doesNotMatch(out.answer,/\b\d{4}-\d{2}-\d{2}\b/)
   assert.doesNotMatch(out.answer,/Wrong grain|9999/)
   assert.equal(Object.keys(out.citations).length,3)

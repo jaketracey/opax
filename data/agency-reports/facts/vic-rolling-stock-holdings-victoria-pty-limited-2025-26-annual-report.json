@@ -1,0 +1,50 @@
+{
+ "report_id": "vic-rolling-stock-holdings-victoria-pty-limited-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "executive_count",
+  "executive_remuneration_total",
+  "staff_fte",
+  "staff_headcount",
+  "employee_expenses",
+  "consultancy_total"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue",
+   "column_as_published": "Consolidated",
+   "value": 4646209,
+   "value_as_published": "4,646,209",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 7,
+   "quote": "Total revenue 4,646,209 4,901,721 4,564,159 4,901,721"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses",
+   "column_as_published": "Consolidated",
+   "value": 347935259,
+   "value_as_published": "347,935,259",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 7,
+   "quote": "Total expenses 347,935,259 245,728,846 338,264,943 238,274,340"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net loss after income tax",
+   "column_as_published": "Consolidated",
+   "value": -306928281,
+   "value_as_published": "(306,928,281)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 7,
+   "quote": "Net loss after income tax (306,928,281) (233,629,762) (298,161,191) (226,346,531)"
+  }
+ ]
+}

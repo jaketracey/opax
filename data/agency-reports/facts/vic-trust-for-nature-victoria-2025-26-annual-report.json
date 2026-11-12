@@ -1,0 +1,183 @@
+{
+ "report_id": "vic-trust-for-nature-victoria-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "executive_band"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 15154708,
+   "value_as_published": "15,154,708",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 50,
+   "quote": "Total revenue and income from transactions 15,154,708 14,115,455"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -12937235,
+   "value_as_published": "(12,937,235)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 50,
+   "quote": "Total expenses from transactions (12,937,235) (14,635,043)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee benefits",
+   "column_as_published": "2026",
+   "value": -7516024,
+   "value_as_published": "(7,516,024)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 50,
+   "quote": "Employee benefits 3.2 (7,516,024) (7,842,027)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": 2951093,
+   "value_as_published": "2,951,093",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 50,
+   "quote": "Net result 2,951,093 318,040"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "FTE",
+   "value": 51.6,
+   "value_as_published": "51.6",
+   "unit": "fte",
+   "period": "June 2026",
+   "page": 36,
+   "quote": "Total 51.6 57 60.9 70"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total",
+   "column_as_published": "Headcount",
+   "value": 57,
+   "value_as_published": "57",
+   "unit": "people",
+   "period": "June 2026",
+   "page": 36,
+   "quote": "Total 51.6 57 60.9 70"
+  },
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Remuneration received or receivable by the Accountable Officer",
+   "value": null,
+   "value_as_published": "$310,000-320,000",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 82,
+   "quote": "Remuneration received or receivable by the Accountable Officer in connection with the management of the Trust during the reporting period was in the range: $310,000-320,000"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 4,
+   "value_as_published": "4",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 83,
+   "quote": "Total number of executives 4 3"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 882170,
+   "value_as_published": "882,170",
+   "unit": "dollars",
+   "period": "2025-26 (executives)",
+   "page": 83,
+   "quote": "Total remuneration (a) 882,170 697,587"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total",
+   "column_as_published": "2026",
+   "value": 800947,
+   "value_as_published": "800,947",
+   "unit": "dollars",
+   "period": "2025-26 (compensation of key management personnel)",
+   "page": 84,
+   "quote": "Compensation of KMPs 2026 2025 $ $ Total (a) 800,947 749,527"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during FY2026 in relation to these consultancies",
+   "value": 68900,
+   "value_as_published": "$68,900",
+   "unit": "dollars",
+   "period": "FY2026 (two consultancies of $10,000 or greater, excl. GST)",
+   "page": 38,
+   "quote": "The total expenditure incurred during FY2026 in relation to these consultancies is $68,900 (excluding GST)."
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excl. GST)",
+   "counterparty": "Noble Ambition",
+   "purpose": "Strategic fundraising advice",
+   "value": 5000,
+   "value_as_published": "5,000",
+   "unit": "dollars",
+   "period": "2025-26 (excl. GST)",
+   "page": 38,
+   "quote": "Noble Ambition Strategic fundraising advice 1/06/2024 31/08/2025 37,700 5,000 -"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excl. GST)",
+   "counterparty": "Thirriwirri Pty Ltd",
+   "purpose": "Strategic advice for engagement with First Peoples organisations",
+   "value": 63900,
+   "value_as_published": "63,900",
+   "unit": "dollars",
+   "period": "2025-26 (excl. GST)",
+   "page": 38,
+   "quote": "Thirriwirri Pty Ltd Strategic advice for engagement with First Peoples organisations 1/11/2025 30/04/2026 77,850 63,900 -"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "conservation covenants",
+   "value": 110,
+   "value_as_published": "110",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 15,
+   "quote": "110 conservation covenants (including offset covenants) were registered during 2025-26"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "hectares of land",
+   "value": 4185.54,
+   "value_as_published": "4,185.54",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 15,
+   "quote": "protecting 4,185.54 hectares of land across Victoria"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "hectares of important habitat",
+   "value": 120000,
+   "value_as_published": "120,000",
+   "unit": "count",
+   "period": "as at 2026",
+   "page": 5,
+   "quote": "permanently protects over 120,000 hectares of important habitat across Victoria"
+  }
+ ]
+}

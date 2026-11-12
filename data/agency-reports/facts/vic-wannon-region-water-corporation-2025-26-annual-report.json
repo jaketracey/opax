@@ -1,0 +1,150 @@
+{
+ "report_id": "vic-wannon-region-water-corporation-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 97055,
+   "value_as_published": "97,055",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 65,
+   "quote": "Total revenue and income from transactions 97,055 95,401"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -108270,
+   "value_as_published": "(108,270)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 65,
+   "quote": "Total expenses from transactions (108,270) (102,014)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee benefits – comprehensive operating statement",
+   "column_as_published": "2026",
+   "value": -29905,
+   "value_as_published": "(29,905)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 65,
+   "quote": "Employee benefits – comprehensive operating statement 3.1.1 (29,905) (28,634)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result for the period",
+   "column_as_published": "2026",
+   "value": -17454,
+   "value_as_published": "(17,454)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 65,
+   "quote": "Net result for the period (17,454) (8,451)"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "TOTAL EMPLOYEES",
+   "column_as_published": "30 June 2026",
+   "value": 254,
+   "value_as_published": "254",
+   "unit": "people",
+   "period": "30 June 2026",
+   "page": 23,
+   "quote": "TOTAL EMPLOYEES 254 242 195 31 217 28 26 248 234"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "TOTAL EMPLOYEES",
+   "column_as_published": "30 June 2026",
+   "value": 242,
+   "value_as_published": "242",
+   "unit": "fte",
+   "period": "30 June 2026",
+   "page": 23,
+   "quote": "TOTAL EMPLOYEES 254 242 195 31 217 28 26 248 234"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 6,
+   "value_as_published": "6",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 106,
+   "quote": "Total number of executives 6 5"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 1485,
+   "value_as_published": "1,485",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 106,
+   "quote": "Total remuneration 1,485 1,391"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 2502,
+   "value_as_published": "2,502",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 107,
+   "quote": "Termination benefits 241 - Total remuneration 2,502 2,094"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Details of consultancies (valued at $10,000 or greater)",
+   "value": 2115171,
+   "value_as_published": "$2,115,171",
+   "unit": "dollars",
+   "period": "2025/26",
+   "page": 60,
+   "quote": "The total expenditure incurred was $2,115,171 (excluding GST)"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Details of consultancies (valued at less than $10,000)",
+   "value": 59085,
+   "value_as_published": "$59,085",
+   "unit": "dollars",
+   "period": "2025/26",
+   "page": 60,
+   "quote": "The total expenditure incurred was $59,085 (excluding GST)"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "residential, commercial, industrial and rural customers across 34 customer zones",
+   "value": 46215,
+   "value_as_published": "46,215",
+   "unit": "count",
+   "period": "2025/26",
+   "page": 7,
+   "quote": "46,215 residential, commercial, industrial and rural customers across 34 customer zones"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "residential, commercial and industrial customers across 16 sewerage systems",
+   "value": 39684,
+   "value_as_published": "39,684",
+   "unit": "count",
+   "period": "2025/26",
+   "page": 7,
+   "quote": "a total of 39,684 residential, commercial and industrial customers across 16 sewerage systems"
+  }
+ ]
+}

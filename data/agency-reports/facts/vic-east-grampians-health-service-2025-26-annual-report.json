@@ -1,0 +1,101 @@
+{
+ "report_id": "vic-east-grampians-health-service-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_headcount",
+  "consultancy_total"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 82410,
+   "value_as_published": "82,410",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 27,
+   "quote": "Total revenue and income from transactions 82,410 76,370"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses from transactions",
+   "column_as_published": "2026",
+   "value": -85487,
+   "value_as_published": "(85,487)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 27,
+   "quote": "Total Expenses from transactions (85,487) (79,145)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -60019,
+   "value_as_published": "(60,019)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 27,
+   "quote": "Employee expenses 3.1(a) (60,019) (56,257)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -2977,
+   "value_as_published": "(2,977)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 27,
+   "quote": "Net result (2,977) (3,004)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "TOTALS",
+   "column_as_published": "JUNE CURRENT MONTH FTE",
+   "value": 399,
+   "value_as_published": "399",
+   "unit": "fte",
+   "period": "June 2026 current month FTE (as at 30 June 2026)",
+   "page": 17,
+   "quote": "TOTALS 399 397 399 382"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 9,
+   "value_as_published": "9",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 37,
+   "quote": "Total number of executives 9 8"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 1574,
+   "value_as_published": "1,574",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 37,
+   "quote": "Total remuneration i 1,574 1,642"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMPs",
+   "column_as_published": "2026",
+   "value": 1967,
+   "value_as_published": "1,967",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (key management personnel)",
+   "page": 38,
+   "quote": "Total compensation - KMPs i 1,967 2,020"
+  }
+ ]
+}

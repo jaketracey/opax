@@ -108,7 +108,7 @@ export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCan
   // The Senate's own Question Time video for each day it sat: a card that plays only when pressed.
   const days = sittingVideos(videos,week.start,week.end)
   if (days.length) body += videoSectionHTML('Senate Question Time',days,{id:'senate-video',
-    note:'Video published by the Senate Public Information Office on YouTube. The player loads from YouTube only when you press play.',
+    note:'Video published by the Senate Public Information Office on YouTube.',
     after:`<p class="video-more">${link(`/video/senate#m${days[0].date!.slice(0,7)}`,'More Senate video')}</p>`+sourceLineHTML({updated:days.map(d => d.published?.slice(0,10) || '').sort().at(-1) || '',dateLabel:'Published',source:'AuSenate YouTube channel',originals:[{href:'https://www.youtube.com/@AuSenate',label:'AuSenate: The Senate Public Information Office'}]})})
   {
     const config = divisionTableConfig({jurisdiction:'federal', start:week.start, end:week.end}, 'Divisions held', 'sitting')

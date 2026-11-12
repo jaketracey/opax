@@ -6,7 +6,7 @@ import { build } from 'esbuild'
 const built = await build({ stdin: { contents: [
   "export {excerpt, speakerName, dayWords, spanWords} from './src/tools/transcript-text'",
   "export {callTool} from './src/tools/index'",
-  "export {transcriptListingOnly, TRANSCRIPT_LABEL} from './src/transcript-answer'",
+  "export {transcriptListingOnly, withTranscriptNote, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE} from './src/transcript-answer'",
   "export {groundAnswerPayload} from './src/research-grounding'",
   "export {guardClaimMeasures, MEASURE_GAP} from './src/ask-claim-measures'",
   "export {extractNamedScope} from './src/agentic-ask'",
@@ -72,7 +72,7 @@ test('transcript counts give their dates in words', async () => {
   assert.equal(api.dayWords('2022-09-27'), '27 September 2022'); assert.equal(api.dayWords('2019-03-01'), '1 March 2019')
   assert.equal(api.spanWords('2022-09-27', '2023-03-10'), '27 September 2022 to 10 March 2023'); assert.equal(api.spanWords('2019-03-01', '2019-03-01'), '1 March 2019')
   const rc = await api.callTool(env, 'royal_commissions', { view: 'transcripts', commission: 'robodebt', limit: 2 })
-  assert.match(rc.citations[0].text, /^Royal Commission into the Robodebt Scheme: \d+ hearing transcripts listed, dated \d{1,2} [A-Z][a-z]+ 2022 to \d{1,2} [A-Z][a-z]+ 2023 \(/)
+  assert.match(rc.citations[0].text, /^OPAX lists \d+ hearing transcripts from the Royal Commission into the Robodebt Scheme, dated \d{1,2} [A-Z][a-z]+ 2022 to \d{1,2} [A-Z][a-z]+ 2023 \(/)
   for (const c of rc.citations) assert.ok(!/\b\d{4}-\d{2}-\d{2}\b/.test(c.text), c.text)
   const profile = await api.callTool(env, 'royal_commissions', { view: 'profile', commission: 'robodebt' })
   for (const c of profile.citations) assert.ok(!/\b\d{4}-\d{2}-\d{2}\b/.test(c.text), c.text)
@@ -111,4 +111,36 @@ test('a commission named in the question is not an unresolved person', () => {
   for (const q of ['What did witnesses at the Robodebt Royal Commission say about income averaging?', 'What has the Robodebt Royal Commission said about income averaging?',
     'What did counsel assisting the Royal Commission into the Robodebt Scheme say about income averaging?', 'What did Bill Shorten say at the Robodebt Royal Commission?']) assert.equal(asked(q), false, q)
   for (const q of ['What has John Smith said about income averaging?', 'What did John Smith at the Robodebt Royal Commission say about income averaging?']) assert.equal(asked(q), true, q)
+})
+
+test('a royal commission transcript count opens the way the integrity count does', async () => {
+  const listing = await api.callTool(env, 'royal_commissions', { view: 'transcripts', commission: 'robodebt', limit: 1 })
+  const profile = await api.callTool(env, 'royal_commissions', { view: 'profile', commission: 'robodebt' })
+  const count = profile.citations.find(c => c.kind === 'count')
+  for (const text of [listing.citations[0].text, count.text]) {
+    assert.match(text, /^OPAX lists 47 hearing transcripts from the Royal Commission into the Robodebt Scheme, dated 27 September 2022 to 10 March 2023[ .]/, text)
+    assert.ok(!/\bthe the\b/i.test(text) && !text.includes('transcripts listed'), text)
+  }
+  assert.equal(count.text, `OPAX lists 47 hearing transcripts from the Royal Commission into the Robodebt Scheme, dated 27 September 2022 to 10 March 2023. ${LABEL}.`, 'no tool hint in answer text')
+  assert.ok(profile.notes.some(n => n.startsWith('view=transcripts')), 'the hint is a tool note')
+})
+
+test('an answer citing only hearing transcripts says they are evidence, not findings', async () => {
+  const turn = `Royal Commission into the Robodebt Scheme, Day 12 (1 November 2022), transcript page 1203 (PDF page 9), hearing turn by Ms Smith: "income averaging". ${LABEL}. CC BY 4.0.`
+  const answer = 'Witnesses described how income averaging was applied to each debt.'
+  const payload = { answered: true, answer_decision: 'answer', answer, citations: { 'fact-1/t/body/0': [[0, answer.length]] },
+    sources: [{ resource: 'fact-1', kind: 'record', url: 'https://robodebt.royalcommission.gov.au/t12.pdf', title: turn, snippet: turn, cited: true },
+      { resource: 'coverage', kind: 'record', url: 'https://opax.test/report/robodebt', title: 'Coverage', snippet: 'Transcripts as the commission published them.', cited: true, coverage: true }] }
+  const out = api.withTranscriptNote(payload)
+  assert.equal(out.answer, `${answer}\n\n${api.TRANSCRIPT_NOTE}`)
+  assert.equal(api.TRANSCRIPT_NOTE, 'These are from hearing transcripts: evidence, not findings.')
+  assert.deepEqual(out.citations, payload.citations, 'existing citation ranges are unchanged')
+  assert.equal(api.withTranscriptNote(out).answer, out.answer, 'added once')
+  const mixed = { ...payload, sources: [...payload.sources, { resource: 'fact-2', kind: 'record', url: 'https://opax.test/report/robodebt', title: 'Final report, page 3', snippet: 'Final report, page 3: "a finding".', cited: true }] }
+  assert.equal(api.withTranscriptNote(mixed).answer, answer, 'a non-transcript source: no note')
+  const uncited = { ...mixed, sources: mixed.sources.map(s => s.resource === 'fact-2' ? { ...s, cited: false } : s) }
+  assert.equal(api.withTranscriptNote(uncited).answer, `${answer}\n\n${api.TRANSCRIPT_NOTE}`, 'only cited sources count')
+  for (const over of [{ answer_decision: 'limitation' }, { answered: false }, { answer: '' }]) assert.deepEqual(api.withTranscriptNote({ ...payload, ...over }), { ...payload, ...over })
+  assert.equal(api.withTranscriptNote(listing()).answer, listing().answer, 'a listing already carries the label')
+  assert.match(await readFile(new URL('../src/index.ts', import.meta.url), 'utf8'), /linkAskSources\(withTranscriptNote\(/, 'applied to the final Ask payload')
 })

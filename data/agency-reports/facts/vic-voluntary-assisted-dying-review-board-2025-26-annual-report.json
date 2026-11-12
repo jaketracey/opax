@@ -1,0 +1,88 @@
+{
+ "report_id": "vic-voluntary-assisted-dying-review-board-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "named_remuneration",
+  "executive_band",
+  "executive_count",
+  "executive_remuneration_total",
+  "staff_fte",
+  "staff_headcount",
+  "total_expenses",
+  "total_income",
+  "employee_expenses",
+  "net_result",
+  "consultancy_total",
+  "consultancy",
+  "matters_received",
+  "investigations_commenced",
+  "investigations_finalised",
+  "public_hearings",
+  "referrals_to_prosecution",
+  "recommendations_made"
+ ],
+ "facts": [
+  {
+   "metric": "operational_other",
+   "label_as_published": "applications for VAD",
+   "value": 1156,
+   "value_as_published": "1,156",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 6,
+   "quote": "The Board received 1,156 applications for VAD"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "permits",
+   "value": 908,
+   "value_as_published": "908",
+   "unit": "count",
+   "period": "1 July 2025 to 30 June 2026",
+   "page": 29,
+   "quote": "the Secretary issued 908 permits for either self-administration or practitioner administration"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "applications were withdrawn",
+   "value": 401,
+   "value_as_published": "401",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 7,
+   "quote": "In 2025–26, 401 applications were withdrawn"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "people applied for access to VAD",
+   "value": 1138,
+   "value_as_published": "1,138",
+   "unit": "people",
+   "period": "2025–26",
+   "page": 11,
+   "quote": "In 2025–26, 1,138 people applied for access to VAD"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "practitioners who registered for the first time",
+   "value": 47,
+   "value_as_published": "47",
+   "unit": "people",
+   "period": "2025–26",
+   "page": 40,
+   "quote": "Of the 47 practitioners who registered for the first time during 2025–26"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "VAD deaths accounted for 1.1% of all deaths in Victoria",
+   "value": 1.1,
+   "value_as_published": "1.1%",
+   "unit": "percent",
+   "period": "2025-2026",
+   "page": 6,
+   "quote": "VAD deaths accounted for 1.1% of all deaths in Victoria in 2025-2026"
+  }
+ ]
+}

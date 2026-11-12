@@ -1,0 +1,203 @@
+{
+ "report_id": "vic-shrine-of-remembrance-trustees-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "staff_fte",
+  "executive_band",
+  "executive_average_remuneration"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 8129903,
+   "value_as_published": "8,129,903",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 40,
+   "quote": "Total revenue and income from transactions 8,129,903 8,766,576"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": 12054603,
+   "value_as_published": "12,054,603",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 40,
+   "quote": "Total expenses from transactions 12,054,603 11,255,361"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": 5132763,
+   "value_as_published": "5,132,763",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 40,
+   "quote": "Employee expenses 3.1 5,132,763 4,932,806"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result for the year",
+   "column_as_published": "2026",
+   "value": -1986702,
+   "value_as_published": "(1,986,702)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 40,
+   "quote": "Net result for the year (1,986,702) (2,475,234)"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "people",
+   "value": 42,
+   "value_as_published": "42",
+   "unit": "people",
+   "period": "2025-26",
+   "page": 19,
+   "quote": "The Shrine employs 42 people"
+  },
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Accountable officer",
+   "value": null,
+   "value_as_published": "$370,000 – $379,000",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 72,
+   "quote": "Remuneration received or receivable by the Accountable officer, in connection with the management of the Trustees during the reporting period, was in the range: $370,000 – $379,000"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 5,
+   "value_as_published": "5",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 72,
+   "quote": "Total number of executives 5 3"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration(a)",
+   "column_as_published": "2026",
+   "value": 613036,
+   "value_as_published": "613,036",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 72,
+   "quote": "Total remuneration(a) 613,036 674,578"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "The total expenditure incurred in relation to these consultancies",
+   "value": 149759,
+   "value_as_published": "$149,759",
+   "unit": "dollars",
+   "period": "FY2025–26 (five consultancies of $10,000 or more, excl GST)",
+   "page": 81,
+   "quote": "The total expenditure incurred in relation to these consultancies was $149,759(excl GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "2025–26 EXPENDITURE (EXCL GST) $",
+   "column_as_published": "2025–26 EXPENDITURE (EXCL GST)",
+   "value": 53930,
+   "value_as_published": "53,930",
+   "unit": "dollars",
+   "period": "FY2025–26",
+   "page": 81,
+   "quote": "Morris Hargreaves McIntyre Limited Triennial Visitor Research 01/12/2025 30/04/2026 53,930 53,930",
+   "counterparty": "Morris Hargreaves McIntyre Limited",
+   "purpose": "Triennial Visitor Research"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "2025–26 EXPENDITURE (EXCL GST) $",
+   "column_as_published": "2025–26 EXPENDITURE (EXCL GST)",
+   "value": 47000,
+   "value_as_published": "47,000",
+   "unit": "dollars",
+   "period": "FY2025–26",
+   "page": 81,
+   "quote": "Hazel Executives and Boards PTY LTD CEO Recruitment 01/02/2026 30/05/2026 47,000 47,000",
+   "counterparty": "Hazel Executives and Boards PTY LTD",
+   "purpose": "CEO Recruitment"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "2025–26 EXPENDITURE (EXCL GST) $",
+   "column_as_published": "2025–26 EXPENDITURE (EXCL GST)",
+   "value": 12100,
+   "value_as_published": "12,100",
+   "unit": "dollars",
+   "period": "FY2025–26",
+   "page": 81,
+   "quote": "Spartans Security PTY LTD ICT Penetration Testing 01/01/2026 31/03/2026 12,100 12,100",
+   "counterparty": "Spartans Security PTY LTD",
+   "purpose": "ICT Penetration Testing"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "2025–26 EXPENDITURE (EXCL GST) $",
+   "column_as_published": "2025–26 EXPENDITURE (EXCL GST)",
+   "value": 11009,
+   "value_as_published": "11,009",
+   "unit": "dollars",
+   "period": "FY2025–26",
+   "page": 81,
+   "quote": "Jones Lang LaSalle (JLL) Inspection & valuation of land for acquisition 01/11/2025 31/03/2026 11,009 11,009",
+   "counterparty": "Jones Lang LaSalle (JLL)",
+   "purpose": "Inspection & valuation of land for acquisition"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "2025–26 EXPENDITURE (EXCL GST) $",
+   "column_as_published": "2025–26 EXPENDITURE (EXCL GST)",
+   "value": 25720,
+   "value_as_published": "25,720",
+   "unit": "dollars",
+   "period": "FY2025–26",
+   "page": 81,
+   "quote": "Grant Thornton PTY LTD Review of FBT Obligations 27/04/2026 30/07/2026 25,720 25,720",
+   "counterparty": "Grant Thornton PTY LTD",
+   "purpose": "Review of FBT Obligations"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "GENERAL VISITORS",
+   "value": 482391,
+   "value_as_published": "482,391",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 5,
+   "quote": "482,391 GENERAL VISITORS"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "DIGITAL ENGAGEMENTS",
+   "value": 1457534,
+   "value_as_published": "1,457,534",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 5,
+   "quote": "1,457,534 DIGITAL ENGAGEMENTS"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "hours of service",
+   "value": 8840,
+   "value_as_published": "8,840",
+   "unit": "count",
+   "period": "2025-26 (volunteers)",
+   "page": 19,
+   "quote": "Volunteers provided 8,840 hours of service during the year"
+  }
+ ]
+}

@@ -1,0 +1,90 @@
+{
+ "report_id": "vic-residential-tenancies-bond-authority-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "executive_count",
+  "executive_remuneration_total",
+  "staff_fte",
+  "staff_headcount",
+  "consultancy_total"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total income from transactions",
+   "column_as_published": "2026",
+   "value_as_published": "121,007",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 20,
+   "quote": "Total income from transactions 121,007 64,489",
+   "value": 121007
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value_as_published": "49,291",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 20,
+   "quote": "Total expenses from transactions 49,291 24,444",
+   "value": 49291
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value_as_published": "7,376",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 20,
+   "quote": "Employee expenses 3.2 7,376 4,933",
+   "value": 7376
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value_as_published": "57,789",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 20,
+   "quote": "Net result 57,789 64,114",
+   "value": 57789
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "the Authority held 750,880 bonds",
+   "value_as_published": "750,880",
+   "unit": "count",
+   "period": "at 30 June 2026",
+   "page": 5,
+   "quote": "At 30 June 2026, the Authority held 750,880 bonds, valued at $1,644 million.",
+   "value": 750880
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "bond lodgments",
+   "value_as_published": "256,627",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 6,
+   "quote": "The Authority registered 256,627 bond lodgments in 2025-26",
+   "value": 256627
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Bond repayment claims",
+   "value_as_published": "246,997",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 6,
+   "quote": "The Authority repaid 246,997 bonds in 2025-26",
+   "value": 246997
+  }
+ ]
+}

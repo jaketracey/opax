@@ -1,0 +1,145 @@
+{
+ "report_id": "vic-orbost-regional-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "staff_headcount",
+  "executive_band"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 39064,
+   "value_as_published": "39,064",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 39,
+   "quote": "Total revenue and income from transactions 39,064 44,855"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -28415,
+   "value_as_published": "(28,415)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 39,
+   "quote": "Total expenses from transactions (28,415) (25,608)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -18888,
+   "value_as_published": "(18,888)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 39,
+   "quote": "Employee expenses 3.1 (a) (18,888) (17,027)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": 10732,
+   "value_as_published": "10,732",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 39,
+   "quote": "Net result 10,732 19,310"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "Jun 2026 FTE",
+   "value": 131,
+   "value_as_published": "131",
+   "unit": "fte",
+   "period": "June 2026",
+   "page": 12,
+   "quote": "Total 136 131 127 126"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 3,
+   "value_as_published": "3",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "Total number of executives 3 2"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 541,
+   "value_as_published": "541",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "Total remuneration i 541 405"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "$10,000 or greater",
+   "value": 521433,
+   "value_as_published": "$521,433",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 15,
+   "quote": "The total expenditure incurred during 2025-2026 in relation to these consultancies is $521,433 (excl. GST)"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Under $10,000",
+   "value": 3182,
+   "value_as_published": "$3,182",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 15,
+   "quote": "The total expenditure incurred during 2025-2026 in relation the consultancies is $3,182 (excl. GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Health Legal",
+   "column_as_published": "Expenditure 2025-2026 (excluding GST)",
+   "value": 17128,
+   "value_as_published": "$17,128",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 15,
+   "quote": "Health Legal Employment Law 01 July 2025 Ongoing $17,128 $17,128 $12,372",
+   "counterparty": "Health Legal",
+   "purpose": "Employment Law"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Connected Medical Solutions",
+   "column_as_published": "Expenditure 2025-2026 (excluding GST)",
+   "value": 504305,
+   "value_as_published": "$504,305",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 15,
+   "quote": "Connected Medical Solutions Virtual Doctors 01 July 2025 Ongoing $240,000 $504,305 $456,000",
+   "counterparty": "Connected Medical Solutions",
+   "purpose": "Virtual Doctors"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "38 bed residential facility",
+   "value": 38,
+   "value_as_published": "38",
+   "unit": "count",
+   "period": "June 2026",
+   "page": 7,
+   "quote": "aged care residents moved to the newly completed 38 bed residential facility"
+  }
+ ]
+}

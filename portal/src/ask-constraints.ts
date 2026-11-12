@@ -45,6 +45,11 @@ export function constrainStep(step: PlanStep, c: AskConstraints, properties: Rec
   if (step.tool === 'count_speeches' && c.speechRankingGrain && has('group_by')) {
     a.group_by = c.speechRankingGrain
     if (!c.people.length) delete a.speaker
+    if (c.speechRankingGrain === 'speaker') {
+      if (!c.jurisdiction) delete a.state
+      if (!c.chamber) delete a.chamber
+      if (!c.party) delete a.party
+    }
   }
   if (step.tool === 'money_totals' && c.industryRanking && has('group_by')) { a.group_by = 'industry'; delete a.donor }
   if (step.tool === 'division' && c.policyVoteTopic && c.party) {

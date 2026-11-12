@@ -1,0 +1,163 @@
+{
+ "report_id": "vic-swan-hill-district-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value_as_published": "132,451",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 69,
+   "quote": "Total revenue and income from transactions 132,451 124,132",
+   "value": 132451
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses from transactions",
+   "column_as_published": "2026",
+   "value_as_published": "(127,997)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 69,
+   "quote": "Total Expenses from transactions (127,997) (119,638)",
+   "value": -127997
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value_as_published": "(89,580)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 69,
+   "quote": "Employee expenses 3.1(a) (89,580) (83,088)",
+   "value": -89580
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value_as_published": "5,686",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 69,
+   "quote": "Net result 5,686 3,234",
+   "value": 5686
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "total workforce Full-Time Equivalent (FTE)",
+   "value_as_published": "473",
+   "unit": "fte",
+   "period": "2026",
+   "page": 28,
+   "quote": "total workforce Full-Time Equivalent (FTE) increasing to 473 across clinical and support services",
+   "value": 473
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value_as_published": "6",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 100,
+   "quote": "Total number of executives 6 5",
+   "value": 6
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration i",
+   "column_as_published": "2026",
+   "value_as_published": "1,038",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 100,
+   "quote": "Total remuneration i 1,038 1,432",
+   "value": 1038
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025-2026 in relation to these consultancies",
+   "value_as_published": "$285,730",
+   "unit": "dollars",
+   "period": "2025-2026 (5 consultancies of $10,000 or greater)",
+   "page": 23,
+   "quote": "The total expenditure incurred during 2025-2026 in relation to these consultancies is $285,730 (excluding GST)",
+   "value": 285730
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Sadhana Consulting",
+   "column_as_published": "Expenditure 2025-2026 (excluding gst)",
+   "value_as_published": "$23,458",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 23,
+   "quote": "Sadhana Consulting Board and Subcommittee Reviews 01/05/2025 30/06/2026 $28,320 $23,458 -",
+   "counterparty": "Sadhana Consulting",
+   "purpose": "Board and Subcommittee Reviews",
+   "value": 23458
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Studio STH Pty Ltd",
+   "column_as_published": "Expenditure 2025-2026 (excluding gst)",
+   "value_as_published": "$98,400",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 23,
+   "quote": "Studio STH Pty Ltd SHDH Medical Imaging Facility Fit Out Submission - Feasibility Study 01/08/2025 (First Invoice states August) 01/01/2026 (Last Invoice states January) $96,900 $98,400 -",
+   "counterparty": "Studio STH Pty Ltd",
+   "purpose": "SHDH Medical Imaging Facility Fit Out Submission - Feasibility Study",
+   "value": 98400
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Strength Based Approach Pty Ltd",
+   "column_as_published": "Expenditure 2025-2026 (excluding gst)",
+   "value_as_published": "$63,250",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 23,
+   "quote": "Strength Based Approach Pty Ltd One Team Culture Organisational Workshops 01/07/2025 Ongoing - $63,250 $63,250",
+   "counterparty": "Strength Based Approach Pty Ltd",
+   "purpose": "One Team Culture Organisational Workshops",
+   "value": 63250
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "D K Sonin & Associates",
+   "column_as_published": "Expenditure 2025-2026 (excluding gst)",
+   "value_as_published": "$76,944",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 23,
+   "quote": "D K Sonin & Associates Cultural Consultant 01/02/2026 Ongoing - $76,944 -",
+   "counterparty": "D K Sonin & Associates",
+   "purpose": "Cultural Consultant",
+   "value": 76944
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Kelloway Lonsdale Pty Ltd",
+   "column_as_published": "Expenditure 2025-2026 (excluding gst)",
+   "value_as_published": "$23,678",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 23,
+   "quote": "Kelloway Lonsdale Pty Ltd Strategic Planning 02/06/2025 01/11/2025 $23,678 $23,678 -",
+   "counterparty": "Kelloway Lonsdale Pty Ltd",
+   "purpose": "Strategic Planning",
+   "value": 23678
+  }
+ ]
+}

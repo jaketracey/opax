@@ -1,0 +1,108 @@
+{
+ "report_id": "vic-victorian-pharmacy-authority-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "consultancy"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 2700182,
+   "value_as_published": "2,700,182",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 55,
+   "quote": "Total revenue and income from transactions 2,700,182 2,408,874"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -2890577,
+   "value_as_published": "(2,890,577)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 55,
+   "quote": "Total expenses from transactions (2,890,577) (2,316,304)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -1542710,
+   "value_as_published": "(1,542,710)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 55,
+   "quote": "Employee expenses 3.1 (1,542,710) (1,333,719)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result for the year",
+   "column_as_published": "2026",
+   "value": -198547,
+   "value_as_published": "(198,547)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 55,
+   "quote": "Net result for the year (198,547) 91,967"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Full Time Equivalent (FTE)",
+   "value": 8.2,
+   "value_as_published": "8.2",
+   "unit": "fte",
+   "period": "as at 30 June 2026",
+   "page": 15,
+   "quote": "a staff of 11 at 30 June 2026, with a Full Time Equivalent (FTE) of 8.2"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "staff",
+   "value": 11,
+   "value_as_published": "11",
+   "unit": "people",
+   "period": "as at 30 June 2026",
+   "page": 15,
+   "quote": "The VPA had a staff of 11 at 30 June 2026"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "$340,001 - $350,000",
+   "column_as_published": "2026",
+   "band": "$340,001 - $350,000",
+   "value": 1,
+   "value_as_published": "1",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "$340,001 - $350,000 1 -"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation – KMPs",
+   "column_as_published": "2026",
+   "value": 395371,
+   "value_as_published": "$395,371",
+   "unit": "dollars",
+   "period": "2025-26 (key management personnel)",
+   "page": 75,
+   "quote": "Total compensation – KMPs1 $395,371 351,052"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025–26 in relation to these consultancies",
+   "value": 199851,
+   "value_as_published": "$199,851",
+   "unit": "dollars",
+   "period": "2025-26 (4 consultancies of $10,000 or greater, excl. GST)",
+   "page": 41,
+   "quote": "The total expenditure incurred during 2025–26 in relation to these consultancies is $199,851."
+  }
+ ]
+}

@@ -1,0 +1,157 @@
+{
+ "report_id": "vic-colac-area-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "employee_expenses",
+  "executive_band",
+  "executive_count",
+  "executive_remuneration_total",
+  "head_remuneration",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total Revenue",
+   "column_as_published": "2026",
+   "value": 93589,
+   "value_as_published": "93,589",
+   "unit": "thousands_of_dollars",
+   "period": "2025-2026 (financial year ended 30 June 2026)",
+   "page": 40,
+   "quote": "Total Revenue 93,589"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses",
+   "column_as_published": "2026",
+   "value": -83100,
+   "value_as_published": "(83,100)",
+   "unit": "thousands_of_dollars",
+   "period": "2025-2026 (financial year ended 30 June 2026)",
+   "page": 40,
+   "quote": "Total Expenses (83,100)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": 10397,
+   "value_as_published": "10,397",
+   "unit": "thousands_of_dollars",
+   "period": "2025-2026 (financial year ended 30 June 2026)",
+   "page": 40,
+   "quote": "Net result 10,397"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "value": 368,
+   "value_as_published": "368",
+   "unit": "fte",
+   "period": "2026 (current month FTE)",
+   "page": 32,
+   "quote": "Ancillary Staff (Allied Health) 42 47 41 44 Total 328 368"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "the total expenditure incurred during 2025-2026 in relation to these consultancies",
+   "value": 72375,
+   "value_as_published": "$72,375",
+   "unit": "dollars",
+   "period": "2025-2026 (three consultancies of $10,000 or greater, excl. GST)",
+   "page": 41,
+   "quote": "The total expenditure incurred during 2025-2026 in relation to these consultancies is $72,375"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Grant Solutions Pty Ltd",
+   "column_as_published": "Expenditure 2025-2026 (Excl GST)",
+   "value": 10000,
+   "value_as_published": "10,000",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 41,
+   "quote": "Fire Services Upgrade 10,000 10,000 0",
+   "counterparty": "Grant Solutions Pty Ltd",
+   "purpose": "Fire Services Upgrade"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Grant Solutions Pty Ltd",
+   "column_as_published": "Expenditure 2025-2026 (Excl GST)",
+   "value": 50000,
+   "value_as_published": "50,000",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 41,
+   "quote": "Workers Accommodation Project 50,000 50,000 0",
+   "counterparty": "Grant Solutions Pty Ltd",
+   "purpose": "Workers Accommodation Project"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Loss Prevention Group of Australia",
+   "column_as_published": "Expenditure 2025-2026 (Excl GST)",
+   "value": 12375,
+   "value_as_published": "12,375",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 41,
+   "quote": "Security Risk Assessment 12,375 12,375 0",
+   "counterparty": "Loss Prevention Group of Australia",
+   "purpose": "Security Risk Assessment"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Community Health client contacts",
+   "value": 64527,
+   "value_as_published": "64,527",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 13,
+   "quote": "Introduction 64,527"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Surgeries at Colac Area Health",
+   "value": 3087,
+   "value_as_published": "3,087",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 13,
+   "quote": "3,087"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Acute care admissions",
+   "value": 7679,
+   "value_as_published": "7,679",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 13,
+   "quote": "7,679"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Kilometres travel saved",
+   "value": 148504,
+   "value_as_published": "148,504",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 13,
+   "quote": "148,504"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Presentations to urgent care",
+   "value": 10846,
+   "value_as_published": "10,846",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 12,
+   "quote": "10,846"
+  }
+ ]
+}

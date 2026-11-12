@@ -17,7 +17,7 @@ import {decodeHTMLStrict} from 'entities'
 import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
 import {inferPeriod} from './ask-period'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-21-depth-and-grain'
+export const ANSWER_WRITING_VERSION = 'written-answer-22-ranking-wording'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[] }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
@@ -69,6 +69,11 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
     const metadata=/^(?:Period|Financial years):/i.test(text)
     const evidenceId=source.resource+'/t/body/0'
     let atoms=atomsFromText(text,evidenceId,source)
+    if (source.member && /^.+?: [\d,]+ (?:chamber speeches|speeches and committee turns|committee-hearing turns)\b/.test(text)) {
+      const projected = text.replace(/^.+?: /, source.member.name + ': ')
+      source = {...source, snippet:[...new Set([source.snippet,projected])].join('\n'), entities:[...new Set([...(source.entities??[]),'person:'+source.member.name])]}
+      atoms = atomsFromText(projected,evidenceId,source)
+    }
     // A labelled copy keeps a tool's explicit owner/amount association readable by the final claim audit.
     const partyTotal=/^(.+?) received (\$[\d,.]+ in federal disclosed receipts[\s\S]*)$/.exec(text)
     if(partyTotal)source={...source,snippet:source.snippet+'\n'+partyTotal[1]+': '+partyTotal[2]}
@@ -100,7 +105,7 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
     }
   }
   for (const fact of facts) {
-    const source = {resource:`fact-${fact.id}`, slug:'', title:fact.cite.label, href:fact.cite.url, url:fact.cite.url, snippet:fact.text, cited:true, kind:fact.cite.kind, ...(fact.receipt?{receipt:fact.receipt}:{}), ...(fact.entities?.length?{entities:fact.entities}:{})}
+    const source = {resource:`fact-${fact.id}`, slug:'', title:fact.cite.label, href:fact.cite.url, url:fact.cite.url, snippet:fact.text, cited:true, kind:fact.cite.kind, ...(fact.receipt?{receipt:fact.receipt}:{}), ...(fact.entities?.length?{entities:fact.entities}:{}), ...(fact.member?{member:fact.member}:{})}
     for (const part of fact.text.split(/\n+/)) add(part, source, isCoverage(part))
   }
   const source = out[0]?.source
@@ -146,6 +151,13 @@ function assemble(lines: WrittenSentence[], input: WritingInput, preserveCoverag
       const evidenceId = fact.evidenceId ?? (source.resource.includes('/t/') ? source.resource : source.resource+'/t/body/0')
       const ranges=citations[evidenceId]??=[]
       if(!ranges.some(([a,b])=>a===start&&b===Array.from(answer).length))ranges.push([start,Array.from(answer).length])
+      if (source.member) {
+        const resource = 'member-' + source.resource, url = new URL('/parliamentarians.json', source.url).href
+        const snippet = `${source.member.name} (${source.member.parliaments.join('; ')}). Indexed speaker: ${fact.text.split(':')[0]}.`
+        sources.set(resource, {resource, slug:'', title:'OPAX member record: '+source.member.name, href:url, url, snippet, cited:true, kind:'record'})
+        const key = resource + '/t/body/0', memberRanges = citations[key] ??= []
+        if (!memberRanges.some(([a,b])=>a===start&&b===Array.from(answer).length)) memberRanges.push([start,Array.from(answer).length])
+      }
     }
   }
   return distinctSummary(plainAnswerPayload({ answer, answer_decision:lines.length&&lines.every(l=>l.coverage)?'limitation' as const:'answer' as const, ...(notes.length?{coverage:{note:notes.join(' ')}}:{}), ...(input.constraints?{answer_scope:input.constraints}:{}), citations, sources:[...sources.values()] }))

@@ -54,7 +54,7 @@ test('grouping: years newest first, then months newest first, then days; undated
   assert.equal(page.status, 200);
   assert.equal(page.title, 'Senate video');
   assert.deepEqual(headings(page.html, 1), ['Senate video']);
-  assert.match(page.html, /<p class="ui-lede">Question Time and senators’ first speeches, as published by the Senate Public Information Office on YouTube\. The player loads only when you press play\.<\/p>/);
+  assert.match(page.html, /<p class="ui-lede">Question Time and senators’ first speeches, as published by the Senate Public Information Office on YouTube\.<\/p>/);
   assert.deepEqual(headings(page.html, 2), ['2026', '2021', 'Other Senate videos']);
   assert.deepEqual(headings(page.html, 3), ['October 2026', 'March 2026', 'February 2021']);
   assert.deepEqual(ids(page.html), ['qtFix000002', 'fsFix000001', 'qtFix000003', 'qtFix000001', 'fsFix000002', 'qtFix000005', 'qtFix000004'], 'the malformed id is dropped');
@@ -128,7 +128,7 @@ test('senateVideoPage survives a missing file', async () => {
 });
 
 const {JSDOM, requestInterceptor} = jsdom;
-test('the archive page asks YouTube for nothing until a card is pressed', async () => {
+test('the archive page loads no YouTube player until a card is pressed', async () => {
   const urls = [];
   const resources = {interceptors: [requestInterceptor((request) => { urls.push(request.url); return new Response('', {status: 200, headers: {'content-type': 'text/html'}}); })]};
   const dom = new JSDOM(`<!doctype html><html><head></head><body><main>${renderSenateVideo(data, null, bySlug).html}</main></body></html>`,
@@ -138,9 +138,9 @@ test('the archive page asks YouTube for nothing until a card is pressed', async 
   await new Promise(r => setTimeout(r, 20));
   assert.equal(document.querySelectorAll('button.video-facade').length, 7);
   assert.equal(document.querySelector('iframe'), null);
-  assert.equal(document.querySelector('img'), null, 'no thumbnails');
-  assert.deepEqual(urls.filter(u => /youtube|ytimg|google/.test(u)), [], 'before any press');
-  assert.doesNotMatch(document.body.innerHTML, /youtube-nocookie|ytimg|youtube\.com\/embed/);
+  assert.equal(document.querySelectorAll('img.video-thumb').length, 7, 'one thumbnail per card');
+  assert.deepEqual(urls.filter(u => /youtube|google/.test(u)), [], 'no player request before any press');
+  assert.doesNotMatch(document.body.innerHTML, /youtube-nocookie|youtube\.com\/embed/);
   document.querySelector('button.video-facade[data-video-id="fsFix000001"]').click();
   for (let i = 0; i < 50 && !urls.some(u => u.startsWith('https://www.youtube-nocookie.com/')); i++) await new Promise(r => setTimeout(r, 10));
   assert.equal(document.querySelectorAll('iframe').length, 1, 'only the pressed card plays');
@@ -217,8 +217,8 @@ test('the real Worker serves /video/senate as a server page, offline, from a scr
       assert.match(html, /<link rel="stylesheet" href="\/hubs\.css">/);
       assert.match(html, /<script type="module" src="\/video-card\.js"><\/script>/);
       assert.doesNotMatch(html, /<script[^>]+src="\/app\.js/);
-      assert.doesNotMatch(html.match(/<main\b[\s\S]*?<\/main>/)[0], /<iframe|youtube-nocookie\.com\/embed|ytimg/);
-      assert.doesNotMatch(html, /youtube-nocookie\.com\/embed|ytimg|<link[^>]+youtube/, 'nothing preloads YouTube');
+      assert.doesNotMatch(html.match(/<main\b[\s\S]*?<\/main>/)[0], /<iframe|youtube-nocookie\.com\/embed/);
+      assert.doesNotMatch(html, /youtube-nocookie\.com\/embed|<link[^>]+(?:youtube|ytimg)/, 'nothing preloads the player');
     }
     const quill = await (await worker.fetch('/video/senate?kind=first-speech')).text();
     assert.match(quill, /<a href="\/subject\/person\/jane-quill">Jane Quill<\/a>/);

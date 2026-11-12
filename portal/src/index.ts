@@ -141,6 +141,7 @@ import { MONEY_GRAPH_PATHS, MONEY_PARTIES_PATH } from '../public/money-parties.j
 import {renderMoneyConnectionsTable} from './money-connections-table'
 import { pressHeadlineAndText, pressTitle } from './press-title'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
+import { withTranscriptNote } from './transcript-answer'
 
 interface FindParagraph {
   score: number
@@ -5911,7 +5912,8 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   // Election coverage names unavailable grants, but renders no financial records.
   // Its renderer owns any future caveat alongside an actual political money pairing.
   // The policy pages (privacy, support) name no association between records.
-  if (route.kind !== 'official-reports' && !(route.kind === 'hub' && route.hub === 'vic-election') && !(route.kind === 'static' && SERVER_PANELS.has(route.page)))
+  // Official report records quote a publisher's own document; they pair no records.
+  if (route.kind !== 'official-reports' && !(route.kind === 'hub' && route.hub === 'vic-election') && !(route.kind === 'static' && SERVER_PANELS.has(route.page)) && route.kind !== 'source-report')
     meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
   // Every page prints its trail in the server HTML too (readers without
   // scripts, crawlers), from the menus' own list; the app's strip replaces it
@@ -6298,7 +6300,7 @@ const CSP_PAGE = [
   "default-src 'self'",
   `script-src 'self' 'wasm-unsafe-eval' ${GTM}`,
   "style-src 'self' 'unsafe-inline'",
-  `img-src 'self' data: https://tile.openstreetmap.org ${GTM} ${GA}`, // data: for the stylesheet's inline SVG glyphs (a select's chevron); images, never script
+  `img-src 'self' data: https://i.ytimg.com https://tile.openstreetmap.org ${GTM} ${GA}`, // data: for the stylesheet's inline SVG glyphs (a select's chevron); images, never script
   "font-src 'self'",
   `connect-src 'self' wss://opax.com.au wss://staging.opax.com.au ${GTM} ${GA}`,
   "worker-src 'self'",
@@ -6794,7 +6796,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     const finish = (run: AgenticPayload) => {
       const payload=agenticAskPayload(run, question)
       // Source rows are linked last: grounding reads the rows as evidence and re-derives which are cited.
-      const finalPayload=linkAskSources(loopRoute?groundAnswerPayload(payload,question):payload,run.source_links,SITE_ORIGIN)
+      const finalPayload=linkAskSources(withTranscriptNote(loopRoute?groundAnswerPayload(payload,question):payload),run.source_links,SITE_ORIGIN)
       const response = json(finalPayload)
       // An answer with no citation at all is not kept for a week, and a refusal or limitation not at all: the next ask may do better (as cacheableAnswer).
       if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && run.qualitative?.answer_status !== 'uncited' && cacheableRoutedAnswer(finalPayload, loopRoute)) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)

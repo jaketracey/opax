@@ -73,11 +73,28 @@ export function recordAnswerLines(input: WritingInput): WrittenSentence[] | null
       return m && f.source.entities?.includes(prefix + m[1]) ? [{f,name:m[1],count:Number(m[2].replaceAll(',','')),basis:m[3]}] : []
     }).filter((r,i,all)=>all.findIndex(other=>other.name===r.name&&other.basis===r.basis)===i)
       .sort((a,b)=>(input.constraints?.superlative==='lowest'?1:-1)*(a.count-b.count)||a.name.localeCompare(b.name))
-    if (rows.length) return rows.slice(0,8).map((r,i)=>line(`${r.name} ${i===0?'led the recorded '+(grain==='speaker'?'member':'party')+' ranking, with':'recorded'} ${r.count.toLocaleString('en-AU')} ${r.basis.replace(/\b\d{4}-\d{2}-\d{2}\b/g, day)}`,[r.f]))
+    if (rows.length) {
+      const selected = rows.slice(0,8)
+      const lines = selected.map((r,i) => {
+        const member = grain === 'speaker' ? r.f.source.member : undefined
+        const name = member ? `${member.name} (${member.parliaments.join('; ')})` : r.name
+        // Only omit a repeated period when it is the same as the lead row's period.
+        const period = / (?:from \d{4}-\d{2}-\d{2}(?: to \d{4}-\d{2}-\d{2})?|to \d{4}-\d{2}-\d{2})$/.exec(r.basis)?.[0]
+        const basis = i && period && selected[0].basis.endsWith(period) ? r.basis.slice(0,-period.length) : r.basis
+        return line(`${name} ${i===0?'led the recorded '+(grain==='speaker'?'member':'party')+' ranking, with':'recorded'} ${r.count.toLocaleString('en-AU')} ${basis.replace(/\b\d{4}-\d{2}-\d{2}\b/g, day)}`,[r.f])
+      })
+      const parliaments = new Set(selected.flatMap(r => r.f.source.member?.parliaments ?? []))
+      if (grain === 'speaker' && parliaments.size > 1) lines.splice(1,0,line('This ranking spans more than one parliament',selected.map(r=>r.f)))
+      return lines
+    }
   }
   if (input.constraints?.industryRanking || /\b(?:which|what) industries\b/i.test(input.question)) {
     const industries = facts.filter(f => /\b(?:led the classified industry ranking|recorded the next ranked industry total)\b/.test(f.text))
-    if (industries.length) return industries.map(f => line(f.text, [f]))
+    if (industries.length) return industries.map((f,i) => {
+      const row = /^(.+?) (?:led the classified industry ranking|recorded the next ranked industry total), with (\$[\d,.]+) in federal disclosed receipts(.*?) in financial years? (.+?) \((1 July \d{4} to 30 June \d{4})\), across ([\d,]+) receipts? in the published donor selection\.$/.exec(f.text)
+      if (!row) return line(f.text,[f])
+      return line(i ? `${row[1]} ${i===1?'was next, with':'recorded'} ${row[2]} across ${row[6]} receipt${row[6]==='1'?'':'s'}` : f.text,[f])
+    })
   }
   // A policy aggregate leads with its whole selection, then its bill/motion split and representative votes.
   const policy = facts.filter(f => /^(?:Across \d[\d,]* matching |No matching divisions on )/.test(f.text) && /\/divisions\/index\.json$/.test(f.source.url)

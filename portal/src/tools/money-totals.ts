@@ -19,6 +19,13 @@ const PARTY_ALIASES: Record<string, string[]> = {
   LNP: ['Liberal National Party', 'Liberal National Party of Queensland'], 'Country Liberal Party': ['CLP', 'Country Liberals'],
   'One Nation': ["Pauline Hanson's One Nation", 'PHON'], 'United Australia Party': ['UAP'],
 }
+const RECIPIENT_NAMES: Record<string, string> = {
+  Labor: 'the Australian Labor Party', Liberal: 'the Liberal Party', Nationals: 'the National Party of Australia',
+  Greens: 'the Australian Greens', LNP: 'the Liberal National Party of Queensland',
+  'Country Liberal Party': 'the Country Liberal Party', 'One Nation': "Pauline Hanson's One Nation",
+  'United Australia Party': 'the United Australia Party', 'Family First': 'the Family First Party',
+  "Katter's Australian Party": "Katter's Australian Party", 'Centre Alliance': 'Centre Alliance',
+}
 function resolve(nodes: MoneyNode[], name: string, kind: string): MoneyNode[] {
   const wanted = key(name)
   return nodes.filter(node => node.kind === kind && [node.id, node.id.replace(/^[^:]+:/, ''), node.label, node.source_name,
@@ -110,7 +117,7 @@ export const tool: ToolDefinition = {
         const params = new URLSearchParams({ jur: 'federal', type: 'receipts', industry: row.industry, from: String(from), to: String(to) })
         if (party) params.set('party', party.id)
         return { kind: 'export' as const, value: row.total_aud, url: siteUrl(env, '/money?' + params),
-          text: `${label} ${i === 0 ? 'led the classified industry ranking' : 'recorded the next ranked industry total'}, with ${aud(row.total_aud)} in federal disclosed receipts${party ? ' to ' + party.label : ''} in financial years ${period} (1 July ${from} to 30 June ${to + 1}), across ${row.receipts.toLocaleString('en-AU')} receipts in the published donor selection.` }
+          text: `${label} ${i === 0 ? 'led the classified industry ranking' : 'recorded the next ranked industry total'}, with ${aud(row.total_aud)} in federal disclosed receipts${party ? ' to ' + (RECIPIENT_NAMES[party.label] ?? party.label) : ''} in financial year${from === to ? '' : 's'} ${period} (1 July ${from} to 30 June ${to + 1}), across ${row.receipts.toLocaleString('en-AU')} receipt${row.receipts === 1 ? '' : 's'} in the published donor selection.` }
       })
       return { rows, citations, notes, coverage, period, group_by: group, matched: ranked.length, truncated: rows.length < ranked.length,
         excluded_non_industry_aud: excluded, query: { file: '/graph/money.json', from_year: from, to_year: to, party: party?.label } }

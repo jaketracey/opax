@@ -1,0 +1,99 @@
+{
+ "report_id": "vic-east-gippsland-region-water-corporation-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "pages 1-96 and 138-146 read as text; financial statements (pages 97-137) are image-only and were not read",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "executive_remuneration_total",
+  "employee_expenses"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total Revenue",
+   "column_as_published": "2025-26",
+   "value": 48411,
+   "value_as_published": "48,411",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 11,
+   "quote": "Total Revenue 35,750 39,383 46,821 45,687 48,411"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenditure",
+   "column_as_published": "2025-26",
+   "value": 55601,
+   "value_as_published": "55,601",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 11,
+   "quote": "Total Expenditure 37,931 43,019 46,455 48,539 55,601"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result before tax",
+   "column_as_published": "2025-26",
+   "value": -7190,
+   "value_as_published": "-7,190",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 11,
+   "quote": "Net result before tax -2,181 -3,636 366 -2,852 -7,190"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "full-time equivalent (FTE)",
+   "column_as_published": "2025-26",
+   "value": 126.4,
+   "value_as_published": "126.4",
+   "unit": "fte",
+   "period": "as at 30 June 2026",
+   "page": 68,
+   "quote": "the corporation employed 134 people, or 126.4 full-time equivalent (FTE)"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "employed 134 people",
+   "column_as_published": "2025-26",
+   "value": 134,
+   "value_as_published": "134",
+   "unit": "people",
+   "period": "as at 30 June 2026",
+   "page": 68,
+   "quote": "the corporation employed 134 people"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total executive numbers at 30 June 2026",
+   "column_as_published": "2026",
+   "value": 5,
+   "value_as_published": "5",
+   "unit": "count",
+   "period": "as at 30 June 2026",
+   "page": 70,
+   "quote": "Total executive numbers at 30 June 2026 5 5"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025-26 in relation to these consultancies",
+   "value": 8.04,
+   "value_as_published": "$8.04 million",
+   "unit": "millions_of_dollars",
+   "period": "2025-26 (11 consultancies of $10,000 or greater)",
+   "page": 81,
+   "quote": "in relation to these consultancies is $8.04 million (ex GST)"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Capital works expenditure totalled",
+   "value": 30.6,
+   "value_as_published": "$30.6 million",
+   "unit": "millions_of_dollars",
+   "period": "2025-26",
+   "page": 10,
+   "quote": "Capital works expenditure totalled $30.6 million for the year"
+  }
+ ]
+}
