@@ -1,5 +1,6 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { router } from 'expo-router';
 import {
   NavigationContext,
   NavigationRouteContext,
@@ -7,12 +8,15 @@ import {
 import { useSafeSetOptions } from '../src/navigation/preview';
 import { sharedScreens } from '../src/navigation/stack';
 import { sheetOptions } from '../src/navigation/stack/screen';
-import { sheetListRoutes } from '../src/navigation/sheet-lists';
-import { shortSheet } from '../src/navigation/chrome';
+import {
+  sheetListOptions,
+  sheetListRoutes,
+} from '../src/navigation/sheet-lists';
+import { headerItems, shortSheet } from '../src/navigation/chrome';
 
 jest.mock('expo-router', () => ({
   Stack: { Screen: () => null },
-  router: {},
+  router: { back: jest.fn(), canGoBack: () => true },
   useIsPreview: () => false,
 }));
 
@@ -62,9 +66,24 @@ test.each([...sheetListRoutes])(
         .unstable_headerRightItems()
         .map((item: { label: string }) => item.label),
     ).toEqual(['More', 'Done']);
+    // Empty lists explicitly clear data-dependent actions on loading/error.
+    act(() => set(headerItems(undefined)));
+    const cleared = navigation.setOptions.mock.calls.at(-1)![0];
+    const done = cleared.unstable_headerRightItems({ canGoBack: false });
+    expect(done.map((item: { label: string }) => item.label)).toEqual(['Done']);
+    done[0].onPress();
+    expect(router.back).toHaveBeenCalled();
     act(() => view.unmount());
   },
 );
+
+test('an unrelated options delta preserves actions and pushed lists can clear them', () => {
+  expect(
+    sheetListOptions({ title: 'Members' }, 'members', 0),
+  ).not.toHaveProperty('unstable_headerRightItems');
+  const clear = headerItems(undefined);
+  expect(sheetListOptions(clear, 'members', 1)).toBe(clear);
+});
 
 test('sheet titles are centred in both shared sheet recipes', () => {
   expect(shortSheet.headerTitleAlign).toBe('center');

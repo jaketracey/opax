@@ -37,12 +37,15 @@ export function sheetListOptions(
 ): NativeStackNavigationOptions {
   if (index !== 0 || !name || !sheetListRoutes.has(name)) return options;
   const items = options.unstable_headerRightItems;
+  // setOptions merges deltas. An explicit clear replaces loaded actions,
+  // while an unrelated delta must leave the existing actions alone.
+  const changesItems = Object.hasOwn(options, 'unstable_headerRightItems');
   return {
     ...options,
     headerTitleAlign: 'center',
-    ...(items
+    ...(changesItems
       ? headerItems(() => {
-          const rows = items({ canGoBack: false });
+          const rows = items?.({ canGoBack: false }) ?? [];
           return rows.some((item) => 'label' in item && item.label === 'Done')
             ? rows
             : [...rows, closeSheetItem()];
