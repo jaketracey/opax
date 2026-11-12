@@ -23,7 +23,11 @@ import {
   citationSheetLeft,
 } from '../src/features/ask/citation-state';
 import { copyCitation } from '../src/features/ask/cite';
-import type { Source, Turn } from '../src/features/ask/model';
+import {
+  decodeAnswer,
+  type Source,
+  type Turn,
+} from '../src/features/ask/model';
 import type { AskPerson } from '../src/features/ask/people';
 import { copyText } from '../src/features/records/actions';
 import { shareRecord } from '../src/navigation/share';
@@ -179,7 +183,7 @@ afterEach(() => {
   act(() => citationSheetLeft());
   jest.clearAllMocks();
 });
-function draw(turn: Turn = answer(), pane = false) {
+function draw(turn: Turn = answer(), pane = false, onRephrase = jest.fn()) {
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
     renderer = TestRenderer.create(
@@ -190,6 +194,7 @@ function draw(turn: Turn = answer(), pane = false) {
         chat="fixture-chat"
         profiles={profiles}
         paneShowsSources={pane}
+        onRephrase={onRephrase}
       />,
     );
   });
@@ -549,12 +554,19 @@ test('a figure is drawn only with its own date and source', () => {
   });
 });
 
-test('an empty answer says so above its records and offers Search', () => {
-  const { words, ids, press } = draw(answer({ answer: '' }));
+test('an empty answer describes the search, offers rephrasing and Search, and retains related records', () => {
+  const onRephrase = jest.fn();
+  const { words, ids, press } = draw(answer({ answer: '' }), false, onRephrase);
   expect(words()).toContain(
     'No written answer came back. The records found are listed below.',
   );
   expect(ids('ask-error-empty').length).toBeGreaterThan(0);
+  expect(words()).toContain(`Searched OPAX records for “${question.text}”.`);
+  expect(words()).toContain('Try naming a person, bill or topic and a year.');
+  expect(words()).toContain('Records found');
+  expect(words()).not.toContain('Records cited');
+  act(() => press('ask-rephrase'));
+  expect(onRephrase).toHaveBeenCalledWith(question.text);
   act(() => press('ask-search-opax'));
   expect(router.push).toHaveBeenCalledWith(
     expect.objectContaining({
@@ -564,6 +576,51 @@ test('an empty answer says so above its records and offers Search', () => {
   const none = draw(answer({ answer: '', sources: [] }));
   expect(none.words()).toContain('No written answer came back.');
   expect(none.words()).not.toContain('listed below');
+});
+
+test('a written evidence gap keeps its answer and ready announcement', () => {
+  const limitation = 'No verified position in the selected speeches.';
+  const turn = answer({
+    answer: limitation,
+    answer_status: 'evidence_gap',
+    sources: [],
+  });
+  const { words, ids } = draw(turn);
+  expect(words()).toContain(limitation);
+  expect(ids('ask-answer-1').length).toBeGreaterThan(0);
+  expect(ids('ask-machine-label').length).toBeGreaterThan(0);
+  expect(ids('ask-no-answer')).toHaveLength(0);
+  expect(ids('ask-error-empty')).toHaveLength(0);
+  expect(words()).not.toContain('No written answer came back');
+  expect(answerReadyAnnouncement(turn)).toBe('Answer ready, no records cited');
+});
+
+test('a cited evidence gap retains its limitation text, citation marks and cited record links', () => {
+  const limitation =
+    'The selected records do not establish that no receipts occurred.';
+  const payload = {
+    answer: limitation,
+    answer_status: 'evidence_gap',
+    money_ranking: true,
+    model_written: false,
+    citations: { 'r1/f/text/0': [[0, limitation.length]] },
+    sources: [source(1, true)],
+  };
+  const turn = answer(decodeAnswer(payload));
+  const { words, ids, renderer, press } = draw(turn);
+  expect(words()).toContain(limitation);
+  expect(words()).toContain('Records cited (1)');
+  expect(words()).not.toContain('Records found');
+  expect(ids('ask-no-answer')).toHaveLength(0);
+  expect(ids('ask-citation-1').length).toBeGreaterThan(0);
+  expect(
+    renderer.root.findAllByType(CitationMark).map((mark) => mark.props.label),
+  ).toEqual(['1']);
+  act(() => press('ask-citation-mark-1'));
+  expect(citationSelection()).toMatchObject({ turn: 'fixture-chat:1', n: 1 });
+  expect(turn.result?.answer).toBe(payload.answer);
+  expect(turn.result?.citations).toEqual(payload.citations);
+  expect(answerReadyAnnouncement(turn)).toBe('Answer ready, 1 record cited');
 });
 
 test('on iPad with the pane the column hides Records cited', () => {

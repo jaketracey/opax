@@ -102,8 +102,8 @@ false and `$geoip_disable` true.
 | `Application Installed`, `Application Opened`, `Application Became Active`, `Application Backgrounded` | none beyond the common set |
 | `Application Updated` | `previous_version`, `previous_build` |
 | `opax_ask_started` | `from_section`, `follow_up` |
-| `opax_ask_completed` | `from_section`, `follow_up`, `duration_ms`, `source_count`, `has_answer` |
-| `opax_ask_failed` | `from_section`, `follow_up`, `duration_ms`, `cancelled` |
+| `opax_ask_completed` | `from_section`, `follow_up`, `duration_ms`, `source_count`, `has_answer`, optional `reason` |
+| `opax_ask_failed` | `from_section`, `follow_up`, `duration_ms`, `cancelled`, optional `reason` |
 | `opax_search_started` | `scope`, `page`, `filter_count` |
 | `opax_search_completed` | `scope`, `page`, `result_count`, `total_count`, `duration_ms` |
 | `opax_search_failed` | `scope`, `page`, `duration_ms` |
@@ -115,7 +115,12 @@ false and `$geoip_disable` true.
 `from_section` is the first segment of the current route (`today` for the
 home screen); anything else becomes `other`. `scope` is one of the fixed search
 scopes. Counts are integers from 0 to 1,000,000 and durations are milliseconds
-up to an hour; any other value is dropped. The app never calls identify.
+up to an hour; any other value is dropped. Ask outcome `reason` accepts only
+`stall`, `deadline`, `network`, `server` or
+`no_answer`. Completions with blank answer text use `has_answer: false`
+and `reason: no_answer`. Written `evidence_gap` answers retain `has_answer: true`
+and omit that reason. Cancellations omit the reason. Automatic transport recovery shares one lifecycle event pair.
+The app never calls identify.
 Person profiles, session replay, touch and text autocapture, exception capture, surveys and feature flags
 are off, and GeoIP is disabled. The install ID is a random UUID made by the SDK and kept in the
 app's documents folder; it is not the IDFV or IDFA and is not linked to an

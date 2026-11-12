@@ -20,6 +20,21 @@ const context: AnalyticsContext = {
 const question = 'Did Senator Example vote against the 2031 housing bill?';
 
 describe('cleanEvent', () => {
+  test.each(['stall', 'deadline', 'network', 'server', 'no_answer'])(
+    'Ask reasons accept only the fixed vocabulary: %s',
+    (reason) => {
+      for (const event of ['opax_ask_completed', 'opax_ask_failed']) {
+        expect(cleanEvent(event, { reason, question })).toEqual({ reason });
+        const scrubbed = scrubEvent(
+          { event, properties: { reason, question, error: question } },
+          context,
+        );
+        expect(scrubbed?.properties?.reason).toBe(reason);
+        expect(JSON.stringify(scrubbed)).not.toContain(question);
+        expect(cleanEvent(event, { reason: question })).toEqual({});
+      }
+    },
+  );
   test('keeps only listed events', () => {
     expect(cleanEvent('opax_question', { question })).toBeNull();
     expect(cleanEvent('$autocapture')).toBeNull();
