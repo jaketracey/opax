@@ -268,3 +268,16 @@ def test_registry_rights_sites_and_notes_are_reader_facing():
         assert not any("transcripts are listed as documents" in n for n in rc.get("notes") or []), rc["id"]
     sa = next(rc for rc in reg["commissions"] if rc["id"] == "sa-domestic-family-sexual-violence")
     assert sa["site"] == "https://www.royalcommissiondfsv.sa.gov.au/"
+
+
+def test_sa_dfsv_final_report_is_fetched_with_its_136_recommendations():
+    import json as _json
+    from pathlib import Path as _Path
+    reg = _json.loads((_Path(__file__).resolve().parents[1] / "parli" / "ingest" / "royal_commissions.json").read_text())
+    sa = next(rc for rc in reg["commissions"] if rc["id"] == "sa-domestic-family-sexual-violence")
+    final = next(d for d in sa["documents"] if d["key"] == "final")
+    assert final["source"] == "url" and final["url"].startswith("https://www.royalcommissiondfsv.sa.gov.au/")
+    rule = final["recommendations"]
+    assert rule["count"] == rule["stated_total"] == 136 and (rule["first_page"], rule["last_page"]) == (31, 62)
+    assert "Creative Commons Attribution 4.0" in final["rights"]
+    assert [f["field"] for f in sa["facts"]] == ["commissioner"]

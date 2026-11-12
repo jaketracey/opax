@@ -482,7 +482,7 @@ def build_commission(rc, run: Path, texts: Texts, trackers):
             if not date:
                 basis = None
             source = cite(page_url, title)
-            extra = {"acquisition": OPAXBOT}
+            extra = {"acquisition": OPAXBOT, **({"rights": doc["rights"]} if doc.get("rights") else {})}
         if not title:
             raise Held(f"{rc['id']}/{doc['key']}: no title")
         files = []
