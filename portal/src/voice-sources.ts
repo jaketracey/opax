@@ -54,7 +54,7 @@ const TYPES: Record<string, string> = {
   legal: 'Legislation', legislation: 'Legislation', bill: 'Bill', bill_text: 'Bill text', news: 'News', grant: 'Grant', grant_program: 'Grant program',
   contract: 'Contract', receipt: 'Disclosed receipt', donation: 'Disclosed receipt', interest: 'Register of interests', interests: 'Register of interests',
   annual_report: 'Annual report', agency_report: 'Agency report', report: 'Report', person: 'Parliamentarian', member: 'Parliamentarian',
-  party: 'Party', electorate: 'Electorate', remuneration: 'Pay determination', pay: 'Pay determination', determination: 'Pay determination',
+  party: 'Party', electorate: 'Electorate', remuneration: 'Pay determination', pay: 'Pay record', determination: 'Pay determination',
   coverage: 'Coverage note', committee: 'Committee', estimates: 'Estimates', page: 'OPAX page', topic: 'Topic', supplier: 'Supplier', agency: 'Agency',
 }
 const PATH_TYPES: [RegExp, string][] = [
@@ -105,13 +105,18 @@ export function voiceSource(row: Row, origin: string): VoiceSource | null {
   const url = opaxLink(row, origin)
   if (!url) return null
   const path = new URL(url).pathname
-  const rawTitle = String(row.title ?? row.name ?? row.label ?? '').replace(/\s+/g, ' ').trim()
+  // Some Hansard titles carry their XML markup (<Xref Class="Bill">...</Xref>), sometimes cut off mid-tag.
+  const rawTitle = String(row.title ?? row.name ?? row.label ?? '').replace(/<[^<>]{0,500}>/g, ' ').replace(/<[^<>]*$/, '').replace(/\s+/g, ' ').trim()
   const rem = row.remuneration && typeof row.remuneration === 'object' ? row.remuneration as Row : null
   const body = typeof row.body === 'string' ? row.body : typeof row.agency === 'string' ? row.agency : rem && typeof rem.body === 'string' ? rem.body : null
   // "Bill Heffernan — COMMITTEES — 2001-06-21": the speaker, the record title, the date.
   const parts = rawTitle.split(/\s+[—–]\s+|\s+-\s+(?=\d{4}-\d{2}-\d{2}$)/).map(part => part.trim()).filter(Boolean)
   const titleDate = parts.length > 1 && ISO_DATE.test(parts.at(-1)!) && parts.at(-1)!.replace(ISO_DATE, '').trim() === '' ? parts.pop()! : null
-  const date = isoDate(row.date) ?? isoDate(row.sort_date) ?? isoDate(titleDate) ?? isoDate(rem?.date) ?? isoDate(rem?.effective) ?? isoDate(ISO_DATE.exec(String(row.slug ?? ''))?.[1])
+  // A record identifier ahead of its name ("3000175296 — Example Pty Ltd") is not part of the title.
+  if (parts.length > 1 && /^[A-Za-z]*\d[\w/-]{5,}$/.test(parts[0])) parts.shift()
+  // Ask's pay rows carry a label ("As at 2026-10-19", "1999–2026") rather than a date.
+  const label = typeof row.dateLabel === 'string' && row.dateLabel.length <= 24 ? isoDate(ISO_DATE.exec(row.dateLabel)?.[1]) ?? row.dateLabel : null
+  const date = isoDate(row.date) ?? isoDate(row.sort_date) ?? isoDate(titleDate) ?? isoDate(rem?.date) ?? isoDate(rem?.effective) ?? isoDate(ISO_DATE.exec(String(row.slug ?? ''))?.[1]) ?? label
   let speaker = typeof row.speaker === 'string' && row.speaker.trim() ? personName(row.speaker) : null
   const looksLikeName = (value: string) => /^[\p{Lu}][\p{L}'’.-]+(?: [\p{Lu}][\p{L}'’.-]+){1,3}$/u.test(value)
   if (parts.length === 1 && titleDate && !speaker && /^\/doc\/speech-/.test(path) && looksLikeName(personName(parts[0]))) speaker = personName(parts.shift()!)

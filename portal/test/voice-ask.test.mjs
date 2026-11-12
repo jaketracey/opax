@@ -75,7 +75,8 @@ test('ask_opax calls Ask once per question and returns a spoken answer with labe
   assert.doesNotMatch(result.spoken_answer,/\[\d+\]|\*\*|https?:|\d{4}-\d{2}-\d{2}/);
   assert.doesNotMatch(result.answer,/\[\d+\]/);
   // Every source has a title, date, type and OPAX link; cited rows first; external-only rows drop out.
-  assert.ok(result.sources.length>=2);
+  assert.ok(result.sources.length>=3);
+  assert.ok(result.sources.some(s=>s.type==='Pay record'&&s.date==='1999–2026'));
   for(const s of result.sources){
     assert.deepEqual(Object.keys(s).sort(),['date','record_title','speaker','title','type','url']);
     assert.ok(s.url.startsWith('https://opax.test/'),s.url);
@@ -133,6 +134,11 @@ test('source labels never show raw slugs, roster names or capitals-only titles',
   assert.equal(voiceSource({url:'https://www.example.gov.au/report.pdf',title:'External'},'https://opax.test'),null);
   assert.equal(voiceSource({url:'https://opax.com.au/doc/speech-9?x=1',title:'Budget',date:'2024-05-14T00:00:00Z'},'https://opax.test').url,'https://opax.test/doc/speech-9?x=1');
   assert.equal(plainCase('Mixed Case Stays'),'Mixed Case Stays');
+  // Shapes seen in the 13 Nov local runs: Hansard XML in a title, a contract number ahead of the supplier, Ask's pay rows.
+  assert.equal(voiceSource({slug:'speech-3',title:'Robin Example — <Xref Class="Bill" Xrefid="R1">Example Bill 1997</Xref> <Break Type="Line"><Xref Class="Bill">Example Amendment Bill 1997</Xref',kind:'speech'},'https://opax.test').record_title,'Example Bill 1997 Example Amendment Bill 1997');
+  assert.equal(voiceSource({href:'/subject/supplier/s-1?contract=CN1',title:'3000175296 — Example Supplies Pty Ltd',kind:'contract',date:'2025-06-30'},'https://opax.test').title,'Example Supplies Pty Ltd');
+  assert.deepEqual(voiceSource({kind:'pay',title:'Example office pay — every step since 1999',href:'/ask?q=x',url:'https://www.example.gov.au/d.pdf',dateLabel:'1999–2026'},'https://opax.test'),{title:'Example office pay: every step since 1999',record_title:'Example office pay: every step since 1999',speaker:null,date:'1999–2026',type:'Pay record',url:'https://opax.test/ask?q=x'});
+  assert.equal(voiceSource({kind:'pay',title:'Example ranking',href:'/ask?q=y',dateLabel:'As at 2026-10-19'},'https://opax.test').date,'2026-10-19');
   assert.equal(spokenAnswer('Pay is $2,500,000,000 [1]. Dr. Example said so on 2024-03-01. Third. Fourth. Fifth.'),'Pay is $2.5 billion. Dr. Example said so on 1 March 2024. Third. Fourth.');
 });
 

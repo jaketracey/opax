@@ -15,9 +15,19 @@ ElevenLabs exposes key ceilings in credits rather than USD. The configured ceili
 
 Use ElevenAgents Write permission: despite being a GET, signed-URL issuance rejects a read-only key with `missing_permissions: convai_write`. Keys are Worker secrets, never browser assets. All other API endpoint permissions are disabled.
 
-The voice is the premade Australian Charlie (`IKne3meq5aSn9XLyUdCD`), using `eleven_flash_v2` and `gemini-3.5-flash-lite` with minimal reasoning. Audio streams directly through a small same-origin WebSocket relay, without another LLM hop. Seven relevant tools are available: search records, read a record, find connections, corpus coverage, grants, topics and parties. The prompt requires source checks, neutral language and a distinction between grant awards and payments. Production record tools have Pre-tool speech set to Off, and the agent prompt requests quiet tool execution so successive searches and reads do not repeat a spoken preamble.
+The voice is the premade Australian Charlie (`IKne3meq5aSn9XLyUdCD`), using `eleven_flash_v2` and `gemini-3.5-flash-lite` with minimal reasoning. Audio streams directly through a small same-origin WebSocket relay, without another LLM hop. Eight tools are available: ask OPAX (the same research as Ask), search records, read a record, find connections, corpus coverage, grants, topics and parties. The prompt requires source checks, neutral language and a distinction between grant awards and payments. Production record tools have Pre-tool speech set to Off, and the agent prompt requests quiet tool execution so successive searches and reads do not repeat a spoken preamble.
 
 Agent authentication is private, restricted to the matching Opax origin. Maximum conversation length is 600 seconds with the duration override explicitly allowed. Bursting is disabled and concurrency is two. Audio recording is off and provider transcript retention is one day, with deletion enabled. Visitor conversation text is not sent to Opax analytics.
+
+## Ask in voice
+
+`ask_opax` gives the voice agent the same research as Ask. Its endpoint, `/api/voice/tools/ask_opax`, takes `question` (3 to 500 characters) and an optional `person` or `topic`, and calls the reader's `/api/ask` entry point in-process with a JSON reply. Identity, money, the research loop, its fallback and the answer cache are all Ask's own; Ask's per-key quota is counted per voice session. It returns `spoken_answer` (two to four sentences, answer first, large dollar amounts and dates in words), `answer` (the written answer without citation markers) and `sources`. The Worker waits up to 85 seconds. The provider's webhook `response_timeout_secs` may be 5 to 300 seconds (default 20), and `ask_opax` sets 90 with `pre_tool_speech: force` so the agent says a holding line while research runs. The quick tools stay for fast lookups.
+
+Every voice source, from Ask or from the quick tools, has `title`, `record_title`, `speaker` (the speaker or the body), `date`, `type` and `url` (an OPAX link). Rows without an OPAX link, and Ask's coverage row, are left out.
+
+### Agent configuration as code
+
+`portal/voice/agent-config.json` holds the agent prompt and its eight webhook tools. Sync it with `npm run voice:agent -- --agent <agent id>` from `portal/` with `ELEVENLABS_API_KEY` set: by default this prints the plan (tools to create or update with each changed field, attached tools it keeps, and the prompt diff) and changes nothing. Add `--apply` to create or update this agent's tools, set its prompt and `tool_ids`, and read the agent back to check. Only tools already attached to the agent are updated, because staging and production tools share names. The tool secret is the provider secret the agent's existing tools already send as `x-opax-voice-token`; pass `--secret-id` to choose one. Apply to the staging agent first.
 
 ## Server enforcement
 
