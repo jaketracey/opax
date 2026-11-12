@@ -38,7 +38,7 @@ export const tool: ToolDefinition = {
     person: { type: 'string', minLength: 2, maxLength: 120, description: 'A federal parliamentarian\'s name.' },
     people: { type: 'array', minItems: 2, maxItems: 6, items: { type: 'string' }, description: 'Named people in a comparison; include every requested person.' },
     office: { type: 'string', minLength: 2, maxLength: 160, description: 'An office or post, e.g. "Prime Minister", "Cabinet Minister", "Secretary of the Department of Defence".' },
-    as_of: { type: 'string', pattern: '^\\d{4}(-\\d{2}-\\d{2})?$', description: 'Calendar year or ISO date. Always pass the requested year; never substitute current figures.' },
+    as_of: { type: 'string', pattern: '^\\d{4}(-\\d{2}-\\d{2})?$', description: 'Calendar year or ISO date. Pass the requested year to select its dated figures.' },
     since: { type: 'string', format: 'date' }, until: { type: 'string', format: 'date' },
     jurisdiction: { type: 'string', enum: ['federal', 'nsw', 'vic', 'qld', 'sa', 'wa', 'tas', 'act', 'nt'] },
     party: { type: 'string' }, chamber: { type: 'string' }, order: { type: 'string', enum: ['asc', 'desc'] },

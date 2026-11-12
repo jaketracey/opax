@@ -46,7 +46,7 @@ function reportingPeriods(meta: Expenses['meta']): Set<string> {
 
 export const tool: ToolDefinition = {
   name: 'member_expenses',
-  description: 'Federal member or senator parliamentary expenses reported by IPEA for a calendar year or Australian financial year. Always pass the requested year, e.g. 2025 or "2024-25", or exact January to December / July to June since and until dates. Returns that year’s reported expenditure, including adjustments, with complete or partial reporting-quarter coverage. Never substitutes a career total or salary. Includes former members where held.',
+  description: 'Federal member or senator parliamentary expenses reported by IPEA for a calendar year or Australian financial year. Always pass the requested year, e.g. 2025 or "2024-25", or exact January to December / July to June since and until dates. Returns that year’s reported expenditure, including adjustments, with complete or partial reporting-quarter coverage. Uses the requested reporting year and expense measure. Includes former members where held.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     person: { type: 'string', minLength: 2, maxLength: 120, description: 'Federal parliamentarian’s name; resolve spelling with find_people when needed.' },
     year: { anyOf: [{ type: 'integer', minimum: 1900, maximum: 2100 }, { type: 'string', pattern: '^\\d{4}(?:[-–−](?:\\d{2}|\\d{4}))?$' }], description: 'Calendar year (2025) or Australian financial year ("2024-25" or "2024-2025").' },

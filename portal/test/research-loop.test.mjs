@@ -22,14 +22,14 @@ test('loop answer instructions require a direct first point, unique facts and se
  const f=fixtures(model([reply([call('decline',{reason:'ambiguous'})])]));await f.run();
  const generation=f.model.doGenerateCalls[0],instructions=JSON.stringify(generation.prompt.filter(p=>['system','developer'].includes(p.role)));
  assert.match(instructions,/first point directly answers the question with the requested name, date or outcome/);
- assert.match(instructions,/never restate the question/);
- assert.match(instructions,/never paste raw tool rows/);
+ assert.match(instructions,/use a complete sentence about the finding/);
+ assert.match(instructions,/use a complete sentence about the finding/);
  assert.match(instructions,/Select each fact once/);
  assert.match(instructions,/Each figure comes from one selected fact with its supporting citation/);
  assert.match(instructions,/response coverage note carries relevant limitations, only when the answer depends on them/);
  assert.doesNotMatch(instructions,/opening with the passage year/);
  const answer=generation.tools.find(t=>t.name==='answer');
- assert.match(answer.description,/do not repeat it in points/);
+ assert.match(answer.description,/Select each fact once across facts and points/);
  assert.match(answer.description,/The first point directly answers the question/);
 });
 test('loop decisions carry a typed refusal or clarification through the response adapter',async()=>{

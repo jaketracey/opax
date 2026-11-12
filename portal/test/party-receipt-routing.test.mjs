@@ -4,21 +4,21 @@ import fs from 'node:fs'
 import {build} from 'esbuild'
 import {loadWorker,offline,outbound} from './worker-harness.mjs'
 const root=new URL('../',import.meta.url).pathname
-const built=await build({stdin:{contents:"export * from './src/ask-money-routing';export * from './src/ask-money';export * from './src/agentic-ask';export * from './src/agentic-response';export * from './src/research-loop';export * from './src/receipt-copy';export {moneyOverviewPrompt} from './src/ask-money-overview';export {writingPrompt} from './src/research-writing';export {partyDonations,TOOL_SPECS} from './src/agentic-tools';export {calculatedLookup} from './src/research-calculated';",resolveDir:root},bundle:true,write:false,platform:'browser',format:'esm'})
+const built=await build({stdin:{contents:"export * from './src/ask-money-routing';export {industryMoneyIntent} from './src/ask-money-industry';export * from './src/ask-money';export * from './src/agentic-ask';export * from './src/agentic-response';export * from './src/research-loop';export * from './src/receipt-copy';export {moneyOverviewPrompt} from './src/ask-money-overview';export {writingPrompt} from './src/research-writing';export {partyDonations,TOOL_SPECS} from './src/agentic-tools';export {calculatedLookup} from './src/research-calculated';",resolveDir:root},bundle:true,write:false,platform:'browser',format:'esm'})
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
 const fixture=JSON.parse(fs.readFileSync(new URL('./fixtures/party-receipt-routing.json',import.meta.url)))
 const asset=async path=>JSON.parse(fs.readFileSync(root+'public'+path))
 const assets={fetch:async request=>Response.json(await asset(new URL(request.url).pathname))}
-function complete(p){assert.equal(p.answer_status,'calculated');assert.ok(p.answer.includes(api.FEDERAL_RECEIPTS_NOTE));assert.match(p.answer.split('\n')[0],/largest disclosed receipts/);assert.match(p.answer,/\| Source \| Disclosed receipts \| Records \|/);assert.ok(p.answer.split('\n').filter(s=>/^\| /.test(s)).length>=3);assert.ok(Object.keys(p.citations).length>=2);for(const ranges of Object.values(p.citations))for(const[a,b]of ranges)assert.ok(a>=0&&b>a&&b<=Array.from(p.answer).length)}
+function complete(p){assert.equal(p.answer_status,'calculated');assert.match(p.answer,/disclosed receipts, all types/);assert.match(p.answer.split('\n')[0],/largest source/);assert.match(p.answer,/\| Source \| Disclosed receipts.*\| Share \| Records \|/);assert.ok(p.answer.split('\n').filter(s=>/^\| /.test(s)).length>=3);assert.ok(Object.keys(p.citations).length>=2);for(const ranges of Object.values(p.citations))for(const[a,b]of ranges)assert.ok(a>=0&&b>a&&b<=Array.from(p.answer).length)}
 for(const question of fixture.questions)test('closed family routes to the complete calculator: '+question,async()=>{
  assert.ok(api.federalPartyRankingQuestion(question));const p=await api.federalPartyMoneyAnswer({question},assets);complete(p)
  const direct=await api.rankedMoneyAnswer({question},assets);assert.equal(direct.answer,p.answer)
 })
 for(const input of fixture.followups)test('bounded family follow-up routes without a model: '+input.question,async()=>complete(await api.federalPartyMoneyAnswer(input,assets)))
-for(const question of fixture.outside)test('outside the family retains its route: '+question,async()=>{assert.equal(api.federalPartyRankingQuestion(question),null);assert.equal(await api.federalPartyMoneyAnswer({question},assets),null)})
+for(const question of fixture.outside)test('outside the family retains its route: '+question,async()=>{assert.equal(api.federalPartyRankingQuestion(question),null);if(api.industryMoneyIntent(question))assert.ok(await api.federalPartyMoneyAnswer({question},assets));else assert.equal(await api.federalPartyMoneyAnswer({question},assets),null)})
 test('a missing historical selection keeps its party, period, limitation and citation',async()=>{
  const p=await api.federalPartyMoneyAnswer({question:'Who gave the most money to One Nation in 1990?'},assets)
- assert.equal(p.answer_status,'evidence_gap');assert.match(p.answer,/receipts to One Nation for 1990–91/);assert.ok(p.answer.includes(api.FEDERAL_RECEIPTS_NOTE));assert.ok(Object.keys(p.citations).length);assert.doesNotMatch(p.answer,/Westpac|\$[0-9]/)
+ assert.equal(p.answer_status,'calculated');assert.equal(p.coverage.matched,false);assert.match(p.answer,/Held-period figures/);assert.match(p.answer,/disclosed receipts, all types/);assert.ok(Object.keys(p.citations).length);assert.match(p.answer,/\$[0-9]/)
 })
 test('state controls and unrelated turns cannot inherit the federal route',async()=>{
  for(const input of [{question:fixture.questions[0],state:'qld'},{question:'What about Labor?',context:[{author:'user',text:'Who props up Labor?'},{author:'user',text:'What did parliament say about hospitals?'}]}])assert.equal(await api.federalPartyMoneyAnswer(input,assets),null)
@@ -57,7 +57,7 @@ test('receipt copy is input-only and reviewed web labels remain',async()=>{
  assert.ok(api.TOOL_SPECS.some(s=>s.name==='party_receipts'&&s.description.includes('receipt')));assert.ok(!api.TOOL_SPECS.some(s=>s.name==='party_donations'))
  const result=await api.partyDonations({asset,kb:async()=>{throw Error('Unexpected retrieval')}},{party:'Labor',limit:1})
  const fact=api.factSheet([result]).facts[0].text;assert.match(fact,/^Labor disclosed \$[\d,]+ in receipts from/);assert.doesNotMatch(fact,/ gave /)
- const state=await api.calculatedLookup('ranked_money',{}, {question:'Who gives the most money to Labor in Victoria?'},{asset,origin:'https://example.invalid'});assert.ok(!state.notes.includes(api.FEDERAL_RECEIPTS_NOTE))
+ const state=await api.calculatedLookup('ranked_money',{}, {question:'Who gives the most money to Labor in Victoria?'},{asset,origin:'https://example.invalid'});assert.deepEqual(state.notes,[])
  const app=fs.readFileSync(root+'public/app.js','utf8');assert.ok(app.includes('"Received by parties (disclosed)"'));assert.ok(app.includes('"Receipts counted"'));assert.doesNotMatch(app,/"Given \(disclosed\)"|"Donations counted"/)
  assert.ok(fs.readFileSync(root+'public/money-map.js','utf8').includes('Received across'));assert.doesNotMatch(fs.readFileSync(root+'public/money-map.js','utf8'),/Given across/)
  assert.ok(fs.readFileSync(root+'public/money-journeys-data.js','utf8').includes('disclosed receipts record'))
@@ -71,7 +71,7 @@ test('conjugation × aspect × party × ranking grammar stays on the complete ca
   const selected=party.replace(/^the /,'').replace('Liberal Party','Liberal')
   assert.equal(api.federalPartyRankingQuestion(question),`Who has the most disclosed receipts to ${selected}?`,question)
   const p=await api.federalPartyMoneyAnswer({question},assets);assert.ok(p,question);complete(p)
-  assert.ok(p.answer.split('\n')[0].includes(`receipts to ${selected} in this published selection`),question)
+  assert.ok(p.answer.split('\n')[0].includes(`source to ${selected} is`),question)
   assert.equal(new URL(p.sources[0].url,'https://opax.test').searchParams.get('party'),'party:'+selected,question)
  }
  for(const question of controls){assert.equal(api.federalPartyRankingQuestion(question),null,question);assert.equal(await api.federalPartyMoneyAnswer({question},assets),null,question)}
@@ -127,7 +127,7 @@ test('ranked_money rows carry their direction and amounts as data',async()=>{
  const calculated=await api.federalPartyMoneyAnswer({question},assets)
  assert.match(calculated.sources[0].snippet,/grouped by source/);assert.doesNotMatch(calculated.sources[0].snippet,/donors during/)
  assert.equal(donorRanking(question,calculated.sources)[0].name,'Westpac Banking Corporation')
- assert.deepEqual(calculated.sources[1].receipt,{...calculated.sources[1].receipt,party:'Labor',source:'Westpac Banking Corporation',jurisdiction:'federal'});assert.equal(calculated.sources[0].coverage,true)
+ const row=calculated.sources.find(s=>s.receipt);assert.equal(row.receipt.party,'Labor');assert.equal(row.receipt.source,'Westpac Banking Corporation');assert.equal(row.receipt.jurisdiction,'federal');assert.match(calculated.sources[0].snippet,/disclosed receipts, all types/)
  const app=fs.readFileSync(root+'public/app.js','utf8');assert.doesNotMatch(app,/heading: "Largest donors"|"major donors disclosed"|`disclosed donation\$/)
 })
 

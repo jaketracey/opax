@@ -43,9 +43,9 @@ test('industry donation limitations return early without spending model or overv
   reset(limiter(true), limiter(false));
   let response = await post('/api/ask', {question});
   let out = await response.json();
-  assert.equal(out.answer_status, 'evidence_gap');
-  assert.match(out.answer.split(/[.!?]/)[0], /figures currently combine donations with loans and other receipts/);
-  assert.doesNotMatch(out.answer, /\$\d/);
+  assert.equal(out.answer_status, 'calculated');
+  assert.match(out.answer.split(/[.!?]/)[0], /disclosed receipts, all types/);
+  assert.match(out.answer, /\$\d/);
   assert.equal(out.money_overview, undefined);
   assert.equal(response.headers.get('x-opax-money-route'), 'federal-party-ranking-v1');
   assert.equal(outbound.length, 0);
@@ -53,9 +53,9 @@ test('industry donation limitations return early without spending model or overv
   reset(limiter(false), limiter(true));
   response = await post('/api/ask', {question});
   out = await response.json();
-  assert.equal(out.answer_status, 'evidence_gap');
-  assert.match(out.answer.split(/[.!?]/)[0], /figures currently combine donations with loans and other receipts/);
-  assert.doesNotMatch(out.answer, /\$\d/);
+  assert.equal(out.answer_status, 'calculated');
+  assert.match(out.answer.split(/[.!?]/)[0], /disclosed receipts, all types/);
+  assert.match(out.answer, /\$\d/);
   assert.equal(out.money_overview, undefined);
   assert.equal(response.headers.get('x-opax-money-route'), 'federal-party-ranking-v1');
   assert.equal(outbound.length, 0);

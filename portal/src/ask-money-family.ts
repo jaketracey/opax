@@ -19,6 +19,7 @@ const fixedTypos:Record<string,string>={teh:'the',hte:'the',waht:'what',moeny:'m
 const normal=(q:string)=>q.normalize('NFKC').toLowerCase().replace(/[’‘]/g,"'").replace(/\s+/g,' ').trim().replace(/[?!.]+$/,'').replace(/^please /,'').replace(/ please$/,'').replace(/^and /,'').replace(/\b(?:teh|hte|waht|moeny|donatoins|dontes)\b/g,word=>fixedTypos[word]).replace(/\b([a-z]+s)'(?=\s|$)/g,"$1's").replace(/^who've /,'who have ')
 const escape=(s:string)=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
 function exactRankingQuestion(q:string):string|null {
+ q=q.replace(/\btop 10\b/g,'top')
  // An explicit state jurisdiction never enters this federal route.
  if(/\b(?:queensland|qld|victoria|victorian|vic|tasmania|tasmanian|tas|new south wales|nsw|south australia|western australia|northern territory|act disclosures|state records|state disclosures)\b/.test(q))return null
  let target:string|undefined

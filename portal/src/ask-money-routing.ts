@@ -26,7 +26,7 @@ export async function federalPartyMoneyAnswer(input:RecordQuestion,assets:Fetche
  }
  if(!direct&&(!fundingContinuation(input.question??'')||!prior.some(q=>federalPartyRankingQuestion(q))))return null
  const context=Array.isArray(input.context)?input.context.map(turn=>turn&&typeof turn.text==='string'&&(turn.author==='user'||turn.author==='question')?{...turn,text:federalPartyRankingQuestion(turn.text)??turn.text}:turn):undefined
- let scoped:RecordQuestion={...input,kind:'all',context,question:direct??input.question}
+ let scoped:RecordQuestion={...input,kind:'all',context,question:direct&&/\btop\s+10\b/i.test(input.question??'')?input.question:direct??input.question}
  if(!direct){
   // Resolve the continuation's intent before interpreting its record filters.
   // A new speech question can carry a topic after a money question.

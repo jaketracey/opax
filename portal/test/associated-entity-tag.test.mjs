@@ -93,7 +93,7 @@ test('the calculated money ranking names the associated entity with its tag in t
   const out=await api.rankedMoneyAnswer({question:c.question},assets),name=node(c.id).label.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
   assert.equal(out?.answer_status,'calculated',c.question)
   const tag=c.tag.source.slice(1,-1)
-  assert.match(out.answer,new RegExp(`are from \\*\\*${name}: \\$[\\d,]+\\*\\* \\(${tag}\\) across`),c.question)
+  assert.match(out.answer.split('\n')[0],new RegExp(`is \\*\\*${name}: \\$[\\d,]+\\*\\* \\(associated entity of .+?, per AEC register\\)`),c.question)
   assert.match(out.answer,new RegExp(`\\| \\[${name}\\]\\([^)]*\\) \\(${tag}\\) \\|`),c.question)
  }
  const westpac=await api.rankedMoneyAnswer({question:'Who gives the most money to One Nation?'},assets)

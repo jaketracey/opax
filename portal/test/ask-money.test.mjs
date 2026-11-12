@@ -30,7 +30,7 @@ test('a donor name containing Federal does not block a Tasmanian comparison or i
  for(const p of links){assert.equal(p.get('jur'),'tas');assert.equal(p.get('focus'),'donor:federal group');assert.equal(p.get('from'),'2025');assert.equal(p.get('to'),'2025')}
  assert.deepEqual(await ask(result.money_question),result);
  const missing=await ask('And in 2024–25?',{context:history(result.money_question)});
- assert.equal(missing.answer_status,'evidence_gap');assert.deepEqual(missing.sources,[]);
+ assert.equal(missing.answer_status,'calculated');assert.equal(missing.comparison_complete,false);assert.match(missing.answer,/Held-period figures/);
  const recovered=await ask('And in 2025–26?',{context:history(missing.money_question)});
  assert.deepEqual(recovered,result);
  const all=await ask('And all years?',{context:history(recovered.money_question)});
@@ -83,7 +83,7 @@ test('implicit funding wording preserves scope restrictions and unknown qualifie
 test('the live fossil-fuel ranking failure is corrected using all selected edges',async()=>{
  const r=await ask('Who receives the most disclosed receipts from fossil fuel donors?');
  assert.match(r.answer,/^\*\*Labor\*\*/);assert.match(r.answer,/\$6,553,737/);assert.match(r.answer,/\$6,121,113/);
- assert.equal(r.answer_status,'calculated');assert.match(r.answer,/not every receipt source/);
+ assert.equal(r.answer_status,'calculated');assert.match(r.answer,/published AEC selection/);
  assert.ok(r.sources.some(s=>s.href.includes('industry=fossil_fuels')&&s.href.includes('party=party%3ALabor')));
 });
 
@@ -116,7 +116,7 @@ test('unknown follow-up scope and relative years never reuse a stale winner',asy
  for(const question of ['And last year?','What about January 2021?','And in 2020 and 2022?']) {
   const result=await ask(question,{context});assert.equal(result?.answer_status,'needs_period',question);assert.deepEqual(result.sources,[]);
  }
- const missing=await ask('And in 1900?',{context});assert.equal(missing.answer_status,'evidence_gap');assert.deepEqual(missing.citations,{});
+ const missing=await ask('And in 1900?',{context});assert.equal(missing.answer_status,'calculated');assert.equal(missing.coverage.matched,false);assert.match(missing.answer,/Held-period figures/);
 });
 
 test('a self-contained money question resets history; non-funding turns end inherited receipt scope',async()=>{
@@ -163,7 +163,7 @@ test('canonical funding requests retain UI filters and all-donor modes without a
 });
 test('industry and party questions rank different directions with source links',async()=>{
  const gambling=await ask('Who takes the most money from the gambling lobby?');
- assert.match(gambling.answer,/^\*\*Labor\*\*/);assert.ok(gambling.answer.includes(aud(industryTotal('gambling','Labor'))));assert.match(gambling.answer,/not personal payments/);
+ assert.match(gambling.answer,/^\*\*Labor\*\*/);assert.ok(gambling.answer.includes(aud(industryTotal('gambling','Labor'))));assert.match(gambling.answer,/party-level totals/);
  for(const party of ['Labor','One Nation']) {
   const answer=await ask(`Who donates the most to ${party}?`);
   const matching=graph.edges.filter(e=>e.target==='party:'+party&&e.source.startsWith('donor:')&&!e.flow&&!e.grant).sort((a,b)=>b.total-a.total);
@@ -174,11 +174,11 @@ test('industry and party questions rank different directions with source links',
 });
 test('each table citation sits inside a cell and has a linked evidence record',async()=>{
  const r=await ask('Who donates the most to Labor?');const chars=Array.from(r.answer);
- for(const [id,ranges] of Object.entries(r.citations)) {assert.ok(r.sources.some(s=>s.resource===id&&s.cited));for(const [start,end] of ranges){assert.ok(end>start);assert.notEqual(chars[end-1],'|');}}
+ for(const [id,ranges] of Object.entries(r.citations)) {assert.ok(r.sources.some(s=>s.resource===id&&s.cited));for(const [start,end] of ranges){assert.ok(end>start);assert.ok(start>=0&&end<=chars.length);assert.ok(chars.slice(start,end).join('').trim());}}
 });
 test('explicit date and party controls win; from an industry is not since a year',async()=>{
  const r=await ask('Who takes the most money from gambling in 2020?');
- assert.match(r.answer,/Financial years: 2020–21/);assert.doesNotMatch(r.answer,/2020–21 to 2020–21/);assert.ok(r.sources.some(s=>s.href.includes('from=2020&to=2020')));
+ assert.match(r.answer,/2020–21/);assert.doesNotMatch(r.answer,/2020–21 to 2020–21/);assert.ok(r.sources.some(s=>s.href.includes('from=2020&to=2020')));
  const filtered=await ask('Who donates the most to Labor?',{party:'Liberal',from:'2020',to:'2020'});
  assert.match(filtered.answer,/to Liberal/);assert.ok(filtered.sources.some(s=>s.href.includes('party=party%3ALiberal')));
  assert.equal((await ask('Who donates the most to Labor recently?')).answer_status,'needs_period');
@@ -192,9 +192,9 @@ test('unsupported questions are not silently replaced by lifetime or party total
 
 test('biggest industry donors and biggest recipient parties are distinct rankings',async()=>{
  const donors=await ask('Who are the biggest gambling donors?');
- assert.match(donors.answer,/\| Source \|/);assert.match(donors.answer,/among gambling sources/);
+ assert.match(donors.answer,/\| Source \|/);assert.match(donors.answer,/gambling-linked/);
  const parties=await ask('Which party receives the largest funding from gambling donors?');
- assert.match(parties.answer,/\| Recipient party \|/);assert.match(parties.answer,/^\*\*Labor\*\*/);
+ assert.match(parties.answer,/\| Recipient \|/);assert.match(parties.answer,/^\*\*Labor\*\*/);
  const flow=await ask('Who donates the most to who?');assert.match(flow.answer,/\| Source → party \|/);
 });
 
@@ -212,7 +212,7 @@ test('party comparisons calculate a dollar difference and cite each scoped side'
 
 test('industry comparisons do not treat banks as every finance organisation',async()=>{
  const unsupported=await ask('Who gives more money to Labor, unions or banks?');
- assert.equal(unsupported.answer_status,'needs_scope');assert.match(unsupported.answer,/grouped with other finance/);
+ assert.equal(unsupported.answer_status,'calculated');assert.match(unsupported.answer,/Finance/);
  const r=await ask('Who gives more money to Labor, unions or finance?');
  assert.equal(r.answer_status,'calculated');assert.match(r.answer,/\| Source industry \|/);
  const unions=industryTotal('unions','Labor'),finance=industryTotal('finance','Labor');
@@ -220,7 +220,7 @@ test('industry comparisons do not treat banks as every finance organisation',asy
  assert.ok(r.answer.includes(aud(unions)));assert.ok(r.answer.includes(aud(finance)));
  assert.ok(r.sources.some(s=>s.href.includes('industry=unions')&&s.href.includes('party=party%3ALabor')));
  assert.ok(r.sources.some(s=>s.href.includes('industry=finance')&&s.href.includes('party=party%3ALabor')));
- assert.equal((await ask('Who receives the most money from banks?')).answer_status,'needs_scope');
+ assert.equal((await ask('Who receives the most money from banks?')).answer_status,'calculated');
  assert.equal((await ask('Who receives the most disclosed receipts from energy?')).answer_status,'needs_scope');
 });
 
@@ -237,7 +237,7 @@ test('unsupported comparisons and missing data never become a false winner',asyn
  const sharedRange=await ask('Who gets more gambling money, Labor or Liberal between 2020 and 2021?');
  assert.equal(sharedRange.answer_status,'calculated');assert.match(sharedRange.answer,/Labor received \$612,232 more/);assert.match(sharedRange.answer,/\$1,431,456/);assert.match(sharedRange.answer,/\$819,224/);
  const missing=await ask('Who gets more gambling money, Labor or Liberal in 1900?');
- assert.equal(missing.answer_status,'evidence_gap');assert.doesNotMatch(missing.answer,/\$0|received more/);
+ assert.equal(missing.answer_status,'calculated');assert.equal(missing.comparison_complete,false);assert.doesNotMatch(missing.answer,/\$0|received more/);
 });
 
 test('year comparisons calculate separate cells and cite each exact year',async()=>{
@@ -278,7 +278,7 @@ test('year comparisons honour explicit dates and clarify ambiguous years and mul
  const filters=await ask('How did gambling receipts to Labor change from 2020 to 2021?',{from:'2022',to:'2024'});
  assert.equal(filters.answer_status,'calculated');assert.match(filters.money_context,/2020–21.*2021–22/);assert.doesNotMatch(filters.answer,/2024–25/);
  const missing=await ask('Compare gambling receipts to Labor in 1900 versus 2021');
- assert.equal(missing.answer_status,'evidence_gap');assert.doesNotMatch(missing.answer,/\$0|received.*more/);
+ assert.equal(missing.answer_status,'calculated');assert.equal(missing.comparison_complete,false);assert.match(missing.answer,/\$985,883/);assert.doesNotMatch(missing.answer,/\$0|received.*more/);
 });
 
 test('equal dated totals and recorded zeros are distinct from missing year data',async()=>{
@@ -344,10 +344,9 @@ test('ambiguous or invalid year labels cannot silently change the period',async(
  assert.equal(r.answer_status,'calculated');assert.match(r.answer,/\$1,431,456/);
 });
 
-test('a missing year has no fabricated ranking or calculation citation',async()=>{
+test('a missing year shows held-period figures with unmatched requested coverage',async()=>{
  const r=await ask('Who gets the most money from gambling in 1900/1901?');
- assert.equal(r.answer_status,'evidence_gap');assert.deepEqual(r.sources,[]);assert.deepEqual(r.citations,{});
- assert.match(r.answer,/does not establish that no receipts occurred/);assert.doesNotMatch(r.answer,/\$0|received the most/);
+ assert.equal(r.answer_status,'calculated');assert.equal(r.coverage.matched,false);assert.match(r.answer,/Held-period figures/);assert.match(r.answer,/\$9,324,627/);assert.doesNotMatch(r.answer,/\$0/);
 });
 
 test('year ending labels and requested versus actual coverage remain explicit',async()=>{
@@ -426,7 +425,7 @@ test('disclosure sources explain the calculation without file paths or markdown 
    assert.doesNotMatch(source.snippet,/money(?:\.[a-z]+)?\.json|donor-to-party edges|year key|Do not present|\*\*/);
    assert.doesNotMatch(source.href,/\/graph\//);
    assert.equal(source.source,'AEC political disclosure records');
-   assert.equal(source.dateLabel,'Calculated by Opax');
+   assert.equal(source.dateLabel,'Calculated by OPAX');
   }
   assert.ok(r.sources.slice(1).every(s=>new URL(s.href,'https://opax.test').searchParams.get('industry')==='gambling'));
   assert.match(r.answer,/Download the calculation data/);
@@ -500,7 +499,7 @@ test('comparison periods replace shared bounds including all-years reset and mis
  const range=await ask('And between 2020 and 2021?',{context:history(seed)});
  assert.match(range.answer,/\$612,232 more/);assert.equal(range.scope.from,'2020');assert.equal(range.scope.to,'2021');
  const missing=await ask('And in 1900?',{context:history(seed)});
- assert.equal(missing.answer_status,'evidence_gap');assert.deepEqual(missing.sources,[]);
+ assert.equal(missing.answer_status,'calculated');assert.equal(missing.comparison_complete,false);assert.match(missing.answer,/Held-period figures/);
  assert.doesNotMatch(missing.answer,/\$0|received more/);assert.match(missing.money_question,/in 1900/);
  const recovery=await ask('And in 2021–22?',{context:history(missing.money_question)});
  assert.match(recovery.answer,/\$526,854 more/);

@@ -56,8 +56,8 @@ test('industry totals sum receipt edges once and exclude public money and node t
  const result=answer('How much money flowed from the gambling industry to government?');
  assert.equal(result.total_aud,350);assert.equal(result.receipts,5);
  assert.deepEqual(result.by_party.map(p=>[p.name,p.total_aud]),[['Liberal',250],['Labor',100]]);
- assert.match(result.answer,/published map selection, not an exhaustive industry total/);
- assert.match(result.scope,/not present as.*payments to government/);
+ assert.match(result.answer,/disclosed receipts, all types/);
+ assert.match(result.scope,/Party-level totals/);
  assert.match(result.sources[0].url,/industry=gambling/);
 });
 test('year and party filters resummate dated receipts without lifetime or undated amounts',()=>{
@@ -66,7 +66,7 @@ test('year and party filters resummate dated receipts without lifetime or undate
  assert.equal(answer('gambling since 2021').total_aud,40);
  assert.equal(answer('gambling before 2021').total_aud,260);
  assert.equal(answer('gambling in 2019').total_aud,0);
- assert.match(answer('gambling in 2019').answer,/does not establish that no receipts occurred/);
+ assert.match(answer('gambling in 2019').answer,/choose a held period/);
  assert.match(answer('gambling in 2020').sources[0].url,/from=2020&to=2020/);
 });
 test('known donors, parties, aliases and jurisdictions retain their scope',()=>{
@@ -85,9 +85,9 @@ test('money tools distinguish donation limitations from mixed receipt exploratio
  for(const [tool,args] of [['search_records',{query:'gambling donations'}],['find_connections',{query:'gambling'}]]){
   const out=await runVoiceTool(tool,args,env,async()=>{throw Error('Unrelated speech retrieval')});
   if(tool==='search_records'){
-   assert.equal(out.data.answer_status,'evidence_gap');assert.match(out.data.answer,/figures currently combine donations with loans and other receipts/);assert.doesNotMatch(out.data.answer,/\$\d/);assert.ok(out.sources.every(s=>s.kind==='receipt'));
+   assert.equal(out.data.answer_status,'calculated');assert.match(out.data.answer,/disclosed receipts, all types/);assert.match(out.data.answer,/\$250/);assert.ok(out.sources.every(s=>s.kind==='receipt'));
   }else{
-   assert.equal(out.data.total_aud,350);assert.equal(out.sources.length,1);assert.match(out.data.answer,/disclosed receipt total/);
+   assert.equal(out.data.total_aud,350);assert.equal(out.sources.length,1);assert.match(out.data.answer,/disclosed receipts, all types/);
   }
  }
  let reads=0;
@@ -182,7 +182,7 @@ test('voice lending questions cannot reuse mixed receipt totals',async()=>{
  }
  const receipt=await runVoiceTool('search_records',{query:'How much money from Westpac Banking Corporation to Labor?'},env,async()=>{throw Error('Unexpected network retrieval')});
  assert.equal(receipt.data.total_aud,42540985);
- assert.match(receipt.data.answer,/These federal totals mix donations with other receipts such as loans, so this is not a donation ranking/);
+ assert.match(receipt.data.answer,/disclosed receipts, all types, including bank loans to the party/);
 });
 
 test('voice uses the shared family calculator, with its entire table and citations',async()=>{
@@ -190,9 +190,9 @@ test('voice uses the shared family calculator, with its entire table and citatio
  for(const query of ['Who bankrolls Labor?','Who props up Labor?','Who has donated the most to the Greens?','Who is giving the most money to Labor?'])for(const [tool,kind]of [['search_records','all'],['search_records','receipt'],['search_records','speech'],['find_connections',undefined]]){
   const out=await runVoiceTool(tool,{query,kind},env,async()=>{throw Error('A family question reached generic retrieval')});
   assert.equal(out.data.money_route,'federal-party-ranking-v1');assert.equal(out.data.answer_status,'calculated');
-  assert.match(out.data.answer,/largest disclosed receipts/);assert.match(out.data.answer,/not a donation ranking/);
-  assert.match(out.data.answer,/\| Source \| Disclosed receipts \| Records \|/);
-  assert.equal(out.data.answer.split('\n').filter(s=>/^\| /.test(s)).length,7);
+  assert.match(out.data.answer,/largest source/);assert.match(out.data.answer,/disclosed receipts, all types/);
+  assert.match(out.data.answer,/\| Source \| Disclosed receipts.*\| Share \| Records \|/);
+  assert.equal(out.data.answer.split('\n').filter(s=>/^\| /.test(s)).length,9);
   assert.ok(Object.keys(out.data.citations).length>=6);assert.equal('money_facts' in out.data,false);
  }
 });
