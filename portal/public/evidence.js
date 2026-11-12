@@ -1,4 +1,4 @@
-import { personUrl, partyUrl } from './canonical-urls.js?v=0079b1f2db';
+import { personUrl, partyUrl } from './canonical-urls.js?v=6c889d487d';
 /* Source-backed connections. Only unambiguous identities are displayed. */
 import {shortDate} from './format.js';
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));

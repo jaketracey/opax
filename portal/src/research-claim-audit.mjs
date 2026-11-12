@@ -1,5 +1,5 @@
 // Pure selected-evidence audit, shared by the final boundary and the offline report.
-import {PERSON_PATHS} from '../public/canonical-urls.js'
+import {PERSON_PATHS} from '../public/party-page.js'
 const norm=s=>String(s??'').normalize('NFKC').toLowerCase().replace(/[‘’]/g,"'").replace(/[^\p{L}\p{N}]+/gu,' ').trim()
 // This generated index binds public parliamentarians.json names and their canonical slugs.
 const rosterPeople=new Map(Object.entries(PERSON_PATHS.exact).flatMap(([name,path])=>[[norm(name),path],[norm(path.split('/').at(-1)),path]]))

@@ -1,6 +1,6 @@
 import {dataTableHTML, applyQuery, parseQuery, type Row} from '../public/datatable.js'
 import {aggregateConfig} from '../public/budget-table.js'
-import {sourceLineHTML} from '../public/labels.js'
+import {sourceLineHTML} from '../public/party-page.js'
 import {saBudgetSection,type SAHub} from './sa-budget.ts'
 import {catalogueReader} from './catalogue-reader.mjs'
 import type {Crumb} from './seo-content'
