@@ -129,7 +129,7 @@ if (rosterMode === 'vacant') {
     const raw = JSON.parse(body.toString());
     if (Array.isArray(raw.electorates))
       for (const seat of raw.electorates)
-        seat.representatives = seat.representatives.filter(
+        seat.representatives = (seat.representatives ?? []).filter(
           (member: { person: { legacy_person_id?: string; name: string } }) =>
             member.person.legacy_person_id !== '10007' &&
             member.person.name !== 'Anthony Albanese',
