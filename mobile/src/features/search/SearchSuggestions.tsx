@@ -11,6 +11,7 @@ import {
   SuggestionRow,
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
+import { asksAsTyped } from './recovery';
 import { suggestionList, type GroupKind, type MatchSources } from './ranking';
 import { MatchRow, type RowSources } from './rows';
 import { scopeMenuAt } from './ScopeBar';
@@ -115,6 +116,10 @@ export function SearchSuggestions({
         <SuggestionRow
           symbol="text.bubble"
           name={`Ask OPAX about “${text}”`}
+          // Typed as a full question, the row asks it at once (SearchScreen).
+          accessibilityHint={
+            asksAsTyped(text) ? 'Asks this question' : undefined
+          }
           onPress={onAsk}
           testID="search-ask-row"
         />

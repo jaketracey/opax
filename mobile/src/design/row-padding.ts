@@ -24,10 +24,20 @@ export function useRowInset(inset = 16) {
     report?.(inset);
   }, [inset, report]);
 }
+/**
+ * A pressed (or keyboard-highlighted) row's fill: always a different colour
+ * from both the row's own surface and the page around it, so the pressed
+ * row reads as part of its group's rounded card (which clips it). On a
+ * raised group the page is `sunken` (grouped surfaces), so `sunken` there
+ * made a pressed row look detached from the card (TestFlight, 13 Nov).
+ */
 export function useRowHighlight() {
-  return useContext(SurfaceContext) === 'sunken'
+  const surface = useContext(SurfaceContext);
+  return surface === 'sunken'
     ? colors.raised
-    : colors.sunken;
+    : surface === 'raised'
+      ? colors.dividerSubtle
+      : colors.sunken;
 }
 
 // The group keeps its text inset; rows bleed their interactive surface to the cell edges.

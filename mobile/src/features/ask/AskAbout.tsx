@@ -1,6 +1,8 @@
 /**
- * "Ask about …" drafts (journeys/ask.md 6). Each goes through `useOpenAsk`,
- * starts a new conversation and is never sent for the reader.
+ * "Ask about …" drafts (journeys/ask.md 6). The controls that use them show
+ * no question ("Ask about this bill", "Ask about {name}"), so each goes
+ * through `useOpenAsk`: a new conversation with the draft to edit and send.
+ * A control that shows its exact question asks at once (`useAskNow`).
  */
 export function scopedQuestion(
   kind: 'person' | 'bill' | 'party' | 'electorate',

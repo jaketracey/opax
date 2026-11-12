@@ -1193,7 +1193,7 @@ test('grouped cell highlights reach both edges while text and separators stay in
   expect(rowStyle(row(root, 'one'), true)).toMatchObject({
     marginHorizontal: -16,
     paddingHorizontal: 16,
-    backgroundColor: colors.sunken,
+    backgroundColor: colors.dividerSubtle,
   });
   expect(
     root

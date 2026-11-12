@@ -156,3 +156,13 @@ export function askDraft(words: string): string {
     return text;
   return `What has parliament said about ${text}?`;
 }
+
+/**
+ * True when "Ask OPAX about “…”" shows exactly what will be asked: the typed
+ * words are themselves a question ending in "?". That row asks at once
+ * (`useAskNow`); any other row drafts `askDraft` to edit.
+ */
+export function asksAsTyped(words: string): boolean {
+  const question = askDraft(words);
+  return question === words.trim() && /\?$/.test(question);
+}

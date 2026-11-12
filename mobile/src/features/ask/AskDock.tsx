@@ -11,6 +11,7 @@ import {
   type LayoutChangeEvent,
 } from 'react-native';
 import { IconButton } from '../../design/controls';
+import { useAccessibilityFocusRequest } from '../../design/keyboard';
 import { formatCount } from '../../design/format';
 import { Icon } from '../../design/icon';
 import { InlineError } from '../../design/states';
@@ -38,6 +39,7 @@ export const composerCopy = {
   options: 'Options',
   clear: 'Clear options',
   fresh: 'Starts a new conversation',
+  queued: 'Asks when this answer finishes',
 } as const;
 const MAX = 2000;
 /** Lines before the field scrolls inside (journeys/ask.md 4.4a). */
@@ -88,7 +90,8 @@ export function composerFieldCap({
  * written, Talk while the field is empty (D5 on), else
  * Send. The options in force show as one line inside it, above the field;
  * an arrival's draft that waits for a running answer says it starts a new
- * conversation.
+ * conversation, or, for a tapped question, that it asks when the answer
+ * finishes.
  */
 export function AskDock({
   inputRef,
@@ -128,10 +131,11 @@ export function AskDock({
   const options = askSession.composerOptions();
   const tags = chips(options, (slug) => topics[slug] ?? slug);
   const empty = !s.draft.trim();
-  const line = [
-    s.fresh ? composerCopy.fresh : null,
-    ...tags.map((tag) => tag.value),
-  ]
+  // A tapped question waiting for the running answer says when it goes.
+  const freshLabel = s.queued ? composerCopy.queued : composerCopy.fresh;
+  // A tapped question that waits puts VoiceOver on this line (`askNow`).
+  const waitingLine = useAccessibilityFocusRequest('ask-waiting');
+  const line = [s.fresh ? freshLabel : null, ...tags.map((tag) => tag.value)]
     .filter(Boolean)
     .join(' · ');
   const chrome =
@@ -145,7 +149,7 @@ export function AskDock({
     chrome,
   });
   const spoken = [
-    s.fresh ? composerCopy.fresh : null,
+    s.fresh ? freshLabel : null,
     ...tags.map((tag) => `${tag.key}, ${tag.value}`),
   ]
     .filter(Boolean)
@@ -195,15 +199,16 @@ export function AskDock({
             <View style={styles.chips}>
               {s.fresh ? (
                 <Pressable
+                  ref={waitingLine}
                   accessibilityRole="button"
-                  accessibilityLabel={composerCopy.fresh}
+                  accessibilityLabel={freshLabel}
                   accessibilityHint="Opens Options"
                   onPress={onOptions}
                   android_ripple={{ color: colors.dividerSubtle }}
                   style={styles.chip}
                 >
                   <Text variant="footnote" tone="inkSoft">
-                    {composerCopy.fresh}
+                    {freshLabel}
                   </Text>
                 </Pressable>
               ) : null}
@@ -254,6 +259,7 @@ export function AskDock({
       ) : line ? (
         <View style={styles.optionsLine}>
           <Pressable
+            ref={s.fresh ? waitingLine : undefined}
             accessibilityRole="button"
             accessibilityLabel={spoken}
             accessibilityHint="Opens Options"

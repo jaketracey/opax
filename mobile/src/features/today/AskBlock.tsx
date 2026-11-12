@@ -10,7 +10,7 @@ import { track } from '../../analytics';
 import { talkSignInRoute } from '../../navigation/routes/account';
 import { voiceLinked } from '../../voice/linked';
 import { useAccount } from '../account/store';
-import { useOpenAsk } from '../ask/open';
+import { useAskNow } from '../ask/open';
 import { starterList } from '../ask/starters';
 import { starterPair, type SydneyDate } from './rules';
 
@@ -21,12 +21,13 @@ export const todayStarters = (
 ) => starterPair(today, list);
 
 /**
- * Ask about parliament (today.md 5.11): two starters a day. A tap switches
- * to the Ask tab with the question in the composer, keyboard up; it never
- * submits. No source line (no figure). Absent with no reviewed list.
+ * Ask about parliament (today.md 5.11): two starters a day. Each row shows
+ * its question, so a tap switches to the Ask tab and asks it at once in a
+ * new conversation (Jake, 13 Nov; `useAskNow`). No source line (no figure).
+ * Absent with no reviewed list.
  */
 export function AskBlock({ today }: { today: SydneyDate }) {
-  const openAsk = useOpenAsk();
+  const askNow = useAskNow();
   const account = useAccount();
   const signedOut = !account.checking && account.status?.signedIn === false;
   const starters = todayStarters(today);
@@ -48,9 +49,9 @@ export function AskBlock({ today }: { today: SydneyDate }) {
               symbolInk="navy"
               onPress={() => {
                 track('opax_chip', { chip_kind: 'ask', placement: 'today' });
-                openAsk({ question });
+                askNow({ question });
               }}
-              accessibilityHint="Opens Ask with this question"
+              accessibilityHint="Asks this question"
               testID={`today-ask-${i}`}
             />
           ))}

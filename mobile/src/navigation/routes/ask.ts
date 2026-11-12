@@ -1,4 +1,9 @@
-/** A draft in native Ask. Arrival never submits a paid request. */
+/**
+ * A question for native Ask. A link (deep or shared) only drafts it: arriving
+ * from outside the app never submits a paid request. In-app taps decide at
+ * the tap: a shown question asks at once (`useAskNow`), a generic Ask drafts
+ * (`useOpenAsk`).
+ */
 export const askRoute = (
   scope: {
     question: string;

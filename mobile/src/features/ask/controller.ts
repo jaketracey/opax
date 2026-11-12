@@ -64,6 +64,12 @@ export type AskState = {
    */
   fresh: boolean;
   freshOptions: AskOptions | null;
+  /**
+   * A tapped question (`askNow`) that arrived while an answer was running:
+   * it is asked as soon as that answer ends. Editing the draft makes it the
+   * reader's own again, sent only by Send.
+   */
+  queued: boolean;
   /** A question held for consent (A1): sent on Continue, kept on Not now. */
   pending: { question: string; carry?: Followup; fromDraft: boolean } | null;
   /** The newest answer is awaiting Ask next suggestions (three reserved rows). */
@@ -83,6 +89,11 @@ export type AskIO = {
   forgetActive?: () => void;
   id: () => string;
   now: () => number;
+  /**
+   * Sends a queued question once the running answer has ended (consent and
+   * the Person check, as Send does). Without it, the draft is sent directly.
+   */
+  sendQueued?: () => Promise<void> | void;
   /**
    * Analytics for each question's outcome: durations, counts and flags only,
    * never the question or answer (src/analytics/events.ts).
@@ -122,6 +133,7 @@ export class AskController {
     draft: '',
     fresh: false,
     freshOptions: null,
+    queued: false,
     pending: null,
     nextLoading: false,
   };
@@ -178,10 +190,12 @@ export class AskController {
     else if (!this.state.busy) this.update({ options: o });
   }
   setDraft(text: string) {
+    // Editing a queued question makes it the reader's: Send sends it.
+    const queued = this.state.queued && text === this.state.draft;
     // Emptying the composer turns a fresh draft back into a follow-up box.
     if (!text.trim() && this.state.fresh)
-      this.update({ draft: text, fresh: false, freshOptions: null });
-    else this.update({ draft: text });
+      this.update({ draft: text, fresh: false, freshOptions: null, queued });
+    else this.update({ draft: text, queued });
   }
   /** A tapped question clears the text while keeping the composer's options. */
   clearDraft() {
@@ -189,7 +203,7 @@ export class AskController {
   }
   /** Clears an arrival's options line (its ⓧ): back to the conversation's own. */
   clearFresh() {
-    this.update({ fresh: false, freshOptions: null });
+    this.update({ fresh: false, freshOptions: null, queued: false });
   }
   /** Opens a saved conversation. False while an answer is being written. */
   open(id: string): boolean {
@@ -215,6 +229,7 @@ export class AskController {
       notice: null,
       fresh: false,
       freshOptions: null,
+      queued: false,
       nextLoading: false,
       reading: 0,
       draft: '',
@@ -264,6 +279,7 @@ export class AskController {
       clarify: null,
       fresh: false,
       freshOptions: null,
+      queued: false,
       nextLoading: false,
     });
   }
@@ -275,16 +291,39 @@ export class AskController {
     return true;
   }
   /**
-   * An "Ask about …" arrival from outside the Ask tab: always a new
-   * conversation, never a cancelled answer, nothing sent.
+   * An arrival from outside the Ask tab: always a new conversation, never a
+   * cancelled answer. A generic "Ask about …" only fills the composer. A
+   * tapped question (`queue`) that meets a running answer waits, marked
+   * "Asks when this answer finishes", and is sent when that answer ends;
+   * with nothing running the caller sends it at once (session `askNow`).
    */
-  arrive(question: string, options: AskOptions) {
+  arrive(question: string, options: AskOptions, { queue = false } = {}) {
     if (this.state.busy)
-      this.update({ draft: question, fresh: true, freshOptions: options });
+      this.update({
+        draft: question,
+        fresh: true,
+        freshOptions: options,
+        queued: queue && !!question.trim(),
+      });
     else {
       this.start(options);
       this.update({ draft: question, pending: null });
     }
+  }
+  /**
+   * A queued question goes once the answer it waited for has been written
+   * (or the reader stopped it); never twice.
+   */
+  private flushQueued() {
+    const s = this.state;
+    if (!s.queued || s.busy) return;
+    this.update({ queued: false });
+    if (!s.draft.trim()) return;
+    // After the ended answer's save, on the next tick.
+    setTimeout(() => {
+      if (this.state.busy || !this.state.draft.trim()) return;
+      void (this.io.sendQueued ? this.io.sendQueued() : this.sendDraft());
+    }, 0);
   }
   cancel() {
     this.abort?.abort();
@@ -316,6 +355,7 @@ export class AskController {
       ...(restored ? { draft: question } : {}),
       ...(before.length ? {} : { id: null }),
     });
+    this.flushQueued();
     return restored ? 'restored' : 'kept';
   }
   /** Holds a question until the reader answers the consent sheet. */
@@ -355,7 +395,7 @@ export class AskController {
         ? failed.carry
         : undefined;
     if (this.state.fresh) this.start(this.state.freshOptions ?? undefined);
-    this.update({ draft: '', fresh: false, freshOptions: null });
+    this.update({ draft: '', fresh: false, freshOptions: null, queued: false });
     await this.submit(q, carry);
   }
   /** Try again: resends the failed question, clearing it from the composer. */
@@ -485,6 +525,9 @@ export class AskController {
           streaming: '',
           clarify: { question: q, ...(suggestion ? { suggestion } : {}) },
           ...(before.length ? {} : { id: null }),
+          // The clarify request stays on screen; the waiting question stays
+          // in the composer for the reader to send.
+          queued: false,
         });
         return;
       }
@@ -512,6 +555,18 @@ export class AskController {
       });
       await this.persist();
       if (mine !== this.sequence) return;
+      if (this.state.queued && this.state.id) {
+        // A tapped question waited for this answer: it goes now, and this
+        // conversation's Ask next rows and account push finish in the
+        // background against the saved copy.
+        const id = this.state.id;
+        const thread = this.state.thread;
+        this.update({ nextLoading: false });
+        this.flushQueued();
+        await this.savedFollowups(id, thread, answer, data, q, passages);
+        await this.io.sync?.(id).catch(() => undefined);
+        return;
+      }
       // Generated only once for this answer. Calculated answers have fixed steps.
       await this.followups(answer, data, q, mine, passages);
       // A failed account push shows only in Conversations, never here.
@@ -539,9 +594,48 @@ export class AskController {
         failed: { question: q, ...(carry ? { carry } : {}) },
         streaming: failure.code === 'cancelled' ? '' : this.state.streaming,
         ...(restore && failure.code !== 'cancelled' ? { draft: q } : {}),
+        // A failure (rate limit, offline, timeout) stays on screen with its
+        // countdown and Try again; a waiting question is not sent into it.
+        // It stays in the composer, marked "Starts a new conversation".
+        queued: false,
       });
     } finally {
       if (mine === this.sequence) this.abort = null;
+    }
+  }
+  /**
+   * Ask next for an answer whose conversation has left the screen (a queued
+   * question took over): generated once and written to the saved copy only.
+   */
+  private async savedFollowups(
+    id: string,
+    thread: Turn[],
+    turn: Turn,
+    data: Answer,
+    q: string,
+    passages: ReturnType<typeof followupPassages>,
+  ) {
+    if (turn.followupsRequested) return;
+    turn.followupsRequested = true;
+    if (!passages.length) return;
+    try {
+      turn.next = decodeFollowups(
+        await this.io.post(
+          '/api/followups',
+          { question: q, answer: data.answer, passages },
+          new AbortController().signal,
+        ),
+      );
+      const store = this.io.read();
+      if (!store.chats.some((c) => c.id === id)) return;
+      await this.io.save({
+        ...store,
+        chats: store.chats.map((c) =>
+          c.id === id ? { ...c, thread: thread.slice() } : c,
+        ),
+      });
+    } catch {
+      /* The saved conversation keeps its answer without Ask next. */
     }
   }
   private async followups(

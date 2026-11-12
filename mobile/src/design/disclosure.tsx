@@ -1,6 +1,10 @@
 import { Pressable } from './pressable';
 import { useEffect, useState, type ReactNode } from 'react';
-import { ownsRowPadding, useRowCellStyle } from './row-padding';
+import {
+  ownsRowPadding,
+  useRowCellStyle,
+  useRowHighlight,
+} from './row-padding';
 import {
   Animated,
   Easing,
@@ -11,7 +15,7 @@ import {
 import { useAccessibilitySize, useReduceMotion } from './accessibility';
 import { Icon, type SFSymbol } from './icon';
 import { Text } from './text';
-import { colors, minimumTarget, rhythm, type Accent } from './tokens';
+import { minimumTarget, rhythm, type Accent } from './tokens';
 
 /** Expand and collapse smoothly, or instantly with Reduce Motion. */
 export function animateLayout(
@@ -80,6 +84,7 @@ export function Disclosure({
   const reduceMotion = useReduceMotion();
   const stacked = useAccessibilitySize();
   const cellStyle = useRowCellStyle();
+  const highlight = useRowHighlight();
   // One animated value for the row's lifetime (state, not a ref, so render reads it).
   const [turn] = useState(() => new Animated.Value(open ? 1 : 0));
   useEffect(() => {
@@ -111,7 +116,7 @@ export function Disclosure({
         styles.row,
         cellStyle,
         accessory ? styles.withAccessory : null,
-        pressed ? { backgroundColor: colors.sunken } : null,
+        pressed ? { backgroundColor: highlight } : null,
       ]}
     >
       {icon ? <Icon name={icon} size={17} tone={tint} /> : null}

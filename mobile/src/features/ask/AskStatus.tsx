@@ -17,6 +17,7 @@ import {
   useAccessibilitySize,
   useReduceMotionSetting,
 } from '../../design/accessibility';
+import { useAccessibilityFocusRequest } from '../../design/keyboard';
 import { ShimmerText } from '../../design/ShimmerText';
 import { colors, motion, rhythm } from '../../design/tokens';
 import type { AskStage, AskStep } from './stream';
@@ -108,6 +109,9 @@ export function AskStatus({
 }) {
   const stacked = useAccessibilitySize();
   const reduceMotion = useReduceMotionSetting() !== false;
+  // A tapped question that asks at once (`askNow`) lands here, not on the
+  // composer.
+  const focusView = useAccessibilityFocusRequest('ask-status');
   const { current, previous, version } = useHeldLine(
     askStatusText(stage, steps),
     STATUS_HOLD_MS,
@@ -140,6 +144,7 @@ export function AskStatus({
   }));
   return (
     <View
+      ref={focusView}
       accessible
       accessibilityLabel={announcement}
       accessibilityLanguage="en-AU"

@@ -7,7 +7,13 @@ import {
   useSyncExternalStore,
   type RefObject,
 } from 'react';
-import { InteractionManager, Platform } from 'react-native';
+import {
+  AccessibilityInfo,
+  InteractionManager,
+  Platform,
+  findNodeHandle,
+  type View,
+} from 'react-native';
 import { OpaxIPad, type KeyCommandSpec } from '../../modules/opax-ipad';
 import { designFlags } from './flags';
 
@@ -242,7 +248,9 @@ export function installKeyCommands(): boolean {
 
 // Focus requests: Cmd-F and Cmd-N move to a screen that may not be mounted
 // yet, so a request waits until that screen's field takes it.
-export type FocusTarget = 'search' | 'ask';
+// 'ask-status' and 'ask-waiting' move VoiceOver (not the keyboard) to a
+// running answer's status line or to a tapped question's waiting line.
+export type FocusTarget = 'search' | 'ask' | 'ask-status' | 'ask-waiting';
 const pending = new Set<FocusTarget>();
 const focusListeners = new Map<FocusTarget, Set<() => void>>();
 
@@ -279,4 +287,26 @@ export function useFocusRequest(
       listeners.delete(focus);
     };
   }, [target, ref]);
+}
+
+/**
+ * Moves VoiceOver or TalkBack to the returned view when a request for
+ * `target` arrives (setAccessibilityFocus is iOS-only).
+ */
+export function useAccessibilityFocusRequest(target: FocusTarget) {
+  const view = useRef<View>(null);
+  const focusable = useRef({
+    focus: () => {
+      const node = view.current;
+      if (!node) return;
+      if (Platform.OS === 'android')
+        AccessibilityInfo.sendAccessibilityEvent(node, 'focus');
+      else {
+        const handle = findNodeHandle(node);
+        if (handle) AccessibilityInfo.setAccessibilityFocus(handle);
+      }
+    },
+  });
+  useFocusRequest(target, focusable);
+  return view;
 }

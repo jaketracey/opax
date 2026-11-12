@@ -30,7 +30,11 @@ jest.mock('expo-router', () => {
 jest.mock('../src/features/account/store', () => ({
   useAccount: () => ({ status: { signedIn: false } }),
 }));
-jest.mock('../src/features/ask/open', () => ({ useOpenAsk: () => jest.fn() }));
+jest.mock('../src/features/ask/open', () => ({
+  ...jest.requireActual('../src/features/ask/open'),
+  useOpenAsk: () => jest.fn(),
+  useAskNow: () => jest.fn(),
+}));
 jest.mock('../src/features/search/sources', () => ({
   useSearchSources: () => ({
     sources: null,

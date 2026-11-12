@@ -108,7 +108,10 @@ jest.mock('../src/features/explore/runtime', () => ({
 }));
 jest.mock('../src/launch/splash', () => ({ releaseSplash: jest.fn() }));
 jest.mock('../src/launch/LaunchHandoff', () => ({ LaunchHandoff: () => null }));
-jest.mock('../src/features/ask/open', () => ({ useOpenAsk: () => jest.fn() }));
+jest.mock('../src/features/ask/open', () => ({
+  useOpenAsk: () => jest.fn(),
+  useAskNow: () => jest.fn(),
+}));
 jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
 }));
