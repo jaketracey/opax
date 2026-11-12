@@ -16,8 +16,9 @@
 #   The lock's `owner` file records pid, lstart and pgid (both the wrapper), script,
 #   worktree basename, UTC start and a random token.
 # - Publication is atomic: the lock is built as a staging directory holding its
-#   owner file, then renamed into place with renamex_np(RENAME_EXCL), which
-#   fails if any directory is there (another project's empty lock included). An
+#   owner file, then renamed into place with renamex_np(RENAME_EXCL) on macOS
+#   or renameat2(RENAME_NOREPLACE) on Linux. Both fail if any directory is there
+#   (another project's empty lock included). An
 #   OPAX lock never exists without its owner file.
 # - Release stops and waits for every other process in the group, then renames
 #   the lock aside in one step and deletes the retired copy.
@@ -111,18 +112,31 @@ qa_lstart() { /bin/ps -o lstart= -p "$1" 2>/dev/null | sed 's/^ *//;s/ *$//'; }
 # Atomic no-replace rename: 0 renamed, 1 the target exists, 2 any other error.
 qa_rename_excl() {
   /usr/bin/python3 -c '
-import ctypes, ctypes.util, errno, sys
+import ctypes, ctypes.util, errno, os, sys
 libc = ctypes.CDLL(ctypes.util.find_library("c"), use_errno=True)
-if sys.platform == "linux":
-    result = libc.renameat2(-100, sys.argv[1].encode(), -100, sys.argv[2].encode(), 1)
+if sys.platform.startswith("linux"):
+    # The kernel checks and publishes in one operation, including for an
+    # existing empty directory. Never fall back to check-then-rename.
+    operation = "renameat2"
+    try:
+        rename = libc.renameat2
+    except AttributeError:
+        sys.stderr.write("renameat2: libc lacks atomic no-replace rename\n")
+        sys.exit(2)
+    rename.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p, ctypes.c_uint]
+    rename.restype = ctypes.c_int
+    AT_FDCWD, RENAME_NOREPLACE = -100, 1
+    result = rename(AT_FDCWD, os.fsencode(sys.argv[1]), AT_FDCWD, os.fsencode(sys.argv[2]), RENAME_NOREPLACE)
 else:
-    result = libc.renamex_np(sys.argv[1].encode(), sys.argv[2].encode(), 0x4)
+    operation = "renamex_np"
+    RENAME_EXCL = 0x4
+    result = libc.renamex_np(sys.argv[1].encode(), sys.argv[2].encode(), RENAME_EXCL)
 if result == 0:
     sys.exit(0)
 code = ctypes.get_errno()
 if code == errno.EEXIST:
     sys.exit(1)
-sys.stderr.write("exclusive rename: %s\n" % errno.errorcode.get(code, code))
+sys.stderr.write("%s: %s\n" % (operation, errno.errorcode.get(code, code)))
 sys.exit(2)
 ' "$1" "$2"
 }

@@ -30,6 +30,39 @@ fail() {
   exit 1
 }
 
+# Keep the public shell API used by Linux builds, even when merging changes
+# first tested on macOS. Check the real host and both platform branches.
+if ! (
+  source "$SCRIPTS/qa-lock.sh" || exit 1
+  for entry in qa_native_lock_run qa_assert_native_lock; do
+    declare -F "$entry" >/dev/null || { echo "Missing function: $entry" >&2; exit 1; }
+  done
+  unset OPAX_LOAD_PROBE
+  load=$(qa_load5) || exit 1
+  [[ "$load" =~ ^[0-9]+$ ]] || { echo "Non-numeric host load: $load" >&2; exit 1; }
+  for platform in Linux Darwin; do
+    (
+      uname() { printf '%s\n' "$platform"; }
+      awk() {
+        if [ "${2:-}" = /proc/loadavg ]; then
+          [ "$platform" = Linux ] || return 1
+          printf '3.21 47.89 8.76 1/100 1234\n' | command awk "$1"
+        else
+          command awk "$@"
+        fi
+      }
+      /usr/sbin/sysctl() {
+        [ "$platform" = Darwin ] && [ "$*" = '-n vm.loadavg' ] || return 1
+        printf '{ 3.21 47.89 8.76 }\n'
+      }
+      [ "$(qa_load5)" = 47 ] || { echo "Wrong five-minute load for $platform" >&2; exit 1; }
+    ) || exit 1
+  done
+); then
+  fail "native-lock functions and Linux/macOS five-minute load probes"
+fi
+pass "native-lock functions exist and Linux/macOS load probes return the five-minute integer"
+
 # Lock state as other processes see it: opax (owner file), foreign (no owner), free.
 cat > "$SCRATCH/state.sh" <<'EOF'
 if [ -f "$OPAX_PASTE_LOCK/owner" ]; then echo opax; elif [ -d "$OPAX_PASTE_LOCK" ]; then echo foreign; else echo free; fi
@@ -103,6 +136,9 @@ wait_for_line() {
 rc_of() { wait_for "$SCRATCH/$1.rc" "${2:-$WAIT_DEFAULT}" || fail "$1 did not finish"; cat "$SCRATCH/$1.rc"; }
 dead_pid() { bash -c 'echo $$'; }
 no_litter() { [ -z "$(/bin/ls "$STATE" 2>/dev/null | grep -v '^reap$')" ]; }
+inode() {
+  if [ "$(uname -s)" = Linux ]; then stat -c %i "$1"; else stat -f %i "$1"; fi
+}
 # in_leader '<code>': runs code in a new process-group leader with the library sourced.
 # The subshell's stderr only carries the shell's "Killed: 9" notice for crash tests.
 in_leader() { ( /usr/bin/perl -e 'setpgrp(0, 0) or die; exec @ARGV' bash -c 'source "$0"; '"$1" "$SCRIPTS/qa-lock.sh" 2>> "$SCRATCH/leader.log"; : ) 2>/dev/null; }
@@ -275,6 +311,94 @@ rmdir "$LOCK" || fail "foreign holder could not rmdir its lock"
 /bin/rm -rf "$SCRATCH/stage-x"
 pass "atomic publication refuses an existing empty lock directory"
 
+# Force a foreign mkdir after any userspace checks, immediately before the
+# real rename syscall. An existence check followed by os.rename would replace
+# this empty directory. The hook delegates to the host's real libc operation.
+mkdir "$SCRATCH/rename-race" "$SCRATCH/stage-race"
+echo staged > "$SCRATCH/stage-race/owner"
+cat > "$SCRATCH/rename-race/sitecustomize.py" <<'PY'
+import ctypes, os
+
+def foreign_lock(destination):
+    if os.fsdecode(destination) == os.environ["QA_RACE_LOCK"]:
+        os.mkdir(destination)
+        with open(os.environ["QA_RACE_MARKER"], "w") as marker:
+            marker.write(str(os.stat(destination).st_ino))
+
+original_getattr = ctypes.CDLL.__getattr__
+def load(self, name):
+    function = original_getattr(self, name)
+    if name not in ("renameat2", "renamex_np"):
+        return function
+    def rename(*args):
+        function.argtypes = getattr(rename, "argtypes", function.argtypes)
+        function.restype = getattr(rename, "restype", function.restype)
+        foreign_lock(args[3 if name == "renameat2" else 1])
+        return function(*args)
+    setattr(self, name, rename)
+    return rename
+ctypes.CDLL.__getattr__ = load
+
+# Also intercept the tempting, unsafe check-then-os.rename implementation so
+# the same regression test rejects it, rather than missing its race window.
+original_rename = os.rename
+def rename(source, destination, *args, **kwargs):
+    foreign_lock(destination)
+    return original_rename(source, destination, *args, **kwargs)
+os.rename = rename
+PY
+rc=0
+PYTHONPATH="$SCRATCH/rename-race" QA_RACE_LOCK="$LOCK" QA_RACE_MARKER="$SCRATCH/race-inode" \
+  bash -c 'source "$0"; qa_rename_excl "$1" "$2"' "$SCRIPTS/qa-lock.sh" "$SCRATCH/stage-race" "$LOCK" || rc=$?
+[ "$rc" = 1 ] && [ -f "$SCRATCH/race-inode" ] && \
+  [ "$(inode "$LOCK")" = "$(cat "$SCRATCH/race-inode")" ] && \
+  [ -z "$(/bin/ls -A "$LOCK")" ] && [ -f "$SCRATCH/stage-race/owner" ] || fail "publication replaced a foreign lock created at the syscall boundary"
+rmdir "$LOCK"
+/bin/rm -rf "$SCRATCH/stage-race"
+pass "a foreign mkdir at the syscall boundary cannot be replaced"
+
+# Contenders start together with complete, distinct owners. Exactly one may
+# publish; every losing source and the winning directory identity must survive.
+# Run against both an absent target and a foreign empty directory, which plain
+# rename would replace. This exercises the real host syscall, including Linux.
+/usr/bin/python3 - "$SCRIPTS/qa-lock.sh" "$SCRATCH" <<'PY' || fail "concurrent no-replace publication failed"
+import os, pathlib, subprocess, sys
+library, scratch = sys.argv[1:]
+for foreign in (False, True):
+    for iteration in range(4):
+        root = pathlib.Path(scratch) / ("publish-%s-%s" % (foreign, iteration))
+        root.mkdir()
+        lock = root / "lock"
+        if foreign:
+            lock.mkdir()
+            original_inode = lock.stat().st_ino
+        children = []
+        for index in range(8):
+            stage = root / str(index)
+            stage.mkdir()
+            (stage / "owner").write_text(str(index))
+            child = subprocess.Popen(
+                ["bash", "-c", 'source "$1"; read -r go; qa_rename_excl "$2" "$3"',
+                 "bash", library, str(stage), str(lock)], stdin=subprocess.PIPE)
+            children.append((stage, child))
+        for _, child in children:
+            child.stdin.write(b"go\n")
+            child.stdin.close()
+        codes = [child.wait(timeout=15) for _, child in children]
+        assert codes.count(0) == (0 if foreign else 1), codes
+        assert all(code in (0, 1) for code in codes), codes
+        for (stage, _), code in zip(children, codes):
+            assert stage.exists() == (code == 1), (stage, code)
+            if code == 1:
+                assert (stage / "owner").read_text() == stage.name
+        if foreign:
+            assert lock.stat().st_ino == original_inode and not list(lock.iterdir())
+        else:
+            winner = codes.index(0)
+            assert (lock / "owner").read_text() == str(winner)
+PY
+pass "eight simultaneous publishers preserve one winner and refuse foreign empty locks"
+
 # 15. Two waiters on one stale lock: one reap, one holder at a time.
 loads 50
 mkdir "$LOCK"; stale_owner "$(dead_pid)" "$(dead_pid)" > "$LOCK/owner"
@@ -295,7 +419,7 @@ pass "one stale lock is removed once and held by one waiter at a time"
 loads 50
 : > "$SCRATCH/violations"
 ( while [ ! -e "$SCRATCH/stop-watch" ]; do
-    i1=$(python3 -c 'import os,sys; print(os.stat(sys.argv[1]).st_ino)' "$LOCK" 2>/dev/null) && [ ! -f "$LOCK/owner" ] && i2=$(python3 -c 'import os,sys; print(os.stat(sys.argv[1]).st_ino)' "$LOCK" 2>/dev/null) && [ "$i1" = "$i2" ] && echo ownerless >> "$SCRATCH/violations"
+    i1=$(inode "$LOCK" 2>/dev/null) && [ ! -f "$LOCK/owner" ] && i2=$(inode "$LOCK" 2>/dev/null) && [ "$i1" = "$i2" ] && echo ownerless >> "$SCRATCH/violations"
   done ) &
 watcher=$!; LIVE+=("$watcher")
 for r in a b c; do
@@ -309,7 +433,7 @@ touch "$SCRATCH/stop-watch"; wait "$watcher" 2>/dev/null || true
 pass "nine racing locked runs never overlap or expose an owner-less lock"
 
 # 17. Release leaves a lock that carries another owner's token.
-in_leader 'qa_paste_lock_try; perl -pi -e "s/^token=.*/token=0000000000000000/" "$OPAX_PASTE_LOCK/owner"; qa_paste_lock_release' || true
+in_leader 'qa_paste_lock_try; sed "s/^token=.*/token=0000000000000000/" "$OPAX_PASTE_LOCK/owner" > "$SCRATCH/owner.next"; /bin/mv -f "$SCRATCH/owner.next" "$OPAX_PASTE_LOCK/owner"; qa_paste_lock_release' || true
 [ -f "$LOCK/owner" ] && grep -q 'no longer ours' "$SCRATCH/leader.log" || fail "released a lock with another token"
 /bin/rm -f "$LOCK/owner"; rmdir "$LOCK"
 pass "release leaves a lock carrying another owner's token"
@@ -361,7 +485,8 @@ mkdir "$LOCK"; stale_owner "$identity_pid" "$(dead_pid)" > "$LOCK/owner"
 printf 'lstart=%s\n' "$identity_start" >> "$LOCK/owner"
 run_locked matched-owner OPAX_PASTE_WAIT_SECONDS=1 -- quick
 [ "$(rc_of matched-owner)" = 1 ] && [ -d "$LOCK" ] || fail "matching live owner reaped"
-perl -pi -e 's/^lstart=.*/lstart=Wed Oct  7 01:00:00 2026/' "$LOCK/owner"
+sed 's/^lstart=.*/lstart=Wed Oct  7 01:00:00 2026/' "$LOCK/owner" > "$SCRATCH/owner.next"
+/bin/mv -f "$SCRATCH/owner.next" "$LOCK/owner"
 run_locked reused-owner -- quick
 [ "$(rc_of reused-owner)" = 0 ] && kill -0 "$identity_pid" || fail "reused owner PID not safely reaped"
 grep -q 'verified pid + lstart' "$SCRATCH/reused-owner.log" || fail "identity reap not logged"

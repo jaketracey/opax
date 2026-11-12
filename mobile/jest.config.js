@@ -1,5 +1,7 @@
 module.exports = {
   preset: 'jest-expo',
+  // A default in config lets an explicit CLI worker budget take precedence.
+  maxWorkers: 2,
   setupFilesAfterEnv: [
     '<rootDir>/tests/hermes-runtime.js',
     '<rootDir>/tests/native-map-mocks.js',

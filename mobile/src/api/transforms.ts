@@ -112,12 +112,14 @@ function buildExpenseBenchmarks(expenses: Expenses) {
 }
 // portal/src/pay-records.mjs: the authoritative search projection. Rates and
 // yearly totals are already calculated by the exporter; never recalculate them.
-const whole = (n: number) =>
-  n.toLocaleString('en-AU', {
-    style: 'currency',
-    currency: 'AUD',
-    maximumFractionDigits: 0,
-  });
+// A pay catalog formats thousands of amounts. Reuse the formatter instead of
+// constructing one for every salary, financial year and post held.
+const wholeAUD = new Intl.NumberFormat('en-AU', {
+  style: 'currency',
+  currency: 'AUD',
+  maximumFractionDigits: 0,
+});
+const whole = (n: number) => wholeAUD.format(n);
 const fy = (y: number) => `${y}-${String(y + 1).slice(2)}`;
 export const PAY_SOURCE =
   'Remuneration Tribunal determinations and the Parliamentary Handbook, joined by Opax';

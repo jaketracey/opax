@@ -9,6 +9,20 @@ import { CitedRecordRow } from '../src/features/ask/AskRows';
 import { type Source, type Turn } from '../src/features/ask/model';
 import { rosterProfiles } from '../src/features/ask/people';
 import { catalogs } from './pinned';
+// Run the complete pinned identity/refusal algorithm without real timer ticks
+// in this rendering test. portraits.test.ts checks the native yielding builder
+// against the same synchronous index, including its UI responsiveness.
+jest.mock('../src/api/portrait-index', () => {
+  const actual = jest.requireActual<
+    typeof import('../src/api/portrait-index')
+  >('../src/api/portrait-index');
+  return {
+    ...actual,
+    buildPortraitIndexAsync: async (
+      data: Parameters<typeof actual.buildPortraitIndex>[0],
+    ) => actual.buildPortraitIndex(data),
+  };
+});
 // The real verified index over the pinned roster, slugs and photo map.
 jest.mock('../src/api/runtime', () => {
   const { PeoplePortraits } = jest.requireActual<
@@ -93,7 +107,7 @@ test('People and speech sources show only verified roster portraits', async () =
       />,
     );
   });
-  // The verified index builds in yielding steps; wait until no lookup is pending.
+  // Wait until the async portrait service has no pending lookup.
   const pending = () =>
     renderer.root.findAll(
       (n) =>

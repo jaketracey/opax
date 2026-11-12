@@ -247,12 +247,12 @@ export function catalogSearchRows(
 ): CatalogRecord[] {
   const rows: CatalogRecord[] = [];
   const href = (name: string) => '/subject/person/' + encodeURIComponent(name);
-  const cash = (amount: number) =>
-    amount.toLocaleString('en-AU', {
-      style: 'currency',
-      currency: 'AUD',
-      maximumFractionDigits: 0,
-    });
+  const cashFormat = new Intl.NumberFormat('en-AU', {
+    style: 'currency',
+    currency: 'AUD',
+    maximumFractionDigits: 0,
+  });
+  const cash = (amount: number) => cashFormat.format(amount);
   if (kind === 'pay') {
     for (const id of Object.keys(data.pay.people)) {
       const record = payPersonRecord(data.pay, id);

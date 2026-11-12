@@ -20,7 +20,11 @@ echo 'OPAX QA: design tokens'
 nice -n 10 node scripts/build-design-tokens.mjs --check
 for gate in typecheck lint test qa-static qa-advisories; do
   echo "OPAX QA: $gate"
-  nice -n 10 npm run "$gate"
+  if [ "$gate" = test ]; then
+    nice -n 10 npm run "$gate" -- "$@"
+  else
+    nice -n 10 npm run "$gate"
+  fi
 done
 echo 'OPAX QA: Android production export'
 nice -n 10 bash scripts/check-release-bundle.sh --android
