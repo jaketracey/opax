@@ -1,12 +1,13 @@
 /** Registers of members' interests (federal and Queensland) from the public register exports. */
 import { personUrl } from '../../public/canonical-urls.js'
+import { interestHolder } from '../../public/interest-holder.js'
 import { clip, fold, siteUrl } from './record-common'
 import { ASK_CHAMBERS, canonicalChamber } from '../ask-chamber'
 import { readToolAsset, type ToolCitation, type ToolDefinition, type ToolEnv } from './types'
 
 const CATEGORIES = ['shareholdings', 'real_estate', 'directorships', 'trusts', 'gifts', 'travel', 'liabilities', 'memberships', 'other']
 const HOLDER: Record<string, string> = { spouse: ' held by their spouse or partner', children: ' held by a dependent child' }
-interface RegisterItem { holder?: string; description: string; kind?: string; date?: string; page?: number }
+interface RegisterItem { holder?: string | null; description: string; kind?: string; date?: string; page?: number }
 interface Register {
   name: string; jurisdiction: string; chamber: string; as_at?: string; statement_date?: string; source_url?: string
   buckets: Record<string, { count: number; items: RegisterItem[] }>
@@ -22,10 +23,10 @@ const scopeLabel = (args: Record<string, unknown>) => [args.jurisdiction, args.c
 
 /** Prefer an expanded copy of the same declaration; retain different holders and alterations. */
 export function mergeRegisterItems(items: RegisterItem[]): RegisterItem[] {
-  const same = (a: RegisterItem, b: RegisterItem) => (a.holder ?? 'unspecified') === (b.holder ?? 'unspecified') &&
+  const same = (a: RegisterItem, b: RegisterItem) => interestHolder(a.holder) === interestHolder(b.holder) &&
     (a.kind ?? 'statement') === (b.kind ?? 'statement') && a.date === b.date && a.page === b.page
   const contains = (a: string, b: string) => a === b || a.startsWith(b + ',') || a.startsWith(b + ';')
-  return items.filter((item, i) => !items.some((other, j) => i !== j && same(item, other) &&
+  return items.map(item => ({ ...item, holder: interestHolder(item.holder) })).filter((item, i) => !items.some((other, j) => i !== j && same(item, other) &&
     contains(fold(other.description), fold(item.description)) && (fold(other.description).length > fold(item.description).length || j < i)))
 }
 
@@ -49,7 +50,7 @@ async function memberRegister(env: ToolEnv, args: Record<string, unknown>) {
   const categories = Object.entries(register.buckets).filter(([category]) => !args.category || args.category === category)
   const summaries = categories.map(([category, bucket]) => ({ category, declared_entries: bucket.count, published_items: bucket.items.length,
     items: mergeRegisterItems(bucket.items).filter(item => (!query || fold(item.description).includes(query)) && inPeriod(dated(item, register), args)) }))
-  const all = summaries.flatMap(s => s.items.map(item => ({ name: register.name, category: s.category, holder: item.holder ?? 'unspecified',
+  const all = summaries.flatMap(s => s.items.map(item => ({ name: register.name, category: s.category, holder: interestHolder(item.holder),
     description: item.description, kind: item.kind ?? 'statement', declaration_date: item.date ?? null,
     date: dated(item, register), register_date: registerDate(register), statement_date: register.statement_date || null,
     jurisdiction: register.jurisdiction, chamber: register.chamber, page: item.page ?? null,

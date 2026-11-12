@@ -58,7 +58,7 @@ interface Votes { name: string; jurisdiction: string; for?: Vote[]; against?: Vo
 interface RecentVotes { _meta: { schema: number; source: string; coverage: string }; people: Record<string, { name: string; jurisdiction: string; recent: Vote[] }> }
 interface Interest {
   source_url?: string; total: number; as_at?: string; ocr_rows?: number; unread_pages?: number;
-  buckets: Record<string, { count: number; items: { description: string; holder?: string; kind?: string; page?: number; date?: string; url?: string }[] }>;
+  buckets: Record<string, { count: number; items: { description: string; holder?: string | null; kind?: string; page?: number; date?: string; url?: string }[] }>;
 }
 interface MoneyNode { id: string; label: string; kind: string; industry?: string; aliases?: string[]; total: number }
 interface MoneyGraph { meta: { sourceShort?: string; source?: string; coverage?: string; source_url?: string }; nodes: MoneyNode[]; edges: { source: string; target: string; total: number; grant?: boolean; flow?: string }[] }
