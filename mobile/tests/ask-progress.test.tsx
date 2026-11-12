@@ -215,6 +215,48 @@ test.each([null, 'invalid', '-1', '1.5'])(
   },
 );
 
+test.each(['3600', 'Fri, 31 Dec 9999 23:59:59 GMT', '9'.repeat(400)])(
+  'Retry-After %s counts down from the 120 s cap, never longer',
+  async (header) => {
+    start();
+    const receivedAt = Date.now();
+    const failure = await rejectBusy(header);
+    expect(failure.retryAt).toBe(receivedAt + 120_000);
+    expect(label()).toBe('Try again in 120 s');
+    act(() => jest.advanceTimersByTime(119_000));
+    expect(label()).toBe('Try again in 1 s');
+    expect(retry().props.disabled).toBe(true);
+    act(() => jest.advanceTimersByTime(1000));
+    expect(label()).toBe('Try again');
+    expect(retry().props.disabled).toBe(false);
+  },
+);
+
+test('a past Retry-After date counts down the short 30 s default', async () => {
+  start();
+  const receivedAt = Date.now();
+  const failure = await rejectBusy(new Date(receivedAt - 60_000).toUTCString());
+  expect(failure.retryAt).toBe(receivedAt + 30_000);
+  expect(label()).toBe('Try again in 30 s');
+  act(() => jest.advanceTimersByTime(30_000));
+  expect(label()).toBe('Try again');
+  expect(retry().props.disabled).toBe(false);
+});
+
+test('a deadline beyond the cap (a clock set back) never shows more than 120 s', async () => {
+  start();
+  await act(async () => {
+    fail(
+      new AskFailure('rate-limited', 'Busy', undefined, Date.now() + 3_600_000),
+    );
+    await request;
+  });
+  expect(label()).toBe('Try again in 120 s');
+  act(() => jest.advanceTimersByTime(60_000));
+  expect(label()).toBe('Try again in 120 s');
+  expect(retry().props.disabled).toBe(true);
+});
+
 test.each(['60', null])(
   'retry deadline survives a part-way remount with header %s',
   async (header) => {

@@ -47,8 +47,21 @@ export type AskReason =
   | 'network'
   | 'server'
   | 'no_answer';
-/** Fallback only when a rate-limit response has no valid Retry-After. */
+/**
+ * The short wait when a rate-limit response's Retry-After is missing,
+ * unreadable or a date already past.
+ */
 export const busyWait = 30_000;
+/**
+ * The longest rate-limit wait the app honours or counts down: 120 s.
+ * The Worker sends Retry-After: 60 (portal/src/index.ts, rateLimited), so the
+ * cap leaves room for that to double. A bad header (an hour, a far-future
+ * date, a proxy's own value) can never hold Try again back for more than
+ * two minutes, the same budget as an answer's pre-text deadline
+ * (transport.ts ASK_DEADLINE_MS). If the limit still holds when the cap
+ * ends, the next try costs one request and brings a fresh countdown.
+ */
+export const retryAfterCap = 120_000;
 export class AskFailure extends Error {
   constructor(
     public code:

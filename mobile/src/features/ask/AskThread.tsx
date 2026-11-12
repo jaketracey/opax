@@ -18,7 +18,7 @@ import { fillComposer } from './AskIdle';
 import type { AskState } from './controller';
 import type { Chat, Turn } from './model';
 import type { AskPerson } from './people';
-import type { AskFailure } from './stream';
+import { retryAfterCap, type AskFailure } from './stream';
 import { askErrorCopy, clarifyCopy, showAnsweredAs } from './turn-copy';
 
 /** A legacy answer's date: the first from `created`, later ones bound by `updated`. */
@@ -82,10 +82,14 @@ export function QuestionLine({
   );
 }
 
+// Never more than the cap, even if the device clock is set back mid-wait.
 const secondsUntil = (deadline: number | undefined) =>
   deadline === undefined
     ? 0
-    : Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+    : Math.min(
+        retryAfterCap / 1000,
+        Math.max(0, Math.ceil((deadline - Date.now()) / 1000)),
+      );
 
 /** Count from the rate-limit failure's deadline, including after a remount. */
 function RetryButton({

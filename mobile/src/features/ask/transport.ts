@@ -1,4 +1,10 @@
-import { AskFailure, AskStream, busyWait, type StreamHandlers } from './stream';
+import {
+  AskFailure,
+  AskStream,
+  busyWait,
+  retryAfterCap,
+  type StreamHandlers,
+} from './stream';
 
 // portal/src/index.ts: the lighter retrieval can take 50 s. The position
 // path can silently fall through from a 40 s recovery to 40 s reasoning.
@@ -6,7 +12,13 @@ import { AskFailure, AskStream, busyWait, type StreamHandlers } from './stream';
 export const ASK_STALL_MS = 85_000;
 export const ASK_DEADLINE_MS = 120_000;
 
-/** Retry-After is a non-negative seconds count or an HTTP date. */
+/**
+ * Retry-After is a non-negative seconds count or an HTTP date. Any wait is
+ * capped at `retryAfterCap` (120 s, stream.ts says why). A date already past
+ * (often a device clock ahead of the server's) or a value that can't be read
+ * takes the short `busyWait` (30 s). "0", or the response's own second, is
+ * now.
+ */
 function retryDeadline(value: string | null, receivedAt: number): number {
   const raw = value?.trim() ?? '';
   const date =
@@ -16,9 +28,11 @@ function retryDeadline(value: string | null, receivedAt: number): number {
     : date.test(raw)
       ? Date.parse(raw.endsWith('GMT') ? raw : `${raw} GMT`)
       : NaN;
-  return Number.isSafeInteger(deadline)
-    ? Math.max(receivedAt, deadline)
-    : receivedAt + busyWait;
+  // An HTTP date has whole seconds, so one in the response's own second is
+  // now, not past. NaN (unreadable) fails this test too.
+  if (!(deadline >= Math.floor(receivedAt / 1000) * 1000))
+    return receivedAt + busyWait;
+  return Math.min(Math.max(receivedAt, deadline), receivedAt + retryAfterCap);
 }
 
 /** One submission, at most two requests, with one pre-text deadline across both. */
