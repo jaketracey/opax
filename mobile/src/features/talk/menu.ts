@@ -115,7 +115,7 @@ export function talkMenu({
       destructive: true,
       onPress: onWithdraw,
     });
-  items.push(openOnOpaxItem('/ask', 'Ask'));
+  items.push(openOnOpaxItem());
   return {
     type: 'menu',
     label: talkCopy.menu.more,

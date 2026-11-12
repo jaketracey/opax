@@ -35,6 +35,8 @@ import {
 import { askSession } from '../src/features/ask/session';
 import { confirmAction } from '../src/design/menu';
 import { haptic } from '../src/design/haptics';
+import { RouteOptions } from '../src/navigation/preview';
+import { expectPublicSiteAction } from './more-menu-web';
 
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
@@ -331,6 +333,18 @@ describe('Account › Ask', () => {
 });
 
 describe('Conversations', () => {
+  test.each(['sheet', 'account'] as const)(
+    '%s More opens a public page accepted by the URL guard',
+    async (mode) => {
+      stored([chat('first-chat', '2026-11-09T01:00:00Z')]);
+      const root = await render(<Conversations mode={mode} />);
+      const items = root
+        .findByType(RouteOptions)
+        .props.options.unstable_headerRightItems();
+      const more = items.find((item: { type: string }) => item.type === 'menu');
+      expectPublicSiteAction(more.menu.items, '/');
+    },
+  );
   test('native row labels use adaptive ink roles instead of the button tint', async () => {
     const saved = chat('first-chat', '2026-11-09T01:00:00Z');
     stored([saved]);

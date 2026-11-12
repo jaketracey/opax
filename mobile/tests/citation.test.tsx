@@ -14,6 +14,7 @@ import { answerTurn } from '../src/features/ask/session';
 import { bindShortLastWord } from '../src/design/record-title';
 import { presentSheet } from '../src/navigation/sheets';
 import type { Answer, Source, Turn } from '../src/features/ask/model';
+import { expectPublicSiteAction } from './more-menu-web';
 
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
@@ -160,6 +161,16 @@ test('with nothing selected the sheet says there is nothing to show', () => {
   const { host } = draw();
   expect(host('citation-missing')).toHaveLength(1);
 });
+
+test.each(['fixture-1', undefined])(
+  'the source More menu opens a permitted public page (slug: %s)',
+  (slug) => {
+    found(fixture([source(1, { slug })]));
+    act(() => showCitation({ turn: 'fixture-chat:1', n: 1 }));
+    draw();
+    expectPublicSiteAction(menuRows(), slug ? `/doc/${slug}` : '/');
+  },
+);
 
 test('the source sheet shows decoded titles without decoding literal entities twice', () => {
   found(

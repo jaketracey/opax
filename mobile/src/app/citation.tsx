@@ -72,7 +72,7 @@ export default function Citation() {
   };
   const menu = pageMenu({
     name: title,
-    webPath: source.slug ? `/doc/${source.slug}` : '/ask',
+    webPath: source.slug ? `/doc/${source.slug}` : '/',
     items: [
       {
         title: 'Cite',
