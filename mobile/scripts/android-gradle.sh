@@ -3,6 +3,7 @@
 # These change how a build runs (daemon, caches, parallelism), not what it produces.
 #   OPAX_GRADLE_WORKERS   Gradle workers (default 8, about half the desktop's 16 vCPUs)
 #   OPAX_NATIVE_JOBS      C/C++ compile and link jobs across CMake builds (default 6)
+#   OPAX_GRADLE_CACHE_ENABLED=0  disable the local build cache (upload builds)
 #   OPAX_GRADLE_DAEMON=0  single-use build without a long-lived daemon
 #   OPAX_GRADLE_CONFIG_CACHE=1  also use Gradle's configuration cache (off by default)
 #   OPAX_ANDROID_CLEAN=1  start from an empty android/ (no kept Gradle state)
@@ -18,7 +19,7 @@ android_gradle_args() {
   export OPAX_NATIVE_JOBS=$jobs
   ANDROID_GRADLE_ARGS=(--init-script "$PWD/scripts/gradle/opax-build-speed.init.gradle"
     "--max-workers=$workers")
-  if [ "${OPAX_GRADLE_BUILD_CACHE:-1}" = 1 ]; then
+  if [ "${OPAX_GRADLE_CACHE_ENABLED:-1}" = 1 ]; then
     ANDROID_GRADLE_ARGS+=(--build-cache)
   else
     ANDROID_GRADLE_ARGS+=(--no-build-cache)

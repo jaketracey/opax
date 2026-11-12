@@ -73,7 +73,7 @@ config=json.load(open(sys.argv[1]))
 assert (config['extra'].get('productionVoiceEnabled') is True) == (sys.argv[2] == '1'), 'Effective Expo voice mode mismatch'
 PY
 # Upload builds keep the provenance guards and use a fresh android/.
-export OPAX_GRADLE_DAEMON=0 OPAX_GRADLE_BUILD_CACHE=0
+export OPAX_GRADLE_DAEMON=0 OPAX_GRADLE_CACHE_ENABLED=0
 android_gradle_args
 ./node_modules/.bin/expo prebuild --platform android --no-install > "$OUT/prebuild.log" 2>&1
 (cd android && "$JAVA_HOME/bin/java" -Xmx64m -Xms64m --enable-native-access=ALL-UNNAMED \

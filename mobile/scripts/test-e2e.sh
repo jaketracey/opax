@@ -90,11 +90,13 @@ trap cleanup EXIT
 trap 'exit 143' TERM
 trap 'exit 130' INT
 mkdir -p "$MOBILE/scripts" "$MOBILE/node_modules/.bin" "$MOBILE/.maestro" "$SCRATCH/bin" "$SCRATCH/jdk/bin" "$SCRATCH/app"
-/bin/cp "$SCRIPTS"/{e2e.sh,e2e-device.sh,qa-env.sh,qa-lock.sh,qa-locked.sh,qa-java.sh,capacity.sh,qa-maestro.sh,maestro-watch.py,qa-wait-clock.py} "$MOBILE/scripts/"
+/bin/cp "$SCRIPTS"/{e2e.sh,e2e-device.sh,qa-env.sh,qa-lock.sh,qa-locked.sh,qa-java.sh,capacity.sh,qa-maestro.sh,maestro-watch.py,qa-wait-clock.py,qa-simulator.sh,sim-health.sh} "$MOBILE/scripts/"
 # polish-b3 adds this source; keep its merge tests isolated too.
 if [ -f "$SCRIPTS/qa-flows.sh" ]; then /bin/cp "$SCRIPTS/qa-flows.sh" "$MOBILE/scripts/"; fi
 touch "$SCRATCH/app/main.jsbundle" "$MOBILE/.maestro/01-start.yaml" "$MOBILE/.maestro/04-offline.yaml"
 export SCRATCH MOBILE OPAX_PASTE_LOCK="$LOCK" OPAX_BUILD_GATE="$SCRATCH/gate.sh" OPAX_SIM_GATE="$SCRATCH/sim-gate.sh"
+export HOME="$SCRATCH/home"
+mkdir -p "$HOME"
 export OPAX_FIXTURE_PORT=8973
 export OPAX_ALLOWED_UDIDS='lane-a lane-b' OPAX_QA_APP="$SCRATCH/app" OPAX_CONTENT_SIZE=large
 export OPAX_CAPACITY_CMD= OPAX_LOAD_PROBE='echo 0' OPAX_PASTE_WAIT_SECONDS=10 OPAX_LOAD_LIMIT=140
@@ -153,7 +155,13 @@ if [ "$lock" != held ] || [ "${MOCK_IN_GATE:-0}" != 1 ] || [ ! -e "$SCRATCH/$MOC
   { [ "${MOCK_NO_LOCK:-0}" = 1 ] && [ "${MOCK_IN_GATE:-0}" = 1 ] && [ -e "$SCRATCH/$MOCK_LANE.gate-active" ]; } || { [ "$action" = shutdown ] && [ "${MOCK_ALLOW_FALLBACK:-0}" = 1 ] && [ -e "$MOBILE/private/qa/$MOCK_LANE/device-started" ]; } || { echo unlocked >> "$SCRATCH/violations"; exit 90; }
 fi
 case "$action" in
+  list)
+    if [ -f "$SCRATCH/booted/device" ]; then
+      device=$(cat "$SCRATCH/booted/device")
+      if [[ "$*" = *-j* ]]; then printf '{"devices":{"mock":[{"udid":"%s","state":"Booted"}]}}\n' "$device"; else echo "$device (Booted)"; fi
+    elif [[ "$*" = *-j* ]]; then echo '{"devices":{"mock":[]}}'; fi ;;
   boot)
+    if [ -f "$SCRATCH/booted/device" ] && [ "$(cat "$SCRATCH/booted/device")" = "$udid" ]; then exit 0; fi
     mkdir "$SCRATCH/booted" || { echo overlap >> "$SCRATCH/violations"; exit 91; }
     echo "$udid" > "$SCRATCH/booted/device"
     touch "$SCRATCH/$MOCK_LANE.boot"
@@ -259,6 +267,38 @@ grep -q 'success fixture-stop lock=free' "$SCRATCH/trace" || fail 'fixture teard
 [ -f "$MOBILE/private/qa/success/device-timing.txt" ] || fail 'no boot/install timing'
 grep -qx -- '--driver-host-port' "$SCRATCH/success.online.maestro-args" && grep -qx '9073' "$SCRATCH/success.online.maestro-args" || fail 'driver port is not fixture + 100'
 pass 'boot/install/Maestro/restore/shutdown inside lock and gate; teardown after release; timings saved'
+
+# Kept devices persist in the shared lock state after release. A different
+# lane must refuse before it claims, boots, restores or shuts down a device.
+export OPAX_KEEP_SIM_BOOTED=1
+run_lane keep-first 01
+wait_for "$MOBILE/private/qa/keep-first/exit-status"
+[ "$(cat "$MOBILE/private/qa/keep-first/exit-status")" = 0 ] && [ ! -e "$LOCK" ] || fail 'kept run failed or held the lock'
+[ "$(cat "$LOCK.opax/kept-simulator")" = lane-a ] && [ "$(cat "$SCRATCH/booted/device")" = lane-a ] || fail 'kept UDID missing from shared state'
+[ -f "$MOBILE/private/qa/keep-first/device-kept" ] && [ ! -e "$SCRATCH/keep-first.shutdown" ] || fail 'kept simulator shut down'
+unset OPAX_KEEP_SIM_BOOTED
+export MOCK_UDID=lane-b
+run_lane keep-other 01
+wait_for "$MOBILE/private/qa/keep-other/exit-status"
+[ "$(cat "$MOBILE/private/qa/keep-other/exit-status")" = 1 ] && [ ! -e "$LOCK" ] || fail 'different simulator was admitted'
+[ ! -e "$SCRATCH/keep-other.boot" ] && [ ! -e "$SCRATCH/keep-other.shutdown" ] && [ "$(cat "$SCRATCH/booted/device")" = lane-a ] || fail 'refused run touched a device'
+grep -q 'another device is booted' "$SCRATCH/keep-other.log" || fail 'boot refusal lacks explanation'
+unset MOCK_UDID
+run_lane keep-reuse 01
+check_rc keep-reuse 0
+[ ! -e "$LOCK.opax/kept-simulator" ] || fail 'shutdown left kept-device state'
+pass 'kept UDID survives lock release; another UDID is refused; same device reuses and clears state on shutdown'
+
+# Opt-in healing is exercised only against fake reports and stub simctl.
+mkdir -p "$HOME/Library/Developer/CoreSimulator/Devices/lane-a"
+export OPAX_SIM_HEAL=1
+run_lane heal-healthy 01
+check_rc heal-healthy 0
+[ -f "$MOBILE/private/qa/heal-healthy/sim-health.log" ] || fail 'healing did not run'
+! grep -q 'erase' "$MOBILE/private/qa/heal-healthy/sim-health.log" || fail 'healthy device erased'
+unset OPAX_SIM_HEAL
+pass 'opt-in simulator healing checks health under the lock with fake HOME'
+
 for phase in online offline install boot restore; do
   export MOCK_FAIL=$phase
   flows=(01); [ "$phase" != offline ] || flows+=(04)
@@ -372,7 +412,9 @@ check_rc bounded-restore 143
 [ ! -e "$MOBILE/private/qa/bounded-restore/fallback-shutdown.log" ] || fail 'bounded restore missed shutdown within grace'
 pass 'stalled restore calls time out and shutdown completes before the stop grace'
 
-export MOCK_CLEANUP_SLEEP=1 MOCK_SHUTDOWN_SLEEP=1 OPAX_SIMCTL_TIMEOUT_SECONDS=3
+# Six delayed restore calls plus shutdown must fit even on the shared host.
+# The next case separately checks a deliberately insufficient one-second grace.
+export MOCK_CLEANUP_SLEEP=1 MOCK_SHUTDOWN_SLEEP=1 OPAX_SIMCTL_TIMEOUT_SECONDS=3 OPAX_E2E_STOP_GRACE_SECONDS=30
 echo OPAX_STOP_GRACE_SECONDS=1 > "$MOBILE/.qa.local.env"
 run_lane slow-cleanup 01
 wait_for "$SCRATCH/slow-cleanup.maestro"

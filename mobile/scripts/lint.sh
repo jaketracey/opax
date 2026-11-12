@@ -16,7 +16,18 @@ inputs=(eslint.config.js package-lock.json)
 for file in scripts/*-rule.js scripts/*-policy.js scripts/*.cjs; do
   [ -f "$file" ] && inputs+=("$file")
 done
-key=$(cat "${inputs[@]}" | /usr/bin/shasum -a 256 | cut -c1-16)
+# Import resolution depends on file membership, including portal imports.
+# A deletion/rename must invalidate unchanged importers in ESLint's cache.
+root=$(git rev-parse --show-toplevel)
+key=$({
+  cat "${inputs[@]}"
+  git -C "$root" ls-files -co --exclude-standard -z | python3 -c '
+import os, sys
+root = sys.argv[1]
+paths = set(sys.stdin.buffer.read().split(b"\0"))
+sys.stdout.buffer.write(b"\0".join(sorted(p for p in paths if p and os.path.lexists(os.path.join(os.fsencode(root), p)))))
+' "$root"
+} | /usr/bin/shasum -a 256 | cut -c1-16)
 cache_dir=node_modules/.cache/eslint
 mkdir -p "$cache_dir"
 # Keep only the current key's cache so stale files do not accumulate.

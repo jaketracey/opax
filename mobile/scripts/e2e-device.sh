@@ -4,6 +4,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 source scripts/qa-env.sh
 source scripts/qa-maestro.sh
+source scripts/qa-simulator.sh
 UDID=${1:?}; OUT=${2:?}; APP=${3:?}; SIZE=${4:?}; APPEARANCE=${5:?}; FIXTURE_PID=${6:?}; OFFLINE=${7:?}; MAP_OFFLINE=${8:?}; MONEY_OFFLINE=${9:?}; shift 9
 AUDIT_PID=; OWN_DEVICE=0; ORIGINAL_SIZE=large; ORIGINAL_APPEARANCE=light; ORIGINAL_CONTRAST=disabled
 # Opt-in: run with iOS Increase Contrast on (OPAX_INCREASE_CONTRAST=1).
@@ -54,10 +55,11 @@ cleanup() {
     timed "$UI_TIMEOUT" xcrun simctl location "$UDID" clear >> "$OUT/restore.log" 2>&1 || true
     # OPAX_KEEP_SIM_BOOTED=1 leaves the simulator up for the next run (the
     # gate reuses a booted device), saving the boot and warm-up each time.
-    if [ "${OPAX_KEEP_SIM_BOOTED:-0}" = 1 ]; then
+    if [ "${OPAX_KEEP_SIM_BOOTED:-0}" = 1 ] && qa_simulator_keep "$UDID"; then
       touch "$OUT/device-kept"
       echo "Simulator left booted (OPAX_KEEP_SIM_BOOTED=1)." >> "$OUT/restore.log"
     elif timed "$SHUTDOWN_TIMEOUT" xcrun simctl shutdown "$UDID" >> "$OUT/restore.log" 2>&1; then
+      qa_simulator_forget "$UDID"
       touch "$OUT/device-shutdown"
     fi
     printf 'device_cleanup_seconds=%s\n' "$((SECONDS - cleanup_start))" >> "$OUT/device-timing.txt"
@@ -78,6 +80,8 @@ fi
 [ ! -e "$OUT/cancelled" ] || exit 143
 allow_simulator "$UDID"
 assert_device_lock
+# Refuse before ownership/cleanup, so a rejected lane cannot stop the holder.
+qa_simulator_admit "$UDID"
 OWN_DEVICE=1
 touch "$OUT/device-started"
 device_start=$SECONDS

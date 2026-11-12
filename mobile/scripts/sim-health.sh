@@ -23,12 +23,17 @@ case "$HOURS" in ''|*[!0-9]*) echo 'hours must be an integer' >&2; exit 2 ;; esa
 DEVICE_DIR="$HOME/Library/Developer/CoreSimulator/Devices/$UDID"
 [ -d "$DEVICE_DIR" ] || { echo "No simulator at $DEVICE_DIR" >&2; exit 2; }
 REPORTS="$HOME/Library/Logs/DiagnosticReports"
+ERASE_MARKER="$DEVICE_DIR/.opax-qa-erased"
 # Crash reports name the device by the first eight characters of its UDID.
 coalition="SimDevice.${UDID:0:8}"
 crashes=0; processes=
 if [ -d "$REPORTS" ]; then
   while IFS= read -r report; do
-    grep -q "$coalition" "$report" 2>/dev/null || continue
+    # Old host reports survive simctl erase. Only a new system crash counts.
+    [ ! -f "$ERASE_MARKER" ] || [ "$report" -nt "$ERASE_MARKER" ] || continue
+    grep -Fq "$coalition" "$report" 2>/dev/null || continue
+    case "$(basename "$report")" in OPAX*|opax*) continue ;; esac
+    grep -Eiq 'au[.]com[.]opax[.]app|"(app_name|procName|name)"[[:space:]]*:[[:space:]]*"OPAX([ ._-][^"]*)?"' "$report" && continue
     crashes=$((crashes + 1))
     processes="$processes $(basename "$report" | sed -E 's/-[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6}.*//')"
   done < <(find "$REPORTS" -maxdepth 1 -name '*.ips' -mmin "-$((HOURS * 60))" 2>/dev/null)
@@ -45,7 +50,11 @@ echo "Simulator is unhealthy: expect slow XCTest driver startup (crash-reporter 
 if [ "$ERASE" = 1 ]; then
   echo "Erasing $UDID (shutdown, erase)."
   xcrun simctl shutdown "$UDID" >/dev/null 2>&1 || true
+  erase_started=$(mktemp "${TMPDIR:-/tmp}/opax-sim-erase.XXXXXX")
+  trap '/bin/rm -f "$erase_started"' EXIT
   xcrun simctl erase "$UDID"
+  # Preserve the start time so a fresh crash during erase is still counted.
+  touch -r "$erase_started" "$ERASE_MARKER"
   echo "Erased. The next boot is a cold first boot; the harness warm-up covers it."
 fi
 exit 3

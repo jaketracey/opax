@@ -17,6 +17,7 @@ beforeEach(() => {
   mkdirSync(join(root, 'scripts'));
   for (const name of [
     'build-android.sh',
+    'android-gradle.sh',
     'qa-env.sh',
     'capacity.sh',
     'qa-lock.sh',
