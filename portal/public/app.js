@@ -20,7 +20,7 @@ const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=63a7c6edf7").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=5df6471214').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=5380fbdd3f').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=8b1bfd1c99').then(module => { askPerson = module; });
 let uiLabels;
@@ -1865,7 +1865,7 @@ async function openAgencyPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading agencies…</p>';
   try {
-    const module = await import("/agencies.js?v=agency-withheld-20261110");
+    const module = await import("/agencies.js?v=agency-identity-20261112");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
