@@ -5,6 +5,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {rosterSeatParty} from '../public/roster-party.js';
+import {datedAffiliationParty} from '../public/speech-attribution.js';
 import {renderPersonAnswer, renderDirectory, partyLine} from '../src/seo-content.ts';
 
 const seat = (over = {}) => ({
@@ -25,6 +26,18 @@ const reader = (electorates) => async (path) => {
 };
 const descriptionOf = async (p, electorates) => (await renderPersonAnswer(p, reader(electorates), new Map())).description;
 const partyItemOf = async (p, electorates) => /<h2>Party and representation<\/h2><ul><li>([\s\S]*?)<\/li>/.exec((await renderPersonAnswer(p, reader(electorates), new Map())).html)?.[1];
+
+test('published state affiliation reaches the profile without inventing speech-date party evidence', async () => {
+  const roster = JSON.parse(readFileSync(new URL('../public/parliamentarians.json', import.meta.url), 'utf8'));
+  const member = roster.people.find(p => p.name === 'Chris Rath');
+  assert.equal(partyLine(member), 'Liberal (recorded affiliation)');
+  assert.equal(await partyItemOf(member, []), '<a href="/subject/party/liberal">Liberal (recorded affiliation)</a>');
+  assert.equal(member.representation[0].as_of, '2026-09-25');
+  assert.equal(member.party_now, undefined);
+  for (const date of ['2022-05-10', '2026-09-25', '2026-11-12']) {
+    assert.equal(datedAffiliationParty({kind:'speech', state:'nsw', chamber:'nsw_lc', date}, member), null);
+  }
+});
 
 test('a state member with no party takes the verified roster party, dated and linked', async () => {
   assert.deepEqual(rosterSeatParty(person(), [seat()]), {party: 'Example Party', as_of: '2026-09-09', electorate: 'Fixtureton',

@@ -336,6 +336,11 @@ def group_problem(name, group, evidence, row, curated, roster=True, root=ROOT):
         why = alias_problem(name, group, row, root)
         if why:
             return why
+    if ev.get("rule") == "state-party-snapshot":
+        from scripts.roster_state_parties import group_problem as state_party_problem
+        why = state_party_problem(name, group, row, root)
+        if why:
+            return why
     if not roster:
         return None
     if row is None:
@@ -343,6 +348,11 @@ def group_problem(name, group, evidence, row, curated, roster=True, root=ROOT):
     if curated is None:
         return "the reviewed roster evidence files cannot be used"
     for pinned, why in protected(row, curated):
+        # A full-name, own-house source match may restore an empty state
+        # profile. The rule above rechecks the dated official evidence; weak
+        # names, witnesses, split identities and other protections still hold.
+        if why == "a neutral namesake" and ev.get("rule") == "state-party-snapshot":
+            continue
         touched = set(fields) if pinned is EVERY_FIELD else set(fields) & pinned
         if touched and (pinned is EVERY_FIELD or ev["kind"] == "identity" or touched & IDENTITY_FIELDS):
             return f"{why}: {', '.join(sorted(touched))} stay as shipped"

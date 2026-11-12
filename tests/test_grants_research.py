@@ -45,9 +45,10 @@ class GrantsResearchTests(unittest.TestCase):
         rows=list(records(data,directory))
         # Reviewed, fixed totals: catches accidental publication loss or growth.
         # 18 Oct 2026: +18 roster profiles, the former senators (and Vanessa Bleyer) accepted in scripts/roster_accept.json.
-        self.assertEqual(len(rows),1464)
-        self.assertEqual(len({r['slug'] for r in rows}),1464)
-        self.assertEqual(sum(r['slug'].startswith('roster-profile-') for r in rows),996)
+        # 12 Nov 2026: +36 sourced state representation profiles.
+        self.assertEqual(len(rows),1500)
+        self.assertEqual(len({r['slug'] for r in rows}),1500)
+        self.assertEqual(sum(r['slug'].startswith('roster-profile-') for r in rows),1032)
         for r in rows:
             self.assertTrue(r['origin']['url'].startswith('https://'))
             self.assertEqual(r['origin']['source_id'],'opax-grants-research')
@@ -68,7 +69,7 @@ class GrantsResearchTests(unittest.TestCase):
         directory=json.loads((ROOT/'portal/public/parliamentarians.json').read_text())
         counts=Counter(kind for kind,_,_ in tasks(data,directory))
         self.assertEqual(counts,{'project_location':226,'invitation_award_match':89,
-            'representation_review':623,  # 100 fewer since 16 Oct: the folded surname prints have no row of their own
+            'representation_review':587,  # 36 missing state seats now have reviewed roster evidence
             'cpi_method_reconciliation':1})
 
 if __name__=='__main__':unittest.main()

@@ -125,7 +125,9 @@ def service_row(entry, bundle):
 
 
 def enrich(doc, accept, bundle):
-    out = copy.deepcopy(doc)
+    from scripts.roster_state_parties import enrich as state_parties
+    state = json.loads((ROOT / 'scripts/roster_state_evidence.json').read_text())
+    out = state_parties(doc, accept, bundle, state)
     by = {p['name']: p for p in out['people']}
     for name, groups in accept.get('records', {}).items():
         row = by.get(name)

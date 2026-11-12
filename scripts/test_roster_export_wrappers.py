@@ -17,7 +17,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-COPIED = ["scripts/vm/export_step.sh", "scripts/vm/export_people.sh", "scripts/vm/keep_if_unchanged.py",
+COPIED = ["scripts/roster_state_parties.py", "scripts/vm/export_step.sh", "scripts/vm/export_people.sh", "scripts/vm/keep_if_unchanged.py",
           "scripts/export_parliamentarians.py", "scripts/roster_identity.py", "scripts/roster_fold.py", "scripts/roster_source_profiles.py", "scripts/roster_overlay.py", "scripts/roster_accept.py", "scripts/roster_accept.json", "scripts/enrich_profile_jurisdictions.py",
           "scripts/roster_service.json", "scripts/roster_witness_service.json", "scripts/roster_state_evidence.json", "portal/public/electorates/manifest.json",
           "portal/public/electorates/releases/b56417062ccc33cf/reference.json",
@@ -202,7 +202,7 @@ class ShippedIdentityReplayTests(unittest.TestCase):
                 box = self.sandbox((ROOT/ROSTER).read_bytes())
                 self.populate_replay(box, scenario)
                 # What the weekly installs: the export laid onto the shipped roster (scripts/roster_overlay.py), so
-                # the replay's five identity differences and two lost scopes never reach the site.
+                # the replay's four identity differences and two lost scopes never reach the site.
                 code, err, output = self.export(box)
                 self.assertEqual(code, 0, err)
                 self.assertNotIn('ROSTER HELD', err)
@@ -253,13 +253,12 @@ class ShippedIdentityReplayTests(unittest.TestCase):
                 self.assertEqual({p['name'] for p in shipped} - by.keys(), renamed, 'every shipped row survives or is folded')
                 # "D'Ambrosio" is now folded into its spelling twin 'D’Ambrosio' (members-electorates-011), so it is
                 # read under that row and is no longer a separate identity change.
-                # The raw export also neutralises the weak Tollner print when the
-                # fixture register cannot reconcile Dave/David. The byte-for-byte
-                # weekly assertion above preserves the reviewed shipped identity.
-                self.assertEqual(set(changes),{'Blandthorn','McDermott','Robinson','Crawford','Tollner'})
-                for field in ('pid', 'full', 'party', 'representation'):
-                    self.assertFalse(by['Tollner'].get(field), field)
-                print(f'Reviewer replay {scenario}: SHIPPED {len(actual)} records, {len(scoped)}/16 scoped; 5 identity differences / cap25; zero unscoped split identities; Robinson/Crawford below own-service floor',file=sys.stderr)
+                # Explicit catalog aliases reconcile the Dave/David source
+                # spellings, so the reviewed Tollner identity remains supported.
+                self.assertEqual(set(changes),{'Blandthorn','McDermott','Robinson','Crawford'})
+                for field in ('pid', 'full', 'party'):
+                    self.assertEqual(by['Tollner'].get(field),next(p for p in shipped if p['name']=='Tollner').get(field))
+                print(f'Reviewer replay {scenario}: SHIPPED {len(actual)} records, {len(scoped)}/16 scoped; 4 identity differences / cap25; zero unscoped split identities; Robinson/Crawford below own-service floor',file=sys.stderr)
 
 
 if __name__ == "__main__":
