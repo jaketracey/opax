@@ -93,6 +93,8 @@ class BuildPayOffices(unittest.TestCase):
         self.assertEqual([s["id"] for s in meta["sources"]], ["secretaries", "full_time", "statutory", "peo"])
         self.assertTrue(all("_doc" not in s for s in meta["sources"]))
         self.assertIn("superannuation", meta["measure"])
+        frl = {s["id"]: s["frl_id"] for s in meta["sources"]}
+        self.assertTrue(all(r["frl_id"] == frl[r["source"]] for r in self.data["offices"]))
 
     def test_fixed_secretaries_and_ranges(self):
         pmc = self.rows["Secretary of the Department of the Prime Minister and Cabinet"]

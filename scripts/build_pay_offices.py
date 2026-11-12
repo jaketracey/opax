@@ -43,7 +43,7 @@ Output (whole dollars):
   {"meta": {"generated", "as_of", "jurisdiction": "federal", "sources": [{"id", "frl_id",
             "compilation_id", "compilation_no", "compilation_date", "registered", "title",
             "url", "publisher"}], "measure", "notes", "not_covered"},
-   "offices": [{"id", "office", "body", "kind", "head", "amount" | null, "min", "max",
+   "offices": [{"id", "office", "body", "kind", "head", "amount" | null, "min", "max", "frl_id",
                 "measure", "classification", "source", "clause", "aliases", "keys"?,
                 "special"?, "holder"?: {"name", "amount"?, "text", "source", "clause",
                 "url", "checked"}}]}
@@ -448,6 +448,8 @@ def build(texts: dict[str, list[str]], sources: dict[str, dict], checked: str) -
         offices += parse_peo(texts["peo"], "peo")
     for row in offices:
         row.pop("special_ref", None)
+        # Each row names its instrument outright; title and compilation are in meta.sources.
+        row["frl_id"] = sources.get(row["source"], {}).get("frl_id")
     order = {"secretary": 0, "statutory_office": 1, "full_time_office": 2, "peo_band": 3}
     offices.sort(key=lambda r: (r["kind"] == "peo_band", r["classification"] if r["kind"] == "peo_band" else "", -(r["amount"] or r["max"] or 0), order[r["kind"]], r["office"]))
     ids = [r["id"] for r in offices]
