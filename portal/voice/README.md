@@ -78,3 +78,69 @@ returned 200 with no active session. The synthetic account's remaining
 allowance reconciled from 90 to 88 seconds. There were no CSP violations or
 uncaught browser errors. The browser context was fully closed before account
 cleanup. No email was sent.
+
+## Agent prompt and tools (`agent-config.json`, `agent-sync.mjs`)
+
+The ElevenLabs agent's prompt and its eight webhook tools are kept in
+`agent-config.json`. `{{origin}}` becomes the agent's OPAX origin (from the
+`agents` table) and `{{voice_tool_secret_id}}` the provider secret that holds
+`VOICE_TOOL_SECRET`. The sync script only reads the provider until `--apply`.
+
+```sh
+cd portal
+export ELEVENLABS_API_KEY=...      # never printed by the script
+npm run voice:agent -- --agent <agent_id>            # dry run: the plan, nothing changed
+npm run voice:agent -- --agent <agent_id> --apply    # back up, then apply, then re-check
+```
+
+`--apply` runs in this order:
+
+1. It reads the agent, its attached tools, and workspace tools with a configured
+   name.
+2. It saves all of that to
+   `~/.cache/opax/voice-agent-backups/<agent_id>-<time>.json` (mode 600, outside
+   the repository; `--backup-dir` or `OPAX_VOICE_BACKUP_DIR` to change). It
+   prints the path, never the contents.
+3. It creates or updates the tools. A configured tool matches an attached tool
+   with its name first, then a workspace tool with its name and this
+   environment's URL. Staging and production tools share names, never URLs, so a
+   re-run after a half-finished apply reuses the tool it created.
+4. One agent update sets the prompt and attaches the tools. If that update
+   fails, the script lists the tools it created (not attached) and updated, and
+   the agent is unchanged.
+5. It reads the agent back (prompt compared with whitespace normalised), then
+   runs the dry run again and exits non-zero unless every tool is `same` and
+   attached and the prompt is unchanged.
+
+To undo, restore from the backup the apply printed. It is a dry run without
+`--apply`, and it backs up the current state first:
+
+```sh
+npm run voice:agent -- --agent <agent_id> --restore ~/.cache/opax/voice-agent-backups/<file>.json
+npm run voice:agent -- --agent <agent_id> --restore ~/.cache/opax/voice-agent-backups/<file>.json --apply
+```
+
+Restore puts back the agent's prompt and `tool_ids` and each saved tool's
+config. Tools the apply created are detached, not deleted; delete them in the
+ElevenLabs dashboard if unwanted.
+
+### Provider fields used, and where they are defined
+
+Checked against the public API reference on 13 November 2026. The tool fields
+are `WebhookToolConfig` on
+[tools/create](https://elevenlabs.io/docs/api-reference/tools/create) and
+[tools/get](https://elevenlabs.io/docs/api-reference/tools/get).
+
+| Field | Values used | Reference |
+| --- | --- | --- |
+| `tool_config.type`, `name`, `description` | `webhook` | [tools/create](https://elevenlabs.io/docs/api-reference/tools/create) (`WebhookToolConfig`) |
+| `response_timeout_secs` | 90 for `ask_opax`, 20 otherwise (allowed 5 to 300, default 20) | [tools/create](https://elevenlabs.io/docs/api-reference/tools/create) |
+| `pre_tool_speech` | `force` for `ask_opax`, `off` otherwise (`auto`, `force`, `off`) | [tools/create](https://elevenlabs.io/docs/api-reference/tools/create) |
+| `execution_mode` | `immediate` (`immediate`, `post_tool_speech`, `async`) | [tools/create](https://elevenlabs.io/docs/api-reference/tools/create) |
+| `tool_call_sound`, `tool_call_sound_behavior` | `typing`, `auto` for `ask_opax` only | [tools/create](https://elevenlabs.io/docs/api-reference/tools/create) |
+| `api_schema.url`, `method` | `POST` to `/api/voice/tools/<name>` | [tools/create](https://elevenlabs.io/docs/api-reference/tools/create) (`WebhookToolApiSchemaConfig-Input`) |
+| `api_schema.request_headers` | `x-opax-voice-token: {"secret_id": ...}` (`ConvAISecretLocator`) | [tools/get](https://elevenlabs.io/docs/api-reference/tools/get) |
+| `request_body_schema` `type`, `description`, `required`, `properties` | object | [tools/create](https://elevenlabs.io/docs/api-reference/tools/create) (`ObjectJsonSchemaProperty-Input`) |
+| property `type`, `description`, `dynamic_variable` | `session_id` uses `dynamic_variable: opax_session_id` and no description: only one of description, dynamic_variable, constant_value, is_system_provided and is_omitted may be set | [tools/get](https://elevenlabs.io/docs/api-reference/tools/get) (`LiteralJsonSchemaProperty`) |
+| agent `conversation_config.agent.prompt.prompt`, `tool_ids` | prompt text, tool ids | [agents/get](https://elevenlabs.io/docs/api-reference/agents/get), [agents/update](https://elevenlabs.io/docs/api-reference/agents/update) |
+| tool list `search`, `page_size`, `cursor` | name prefix search, 100 per page | [tools/list](https://elevenlabs.io/docs/api-reference/tools/list) |
