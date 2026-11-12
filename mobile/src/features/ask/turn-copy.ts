@@ -16,15 +16,26 @@ export const askErrors = {
 } as const;
 /** How long Try again waits after "OPAX is busy right now." */
 export const busyWait = 30_000;
-export function askErrorCopy(failure: Pick<AskFailure, 'code'>): {
+export function askErrorCopy(
+  failure: Pick<AskFailure, 'code'> & Partial<Pick<AskFailure, 'reason'>>,
+): {
   message: string;
+  reason?: string;
   retry: boolean;
 } | null {
   switch (failure.code) {
     case 'cancelled':
       return null;
     case 'blocked':
-      return { message: askErrors.blocked, retry: false };
+      return {
+        message: askErrors.blocked,
+        retry: false,
+        ...(failure.reason === 'network'
+          ? { reason: 'You can try again when you are online.' }
+          : failure.reason === 'server'
+            ? { reason: 'Try rewording your question with public details.' }
+            : {}),
+      };
     case 'empty':
       return { message: askErrors.empty, retry: false };
     case 'offline':

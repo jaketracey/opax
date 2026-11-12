@@ -1,10 +1,15 @@
-import { useEffect, useState, type ReactNode } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { AccessibilityInfo, AppState, StyleSheet, View } from 'react-native';
 import { Button } from '../../design/controls';
+import { haptic } from '../../design/haptics';
+import { Icon } from '../../design/icon';
+import { requestFocus } from '../../design/keyboard';
+import { Pressable } from '../../design/pressable';
 import { InsetGroup } from '../../design/layout';
 import { InlineError } from '../../design/states';
 import { Text } from '../../design/text';
-import { rhythm } from '../../design/tokens';
+import { symbols } from '../../design/symbols';
+import { minimumTarget, rhythm } from '../../design/tokens';
 import { AnswerView, SearchOpaxRow, type LegacyDate } from './AnswerView';
 import { AskProgress, StreamedAnswer } from './AskProgress';
 import { AskSuggestionRow } from './AskRows';
@@ -87,22 +92,105 @@ function RetryButton({
   wait: boolean;
   onPress: () => void;
 }) {
-  const [waiting, setWaiting] = useState(wait);
+  const [deadline] = useState(() => Date.now() + (wait ? busyWait : 0));
+  const [remaining, setRemaining] = useState(wait ? busyWait / 1000 : 0);
+  const announced = useRef(false);
   useEffect(() => {
     if (!wait) return;
-    const timer = setTimeout(() => setWaiting(false), busyWait);
-    return () => clearTimeout(timer);
-  }, [wait]);
+    const tick = () => {
+      const seconds = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+      setRemaining(seconds);
+      if (seconds === 0) {
+        clearInterval(timer);
+        if (!announced.current) {
+          announced.current = true;
+          AccessibilityInfo.announceForAccessibilityWithOptions(
+            'You can try again now',
+            { queue: true },
+          );
+        }
+      }
+    };
+    const timer = setInterval(tick, 1000);
+    tick();
+    return () => clearInterval(timer);
+  }, [wait, deadline]);
+  if (!wait)
+    return (
+      <Button
+        label="Try again"
+        icon={symbols.retry}
+        onPress={onPress}
+        testID="ask-retry"
+      />
+    );
+  const waiting = remaining > 0;
   return (
-    <Button
-      label="Try again"
-      icon="arrow.clockwise"
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel="Try again"
+      accessibilityState={{ disabled: waiting }}
+      accessibilityLiveRegion="none"
       disabled={waiting}
-      accessibilityHint={waiting ? 'Available in a moment' : undefined}
+      accessibilityHint={
+        waiting ? 'Available when the countdown ends' : undefined
+      }
       onPress={onPress}
       testID="ask-retry"
-    />
+      style={styles.retry}
+    >
+      <Icon name={symbols.retry} tone={waiting ? 'inkSoft' : 'navy'} />
+      <Text
+        variant="strong"
+        tone={waiting ? 'inkSoft' : 'navy'}
+        tabular
+        wordSafe
+      >
+        {waiting ? `Try again in ${remaining} s` : 'Try again'}
+      </Text>
+    </Pressable>
   );
+}
+
+/** Consume the first text once per submitted question, including fast/background arrivals. */
+function useAnswerArrival(s: AskState) {
+  const waiting = useRef<{
+    question: Turn;
+    started: number;
+    arrived: boolean;
+  } | null>(null);
+  useEffect(() => {
+    if (s.error || s.clarify) {
+      waiting.current = null;
+      return;
+    }
+    const latest = s.thread.at(-1);
+    if (
+      s.busy &&
+      latest?.role === 'user' &&
+      waiting.current?.question !== latest
+    )
+      waiting.current = {
+        question: latest,
+        started: Date.now(),
+        arrived: false,
+      };
+    const run = waiting.current;
+    const text = s.busy
+      ? s.streaming
+      : latest?.role === 'answer' && s.thread.at(-2) === run?.question
+        ? latest.text
+        : '';
+    if (run && !run.arrived && text.trim()) {
+      run.arrived = true;
+      if (
+        Date.now() - run.started >= 3000 &&
+        AppState.currentState === 'active'
+      )
+        haptic('light');
+    }
+    if (!s.busy) waiting.current = null;
+  }, [s]);
 }
 
 /**
@@ -139,6 +227,7 @@ export function AskThread({
   minHeight: number;
   statusAnnouncement?: string;
 }) {
+  useAnswerArrival(s);
   const thread = s.thread;
   const failure =
     s.error && s.error.code !== 'empty' ? askErrorCopy(s.error) : null;
@@ -238,6 +327,24 @@ export function AskThread({
               message={failure.message}
               testID="ask-error"
             />
+            {failure.reason ? (
+              <Text
+                variant="secondary"
+                tone="inkSoft"
+                wordSafe
+                testID="ask-blocked-reason"
+              >
+                {failure.reason}
+              </Text>
+            ) : null}
+            {s.error!.code === 'blocked' ? (
+              <Button
+                label="Edit question"
+                variant="plain"
+                onPress={() => requestFocus('ask')}
+                testID="ask-edit-question"
+              />
+            ) : null}
             {failure.retry ? (
               <RetryButton
                 key={errorKey(s.error!)}
@@ -270,4 +377,11 @@ const styles = StyleSheet.create({
   thread: { gap: rhythm.section },
   question: { gap: rhythm.line },
   block: { gap: rhythm.tight },
+  retry: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+    minHeight: minimumTarget,
+    alignSelf: 'flex-start',
+  },
 });
