@@ -1,4 +1,4 @@
-import {personUrl} from '../public/canonical-urls.js'
+import {personUrl} from '../public/party-page.js'
 import type {RecordQuestion} from './ask-records'
 import {federalPartyRankingIntent} from './ask-money-family'
 import {isReceiptGraph, mentionedReceiptIndustries, receiptAnswer, receiptDonorChoices, receiptGraphForQuestion, unmatchedReceiptRankingScope} from './voice-money'
