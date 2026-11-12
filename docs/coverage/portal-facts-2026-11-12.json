@@ -5,7 +5,7 @@
   "publication": {
     "bills": 2989,
     "generated_at_retained": "2026-10-04T16:27:54+00:00",
-    "method": "Current exporter ran against the local read-only database. Only sponsor party fields were promoted into the retained snapshot. Division facts were reconciled from the standalone records. Other bill fields and the collection timestamp were retained."
+    "method": "Restore original sponsor-party label/null fields from base 456839511, then decode/map only pre-existing labels with export_bills.py --normalise-sponsor-labels, using its existing sponsor_party_token function. Original nulls remain null and 12 non-party values become null. No sponsor identity or dated affiliation is inferred. Division facts are reconciled and validated against standalone records at export time; page rendering reads the reconciled embedded copies. The collection timestamp and all other retained bill facts are preserved."
   },
   "findings": {
     "grant_program_ids": {
@@ -26,7 +26,10 @@
       "unrecognised_before": 12,
       "unrecognised_after": 0,
       "noncanonical_before": 585,
-      "noncanonical_after": 0
+      "noncanonical_after": 0,
+      "existing_labels_corrected": 585,
+      "original_nulls_filled": 0,
+      "non_party_labels_removed": 12
     },
     "bill_division_tallies": {
       "conflicts_before": 8,
@@ -148,136 +151,22 @@
       "sha256": "c333bf14013850d75b1c59f402742b8c082154282dfac1b950ef90dd2c307788"
     },
     {
-      "path": "portal/public/bills/au-federal-alrc-4132.json",
-      "before_bytes": 5676,
-      "after_bytes": 6451,
-      "sha256": "0d9198b496b014b45ac6fe1eb30d93217a206a261ca5b0bb5915c7f4b80cd41e"
-    },
-    {
-      "path": "portal/public/bills/au-federal-alrc-4134.json",
-      "before_bytes": 2696,
-      "after_bytes": 2701,
-      "sha256": "59e563e2bd05ee9980ab5971bde61f4b4d56e2ab95048bf6c8c036954d129f0e"
-    },
-    {
-      "path": "portal/public/bills/au-federal-alrc-4135.json",
-      "before_bytes": 2285,
-      "after_bytes": 2289,
-      "sha256": "c3952be3ee211357557f944eef49d7e62051e2ea90c64cce7a95acf773e9e857"
-    },
-    {
-      "path": "portal/public/bills/au-federal-alrc-4138.json",
-      "before_bytes": 615,
-      "after_bytes": 624,
-      "sha256": "79d3f7c5d8164580aac2bca2382fbf2aea69c1f0470593a1743e54fb9d739924"
-    },
-    {
-      "path": "portal/public/bills/au-federal-alrc-4139.json",
-      "before_bytes": 618,
-      "after_bytes": 627,
-      "sha256": "837e831cd939e80ceff5e7e5d8dbfcf1436684188e76512e0c8507f57d66bcbb"
-    },
-    {
-      "path": "portal/public/bills/au-federal-alrc-4140.json",
-      "before_bytes": 2417,
-      "after_bytes": 2426,
-      "sha256": "7c06c9d9bba29cfcec895f39e3df4cf3fca7e538569d9b8ccc79e852d2699752"
-    },
-    {
-      "path": "portal/public/bills/au-federal-alrc-4141.json",
-      "before_bytes": 720,
-      "after_bytes": 729,
-      "sha256": "f0dda9aed7209708483b78d30d9a1a5c086e248eb4383bdabbf0861177558971"
-    },
-    {
       "path": "portal/public/bills/au-federal-alrc-4142.json",
       "before_bytes": 10465,
       "after_bytes": 10440,
       "sha256": "0053aba6b168700eab75d6fca9a1e795372578727828f45a0a0852329d20b0a2"
     },
     {
-      "path": "portal/public/bills/au-federal-alrc-4143.json",
-      "before_bytes": 3678,
-      "after_bytes": 3683,
-      "sha256": "0d8ecb7c8d02d104078ce7bd964ae88c44cd6b9c83afc6b9043abaa439c1820d"
-    },
-    {
       "path": "portal/public/bills/au-federal-alrc-4144.json",
       "before_bytes": 11900,
-      "after_bytes": 11884,
-      "sha256": "214d0bca76795d821ca7a1f0ca7e62e68b69a88daf0f37368313f83952e32f8d"
-    },
-    {
-      "path": "portal/public/bills/au-federal-alrc-4149.json",
-      "before_bytes": 2260,
-      "after_bytes": 2269,
-      "sha256": "328f25899b908191e020c9bebadafb7c7c6ba04753f32bc3228c5839408b1ac9"
-    },
-    {
-      "path": "portal/public/bills/au-federal-alrc-4150.json",
-      "before_bytes": 2694,
-      "after_bytes": 2703,
-      "sha256": "a50b8ccda2fa64a2a269d7081a74c64c590738b886df8c2f780565d2618dd3cc"
-    },
-    {
-      "path": "portal/public/bills/au-federal-alrc-4157.json",
-      "before_bytes": 2473,
-      "after_bytes": 2482,
-      "sha256": "e790d3eb14510b04f82814b6ebd95d8b45787f663b85e80a5c70e1fd2c96dd77"
-    },
-    {
-      "path": "portal/public/bills/au-federal-alrc-4158.json",
-      "before_bytes": 3075,
-      "after_bytes": 3079,
-      "sha256": "fbef14805b75fd5294980057546fcaf9ee481bc2991c1ca308f1a98ba4ed46cd"
-    },
-    {
-      "path": "portal/public/bills/au-federal-alrc-4159.json",
-      "before_bytes": 2438,
-      "after_bytes": 2442,
-      "sha256": "ffb549bd439b55ccc85417d98287ac760df9b1af76ebc3e16628450b570eb60f"
+      "after_bytes": 11875,
+      "sha256": "f599fb5a579d32baccae77913549c852688b2978a9f3e7effb55441777775275"
     },
     {
       "path": "portal/public/bills/au-federal-alrc-4164.json",
       "before_bytes": 6377,
       "after_bytes": 6355,
       "sha256": "a81ff70318ae81c4d28d4a18c5ae3d8ab7da083becf58729ba4f44e6233c2b31"
-    },
-    {
-      "path": "portal/public/bills/au-federal-alrc-4167.json",
-      "before_bytes": 3008,
-      "after_bytes": 3017,
-      "sha256": "a8f91e4dafabd2b59661004bb4c727a13c3db1a71fd927350cdb5f703964548c"
-    },
-    {
-      "path": "portal/public/bills/au-federal-alrc-4168.json",
-      "before_bytes": 2425,
-      "after_bytes": 2429,
-      "sha256": "c3f5bfa5234de190953b411cb53ff276950f534c9a976a4722eb093598b88bf2"
-    },
-    {
-      "path": "portal/public/bills/au-federal-alrc-4169.json",
-      "before_bytes": 4445,
-      "after_bytes": 4454,
-      "sha256": "f996bf66192720501c87bf20607facefdaa43bd030bd7586c257d5dab7adf25e"
-    },
-    {
-      "path": "portal/public/bills/au-federal-alrc-4172.json",
-      "before_bytes": 3227,
-      "after_bytes": 3236,
-      "sha256": "2fd07a9cdc0af0ba45fbe0eb906b6a5c96276fcf81ee89ffb7fe32bf8c07a091"
-    },
-    {
-      "path": "portal/public/bills/au-federal-alrc-4173.json",
-      "before_bytes": 3043,
-      "after_bytes": 3052,
-      "sha256": "5c2a10f97c21502105bd164537680195482c38f57b5e69bcd932d072b3e46183"
-    },
-    {
-      "path": "portal/public/bills/au-federal-alrc-4177.json",
-      "before_bytes": 2422,
-      "after_bytes": 2431,
-      "sha256": "c3d5f9b760bcaf82dde5bf59f786b5bf659fef2fb5593e3ea75c9899272a7a34"
     },
     {
       "path": "portal/public/bills/au-federal-r5121.json",
@@ -2016,8 +1905,8 @@
     {
       "path": "portal/public/bills/au-federal-r7006.json",
       "before_bytes": 2789,
-      "after_bytes": 2786,
-      "sha256": "85d585fcf15e66a81c6caff66c8d4bb88aab9a89f95a27988a55f55f3184ac34"
+      "after_bytes": 2781,
+      "sha256": "b94016adb9bb3893e52ba02c0edc669f9adc2da8dfe236e0af9c588578461dc4"
     },
     {
       "path": "portal/public/bills/au-federal-r7010.json",
@@ -2256,8 +2145,8 @@
     {
       "path": "portal/public/bills/au-federal-r7200.json",
       "before_bytes": 2752,
-      "after_bytes": 2749,
-      "sha256": "a23f972c7c6bd242069a6cf7ce4315df3ebf86454084be6a2972ae1b807c79e7"
+      "after_bytes": 2744,
+      "sha256": "ed9959342655b63ee1c0e41cc1e835b301c0770b76bbf26358ba717af3cf2027"
     },
     {
       "path": "portal/public/bills/au-federal-r7203.json",
@@ -2964,8 +2853,8 @@
     {
       "path": "portal/public/bills/au-federal-s1062.json",
       "before_bytes": 8027,
-      "after_bytes": 7953,
-      "sha256": "8910c274071cd40711ca487659afe6ef92817efeb184c504e5134ebfa4dcf775"
+      "after_bytes": 7949,
+      "sha256": "6016d5c3fc7e5e567e42ea577093c21a0ed9a718d0f9d5c7b744090962fd14b8"
     },
     {
       "path": "portal/public/bills/au-federal-s1064.json",
@@ -3096,8 +2985,8 @@
     {
       "path": "portal/public/bills/au-federal-s1100.json",
       "before_bytes": 2553,
-      "after_bytes": 2504,
-      "sha256": "3f1748f3b702f2139e3b4a328366ee4b85dbc172a6986081fbf52c1e9353ea52"
+      "after_bytes": 2500,
+      "sha256": "a64db711cec380ae95deca3c970d15b134b1894914d0d659a5497a3ff636a317"
     },
     {
       "path": "portal/public/bills/au-federal-s1106.json",
@@ -3384,8 +3273,8 @@
     {
       "path": "portal/public/bills/au-federal-s1226.json",
       "before_bytes": 3070,
-      "after_bytes": 3021,
-      "sha256": "4d0e0eb7f3616bd190a0305d7869ba965ebad9674bb474d1b8f7d23cb763f4dc"
+      "after_bytes": 3017,
+      "sha256": "6e434c079db750603826697a50a34ccc3ac85a0ed617e335be5940c33844e81d"
     },
     {
       "path": "portal/public/bills/au-federal-s1227.json",
@@ -3672,8 +3561,8 @@
     {
       "path": "portal/public/bills/au-federal-s1328.json",
       "before_bytes": 2951,
-      "after_bytes": 2902,
-      "sha256": "99e1bb7c1258b2521808045198c2118d8afd876241057506e5a13c7320fda051"
+      "after_bytes": 2898,
+      "sha256": "66542e15eb6095ff17821be35a3d127fca7edd005b5bd221e881809e8259e0cb"
     },
     {
       "path": "portal/public/bills/au-federal-s1329.json",
@@ -3720,8 +3609,8 @@
     {
       "path": "portal/public/bills/au-federal-s1346.json",
       "before_bytes": 3466,
-      "after_bytes": 3417,
-      "sha256": "5bb921844235cb53a9a43df9814c16f0d82f269b8d08c2c690f4bd4ddbaa1535"
+      "after_bytes": 3413,
+      "sha256": "afaeeea12fea5577921a477a8bb9b2d28ad66698024985b5889a6a45b0d039d2"
     },
     {
       "path": "portal/public/bills/au-federal-s1347.json",
@@ -4302,14 +4191,14 @@
     {
       "path": "portal/public/bills/au-federal-s1494.json",
       "before_bytes": 3378,
-      "after_bytes": 3329,
-      "sha256": "431ab5be33c0bfc130c6aed76bad9f524c070c02ce055dc4cef0a52bf1247568"
+      "after_bytes": 3325,
+      "sha256": "4341898a4f3f06e590487d5f15d719add25fb2e9d8ac91b12a6f7365d891b465"
     },
     {
       "path": "portal/public/bills/au-federal-s1496.json",
       "before_bytes": 15563,
-      "after_bytes": 15568,
-      "sha256": "fde7788dba2ba3ea332d2520b41df7ab6f18f19ff14df57752102a845ed68d62"
+      "after_bytes": 15563,
+      "sha256": "95ed969a4a12d8e023a63b9cfff9e6f5de01bab49cf92a865c6f41b442682b15"
     },
     {
       "path": "portal/public/bills/au-federal-s1497.json",
@@ -4554,8 +4443,8 @@
     {
       "path": "portal/public/bills/au-federal-s951.json",
       "before_bytes": 3739,
-      "after_bytes": 3690,
-      "sha256": "c72f834eb923f1d9e80b6ec2a8c67a2dc5a8b28f82f597d165ff02e75709482c"
+      "after_bytes": 3686,
+      "sha256": "1c205d42255821e121bc57205e47c5fa9103b5ad1d83cdd5bdf4a98621bf2a0d"
     },
     {
       "path": "portal/public/bills/au-federal-s952.json",
@@ -4662,8 +4551,8 @@
     {
       "path": "portal/public/bills/au-federal-s973.json",
       "before_bytes": 2947,
-      "after_bytes": 2898,
-      "sha256": "40f5e3e8611586bb126230cd5dd441fbf4393dc25e9d7d7ca8d4b154dc4235cd"
+      "after_bytes": 2894,
+      "sha256": "e76573994b9e9f88f64591081d63c8373fc1f212c919f3f6b7e5abed28124ad8"
     },
     {
       "path": "portal/public/bills/au-federal-s974.json",
@@ -4686,8 +4575,8 @@
     {
       "path": "portal/public/bills/au-federal-s978.json",
       "before_bytes": 2684,
-      "after_bytes": 2639,
-      "sha256": "eb23690f25d9d5c65b8b3e9d2f2117c050d4e493d16975c70a6ef7ff55192dbc"
+      "after_bytes": 2629,
+      "sha256": "3753b3fcf4e2919d7a46afd21b60bae76e64d39adfec42ebbf814a823a750519"
     },
     {
       "path": "portal/public/bills/au-federal-s979.json",
@@ -4776,14 +4665,14 @@
     {
       "path": "portal/public/bills/index.json",
       "before_bytes": 1819999,
-      "after_bytes": 1813518,
-      "sha256": "89d4942418b2b1adbe4f309f68d4c5b95e4d24c0f460f53ebc8c8311e62b119b"
+      "after_bytes": 1813313,
+      "sha256": "800df5abf7132888af2fb77076d370c21ad233fabe7e240a8020e88bf6580fd9"
     },
     {
       "path": "portal/public/search-catalog/manifest.json",
       "before_bytes": 764,
       "after_bytes": 764,
-      "sha256": "15363966844ad8ebfcc96ea06972234288a28e79f3ea688c31d4e90571ee32c6"
+      "sha256": "8bb6d026c19b6ef4e720cfe1659b3c2011a2c52321d21c67f99a56a9d2ab4d69"
     },
     {
       "path": "portal/public/facts/sponsor-parties.json",
@@ -4792,7 +4681,222 @@
       "sha256": "816c97bf29e76df2c6296d8096f0ebc7aec37cb7927e2fde79b300807719412c"
     }
   ],
-  "gates": {
+  "code_sha": "9504eac3a",
+  "local_validation_builds": [
+    {
+      "path": "portal/public/report-records",
+      "command": "node scripts/build_report_catalog.mjs",
+      "files_present": 2373,
+      "bytes_present": 31097198,
+      "result": "passed; build outputs are gitignored except the search manifest"
+    },
+    {
+      "path": "portal/public/search-catalog",
+      "command": "node scripts/build_search_catalog.mjs",
+      "files_present": 1626,
+      "bytes_present": 279950246,
+      "result": "passed; build outputs are gitignored except the search manifest"
+    },
+    {
+      "path": "portal/public/hubs",
+      "command": "node scripts/build_hubs.mjs and node scripts/build_vic_election.mjs",
+      "files_present": 5,
+      "bytes_present": 819574,
+      "result": "passed; build outputs are gitignored except the search manifest"
+    },
+    {
+      "path": "portal/public/crawl",
+      "command": "node scripts/build_crawl_catalog.mjs",
+      "files_present": 2,
+      "bytes_present": 865423,
+      "result": "passed; build outputs are gitignored except the search manifest"
+    }
+  ],
+  "regenerated_summary": {
+    "bill_detail_files": 764,
+    "bill_index_files": 1,
+    "bill_files_bytes": 8613969,
+    "search_manifest_bytes": 764,
+    "canonical_party_tokens_bytes": 508,
+    "total_versioned_data_bytes": 8615241
+  },
+  "review_round_1": {
+    "reviewed_sha": "6727804019fd6a7cadf838b7311789d48ed0a0ae",
+    "fix_sha": "9504eac3ac85c2e1a755539d5e8aa33ff31f3efb",
+    "main_merged": "c37df29d334008d98dfe13c82fa03b3b8eb42fbd",
+    "party_changes_original_submission": 605,
+    "existing_raw_labels_original_submission": 585,
+    "unsupported_null_fills_original_submission": 20,
+    "party_changes_final_against_original_base": 585,
+    "unsupported_null_fills_final": 0,
+    "party_values_revised_against_reviewed_sha": 32,
+    "explanation": "The first submission changed 605 top-level party fields: 585 pre-existing raw labels plus 20 originally null ALRC fields. Round 1 reverts those 20 additions (including nine Bob Katter bills), and drops 12 affiliations inferred in place of non-party source text. The final 585 changes only decode/map labels that existed in the October snapshot. No party is promoted onto an originally null field.",
+    "alrc_party_without_sponsor_before": 20,
+    "alrc_party_without_sponsor_after": 0,
+    "wrong_katter_independent_before": 9,
+    "wrong_katter_independent_after": 0,
+    "browser_standalone_requests_r5626_before": 48,
+    "browser_standalone_requests_r5626_after": 0,
+    "server_standalone_requests_r5626_before": 48,
+    "server_standalone_requests_r5626_after": 0,
+    "catalogue_parses_per_request_before": 1,
+    "catalogue_parses_per_isolate_after": 1,
+    "catalogue_failure_status_before": 500,
+    "catalogue_failure_status_after": 404,
+    "native_title_distinct_search_slugs_before": 1,
+    "native_title_distinct_search_slugs_after": 2,
+    "nightly_check": "--refresh-division-facts validates all joins before writing and checks persisted ayes/noes/outcome for every embedded division afterwards; mismatch or missing records fail the nightly step. --check-division-facts exposes the same offline check for build verification.",
+    "merge_sha": "037c74e8eeefda9fb97f77a08f15618a7d1114c4",
+    "generated_search_version": "d0af3ee81c0b633b",
+    "round_1_data_files": [
+      {
+        "path": "portal/public/bills/au-federal-alrc-4132.json",
+        "bytes": 5676
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4134.json",
+        "bytes": 2696
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4135.json",
+        "bytes": 2285
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4138.json",
+        "bytes": 615
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4139.json",
+        "bytes": 618
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4140.json",
+        "bytes": 2417
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4141.json",
+        "bytes": 720
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4143.json",
+        "bytes": 3678
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4144.json",
+        "bytes": 11875
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4149.json",
+        "bytes": 2260
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4150.json",
+        "bytes": 2694
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4157.json",
+        "bytes": 2473
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4158.json",
+        "bytes": 3075
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4159.json",
+        "bytes": 2438
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4167.json",
+        "bytes": 3008
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4168.json",
+        "bytes": 2425
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4169.json",
+        "bytes": 4445
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4172.json",
+        "bytes": 3227
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4173.json",
+        "bytes": 3043
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4177.json",
+        "bytes": 2422
+      },
+      {
+        "path": "portal/public/bills/au-federal-r7006.json",
+        "bytes": 2781
+      },
+      {
+        "path": "portal/public/bills/au-federal-r7200.json",
+        "bytes": 2744
+      },
+      {
+        "path": "portal/public/bills/au-federal-s1062.json",
+        "bytes": 7949
+      },
+      {
+        "path": "portal/public/bills/au-federal-s1100.json",
+        "bytes": 2500
+      },
+      {
+        "path": "portal/public/bills/au-federal-s1226.json",
+        "bytes": 3017
+      },
+      {
+        "path": "portal/public/bills/au-federal-s1328.json",
+        "bytes": 2898
+      },
+      {
+        "path": "portal/public/bills/au-federal-s1346.json",
+        "bytes": 3413
+      },
+      {
+        "path": "portal/public/bills/au-federal-s1494.json",
+        "bytes": 3325
+      },
+      {
+        "path": "portal/public/bills/au-federal-s1496.json",
+        "bytes": 15563
+      },
+      {
+        "path": "portal/public/bills/au-federal-s951.json",
+        "bytes": 3686
+      },
+      {
+        "path": "portal/public/bills/au-federal-s973.json",
+        "bytes": 2894
+      },
+      {
+        "path": "portal/public/bills/au-federal-s978.json",
+        "bytes": 2629
+      },
+      {
+        "path": "portal/public/bills/index.json",
+        "bytes": 1813313
+      }
+    ],
+    "round_1_bill_detail_files": 32,
+    "round_1_bill_data_bytes": 1928802,
+    "unrelated_release_outputs_restored": [
+      "portal/public/grants-map-LICENSE.txt",
+      "portal/public/graph/party-members.json",
+      "portal/public/growth/agency-top-suppliers.json",
+      "portal/public/voice.js"
+    ],
+    "formatting_only_bill_restore": "au-federal-alrc-4132 is semantically identical to the original snapshot after reverting its unsupported party. Restored original file bytes too.",
+    "unrelated_release_outputs_removed": [
+      "portal/public/chunks/voice-sdk-XRBS4UDV.js"
+    ],
+    "unresolved_findings": []
+  },
+  "prior_submission_gates": {
     "typescript": {
       "command": "cd portal && npx tsc --noEmit",
       "result": "passed after local wrangler types generation"
@@ -4843,43 +4947,62 @@
       "result": "Interrupted after reproducing failures. The first scenario also fails with the base nightly/exporter because fixture status introduced is outside the published vocabulary. The new offline reconciliation completed with zero changed files in that scenario."
     }
   },
-  "code_sha": "2fdfedea1",
-  "local_validation_builds": [
-    {
-      "path": "portal/public/report-records",
-      "command": "node scripts/build_report_catalog.mjs",
-      "files_present": 2373,
-      "bytes_present": 29702354,
-      "result": "passed; build outputs are gitignored except the search manifest"
+  "gates": {
+    "wrangler_types": {
+      "command": "cd portal && npx wrangler types",
+      "result": "passed"
     },
-    {
-      "path": "portal/public/search-catalog",
-      "command": "node scripts/build_search_catalog.mjs",
-      "files_present": 1626,
-      "bytes_present": 279950716,
-      "result": "passed; build outputs are gitignored except the search manifest"
+    "python": {
+      "command": ".venv/bin/python -m unittest scripts.test_export_bills_sponsors scripts.test_export_bills_cleanup tests.test_export_bill_divisions tests.test_bill_lifecycle_export tests.test_bill_refresh_briefs tests.test_export_bills_facts",
+      "result": "passed",
+      "tests": 60
     },
-    {
-      "path": "portal/public/hubs",
-      "command": "node scripts/build_hubs.mjs and node scripts/build_vic_election.mjs",
-      "files_present": 5,
-      "bytes_present": 743981,
-      "result": "passed; build outputs are gitignored except the search manifest"
+    "targeted_portal": {
+      "command": "cd portal && node --test test/portal-facts.test.mjs test/seo-render.test.mjs",
+      "result": "passed before merge; the full portal gate rechecks these tests on the merged tree",
+      "tests": 52
     },
-    {
-      "path": "portal/public/crawl",
-      "command": "node scripts/build_crawl_catalog.mjs",
-      "files_present": 20,
-      "bytes_present": 9359334,
-      "result": "passed; build outputs are gitignored except the search manifest"
+    "shell_syntax": {
+      "command": "bash -n scripts/vm/nightly.sh",
+      "result": "passed"
+    },
+    "lint": {
+      "result": "No portal lint script is defined"
+    },
+    "build_release": {
+      "command": "cd portal && npm run build:release",
+      "result": "passed; local assets only, no deployment",
+      "search_version": "d0af3ee81c0b633b"
+    },
+    "asset_stamps": {
+      "command": "node scripts/stamp_assets.mjs --check",
+      "result": "passed after restoring unrelated tracked build outputs"
+    },
+    "typescript": {
+      "command": "cd portal && npx tsc --noEmit",
+      "result": "passed on the merged tree after release build and restoring unrelated tracked outputs"
+    },
+    "diff": {
+      "command": "git diff --check",
+      "result": "passed"
+    },
+    "portal_system_python_attempt": {
+      "command": "cd portal && npm test",
+      "tests": 4727,
+      "passed": 4723,
+      "failed": 3,
+      "skipped": 1,
+      "result": "Failed because system python3 lacks openpyxl. Two files could not load, and the Victorian advertising Python subprocess also failed. All lane regression tests passed in this run. Re-run with the existing repository virtual environment on PATH."
+    },
+    "portal": {
+      "command": "cd portal && npm test",
+      "environment": "Repository .venv/bin prepended to PATH so Python subprocesses use the installed workbook dependencies.",
+      "tests": 4737,
+      "passed": 4736,
+      "failed": 0,
+      "skipped": 1,
+      "duration_ms": 158481.544452,
+      "result": "passed on the merged tree after restoring unrelated tracked release outputs"
     }
-  ],
-  "regenerated_summary": {
-    "bill_detail_files": 783,
-    "bill_index_files": 1,
-    "bill_files_bytes": 8665364,
-    "search_manifest_bytes": 764,
-    "canonical_party_tokens_bytes": 508,
-    "total_versioned_data_bytes": 8666636
   }
 }
