@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Cache file-local rules by content. Hermes uses the whole TypeScript program
-# and always runs uncached, so editing a dependency rechecks unchanged callers.
+# Cache file-local rules by content. Hermes and dependency-sensitive import
+# rules always run uncached, so dependency edits recheck unchanged callers.
 # Config, local plugins/policies and dependency versions invalidate the cache.
-# File membership also matters to import/no-unresolved; source bytes do not.
+# File membership changes also invalidate the per-file cache.
 # OPAX_LINT_NO_CACHE=1 runs the original combined config without any cache.
 set -euo pipefail
 cd "$(dirname "$0")/.."

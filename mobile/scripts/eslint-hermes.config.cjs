@@ -1,7 +1,7 @@
 // Keep the canonical parsers, plugins, ignores and inline directive support,
-// but run only the whole-program rule. Never cache this pass's results.
+// but run only rules that read other files. Never cache this pass's results.
 const config = require('../eslint.config');
-const rule = 'opax/hermes-builtins';
+const uncachedRules = require('./eslint-uncached-rules.cjs');
 module.exports = [
   ...config.map((entry) => ({
     ...entry,
@@ -9,7 +9,7 @@ module.exports = [
       rules: Object.fromEntries(
         Object.entries(entry.rules).map(([name, setting]) => [
           name,
-          name === rule ? setting : 'off',
+          uncachedRules.has(name) ? setting : 'off',
         ]),
       ),
     }),
