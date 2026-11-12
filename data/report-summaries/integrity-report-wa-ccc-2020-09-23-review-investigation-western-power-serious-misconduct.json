@@ -1,0 +1,99 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2020-09-23-review-investigation-western-power-serious-misconduct",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Review of an investigation by Western Power into serious misconduct",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20investigation%20by%20Western%20Power%20into%20serious%20misconduct.pdf",
+  "document": "Review of an investigation by Western Power into serious misconduct",
+  "sha256": "ab9107411ece8729a76e060a32f2332a455d53df833951e7d70d351bfb149186",
+  "pages": 9,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed an investigation by Western Power into allegations that an employee falsified power pole inspection records.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20investigation%20by%20Western%20Power%20into%20serious%20misconduct.pdf",
+      "document": "Review of an investigation by Western Power into serious misconduct",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20investigation%20by%20Western%20Power%20into%20serious%20misconduct.pdf",
+      "document": "Review of an investigation by Western Power into serious misconduct",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The Commission considered the investigation thorough and accepted that Western Power's conclusions were supported by the available evidence.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20investigation%20by%20Western%20Power%20into%20serious%20misconduct.pdf",
+      "document": "Review of an investigation by Western Power into serious misconduct",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The Commission considered notification of suspected misconduct late and disagreed with the decision against reporting the conduct to police.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20investigation%20by%20Western%20Power%20into%20serious%20misconduct.pdf",
+      "document": "Review of an investigation by Western Power into serious misconduct",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The Commission made no formal recommendations, recognising the investigation and changes to auditing intended to detect similar conduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20investigation%20by%20Western%20Power%20into%20serious%20misconduct.pdf",
+      "document": "Review of an investigation by Western Power into serious misconduct",
+      "page": 9
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The conclusions reached by Western Power were open to be made based on the evidence available.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20investigation%20by%20Western%20Power%20into%20serious%20misconduct.pdf",
+     "document": "Review of an investigation by Western Power into serious misconduct",
+     "page": 7
+    }
+   },
+   {
+    "quote": "In view of Western Power's investigation, the Commission makes no formal recommendations.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20investigation%20by%20Western%20Power%20into%20serious%20misconduct.pdf",
+     "document": "Review of an investigation by Western Power into serious misconduct",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

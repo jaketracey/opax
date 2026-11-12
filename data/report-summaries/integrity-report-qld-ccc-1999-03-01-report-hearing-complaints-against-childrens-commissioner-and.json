@@ -1,0 +1,99 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1999-03-01-report-hearing-complaints-against-childrens-commissioner-and",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Report on a Hearing into Complaints against the Children's Commissioner and Another",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Report-on-a-hearing-into-complaints-against-the-Childrens-Commissioner-and-Another-Report-1999.pdf",
+  "document": "Report on a Hearing into Complaints against the Children's Commissioner and Another (March 1999)",
+  "sha256": "2f1e9a56f8d2bb553282bb0a92e0cf256dd260f1f9cc403ba0c975217e5b4dc6",
+  "pages": 9,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission reported on an investigative hearing into allegations involving Queensland’s Children’s Commissioner and an administration officer.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Report-on-a-hearing-into-complaints-against-the-Childrens-Commissioner-and-Another-Report-1999.pdf",
+      "document": "Report on a Hearing into Complaints against the Children's Commissioner and Another (March 1999)",
+      "page": 5
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The hearing examined alleged interference in recruitment and preferential treatment, along with alleged misuse of a vehicle and office equipment.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Report-on-a-hearing-into-complaints-against-the-Childrens-Commissioner-and-Another-Report-1999.pdf",
+      "document": "Report on a Hearing into Complaints against the Children's Commissioner and Another (March 1999)",
+      "page": 7
+     }
+    ],
+    "section": "Subject matter of hearing"
+   },
+   {
+    "text": "The Commission reported that the investigation was essentially complete, but disciplinary determinations had not begun and further procedural steps remained.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Report-on-a-hearing-into-complaints-against-the-Childrens-Commissioner-and-Another-Report-1999.pdf",
+      "document": "Report on a Hearing into Complaints against the Children's Commissioner and Another (March 1999)",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Report-on-a-hearing-into-complaints-against-the-Childrens-Commissioner-and-Another-Report-1999.pdf",
+      "document": "Report on a Hearing into Complaints against the Children's Commissioner and Another (March 1999)",
+      "page": 8
+     }
+    ],
+    "section": "Reporting process; Procedural requirements"
+   },
+   {
+    "text": "The Commission kept detailed evidence in a confidential second part, considering public disclosure premature before any disciplinary hearing.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Report-on-a-hearing-into-complaints-against-the-Childrens-Commissioner-and-Another-Report-1999.pdf",
+      "document": "Report on a Hearing into Complaints against the Children's Commissioner and Another (March 1999)",
+      "page": 8
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Report-on-a-hearing-into-complaints-against-the-Childrens-Commissioner-and-Another-Report-1999.pdf",
+      "document": "Report on a Hearing into Complaints against the Children's Commissioner and Another (March 1999)",
+      "page": 9
+     }
+    ],
+    "section": "Confidential report"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "For these reasons, pursuant to section 27(3) of the Act, the CJC is of the opinion that such matters should, for the time being, remain confidential.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Report-on-a-hearing-into-complaints-against-the-Childrens-Commissioner-and-Another-Report-1999.pdf",
+     "document": "Report on a Hearing into Complaints against the Children's Commissioner and Another (March 1999)",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

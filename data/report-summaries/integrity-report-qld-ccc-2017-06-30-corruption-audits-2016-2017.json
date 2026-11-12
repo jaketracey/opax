@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2017-06-30-corruption-audits-2016-2017",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Corruption Audits - 2016 - 2017",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-Audit-Report-Managing-and-responding-to-conflicts-of-interest-involving-council-employees-2017.pdf",
+  "document": "Managing and responding to conflicts of interest involving council employees - October 2017",
+  "sha256": "793e2b31db148b3ec23be95b9653356b5611474320e82d1acdf5eb2a5747c5af",
+  "pages": 28,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-Audit-Report-Managing-and-responding-to-conflicts-of-interest-involving-council-employees-2017.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission audited council controls for employee conflicts of interest and responses to related allegations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-Audit-Report-Managing-and-responding-to-conflicts-of-interest-involving-council-employees-2017.pdf",
+      "document": "Managing and responding to conflicts of interest involving council employees - October 2017",
+      "page": 4
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "The CCC found that 10 of the 13 councils needed a coordinated framework for identifying, managing and monitoring conflicts.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-Audit-Report-Managing-and-responding-to-conflicts-of-interest-involving-council-employees-2017.pdf",
+      "document": "Managing and responding to conflicts of interest involving council employees - October 2017",
+      "page": 4
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "It concluded that complaints were generally handled satisfactorily, while identifying scope to improve complaints procedures and outcomes.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-Audit-Report-Managing-and-responding-to-conflicts-of-interest-involving-council-employees-2017.pdf",
+      "document": "Managing and responding to conflicts of interest involving council employees - October 2017",
+      "page": 22
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The CCC recommended conflict management frameworks, procedures for gifts and benefits, and regular audits of conflict management.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-Audit-Report-Managing-and-responding-to-conflicts-of-interest-involving-council-employees-2017.pdf",
+      "document": "Managing and responding to conflicts of interest involving council employees - October 2017",
+      "page": 4
+     }
+    ],
+    "section": "Summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The CCC audit showed considerable variation in the adequacy of procedures for handling corrupt conduct complaints across the councils.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-Audit-Report-Managing-and-responding-to-conflicts-of-interest-involving-council-employees-2017.pdf",
+     "document": "Managing and responding to conflicts of interest involving council employees - October 2017",
+     "page": 5
+    }
+   },
+   {
+    "quote": "Overall, complaints were dealt with satisfactorily.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-Audit-Report-Managing-and-responding-to-conflicts-of-interest-involving-council-employees-2017.pdf",
+     "document": "Managing and responding to conflicts of interest involving council employees - October 2017",
+     "page": 22
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

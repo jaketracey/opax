@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2009-05-19-profiling-the-nsw-public-sector-ii-report-1-results-for-the",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Profiling the NSW public sector II - Report 1 - Results for the NSW public sector as a whole",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20II%20-%20Report%201,%20Results%20for%20the%20NSW%20public%20sector%20as%20a%20whole.pdf.aspx",
+  "document": "Profiling the NSW public sector II - Report 1 - Results for the NSW public sector as a whole",
+  "sha256": "429ac6cfa82504ec0be7ff39e37ad68b9e7ed943a2209614267aadd08cc0e479",
+  "pages": 27,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 7,
+  "last_page": 7,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20II%20-%20Report%201,%20Results%20for%20the%20NSW%20public%20sector%20as%20a%20whole.pdf.aspx#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Commission Against Corruption surveyed NSW public sector organisations and employees in 2007 about corruption risks and prevention practices.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20II%20-%20Report%201,%20Results%20for%20the%20NSW%20public%20sector%20as%20a%20whole.pdf.aspx",
+      "document": "Profiling the NSW public sector II - Report 1 - Results for the NSW public sector as a whole",
+      "page": 7
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "ICAC reported responses from 317 organisations and 493 employees, covering organisational practices and staff perceptions across NSW.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20II%20-%20Report%201,%20Results%20for%20the%20NSW%20public%20sector%20as%20a%20whole.pdf.aspx",
+      "document": "Profiling the NSW public sector II - Report 1 - Results for the NSW public sector as a whole",
+      "page": 7
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "ICAC reported that organisations most often identified procurement, recordkeeping and conflicts of interest as risks, while employees most often perceived favouritism and harassment as workplace problems.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20II%20-%20Report%201,%20Results%20for%20the%20NSW%20public%20sector%20as%20a%20whole.pdf.aspx",
+      "document": "Profiling the NSW public sector II - Report 1 - Results for the NSW public sector as a whole",
+      "page": 7
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "ICAC also reported gaps in staff awareness: 47% did not know they had to retain business emails and 36% had heard of the Protected Disclosures Act 1994.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20II%20-%20Report%201,%20Results%20for%20the%20NSW%20public%20sector%20as%20a%20whole.pdf.aspx",
+      "document": "Profiling the NSW public sector II - Report 1 - Results for the NSW public sector as a whole",
+      "page": 7
+     }
+    ],
+    "section": "Executive summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Organisation responses indicated that high corruption risk functions are generally performed in the context of a policy framework.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20II%20-%20Report%201,%20Results%20for%20the%20NSW%20public%20sector%20as%20a%20whole.pdf.aspx",
+     "document": "Profiling the NSW public sector II - Report 1 - Results for the NSW public sector as a whole",
+     "page": 7
+    }
+   },
+   {
+    "quote": "Many organisations indicated that they have a variety of corruption prevention strategies in place but not all organisations use the same strategies.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20II%20-%20Report%201,%20Results%20for%20the%20NSW%20public%20sector%20as%20a%20whole.pdf.aspx",
+     "document": "Profiling the NSW public sector II - Report 1 - Results for the NSW public sector as a whole",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

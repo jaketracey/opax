@@ -1,0 +1,144 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-cth-robodebt",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "Royal Commission into the Robodebt Scheme",
+ "body": "Royal Commission into the Robodebt Scheme",
+ "source": {
+  "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+  "document": "Report of the Royal Commission into the Robodebt Scheme",
+  "sha256": "9837ca00ecf7022694abb9eae1be57f49a8a791d4df8951339be282a2c76cf42",
+  "pages": 1052,
+  "rights": "© Commonwealth of Australia 2023. With the exception of the Coat of Arms and where otherwise stated, all material presented in this publication is provided under a Creative Commons Attribution 4.0 International licence (imprint, page 2)."
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview of Robodebt",
+  "first_page": 29,
+  "last_page": 35,
+  "link": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF#page=29"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Royal Commission into the Robodebt Scheme was asked to investigate how the scheme was created and run, responses to concerns, debt collection and its human and economic effects.",
+    "cites": [
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "document": "Report of the Royal Commission into the Robodebt Scheme",
+      "page": 11
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It examined income averaging, automated decisions, debt recovery and the roles of legal advisers and oversight agencies.",
+    "cites": [
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "document": "Report of the Royal Commission into the Robodebt Scheme",
+      "page": 11
+     },
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "document": "Report of the Royal Commission into the Robodebt Scheme",
+      "page": 14
+     }
+    ],
+    "section": "Structure of the report"
+   },
+   {
+    "text": "The Commission concluded that income averaging produced inaccurate debts using a method the social security legislation did not permit.",
+    "cites": [
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "document": "Report of the Royal Commission into the Robodebt Scheme",
+      "page": 699
+     }
+    ],
+    "section": "Closing observations"
+   },
+   {
+    "text": "The Commission concluded that the scheme caused trauma and was a costly failure of public administration.",
+    "cites": [
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "document": "Report of the Royal Commission into the Robodebt Scheme",
+      "page": 35
+     }
+    ],
+    "section": "Overview of Robodebt"
+   },
+   {
+    "text": "The Commission made 57 recommendations, including changes to recipient support, budget safeguards, automated decisions, debt recovery and public service accountability.",
+    "cites": [
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "document": "Report of the Royal Commission into the Robodebt Scheme",
+      "page": 19
+     },
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "document": "Report of the Royal Commission into the Robodebt Scheme",
+      "page": 21
+     },
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "document": "Report of the Royal Commission into the Robodebt Scheme",
+      "page": 22
+     },
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "document": "Report of the Royal Commission into the Robodebt Scheme",
+      "page": 26
+     }
+    ],
+    "section": "List of Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "It was a costly failure of public administration, in both human and economic terms.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+     "document": "Report of the Royal Commission into the Robodebt Scheme",
+     "page": 35
+    }
+   },
+   {
+    "quote": "The Scheme was approved by Cabinet and proceeded without the legislative change to support averaging which DSS had said was needed.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+     "document": "Report of the Royal Commission into the Robodebt Scheme",
+     "page": 31
+    }
+   },
+   {
+    "quote": "The Ombudsman was deliberately misled, thus providing further opportunity for the Government to resist scrutiny by using his report as a shield.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+     "document": "Report of the Royal Commission into the Robodebt Scheme",
+     "page": 702
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:21+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

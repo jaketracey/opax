@@ -1,0 +1,124 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2001-04-01-unravelling-corruption-ii-exploring-changes-in-the-public-se",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Unravelling Corruption II Exploring changes in the Public Sector Perspective 1993-1999",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Unravelling%20Corruption%20II%20-%20Exploring%20changes%20in%20the%20Public%20Sector%20Perspective%201993-1999.pdf.aspx",
+  "document": "Unravelling Corruption II Exploring changes in the Public Sector Perspective 1993-1999",
+  "sha256": "2652b21883401cdd584b397f0fa981efbf69bd12c0d6b2a5b4166a8957793e5c",
+  "pages": 142,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY",
+  "first_page": 4,
+  "last_page": 7,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Unravelling%20Corruption%20II%20-%20Exploring%20changes%20in%20the%20Public%20Sector%20Perspective%201993-1999.pdf.aspx#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Commission Against Corruption repeated its employee survey in 1999 to assess how NSW public sector perceptions and reporting attitudes had changed since 1993.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Unravelling%20Corruption%20II%20-%20Exploring%20changes%20in%20the%20Public%20Sector%20Perspective%201993-1999.pdf.aspx",
+      "document": "Unravelling Corruption II Exploring changes in the Public Sector Perspective 1993-1999",
+      "page": 4
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "The research compared responses to workplace scenarios and examined whether experience in particular work affected recognition of corruption and willingness to act.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Unravelling%20Corruption%20II%20-%20Exploring%20changes%20in%20the%20Public%20Sector%20Perspective%201993-1999.pdf.aspx",
+      "document": "Unravelling Corruption II Exploring changes in the Public Sector Perspective 1993-1999",
+      "page": 4
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Unravelling%20Corruption%20II%20-%20Exploring%20changes%20in%20the%20Public%20Sector%20Perspective%201993-1999.pdf.aspx",
+      "document": "Unravelling Corruption II Exploring changes in the Public Sector Perspective 1993-1999",
+      "page": 5
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "ICAC concluded that respondents more often recognised corruption and said they would report it, while unclear definitions and fear of retaliation remained barriers.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Unravelling%20Corruption%20II%20-%20Exploring%20changes%20in%20the%20Public%20Sector%20Perspective%201993-1999.pdf.aspx",
+      "document": "Unravelling Corruption II Exploring changes in the Public Sector Perspective 1993-1999",
+      "page": 4
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Unravelling%20Corruption%20II%20-%20Exploring%20changes%20in%20the%20Public%20Sector%20Perspective%201993-1999.pdf.aspx",
+      "document": "Unravelling Corruption II Exploring changes in the Public Sector Perspective 1993-1999",
+      "page": 5
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Unravelling%20Corruption%20II%20-%20Exploring%20changes%20in%20the%20Public%20Sector%20Perspective%201993-1999.pdf.aspx",
+      "document": "Unravelling Corruption II Exploring changes in the Public Sector Perspective 1993-1999",
+      "page": 6
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "ICAC set out six main lessons about shared understanding, selection-panel training, reporting channels, induction, management action and creating a safe reporting culture.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Unravelling%20Corruption%20II%20-%20Exploring%20changes%20in%20the%20Public%20Sector%20Perspective%201993-1999.pdf.aspx",
+      "document": "Unravelling Corruption II Exploring changes in the Public Sector Perspective 1993-1999",
+      "page": 6
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Unravelling%20Corruption%20II%20-%20Exploring%20changes%20in%20the%20Public%20Sector%20Perspective%201993-1999.pdf.aspx",
+      "document": "Unravelling Corruption II Exploring changes in the Public Sector Perspective 1993-1999",
+      "page": 7
+     }
+    ],
+    "section": "Major lessons for corruption minimisation in the public sector"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "More needs to be done to create organisational cultures in which employees feel safe to report corruption.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Unravelling%20Corruption%20II%20-%20Exploring%20changes%20in%20the%20Public%20Sector%20Perspective%201993-1999.pdf.aspx",
+     "document": "Unravelling Corruption II Exploring changes in the Public Sector Perspective 1993-1999",
+     "page": 7
+    }
+   },
+   {
+    "quote": "Review the nature of training given to those who participate in selection panels to address the risks identified in recruitment selection.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Unravelling%20Corruption%20II%20-%20Exploring%20changes%20in%20the%20Public%20Sector%20Perspective%201993-1999.pdf.aspx",
+     "document": "Unravelling Corruption II Exploring changes in the Public Sector Perspective 1993-1999",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,113 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2020-08-27-looking-back-2020",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Looking Back 2020",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/370766/ICAC-Looking-Back-2020.pdf",
+  "document": "Looking Back 2020",
+  "sha256": "8587f9763f726365d5164fd1ca5c9a5418bce0f4343a436208b0307a5baf9f78",
+  "pages": 40,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s outgoing Independent Commissioner Against Corruption reviewed seven years of the office’s work and proposed legislative reforms.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/370766/ICAC-Looking-Back-2020.pdf",
+      "document": "Looking Back 2020",
+      "page": 5
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commissioner described investigation, complaint oversight, agency evaluation and education as parts of the office’s broader integrity role.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/370766/ICAC-Looking-Back-2020.pdf",
+      "document": "Looking Back 2020",
+      "page": 7
+     }
+    ],
+    "section": "What have we accomplished?"
+   },
+   {
+    "text": "The Commissioner concluded that corruption was present but not systemic, while widespread maladministration created opportunities for corrupt conduct.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/370766/ICAC-Looking-Back-2020.pdf",
+      "document": "Looking Back 2020",
+      "page": 38
+     }
+    ],
+    "section": "CONCLUDING REMARKS"
+   },
+   {
+    "text": "The Commissioner recommended a public integrity commission and changes to statutory definitions and investigation powers.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/370766/ICAC-Looking-Back-2020.pdf",
+      "document": "Looking Back 2020",
+      "page": 25
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/370766/ICAC-Looking-Back-2020.pdf",
+      "document": "Looking Back 2020",
+      "page": 27
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/370766/ICAC-Looking-Back-2020.pdf",
+      "document": "Looking Back 2020",
+      "page": 28
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/370766/ICAC-Looking-Back-2020.pdf",
+      "document": "Looking Back 2020",
+      "page": 29
+     }
+    ],
+    "section": "LEGISLATIVE REFORM"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Corruption exists in South Australia but South Australia does not have a corrupt public administration.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/370766/ICAC-Looking-Back-2020.pdf",
+     "document": "Looking Back 2020",
+     "page": 38
+    }
+   },
+   {
+    "quote": "There is however evidence of widespread maladministration which enables individuals to engage in corrupt conduct.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/370766/ICAC-Looking-Back-2020.pdf",
+     "document": "Looking Back 2020",
+     "page": 38
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

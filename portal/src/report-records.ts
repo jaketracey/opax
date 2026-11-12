@@ -16,6 +16,15 @@ export interface ReportDetail {
   date: string | null; date_basis: string | null; year: string | null; snippet: string; citation: ReportCitation
   snapshot_at: string; caveats: string[]; publisher: RecordRow; record: RecordRow
   facts: RecordRow[]; tables: RecordRow[]; headline: RecordRow | null
+  /** Present only for reports with a checked generated summary (scripts/build_report_catalog.mjs). */
+  summary?: ReportSummary
+}
+/** A generated summary: every sentence cites the report pages it rests on, and the quotes are the body's own words,
+ * verbatim. `quotes.items` is empty where the record already reproduces findings or the quotes are held. */
+export interface ReportSummary {
+  own_summary: { label: string; heading: string; url: string; first_page?: number; last_page?: number } | null
+  generated: { label: string; model: string; checked_at: string | null; sentences: { text: string; cites: ReportCitation[]; section?: string }[] }
+  quotes: { label: string; items: { quote: string; kind: string; cite: ReportCitation }[] }
 }
 export const REPORT_SLUG = /^(?:royal-commission|integrity-report|annual-report|agency-report)-[a-z0-9]+(?:-[a-z0-9]+)*$/
 export async function readReport(assets: Fetcher, slug: string): Promise<ReportDetail | null> {
@@ -170,6 +179,21 @@ function items(part: 'findings' | 'recommendations', r: ReportDetail, mainDocume
   const statusNote = statuses.length ? `<p class="ui-section-note">${plural(statuses.length, 'recommendation has', 'recommendations have')} a status published by government, shown in the government's own words.</p>` +
     `<ul class="rr-tally" role="list" aria-label="Government-published statuses">${[...tally].map(([label, n]) => `<li><span class="ui-status">${esc(label)}</span> <span class="rr-tally-count">${figure(n)}</span></li>`).join('')}</ul>` : ''
   return { id, title, count: held.length || undefined, html: note + partial + statusNote + jump + list }
+}
+
+// ---- generated summary: the report's own summary first, then the generated sentences under their label, each with
+// the pages it rests on, then the body's own words.
+const pages = (a?: number, b?: number) => a == null ? '' : b != null && b !== a ? `pages ${a} to ${b}` : `page ${a}`
+function summaryPart(r: ReportDetail, mainDocument: string): Part | null {
+  const s = r.summary, lines = s?.generated?.sentences || []
+  if (!s || !lines.length) return null
+  const own = s.own_summary && url(s.own_summary.url) ? `<p class="rr-record-text rr-own-summary">${esc(s.own_summary.label)}: ${link(s.own_summary.url,
+    [s.own_summary.heading, pages(s.own_summary.first_page, s.own_summary.last_page)].filter(Boolean).join(', '))}</p>` : ''
+  const generated = `<div class="rr-generated"><p class="ui-section-note rr-generated-label">${esc(s.generated.label)}</p><ul class="rr-summary-lines" role="list">` +
+    lines.map(x => `<li><p class="rr-record-text">${esc(x.text)}</p><p class="rr-cite-line">${x.cites.map(c => citeLink(c, mainDocument)).filter(Boolean).join(' · ')}</p></li>`).join('') + `</ul></div>`
+  const quotes = s.quotes.items.length ? `<h3 class="ui-subsection-title">${esc(s.quotes.label)}</h3><ol class="rr-items" role="list">` +
+    s.quotes.items.map(q => `<li class="rr-item"><div class="rr-item-head"><span class="ui-status rr-kind">${esc(human(q.kind))}</span></div><blockquote class="rr-quote">${prose(q.quote, 'rr-item-text')}</blockquote>${citeLine(q.cite, mainDocument)}</li>`).join('') + `</ol>` : ''
+  return { id: 'summary', title: 'Summary', html: own + generated + quotes }
 }
 
 // ---- documents (commission reports, responses, transcripts; integrity documents)
@@ -491,6 +515,8 @@ export function renderReport(r: ReportDetail) {
     stats = agency(r, parts, mainDocument)
   }
 
+  const summary = summaryPart(r, mainDocument)
+  if (summary) parts.unshift(summary)
   const recordNotes = Array.isArray(c.notes) && c.notes.length ? notes(c.notes) : ''
   if (recordNotes) parts.push({ id: 'notes', title: 'Notes on this record', html: recordNotes })
   const gaps = [...(Array.isArray(c.gaps) ? c.gaps : []), ...(Array.isArray(r.publisher.gaps) ? r.publisher.gaps : [])]

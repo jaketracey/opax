@@ -1,0 +1,141 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2023-03-21-evaluation-of-tafe-sa",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Evaluation of TAFE SA",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/documents/TAFE-SA-Evaluation.pdf",
+  "document": "Evaluation of TAFE SA",
+  "sha256": "004862951bdf7e1cb6e66bd9c1e95340e35131f9921a4711fa4e9a12c90e9dc7",
+  "pages": 167,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 10,
+  "last_page": 11,
+  "link": "https://icac.sa.gov.au/documents/TAFE-SA-Evaluation.pdf#page=10"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption evaluated TAFE SA to identify weaknesses that could allow corruption.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/TAFE-SA-Evaluation.pdf",
+      "document": "Evaluation of TAFE SA",
+      "page": 8
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The evaluation examined governance, staffing, procurement, assets, teaching, commercial activities and information management.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/TAFE-SA-Evaluation.pdf",
+      "document": "Evaluation of TAFE SA",
+      "page": 10
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/TAFE-SA-Evaluation.pdf",
+      "document": "Evaluation of TAFE SA",
+      "page": 11
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commission considered that TAFE SA could underestimate fraud and corruption risks despite work to strengthen its governance.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/TAFE-SA-Evaluation.pdf",
+      "document": "Evaluation of TAFE SA",
+      "page": 10
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commission reported that completed parallel investigations found no evidence of corruption, although another investigation remained underway and procedural weaknesses had emerged.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/TAFE-SA-Evaluation.pdf",
+      "document": "Evaluation of TAFE SA",
+      "page": 11
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "Its 34 recommendations covered risk assessment, staff supervision, procurement controls, complaints, professional boundaries and commercial interests.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/TAFE-SA-Evaluation.pdf",
+      "document": "Evaluation of TAFE SA",
+      "page": 11
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/TAFE-SA-Evaluation.pdf",
+      "document": "Evaluation of TAFE SA",
+      "page": 14
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/TAFE-SA-Evaluation.pdf",
+      "document": "Evaluation of TAFE SA",
+      "page": 15
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/TAFE-SA-Evaluation.pdf",
+      "document": "Evaluation of TAFE SA",
+      "page": 16
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/TAFE-SA-Evaluation.pdf",
+      "document": "Evaluation of TAFE SA",
+      "page": 17
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/TAFE-SA-Evaluation.pdf",
+      "document": "Evaluation of TAFE SA",
+      "page": 18
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/TAFE-SA-Evaluation.pdf",
+      "document": "Evaluation of TAFE SA",
+      "page": 19
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There are opportunities for TAFE SA to strengthen its awareness and assessment of those risks and behaviours beyond the current understanding provided by its risk appetite statement and external audit function.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/TAFE-SA-Evaluation.pdf",
+     "document": "Evaluation of TAFE SA",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

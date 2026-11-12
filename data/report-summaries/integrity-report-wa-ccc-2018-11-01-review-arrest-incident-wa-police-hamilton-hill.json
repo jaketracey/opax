@@ -1,0 +1,124 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2018-11-01-review-arrest-incident-wa-police-hamilton-hill",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Review of an arrest incident by WA Police at Hamilton Hill",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+  "document": "Review of an arrest incident by WA Police at Hamilton Hill",
+  "sha256": "9c67de8ccd5ea3f976fae17b367b2d1646926f0410d4751ae87b464d6bf61637",
+  "pages": 22,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed a police investigation into an arrest at Hamilton Hill and the preparation of prosecution evidence.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+      "document": "Review of an arrest incident by WA Police at Hamilton Hill",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+      "document": "Review of an arrest incident by WA Police at Hamilton Hill",
+      "page": 5
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "The Commission assessed whether the police investigation's conclusions were reasonably available on the evidence.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+      "document": "Review of an arrest incident by WA Police at Hamilton Hill",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+      "document": "Review of an arrest incident by WA Police at Hamilton Hill",
+      "page": 20
+     }
+    ],
+    "section": "The Commission's second review"
+   },
+   {
+    "text": "It concluded that the investigation was comprehensive and formed no opinion of misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+      "document": "Review of an arrest incident by WA Police at Hamilton Hill",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+      "document": "Review of an arrest incident by WA Police at Hamilton Hill",
+      "page": 22
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commission supported introducing police body cameras and planned to seek an update on work addressing prosecution issues after a year.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+      "document": "Review of an arrest incident by WA Police at Hamilton Hill",
+      "page": 21
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+      "document": "Review of an arrest incident by WA Police at Hamilton Hill",
+      "page": 22
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission has concluded that the IAU investigation was comprehensive.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+     "document": "Review of an arrest incident by WA Police at Hamilton Hill",
+     "page": 22
+    }
+   },
+   {
+    "quote": "The conclusions reached by IAU as to the conduct of various officers were open.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+     "document": "Review of an arrest incident by WA Police at Hamilton Hill",
+     "page": 22
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

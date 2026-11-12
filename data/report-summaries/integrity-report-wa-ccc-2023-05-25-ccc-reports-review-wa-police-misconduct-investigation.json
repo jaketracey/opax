@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2023-05-25-ccc-reports-review-wa-police-misconduct-investigation",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "CCC reports on review of WA Police misconduct investigation",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_oversight_of_a_police_investigation_into_an_arrest_for_disorderly_conduct.pdf",
+  "document": "Report on oversight of a police investigation into an arrest for disorderly conduct",
+  "sha256": "f42698882822d75d0ec1e2087439ba82bfc4e5463e3b8a328d2ca171934b7725",
+  "pages": 14,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_oversight_of_a_police_investigation_into_an_arrest_for_disorderly_conduct.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed WA Police's handling of a complaint about an arrest for disorderly behaviour.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_oversight_of_a_police_investigation_into_an_arrest_for_disorderly_conduct.pdf",
+      "document": "Report on oversight of a police investigation into an arrest for disorderly conduct",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The Commission found the investigation inadequate, citing excessive delay, poor transparency and weaknesses in quality assurance.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_oversight_of_a_police_investigation_into_an_arrest_for_disorderly_conduct.pdf",
+      "document": "Report on oversight of a police investigation into an arrest for disorderly conduct",
+      "page": 14
+     }
+    ]
+   },
+   {
+    "text": "The Commission accepted that the arrest was lawful but considered it and the subsequent assault charge oppressive in the circumstances.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_oversight_of_a_police_investigation_into_an_arrest_for_disorderly_conduct.pdf",
+      "document": "Report on oversight of a police investigation into an arrest for disorderly conduct",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The Commission made one recommendation to clarify timeframes for investigations and reviews, with a further review planned after 12 months.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_oversight_of_a_police_investigation_into_an_arrest_for_disorderly_conduct.pdf",
+      "document": "Report on oversight of a police investigation into an arrest for disorderly conduct",
+      "page": 14
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission considers the investigation inadequate.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_oversight_of_a_police_investigation_into_an_arrest_for_disorderly_conduct.pdf",
+     "document": "Report on oversight of a police investigation into an arrest for disorderly conduct",
+     "page": 14
+    }
+   },
+   {
+    "quote": "The Commission considers the arrest, and the subsequent charge of Assault Public Officer, were oppressive in the circumstances.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_oversight_of_a_police_investigation_into_an_arrest_for_disorderly_conduct.pdf",
+     "document": "Report on oversight of a police investigation into an arrest for disorderly conduct",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

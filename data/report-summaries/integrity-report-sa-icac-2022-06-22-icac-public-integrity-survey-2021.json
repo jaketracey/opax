@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2022-06-22-icac-public-integrity-survey-2021",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "ICAC Public Integrity Survey 2021",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/documents/web-ICAC-Local-Public-Integrity-Survey-2022-27.6.2022.pdf",
+  "document": "ICAC Public Integrity Survey 2021 – Local Government Integrity Insights",
+  "sha256": "36b1c64bf3b6559c35c1810e5a868a7ac6355b1954741930981d45fffe74cc6e",
+  "pages": 52,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "COMMISSIONER’S FOREWORD",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://icac.sa.gov.au/documents/web-ICAC-Local-Public-Integrity-Survey-2022-27.6.2022.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption surveyed local government public officers about workplace corruption risks and reporting.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/web-ICAC-Local-Public-Integrity-Survey-2022-27.6.2022.pdf",
+      "document": "ICAC Public Integrity Survey 2021 – Local Government Integrity Insights",
+      "page": 4
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/web-ICAC-Local-Public-Integrity-Survey-2022-27.6.2022.pdf",
+      "document": "ICAC Public Integrity Survey 2021 – Local Government Integrity Insights",
+      "page": 6
+     }
+    ],
+    "section": "THE SURVEY"
+   },
+   {
+    "text": "The Commission cautioned that the voluntary responses reflected perceptions and might not represent the whole local government workforce.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/web-ICAC-Local-Public-Integrity-Survey-2022-27.6.2022.pdf",
+      "document": "ICAC Public Integrity Survey 2021 – Local Government Integrity Insights",
+      "page": 6
+     }
+    ],
+    "section": "THE SURVEY"
+   },
+   {
+    "text": "The Commission reported that participants perceived nepotism and favouritism in recruitment and career opportunities as the leading corruption risks.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/web-ICAC-Local-Public-Integrity-Survey-2022-27.6.2022.pdf",
+      "document": "ICAC Public Integrity Survey 2021 – Local Government Integrity Insights",
+      "page": 4
+     }
+    ],
+    "section": "COMMISSIONER’S FOREWORD"
+   },
+   {
+    "text": "The Commission recommended targeted training, secondary employment policies, closer monitoring of contract outcomes and safer reporting arrangements.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/web-ICAC-Local-Public-Integrity-Survey-2022-27.6.2022.pdf",
+      "document": "ICAC Public Integrity Survey 2021 – Local Government Integrity Insights",
+      "page": 42
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The potential risks associated with secondary employment need to be better identified and managed.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/web-ICAC-Local-Public-Integrity-Survey-2022-27.6.2022.pdf",
+     "document": "ICAC Public Integrity Survey 2021 – Local Government Integrity Insights",
+     "page": 42
+    }
+   },
+   {
+    "quote": "There is a need for further training and education concerning corruption risks that are specific to someone’s role.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/web-ICAC-Local-Public-Integrity-Survey-2022-27.6.2022.pdf",
+     "document": "ICAC Public Integrity Survey 2021 – Local Government Integrity Insights",
+     "page": 42
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

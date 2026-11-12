@@ -1,0 +1,99 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2024-08-27-a-dependent-commission-against-corruption",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "A Dependent Commission Against Corruption",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/1065118/A-Dependent-Commission-Against-Corruption-report-August-2024.pdf",
+  "document": "A Dependent Commission Against Corruption",
+  "sha256": "fd411ec089608030342d71ee9647bedc5a2819d6144c06128af8993e5e7f185d",
+  "pages": 16,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption reported on the consequences of losing its ability to refer cases directly to the Director of Public Prosecutions.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/1065118/A-Dependent-Commission-Against-Corruption-report-August-2024.pdf",
+      "document": "A Dependent Commission Against Corruption",
+      "page": 4
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The report compared the referral process before and after the legislative changes and considered arrangements in other jurisdictions.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/1065118/A-Dependent-Commission-Against-Corruption-report-August-2024.pdf",
+      "document": "A Dependent Commission Against Corruption",
+      "page": 3
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/1065118/A-Dependent-Commission-Against-Corruption-report-August-2024.pdf",
+      "document": "A Dependent Commission Against Corruption",
+      "page": 7
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/1065118/A-Dependent-Commission-Against-Corruption-report-August-2024.pdf",
+      "document": "A Dependent Commission Against Corruption",
+      "page": 9
+     }
+    ],
+    "section": "The ICAC Act post 7 October 2021; Other jurisdictions"
+   },
+   {
+    "text": "The Commissioner concluded that the restrictions reduced independence, duplicated work, caused delay and obstructed direct contact with prosecutors.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/1065118/A-Dependent-Commission-Against-Corruption-report-August-2024.pdf",
+      "document": "A Dependent Commission Against Corruption",
+      "page": 14
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The single recommendation sought a legislative amendment restoring direct referrals to the Director of Public Prosecutions.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/1065118/A-Dependent-Commission-Against-Corruption-report-August-2024.pdf",
+      "document": "A Dependent Commission Against Corruption",
+      "page": 14
+     }
+    ],
+    "section": "Recommendation"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The loss of the Commission’s independence, double handling, delay and the lack of direct communication with the prosecutor are all consequences of the current position.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/1065118/A-Dependent-Commission-Against-Corruption-report-August-2024.pdf",
+     "document": "A Dependent Commission Against Corruption",
+     "page": 14
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

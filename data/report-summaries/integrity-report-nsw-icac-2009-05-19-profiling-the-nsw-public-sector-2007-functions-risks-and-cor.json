@@ -1,0 +1,73 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2009-05-19-profiling-the-nsw-public-sector-2007-functions-risks-and-cor",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Profiling the NSW public sector 2007 - functions, risks and corruption prevention strategics",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector%202007,%20Functions,%20risks%20and%20corruption%20prevention%20strategics.pdf.aspx",
+  "document": "Profiling the NSW public sector 2007 - functions, risks and corruption prevention strategics",
+  "sha256": "a320e24febdae3685328f4b725718b1ea61552e151263666aa123db432cc6ffa",
+  "pages": 40,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Commission Against Corruption prepared this organisational questionnaire to profile NSW public sector functions, corruption risks and prevention practices.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector%202007,%20Functions,%20risks%20and%20corruption%20prevention%20strategics.pdf.aspx",
+      "document": "Profiling the NSW public sector 2007 - functions, risks and corruption prevention strategics",
+      "page": 2
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It asks organisations to rate potential corruption risks and indicate whether those risks are managed adequately or need more attention.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector%202007,%20Functions,%20risks%20and%20corruption%20prevention%20strategics.pdf.aspx",
+      "document": "Profiling the NSW public sector 2007 - functions, risks and corruption prevention strategics",
+      "page": 11
+     }
+    ],
+    "section": "Corruption risk areas"
+   },
+   {
+    "text": "It also asks about designated responsibility for prevention, risk management processes and employee training on codes of conduct.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector%202007,%20Functions,%20risks%20and%20corruption%20prevention%20strategics.pdf.aspx",
+      "document": "Profiling the NSW public sector 2007 - functions, risks and corruption prevention strategics",
+      "page": 17
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector%202007,%20Functions,%20risks%20and%20corruption%20prevention%20strategics.pdf.aspx",
+      "document": "Profiling the NSW public sector 2007 - functions, risks and corruption prevention strategics",
+      "page": 20
+     }
+    ],
+    "section": "Organisational strategies"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

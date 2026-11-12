@@ -1,0 +1,108 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2015-02-04-report-misconduct-risk-local-government-procurement",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on Misconduct Risk in Local Government Procurement",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Risk%20in%20Local%20Government%20Procurement.pdf",
+  "document": "Report on Misconduct Risk in Local Government Procurement",
+  "sha256": "4c21700775538fe41e23af41e7bf0a6672b233ab771244bfeefa9804ffe254c9",
+  "pages": 30,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission examined procurement misconduct risks through investigations, audits of five local governments and a review of financial governance at the City of Stirling.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Risk%20in%20Local%20Government%20Procurement.pdf",
+      "document": "Report on Misconduct Risk in Local Government Procurement",
+      "page": 8
+     }
+    ],
+    "section": "Purpose"
+   },
+   {
+    "text": "It found that procurement and financial governance weaknesses, including insufficient risk assessment, left local governments exposed to fraud and corruption.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Risk%20in%20Local%20Government%20Procurement.pdf",
+      "document": "Report on Misconduct Risk in Local Government Procurement",
+      "page": 8
+     }
+    ],
+    "section": "Purpose"
+   },
+   {
+    "text": "The Commission favoured prevention across the sector and considered external procurement audit necessary.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Risk%20in%20Local%20Government%20Procurement.pdf",
+      "document": "Report on Misconduct Risk in Local Government Procurement",
+      "page": 24
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Risk%20in%20Local%20Government%20Procurement.pdf",
+      "document": "Report on Misconduct Risk in Local Government Procurement",
+      "page": 27
+     }
+    ],
+    "section": "ANALYSIS"
+   },
+   {
+    "text": "Its two recommendations sought Auditor General oversight of local governments and active departmental scrutiny of their procurement risk reviews.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Risk%20in%20Local%20Government%20Procurement.pdf",
+      "document": "Report on Misconduct Risk in Local Government Procurement",
+      "page": 28
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Risk%20in%20Local%20Government%20Procurement.pdf",
+      "document": "Report on Misconduct Risk in Local Government Procurement",
+      "page": 29
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In the Commission's view a whole-of-sector approach, with a focus on prevention, is needed.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Risk%20in%20Local%20Government%20Procurement.pdf",
+     "document": "Report on Misconduct Risk in Local Government Procurement",
+     "page": 24
+    }
+   },
+   {
+    "quote": "There is a need for external audit of local government procurement.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Risk%20in%20Local%20Government%20Procurement.pdf",
+     "document": "Report on Misconduct Risk in Local Government Procurement",
+     "page": 27
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

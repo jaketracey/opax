@@ -1,0 +1,94 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2023-10-04-corruption-risks-associated-with-supplier-panels-october-202",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Corruption risks associated with supplier panels (October 2023)",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20associated%20with%20supplier%20panels-FIN_Oct23.pdf.aspx",
+  "document": "Corruption risks associated with supplier panels (October 2023)",
+  "sha256": "207c9e1317953f7f3894557aacdd70d0ad9cb6f9182fb92d2c97f9b4ccae95a3",
+  "pages": 9,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption explains corruption risks in agencies’ internal supplier panels.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20associated%20with%20supplier%20panels-FIN_Oct23.pdf.aspx",
+      "document": "Corruption risks associated with supplier panels (October 2023)",
+      "page": 1
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It examines how suppliers are selected, how work is allocated and how panels are maintained.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20associated%20with%20supplier%20panels-FIN_Oct23.pdf.aspx",
+      "document": "Corruption risks associated with supplier panels (October 2023)",
+      "page": 2
+     }
+    ],
+    "section": "What is a supplier panel?"
+   },
+   {
+    "text": "The Commission cautions that weaknesses in selecting panel members can leave later purchasing vulnerable to corruption.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20associated%20with%20supplier%20panels-FIN_Oct23.pdf.aspx",
+      "document": "Corruption risks associated with supplier panels (October 2023)",
+      "page": 2
+     }
+    ],
+    "section": "Phase 1 – panel formation"
+   },
+   {
+    "text": "The Commission recommends formal contracting arrangements and a panel administrator to monitor purchasing, prices, due diligence and conflicts of interest.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20associated%20with%20supplier%20panels-FIN_Oct23.pdf.aspx",
+      "document": "Corruption risks associated with supplier panels (October 2023)",
+      "page": 7
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20associated%20with%20supplier%20panels-FIN_Oct23.pdf.aspx",
+      "document": "Corruption risks associated with supplier panels (October 2023)",
+      "page": 8
+     }
+    ],
+    "section": "Phase 3 – Panel maintenance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Agencies should therefore treat formation of a supplier panel with the same level of formality and probity as a procurement exercise.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20associated%20with%20supplier%20panels-FIN_Oct23.pdf.aspx",
+     "document": "Corruption risks associated with supplier panels (October 2023)",
+     "page": 3
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

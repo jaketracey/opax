@@ -1,0 +1,89 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2005-07-28-profiling-the-nsw-public-sector-functions-risks-and-corrupti",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector,%20functions,%20risks%20and%20corruption%20resistance%20strategi.pdf.aspx",
+  "document": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+  "sha256": "3252c2b27cbb4a97b498bebef3687166bd43f837752b9c22fe904b9437605cb7",
+  "pages": 10,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Commission Against Corruption followed up NSW public sector agencies to assess progress in core prevention policies between 2001 and 2004.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector,%20functions,%20risks%20and%20corruption%20resistance%20strategi.pdf.aspx",
+      "document": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+      "page": 3
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It examined codes of conduct, corruption risk management, internal audit, gifts and benefits policies, and internal investigations.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector,%20functions,%20risks%20and%20corruption%20resistance%20strategi.pdf.aspx",
+      "document": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+      "page": 3
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "ICAC concluded that fewer agencies in the follow-up sample lacked the core strategies, but corruption risk management still needed further work.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector,%20functions,%20risks%20and%20corruption%20resistance%20strategi.pdf.aspx",
+      "document": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+      "page": 10
+     }
+    ],
+    "section": "Conclusions"
+   },
+   {
+    "text": "ICAC cautioned that agencies’ answers were accepted at face value, the sample did not represent the whole sector and changes were not tested for statistical significance.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector,%20functions,%20risks%20and%20corruption%20resistance%20strategi.pdf.aspx",
+      "document": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+      "page": 10
+     }
+    ],
+    "section": "Conclusions"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Finally, this follow-up research suggests that the main area in which further work needs to be done is corruption risk management.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector,%20functions,%20risks%20and%20corruption%20resistance%20strategi.pdf.aspx",
+     "document": "Profiling the NSW public sector - functions, risks and corruption resistance strategies",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,113 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2026-06-02-evaluation-of-professional-development-funds-for-medical-off",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Evaluation of Professional Development Funds for Medical Officers",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/1417948/Report-Evaluation-of-Professional-Development-Funds-for-Medical-Officers_June-2026.pdf",
+  "document": "here.",
+  "sha256": "604b002c340c8eff6c57d7224120a4b68fe24c544df83aa9e3f1753684dc2ea2",
+  "pages": 48,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption evaluated controls over medical officers’ professional development funds in the health department and two local health networks.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/1417948/Report-Evaluation-of-Professional-Development-Funds-for-Medical-Officers_June-2026.pdf",
+      "document": "here.",
+      "page": 9
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/1417948/Report-Evaluation-of-Professional-Development-Funds-for-Medical-Officers_June-2026.pdf",
+      "document": "here.",
+      "page": 11
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It reviewed policies, claims data, supporting documents and staff interviews to assess how the funds were administered.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/1417948/Report-Evaluation-of-Professional-Development-Funds-for-Medical-Officers_June-2026.pdf",
+      "document": "here.",
+      "page": 11
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission concluded that clearer definitions and procedures were needed to limit discretion and reduce the risk of funds being misused.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/1417948/Report-Evaluation-of-Professional-Development-Funds-for-Medical-Officers_June-2026.pdf",
+      "document": "here.",
+      "page": 30
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "Its eight recommendations covered eligible expenses, approval and reimbursement systems, detection of duplicate claims and audits.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/1417948/Report-Evaluation-of-Professional-Development-Funds-for-Medical-Officers_June-2026.pdf",
+      "document": "here.",
+      "page": 9
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/1417948/Report-Evaluation-of-Professional-Development-Funds-for-Medical-Officers_June-2026.pdf",
+      "document": "here.",
+      "page": 32
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/1417948/Report-Evaluation-of-Professional-Development-Funds-for-Medical-Officers_June-2026.pdf",
+      "document": "here.",
+      "page": 33
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There is a need for clear definitions, policies and procedures to reduce discretion and to guide decision-making.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/1417948/Report-Evaluation-of-Professional-Development-Funds-for-Medical-Officers_June-2026.pdf",
+     "document": "here.",
+     "page": 30
+    }
+   },
+   {
+    "quote": "Review and improve the capability of the electronic reimbursement system, MOPDRS to detect duplicate claims.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/1417948/Report-Evaluation-of-Professional-Development-Funds-for-Medical-Officers_June-2026.pdf",
+     "document": "here.",
+     "page": 33
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,99 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-act-ic-2026-07-23-operation-kingfisher",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Kingfisher: An investigation into whether the procurement for the Campbell Primary School Modernisation Project was conducted with probity and whether it was affected by corrupt conduct.",
+ "body": "ACT Integrity Commission",
+ "source": {
+  "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0018/3102831/Investigation-Report-Operation-Kingfisher.pdf",
+  "document": "Operation Kingfisher: An investigation into whether the procurement for the Campbell Primary School Modernisation Project was conducted with probity and whether it was affected by corrupt conduct.",
+  "sha256": "880df79bad29d7be4b5731628393b8470e86f597005dbf93a9e954cbebd7d247",
+  "pages": 341,
+  "rights": "commission-copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The ACT Integrity Commission investigated whether Education Directorate officials acted honestly and impartially during the 2019–2020 procurement for the Campbell Primary School Modernisation Project.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0018/3102831/Investigation-Report-Operation-Kingfisher.pdf",
+      "document": "Operation Kingfisher: An investigation into whether the procurement for the Campbell Primary School Modernisation Project was conducted with probity and whether it was affected by corrupt conduct.",
+      "page": 6
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It examined the selection of Lendlease despite evaluation teams favouring Manteena, including communications involving ministerial staff, union officials and public servants.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0018/3102831/Investigation-Report-Operation-Kingfisher.pdf",
+      "document": "Operation Kingfisher: An investigation into whether the procurement for the Campbell Primary School Modernisation Project was conducted with probity and whether it was affected by corrupt conduct.",
+      "page": 6
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0018/3102831/Investigation-Report-Operation-Kingfisher.pdf",
+      "document": "Operation Kingfisher: An investigation into whether the procurement for the Campbell Primary School Modernisation Project was conducted with probity and whether it was affected by corrupt conduct.",
+      "page": 10
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission found that the then director-general and the minister's chief of staff engaged in serious corrupt conduct by improperly influencing the procurement and trying to conceal what occurred.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0018/3102831/Investigation-Report-Operation-Kingfisher.pdf",
+      "document": "Operation Kingfisher: An investigation into whether the procurement for the Campbell Primary School Modernisation Project was conducted with probity and whether it was affected by corrupt conduct.",
+      "page": 10
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0018/3102831/Investigation-Report-Operation-Kingfisher.pdf",
+      "document": "Operation Kingfisher: An investigation into whether the procurement for the Campbell Primary School Modernisation Project was conducted with probity and whether it was affected by corrupt conduct.",
+      "page": 325
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0018/3102831/Investigation-Report-Operation-Kingfisher.pdf",
+      "document": "Operation Kingfisher: An investigation into whether the procurement for the Campbell Primary School Modernisation Project was conducted with probity and whether it was affected by corrupt conduct.",
+      "page": 329
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0018/3102831/Investigation-Report-Operation-Kingfisher.pdf",
+      "document": "Operation Kingfisher: An investigation into whether the procurement for the Campbell Primary School Modernisation Project was conducted with probity and whether it was affected by corrupt conduct.",
+      "page": 330
+     }
+    ],
+    "section": "Serious corrupt conduct"
+   },
+   {
+    "text": "The Commission declined to find that another official engaged in serious corrupt conduct, taking account of his later disclosures and efforts to correct the wrongdoing.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0018/3102831/Investigation-Report-Operation-Kingfisher.pdf",
+      "document": "Operation Kingfisher: An investigation into whether the procurement for the Campbell Primary School Modernisation Project was conducted with probity and whether it was affected by corrupt conduct.",
+      "page": 330
+     }
+    ],
+    "section": "Serious corrupt conduct"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

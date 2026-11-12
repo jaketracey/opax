@@ -1,0 +1,90 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2016-07-01-report-matter-governance-murdoch-university",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on a Matter of Governance at Murdoch University",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20Matter%20of%20Governance%20at%20Murdoch%20University.pdf",
+  "document": "Report on a Matter of Governance at Murdoch University",
+  "sha256": "485b13bfd22ef6e764e71fe02e46f030dfdaef3a3f13dfa11a6e5088a6711e71",
+  "pages": 34,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 7,
+  "last_page": 10,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20Matter%20of%20Governance%20at%20Murdoch%20University.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission and Murdoch University jointly investigated complaints concerning the then vice-chancellor's conduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20Matter%20of%20Governance%20at%20Murdoch%20University.pdf",
+      "document": "Report on a Matter of Governance at Murdoch University",
+      "page": 7
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The report examined senior appointments, an appointment's termination and breaches of policies on adult material.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20Matter%20of%20Governance%20at%20Murdoch%20University.pdf",
+      "document": "Report on a Matter of Governance at Murdoch University",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20Matter%20of%20Governance%20at%20Murdoch%20University.pdf",
+      "document": "Report on a Matter of Governance at Murdoch University",
+      "page": 10
+     }
+    ],
+    "section": "Matters that fall within the scope of this report"
+   },
+   {
+    "text": "The Commission formed a serious misconduct opinion about one senior appointment and misconduct opinions about misleading statements and the adult material policy breaches.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20Matter%20of%20Governance%20at%20Murdoch%20University.pdf",
+      "document": "Report on a Matter of Governance at Murdoch University",
+      "page": 10
+     }
+    ],
+    "section": "Matters that fall within the scope of this report"
+   },
+   {
+    "text": "It considered further recommendations unnecessary on credit card use and document retention because the university had accepted consultants' recommendations and improved its practices.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20Matter%20of%20Governance%20at%20Murdoch%20University.pdf",
+      "document": "Report on a Matter of Governance at Murdoch University",
+      "page": 9
+     }
+    ],
+    "section": "Destruction of documents"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

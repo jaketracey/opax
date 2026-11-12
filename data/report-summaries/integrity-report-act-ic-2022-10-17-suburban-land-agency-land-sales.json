@@ -1,0 +1,89 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-act-ic-2022-10-17-suburban-land-agency-land-sales",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Suburban Land Agency Land Sales: A report dealing with allegations of corrupt conduct arising from the processes for the sale of residential land",
+ "body": "ACT Integrity Commission",
+ "source": {
+  "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/2091756/ACT-Integrity-Commission-Special-Report-Suburban-Land-Agency-Land-Sales.pdf",
+  "document": "Suburban Land Agency Land Sales: A report dealing with allegations of corrupt conduct arising from the processes for the sale of residential land",
+  "sha256": "11389421bd52d9cfd71dc0f1b3dde8260c892433a5ea15da0f8c449b2f1c0789",
+  "pages": 17,
+  "rights": "commission-copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The ACT Integrity Commission assessed complaints referred by the Suburban Land Agency about residential land sale processes in Throsby and Whitlam.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/2091756/ACT-Integrity-Commission-Special-Report-Suburban-Land-Agency-Land-Sales.pdf",
+      "document": "Suburban Land Agency Land Sales: A report dealing with allegations of corrupt conduct arising from the processes for the sale of residential land",
+      "page": 7
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It concluded that the complaints did not justify investigation, while identifying corruption risks in the sale process.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/2091756/ACT-Integrity-Commission-Special-Report-Suburban-Land-Agency-Land-Sales.pdf",
+      "document": "Suburban Land Agency Land Sales: A report dealing with allegations of corrupt conduct arising from the processes for the sale of residential land",
+      "page": 7
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission considered that undisclosed principals using several agents could undermine limits on purchases.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/2091756/ACT-Integrity-Commission-Special-Report-Suburban-Land-Agency-Land-Sales.pdf",
+      "document": "Suburban Land Agency Land Sales: A report dealing with allegations of corrupt conduct arising from the processes for the sale of residential land",
+      "page": 12
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/2091756/ACT-Integrity-Commission-Special-Report-Suburban-Land-Agency-Land-Sales.pdf",
+      "document": "Suburban Land Agency Land Sales: A report dealing with allegations of corrupt conduct arising from the processes for the sale of residential land",
+      "page": 17
+     }
+    ],
+    "section": "Discussion"
+   },
+   {
+    "text": "It recommended reconsidering the sales conditions and suggested requiring applicants to disclose agency arrangements and confirm they had not made multiple applications.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/2091756/ACT-Integrity-Commission-Special-Report-Suburban-Land-Agency-Land-Sales.pdf",
+      "document": "Suburban Land Agency Land Sales: A report dealing with allegations of corrupt conduct arising from the processes for the sale of residential land",
+      "page": 13
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/2091756/ACT-Integrity-Commission-Special-Report-Suburban-Land-Agency-Land-Sales.pdf",
+      "document": "Suburban Land Agency Land Sales: A report dealing with allegations of corrupt conduct arising from the processes for the sale of residential land",
+      "page": 17
+     }
+    ],
+    "section": "Discussion; Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

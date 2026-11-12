@@ -1,0 +1,125 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2023-12-12-tp7981-special-report-on-victoria-police-s-responses-to-ibac",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Special report on Victoria Police’s responses to IBAC’s recommendations",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a26ba/globalassets/tabled-paper-documents/tabled-paper-7981/final---special-report-on-victoria-police_s-responses-to-ibac_s-recommendations---december-2023.pdf",
+  "document": "FINAL - Special Report on Victoria Police_s responses to IBAC_s recommendations - December 2023",
+  "sha256": "b8c7889b1985dd727387dd51bb541c8528700a47d2a92ff0d043985659b6c0ae",
+  "pages": 20,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4a26ba/globalassets/tabled-paper-documents/tabled-paper-7981/final---special-report-on-victoria-police_s-responses-to-ibac_s-recommendations---december-2023.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC reviewed how Victoria Police responded to its recommendations to improve transparency and accountability.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a26ba/globalassets/tabled-paper-documents/tabled-paper-7981/final---special-report-on-victoria-police_s-responses-to-ibac_s-recommendations---december-2023.pdf",
+      "document": "FINAL - Special Report on Victoria Police_s responses to IBAC_s recommendations - December 2023",
+      "page": 5
+     }
+    ],
+    "section": "Reasons for this special report"
+   },
+   {
+    "text": "It analysed responses to 104 recommendations made between January 2016 and March 2022, including implementation, timeliness, discipline and systemic risks.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a26ba/globalassets/tabled-paper-documents/tabled-paper-7981/final---special-report-on-victoria-police_s-responses-to-ibac_s-recommendations---december-2023.pdf",
+      "document": "FINAL - Special Report on Victoria Police_s responses to IBAC_s recommendations - December 2023",
+      "page": 5
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "IBAC reported that Victoria Police accepted 92 per cent of its recommendations.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a26ba/globalassets/tabled-paper-documents/tabled-paper-7981/final---special-report-on-victoria-police_s-responses-to-ibac_s-recommendations---december-2023.pdf",
+      "document": "FINAL - Special Report on Victoria Police_s responses to IBAC_s recommendations - December 2023",
+      "page": 9
+     }
+    ],
+    "section": "Victoria Police accepted and implemented most of IBAC’s recommendations"
+   },
+   {
+    "text": "After excluding rejected recommendations and those still unfinished, IBAC assessed 98 per cent as fully or partly implemented.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a26ba/globalassets/tabled-paper-documents/tabled-paper-7981/final---special-report-on-victoria-police_s-responses-to-ibac_s-recommendations---december-2023.pdf",
+      "document": "FINAL - Special Report on Victoria Police_s responses to IBAC_s recommendations - December 2023",
+      "page": 9
+     }
+    ],
+    "section": "Victoria Police accepted and implemented most of IBAC’s recommendations"
+   },
+   {
+    "text": "IBAC found that police usually reported late on implementation and identified persistent risks in force reporting, conflicts of interest, notetaking and statement making.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a26ba/globalassets/tabled-paper-documents/tabled-paper-7981/final---special-report-on-victoria-police_s-responses-to-ibac_s-recommendations---december-2023.pdf",
+      "document": "FINAL - Special Report on Victoria Police_s responses to IBAC_s recommendations - December 2023",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a26ba/globalassets/tabled-paper-documents/tabled-paper-7981/final---special-report-on-victoria-police_s-responses-to-ibac_s-recommendations---december-2023.pdf",
+      "document": "FINAL - Special Report on Victoria Police_s responses to IBAC_s recommendations - December 2023",
+      "page": 12
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a26ba/globalassets/tabled-paper-documents/tabled-paper-7981/final---special-report-on-victoria-police_s-responses-to-ibac_s-recommendations---december-2023.pdf",
+      "document": "FINAL - Special Report on Victoria Police_s responses to IBAC_s recommendations - December 2023",
+      "page": 16
+     }
+    ],
+    "section": "Key findings about recommendations to Victoria Police"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Excluding rejected recommendations and recommendations not finalised as of 1 November 2022, IBAC assessed that Victoria Police had implemented or partially implemented 98 per cent of recommendations.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a26ba/globalassets/tabled-paper-documents/tabled-paper-7981/final---special-report-on-victoria-police_s-responses-to-ibac_s-recommendations---december-2023.pdf",
+     "document": "FINAL - Special Report on Victoria Police_s responses to IBAC_s recommendations - December 2023",
+     "page": 9
+    }
+   },
+   {
+    "quote": "Victoria Police is usually late when reporting on the implementation of recommendations to IBAC.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a26ba/globalassets/tabled-paper-documents/tabled-paper-7981/final---special-report-on-victoria-police_s-responses-to-ibac_s-recommendations---december-2023.pdf",
+     "document": "FINAL - Special Report on Victoria Police_s responses to IBAC_s recommendations - December 2023",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2026-11-09-sector-insights-public-sector-fy-2020-2025",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Sector insights – Public sector (FY 2020–2025)",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Public-Sector_%28FY2020%E2%80%932025%29.pdf",
+  "document": "CCC Sector insights – Queensland Public sector (FY 2020–2025)",
+  "sha256": "4c41716428f8cece112462d5792bac2249017b6cce5c13ffcc1e915b132236e5",
+  "pages": 19,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 3,
+  "last_page": 4,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Public-Sector_%28FY2020%E2%80%932025%29.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission examined Queensland public sector corruption risks through complaints, investigations, intelligence and public information from July 2020 to June 2025.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Public-Sector_%28FY2020%E2%80%932025%29.pdf",
+      "document": "CCC Sector insights – Queensland Public sector (FY 2020–2025)",
+      "page": 3
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "It covered agencies within the CCC’s jurisdiction outside local government and the Queensland Police Service, including departments, boards, elected officials and other public bodies.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Public-Sector_%28FY2020%E2%80%932025%29.pdf",
+      "document": "CCC Sector insights – Queensland Public sector (FY 2020–2025)",
+      "page": 3
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Public-Sector_%28FY2020%E2%80%932025%29.pdf",
+      "document": "CCC Sector insights – Queensland Public sector (FY 2020–2025)",
+      "page": 4
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "The CCC identified public interactions, confidential information and human resource management as high-risk activities and reported an increase in complaint numbers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Public-Sector_%28FY2020%E2%80%932025%29.pdf",
+      "document": "CCC Sector insights – Queensland Public sector (FY 2020–2025)",
+      "page": 5
+     }
+    ],
+    "section": "Complaint trends and insights"
+   },
+   {
+    "text": "The CCC outlined prevention measures covering recruitment, induction, specialist training, recordkeeping, supervision, procurement oversight and workplace culture.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Public-Sector_%28FY2020%E2%80%932025%29.pdf",
+      "document": "CCC Sector insights – Queensland Public sector (FY 2020–2025)",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Public-Sector_%28FY2020%E2%80%932025%29.pdf",
+      "document": "CCC Sector insights – Queensland Public sector (FY 2020–2025)",
+      "page": 16
+     }
+    ],
+    "section": "Prevention strategies and resources"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Interacting with members of the public, managing confidential information and human resource management are high-risk activities for the public sector.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Public-Sector_%28FY2020%E2%80%932025%29.pdf",
+     "document": "CCC Sector insights – Queensland Public sector (FY 2020–2025)",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

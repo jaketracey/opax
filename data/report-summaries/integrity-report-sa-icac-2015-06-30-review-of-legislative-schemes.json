@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2015-06-30-review-of-legislative-schemes",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Review of Legislative Schemes",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370696/Legislative_reviews_report_0.pdf",
+  "document": "Review of Legislative Schemes",
+  "sha256": "488f9ca00e564ca3e7653986cdd12f5e924f102aa1f2bd5c291a4389d2973635",
+  "pages": 62,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370696/Legislative_reviews_report_0.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commissioner Against Corruption reviewed police complaints legislation and public administration complaint pathways at the Attorney-General’s request.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370696/Legislative_reviews_report_0.pdf",
+      "document": "Review of Legislative Schemes",
+      "page": 4
+     }
+    ],
+    "section": "LETTER OF TRANSMITTAL"
+   },
+   {
+    "text": "The review considered complaint oversight, assessment, investigation and whether intake processes could be consolidated.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370696/Legislative_reviews_report_0.pdf",
+      "document": "Review of Legislative Schemes",
+      "page": 4
+     }
+    ],
+    "section": "LETTER OF TRANSMITTAL"
+   },
+   {
+    "text": "The Commissioner concluded that overlapping responsibilities and slow resolution made the existing integrity system cumbersome.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370696/Legislative_reviews_report_0.pdf",
+      "document": "Review of Legislative Schemes",
+      "page": 5
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commissioner made 29 recommendations, including replacing police complaints legislation, abolishing the Police Ombudsman and giving the Office for Public Integrity oversight of police complaint handling.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370696/Legislative_reviews_report_0.pdf",
+      "document": "Review of Legislative Schemes",
+      "page": 7
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370696/Legislative_reviews_report_0.pdf",
+      "document": "Review of Legislative Schemes",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370696/Legislative_reviews_report_0.pdf",
+      "document": "Review of Legislative Schemes",
+      "page": 9
+     }
+    ],
+    "section": "SUMMARY OF RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Complaints and reports about public administration are taking too long to resolve.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370696/Legislative_reviews_report_0.pdf",
+     "document": "Review of Legislative Schemes",
+     "page": 5
+    }
+   },
+   {
+    "quote": "New police complaints legislation should invest the role of overseeing the management of complaints and reports about police in the OPI.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370696/Legislative_reviews_report_0.pdf",
+     "document": "Review of Legislative Schemes",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

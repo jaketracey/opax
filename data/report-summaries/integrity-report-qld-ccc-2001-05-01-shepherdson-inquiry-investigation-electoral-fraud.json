@@ -1,0 +1,130 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2001-05-01-shepherdson-inquiry-investigation-electoral-fraud",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "The Shepherdson Inquiry: An investigation into electoral fraud",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/The-Shepherdson-inquiry-Report-2001.pdf",
+  "document": "The Shepherdson Inquiry: An investigation into electoral fraud (April 2001)",
+  "sha256": "9994d8297f51dfbed7740b23b152a72ba973f2d90e7897a678d1f5581abc8db6",
+  "pages": 225,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 9,
+  "last_page": 15,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/The-Shepherdson-inquiry-Report-2001.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "An independent inquiry for the CJC examined alleged electoral-roll misconduct linked to ALP preselections and a state by-election.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/The-Shepherdson-inquiry-Report-2001.pdf",
+      "document": "The Shepherdson Inquiry: An investigation into electoral fraud (April 2001)",
+      "page": 9
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The inquiry assessed whether admissible evidence should be referred for possible prosecution, rather than determining guilt.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/The-Shepherdson-inquiry-Report-2001.pdf",
+      "document": "The Shepherdson Inquiry: An investigation into electoral fraud (April 2001)",
+      "page": 10
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The inquiry found that some party members treated knowingly false enrolments as a preselection tactic, but found no evidence of general use to influence public elections.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/The-Shepherdson-inquiry-Report-2001.pdf",
+      "document": "The Shepherdson Inquiry: An investigation into electoral fraud (April 2001)",
+      "page": 11
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It recommended prosecution referrals for possible forgery charges and explained that time limits prevented action on many consensual false enrolments.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/The-Shepherdson-inquiry-Report-2001.pdf",
+      "document": "The Shepherdson Inquiry: An investigation into electoral fraud (April 2001)",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/The-Shepherdson-inquiry-Report-2001.pdf",
+      "document": "The Shepherdson Inquiry: An investigation into electoral fraud (April 2001)",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/The-Shepherdson-inquiry-Report-2001.pdf",
+      "document": "The Shepherdson Inquiry: An investigation into electoral fraud (April 2001)",
+      "page": 13
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It offered reform suggestions on identity and residence checks, preselection oversight, electoral penalties and prosecution time limits, without making formal electoral-reform recommendations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/The-Shepherdson-inquiry-Report-2001.pdf",
+      "document": "The Shepherdson Inquiry: An investigation into electoral fraud (April 2001)",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/The-Shepherdson-inquiry-Report-2001.pdf",
+      "document": "The Shepherdson Inquiry: An investigation into electoral fraud (April 2001)",
+      "page": 15
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The information gathered during the Inquiry clearly established that the practice of making consensual false enrolments to bolster the chances of specific candidates in preselections was regarded by some Party members as a legitimate campaign tactic.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/The-Shepherdson-inquiry-Report-2001.pdf",
+     "document": "The Shepherdson Inquiry: An investigation into electoral fraud (April 2001)",
+     "page": 11
+    }
+   },
+   {
+    "quote": "No evidence, however, was revealed indicating that the tactic had been generally used to influence the outcome of public elections.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/The-Shepherdson-inquiry-Report-2001.pdf",
+     "document": "The Shepherdson Inquiry: An investigation into electoral fraud (April 2001)",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

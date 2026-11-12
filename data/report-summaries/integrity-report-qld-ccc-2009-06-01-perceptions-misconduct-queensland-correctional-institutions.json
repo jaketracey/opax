@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2009-06-01-perceptions-misconduct-queensland-correctional-institutions",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Perceptions of misconduct in Queensland correctional institutions: A survey of custodial officers",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Perceptions-of%20misconduct-in-Qld-correctional-institutions-%20Report-2009.pdf",
+  "document": "Perceptions of misconduct in Queensland correctional institutions: A survey of custodial officers (June 2009)",
+  "sha256": "4bf7a215850958c622c4a8b65582e0314cd079524266bc5347bc71287a7b8af0",
+  "pages": 96,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary",
+  "first_page": 7,
+  "last_page": 12,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Perceptions-of%20misconduct-in-Qld-correctional-institutions-%20Report-2009.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission and Griffith University surveyed Queensland custodial officers to track changes in their perceptions of misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Perceptions-of%20misconduct-in-Qld-correctional-institutions-%20Report-2009.pdf",
+      "document": "Perceptions of misconduct in Queensland correctional institutions: A survey of custodial officers (June 2009)",
+      "page": 7
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "The research compared officers’ views about misconduct, reporting, training, management and working conditions across surveys in 2001 and 2007.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Perceptions-of%20misconduct-in-Qld-correctional-institutions-%20Report-2009.pdf",
+      "document": "Perceptions of misconduct in Queensland correctional institutions: A survey of custodial officers (June 2009)",
+      "page": 7
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "The CMC reported that officers perceived misconduct as less frequent and more likely to be detected, but were more willing to justify it.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Perceptions-of%20misconduct-in-Qld-correctional-institutions-%20Report-2009.pdf",
+      "document": "Perceptions of misconduct in Queensland correctional institutions: A survey of custodial officers (June 2009)",
+      "page": 8
+     }
+    ],
+    "section": "Key findings"
+   },
+   {
+    "text": "The CMC identified continuing concerns about perceived favouritism, reporting misconduct and relationships with management.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Perceptions-of%20misconduct-in-Qld-correctional-institutions-%20Report-2009.pdf",
+      "document": "Perceptions of misconduct in Queensland correctional institutions: A survey of custodial officers (June 2009)",
+      "page": 8
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Perceptions-of%20misconduct-in-Qld-correctional-institutions-%20Report-2009.pdf",
+      "document": "Perceptions of misconduct in Queensland correctional institutions: A survey of custodial officers (June 2009)",
+      "page": 11
+     }
+    ],
+    "section": "Key findings"
+   },
+   {
+    "text": "Its three recommendations covered recruitment and selection, compulsory ethics training and a review of internal misconduct reporting.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Perceptions-of%20misconduct-in-Qld-correctional-institutions-%20Report-2009.pdf",
+      "document": "Perceptions of misconduct in Queensland correctional institutions: A survey of custodial officers (June 2009)",
+      "page": 11
+     }
+    ],
+    "section": "Recommendations and suggestions for improvement"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "However, there was a significant increase in the willingness of officers to justify occasions of misconduct.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Perceptions-of%20misconduct-in-Qld-correctional-institutions-%20Report-2009.pdf",
+     "document": "Perceptions of misconduct in Queensland correctional institutions: A survey of custodial officers (June 2009)",
+     "page": 8
+    }
+   },
+   {
+    "quote": "CCOs seem reluctant to report misconduct and have generally unfavourable perceptions of senior staff and management.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Perceptions-of%20misconduct-in-Qld-correctional-institutions-%20Report-2009.pdf",
+     "document": "Perceptions of misconduct in Queensland correctional institutions: A survey of custodial officers (June 2009)",
+     "page": 68
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

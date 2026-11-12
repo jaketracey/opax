@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2012-02-15-anti-corruption-safeguards-and-the-nsw-planning-system",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Anti-corruption safeguards and the NSW planning system",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Anti-corruption%20safeguards%20and%20the%20NSW%20planning%20system%202012.pdf.aspx",
+  "document": "Anti-corruption safeguards and the NSW planning system",
+  "sha256": "b17bd3f8d2fbdfe9ae693b81580461ae4ab1af77f00f3e95421e447063c1b333",
+  "pages": 28,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chapter 1: Introduction and overview",
+  "first_page": 6,
+  "last_page": 9,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Anti-corruption%20safeguards%20and%20the%20NSW%20planning%20system%202012.pdf.aspx#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption sets out safeguards it considers necessary to reduce corruption risks in the planning system.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Anti-corruption%20safeguards%20and%20the%20NSW%20planning%20system%202012.pdf.aspx",
+      "document": "Anti-corruption safeguards and the NSW planning system",
+      "page": 6
+     }
+    ],
+    "section": "Chapter 1: Introduction and overview"
+   },
+   {
+    "text": "It examines decision-making criteria, competing public interests, transparency, complexity, community participation and third-party appeals.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Anti-corruption%20safeguards%20and%20the%20NSW%20planning%20system%202012.pdf.aspx",
+      "document": "Anti-corruption safeguards and the NSW planning system",
+      "page": 7
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Anti-corruption%20safeguards%20and%20the%20NSW%20planning%20system%202012.pdf.aspx",
+      "document": "Anti-corruption safeguards and the NSW planning system",
+      "page": 8
+     }
+    ],
+    "section": "Key corruption prevention safeguards"
+   },
+   {
+    "text": "The Commission cautions that frequent planning complaints do not themselves demonstrate corruption, while broad discretion over departures from plans creates risk.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Anti-corruption%20safeguards%20and%20the%20NSW%20planning%20system%202012.pdf.aspx",
+      "document": "Anti-corruption safeguards and the NSW planning system",
+      "page": 7
+     }
+    ],
+    "section": "Planning, corruption and the Commission"
+   },
+   {
+    "text": "Its 16 recommendations cover objective criteria, oversight, simpler rules, clearer decisions, public consultation and wider access to merit appeals.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Anti-corruption%20safeguards%20and%20the%20NSW%20planning%20system%202012.pdf.aspx",
+      "document": "Anti-corruption safeguards and the NSW planning system",
+      "page": 8
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Anti-corruption%20safeguards%20and%20the%20NSW%20planning%20system%202012.pdf.aspx",
+      "document": "Anti-corruption safeguards and the NSW planning system",
+      "page": 9
+     }
+    ],
+    "section": "List of recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "This high ranking in complaint numbers, however, does not directly correlate with evidence of corruption.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Anti-corruption%20safeguards%20and%20the%20NSW%20planning%20system%202012.pdf.aspx",
+     "document": "Anti-corruption safeguards and the NSW planning system",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

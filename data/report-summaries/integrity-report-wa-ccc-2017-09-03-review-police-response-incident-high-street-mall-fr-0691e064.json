@@ -1,0 +1,84 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2017-09-03-review-police-response-incident-high-street-mall-fr-0691e064",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Review of police response to an incident in High Street Mall Fremantle on 3 September 2017",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20police%20response%20to%20an%20incident%20in%20High%20Street%20Mall%20Fremantle%20on%203%20September%202017.pdf",
+  "document": "Review of police response to an incident in High Street Mall Fremantle on 3 September 2017",
+  "sha256": "6789d3859634084efb493bd066dc0d6977495bcedf71287902c451c383453768",
+  "pages": 38,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Introduction and overview",
+  "first_page": 4,
+  "last_page": 6,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20police%20response%20to%20an%20incident%20in%20High%20Street%20Mall%20Fremantle%20on%203%20September%202017.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated police conduct during an arrest in High Street Mall in Fremantle and reviewed the Internal Affairs Unit investigation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20police%20response%20to%20an%20incident%20in%20High%20Street%20Mall%20Fremantle%20on%203%20September%202017.pdf",
+      "document": "Review of police response to an incident in High Street Mall Fremantle on 3 September 2017",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20police%20response%20to%20an%20incident%20in%20High%20Street%20Mall%20Fremantle%20on%203%20September%202017.pdf",
+      "document": "Review of police response to an incident in High Street Mall Fremantle on 3 September 2017",
+      "page": 5
+     }
+    ],
+    "section": "Introduction and overview"
+   },
+   {
+    "text": "The Commission formed misconduct opinions about two officers' use of force, including twisting a restrained person's finger to dislocation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20police%20response%20to%20an%20incident%20in%20High%20Street%20Mall%20Fremantle%20on%203%20September%202017.pdf",
+      "document": "Review of police response to an incident in High Street Mall Fremantle on 3 September 2017",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20police%20response%20to%20an%20incident%20in%20High%20Street%20Mall%20Fremantle%20on%203%20September%202017.pdf",
+      "document": "Review of police response to an incident in High Street Mall Fremantle on 3 September 2017",
+      "page": 38
+     }
+    ],
+    "section": "Introduction and overview"
+   },
+   {
+    "text": "It concluded that force used to subdue the person was excessive but expressed no opinion about criminal offences.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20police%20response%20to%20an%20incident%20in%20High%20Street%20Mall%20Fremantle%20on%203%20September%202017.pdf",
+      "document": "Review of police response to an incident in High Street Mall Fremantle on 3 September 2017",
+      "page": 37
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

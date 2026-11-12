@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2009-06-16-profiling-the-nsw-public-sector-ii-report-2-comparison-of-20",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Profiling the NSW public sector II - Report 2 Comparison of 2001 and 2007 organisation",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sectior%20II%20-%20Report%202%20-%20Comparison%20of%202001%20and%202007%20organisation.pdf.aspx",
+  "document": "Profiling the NSW public sector II - Report 2 Comparison of 2001 and 2007 organisation",
+  "sha256": "222881bd845590587a1f381ef5dda6de0f134dca37f5049969f08f8cca244b9c",
+  "pages": 25,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 7,
+  "last_page": 7,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sectior%20II%20-%20Report%202%20-%20Comparison%20of%202001%20and%202007%20organisation.pdf.aspx#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Commission Against Corruption compared chief executives’ survey responses from 2001 and 2007 to assess changes in corruption risks and prevention across the NSW public sector.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sectior%20II%20-%20Report%202%20-%20Comparison%20of%202001%20and%202007%20organisation.pdf.aspx",
+      "document": "Profiling the NSW public sector II - Report 2 Comparison of 2001 and 2007 organisation",
+      "page": 7
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sectior%20II%20-%20Report%202%20-%20Comparison%20of%202001%20and%202007%20organisation.pdf.aspx",
+      "document": "Profiling the NSW public sector II - Report 2 Comparison of 2001 and 2007 organisation",
+      "page": 8
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The comparison covered 165 organisations, excluding local councils, county councils and local Aboriginal land councils because they were outside the earlier survey.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sectior%20II%20-%20Report%202%20-%20Comparison%20of%202001%20and%202007%20organisation.pdf.aspx",
+      "document": "Profiling the NSW public sector II - Report 2 Comparison of 2001 and 2007 organisation",
+      "page": 8
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "ICAC concluded that perceived corruption risks had remained broadly stable while organisations reported adopting more prevention strategies, suggesting improved risk management.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sectior%20II%20-%20Report%202%20-%20Comparison%20of%202001%20and%202007%20organisation.pdf.aspx",
+      "document": "Profiling the NSW public sector II - Report 2 Comparison of 2001 and 2007 organisation",
+      "page": 7
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "ICAC advised organisations to review their prevention strategies for areas needing further controls.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sectior%20II%20-%20Report%202%20-%20Comparison%20of%202001%20and%202007%20organisation.pdf.aspx",
+      "document": "Profiling the NSW public sector II - Report 2 Comparison of 2001 and 2007 organisation",
+      "page": 24
+     }
+    ],
+    "section": "Further considerations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In conclusion, the corruption risk management of the NSW public sector as a whole appears to have improved since 2001.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sectior%20II%20-%20Report%202%20-%20Comparison%20of%202001%20and%202007%20organisation.pdf.aspx",
+     "document": "Profiling the NSW public sector II - Report 2 Comparison of 2001 and 2007 organisation",
+     "page": 24
+    }
+   },
+   {
+    "quote": "Organisations should, however, examine their own usage of corruption prevention strategies to identify any areas where further strategies are warranted.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sectior%20II%20-%20Report%202%20-%20Comparison%20of%202001%20and%202007%20organisation.pdf.aspx",
+     "document": "Profiling the NSW public sector II - Report 2 Comparison of 2001 and 2007 organisation",
+     "page": 24
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

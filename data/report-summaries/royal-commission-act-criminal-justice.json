@@ -1,0 +1,138 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-act-criminal-justice",
+ "report_type": "royal_commission",
+ "subtype": "board_of_inquiry",
+ "title": "Board of Inquiry into the Criminal Justice System",
+ "body": "Board of Inquiry into the Criminal Justice System",
+ "source": {
+  "url": "https://www.act.gov.au/__data/assets/pdf_file/0020/2570060/ACT-Board-of-Inquiry-Criminal-justice-System-Final-Report.pdf",
+  "document": "Final Report, Board of Inquiry: Criminal Justice System",
+  "sha256": "5b65a5abef0a8ee96119b06519a466373fbdf432d142117e4e1a554953208546",
+  "pages": 839,
+  "rights": "© Australian Capital Territory, Canberra 2023. This work is subject to copyright. Apart from any use permitted under the Copyright Act 1968, no part may be reproduced by any process without written permission from the Territory Records Office (imprint, page 2). OPAX links to the publisher's copy and does not reproduce the report."
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "1. Introduction",
+  "first_page": 7,
+  "last_page": 11,
+  "link": "https://www.act.gov.au/__data/assets/pdf_file/0020/2570060/ACT-Board-of-Inquiry-Criminal-justice-System-Final-Report.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The ACT Board of Inquiry examined possible misconduct by police, prosecutors and the Victims of Crime Commissioner in a criminal matter.",
+    "cites": [
+     {
+      "url": "https://www.act.gov.au/__data/assets/pdf_file/0020/2570060/ACT-Board-of-Inquiry-Criminal-justice-System-Final-Report.pdf",
+      "document": "Final Report, Board of Inquiry: Criminal Justice System",
+      "page": 1
+     },
+     {
+      "url": "https://www.act.gov.au/__data/assets/pdf_file/0020/2570060/ACT-Board-of-Inquiry-Criminal-justice-System-Final-Report.pdf",
+      "document": "Final Report, Board of Inquiry: Criminal Justice System",
+      "page": 8
+     }
+    ],
+    "section": "1. Introduction"
+   },
+   {
+    "text": "The Board found that police had investigated thoroughly, although mistakes caused unnecessary distress without affecting the investigation or prejudicing the case.",
+    "cites": [
+     {
+      "url": "https://www.act.gov.au/__data/assets/pdf_file/0020/2570060/ACT-Board-of-Inquiry-Criminal-justice-System-Final-Report.pdf",
+      "document": "Final Report, Board of Inquiry: Criminal Justice System",
+      "page": 9
+     }
+    ],
+    "section": "1. Introduction"
+   },
+   {
+    "text": "The Board also made serious misconduct findings against the then Director of Public Prosecutions, while declining to determine fitness to remain in office or practise as a barrister.",
+    "cites": [
+     {
+      "url": "https://www.act.gov.au/__data/assets/pdf_file/0020/2570060/ACT-Board-of-Inquiry-Criminal-justice-System-Final-Report.pdf",
+      "document": "Final Report, Board of Inquiry: Criminal Justice System",
+      "page": 10
+     }
+    ],
+    "section": "1. Introduction"
+   },
+   {
+    "text": "Its ten numbered recommendations address charging decisions, counselling records, disclosure, police dealings with defence lawyers, retrial decisions and complaints between agencies.",
+    "cites": [
+     {
+      "url": "https://www.act.gov.au/__data/assets/pdf_file/0020/2570060/ACT-Board-of-Inquiry-Criminal-justice-System-Final-Report.pdf",
+      "document": "Final Report, Board of Inquiry: Criminal Justice System",
+      "page": 197
+     },
+     {
+      "url": "https://www.act.gov.au/__data/assets/pdf_file/0020/2570060/ACT-Board-of-Inquiry-Criminal-justice-System-Final-Report.pdf",
+      "document": "Final Report, Board of Inquiry: Criminal Justice System",
+      "page": 198
+     },
+     {
+      "url": "https://www.act.gov.au/__data/assets/pdf_file/0020/2570060/ACT-Board-of-Inquiry-Criminal-justice-System-Final-Report.pdf",
+      "document": "Final Report, Board of Inquiry: Criminal Justice System",
+      "page": 199
+     },
+     {
+      "url": "https://www.act.gov.au/__data/assets/pdf_file/0020/2570060/ACT-Board-of-Inquiry-Criminal-justice-System-Final-Report.pdf",
+      "document": "Final Report, Board of Inquiry: Criminal Justice System",
+      "page": 200
+     },
+     {
+      "url": "https://www.act.gov.au/__data/assets/pdf_file/0020/2570060/ACT-Board-of-Inquiry-Criminal-justice-System-Final-Report.pdf",
+      "document": "Final Report, Board of Inquiry: Criminal Justice System",
+      "page": 201
+     }
+    ],
+    "section": "8. Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Regrettably, I have found it necessary to make several serious findings of misconduct on the part of Mr Shane Drumgold SC, the Director of Public Prosecutions.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.act.gov.au/__data/assets/pdf_file/0020/2570060/ACT-Board-of-Inquiry-Criminal-justice-System-Final-Report.pdf",
+     "document": "Final Report, Board of Inquiry: Criminal Justice System",
+     "page": 10
+    }
+   },
+   {
+    "quote": "None of these mistakes actually affected the substance of the investigation and none of them prejudiced the case.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.act.gov.au/__data/assets/pdf_file/0020/2570060/ACT-Board-of-Inquiry-Criminal-justice-System-Final-Report.pdf",
+     "document": "Final Report, Board of Inquiry: Criminal Justice System",
+     "page": 9
+    }
+   },
+   {
+    "quote": "I recommend that the government, in consultation with stakeholders, enact legislation to codify the scope and content of the obligation of disclosure owed by the Prosecution in criminal proceedings.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.act.gov.au/__data/assets/pdf_file/0020/2570060/ACT-Board-of-Inquiry-Criminal-justice-System-Final-Report.pdf",
+     "document": "Final Report, Board of Inquiry: Criminal Justice System",
+     "page": 200
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

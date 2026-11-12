@@ -1,0 +1,144 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-qld-forensic-dna",
+ "report_type": "royal_commission",
+ "subtype": "commission_of_inquiry",
+ "title": "Commission of Inquiry into Forensic DNA Testing in Queensland",
+ "body": "Commission of Inquiry into Forensic DNA Testing in Queensland",
+ "source": {
+  "url": "https://www.health.qld.gov.au/__data/assets/pdf_file/0036/1196685/final-report-coi-dna-testing-qld-dec-2022.pdf",
+  "document": "Final Report, Commission of Inquiry into Forensic DNA Testing in Queensland",
+  "sha256": "848610463c0724acbc16eaa757f820e1c3ca4a68dbda10c315c76ec3c8ecd2c5",
+  "pages": 520,
+  "rights": "The document carries no reuse notice; OPAX links to the publisher's copy."
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 13,
+  "last_page": 14,
+  "link": "https://www.health.qld.gov.au/__data/assets/pdf_file/0036/1196685/final-report-coi-dna-testing-qld-dec-2022.pdf#page=13"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Commission of Inquiry into Forensic DNA Testing in Queensland assessed whether DNA collection, testing and analysis met best practice and why any failures occurred.",
+    "cites": [
+     {
+      "url": "https://www.health.qld.gov.au/__data/assets/pdf_file/0036/1196685/final-report-coi-dna-testing-qld-dec-2022.pdf",
+      "document": "Final Report, Commission of Inquiry into Forensic DNA Testing in Queensland",
+      "page": 13
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It examined laboratory practices, sample collection by police and medical practitioners, management and workplace culture.",
+    "cites": [
+     {
+      "url": "https://www.health.qld.gov.au/__data/assets/pdf_file/0036/1196685/final-report-coi-dna-testing-qld-dec-2022.pdf",
+      "document": "Final Report, Commission of Inquiry into Forensic DNA Testing in Queensland",
+      "page": 13
+     },
+     {
+      "url": "https://www.health.qld.gov.au/__data/assets/pdf_file/0036/1196685/final-report-coi-dna-testing-qld-dec-2022.pdf",
+      "document": "Final Report, Commission of Inquiry into Forensic DNA Testing in Queensland",
+      "page": 14
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission found that the laboratory prioritised processing speed over scientific quality and had failed to obtain available evidence in some cases.",
+    "cites": [
+     {
+      "url": "https://www.health.qld.gov.au/__data/assets/pdf_file/0036/1196685/final-report-coi-dna-testing-qld-dec-2022.pdf",
+      "document": "Final Report, Commission of Inquiry into Forensic DNA Testing in Queensland",
+      "page": 13
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission found that the identified failures did not undermine the reliability of matches between crime scene DNA and reference samples, while the number of affected cases could not be quantified.",
+    "cites": [
+     {
+      "url": "https://www.health.qld.gov.au/__data/assets/pdf_file/0036/1196685/final-report-coi-dna-testing-qld-dec-2022.pdf",
+      "document": "Final Report, Commission of Inquiry into Forensic DNA Testing in Queensland",
+      "page": 13
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission made 123 recommendations covering scientific procedures, review of past cases, governance and funding, including an independent forensic science institute within the Department of Justice and Attorney-General.",
+    "cites": [
+     {
+      "url": "https://www.health.qld.gov.au/__data/assets/pdf_file/0036/1196685/final-report-coi-dna-testing-qld-dec-2022.pdf",
+      "document": "Final Report, Commission of Inquiry into Forensic DNA Testing in Queensland",
+      "page": 14
+     },
+     {
+      "url": "https://www.health.qld.gov.au/__data/assets/pdf_file/0036/1196685/final-report-coi-dna-testing-qld-dec-2022.pdf",
+      "document": "Final Report, Commission of Inquiry into Forensic DNA Testing in Queensland",
+      "page": 69
+     },
+     {
+      "url": "https://www.health.qld.gov.au/__data/assets/pdf_file/0036/1196685/final-report-coi-dna-testing-qld-dec-2022.pdf",
+      "document": "Final Report, Commission of Inquiry into Forensic DNA Testing in Queensland",
+      "page": 514
+     },
+     {
+      "url": "https://www.health.qld.gov.au/__data/assets/pdf_file/0036/1196685/final-report-coi-dna-testing-qld-dec-2022.pdf",
+      "document": "Final Report, Commission of Inquiry into Forensic DNA Testing in Queensland",
+      "page": 518
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The laboratory has, for some time, focused on throughput and quick reporting of results to the detriment of high-quality science.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.health.qld.gov.au/__data/assets/pdf_file/0036/1196685/final-report-coi-dna-testing-qld-dec-2022.pdf",
+     "document": "Final Report, Commission of Inquiry into Forensic DNA Testing in Queensland",
+     "page": 13
+    }
+   },
+   {
+    "quote": "None of the failures I have identified call into question the reliability of a match between a crime scene sample and a person’s reference sample, the most probative evidence which often supports convictions.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.health.qld.gov.au/__data/assets/pdf_file/0036/1196685/final-report-coi-dna-testing-qld-dec-2022.pdf",
+     "document": "Final Report, Commission of Inquiry into Forensic DNA Testing in Queensland",
+     "page": 13
+    }
+   },
+   {
+    "quote": "Cultural issues have had a negative impact on the scientific processes used and the results obtained.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.health.qld.gov.au/__data/assets/pdf_file/0036/1196685/final-report-coi-dna-testing-qld-dec-2022.pdf",
+     "document": "Final Report, Commission of Inquiry into Forensic DNA Testing in Queensland",
+     "page": 456
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:21+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

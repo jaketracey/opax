@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2021-05-27-review-police-use-force-incident-northbridge-10-nov-05bee47a",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Review of a police use of force incident in Northbridge on 10 November 2019",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20a%20police%20use%20of%20force%20incident%20in%20Northbridge%20on%2010%20November%202019.pdf",
+  "document": "Review of a police use of force incident in Northbridge on 10 November 2019",
+  "sha256": "97fc4073c6145374d0152339cae6f9060a784e5002c24092ec980e6c48988fb8",
+  "pages": 43,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Introduction",
+  "first_page": 5,
+  "last_page": 7,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20a%20police%20use%20of%20force%20incident%20in%20Northbridge%20on%2010%20November%202019.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated an arrest in Northbridge, examining force, a move on order and the treatment of the arrested person.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20a%20police%20use%20of%20force%20incident%20in%20Northbridge%20on%2010%20November%202019.pdf",
+      "document": "Review of a police use of force incident in Northbridge on 10 November 2019",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20a%20police%20use%20of%20force%20incident%20in%20Northbridge%20on%2010%20November%202019.pdf",
+      "document": "Review of a police use of force incident in Northbridge on 10 November 2019",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The Commission accepted that the arrest was lawful but considered the neck restraint excessive and formed an opinion of serious misconduct against the arresting officer.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20a%20police%20use%20of%20force%20incident%20in%20Northbridge%20on%2010%20November%202019.pdf",
+      "document": "Review of a police use of force incident in Northbridge on 10 November 2019",
+      "page": 41
+     }
+    ]
+   },
+   {
+    "text": "The Commission considered another officer's move on order unlawful and formed an opinion of reviewable police action.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20a%20police%20use%20of%20force%20incident%20in%20Northbridge%20on%2010%20November%202019.pdf",
+      "document": "Review of a police use of force incident in Northbridge on 10 November 2019",
+      "page": 42
+     }
+    ]
+   },
+   {
+    "text": "The Commission also identified risks involving medical care, the length of detention and inaccurate custody records.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20a%20police%20use%20of%20force%20incident%20in%20Northbridge%20on%2010%20November%202019.pdf",
+      "document": "Review of a police use of force incident in Northbridge on 10 November 2019",
+      "page": 43
+     }
+    ]
+   },
+   {
+    "text": "The Commission emphasised that a serious misconduct opinion did not determine guilt of a criminal or disciplinary offence.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20a%20police%20use%20of%20force%20incident%20in%20Northbridge%20on%2010%20November%202019.pdf",
+      "document": "Review of a police use of force incident in Northbridge on 10 November 2019",
+      "page": 42
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

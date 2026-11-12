@@ -84,6 +84,15 @@
 .rr-tally li { display: inline-flex; align-items: baseline; gap: var(--space-line); }
 .rr-tally-count { font: var(--type-strong); font-variant-numeric: tabular-nums; }
 
+/* Summary: the report's own summary, the generated lines under their label, each with its pages, then the body's words. */
+.rr-own-summary { margin-bottom: var(--space-block); }
+.rr-generated { padding-left: var(--space-row); border-left: var(--border-focus) solid var(--divider-default); margin-bottom: var(--space-block); }
+.rr-generated-label { margin: 0 0 var(--space-tight); }
+.rr-summary-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-row); }
+.rr-summary-lines .rr-record-text { margin: 0; }
+.rr-summary-lines .rr-cite-line { margin-top: var(--space-line); }
+.rr-quote { margin: 0; }
+
 /* Recommendation numbers: a quiet index for long lists. */
 .rr-jump ul { display: flex; flex-wrap: wrap; gap: var(--space-line); margin: 0 0 var(--space-block); padding: 0; list-style: none; }
 .rr-jump a { display: inline-flex; align-items: center; justify-content: center; min-width: 2.75rem; min-height: 2rem; padding: 0 var(--sp-8); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--ui-radius); background: var(--paper-raised); font: var(--type-label); color: var(--ink); text-decoration: none; font-variant-numeric: tabular-nums; }

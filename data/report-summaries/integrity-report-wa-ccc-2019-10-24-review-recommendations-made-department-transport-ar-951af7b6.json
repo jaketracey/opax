@@ -1,0 +1,129 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2019-10-24-review-recommendations-made-department-transport-ar-951af7b6",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Review of recommendations made to Department of Transport arising from three reports",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20Department%20of%20Transport%20arising%20from%20three%20reports.pdf",
+  "document": "Review of recommendations made to Department of Transport arising from three reports",
+  "sha256": "e8958d029f735090725aee29687d00691d408b5e6960dad211eae1e781ed985e",
+  "pages": 11,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed four recommendations arising from three reports on misconduct risks in Department of Transport licensing and vehicle examinations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20Department%20of%20Transport%20arising%20from%20three%20reports.pdf",
+      "document": "Review of recommendations made to Department of Transport arising from three reports",
+      "page": 3
+     }
+    ]
+   },
+   {
+    "text": "The recommendations concerned driving assessment bookings, photographs of vehicle examinations, invoice audits and recognition of overseas driving licences.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20Department%20of%20Transport%20arising%20from%20three%20reports.pdf",
+      "document": "Review of recommendations made to Department of Transport arising from three reports",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20Department%20of%20Transport%20arising%20from%20three%20reports.pdf",
+      "document": "Review of recommendations made to Department of Transport arising from three reports",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20Department%20of%20Transport%20arising%20from%20three%20reports.pdf",
+      "document": "Review of recommendations made to Department of Transport arising from three reports",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20Department%20of%20Transport%20arising%20from%20three%20reports.pdf",
+      "document": "Review of recommendations made to Department of Transport arising from three reports",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The Commission concluded that booking controls and audits had improved, accepted the proposed regulatory changes and closed all recommendations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20Department%20of%20Transport%20arising%20from%20three%20reports.pdf",
+      "document": "Review of recommendations made to Department of Transport arising from three reports",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20Department%20of%20Transport%20arising%20from%20three%20reports.pdf",
+      "document": "Review of recommendations made to Department of Transport arising from three reports",
+      "page": 8
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20Department%20of%20Transport%20arising%20from%20three%20reports.pdf",
+      "document": "Review of recommendations made to Department of Transport arising from three reports",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20Department%20of%20Transport%20arising%20from%20three%20reports.pdf",
+      "document": "Review of recommendations made to Department of Transport arising from three reports",
+      "page": 11
+     }
+    ]
+   },
+   {
+    "text": "The Commission also closed the photographic evidence recommendation after the department considered it and declined implementation because of cost.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20Department%20of%20Transport%20arising%20from%20three%20reports.pdf",
+      "document": "Review of recommendations made to Department of Transport arising from three reports",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20Department%20of%20Transport%20arising%20from%20three%20reports.pdf",
+      "document": "Review of recommendations made to Department of Transport arising from three reports",
+      "page": 7
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission considers all recommendations closed.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20Department%20of%20Transport%20arising%20from%20three%20reports.pdf",
+     "document": "Review of recommendations made to Department of Transport arising from three reports",
+     "page": 11
+    }
+   },
+   {
+    "quote": "The regulatory reform proposed by Transport is appropriate and logical.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20Department%20of%20Transport%20arising%20from%20three%20reports.pdf",
+     "document": "Review of recommendations made to Department of Transport arising from three reports",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,124 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-cth-defence-veteran-suicide",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "Royal Commission into Defence and Veteran Suicide",
+ "body": "Royal Commission into Defence and Veteran Suicide",
+ "source": {
+  "url": "https://www.royalcommission.gov.au/system/files/2024-09/dvsrc-final-report-volume-1.pdf",
+  "document": "Royal Commission into Defence and Veteran Suicide, Final Report, Volume 1: Executive summary and recommendations",
+  "sha256": "5efee4f27059ed249c5b75bb28738dc315d8af315d0cb093c1a1130bc266e038",
+  "pages": 319,
+  "rights": "© Commonwealth of Australia 2024. With the exception of the Coat of Arms and where otherwise stated, all material presented in this publication is provided under a Creative Commons Attribution 4.0 International licence (imprint, page 2)."
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 13,
+  "last_page": 101,
+  "link": "https://www.royalcommission.gov.au/system/files/2024-09/dvsrc-final-report-volume-1.pdf#page=13"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Royal Commission into Defence and Veteran Suicide was asked to identify systemic problems and propose ways to prevent suicide and suicidality among current and former ADF members.",
+    "cites": [
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2024-09/dvsrc-final-report-volume-1.pdf",
+      "document": "Royal Commission into Defence and Veteran Suicide, Final Report, Volume 1: Executive summary and recommendations",
+      "page": 11
+     }
+    ],
+    "section": "Commissioners’ foreword"
+   },
+   {
+    "text": "It examined cultural, structural and systemic issues across the ADF, Defence and the Department of Veterans’ Affairs.",
+    "cites": [
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2024-09/dvsrc-final-report-volume-1.pdf",
+      "document": "Royal Commission into Defence and Veteran Suicide, Final Report, Volume 1: Executive summary and recommendations",
+      "page": 11
+     },
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2024-09/dvsrc-final-report-volume-1.pdf",
+      "document": "Royal Commission into Defence and Veteran Suicide, Final Report, Volume 1: Executive summary and recommendations",
+      "page": 14
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commission found that institutional problems in Defence and the Department of Veterans’ Affairs contributed to persistently high levels of suicide and suicidality.",
+    "cites": [
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2024-09/dvsrc-final-report-volume-1.pdf",
+      "document": "Royal Commission into Defence and Veteran Suicide, Final Report, Volume 1: Executive summary and recommendations",
+      "page": 25
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "Its 122 recommendations address harm prevention, early intervention, coordination of support, institutional capability and stronger oversight.",
+    "cites": [
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2024-09/dvsrc-final-report-volume-1.pdf",
+      "document": "Royal Commission into Defence and Veteran Suicide, Final Report, Volume 1: Executive summary and recommendations",
+      "page": 77
+     },
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2024-09/dvsrc-final-report-volume-1.pdf",
+      "document": "Royal Commission into Defence and Veteran Suicide, Final Report, Volume 1: Executive summary and recommendations",
+      "page": 78
+     },
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2024-09/dvsrc-final-report-volume-1.pdf",
+      "document": "Royal Commission into Defence and Veteran Suicide, Final Report, Volume 1: Executive summary and recommendations",
+      "page": 79
+     },
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2024-09/dvsrc-final-report-volume-1.pdf",
+      "document": "Royal Commission into Defence and Veteran Suicide, Final Report, Volume 1: Executive summary and recommendations",
+      "page": 80
+     }
+    ],
+    "section": "Recommendations: Lines of effort"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Our inquiry has found that numerous institutional drivers within Defence and DVA contribute to the persistently high rates of suicide and suicidality among serving and ex-serving ADF members.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.royalcommission.gov.au/system/files/2024-09/dvsrc-final-report-volume-1.pdf",
+     "document": "Royal Commission into Defence and Veteran Suicide, Final Report, Volume 1: Executive summary and recommendations",
+     "page": 25
+    }
+   },
+   {
+    "quote": "There is no comprehensive oversight of the defence and veteran ecosystem and its performance in relation to suicide prevention.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.royalcommission.gov.au/system/files/2024-09/dvsrc-final-report-volume-1.pdf",
+     "document": "Royal Commission into Defence and Veteran Suicide, Final Report, Volume 1: Executive summary and recommendations",
+     "page": 79
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

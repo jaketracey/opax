@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2025-07-29-corruption-perceptions-survey-2025-queensland-police-service",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Corruption Perceptions Survey 2025 | Queensland Police Service Employees Report",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-QPS-Employees-Report.pdf",
+  "document": "Queensland Police Service Employees Report",
+  "sha256": "679ac1e77b237ffaa47c8df303a76ef1ad133ae901dd4e1fe4496afb19cfb705",
+  "pages": 59,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of key findings",
+  "first_page": 13,
+  "last_page": 14,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-QPS-Employees-Report.pdf#page=13"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission commissioned research on Queensland Police Service employees’ corruption perceptions to inform prevention work and strategic planning.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-QPS-Employees-Report.pdf",
+      "document": "Queensland Police Service Employees Report",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-QPS-Employees-Report.pdf",
+      "document": "Queensland Police Service Employees Report",
+      "page": 5
+     }
+    ],
+    "section": "Research objectives"
+   },
+   {
+    "text": "The online survey received 116 completed responses between 28 March and 9 May 2025, covering police officers and staff members.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-QPS-Employees-Report.pdf",
+      "document": "Queensland Police Service Employees Report",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-QPS-Employees-Report.pdf",
+      "document": "Queensland Police Service Employees Report",
+      "page": 6
+     }
+    ],
+    "section": "Research method"
+   },
+   {
+    "text": "The CCC reported that confidential information misuse, bullying and harassment, policy non-compliance, and recruitment screening were among the highest perceived workplace risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-QPS-Employees-Report.pdf",
+      "document": "Queensland Police Service Employees Report",
+      "page": 14
+     }
+    ],
+    "section": "Summary of key findings"
+   },
+   {
+    "text": "The CCC reported that 72% intended to report corruption, while 58% expected personal repercussions and only 29% expected meaningful action.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-QPS-Employees-Report.pdf",
+      "document": "Queensland Police Service Employees Report",
+      "page": 14
+     }
+    ],
+    "section": "Summary of key findings"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There is a firm resolve to report corruption in the future; however, doubt exists as to whether meaningful action would be taken.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-QPS-Employees-Report.pdf",
+     "document": "Queensland Police Service Employees Report",
+     "page": 14
+    }
+   },
+   {
+    "quote": "There is a preference for lodging complaints with an independent organisation.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-QPS-Employees-Report.pdf",
+     "document": "Queensland Police Service Employees Report",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

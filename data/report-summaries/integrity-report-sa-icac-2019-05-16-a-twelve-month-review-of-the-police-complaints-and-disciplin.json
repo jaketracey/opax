@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2019-05-16-a-twelve-month-review-of-the-police-complaints-and-disciplin",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "A Twelve Month Review of the Police Complaints and Discipline Act 2016",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362959/A-Twelve-Month-Review-of-the-PCDA-2016.pdf",
+  "document": "A Twelve Month Review of the Police Complaints and Discipline Act 2016",
+  "sha256": "9495f7944f05e915adff596a427e6ff86fe7ed5e8a485a0c5f3cb66749e93d13",
+  "pages": 60,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362959/A-Twelve-Month-Review-of-the-PCDA-2016.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commissioner Against Corruption reviewed the first year of the Police Complaints and Discipline Act 2016 to inform Parliament about operational issues.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362959/A-Twelve-Month-Review-of-the-PCDA-2016.pdf",
+      "document": "A Twelve Month Review of the Police Complaints and Discipline Act 2016",
+      "page": 6
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The review examined how the Office for Public Integrity oversaw the assessment and investigation of complaints about police conduct.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362959/A-Twelve-Month-Review-of-the-PCDA-2016.pdf",
+      "document": "A Twelve Month Review of the Police Complaints and Discipline Act 2016",
+      "page": 6
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The Commissioner considered the scheme to be working reasonably well but identified ambiguities and tensions with the ICAC Act.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362959/A-Twelve-Month-Review-of-the-PCDA-2016.pdf",
+      "document": "A Twelve Month Review of the Police Complaints and Discipline Act 2016",
+      "page": 6
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The Commissioner made 18 recommendations about assessment, oversight, management resolution and investigation powers.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362959/A-Twelve-Month-Review-of-the-PCDA-2016.pdf",
+      "document": "A Twelve Month Review of the Police Complaints and Discipline Act 2016",
+      "page": 6
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362959/A-Twelve-Month-Review-of-the-PCDA-2016.pdf",
+      "document": "A Twelve Month Review of the Police Complaints and Discipline Act 2016",
+      "page": 56
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362959/A-Twelve-Month-Review-of-the-PCDA-2016.pdf",
+      "document": "A Twelve Month Review of the Police Complaints and Discipline Act 2016",
+      "page": 57
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362959/A-Twelve-Month-Review-of-the-PCDA-2016.pdf",
+      "document": "A Twelve Month Review of the Police Complaints and Discipline Act 2016",
+      "page": 58
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The PCDA be amended to permit the OPI to identify a matter on its own initiative for assessment by IIS or referral under section 29 to the ICAC.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0007/362959/A-Twelve-Month-Review-of-the-PCDA-2016.pdf",
+     "document": "A Twelve Month Review of the Police Complaints and Discipline Act 2016",
+     "page": 56
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

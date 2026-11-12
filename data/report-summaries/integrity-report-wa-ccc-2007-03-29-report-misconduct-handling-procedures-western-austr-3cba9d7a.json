@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2007-03-29-report-misconduct-handling-procedures-western-austr-3cba9d7a",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department of Consumer Employment Protection",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20of%20Consumer%20Employment%20Protection.pdf",
+  "document": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department of Consumer Employment Protection.pdf",
+  "sha256": "4c682c8e58effea76d2f8441214c395bf27d6f82888e2b61f4d39c76ddb1a9ad",
+  "pages": 17,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 7,
+  "last_page": 7,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20of%20Consumer%20Employment%20Protection.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed misconduct handling capacity at the Department of Consumer Employment Protection.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20of%20Consumer%20Employment%20Protection.pdf",
+      "document": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department of Consumer Employment Protection.pdf",
+      "page": 7
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The review considered internal investigations and the department's role in identifying suspected misconduct elsewhere in the public sector.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20of%20Consumer%20Employment%20Protection.pdf",
+      "document": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department of Consumer Employment Protection.pdf",
+      "page": 7
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission considered the department committed to misconduct guidelines, staff education and reporting obligations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20of%20Consumer%20Employment%20Protection.pdf",
+      "document": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department of Consumer Employment Protection.pdf",
+      "page": 7
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "Its two recommendations sought monitoring of internal investigation capacity and continued notification of suspected misconduct outside the department.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20of%20Consumer%20Employment%20Protection.pdf",
+      "document": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department of Consumer Employment Protection.pdf",
+      "page": 7
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission considers that DOCEP is making a very serious attempt to establish appropriate misconduct guidelines for its staff, to roll out those guidelines in a timely fashion and to educate the Executive and staff about their obligations and responsibilities under the Act.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20of%20Consumer%20Employment%20Protection.pdf",
+     "document": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department of Consumer Employment Protection.pdf",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

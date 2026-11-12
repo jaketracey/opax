@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2024-06-13-review-main-roads-investigation-misconduct-two-managers",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Review of Main Roads investigation into misconduct by two managers",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_Main_Roads_investigation_into_misconduct_by_two_managers.pdf",
+  "document": "Review of Main Roads investigation into misconduct by two managers",
+  "sha256": "0baaabaa7d6c2a3671f39e9573c74149760c54c9e9ca3bde4d8ac40762b74579",
+  "pages": 16,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_Main_Roads_investigation_into_misconduct_by_two_managers.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed how Main Roads handled misconduct allegations involving two managers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_Main_Roads_investigation_into_misconduct_by_two_managers.pdf",
+      "document": "Review of Main Roads investigation into misconduct by two managers",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The Commission considered the external investigation thorough, but found Main Roads had initially done little to address wider misconduct risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_Main_Roads_investigation_into_misconduct_by_two_managers.pdf",
+      "document": "Review of Main Roads investigation into misconduct by two managers",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_Main_Roads_investigation_into_misconduct_by_two_managers.pdf",
+      "document": "Review of Main Roads investigation into misconduct by two managers",
+      "page": 13
+     }
+    ]
+   },
+   {
+    "text": "The Commission made three recommendations covering financial audits, procurement oversight and fixed asset policies.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_Main_Roads_investigation_into_misconduct_by_two_managers.pdf",
+      "document": "Review of Main Roads investigation into misconduct by two managers",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "After considering further action by Main Roads, the Commission concluded that all three recommendations could be closed.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_Main_Roads_investigation_into_misconduct_by_two_managers.pdf",
+      "document": "Review of Main Roads investigation into misconduct by two managers",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_Main_Roads_investigation_into_misconduct_by_two_managers.pdf",
+      "document": "Review of Main Roads investigation into misconduct by two managers",
+      "page": 16
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "On the evidence available, the Commission considers the conclusions reached that both managers engaged in misconduct were open to be made.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_Main_Roads_investigation_into_misconduct_by_two_managers.pdf",
+     "document": "Review of Main Roads investigation into misconduct by two managers",
+     "page": 12
+    }
+   },
+   {
+    "quote": "The Commission considers all recommendations closed.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_Main_Roads_investigation_into_misconduct_by_two_managers.pdf",
+     "document": "Review of Main Roads investigation into misconduct by two managers",
+     "page": 16
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

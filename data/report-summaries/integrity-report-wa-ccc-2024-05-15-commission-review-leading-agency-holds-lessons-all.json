@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2024-05-15-commission-review-leading-agency-holds-lessons-all",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Commission review of leading agency holds lessons for all",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A_review_of_misconduct_risks_within_Department_of_Finance_-Lessons_for_all_government_authorities_0.pdf",
+  "document": "A review of misconduct risks within Department of Finance - Lessons for all government authorities",
+  "sha256": "9ddc790c400890c89c55e66a33f55a5b790880089122d1c543ab4213de02a4e8",
+  "pages": 18,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "OVERVIEW",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/A_review_of_misconduct_risks_within_Department_of_Finance_-Lessons_for_all_government_authorities_0.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed the Department of Finance's handling of three allegations involving procurement and conflicts of interest.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A_review_of_misconduct_risks_within_Department_of_Finance_-Lessons_for_all_government_authorities_0.pdf",
+      "document": "A review of misconduct risks within Department of Finance - Lessons for all government authorities",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The Commission concluded that Finance's response to all three matters was inadequate.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A_review_of_misconduct_risks_within_Department_of_Finance_-Lessons_for_all_government_authorities_0.pdf",
+      "document": "A review of misconduct risks within Department of Finance - Lessons for all government authorities",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The Commission found that Finance focused on individual conduct without adequately examining wider weaknesses that could allow misconduct to recur.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A_review_of_misconduct_risks_within_Department_of_Finance_-Lessons_for_all_government_authorities_0.pdf",
+      "document": "A review of misconduct risks within Department of Finance - Lessons for all government authorities",
+      "page": 17
+     }
+    ]
+   },
+   {
+    "text": "The Commission acknowledged Finance's subsequent changes and urged government authorities to review their governance and ability to respond promptly to misconduct risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A_review_of_misconduct_risks_within_Department_of_Finance_-Lessons_for_all_government_authorities_0.pdf",
+      "document": "A review of misconduct risks within Department of Finance - Lessons for all government authorities",
+      "page": 18
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission's review considers the action taken by Finance into all three matters was inadequate.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A_review_of_misconduct_risks_within_Department_of_Finance_-Lessons_for_all_government_authorities_0.pdf",
+     "document": "A review of misconduct risks within Department of Finance - Lessons for all government authorities",
+     "page": 4
+    }
+   },
+   {
+    "quote": "In the Commission's view, the actions taken should look beyond the conduct of the individuals to identify vulnerabilities that may be exposed or exploited again in the future.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A_review_of_misconduct_risks_within_Department_of_Finance_-Lessons_for_all_government_authorities_0.pdf",
+     "document": "A review of misconduct risks within Department of Finance - Lessons for all government authorities",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

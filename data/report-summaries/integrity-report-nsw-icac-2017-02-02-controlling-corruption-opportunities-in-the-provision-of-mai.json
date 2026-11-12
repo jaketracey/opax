@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2017-02-02-controlling-corruption-opportunities-in-the-provision-of-mai",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Controlling corruption opportunities in the provision of maintenance services",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Controlling%20corruption%20opportunities%20in%20the%20provision%20of%20maintenance%20services%203Feb17.pdf.aspx",
+  "document": "Controlling corruption opportunities in the provision of maintenance services",
+  "sha256": "a9f51467b61a3b0d52e6a3ac908dbffdc6c0e57114c090f386e147270fb02fde",
+  "pages": 48,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 7,
+  "last_page": 7,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Controlling%20corruption%20opportunities%20in%20the%20provision%20of%20maintenance%20services%203Feb17.pdf.aspx#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption provides guidance for officials responsible for facilities maintenance systems and contracts.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Controlling%20corruption%20opportunities%20in%20the%20provision%20of%20maintenance%20services%203Feb17.pdf.aspx",
+      "document": "Controlling corruption opportunities in the provision of maintenance services",
+      "page": 7
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "It draws on interviews with senior staff from 24 organisations and case studies to examine outsourced maintenance arrangements.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Controlling%20corruption%20opportunities%20in%20the%20provision%20of%20maintenance%20services%203Feb17.pdf.aspx",
+      "document": "Controlling corruption opportunities in the provision of maintenance services",
+      "page": 7
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Controlling%20corruption%20opportunities%20in%20the%20provision%20of%20maintenance%20services%203Feb17.pdf.aspx",
+      "document": "Controlling corruption opportunities in the provision of maintenance services",
+      "page": 8
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "The Commission concludes that effective maintenance controls require asset and cost knowledge, separation of key duties and connected information about performance.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Controlling%20corruption%20opportunities%20in%20the%20provision%20of%20maintenance%20services%203Feb17.pdf.aspx",
+      "document": "Controlling corruption opportunities in the provision of maintenance services",
+      "page": 38
+     }
+    ],
+    "section": "Chapter 7: Conclusion"
+   },
+   {
+    "text": "The Commission advises agencies to select contracting arrangements that match their staff capabilities and information systems, then review them as circumstances change.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Controlling%20corruption%20opportunities%20in%20the%20provision%20of%20maintenance%20services%203Feb17.pdf.aspx",
+      "document": "Controlling corruption opportunities in the provision of maintenance services",
+      "page": 38
+     }
+    ],
+    "section": "Chapter 7: Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Regardless of its commercial arrangements, an agency should aim to be an informed client.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Controlling%20corruption%20opportunities%20in%20the%20provision%20of%20maintenance%20services%203Feb17.pdf.aspx",
+     "document": "Controlling corruption opportunities in the provision of maintenance services",
+     "page": 38
+    }
+   },
+   {
+    "quote": "Agencies should design maintenance arrangements in accordance with their experience and capability.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Controlling%20corruption%20opportunities%20in%20the%20provision%20of%20maintenance%20services%203Feb17.pdf.aspx",
+     "document": "Controlling corruption opportunities in the provision of maintenance services",
+     "page": 38
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

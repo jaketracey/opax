@@ -1,0 +1,86 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2023-10-26-ccc-investigation-highlights-misconduct-risks-wa-po-b491d654",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "CCC investigation highlights misconduct risks in WA Police Force",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_serious_misconduct_by_a_senior_police_officer.pdf",
+  "document": "Report on Serious Misconduct by a Senior Police Officer",
+  "sha256": "cc45e5f94878fc97eba81f84f244e81f4c72cb35987126e05ccc6b071f5a09b2",
+  "pages": 38,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_serious_misconduct_by_a_senior_police_officer.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated allegations about a senior police officer's disclosure of confidential information and use of police vehicles.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_serious_misconduct_by_a_senior_police_officer.pdf",
+      "document": "Report on Serious Misconduct by a Senior Police Officer",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The Commission formed opinions of police misconduct concerning the officer's vehicle use and repeated disclosure of confidential information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_serious_misconduct_by_a_senior_police_officer.pdf",
+      "document": "Report on Serious Misconduct by a Senior Police Officer",
+      "page": 11
+     }
+    ]
+   },
+   {
+    "text": "The Commission emphasised that its misconduct opinion did not establish guilt of a criminal or disciplinary offence.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_serious_misconduct_by_a_senior_police_officer.pdf",
+      "document": "Report on Serious Misconduct by a Senior Police Officer",
+      "page": 38
+     }
+    ]
+   },
+   {
+    "text": "The Commission made two recommendations: review the vehicle commuting policy and regularly remind staff about confidentiality.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_serious_misconduct_by_a_senior_police_officer.pdf",
+      "document": "Report on Serious Misconduct by a Senior Police Officer",
+      "page": 21
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_serious_misconduct_by_a_senior_police_officer.pdf",
+      "document": "Report on Serious Misconduct by a Senior Police Officer",
+      "page": 30
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

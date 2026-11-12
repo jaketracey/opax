@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-undated-icac-public-integrity-survey-2024-local-government-insights",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "ICAC Public Integrity Survey 2024: Local Government Insights",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/1165184/ICAC-Public-Integrity-Survey-Local-Government-20.6.25.pdf",
+  "document": "ICAC Public Integrity Survey 2024 – Local Government Insights",
+  "sha256": "e95a4c129a8e655d8b608f34dd310a7b72d80d25212819b28127ba51d39200ea",
+  "pages": 74,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "COMMISSIONER’S FOREWORD",
+  "first_page": 6,
+  "last_page": 6,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/1165184/ICAC-Public-Integrity-Survey-Local-Government-20.6.25.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption analysed local government responses to its third Public Integrity Survey.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/1165184/ICAC-Public-Integrity-Survey-Local-Government-20.6.25.pdf",
+      "document": "ICAC Public Integrity Survey 2024 – Local Government Insights",
+      "page": 6
+     }
+    ],
+    "section": "COMMISSIONER’S FOREWORD"
+   },
+   {
+    "text": "The survey focused on decision making, discretionary powers and improper influence, while comparing compatible results with earlier surveys.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/1165184/ICAC-Public-Integrity-Survey-Local-Government-20.6.25.pdf",
+      "document": "ICAC Public Integrity Survey 2024 – Local Government Insights",
+      "page": 6
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/1165184/ICAC-Public-Integrity-Survey-Local-Government-20.6.25.pdf",
+      "document": "ICAC Public Integrity Survey 2024 – Local Government Insights",
+      "page": 7
+     }
+    ],
+    "section": "THE SURVEY"
+   },
+   {
+    "text": "The Commission reported increasing perceptions of corruption vulnerability, while cautioning that greater awareness could explain the change.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/1165184/ICAC-Public-Integrity-Survey-Local-Government-20.6.25.pdf",
+      "document": "ICAC Public Integrity Survey 2024 – Local Government Insights",
+      "page": 6
+     }
+    ],
+    "section": "COMMISSIONER’S FOREWORD"
+   },
+   {
+    "text": "The Commission identified risks around recruitment favouritism, procurement, confidential information and unchecked decision making, and encouraged officers to use reporting systems.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/1165184/ICAC-Public-Integrity-Survey-Local-Government-20.6.25.pdf",
+      "document": "ICAC Public Integrity Survey 2024 – Local Government Insights",
+      "page": 60
+     }
+    ],
+    "section": "CONCLUSIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Decision making that lacks transparency, accountability, and appropriate checks and balances, may be vulnerable to misuse of authority.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/1165184/ICAC-Public-Integrity-Survey-Local-Government-20.6.25.pdf",
+     "document": "ICAC Public Integrity Survey 2024 – Local Government Insights",
+     "page": 60
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

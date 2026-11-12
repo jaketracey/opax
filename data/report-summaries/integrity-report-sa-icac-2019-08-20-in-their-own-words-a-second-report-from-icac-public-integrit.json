@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2019-08-20-in-their-own-words-a-second-report-from-icac-public-integrit",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "In Their Own Words: A Second Report from ICAC Public Integrity Survey 2018",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/387807/In-Their-Own-Words.pdf",
+  "document": "In Their Own Words: A Second Report from the ICAC Public Integrity Survey 2018",
+  "sha256": "a0c393de53a5dd96bca11ddcc83d48585be507a132480d29319051538b5cccc0",
+  "pages": 84,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/387807/In-Their-Own-Words.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commissioner Against Corruption examined written responses to the Public Integrity Survey 2018 about agency culture and practices.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/387807/In-Their-Own-Words.pdf",
+      "document": "In Their Own Words: A Second Report from the ICAC Public Integrity Survey 2018",
+      "page": 6
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The Commissioner cautioned that the survey recorded participants’ perceptions and did not establish whether their accounts were true.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/387807/In-Their-Own-Words.pdf",
+      "document": "In Their Own Words: A Second Report from the ICAC Public Integrity Survey 2018",
+      "page": 6
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The Commissioner reported recurring concerns about fear of reprisals, the usefulness of reporting and the effect of poor workplace conduct.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/387807/In-Their-Own-Words.pdf",
+      "document": "In Their Own Words: A Second Report from the ICAC Public Integrity Survey 2018",
+      "page": 7
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/387807/In-Their-Own-Words.pdf",
+      "document": "In Their Own Words: A Second Report from the ICAC Public Integrity Survey 2018",
+      "page": 70
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commissioner urged agencies to consult staff, protect reporting and regularly review integrity controls and compliance with policies.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/387807/In-Their-Own-Words.pdf",
+      "document": "In Their Own Words: A Second Report from the ICAC Public Integrity Survey 2018",
+      "page": 70
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/387807/In-Their-Own-Words.pdf",
+      "document": "In Their Own Words: A Second Report from the ICAC Public Integrity Survey 2018",
+      "page": 71
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Agencies have an obligation to create an environment where staff are both free to report without reprisal and can be confident their reports will be handled appropriately.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/387807/In-Their-Own-Words.pdf",
+     "document": "In Their Own Words: A Second Report from the ICAC Public Integrity Survey 2018",
+     "page": 70
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

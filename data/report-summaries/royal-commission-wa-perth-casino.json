@@ -1,0 +1,139 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-wa-perth-casino",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "Perth Casino Royal Commission",
+ "body": "Perth Casino Royal Commission",
+ "source": {
+  "url": "https://www.wa.gov.au/system/files/2022-03/PCRC%20Final%20Report%20Digital_FINAL%20%28Master%29_0.pdf",
+  "document": "Perth Casino Royal Commission, Final Report",
+  "sha256": "321e3003e3fd1df86d1f2966c9dd686fd886c4a871cfaf1bcffa63f0958c4cd9",
+  "pages": 996,
+  "rights": "© Government of Western Australia. Copyright in this document is reserved to the Government for the State of Western Australia. Reproduction of this document (or part thereof, in any format) is prohibited except with the prior written consent of the Perth Casino Royal Commission or the Department of Premier and Cabinet or as permitted by the Copyright Act 1968 (Cth) (imprint, page 2). OPAX links to the publisher's copy and does not reproduce the report."
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Foreword",
+  "first_page": 10,
+  "last_page": 13,
+  "link": "https://www.wa.gov.au/system/files/2022-03/PCRC%20Final%20Report%20Digital_FINAL%20%28Master%29_0.pdf#page=10"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Perth Casino Royal Commission examined whether the casino licensee and associated Crown companies were suitable to conduct casino gaming, and whether Western Australia’s regulation was adequate.",
+    "cites": [
+     {
+      "url": "https://www.wa.gov.au/system/files/2022-03/PCRC%20Final%20Report%20Digital_FINAL%20%28Master%29_0.pdf",
+      "document": "Perth Casino Royal Commission, Final Report",
+      "page": 10
+     }
+    ],
+    "section": "Foreword"
+   },
+   {
+    "text": "The Commission found that the licensee was unsuitable to retain its licence and that the associated companies were unsuitable to organise or conduct casino gaming.",
+    "cites": [
+     {
+      "url": "https://www.wa.gov.au/system/files/2022-03/PCRC%20Final%20Report%20Digital_FINAL%20%28Master%29_0.pdf",
+      "document": "Perth Casino Royal Commission, Final Report",
+      "page": 10
+     },
+     {
+      "url": "https://www.wa.gov.au/system/files/2022-03/PCRC%20Final%20Report%20Digital_FINAL%20%28Master%29_0.pdf",
+      "document": "Perth Casino Royal Commission, Final Report",
+      "page": 14
+     }
+    ],
+    "section": "Foreword; Answers to Questions in the Terms of Reference"
+   },
+   {
+    "text": "It also concluded that casino legislation needed replacement and identified shortcomings in the regulator’s performance and departmental support.",
+    "cites": [
+     {
+      "url": "https://www.wa.gov.au/system/files/2022-03/PCRC%20Final%20Report%20Digital_FINAL%20%28Master%29_0.pdf",
+      "document": "Perth Casino Royal Commission, Final Report",
+      "page": 11
+     }
+    ],
+    "section": "Foreword"
+   },
+   {
+    "text": "The Commission proposed a path back to suitability involving about two years of remediation overseen by an independent monitor.",
+    "cites": [
+     {
+      "url": "https://www.wa.gov.au/system/files/2022-03/PCRC%20Final%20Report%20Digital_FINAL%20%28Master%29_0.pdf",
+      "document": "Perth Casino Royal Commission, Final Report",
+      "page": 10
+     }
+    ],
+    "section": "Foreword"
+   },
+   {
+    "text": "Its 59 numbered recommendations address governance, gambling risks, regulatory capability and research data, including compulsory limits on gaming-machine losses and playing time.",
+    "cites": [
+     {
+      "url": "https://www.wa.gov.au/system/files/2022-03/PCRC%20Final%20Report%20Digital_FINAL%20%28Master%29_0.pdf",
+      "document": "Perth Casino Royal Commission, Final Report",
+      "page": 16
+     },
+     {
+      "url": "https://www.wa.gov.au/system/files/2022-03/PCRC%20Final%20Report%20Digital_FINAL%20%28Master%29_0.pdf",
+      "document": "Perth Casino Royal Commission, Final Report",
+      "page": 17
+     },
+     {
+      "url": "https://www.wa.gov.au/system/files/2022-03/PCRC%20Final%20Report%20Digital_FINAL%20%28Master%29_0.pdf",
+      "document": "Perth Casino Royal Commission, Final Report",
+      "page": 24
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Burswood Nominees Ltd is not a ‘suitable person’ to continue to hold the gaming licence for Perth Casino.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.wa.gov.au/system/files/2022-03/PCRC%20Final%20Report%20Digital_FINAL%20%28Master%29_0.pdf",
+     "document": "Perth Casino Royal Commission, Final Report",
+     "page": 10
+    }
+   },
+   {
+    "quote": "We have concluded that the legislation by which Perth Casino is regulated is not fit for purpose and requires replacement with a modern regulatory framework.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.wa.gov.au/system/files/2022-03/PCRC%20Final%20Report%20Digital_FINAL%20%28Master%29_0.pdf",
+     "document": "Perth Casino Royal Commission, Final Report",
+     "page": 11
+    }
+   },
+   {
+    "quote": "Consequently, some of Perth Casino’s patrons have suffered considerable and avoidable harms as a result of their gambling.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.wa.gov.au/system/files/2022-03/PCRC%20Final%20Report%20Digital_FINAL%20%28Master%29_0.pdf",
+     "document": "Perth Casino Royal Commission, Final Report",
+     "page": 12
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:22+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

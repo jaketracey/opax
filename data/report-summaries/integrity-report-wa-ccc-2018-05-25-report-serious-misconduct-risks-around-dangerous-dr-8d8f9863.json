@@ -1,0 +1,116 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2018-05-25-report-serious-misconduct-risks-around-dangerous-dr-8d8f9863",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on serious misconduct risks around dangerous drugs in hospital",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20serious%20misconduct%20risks%20around%20dangerous%20drugs%20in%20hospital.pdf",
+  "document": "Report on serious misconduct risks around dangerous drugs in hospital",
+  "sha256": "1368210dd7aceeced63ec311694a171162d341ecdf6434b388ea7f3f471a61a6",
+  "pages": 54,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary",
+  "first_page": 52,
+  "last_page": 53,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20serious%20misconduct%20risks%20around%20dangerous%20drugs%20in%20hospital.pdf#page=52"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission examined theft and misuse risks involving dangerous pharmaceutical drugs in WA Health facilities.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20serious%20misconduct%20risks%20around%20dangerous%20drugs%20in%20hospital.pdf",
+      "document": "Report on serious misconduct risks around dangerous drugs in hospital",
+      "page": 6
+     }
+    ],
+    "section": "Purpose of this report"
+   },
+   {
+    "text": "It analysed notifications about missing or otherwise unaccounted-for restricted drugs at three metropolitan hospitals from 2013 to 2017.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20serious%20misconduct%20risks%20around%20dangerous%20drugs%20in%20hospital.pdf",
+      "document": "Report on serious misconduct risks around dangerous drugs in hospital",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20serious%20misconduct%20risks%20around%20dangerous%20drugs%20in%20hospital.pdf",
+      "document": "Report on serious misconduct risks around dangerous drugs in hospital",
+      "page": 52
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "The Commission concluded that most reported discrepancies remained unexplained after investigation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20serious%20misconduct%20risks%20around%20dangerous%20drugs%20in%20hospital.pdf",
+      "document": "Report on serious misconduct risks around dangerous drugs in hospital",
+      "page": 52
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "It considered poor records and failures to follow security and handling policies to be contributing factors.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20serious%20misconduct%20risks%20around%20dangerous%20drugs%20in%20hospital.pdf",
+      "document": "Report on serious misconduct risks around dangerous drugs in hospital",
+      "page": 52
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "Its nine recommendations covered consistent policies, accountability, records, security, prompt reporting, skilled investigations, staff training and detection strategies.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20serious%20misconduct%20risks%20around%20dangerous%20drugs%20in%20hospital.pdf",
+      "document": "Report on serious misconduct risks around dangerous drugs in hospital",
+      "page": 53
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20serious%20misconduct%20risks%20around%20dangerous%20drugs%20in%20hospital.pdf",
+      "document": "Report on serious misconduct risks around dangerous drugs in hospital",
+      "page": 54
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "WA Health is unable to account to the Commission or the community for the majority of drug discrepancies.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20serious%20misconduct%20risks%20around%20dangerous%20drugs%20in%20hospital.pdf",
+     "document": "Report on serious misconduct risks around dangerous drugs in hospital",
+     "page": 52
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

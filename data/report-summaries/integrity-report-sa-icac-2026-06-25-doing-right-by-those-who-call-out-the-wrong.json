@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2026-06-25-doing-right-by-those-who-call-out-the-wrong",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Doing right by those who call out the wrong",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/1424961/ICAC-Report-Whistleblower-Protection-Regime.pdf",
+  "document": "here.",
+  "sha256": "6b3883f439a31bf13ad132fdb0516cb3c620726d38c147a67db7073479dce94a",
+  "pages": 184,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption reviewed the effectiveness of the state’s whistleblower protections.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/1424961/ICAC-Report-Whistleblower-Protection-Regime.pdf",
+      "document": "here.",
+      "page": 27
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The review examined eligibility for protection, remedies for retaliation, confidentiality, support, oversight and the clarity of the law.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/1424961/ICAC-Report-Whistleblower-Protection-Regime.pdf",
+      "document": "here.",
+      "page": 5
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/1424961/ICAC-Report-Whistleblower-Protection-Regime.pdf",
+      "document": "here.",
+      "page": 6
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/1424961/ICAC-Report-Whistleblower-Protection-Regime.pdf",
+      "document": "here.",
+      "page": 7
+     }
+    ],
+    "section": "Contents"
+   },
+   {
+    "text": "The Commission concluded that broader protection, better access to remedies and clearer laws would improve the regime.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/1424961/ICAC-Report-Whistleblower-Protection-Regime.pdf",
+      "document": "here.",
+      "page": 157
+     }
+    ],
+    "section": "Concluding remarks"
+   },
+   {
+    "text": "Its 61 recommendations included expanding protection, improving enforcement and establishing independent support for whistleblowers.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/1424961/ICAC-Report-Whistleblower-Protection-Regime.pdf",
+      "document": "here.",
+      "page": 13
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/1424961/ICAC-Report-Whistleblower-Protection-Regime.pdf",
+      "document": "here.",
+      "page": 19
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/1424961/ICAC-Report-Whistleblower-Protection-Regime.pdf",
+      "document": "here.",
+      "page": 23
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "An independent, and adequately resourced, whistleblower support authority could fill a significant gap in South Australia’s whistleblower protection regime.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/1424961/ICAC-Report-Whistleblower-Protection-Regime.pdf",
+     "document": "here.",
+     "page": 157
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

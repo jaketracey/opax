@@ -1,0 +1,124 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2026-02-10-final-review-wa-police-action-recommendations-deplo-f0b2b7ee",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Final Review of WA Police Action into Recommendations on the Deployment of Police Dogs",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20Review%20of%20WA%20Police%20Action%20into%20Recommendations%20on%20the%20Deployment%20of%20Police%20Dogs.pdf",
+  "document": "Final Review of WA Police Action into Recommendations on the Deployment of Police Dogs",
+  "sha256": "1f537ea3cd946ed41108b793857a73ae23a26648382efc447afa37c970870933",
+  "pages": 7,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 3,
+  "last_page": 4,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20Review%20of%20WA%20Police%20Action%20into%20Recommendations%20on%20the%20Deployment%20of%20Police%20Dogs.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission completed a final review of WA Police’s response to two earlier recommendations about deploying police dogs.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20Review%20of%20WA%20Police%20Action%20into%20Recommendations%20on%20the%20Deployment%20of%20Police%20Dogs.pdf",
+      "document": "Final Review of WA Police Action into Recommendations on the Deployment of Police Dogs",
+      "page": 3
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20Review%20of%20WA%20Police%20Action%20into%20Recommendations%20on%20the%20Deployment%20of%20Police%20Dogs.pdf",
+      "document": "Final Review of WA Police Action into Recommendations on the Deployment of Police Dogs",
+      "page": 4
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The review examined canine policies and oversight, and research into the disproportionate deployment of dogs on Aboriginal and Torres Strait Islander people.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20Review%20of%20WA%20Police%20Action%20into%20Recommendations%20on%20the%20Deployment%20of%20Police%20Dogs.pdf",
+      "document": "Final Review of WA Police Action into Recommendations on the Deployment of Police Dogs",
+      "page": 3
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20Review%20of%20WA%20Police%20Action%20into%20Recommendations%20on%20the%20Deployment%20of%20Police%20Dogs.pdf",
+      "document": "Final Review of WA Police Action into Recommendations on the Deployment of Police Dogs",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20Review%20of%20WA%20Police%20Action%20into%20Recommendations%20on%20the%20Deployment%20of%20Police%20Dogs.pdf",
+      "document": "Final Review of WA Police Action into Recommendations on the Deployment of Police Dogs",
+      "page": 5
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission concluded that revised policies and procedures reduced ambiguity and risk and improved accountability for dog deployments.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20Review%20of%20WA%20Police%20Action%20into%20Recommendations%20on%20the%20Deployment%20of%20Police%20Dogs.pdf",
+      "document": "Final Review of WA Police Action into Recommendations on the Deployment of Police Dogs",
+      "page": 5
+     }
+    ],
+    "section": "The Commission’s review"
+   },
+   {
+    "text": "The Commission closed both recommendations as appropriately addressed, while noting that incomplete data limited analysis of disproportionate deployment.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20Review%20of%20WA%20Police%20Action%20into%20Recommendations%20on%20the%20Deployment%20of%20Police%20Dogs.pdf",
+      "document": "Final Review of WA Police Action into Recommendations on the Deployment of Police Dogs",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20Review%20of%20WA%20Police%20Action%20into%20Recommendations%20on%20the%20Deployment%20of%20Police%20Dogs.pdf",
+      "document": "Final Review of WA Police Action into Recommendations on the Deployment of Police Dogs",
+      "page": 7
+     }
+    ],
+    "section": "The Commission’s conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission considers that WA Police appropriately responded to recommendation one, and it is deemed closed.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20Review%20of%20WA%20Police%20Action%20into%20Recommendations%20on%20the%20Deployment%20of%20Police%20Dogs.pdf",
+     "document": "Final Review of WA Police Action into Recommendations on the Deployment of Police Dogs",
+     "page": 5
+    }
+   },
+   {
+    "quote": "The Commission considers that WA Police responded appropriately to recommendation two, and it is deemed closed.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20Review%20of%20WA%20Police%20Action%20into%20Recommendations%20on%20the%20Deployment%20of%20Police%20Dogs.pdf",
+     "document": "Final Review of WA Police Action into Recommendations on the Deployment of Police Dogs",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

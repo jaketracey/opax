@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2023-11-09-further-review-department-transports-management-unl-e9ff2852",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Further review of the Department of Transport's management of unlawful access to TRELIS",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Further_review_of_the_Department_of_Transport%26%23039%3Bs_management_of_unlawful_access_to_TRELIS_1_0.pdf",
+  "document": "Further review of the Department of Transport's management of unlawful access to TRELIS",
+  "sha256": "5991ccc5d3dd795558d3f79aa211ff7b1d3e95c5fe25f5030f272e2fa486c775",
+  "pages": 12,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "OVERVIEW",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Further_review_of_the_Department_of_Transport%26%23039%3Bs_management_of_unlawful_access_to_TRELIS_1_0.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed the Department of Transport's response to four recommendations about unauthorised access to its TRELIS database.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Further_review_of_the_Department_of_Transport%26%23039%3Bs_management_of_unlawful_access_to_TRELIS_1_0.pdf",
+      "document": "Further review of the Department of Transport's management of unlawful access to TRELIS",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The earlier recommendations covered access policies, investigation processes, activity alerts and agreements governing external users.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Further_review_of_the_Department_of_Transport%26%23039%3Bs_management_of_unlawful_access_to_TRELIS_1_0.pdf",
+      "document": "Further review of the Department of Transport's management of unlawful access to TRELIS",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The Commission concluded that the department had improved its ability to prevent serious misconduct and had adequately addressed all four recommendations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Further_review_of_the_Department_of_Transport%26%23039%3Bs_management_of_unlawful_access_to_TRELIS_1_0.pdf",
+      "document": "Further review of the Department of Transport's management of unlawful access to TRELIS",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Further_review_of_the_Department_of_Transport%26%23039%3Bs_management_of_unlawful_access_to_TRELIS_1_0.pdf",
+      "document": "Further review of the Department of Transport's management of unlawful access to TRELIS",
+      "page": 12
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission considers DoT has taken appropriate steps to address the recommendations.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Further_review_of_the_Department_of_Transport%26%23039%3Bs_management_of_unlawful_access_to_TRELIS_1_0.pdf",
+     "document": "Further review of the Department of Transport's management of unlawful access to TRELIS",
+     "page": 12
+    }
+   },
+   {
+    "quote": "The Commission considers all recommendations closed.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Further_review_of_the_Department_of_Transport%26%23039%3Bs_management_of_unlawful_access_to_TRELIS_1_0.pdf",
+     "document": "Further review of the Department of Transport's management of unlawful access to TRELIS",
+     "page": 12
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

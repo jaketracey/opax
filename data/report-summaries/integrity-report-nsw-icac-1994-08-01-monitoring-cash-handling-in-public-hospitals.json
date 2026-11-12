@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-1994-08-01-monitoring-cash-handling-in-public-hospitals",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Monitoring cash handling in public hospitals",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Monitoring%20cash%20handling%20in%20public%20hospitals.pdf.aspx",
+  "document": "Monitoring cash handling in public hospitals",
+  "sha256": "f13fd6a3aecaeb425458fa09c08578630ee90b98fd9b104094cae0f3ed4080d0",
+  "pages": 23,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "OVERVIEW",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Monitoring%20cash%20handling%20in%20public%20hospitals.pdf.aspx#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Commission Against Corruption monitored NSW hospitals in 1993/94 to assess whether management had effectively implemented earlier cash-handling recommendations.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Monitoring%20cash%20handling%20in%20public%20hospitals.pdf.aspx",
+      "document": "Monitoring cash handling in public hospitals",
+      "page": 5
+     }
+    ],
+    "section": "OVERVIEW"
+   },
+   {
+    "text": "The project visited two large hospitals and analysed questionnaire results from 33 other hospitals of different sizes.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Monitoring%20cash%20handling%20in%20public%20hospitals.pdf.aspx",
+      "document": "Monitoring cash handling in public hospitals",
+      "page": 5
+     }
+    ],
+    "section": "OVERVIEW"
+   },
+   {
+    "text": "The Commission found implementation worked best where senior management provided leadership, allocated tasks and coordinated the changes.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Monitoring%20cash%20handling%20in%20public%20hospitals.pdf.aspx",
+      "document": "Monitoring cash handling in public hospitals",
+      "page": 13
+     }
+    ],
+    "section": "RESULTS OF VISITS TO HOSPITALS"
+   },
+   {
+    "text": "It provided an implementation checklist covering responsibility, planned changes, resources, staff training and reviews of whether new systems achieved their aims.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Monitoring%20cash%20handling%20in%20public%20hospitals.pdf.aspx",
+      "document": "Monitoring cash handling in public hospitals",
+      "page": 15
+     }
+    ],
+    "section": "IMPLEMENTATION CHECKLIST"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The cash handling monitoring project confirmed management involvement and guidance can increase the effectiveness of implementation.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Monitoring%20cash%20handling%20in%20public%20hospitals.pdf.aspx",
+     "document": "Monitoring cash handling in public hospitals",
+     "page": 14
+    }
+   },
+   {
+    "quote": "Train all staff who will use new procedures, equipment or documents.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Monitoring%20cash%20handling%20in%20public%20hospitals.pdf.aspx",
+     "document": "Monitoring cash handling in public hospitals",
+     "page": 15
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

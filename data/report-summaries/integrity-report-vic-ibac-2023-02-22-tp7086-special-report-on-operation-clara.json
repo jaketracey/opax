@@ -1,0 +1,119 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2023-02-22-tp7086-special-report-on-operation-clara",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Special report on Operation Clara",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a23fd/globalassets/tabled-paper-documents/tabled-paper-7086/operation_clara_special_report_-_february_2023_dfgdn7w9.pdf",
+  "document": "Operation_Clara_Special_Report_-_February_2023_DFgdn7w9",
+  "sha256": "65f77c1758d8a3e0f19c3ea4e7ba4c675e8c503e277eb75b0529d50db4aa6873",
+  "pages": 60,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of the investigation and outcomes",
+  "first_page": 7,
+  "last_page": 20,
+  "link": "https://www.parliament.vic.gov.au/4a23fd/globalassets/tabled-paper-documents/tabled-paper-7086/operation_clara_special_report_-_february_2023_dfgdn7w9.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC’s Operation Clara investigated whether a Victorian Planning Authority director misused his position or improperly influenced officials involved in the East Werribee project.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a23fd/globalassets/tabled-paper-documents/tabled-paper-7086/operation_clara_special_report_-_february_2023_dfgdn7w9.pdf",
+      "document": "Operation_Clara_Special_Report_-_February_2023_DFgdn7w9",
+      "page": 7
+     }
+    ],
+    "section": "What IBAC did"
+   },
+   {
+    "text": "It examined the director’s lobbying for the Australian Education City consortium, conflicts of interest and attempts to obtain financial benefits.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a23fd/globalassets/tabled-paper-documents/tabled-paper-7086/operation_clara_special_report_-_february_2023_dfgdn7w9.pdf",
+      "document": "Operation_Clara_Special_Report_-_February_2023_DFgdn7w9",
+      "page": 8
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a23fd/globalassets/tabled-paper-documents/tabled-paper-7086/operation_clara_special_report_-_february_2023_dfgdn7w9.pdf",
+      "document": "Operation_Clara_Special_Report_-_February_2023_DFgdn7w9",
+      "page": 17
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a23fd/globalassets/tabled-paper-documents/tabled-paper-7086/operation_clara_special_report_-_february_2023_dfgdn7w9.pdf",
+      "document": "Operation_Clara_Special_Report_-_February_2023_DFgdn7w9",
+      "page": 18
+     }
+    ],
+    "section": "What the investigation found"
+   },
+   {
+    "text": "IBAC found that the director lobbied officials without declaring relevant conflicts or registering the consortium as a client, and sought to use his board role to advance private interests.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a23fd/globalassets/tabled-paper-documents/tabled-paper-7086/operation_clara_special_report_-_february_2023_dfgdn7w9.pdf",
+      "document": "Operation_Clara_Special_Report_-_February_2023_DFgdn7w9",
+      "page": 8
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a23fd/globalassets/tabled-paper-documents/tabled-paper-7086/operation_clara_special_report_-_february_2023_dfgdn7w9.pdf",
+      "document": "Operation_Clara_Special_Report_-_February_2023_DFgdn7w9",
+      "page": 17
+     }
+    ],
+    "section": "What the investigation found"
+   },
+   {
+    "text": "It made four recommendations covering board appointments, lobbying restrictions, directors’ conduct rules and the time limit for commencing certain planning authority prosecutions.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a23fd/globalassets/tabled-paper-documents/tabled-paper-7086/operation_clara_special_report_-_february_2023_dfgdn7w9.pdf",
+      "document": "Operation_Clara_Special_Report_-_February_2023_DFgdn7w9",
+      "page": 31
+     }
+    ],
+    "section": "Conclusions and recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "IBAC’s investigation found that Mr Theophanous sought to use his public position on the board of the VPA to favour AEC and further his other business interests as a registered lobbyist.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a23fd/globalassets/tabled-paper-documents/tabled-paper-7086/operation_clara_special_report_-_february_2023_dfgdn7w9.pdf",
+     "document": "Operation_Clara_Special_Report_-_February_2023_DFgdn7w9",
+     "page": 17
+    }
+   },
+   {
+    "quote": "IBAC’s investigation did not identify any direct financial payments from AEC to Mr Theophanous.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a23fd/globalassets/tabled-paper-documents/tabled-paper-7086/operation_clara_special_report_-_february_2023_dfgdn7w9.pdf",
+     "document": "Operation_Clara_Special_Report_-_February_2023_DFgdn7w9",
+     "page": 19
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

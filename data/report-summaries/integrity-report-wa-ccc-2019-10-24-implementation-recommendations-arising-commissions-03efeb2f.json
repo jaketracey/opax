@@ -1,0 +1,94 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2019-10-24-implementation-recommendations-arising-commissions-03efeb2f",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "The implementation of recommendations arising from the Commission’s investigation into Operation Aviemore - a final report",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20implementation%20of%20recommendations%20arising%20from%20the%20Commission%E2%80%99s%20investigation%20into%20Operation%20Aviemore%20-%20a%20final%20report.pdf",
+  "document": "The implementation of recommendations arising from the Commission’s investigation into Operation Aviemore - a final report",
+  "sha256": "be73b1027508c0c8e95edf8f2a4fb0fcd4e94eece784ea3be3cf600c5fde35a8",
+  "pages": 11,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed the WA Police response to the two remaining recommendations from its Operation Aviemore investigation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20implementation%20of%20recommendations%20arising%20from%20the%20Commission%E2%80%99s%20investigation%20into%20Operation%20Aviemore%20-%20a%20final%20report.pdf",
+      "document": "The implementation of recommendations arising from the Commission’s investigation into Operation Aviemore - a final report",
+      "page": 3
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "Its review included police briefings and observation of investigative interviewing and cultural awareness training.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20implementation%20of%20recommendations%20arising%20from%20the%20Commission%E2%80%99s%20investigation%20into%20Operation%20Aviemore%20-%20a%20final%20report.pdf",
+      "document": "The implementation of recommendations arising from the Commission’s investigation into Operation Aviemore - a final report",
+      "page": 3
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission concluded that police were addressing the investigation's issues and taking broader steps to change their relationship with Aboriginal people.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20implementation%20of%20recommendations%20arising%20from%20the%20Commission%E2%80%99s%20investigation%20into%20Operation%20Aviemore%20-%20a%20final%20report.pdf",
+      "document": "The implementation of recommendations arising from the Commission’s investigation into Operation Aviemore - a final report",
+      "page": 11
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commission closed all seven recommendations, while noting continuing challenges in helping interviewees understand the criminal caution.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20implementation%20of%20recommendations%20arising%20from%20the%20Commission%E2%80%99s%20investigation%20into%20Operation%20Aviemore%20-%20a%20final%20report.pdf",
+      "document": "The implementation of recommendations arising from the Commission’s investigation into Operation Aviemore - a final report",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20implementation%20of%20recommendations%20arising%20from%20the%20Commission%E2%80%99s%20investigation%20into%20Operation%20Aviemore%20-%20a%20final%20report.pdf",
+      "document": "The implementation of recommendations arising from the Commission’s investigation into Operation Aviemore - a final report",
+      "page": 11
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission considers that Police have taken responsibility to address all seven recommendations and therefore considers these closed.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20implementation%20of%20recommendations%20arising%20from%20the%20Commission%E2%80%99s%20investigation%20into%20Operation%20Aviemore%20-%20a%20final%20report.pdf",
+     "document": "The implementation of recommendations arising from the Commission’s investigation into Operation Aviemore - a final report",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

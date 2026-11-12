@@ -1,0 +1,129 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-cth-antisemitism",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "Royal Commission on Antisemitism and Social Cohesion",
+ "body": "Royal Commission on Antisemitism and Social Cohesion",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a27f3/globalassets/tabled-paper-documents/tabled-paper-10157/for-tabling---interim-report-of-the-royal-commission-on-antisemitism-and-social-cohesion.pdf",
+  "document": "Royal Commission on Antisemitism and Social Cohesion – Interim Report",
+  "sha256": "2eb143cec02e51c78da07497fa79936d58cb329bcaf20aca9ed75cdcfa12a0c2",
+  "pages": 159,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview of Interim Report",
+  "first_page": 15,
+  "last_page": 17,
+  "link": "https://www.parliament.vic.gov.au/4a27f3/globalassets/tabled-paper-documents/tabled-paper-10157/for-tabling---interim-report-of-the-royal-commission-on-antisemitism-and-social-cohesion.pdf#page=15"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Royal Commission on Antisemitism and Social Cohesion examined security for the Chanukah event at Bondi and counter-terrorism arrangements in its interim report.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27f3/globalassets/tabled-paper-documents/tabled-paper-10157/for-tabling---interim-report-of-the-royal-commission-on-antisemitism-and-social-cohesion.pdf",
+      "document": "Royal Commission on Antisemitism and Social Cohesion – Interim Report",
+      "page": 15
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27f3/globalassets/tabled-paper-documents/tabled-paper-10157/for-tabling---interim-report-of-the-royal-commission-on-antisemitism-and-social-cohesion.pdf",
+      "document": "Royal Commission on Antisemitism and Social Cohesion – Interim Report",
+      "page": 16
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27f3/globalassets/tabled-paper-documents/tabled-paper-10157/for-tabling---interim-report-of-the-royal-commission-on-antisemitism-and-social-cohesion.pdf",
+      "document": "Royal Commission on Antisemitism and Social Cohesion – Interim Report",
+      "page": 17
+     }
+    ],
+    "section": "Overview of Interim Report"
+   },
+   {
+    "text": "The Commission said further hearings were needed before it could assess whether security for the event was adequate.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27f3/globalassets/tabled-paper-documents/tabled-paper-10157/for-tabling---interim-report-of-the-royal-commission-on-antisemitism-and-social-cohesion.pdf",
+      "document": "Royal Commission on Antisemitism and Social Cohesion – Interim Report",
+      "page": 16
+     }
+    ],
+    "section": "Overview of Interim Report"
+   },
+   {
+    "text": "The Commission proposed improvements to information sharing but did not suggest those changes would have prevented the attack.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27f3/globalassets/tabled-paper-documents/tabled-paper-10157/for-tabling---interim-report-of-the-royal-commission-on-antisemitism-and-social-cohesion.pdf",
+      "document": "Royal Commission on Antisemitism and Social Cohesion – Interim Report",
+      "page": 16
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27f3/globalassets/tabled-paper-documents/tabled-paper-10157/for-tabling---interim-report-of-the-royal-commission-on-antisemitism-and-social-cohesion.pdf",
+      "document": "Royal Commission on Antisemitism and Social Cohesion – Interim Report",
+      "page": 17
+     }
+    ],
+    "section": "Overview of Interim Report"
+   },
+   {
+    "text": "Its 14 recommendations cover event security, counter-terrorism coordination, information sharing and firearms reform, with some recommendations kept confidential.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27f3/globalassets/tabled-paper-documents/tabled-paper-10157/for-tabling---interim-report-of-the-royal-commission-on-antisemitism-and-social-cohesion.pdf",
+      "document": "Royal Commission on Antisemitism and Social Cohesion – Interim Report",
+      "page": 16
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27f3/globalassets/tabled-paper-documents/tabled-paper-10157/for-tabling---interim-report-of-the-royal-commission-on-antisemitism-and-social-cohesion.pdf",
+      "document": "Royal Commission on Antisemitism and Social Cohesion – Interim Report",
+      "page": 18
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27f3/globalassets/tabled-paper-documents/tabled-paper-10157/for-tabling---interim-report-of-the-royal-commission-on-antisemitism-and-social-cohesion.pdf",
+      "document": "Royal Commission on Antisemitism and Social Cohesion – Interim Report",
+      "page": 19
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The procedures adopted by NSW Police in respect of Operation Jewish High Holy Days should apply to other high risk Jewish festivals and events, particularly those that have a public facing element.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a27f3/globalassets/tabled-paper-documents/tabled-paper-10157/for-tabling---interim-report-of-the-royal-commission-on-antisemitism-and-social-cohesion.pdf",
+     "document": "Royal Commission on Antisemitism and Social Cohesion – Interim Report",
+     "page": 18
+    }
+   },
+   {
+    "quote": "The Commonwealth and states and territories should prioritise efforts to finalise and implement an updated and nationally consistent National Firearms Agreement.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a27f3/globalassets/tabled-paper-documents/tabled-paper-10157/for-tabling---interim-report-of-the-royal-commission-on-antisemitism-and-social-cohesion.pdf",
+     "document": "Royal Commission on Antisemitism and Social Cohesion – Interim Report",
+     "page": 19
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

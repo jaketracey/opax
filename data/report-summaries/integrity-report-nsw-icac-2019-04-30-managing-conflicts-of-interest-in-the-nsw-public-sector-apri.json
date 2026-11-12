@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2019-04-30-managing-conflicts-of-interest-in-the-nsw-public-sector-apri",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Managing conflicts of interest in the nsw public sector April 2019",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing-conflicts-of-interest-in-the-nsw-public-sector_June-2019.pdf.aspx",
+  "document": "Managing conflicts of interest in the nsw public sector April 2019",
+  "sha256": "0321fcb65c5fffb2b46c0d7140228c20e38c0b9159a35deb3f024411f8630f63",
+  "pages": 32,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption provides guidance on recognising, disclosing and managing conflicts of interest in public agencies.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing-conflicts-of-interest-in-the-nsw-public-sector_June-2019.pdf.aspx",
+      "document": "Managing conflicts of interest in the nsw public sector April 2019",
+      "page": 6
+     }
+    ],
+    "section": "About this publication"
+   },
+   {
+    "text": "Its framework examines personal interests, public duties and whether an informed observer could perceive that private interests might be favoured.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing-conflicts-of-interest-in-the-nsw-public-sector_June-2019.pdf.aspx",
+      "document": "Managing conflicts of interest in the nsw public sector April 2019",
+      "page": 6
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing-conflicts-of-interest-in-the-nsw-public-sector_June-2019.pdf.aspx",
+      "document": "Managing conflicts of interest in the nsw public sector April 2019",
+      "page": 7
+     }
+    ],
+    "section": "What is a conflict of interest?"
+   },
+   {
+    "text": "The Commission explains that a conflict usually does not itself amount to corruption, but concealment, misuse or poor management can lead to corrupt conduct.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing-conflicts-of-interest-in-the-nsw-public-sector_June-2019.pdf.aspx",
+      "document": "Managing conflicts of interest in the nsw public sector April 2019",
+      "page": 9
+     }
+    ],
+    "section": "Conflicts of interest and corrupt conduct"
+   },
+   {
+    "text": "The Commission advises managers to assess risks, document and implement responses, monitor changes and audit whether controls work.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing-conflicts-of-interest-in-the-nsw-public-sector_June-2019.pdf.aspx",
+      "document": "Managing conflicts of interest in the nsw public sector April 2019",
+      "page": 21
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing-conflicts-of-interest-in-the-nsw-public-sector_June-2019.pdf.aspx",
+      "document": "Managing conflicts of interest in the nsw public sector April 2019",
+      "page": 25
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing-conflicts-of-interest-in-the-nsw-public-sector_June-2019.pdf.aspx",
+      "document": "Managing conflicts of interest in the nsw public sector April 2019",
+      "page": 28
+     }
+    ],
+    "section": "Manage and monitor conflicts of interest"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "As with any other important control framework, an agency’s conflict of interest framework should be evaluated or audited from time-to-time.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing-conflicts-of-interest-in-the-nsw-public-sector_June-2019.pdf.aspx",
+     "document": "Managing conflicts of interest in the nsw public sector April 2019",
+     "page": 28
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

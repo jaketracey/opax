@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2016-12-12-publicising-allegations-corrupt-conduct-it-public-interest",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Publicising allegations of corrupt conduct: Is it in the public interest?",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Publishing-allegations-of-corrupt-conduct-Report-December-2016.pdf",
+  "document": "Publicising allegations of corrupt conduct: Is it in the public interest? Final Report - December 2016",
+  "sha256": "154b12fb042c2fe536373f6cb3ca1ac97eecda4e802ba17661531376b279f95b",
+  "pages": 54,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary and recommendation",
+  "first_page": 10,
+  "last_page": 11,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Publishing-allegations-of-corrupt-conduct-Report-December-2016.pdf#page=10"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The CCC examined whether publicising corruption allegations served the public interest and whether restrictions were needed.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Publishing-allegations-of-corrupt-conduct-Report-December-2016.pdf",
+      "document": "Publicising allegations of corrupt conduct: Is it in the public interest? Final Report - December 2016",
+      "page": 10
+     }
+    ],
+    "section": "Summary and recommendation"
+   },
+   {
+    "text": "It considered public submissions, a public forum, legislation, earlier reports and its own operational information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Publishing-allegations-of-corrupt-conduct-Report-December-2016.pdf",
+      "document": "Publicising allegations of corrupt conduct: Is it in the public interest? Final Report - December 2016",
+      "page": 10
+     }
+    ],
+    "section": "Summary and recommendation"
+   },
+   {
+    "text": "The CCC favoured retaining the law except for publicity about councillors and candidates during local government elections.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Publishing-allegations-of-corrupt-conduct-Report-December-2016.pdf",
+      "document": "Publicising allegations of corrupt conduct: Is it in the public interest? Final Report - December 2016",
+      "page": 10
+     }
+    ],
+    "section": "Summary and recommendation"
+   },
+   {
+    "text": "Its recommendation asked the government to consider an offence for publicising allegations, or the fact of a CCC complaint, about councillors and candidates during local elections without first notifying the CCC and allowing at least three months for assessment.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Publishing-allegations-of-corrupt-conduct-Report-December-2016.pdf",
+      "document": "Publicising allegations of corrupt conduct: Is it in the public interest? Final Report - December 2016",
+      "page": 11
+     }
+    ],
+    "section": "Recommendation"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "On balance, the CCC is of the view that, with one exception, there should be no change to the law.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Publishing-allegations-of-corrupt-conduct-Report-December-2016.pdf",
+     "document": "Publicising allegations of corrupt conduct: Is it in the public interest? Final Report - December 2016",
+     "page": 43
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

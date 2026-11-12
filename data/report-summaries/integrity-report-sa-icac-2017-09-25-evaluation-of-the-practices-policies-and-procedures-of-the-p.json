@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2017-09-25-evaluation-of-the-practices-policies-and-procedures-of-the-p",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Evaluation of the Practices, Policies and Procedures of the Public Trustee",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/362951/ICAC_Evaluation_of_the_Practices_Policies_and_Procedures_of_the_Public_Trustee_2017.pdf",
+  "document": "Evaluation of the Practices, Policies and Procedures of the Public Trustee",
+  "sha256": "2cdbfc81b6a7d449f903d9d54cac42ac45615e2af8fe31f0d842aff6145cc2ca",
+  "pages": 97,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commissioner Against Corruption evaluated the Public Trustee’s systems to identify ways to prevent corruption, misconduct and maladministration.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/362951/ICAC_Evaluation_of_the_Practices_Policies_and_Procedures_of_the_Public_Trustee_2017.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Public Trustee",
+      "page": 6
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/362951/ICAC_Evaluation_of_the_Practices_Policies_and_Procedures_of_the_Public_Trustee_2017.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Public Trustee",
+      "page": 7
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The evaluation focused on administering trusts and deceased and personal estates, together with preparing wills.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/362951/ICAC_Evaluation_of_the_Practices_Policies_and_Procedures_of_the_Public_Trustee_2017.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Public Trustee",
+      "page": 7
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/362951/ICAC_Evaluation_of_the_Practices_Policies_and_Procedures_of_the_Public_Trustee_2017.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Public Trustee",
+      "page": 8
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commissioner concluded that integrity risks would remain high without the recommended changes and that adequate resources were needed to reduce them.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/362951/ICAC_Evaluation_of_the_Practices_Policies_and_Procedures_of_the_Public_Trustee_2017.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Public Trustee",
+      "page": 82
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "The Commissioner made 19 recommendations addressing organisational arrangements, electronic systems, information security, training, customer service and estate assets.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/362951/ICAC_Evaluation_of_the_Practices_Policies_and_Procedures_of_the_Public_Trustee_2017.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Public Trustee",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/362951/ICAC_Evaluation_of_the_Practices_Policies_and_Procedures_of_the_Public_Trustee_2017.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Public Trustee",
+      "page": 11
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/362951/ICAC_Evaluation_of_the_Practices_Policies_and_Procedures_of_the_Public_Trustee_2017.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Public Trustee",
+      "page": 12
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/362951/ICAC_Evaluation_of_the_Practices_Policies_and_Procedures_of_the_Public_Trustee_2017.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Public Trustee",
+      "page": 13
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Many of the recommendations in this report would have the same effect but without the implementation of those recommendations, the risk of corruption, misconduct and maladministration will remain high.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/362951/ICAC_Evaluation_of_the_Practices_Policies_and_Procedures_of_the_Public_Trustee_2017.pdf",
+     "document": "Evaluation of the Practices, Policies and Procedures of the Public Trustee",
+     "page": 82
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

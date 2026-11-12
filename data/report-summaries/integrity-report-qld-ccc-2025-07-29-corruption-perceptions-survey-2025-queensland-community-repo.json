@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2025-07-29-corruption-perceptions-survey-2025-queensland-community-repo",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Corruption Perceptions Survey 2025 | Queensland Community Report",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Community-Report.pdf",
+  "document": "Queensland Community Report",
+  "sha256": "9b741c520ffa314153f1cd909df35125c99ed33ad262eed61503cfbff655b15f",
+  "pages": 63,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of key findings",
+  "first_page": 12,
+  "last_page": 13,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Community-Report.pdf#page=12"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission surveyed community corruption perceptions to assess its prevention work and inform strategic planning.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Community-Report.pdf",
+      "document": "Queensland Community Report",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Community-Report.pdf",
+      "document": "Queensland Community Report",
+      "page": 12
+     }
+    ],
+    "section": "Research objectives"
+   },
+   {
+    "text": "The online survey collected 3,013 completed responses between 31 March and 20 April 2025, with results weighted by age, gender and region to reflect Queensland’s population.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Community-Report.pdf",
+      "document": "Queensland Community Report",
+      "page": 6
+     }
+    ],
+    "section": "Research method"
+   },
+   {
+    "text": "The CCC reported that 73% saw corruption as a problem in Queensland and 78% expressed at least a fair amount of trust in the CCC.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Community-Report.pdf",
+      "document": "Queensland Community Report",
+      "page": 12
+     }
+    ],
+    "section": "Summary of key findings"
+   },
+   {
+    "text": "The CCC reported that 37% said they had witnessed or suspected corruption in the preceding five years, and 57% of that group had not reported it.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Community-Report.pdf",
+      "document": "Queensland Community Report",
+      "page": 13
+     }
+    ],
+    "section": "Summary of key findings"
+   },
+   {
+    "text": "The CCC identified a need for further community education about reporting processes and channels.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Community-Report.pdf",
+      "document": "Queensland Community Report",
+      "page": 13
+     }
+    ],
+    "section": "Summary of key findings"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Continued education is needed to inform the community on the process and channels for reporting corruption.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Community-Report.pdf",
+     "document": "Queensland Community Report",
+     "page": 13
+    }
+   },
+   {
+    "quote": "There is some scepticism around the outcomes of reporting corruption; 41% agree meaningful action would be taken, but 23% disagree.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Community-Report.pdf",
+     "document": "Queensland Community Report",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

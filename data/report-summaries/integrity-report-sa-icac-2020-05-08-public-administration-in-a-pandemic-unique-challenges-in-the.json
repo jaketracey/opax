@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2020-05-08-public-administration-in-a-pandemic-unique-challenges-in-the",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Public Administration in a Pandemic: Unique Challenges in the Current Climate",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370778/ICAC-Public-Administration-in-Pandemic.pdf",
+  "document": "Public Administration in a Pandemic: Unique Challenges in the Current Climate",
+  "sha256": "5a52c2a8a45c4d643b944850ec6cb1979ad981ac95ff8bfb4c9d1e99d15873de",
+  "pages": 11,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commissioner Against Corruption examined how the COVID-19 pandemic could affect integrity in public administration.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370778/ICAC-Public-Administration-in-Pandemic.pdf",
+      "document": "Public Administration in a Pandemic: Unique Challenges in the Current Climate",
+      "page": 4
+     }
+    ],
+    "section": "PUBLIC ADMINISTRATION IN A PANDEMIC: UNIQUE CHALLENGES IN THE CURRENT CLIMATE"
+   },
+   {
+    "text": "The Commissioner identified risks involving remote supervision, information security, procurement, contract management and pressure on public officers.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370778/ICAC-Public-Administration-in-Pandemic.pdf",
+      "document": "Public Administration in a Pandemic: Unique Challenges in the Current Climate",
+      "page": 5
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370778/ICAC-Public-Administration-in-Pandemic.pdf",
+      "document": "Public Administration in a Pandemic: Unique Challenges in the Current Climate",
+      "page": 6
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370778/ICAC-Public-Administration-in-Pandemic.pdf",
+      "document": "Public Administration in a Pandemic: Unique Challenges in the Current Climate",
+      "page": 7
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370778/ICAC-Public-Administration-in-Pandemic.pdf",
+      "document": "Public Administration in a Pandemic: Unique Challenges in the Current Climate",
+      "page": 8
+     }
+    ],
+    "section": "High Risk Functions"
+   },
+   {
+    "text": "The Commissioner warned that disruption, economic uncertainty and reduced oversight could increase opportunities for improper conduct.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370778/ICAC-Public-Administration-in-Pandemic.pdf",
+      "document": "Public Administration in a Pandemic: Unique Challenges in the Current Climate",
+      "page": 5
+     }
+    ],
+    "section": "Integrity in Public Administration in Light of COVID-19"
+   },
+   {
+    "text": "The Commissioner urged agencies to review contingency arrangements, maintain expenditure oversight, protect information and support staff experiencing difficulties.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370778/ICAC-Public-Administration-in-Pandemic.pdf",
+      "document": "Public Administration in a Pandemic: Unique Challenges in the Current Climate",
+      "page": 5
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370778/ICAC-Public-Administration-in-Pandemic.pdf",
+      "document": "Public Administration in a Pandemic: Unique Challenges in the Current Climate",
+      "page": 7
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370778/ICAC-Public-Administration-in-Pandemic.pdf",
+      "document": "Public Administration in a Pandemic: Unique Challenges in the Current Climate",
+      "page": 9
+     }
+    ],
+    "section": "High Risk Functions"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Remote working arrangements also pose significant risks around information and cyber security.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370778/ICAC-Public-Administration-in-Pandemic.pdf",
+     "document": "Public Administration in a Pandemic: Unique Challenges in the Current Climate",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

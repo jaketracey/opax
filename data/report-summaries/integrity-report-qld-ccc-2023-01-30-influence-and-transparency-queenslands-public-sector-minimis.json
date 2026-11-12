@@ -1,0 +1,113 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2023-01-30-influence-and-transparency-queenslands-public-sector-minimis",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Influence and transparency in Queensland's public sector: Minimising the corruption risks associated with improper influence on government decisions",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Influence-and-transparency-in-Queenslands-public-sector.pdf",
+  "document": "Influence and transparency in Queensland's public sector",
+  "sha256": "bd45a703facbdd3250af0aa10f5e583c0af36871191b754a35bab479b1953e95",
+  "pages": 36,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission examined improper influence on Queensland state and local government decisions to identify corruption risks and possible safeguards.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Influence-and-transparency-in-Queenslands-public-sector.pdf",
+      "document": "Influence and transparency in Queensland's public sector",
+      "page": 7
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It considered its information holdings and investigations, public complaints and submissions, and approaches used in other jurisdictions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Influence-and-transparency-in-Queenslands-public-sector.pdf",
+      "document": "Influence and transparency in Queensland's public sector",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Influence-and-transparency-in-Queenslands-public-sector.pdf",
+      "document": "Influence and transparency in Queensland's public sector",
+      "page": 10
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The CCC concluded that gaps remained in Queensland’s integrity framework, including risks from former officials’ connections, privileged access and undisclosed interactions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Influence-and-transparency-in-Queenslands-public-sector.pdf",
+      "document": "Influence and transparency in Queensland's public sector",
+      "page": 10
+     }
+    ],
+    "section": "Improper influence and corrupt conduct"
+   },
+   {
+    "text": "It proposed seven reforms covering broader disclosure rules, visibility of contacts, former officials’ lobbying, compliance audits, a shared reporting platform, board conflicts and education.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Influence-and-transparency-in-Queenslands-public-sector.pdf",
+      "document": "Influence and transparency in Queensland's public sector",
+      "page": 33
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Influence-and-transparency-in-Queenslands-public-sector.pdf",
+      "document": "Influence and transparency in Queensland's public sector",
+      "page": 34
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Influence-and-transparency-in-Queenslands-public-sector.pdf",
+      "document": "Influence and transparency in Queensland's public sector",
+      "page": 35
+     }
+    ],
+    "section": "Appendix: Collated list of proposed reforms"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There remain gaps in Queensland’s integrity framework which allow for continued risk of corrupt practices (or the perception of them).",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Influence-and-transparency-in-Queenslands-public-sector.pdf",
+     "document": "Influence and transparency in Queensland's public sector",
+     "page": 10
+    }
+   },
+   {
+    "quote": "Transparency of influence is currently limited by narrow definitions and reporting requirements.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Influence-and-transparency-in-Queenslands-public-sector.pdf",
+     "document": "Influence and transparency in Queensland's public sector",
+     "page": 33
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

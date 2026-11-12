@@ -1,0 +1,90 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2020-06-18-final-review-following-arrest-incident-wa-police-ha-ef730c95",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Final review following an arrest incident by WA Police at Hamilton Hill",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20review%20following%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+  "document": "Final review following an arrest incident by WA Police at Hamilton Hill",
+  "sha256": "2538aa5a3dcddf24085bc07a8083c3fc6c384ce6edab22399fe50ef4e2d2d2f4",
+  "pages": 7,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed action by WA Police following concerns about prosecution standards raised in an earlier report on an arrest at Hamilton Hill.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20review%20following%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+      "document": "Final review following an arrest incident by WA Police at Hamilton Hill",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The review considered organisational changes and a statewide examination of prosecuting services, including brief quality and prosecutor experience.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20review%20following%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+      "document": "Final review following an arrest incident by WA Police at Hamilton Hill",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20review%20following%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+      "document": "Final review following an arrest incident by WA Police at Hamilton Hill",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The Commission recognised progress but remained cautious about effectiveness because the statewide review findings had not been endorsed or published.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20review%20following%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+      "document": "Final review following an arrest incident by WA Police at Hamilton Hill",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The Commission concluded that WA Police was taking appropriate action and closed its review.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20review%20following%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+      "document": "Final review following an arrest incident by WA Police at Hamilton Hill",
+      "page": 7
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission considers the WA Police Force is taking appropriate steps and considers this review to be complete.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Final%20review%20following%20an%20arrest%20incident%20by%20WA%20Police%20at%20Hamilton%20Hill.pdf",
+     "document": "Final review following an arrest incident by WA Police at Hamilton Hill",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,103 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-cth-child-sexual-abuse",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "Royal Commission into Institutional Responses to Child Sexual Abuse",
+ "body": "Royal Commission into Institutional Responses to Child Sexual Abuse",
+ "source": {
+  "url": "https://www.royalcommission.gov.au/system/files/2021-08/final_report_-_recommendations.pdf",
+  "document": "Royal Commission into Institutional Responses to Child Sexual Abuse, Final Report: Recommendations",
+  "sha256": "8a3f627e17fa02f73ddf3782e89abafb3126176e9a731174cec587f035112f4c",
+  "pages": 115,
+  "rights": "The document carries no reuse notice. Its publisher's site (royalcommission.gov.au) refuses OPAXBot, so the site's copyright terms could not be read; OPAX quotes the recommendations with attribution and links to the publisher's copy."
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Royal Commission into Institutional Responses to Child Sexual Abuse recommended a national strategy to prevent child sexual abuse.",
+    "cites": [
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2021-08/final_report_-_recommendations.pdf",
+      "document": "Royal Commission into Institutional Responses to Child Sexual Abuse, Final Report: Recommendations",
+      "page": 4
+     }
+    ],
+    "section": "Creating child safe communities through prevention"
+   },
+   {
+    "text": "The Commission recommended that institutions put children’s interests first and implement its Child Safe Standards, including child participation, suitable staff and child-focused complaint processes.",
+    "cites": [
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2021-08/final_report_-_recommendations.pdf",
+      "document": "Royal Commission into Institutional Responses to Child Sexual Abuse, Final Report: Recommendations",
+      "page": 6
+     }
+    ],
+    "section": "What makes institutions safer for children"
+   },
+   {
+    "text": "It also recommended longer retention of abuse records and government funding for coordinated advocacy, counselling and support for survivors.",
+    "cites": [
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2021-08/final_report_-_recommendations.pdf",
+      "document": "Royal Commission into Institutional Responses to Child Sexual Abuse, Final Report: Recommendations",
+      "page": 22
+     },
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2021-08/final_report_-_recommendations.pdf",
+      "document": "Royal Commission into Institutional Responses to Child Sexual Abuse, Final Report: Recommendations",
+      "page": 30
+     }
+    ],
+    "section": "Records and recordkeeping; Dedicated community support services for victims and survivors"
+   },
+   {
+    "text": "The Commission recommended five years of annual implementation reports from governments and major institutions.",
+    "cites": [
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2021-08/final_report_-_recommendations.pdf",
+      "document": "Royal Commission into Institutional Responses to Child Sexual Abuse, Final Report: Recommendations",
+      "page": 61
+     }
+    ],
+    "section": "Monitoring and reporting on implementation"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "All institutions should uphold the rights of the child.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.royalcommission.gov.au/system/files/2021-08/final_report_-_recommendations.pdf",
+     "document": "Royal Commission into Institutional Responses to Child Sexual Abuse, Final Report: Recommendations",
+     "page": 6
+    }
+   },
+   {
+    "quote": "The Australian Government should establish a mechanism to oversee the development and implementation of a national strategy to prevent child sexual abuse.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.royalcommission.gov.au/system/files/2021-08/final_report_-_recommendations.pdf",
+     "document": "Royal Commission into Institutional Responses to Child Sexual Abuse, Final Report: Recommendations",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

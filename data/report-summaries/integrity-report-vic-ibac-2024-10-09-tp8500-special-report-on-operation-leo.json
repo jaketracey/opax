@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2024-10-09-tp8500-special-report-on-operation-leo",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Special report on Operation Leo",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a2838/globalassets/tabled-paper-documents/tabled-paper-8500/operation-leo-special-report-final_updated.pdf",
+  "document": "Operation Leo special report FINAL_UPDATED",
+  "sha256": "cabb492b15703572fcceff480740b1f2701196c2e6cdf853ee3ef963acd2ff99",
+  "pages": 32,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of investigation and outcomes",
+  "first_page": 7,
+  "last_page": 17,
+  "link": "https://www.parliament.vic.gov.au/4a2838/globalassets/tabled-paper-documents/tabled-paper-8500/operation-leo-special-report-final_updated.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC’s Operation Leo investigated alleged bribery and misconduct involving Moonee Valley City Council councillors.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2838/globalassets/tabled-paper-documents/tabled-paper-8500/operation-leo-special-report-final_updated.pdf",
+      "document": "Operation Leo special report FINAL_UPDATED",
+      "page": 6
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It examined property matters and whether councillors sought benefits or favoured the Essendon Royals Soccer Club.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2838/globalassets/tabled-paper-documents/tabled-paper-8500/operation-leo-special-report-final_updated.pdf",
+      "document": "Operation Leo special report FINAL_UPDATED",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2838/globalassets/tabled-paper-documents/tabled-paper-8500/operation-leo-special-report-final_updated.pdf",
+      "document": "Operation Leo special report FINAL_UPDATED",
+      "page": 7
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "IBAC found that councillors bypassed council processes and used their positions to favour third parties, but found no evidence of payments from the club president or associates.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2838/globalassets/tabled-paper-documents/tabled-paper-8500/operation-leo-special-report-final_updated.pdf",
+      "document": "Operation Leo special report FINAL_UPDATED",
+      "page": 10
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2838/globalassets/tabled-paper-documents/tabled-paper-8500/operation-leo-special-report-final_updated.pdf",
+      "document": "Operation Leo special report FINAL_UPDATED",
+      "page": 24
+     }
+    ],
+    "section": "What the investigation found"
+   },
+   {
+    "text": "It made one recommendation for the model councillor code to require reporting of suspected corruption and explain how to report it.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2838/globalassets/tabled-paper-documents/tabled-paper-8500/operation-leo-special-report-final_updated.pdf",
+      "document": "Operation Leo special report FINAL_UPDATED",
+      "page": 23
+     }
+    ],
+    "section": "Failure to report corrupt conduct"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "IBAC’s investigation identified that several councillors used their positions to influence MVCC decisions, bypass MVCC decision-making processes and inappropriately disclose MVCC information.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2838/globalassets/tabled-paper-documents/tabled-paper-8500/operation-leo-special-report-final_updated.pdf",
+     "document": "Operation Leo special report FINAL_UPDATED",
+     "page": 24
+    }
+   },
+   {
+    "quote": "IBAC did not find any evidence that MVCC councillors received payments from the ERSC president or any of his associates, including the construction manager.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2838/globalassets/tabled-paper-documents/tabled-paper-8500/operation-leo-special-report-final_updated.pdf",
+     "document": "Operation Leo special report FINAL_UPDATED",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

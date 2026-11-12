@@ -1,0 +1,129 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2021-06-24-evaluation-of-the-practices-policies-and-procedures-of-the-d",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Evaluation of the Practices, Policies and Procedures of the Department for Correctional Services",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/documents/ICAC-Evaluation-Dept-Correctional-Services-web.pdf",
+  "document": "Evaluation of the Practices, Policies and Procedures of the Department for Correctional Services",
+  "sha256": "a59b799176af5bea58828299a476e16034c25f3cf8803fca7153d990c8fbd336",
+  "pages": 186,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive Summary",
+  "first_page": 8,
+  "last_page": 10,
+  "link": "https://icac.sa.gov.au/documents/ICAC-Evaluation-Dept-Correctional-Services-web.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commissioner Against Corruption evaluated the Department for Correctional Services to identify ways to reduce corruption and other integrity risks.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC-Evaluation-Dept-Correctional-Services-web.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Department for Correctional Services",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC-Evaluation-Dept-Correctional-Services-web.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Department for Correctional Services",
+      "page": 9
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "The evaluation concentrated on prisons and examined organisational culture, reporting, policies, recruitment, training and performance management.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC-Evaluation-Dept-Correctional-Services-web.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Department for Correctional Services",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC-Evaluation-Dept-Correctional-Services-web.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Department for Correctional Services",
+      "page": 9
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "The Commissioner considered the Department’s policies and procedures sound but identified improvements to their management, recruitment, training and performance expectations.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC-Evaluation-Dept-Correctional-Services-web.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Department for Correctional Services",
+      "page": 10
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "The Commissioner made 24 recommendations covering staff training, policy controls, prisoner interactions, prison security and performance management.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC-Evaluation-Dept-Correctional-Services-web.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Department for Correctional Services",
+      "page": 10
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC-Evaluation-Dept-Correctional-Services-web.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Department for Correctional Services",
+      "page": 12
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC-Evaluation-Dept-Correctional-Services-web.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Department for Correctional Services",
+      "page": 13
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC-Evaluation-Dept-Correctional-Services-web.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Department for Correctional Services",
+      "page": 14
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Introduce regular and mandatory training about grooming and inappropriate relationships for all staff who have regular contact with prisoners.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/ICAC-Evaluation-Dept-Correctional-Services-web.pdf",
+     "document": "Evaluation of the Practices, Policies and Procedures of the Department for Correctional Services",
+     "page": 13
+    }
+   },
+   {
+    "quote": "Reinforce the need for absolute compliance with access control screening procedures for all persons entering a prison, including staff.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/ICAC-Evaluation-Dept-Correctional-Services-web.pdf",
+     "document": "Evaluation of the Practices, Policies and Procedures of the Department for Correctional Services",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,99 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2024-08-27-when-duty-calls-who-is-responding",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "When duty calls, who is responding?",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0020/1065143/When-duty-calls-report-Police-Affidavits-August-2024.pdf",
+  "document": "When duty calls, who is responding?",
+  "sha256": "c29ca2bccf4f092e79135874128fd543cc506304ed40b5b5244273c3f24a1f68",
+  "pages": 16,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption reported on police officers declining to provide sworn statements for investigations into colleagues.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0020/1065143/When-duty-calls-report-Police-Affidavits-August-2024.pdf",
+      "document": "When duty calls, who is responding?",
+      "page": 4
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0020/1065143/When-duty-calls-report-Police-Affidavits-August-2024.pdf",
+      "document": "When duty calls, who is responding?",
+      "page": 5
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The report concerned officers who could be witnesses, while expressly preserving suspects’ rights to silence and protection against self-incrimination.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0020/1065143/When-duty-calls-report-Police-Affidavits-August-2024.pdf",
+      "document": "When duty calls, who is responding?",
+      "page": 5
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The Commissioner concluded that refusals obstructed investigations and risked undermining police integrity and public confidence.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0020/1065143/When-duty-calls-report-Police-Affidavits-August-2024.pdf",
+      "document": "When duty calls, who is responding?",
+      "page": 10
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0020/1065143/When-duty-calls-report-Police-Affidavits-August-2024.pdf",
+      "document": "When duty calls, who is responding?",
+      "page": 12
+     }
+    ],
+    "section": "Consequences"
+   },
+   {
+    "text": "The single recommendation sought power to require affidavits from public officers who were potential witnesses rather than suspects, with an offence for non-compliance.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0020/1065143/When-duty-calls-report-Police-Affidavits-August-2024.pdf",
+      "document": "When duty calls, who is responding?",
+      "page": 14
+     }
+    ],
+    "section": "Recommendation"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Having incomplete evidence in an investigation or prosecution is not in the public interest.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0020/1065143/When-duty-calls-report-Police-Affidavits-August-2024.pdf",
+     "document": "When duty calls, who is responding?",
+     "page": 12
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

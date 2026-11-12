@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2015-04-15-learning-the-hard-way-managing-corruption-risks-associated-w",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Learning the hard way - managing corruption risks associated with international students",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Learning%20the%20hard%20way,%20managing%20corruption%20risks%20associated%20with%20international%20students.pdf.aspx",
+  "document": "Learning the hard way - managing corruption risks associated with international students",
+  "sha256": "e5cfc842ca23a225c29c17a420783c4007b8c5bfd1950597c8e4341d81330827",
+  "pages": 36,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Key corruption prevention initiatives",
+  "first_page": 7,
+  "last_page": 9,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Learning%20the%20hard%20way,%20managing%20corruption%20risks%20associated%20with%20international%20students.pdf.aspx#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption considers how universities can manage corruption risks arising from their international student businesses.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Learning%20the%20hard%20way,%20managing%20corruption%20risks%20associated%20with%20international%20students.pdf.aspx",
+      "document": "Learning the hard way - managing corruption risks associated with international students",
+      "page": 7
+     }
+    ],
+    "section": "Why the Commission produced this paper"
+   },
+   {
+    "text": "Its research included university consultations, interviews with more than 40 academics and administrators, and review of relevant legislation and literature.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Learning%20the%20hard%20way,%20managing%20corruption%20risks%20associated%20with%20international%20students.pdf.aspx",
+      "document": "Learning the hard way - managing corruption risks associated with international students",
+      "page": 7
+     }
+    ],
+    "section": "Research and consultation"
+   },
+   {
+    "text": "The Commission identifies tensions between revenue generation and academic standards, alongside risks from market choices and reliance on recruitment agents.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Learning%20the%20hard%20way,%20managing%20corruption%20risks%20associated%20with%20international%20students.pdf.aspx",
+      "document": "Learning the hard way - managing corruption risks associated with international students",
+      "page": 6
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Learning%20the%20hard%20way,%20managing%20corruption%20risks%20associated%20with%20international%20students.pdf.aspx",
+      "document": "Learning the hard way - managing corruption risks associated with international students",
+      "page": 7
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Learning%20the%20hard%20way,%20managing%20corruption%20risks%20associated%20with%20international%20students.pdf.aspx",
+      "document": "Learning the hard way - managing corruption risks associated with international students",
+      "page": 8
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission highlights prevention approaches involving market risk assessment, closer oversight of agents and greater separation between recruitment and academic compliance.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Learning%20the%20hard%20way,%20managing%20corruption%20risks%20associated%20with%20international%20students.pdf.aspx",
+      "document": "Learning the hard way - managing corruption risks associated with international students",
+      "page": 8
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Learning%20the%20hard%20way,%20managing%20corruption%20risks%20associated%20with%20international%20students.pdf.aspx",
+      "document": "Learning the hard way - managing corruption risks associated with international students",
+      "page": 9
+     }
+    ],
+    "section": "Key corruption prevention initiatives"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "This creates significant tensions within those universities between generation of revenue and compliance with academic standards.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Learning%20the%20hard%20way,%20managing%20corruption%20risks%20associated%20with%20international%20students.pdf.aspx",
+     "document": "Learning the hard way - managing corruption risks associated with international students",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

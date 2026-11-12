@@ -1,0 +1,118 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2024-06-04-buying-trust-corruption-risks-in-public-sector-procurement",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Buying trust: Corruption risks in public sector procurement",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0017/1013534/Buying-trust-Corruption-Risks-in-Public-Sector-Procurement.pdf",
+  "document": "Buying trust: Corruption risks in public sector procurement",
+  "sha256": "43b53e739f7f81a9d55271547a588a1ca47b643b687ff7820eba1d54c86a2b89",
+  "pages": 78,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption studied corruption risks in public procurement to identify warning signs and improve prevention.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0017/1013534/Buying-trust-Corruption-Risks-in-Public-Sector-Procurement.pdf",
+      "document": "Buying trust: Corruption risks in public sector procurement",
+      "page": 8
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "It examined survey comments, submissions, referrals and other integrity agencies’ findings about procurement.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0017/1013534/Buying-trust-Corruption-Risks-in-Public-Sector-Procurement.pdf",
+      "document": "Buying trust: Corruption risks in public sector procurement",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0017/1013534/Buying-trust-Corruption-Risks-in-Public-Sector-Procurement.pdf",
+      "document": "Buying trust: Corruption risks in public sector procurement",
+      "page": 14
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission concluded that suspected corruption was too often overlooked and that reluctance to report and poor awareness could contribute.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0017/1013534/Buying-trust-Corruption-Risks-in-Public-Sector-Procurement.pdf",
+      "document": "Buying trust: Corruption risks in public sector procurement",
+      "page": 70
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "Its 18 recommendations covered procurement audits, training, conflicts of interest, gifts, confidential information, decision records and reporting obligations.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0017/1013534/Buying-trust-Corruption-Risks-in-Public-Sector-Procurement.pdf",
+      "document": "Buying trust: Corruption risks in public sector procurement",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0017/1013534/Buying-trust-Corruption-Risks-in-Public-Sector-Procurement.pdf",
+      "document": "Buying trust: Corruption risks in public sector procurement",
+      "page": 10
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0017/1013534/Buying-trust-Corruption-Risks-in-Public-Sector-Procurement.pdf",
+      "document": "Buying trust: Corruption risks in public sector procurement",
+      "page": 11
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0017/1013534/Buying-trust-Corruption-Risks-in-Public-Sector-Procurement.pdf",
+      "document": "Buying trust: Corruption risks in public sector procurement",
+      "page": 12
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "These warning signs do not necessarily constitute corruption per se.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0017/1013534/Buying-trust-Corruption-Risks-in-Public-Sector-Procurement.pdf",
+     "document": "Buying trust: Corruption risks in public sector procurement",
+     "page": 70
+    }
+   },
+   {
+    "quote": "However, they should prompt public officers to make further enquiries and report suspicious conduct.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0017/1013534/Buying-trust-Corruption-Risks-in-Public-Sector-Procurement.pdf",
+     "document": "Buying trust: Corruption risks in public sector procurement",
+     "page": 70
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2018-06-30-corruption-audits-2017-2019",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Corruption Audits - 2017 - 2019",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-Audit-Report-Probity-in-councillors-use-of-councillor-discretionary-funds-2019-v2.pdf",
+  "document": "Probity in councillors' use of councillor discretionary funds - October 2019",
+  "sha256": "70c57d237bc1eff896587df129e55d59c48728dcf58ef378cb2a01888ad56d66",
+  "pages": 30,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-Audit-Report-Probity-in-councillors-use-of-councillor-discretionary-funds-2019-v2.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The CCC audited how five Queensland councils administered councillor discretionary funds, focusing on accountability, transparency and corruption risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-Audit-Report-Probity-in-councillors-use-of-councillor-discretionary-funds-2019-v2.pdf",
+      "document": "Probity in councillors' use of councillor discretionary funds - October 2019",
+      "page": 4
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "It also assessed how two public authorities handled corruption allegations concerning grants and funding.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-Audit-Report-Probity-in-councillors-use-of-councillor-discretionary-funds-2019-v2.pdf",
+      "document": "Probity in councillors' use of councillor discretionary funds - October 2019",
+      "page": 4
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "The CCC identified 11 areas needing improvement, including incomplete applications, conflicts of interest and monitoring of spending.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-Audit-Report-Probity-in-councillors-use-of-councillor-discretionary-funds-2019-v2.pdf",
+      "document": "Probity in councillors' use of councillor discretionary funds - October 2019",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-Audit-Report-Probity-in-councillors-use-of-councillor-discretionary-funds-2019-v2.pdf",
+      "document": "Probity in councillors' use of councillor discretionary funds - October 2019",
+      "page": 5
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "The CCC was satisfied with the handling of the seven complaints it reviewed.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-Audit-Report-Probity-in-councillors-use-of-councillor-discretionary-funds-2019-v2.pdf",
+      "document": "Probity in councillors' use of councillor discretionary funds - October 2019",
+      "page": 22
+     }
+    ],
+    "section": "Agencies’ dealings with allegations of corrupt conduct"
+   },
+   {
+    "text": "It recommended improvements to council controls and moving discretionary funding into community grants programs with stronger assessment rules.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-Audit-Report-Probity-in-councillors-use-of-councillor-discretionary-funds-2019-v2.pdf",
+      "document": "Probity in councillors' use of councillor discretionary funds - October 2019",
+      "page": 5
+     }
+    ],
+    "section": "Summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The expenditure of funds at each councillor’s discretion created obvious risks in relation to the potential for fraud, corruption and abuse.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Summary-Audit-Report-Probity-in-councillors-use-of-councillor-discretionary-funds-2019-v2.pdf",
+     "document": "Probity in councillors' use of councillor discretionary funds - October 2019",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

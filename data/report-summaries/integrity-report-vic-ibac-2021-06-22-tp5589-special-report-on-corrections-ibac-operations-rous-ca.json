@@ -1,0 +1,129 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2021-06-22-tp5589-special-report-on-corrections-ibac-operations-rous-ca",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Special report on corrections: IBAC Operations Rous, Caparra, Nisidia and Molara",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a242a/globalassets/tabled-paper-documents/tabled-paper-5589/special_report_on_corrections_-_ibac_-_june_2021_h8h0zvcg.pdf",
+  "document": "Special_report_on_corrections_-_IBAC_-_June_2021_H8h0zVcG",
+  "sha256": "47224ff2b0a2d9c27591609ce4c9aef354096f7a5b9bbe9910262474a78c6fbf",
+  "pages": 108,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of investigations and key findings",
+  "first_page": 7,
+  "last_page": 17,
+  "link": "https://www.parliament.vic.gov.au/4a242a/globalassets/tabled-paper-documents/tabled-paper-5589/special_report_on_corrections_-_ibac_-_june_2021_h8h0zvcg.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC reported on corruption in Victorian prisons through four investigations: Operations Rous, Caparra, Nisidia and Molara.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a242a/globalassets/tabled-paper-documents/tabled-paper-5589/special_report_on_corrections_-_ibac_-_june_2021_h8h0zvcg.pdf",
+      "document": "Special_report_on_corrections_-_IBAC_-_June_2021_H8h0zVcG",
+      "page": 9
+     }
+    ],
+    "section": "IBAC’s investigations"
+   },
+   {
+    "text": "It examined conduct in public and private prisons, including assaults, information misuse, undisclosed associations and tobacco smuggling.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a242a/globalassets/tabled-paper-documents/tabled-paper-5589/special_report_on_corrections_-_ibac_-_june_2021_h8h0zvcg.pdf",
+      "document": "Special_report_on_corrections_-_IBAC_-_June_2021_H8h0zVcG",
+      "page": 9
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a242a/globalassets/tabled-paper-documents/tabled-paper-5589/special_report_on_corrections_-_ibac_-_june_2021_h8h0zvcg.pdf",
+      "document": "Special_report_on_corrections_-_IBAC_-_June_2021_H8h0zVcG",
+      "page": 10
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a242a/globalassets/tabled-paper-documents/tabled-paper-5589/special_report_on_corrections_-_ibac_-_june_2021_h8h0zvcg.pdf",
+      "document": "Special_report_on_corrections_-_IBAC_-_June_2021_H8h0zVcG",
+      "page": 98
+     }
+    ],
+    "section": "Conclusions"
+   },
+   {
+    "text": "IBAC found excessive force and failures in incident reporting at Port Phillip Prison, and identified improper relationships, information access and payments for tobacco smuggling in other investigations.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a242a/globalassets/tabled-paper-documents/tabled-paper-5589/special_report_on_corrections_-_ibac_-_june_2021_h8h0zvcg.pdf",
+      "document": "Special_report_on_corrections_-_IBAC_-_June_2021_H8h0zVcG",
+      "page": 11
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a242a/globalassets/tabled-paper-documents/tabled-paper-5589/special_report_on_corrections_-_ibac_-_june_2021_h8h0zvcg.pdf",
+      "document": "Special_report_on_corrections_-_IBAC_-_June_2021_H8h0zVcG",
+      "page": 13
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a242a/globalassets/tabled-paper-documents/tabled-paper-5589/special_report_on_corrections_-_ibac_-_june_2021_h8h0zvcg.pdf",
+      "document": "Special_report_on_corrections_-_IBAC_-_June_2021_H8h0zVcG",
+      "page": 14
+     }
+    ],
+    "section": "Key corruption risks and issues"
+   },
+   {
+    "text": "It made three additional recommendations on prison controls and training, a statutory duty to report suspected corruption and a culture that supports reporting.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a242a/globalassets/tabled-paper-documents/tabled-paper-5589/special_report_on_corrections_-_ibac_-_june_2021_h8h0zvcg.pdf",
+      "document": "Special_report_on_corrections_-_IBAC_-_June_2021_H8h0zVcG",
+      "page": 17
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a242a/globalassets/tabled-paper-documents/tabled-paper-5589/special_report_on_corrections_-_ibac_-_june_2021_h8h0zvcg.pdf",
+      "document": "Special_report_on_corrections_-_IBAC_-_June_2021_H8h0zVcG",
+      "page": 99
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In Operation Rous, IBAC found that certain corrections officers at Port Phillip Prison had used excessive force against two prisoners, one of whom has an intellectual disability.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a242a/globalassets/tabled-paper-documents/tabled-paper-5589/special_report_on_corrections_-_ibac_-_june_2021_h8h0zvcg.pdf",
+     "document": "Special_report_on_corrections_-_IBAC_-_June_2021_H8h0zVcG",
+     "page": 11
+    }
+   },
+   {
+    "quote": "In Operations Nisidia and Molara, IBAC found corrections staff at Loddon and Dhurringile Prisons corruptly received cash payments to smuggle tobacco into the facilities.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a242a/globalassets/tabled-paper-documents/tabled-paper-5589/special_report_on_corrections_-_ibac_-_june_2021_h8h0zvcg.pdf",
+     "document": "Special_report_on_corrections_-_IBAC_-_June_2021_H8h0zVcG",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

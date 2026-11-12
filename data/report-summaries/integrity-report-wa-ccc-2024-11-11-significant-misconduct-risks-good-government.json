@@ -1,0 +1,130 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2024-11-11-significant-misconduct-risks-good-government",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Significant misconduct risks to good government",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Significant_misconduct_risks_to_good_government.pdf",
+  "document": "REPORT - Significant misconduct risks to good government",
+  "sha256": "d5113ef630d403526af3f3f8dd9d5fd283a0fd5e68edc5136bb7e7e7531ad80d",
+  "pages": 54,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 4,
+  "last_page": 9,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Significant_misconduct_risks_to_good_government.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission’s Operation Godrevy investigated allegations of preferential travel-pass treatment and misuse of electorate staff for party campaigning.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Significant_misconduct_risks_to_good_government.pdf",
+      "document": "REPORT - Significant misconduct risks to good government",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Significant_misconduct_risks_to_good_government.pdf",
+      "document": "REPORT - Significant misconduct risks to good government",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Significant_misconduct_risks_to_good_government.pdf",
+      "document": "REPORT - Significant misconduct risks to good government",
+      "page": 7
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission formed no opinion that serious misconduct had occurred in either allegation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Significant_misconduct_risks_to_good_government.pdf",
+      "document": "REPORT - Significant misconduct risks to good government",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Significant_misconduct_risks_to_good_government.pdf",
+      "document": "REPORT - Significant misconduct risks to good government",
+      "page": 8
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission concluded that missing time records prevented verification of claims that campaigning during office hours was offset by public duties performed later.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Significant_misconduct_risks_to_good_government.pdf",
+      "document": "REPORT - Significant misconduct risks to good government",
+      "page": 49
+     }
+    ],
+    "section": "Opinions"
+   },
+   {
+    "text": "The Commission considered the absence of electorate office time recording a serious misconduct risk.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Significant_misconduct_risks_to_good_government.pdf",
+      "document": "REPORT - Significant misconduct risks to good government",
+      "page": 9
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission made three recommendations to introduce time recording, clarify restrictions on party work and provide a constituent management system.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Significant_misconduct_risks_to_good_government.pdf",
+      "document": "REPORT - Significant misconduct risks to good government",
+      "page": 9
+     }
+    ],
+    "section": "INTRODUCTION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The absence of accurate documentation of hours worked made it impossible for the Commission to verify claims that campaigning work during office hours was made up for by public duties performed outside those hours.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Significant_misconduct_risks_to_good_government.pdf",
+     "document": "REPORT - Significant misconduct risks to good government",
+     "page": 49
+    }
+   },
+   {
+    "quote": "In the Commission's opinion, if an MP does not utilise a time recording system in their electorate office, their failure to do so is a serious misconduct risk.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/REPORT_-_Significant_misconduct_risks_to_good_government.pdf",
+     "document": "REPORT - Significant misconduct risks to good government",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

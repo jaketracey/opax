@@ -1,0 +1,84 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2012-08-28-funding-ngo-delivery-of-human-services-in-nsw-a-period-of-tr",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Funding NGO delivery of human services in NSW - A period of transition - consultation paper",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Consultation_paper_(August_2012.pdf.aspx",
+  "document": "Funding NGO delivery of human services in NSW - A period of transition - consultation paper",
+  "sha256": "697c7debd08dc71fd4f1aa655cb88943b1908aa29f1f9efb921433a642f861b1",
+  "pages": 29,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption seeks views on corruption risks in funding non-government organisations to deliver human services.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Consultation_paper_(August_2012.pdf.aspx",
+      "document": "Funding NGO delivery of human services in NSW - A period of transition - consultation paper",
+      "page": 5
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Consultation_paper_(August_2012.pdf.aspx",
+      "document": "Funding NGO delivery of human services in NSW - A period of transition - consultation paper",
+      "page": 6
+     }
+    ],
+    "section": "1.1 The purpose of the paper"
+   },
+   {
+    "text": "Its research draws on stakeholder discussions, published reports, agency documents and funding systems in other jurisdictions.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Consultation_paper_(August_2012.pdf.aspx",
+      "document": "Funding NGO delivery of human services in NSW - A period of transition - consultation paper",
+      "page": 6
+     }
+    ],
+    "section": "1.1 The purpose of the paper"
+   },
+   {
+    "text": "The Commission identifies tensions between central controls and flexible local delivery, and examines agency structures, provider relationships and wider coordination.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Consultation_paper_(August_2012.pdf.aspx",
+      "document": "Funding NGO delivery of human services in NSW - A period of transition - consultation paper",
+      "page": 7
+     }
+    ],
+    "section": "1.2 The difficult task of controlling funds"
+   },
+   {
+    "text": "It invites submissions on control arrangements to inform a future position paper that may propose changes to funding management.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/NGO_-_Consultation_paper_(August_2012.pdf.aspx",
+      "document": "Funding NGO delivery of human services in NSW - A period of transition - consultation paper",
+      "page": 8
+     }
+    ],
+    "section": "Call for submissions"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

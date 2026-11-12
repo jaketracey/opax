@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2024-06-28-review-wa-police-investigation-arrest-aboriginal-teenager",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Review of WA Police investigation into the arrest of an Aboriginal teenager",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_WA_Police_investigation_into_the_arrest_of_an_Aboriginal_teenager_0.pdf",
+  "document": "Review of WA Police investigation into the arrest of an Aboriginal teenager",
+  "sha256": "bde246884e01e67b684450ad60b9967924991d747cd282db07c4be15618b1dde",
+  "pages": 18,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "OVERVIEW",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_WA_Police_investigation_into_the_arrest_of_an_Aboriginal_teenager_0.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed WA Police’s handling of a complaint about the arrest and alleged excessive force used against a 14-year-old Aboriginal girl.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_WA_Police_investigation_into_the_arrest_of_an_Aboriginal_teenager_0.pdf",
+      "document": "Review of WA Police investigation into the arrest of an Aboriginal teenager",
+      "page": 4
+     }
+    ],
+    "section": "OVERVIEW"
+   },
+   {
+    "text": "The Commission concluded that police investigations were delayed and incomplete, with important issues addressed only after its intervention.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_WA_Police_investigation_into_the_arrest_of_an_Aboriginal_teenager_0.pdf",
+      "document": "Review of WA Police investigation into the arrest of an Aboriginal teenager",
+      "page": 14
+     }
+    ],
+    "section": "Commission review"
+   },
+   {
+    "text": "The Commission considered the arrest and force unlawful and unreasonable, and found that police quality assurance had not ensured an adequate response.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_WA_Police_investigation_into_the_arrest_of_an_Aboriginal_teenager_0.pdf",
+      "document": "Review of WA Police investigation into the arrest of an Aboriginal teenager",
+      "page": 17
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "The Commission said its review of an earlier recommendation on police investigation processes would also consider quality assurance.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_WA_Police_investigation_into_the_arrest_of_an_Aboriginal_teenager_0.pdf",
+      "document": "Review of WA Police investigation into the arrest of an Aboriginal teenager",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_WA_Police_investigation_into_the_arrest_of_an_Aboriginal_teenager_0.pdf",
+      "document": "Review of WA Police investigation into the arrest of an Aboriginal teenager",
+      "page": 18
+     }
+    ],
+    "section": "CONCLUSION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In the Commission's opinion the arrest and subsequent force used were unlawful, unreasonable, oppressive, and unjust.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_WA_Police_investigation_into_the_arrest_of_an_Aboriginal_teenager_0.pdf",
+     "document": "Review of WA Police investigation into the arrest of an Aboriginal teenager",
+     "page": 17
+    }
+   },
+   {
+    "quote": "WA Police's actions were incomplete, protracted and relied upon Commission intervention to identify and address key issues.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review_of_WA_Police_investigation_into_the_arrest_of_an_Aboriginal_teenager_0.pdf",
+     "document": "Review of WA Police investigation into the arrest of an Aboriginal teenager",
+     "page": 14
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}
