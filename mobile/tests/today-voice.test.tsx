@@ -99,7 +99,10 @@ jest.mock('../src/features/follows/FollowingSection', () => ({
 jest.mock('../src/features/today/MoreToExplore', () => ({
   MoreToExplore: () => null,
 }));
-jest.mock('../src/features/ask/open', () => ({ useOpenAsk: () => jest.fn() }));
+jest.mock('../src/features/ask/open', () => ({
+  useOpenAsk: () => jest.fn(),
+  useAskNow: () => jest.fn(),
+}));
 jest.mock('../src/launch/splash', () => ({ releaseSplash: jest.fn() }));
 
 const standard = { width: 390, height: 844, scale: 3, fontScale: 1 };

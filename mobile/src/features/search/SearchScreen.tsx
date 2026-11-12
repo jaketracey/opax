@@ -26,7 +26,7 @@ import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { headerItems, rootHeaderItems } from '../../navigation/chrome';
 import { resultsRoute } from '../../navigation/routes/search';
 import { useAccount } from '../account/store';
-import { useOpenAsk } from '../ask/open';
+import { isVisibleQuestion, useAskNow, useOpenAsk } from '../ask/open';
 import { SearchIdle } from './SearchIdle';
 import { SearchField } from './SearchField';
 import { SearchSuggestions } from './SearchSuggestions';
@@ -95,6 +95,15 @@ function SearchContent({
   const { sources, roster, failed, refreshing, retry } = useSearchSources();
   const signedIn = !!useAccount().status?.signedIn;
   const openAsk = useOpenAsk();
+  const askNow = useAskNow();
+  // "Ask OPAX about “…”" shows what was typed. When that is itself a
+  // question, the row shows exactly what will be asked, so it asks at once;
+  // otherwise it drafts "What has parliament said about …?" to edit.
+  const askTyped = (words: string) => {
+    const question = askDraft(words);
+    if (isVisibleQuestion(words, question)) askNow({ question });
+    else openAsk({ question });
+  };
   const q = submitted?.q ?? '';
   const scope = submitted?.scope ?? 'all';
   const controls = useResultsControls({
@@ -273,7 +282,7 @@ function SearchContent({
             failed={failed}
             onRetry={retry}
             onSearchSpeeches={() => submit(text, 'speeches')}
-            onAsk={() => openAsk({ question: askDraft(text) })}
+            onAsk={() => askTyped(text)}
             onSeeAll={seeAll}
           />
         ) : (

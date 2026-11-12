@@ -70,7 +70,10 @@ jest.mock('../src/features/explore/runtime', () => ({
   explore: { pictures: jest.fn(() => Promise.reject(new Error('Offline'))) },
 }));
 jest.mock('../src/launch/splash', () => ({ releaseSplash: jest.fn() }));
-jest.mock('../src/features/ask/open', () => ({ useOpenAsk: () => jest.fn() }));
+jest.mock('../src/features/ask/open', () => ({
+  useOpenAsk: () => jest.fn(),
+  useAskNow: () => jest.fn(),
+}));
 jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
 }));
