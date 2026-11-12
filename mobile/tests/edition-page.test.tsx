@@ -1166,11 +1166,73 @@ test('AX5 plate detail stays below the title size and both stage ends share one 
   }
   const ends = host(root, 'today-edition-art-ends')[0]!;
   expect(ends.props).toMatchObject({
-    numberOfLines: 1,
+    numberOfLines: 2,
     adjustsFontSizeToFit: true,
   });
   expect(StyleSheet.flatten(ends.props.style).textAlign).toBe('left');
   expect(ends.props.children.join('')).toBe(
     'Introduced 12 Aug · Royal Assent 18 Sep',
   );
+});
+
+test('AX5: a long first stage name wraps to a second line, never an ellipsis; default sizes keep one row', async () => {
+  const long = {
+    ...ready,
+    data: {
+      ...edition,
+      facts: {
+        ...edition.facts,
+        events: [
+          {
+            date: '12 Aug 2026',
+            text: 'Second reading amendments agreed in the Senate',
+          },
+          { date: '18 Sep 2026', text: 'Royal Assent' },
+        ],
+      },
+    },
+  };
+  const ax5 = { width: 402, height: 874, scale: 3, fontScale: 3.571 };
+  Dimensions.set({ window: ax5, screen: ax5 });
+  const { root } = await render(
+    <EditionCard edition={long} today="2026-10-05" />,
+  );
+  const ends = host(root, 'today-edition-art-ends')[0]!;
+  expect(ends.props.children.join('')).toBe(
+    'Second reading amendments agreed 12 Aug · Royal Assent 18 Sep',
+  );
+  expect(ends.props.numberOfLines).toBe(2);
+  // Shrinking stays a last resort, capped at 75 %; nothing truncates the
+  // head or middle of the line.
+  expect(ends.props.minimumFontScale).toBe(0.75);
+  expect(ends.props.ellipsizeMode ?? 'tail').toBe('tail');
+  expect(StyleSheet.flatten(ends.props.style).textAlign).toBe('left');
+
+  // Default text size: the two ends sit in one row, each its own line.
+  const standard = { width: 402, height: 874, scale: 3, fontScale: 1 };
+  // The AX5 card is still mounted, and redraws at the new size.
+  act(() => Dimensions.set({ window: standard, screen: standard }));
+  const { root: plain } = await render(
+    <EditionCard edition={long} today="2026-10-05" />,
+  );
+  expect(host(plain, 'today-edition-art-ends')).toHaveLength(0);
+  const row = plain
+    .findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        StyleSheet.flatten(node.props.style)?.justifyContent ===
+          'space-between' &&
+        StyleSheet.flatten(node.props.style)?.flexDirection === 'row',
+    )
+    .find((node) =>
+      node
+        .findAll((child) => typeof child.type === 'string')
+        .some((child) =>
+          [child.props.children]
+            .flat()
+            .join('')
+            .includes('Second reading amendments agreed'),
+        ),
+    );
+  expect(row).toBeDefined();
 });

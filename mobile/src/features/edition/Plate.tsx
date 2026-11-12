@@ -247,7 +247,9 @@ export function PlateArt({
               variant="footnote"
               tone="onBandSoft"
               maxFontSizeMultiplier={1.353}
-              numberOfLines={1}
+              // One line when the ends fit; a long stage name wraps to a
+              // second line rather than ending in an ellipsis.
+              numberOfLines={2}
               adjustsFontSizeToFit
               minimumFontScale={0.75}
               style={{ marginTop: rhythm.tight, textAlign: 'left' }}
