@@ -470,13 +470,21 @@ export function FollowButton({
         onPress={() => void toggle()}
         testID={`${testID}-${following ? 'on' : 'off'}`}
       />
-      {message ? (
-        <Animated.View style={{ opacity: confirmation ? opacity : 1 }}>
-          <Text wordSafe variant="footnote" testID={`${testID}-message`}>
-            {message}
-          </Text>
-        </Animated.View>
-      ) : null}
+      {/* The sentence reserves its natural wrapped height at every text size.
+          Only opacity changes during the first-follow confirmation. */}
+      <Animated.View
+        accessibilityElementsHidden={!message}
+        importantForAccessibility={message ? 'auto' : 'no-hide-descendants'}
+        style={{ opacity: message ? (confirmation ? opacity : 1) : 0 }}
+      >
+        <Text
+          wordSafe
+          variant="footnote"
+          testID={message ? `${testID}-message` : undefined}
+        >
+          {message ?? 'Changes will show on Today.'}
+        </Text>
+      </Animated.View>
       {limitReached ? (
         <Button
           label="Edit Following"

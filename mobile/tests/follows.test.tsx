@@ -1107,7 +1107,28 @@ describe('delight follow moments', () => {
           testID="moment"
         />,
       );
+      const messageRegion = () =>
+        r.root
+          .findByType(FollowButton)
+          .findAll(
+            (node) =>
+              typeof node.type === 'string' &&
+              node.props.accessibilityElementsHidden !== undefined &&
+              node
+                .findAllByType(Text)
+                .some(
+                  (text) =>
+                    text.props.children === 'Changes will show on Today.',
+                ),
+          )[0];
+      // The same full sentence reserves its wrapped height even before the
+      // first follow, and remains hidden from accessibility while empty.
+      const reserved = messageRegion();
+      expect(reserved).toBeDefined();
+      expect(reserved!.props.accessibilityElementsHidden).toBe(true);
       await act(async () => r.root.findByType(Button).props.onPress());
+      expect(messageRegion()).toBe(reserved);
+      expect(reserved!.props.accessibilityElementsHidden).toBe(false);
       expect(r.root.findByType(Button).props).toMatchObject({
         label: 'Following',
         symbol: 'checkmark',
@@ -1116,7 +1137,7 @@ describe('delight follow moments', () => {
       expect(
         r.root
           .findAllByType(Text)
-          .some((n) => n.props.children === 'Changes will show on Today.'),
+          .some((n) => n.props.testID === 'moment-message'),
       ).toBe(true);
       expect(announce).toHaveBeenCalledTimes(1);
       expect(announce).toHaveBeenCalledWith('Changes will show on Today.');
@@ -1127,14 +1148,16 @@ describe('delight follow moments', () => {
       expect(
         r.root
           .findAllByType(Text)
-          .some((n) => n.props.children === 'Changes will show on Today.'),
+          .some((n) => n.props.testID === 'moment-message'),
       ).toBe(true);
       act(() => jest.advanceTimersByTime(500));
       expect(
         r.root
           .findAllByType(Text)
-          .some((n) => n.props.children === 'Changes will show on Today.'),
+          .some((n) => n.props.testID === 'moment-message'),
       ).toBe(false);
+      expect(messageRegion()).toBe(reserved);
+      expect(reserved!.props.accessibilityElementsHidden).toBe(true);
       act(() => r.unmount());
       for (const id of ['fixture-two', 'fixture-three'])
         await follow({ kind: 'party', id, title: id });
@@ -1148,7 +1171,7 @@ describe('delight follow moments', () => {
       expect(
         fourth.root
           .findAllByType(Text)
-          .some((n) => n.props.children === 'Changes will show on Today.'),
+          .some((n) => n.props.testID === 'follow-message'),
       ).toBe(false);
       expect(announce).toHaveBeenCalledTimes(1);
       act(() => fourth.unmount());
@@ -1169,13 +1192,13 @@ describe('delight follow moments', () => {
     expect(
       r.root
         .findAllByType(Text)
-        .some((n) => n.props.children === 'Changes will show on Today.'),
+        .some((n) => n.props.testID === 'follow-message'),
     ).toBe(true);
     act(() => jest.advanceTimersByTime(100));
     expect(
       r.root
         .findAllByType(Text)
-        .some((n) => n.props.children === 'Changes will show on Today.'),
+        .some((n) => n.props.testID === 'follow-message'),
     ).toBe(false);
     act(() => r.unmount());
   });

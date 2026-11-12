@@ -325,7 +325,10 @@ describe('every drawn state is in the contrast table and passes', () => {
       expect({ file, values: values.filter((v) => v !== '0') }).toEqual({
         file,
         // Lane B's brief explicitly gives the transient follow line a fade.
-        values: file === 'controls.tsx' ? ['confirmation ? opacity : 1'] : [],
+        values:
+          file === 'controls.tsx'
+            ? ['message ? (confirmation ? opacity : 1) : 0']
+            : [],
       });
     }
   });
