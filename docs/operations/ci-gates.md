@@ -12,8 +12,10 @@ worker limit. Full git history is available for fixtures that read pinned blobs.
 Commits without a `mobile/` tree report mobile checks as inapplicable in their
 job summaries. A present but incomplete mobile tree fails normally.
 
-The portal job generates Worker types, builds release assets, typechecks, runs
-the full Node test suite and discovers all `portal/test/*_test.py` Python tests.
+The four portal shards each generate Worker types, build release assets and
+typecheck, then distribute the full Node test suite with `--test-shard`.
+Shard 1 also discovers all `portal/test/*_test.py` Python tests. The combined
+portal job exceeded six minutes in the initial trial, triggering this split.
 It uses the repository's frozen Python lock and version, including for Python
 processes spawned by Node tests. The table build generates metadata locally.
 The workflow does not deploy or call production services.
@@ -32,7 +34,7 @@ never add private fixtures or evidence to the committed tree.
 2. Run the local operations helper: `ci-gate.sh <worktree> <label>`. It force
    pushes HEAD only to `origin` as `ci/<label>`, finds the matching workflow by
    exact SHA and workflow path, watches it and prints every job's result and wall
-   time. Exit 0 means all eight jobs succeeded; 1 means failure; 2 means invalid
+   time. Exit 0 means all eleven jobs succeeded; 1 means failure; 2 means invalid
    usage or a missing workflow. Uncommitted edits are excluded.
 3. Review the linked run and reuse its pass only for the exact tested SHA. A
    changed commit, including a new integration merge, requires another run.

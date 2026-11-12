@@ -91,8 +91,13 @@ jobs:
         run: npx jest --silent --shard=${{ matrix.shard }}/6 --maxWorkers=4
 
   portal:
+    name: portal (${{ matrix.shard }}/4)
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     defaults:
       run:
         working-directory: portal
@@ -136,7 +141,9 @@ jobs:
       - name: Typecheck
         run: npx tsc --noEmit
       - name: Test portal
-        run: npm test
+        # Equivalent to npm test, with Node's shard option before the file list.
+        run: node --test --test-shard=${{ matrix.shard }}/4 test/*.test.mjs
       - name: Test portal Python loaders
+        if: matrix.shard == 1
         working-directory: .
         run: python3 -m unittest discover -s portal/test -p '*_test.py'
