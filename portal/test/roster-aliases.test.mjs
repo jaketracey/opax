@@ -47,3 +47,29 @@ test('two spellings with one verified id share a source-alias address',()=>{
  assert.equal(personIndex(rows).addresses.get('william richard example').name,'Bill Example');
  assert.equal(rosterPerson({people:rows},'William Richard Example'),'Bill Example');
 });
+
+
+test('an exact printed full name wins over an alias on another row',()=>{
+ const rows=[{name:'Alex Example',pid:'19996',speeches:147},{name:'Alex Sample',pid:'19995',speeches:900,aliases:['Alex Example']}];
+ const match=resolvePersonName('Alex Example',rows);
+ assert.equal(match.status,'matched');
+ assert.equal(match.candidates[0].person.name,'Alex Example');
+ assert.equal(rosterPerson({people:rows},'Alex Example'),'Alex Example');
+ assert.equal(resolvePersonName('Alex Example',[...rows,{name:'Alex Example',pid:'19994'}]).status,'ambiguous');
+});
+
+test('Sophie Panopoulos keeps her exact speech filter despite the Mirabella alias',()=>{
+ const roster=JSON.parse(readFileSync(new URL('../public/parliamentarians.json',import.meta.url),'utf8'));
+ const match=resolvePersonName('Sophie Panopoulos',roster.people);
+ assert.equal(match.status,'matched');
+ assert.equal(match.candidates[0].person.name,'Sophie Panopoulos');
+ assert.equal(match.candidates[0].person.speeches,147);
+ assert.equal(rosterPerson(roster,'Sophie Panopoulos'),'Sophie Panopoulos');
+});
+
+test('an ambiguous surname cannot choose the most prolific person',()=>{
+ const rows=[{name:'Alex Example',speeches:9999},{name:'Jo Example',speeches:1}];
+ assert.equal(rosterPerson({people:rows},'Example'),null);
+ const roster=JSON.parse(readFileSync(new URL('../public/parliamentarians.json',import.meta.url),'utf8'));
+ assert.equal(rosterPerson(roster,'Bishop'),null);
+});

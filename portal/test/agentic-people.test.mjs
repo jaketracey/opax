@@ -17,6 +17,13 @@ const depsFor = people => ({
   kb: async () => { throw new Error('Name resolution must use the roster only'); },
 });
 const deps = depsFor(roster.people);
+test('find_people keeps the exact Panopoulos speech row despite the Mirabella alias', async () => {
+  const result = await findPeople(deps, {name: 'Sophie Panopoulos'});
+  assert.equal(result.data.match_status, 'matched');
+  assert.equal(result.data.people[0].name, 'Sophie Panopoulos');
+  assert.equal(result.data.people[0].speeches_indexed, 147);
+  assert.equal(result.data.clarification, undefined);
+});
 const person = (name, pid, speeches = 1) => ({ name, pid, speeches, states: ['federal'], chambers: ['senate'] });
 const resolved = (result, name) => {
   assert.equal(result.ok, true);

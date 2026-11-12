@@ -107,6 +107,9 @@ function scoreName(query: Name, name: Name): number {
 export function resolvePersonName<T extends RosterName>(value: string, people: readonly T[]): NameResolution<T> {
   const query = parseName(value)
   if (!query.words.length || value.length > 160 || query.words.length > 10) return { status: 'no_match', candidates: [] }
+  // A printed full name owns its speech filter even when another roster row
+  // lists it as an alias. Keep distinct exact owners ambiguous.
+  const exact = query.words.length > 1 && people.some(person => parseName(person.name).key === query.key)
   const identities = new Map<string, { person: T; name: Name }[]>()
   for (const person of people) {
     const name = parseName(person.name), key = person.pid ? `pid:${person.pid}` : `name:${name.key}`
@@ -120,7 +123,7 @@ export function resolvePersonName<T extends RosterName>(value: string, people: r
     if (query.suffix && suffixes.length && !suffixes.includes(query.suffix)) continue
     let best: { person: T; score: number; full: boolean } | undefined
     for (const { person, name } of aliases) {
-      const score = scoreName(query, name)
+      const score = Math.min(scoreName(query, name), exact && parseName(person.name).key !== query.key ? 999 : 1000)
       // Speech counts only choose an indexed spelling within one identity.
       // They must never break a tie between different parliamentarians.
       if (score && (!best || score > best.score || score === best.score && (person.speeches ?? 0) > (best.person.speeches ?? 0))) best = { person, score, full: name.words.length > 1 }
