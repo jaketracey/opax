@@ -565,10 +565,10 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   // inside one result set costs no upstream call and no rate-limit quota.
   const keyParams = (drop: string[]) => cacheKeyParams(url.searchParams, drop)
   // Retire windows/pages containing the old unnormalized, character-cut snippets.
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1\n${keyParams(['nocache'])}`))
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1-source-url-v2\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
-    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
+    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1-source-url-v2\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
@@ -852,7 +852,7 @@ async function searchWindow(
       // Divisions carry their date on origin.created rather than in metadata.
       date: (meta.date as string) ?? (resource.origin as { created?: string } | undefined)?.created?.slice(0, 10) ?? null,
       url: resource.origin?.url || null,
-      ...((label(resource, 'state') === 'sa' || label(resource, 'source') === 'sa_hansard') && typeof meta.source_url === 'string' ? {source_url:meta.source_url} : {}), // official record, for exports/citations
+      ...(typeof meta.source_url === 'string' ? {source_url:meta.source_url} : {}), // Recorded official URL, reused by topic pages and citations.
       snippet: windowed,
       // BASIC already includes resource and computed field classifications.
       // Reuse them; never fetch each result separately just to draw its chips.

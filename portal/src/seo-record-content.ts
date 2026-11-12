@@ -74,7 +74,7 @@ export function topicCoreBody(slug: string, counts: TopicCounts, speeches: Topic
   const search = '/ask?'+new URLSearchParams({view:'search',q:phrase,kind:'speech',topic:slug,sort:'newest'})
   return figures([['Speeches labelled with this topic',number(counts.count)],['Speeches labelled to date',number(counts.labelled)]])
     + table('Newest retrieved speeches', ['Speech','Speaker','Date','Source'], speeches.filter(s=>s.slug).slice(0,20).map(s=>[
-      link('/doc/'+encodeURIComponent(s.slug),s.title || s.slug),esc(s.speaker || ''),esc(s.date?.slice(0,10) || ''),link(s.source_url || s.url || '', 'Official record'),
+      link('/doc/'+encodeURIComponent(s.slug),s.title || s.slug),esc(s.speaker || ''),esc(s.date?.slice(0,10) || ''),safeHref(s.source_url || s.url || '') ? link(s.source_url || s.url || '', 'Official record') : 'Source link not recorded',
     ]))
     + `<p>${link(search,'Explore the full speech list')}${dataPath ? ' · '+link(dataPath,'Read retrieved speeches (JSON)') : ''}</p><p class="source-line">Source: the parliamentary records linked above. Topic labels are machine applied. This list is the newest part of the retrieved search window.</p>`
 }

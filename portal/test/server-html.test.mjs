@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {JSDOM} from 'jsdom';
 import {offline, loadWorker, outbound} from './worker-harness.mjs';
 import {files, paths} from './fixtures/server-html.mjs';
-import {grantCoreBody} from '../src/seo-record-content.ts';
+import {grantCoreBody, topicCoreBody} from '../src/seo-record-content.ts';
 
 offline();
 const cache = new Map();
@@ -81,4 +81,20 @@ test('a missing grant value remains missing, while a published zero remains zero
   const doc = new JSDOM(html).window.document;
   const values = [...doc.querySelectorAll('tbody tr')].map(row=>row.cells[2].textContent);
   assert.deepEqual(values,['Value not recorded','$0.00']);
+});
+
+test('topic rows link recorded sources and accurately label absent or unsafe sources',()=>{
+  const doc = new JSDOM(topicCoreBody('housing',{count:4,labelled:4},[
+    {slug:'example-one',title:'Example one',source_url:'https://example.org/official-one'},
+    {slug:'example-two',title:'Example two',url:'https://example.org/official-two'},
+    {slug:'example-three',title:'Example three'},
+    {slug:'example-four',title:'Example four',source_url:'javascript:alert(1)'},
+  ])).window.document;
+  const sources = [...doc.querySelectorAll('tbody tr')].map(row=>row.cells[3]);
+  assert.equal(sources[0].querySelector('a').href,'https://example.org/official-one');
+  assert.equal(sources[1].querySelector('a').href,'https://example.org/official-two');
+  for(const source of sources.slice(2)) {
+    assert.equal(source.textContent,'Source link not recorded');
+    assert.equal(source.querySelector('a'),null);
+  }
 });
