@@ -33,6 +33,7 @@ import Coverage from '../src/features/methods/Coverage';
 import { coverageSources } from '../src/features/methods/repository';
 import { methodsCopy } from '../src/features/methods/copy';
 import { paperBar } from '../src/features/sources/parts';
+import { opaqueBar } from '../src/navigation/chrome';
 import { colors } from '../src/design/tokens';
 import { pinned } from './pinned';
 
@@ -215,9 +216,7 @@ describe('Methods', () => {
   test('on paper under a paper bar, inside the sunken Account sheet', async () => {
     await render(<Methods />, false);
     expect(resolvedOptions()).toMatchObject(paperBar);
-    expect(paperBar).toEqual({
-      contentStyle: { backgroundColor: colors.paper },
-    });
+    expect(paperBar).toEqual(opaqueBar(colors.paper));
   });
 
   test('a page title, then the sections in order', async () => {

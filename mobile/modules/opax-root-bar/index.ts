@@ -10,7 +10,7 @@ interface RootBarModule {
     event: 'onVerticalBarEdge',
     listener: (event: { edge: VerticalBarEdge }) => void,
   ): { remove(): void };
-  setSolid(identifier: string, ground: ColorValue): Promise<void>;
+  setSolid?(identifier: string, ground: ColorValue): Promise<void>;
   remove(identifier: string): Promise<void>;
 }
 

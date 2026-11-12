@@ -61,8 +61,8 @@ export function useRootBarSearchOptions(
 
 /**
  * Screen supplies its ground. Bills and Ask use this from RouteOptions because
- * their FlatList/ScrollView does not use Screen. Explicit large-title list
- * destinations also use RouteOptions; Screen defers to that owner. Scrolling
+ * their FlatList/ScrollView does not use Screen. Only the five tab roots
+ * opt in; pushed and inline screens retain the stack's opaque bar. Scrolling
  * belongs to UIKit, never JS collapse thresholds or route appearance updates.
  * The setter must be the shared useSafeSetOptions guard.
  */
@@ -73,13 +73,11 @@ export function useRootBarAppearance(
     disabled = false,
     names = roots,
     owner = 'screen',
-    includeInline = false,
   }: {
     ground?: ColorValue;
     disabled?: boolean;
     names?: readonly string[];
     owner?: 'screen' | 'options';
-    includeInline?: boolean;
   } = {},
 ) {
   const navigation = useContext(NavigationContext);
@@ -110,13 +108,10 @@ export function useRootBarAppearance(
     !disabled &&
     glassBar() &&
     tabStack &&
-    ((route?.key === state?.routes[0]?.key &&
-      names.includes(route?.name ?? '')) ||
-      rootOptions.largeTitle === true)
+    route?.key === state?.routes[0]?.key &&
+    names.includes(route?.name ?? '')
       ? route
       : undefined;
-  const inline =
-    !disabled && glassBar() && includeInline && !root ? route : undefined;
   const largeTitleEnabled = !!root && (rootOptions.largeTitle ?? true);
   const headerHeight = useContext(HeaderHeightContext) ?? 0;
   const { width, height, fontScale } = useWindowDimensions();
@@ -130,7 +125,7 @@ export function useRootBarAppearance(
       ? tabRootGround(name)
       : colors.paper);
   const ownsBar = owner === 'options' || rootOptions.largeTitle === undefined;
-  const rootKey = root?.key ?? inline?.key;
+  const rootKey = root?.key;
   const identifier = rootKey ? `opax-root-bar-${rootKey}` : undefined;
 
   useLayoutEffect(() => {
@@ -162,7 +157,7 @@ export function useRootBarAppearance(
   useLayoutEffect(() => {
     if (!identifier || !ownsBar || !largeTitleEnabled || verticalBar || !solid)
       return;
-    if (navigation?.isFocused()) void RootBar?.setSolid(identifier, colour);
+    if (navigation?.isFocused()) void RootBar?.setSolid?.(identifier, colour);
   }, [
     identifier,
     ownsBar,
@@ -180,7 +175,7 @@ export function useRootBarAppearance(
     if (!identifier || !ownsBar || !largeTitleEnabled || verticalBar || !solid)
       return;
     const focus = navigation?.addListener('focus', () => {
-      void RootBar?.setSolid(identifier, colour);
+      void RootBar?.setSolid?.(identifier, colour);
     });
     const clear = () => {
       void RootBar?.remove(identifier);

@@ -22,7 +22,7 @@ Use `FigureBlock` for a subject figure and `StatTile` or `StatStrip` for related
 
 Every block has one dated `SourceLine`. It opens the `/source` route through `navigation/sheets`, with originals, plain notes, the selection rule and a Sources and licences link. Licence text belongs in the Licence sheet. Use `MachinePill` and `/machine-note` for machine-written text. Methodology opens `/rule`; there are no in-place source or info modals.
 
-Sheets use a native bar, plain Done and the shared detents. Account, Licence and Ask retain their own sunken ground. On iOS 26 and later, roots and shared pushed screens keep transparent native appearances with the system's soft scroll edge. No background or divider follows a JS scroll threshold. The screen's own ground extends beneath the bar, including during overscroll. Reduce Transparency or Increase Contrast selects a solid bar; large-title roots use a native sibling below the bar for that fallback because colouring the UIKit appearance hides their titles. Earlier iOS versions and Android keep their opaque bar behaviour.
+Form sheets use a native paper bar over sunken content, plain Done and the shared detents. On iOS 26 and later, only the five tab roots use transparent native appearances with the system's soft scroll edge. No background or divider follows a JS scroll threshold. Reduce Transparency or Increase Contrast selects a constant solid backing below a large-title root's bar, preserving its title. The settings are read asynchronously using the shared accessibility store. Pushed and inline screens retain a non-translucent bar and hard edge for legibility over serif record text, as decided after the wave 2 captures. Earlier iOS versions and Android keep their bar behaviour.
 
 ## State and controls
 

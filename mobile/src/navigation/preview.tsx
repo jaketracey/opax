@@ -4,7 +4,6 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { useCallback, useContext, useLayoutEffect, useMemo } from 'react';
-import type { ColorValue } from 'react-native';
 import { useDetailRouteOptions } from './useDetailRouteOptions';
 import { headerItems, pendingHeaderItems } from './chrome';
 import {
@@ -52,11 +51,8 @@ export function useSafeSetOptions() {
 export function RouteOptions({
   options,
   stableItems = false,
-  barGround,
 }: {
   options?: NativeStackNavigationOptions;
-  /** Custom scrolling views supply their inline bar ground here. */
-  barGround?: ColorValue;
   /** A detail's bar items retain their identity as data and title arrive. */
   stableItems?: boolean;
 }) {
@@ -83,8 +79,6 @@ export function RouteOptions({
   useRootBarAppearance(setOptions, {
     names: ['bills', 'ask'],
     owner: 'options',
-    ground: barGround,
-    includeInline: barGround !== undefined,
   });
   // Stack.Screen installs options in its own effect, outside our guard.
   // Install before paint so native items start in their final positions.

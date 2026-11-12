@@ -14,11 +14,10 @@ export function askScreens(segment = '', signedIn = false) {
     screen('ask', 'Ask', {
       ...(segment === '(ask)'
         ? largeTitleBar(colors.sunken)
-        : glassBar()
-          ? {}
-          : opaqueBar(colors.sunken)),
+        : opaqueBar(colors.sunken)),
       contentStyle: { backgroundColor: colors.sunken },
       headerLargeTitleEnabled: segment === '(ask)',
+      headerTransparent: segment === '(ask)' && glassBar(),
       ...askHeaderItems({
         canStartNew: false,
         historyEnabled: true,

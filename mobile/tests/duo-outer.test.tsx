@@ -491,15 +491,15 @@ describe('compact outer surfaces', () => {
 describe('system navigation on both displays', () => {
   test('scroll edge protection follows the actual bar side', () => {
     expect(barScrollEdges('leading')).toMatchObject({
-      left: 'soft',
+      left: 'hard',
       right: 'soft',
     });
     expect(barScrollEdges('trailing')).toMatchObject({
       left: 'soft',
-      right: 'soft',
+      right: 'hard',
     });
     expect(barScrollEdges('unspecified')).toEqual({
-      top: 'soft',
+      top: 'hard',
       bottom: 'soft',
     });
   });

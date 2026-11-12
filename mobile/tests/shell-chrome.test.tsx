@@ -8,6 +8,7 @@ import React, { act } from 'react';
 import { Animated, Dimensions, Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import TestRenderer from 'react-test-renderer';
+import TalkStack from '../src/app/talk/_layout';
 import AskRoute from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/ask';
 import { designFlags } from '../src/design/flags';
 import { Screen } from '../src/design/layout';
@@ -18,7 +19,6 @@ import {
   glassBar,
   largeTitleBar,
   opaqueBar,
-  scrollBar,
   pageItems,
   pageMenu,
   rootHeaderItems,
@@ -43,6 +43,7 @@ import {
   rootBackTitle,
   screen,
   tabRootScreen,
+  sheetOptions,
   untitled,
 } from '../src/navigation/stack/screen';
 import {
@@ -61,7 +62,10 @@ jest.mock('../modules/opax-root-bar', () => ({
 }));
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
-  Stack: { Screen: () => null },
+  Stack: Object.assign(
+    ({ children }: { children: React.ReactNode }) => children,
+    { Screen: () => null },
+  ),
   useSegments: () => ['(tabs)', '(ask)'],
   router: { push: jest.fn(), back: jest.fn() },
 }));
@@ -402,7 +406,7 @@ test.each([
   [27, true],
   [27, false],
 ] as const)(
-  'iOS %s edition extends its grouped=%s ground beneath a stable soft edge during overscroll',
+  'iOS %s edition owns an opaque bar on its grouped=%s ground during overscroll',
   (version, grouped) => {
     const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
     Object.defineProperty(Platform, 'Version', {
@@ -444,6 +448,7 @@ test.each([
       );
     }
     let renderer: TestRenderer.ReactTestRenderer | undefined;
+    let background: TestRenderer.ReactTestRenderer | undefined;
     try {
       expect(options).toMatchObject({
         title: 'Daily edition',
@@ -451,12 +456,19 @@ test.each([
         headerBackButtonDisplayMode: 'default',
         headerBackButtonMenuEnabled: true,
         headerLargeTitleEnabled: false,
-        ...scrollBar(ground),
+        headerTransparent: false,
+        ...opaqueBar(ground),
         contentStyle: { backgroundColor: ground },
-        scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
+        scrollEdgeEffects: { top: 'hard', bottom: 'soft' },
       });
       expect(options).not.toHaveProperty('headerBlurEffect');
-      expect(options).not.toHaveProperty('headerBackground');
+      background = tree(options.headerBackground!());
+      const backing = background.root.findByType(View);
+      expect(backing.props.pointerEvents).toBe('none');
+      expect(StyleSheet.flatten(backing.props.style)).toMatchObject({
+        flex: 1,
+        backgroundColor: ground,
+      });
       renderer = tree(
         <NavigationContext.Provider value={navigation as never}>
           <NavigationRouteContext.Provider value={route}>
@@ -466,7 +478,7 @@ test.each([
           </NavigationRouteContext.Provider>
         </NavigationContext.Provider>,
       );
-      jest.mocked(RootBar!.setSolid).mockClear();
+      jest.mocked(RootBar!.setSolid!).mockClear();
       navigation.setOptions.mockClear();
       for (const [offset, y] of [
         [0, 120],
@@ -482,8 +494,11 @@ test.each([
           ...navigation.setOptions.mock.calls.map(([value]) => value),
         );
         expect(resolved).toMatchObject({
-          ...scrollBar(ground),
+          headerTransparent: false,
+          headerStyle: { backgroundColor: ground },
+          headerLargeStyle: { backgroundColor: ground },
           contentStyle: { backgroundColor: ground },
+          headerBackground: options.headerBackground,
         });
       }
       expect(navigation.setOptions).toHaveBeenCalledTimes(2);
@@ -493,6 +508,7 @@ test.each([
       expect(largeTitleBar(ground).headerTransparent).toBe(true);
     } finally {
       if (renderer) act(() => renderer!.unmount());
+      if (background) act(() => background!.unmount());
       mockFlags.groupedSurfaces = previousGrouped;
       Object.defineProperty(Platform, 'Version', descriptor);
     }
@@ -918,13 +934,10 @@ const tabCases = [
   ['(ask)', 'ask', 'Ask'],
 ] as const;
 
-// Exercise Screen and RouteOptions owners, including pushed large-title lists.
-const fadeCases = [
-  ...tabCases.map(([segment, name]) => [segment, name, false, false] as const),
-  ['(today)', 'grants', true, false],
-  ['(today)', 'leads', true, true],
-  ['(today)', 'money-donors', true, false],
-] as const;
+// Exercise the five tab roots through their Screen and RouteOptions owners.
+const fadeCases = tabCases.map(
+  ([segment, name]) => [segment, name, false, false] as const,
+);
 function fadePage(
   name: string,
   segment: (typeof tabCases)[number][0],
@@ -1002,7 +1015,7 @@ function fadePage(
 function withGlass(test: () => void) {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
-  jest.mocked(RootBar!.setSolid).mockClear();
+  jest.mocked(RootBar!.setSolid!).mockClear();
   jest.mocked(RootBar!.remove).mockClear();
   try {
     test();
@@ -1096,7 +1109,7 @@ test.each(tabCases)(
         act(() => listeners.get('blur')!.forEach((listener) => listener()));
         expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
         navigation.isFocused.mockReturnValue(false);
-        jest.mocked(RootBar!.setSolid).mockClear();
+        jest.mocked(RootBar!.setSolid!).mockClear();
         act(() => renderer.update(page(100)));
         expect(RootBar!.setSolid).not.toHaveBeenCalled();
         navigation.isFocused.mockReturnValue(true);
@@ -1127,7 +1140,7 @@ test('the solid fallback follows a resize even if header height stays the same',
     const renderer = tree(page(68));
     try {
       navigation.setOptions.mockClear();
-      jest.mocked(RootBar!.setSolid).mockClear();
+      jest.mocked(RootBar!.setSolid!).mockClear();
       act(() =>
         Dimensions.set({
           window: { ...window, width: window.width + 80, fontScale: 3.571 },
@@ -1144,7 +1157,7 @@ test('the solid fallback follows a resize even if header height stays the same',
   }));
 
 test.each(['pushed screen', 'sheet'])(
-  '%s keeps the system soft edge on iOS 26',
+  '%s retains an opaque, non-translucent bar on iOS 26',
   (kind) => {
     const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
     Object.defineProperty(Platform, 'Version', {
@@ -1186,7 +1199,10 @@ test.each(['pushed screen', 'sheet'])(
     try {
       for (const height of [120, 90, 44, 120]) {
         act(() => renderer.update(page(height)));
-        expect(setOptions).toHaveBeenLastCalledWith(scrollBar(colors.sunken));
+        expect(setOptions).toHaveBeenLastCalledWith({
+          ...opaqueBar(colors.sunken),
+          headerTransparent: false,
+        });
       }
     } finally {
       act(() => renderer.unmount());
@@ -1194,3 +1210,92 @@ test.each(['pushed screen', 'sheet'])(
     }
   },
 );
+
+test('an older native binary without setSolid does not crash on mount or focus', () =>
+  withGlass(() => {
+    const method = RootBar!.setSolid;
+    mockSolidBar = true;
+    Object.defineProperty(RootBar, 'setSolid', {
+      configurable: true,
+      value: undefined,
+    });
+    let renderer: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      const { page, listeners } = fadePage('index', '(today)');
+      expect(() => {
+        renderer = tree(page(120));
+      }).not.toThrow();
+      expect(() =>
+        act(() => listeners.get('focus')!.forEach((listener) => listener())),
+      ).not.toThrow();
+    } finally {
+      if (renderer) act(() => renderer!.unmount());
+      mockSolidBar = false;
+      Object.defineProperty(RootBar, 'setSolid', {
+        configurable: true,
+        value: method,
+      });
+    }
+  }));
+
+test.each([26, 27])(
+  'iOS %s keeps Talk and pushed bars non-translucent with a hard edge',
+  (version) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: version,
+    });
+    let renderer: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      renderer = tree(<TalkStack />);
+      const options = renderer.root.findByType(Stack).props.screenOptions;
+      expect(options).toMatchObject({
+        ...opaqueBar(colors.paper),
+        headerTransparent: false,
+        scrollEdgeEffects: { top: 'hard', bottom: 'soft' },
+      });
+      for (const entry of renderer.root.findAllByType(Stack.Screen))
+        expect({ ...options, ...entry.props.options }.headerTransparent).toBe(
+          false,
+        );
+    } finally {
+      if (renderer) act(() => renderer!.unmount());
+      Object.defineProperty(Platform, 'Version', descriptor);
+    }
+  },
+);
+
+test.each(['grants', 'leads', 'money-donors'])(
+  '%s cannot opt a pushed list into the root soft edge',
+  (name) =>
+    withGlass(() => {
+      const { page, navigation } = fadePage(name, '(today)', true, true);
+      const renderer = tree(page(120));
+      try {
+        // The mounted Screen owns the pushed list's opaque ground, even when
+        // RouteOptions requests a large title for that list.
+        const screen = renderer.root.findByType(Screen);
+        expect(screen.props.grouped).toBe(true);
+        expect(RootBar!.setSolid).not.toHaveBeenCalled();
+        const resolved = Object.assign(
+          {},
+          ...navigation.setOptions.mock.calls.map(([options]) => options),
+        );
+        expect(resolved).toMatchObject({
+          ...opaqueBar(colors.sunken),
+          headerTransparent: false,
+        });
+      } finally {
+        act(() => renderer.unmount());
+      }
+    }),
+);
+
+test('form sheets explicitly retain the paper bar and hard top edge', () => {
+  expect(sheetOptions).toMatchObject({
+    ...opaqueBar(colors.paper),
+    headerTransparent: false,
+    scrollEdgeEffects: { top: 'hard', bottom: 'soft' },
+  });
+});

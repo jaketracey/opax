@@ -16,7 +16,6 @@ import {
   type ColorValue,
 } from 'react-native';
 import { designFlags } from '../design/flags';
-import { useSolidBar } from '../design/accessibility';
 import { Icon, type SFSymbol } from '../design/icon';
 import { showMenu, type MenuAction } from '../design/menu';
 import type { RowMenuAction } from '../design/row-link';
@@ -46,12 +45,10 @@ export const glassBar = () =>
   Platform.OS === 'ios' && parseInt(String(Platform.Version), 10) >= 26;
 
 /** Protect the content edge where UIKit actually places the bar. */
-export function barScrollEdges(edge: VerticalBarEdge, solid = false) {
-  const active = glassBar()
-    ? solid
-      ? ('hidden' as const)
-      : ('soft' as const)
-    : ('hard' as const);
+export function barScrollEdges(
+  edge: VerticalBarEdge,
+  active: 'hard' | 'soft' | 'hidden' = 'hard',
+) {
   return edge === 'unspecified'
     ? { top: active, bottom: 'soft' as const }
     : {
@@ -97,11 +94,14 @@ export const largeTitleBar = (
         headerTransparent: true,
         headerShadowVisible: false,
         headerLargeTitleShadowVisible: false,
-        scrollEdgeEffects: barScrollEdges('unspecified', solid),
+        scrollEdgeEffects: barScrollEdges(
+          'unspecified',
+          solid ? 'hidden' : 'soft',
+        ),
       }
     : opaqueBar(ground);
 
-/** Shared by inline destinations and roots whose large title is disabled. */
+/** Tab roots whose large title is disabled, including iPad split layouts. */
 export const scrollBar = (
   ground: ColorValue = colors.paper,
   solid = false,
@@ -112,11 +112,11 @@ export const scrollBar = (
       ? {
           ...opaqueBar(ground),
           headerTransparent: false,
-          scrollEdgeEffects: barScrollEdges(edge, true),
+          scrollEdgeEffects: barScrollEdges(edge, 'hidden'),
         }
       : {
           ...largeTitleBar(ground),
-          scrollEdgeEffects: barScrollEdges(edge),
+          scrollEdgeEffects: barScrollEdges(edge, 'soft'),
         }
     : opaqueBar(ground);
 
@@ -140,7 +140,6 @@ export const androidBar = {
 export function useStackChrome() {
   const { fontScale } = useWindowDimensions();
   const barEdge = useVerticalBarEdge();
-  const solid = useSolidBar();
   const category = contentSizeCategory(fontScale);
   const sizes = {
     largeTitle: largeTitleSizes[category],
@@ -151,9 +150,10 @@ export function useStackChrome() {
     ...(Platform.OS === 'android'
       ? { headerTitleAlign: 'left' as const, statusBarStyle: 'dark' as const }
       : {}),
-    // Earlier iOS versions and Android retain their opaque layout.
+    // Pushed, inline and sheet layouts reserve space for a solid native bar.
+    // The five tab roots opt into translucency separately.
     headerTransparent: false,
-    ...scrollBar(colors.paper, solid, barEdge),
+    ...opaqueBar(),
     headerTitleStyle: {
       fontFamily: textStyles.inlineTitle.fontFamily,
       fontWeight: textStyles.inlineTitle.fontWeight,
@@ -175,7 +175,12 @@ export function useStackChrome() {
         : {}),
       color: colors.ink,
     },
-    scrollEdgeEffects: barScrollEdges(barEdge, solid),
+    // Wave 2 found the soft top edge too light over serif record text: the
+    // record remained readable through the title and bar buttons. Keep the
+    // hard edge and matching opaque ground on pushed and inline screens.
+    // Only the five tab roots use the soft edge for the scrolling header art.
+    // The bottom stays soft at the minimising tab bar.
+    scrollEdgeEffects: barScrollEdges(barEdge),
     headerLargeTitleEnabled: false,
     headerLargeTitleShadowVisible: false,
     headerBackButtonDisplayMode: 'default' as const,
