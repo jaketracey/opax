@@ -1,4 +1,5 @@
 import { Platform } from 'react-native';
+import { dpToSp, spToDp } from '../../modules/opax-text-metrics';
 import {
   contentSizeCategory,
   type ContentSizeCategory,
@@ -41,14 +42,27 @@ export function textRampScale(
   fontScale: number,
   maxFontSizeMultiplier = 0,
   os: string = Platform.OS,
+  lineHeightSp?: number,
 ) {
   // RN Android's TextAttributeProps converts explicit lineHeight from SP
   // without maxFontSizeMultiplier; the ceiling applies to fontSize only.
   // Our event guard compares line heights, so preserve that native scale.
-  if (os !== 'ios') return fontScale;
+  if (os !== 'ios')
+    return lineHeightSp === undefined
+      ? NaN
+      : spToDp(lineHeightSp, fontScale) / lineHeightSp;
   const points = sizes[ramp];
   const full = points[index[contentSizeCategory(fontScale)]]! / points[3]!;
   return maxFontSizeMultiplier >= 1
     ? Math.min(full, maxFontSizeMultiplier)
     : full;
+}
+
+/** Convert a desired measured line scale back to the SP size RN must draw. */
+export function androidCapScale(
+  baseSp: number,
+  cap: number,
+  fontScale: number,
+) {
+  return dpToSp(baseSp * cap, fontScale) / baseSp;
 }

@@ -128,7 +128,9 @@ test('keep rules cover native entry points without disabling R8 globally', () =>
 
 // Captured with `expo config --type prebuild --json` at iOS head 1bc9ee398,
 // then independently matched against the merged config. Only the checkout's absolute path is replaced
-// for portability; the entire output, including iOS, extra and plugin order, is pinned.
+// for portability. The only inventory exception is the Android-only text
+// conversion module; all runtime config, including iOS, extra and plugin order,
+// remains pinned to the original hashes.
 const iosPrebuildHashes = {
   development:
     'b59463dd4eae775abedf56d47cca0816886b6fc733ee123e460b22fe980ad5de',
@@ -154,7 +156,25 @@ test.each(variants)(
     );
     if (result.status !== 0)
       throw new Error(result.stderr || String(result.error));
-    const normalised = result.stdout.split(root).join('<PROJECT_ROOT>');
+    const inspected = JSON.parse(
+      result.stdout.split(root).join('<PROJECT_ROOT>'),
+    );
+    // Expo's platform-neutral inventory includes Android-only local modules.
+    // Removing exactly this entry must recover the unchanged iOS baseline.
+    expect(
+      JSON.parse(
+        readFileSync(
+          join(root, 'modules/opax-text-metrics/expo-module.config.json'),
+          'utf8',
+        ),
+      ).platforms,
+    ).toEqual(['android']);
+    const inventory: string[] = inspected._internal.autolinkedModules;
+    expect(
+      inventory.filter((name) => name === 'opax-text-metrics'),
+    ).toHaveLength(1);
+    inventory.splice(inventory.indexOf('opax-text-metrics'), 1);
+    const normalised = JSON.stringify(inspected);
     expect(createHash('sha256').update(normalised).digest('hex')).toBe(
       iosPrebuildHashes[variant],
     );

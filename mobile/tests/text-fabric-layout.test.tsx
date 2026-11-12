@@ -10,6 +10,11 @@ import { LINE_HEIGHT_NUDGE, Text } from '../src/design/text';
 import { textStyles } from '../src/design/tokens';
 import { textRampScale } from '../src/design/text-scale';
 
+jest.mock('../modules/opax-text-metrics', () => ({
+  spToDp: (sp: number, fontScale: number) => sp * fontScale,
+  dpToSp: (dp: number, fontScale: number) => dp / fontScale,
+}));
+
 const role = textStyles.sectionTitle;
 const base = role.lineHeight + LINE_HEIGHT_NUDGE;
 const ax5 = 56 / 22;
@@ -159,8 +164,8 @@ test('expected scales follow the role ramp and caller ceiling, rather than the g
   expect(textRampScale('subheadline', 3.571)).toBe(49 / 15);
   expect(textRampScale('caption1', 3.571)).toBe(43 / 12);
   expect(textRampScale('headline', 3.571, 1.2)).toBe(1.2);
-  expect(textRampScale('title2', 1.47, 0, 'android')).toBe(1.47);
-  expect(textRampScale('title2', 2, 1.2, 'android')).toBe(2);
+  expect(textRampScale('title2', 1.47, 0, 'android', base)).toBeCloseTo(1.47);
+  expect(textRampScale('title2', 2, 1.2, 'android', base)).toBe(2);
 });
 
 test('a narrower column fits buffered lines after removing a floor even without another onLayout', () => {

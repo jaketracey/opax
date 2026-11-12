@@ -19,6 +19,12 @@ import {
 } from '../src/design/text';
 import { textStyles } from '../src/design/tokens';
 
+// Android 13's linear native SP conversion. Newer curves have separate tests.
+jest.mock('../modules/opax-text-metrics', () => ({
+  spToDp: (sp: number, fontScale: number) => sp * fontScale,
+  dpToSp: (dp: number, fontScale: number) => dp / fontScale,
+}));
+
 test.each(['ios', 'android'] as const)(
   '%s: text keeps its native accessibility element across fitting, layout, size and content changes',
   (os) => {

@@ -17,7 +17,7 @@ import { lightHighContrast, paletteFor } from './palette';
 import { bindRecordTitle, recordTitleRoles } from './record-title';
 import { useTextProbe } from './text-probe';
 import type { ProbeLine } from './text-probe.types';
-import { textRampScale } from './text-scale';
+import { androidCapScale, textRampScale } from './text-scale';
 import {
   boldStep,
   colors,
@@ -259,6 +259,7 @@ export function wordSafeOnLines(
 ): WordSafeState {
   if (at.key !== state.key || at.gen !== state.gen || !lines.length)
     return state;
+  if (!Number.isFinite(state.full) || state.full <= 0) return state;
   if (fontScale <= 1 || !state.fullFrame) return state;
   if (compact(lines.map((line) => line.text).join('')) !== compact(content))
     return state;
@@ -379,12 +380,16 @@ export function Text({
   // (nested text included, such as a field's "(required)"): any change starts
   // again from full size, and so does a wider column (wordSafeOnFrame).
   const content = textContent(props.children);
+  const titleCap = titleSizeCap(variant, fontScale);
+  const baseLineHeight = role.lineHeight + LINE_HEIGHT_NUDGE;
   const expectedFull =
     textRampScale(
       role.dynamicTypeRamp,
       fontScale,
       given.maxFontSizeMultiplier ?? 0,
-    ) * titleSizeCap(variant, fontScale);
+      Platform.OS,
+      baseLineHeight * titleCap,
+    ) * titleCap;
   const key = `${fontScale}|${width}|${variant}|${bold}|${drawnFamily}|${given.maxFontSizeMultiplier}|${content}`;
   // The state machine runs at event time in a ref, so frames and lines that
   // change nothing drawn never render; `shown` re-renders on a new generation.
@@ -420,8 +425,11 @@ export function Text({
   // The title's AX2 ceiling works the same way, under any word-safe cap:
   // measured line heights include it, so the steps stay in drawn sizes.
   const capScale =
-    (wordSafe && cap && full ? cap / full : 1) *
-    titleSizeCap(variant, fontScale);
+    wordSafe && cap && full
+      ? Platform.OS === 'android'
+        ? androidCapScale(baseLineHeight, cap, fontScale)
+        : (cap / full) * titleCap
+      : titleCap;
   const heightKey = `${key}|${cap}|${scale}`;
   const probe = useTextProbe(props, heightKey, content);
   const measured = useRef<{
