@@ -1,0 +1,119 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2017-06-20-report-supply-and-management-schedule-8-controlled-1605e810",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Supply and Management of Schedule 8 Controlled Drugs at Certain Public Hospitals in WA",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Supply%20and%20Management%20of%20Schedule%208%20Controlled%20Drugs%20at%20Certain%20Public%20Hospitals%20in%20WA.pdf",
+  "document": "Report on the Supply and Management of Schedule 8 Controlled Drugs at Certain Public Hospitals in WA",
+  "sha256": "6a5794b3974c3e58181709a61f0332ddb01c8849a5bd67b3d47d772e026951dd",
+  "pages": 49,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 7,
+  "last_page": 8,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Supply%20and%20Management%20of%20Schedule%208%20Controlled%20Drugs%20at%20Certain%20Public%20Hospitals%20in%20WA.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated drug theft and safeguards at two public hospitals in Western Australia.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Supply%20and%20Management%20of%20Schedule%208%20Controlled%20Drugs%20at%20Certain%20Public%20Hospitals%20in%20WA.pdf",
+      "document": "Report on the Supply and Management of Schedule 8 Controlled Drugs at Certain Public Hospitals in WA",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Supply%20and%20Management%20of%20Schedule%208%20Controlled%20Drugs%20at%20Certain%20Public%20Hospitals%20in%20WA.pdf",
+      "document": "Report on the Supply and Management of Schedule 8 Controlled Drugs at Certain Public Hospitals in WA",
+      "page": 10
+     }
+    ],
+    "section": "Serious misconduct at two Western Australian public hospitals"
+   },
+   {
+    "text": "It reviewed staff accounts, audit material, drug registers, requisition forms and archived records.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Supply%20and%20Management%20of%20Schedule%208%20Controlled%20Drugs%20at%20Certain%20Public%20Hospitals%20in%20WA.pdf",
+      "document": "Report on the Supply and Management of Schedule 8 Controlled Drugs at Certain Public Hospitals in WA",
+      "page": 10
+     }
+    ],
+    "section": "Serious misconduct at two Western Australian public hospitals"
+   },
+   {
+    "text": "The Commission identified weaknesses in after-hours access, drug reconciliation, requisitions and register management, while finding no evidence of serious misconduct by anyone beyond the convicted pharmacist.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Supply%20and%20Management%20of%20Schedule%208%20Controlled%20Drugs%20at%20Certain%20Public%20Hospitals%20in%20WA.pdf",
+      "document": "Report on the Supply and Management of Schedule 8 Controlled Drugs at Certain Public Hospitals in WA",
+      "page": 33
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Supply%20and%20Management%20of%20Schedule%208%20Controlled%20Drugs%20at%20Certain%20Public%20Hospitals%20in%20WA.pdf",
+      "document": "Report on the Supply and Management of Schedule 8 Controlled Drugs at Certain Public Hospitals in WA",
+      "page": 47
+     }
+    ],
+    "section": "THE GAPS IN MANAGEMENT AND CONTROL OF SCHEDULE 8 DRUGS"
+   },
+   {
+    "text": "Its ten recommendations address access monitoring, reconciliation, separate duties, compliance checks, records, policies, knowledge sharing and automation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Supply%20and%20Management%20of%20Schedule%208%20Controlled%20Drugs%20at%20Certain%20Public%20Hospitals%20in%20WA.pdf",
+      "document": "Report on the Supply and Management of Schedule 8 Controlled Drugs at Certain Public Hospitals in WA",
+      "page": 47
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Supply%20and%20Management%20of%20Schedule%208%20Controlled%20Drugs%20at%20Certain%20Public%20Hospitals%20in%20WA.pdf",
+      "document": "Report on the Supply and Management of Schedule 8 Controlled Drugs at Certain Public Hospitals in WA",
+      "page": 48
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission investigation revealed gaps in the management and control of Schedule 8 drugs at public hospitals.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Supply%20and%20Management%20of%20Schedule%208%20Controlled%20Drugs%20at%20Certain%20Public%20Hospitals%20in%20WA.pdf",
+     "document": "Report on the Supply and Management of Schedule 8 Controlled Drugs at Certain Public Hospitals in WA",
+     "page": 33
+    }
+   },
+   {
+    "quote": "There is no evidence of serious misconduct by anyone else.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Supply%20and%20Management%20of%20Schedule%208%20Controlled%20Drugs%20at%20Certain%20Public%20Hospitals%20in%20WA.pdf",
+     "document": "Report on the Supply and Management of Schedule 8 Controlled Drugs at Certain Public Hospitals in WA",
+     "page": 47
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

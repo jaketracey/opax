@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2023-10-17-integrity-state-2022-23",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Integrity State 2022–23",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/949734/Integrity-State-2022-2023.pdf",
+  "document": "Integrity State 2022–23",
+  "sha256": "e82d36c28a10ba4389b702cc1b5c5e383095959300317fd50371e68c7443cc1b",
+  "pages": 24,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/949734/Integrity-State-2022-2023.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commission Against Corruption reviewed prevention recommendations sent to public authorities during the 2022/2023 financial year.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/949734/Integrity-State-2022-2023.pdf",
+      "document": "Integrity State 2022–23",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "It examined risks involving private providers, unsolicited proposals, procurement conflicts, human resources and public assets.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/949734/Integrity-State-2022-2023.pdf",
+      "document": "Integrity State 2022–23",
+      "page": 4
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/949734/Integrity-State-2022-2023.pdf",
+      "document": "Integrity State 2022–23",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The Commission reported on 16 prevention letters arising from investigations that did not lead to criminal proceedings.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/949734/Integrity-State-2022-2023.pdf",
+      "document": "Integrity State 2022–23",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The Commission concluded that public authorities could reduce corruption risks by improving their policies, procedures and practices.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/949734/Integrity-State-2022-2023.pdf",
+      "document": "Integrity State 2022–23",
+      "page": 23
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission’s recommendations indicate there are opportunities for many public authorities to improve their practices, policies and procedures to mitigate corruption risks.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0009/949734/Integrity-State-2022-2023.pdf",
+     "document": "Integrity State 2022–23",
+     "page": 23
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

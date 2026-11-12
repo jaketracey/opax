@@ -1,0 +1,115 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2021-04-30-tp5502-operation-meroo-an-investigation-into-alleged-corrupt",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Meroo: An investigation into alleged corrupt conduct by a former CEO of a Victorian regional health service",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a2952/globalassets/tabled-paper-documents/tabled-paper-5502/special_report_-_operation_meroo_-_april_2021_b9pv8tn4.pdf",
+  "document": "SPECIAL_REPORT_-_Operation_Meroo_-_April_2021_B9pv8tn4",
+  "sha256": "573351044710d4b52b5bb8d1c099cd0be67369a085ae53f46b60d7a6349f6ad4",
+  "pages": 56,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of investigation and outcomes",
+  "first_page": 7,
+  "last_page": 14,
+  "link": "https://www.parliament.vic.gov.au/4a2952/globalassets/tabled-paper-documents/tabled-paper-5502/special_report_-_operation_meroo_-_april_2021_b9pv8tn4.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Broad-based Anti-corruption Commission investigated allegations that a former regional health service chief executive misused their position in Operation Meroo.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2952/globalassets/tabled-paper-documents/tabled-paper-5502/special_report_-_operation_meroo_-_april_2021_b9pv8tn4.pdf",
+      "document": "SPECIAL_REPORT_-_Operation_Meroo_-_April_2021_B9pv8tn4",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "It examined procurement, conflicts of interest, funding applications, recruitment, spending and oversight of the chief executive.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2952/globalassets/tabled-paper-documents/tabled-paper-5502/special_report_-_operation_meroo_-_april_2021_b9pv8tn4.pdf",
+      "document": "SPECIAL_REPORT_-_Operation_Meroo_-_April_2021_B9pv8tn4",
+      "page": 10
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2952/globalassets/tabled-paper-documents/tabled-paper-5502/special_report_-_operation_meroo_-_april_2021_b9pv8tn4.pdf",
+      "document": "SPECIAL_REPORT_-_Operation_Meroo_-_April_2021_B9pv8tn4",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "IBAC found that the former chief executive awarded a contract while in a personal relationship with a director and authorised unverified payments to a relative’s company.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2952/globalassets/tabled-paper-documents/tabled-paper-5502/special_report_-_operation_meroo_-_april_2021_b9pv8tn4.pdf",
+      "document": "SPECIAL_REPORT_-_Operation_Meroo_-_April_2021_B9pv8tn4",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "IBAC also found ineffective board oversight and shortcomings in departmental supervision.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2952/globalassets/tabled-paper-documents/tabled-paper-5502/special_report_-_operation_meroo_-_april_2021_b9pv8tn4.pdf",
+      "document": "SPECIAL_REPORT_-_Operation_Meroo_-_April_2021_B9pv8tn4",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "It made three recommendations concerning procurement and conflicts controls, board capability, and departmental monitoring and oversight of chief executives.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2952/globalassets/tabled-paper-documents/tabled-paper-5502/special_report_-_operation_meroo_-_april_2021_b9pv8tn4.pdf",
+      "document": "SPECIAL_REPORT_-_Operation_Meroo_-_April_2021_B9pv8tn4",
+      "page": 14
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "IBAC also found the former CEO inappropriately expended the health service’s funds on travel and hospitality and regularly failed to comply with Agency A’s policies and procedures.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2952/globalassets/tabled-paper-documents/tabled-paper-5502/special_report_-_operation_meroo_-_april_2021_b9pv8tn4.pdf",
+     "document": "SPECIAL_REPORT_-_Operation_Meroo_-_April_2021_B9pv8tn4",
+     "page": 8
+    }
+   },
+   {
+    "quote": "IBAC also found that Agency A’s Board failed to govern effectively and did not adequately oversee the former CEO.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2952/globalassets/tabled-paper-documents/tabled-paper-5502/special_report_-_operation_meroo_-_april_2021_b9pv8tn4.pdf",
+     "document": "SPECIAL_REPORT_-_Operation_Meroo_-_April_2021_B9pv8tn4",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

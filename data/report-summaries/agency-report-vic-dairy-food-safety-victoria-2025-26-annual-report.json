@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-dairy-food-safety-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Dairy Food Safety Victoria 2025-26 annual report",
+ "body": "Dairy Food Safety Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab373/globalassets/tabled-paper-documents/tabled-paper-10648/att-1-dfsv-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "20acf1bf03ff6dfdf1334804cd0156c496be6143a63b7a5be7f78dcd4954d6a7",
+  "pages": 76,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chairperson’s report",
+  "first_page": 8,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4ab373/globalassets/tabled-paper-documents/tabled-paper-10648/att-1-dfsv-annual-report-2025-26.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Dairy Food Safety Victoria reported for 2025-26 on its regulation of dairy food safety to safeguard public health in Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab373/globalassets/tabled-paper-documents/tabled-paper-10648/att-1-dfsv-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab373/globalassets/tabled-paper-documents/tabled-paper-10648/att-1-dfsv-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Charter and purpose"
+   },
+   {
+    "text": "Dairy Food Safety Victoria reported undertaking compliance audits, enforcement and licensing work while preparing to join Safe Food Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab373/globalassets/tabled-paper-documents/tabled-paper-10648/att-1-dfsv-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Chairperson’s report"
+   },
+   {
+    "text": "Dairy Food Safety Victoria reported completing a five-year review of its Dairy RegTech program, with recommendations for the new regulator to consider.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab373/globalassets/tabled-paper-documents/tabled-paper-10648/att-1-dfsv-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Year in review"
+   },
+   {
+    "text": "Dairy Food Safety Victoria reported that 2025-26 was its final year as a separate entity, with its staff and functions continuing in Safe Food Victoria from 1 July 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab373/globalassets/tabled-paper-documents/tabled-paper-10648/att-1-dfsv-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Chairperson’s report"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "DFSV maintained a sound financial position while continuing to deliver its regulatory functions and support key government priorities.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab373/globalassets/tabled-paper-documents/tabled-paper-10648/att-1-dfsv-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 27
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

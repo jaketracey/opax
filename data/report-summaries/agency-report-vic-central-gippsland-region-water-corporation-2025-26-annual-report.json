@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-central-gippsland-region-water-corporation-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Central Gippsland Region Water Corporation 2025-26 annual report",
+ "body": "Central Gippsland Region Water Corporation",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab347/globalassets/tabled-paper-documents/tabled-paper-10625/gippsland-water-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "97aac2944a1f2332eb46b3a49a098887c0559e2d98b87500f07414557e7d0141",
+  "pages": 171,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "A message from the Chair and Managing Director",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.parliament.vic.gov.au/4ab347/globalassets/tabled-paper-documents/tabled-paper-10625/gippsland-water-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Gippsland Water reported for 2025-26 on its water and wastewater operations, infrastructure and planning.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab347/globalassets/tabled-paper-documents/tabled-paper-10625/gippsland-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "A message from the Chair and Managing Director"
+   },
+   {
+    "text": "Gippsland Water reported starting the Warragul wastewater treatment plant upgrade and a major sewer main to support reliability and population growth.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab347/globalassets/tabled-paper-documents/tabled-paper-10625/gippsland-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "A message from the Chair and Managing Director"
+   },
+   {
+    "text": "Gippsland Water reported achieving its cost-to-serve target for 2025-26.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab347/globalassets/tabled-paper-documents/tabled-paper-10625/gippsland-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "A message from the Chair and Managing Director"
+   },
+   {
+    "text": "Gippsland Water reported a loss of $4.3 million, which was $3.5 million better than its Corporate Plan.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab347/globalassets/tabled-paper-documents/tabled-paper-10625/gippsland-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "A message from the Chair and Managing Director"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We also achieved our 2025-26 cost-to-serve target, reflecting disciplined cost management and a continued focus on efficiency across the organisation.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab347/globalassets/tabled-paper-documents/tabled-paper-10625/gippsland-water-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

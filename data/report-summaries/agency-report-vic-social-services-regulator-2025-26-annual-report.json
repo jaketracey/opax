@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-social-services-regulator-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Social Services Regulator 2025-26 annual report",
+ "body": "Social Services Regulator",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4aa287/globalassets/tabled-paper-documents/tabled-paper-10561/social-services-regulator-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "87c3fca495346df0d47f4fb4cf0356fc984e7bf31eeff81218789d7f67b1a385",
+  "pages": 43,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Regulator",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4aa287/globalassets/tabled-paper-documents/tabled-paper-10561/social-services-regulator-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Social Services Regulator’s 2025-26 report covered its second year safeguarding the rights of children and people using social services in Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa287/globalassets/tabled-paper-documents/tabled-paper-10561/social-services-regulator-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Message from the Regulator"
+   },
+   {
+    "text": "The regulator reported an expanded remit covering worker screening checks, the Reportable Conduct Scheme and a greater role in enforcing Child Safe Standards.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa287/globalassets/tabled-paper-documents/tabled-paper-10561/social-services-regulator-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Message from the Regulator"
+   },
+   {
+    "text": "It reported revoking a supported residential service operator’s registration and directing the service to close after finding significant harm or risk of significant harm to residents.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa287/globalassets/tabled-paper-documents/tabled-paper-10561/social-services-regulator-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Message from the Regulator"
+   },
+   {
+    "text": "The regulator reported 535 registered providers at 30 June 2026 and approval of 297 registration applications during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa287/globalassets/tabled-paper-documents/tabled-paper-10561/social-services-regulator-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "Registration activities"
+   },
+   {
+    "text": "It reported processing 98% of registration applications within the required 60 days.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa287/globalassets/tabled-paper-documents/tabled-paper-10561/social-services-regulator-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "Registration activities"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In 2025–26, 297 registration applications were approved.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4aa287/globalassets/tabled-paper-documents/tabled-paper-10561/social-services-regulator-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 12
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

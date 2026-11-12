@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2022-05-17-failing-the-corruption-road-test-corruption-risks-in-south-a",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Failing the Corruption Road Test: Corruption Risks in South Australia’s Driver Training Industry",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/documents/Failing-the-Corruption-Road-Test_report.pdf",
+  "document": "Failing the Corruption Road Test: Corruption Risks in South Australia's Driver Training Industry",
+  "sha256": "0edf5be0e026d07ca8e6ec295c9e2a8249d188e49a15234d4bce8913e01e006d",
+  "pages": 30,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://icac.sa.gov.au/documents/Failing-the-Corruption-Road-Test_report.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commissioner Against Corruption reviewed more than forty complaints and reports about authorised driving examiners to identify corruption risks.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Failing-the-Corruption-Road-Test_report.pdf",
+      "document": "Failing the Corruption Road Test: Corruption Risks in South Australia's Driver Training Industry",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The review considered alleged bribery, testing outside the rules and inappropriate conduct in driver licensing.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Failing-the-Corruption-Road-Test_report.pdf",
+      "document": "Failing the Corruption Road Test: Corruption Risks in South Australia's Driver Training Industry",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The Commissioner formed the view that some examiners had engaged in a pattern of wrongdoing and that prevention controls were inadequate.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Failing-the-Corruption-Road-Test_report.pdf",
+      "document": "Failing the Corruption Road Test: Corruption Risks in South Australia's Driver Training Industry",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "Her nine recommendations addressed pricing, student information, examiner records, test bookings and allocation, and auditors’ powers.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Failing-the-Corruption-Road-Test_report.pdf",
+      "document": "Failing the Corruption Road Test: Corruption Risks in South Australia's Driver Training Industry",
+      "page": 28
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/Failing-the-Corruption-Road-Test_report.pdf",
+      "document": "Failing the Corruption Road Test: Corruption Risks in South Australia's Driver Training Industry",
+      "page": 29
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "It may be time to reassess the appropriateness of private authorised examiners.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/Failing-the-Corruption-Road-Test_report.pdf",
+     "document": "Failing the Corruption Road Test: Corruption Risks in South Australia's Driver Training Industry",
+     "page": 26
+    }
+   },
+   {
+    "quote": "I recommend that the Registrar explore the viability of bookings of tests and assessments and the random allocation of examiners being managed by the Department.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/Failing-the-Corruption-Road-Test_report.pdf",
+     "document": "Failing the Corruption Road Test: Corruption Risks in South Australia's Driver Training Industry",
+     "page": 29
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

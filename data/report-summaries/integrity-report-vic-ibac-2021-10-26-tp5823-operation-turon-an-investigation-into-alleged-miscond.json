@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2021-10-26-tp5823-operation-turon-an-investigation-into-alleged-miscond",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Turon: An investigation into alleged misconduct by a former Victoria Police Assistant Commissioner",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a253a/globalassets/tabled-paper-documents/tabled-paper-5823/ibac_-_operation_turon_special_report_-_october_2021_w06zcvp3.pdf",
+  "document": "IBAC_-_Operation_Turon_special_report_-_October_2021_w06zcVp3",
+  "sha256": "defc23ede5fed88e5327b6a11fee77a9edba3f9e96b3060db5420e7219ad78b6",
+  "pages": 24,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of investigation and outcomes",
+  "first_page": 5,
+  "last_page": 9,
+  "link": "https://www.parliament.vic.gov.au/4a253a/globalassets/tabled-paper-documents/tabled-paper-5823/ibac_-_operation_turon_special_report_-_october_2021_w06zcvp3.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Broad-based Anti-corruption Commission investigated alleged misconduct by a then Victoria Police assistant commissioner in Operation Turon.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a253a/globalassets/tabled-paper-documents/tabled-paper-5823/ibac_-_operation_turon_special_report_-_october_2021_w06zcvp3.pdf",
+      "document": "IBAC_-_Operation_Turon_special_report_-_October_2021_w06zcVp3",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "It examined offensive online activity, possible bias in complaint decisions and the adequacy of police policies and investigative practices.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a253a/globalassets/tabled-paper-documents/tabled-paper-5823/ibac_-_operation_turon_special_report_-_october_2021_w06zcvp3.pdf",
+      "document": "IBAC_-_Operation_Turon_special_report_-_October_2021_w06zcVp3",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "IBAC found that the assistant commissioner engaged in police misconduct through offensive online posts and commentary about police matters.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a253a/globalassets/tabled-paper-documents/tabled-paper-5823/ibac_-_operation_turon_special_report_-_october_2021_w06zcvp3.pdf",
+      "document": "IBAC_-_Operation_Turon_special_report_-_October_2021_w06zcVp3",
+      "page": 16
+     }
+    ]
+   },
+   {
+    "text": "IBAC reported that its complaint-file review found no evidence that his decisions had been affected by bias.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a253a/globalassets/tabled-paper-documents/tabled-paper-5823/ibac_-_operation_turon_special_report_-_october_2021_w06zcvp3.pdf",
+      "document": "IBAC_-_Operation_Turon_special_report_-_October_2021_w06zcVp3",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "Its one formal recommendation sought a report on leadership selection reforms, including psychometric testing, personnel records and contemporary recruitment and promotion practices.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a253a/globalassets/tabled-paper-documents/tabled-paper-5823/ibac_-_operation_turon_special_report_-_october_2021_w06zcvp3.pdf",
+      "document": "IBAC_-_Operation_Turon_special_report_-_October_2021_w06zcVp3",
+      "page": 16
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "IBAC found Assistant Commissioner Guerin engaged in police misconduct through his online trolling, both on and off duty, including in relation to matters relevant to Victoria Police and with information he obtained in the course of his duties.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a253a/globalassets/tabled-paper-documents/tabled-paper-5823/ibac_-_operation_turon_special_report_-_october_2021_w06zcvp3.pdf",
+     "document": "IBAC_-_Operation_Turon_special_report_-_October_2021_w06zcVp3",
+     "page": 6
+    }
+   },
+   {
+    "quote": "IBAC’s review of complaint files did not identify evidence that Assistant Commissioner Guerin’s decisions (including those made in his previous position as a superintendent) were affected by bias.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a253a/globalassets/tabled-paper-documents/tabled-paper-5823/ibac_-_operation_turon_special_report_-_october_2021_w06zcvp3.pdf",
+     "document": "IBAC_-_Operation_Turon_special_report_-_October_2021_w06zcVp3",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

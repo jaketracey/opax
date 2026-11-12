@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2020-07-31-tp4814-operation-gloucester-an-investigation-into-improper-e",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Gloucester: An investigation into improper evidentiary and disclosure practices in relation to the Victoria Police investigation of the murders of Sergeant Gary Silk and Senior Constable Rodney Miller",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a267c/globalassets/tabled-paper-documents/tabled-paper-4814/special_report_-_operation_gloucester_-_july_2020_k5c3cgfg.pdf",
+  "document": "SPECIAL_REPORT_-_Operation_Gloucester_-_July_2020_k5c3cgfG",
+  "sha256": "f8d2ca2d30e6e830dfb9606a88684ac0aefa1eba64609d91e8ed13ab1dedbbbf",
+  "pages": 104,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of investigation and outcomes",
+  "first_page": 11,
+  "last_page": 22,
+  "link": "https://www.parliament.vic.gov.au/4a267c/globalassets/tabled-paper-documents/tabled-paper-4814/special_report_-_operation_gloucester_-_july_2020_k5c3cgfg.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Broad-based Anti-corruption Commission investigated evidence-gathering and disclosure practices in the Lorimer Taskforce inquiry into the murders of two Victoria Police officers.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a267c/globalassets/tabled-paper-documents/tabled-paper-4814/special_report_-_operation_gloucester_-_july_2020_k5c3cgfg.pdf",
+      "document": "SPECIAL_REPORT_-_Operation_Gloucester_-_July_2020_k5c3cgfG",
+      "page": 12
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a267c/globalassets/tabled-paper-documents/tabled-paper-4814/special_report_-_operation_gloucester_-_july_2020_k5c3cgfg.pdf",
+      "document": "SPECIAL_REPORT_-_Operation_Gloucester_-_July_2020_k5c3cgfG",
+      "page": 13
+     }
+    ]
+   },
+   {
+    "text": "IBAC did not substantiate the original allegation that a first responder’s statement in the prosecution brief contained a false account.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a267c/globalassets/tabled-paper-documents/tabled-paper-4814/special_report_-_operation_gloucester_-_july_2020_k5c3cgfg.pdf",
+      "document": "SPECIAL_REPORT_-_Operation_Gloucester_-_July_2020_k5c3cgfG",
+      "page": 14
+     }
+    ]
+   },
+   {
+    "text": "IBAC nevertheless found improper practices involving omitted information, replaced statements, inaccurate claims about contemporaneous notes, contaminated accounts and failures to disclose relevant material.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a267c/globalassets/tabled-paper-documents/tabled-paper-4814/special_report_-_operation_gloucester_-_july_2020_k5c3cgfg.pdf",
+      "document": "SPECIAL_REPORT_-_Operation_Gloucester_-_July_2020_k5c3cgfG",
+      "page": 14
+     }
+    ]
+   },
+   {
+    "text": "IBAC found that some improper practices continued to occur and concluded that police needed clearer policies, stronger supervision and better training.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a267c/globalassets/tabled-paper-documents/tabled-paper-4814/special_report_-_operation_gloucester_-_july_2020_k5c3cgfg.pdf",
+      "document": "SPECIAL_REPORT_-_Operation_Gloucester_-_July_2020_k5c3cgfG",
+      "page": 14
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a267c/globalassets/tabled-paper-documents/tabled-paper-4814/special_report_-_operation_gloucester_-_july_2020_k5c3cgfg.pdf",
+      "document": "SPECIAL_REPORT_-_Operation_Gloucester_-_July_2020_k5c3cgfG",
+      "page": 21
+     }
+    ]
+   },
+   {
+    "text": "It made three recommendations on police guidance and training, a compliance audit, and a statutory disclosure obligation.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a267c/globalassets/tabled-paper-documents/tabled-paper-4814/special_report_-_operation_gloucester_-_july_2020_k5c3cgfg.pdf",
+      "document": "SPECIAL_REPORT_-_Operation_Gloucester_-_July_2020_k5c3cgfG",
+      "page": 22
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Operation Gloucester exposed that improper statement taking practices occurred in Victoria Police’s Lorimer Taskforce as well as the Armed Robbery and Homicide Squads in the late 1990s to the early 2000s.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a267c/globalassets/tabled-paper-documents/tabled-paper-4814/special_report_-_operation_gloucester_-_july_2020_k5c3cgfg.pdf",
+     "document": "SPECIAL_REPORT_-_Operation_Gloucester_-_July_2020_k5c3cgfG",
+     "page": 82
+    }
+   },
+   {
+    "quote": "IBAC has also identified instances of improper statement taking and record-keeping in recent matters.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a267c/globalassets/tabled-paper-documents/tabled-paper-4814/special_report_-_operation_gloucester_-_july_2020_k5c3cgfg.pdf",
+     "document": "SPECIAL_REPORT_-_Operation_Gloucester_-_July_2020_k5c3cgfG",
+     "page": 82
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

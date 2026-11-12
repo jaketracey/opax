@@ -1,0 +1,135 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2017-10-04-operation-belcarra-blueprint-integrity-and-addressing-corrup",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Belcarra - A blueprint for integrity and addressing corruption risk in local government",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Operation-Belcarra-Report-2017.pdf",
+  "document": "Operation Belcarra - A blueprint for integrity and addressing corruption risk in local government",
+  "sha256": "1c4765a54467a1921a6e0c3899cbd40edf3f5a4dd4a54e9fce4515cfb5d3c212",
+  "pages": 162,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary and recommendations",
+  "first_page": 13,
+  "last_page": 20,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Operation-Belcarra-Report-2017.pdf#page=13"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission began Operation Belcarra after complaints about candidates in Queensland’s 2016 council elections.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Operation-Belcarra-Report-2017.pdf",
+      "document": "Operation Belcarra - A blueprint for integrity and addressing corruption risk in local government",
+      "page": 13
+     }
+    ]
+   },
+   {
+    "text": "It investigated possible electoral offences and examined practices that could undermine confidence in local government.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Operation-Belcarra-Report-2017.pdf",
+      "document": "Operation Belcarra - A blueprint for integrity and addressing corruption risk in local government",
+      "page": 13
+     }
+    ]
+   },
+   {
+    "text": "The CCC found unequal campaign competition, unclear candidate affiliations and weaknesses in donation disclosure and enforcement.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Operation-Belcarra-Report-2017.pdf",
+      "document": "Operation Belcarra - A blueprint for integrity and addressing corruption risk in local government",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Operation-Belcarra-Report-2017.pdf",
+      "document": "Operation Belcarra - A blueprint for integrity and addressing corruption risk in local government",
+      "page": 14
+     }
+    ]
+   },
+   {
+    "text": "The CCC made 31 recommendations addressing election funding, disclosure, conflicts of interest and electoral oversight.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Operation-Belcarra-Report-2017.pdf",
+      "document": "Operation Belcarra - A blueprint for integrity and addressing corruption risk in local government",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Operation-Belcarra-Report-2017.pdf",
+      "document": "Operation Belcarra - A blueprint for integrity and addressing corruption risk in local government",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Operation-Belcarra-Report-2017.pdf",
+      "document": "Operation Belcarra - A blueprint for integrity and addressing corruption risk in local government",
+      "page": 16
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Operation-Belcarra-Report-2017.pdf",
+      "document": "Operation Belcarra - A blueprint for integrity and addressing corruption risk in local government",
+      "page": 17
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Operation-Belcarra-Report-2017.pdf",
+      "document": "Operation Belcarra - A blueprint for integrity and addressing corruption risk in local government",
+      "page": 18
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Operation-Belcarra-Report-2017.pdf",
+      "document": "Operation Belcarra - A blueprint for integrity and addressing corruption risk in local government",
+      "page": 19
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Operation-Belcarra-Report-2017.pdf",
+      "document": "Operation Belcarra - A blueprint for integrity and addressing corruption risk in local government",
+      "page": 20
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There is uneven competition between candidates in Queensland council elections, particularly with respect to campaign funding.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Operation-Belcarra-Report-2017.pdf",
+     "document": "Operation Belcarra - A blueprint for integrity and addressing corruption risk in local government",
+     "page": 13
+    }
+   },
+   {
+    "quote": "There are considerable deficiencies in the compliance and enforcement framework for local government elections in Queensland.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Operation-Belcarra-Report-2017.pdf",
+     "document": "Operation Belcarra - A blueprint for integrity and addressing corruption risk in local government",
+     "page": 14
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

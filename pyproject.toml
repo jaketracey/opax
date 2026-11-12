@@ -22,6 +22,7 @@ dependencies = [
     "pandas>=2.3.3",
     "pyarrow>=21.0.0",
     "datasets>=4.8.4",
+    "xlrd>=2.0.2",  # VEC candidate reports use the legacy XLS format
     # Classification helpers (donations, interests)
     "anthropic>=0.86.0",
 ]

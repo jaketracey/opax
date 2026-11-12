@@ -1,0 +1,124 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2017-03-09-tp2995-operation-liverpool-an-investigation-into-the-conduct",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Liverpool: An investigation into the conduct of two officers of Bendigo Health, Adam Hardinge and John Mulder",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a25ff/globalassets/tabled-paper-documents/tabled-paper-2995/operation_liverpool_special_report_march_2017_mff428zt.pdf",
+  "document": "Operation_Liverpool_special_report_March_2017_mFF428zt",
+  "sha256": "0370d608344e550490f5ec7254baa8b487fd147d70dc57e71693ae8e0814d851",
+  "pages": 35,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "1 Summary of investigation and outcomes",
+  "first_page": 7,
+  "last_page": 12,
+  "link": "https://www.parliament.vic.gov.au/4a25ff/globalassets/tabled-paper-documents/tabled-paper-2995/operation_liverpool_special_report_march_2017_mff428zt.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC investigated alleged corruption involving Bendigo Health’s former construction manager and its chief executive.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25ff/globalassets/tabled-paper-documents/tabled-paper-2995/operation_liverpool_special_report_march_2017_mff428zt.pdf",
+      "document": "Operation_Liverpool_special_report_March_2017_mFF428zt",
+      "page": 8
+     }
+    ],
+    "section": "1.1 Introduction"
+   },
+   {
+    "text": "IBAC found that the former construction manager took property without authorisation and bypassed procurement controls for personal and contractor benefit.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25ff/globalassets/tabled-paper-documents/tabled-paper-2995/operation_liverpool_special_report_march_2017_mff428zt.pdf",
+      "document": "Operation_Liverpool_special_report_March_2017_mFF428zt",
+      "page": 8
+     }
+    ],
+    "section": "1.1 Introduction"
+   },
+   {
+    "text": "IBAC found that the chief executive received private goods and services without paying for them.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25ff/globalassets/tabled-paper-documents/tabled-paper-2995/operation_liverpool_special_report_march_2017_mff428zt.pdf",
+      "document": "Operation_Liverpool_special_report_March_2017_mFF428zt",
+      "page": 27
+     }
+    ],
+    "section": "5.2 John Mulder"
+   },
+   {
+    "text": "IBAC did not substantiate the corruption allegations concerning the chief executive’s remuneration arrangements.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25ff/globalassets/tabled-paper-documents/tabled-paper-2995/operation_liverpool_special_report_march_2017_mff428zt.pdf",
+      "document": "Operation_Liverpool_special_report_March_2017_mFF428zt",
+      "page": 27
+     }
+    ],
+    "section": "5.2 John Mulder"
+   },
+   {
+    "text": "IBAC made seven recommendations covering integrity policies, procurement, asset management, training, payment for private work and risks across Victorian health services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25ff/globalassets/tabled-paper-documents/tabled-paper-2995/operation_liverpool_special_report_march_2017_mff428zt.pdf",
+      "document": "Operation_Liverpool_special_report_March_2017_mFF428zt",
+      "page": 12
+     }
+    ],
+    "section": "1.6 Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "IBAC’s investigation found Mr Hardinge took Bendigo Health property and materials without proper authorisation, and circumvented the usual procurement controls in place at Bendigo Health for the benefit of himself and certain contractors.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a25ff/globalassets/tabled-paper-documents/tabled-paper-2995/operation_liverpool_special_report_march_2017_mff428zt.pdf",
+     "document": "Operation_Liverpool_special_report_March_2017_mFF428zt",
+     "page": 8
+    }
+   },
+   {
+    "quote": "The investigation also found that on a number of occasions Mr Mulder engaged in conduct contrary to the Victorian Public Sector Code of Conduct and Bendigo Health’s stated organisational values.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a25ff/globalassets/tabled-paper-documents/tabled-paper-2995/operation_liverpool_special_report_march_2017_mff428zt.pdf",
+     "document": "Operation_Liverpool_special_report_March_2017_mFF428zt",
+     "page": 8
+    }
+   },
+   {
+    "quote": "IBAC has also identified organisational and systemic corruption vulnerabilities at Bendigo Health that facilitated this conduct.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a25ff/globalassets/tabled-paper-documents/tabled-paper-2995/operation_liverpool_special_report_march_2017_mff428zt.pdf",
+     "document": "Operation_Liverpool_special_report_March_2017_mFF428zt",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-wannon-region-water-corporation-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Wannon Region Water Corporation 2025-26 annual report",
+ "body": "Wannon Region Water Corporation",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab375/globalassets/tabled-paper-documents/tabled-paper-10637/wannon-water-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "0384ae8a99436cc554d6c0f723e27f85917a71e4bbc947540ad3864b6f98f06a",
+  "pages": 120,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "A message from our Chair and Managing Director",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.parliament.vic.gov.au/4ab375/globalassets/tabled-paper-documents/tabled-paper-10637/wannon-water-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Wannon Water reported for 2025/26 on its drinking water and sewerage services for communities across South West Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab375/globalassets/tabled-paper-documents/tabled-paper-10637/wannon-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab375/globalassets/tabled-paper-documents/tabled-paper-10637/wannon-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Our vital role"
+   },
+   {
+    "text": "Wannon Water reported opening the $85 million sewage treatment plant upgrade in Warrnambool, with construction completed below budget.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab375/globalassets/tabled-paper-documents/tabled-paper-10637/wannon-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Our key initiatives"
+   },
+   {
+    "text": "Wannon Water also reported completing a floating solar array on an existing water storage basin in Warrnambool.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab375/globalassets/tabled-paper-documents/tabled-paper-10637/wannon-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Our key initiatives"
+   },
+   {
+    "text": "Wannon Water recorded partial delivery of work under the regional sustainable water strategy and a paused reservoir master plan update.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab375/globalassets/tabled-paper-documents/tabled-paper-10637/wannon-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Performance against objectives"
+   },
+   {
+    "text": "Wannon Water reported a loss before tax of $24.5 million, attributing higher expenses mainly to contractors and depreciation from major capital projects.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab375/globalassets/tabled-paper-documents/tabled-paper-10637/wannon-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "A message from our Chair and Managing Director"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We recorded a net loss before tax of $24.5 million, an increase of $12.4 million on the prior year.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab375/globalassets/tabled-paper-documents/tabled-paper-10637/wannon-water-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -76,8 +76,9 @@ test('grouping: years newest first, then months newest first, then days; undated
 test('first-speech cards link a matched senator; an unmatched one shows its title only', () => {
   const html = renderSenateVideo(data, 'first-speech', bySlug).html;
   const card = (id) => html.match(new RegExp(`<figure class="video-card"[^>]*><div class="video-frame"><button[^>]*data-video-id="${id}"[\\s\\S]*?</figure>`))[0];
-  assert.match(card('fsFix000001'), /<figcaption class="video-caption"><a href="https:\/\/www\.youtube\.com\/watch\?v=fsFix000001" rel="noopener">Watch on YouTube<\/a> · <a href="\/subject\/person\/jane-quill">Jane Quill<\/a><\/figcaption>/);
-  assert.match(card('fsFix000002'), /<figcaption class="video-caption"><a [^>]*>Watch on YouTube<\/a><\/figcaption>/);
+  assert.match(card('fsFix000001'), /<figcaption class="video-caption"><a href="\/subject\/person\/jane-quill">Jane Quill<\/a><\/figcaption>/);
+  assert.doesNotMatch(card('fsFix000002'), /<figcaption/);
+  assert.doesNotMatch(html, /Watch on YouTube/);
   assert.doesNotMatch(card('fsFix000002'), /\/subject\/person/);
   // A slug the roster no longer holds still links, under a plain label.
   assert.match(renderSenateVideo(data, 'first-speech').html, /<a href="\/subject\/person\/jane-quill">The senator’s page<\/a>/);

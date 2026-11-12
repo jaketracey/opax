@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-oral-health-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Oral Health Victoria 2025-26 annual report",
+ "body": "Oral Health Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3e9/globalassets/tabled-paper-documents/tabled-paper-10732/oral-health-victoria-annual-report-2025_26.pdf",
+  "document": "annual report",
+  "sha256": "362164d766cdad2c8017c69cf8419e24d0c10d08403349b7f889d819fab52955",
+  "pages": 109,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "From the Board \nChair and CEO",
+  "first_page": 7,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab3e9/globalassets/tabled-paper-documents/tabled-paper-10732/oral-health-victoria-annual-report-2025_26.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Oral Health Victoria reported on 2025–26 as the state’s lead public oral health agency, providing and purchasing dental services for eligible Victorians.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e9/globalassets/tabled-paper-documents/tabled-paper-10732/oral-health-victoria-annual-report-2025_26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e9/globalassets/tabled-paper-documents/tabled-paper-10732/oral-health-victoria-annual-report-2025_26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The agency reported providing clinical care to 70,833 students through Smile Squad.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e9/globalassets/tabled-paper-documents/tabled-paper-10732/oral-health-victoria-annual-report-2025_26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "It reported commissioning a fourth operating theatre at the Royal Dental Hospital of Melbourne and increasing day surgery patient numbers by 17 per cent.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e9/globalassets/tabled-paper-documents/tabled-paper-10732/oral-health-victoria-annual-report-2025_26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "It reported a $9k operating surplus and an overall deficit of $69k.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e9/globalassets/tabled-paper-documents/tabled-paper-10732/oral-health-victoria-annual-report-2025_26.pdf",
+      "document": "annual report",
+      "page": 49
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The OHV operating result for the financial year was a surplus of $9k.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3e9/globalassets/tabled-paper-documents/tabled-paper-10732/oral-health-victoria-annual-report-2025_26.pdf",
+     "document": "annual report",
+     "page": 49
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-registration-and-qualifications-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Registration and Qualifications Authority 2025-26 annual report",
+ "body": "Victorian Registration and Qualifications Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10615/brd-260900046_att1_vrqa_annual_report_2025-26_final.pdf",
+  "document": "annual report",
+  "sha256": "10228e758d0c68f20384d79ce88caebe921b593a346a7334f11882d2a9025ee3",
+  "pages": 85,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Report of the Chair",
+  "first_page": 7,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10615/brd-260900046_att1_vrqa_annual_report_2025-26_final.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Registration and Qualifications Authority reported for the year ending 30 June 2026 on its role regulating the quality of learning outcomes.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10615/brd-260900046_att1_vrqa_annual_report_2025-26_final.pdf",
+      "document": "annual report",
+      "page": 3
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10615/brd-260900046_att1_vrqa_annual_report_2025-26_final.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Our purpose"
+   },
+   {
+    "text": "The Authority reported strengthening cooperation with child safety regulators and introducing agreements intended to improve consistency in school assessments.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10615/brd-260900046_att1_vrqa_annual_report_2025-26_final.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Report of the CEO (Director)"
+   },
+   {
+    "text": "The Authority reported using a new employer campaign and changes to employer approvals to increase oversight of entry into the apprenticeship system.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10615/brd-260900046_att1_vrqa_annual_report_2025-26_final.pdf",
+      "document": "annual report",
+      "page": 13
+     }
+    ],
+    "section": "Key achievements"
+   },
+   {
+    "text": "The Authority reported a net deficit of $1.74 million, with total income of $18.38 million and expenses of $20.12 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10615/brd-260900046_att1_vrqa_annual_report_2025-26_final.pdf",
+      "document": "annual report",
+      "page": 31
+     }
+    ],
+    "section": "VRQA financial review 2025–26"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "This report highlights that the VRQA has fulfilled the commitments and expectations defined by the Board and the priorities of the Victorian Government.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10615/brd-260900046_att1_vrqa_annual_report_2025-26_final.pdf",
+     "document": "annual report",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

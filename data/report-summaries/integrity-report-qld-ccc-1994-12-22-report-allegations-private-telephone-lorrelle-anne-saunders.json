@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1994-12-22-report-allegations-private-telephone-lorrelle-anne-saunders",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "A report into allegations that the private telephone of Lorrelle Anne Saunders was \"bugged\" in 1982 by persons unknown, and related matters",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Lorrelle-Anne-Saunders-Bugged/Allegations-that-the-private-telephone-of-Lorrelle-Anne-Saunders-was-bugged-related-matters-Report-1994.pdf",
+  "document": "A report into allegations that the private telephone of Lorrelle Anne Saunders was \"bugged\" in 1982... (22 December 1994)",
+  "sha256": "ae40dd379afbd9baa71619787dfbd0bbfe1f74055f4aa4a72570653467f008dc",
+  "pages": 104,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "4.4 CONCLUSIONS",
+  "first_page": 85,
+  "last_page": 86,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Lorrelle-Anne-Saunders-Bugged/Allegations-that-the-private-telephone-of-Lorrelle-Anne-Saunders-was-bugged-related-matters-Report-1994.pdf#page=85"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission published an independent inquiry into allegations that a private telephone had been intercepted and related matters.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Lorrelle-Anne-Saunders-Bugged/Allegations-that-the-private-telephone-of-Lorrelle-Anne-Saunders-was-bugged-related-matters-Report-1994.pdf",
+      "document": "A report into allegations that the private telephone of Lorrelle Anne Saunders was \"bugged\" in 1982... (22 December 1994)",
+      "page": 3
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The inquiry examined expert analysis and other evidence about a recording used in criminal proceedings.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Lorrelle-Anne-Saunders-Bugged/Allegations-that-the-private-telephone-of-Lorrelle-Anne-Saunders-was-bugged-related-matters-Report-1994.pdf",
+      "document": "A report into allegations that the private telephone of Lorrelle Anne Saunders was \"bugged\" in 1982... (22 December 1994)",
+      "page": 81
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Lorrelle-Anne-Saunders-Bugged/Allegations-that-the-private-telephone-of-Lorrelle-Anne-Saunders-was-bugged-related-matters-Report-1994.pdf",
+      "document": "A report into allegations that the private telephone of Lorrelle Anne Saunders was \"bugged\" in 1982... (22 December 1994)",
+      "page": 85
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Lorrelle-Anne-Saunders-Bugged/Allegations-that-the-private-telephone-of-Lorrelle-Anne-Saunders-was-bugged-related-matters-Report-1994.pdf",
+      "document": "A report into allegations that the private telephone of Lorrelle Anne Saunders was \"bugged\" in 1982... (22 December 1994)",
+      "page": 87
+     }
+    ],
+    "section": "CONCLUSIONS"
+   },
+   {
+    "text": "The inquiry concluded that there had been neither a radio bug nor a central telephone-line tap, and that police had not made or commissioned the recording tendered in court.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Lorrelle-Anne-Saunders-Bugged/Allegations-that-the-private-telephone-of-Lorrelle-Anne-Saunders-was-bugged-related-matters-Report-1994.pdf",
+      "document": "A report into allegations that the private telephone of Lorrelle Anne Saunders was \"bugged\" in 1982... (22 December 1994)",
+      "page": 85
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Lorrelle-Anne-Saunders-Bugged/Allegations-that-the-private-telephone-of-Lorrelle-Anne-Saunders-was-bugged-related-matters-Report-1994.pdf",
+      "document": "A report into allegations that the private telephone of Lorrelle Anne Saunders was \"bugged\" in 1982... (22 December 1994)",
+      "page": 87
+     }
+    ],
+    "section": "CONCLUSIONS"
+   },
+   {
+    "text": "It concluded that there was insufficient evidence for a statutory referral concerning the recording and no reason to amend the earlier inquiry’s conclusions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Lorrelle-Anne-Saunders-Bugged/Allegations-that-the-private-telephone-of-Lorrelle-Anne-Saunders-was-bugged-related-matters-Report-1994.pdf",
+      "document": "A report into allegations that the private telephone of Lorrelle Anne Saunders was \"bugged\" in 1982... (22 December 1994)",
+      "page": 87
+     }
+    ],
+    "section": "ANSWERS TO THE QUESTIONS POSED IN THE RESOLUTION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There was no central line tap on Saunders's telephone or telephone line.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Lorrelle-Anne-Saunders-Bugged/Allegations-that-the-private-telephone-of-Lorrelle-Anne-Saunders-was-bugged-related-matters-Report-1994.pdf",
+     "document": "A report into allegations that the private telephone of Lorrelle Anne Saunders was \"bugged\" in 1982... (22 December 1994)",
+     "page": 85
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:50+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

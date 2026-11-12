@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-south-west-healthcare-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "South West Healthcare 2025-26 annual report",
+ "body": "South West Healthcare",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab417/globalassets/tabled-paper-documents/tabled-paper-10754/south-west-healthcare-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "47160ff8ffed6d9182ab0e22938c988cd6dd9ad90ef372d864ee54aad6e6b9fe",
+  "pages": 53,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Year in review",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab417/globalassets/tabled-paper-documents/tabled-paper-10754/south-west-healthcare-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South West Healthcare’s report for the year ended 30 June 2026 covered health services for communities across South West Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab417/globalassets/tabled-paper-documents/tabled-paper-10754/south-west-healthcare-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab417/globalassets/tabled-paper-documents/tabled-paper-10754/south-west-healthcare-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Year in review"
+   },
+   {
+    "text": "The health service reported leading the establishment of the South West Local Health Service Network and advancing the Warrnambool Base Hospital redevelopment.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab417/globalassets/tabled-paper-documents/tabled-paper-10754/south-west-healthcare-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Year in review"
+   },
+   {
+    "text": "It reported 3,960 planned surgeries and 26,655 inpatient admissions across Camperdown and Warrnambool.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab417/globalassets/tabled-paper-documents/tabled-paper-10754/south-west-healthcare-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Year in review"
+   },
+   {
+    "text": "South West Healthcare reported delivering 10.2% of admitted days at home against a 7.7% target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab417/globalassets/tabled-paper-documents/tabled-paper-10754/south-west-healthcare-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Year in review"
+   },
+   {
+    "text": "The health service reported an operating deficit of $6.6 million for 2025-26.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab417/globalassets/tabled-paper-documents/tabled-paper-10754/south-west-healthcare-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 30
+     }
+    ],
+    "section": "Summary of financial results for the year"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The overall percentage of admitted days delivered at home was 10.2% with a target of 7.7%.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab417/globalassets/tabled-paper-documents/tabled-paper-10754/south-west-healthcare-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

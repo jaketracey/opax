@@ -255,3 +255,16 @@ def test_unnumbered_recommendation_is_verbatim_labelled_and_counted(tmp_path):
         with pytest.raises(SystemExit) as e:
             rc.build_commission(held, run, rc.Texts(tmp_path), {})
         assert e.value.code == 3
+
+
+def test_registry_rights_sites_and_notes_are_reader_facing():
+    import json as _json
+    from pathlib import Path as _Path
+    reg = _json.loads((_Path(__file__).resolve().parents[1] / "parli" / "ingest" / "royal_commissions.json").read_text())
+    internal = ("review before", "rights review", "check crown", "check transcript-specific", "attribute as directed")
+    for rc in reg["commissions"]:
+        for d in rc.get("documents") or []:
+            assert not any(w in (d.get("rights") or "").lower() for w in internal), (rc["id"], d.get("rights"))
+        assert not any("transcripts are listed as documents" in n for n in rc.get("notes") or []), rc["id"]
+    sa = next(rc for rc in reg["commissions"] if rc["id"] == "sa-domestic-family-sexual-violence")
+    assert sa["site"] == "https://www.royalcommissiondfsv.sa.gov.au/"

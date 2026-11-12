@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2018-02-28-oakden-a-shameful-chapter-in-south-australia-s-history",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Oakden: A Shameful Chapter in South Australia's History",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/370727/ICAC_Report_Oakden.pdf",
+  "document": "Oakden: A Shameful Chapter in South Australia's History",
+  "sha256": "0da0f677b0f669d1b68c2f01bfcd38fc0c8fd1239e0d4aedcfc49196e184eb04",
+  "pages": 456,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 16,
+  "last_page": 23,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/370727/ICAC_Report_Oakden.pdf#page=16"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commissioner Against Corruption investigated possible serious or systemic maladministration at the Oakden Older Persons Mental Health Service.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/370727/ICAC_Report_Oakden.pdf",
+      "document": "Oakden: A Shameful Chapter in South Australia's History",
+      "page": 16
+     }
+    ]
+   },
+   {
+    "text": "He examined how management, complaint handling and oversight had allowed poor care to continue.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/370727/ICAC_Report_Oakden.pdf",
+      "document": "Oakden: A Shameful Chapter in South Australia's History",
+      "page": 16
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/370727/ICAC_Report_Oakden.pdf",
+      "document": "Oakden: A Shameful Chapter in South Australia's History",
+      "page": 20
+     }
+    ]
+   },
+   {
+    "text": "The Commissioner found that the Northern Adelaide Local Health Network engaged in maladministration through substantial mismanagement of the facility and its operations.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/370727/ICAC_Report_Oakden.pdf",
+      "document": "Oakden: A Shameful Chapter in South Australia's History",
+      "page": 21
+     }
+    ]
+   },
+   {
+    "text": "He concluded that reporting arrangements depended too heavily on individual judgement and failed to bring concerns to those able to intervene.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/370727/ICAC_Report_Oakden.pdf",
+      "document": "Oakden: A Shameful Chapter in South Australia's History",
+      "page": 20
+     }
+    ]
+   },
+   {
+    "text": "He made thirteen recommendations covering mental health governance, reporting, inspections, complaints, restrictive practices, facilities and staffing.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/370727/ICAC_Report_Oakden.pdf",
+      "document": "Oakden: A Shameful Chapter in South Australia's History",
+      "page": 21
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/370727/ICAC_Report_Oakden.pdf",
+      "document": "Oakden: A Shameful Chapter in South Australia's History",
+      "page": 22
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0008/370727/ICAC_Report_Oakden.pdf",
+      "document": "Oakden: A Shameful Chapter in South Australia's History",
+      "page": 23
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

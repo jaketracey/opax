@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-building-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Building Authority 2025-26 annual report",
+ "body": "Victorian Building Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10660/building-and-plumbing-commission-2025-26-annual-report-final.pdf",
+  "document": "annual report",
+  "sha256": "2570cbd24bf8cedf27b3df9ca8895a5374294c9ca729c4891b01b42158583026",
+  "pages": 162,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "The Commissioner and Chief Executive Officer’s Report",
+  "first_page": 12,
+  "last_page": 13,
+  "link": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10660/building-and-plumbing-commission-2025-26-annual-report-final.pdf#page=12"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Building and Plumbing Commission reported on 2025–26, combining building and plumbing regulation with domestic building insurance and dispute resolution.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10660/building-and-plumbing-commission-2025-26-annual-report-final.pdf",
+      "document": "annual report",
+      "page": 8
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10660/building-and-plumbing-commission-2025-26-annual-report-final.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "The Commissioner and Chief Executive Officer’s Report"
+   },
+   {
+    "text": "The commission reported that almost 70,000 building and plumbing practitioners were registered or licensed at the end of June 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10660/building-and-plumbing-commission-2025-26-annual-report-final.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "The Commissioner and Chief Executive Officer’s Report"
+   },
+   {
+    "text": "It reported resolving 90.5% of consumer enquiries at first contact, above its target of 80%.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10660/building-and-plumbing-commission-2025-26-annual-report-final.pdf",
+      "document": "annual report",
+      "page": 33
+     }
+    ],
+    "section": "Performance against Minister’s Statement of Expectations and Department Performance Statement"
+   },
+   {
+    "text": "The commission reported a comprehensive result of $29.9 million, primarily driven by grant funding and increased levy, fee and fine revenue.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10660/building-and-plumbing-commission-2025-26-annual-report-final.pdf",
+      "document": "annual report",
+      "page": 17
+     }
+    ],
+    "section": "Current year – financial review"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Overall, the underlying net result enables the BPC to continue investing in regulatory capability, service delivery and reform initiatives while maintaining financial sustainability.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10660/building-and-plumbing-commission-2025-26-annual-report-final.pdf",
+     "document": "annual report",
+     "page": 17
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

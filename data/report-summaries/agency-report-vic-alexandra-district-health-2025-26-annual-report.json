@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-alexandra-district-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Alexandra District Health 2025-26 annual report",
+ "body": "Alexandra District Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3b7/globalassets/tabled-paper-documents/tabled-paper-10698/alexandra-district-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "50a6e13c05e024a8da747b6484279028dcefa42ffbded46f4a134b1c86119f5f",
+  "pages": 86,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Board Chair and Chief Executive Officer Report",
+  "first_page": 10,
+  "last_page": 13,
+  "link": "https://www.parliament.vic.gov.au/4ab3b7/globalassets/tabled-paper-documents/tabled-paper-10698/alexandra-district-health-annual-report-2025-26.pdf#page=10"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Alexandra District Health reported on 2025/26, providing hospital and primary health services in Alexandra.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b7/globalassets/tabled-paper-documents/tabled-paper-10698/alexandra-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b7/globalassets/tabled-paper-documents/tabled-paper-10698/alexandra-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ]
+   },
+   {
+    "text": "The health service reported opening a local oncology infusion clinic, expanding its sessions and establishing a cardiology telehealth clinic.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b7/globalassets/tabled-paper-documents/tabled-paper-10698/alexandra-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ]
+   },
+   {
+    "text": "The Board reported recommending a voluntary amalgamation with Eastern Health after developing a business case and consulting staff, stakeholders and the community.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b7/globalassets/tabled-paper-documents/tabled-paper-10698/alexandra-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ]
+   },
+   {
+    "text": "The health service reported $381,907 in efficiency and sustainability savings, exceeding its $360,754 target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b7/globalassets/tabled-paper-documents/tabled-paper-10698/alexandra-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 13
+     }
+    ]
+   },
+   {
+    "text": "It reported an operating surplus of $44,049 but a consolidated deficit of $1.93 million, mainly reflecting depreciation and asset adjustments.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b7/globalassets/tabled-paper-documents/tabled-paper-10698/alexandra-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b7/globalassets/tabled-paper-documents/tabled-paper-10698/alexandra-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 13
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The organisation achieved $381,907 in efficiency and sustainability savings, exceeding its annual target of $360,754 and demonstrating a strong commitment to prudent financial management.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3b7/globalassets/tabled-paper-documents/tabled-paper-10698/alexandra-district-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

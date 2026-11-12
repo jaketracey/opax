@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-central-highlands-region-water-corporation-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Central Highlands Region Water Corporation 2025-26 annual report",
+ "body": "Central Highlands Region Water Corporation",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10636/central-highlands-water-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "5b03ea368f9e5c796fe3409a6e8aaaddc9b4dcc6844c153d3cdbe167a28f61a4",
+  "pages": 132,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chair and Managing Director’s message",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10636/central-highlands-water-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Central Highlands Water reported for 2025-26 on its drinking water, sewerage, trade waste and recycled water services in the Central Highlands region.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10636/central-highlands-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10636/central-highlands-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "About us"
+   },
+   {
+    "text": "Central Highlands Water reported that most digital meters outside Ballarat were installed and that Redbank customers received the first bills using digital data in June.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10636/central-highlands-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Exceptional value for our customers and community"
+   },
+   {
+    "text": "Central Highlands Water reported using 100% renewable electricity and implementing an energy efficiency program.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10636/central-highlands-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "A healthy environment and caring for Country"
+   },
+   {
+    "text": "Central Highlands Water reported a before-tax operating loss of $3.9 million, citing lower developer contributions and greater pumping costs during dry conditions.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10636/central-highlands-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "Explanation for the summary of financial results"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "As a result, in 2025-26 we delivered an operating loss before tax of $3.9 million.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10636/central-highlands-water-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,124 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2018-08-16-report-bribery-and-corruption-maintenance-and-servi-5f04ae55",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report into bribery and corruption in maintenance and service contracts within North Metropolitan Health Service",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20bribery%20and%20corruption%20in%20maintenance%20and%20service%20contracts%20within%20North%20Metropolitan%20Health%20Service.pdf",
+  "document": "Report into bribery and corruption in maintenance and service contracts within North Metropolitan Health Service",
+  "sha256": "d331227d0226d93f4d601bccd012f7b779e846b0ba4bbdb07f74b7d09c1d939a",
+  "pages": 84,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of the investigation: Operation Neil",
+  "first_page": 11,
+  "last_page": 16,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20bribery%20and%20corruption%20in%20maintenance%20and%20service%20contracts%20within%20North%20Metropolitan%20Health%20Service.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated suspected procurement misconduct at North Metropolitan Health Service after WA Health requested its involvement.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20bribery%20and%20corruption%20in%20maintenance%20and%20service%20contracts%20within%20North%20Metropolitan%20Health%20Service.pdf",
+      "document": "Report into bribery and corruption in maintenance and service contracts within North Metropolitan Health Service",
+      "page": 11
+     }
+    ],
+    "section": "Summary of the investigation: Operation Neil"
+   },
+   {
+    "text": "The investigation covered maintenance and service contracts across hospitals and other health facilities.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20bribery%20and%20corruption%20in%20maintenance%20and%20service%20contracts%20within%20North%20Metropolitan%20Health%20Service.pdf",
+      "document": "Report into bribery and corruption in maintenance and service contracts within North Metropolitan Health Service",
+      "page": 8
+     }
+    ],
+    "section": "Bribes and fraud"
+   },
+   {
+    "text": "The Commission concluded that contractors provided benefits to senior health officials to obtain work and recovered the costs through fraudulent invoicing.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20bribery%20and%20corruption%20in%20maintenance%20and%20service%20contracts%20within%20North%20Metropolitan%20Health%20Service.pdf",
+      "document": "Report into bribery and corruption in maintenance and service contracts within North Metropolitan Health Service",
+      "page": 82
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "The Commission made six recommendations to consider prosecutions involving public officers and contractors, while making no general recommendations to the health service or public sector.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20bribery%20and%20corruption%20in%20maintenance%20and%20service%20contracts%20within%20North%20Metropolitan%20Health%20Service.pdf",
+      "document": "Report into bribery and corruption in maintenance and service contracts within North Metropolitan Health Service",
+      "page": 48
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20bribery%20and%20corruption%20in%20maintenance%20and%20service%20contracts%20within%20North%20Metropolitan%20Health%20Service.pdf",
+      "document": "Report into bribery and corruption in maintenance and service contracts within North Metropolitan Health Service",
+      "page": 70
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20bribery%20and%20corruption%20in%20maintenance%20and%20service%20contracts%20within%20North%20Metropolitan%20Health%20Service.pdf",
+      "document": "Report into bribery and corruption in maintenance and service contracts within North Metropolitan Health Service",
+      "page": 76
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20bribery%20and%20corruption%20in%20maintenance%20and%20service%20contracts%20within%20North%20Metropolitan%20Health%20Service.pdf",
+      "document": "Report into bribery and corruption in maintenance and service contracts within North Metropolitan Health Service",
+      "page": 79
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20bribery%20and%20corruption%20in%20maintenance%20and%20service%20contracts%20within%20North%20Metropolitan%20Health%20Service.pdf",
+      "document": "Report into bribery and corruption in maintenance and service contracts within North Metropolitan Health Service",
+      "page": 82
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Regular and expensive gifts and gratuities given to some NMHS public officers were bribes.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20bribery%20and%20corruption%20in%20maintenance%20and%20service%20contracts%20within%20North%20Metropolitan%20Health%20Service.pdf",
+     "document": "Report into bribery and corruption in maintenance and service contracts within North Metropolitan Health Service",
+     "page": 8
+    }
+   },
+   {
+    "quote": "NMHS had proper policies and procedures in place.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20bribery%20and%20corruption%20in%20maintenance%20and%20service%20contracts%20within%20North%20Metropolitan%20Health%20Service.pdf",
+     "document": "Report into bribery and corruption in maintenance and service contracts within North Metropolitan Health Service",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

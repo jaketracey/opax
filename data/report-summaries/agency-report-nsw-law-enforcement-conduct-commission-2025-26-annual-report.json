@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-nsw-law-enforcement-conduct-commission-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Law Enforcement Conduct Commission 2025-26 annual report",
+ "body": "Law Enforcement Conduct Commission",
+ "source": {
+  "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212450%2FLaw%20Enforcement%20Conduct%20Commission%20Annual%20Report%202025-26.pdf",
+  "document": "annual report",
+  "sha256": "40e390d74d0e6abd534991f15be78ba420d72ffb88dcb92801e4dd9b10076060",
+  "pages": 160,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "From our Commissioners",
+  "first_page": 8,
+  "last_page": 9,
+  "link": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212450%2FLaw%20Enforcement%20Conduct%20Commission%20Annual%20Report%202025-26.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Law Enforcement Conduct Commission reported on 2025–26, overseeing and investigating misconduct and maladministration in the NSW Police Force and NSW Crime Commission.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212450%2FLaw%20Enforcement%20Conduct%20Commission%20Annual%20Report%202025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     },
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212450%2FLaw%20Enforcement%20Conduct%20Commission%20Annual%20Report%202025-26.pdf",
+      "document": "annual report",
+      "page": 13
+     }
+    ]
+   },
+   {
+    "text": "The Commission recorded 8,046 completed assessments, 2,352 investigations under oversight and monitoring of 49 critical incidents.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212450%2FLaw%20Enforcement%20Conduct%20Commission%20Annual%20Report%202025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ]
+   },
+   {
+    "text": "It also reported conducting 30 investigations and 106 examinations, and tabling seven public reports.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212450%2FLaw%20Enforcement%20Conduct%20Commission%20Annual%20Report%202025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ]
+   },
+   {
+    "text": "The Commission maintained that it needed an explicit statutory right to access NSW Police Force information so its work could proceed without delay.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212450%2FLaw%20Enforcement%20Conduct%20Commission%20Annual%20Report%202025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We remain of the view that the Commission needs a clear statutory entitlement to access NSW Police Force information to ensure that the Commission can conduct its business without delay.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212450%2FLaw%20Enforcement%20Conduct%20Commission%20Annual%20Report%202025-26.pdf",
+     "document": "annual report",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

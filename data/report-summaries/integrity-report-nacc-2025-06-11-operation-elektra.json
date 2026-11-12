@@ -1,0 +1,90 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nacc-2025-06-11-operation-elektra",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Elektra investigation report",
+ "body": "National Anti-Corruption Commission",
+ "source": {
+  "url": "https://www.nacc.gov.au/sites/default/files/documents/2025-06/Investigation%20Report%20-%20Operation%20Elektra_0.pdf",
+  "document": "Operation Elektra investigation report",
+  "sha256": "e7d4f7b6561ce9b25418d6cb5aa32b65dd41bb5bf7e3122bda16e235e20fdd6c",
+  "pages": 22,
+  "rights": "CC BY 4.0 (stated in each report)"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.nacc.gov.au/sites/default/files/documents/2025-06/Investigation%20Report%20-%20Operation%20Elektra_0.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Operation Elektra was a joint investigation by the Australian Commission for Law Enforcement Integrity, immigration authorities and Australian Federal Police into alleged phone sales to Christmas Island detainees.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2025-06/Investigation%20Report%20-%20Operation%20Elektra_0.pdf",
+      "document": "Operation Elektra investigation report",
+      "page": 4
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The investigation did not establish phone sales, but found that one officer supplied SIM cards to detainees and another disclosed protected immigration information.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2025-06/Investigation%20Report%20-%20Operation%20Elektra_0.pdf",
+      "document": "Operation Elektra investigation report",
+      "page": 4
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commissioner found that those two officers abused their offices and engaged in corrupt conduct, but made no corruption finding against a third officer.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2025-06/Investigation%20Report%20-%20Operation%20Elektra_0.pdf",
+      "document": "Operation Elektra investigation report",
+      "page": 4
+     },
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2025-06/Investigation%20Report%20-%20Operation%20Elektra_0.pdf",
+      "document": "Operation Elektra investigation report",
+      "page": 19
+     }
+    ],
+    "section": "Findings"
+   },
+   {
+    "text": "The report records prevention proposals covering internal reporting, training about grooming and corruption risks, and rotating detention staff between roles and locations.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2025-06/Investigation%20Report%20-%20Operation%20Elektra_0.pdf",
+      "document": "Operation Elektra investigation report",
+      "page": 21
+     }
+    ],
+    "section": "Corruption prevention observations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

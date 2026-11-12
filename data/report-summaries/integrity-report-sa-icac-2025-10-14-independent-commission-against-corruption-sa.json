@@ -1,0 +1,91 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2025-10-14-independent-commission-against-corruption-sa",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Independent Commission Against Corruption SA",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/1194188/Independent-Commission-Against-Corruptions-Report-Integrity-State-2024-2025.pdf",
+  "document": "Integrity State Report 2024-25",
+  "sha256": "e60e98fdf29b41b4afa7daf348e0cc0112a29190547b401decec53c11d20c95c",
+  "pages": 15,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 2,
+  "last_page": 2,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/1194188/Independent-Commission-Against-Corruptions-Report-Integrity-State-2024-2025.pdf#page=2"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commission Against Corruption reported on prevention recommendations arising from its investigations during the 2024/2025 financial year.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/1194188/Independent-Commission-Against-Corruptions-Report-Integrity-State-2024-2025.pdf",
+      "document": "Integrity State Report 2024-25",
+      "page": 2
+     }
+    ]
+   },
+   {
+    "text": "The Commission identified procurement conflicts of interest and the use of public power or resources for personal benefit as recurring corruption risks.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/1194188/Independent-Commission-Against-Corruptions-Report-Integrity-State-2024-2025.pdf",
+      "document": "Integrity State Report 2024-25",
+      "page": 2
+     }
+    ]
+   },
+   {
+    "text": "It summarised eight prevention letters, none arising from an investigation that led to criminal proceedings.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/1194188/Independent-Commission-Against-Corruptions-Report-Integrity-State-2024-2025.pdf",
+      "document": "Integrity State Report 2024-25",
+      "page": 3
+     }
+    ]
+   },
+   {
+    "text": "The Commission stressed that conflicts must be declared and managed, and that public officers, contractors and subcontractors need clear guidance about integrity obligations.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/1194188/Independent-Commission-Against-Corruptions-Report-Integrity-State-2024-2025.pdf",
+      "document": "Integrity State Report 2024-25",
+      "page": 13
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "This edition of Integrity State shows that conflicts of interest continue to be a recurring theme in the Commission’s investigations.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/1194188/Independent-Commission-Against-Corruptions-Report-Integrity-State-2024-2025.pdf",
+     "document": "Integrity State Report 2024-25",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

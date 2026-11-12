@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-first-peoples-assembly-of-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "First Peoples' Assembly of Victoria 2025-26 annual report",
+ "body": "First Peoples' Assembly of Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab327/globalassets/tabled-paper-documents/tabled-paper-10581/arb-annual-report-2026.pdf",
+  "document": "annual report",
+  "sha256": "041f7aab854b508f163e97f75687c16ea7a7256c8e45bd1d9dfbc645d7ed3052",
+  "pages": 56,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "A MESSAGE FROM THE CO-CHAIRS",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab327/globalassets/tabled-paper-documents/tabled-paper-10581/arb-annual-report-2026.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The First Peoples’ Assembly of Victoria’s 2026 report covers its representation of First Peoples and its work on Treaty.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab327/globalassets/tabled-paper-documents/tabled-paper-10581/arb-annual-report-2026.pdf",
+      "document": "annual report",
+      "page": 1
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab327/globalassets/tabled-paper-documents/tabled-paper-10581/arb-annual-report-2026.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab327/globalassets/tabled-paper-documents/tabled-paper-10581/arb-annual-report-2026.pdf",
+      "document": "annual report",
+      "page": 43
+     }
+    ],
+    "section": "Establishment of Gellung Warl"
+   },
+   {
+    "text": "The Assembly reported that Gellung Warl was established on 1 May 2026 and that the elected Assembly continued within it.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab327/globalassets/tabled-paper-documents/tabled-paper-10581/arb-annual-report-2026.pdf",
+      "document": "annual report",
+      "page": 43
+     }
+    ],
+    "section": "Establishment of Gellung Warl"
+   },
+   {
+    "text": "It reported more than 10,000 enrolments for the 2026 Treaty elections, with half of those enrolled voting for 22 general seats across five regions.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab327/globalassets/tabled-paper-documents/tabled-paper-10581/arb-annual-report-2026.pdf",
+      "document": "annual report",
+      "page": 36
+     }
+    ],
+    "section": "TREATY ELECTIONS 2026"
+   },
+   {
+    "text": "It reported that Gellung Warl was developing cultural governance practices and preparing a joint implementation approach with the State for Treaty commitments.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab327/globalassets/tabled-paper-documents/tabled-paper-10581/arb-annual-report-2026.pdf",
+      "document": "annual report",
+      "page": 45
+     }
+    ],
+    "section": "Implementing Statewide Treaty and Gellung Warl commitments"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "More than 10,000 First Peoples enrolled in these elections, which is four times the number enrolled for the first in 2019.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab327/globalassets/tabled-paper-documents/tabled-paper-10581/arb-annual-report-2026.pdf",
+     "document": "annual report",
+     "page": 36
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

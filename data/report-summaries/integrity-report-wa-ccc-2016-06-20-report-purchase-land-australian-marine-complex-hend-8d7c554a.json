@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2016-06-20-report-purchase-land-australian-marine-complex-hend-8d7c554a",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on a Purchase of Land in the Australian Marine Complex Henderson by a Senior Officer of LandCorp",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20Purchase%20of%20Land%20in%20the%20Australian%20Marine%20Complex%20Henderson%20by%20a%20Senior%20Officer%20of%20LandCorp.pdf",
+  "document": "Report on a Purchase of Land in the Australian Marine Complex Henderson by a Senior Officer of LandCorp",
+  "sha256": "8de9a9fc6020cbb1cd78d5db0ab483c5b10b83e81dcb84abd943a5ee30abaec8",
+  "pages": 35,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 7,
+  "last_page": 7,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20Purchase%20of%20Land%20in%20the%20Australian%20Marine%20Complex%20Henderson%20by%20a%20Senior%20Officer%20of%20LandCorp.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission examined a senior LandCorp officer’s involvement in buying land at the Australian Marine Complex in Henderson.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20Purchase%20of%20Land%20in%20the%20Australian%20Marine%20Complex%20Henderson%20by%20a%20Senior%20Officer%20of%20LandCorp.pdf",
+      "document": "Report on a Purchase of Land in the Australian Marine Complex Henderson by a Senior Officer of LandCorp",
+      "page": 7
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission formed an opinion that the officer corruptly used his employment to benefit himself and others.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20Purchase%20of%20Land%20in%20the%20Australian%20Marine%20Complex%20Henderson%20by%20a%20Senior%20Officer%20of%20LandCorp.pdf",
+      "document": "Report on a Purchase of Land in the Australian Marine Complex Henderson by a Senior Officer of LandCorp",
+      "page": 7
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "It formed no serious misconduct opinion about another LandCorp employee’s failure to declare an interest, given the lack of direct evidence that the omission was intentional.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20Purchase%20of%20Land%20in%20the%20Australian%20Marine%20Complex%20Henderson%20by%20a%20Senior%20Officer%20of%20LandCorp.pdf",
+      "document": "Report on a Purchase of Land in the Australian Marine Complex Henderson by a Senior Officer of LandCorp",
+      "page": 32
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "Its recommendation called on LandCorp to reinforce compliance with its conflict of interest requirements.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20a%20Purchase%20of%20Land%20in%20the%20Australian%20Marine%20Complex%20Henderson%20by%20a%20Senior%20Officer%20of%20LandCorp.pdf",
+      "document": "Report on a Purchase of Land in the Australian Marine Complex Henderson by a Senior Officer of LandCorp",
+      "page": 32
+     }
+    ],
+    "section": "INTRODUCTION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

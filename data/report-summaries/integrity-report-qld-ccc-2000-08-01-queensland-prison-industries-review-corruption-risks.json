@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2000-08-01-queensland-prison-industries-review-corruption-risks",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Queensland Prison Industries: A review of corruption risks",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Qld-prison-industries-Report-2000.pdf",
+  "document": "Queensland Prison Industries: A review of corruption risks (August 2000)",
+  "sha256": "977365d6234c240d868f91aaf312e56e3da61e38085b5ab4eebd88848b0e421e",
+  "pages": 58,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 8,
+  "last_page": 9,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Qld-prison-industries-Report-2000.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission reviewed corruption risks in prison industries run by the Department of Corrective Services.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Qld-prison-industries-Report-2000.pdf",
+      "document": "Queensland Prison Industries: A review of corruption risks (August 2000)",
+      "page": 8
+     }
+    ],
+    "section": "What this report does"
+   },
+   {
+    "text": "The review covered commercial activities using prisoner labour in state-operated centres, drawing on complaints, investigations, visits and departmental advice.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Qld-prison-industries-Report-2000.pdf",
+      "document": "Queensland Prison Industries: A review of corruption risks (August 2000)",
+      "page": 8
+     }
+    ],
+    "section": "Information sources used"
+   },
+   {
+    "text": "The CJC identified risks in corporate governance, management and operational controls, rather than investigating whether particular misconduct had occurred.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Qld-prison-industries-Report-2000.pdf",
+      "document": "Queensland Prison Industries: A review of corruption risks (August 2000)",
+      "page": 8
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Qld-prison-industries-Report-2000.pdf",
+      "document": "Queensland Prison Industries: A review of corruption risks (August 2000)",
+      "page": 9
+     }
+    ],
+    "section": "Findings of the review"
+   },
+   {
+    "text": "It made four recommendations covering corruption-prevention policy, industry management, governance arrangements and controls over operational activities.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Qld-prison-industries-Report-2000.pdf",
+      "document": "Queensland Prison Industries: A review of corruption risks (August 2000)",
+      "page": 9
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The review revealed numerous areas relevant to the operation of prison industries where the DCS is exposed to corruption risks.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Qld-prison-industries-Report-2000.pdf",
+     "document": "Queensland Prison Industries: A review of corruption risks (August 2000)",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

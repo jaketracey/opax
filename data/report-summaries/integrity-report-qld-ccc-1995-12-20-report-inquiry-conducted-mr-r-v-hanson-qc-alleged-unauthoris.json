@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1995-12-20-report-inquiry-conducted-mr-r-v-hanson-qc-alleged-unauthoris",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Report on an Inquiry conducted by Mr R V Hanson QC into the alleged unauthorised dissemination of information concerning Operation Wallah",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-on-an-inquiry-conducted-by-RV-Hanson-Wallah/An-inquiry-into-the-alleged-unauthorised-dissemination-of-information-concerning-Operation-Wallah-Report-1995.pdf",
+  "document": "Report on an Inquiry conducted by Mr R V Hanson into the alleged unauthorised dissemination... (20 December 1995)",
+  "sha256": "d5c7c54af79edf8a93c9aabd3eb239e9ab9d82bf194360601242f20299820981",
+  "pages": 96,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "FINDINGS",
+  "first_page": 85,
+  "last_page": 86,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-on-an-inquiry-conducted-by-RV-Hanson-Wallah/An-inquiry-into-the-alleged-unauthorised-dissemination-of-information-concerning-Operation-Wallah-Report-1995.pdf#page=85"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "An inquiry constituted for the Criminal Justice Commission investigated alleged unauthorised release of information about Operation Wallah.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-on-an-inquiry-conducted-by-RV-Hanson-Wallah/An-inquiry-into-the-alleged-unauthorised-dissemination-of-information-concerning-Operation-Wallah-Report-1995.pdf",
+      "document": "Report on an Inquiry conducted by Mr R V Hanson into the alleged unauthorised dissemination... (20 December 1995)",
+      "page": 3
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-on-an-inquiry-conducted-by-RV-Hanson-Wallah/An-inquiry-into-the-alleged-unauthorised-dissemination-of-information-concerning-Operation-Wallah-Report-1995.pdf",
+      "document": "Report on an Inquiry conducted by Mr R V Hanson into the alleged unauthorised dissemination... (20 December 1995)",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-on-an-inquiry-conducted-by-RV-Hanson-Wallah/An-inquiry-into-the-alleged-unauthorised-dissemination-of-information-concerning-Operation-Wallah-Report-1995.pdf",
+      "document": "Report on an Inquiry conducted by Mr R V Hanson into the alleged unauthorised dissemination... (20 December 1995)",
+      "page": 9
+     }
+    ],
+    "section": "PRELIMINARY"
+   },
+   {
+    "text": "It examined whether Commission personnel, parliamentary committee members or staff, or Queensland police had unlawfully supplied information published in specified newspaper articles.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-on-an-inquiry-conducted-by-RV-Hanson-Wallah/An-inquiry-into-the-alleged-unauthorised-dissemination-of-information-concerning-Operation-Wallah-Report-1995.pdf",
+      "document": "Report on an Inquiry conducted by Mr R V Hanson into the alleged unauthorised dissemination... (20 December 1995)",
+      "page": 9
+     }
+    ],
+    "section": "PRELIMINARY"
+   },
+   {
+    "text": "The inquiry found that no Queensland police officer had unlawfully released the information covered by its terms of reference.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-on-an-inquiry-conducted-by-RV-Hanson-Wallah/An-inquiry-into-the-alleged-unauthorised-dissemination-of-information-concerning-Operation-Wallah-Report-1995.pdf",
+      "document": "Report on an Inquiry conducted by Mr R V Hanson into the alleged unauthorised dissemination... (20 December 1995)",
+      "page": 86
+     }
+    ],
+    "section": "FINDINGS"
+   },
+   {
+    "text": "It reached similar conclusions for Commission and parliamentary committee personnel, qualified by findings that some conversations consciously or unconsciously affirmed information put by journalists.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-on-an-inquiry-conducted-by-RV-Hanson-Wallah/An-inquiry-into-the-alleged-unauthorised-dissemination-of-information-concerning-Operation-Wallah-Report-1995.pdf",
+      "document": "Report on an Inquiry conducted by Mr R V Hanson into the alleged unauthorised dissemination... (20 December 1995)",
+      "page": 85
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-on-an-inquiry-conducted-by-RV-Hanson-Wallah/An-inquiry-into-the-alleged-unauthorised-dissemination-of-information-concerning-Operation-Wallah-Report-1995.pdf",
+      "document": "Report on an Inquiry conducted by Mr R V Hanson into the alleged unauthorised dissemination... (20 December 1995)",
+      "page": 86
+     }
+    ],
+    "section": "FINDINGS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "I find that no officer of the Queensland Police Service has, contrary to the provisions of the Police Service Administration Act 1990, released the information concerning Operation Wallah which was published in the Courier-Mail and Australian newspapers between 11 March 1995 and 25 March 1995 as specified in schedule 2.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-on-an-inquiry-conducted-by-RV-Hanson-Wallah/An-inquiry-into-the-alleged-unauthorised-dissemination-of-information-concerning-Operation-Wallah-Report-1995.pdf",
+     "document": "Report on an Inquiry conducted by Mr R V Hanson into the alleged unauthorised dissemination... (20 December 1995)",
+     "page": 86
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

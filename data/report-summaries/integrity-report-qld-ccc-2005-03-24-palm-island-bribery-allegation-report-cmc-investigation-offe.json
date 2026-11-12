@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2005-03-24-palm-island-bribery-allegation-report-cmc-investigation-offe",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Palm Island bribery allegation: Report of a CMC investigation into an offer made by the Premier of Queensland to the Palm Island Regional Council",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Palm-Island-bribery-allegation-Report-2005.pdf",
+  "document": "Palm Island bribery allegation: Report of a CMC investigation into an offer made by the Premier of Queensland... (24 March 2005)",
+  "sha256": "31ec040f0f8cd13c07fcb73150e364bc0d7e88ad44155394efd21b10807ce044",
+  "pages": 54,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY AND MAJOR FINDINGS",
+  "first_page": 3,
+  "last_page": 4,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Palm-Island-bribery-allegation-Report-2005.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission investigated whether the Queensland Premier committed official misconduct in an offer concerning Palm Island council debt.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Palm-Island-bribery-allegation-Report-2005.pdf",
+      "document": "Palm Island bribery allegation: Report of a CMC investigation into an offer made by the Premier of Queensland... (24 March 2005)",
+      "page": 3
+     }
+    ],
+    "section": "SUMMARY AND MAJOR FINDINGS"
+   },
+   {
+    "text": "It examined an allegation that debt relief was offered in return for councillors attending the opening of a community youth centre.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Palm-Island-bribery-allegation-Report-2005.pdf",
+      "document": "Palm Island bribery allegation: Report of a CMC investigation into an offer made by the Premier of Queensland... (24 March 2005)",
+      "page": 3
+     }
+    ],
+    "section": "SUMMARY AND MAJOR FINDINGS"
+   },
+   {
+    "text": "The CMC concluded that the conduct was not corrupt and could not constitute official misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Palm-Island-bribery-allegation-Report-2005.pdf",
+      "document": "Palm Island bribery allegation: Report of a CMC investigation into an offer made by the Premier of Queensland... (24 March 2005)",
+      "page": 3
+     }
+    ],
+    "section": "Findings"
+   },
+   {
+    "text": "The CMC said its jurisdiction did not extend to judging whether the offer was wise politically, practically or morally.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Palm-Island-bribery-allegation-Report-2005.pdf",
+      "document": "Palm Island bribery allegation: Report of a CMC investigation into an offer made by the Premier of Queensland... (24 March 2005)",
+      "page": 4
+     }
+    ],
+    "section": "SUMMARY AND MAJOR FINDINGS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Hence, the CMC has come to the conclusion that the conduct in question was not corrupt and therefore the Premier’s conduct could not amount to official misconduct.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Palm-Island-bribery-allegation-Report-2005.pdf",
+     "document": "Palm Island bribery allegation: Report of a CMC investigation into an offer made by the Premier of Queensland... (24 March 2005)",
+     "page": 3
+    }
+   },
+   {
+    "quote": "It could not be held that the conduct of the Premier was corrupt.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Palm-Island-bribery-allegation-Report-2005.pdf",
+     "document": "Palm Island bribery allegation: Report of a CMC investigation into an offer made by the Premier of Queensland... (24 March 2005)",
+     "page": 45
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

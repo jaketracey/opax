@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2011-02-06-report-investigation-alleged-public-sector-miscondu-2d783a20",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the Perth Hills bushfires of 6 February 2011",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20any%20public%20officer%20in%20relation%20to%20the%20Perth%20Hills%20bushfires%20of%206%20February%202011.pdf",
+  "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the Perth Hills bushfires of 6 February 2011",
+  "sha256": "c62a4e026bc14e0afb7551161af122d4030b1e87e560c328adaddddf9f4e1eec",
+  "pages": 84,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 9,
+  "last_page": 13,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20any%20public%20officer%20in%20relation%20to%20the%20Perth%20Hills%20bushfires%20of%206%20February%202011.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated whether public officers gave misleading accounts of the Perth Hills bushfires to inquiries or the media.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20any%20public%20officer%20in%20relation%20to%20the%20Perth%20Hills%20bushfires%20of%206%20February%202011.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the Perth Hills bushfires of 6 February 2011",
+      "page": 9
+     }
+    ],
+    "section": "Scope and Purpose of Commission Investigation"
+   },
+   {
+    "text": "It examined the Police Commissioner’s accounts of telephone conversations and his movements on the day of the fires.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20any%20public%20officer%20in%20relation%20to%20the%20Perth%20Hills%20bushfires%20of%206%20February%202011.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the Perth Hills bushfires of 6 February 2011",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20any%20public%20officer%20in%20relation%20to%20the%20Perth%20Hills%20bushfires%20of%206%20February%202011.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the Perth Hills bushfires of 6 February 2011",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20any%20public%20officer%20in%20relation%20to%20the%20Perth%20Hills%20bushfires%20of%206%20February%202011.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the Perth Hills bushfires of 6 February 2011",
+      "page": 12
+     }
+    ],
+    "section": "Issues of Misconduct"
+   },
+   {
+    "text": "The Commission concluded that the available material did not support a misconduct or serious misconduct opinion about any public officer within the investigation’s scope.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20any%20public%20officer%20in%20relation%20to%20the%20Perth%20Hills%20bushfires%20of%206%20February%202011.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the Perth Hills bushfires of 6 February 2011",
+      "page": 12
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "It nevertheless considered that disclosing a disputed conversation to the parliamentary inquiry would have improved openness, while noting there was no positive obligation to do so.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20any%20public%20officer%20in%20relation%20to%20the%20Perth%20Hills%20bushfires%20of%206%20February%202011.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the Perth Hills bushfires of 6 February 2011",
+      "page": 13
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In the absence of such an obligation, the failure to make reference to the Gregson Conversation to the CDJSC Inquiry could not, therefore, be regarded as misconduct as defined by sections 3 and 4 of the CCC Act.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20by%20any%20public%20officer%20in%20relation%20to%20the%20Perth%20Hills%20bushfires%20of%206%20February%202011.pdf",
+     "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the Perth Hills bushfires of 6 February 2011",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

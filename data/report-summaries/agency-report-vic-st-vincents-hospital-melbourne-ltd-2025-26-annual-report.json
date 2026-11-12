@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-st-vincents-hospital-melbourne-ltd-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "St Vincent's Hospital Melbourne Ltd 2025-26 annual report",
+ "body": "St Vincent's Hospital Melbourne Ltd",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10755/st-vincents-hospital-melbourne-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "2b7af8ad34e3a615cb0f1ef12d984de519dba8a166807a139d80891e18ec2339",
+  "pages": 59,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Chief Executive",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10755/st-vincents-hospital-melbourne-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "St Vincent’s Hospital Melbourne reported for 2025-26 on its public hospital, specialist, aged care, community and outreach services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10755/st-vincents-hospital-melbourne-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 1
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10755/st-vincents-hospital-melbourne-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "About St Vincent’s"
+   },
+   {
+    "text": "The hospital reported opening the Aikenhead Centre for Medical Discovery and completing its Fitzroy Health and Innovation Precinct masterplan.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10755/st-vincents-hospital-melbourne-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10755/st-vincents-hospital-melbourne-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Message from the Chief Executive"
+   },
+   {
+    "text": "It reported completing 8,748 elective surgeries, exceeding its target, and transferring 75% of ambulance patients within 40 minutes.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10755/st-vincents-hospital-melbourne-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Message from the Chief Executive"
+   },
+   {
+    "text": "The hospital reported a break-even result for 2025-26 and employee engagement of 74%.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10755/st-vincents-hospital-melbourne-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Message from the Chief Executive"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Across more than 40 projects, staff applied evidence-based improvement methods to enhance patient care, increase efficiency and bolster sustainability.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10755/st-vincents-hospital-melbourne-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

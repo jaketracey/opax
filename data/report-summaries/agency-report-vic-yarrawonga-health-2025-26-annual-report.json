@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-yarrawonga-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Yarrawonga Health 2025-26 annual report",
+ "body": "Yarrawonga Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab444/globalassets/tabled-paper-documents/tabled-paper-10770/yarrawonga-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "94278775df4c4c8554f74a4436476252b3560a5a2aedf479e6ba9744fe2cb8f3",
+  "pages": 92,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "BOARD CHAIR AND CEO REPORT",
+  "first_page": 7,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab444/globalassets/tabled-paper-documents/tabled-paper-10770/yarrawonga-health-annual-report-2025-26.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Yarrawonga Health reported for 2025–2026 on acute, residential aged care and community services for its border-region catchment.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab444/globalassets/tabled-paper-documents/tabled-paper-10770/yarrawonga-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab444/globalassets/tabled-paper-documents/tabled-paper-10770/yarrawonga-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "WHO ARE WE"
+   },
+   {
+    "text": "The health service reported completing a new operating theatre, sterilising department, entrance and reception to support local surgical care.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab444/globalassets/tabled-paper-documents/tabled-paper-10770/yarrawonga-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "WHO ARE WE"
+   },
+   {
+    "text": "The Board reported meeting its Statement of Priorities indicators and obtaining three-year safety and quality accreditation without recommendations.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab444/globalassets/tabled-paper-documents/tabled-paper-10770/yarrawonga-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "BOARD CHAIR AND CEO REPORT"
+   },
+   {
+    "text": "The health service reported a small operating surplus and an overall net deficit of $1,926,519 after capital and specific items.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab444/globalassets/tabled-paper-documents/tabled-paper-10770/yarrawonga-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 15
+     }
+    ],
+    "section": "FINANCIAL AND SERVICE PERFORMANCE"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "This year Yarrawonga Health achieved three-year accreditation against the National Safety and Quality Health Service Standards, successfully meeting all compliance standards with no recommendations.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab444/globalassets/tabled-paper-documents/tabled-paper-10770/yarrawonga-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

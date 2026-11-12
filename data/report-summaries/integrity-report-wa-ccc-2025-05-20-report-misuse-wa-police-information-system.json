@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2025-05-20-report-misuse-wa-police-information-system",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report into the Misuse of a WA Police Information System",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC_-_Report_into_the_Misuse_of_a_WA_Police_Information_System_0.pdf",
+  "document": "CCC - Report into the Misuse of a WA Police Information System",
+  "sha256": "202ce97416c024ab3cbf9bbaf5ba7115b297d07240871c40049b48968ead8f25",
+  "pages": 28,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 4,
+  "last_page": 7,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC_-_Report_into_the_Misuse_of_a_WA_Police_Information_System_0.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated possible unauthorised access to a police information system by a senior officer.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC_-_Report_into_the_Misuse_of_a_WA_Police_Information_System_0.pdf",
+      "document": "CCC - Report into the Misuse of a WA Police Information System",
+      "page": 4
+     }
+    ],
+    "section": "The Commission’s investigation"
+   },
+   {
+    "text": "The Commission formed an opinion of serious misconduct concerning the officer’s unauthorised access and disclosure of information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC_-_Report_into_the_Misuse_of_a_WA_Police_Information_System_0.pdf",
+      "document": "CCC - Report into the Misuse of a WA Police Information System",
+      "page": 6
+     }
+    ],
+    "section": "The Commission’s decision"
+   },
+   {
+    "text": "The Commission considered that the initial investigation should immediately have been assigned outside the unit in which the officer worked.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC_-_Report_into_the_Misuse_of_a_WA_Police_Information_System_0.pdf",
+      "document": "CCC - Report into the Misuse of a WA Police Information System",
+      "page": 27
+     }
+    ],
+    "section": "The initial investigation by IAU"
+   },
+   {
+    "text": "The Commission called for clearer guidance on system access and planned to review police action on access policies and auditing after twelve months.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC_-_Report_into_the_Misuse_of_a_WA_Police_Information_System_0.pdf",
+      "document": "CCC - Report into the Misuse of a WA Police Information System",
+      "page": 28
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:54+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

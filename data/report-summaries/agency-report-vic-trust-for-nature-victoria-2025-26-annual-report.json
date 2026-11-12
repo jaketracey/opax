@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-trust-for-nature-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Trust for Nature (Victoria) 2025-26 annual report",
+ "body": "Trust for Nature (Victoria)",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab331/globalassets/tabled-paper-documents/tabled-paper-10607/attachment-1---2025-26-trust-for-nature-annual-report---final.pdf",
+  "document": "annual report",
+  "sha256": "b02ec6e2f424808448f01afd8a843ce83d536f402a97c7c5d859706dfaaf8dd1",
+  "pages": 88,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "CEO Report",
+  "first_page": 7,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab331/globalassets/tabled-paper-documents/tabled-paper-10607/attachment-1---2025-26-trust-for-nature-annual-report---final.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Trust for Nature reported on 2025–26, providing conservation services for private land in Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab331/globalassets/tabled-paper-documents/tabled-paper-10607/attachment-1---2025-26-trust-for-nature-annual-report---final.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab331/globalassets/tabled-paper-documents/tabled-paper-10607/attachment-1---2025-26-trust-for-nature-annual-report---final.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "How we operate"
+   },
+   {
+    "text": "The trust reported protecting 4,185 hectares through 110 conservation covenants during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab331/globalassets/tabled-paper-documents/tabled-paper-10607/attachment-1---2025-26-trust-for-nature-annual-report---final.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "CEO Report"
+   },
+   {
+    "text": "It reported taking over management of Land for Wildlife in late 2025 and providing small grants to landholders affected by bushfires.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab331/globalassets/tabled-paper-documents/tabled-paper-10607/attachment-1---2025-26-trust-for-nature-annual-report---final.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "CEO Report"
+   },
+   {
+    "text": "The trust reported a surplus from transactions of $2.2 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab331/globalassets/tabled-paper-documents/tabled-paper-10607/attachment-1---2025-26-trust-for-nature-annual-report---final.pdf",
+      "document": "annual report",
+      "page": 26
+     }
+    ],
+    "section": "Current year financial overview"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Total net assets improved to $62.7 million.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab331/globalassets/tabled-paper-documents/tabled-paper-10607/attachment-1---2025-26-trust-for-nature-annual-report---final.pdf",
+     "document": "annual report",
+     "page": 26
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

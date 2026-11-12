@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-managed-insurance-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Managed Insurance Authority 2025-26 annual report",
+ "body": "Victorian Managed Insurance Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4aa28e/globalassets/tabled-paper-documents/tabled-paper-10564/victorian-managed-insurance-authority-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "fe353a1896994f7640fc4c2f999af63a546e289fec266b5db20f44bda9c3ef89",
+  "pages": 60,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Report from the Chair and CEO",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4aa28e/globalassets/tabled-paper-documents/tabled-paper-10564/victorian-managed-insurance-authority-annual-report-2025-26.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Managed Insurance Authority reported for 2025–26 on its work as Victoria’s government insurer and risk adviser.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa28e/globalassets/tabled-paper-documents/tabled-paper-10564/victorian-managed-insurance-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa28e/globalassets/tabled-paper-documents/tabled-paper-10564/victorian-managed-insurance-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Report from the Chair and CEO"
+   },
+   {
+    "text": "VMIA reported that it supported clients affected by bushfires and flooding through risk intelligence, claims management and financial relief.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa28e/globalassets/tabled-paper-documents/tabled-paper-10564/victorian-managed-insurance-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Report from the Chair and CEO"
+   },
+   {
+    "text": "VMIA reported expanding its patient safety program and funding targeted projects at 10 health services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa28e/globalassets/tabled-paper-documents/tabled-paper-10564/victorian-managed-insurance-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Report from the Chair and CEO"
+   },
+   {
+    "text": "VMIA reported an operating surplus of $347.0 million and an insurance funding ratio of 130.3%.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa28e/globalassets/tabled-paper-documents/tabled-paper-10564/victorian-managed-insurance-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 21
+     }
+    ],
+    "section": "Financial performance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "VMIA had an operating surplus of $347.0 million for the 2025–2026 year.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4aa28e/globalassets/tabled-paper-documents/tabled-paper-10564/victorian-managed-insurance-authority-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 21
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,86 @@
+{
+ "schema": 1,
+ "slug": "agency-report-cth-department-of-finance-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Department of Finance 2025-26 annual report",
+ "body": "Department of Finance",
+ "source": {
+  "url": "https://www.finance.gov.au/sites/default/files/2026-10/department-of-finance-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "2b6840acec12ee361b6abd2f8316aa546871b2cf5f4e76d6a4edfe6c224a950a",
+  "pages": 248,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive overview",
+  "first_page": 7,
+  "last_page": 8,
+  "link": "https://www.finance.gov.au/sites/default/files/2026-10/department-of-finance-annual-report-2025-26.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Department of Finance reported on 2025–26 as a central agency advising on the allocation and management of Commonwealth resources.",
+    "cites": [
+     {
+      "url": "https://www.finance.gov.au/sites/default/files/2026-10/department-of-finance-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://www.finance.gov.au/sites/default/files/2026-10/department-of-finance-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 20
+     }
+    ]
+   },
+   {
+    "text": "Finance reported supporting the 2026–27 Budget and expanding the use of artificial intelligence across the public service.",
+    "cites": [
+     {
+      "url": "https://www.finance.gov.au/sites/default/files/2026-10/department-of-finance-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "It also began preparing to sell 58 surplus Defence properties, including due diligence and community engagement.",
+    "cites": [
+     {
+      "url": "https://www.finance.gov.au/sites/default/files/2026-10/department-of-finance-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "Finance reported achieving 26 of 34 targets, partially achieving 4 and missing 2, with one result unavailable and another target not measured that year.",
+    "cites": [
+     {
+      "url": "https://www.finance.gov.au/sites/default/files/2026-10/department-of-finance-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 28
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:43+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

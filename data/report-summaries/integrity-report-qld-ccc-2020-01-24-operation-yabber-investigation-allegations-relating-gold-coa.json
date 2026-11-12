@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2020-01-24-operation-yabber-investigation-allegations-relating-gold-coa",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Yabber: An investigation into allegations relating to the Gold Coast City Council",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Operation-Yabber-An-investigation-into-allegations-relating-to-the-Gold-Coast-City-Council.pdf",
+  "document": "Operation Yabber: An investigation into allegations relating to the Gold Coast City Council",
+  "sha256": "fb8d261604d33a162eacf84744d3723bdb5e1f73f892d0bb5d745ecde6fd9520",
+  "pages": 84,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission examined complaints about the Gold Coast City Council through Operation Yabber.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Operation-Yabber-An-investigation-into-allegations-relating-to-the-Gold-Coast-City-Council.pdf",
+      "document": "Operation Yabber: An investigation into allegations relating to the Gold Coast City Council",
+      "page": 1
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Operation-Yabber-An-investigation-into-allegations-relating-to-the-Gold-Coast-City-Council.pdf",
+      "document": "Operation Yabber: An investigation into allegations relating to the Gold Coast City Council",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The CCC found that the mayor’s chief of staff had not properly declared conflicts of interest and that those conflicts had not been properly managed.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Operation-Yabber-An-investigation-into-allegations-relating-to-the-Gold-Coast-City-Council.pdf",
+      "document": "Operation Yabber: An investigation into allegations relating to the Gold Coast City Council",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The CCC considered that many interactions between the chief of staff and council officers were inappropriate attempts to influence council decisions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Operation-Yabber-An-investigation-into-allegations-relating-to-the-Gold-Coast-City-Council.pdf",
+      "document": "Operation Yabber: An investigation into allegations relating to the Gold Coast City Council",
+      "page": 10
+     }
+    ]
+   },
+   {
+    "text": "The CCC made two recommendations for legislative changes concerning mayoral directions and political advisers, with further recommendations to the council on employment, conflicts and spending controls.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Operation-Yabber-An-investigation-into-allegations-relating-to-the-Gold-Coast-City-Council.pdf",
+      "document": "Operation Yabber: An investigation into allegations relating to the Gold Coast City Council",
+      "page": 29
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Operation-Yabber-An-investigation-into-allegations-relating-to-the-Gold-Coast-City-Council.pdf",
+      "document": "Operation Yabber: An investigation into allegations relating to the Gold Coast City Council",
+      "page": 32
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Operation-Yabber-An-investigation-into-allegations-relating-to-the-Gold-Coast-City-Council.pdf",
+      "document": "Operation Yabber: An investigation into allegations relating to the Gold Coast City Council",
+      "page": 82
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The CCC investigation found that the Mayor’s Chief of Staff failed to properly declare conflicts of interest and that the conflicts were not properly managed.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Operation-Yabber-An-investigation-into-allegations-relating-to-the-Gold-Coast-City-Council.pdf",
+     "document": "Operation Yabber: An investigation into allegations relating to the Gold Coast City Council",
+     "page": 9
+    }
+   },
+   {
+    "quote": "The CCC takes the view that the interactions, in many cases, represented inappropriate attempts to influence council decision-making.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Operation-Yabber-An-investigation-into-allegations-relating-to-the-Gold-Coast-City-Council.pdf",
+     "document": "Operation Yabber: An investigation into allegations relating to the Gold Coast City Council",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-remembrance-parks-central-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Remembrance Parks Central Victoria 2025-26 annual report",
+ "body": "Remembrance Parks Central Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4aa6ad/globalassets/tabled-paper-documents/tabled-paper-10675/remembrance-parks-central-victoria-annual-report-2025-2026.pdf",
+  "document": "annual report",
+  "sha256": "378d10845682401b94f970e4b7099d57095cb9e777b226836160681ef53f2c05",
+  "pages": 89,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Report from the Trust Chair & Chief Executive Officer",
+  "first_page": 5,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4aa6ad/globalassets/tabled-paper-documents/tabled-paper-10675/remembrance-parks-central-victoria-annual-report-2025-2026.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "In its 2025-2026 report, Remembrance Parks Central Victoria described its burial, cremation and memorialisation services and care of 12 remembrance parks.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6ad/globalassets/tabled-paper-documents/tabled-paper-10675/remembrance-parks-central-victoria-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6ad/globalassets/tabled-paper-documents/tabled-paper-10675/remembrance-parks-central-victoria-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "About Us"
+   },
+   {
+    "text": "The trust reported introducing new burial products and sections and improving cemetery records through its PlotBox management system.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6ad/globalassets/tabled-paper-documents/tabled-paper-10675/remembrance-parks-central-victoria-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Report from the Trust Chair & Chief Executive Officer"
+   },
+   {
+    "text": "It reported that management of Heathcote Cemetery transferred to the trust in February 2026 and that its cremator replacement project reached the tender-ready stage.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6ad/globalassets/tabled-paper-documents/tabled-paper-10675/remembrance-parks-central-victoria-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Report from the Trust Chair & Chief Executive Officer"
+   },
+   {
+    "text": "The trust reported receiving Department of Health structural support funding in June 2026 to help maintain financial sustainability after prolonged financial pressures.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6ad/globalassets/tabled-paper-documents/tabled-paper-10675/remembrance-parks-central-victoria-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Report from the Trust Chair & Chief Executive Officer"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "This funding has stabilised cashflow and enabled RPCV to continue working on improvements to financial position.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4aa6ad/globalassets/tabled-paper-documents/tabled-paper-10675/remembrance-parks-central-victoria-annual-report-2025-2026.pdf",
+     "document": "annual report",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

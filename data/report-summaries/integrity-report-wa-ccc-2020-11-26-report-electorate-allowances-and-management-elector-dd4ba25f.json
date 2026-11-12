@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2020-11-26-report-electorate-allowances-and-management-elector-dd4ba25f",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on electorate allowances and management of electorate offices",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20electorate%20allowances%20and%20management%20of%20electorate%20offices.pdf",
+  "document": "Report on electorate allowances and management of electorate offices",
+  "sha256": "8934a6ebd054fda9e3a563afcc0d26bd8fbb194a0a23cc5270a3d2b431be3eb9",
+  "pages": 89,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Introduction",
+  "first_page": 5,
+  "last_page": 7,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20electorate%20allowances%20and%20management%20of%20electorate%20offices.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reported on its continuing investigation into parliamentary allowances and the management of electorate offices.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20electorate%20allowances%20and%20management%20of%20electorate%20offices.pdf",
+      "document": "Report on electorate allowances and management of electorate offices",
+      "page": 5
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It examined private use of allowances, recruitment of electorate staff and interference with the investigation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20electorate%20allowances%20and%20management%20of%20electorate%20offices.pdf",
+      "document": "Report on electorate allowances and management of electorate offices",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20electorate%20allowances%20and%20management%20of%20electorate%20offices.pdf",
+      "document": "Report on electorate allowances and management of electorate offices",
+      "page": 6
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission formed serious misconduct opinions about two former members’ use of allowances and one former member’s employment of electorate staff.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20electorate%20allowances%20and%20management%20of%20electorate%20offices.pdf",
+      "document": "Report on electorate allowances and management of electorate offices",
+      "page": 86
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commission identified insufficient oversight of both allowance spending and electorate staff employment.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20electorate%20allowances%20and%20management%20of%20electorate%20offices.pdf",
+      "document": "Report on electorate allowances and management of electorate offices",
+      "page": 85
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commission made two recommendations to implement a staff code of conduct and adapt public service recruitment requirements for electorate staff.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20electorate%20allowances%20and%20management%20of%20electorate%20offices.pdf",
+      "document": "Report on electorate allowances and management of electorate offices",
+      "page": 88
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20electorate%20allowances%20and%20management%20of%20electorate%20offices.pdf",
+      "document": "Report on electorate allowances and management of electorate offices",
+      "page": 89
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

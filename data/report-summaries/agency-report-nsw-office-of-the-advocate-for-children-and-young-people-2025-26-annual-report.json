@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-nsw-office-of-the-advocate-for-children-and-young-people-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Office of the Advocate for Children and Young People 2025-26 annual report",
+ "body": "Office of the Advocate for Children and Young People",
+ "source": {
+  "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212455%2FAdvocate%20for%20Children%20and%20Young%20People%20Annual%20Report%202025-2026.pdf",
+  "document": "annual report",
+  "sha256": "329fedfacf8e913d758f0831895bbf52badf5c9279df5338592b1444b6e2bcf2",
+  "pages": 49,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Advocate’s Foreword",
+  "first_page": 6,
+  "last_page": 8,
+  "link": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212455%2FAdvocate%20for%20Children%20and%20Young%20People%20Annual%20Report%202025-2026.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Advocate for Children and Young People reported on 2025–26, advocating for the safety, welfare and wellbeing of children and young people.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212455%2FAdvocate%20for%20Children%20and%20Young%20People%20Annual%20Report%202025-2026.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212455%2FAdvocate%20for%20Children%20and%20Young%20People%20Annual%20Report%202025-2026.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ]
+   },
+   {
+    "text": "The Office recorded engaging 11,641 children and young people and making 20 submissions to government.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212455%2FAdvocate%20for%20Children%20and%20Young%20People%20Annual%20Report%202025-2026.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The Advocate reported research work on school belonging, early childhood support and the experiences of young people affected by domestic and family violence.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212455%2FAdvocate%20for%20Children%20and%20Young%20People%20Annual%20Report%202025-2026.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The Advocate also reported preparing the NSW strategic plan for children and young people for 2027–2030, drawing on contributions from young people, communities, agencies and service providers.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212455%2FAdvocate%20for%20Children%20and%20Young%20People%20Annual%20Report%202025-2026.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Their perspectives continue to provide a foundation for government decision-making and reform.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212455%2FAdvocate%20for%20Children%20and%20Young%20People%20Annual%20Report%202025-2026.pdf",
+     "document": "annual report",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

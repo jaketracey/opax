@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-east-wimmera-health-service-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "East Wimmera Health Service 2025-26 annual report",
+ "body": "East Wimmera Health Service",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10733/east-wimmera-health-service-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "4a9d3c71ee8ba7fc592823e6415b6d41fae1545a63942480e1b5e94902dc50b7",
+  "pages": 92,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Chair and Chief Executive Officer",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10733/east-wimmera-health-service-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "In its 2025–26 report, East Wimmera Health Service described its provision of primary care and home support services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10733/east-wimmera-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Message from the Chair and Chief Executive Officer"
+   },
+   {
+    "text": "The service reported completing staff accommodation at Wycheproof and starting fire service upgrades at Donald, St Arnaud and Wycheproof.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10733/east-wimmera-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Message from the Chair and Chief Executive Officer"
+   },
+   {
+    "text": "It reported cutting nurse agency costs by $2.009 million, exceeding its reduction target of $0.5 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10733/east-wimmera-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 22
+     }
+    ],
+    "section": "Finance Overview"
+   },
+   {
+    "text": "It reported a $0.028 million operating surplus and a $3.452 million comprehensive deficit, including other economic flows.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10733/east-wimmera-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 22
+     }
+    ],
+    "section": "Finance Overview"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "This year continued to prove difficult in recruiting staff, particularly nursing staff, but the pressures eased as the year progressed, the majority of vacant nursing positions were filled by the end of the financial year.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10733/east-wimmera-health-service-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 22
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2008-10-30-report-investigation-alleged-misconduct-concerning-3ef023df",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Investigation of Alleged Misconduct Concerning Officers of the Department of Fisheries",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Officers%20of%20the%20Department%20of%20Fisheries.pdf",
+  "document": "Report on the Investigation of Alleged Misconduct Concerning Officers of the Department of Fisheries.pdf",
+  "sha256": "3d988653404b1dd30ec30c8d95aa6facf67b5c61b8e99fb987e989947da03ec2",
+  "pages": 78,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 9,
+  "last_page": 15,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Officers%20of%20the%20Department%20of%20Fisheries.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated Department of Fisheries officers’ associations with people involved in suspected illegal fishing.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Officers%20of%20the%20Department%20of%20Fisheries.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Officers of the Department of Fisheries.pdf",
+      "page": 9
+     }
+    ],
+    "section": "Investigation by the Commission"
+   },
+   {
+    "text": "It examined the disclosure of information about an investigation and advice given to people under investigation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Officers%20of%20the%20Department%20of%20Fisheries.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Officers of the Department of Fisheries.pdf",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Officers%20of%20the%20Department%20of%20Fisheries.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Officers of the Department of Fisheries.pdf",
+      "page": 10
+     }
+    ],
+    "section": "Investigation by the Commission"
+   },
+   {
+    "text": "The Commission formed serious misconduct opinions about the acting chief executive’s disclosure and two officers’ advice about false explanations for fishing activities.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Officers%20of%20the%20Department%20of%20Fisheries.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Officers of the Department of Fisheries.pdf",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Officers%20of%20the%20Department%20of%20Fisheries.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Officers of the Department of Fisheries.pdf",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Officers%20of%20the%20Department%20of%20Fisheries.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Officers of the Department of Fisheries.pdf",
+      "page": 14
+     }
+    ],
+    "section": "Commission Assessments and Opinions"
+   },
+   {
+    "text": "Its three recommendations sought consideration of disciplinary action against the acting chief executive and exclusion of the other officers from future departmental work.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Officers%20of%20the%20Department%20of%20Fisheries.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Officers of the Department of Fisheries.pdf",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Officers%20of%20the%20Department%20of%20Fisheries.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Officers of the Department of Fisheries.pdf",
+      "page": 15
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

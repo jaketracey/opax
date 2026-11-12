@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2022-09-20-report-corrupt-procurement-practices-and-conduct-de-664e7e8d",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "A report on corrupt procurement practices and conduct in the Department of Communities",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20corrupt%20procurement%20practices%20and%20conduct%20in%20the%20Department%20of%20Communities.pdf",
+  "document": "A report on corrupt procurement practices and conduct in the Department of Communities.pdf",
+  "sha256": "b14e49f69fa0891a35f480f544a0c263cf88fe43247f04d58f39d37f6274db80",
+  "pages": 59,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "OVERVIEW",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20corrupt%20procurement%20practices%20and%20conduct%20in%20the%20Department%20of%20Communities.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated procurement and personal benefits associated with a Department of Communities consulting project.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20corrupt%20procurement%20practices%20and%20conduct%20in%20the%20Department%20of%20Communities.pdf",
+      "document": "A report on corrupt procurement practices and conduct in the Department of Communities.pdf",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20corrupt%20procurement%20practices%20and%20conduct%20in%20the%20Department%20of%20Communities.pdf",
+      "document": "A report on corrupt procurement practices and conduct in the Department of Communities.pdf",
+      "page": 6
+     }
+    ],
+    "section": "OVERVIEW"
+   },
+   {
+    "text": "The Commission formed an opinion that a departmental employee used her control of consulting work corruptly to obtain benefits for herself and others.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20corrupt%20procurement%20practices%20and%20conduct%20in%20the%20Department%20of%20Communities.pdf",
+      "document": "A report on corrupt procurement practices and conduct in the Department of Communities.pdf",
+      "page": 57
+     }
+    ],
+    "section": "Conclusions and recommendations"
+   },
+   {
+    "text": "The Commission could not make serious misconduct findings about a contractor involved because she was outside its definition of a public officer.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20corrupt%20procurement%20practices%20and%20conduct%20in%20the%20Department%20of%20Communities.pdf",
+      "document": "A report on corrupt procurement practices and conduct in the Department of Communities.pdf",
+      "page": 5
+     }
+    ],
+    "section": "OVERVIEW"
+   },
+   {
+    "text": "The Commission made one recommendation to extend its jurisdiction to contractors performing work ordinarily done by public sector employees.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20corrupt%20procurement%20practices%20and%20conduct%20in%20the%20Department%20of%20Communities.pdf",
+      "document": "A report on corrupt procurement practices and conduct in the Department of Communities.pdf",
+      "page": 57
+     }
+    ],
+    "section": "Recommendation"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In the Commission's opinion, Mrs Ravi engaged in serious misconduct over a number of years.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20corrupt%20procurement%20practices%20and%20conduct%20in%20the%20Department%20of%20Communities.pdf",
+     "document": "A report on corrupt procurement practices and conduct in the Department of Communities.pdf",
+     "page": 57
+    }
+   },
+   {
+    "quote": "The CCM Act should be amended to give the Commission clear jurisdiction in respect of people who work within the public sector as contractors but perform work ordinarily performed by employees.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20corrupt%20procurement%20practices%20and%20conduct%20in%20the%20Department%20of%20Communities.pdf",
+     "document": "A report on corrupt procurement practices and conduct in the Department of Communities.pdf",
+     "page": 57
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

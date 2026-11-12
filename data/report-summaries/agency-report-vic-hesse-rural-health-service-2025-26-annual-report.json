@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-hesse-rural-health-service-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Hesse Rural Health Service 2025-26 annual report",
+ "body": "Hesse Rural Health Service",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10743/hesse-rural-health-service-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "8aa9e3cdd9c62dc7e604671ee5eb92361b4d570c650c6c3d831b63f1f3aa7cbd",
+  "pages": 105,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "MESSAGE FROM Board Chair & Chief Executive",
+  "first_page": 7,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10743/hesse-rural-health-service-annual-report-2025-26.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Hesse Rural Health Service’s 2025-26 report covers its acute care, residential aged care, allied health, home care and community services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10743/hesse-rural-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10743/hesse-rural-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Nature & Range Of Services"
+   },
+   {
+    "text": "Hesse reported gaining another three years of national safety and quality accreditation for acute services, with all applicable requirements fully met.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10743/hesse-rural-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "MESSAGE FROM Board Chair & Chief Executive"
+   },
+   {
+    "text": "It reported introducing the Support at Home program in November 2025 and helping existing home care clients move to the new arrangements.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10743/hesse-rural-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "MESSAGE FROM Board Chair & Chief Executive"
+   },
+   {
+    "text": "Hesse reported an operating surplus of $748 and an overall net deficit of $905,616.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10743/hesse-rural-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 56
+     }
+    ],
+    "section": "Financial Overview"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Hesse is proud to have met all budgetary targets, from operating results to effective management of debtors and creditors.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10743/hesse-rural-health-service-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 56
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

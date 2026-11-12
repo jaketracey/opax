@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-austin-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Austin Health 2025-26 annual report",
+ "body": "Austin Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10701/austin-health-annual-report--2025-26.pdf",
+  "document": "annual report",
+  "sha256": "0f34136c5cdc428b268b0fbc96e81e21774d5dc8d6e481f69165015143dcffdd",
+  "pages": 148,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "From the Board Chair and the CEO",
+  "first_page": 4,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10701/austin-health-annual-report--2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Austin Health reported for the year ending 30 June 2026 as a Victorian provider of specialist hospital and community healthcare.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10701/austin-health-annual-report--2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10701/austin-health-annual-report--2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "About Austin Health"
+   },
+   {
+    "text": "Austin Health reported performing 29,320 surgeries and 245 transplants, alongside 325,137 specialist clinic appointments.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10701/austin-health-annual-report--2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Patient and community focused care"
+   },
+   {
+    "text": "Austin Health reported extending its Virtual Hospital following a pilot, enabling more patients to receive hospital care at home.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10701/austin-health-annual-report--2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "A future focused health service"
+   },
+   {
+    "text": "Austin Health reported a surplus of $0.2 million and a workforce of 11,603 employees.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10701/austin-health-annual-report--2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Sustainable healthcare"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We have opened the new Heidelberg Youth Prevention and Recovery Care, a co-designed space providing around-the-clock treatment, care and support to young people aged 16 to 25 who are experiencing mental health challenges.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10701/austin-health-annual-report--2025-26.pdf",
+     "document": "annual report",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

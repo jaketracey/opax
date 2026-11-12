@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2020-02-21-operation-impala",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Impala - A report on misuse of confidential information in the Queensland public sector",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Impala/Operation-Impala-report-on-misuse-of-confidential-information-in-the-Queensland-public-sector-v2.pdf",
+  "document": "Operation Impala - A report on misuse of confidential information in the Queensland public sector",
+  "sha256": "c9ba16ec6d612f2508f10dcc8b9a44a5d15331b1a2ce57d0c3d777d067b10361",
+  "pages": 154,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary and recommendations",
+  "first_page": 12,
+  "last_page": 19,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Impala/Operation-Impala-report-on-misuse-of-confidential-information-in-the-Queensland-public-sector-v2.pdf#page=12"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission conducted Operation Impala to examine how Queensland public agencies manage confidential information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Impala/Operation-Impala-report-on-misuse-of-confidential-information-in-the-Queensland-public-sector-v2.pdf",
+      "document": "Operation Impala - A report on misuse of confidential information in the Queensland public sector",
+      "page": 12
+     }
+    ]
+   },
+   {
+    "text": "The investigation examined seven agencies, focusing on unauthorised access to personal information and its disclosure.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Impala/Operation-Impala-report-on-misuse-of-confidential-information-in-the-Queensland-public-sector-v2.pdf",
+      "document": "Operation Impala - A report on misuse of confidential information in the Queensland public sector",
+      "page": 12
+     }
+    ]
+   },
+   {
+    "text": "The CCC identified inconsistent responses to information misuse and found that victims could experience lasting distress and financial loss.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Impala/Operation-Impala-report-on-misuse-of-confidential-information-in-the-Queensland-public-sector-v2.pdf",
+      "document": "Operation Impala - A report on misuse of confidential information in the Queensland public sector",
+      "page": 13
+     }
+    ]
+   },
+   {
+    "text": "The CCC made 18 recommendations covering agency safeguards, privacy law, a new criminal offence and ways for affected people to seek redress.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Impala/Operation-Impala-report-on-misuse-of-confidential-information-in-the-Queensland-public-sector-v2.pdf",
+      "document": "Operation Impala - A report on misuse of confidential information in the Queensland public sector",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Impala/Operation-Impala-report-on-misuse-of-confidential-information-in-the-Queensland-public-sector-v2.pdf",
+      "document": "Operation Impala - A report on misuse of confidential information in the Queensland public sector",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Impala/Operation-Impala-report-on-misuse-of-confidential-information-in-the-Queensland-public-sector-v2.pdf",
+      "document": "Operation Impala - A report on misuse of confidential information in the Queensland public sector",
+      "page": 19
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Operation Impala identified inconsistent approaches to dealing with allegations regarding misuse of confidential information.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Impala/Operation-Impala-report-on-misuse-of-confidential-information-in-the-Queensland-public-sector-v2.pdf",
+     "document": "Operation Impala - A report on misuse of confidential information in the Queensland public sector",
+     "page": 13
+    }
+   },
+   {
+    "quote": "Such misuse was found to have ongoing and long-lasting effects including stress, feelings of vulnerability, financial loss, and frustration with the difficulty of obtaining redress or adequate compensation.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Impala/Operation-Impala-report-on-misuse-of-confidential-information-in-the-Queensland-public-sector-v2.pdf",
+     "document": "Operation Impala - A report on misuse of confidential information in the Queensland public sector",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

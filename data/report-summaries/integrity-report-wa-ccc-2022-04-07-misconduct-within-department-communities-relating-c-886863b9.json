@@ -1,0 +1,90 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2022-04-07-misconduct-within-department-communities-relating-c-886863b9",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Misconduct within the Department of Communities relating to country building projects",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20within%20the%20Department%20of%20Communities%20relating%20to%20country%20building%20projects.pdf",
+  "document": "20220407 Misconduct within the Department of Communities relating to country building projects",
+  "sha256": "f3b750a7bdfc67dd864a9df5df14e296193388f60678a8cc89c0240b88e29bb5",
+  "pages": 34,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Introduction",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20within%20the%20Department%20of%20Communities%20relating%20to%20country%20building%20projects.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated a senior housing project manager’s conduct in awarding regional construction and maintenance contracts.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20within%20the%20Department%20of%20Communities%20relating%20to%20country%20building%20projects.pdf",
+      "document": "20220407 Misconduct within the Department of Communities relating to country building projects",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20within%20the%20Department%20of%20Communities%20relating%20to%20country%20building%20projects.pdf",
+      "document": "20220407 Misconduct within the Department of Communities relating to country building projects",
+      "page": 5
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission formed an opinion of serious misconduct concerning payments the manager received from contractors awarded work through his position.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20within%20the%20Department%20of%20Communities%20relating%20to%20country%20building%20projects.pdf",
+      "document": "20220407 Misconduct within the Department of Communities relating to country building projects",
+      "page": 4
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission concluded that housing controls had been weak and noted subsequent improvement in enforcement of departmental procedures.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20within%20the%20Department%20of%20Communities%20relating%20to%20country%20building%20projects.pdf",
+      "document": "20220407 Misconduct within the Department of Communities relating to country building projects",
+      "page": 33
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commission referred the conduct of the manager and two contractors to police.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20within%20the%20Department%20of%20Communities%20relating%20to%20country%20building%20projects.pdf",
+      "document": "20220407 Misconduct within the Department of Communities relating to country building projects",
+      "page": 34
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,125 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1997-10-30-investigation-paedophilia-criminal-justice-commission",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "The Investigation of Paedophilia by the Criminal Justice Commission",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-of-paedophilia-by-the-CJC-Report-1997.pdf",
+  "document": "The Investigation of Paedophilia by the Criminal Justice Commission - 30 October 1997 (PDF)",
+  "sha256": "b5acba32050af64c1de07d4889029f6fe230558bd5f9112ac511ef89196c496b",
+  "pages": 31,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 2,
+  "last_page": 6,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-of-paedophilia-by-the-CJC-Report-1997.pdf#page=2"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission reported on how it had exercised its responsibilities concerning paedophilia.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-of-paedophilia-by-the-CJC-Report-1997.pdf",
+      "document": "The Investigation of Paedophilia by the Criminal Justice Commission - 30 October 1997 (PDF)",
+      "page": 2
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It reviewed its jurisdiction, intelligence assessment, complaint handling and joint work with police.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-of-paedophilia-by-the-CJC-Report-1997.pdf",
+      "document": "The Investigation of Paedophilia by the Criminal Justice Commission - 30 October 1997 (PDF)",
+      "page": 2
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-of-paedophilia-by-the-CJC-Report-1997.pdf",
+      "document": "The Investigation of Paedophilia by the Criminal Justice Commission - 30 October 1997 (PDF)",
+      "page": 3
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-of-paedophilia-by-the-CJC-Report-1997.pdf",
+      "document": "The Investigation of Paedophilia by the Criminal Justice Commission - 30 October 1997 (PDF)",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-of-paedophilia-by-the-CJC-Report-1997.pdf",
+      "document": "The Investigation of Paedophilia by the Criminal Justice Commission - 30 October 1997 (PDF)",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-of-paedophilia-by-the-CJC-Report-1997.pdf",
+      "document": "The Investigation of Paedophilia by the Criminal Justice Commission - 30 October 1997 (PDF)",
+      "page": 6
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The CJC maintained that it had discharged its responsibilities appropriately and reported that no allegations of police cover-up had been substantiated.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-of-paedophilia-by-the-CJC-Report-1997.pdf",
+      "document": "The Investigation of Paedophilia by the Criminal Justice Commission - 30 October 1997 (PDF)",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-of-paedophilia-by-the-CJC-Report-1997.pdf",
+      "document": "The Investigation of Paedophilia by the Criminal Justice Commission - 30 October 1997 (PDF)",
+      "page": 30
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-of-paedophilia-by-the-CJC-Report-1997.pdf",
+      "document": "The Investigation of Paedophilia by the Criminal Justice Commission - 30 October 1997 (PDF)",
+      "page": 31
+     }
+    ],
+    "section": "SECTION 8 CONCLUSIONS"
+   },
+   {
+    "text": "It reported that the joint task force examining alleged official misconduct had found none to date, while its investigations continued.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-of-paedophilia-by-the-CJC-Report-1997.pdf",
+      "document": "The Investigation of Paedophilia by the Criminal Justice Commission - 30 October 1997 (PDF)",
+      "page": 6
+     }
+    ],
+    "section": "Section 7: Project Triton"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The CJC contends that it has adequately and appropriately discharged its responsibility in relation to this important issue of paedophilia.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-of-paedophilia-by-the-CJC-Report-1997.pdf",
+     "document": "The Investigation of Paedophilia by the Criminal Justice Commission - 30 October 1997 (PDF)",
+     "page": 30
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,90 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2019-03-12-report-wa-commissioner-japan-updated-12-november-2025",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the WA Commissioner in Japan - updated 12 November 2025",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20WA%20Commissioner%20in%20Japan%20-%20updated%2012%20November%202025.pdf",
+  "document": "Report on the WA Commissioner in Japan - updated 12 November 2025",
+  "sha256": "fc2ffb51cde5ad4ed7a86679ac1e0cfb518ae97ca251313a4f8a8b5b03cad26e",
+  "pages": 64,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview: The behaviour of the Commissioner for WA in Tokyo, Japan",
+  "first_page": 5,
+  "last_page": 11,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20WA%20Commissioner%20in%20Japan%20-%20updated%2012%20November%202025.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated the use of public money and benefits by Western Australia’s representative in Japan.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20WA%20Commissioner%20in%20Japan%20-%20updated%2012%20November%202025.pdf",
+      "document": "Report on the WA Commissioner in Japan - updated 12 November 2025",
+      "page": 10
+     }
+    ],
+    "section": "The Commission’s investigation"
+   },
+   {
+    "text": "The financial investigation focused principally on a two-year period, while also examining historical matters that emerged.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20WA%20Commissioner%20in%20Japan%20-%20updated%2012%20November%202025.pdf",
+      "document": "Report on the WA Commissioner in Japan - updated 12 November 2025",
+      "page": 63
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20WA%20Commissioner%20in%20Japan%20-%20updated%2012%20November%202025.pdf",
+      "document": "Report on the WA Commissioner in Japan - updated 12 November 2025",
+      "page": 64
+     }
+    ],
+    "section": "Conclusion: The Commission’s investigation"
+   },
+   {
+    "text": "The Commission formed an opinion that the representative corruptly used his position to benefit himself and others at the State’s expense.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20WA%20Commissioner%20in%20Japan%20-%20updated%2012%20November%202025.pdf",
+      "document": "Report on the WA Commissioner in Japan - updated 12 November 2025",
+      "page": 11
+     }
+    ],
+    "section": "Opinion of serious misconduct"
+   },
+   {
+    "text": "The Commission provided the report to the Public Sector Commission for questions about supervision and validation of financial accounts.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20WA%20Commissioner%20in%20Japan%20-%20updated%2012%20November%202025.pdf",
+      "document": "Report on the WA Commissioner in Japan - updated 12 November 2025",
+      "page": 64
+     }
+    ],
+    "section": "Conclusion: The Commission’s investigation"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,141 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1997-10-01-police-and-drugs-report-investigation-cases-involving-queens",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Police and Drugs: A Report of an Investigation of Cases Involving Queensland Police Officers",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-and-drugs-Report-1997.pdf",
+  "document": "Police and Drugs: A Report of an Investigation of Cases Involving Queensland Police Officers (October 1997)",
+  "sha256": "9e98bc590c7a3a0de2fde76fff6980742927fb7b04cbf7dc104246091a77dfd6",
+  "pages": 117,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 3,
+  "last_page": 12,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-and-drugs-Report-1997.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The CJC’s Operation Shield investigated suspected police corruption involving drugs and the drug trade.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-and-drugs-Report-1997.pdf",
+      "document": "Police and Drugs: A Report of an Investigation of Cases Involving Queensland Police Officers (October 1997)",
+      "page": 4
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The report examined problems involving informants, seized money, police transfers, information systems, drug exhibits and supervision.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-and-drugs-Report-1997.pdf",
+      "document": "Police and Drugs: A Report of an Investigation of Cases Involving Queensland Police Officers (October 1997)",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-and-drugs-Report-1997.pdf",
+      "document": "Police and Drugs: A Report of an Investigation of Cases Involving Queensland Police Officers (October 1997)",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-and-drugs-Report-1997.pdf",
+      "document": "Police and Drugs: A Report of an Investigation of Cases Involving Queensland Police Officers (October 1997)",
+      "page": 8
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-and-drugs-Report-1997.pdf",
+      "document": "Police and Drugs: A Report of an Investigation of Cases Involving Queensland Police Officers (October 1997)",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-and-drugs-Report-1997.pdf",
+      "document": "Police and Drugs: A Report of an Investigation of Cases Involving Queensland Police Officers (October 1997)",
+      "page": 10
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The inquiry reported corruption involving drug use and dealing, protection of dealers, theft and false material presented to courts.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-and-drugs-Report-1997.pdf",
+      "document": "Police and Drugs: A Report of an Investigation of Cases Involving Queensland Police Officers (October 1997)",
+      "page": 5
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It concluded that informant-management procedures were ineffective and that cash-handling safeguards were inadequate.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-and-drugs-Report-1997.pdf",
+      "document": "Police and Drugs: A Report of an Investigation of Cases Involving Queensland Police Officers (October 1997)",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-and-drugs-Report-1997.pdf",
+      "document": "Police and Drugs: A Report of an Investigation of Cases Involving Queensland Police Officers (October 1997)",
+      "page": 8
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The report made fourteen recommendations covering a permanent anti-corruption unit, investigative powers, operational safeguards, staff policies and supervision.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-and-drugs-Report-1997.pdf",
+      "document": "Police and Drugs: A Report of an Investigation of Cases Involving Queensland Police Officers (October 1997)",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-and-drugs-Report-1997.pdf",
+      "document": "Police and Drugs: A Report of an Investigation of Cases Involving Queensland Police Officers (October 1997)",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-and-drugs-Report-1997.pdf",
+      "document": "Police and Drugs: A Report of an Investigation of Cases Involving Queensland Police Officers (October 1997)",
+      "page": 15
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The current system for the registration of informants as part of Queensland Police Service procedures is not effective.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-and-drugs-Report-1997.pdf",
+     "document": "Police and Drugs: A Report of an Investigation of Cases Involving Queensland Police Officers (October 1997)",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

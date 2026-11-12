@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-institute-of-forensic-medicine-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Institute of Forensic Medicine 2025-26 annual report",
+ "body": "Victorian Institute of Forensic Medicine",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4aa6bd/globalassets/tabled-paper-documents/tabled-paper-10777/victorian-institute-of-forensic-medicine-2025-26-annual-report.pdf",
+  "document": "annual report",
+  "sha256": "1e3bc1899baeee2f1a603f3c85f4edbb1e19d67d5321fd2bf225d452e46b7087",
+  "pages": 114,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Board Chair and CEO report",
+  "first_page": 12,
+  "last_page": 13,
+  "link": "https://www.parliament.vic.gov.au/4aa6bd/globalassets/tabled-paper-documents/tabled-paper-10777/victorian-institute-of-forensic-medicine-2025-26-annual-report.pdf#page=12"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Institute of Forensic Medicine reported on 2025–26, providing forensic expertise for justice, tissue for transplantation, and education and research.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6bd/globalassets/tabled-paper-documents/tabled-paper-10777/victorian-institute-of-forensic-medicine-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6bd/globalassets/tabled-paper-documents/tabled-paper-10777/victorian-institute-of-forensic-medicine-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "Who we are"
+   },
+   {
+    "text": "The institute reported opening a dedicated MRI scanner in July 2025 to support death investigations and clinical forensic work.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6bd/globalassets/tabled-paper-documents/tabled-paper-10777/victorian-institute-of-forensic-medicine-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "Board Chair and CEO report"
+   },
+   {
+    "text": "It reported 5,072 clinical forensic medicine cases, with the team meeting or exceeding key performance targets across its major service areas.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6bd/globalassets/tabled-paper-documents/tabled-paper-10777/victorian-institute-of-forensic-medicine-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 45
+     }
+    ],
+    "section": "Clinical Forensic Medicine"
+   },
+   {
+    "text": "The institute reported a comprehensive deficit of $7.76 million, reflecting increased staffing costs and reduced revenue.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6bd/globalassets/tabled-paper-documents/tabled-paper-10777/victorian-institute-of-forensic-medicine-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 53
+     }
+    ],
+    "section": "Financial performance - Operating statement"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Financial sustainability, workforce capability, digital transformation and infrastructure renewal will remain important priorities for the organisation.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4aa6bd/globalassets/tabled-paper-documents/tabled-paper-10777/victorian-institute-of-forensic-medicine-2025-26-annual-report.pdf",
+     "document": "annual report",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

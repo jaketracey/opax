@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-institute-of-sport-trust-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Institute of Sport Trust 2025-26 annual report",
+ "body": "Victorian Institute of Sport Trust",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab35c/globalassets/tabled-paper-documents/tabled-paper-10641/2025-26-vis-annual-report.pdf",
+  "document": "annual report",
+  "sha256": "223e1ddeee33a9a0e0bbe31c43e0785dadd3ece48469fc641647364e02d0ac7e",
+  "pages": 64,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chair & CEO Report",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab35c/globalassets/tabled-paper-documents/tabled-paper-10641/2025-26-vis-annual-report.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Institute of Sport reported on 2025–2026, supporting athletes to succeed at major events and in life.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab35c/globalassets/tabled-paper-documents/tabled-paper-10641/2025-26-vis-annual-report.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab35c/globalassets/tabled-paper-documents/tabled-paper-10641/2025-26-vis-annual-report.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "WHO WE ARE"
+   },
+   {
+    "text": "The institute reported supporting 451 athletes across 46 sports, with 56% female representation.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab35c/globalassets/tabled-paper-documents/tabled-paper-10641/2025-26-vis-annual-report.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Chair & CEO Report"
+   },
+   {
+    "text": "It reported 37 podium-level results at major international events, including 14 gold medals.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab35c/globalassets/tabled-paper-documents/tabled-paper-10641/2025-26-vis-annual-report.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Chair & CEO Report"
+   },
+   {
+    "text": "The institute reported that 92% of scholarship holders were studying, working or doing both.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab35c/globalassets/tabled-paper-documents/tabled-paper-10641/2025-26-vis-annual-report.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Chair & CEO Report"
+   },
+   {
+    "text": "The institute reported employing more than 115 people across coaching, performance services and other support roles.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab35c/globalassets/tabled-paper-documents/tabled-paper-10641/2025-26-vis-annual-report.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "WHO WE ARE"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "A further 43 top eight performances highlighted the depth and consistency across VIS programs.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab35c/globalassets/tabled-paper-documents/tabled-paper-10641/2025-26-vis-annual-report.pdf",
+     "document": "annual report",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

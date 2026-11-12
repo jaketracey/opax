@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-game-management-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Game Management Authority 2025-26 annual report",
+ "body": "Game Management Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab33c/globalassets/tabled-paper-documents/tabled-paper-10598/bmin-2-26-54595---attachment-1-gma-annual-report-25-26.pdf",
+  "document": "annual report",
+  "sha256": "86c54345183c2bdf5a7374c264aaa51c7a0bc39d2d7f09e6ddb5c0550cfe2699",
+  "pages": 60,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Foreword",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.parliament.vic.gov.au/4ab33c/globalassets/tabled-paper-documents/tabled-paper-10598/bmin-2-26-54595---attachment-1-gma-annual-report-25-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Game Management Authority reported on its regulation of game hunting in Victoria during 2025–26.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab33c/globalassets/tabled-paper-documents/tabled-paper-10598/bmin-2-26-54595---attachment-1-gma-annual-report-25-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "About the Game Management Authority"
+   },
+   {
+    "text": "The authority reported leading 25 operations, participating in 21 more with other agencies and publishing three education modules for gamebird hunters.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab33c/globalassets/tabled-paper-documents/tabled-paper-10598/bmin-2-26-54595---attachment-1-gma-annual-report-25-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "CEO Report"
+   },
+   {
+    "text": "It classified 79% of its 72 business plan measures as complete or ongoing, 8% as in progress and 13% as on hold.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab33c/globalassets/tabled-paper-documents/tabled-paper-10598/bmin-2-26-54595---attachment-1-gma-annual-report-25-26.pdf",
+      "document": "annual report",
+      "page": 20
+     }
+    ],
+    "section": "Our Performance"
+   },
+   {
+    "text": "It reported a $2.9 million deficit from transactions, primarily reflecting planned spending of reserves and depreciation and amortisation costs.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab33c/globalassets/tabled-paper-documents/tabled-paper-10598/bmin-2-26-54595---attachment-1-gma-annual-report-25-26.pdf",
+      "document": "annual report",
+      "page": 22
+     }
+    ],
+    "section": "Financial Performance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The first-year results demonstrated that the bag-limit model performed well, with the 2025 harvest within 1.8 per cent of the seasonal harvest quota.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab33c/globalassets/tabled-paper-documents/tabled-paper-10598/bmin-2-26-54595---attachment-1-gma-annual-report-25-26.pdf",
+     "document": "annual report",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2008-01-25-report-investigation-alleged-misconduct-concerning-b1a55a53",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Investigation of Alleged Misconduct concerning Dr Neale Fong, Director General of the Department of Health",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20concerning%20Dr%20Neale%20Fong%2C%20Director%20General%20of%20the%20Department%20of%20Health.pdf",
+  "document": "Report on the Investigation of Alleged Misconduct concerning Dr Neale Fong, Director General of the Department of Health.pdf",
+  "sha256": "941bd66989d521100b908b20e4ed65f6a5440c531d843229c3b0025f894b99a6",
+  "pages": 92,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 7,
+  "last_page": 12,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20concerning%20Dr%20Neale%20Fong%2C%20Director%20General%20of%20the%20Department%20of%20Health.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated the health department’s director general over his relationship and communications with a lobbyist.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20concerning%20Dr%20Neale%20Fong%2C%20Director%20General%20of%20the%20Department%20of%20Health.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct concerning Dr Neale Fong, Director General of the Department of Health.pdf",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20concerning%20Dr%20Neale%20Fong%2C%20Director%20General%20of%20the%20Department%20of%20Health.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct concerning Dr Neale Fong, Director General of the Department of Health.pdf",
+      "page": 8
+     }
+    ],
+    "section": "The investigation"
+   },
+   {
+    "text": "The Commission formed misconduct opinions about his misleading account to his minister and his failure to report a claimed disclosure of Cabinet information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20concerning%20Dr%20Neale%20Fong%2C%20Director%20General%20of%20the%20Department%20of%20Health.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct concerning Dr Neale Fong, Director General of the Department of Health.pdf",
+      "page": 11
+     }
+    ],
+    "section": "The Commission’s assessment and opinion"
+   },
+   {
+    "text": "It also formed a serious misconduct opinion about his disclosure of a restricted matter concerning an investigation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20concerning%20Dr%20Neale%20Fong%2C%20Director%20General%20of%20the%20Department%20of%20Health.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct concerning Dr Neale Fong, Director General of the Department of Health.pdf",
+      "page": 11
+     }
+    ],
+    "section": "The Commission’s assessment and opinion"
+   },
+   {
+    "text": "Its five recommendations covered consideration of disciplinary action and prosecution, referral of information-handling concerns, and government standards for retaining emails.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20concerning%20Dr%20Neale%20Fong%2C%20Director%20General%20of%20the%20Department%20of%20Health.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct concerning Dr Neale Fong, Director General of the Department of Health.pdf",
+      "page": 12
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission does not accept that he had no recollection whatsoever of any email contact at all between August 2004 and June 2006.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20concerning%20Dr%20Neale%20Fong%2C%20Director%20General%20of%20the%20Department%20of%20Health.pdf",
+     "document": "Report on the Investigation of Alleged Misconduct concerning Dr Neale Fong, Director General of the Department of Health.pdf",
+     "page": 9
+    }
+   },
+   {
+    "quote": "Further, pursuant to section 22(1) of the CCC Act the Commission has formed the opinion that Dr Fong has engaged in serious misconduct within the meaning of section 4(c) of the CCC Act, by disclosing a restricted matter concerning an investigation into Mr Michael Moodie, contrary to section 167 and a notation under s.99 of the CCC Act.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20concerning%20Dr%20Neale%20Fong%2C%20Director%20General%20of%20the%20Department%20of%20Health.pdf",
+     "document": "Report on the Investigation of Alleged Misconduct concerning Dr Neale Fong, Director General of the Department of Health.pdf",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

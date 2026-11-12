@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2002-10-23-forensics-under-microscope-challenges-providing-forensic-sci",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Forensics under the microscope: Challenges in providing forensic science services in Queensland",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Forensics-under-the-microscope-Report-2002.pdf",
+  "document": "Forensics under the microscope: Challenges in providing forensic science services in Queensland (23 October 2002)",
+  "sha256": "59df7c03f3bab17b383904f3f9fe866c9a89e534652b3840e81ee5b5d4f3c925",
+  "pages": 40,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY AND RECOMMENDATIONS",
+  "first_page": 9,
+  "last_page": 12,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Forensics-under-the-microscope-Report-2002.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Commission investigated police and forensic work after prosecutors referred concerns arising from a rape conviction overturned on fresh forensic evidence.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Forensics-under-the-microscope-Report-2002.pdf",
+      "document": "Forensics under the microscope: Challenges in providing forensic science services in Queensland (23 October 2002)",
+      "page": 9
+     }
+    ],
+    "section": "Catalyst for this report"
+   },
+   {
+    "text": "It examined alleged witness intimidation and decisions about testing material collected during the investigation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Forensics-under-the-microscope-Report-2002.pdf",
+      "document": "Forensics under the microscope: Challenges in providing forensic science services in Queensland (23 October 2002)",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Forensics-under-the-microscope-Report-2002.pdf",
+      "document": "Forensics under the microscope: Challenges in providing forensic science services in Queensland (23 October 2002)",
+      "page": 10
+     }
+    ],
+    "section": "An overview of the Commission’s investigation"
+   },
+   {
+    "text": "The Commission found no grounds for criminal or disciplinary proceedings against anyone.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Forensics-under-the-microscope-Report-2002.pdf",
+      "document": "Forensics under the microscope: Challenges in providing forensic science services in Queensland (23 October 2002)",
+      "page": 9
+     }
+    ],
+    "section": "Outcome of the Commission’s investigation"
+   },
+   {
+    "text": "It identified coordination, testing priorities, training, information systems and review processes as issues for forensic services.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Forensics-under-the-microscope-Report-2002.pdf",
+      "document": "Forensics under the microscope: Challenges in providing forensic science services in Queensland (23 October 2002)",
+      "page": 11
+     }
+    ],
+    "section": "Forensic science in the Queensland criminal justice system"
+   },
+   {
+    "text": "The Commission made three recommendations on testing-request protocols, coordinated training and an inter-agency working group.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Forensics-under-the-microscope-Report-2002.pdf",
+      "document": "Forensics under the microscope: Challenges in providing forensic science services in Queensland (23 October 2002)",
+      "page": 12
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission’s investigation found there was no basis for criminal or disciplinary proceedings against any person.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Forensics-under-the-microscope-Report-2002.pdf",
+     "document": "Forensics under the microscope: Challenges in providing forensic science services in Queensland (23 October 2002)",
+     "page": 9
+    }
+   },
+   {
+    "quote": "The evidence fails to give rise to a reasonable suspicion of official misconduct on the part of the forensic scientist.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Forensics-under-the-microscope-Report-2002.pdf",
+     "document": "Forensics under the microscope: Challenges in providing forensic science services in Queensland (23 October 2002)",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

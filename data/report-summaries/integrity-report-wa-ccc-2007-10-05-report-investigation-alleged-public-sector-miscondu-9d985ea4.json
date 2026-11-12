@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2007-10-05-report-investigation-alleged-public-sector-miscondu-9d985ea4",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on Investigation of Alleged Public Sector Misconduct Linked to the Smiths Beach Development at Yallingup",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20Linked%20to%20the%20Smiths%20Beach%20Development%20at%20Yallingup.pdf",
+  "document": "Report on Investigation of Alleged Public Sector Misconduct Linked to the Smiths Beach Development at Yallingup.pdf",
+  "sha256": "90d880c86cdc8a2592e52c9c19795372a986c1f2237261799637408c33545aa1",
+  "pages": 120,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 10,
+  "last_page": 20,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20Linked%20to%20the%20Smiths%20Beach%20Development%20at%20Yallingup.pdf#page=10"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated alleged misconduct connected with the proposed Smiths Beach development after receiving an allegation about council election funding.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20Linked%20to%20the%20Smiths%20Beach%20Development%20at%20Yallingup.pdf",
+      "document": "Report on Investigation of Alleged Public Sector Misconduct Linked to the Smiths Beach Development at Yallingup.pdf",
+      "page": 10
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It examined attempts by the developer and its consultants to influence councillors, public servants and politicians.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20Linked%20to%20the%20Smiths%20Beach%20Development%20at%20Yallingup.pdf",
+      "document": "Report on Investigation of Alleged Public Sector Misconduct Linked to the Smiths Beach Development at Yallingup.pdf",
+      "page": 10
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission formed misconduct opinions about seven public officers, including failures of impartiality and disclosure of interests.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20Linked%20to%20the%20Smiths%20Beach%20Development%20at%20Yallingup.pdf",
+      "document": "Report on Investigation of Alleged Public Sector Misconduct Linked to the Smiths Beach Development at Yallingup.pdf",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20Linked%20to%20the%20Smiths%20Beach%20Development%20at%20Yallingup.pdf",
+      "document": "Report on Investigation of Alleged Public Sector Misconduct Linked to the Smiths Beach Development at Yallingup.pdf",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20Linked%20to%20the%20Smiths%20Beach%20Development%20at%20Yallingup.pdf",
+      "document": "Report on Investigation of Alleged Public Sector Misconduct Linked to the Smiths Beach Development at Yallingup.pdf",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20Linked%20to%20the%20Smiths%20Beach%20Development%20at%20Yallingup.pdf",
+      "document": "Report on Investigation of Alleged Public Sector Misconduct Linked to the Smiths Beach Development at Yallingup.pdf",
+      "page": 15
+     }
+    ],
+    "section": "Commission’s Opinions as to Misconduct"
+   },
+   {
+    "text": "Its six recommendations addressed consideration of disciplinary action, election donation disclosure, council conduct standards and a mechanism for suspending councillors under investigation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20Linked%20to%20the%20Smiths%20Beach%20Development%20at%20Yallingup.pdf",
+      "document": "Report on Investigation of Alleged Public Sector Misconduct Linked to the Smiths Beach Development at Yallingup.pdf",
+      "page": 19
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20Linked%20to%20the%20Smiths%20Beach%20Development%20at%20Yallingup.pdf",
+      "document": "Report on Investigation of Alleged Public Sector Misconduct Linked to the Smiths Beach Development at Yallingup.pdf",
+      "page": 20
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

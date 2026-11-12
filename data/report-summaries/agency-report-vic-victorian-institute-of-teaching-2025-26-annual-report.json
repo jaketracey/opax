@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-institute-of-teaching-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Institute of Teaching 2025-26 annual report",
+ "body": "Victorian Institute of Teaching",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab36d/globalassets/tabled-paper-documents/tabled-paper-10645/victorian-institute-of-teaching-2025-26-annual-report.pdf",
+  "document": "annual report",
+  "sha256": "970ae883cba94e516f0c8a2cfa6ef2e5deadf4a886251454178691d3816dbf76",
+  "pages": 112,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chairperson and CEO message",
+  "first_page": 10,
+  "last_page": 11,
+  "link": "https://www.parliament.vic.gov.au/4ab36d/globalassets/tabled-paper-documents/tabled-paper-10645/victorian-institute-of-teaching-2025-26-annual-report.pdf#page=10"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Institute of Teaching reported on 2025–26, serving the public interest by supporting safe teaching of a high standard in Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab36d/globalassets/tabled-paper-documents/tabled-paper-10645/victorian-institute-of-teaching-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Chairperson and CEO message"
+   },
+   {
+    "text": "The institute reported publishing an independent review of professional conduct management and beginning reforms to child safety and regulatory decision-making.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab36d/globalassets/tabled-paper-documents/tabled-paper-10645/victorian-institute-of-teaching-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Chairperson and CEO message"
+   },
+   {
+    "text": "It reported meeting its target to halve the historical conduct backlog, finalising 526 matters and reducing open backlog cases from 1,048 to 522.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab36d/globalassets/tabled-paper-documents/tabled-paper-10645/victorian-institute-of-teaching-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 38
+     }
+    ],
+    "section": "A more timely regulator"
+   },
+   {
+    "text": "The institute reported a comprehensive surplus of $3,102,162 for the year ending 30 June 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab36d/globalassets/tabled-paper-documents/tabled-paper-10645/victorian-institute-of-teaching-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 73
+     }
+    ],
+    "section": "Comprehensive operating statement"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "By 30 June 2026, we had achieved our target of reducing backlog cases by 50%.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab36d/globalassets/tabled-paper-documents/tabled-paper-10645/victorian-institute-of-teaching-2025-26-annual-report.pdf",
+     "document": "annual report",
+     "page": 38
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

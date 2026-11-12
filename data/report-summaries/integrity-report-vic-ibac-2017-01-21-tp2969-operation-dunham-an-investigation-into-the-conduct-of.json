@@ -1,0 +1,124 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2017-01-21-tp2969-operation-dunham-an-investigation-into-the-conduct-of",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Dunham: An investigation into the conduct of officers of the Department of Education and Training, including Darrell Fraser, in connection with the Ultranet project and related matters",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a25fb/globalassets/tabled-paper-documents/tabled-paper-2969/operation_dunham_special_report_january_2017_q8233kkg.pdf",
+  "document": "Operation_Dunham_special_report_January_2017_Q8233Kkg",
+  "sha256": "6643296c10b162eb9906c02649a1345aa468ccd6d338ac19c62a3be7ad0f6ed8",
+  "pages": 119,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "1 Summary of investigation and outcomes",
+  "first_page": 9,
+  "last_page": 13,
+  "link": "https://www.parliament.vic.gov.au/4a25fb/globalassets/tabled-paper-documents/tabled-paper-2969/operation_dunham_special_report_january_2017_q8233kkg.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC’s Operation Dunham investigated allegations that senior education officials compromised the Ultranet tender and arranged improper payments through an evaluation project.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25fb/globalassets/tabled-paper-documents/tabled-paper-2969/operation_dunham_special_report_january_2017_q8233kkg.pdf",
+      "document": "Operation_Dunham_special_report_January_2017_Q8233Kkg",
+      "page": 10
+     }
+    ],
+    "section": "1.1 Introduction"
+   },
+   {
+    "text": "The investigation also examined procurement controls, financial management, conflicts of interest and senior leadership accountability.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25fb/globalassets/tabled-paper-documents/tabled-paper-2969/operation_dunham_special_report_january_2017_q8233kkg.pdf",
+      "document": "Operation_Dunham_special_report_January_2017_Q8233Kkg",
+      "page": 10
+     }
+    ],
+    "section": "1.1 Introduction"
+   },
+   {
+    "text": "IBAC found that improper relationships between senior officials and suppliers had corrupted the tender process.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25fb/globalassets/tabled-paper-documents/tabled-paper-2969/operation_dunham_special_report_january_2017_q8233kkg.pdf",
+      "document": "Operation_Dunham_special_report_January_2017_Q8233Kkg",
+      "page": 11
+     }
+    ],
+    "section": "1.2 Outcomes of the investigation into the Ultranet tender process"
+   },
+   {
+    "text": "IBAC identified a culture that tolerated breaches of process and failures in departmental safeguards.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25fb/globalassets/tabled-paper-documents/tabled-paper-2969/operation_dunham_special_report_january_2017_q8233kkg.pdf",
+      "document": "Operation_Dunham_special_report_January_2017_Q8233Kkg",
+      "page": 12
+     }
+    ],
+    "section": "1.5 Flawed systems and culture"
+   },
+   {
+    "text": "IBAC made four recommendations on departmental reforms, commercial ventures, procurement governance, supplier gifts and reviews of major projects.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25fb/globalassets/tabled-paper-documents/tabled-paper-2969/operation_dunham_special_report_january_2017_q8233kkg.pdf",
+      "document": "Operation_Dunham_special_report_January_2017_Q8233Kkg",
+      "page": 13
+     }
+    ],
+    "section": "1.6 Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Operation Dunham exposed a range of improper actions and behaviours by senior departmental staff (including Mr Fraser) that effectively corrupted the tender process.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a25fb/globalassets/tabled-paper-documents/tabled-paper-2969/operation_dunham_special_report_january_2017_q8233kkg.pdf",
+     "document": "Operation_Dunham_special_report_January_2017_Q8233Kkg",
+     "page": 11
+    }
+   },
+   {
+    "quote": "Those shortcomings include a failure of the lines of defence and a culture that excused or ignored breaches of probity and process.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a25fb/globalassets/tabled-paper-documents/tabled-paper-2969/operation_dunham_special_report_january_2017_q8233kkg.pdf",
+     "document": "Operation_Dunham_special_report_January_2017_Q8233Kkg",
+     "page": 12
+    }
+   },
+   {
+    "quote": "The lack of transparency, accountability, oversight and risk mitigation around the commercial ventures is a significant concern.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a25fb/globalassets/tabled-paper-documents/tabled-paper-2969/operation_dunham_special_report_january_2017_q8233kkg.pdf",
+     "document": "Operation_Dunham_special_report_January_2017_Q8233Kkg",
+     "page": 31
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

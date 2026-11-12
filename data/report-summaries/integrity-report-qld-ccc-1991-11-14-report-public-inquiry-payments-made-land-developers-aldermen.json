@@ -1,0 +1,130 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1991-11-14-report-public-inquiry-payments-made-land-developers-aldermen",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Report on a public inquiry into payments made by land developers to Aldermen and candidates for election to the Council of the City of Gold Coast",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-into-payments-made-land-developers-Aldermen-Gold-Coast-election/A-public-inquiry-into-payments-made-to-candidates-for-election-to-the-Council-of-the-City-of-Gold-Coast-Report-1991.pdf",
+  "document": "Report on a Public Inquiry into payments made by land developers to Aldermen and candidates for election... (14 November 1991)",
+  "sha256": "c7da69097848adb04ecbc904ac5ed12f01b1135a60a7cbe39746cdd858f77388",
+  "pages": 166,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 13,
+  "last_page": 26,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-into-payments-made-land-developers-Aldermen-Gold-Coast-election/A-public-inquiry-into-payments-made-to-candidates-for-election-to-the-Council-of-the-City-of-Gold-Coast-Report-1991.pdf#page=13"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission held a public inquiry into developers’ payments to Gold Coast councillors and election candidates.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-into-payments-made-land-developers-Aldermen-Gold-Coast-election/A-public-inquiry-into-payments-made-to-candidates-for-election-to-the-Council-of-the-City-of-Gold-Coast-Report-1991.pdf",
+      "document": "Report on a Public Inquiry into payments made by land developers to Aldermen and candidates for election... (14 November 1991)",
+      "page": 3
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-into-payments-made-land-developers-Aldermen-Gold-Coast-election/A-public-inquiry-into-payments-made-to-candidates-for-election-to-the-Council-of-the-City-of-Gold-Coast-Report-1991.pdf",
+      "document": "Report on a Public Inquiry into payments made by land developers to Aldermen and candidates for election... (14 November 1991)",
+      "page": 14
+     }
+    ],
+    "section": "THE GENESIS OF THE INQUIRY"
+   },
+   {
+    "text": "It examined the payments’ extent, recipients, purpose, secrecy and possible effects on council decisions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-into-payments-made-land-developers-Aldermen-Gold-Coast-election/A-public-inquiry-into-payments-made-to-candidates-for-election-to-the-Council-of-the-City-of-Gold-Coast-Report-1991.pdf",
+      "document": "Report on a Public Inquiry into payments made by land developers to Aldermen and candidates for election... (14 November 1991)",
+      "page": 14
+     }
+    ],
+    "section": "THE GENESIS OF THE INQUIRY"
+   },
+   {
+    "text": "For election donations, the Commission found no evidence of offences or official misconduct, but found that donors and recipients sought to keep donations from public knowledge.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-into-payments-made-land-developers-Aldermen-Gold-Coast-election/A-public-inquiry-into-payments-made-to-candidates-for-election-to-the-Council-of-the-City-of-Gold-Coast-Report-1991.pdf",
+      "document": "Report on a Public Inquiry into payments made by land developers to Aldermen and candidates for election... (14 November 1991)",
+      "page": 141
+     }
+    ],
+    "section": "SUMMARY OF FINDINGS AND RECOMMENDATIONS"
+   },
+   {
+    "text": "The Commission also concluded that accepting developers’ donations could affect councillors’ deliberations, even where councillors believed they were uninfluenced.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-into-payments-made-land-developers-Aldermen-Gold-Coast-election/A-public-inquiry-into-payments-made-to-candidates-for-election-to-the-Council-of-the-City-of-Gold-Coast-Report-1991.pdf",
+      "document": "Report on a Public Inquiry into payments made by land developers to Aldermen and candidates for election... (14 November 1991)",
+      "page": 141
+     }
+    ],
+    "section": "SUMMARY OF FINDINGS AND RECOMMENDATIONS"
+   },
+   {
+    "text": "Its six listed recommendations addressed election funding, disclosure of donations, penalties, conflicts of interest and a consistent code of conduct for local government.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-into-payments-made-land-developers-Aldermen-Gold-Coast-election/A-public-inquiry-into-payments-made-to-candidates-for-election-to-the-Council-of-the-City-of-Gold-Coast-Report-1991.pdf",
+      "document": "Report on a Public Inquiry into payments made by land developers to Aldermen and candidates for election... (14 November 1991)",
+      "page": 142
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There is no evidence of any person engaging in conduct which was official misconduct.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-into-payments-made-land-developers-Aldermen-Gold-Coast-election/A-public-inquiry-into-payments-made-to-candidates-for-election-to-the-Council-of-the-City-of-Gold-Coast-Report-1991.pdf",
+     "document": "Report on a Public Inquiry into payments made by land developers to Aldermen and candidates for election... (14 November 1991)",
+     "page": 141
+    }
+   },
+   {
+    "quote": "There was a conscious effort by all who gave and received donations to keep, as far as was practicable, the fact of the donations from the knowledge of the public.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-into-payments-made-land-developers-Aldermen-Gold-Coast-election/A-public-inquiry-into-payments-made-to-candidates-for-election-to-the-Council-of-the-City-of-Gold-Coast-Report-1991.pdf",
+     "document": "Report on a Public Inquiry into payments made by land developers to Aldermen and candidates for election... (14 November 1991)",
+     "page": 141
+    }
+   },
+   {
+    "quote": "It cannot be accepted that the receipt of donations from a land developer would have absolutely no effect upon the deliberations of Aldermen, however uninfluenced they may claim to be.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-into-payments-made-land-developers-Aldermen-Gold-Coast-election/A-public-inquiry-into-payments-made-to-candidates-for-election-to-the-Council-of-the-City-of-Gold-Coast-Report-1991.pdf",
+     "document": "Report on a Public Inquiry into payments made by land developers to Aldermen and candidates for election... (14 November 1991)",
+     "page": 141
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:50+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

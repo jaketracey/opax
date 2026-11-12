@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2025-05-12-report-dangers-wrongful-identification-custody",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Dangers of Wrongful Identification in Custody",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_the_dangers_of_wrongful_identification_in_custody.pdf",
+  "document": "Report on the dangers of wrongful identification in custody",
+  "sha256": "58da553176f58a448a574d56554644a69689e36d65e7fd851bbbeff615afccf0",
+  "pages": 17,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "OVERVIEW",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_the_dangers_of_wrongful_identification_in_custody.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed police investigations into the wrongful detention of a man who was arrested under an incorrect name.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_the_dangers_of_wrongful_identification_in_custody.pdf",
+      "document": "Report on the dangers of wrongful identification in custody",
+      "page": 4
+     }
+    ],
+    "section": "OVERVIEW"
+   },
+   {
+    "text": "The Commission concluded that inadequate identity checks after the arrest led to the man being unlawfully detained overnight.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_the_dangers_of_wrongful_identification_in_custody.pdf",
+      "document": "Report on the dangers of wrongful identification in custody",
+      "page": 5
+     }
+    ],
+    "section": "OVERVIEW"
+   },
+   {
+    "text": "The Commission considered the initial criminal investigation inadequate and questioned the police conclusion that there was insufficient evidence for a deprivation of liberty charge.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_the_dangers_of_wrongful_identification_in_custody.pdf",
+      "document": "Report on the dangers of wrongful identification in custody",
+      "page": 17
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commission acknowledged that police corrected deficiencies after receiving a draft report, while expressing concern about their quality assurance process.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_the_dangers_of_wrongful_identification_in_custody.pdf",
+      "document": "Report on the dangers of wrongful identification in custody",
+      "page": 17
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission considers the WA Police investigations to be inadequate.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_the_dangers_of_wrongful_identification_in_custody.pdf",
+     "document": "Report on the dangers of wrongful identification in custody",
+     "page": 17
+    }
+   },
+   {
+    "quote": "The Commission does not consider the officers initially arrested the man with a purpose to unlawfully deprive him of his liberty.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_the_dangers_of_wrongful_identification_in_custody.pdf",
+     "document": "Report on the dangers of wrongful identification in custody",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:54+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

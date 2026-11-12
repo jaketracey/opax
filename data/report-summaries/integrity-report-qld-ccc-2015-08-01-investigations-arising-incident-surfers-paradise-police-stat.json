@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2015-08-01-investigations-arising-incident-surfers-paradise-police-stat",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Investigations arising from an incident at the Surfers Paradise Police Station",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Investigations-arising-from-an-incident-at-the-Surfers-Paradise-Police-Station-Statement-2015.pdf",
+  "document": "Investigations arising from an incident at the Surfers Paradise Police Station",
+  "sha256": "d270ef994b04b71d9e462dc7882a2033f20c29ea48f73bc111b9fe4e2b791c0e",
+  "pages": 6,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission issued a statement explaining its role in investigations following an incident at Surfers Paradise police station and the release of CCTV footage.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Investigations-arising-from-an-incident-at-the-Surfers-Paradise-Police-Station-Statement-2015.pdf",
+      "document": "Investigations arising from an incident at the Surfers Paradise Police Station",
+      "page": 1
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Investigations-arising-from-an-incident-at-the-Surfers-Paradise-Police-Station-Statement-2015.pdf",
+      "document": "Investigations arising from an incident at the Surfers Paradise Police Station",
+      "page": 2
+     }
+    ]
+   },
+   {
+    "text": "The CMC considered that an assault prosecution was unlikely to succeed without a statement from the complainant and supported disciplinary proceedings against two officers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Investigations-arising-from-an-incident-at-the-Surfers-Paradise-Police-Station-Statement-2015.pdf",
+      "document": "Investigations arising from an incident at the Surfers Paradise Police Station",
+      "page": 3
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Investigations-arising-from-an-incident-at-the-Surfers-Paradise-Police-Station-Statement-2015.pdf",
+      "document": "Investigations arising from an incident at the Surfers Paradise Police Station",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The CCC considered an appeal against a suspended dismissal unlikely to succeed and expressed concern that suspended sanctions could weaken public confidence in police discipline.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Investigations-arising-from-an-incident-at-the-Surfers-Paradise-Police-Station-Statement-2015.pdf",
+      "document": "Investigations arising from an incident at the Surfers Paradise Police Station",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Investigations-arising-from-an-incident-at-the-Surfers-Paradise-Police-Station-Statement-2015.pdf",
+      "document": "Investigations arising from an incident at the Surfers Paradise Police Station",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The CCC drew attention to earlier recommendations to reform police complaints and discipline procedures.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Investigations-arising-from-an-incident-at-the-Surfers-Paradise-Police-Station-Statement-2015.pdf",
+      "document": "Investigations arising from an incident at the Surfers Paradise Police Station",
+      "page": 5
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In particular, the CCC is concerned about the prevalence of the suspension of sanctions by the QPS, which has the potential to undermine public confidence in the QPS and the discipline system it administers.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Investigations-arising-from-an-incident-at-the-Surfers-Paradise-Police-Station-Statement-2015.pdf",
+     "document": "Investigations arising from an incident at the Surfers Paradise Police Station",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

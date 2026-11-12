@@ -1,0 +1,101 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2005-06-24-report-investigation-calm-officer-involvement-oil-m-561fee9b",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on Investigation into CALM officer involvement in Oil Mallee Industry",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20into%20CALM%20officer%20involvement%20in%20Oil%20Mallee%20Industry.pdf",
+  "document": "Report on Investigation into CALM officer involvement in Oil Mallee Industry.pdf",
+  "sha256": "d7e2e89fac09fa6d4982e4d42ec702a3b7289352e042108241517190c4668de7",
+  "pages": 12,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary",
+  "first_page": 11,
+  "last_page": 11,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20into%20CALM%20officer%20involvement%20in%20Oil%20Mallee%20Industry.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated a CALM officer’s involvement in oil mallee industry organisations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20into%20CALM%20officer%20involvement%20in%20Oil%20Mallee%20Industry.pdf",
+      "document": "Report on Investigation into CALM officer involvement in Oil Mallee Industry.pdf",
+      "page": 5
+     }
+    ],
+    "section": "What is this Report About?"
+   },
+   {
+    "text": "It examined his shares and directorship, advice relating to grants and the distribution of oil mallee seed.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20into%20CALM%20officer%20involvement%20in%20Oil%20Mallee%20Industry.pdf",
+      "document": "Report on Investigation into CALM officer involvement in Oil Mallee Industry.pdf",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20into%20CALM%20officer%20involvement%20in%20Oil%20Mallee%20Industry.pdf",
+      "document": "Report on Investigation into CALM officer involvement in Oil Mallee Industry.pdf",
+      "page": 11
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "The Commission identified apparent conflicts of interest but found no evidence supporting statutory misconduct by the officer.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20into%20CALM%20officer%20involvement%20in%20Oil%20Mallee%20Industry.pdf",
+      "document": "Report on Investigation into CALM officer involvement in Oil Mallee Industry.pdf",
+      "page": 11
+     }
+    ],
+    "section": "Commission’s Opinion"
+   },
+   {
+    "text": "It concluded that CALM’s controls inadequately addressed conflicts of interest in allocating funds to outside bodies.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20into%20CALM%20officer%20involvement%20in%20Oil%20Mallee%20Industry.pdf",
+      "document": "Report on Investigation into CALM officer involvement in Oil Mallee Industry.pdf",
+      "page": 12
+     }
+    ],
+    "section": "Commission’s Opinion"
+   },
+   {
+    "text": "Its four recommendations addressed conflict management procedures, the code of conduct, staff acknowledgements and annual declarations of financial interests.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Investigation%20into%20CALM%20officer%20involvement%20in%20Oil%20Mallee%20Industry.pdf",
+      "document": "Report on Investigation into CALM officer involvement in Oil Mallee Industry.pdf",
+      "page": 12
+     }
+    ],
+    "section": "Commission’s Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

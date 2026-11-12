@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-commission-for-children-and-young-people-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Commission for Children and Young People 2025-26 annual report",
+ "body": "Commission for Children and Young People",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10554/commission-for-children-and-young-people-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "bb5e9c08d374e77428538e2161c739f9b8da57ed6be8bfb231dd0f9fea8aa2cc",
+  "pages": 92,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "From the Principal Commissioner",
+  "first_page": 4,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10554/commission-for-children-and-young-people-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Commission for Children and Young People reported for 2025-26 on its independent role in improving policies and practices affecting Victorian children’s safety and wellbeing.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10554/commission-for-children-and-young-people-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10554/commission-for-children-and-young-people-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 16
+     }
+    ],
+    "section": "About the Commission for Children and Young People"
+   },
+   {
+    "text": "The Commission reported finalising two inquiries, examining children who encounter multiple service systems and responses to children in youth justice.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10554/commission-for-children-and-young-people-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "From the Principal Commissioner"
+   },
+   {
+    "text": "The Commission reported transferring regulatory functions to the Social Services Regulator during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10554/commission-for-children-and-young-people-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "From the Principal Commissioner"
+   },
+   {
+    "text": "The Commission reported finalising its 2026-29 strategy, with priorities including children’s voices, early intervention and monitoring child protection and youth justice services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10554/commission-for-children-and-young-people-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "From the Principal Commissioner"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The range of our work this year reinforces the importance of the Commission as an independent body that is dedicated to evidence, informed by data, and grounded in the voices of children and young people.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10554/commission-for-children-and-young-people-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nacc-2025-02-12-operation-wilson",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Wilson investigation report",
+ "body": "National Anti-Corruption Commission",
+ "source": {
+  "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Wilson%20-%20Investigation%20Report.pdf",
+  "document": "Operation Wilson investigation report",
+  "sha256": "af8b80324d28802c4c6ae9c9a5c693854241a9e71338e7e8755df1bb29c0e30b",
+  "pages": 34,
+  "rights": "CC BY 4.0 (stated in each report)"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Wilson%20-%20Investigation%20Report.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Operation Wilson was a joint investigation by the Australian Commission for Law Enforcement Integrity, Home Affairs and federal and Victorian police into a former border officer’s alleged misuse of information.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Wilson%20-%20Investigation%20Report.pdf",
+      "document": "Operation Wilson investigation report",
+      "page": 5
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commissioner found that the officer accessed restricted border information without authority to assist an associate, including searches concerning containers holding illicit cigarettes.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Wilson%20-%20Investigation%20Report.pdf",
+      "document": "Operation Wilson investigation report",
+      "page": 23
+     }
+    ],
+    "section": "Consideration"
+   },
+   {
+    "text": "The Commissioner concluded that accessing official information for purposes outside the officer’s duties was corrupt conduct through abuse of office.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Wilson%20-%20Investigation%20Report.pdf",
+      "document": "Operation Wilson investigation report",
+      "page": 24
+     }
+    ],
+    "section": "Consideration"
+   },
+   {
+    "text": "The report records guilty pleas to two unauthorised data-access charges, a conviction and a $4,000 fine.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Wilson%20-%20Investigation%20Report.pdf",
+      "document": "Operation Wilson investigation report",
+      "page": 24
+     }
+    ],
+    "section": "Action under Part 10 of the LEIC Act"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

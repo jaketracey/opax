@@ -1,0 +1,126 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1994-11-01-report-investigation-tow-truck-and-smash-repair-industries",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on an investigation into the tow truck and smash repair industries",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-the-tow-truck-and-smash-repairs-industries-Report-1994.pdf",
+  "document": "Report on an investigation into the tow truck and smash repair industries (November 1994)",
+  "sha256": "e92334c05827efbe4a759d49dd4b147f4e673128d7f43b5b4a8d9e906bd25005",
+  "pages": 316,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission investigated practices in the tow-truck and smash-repair industries.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-the-tow-truck-and-smash-repairs-industries-Report-1994.pdf",
+      "document": "Report on an investigation into the tow truck and smash repair industries (November 1994)",
+      "page": 3
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It examined alleged payments for accident information and repair work, pressure on spare-parts dealers and possible official misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-the-tow-truck-and-smash-repairs-industries-Report-1994.pdf",
+      "document": "Report on an investigation into the tow truck and smash repair industries (November 1994)",
+      "page": 14
+     }
+    ],
+    "section": "Terms of reference"
+   },
+   {
+    "text": "The CJC concluded that payments to secure repair work were longstanding and helped sustain an oversupply of tow trucks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-the-tow-truck-and-smash-repairs-industries-Report-1994.pdf",
+      "document": "Report on an investigation into the tow truck and smash repair industries (November 1994)",
+      "page": 180
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-the-tow-truck-and-smash-repairs-industries-Report-1994.pdf",
+      "document": "Report on an investigation into the tow truck and smash repair industries (November 1994)",
+      "page": 183
+     }
+    ],
+    "section": "CONCLUSIONS"
+   },
+   {
+    "text": "It found no official misconduct by transport officers, but concluded that enforcement of towing laws had been ineffective.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-the-tow-truck-and-smash-repairs-industries-Report-1994.pdf",
+      "document": "Report on an investigation into the tow truck and smash repair industries (November 1994)",
+      "page": 214
+     }
+    ],
+    "section": "Conclusions"
+   },
+   {
+    "text": "The Commission recommended independent holding yards, maximum fees, stronger operator accountability and tendered contracts for police-authorised towing.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-the-tow-truck-and-smash-repairs-industries-Report-1994.pdf",
+      "document": "Report on an investigation into the tow truck and smash repair industries (November 1994)",
+      "page": 219
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-the-tow-truck-and-smash-repairs-industries-Report-1994.pdf",
+      "document": "Report on an investigation into the tow truck and smash repair industries (November 1994)",
+      "page": 247
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-the-tow-truck-and-smash-repairs-industries-Report-1994.pdf",
+      "document": "Report on an investigation into the tow truck and smash repair industries (November 1994)",
+      "page": 250
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-the-tow-truck-and-smash-repairs-industries-Report-1994.pdf",
+      "document": "Report on an investigation into the tow truck and smash repair industries (November 1994)",
+      "page": 253
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-the-tow-truck-and-smash-repairs-industries-Report-1994.pdf",
+      "document": "Report on an investigation into the tow truck and smash repair industries (November 1994)",
+      "page": 259
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "For many years the payment of drop fees has been a common practice in the towing industry and the smash repair industry.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-the-tow-truck-and-smash-repairs-industries-Report-1994.pdf",
+     "document": "Report on an investigation into the tow truck and smash repair industries (November 1994)",
+     "page": 180
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:50+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

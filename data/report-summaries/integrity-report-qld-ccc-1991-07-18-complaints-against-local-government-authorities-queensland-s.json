@@ -1,0 +1,156 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1991-07-18-complaints-against-local-government-authorities-queensland-s",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Complaints against local government authorities in Queensland - six case studies",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Complaints-against-local-government-authorities-in-qld-Report-1991.pdf",
+  "document": "Complaints against local government authorities in Queensland - six case studies (18 July 1991)",
+  "sha256": "e6e2a433db85cb7d1645666425bb7b8408c32c8f78f4bba1d2e54c341b32602a",
+  "pages": 88,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "E. CONCLUSION",
+  "first_page": 71,
+  "last_page": 75,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Complaints-against-local-government-authorities-in-qld-Report-1991.pdf#page=71"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission selected six completed local-government investigations to illustrate recurring problems and ways to prevent misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Complaints-against-local-government-authorities-in-qld-Report-1991.pdf",
+      "document": "Complaints against local government authorities in Queensland - six case studies (18 July 1991)",
+      "page": 7
+     }
+    ],
+    "section": "A. INTRODUCTION"
+   },
+   {
+    "text": "The cases covered purchasing, contracts, council expenditure and financial interests of councillors and employees.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Complaints-against-local-government-authorities-in-qld-Report-1991.pdf",
+      "document": "Complaints against local government authorities in Queensland - six case studies (18 July 1991)",
+      "page": 19
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Complaints-against-local-government-authorities-in-qld-Report-1991.pdf",
+      "document": "Complaints against local government authorities in Queensland - six case studies (18 July 1991)",
+      "page": 36
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Complaints-against-local-government-authorities-in-qld-Report-1991.pdf",
+      "document": "Complaints against local government authorities in Queensland - six case studies (18 July 1991)",
+      "page": 47
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Complaints-against-local-government-authorities-in-qld-Report-1991.pdf",
+      "document": "Complaints against local government authorities in Queensland - six case studies (18 July 1991)",
+      "page": 53
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Complaints-against-local-government-authorities-in-qld-Report-1991.pdf",
+      "document": "Complaints against local government authorities in Queensland - six case studies (18 July 1991)",
+      "page": 58
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Complaints-against-local-government-authorities-in-qld-Report-1991.pdf",
+      "document": "Complaints against local government authorities in Queensland - six case studies (18 July 1991)",
+      "page": 70
+     }
+    ],
+    "section": "Recommendations"
+   },
+   {
+    "text": "The CJC identified weak financial controls, inadequate records and failures to manage conflicts of interest across the case studies.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Complaints-against-local-government-authorities-in-qld-Report-1991.pdf",
+      "document": "Complaints against local government authorities in Queensland - six case studies (18 July 1991)",
+      "page": 73
+     }
+    ],
+    "section": "E. CONCLUSION"
+   },
+   {
+    "text": "It recommended referral of evidence for consideration of possible offences in some cases, alongside improved purchasing, credit-card and interest-disclosure controls.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Complaints-against-local-government-authorities-in-qld-Report-1991.pdf",
+      "document": "Complaints against local government authorities in Queensland - six case studies (18 July 1991)",
+      "page": 19
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Complaints-against-local-government-authorities-in-qld-Report-1991.pdf",
+      "document": "Complaints against local government authorities in Queensland - six case studies (18 July 1991)",
+      "page": 53
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Complaints-against-local-government-authorities-in-qld-Report-1991.pdf",
+      "document": "Complaints against local government authorities in Queensland - six case studies (18 July 1991)",
+      "page": 58
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Complaints-against-local-government-authorities-in-qld-Report-1991.pdf",
+      "document": "Complaints against local government authorities in Queensland - six case studies (18 July 1991)",
+      "page": 70
+     }
+    ],
+    "section": "Recommendations"
+   },
+   {
+    "text": "The Commission also called for a standard code of conduct, stronger council policies and review of conflict-of-interest legislation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Complaints-against-local-government-authorities-in-qld-Report-1991.pdf",
+      "document": "Complaints against local government authorities in Queensland - six case studies (18 July 1991)",
+      "page": 74
+     }
+    ],
+    "section": "Maintenance of Integrity of Senior Officers"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Clear written guidelines regarding the use of official credit cards are required to prevent their misuse.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Complaints-against-local-government-authorities-in-qld-Report-1991.pdf",
+     "document": "Complaints against local government authorities in Queensland - six case studies (18 July 1991)",
+     "page": 72
+    }
+   },
+   {
+    "quote": "Systems and procedures relating to the allocation of work to truck owner/drivers and hire of plant and equipment are inadequate and open to manipulation.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Complaints-against-local-government-authorities-in-qld-Report-1991.pdf",
+     "document": "Complaints against local government authorities in Queensland - six case studies (18 July 1991)",
+     "page": 69
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

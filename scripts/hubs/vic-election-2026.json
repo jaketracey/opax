@@ -21,7 +21,9 @@
     "enrolment": "https://www.vec.vic.gov.au/enrolment/check-my-enrolment",
     "address": "https://www.vec.vic.gov.au/electoral-boundaries/which-boundaries-cover-where-i-live",
     "map": "https://maps.vec.vic.gov.au/",
-    "results": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results"
+    "results": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results",
+    "candidates": "https://www.vec.vic.gov.au/voting/2026-state-election",
+    "candidates_download": "https://www.vec.vic.gov.au/-/media/f487c2abe7274ed4b5bb60daa2b001ad.xls"
   },
   "licence": {
     "name": "Creative Commons Attribution 4.0 International",
@@ -68,6 +70,14 @@
     {
       "name": "which-boundaries-2026-10-13",
       "sha256": "e30d58d5028056066e35b687f7e8dd71b94dc5593421b973baacf74228eb5b75"
+    },
+    {
+      "name": "candidates-page-2026-11-12",
+      "sha256": "1ad9788376183bd1c5e3416f56b7e9f77fad948cc5344a461c4ffce8be86e5b0"
+    },
+    {
+      "name": "candidates-xls-2026-11-12",
+      "sha256": "f5c9505d01abb39bfd4e20cd389c6adea2e524a26423c7c82a51084e21d95c16"
     }
   ],
   "districts": [

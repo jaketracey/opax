@@ -59,6 +59,9 @@ Fields:
   `named_remuneration` needs `name` and `position` exactly as printed; `consultancy`
   needs `counterparty` (and `purpose` when printed). Each extra text field must appear
   on the cited page.
+* Names stay exactly as the report prints them, including individuals in executive,
+  remuneration and consultancy tables (Jake's ruling on PR #278). Do not drop, initial
+  or redact a printed name, and do not add a name the report does not print.
 
 ## What to read
 

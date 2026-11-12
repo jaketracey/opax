@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2021-08-25-facilities-maintenance-in-local-government",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Facilities Maintenance in Local Government",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/documents/ICAC-Report-Facilities-Maintenance-Local-Government.pdf",
+  "document": "Facilities Maintenance in Local Government",
+  "sha256": "3f74aa7602bbef3ed36806f793cfb270bc36edb296e09ae6222cad82b6072aa8",
+  "pages": 12,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://icac.sa.gov.au/documents/ICAC-Report-Facilities-Maintenance-Local-Government.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commissioner Against Corruption drew on investigations to inform councils about corruption risks in facilities maintenance.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC-Report-Facilities-Maintenance-Local-Government.pdf",
+      "document": "Facilities Maintenance in Local Government",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The report examined procurement, supplier relationships, conflicts of interest, recruitment and oversight of maintenance work.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC-Report-Facilities-Maintenance-Local-Government.pdf",
+      "document": "Facilities Maintenance in Local Government",
+      "page": 5
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC-Report-Facilities-Maintenance-Local-Government.pdf",
+      "document": "Facilities Maintenance in Local Government",
+      "page": 9
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC-Report-Facilities-Maintenance-Local-Government.pdf",
+      "document": "Facilities Maintenance in Local Government",
+      "page": 10
+     }
+    ]
+   },
+   {
+    "text": "The Commissioner reported that a recent investigation uncovered improper conduct, but poor records and insufficient admissible evidence made a sustainable corruption charge doubtful.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC-Report-Facilities-Maintenance-Local-Government.pdf",
+      "document": "Facilities Maintenance in Local Government",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "She set out fourteen prevention principles covering contract planning, supplier checks, audits, conflicts, recruitment, induction and workloads.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC-Report-Facilities-Maintenance-Local-Government.pdf",
+      "document": "Facilities Maintenance in Local Government",
+      "page": 10
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In light of this report, all councils should review their practices, policies and procedures on facilities management procurement and contract management.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/ICAC-Report-Facilities-Maintenance-Local-Government.pdf",
+     "document": "Facilities Maintenance in Local Government",
+     "page": 11
+    }
+   },
+   {
+    "quote": "Councils may benefit from having their audit and risk teams conduct random audits of facilities management functions to detect weaknesses.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/ICAC-Report-Facilities-Maintenance-Local-Government.pdf",
+     "document": "Facilities Maintenance in Local Government",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,155 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2009-11-20-restoring-order-crime-prevention-policing-and-local-justice",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf",
+  "document": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities (2009)",
+  "sha256": "b98efabb55e468637727a7588d44bc91bc86f4438ca7e1e25961df1711d0d2c2",
+  "pages": 468,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "summary",
+  "first_page": 17,
+  "last_page": 61,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf#page=17"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Queensland Government asked the Crime and Misconduct Commission to examine policing in Indigenous communities and recommend improvements.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf",
+      "document": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities (2009)",
+      "page": 17
+     }
+    ]
+   },
+   {
+    "text": "The inquiry covered police relations with communities, detention and supervision in custody, and the use of criminal justice resources.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf",
+      "document": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities (2009)",
+      "page": 17
+     }
+    ]
+   },
+   {
+    "text": "The CMC concluded that reducing crime and violence was essential to better police relations, fewer people in custody and more effective use of resources.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf",
+      "document": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities (2009)",
+      "page": 45
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf",
+      "document": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities (2009)",
+      "page": 390
+     }
+    ]
+   },
+   {
+    "text": "The CMC identified limited community involvement in setting police priorities and called for sustained local planning and community authority.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf",
+      "document": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities (2009)",
+      "page": 27
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf",
+      "document": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities (2009)",
+      "page": 46
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf",
+      "document": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities (2009)",
+      "page": 47
+     }
+    ]
+   },
+   {
+    "text": "Its six recommendations and 51 actions addressed crime prevention, local authority and planning, policing support, evaluation and innovation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf",
+      "document": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities (2009)",
+      "page": 48
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf",
+      "document": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities (2009)",
+      "page": 49
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf",
+      "document": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities (2009)",
+      "page": 51
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf",
+      "document": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities (2009)",
+      "page": 53
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf",
+      "document": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities (2009)",
+      "page": 54
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf",
+      "document": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities (2009)",
+      "page": 60
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf",
+      "document": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities (2009)",
+      "page": 61
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "However, we have concluded that robust and carefully executed local-level planning is an unavoidable and necessary tool if crime and violence are to be reduced in Queensland’s Indigenous communities.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf",
+     "document": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities (2009)",
+     "page": 396
+    }
+   },
+   {
+    "quote": "Greater efforts to evaluate the effectiveness of programs and strategies in Queensland’s Indigenous communities are warranted.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Restoring-Order-Crime-prevention-policing-and-local-justice-in-qld-Indigenous-communities-Report-2009.pdf",
+     "document": "Restoring order: Crime prevention, policing and local justice in Queensland’s Indigenous communities (2009)",
+     "page": 48
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

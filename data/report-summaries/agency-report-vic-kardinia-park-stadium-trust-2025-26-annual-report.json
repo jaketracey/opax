@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-kardinia-park-stadium-trust-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Kardinia Park Stadium Trust 2025-26 annual report",
+ "body": "Kardinia Park Stadium Trust",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10627/2025-26-kpst-annual-report.pdf",
+  "document": "annual report",
+  "sha256": "148d18afaea8386a6754efa16b88ed4604be164ea872bd2ab659df44451b4d0f",
+  "pages": 86,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "CHAIR'S AND CEO'S REPORT",
+  "first_page": 4,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10627/2025-26-kpst-annual-report.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "In its 2025–26 report, Kardinia Park Stadium Trust describes its management and promotion of the stadium precinct and its contribution to Geelong and the surrounding region.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10627/2025-26-kpst-annual-report.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10627/2025-26-kpst-annual-report.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "PURPOSE, VISION, MISSION AND VALUES"
+   },
+   {
+    "text": "KPST reported delivering 36 on-field events attended by more than 360,000 people and receiving more than 436,000 precinct visitors overall.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10627/2025-26-kpst-annual-report.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "CHAIR'S AND CEO'S REPORT"
+   },
+   {
+    "text": "It reported delivering a Financial Sustainability Report examining past practices and agreements and options for the precinct’s future.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10627/2025-26-kpst-annual-report.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "DELIVERING KPST'S FINANCIAL SUSTAINABILITY REPORT"
+   },
+   {
+    "text": "KPST reported holding $8.617 million in cash at 30 June 2026, including $2.907 million committed to endorsed capital works.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10627/2025-26-kpst-annual-report.pdf",
+      "document": "annual report",
+      "page": 31
+     }
+    ],
+    "section": "Cash flows"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Across the 2025–26 financial year, the KPST team delivered 36 on-field events with crowd attendance of over 360,000.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10627/2025-26-kpst-annual-report.pdf",
+     "document": "annual report",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

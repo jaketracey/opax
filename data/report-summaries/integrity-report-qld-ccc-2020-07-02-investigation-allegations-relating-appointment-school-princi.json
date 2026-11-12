@@ -1,0 +1,94 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2020-07-02-investigation-allegations-relating-appointment-school-princi",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "An investigation into allegations relating to the appointment of a school principal",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Report-An-investigation-into-allegations-relating-to-the-appointment-of-a-school-principal.pdf",
+  "document": "An investigation into allegations relating to the appointment of a school principal - 2 July 2020",
+  "sha256": "9a5b6104707e6bfd9fc72626cf2db43a06cb83615ed888c4253bdd1335381fda",
+  "pages": 178,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission investigated an allegation of political interference in the selection of a principal for a new state school.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Report-An-investigation-into-allegations-relating-to-the-appointment-of-a-school-principal.pdf",
+      "document": "An investigation into allegations relating to the appointment of a school principal - 2 July 2020",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The CCC concluded that senior public servants had undermined the selection process through flawed decisions, false information and an attempt to destroy a record.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Report-An-investigation-into-allegations-relating-to-the-appointment-of-a-school-principal.pdf",
+      "document": "An investigation into allegations relating to the appointment of a school principal - 2 July 2020",
+      "page": 88
+     }
+    ]
+   },
+   {
+    "text": "The CCC found no prima facie case of a criminal offence or dishonest or corrupt intent by the then Deputy Premier, while identifying a corruption risk in her involvement.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Report-An-investigation-into-allegations-relating-to-the-appointment-of-a-school-principal.pdf",
+      "document": "An investigation into allegations relating to the appointment of a school principal - 2 July 2020",
+      "page": 87
+     }
+    ]
+   },
+   {
+    "text": "The CCC referred the investigation to the Public Service Commission for consideration of disciplinary action.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Report-An-investigation-into-allegations-relating-to-the-appointment-of-a-school-principal.pdf",
+      "document": "An investigation into allegations relating to the appointment of a school principal - 2 July 2020",
+      "page": 87
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There is no prima facie case that the Deputy Premier has committed a criminal offence or that she was motivated by any dishonest or corrupt intent.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Report-An-investigation-into-allegations-relating-to-the-appointment-of-a-school-principal.pdf",
+     "document": "An investigation into allegations relating to the appointment of a school principal - 2 July 2020",
+     "page": 87
+    }
+   },
+   {
+    "quote": "The failure to keep records fell well below the standards expected of senior public servants.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Report-An-investigation-into-allegations-relating-to-the-appointment-of-a-school-principal.pdf",
+     "document": "An investigation into allegations relating to the appointment of a school principal - 2 July 2020",
+     "page": 87
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

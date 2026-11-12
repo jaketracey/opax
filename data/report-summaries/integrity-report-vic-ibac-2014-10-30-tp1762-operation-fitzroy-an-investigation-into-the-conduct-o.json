@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2014-10-30-tp1762-operation-fitzroy-an-investigation-into-the-conduct-o",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Fitzroy: An investigation into the conduct of former employees of the Department of Transport / Public Transport Victoria, Barry John Wells and Hoe Ghee (Albert) Ooi, and others",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a295a/globalassets/tabled-paper-documents/tabled-paper-1762/web_pdf_-_operation_fitzroy_special_report_-_20141027_75cxnhht.pdf",
+  "document": "WEB_PDF_-_Operation_Fitzroy_special_report_-_20141027_75CxNhht",
+  "sha256": "5355f50cf3fd22293d72c656b4a90aa550dfc46f390877a0624904dd937ba53c",
+  "pages": 99,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "1 Summary of investigation and outcomes",
+  "first_page": 6,
+  "last_page": 10,
+  "link": "https://www.parliament.vic.gov.au/4a295a/globalassets/tabled-paper-documents/tabled-paper-1762/web_pdf_-_operation_fitzroy_special_report_-_20141027_75cxnhht.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC’s Operation Fitzroy examined businesses linked to two former transport officials that secured public contracts, together with benefits and conflicts of interest.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a295a/globalassets/tabled-paper-documents/tabled-paper-1762/web_pdf_-_operation_fitzroy_special_report_-_20141027_75cxnhht.pdf",
+      "document": "WEB_PDF_-_Operation_Fitzroy_special_report_-_20141027_75CxNhht",
+      "page": 7
+     }
+    ],
+    "section": "1.1 About Operation Fitzroy"
+   },
+   {
+    "text": "IBAC found that the officials and their associates corrupted expenditure of at least $25 million through contracts and invoicing arrangements.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a295a/globalassets/tabled-paper-documents/tabled-paper-1762/web_pdf_-_operation_fitzroy_special_report_-_20141027_75cxnhht.pdf",
+      "document": "WEB_PDF_-_Operation_Fitzroy_special_report_-_20141027_75CxNhht",
+      "page": 79
+     }
+    ],
+    "section": "11 Conclusion and recommendations"
+   },
+   {
+    "text": "IBAC identified inadequate procurement controls, staff training and supervision, together with a culture of non-compliance that enabled the conduct.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a295a/globalassets/tabled-paper-documents/tabled-paper-1762/web_pdf_-_operation_fitzroy_special_report_-_20141027_75cxnhht.pdf",
+      "document": "WEB_PDF_-_Operation_Fitzroy_special_report_-_20141027_75CxNhht",
+      "page": 79
+     }
+    ],
+    "section": "11 Conclusion and recommendations"
+   },
+   {
+    "text": "IBAC made three recommendations on reporting procurement reforms, excluding improper contractors and considering an independent audit of the revised framework.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a295a/globalassets/tabled-paper-documents/tabled-paper-1762/web_pdf_-_operation_fitzroy_special_report_-_20141027_75cxnhht.pdf",
+      "document": "WEB_PDF_-_Operation_Fitzroy_special_report_-_20141027_75CxNhht",
+      "page": 80
+     }
+    ],
+    "section": "11 Conclusion and recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Operation Fitzroy has revealed that Barry Wells and Albert Ooi, often aided by their network of associates, corrupted public sector expenditures of at least $25 million.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a295a/globalassets/tabled-paper-documents/tabled-paper-1762/web_pdf_-_operation_fitzroy_special_report_-_20141027_75cxnhht.pdf",
+     "document": "WEB_PDF_-_Operation_Fitzroy_special_report_-_20141027_75CxNhht",
+     "page": 79
+    }
+   },
+   {
+    "quote": "The practices in this report were not isolated instances – they continued unchecked for at least seven years until overt action was taken by IBAC in late-2013.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a295a/globalassets/tabled-paper-documents/tabled-paper-1762/web_pdf_-_operation_fitzroy_special_report_-_20141027_75cxnhht.pdf",
+     "document": "WEB_PDF_-_Operation_Fitzroy_special_report_-_20141027_75CxNhht",
+     "page": 79
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,5 +1,6 @@
 // Offline projection: official constituency names, existing validated identities
-// and existing exports only. No candidate, donor, grant or Hansard text ingestion.
+// and existing exports, including the optional fetched VEC candidate report.
+// No donor, grant or Hansard text ingestion.
 // VEC results (fetch_vec_results.py) and ABS place splits (build_vic_places.py)
 // are committed source files beside the VEC config.
 import {readFile, writeFile, mkdir} from 'node:fs/promises';
@@ -84,10 +85,11 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
       region:c.region || null,districts:c.districts || [],boundary_note:c.boundary_note || null,
       formerly:c.formerly || null,created:config.boundaries.created.includes(c.name) && !c.formerly,
       result:result ? {general:contest(result.general),since:contest(result.since) || null} : null,
-      candidates:list?.length ? {published:nominated.published,url:nominated.url,list:list.map(x=>({name:x.name,party:x.party || ''}))} : null,
+      candidates:list?.length ? {published:nominated.published,url:c.source_url.replace(/\/$/,'')+'/nominations',list:list.map(x=>({name:x.name,party:x.party || '',
+        ...c.kind === 'region' ? {group:x.group,group_name:x.group_name} : {}}))} : null,
       electorate_url:seat.url,roster_date:seat.representation_as_of,members};
   });
-  const updated = latest([config.updated,roster.meta.generated,roster.meta.representation?.updated,day(corpus.version),...seats.map(s=>s.roster_date)]);
+  const updated = latest([config.updated,nominated?.published,roster.meta.generated,roster.meta.representation?.updated,day(corpus.version),...seats.map(s=>s.roster_date)]);
   const pages = [{path:VIC_ELECTION_PATH,lastmod:updated},...seats.map(s=>({path:s.path,lastmod:updated}))];
   const data = {authorisation:VIC_ELECTION_AUTHORISATION_LINE,
     corrections:{email:VIC_ELECTION_CORRECTIONS_EMAIL,response:VIC_ELECTION_CORRECTIONS_RESPONSE},

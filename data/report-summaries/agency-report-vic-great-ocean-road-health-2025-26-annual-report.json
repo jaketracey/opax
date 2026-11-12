@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-great-ocean-road-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Great Ocean Road Health 2025-26 annual report",
+ "body": "Great Ocean Road Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab40a/globalassets/tabled-paper-documents/tabled-paper-10739/great-ocean-road-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "47ede5dbc672bc7d3ee21c6b09e2c49c78a03c9cb6a197fcd52c21c4a1cf1eb8",
+  "pages": 56,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Board Chair’s & CEO Report",
+  "first_page": 3,
+  "last_page": 4,
+  "link": "https://www.parliament.vic.gov.au/4ab40a/globalassets/tabled-paper-documents/tabled-paper-10739/great-ocean-road-health-annual-report-2025-26.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Great Ocean Road Health’s 2025–26 report covers its hospital, aged care, general practice and community services in Lorne, Apollo Bay and surrounding communities.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab40a/globalassets/tabled-paper-documents/tabled-paper-10739/great-ocean-road-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab40a/globalassets/tabled-paper-documents/tabled-paper-10739/great-ocean-road-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab40a/globalassets/tabled-paper-documents/tabled-paper-10739/great-ocean-road-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 16
+     }
+    ],
+    "section": "Board Chair’s & CEO Report"
+   },
+   {
+    "text": "Great Ocean Road Health reported lodging its first Reflect Reconciliation Action Plan with Reconciliation Australia.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab40a/globalassets/tabled-paper-documents/tabled-paper-10739/great-ocean-road-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "Board Chair’s & CEO Report"
+   },
+   {
+    "text": "It reported completing NDIS accreditation and said the Lorne Medical Centre met every required indicator in its accreditation survey.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab40a/globalassets/tabled-paper-documents/tabled-paper-10739/great-ocean-road-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Board Chair’s & CEO Report"
+   },
+   {
+    "text": "Great Ocean Road Health reported revenue of $27.4 million and a net operating deficit of $53 thousand.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab40a/globalassets/tabled-paper-documents/tabled-paper-10739/great-ocean-road-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 16
+     }
+    ],
+    "section": "Finance Officer Report"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Our aged care homes continue to receive 5-Star ratings, reflecting the quality of care residents consistently receive.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab40a/globalassets/tabled-paper-documents/tabled-paper-10739/great-ocean-road-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 3
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

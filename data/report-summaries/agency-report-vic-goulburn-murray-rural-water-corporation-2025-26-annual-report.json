@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-goulburn-murray-rural-water-corporation-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Goulburn Murray Rural Water Corporation 2025-26 annual report",
+ "body": "Goulburn Murray Rural Water Corporation",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab33e/globalassets/tabled-paper-documents/tabled-paper-10622/goulburn-murray-water-2025-26-annual-report-.pdf",
+  "document": "annual report",
+  "sha256": "744274f2440e1ebcf10aee74386d45469f362b9ea4bb8c2c7212d6a176a65854",
+  "pages": 142,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "A Message from the Chair and Managing Director",
+  "first_page": 7,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4ab33e/globalassets/tabled-paper-documents/tabled-paper-10622/goulburn-murray-water-2025-26-annual-report-.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The 2025/26 report from Goulburn-Murray Water covers its role in storing and delivering water in northern Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab33e/globalassets/tabled-paper-documents/tabled-paper-10622/goulburn-murray-water-2025-26-annual-report-.pdf",
+      "document": "annual report",
+      "page": 2
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab33e/globalassets/tabled-paper-documents/tabled-paper-10622/goulburn-murray-water-2025-26-annual-report-.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Nature and Range of Services Provided"
+   },
+   {
+    "text": "GMW reported launching an updated WaterLINE service for customers to manage water orders and advancing a new customer relationship and billing system.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab33e/globalassets/tabled-paper-documents/tabled-paper-10622/goulburn-murray-water-2025-26-annual-report-.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "A Message from the Chair and Managing Director"
+   },
+   {
+    "text": "It reported delivering more than 850,000 megalitres to irrigators in northern Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab33e/globalassets/tabled-paper-documents/tabled-paper-10622/goulburn-murray-water-2025-26-annual-report-.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "A Message from the Chair and Managing Director"
+   },
+   {
+    "text": "GMW reported a pre-tax loss of $68.3 million, including depreciation and amortisation of $88.7 million that its regulated revenue did not fully recover.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab33e/globalassets/tabled-paper-documents/tabled-paper-10622/goulburn-murray-water-2025-26-annual-report-.pdf",
+      "document": "annual report",
+      "page": 33
+     }
+    ],
+    "section": "Current Financial Year Review"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Customer satisfaction remained strong, reflecting the dedication of our people and our focus on continuous improvement.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab33e/globalassets/tabled-paper-documents/tabled-paper-10622/goulburn-murray-water-2025-26-annual-report-.pdf",
+     "document": "annual report",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

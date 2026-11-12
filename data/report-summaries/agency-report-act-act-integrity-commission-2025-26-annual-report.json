@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-act-act-integrity-commission-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report, corrected publisher version",
+ "title": "ACT Integrity Commission 2025-26 annual report, corrected publisher version",
+ "body": "ACT Integrity Commission",
+ "source": {
+  "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0010/3139615/Integrity-Commission-2025-26-Annual-Report.pdf",
+  "document": "annual report, corrected publisher version",
+  "sha256": "7cbaf3bce02f9ccb36d6aac416c576aac74353f2315af6ebcd3f59f63166b41a",
+  "pages": 160,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0010/3139615/Integrity-Commission-2025-26-Annual-Report.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The ACT Integrity Commission reported for 2025–26 on investigating and preventing corruption and overseeing public interest disclosures.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0010/3139615/Integrity-Commission-2025-26-Annual-Report.pdf",
+      "document": "annual report, corrected publisher version",
+      "page": 11
+     }
+    ],
+    "section": "The Commission’s vision, purpose, values and functions"
+   },
+   {
+    "text": "The Commission reported receiving 261 corruption reports and progressing 80 to full assessment.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0010/3139615/Integrity-Commission-2025-26-Annual-Report.pdf",
+      "document": "annual report, corrected publisher version",
+      "page": 7
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The Commissioner concluded that major investigations revealed failures in governance and decision-making and called for stronger public sector integrity safeguards.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0010/3139615/Integrity-Commission-2025-26-Annual-Report.pdf",
+      "document": "annual report, corrected publisher version",
+      "page": 6
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The Commission reported that 87% of report assessments were completed within 90 days against an 85% target, while 57% of declared public interest disclosures met that timeframe.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0010/3139615/Integrity-Commission-2025-26-Annual-Report.pdf",
+      "document": "annual report, corrected publisher version",
+      "page": 37
+     }
+    ],
+    "section": "Performance measures for 2025–26"
+   },
+   {
+    "text": "The Commission reported expenses of $8.639 million, $1.513 million below budget, and income of $8.634 million.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0010/3139615/Integrity-Commission-2025-26-Annual-Report.pdf",
+      "document": "annual report, corrected publisher version",
+      "page": 89
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0010/3139615/Integrity-Commission-2025-26-Annual-Report.pdf",
+      "document": "annual report, corrected publisher version",
+      "page": 90
+     }
+    ],
+    "section": "Financial performance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "These findings highlight the need to strengthen public sector integrity and reinforce the principles that underpin public confidence: honesty, fairness, transparency and accountability.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0010/3139615/Integrity-Commission-2025-26-Annual-Report.pdf",
+     "document": "annual report, corrected publisher version",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:43+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2015-12-11-transparency-and-accountability-local-government",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Transparency and accountability in local government",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Transparency-and-accountability-in-local-government-Report-2015.pdf",
+  "document": "Transparency and accountability in local government",
+  "sha256": "34514ebde60c794acbbd8c1f1ef98bfa3f41fdea90c04ac391c00c2b0ac4314a",
+  "pages": 38,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Investigation summary",
+  "first_page": 15,
+  "last_page": 19,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Transparency-and-accountability-in-local-government-Report-2015.pdf#page=15"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission investigated disclosure obligations and fundraising entities associated with the Ipswich mayor.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Transparency-and-accountability-in-local-government-Report-2015.pdf",
+      "document": "Transparency and accountability in local government",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The CCC found no corrupt conduct or misuse of community funds in the entities it examined, but concluded that some practices had created perceptions of corruption or self-interest.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Transparency-and-accountability-in-local-government-Report-2015.pdf",
+      "document": "Transparency and accountability in local government",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The CCC identified unclear rules for campaign funds and inconsistent donation disclosure requirements.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Transparency-and-accountability-in-local-government-Report-2015.pdf",
+      "document": "Transparency and accountability in local government",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The CCC made six recommendations concerning fundraising associations, campaign donation disclosure, unspent funds and gifts that benefit elected officials.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Transparency-and-accountability-in-local-government-Report-2015.pdf",
+      "document": "Transparency and accountability in local government",
+      "page": 22
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Transparency-and-accountability-in-local-government-Report-2015.pdf",
+      "document": "Transparency and accountability in local government",
+      "page": 23
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Transparency-and-accountability-in-local-government-Report-2015.pdf",
+      "document": "Transparency and accountability in local government",
+      "page": 24
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Transparency-and-accountability-in-local-government-Report-2015.pdf",
+      "document": "Transparency and accountability in local government",
+      "page": 25
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Transparency-and-accountability-in-local-government-Report-2015.pdf",
+      "document": "Transparency and accountability in local government",
+      "page": 26
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The use of a separate legal entity to hold election campaign donations intended for use by candidates/councillors has significant potential to diminish transparency in this area and the area of councillor disclosure of financial and non-financial interests.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Transparency-and-accountability-in-local-government-Report-2015.pdf",
+     "document": "Transparency and accountability in local government",
+     "page": 23
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}
