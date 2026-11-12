@@ -1,4 +1,5 @@
-import { readFileSync } from 'node:fs';
+import assert from 'node:assert/strict';
+import { closeSync, openSync, readFileSync, readSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { exploreFixture } from '../scripts/explore-fixture';
 import pins from '../scripts/fixtures/explore-pictures.json';
@@ -10,6 +11,7 @@ import {
   assertYearPictureBytes,
   yearPictureKey,
   yearPictureKeyPattern,
+  yearPictureMaxBytes,
   yearPicturePath,
 } from '../src/api/year-picture-policy';
 import { decodePictures } from '../src/features/explore/pictures';
@@ -43,31 +45,49 @@ test('the web manifest preserves all 189 photos and credits, including unknown d
   const byFile = new Map(originals.map((p) => [p.file, p]));
   for (const p of Object.values(cleaned).flat()) {
     const original = byFile.get(p.file);
-    expect({ ...p, credit: original.credit }).toEqual(original);
-    expect(p.credit).not.toMatch(/^(?:photo:\s*)?own work[.!]?$/i);
+    assert.deepEqual({ ...p, credit: original.credit }, original, p.file);
+    assert.doesNotMatch(p.credit, /^(?:photo:\s*)?own work[.!]?$/i, p.file);
   }
   expect(Object.values(cleaned).flat()).toHaveLength(189);
-  // The portal's pictures.test.mjs validates every source image. Mobile checks
-  // all routes here and the seven pinned WebP bodies below, without rereading
-  // 23 MB of portal assets on every unit run.
   for (const rows of Object.values(cleaned))
     for (const p of rows) {
-      expect(() => assertAllowedPath('/' + p.file)).not.toThrow();
-      expect(yearPicturePath(yearPictureKey('/' + p.file))).toBe('/' + p.file);
+      assert.doesNotThrow(() => assertAllowedPath('/' + p.file), p.file);
+      assert.equal(
+        yearPicturePath(yearPictureKey('/' + p.file)),
+        '/' + p.file,
+        p.file,
+      );
     }
+});
+test('all 189 source pictures meet mobile byte limits and exact RIFF lengths using only 12-byte headers', () => {
+  const pictures = Object.values(raw).flat() as { file: string }[];
+  assert.equal(pictures.length, 189);
+  const header = Buffer.alloc(12);
+  for (const { file } of pictures) {
+    const path = resolve(__dirname, '../../portal/public', file);
+    const size = statSync(path).size;
+    assert.ok(size >= 30 && size <= yearPictureMaxBytes, file);
+    const fd = openSync(path, 'r');
+    try {
+      assert.equal(readSync(fd, header, 0, 12, 0), 12, file);
+    } finally {
+      closeSync(fd);
+    }
+    assert.equal(header.toString('ascii', 0, 4), 'RIFF', file);
+    assert.equal(header.toString('ascii', 8, 12), 'WEBP', file);
+    assert.equal(header.readUInt32LE(4) + 8, size, file);
+  }
 });
 test.each(['file', 'width', 'licence', 'source_url'])(
   'manifest refuses malformed %s and mismatched years',
   (field) => {
-    const bad = structuredClone(raw);
+    const bad = { '2025': [{ ...raw['2025'][0] }] };
     bad['2025'][0][field] =
       field === 'width' ? 0 : field === 'licence' ? '' : '/api/og/paid';
     expect(() => decodePictures(bad)).toThrow();
-    const wrongYear = structuredClone(raw);
-    wrongYear['1998'] = wrongYear['2025'];
+    const wrongYear = { '1998': [raw['2025'][0]] };
     expect(() => decodePictures(wrongYear)).toThrow();
-    const duplicate = structuredClone(raw);
-    duplicate['2025'].push(duplicate['2025'][0]);
+    const duplicate = { '2025': [raw['2025'][0], raw['2025'][0]] };
     expect(() => decodePictures(duplicate)).toThrow();
   },
 );
