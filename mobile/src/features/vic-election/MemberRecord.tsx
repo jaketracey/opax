@@ -62,15 +62,16 @@ export function MemberRecord({
   const any = m.votes || m.speeches;
   return (
     <Block title={c.done(m.name)} testID="vic-seat-record">
+      {m.speech_gap ? (
+        <Text wordSafe variant="footnote" tone="inkSoft">
+          {m.speech_gap}
+        </Text>
+      ) : null}
       {!any ? (
         <MemberRow member={m} />
       ) : (
         <>
-          {m.speech_gap ? (
-            <Text wordSafe variant="footnote" tone="inkSoft">
-              {m.speech_gap}
-            </Text>
-          ) : m.speeches ? (
+          {!m.speech_gap && m.speeches ? (
             <ValueRow
               label={c.speechYears(m.speeches.first, m.speeches.last)}
               value={m.speeches.count.toLocaleString('en-AU')}

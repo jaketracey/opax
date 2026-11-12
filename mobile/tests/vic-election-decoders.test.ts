@@ -7,7 +7,7 @@ import {
   decodeOverview,
   decodeSeat,
 } from '../src/features/vic-election/decoders';
-test('contract examples decode, ignore new keys and pin authorisation', () => {
+test('portal pins decode, ignore new keys and pin authorisation', () => {
   expect(decodeOverview({ ...overview, new_field: 1 }).authorisation).toBe(
     AUTHORISATION_LINE,
   );
@@ -49,12 +49,76 @@ test('every saved API response in the fixture directory decodes without dropping
   const dir = path.join(__dirname, '../scripts/fixtures/vic-election');
   for (const file of fs.readdirSync(dir).filter((f) => f.endsWith('.json'))) {
     const raw = JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8'));
-    expect(() =>
+    const decoded =
       'hits' in raw
         ? decodeFind(raw)
         : 'kind' in raw
           ? decodeSeat(raw)
-          : decodeOverview(raw),
-    ).not.toThrow();
+          : decodeOverview(raw);
+    expect(decoded).toEqual(raw);
   }
+});
+
+test('required nullable seat and member fields accept null but reject omission', () => {
+  const nullableSeat = {
+    ...seat,
+    division_start: null,
+    result: null,
+    candidates: null,
+  };
+  expect(decodeSeat(nullableSeat)).toMatchObject({
+    division_start: null,
+    result: null,
+    candidates: null,
+  });
+  for (const key of [
+    'candidates',
+    'result',
+    'region',
+    'formerly',
+    'boundary_note',
+    'division_start',
+  ]) {
+    const missing: Record<string, unknown> = { ...seat };
+    delete missing[key];
+    expect(() => decodeSeat(missing)).toThrow();
+  }
+  const member = {
+    ...seat.members[0]!,
+    party: null,
+    speeches: null,
+    speech_gap: null,
+    votes: null,
+  };
+  expect(decodeSeat({ ...seat, members: [member] }).members[0]).toMatchObject(
+    member,
+  );
+  for (const key of ['party', 'speeches', 'speech_gap', 'votes']) {
+    const missing: Record<string, unknown> = { ...member };
+    delete missing[key];
+    expect(() => decodeSeat({ ...seat, members: [missing] })).toThrow();
+  }
+});
+
+test('Council group metadata is optional, nullable and typed', () => {
+  const withCandidate = (extra: Record<string, unknown>) => ({
+    ...seat,
+    candidates: {
+      published: '2026-11-10',
+      url: seat.source_url,
+      list: [{ name: 'Test Candidate', party: null, ...extra }],
+    },
+  });
+  for (const extra of [
+    {},
+    { group: 'A', group_name: 'Example Group' },
+    { group: 'M', group_name: null },
+    { group: null, group_name: null },
+    { group: '', group_name: '' },
+  ])
+    expect(decodeSeat(withCandidate(extra)).candidates!.list[0]).toMatchObject(
+      extra,
+    );
+  for (const extra of [{ group: 1 }, { group_name: [] }, { party: '' }])
+    expect(() => decodeSeat(withCandidate(extra))).toThrow();
 });

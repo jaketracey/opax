@@ -48,6 +48,15 @@ const percent = (v: unknown) => {
 };
 const link = shape({ label: nonempty, url: https });
 const named = { name: nonempty, party: nullable(nonempty) };
+// Council groups are an additive contract field. Older responses omit them;
+// ungrouped candidates may carry null or an empty string.
+const optionalNullableText = (v: unknown) =>
+  v === undefined ? undefined : nullable(text)(v);
+const candidate = shape({
+  ...named,
+  group: optionalNullableText,
+  group_name: optionalNullableText,
+});
 const contestFields = {
   date: day,
   kind: literal('general', 'by-election', 'supplementary'),
@@ -181,7 +190,7 @@ const seat = shape({
   districts: array(decodeDistrictRow),
   result: nullable(shape({ general: contest, since: nullable(contest) })),
   candidates: nullable(
-    shape({ published: day, url: https, list: array(shape(named)) }),
+    shape({ published: day, url: https, list: array(candidate) }),
   ),
   members: array(member),
   results_fetched: day,

@@ -11,8 +11,8 @@
           "kind": "district",
           "slug": "albert-park",
           "name": "Albert Park",
-          "region": "Southern Metropolitan",
           "electorate_url": "/subject/electorate/vic-vic-la-vic-albert-park",
+          "region": "Southern Metropolitan",
           "member": {
             "name": "Nina Taylor",
             "party": "Labor"
@@ -30,8 +30,8 @@
           "kind": "district",
           "slug": "prahran",
           "name": "Prahran",
-          "region": "Southern Metropolitan",
           "electorate_url": "/subject/electorate/vic-vic-la-vic-prahran",
+          "region": "Southern Metropolitan",
           "member": {
             "name": "Rachel Westaway",
             "party": "Liberal"
@@ -49,8 +49,8 @@
           "kind": "district",
           "slug": "caulfield",
           "name": "Caulfield",
-          "region": "Southern Metropolitan",
           "electorate_url": "/subject/electorate/vic-vic-la-vic-caulfield",
+          "region": "Southern Metropolitan",
           "member": {
             "name": "David Southwick",
             "party": "Liberal"
@@ -74,8 +74,8 @@
           "kind": "district",
           "slug": "caulfield",
           "name": "Caulfield",
-          "region": "Southern Metropolitan",
           "electorate_url": "/subject/electorate/vic-vic-la-vic-caulfield",
+          "region": "Southern Metropolitan",
           "member": {
             "name": "David Southwick",
             "party": "Liberal"
@@ -93,8 +93,8 @@
           "kind": "district",
           "slug": "prahran",
           "name": "Prahran",
-          "region": "Southern Metropolitan",
           "electorate_url": "/subject/electorate/vic-vic-la-vic-prahran",
+          "region": "Southern Metropolitan",
           "member": {
             "name": "Rachel Westaway",
             "party": "Liberal"
@@ -118,8 +118,8 @@
           "kind": "district",
           "slug": "albert-park",
           "name": "Albert Park",
-          "region": "Southern Metropolitan",
           "electorate_url": "/subject/electorate/vic-vic-la-vic-albert-park",
+          "region": "Southern Metropolitan",
           "member": {
             "name": "Nina Taylor",
             "party": "Labor"

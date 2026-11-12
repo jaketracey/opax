@@ -1,4 +1,5 @@
 import { act } from 'react';
+import { SectionList } from 'react-native';
 import { mockVic, renderVic, resetVic, words } from './vic-election-render';
 import { ContentUnavailable } from '../src/design/states';
 import Hub from '../src/features/vic-election/Hub';
@@ -6,6 +7,10 @@ import { Finder } from '../src/features/vic-election/Finder';
 import { ElectionUnavailable } from '../src/features/vic-election/reads';
 import { decodeFind } from '../src/features/vic-election/decoders';
 import finder from '../scripts/fixtures/vic-election/find-st-kilda.json';
+import postcode from '../scripts/fixtures/vic-election/find-3350.json';
+import missingPostcode from '../scripts/fixtures/vic-election/find-9999.json';
+import memberFind from '../scripts/fixtures/vic-election/find-allan.json';
+import districtFind from '../scripts/fixtures/vic-election/find-bass.json';
 beforeEach(resetVic);
 test('Ahead puts status before dates, districts, regions and authorised foot', () => {
   const r = renderVic(<Hub />);
@@ -22,8 +27,17 @@ test('Ahead puts status before dates, districts, regions and authorised foot', (
     `Lower house: ${mockVic.overview.record!.data.districts.length} districts`,
   );
   expect(text.indexOf('Key dates')).toBeLessThan(text.indexOf('Lower house:'));
-  expect(text.indexOf('Lower house:')).toBeLessThan(
-    text.indexOf('Upper house:'),
+  // The full 88-row pin virtualises the region section offscreen.
+  const sections = r.root.findByType(SectionList).props.sections;
+  expect(sections.map((section: { title: string }) => section.title)).toEqual([
+    'Lower house: 88 districts',
+    'Upper house: 8 regions',
+  ]);
+  expect(
+    sections.map((section: { data: unknown[] }) => section.data.length),
+  ).toEqual([88, 8]);
+  expect(r.root.findAllByProps({ testID: 'vic-election-notice' })).toHaveLength(
+    0,
   );
   expect(text).toContain(mockVic.overview.record!.data.authorisation);
 });
@@ -95,6 +109,37 @@ test('finder draws split percentages and its foot', async () => {
   expect(text).toContain('Some places cross district lines.');
   expect(text).toContain(mockVic.overview.record!.data.authorisation);
 });
+test('pinned postcode 3350 shows all three districts and resident shares', async () => {
+  const text = words(await find('3350', decodeFind(postcode)));
+  for (const value of [
+    'Wendouree',
+    '55%',
+    'Eureka',
+    '40%',
+    'Ripon',
+    '5%',
+    'Some places cross district lines.',
+  ])
+    expect(text).toContain(value);
+});
+test('pinned postcode 9999 renders the postcode-specific empty state', async () => {
+  const r = await find('9999', decodeFind(missingPostcode));
+  expect(words(r)).toContain('No Victorian postcode area matches “9999”.');
+  expect(
+    r.root.findAllByProps({ testID: 'vic-election-address' }).length,
+  ).toBeGreaterThan(0);
+  expect(r.root.findAllByProps({ testID: 'vic-election-hit-0' })).toHaveLength(
+    0,
+  );
+});
+test.each([memberFind, districtFind])(
+  'pinned name query $q keeps every returned hit',
+  async (pin) => {
+    const text = words(await find(pin.q, decodeFind(pin)));
+    for (const hit of pin.hits)
+      for (const seat of hit.seats) expect(text).toContain(seat.name);
+  },
+);
 for (const empty of ['postcode', 'place'] as const)
   test(`finder empty ${empty}`, async () => {
     const q = empty === 'postcode' ? '9999' : 'Missing';

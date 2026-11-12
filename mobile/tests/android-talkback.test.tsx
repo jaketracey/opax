@@ -776,7 +776,9 @@ test('Victorian election rows expose grouped TalkBack labels and 48dp targets', 
           share: 67.2,
           place: 'St Kilda',
         }),
-        app.React.createElement(RegionRow, { region: overview.regions[0]! }),
+        app.React.createElement(RegionRow, {
+          region: overview.regions.find((r) => r.slug === 'southern-metropolitan')!,
+        }),
       );
     });
     const district = byID(renderer, 'vic-election-district-albert-park');

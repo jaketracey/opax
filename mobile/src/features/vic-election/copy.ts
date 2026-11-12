@@ -75,6 +75,9 @@ export const vicCopy = {
   regionHead: (members: number, n: number) =>
     `Upper house region with ${members === 5 ? 'five' : members} members and ${n} districts.`,
   candidates: 'Candidates',
+  candidateGroup: (group: string, name?: string) =>
+    `Group ${group}${name ? ` · ${name}` : ''}`,
+  ungroupedCandidates: 'Ungrouped candidates',
   ballot: (d: string) =>
     `In ballot paper order, as published by the VEC on ${d}.`,
   noCandidates:

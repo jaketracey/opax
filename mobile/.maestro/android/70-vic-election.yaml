@@ -53,7 +53,7 @@ name: 70 Victorian election on Android
 - assertVisible: of residents
 - takeScreenshot: ${EVIDENCE}/70-android-finder
 - tapOn:
-    id: vic-election-district-wendouree
+    id: vic-election-district-eureka
 - assertVisible: Last held by
 - scrollUntilVisible:
     element:

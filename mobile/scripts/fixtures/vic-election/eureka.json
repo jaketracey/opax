@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "updated": "2026-11-12",
+  "kind": "district",
+  "slug": "eureka",
+  "name": "Eureka",
+  "web_url": "https://opax.com.au/vic-election-2026/eureka",
+  "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/eureka-district",
+  "electorate_url": "/subject/electorate/vic-vic-la-vic-eureka",
+  "roster_date": "2026-09-09",
+  "formerly": "Buninyong",
+  "created": false,
+  "boundary_note": "The EBC final report changed Buninyong District’s name to Eureka District, with boundary changes, effective 1 November 2022. This predates the 2022–2026 term.",
+  "region": {
+    "slug": "western-victoria",
+    "name": "Western Victoria",
+    "members": [
+      {
+        "name": "Jacinta Ermacora",
+        "party": "Labor",
+        "slug": "jacinta-ermacora",
+        "href": "/subject/person/jacinta-ermacora"
+      },
+      {
+        "name": "Sarah Mansfield",
+        "party": "Greens",
+        "slug": "sarah-mansfield",
+        "href": "/subject/person/sarah-mansfield"
+      },
+      {
+        "name": "Bev McArthur",
+        "party": "Liberal",
+        "slug": "bev-mcarthur",
+        "href": "/subject/person/bev-mcarthur"
+      },
+      {
+        "name": "Joe McCracken",
+        "party": "Liberal",
+        "slug": "joe-mccracken",
+        "href": "/subject/person/joe-mccracken"
+      },
+      {
+        "name": "Gayle Tierney",
+        "party": "Labor",
+        "slug": "gayle-tierney",
+        "href": "/subject/person/gayle-tierney"
+      }
+    ]
+  },
+  "districts": [],
+  "result": {
+    "general": {
+      "date": "2022-11-26",
+      "kind": "general",
+      "party": "Labor",
+      "share": 57.17,
+      "against": "Liberal",
+      "against_share": 42.83,
+      "margin": 7.17,
+      "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/eureka-district-results"
+    },
+    "since": null
+  },
+  "candidates": null,
+  "members": [
+    {
+      "name": "Michaela Settle",
+      "party": "Labor",
+      "slug": "michaela-settle",
+      "href": "/subject/person/michaela-settle",
+      "source_url": "https://www.parliament.vic.gov.au/members/michaela-settle/",
+      "speeches": {
+        "count": 160,
+        "first": 2023,
+        "last": 2026,
+        "within_term": true
+      },
+      "speech_gap": null,
+      "votes": {
+        "count": 9,
+        "ayes": 6,
+        "noes": 3
+      },
+      "recent_votes": [
+        {
+          "date": "2026-09-10",
+          "title": "That the following words be inserted to the end of the motion: ‘while noting the impact of $15 billion of corruption on services for Victorians’.",
+          "href": "/doc/division-vic-la-2026-09-10-3",
+          "vote": "no",
+          "source_url": "https://www.parliament.vic.gov.au/4a70cc/globalassets/hansard-daily-pdfs/hansard-2145855009-37384/hansard-2145855009-37384.pdf"
+        }
+      ]
+    }
+  ],
+  "results_fetched": "2026-10-13",
+  "speech_updated": "2026-10-18",
+  "division_start": "2026-08-14",
+  "division_end": "2026-09-24"
+}

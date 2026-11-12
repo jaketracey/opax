@@ -2,6 +2,12 @@ import { mockVic, renderVic, resetVic, words } from './vic-election-render';
 import { ContentUnavailable } from '../src/design/states';
 import Seat from '../src/features/vic-election/Seat';
 import { ElectionUnavailable } from '../src/features/vic-election/reads';
+import { decodeSeat } from '../src/features/vic-election/decoders';
+import published from '../scripts/fixtures/vic-election/albert-park-candidates.json';
+import werribee from '../scripts/fixtures/vic-election/werribee.json';
+import bendigoWest from '../scripts/fixtures/vic-election/bendigo-west.json';
+import eureka from '../scripts/fixtures/vic-election/eureka.json';
+import region from '../scripts/fixtures/vic-election/southern-metropolitan.json';
 beforeEach(resetVic);
 test('district has Last held by, a dated result, candidates and record', () => {
   const r = renderVic(<Seat />);
@@ -33,14 +39,7 @@ test('district has Last held by, a dated result, candidates and record', () => {
   expect(text).not.toMatch(/(?:^|\s)Held by/);
 });
 test('latest contest first, with one winning margin', () => {
-  const s = mockVic.seat.record!.data;
-  s.name = 'Test district';
-  s.result!.since = {
-    ...s.result!.general,
-    date: '2025-02-08',
-    kind: 'by-election',
-    margin: 0.82,
-  };
+  mockVic.seat.record!.data = decodeSeat(werribee);
   const text = words(renderVic(<Seat />));
   expect(text.indexOf('2025 by-election')).toBeLessThan(
     text.indexOf('2022 election'),
@@ -48,22 +47,27 @@ test('latest contest first, with one winning margin', () => {
   expect(text.match(/Winning margin/g)).toHaveLength(1);
 });
 test('candidate order, ballot numbers and plain unlinked names', () => {
-  mockVic.seat.record!.data.candidates = {
-    published: '2026-11-09',
-    url: 'https://www.vec.vic.gov.au/',
-    list: [
-      { name: 'Test Zed', party: null },
-      { name: 'Test Ada', party: 'Test Party' },
-    ],
-  };
+  mockVic.seat.record!.data = decodeSeat(published);
   const r = renderVic(<Seat />);
   const text = words(r);
-  expect(text.indexOf('Test Zed')).toBeLessThan(text.indexOf('Test Ada'));
+  const names = published.candidates.list.map((candidate) => candidate.name);
+  expect(text.indexOf(names[0]!)).toBeLessThan(text.indexOf(names[1]!));
+  expect(text.indexOf(names[1]!)).toBeLessThan(text.indexOf(names[2]!));
+  expect(text).toContain('Published 10 Nov 2026');
   const row = r.root
     .findAllByProps({ testID: 'vic-seat-candidate-0' })
     .find((n) => typeof n.type === 'string')!;
-  expect(row.props.accessibilityLabel).toBe('1. Test Zed.');
+  expect(row.props.accessibilityLabel).toBe(`1. ${names[0]}.`);
   expect(row.props.onPress).toBeUndefined();
+  const independent = r.root
+    .findAllByProps({ testID: 'vic-seat-candidate-1' })
+    .find((n) => typeof n.type === 'string')!;
+  expect(independent.props.accessibilityLabel).toBe(
+    `2. ${names[1]}, Independent.`,
+  );
+  expect(
+    r.root.findAllByProps({ testID: 'vic-seat-candidates-none' }),
+  ).toHaveLength(0);
 });
 test('Closed hides absent candidates and labels historical results', () => {
   mockVic.now = new Date('2026-11-28T19:00:00+11:00');
@@ -73,37 +77,38 @@ test('Closed hides absent candidates and labels historical results', () => {
   expect(text).toContain('These are results from before the 2026 election.');
 });
 test('speech gap and absent vote count do not invent totals', () => {
-  const m = mockVic.seat.record!.data.members[0]!;
-  m.speeches = null;
-  m.speech_gap = 'No speech count for this member.';
-  const text = words(renderVic(<Seat />));
-  expect(text).toContain(m.speech_gap);
+  mockVic.seat.record!.data = decodeSeat(bendigoWest);
+  const r = renderVic(<Seat />);
+  const text = words(r);
+  expect(text).toContain(bendigoWest.members[0]!.speech_gap);
+  expect(text).not.toContain('Speeches in Parliament');
+  expect(text).not.toContain('Votes recorded');
+  expect(r.root.findAllByProps({ testID: 'vic-seat-speeches' })).toHaveLength(
+    0,
+  );
 });
 test('region uses member and district rows', () => {
-  const s = mockVic.seat.record!.data;
-  s.kind = 'region';
-  s.name = 'Test region';
-  s.result = null;
-  s.region = null;
-  s.members = Array.from({ length: 5 }, (_, i) => ({
-    name: `Test Member ${i + 1}`,
-    party: null,
-    slug: `test-member-${i + 1}`,
-    href: `/subject/person/test-member-${i + 1}`,
-    source_url: `https://example.test/member-${i + 1}`,
-    speeches: null,
-    speech_gap: null,
-    votes: null,
-    recent_votes: [],
-  }));
-  s.districts = mockVic.overview.record!.data.districts;
+  mockVic.seat.record!.data = decodeSeat(region);
   const text = words(renderVic(<Seat />));
-  expect(text).toContain('Test region Region');
+  expect(text).toContain('Southern Metropolitan Region');
   expect(text).toContain('Upper house region with five members');
-  for (let i = 1; i <= 5; i++) expect(text).toContain(`Test Member ${i}`);
+  for (const member of region.members) expect(text).toContain(member.name);
+  for (const district of region.districts)
+    expect(text).toContain(district.name);
   expect(text).toContain('Members, 2022 to 2026');
   expect(text).toContain('Districts in this region');
   expect(text).not.toContain('Last result');
+});
+test('Eureka keeps its former district name', () => {
+  mockVic.seat.record!.data = decodeSeat(eureka);
+  expect(words(renderVic(<Seat />))).toContain('Called Buninyong before 2022.');
+});
+test('published candidates stay visible after voting closes', () => {
+  mockVic.seat.record!.data = decodeSeat(published);
+  mockVic.now = new Date('2026-11-28T19:00:00+11:00');
+  const text = words(renderVic(<Seat />));
+  for (const candidate of published.candidates.list)
+    expect(text).toContain(candidate.name);
 });
 test('seat not found has an All districts action and no foot', () => {
   mockVic.seat = {

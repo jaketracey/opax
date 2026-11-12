@@ -2,6 +2,7 @@ import { spawn, type ChildProcess } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { get, request as httpRequest } from 'node:http';
 import { resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
 import snapshot from '../scripts/fixture-snapshot.json';
 import {
   decodeEdition,
@@ -117,6 +118,32 @@ afterAll(async () => {
     });
   }
 });
+test.each([
+  ['overview', ''],
+  ['albert-park', '/seat/albert-park'],
+  ['bendigo-west', '/seat/bendigo-west'],
+  ['eureka', '/seat/eureka'],
+  ['werribee', '/seat/werribee'],
+  ['southern-metropolitan', '/seat/southern-metropolitan'],
+  ['find-3350', '/find?q=3350'],
+  ['find-9999', '/find?q=9999'],
+  ['find-allan', '/find?q=allan'],
+  ['find-bass', '/find?q=Bass'],
+  ['find-st-kilda', '/find?q=St%20Kilda'],
+])(
+  'serves the pinned Vic election response %s offline',
+  async (file, suffix) => {
+    const result = await request(`/api/app/v1/vic-election${suffix}`);
+    expect(result.status).toBe(200);
+    const pin = JSON.parse(
+      readFileSync(
+        resolve(__dirname, `../scripts/fixtures/vic-election/${file}.json`),
+        'utf8',
+      ),
+    );
+    expect(JSON.parse(result.body)).toEqual(pin);
+  },
+);
 test('year-photo manifest and pinned WebP subset are served as free static files; absent pictures stay offline', async () => {
   const manifest = await request('/years/pictures.json');
   expect(manifest.status).toBe(200);
