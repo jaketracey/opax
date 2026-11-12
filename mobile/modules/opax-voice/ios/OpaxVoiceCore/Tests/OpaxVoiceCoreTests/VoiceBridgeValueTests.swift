@@ -39,6 +39,17 @@ final class VoiceBridgeValueTests: XCTestCase {
         XCTAssertEqual(open?["state"] as? String, "unknown")
         XCTAssertEqual(Set(open?.keys.map { $0 } ?? []), ["state", "expiresAt"])
     }
+    func testSourcesProjectAskFieldsOnlyWhenPresent() throws {
+        let shipped = VoiceSource(title: "Public record", path: "/money/receipts")
+        let labelled = VoiceSource(title: "Example office pay: every step since 1999", path: "/ask?q=x", recordTitle: "Example office pay: every step since 1999", date: "1999–2026", type: "Pay record")
+        let sources = VoiceBridgeValue.event(.sources([shipped, labelled]))["sources"] as? [[String: Any]]
+        XCTAssertEqual(sources?.count, 2)
+        XCTAssertEqual(Set(sources?[0].keys.map { $0 } ?? []), ["title", "path"])
+        XCTAssertEqual(Set(sources?[1].keys.map { $0 } ?? []), ["title", "path", "recordTitle", "date", "type"])
+        XCTAssertEqual(sources?[1]["type"] as? String, "Pay record")
+        XCTAssertEqual(sources?[1]["date"] as? String, "1999–2026")
+        XCTAssertTrue(JSONSerialization.isValidJSONObject(VoiceBridgeValue.event(.sources([shipped, labelled]))))
+    }
     func testClearedStatusEventProjectsNull() {
         let event = VoiceBridgeValue.event(.status(nil))
         XCTAssertEqual(event["type"] as? String, "status")

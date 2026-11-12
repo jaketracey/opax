@@ -42,8 +42,16 @@ enum VoiceBridgeValue {
         case .transcript(let turns):
             return ["type": "transcript", "turns": turns.map { ["role": $0.role.rawValue, "id": $0.id, "text": $0.text] as [String: Any] }]
         case .sources(let sources):
-            return ["type": "sources", "sources": sources.map { ["title": $0.title, "path": $0.path] }]
+            return ["type": "sources", "sources": sources.map(source)]
         }
+    }
+    /// Title and path, plus Ask's labels only when the tool sent them (older results project exactly as before).
+    static func source(_ value: VoiceSource) -> [String: Any] {
+        var out: [String: Any] = ["title": value.title, "path": value.path]
+        for (key, label) in [("recordTitle", value.recordTitle), ("speaker", value.speaker), ("date", value.date), ("type", value.type)] {
+            if let label { out[key] = label }
+        }
+        return out
     }
     /// Two rounded loudness values: coarse enough to animate, never audio.
     static func levels(_ value: AudioLevels) -> [String: Any] {
