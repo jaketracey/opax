@@ -536,6 +536,12 @@ export function Text({
       allowFontScaling
       maxFontSizeMultiplier={given.maxFontSizeMultiplier ?? 0}
       dynamicTypeRamp={role.dynamicTypeRamp}
+      {...(Platform.OS === 'android'
+        ? {
+            android_hyphenationFrequency: 'none' as const,
+            textBreakStrategy: 'highQuality' as const,
+          }
+        : {})}
       {...(Platform.OS === 'ios' && titleRole
         ? { lineBreakStrategyIOS: 'push-out' }
         : {})}
@@ -547,6 +553,7 @@ export function Text({
           fontSize: role.fontSize * capScale,
           lineHeight: (role.lineHeight + LINE_HEIGHT_NUDGE) * capScale,
           flexShrink: 1,
+          ...(Platform.OS === 'android' ? { includeFontPadding: false } : {}),
         },
         tabular ? { fontVariant: ['tabular-nums'] } : null,
         heightGuard.key === heightKey && heightGuard.minimum > 0

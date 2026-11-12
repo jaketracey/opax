@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 source "$(dirname "$0")/qa-env.sh"
+if [ "$(uname -s)" = Linux ]; then
+  echo 'Linux Android desktop: skipping Mac capacity checks.' >&2
+  exit 0
+fi
 source "$(dirname "$0")/qa-lock.sh"
 if [ -z "${OPAX_CAPACITY_CMD:-}" ]; then
   echo "No capacity command configured; skipping capacity checks." >&2

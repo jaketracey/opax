@@ -1,7 +1,8 @@
+import { Pressable } from './pressable';
 import { type Href } from 'expo-router';
 import { useRecordLink } from '../navigation/record-link';
 import { useState, type ReactNode } from 'react';
-import { Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useOpenAsk } from '../features/ask/open';
 import { openSource } from '../navigation/external';
 import { useAccessibilitySize } from './accessibility';

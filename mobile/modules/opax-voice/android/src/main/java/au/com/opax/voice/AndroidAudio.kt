@@ -482,6 +482,8 @@ class AndroidVoiceAudioSession(
   private val focusListener = AudioManager.OnAudioFocusChangeListener { change ->
     when (change) {
       AudioManager.AUDIOFOCUS_LOSS, AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> lifecycle.emit(LifecycleEvent.interruptionBegan)
+      // A notification or navigation prompt only ducks: speech is never ducked by
+      // the system, so the call carries on as an iOS voice chat session does.
       AudioManager.AUDIOFOCUS_GAIN -> lifecycle.emit(LifecycleEvent.interruptionEnded)
     }
   }

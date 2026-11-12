@@ -1,3 +1,4 @@
+import { Pressable } from './pressable';
 import {
   cloneElement,
   useEffect,
@@ -8,7 +9,6 @@ import {
 import {
   Alert,
   Platform,
-  Pressable,
   StyleSheet,
   View,
   type PressableProps,
@@ -231,7 +231,19 @@ export function RowLink({
         {...child.props}
         {...accessibility}
         onPress={open}
-        onLongPress={leaves.length ? () => showMenu('', leaves) : undefined}
+        onLongPress={
+          leaves.length
+            ? Platform.OS === 'android'
+              ? (event) =>
+                  showMenu('', leaves, {
+                    x: event.nativeEvent.pageX,
+                    y: event.nativeEvent.pageY,
+                    width: 0,
+                    height: 0,
+                  })
+              : () => showMenu('', leaves)
+            : undefined
+        }
       />
     );
   const hasNativeHost = showPreview || items.length > 0;

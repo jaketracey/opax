@@ -1,4 +1,5 @@
 import { Stack } from 'expo-router';
+import { Platform } from 'react-native';
 import { detailBackOptions, screen, sheetOptions, untitled } from './screen';
 import { closeSheetItem, headerItems, pendingHeaderOptions } from '../chrome';
 import { frontPageQuestion } from '../../features/explore/quiz/data';
@@ -37,7 +38,7 @@ export function exploreScreens() {
           title: exploreToolTitle(params),
           ...untitled,
           headerLargeTitleEnabled: false,
-          headerTitleAlign: 'center',
+          headerTitleAlign: Platform.OS === 'android' ? 'left' : 'center',
           ...detailBackOptions(navigation, route.key, 'explore/[tool]'),
           ...pendingHeaderOptions('explore/[tool]'),
         };
@@ -46,6 +47,9 @@ export function exploreScreens() {
     screen('explore/photo', 'Photograph', {
       presentation: 'fullScreenModal',
       ...headerItems(() => [closeSheetItem()]),
+      ...(Platform.OS === 'android'
+        ? { statusBarStyle: 'light' as const }
+        : {}),
     }),
     screen('explore/tide-table', 'The tide', {
       ...sheetOptions,

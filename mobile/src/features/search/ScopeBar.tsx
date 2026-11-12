@@ -13,6 +13,7 @@ import {
   rhythm,
 } from '../../design/tokens';
 import { scopes, type Scope } from './scopes';
+import { ScopeChips } from './ScopeChips';
 
 /** The menu replaces the segments from AX3 (journeys/search.md 3.4). */
 export function scopeMenuAt(fontScale: number) {
@@ -22,8 +23,8 @@ export function scopeMenuAt(fontScale: number) {
 /**
  * The four scopes, first in the results list header: All, People, Bills,
  * Speeches. A `SegmentedPicker` to AX2 (four labels fit 375 pt there); a
- * pop-up button with the current scope from AX3. Android draws its own
- * segmented control, with a bottom-sheet menu at the largest sizes.
+ * pop-up button with the current scope from AX3. Android uses scrolling
+ * Material chips so every scope keeps its complete label at large text sizes.
  */
 export function ScopeBar({
   value,
@@ -39,6 +40,19 @@ export function ScopeBar({
     haptic('selection');
     onChange(next);
   };
+  if (Platform.OS === 'android')
+    return (
+      <ScopeChips
+        label="Search scope"
+        options={scopes.map((s) => ({
+          ...s,
+          testID: `search-scope-${s.value}`,
+        }))}
+        value={value}
+        onChange={choose}
+        testID="search-scope"
+      />
+    );
   if (menu)
     return (
       <View style={styles.band}>

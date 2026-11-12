@@ -7,7 +7,13 @@ import {
   Section as SwiftSection,
 } from '@expo/ui/swift-ui';
 import { cloneElement, type ReactElement } from 'react';
-import { Platform, type PressableProps } from 'react-native';
+import {
+  Platform,
+  Pressable as NativePressable,
+  type PressableProps,
+} from 'react-native';
+import { Pressable } from './pressable';
+import { androidControls } from './tokens';
 import { showMenu } from './menu';
 import { menuLeaves, menuSections, type RowMenuAction } from './row-link';
 
@@ -33,10 +39,26 @@ export function ContextMenu({
       if (item) item.onPress();
       else children.props.onAccessibilityAction?.(event);
     },
-    ...(Platform.OS !== 'ios'
-      ? { onLongPress: () => showMenu('', leaves) }
-      : {}),
+    ...(Platform.OS === 'android'
+      ? {
+          android_ripple: children.props.android_ripple ?? {
+            color: androidControls.ripple,
+            foreground: true,
+          },
+          onLongPress: (event: import('react-native').GestureResponderEvent) =>
+            showMenu('', leaves, {
+              x: event.nativeEvent.pageX,
+              y: event.nativeEvent.pageY,
+              width: 0,
+              height: 0,
+            }),
+        }
+      : Platform.OS !== 'ios'
+        ? { onLongPress: () => showMenu('', leaves) }
+        : {}),
   });
+  if (Platform.OS === 'android' && children.type === NativePressable)
+    return <Pressable {...trigger.props} />;
   if (Platform.OS !== 'ios') return trigger;
   return (
     <Host matchContents={{ vertical: true }}>
