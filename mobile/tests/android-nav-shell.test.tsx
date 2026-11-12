@@ -1,6 +1,7 @@
-import { act, type ReactNode } from 'react';
+import { act, createRef, type ReactNode } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Screen } from '../src/design/layout';
 import { androidHeaderBar, pageItems } from '../src/navigation/chrome';
 import { androidTabsHidden } from '../src/navigation/AndroidTabs';
 import { AndroidTabIcon } from '../src/navigation/AndroidTabIcon';
@@ -292,6 +293,103 @@ test('action menus have a dialog title and native Modal handles Back before the 
     tree.findAll((node) => node.props.role === 'dialog').length,
   ).toBeGreaterThan(0);
 });
+
+test.each(
+  [false, true].flatMap((clamp) =>
+    [false, true].map((callback) => ({ clamp, callback })),
+  ),
+)(
+  'Android Screen retains its scroll target and range repair (clamp=$clamp, callback=$callback)',
+  ({ clamp, callback }) => {
+    platform('android');
+    let tabPress!: (event: { target: string }) => void;
+    const tabs = {
+      getState: () => ({
+        type: 'tab',
+        index: 0,
+        routes: [{ key: 'today-tab', state: { key: 'root-stack' } }],
+      }),
+      addListener: jest.fn((_type, callback) => {
+        tabPress = callback;
+        return jest.fn();
+      }),
+    };
+    const setOptions = jest.fn();
+    const navigation = {
+      isFocused: () => true,
+      addListener: jest.fn(() => jest.fn()),
+      getState: () => ({
+        key: 'root-stack',
+        routeNames: ['index', 'bill/[key]'],
+        routes: [{ key: 'today-root', name: 'index' }],
+      }),
+      getParent: () => tabs,
+      setOptions,
+    };
+    const ref = createRef<ScrollView>();
+    const forwarded = callback
+      ? (node: ScrollView | null) => {
+          ref.current = node;
+        }
+      : ref;
+    const onScroll = jest.fn();
+    const tree = render(
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider
+          value={{ key: 'today-root', name: 'index' }}
+        >
+          <Screen
+            scrollRef={forwarded}
+            onScroll={onScroll}
+            clampScrollOnContentChange={clamp}
+          >
+            <View />
+          </Screen>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>,
+    );
+    const view = tree.findByType(ScrollView);
+    expect(ref.current).toBe(view.instance);
+    expect(
+      tree.findAllByProps({ testID: 'android-root-title' }).length,
+    ).toBeGreaterThan(0);
+    const scrollTo = jest.fn();
+    ref.current!.scrollTo = scrollTo;
+    act(() => {
+      view.props.onLayout({
+        nativeEvent: { layout: { width: 402, height: 700 } },
+      });
+      view.props.onContentSizeChange?.(402, 3000);
+      view.props.onScroll({
+        nativeEvent: {
+          contentOffset: { x: 0, y: 80 },
+          contentInset: { top: 0, bottom: 0 },
+          layoutMeasurement: { width: 402, height: 700 },
+        },
+      });
+    });
+    expect(onScroll).toHaveBeenLastCalledWith(80);
+    expect(setOptions).toHaveBeenLastCalledWith(
+      expect.objectContaining({ headerTitle: 'Today' }),
+    );
+    const frame = jest
+      .spyOn(global, 'requestAnimationFrame')
+      .mockImplementation((callback) => {
+        callback(0);
+        return 0;
+      });
+    try {
+      act(() => tabPress({ target: 'today-tab' }));
+      expect(scrollTo).toHaveBeenLastCalledWith({ y: 0, animated: true });
+      if (clamp) {
+        act(() => view.props.onContentSizeChange(402, 720));
+        expect(scrollTo).toHaveBeenLastCalledWith({ y: 20, animated: false });
+      }
+    } finally {
+      frame.mockRestore();
+    }
+  },
+);
 
 test.each(['android', 'ios'] as const)(
   '%s root scroll preserves the platform bar and tab behaviour',

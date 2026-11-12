@@ -1,4 +1,5 @@
 import { RouteOptions } from '../../navigation/preview';
+import { useAndroidRootScroll } from '../../navigation/useAndroidRootScroll';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
   useCallback,
@@ -113,6 +114,7 @@ export default function AskScreen() {
   const [topRequest, setTopRequest] = useState(0);
   const input = useRef<TextInput>(null);
   const scroll = useRef<ScrollView>(null);
+  const androidRoot = useAndroidRootScroll(scroll, colors[ground]);
   const root = useRef<View>(null);
   const turnY = useRef(0);
   const pin = useRef(false);
@@ -316,6 +318,7 @@ export default function AskScreen() {
       onLayout={column.onLayout}
       onScroll={(event) => {
         atTop.current = event.nativeEvent.contentOffset.y <= 4;
+        if (Platform.OS === 'android') androidRoot.onScroll(event);
         if (adaptive) anchor.onScroll(event.nativeEvent.contentOffset.y);
         if (docked) sources.onScroll();
       }}
@@ -329,6 +332,7 @@ export default function AskScreen() {
         },
       ]}
     >
+      {androidRoot.title}
       <RegionProvider value={column.inner}>
         {idle ? (
           <AskIdle
