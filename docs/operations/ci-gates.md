@@ -18,6 +18,10 @@ It uses the repository's frozen Python lock and version, including for Python
 processes spawned by Node tests. The table build generates metadata locally.
 The workflow does not deploy or call production services.
 
+The older portal on `ios/apple-design` predates `build:release`. For that tree,
+the workflow runs its complete pre-deploy sequence: search, social, grants map,
+analytics, voice and asset stamping. It never invokes the deploy script.
+
 Dates use `Australia/Melbourne` and the locale is `C.UTF-8`. Only the npm
 download cache is retained. Public source and fixture output can appear in logs;
 never add private fixtures or evidence to the committed tree.

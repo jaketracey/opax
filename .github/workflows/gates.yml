@@ -117,7 +117,20 @@ jobs:
       - name: Generate Worker types
         run: npx wrangler types
       - name: Build release assets
-        run: npm run build:release
+        run: |
+          if node -e 'process.exit(Object.hasOwn(JSON.parse(require("fs").readFileSync("package.json", "utf8")).scripts, "build:release") ? 0 : 1)'; then
+            npm run build:release
+          else
+            # ios/apple-design predates build:release. Run its complete
+            # pre-deploy build sequence, without invoking the deploy script.
+            echo '::notice::Building the legacy portal release sequence'
+            npm run build:search
+            npm run build:social
+            npm run build:grants-map
+            npm run build:analytics
+            npm run build:voice
+            node ../scripts/stamp_assets.mjs
+          fi
         env:
           OPAX_TABLE_METADATA_ONLY: '1'
       - name: Typecheck
