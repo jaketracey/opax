@@ -190,7 +190,8 @@ test('R7 exact reproductions and uncertain requests bypass poisoned caches in JS
    assert.equal(response.status,200);assert.equal(response.headers.get('x-opax-money-route'),'federal-party-ranking-v1',question)
    const wire=await response.text(),p=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
    assert.deepEqual(p,JSON.parse(JSON.stringify(api.publicPartyMoneyAnswer(await api.federalPartyMoneyAnswer({question},assets)))))
-   if(reproductions.includes(question))complete(p);else assert.equal(p.answer_status,'needs_scope')
+   // An informal request is calculated for its natural reading, which the answer states.
+   if(reproductions.includes(question))complete(p);else{assert.equal(p.answer_status,'calculated',question);assert.match(p.money_reading,/^Reading this as the largest disclosed receipts to /)}
   }
   assert.equal(reads,0);assert.equal(outbound.length,before)
  }finally{globalThis.caches.default=saved;await Promise.all(pending);restore()}

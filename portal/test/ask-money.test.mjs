@@ -230,6 +230,7 @@ test('party comparisons calculate a dollar difference and cite each scoped side'
 test('industry comparisons do not treat banks as every finance organisation',async()=>{
  const unsupported=await ask('Who gives more money to Labor, unions or banks?');
  assert.equal(unsupported.answer_status,'calculated');assert.match(unsupported.answer,/Finance/);
+ assert.match(unsupported.money_reading,/Reading banks as the finance grouping in this map, which also holds insurers and investment firms/);
  const r=await ask('Who gives more money to Labor, unions or finance?');
  assert.equal(r.answer_status,'calculated');assert.match(r.answer,/\| Source industry \|/);
  const unions=industryTotal('unions','Labor'),finance=industryTotal('finance','Labor');
@@ -238,7 +239,10 @@ test('industry comparisons do not treat banks as every finance organisation',asy
  assert.ok(r.sources.some(s=>s.href.includes('industry=unions')&&s.href.includes('party=party%3ALabor')));
  assert.ok(r.sources.some(s=>s.href.includes('industry=finance')&&s.href.includes('party=party%3ALabor')));
  assert.equal((await ask('Who receives the most money from banks?')).answer_status,'calculated');
- assert.equal((await ask('Who receives the most disclosed receipts from energy?')).answer_status,'needs_scope');
+ // "Energy" is read as the fossil fuels grouping, and the reading is stated.
+ const energy=await ask('Who receives the most disclosed receipts from energy?');
+ assert.equal(energy.answer_status,'calculated');assert.match(energy.money_reading,/Reading energy as the fossil fuels grouping, which holds the energy producers in this map/);
+ assert.ok(energy.sources.some(s=>s.href.includes('industry=fossil_fuels')));
 });
 
 test('familiar corporate names find the donor without a model ranking',async()=>{
@@ -249,8 +253,9 @@ test('familiar corporate names find the donor without a model ranking',async()=>
 
 test('unsupported comparisons and missing data never become a false winner',async()=>{
  for(const q of ['Who gets more money, Labor or Liberal or Greens?','Who gets more money from gambling or mining, Labor or Liberal?','Who gets more money from the unicorn lobby, Labor or Liberal?','Who gets more unicorn industry money, Labor or Liberal?','Who gets more gambling money adjusted for inflation, Labor or Liberal?']) assert.equal(await ask(q),null,q);
+ // Separate years are read as the continuous span they mark out, and said so.
  const mixedPeriods=await ask('Compare gambling money, Labor in 2020 or Liberal in 2021?');
- assert.equal(mixedPeriods.answer_status,'needs_period');assert.doesNotMatch(mixedPeriods.answer,/\$/);
+ assert.equal(mixedPeriods.answer_status,'calculated');assert.match(mixedPeriods.money_reading,/continuous span 2020–21 to 2021–22/);
  const sharedRange=await ask('Who gets more gambling money, Labor or Liberal between 2020 and 2021?');
  assert.equal(sharedRange.answer_status,'calculated');assert.match(sharedRange.answer,/Labor received \$23,199 more/);assert.match(sharedRange.answer,/\| Labor \| \$83,199 \| 6 \|/);assert.match(sharedRange.answer,/\| Liberal \| \$60,000 \| 1 \|/);
  const missing=await ask('Who gets more gambling money, Labor or Liberal in 1900?');
@@ -290,8 +295,12 @@ test('year comparisons honour explicit dates and clarify ambiguous years and mul
  for(const q of ['Did Labor or Liberal receive more gambling money in 2020 than in 2021?','Compare gambling money for Labor and Liberal, 2020 vs 2021?','Compare gambling receipts in 2020 versus 2021']) {
   const r=await ask(q);assert.equal(r.answer_status,'needs_scope',q);assert.doesNotMatch(r.answer,/\$/);
  }
- for(const q of ['How did gambling receipts to Labor change since 2020?','How did gambling receipts to Labor change from 2020 to 2020?','Compare gambling receipts to Labor, 2019–2020 versus 2021–2022']) {
-  const r=await ask(q);assert.equal(r.answer_status,'needs_period',q);assert.doesNotMatch(r.answer,/\$/);
+ // An open or single-year change is read as two named years, and the reading is stated.
+ for(const [q,reading,years] of [['How did gambling receipts to Labor change since 2020?',/Reading “since 2020” as the 2019–20 to 2024–25 disclosure years/,['2019','2024']],
+  ['How did gambling receipts to Labor change from 2020 to 2020?',/Reading this as the change from 2019–20 to 2020–21/,['2019','2020']],
+  ['Compare gambling receipts to Labor, 2019–2020 versus 2021–2022',/Reading 2019–2020 as the 2019–20 financial year\. Reading 2021–2022 as the 2021–22 financial year/,['2019','2021']]]) {
+  const r=await ask(q);assert.equal(r.answer_status,'calculated',q);assert.match(r.money_reading,reading,q);
+  for(const y of years)assert.ok(r.sources.some(s=>s.href.includes(`from=${y}&to=${y}`))||r.answer.includes(`from=${y}&to=${y}`),q+' '+y);
  }
  const filters=await ask('How did gambling receipts to Labor change from 2020 to 2021?',{from:'2022',to:'2024'});
  assert.equal(filters.answer_status,'calculated');assert.match(filters.money_context,/2020–21.*2021–22/);assert.doesNotMatch(filters.answer,/2024–25/);
@@ -354,9 +363,12 @@ test('comparisons between financial-year labels keep each year separate',async()
 });
 
 test('ambiguous or invalid year labels cannot silently change the period',async()=>{
- for(const label of ['2020-2021','2020/22','2020/2022','2020–20','2020-01-01']) {
+ // An unusual label is read in its most natural sense, and the reading is stated.
+ for(const [label,reading,from,to] of [['2020-2021',/Reading 2020-2021 as the 2020–21 financial year/,2020,2020],['2020/22',/Reading 2020\/22 as the 2020–21 to 2021–22 financial years/,2020,2021],
+  ['2020/2022',/Reading 2020\/2022 as the 2020–21 to 2021–22 financial years/,2020,2021],['2020–20',/Reading 2020–20 as the 2020–21 financial year/,2020,2020],['2020-01-01',/reads the period as 2019–20/,2019,2019]]) {
   const r=await ask(`Who gets the most money from gambling in ${label}?`);
-  assert.equal(r.answer_status,'needs_period',label);assert.deepEqual(r.citations,{});assert.doesNotMatch(r.answer,/\$/);
+  assert.equal(r.answer_status,'calculated',label);assert.match(r.money_reading,reading,label);
+  assert.ok(r.sources.some(s=>s.href.includes(`from=${from}&to=${to}`)),label);
  }
  const r=await ask('Who gets the most money from gambling in 2020 to 2021?');
  assert.equal(r.answer_status,'calculated');assert.match(r.answer,/\*\*\$83,199\*\* in donations received/);
@@ -374,7 +386,8 @@ test('year ending labels and requested versus actual coverage remain explicit',a
  assert.match(sparse.money_context,/Financial years: 1900–01 to 2020–21/);
  assert.match(sparse.money_context,/Matching recorded years: 1998–99 to 2020–21/);
  for(const q of ['Who gets the most money from gambling in financial years 2019–20 and 2021–2022?', 'Who gets the most money from gambling in 2019–20, 2021–22?', 'Who gets the most money from gambling in 2019–20 & 2021–22?', 'Who gets the most money from gambling in calendar year 2020?', 'Who gets the most money from gambling from January to June 2020?', 'Who gets the most money from gambling on 2020-1-1?']) {
-  const answer=await ask(q);assert.equal(answer.answer_status,'needs_period',q);assert.doesNotMatch(answer.answer,/\$/);
+  // Each is read as the financial years it names or falls in, and the reading is stated.
+  const answer=await ask(q);assert.equal(answer.answer_status,'calculated',q);assert.match(answer.money_reading,/^(?:Reading|These records are grouped by financial year)/,q);
  }
 });
 
@@ -382,9 +395,10 @@ test('year ending labels and requested versus actual coverage remain explicit',a
 test('an explicit year answers a period clarification without losing the funding selection',async()=>{
  const seed=await ask('Who donated most to Liberal from Tabcorp Holdings in FY2020-21?');
  for(const question of ['And last year?','What about January 2021?','And in 2020 and 2022?']) {
-  const clarification=await ask(question,{context:history(seed.money_question)});
-  assert.equal(clarification.answer_status,'needs_period');assert.equal(clarification.money_question,seed.money_question);
-  for(const prior of [question,clarification.money_question]) {
+  // The period is read and answered for the same selection; a later explicit year still applies.
+  const read=await ask(question,{context:history(seed.money_question)});
+  assert.notEqual(read.answer_status,'needs_period');assert.match(read.money_reading,/^(?:Reading|These records)/,question);assert.match(read.answer,/Tabcorp|Liberal/);
+  for(const prior of [question,read.money_question]) {
    const correction=await ask('And in 2021-22?',{context:history(seed.money_question,prior)});
    assert.equal(correction.answer_status,'calculated');assert.match(correction.answer,/Tabcorp Holdings Limited: \$30,000\*\*, other receipts \(AEC receipt type: Other Receipt, which includes loans\), 2021–22/);
   }
@@ -427,10 +441,11 @@ test('donor choices retain UI controls, follow-up dates and explicit jurisdictio
  const choice=choiceQuestions(qld.answer)[0];if(choice)assert.match(choice,/Queensland/);const state=choice ? await ask(choice) : qld;assert.equal(state.scope.state,'qld');
 });
 test('parenthesised donor names remain complete clickable choice URLs',async()=>{
+ // A shortened name with one match is answered for it, and the reading names it in full.
  const result=await ask('Who receives the most disclosed receipts from Visa AP?');
- assert.equal(result.answer_status,'needs_scope');assert.match(result.answer,/%28Australia%29/);
- const choices=choiceQuestions(result.answer);assert.deepEqual(choices,['Who receives the most disclosed receipts from Visa AP (Australia) Pty Ltd in federal records?']);
- const resolved=await ask(choices[0]);assert.equal(resolved.answer_status,'calculated');assert.match(resolved.answer,/^\*\*Liberal\*\* leads parties receiving money from Visa AP \(Australia\) Pty Ltd: \*\*\$15,000\*\*/);
+ assert.equal(result.answer_status,'calculated');assert.match(result.money_reading,/Reading “Visa AP” as Visa AP \(Australia\) Pty Ltd\./);
+ assert.match(result.answer,/^\*\*Liberal\*\* leads parties receiving money from Visa AP \(Australia\) Pty Ltd: \*\*\$15,000\*\*/);
+ const resolved=await ask('Who receives the most disclosed receipts from Visa AP (Australia) Pty Ltd in federal records?');assert.equal(resolved.answer_status,'calculated');assert.match(resolved.answer,/^\*\*Liberal\*\* leads parties receiving money from Visa AP \(Australia\) Pty Ltd: \*\*\$15,000\*\*/);
  assert.ok(resolved.sources.filter(s=>s.href.startsWith('/money?')).every(s=>new URL(s.href,'https://opax.test').searchParams.get('focus')==='donor:visa ap australia'));
 });
 test('short-name suggestions never remove unsupported qualifiers or combined groups',async()=>{
@@ -505,9 +520,10 @@ test('comparison canonical questions retain UI periods and survive truncated con
 test('comparison date clarification preserves the pair for an explicit correction',async()=>{
  const seed=(await ask('Who gets more gambling money, Labor or Liberal in 2018?')).money_question;
  for(const question of ['And last year?','What about January 2021?','And in calendar year 2021?','And in 2020 and 2022?','And in 2021–23?']) {
+  // The pair keeps its parties; the new period is read, stated and calculated.
   const r=await ask(question,{context:history(seed)});
-  assert.equal(r.answer_status,'needs_period',question);assert.equal(r.money_question,seed);
-  assert.deepEqual(r.sources,[]);assert.doesNotMatch(r.answer,/\$/);
+  assert.equal(r.answer_status,'calculated',question);assert.match(r.money_reading,/^(?:Reading|These records)/,question);
+  assert.match(r.money_question,/Labor or Liberal/,question);
   for(const prior of [question,r.money_question]) {
    const correction=await ask('And in 2021–22?',{context:history(seed,prior)});
    assert.equal(correction.answer_status,'calculated',question);assert.match(correction.answer,/Labor received \$22,199 more/);

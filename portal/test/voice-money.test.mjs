@@ -120,7 +120,12 @@ test('voice period labels and separate years cannot become a wider total',()=>{
  // Untyped fallback: the same question over a file without receipt types sums every legacy 2020–21 receipt.
  const legacy=receiptAnswer(untypedMoney(),'gambling in financial year ending 2021','federal','https://opax.test');
  assert.equal(legacy.typed,false);assert.equal(legacy.measure,'receipts_all');assert.equal(legacy.by_party.find(x=>x.name==='Labor').total_aud,445573);
- for(const q of ['gambling in 2019–20 and 2021–22','gambling in January to June 2020','gambling on 2020-1-1','gambling in calendar year 2020','gambling on 1/1/2020','gambling on 30/06/2021','gambling on 2020.01.01','gambling in H1 2020','gambling in the 1st half of 2020']) assert.equal(receiptAnswer(real,q,'federal','https://opax.test').needs_period,true,q);
+ // Calendar periods and separate years are read as the financial years that
+ // contain them; the answer states the reading and keeps figures.
+ for(const [q,from,to] of [['gambling in 2019–20 and 2021–22',2019,2021],['gambling in January to June 2020',2019,2019],['gambling on 2020-1-1',2019,2019],['gambling in calendar year 2020',2019,2020],['gambling on 1/1/2020',2019,2019],['gambling on 30/06/2021',2020,2020],['gambling on 2020.01.01',2019,2019],['gambling in H1 2020',2019,2019],['gambling in the 1st half of 2020',2019,2019]]) {
+  const r=receiptAnswer(real,q,'federal','https://opax.test')
+  assert.equal(r.needs_period,undefined,q);assert.deepEqual(r.requested_years,{from,to},q);assert.match(r.period_reading,/^(?:Reading|These records are grouped by financial year)/,q);assert.ok(r.all_types_aud>0,q)
+ }
 });
 
 

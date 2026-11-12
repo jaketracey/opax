@@ -106,9 +106,11 @@ export function readReceiptPeriod(question:string, latest:number|undefined, opti
   // 2. Dashed year pairs that are not a single labelled financial year.
   const labelled=/\b(?:FY|financial[ -]years?)\b/i.test(text)
   const pairReadings:string[]=[],pairOptions:PeriodOption[]=[]
-  text=text.replace(new RegExp('\\b('+YEAR+')\\s*([/–—‑-])\\s*('+YEAR+'|\\d{2})\\b','g'),(match,a,sep,b)=>{
+  // A leading preposition is replaced along with the label, so the window reads cleanly.
+  text=text.replace(new RegExp('(\\b(?:in|during|for|over|across)\\s+(?:the\\s+)?)?\\b('+YEAR+')\\s*([/–—‑-])\\s*('+YEAR+'|\\d{2})\\b','gi'),(whole,lead,a,sep,b)=>{
+    const match=whole.slice((lead??'').length)
     const start=Number(a),end=b.length===2?Math.floor(start/100)*100+Number(b)+(Number(b)<start%100?100:0):Number(b)
-    if(end===start+1&&(sep==='/'||b.length===2||labelled))return match
+    if(end===start+1&&(sep==='/'||b.length===2||labelled))return whole
     if(end===start+1||end===start){
       pairReadings.push(`Reading ${match} as the ${financialYear(start)} financial year.`)
       if(end>start)pairOptions.push({label:`${financialYear(start)} and ${financialYear(end)}`,from:start,to:end})
@@ -119,7 +121,7 @@ export function readReceiptPeriod(question:string, latest:number|undefined, opti
       pairOptions.push({label:`${span(start,end)}`,from:start,to:end})
       return `from ${start} to ${end-1}`
     }
-    return match
+    return whole
   })
   if(pairReadings.length)return {query:tidy(text),reading:pairReadings.join(' '),options:[allYears,...pairOptions]}
 
