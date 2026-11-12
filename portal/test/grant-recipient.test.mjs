@@ -30,3 +30,27 @@ test('a $0.00 award reads as published; a missing value is never shown as $0 (se
   assert.match(awardMoney(201261003), /^\$201,261,003/);
   assert.match(awardMoney(0.4), /^\$0\.40?$/);
 });
+
+test('a missing or failed recipient shows the error state, not a script error', async () => {
+  const {JSDOM} = await import('jsdom');
+  const {mountGrantRecipient} = await import('../public/grant-recipient.js');
+  const dom = new JSDOM('<!doctype html><html><body><main id="root"></main></body></html>', {url: 'https://opax.test/money/grants/recipient/federal/abn:1'});
+  const saved = {window: globalThis.window, document: globalThis.document, location: globalThis.location, fetch: globalThis.fetch, requestAnimationFrame: globalThis.requestAnimationFrame};
+  Object.assign(globalThis, {window: dom.window, document: dom.window.document, location: dom.window.location, requestAnimationFrame: fn => setTimeout(fn, 0)});
+  try {
+    for (const [status, heading, retry] of [[404, 'Recipient not found', 0], [503, 'Recipient records could not load', 1]]) {
+      globalThis.fetch = async () => new Response('{}', {status});
+      const root = dom.window.document.getElementById('root');
+      const view = mountGrantRecipient(root, {jurisdiction: 'federal', id: 'abn:1'});
+      await view.ready;
+      const article = root.querySelector('.grant-recipient-page');
+      assert.equal(article.getAttribute('aria-busy'), null);
+      assert.equal(article.querySelector('h1').textContent, heading);
+      assert.equal(article.querySelectorAll('[role="alert"]').length, 1);
+      assert.equal([...article.querySelectorAll('button')].filter(b => b.textContent === 'Try again').length, retry);
+      view.destroy();
+    }
+  } finally {
+    for (const [key, value] of Object.entries(saved)) if (value === undefined) delete globalThis[key]; else globalThis[key] = value;
+  }
+});

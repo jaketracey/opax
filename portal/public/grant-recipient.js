@@ -245,8 +245,7 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
       if (alive()) render(data, index);
     } catch (error) {
       if (!alive() || error.name === 'AbortError') return;
-      const coreActive = hydrateRecordCore('recipient',data,{jurisdiction});
-    root.replaceChildren(); root.removeAttribute('aria-busy');
+      root.replaceChildren(); root.removeAttribute('aria-busy');
       const heading = node('h1', error.message === 'not-found' ? 'Recipient not found' : 'Recipient records could not load'); heading.tabIndex = -1;
       const message = node('p', error.message === 'not-found' ? 'No grant records for this recipient in this jurisdiction.' : 'The published records are temporarily unavailable. Try loading them again.'); message.setAttribute('role', 'alert'); root.append(heading, message);
       if (error.message !== 'not-found') { const retry = node('button', 'Try again', 'primary'); retry.type = 'button'; retry.addEventListener('click', () => { root.setAttribute('aria-busy', 'true'); retry.disabled = true; retry.textContent = 'Loading…'; load(); }); root.append(retry); }
