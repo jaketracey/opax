@@ -1,0 +1,97 @@
+{
+ "raw": {
+  "own_summary": {
+   "present": true,
+   "heading": "EXECUTIVE SUMMARY",
+   "first_page": 13,
+   "last_page": 14
+  },
+  "overview": [
+   {
+    "text": "The Commission of Inquiry into Forensic DNA Testing in Queensland, led by Commissioner Walter Sofronoff KC, was asked to report on whether the methods, systems and processes used in the collection, testing and analysis of DNA samples in Queensland were consistent with best practice.",
+    "pages": [
+     13
+    ],
+    "support": "I was commissioned to report on whether the methods, systems and processes used in the collection, testing and analysis of DNA samples in Queensland were consistent with best practice.",
+    "people": [
+     "Walter Sofronoff KC"
+    ]
+   },
+   {
+    "text": "The Commission examined the methods, systems and processes at the forensic DNA laboratory, including its management, validations, sample collection and results reporting.",
+    "pages": [
+     3,
+     13
+    ],
+    "support": "The laboratory has, for some time, focused on throughput and quick reporting of results to the detriment of high-quality science.",
+    "people": []
+   },
+   {
+    "text": "The Commissioner reported that the methods, systems and processes used at the forensic DNA laboratory do not, in many ways, measure up to best practice.",
+    "pages": [
+     13
+    ],
+    "support": "the methods, systems and processes used at the forensic DNA laboratory do not, in many ways, measure up to best practice",
+    "people": []
+   },
+   {
+    "text": "The Commissioner considered that the failures were serious and that none of the failures identified call into question the reliability of a match between a crime scene sample and a reference sample.",
+    "pages": [
+     13
+    ],
+    "support": "None of the failures I have identified call into question the reliability of a match between a crime scene sample and a person's reference sample",
+    "people": []
+   },
+   {
+    "text": "The Commissioner made over 100 recommendations, which are aimed at structural change, quality management and review of cases.",
+    "pages": [
+     13,
+     14
+    ],
+    "support": "I have made over 100 recommendations.",
+    "people": []
+   }
+  ],
+  "findings": [
+   {
+    "quote": "I have the unfortunate duty to report that the methods, systems and processes used at the forensic DNA laboratory do not, in many ways, measure up to best practice.",
+    "page": 13,
+    "kind": "finding"
+   },
+   {
+    "quote": "None of the failures I have identified call into question the reliability of a match between a crime scene sample and a person's reference sample, the most probative evidence which often supports convictions.",
+    "page": 13,
+    "kind": "opinion"
+   },
+   {
+    "quote": "I find that Ms Allen did not exercise sufficient supervision and review over the validations of Quant Trio and Quant Studio 5 or ensure that properly trained scientists conducted each aspect in accordance with best practice.",
+    "page": 61,
+    "kind": "finding"
+   },
+   {
+    "quote": "I find that current training requirements and practices, as a whole, do not meet best practice, particularly noting that Senior Medical Officers may undertake forensic medical examinations without specific training",
+    "page": 230,
+    "kind": "finding"
+   },
+   {
+    "quote": "I find that the QPS failed to train and educate its officers sufficiently about result lines and available options for further testing or working of samples.",
+    "page": 237,
+    "kind": "finding"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 226018,
+  "completion_tokens": 3383,
+  "cost_usd": 0.0302555,
+  "calls": 3,
+  "verify": {
+   "model": "google/gemini-3.5-flash-lite",
+   "prompt_tokens": 13149,
+   "completion_tokens": 807,
+   "cost_usd": 0.0059622
+  },
+  "model": "anthropic/claude-haiku-5.5",
+  "provider": "Claude Platform on AWS"
+ }
+}

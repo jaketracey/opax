@@ -1,0 +1,93 @@
+{
+ "raw": {
+  "own_summary": {
+   "present": true,
+   "heading": "Summary and recommendations",
+   "first_page": 7,
+   "last_page": 9
+  },
+  "overview": [
+   {
+    "text": "The Royal Commission into Victoria's Mental Health System was established in February 2019 by the Governor of Victoria, on advice from the Victorian Government, to inquire into the state's mental health system.",
+    "pages": [
+     9
+    ],
+    "support": "In February 2019, on advice from the Victorian Government, the Governor of the State of Victoria formally established the Royal Commission",
+    "people": []
+   },
+   {
+    "text": "The Commission examined the strengths and challenges of the system, including demand, access, integration, lived experience, families and carers, and the criminal justice system, through extensive consultation with people with lived experience, carers, workers and service providers.",
+    "pages": [
+     12,
+     16
+    ],
+    "support": "Throughout its inquiry, the Commission has extensively engaged with people living with mental illness or psychological distress",
+    "people": []
+   },
+   {
+    "text": "The Commission concluded that the system had catastrophically failed to live up to expectations and was underprepared for current and future challenges, a view it first stated in its interim report.",
+    "pages": [
+     9
+    ],
+    "support": "the Commission's interim report concluded that the system had catastrophically failed to live up to expectations",
+    "people": []
+   },
+   {
+    "text": "The Commission set out 65 recommendations in this final report, with nine in its interim report, covering areas such as the structure of services, crisis response, workforce, housing, suicide prevention, legislation and governance.",
+    "pages": [
+     9,
+     43,
+     44
+    ],
+    "support": "Across these volumes, the Commission sets out 65 recommendations to transform Victoria's mental health system.",
+    "people": []
+   },
+   {
+    "text": "The report describes a new community-based system structured around local, area and statewide services, and recommends a new Mental Health and Wellbeing Act and an independent Mental Health and Wellbeing Commission.",
+    "pages": [
+     26,
+     36,
+     86
+    ],
+    "support": "The future mental health and wellbeing system will be fundamentally restructured around a community-based model of care",
+    "people": []
+   }
+  ],
+  "findings": [
+   {
+    "quote": "In November 2019, the Commission's interim report concluded that the system had catastrophically failed to live up to expectations and was underprepared for current and future challenges.",
+    "page": 9,
+    "kind": "conclusion"
+   },
+   {
+    "quote": "Victoria's mental health system has deteriorated for a multitude of reasons and over the course of many years.",
+    "page": 9,
+    "kind": "finding"
+   },
+   {
+    "quote": "The system is complex and fragmented and, for those who do manage to get into it, difficult to navigate.",
+    "page": 10,
+    "kind": "finding"
+   },
+   {
+    "quote": "System leadership is weak, and accountability for how the system is managed is unclear.",
+    "page": 22,
+    "kind": "finding"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 61458,
+  "completion_tokens": 959,
+  "cost_usd": 0.0096667,
+  "calls": 1,
+  "verify": {
+   "model": "google/gemini-3.5-flash-lite",
+   "prompt_tokens": 6088,
+   "completion_tokens": 486,
+   "cost_usd": 0.0030414
+  },
+  "model": "anthropic/claude-haiku-5.5",
+  "provider": "Claude Platform on AWS"
+ }
+}

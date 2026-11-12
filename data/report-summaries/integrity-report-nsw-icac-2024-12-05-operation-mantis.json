@@ -1,0 +1,176 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2024-12-05-operation-mantis",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+ "body": "Independent Commission Against Corruption",
+ "jurisdiction": "NSW",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+  "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+  "sha256": "cb09df88c16582211cd81366ee7975d2064702a82fd04be180e6e258553fff2c",
+  "pages": 140,
+  "pages_read": 63,
+  "rights": "copyright, all rights reserved"
+ },
+ "already_on_page": true,
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by a model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Commission Against Corruption (the Commission) investigated the conduct of a then manager at Canterbury-Bankstown Council and a former Council contractor and reported under s 74 of the ICAC Act.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+      "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+      "page": 8
+     }
+    ],
+    "support": "This investigation by the NSW Independent Commission Against Corruption (“the Commission”) centred around the conduct of former senior"
+   },
+   {
+    "text": "The investigation examined a recruitment scheme in which a company connected to a former contractor supplied contingent workers to Council, and a procurement arrangement in which Council projects were awarded to a construction company.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+      "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+      "page": 8
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+      "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+      "page": 10
+     }
+    ],
+    "support": "The allegations that the Commission investigated were"
+   },
+   {
+    "text": "The Commission found that the then manager engaged in serious corrupt conduct in connection with the recruitment scheme, and that the former contractor and another person engaged in serious corrupt conduct in connection with the procurement arrangement.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+      "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+      "page": 12
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+      "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+      "page": 11
+     }
+    ],
+    "support": "The Commission found that Mr Webb engaged in serious corrupt conduct in connection with the recruitment scheme"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": [],
+  "unused_selection": [
+   {
+    "quote": "The Commission found that Mr Webb engaged in serious corrupt conduct in connection with the recruitment scheme (see chapter 4) by:",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+     "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+     "page": 12
+    }
+   },
+   {
+    "quote": "The Commission finds that Mr Cossu engaged in serious corrupt conduct in connection with the procurement arrangement (see chapter 5) by:",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+     "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+     "page": 13
+    }
+   },
+   {
+    "quote": "The Commission finds that Mr Clarke engaged in serious corrupt conduct in connection with the procurement arrangement (see chapter 5) by:",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1116/Investigation-into-the-conduct-of-a-then-manager-and-a-former-contractor-at-Canterbury-Bankstown-Council_Operation-Mantis_5Dec2024.pdf.aspx",
+     "document": "Investigation into the conduct of a then manager and-a former contractor at-Canterbury-Bankstown Council (Operation-Mantis)",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "dropped": [
+  {
+   "text": "The Commission also gave section 74A(2) opinions that consideration should be given to obtaining the advice of the Director of Public Prosecutions about prosecution of certain persons.",
+   "pages": [
+    12,
+    11
+   ],
+   "support": "The Commission is of the opinion that consideration should be given to obtaining the advice of the Director of Public Prosecutions",
+   "people": [],
+   "page_corrected": {
+    "from": [
+     11,
+     12
+    ],
+    "to": [
+     12
+    ]
+   },
+   "why": [
+    "copies a run of 15+ words from the report"
+   ]
+  },
+  {
+   "own_summary": {
+    "present": true,
+    "heading": "Chapter 1: Overview",
+    "first_page": 7,
+    "last_page": 15
+   },
+   "why": [
+    "heading not found on its first page"
+   ]
+  },
+  {
+   "text": "The Commission made corruption prevention recommendations, numbered 1 to 19, about matters including employment screening, contingent workforce management and contract variations, and recommended that the report be made public forthwith.",
+   "pages": [
+    16,
+    13,
+    14
+   ],
+   "support": "Pursuant to s 78(2) of the ICAC Act, the Commission recommends that this report be made public forthwith",
+   "people": [],
+   "page_corrected": {
+    "from": [
+     13,
+     14,
+     15
+    ],
+    "to": [
+     16
+    ]
+   },
+   "why": [
+    "verifier: support no (Page 14 shows recommendations 12-18, but the cited pages do not state that recommendations numbered 1 to 19 were made or that the report should be made public forthwith.)"
+   ]
+  }
+ ],
+ "generation": {
+  "model": "anthropic/claude-haiku-5.5",
+  "provider": "Claude Platform on AWS",
+  "prompt_version": "report-summaries-pilot-20261112",
+  "generated_at": "2026-11-12T07:26:08+00:00",
+  "prompt_tokens": 250556,
+  "completion_tokens": 3015,
+  "input_chars": 199056,
+  "calls": 3,
+  "verifier": {
+   "model": "google/gemini-3.5-flash-lite",
+   "prompt_tokens": 19604,
+   "completion_tokens": 1045,
+   "cost_usd": 0.0084937
+  },
+  "cost_usd": 0.0350568
+ }
+}

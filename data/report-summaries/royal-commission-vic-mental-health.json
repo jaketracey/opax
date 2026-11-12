@@ -1,0 +1,172 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-vic-mental-health",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "Royal Commission into Victoria's Mental Health System",
+ "body": "Royal Commission into Victoria's Mental Health System",
+ "jurisdiction": "Vic",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+  "document": "Final Report",
+  "sha256": "915af6e814187b8986f0c1f164aecbe492137935fccbe23e06cc717efdc719f8",
+  "pages": 120,
+  "pages_read": 116,
+  "rights": null
+ },
+ "already_on_page": false,
+ "own_summary": {
+  "heading": "Summary and recommendations",
+  "first_page": 7,
+  "last_page": 9,
+  "label": "The report's own summary",
+  "link": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by a model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Royal Commission into Victoria's Mental Health System was established in February 2019 by the Governor of Victoria, on advice from the Victorian Government, to inquire into the state's mental health system.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 9
+     }
+    ],
+    "support": "In February 2019, on advice from the Victorian Government, the Governor of the State of Victoria formally established the Royal Commission"
+   },
+   {
+    "text": "The Commission examined the strengths and challenges of the system, including demand, access, integration, lived experience, families and carers, and the criminal justice system, through extensive consultation with people with lived experience, carers, workers and service providers.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 12
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 16
+     }
+    ],
+    "support": "Throughout its inquiry, the Commission has extensively engaged with people living with mental illness or psychological distress"
+   },
+   {
+    "text": "The Commission set out 65 recommendations in this final report, with nine in its interim report, covering areas such as the structure of services, crisis response, workforce, housing, suicide prevention, legislation and governance.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 10
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 9
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 43
+     }
+    ],
+    "support": "Across these volumes, the Commission sets out 65 recommendations to transform Victoria's mental health system."
+   },
+   {
+    "text": "The report describes a new community-based system structured around local, area and statewide services, and recommends a new Mental Health and Wellbeing Act and an independent Mental Health and Wellbeing Commission.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 26
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 36
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 86
+     }
+    ],
+    "support": "The future mental health and wellbeing system will be fundamentally restructured around a community-based model of care"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "selected by the model, quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In November 2019, the Commission's interim report concluded that the system had catastrophically failed to live up to expectations and was underprepared for current and future challenges.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+     "document": "Final Report",
+     "page": 9
+    }
+   },
+   {
+    "quote": "Victoria's mental health system has deteriorated for a multitude of reasons and over the course of many years.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+     "document": "Final Report",
+     "page": 9
+    }
+   },
+   {
+    "quote": "The system is complex and fragmented and, for those who do manage to get into it, difficult to navigate.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+     "document": "Final Report",
+     "page": 10
+    }
+   },
+   {
+    "quote": "System leadership is weak, and accountability for how the system is managed is unclear.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+     "document": "Final Report",
+     "page": 22
+    }
+   }
+  ]
+ },
+ "dropped": [
+  {
+   "text": "The Commission concluded that the system had catastrophically failed to live up to expectations and was underprepared for current and future challenges, a view it first stated in its interim report.",
+   "pages": [
+    9
+   ],
+   "support": "the Commission's interim report concluded that the system had catastrophically failed to live up to expectations",
+   "people": [],
+   "why": [
+    "copies a run of 15+ words from the report"
+   ]
+  }
+ ],
+ "generation": {
+  "model": "anthropic/claude-haiku-5.5",
+  "provider": "Claude Platform on AWS",
+  "prompt_version": "report-summaries-pilot-20261112",
+  "generated_at": "2026-11-12T07:25:22+00:00",
+  "prompt_tokens": 61458,
+  "completion_tokens": 959,
+  "input_chars": 176032,
+  "calls": 1,
+  "verifier": {
+   "model": "google/gemini-3.5-flash-lite",
+   "prompt_tokens": 6088,
+   "completion_tokens": 486,
+   "cost_usd": 0.0030414
+  },
+  "cost_usd": 0.0096667
+ }
+}

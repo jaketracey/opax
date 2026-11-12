@@ -1,0 +1,92 @@
+{
+ "raw": {
+  "own_summary": {
+   "present": false
+  },
+  "overview": [
+   {
+    "text": "The ACT Integrity Commission conducted an investigation under s 100 of the Integrity Commission Act 2018 into the Campbell Primary School Modernisation Project procurement.",
+    "pages": [
+     5,
+     6
+    ],
+    "support": "The Commission conducted the investigation pursuant to s 100 of the Integrity Commission Act 2018",
+    "people": []
+   },
+   {
+    "text": "The investigation examined whether public officials in the ACT Education Directorate failed to exercise their official functions honestly or impartially when making recommendations and decisions about capital works procurement for the Project between 2019 and 2020.",
+    "pages": [
+     6
+    ],
+    "support": "whether public officials in the ACT Education Directorate (EDU) failed to exercise their official functions honestly and or impartially",
+    "people": []
+   },
+   {
+    "text": "The Commission concluded that three responsible officials undermined the procurement processes and, in effect, cheated the tenderer Manteena to the advantage of the CFMEU and, as it happened, Lendlease at a substantial cost to the Territory.",
+    "pages": [
+     10,
+     11
+    ],
+    "support": "three responsible officials, rather than using the procurement processes to ensure integrity was maintained, undermined those processes",
+    "people": []
+   },
+   {
+    "text": "The report states that it makes no adverse comment or finding against Lendlease, in respect of which it found no evidence of any wrongdoing.",
+    "pages": [
+     11
+    ],
+    "support": "this report makes no adverse comment, let alone an adverse finding against Lendlease, in respect of which there is no evidence of any wrongdoing",
+    "people": []
+   },
+   {
+    "text": "The report states that formal adverse findings were made against the Director-General and the Minister's Chief of Staff, and that the conduct of Mr Ferguson was referred to the relevant Minister.",
+    "pages": [
+     6,
+     335
+    ],
+    "support": "Formal adverse findings have been made against Ms Haire and Mr Ceramidas.",
+    "people": [
+     "Ms Haire",
+     "Mr Ceramidas",
+     "Mr Ferguson"
+    ]
+   }
+  ],
+  "findings": [
+   {
+    "quote": "The Commission has concluded to the requisite standard of proof that three responsible officials, rather than using the procurement processes to ensure integrity was maintained, undermined those processes and, in effect, cheated Manteena to the advantage of the CFMEU and, as it happened, Lendlease at a substantial cost to the Territory.",
+    "page": 11,
+    "kind": "conclusion"
+   },
+   {
+    "quote": "On all accounts, this was a fabrication, although why it was invented is far from clear.",
+    "page": 310,
+    "kind": "opinion"
+   },
+   {
+    "quote": "it is established to the requisite standard of proof that Mr Green acted at the behest of Ms Haire, herself influenced by Mr Ceramidas, to advantage the CFMEU.",
+    "page": 309,
+    "kind": "conclusion"
+   },
+   {
+    "quote": "I am satisfied that Mr Ceramidas acted on his own account to curry favour with the CFMEU.",
+    "page": 314,
+    "kind": "finding"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 211122,
+  "completion_tokens": 3241,
+  "cost_usd": 0.028646500000000002,
+  "calls": 3,
+  "verify": {
+   "model": "google/gemini-3.5-flash-lite",
+   "prompt_tokens": 13596,
+   "completion_tokens": 734,
+   "cost_usd": 0.0059138
+  },
+  "model": "anthropic/claude-haiku-5.5",
+  "provider": "Claude Platform on AWS"
+ }
+}

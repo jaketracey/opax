@@ -1,0 +1,88 @@
+{
+ "raw": {
+  "own_summary": {
+   "present": true,
+   "heading": "Chapter 1: Overview",
+   "first_page": 7,
+   "last_page": 15
+  },
+  "overview": [
+   {
+    "text": "The Independent Commission Against Corruption (the Commission) investigated the conduct of a then manager at Canterbury-Bankstown Council and a former Council contractor and reported under s 74 of the ICAC Act.",
+    "pages": [
+     8
+    ],
+    "support": "This investigation by the NSW Independent Commission Against Corruption (“the Commission”) centred around the conduct of former senior",
+    "people": []
+   },
+   {
+    "text": "The investigation examined a recruitment scheme in which a company connected to a former contractor supplied contingent workers to Council, and a procurement arrangement in which Council projects were awarded to a construction company.",
+    "pages": [
+     8,
+     10
+    ],
+    "support": "The allegations that the Commission investigated were",
+    "people": []
+   },
+   {
+    "text": "The Commission found that the then manager engaged in serious corrupt conduct in connection with the recruitment scheme, and that the former contractor and another person engaged in serious corrupt conduct in connection with the procurement arrangement.",
+    "pages": [
+     11,
+     12
+    ],
+    "support": "The Commission found that Mr Webb engaged in serious corrupt conduct in connection with the recruitment scheme",
+    "people": []
+   },
+   {
+    "text": "The Commission also gave section 74A(2) opinions that consideration should be given to obtaining the advice of the Director of Public Prosecutions about prosecution of certain persons.",
+    "pages": [
+     11,
+     12
+    ],
+    "support": "The Commission is of the opinion that consideration should be given to obtaining the advice of the Director of Public Prosecutions",
+    "people": []
+   },
+   {
+    "text": "The Commission made corruption prevention recommendations, numbered 1 to 19, about matters including employment screening, contingent workforce management and contract variations, and recommended that the report be made public forthwith.",
+    "pages": [
+     13,
+     14,
+     15
+    ],
+    "support": "Pursuant to s 78(2) of the ICAC Act, the Commission recommends that this report be made public forthwith",
+    "people": []
+   }
+  ],
+  "findings": [
+   {
+    "kind": "finding",
+    "page": 11,
+    "quote": "The Commission found that Mr Webb engaged in serious corrupt conduct in connection with the recruitment scheme (see chapter 4) by:"
+   },
+   {
+    "kind": "finding",
+    "page": 12,
+    "quote": "The Commission finds that Mr Cossu engaged in serious corrupt conduct in connection with the procurement arrangement (see chapter 5) by:"
+   },
+   {
+    "kind": "finding",
+    "page": 12,
+    "quote": "The Commission finds that Mr Clarke engaged in serious corrupt conduct in connection with the procurement arrangement (see chapter 5) by:"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 250556,
+  "completion_tokens": 3015,
+  "cost_usd": 0.0350568,
+  "calls": 3,
+  "verify": {
+   "model": "google/gemini-3.5-flash-lite",
+   "prompt_tokens": 19604,
+   "completion_tokens": 1045,
+   "cost_usd": 0.0084937
+  },
+  "model": "anthropic/claude-haiku-5.5",
+  "provider": "Claude Platform on AWS"
+ }
+}

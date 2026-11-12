@@ -1,0 +1,138 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-cth-robodebt",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "Royal Commission into the Robodebt Scheme",
+ "body": "Royal Commission into the Robodebt Scheme",
+ "jurisdiction": "Cth",
+ "source": {
+  "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+  "document": "Report of the Royal Commission into the Robodebt Scheme",
+  "sha256": "9837ca00ecf7022694abb9eae1be57f49a8a791d4df8951339be282a2c76cf42",
+  "pages": 1052,
+  "pages_read": 77,
+  "rights": "© Commonwealth of Australia 2023. With the exception of the Coat of Arms and where otherwise stated, all material presented in this publication is provided under a Creative Commons Attribution 4.0 International licence (imprint, page 2)."
+ },
+ "already_on_page": false,
+ "own_summary": {
+  "heading": "Overview",
+  "first_page": 29,
+  "last_page": 36,
+  "label": "The report's own summary",
+  "link": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF#page=29"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by a model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Royal Commission into the Robodebt Scheme was established by Letters Patent on 18 August 2022 to inquire into the Robodebt Scheme, a debt assessment and recovery scheme.",
+    "cites": [
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "document": "Report of the Royal Commission into the Robodebt Scheme",
+      "page": 11
+     }
+    ],
+    "support": "The Royal Commission into the Robodebt Scheme was established by Letters Patent on 18 August 2022"
+   },
+   {
+    "text": "The Commission examined how, by whom and why the Scheme was established, designed and implemented, how concerns and complaints were managed, the use of third-party debt collectors, and the Scheme's human and economic effects.",
+    "cites": [
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "document": "Report of the Royal Commission into the Robodebt Scheme",
+      "page": 11
+     }
+    ],
+    "support": "how, by whom and why the scheme was established, designed, implemented"
+   },
+   {
+    "text": "The Commission found that the Scheme relied heavily on income averaging to assess income and entitlement to benefit.",
+    "cites": [
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "document": "Report of the Royal Commission into the Robodebt Scheme",
+      "page": 11
+     }
+    ],
+    "support": "relied heavily on a process known as “income averaging” to assess income and entitlement to benefit"
+   },
+   {
+    "text": "The Commission described Robodebt as a crude and cruel mechanism, neither fair nor legal, and a costly failure of public administration in both human and economic terms.",
+    "cites": [
+     {
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "document": "Report of the Royal Commission into the Robodebt Scheme",
+      "page": 35
+     }
+    ],
+    "support": "Robodebt was a crude and cruel mechanism, neither fair nor legal"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "selected by the model, quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Robodebt was a crude and cruel mechanism, neither fair nor legal, and it made many people feel like criminals.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+     "document": "Report of the Royal Commission into the Robodebt Scheme",
+     "page": 35
+    }
+   },
+   {
+    "quote": "The Commission finds that Ms Campbell instructed DHS officers to cease the process of responding to Mr Jackson's request for advice, motivated by a concern that the unlawfulness of the Scheme might be exposed to the Ombudsman in the course of its investigation.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+     "document": "Report of the Royal Commission into the Robodebt Scheme",
+     "page": 229
+    }
+   },
+   {
+    "quote": "The use of income averaging, as was being proposed by DHS, was unlawful.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+     "document": "Report of the Royal Commission into the Robodebt Scheme",
+     "page": 82
+    }
+   }
+  ]
+ },
+ "dropped": [
+  {
+   "text": "The report makes 57 recommendations, grouped by chapter, including on Services Australia's policy processes, debt recovery, legal practice standards, automated decision making and the Ombudsman.",
+   "pages": [
+    19
+   ],
+   "support": "The following is a list of 57 recommendations of this Commission",
+   "people": [],
+   "why": [
+    "verifier: support partly (Page 19 lists the 57 recommendations and some of their topics, but does not mention legal practice standards, automated decision making, or the Ombudsman in the text on this page.)"
+   ]
+  }
+ ],
+ "generation": {
+  "model": "anthropic/claude-haiku-5.5",
+  "provider": "Claude Platform on AWS",
+  "prompt_version": "report-summaries-pilot-20261112",
+  "generated_at": "2026-11-12T07:24:52+00:00",
+  "prompt_tokens": 151807,
+  "completion_tokens": 1744,
+  "input_chars": 199491,
+  "calls": 2,
+  "verifier": {
+   "model": "google/gemini-3.5-flash-lite",
+   "prompt_tokens": 9657,
+   "completion_tokens": 622,
+   "cost_usd": 0.0044521000000000005
+  },
+  "cost_usd": 0.020504800000000004
+ }
+}

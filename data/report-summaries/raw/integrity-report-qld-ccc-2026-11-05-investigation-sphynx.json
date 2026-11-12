@@ -1,0 +1,87 @@
+{
+ "raw": {
+  "own_summary": {
+   "present": true,
+   "heading": "Executive summary",
+   "first_page": 5,
+   "last_page": 5
+  },
+  "overview": [
+   {
+    "text": "The Crime and Corruption Commission (CCC) conducted Investigation Sphynx, a corruption investigation into the circumstances and decisions giving rise to the Queensland Police Service's (QPS) commitment to lease premises at 433 Logan Road, Stones Corner, Brisbane.",
+    "pages": [
+     6
+    ],
+    "support": "Investigation Sphynx was a corruption investigation conducted by the CCC into the circumstances and decisions giving rise to the QPS's commitment",
+    "people": []
+   },
+   {
+    "text": "The investigation examined a long-term lease that committed the QPS to approximately $116 million in lease costs over 15 years, for premises that were later found unfit for purpose and were not occupied.",
+    "pages": [
+     5
+    ],
+    "support": "The QPS committed to approximately $116 million in lease costs over 15 years to premises that were later found unfit for purpose",
+    "people": []
+   },
+   {
+    "text": "The CCC reported that it identified no dishonesty, improper relationship or personal benefit on the part of any person.",
+    "pages": [
+     5
+    ],
+    "support": "identified no dishonesty, improper relationship or personal benefit on the part of any person",
+    "people": []
+   },
+   {
+    "text": "The CCC stated that the significance of the matter lies in the governance and control weaknesses that allowed the commitment to be made.",
+    "pages": [
+     5
+    ],
+    "support": "governance and control weaknesses that allowed a commitment of this size",
+    "people": []
+   },
+   {
+    "text": "The CCC made nine recommendations directly to the QPS on governance, leasing, committee processes, financial delegations and organisational culture, and made two recommendations to the Queensland Government on property transaction risks.",
+    "pages": [
+     5,
+     15,
+     25,
+     26,
+     67
+    ],
+    "support": "The CCC has made nine (9) recommendations directly to the QPS to support their broader reforms",
+    "people": []
+   }
+  ],
+  "findings": [
+   {
+    "quote": "Multiple controls that could have prevented this outcome failed at the same time.",
+    "page": 5,
+    "kind": "finding"
+   },
+   {
+    "quote": "Although the QPS had appropriate controls, their failure resulted from a breakdown in organisational culture.",
+    "page": 5,
+    "kind": "finding"
+   },
+   {
+    "quote": "The investigation identified no dishonesty, improper relationship or personal benefit on the part of any person.",
+    "page": 5,
+    "kind": "finding"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 57036,
+  "completion_tokens": 1817,
+  "cost_usd": 0.010113899999999999,
+  "calls": 2,
+  "verify": {
+   "model": "google/gemini-3.5-flash-lite",
+   "prompt_tokens": 5806,
+   "completion_tokens": 704,
+   "cost_usd": 0.0035018000000000002
+  },
+  "model": "anthropic/claude-haiku-5.5",
+  "provider": "Claude Platform on AWS"
+ }
+}

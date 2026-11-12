@@ -1,0 +1,78 @@
+{
+ "raw": {
+  "own_summary": {
+   "present": false
+  },
+  "overview": [
+   {
+    "text": "The Australian Public Service Commission's combined annual report for 2025–26 covers the Commission and the Merit Protection Commissioner's annual report.",
+    "pages": [
+     7,
+     135
+    ],
+    "support": "Merit Protection Commissioner Annual Report",
+    "people": []
+   },
+   {
+    "text": "The Merit Protection Commissioner's section reports on the office's statutory review functions under the Public Service Act 1999, including Code of Conduct reviews, promotion reviews and own motion audits.",
+    "pages": [
+     145,
+     148
+    ],
+    "support": "We conduct merit reviews of employment decisions to make sure they are correct, fair and lawful.",
+    "people": []
+   },
+   {
+    "text": "The report records that 109 applications for review of Code of Conduct decisions were received in 2025–26, and that 40% of Code of Conduct decisions reviewed were set aside or varied.",
+    "pages": [
+     152,
+     144
+    ],
+    "support": "We set aside or varied 40% of Code of Conduct decisions.",
+    "people": []
+   },
+   {
+    "text": "The Merit Protection Commissioner stated that in almost 40% of Code of Conduct decisions reviewed this year the office identified issues that required the original decision to be set aside or varied.",
+    "pages": [
+     140
+    ],
+    "support": "in almost 40% of Code of Conduct decisions reviewed this year we identified issues that required the original decision to be set aside or varied",
+    "people": []
+   },
+   {
+    "text": "The Commission's section reports on its performance against six measures for 2025–26, with four achieved, one substantially achieved and one partially achieved.",
+    "pages": [
+     35
+    ],
+    "support": "of our 6 performance measures we achieved the targets for 4 measures, substantially achieved the targets for one measure, and partially achieved the targets for one measure.",
+    "people": []
+   }
+  ],
+  "findings": [
+   {
+    "quote": "We set aside or varied 40% of decisions of Code of Conduct breaches and sanctions that we reviewed.",
+    "page": 144,
+    "kind": "finding"
+   },
+   {
+    "quote": "It is therefore significant that in almost 40% of Code of Conduct decisions reviewed this year we identified issues that required the original decision to be set aside or varied.",
+    "page": 140,
+    "kind": "opinion"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 73807,
+  "completion_tokens": 783,
+  "cost_usd": 0.0096395,
+  "calls": 1,
+  "verify": {
+   "model": "google/gemini-3.5-flash-lite",
+   "prompt_tokens": 3316,
+   "completion_tokens": 349,
+   "cost_usd": 0.0018673
+  },
+  "model": "anthropic/claude-haiku-5.5",
+  "provider": "Claude Platform on AWS"
+ }
+}

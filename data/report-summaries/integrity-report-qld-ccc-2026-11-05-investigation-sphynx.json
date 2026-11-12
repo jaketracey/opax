@@ -1,0 +1,148 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2026-11-05-investigation-sphynx",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Investigation Sphynx: An investigation into allegations of corrupt conduct surrounding the QPS’s decision to enter into the Stones Corner lease",
+ "body": "Crime and Corruption Commission",
+ "jurisdiction": "Qld",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+  "document": "Investigation Sphynx – November 2026 (PDF)",
+  "sha256": "34a4faa0d498f32ff8bece65ce71bf72658dee49e0cfdf66f7bf4d9f813fbe85",
+  "pages": 32,
+  "pages_read": 32,
+  "rights": "cc-by-4.0"
+ },
+ "already_on_page": true,
+ "own_summary": {
+  "heading": "Executive summary",
+  "first_page": 5,
+  "last_page": 5,
+  "label": "The report's own summary",
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by a model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission (CCC) conducted Investigation Sphynx, a corruption investigation into the circumstances and decisions giving rise to the Queensland Police Service's (QPS) commitment to lease premises at 433 Logan Road, Stones Corner, Brisbane.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+      "document": "Investigation Sphynx – November 2026 (PDF)",
+      "page": 6
+     }
+    ],
+    "support": "Investigation Sphynx was a corruption investigation conducted by the CCC into the circumstances and decisions giving rise to the QPS's commitment"
+   },
+   {
+    "text": "The investigation examined a long-term lease that committed the QPS to approximately $116 million in lease costs over 15 years, for premises that were later found unfit for purpose and were not occupied.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+      "document": "Investigation Sphynx – November 2026 (PDF)",
+      "page": 5
+     }
+    ],
+    "support": "The QPS committed to approximately $116 million in lease costs over 15 years to premises that were later found unfit for purpose"
+   },
+   {
+    "text": "The CCC reported that it identified no dishonesty, improper relationship or personal benefit on the part of any person.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+      "document": "Investigation Sphynx – November 2026 (PDF)",
+      "page": 5
+     }
+    ],
+    "support": "identified no dishonesty, improper relationship or personal benefit on the part of any person"
+   },
+   {
+    "text": "The CCC stated that the significance of the matter lies in the governance and control weaknesses that allowed the commitment to be made.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+      "document": "Investigation Sphynx – November 2026 (PDF)",
+      "page": 5
+     }
+    ],
+    "support": "governance and control weaknesses that allowed a commitment of this size"
+   },
+   {
+    "text": "The CCC made nine recommendations directly to the QPS on governance, leasing, committee processes, financial delegations and organisational culture, and made two recommendations to the Queensland Government on property transaction risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+      "document": "Investigation Sphynx – November 2026 (PDF)",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+      "document": "Investigation Sphynx – November 2026 (PDF)",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+      "document": "Investigation Sphynx – November 2026 (PDF)",
+      "page": 15
+     }
+    ],
+    "support": "The CCC has made nine (9) recommendations directly to the QPS to support their broader reforms"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": [],
+  "unused_selection": [
+   {
+    "quote": "Multiple controls that could have prevented this outcome failed at the same time.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+     "document": "Investigation Sphynx – November 2026 (PDF)",
+     "page": 5
+    }
+   },
+   {
+    "quote": "Although the QPS had appropriate controls, their failure resulted from a breakdown in organisational culture.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+     "document": "Investigation Sphynx – November 2026 (PDF)",
+     "page": 5
+    }
+   },
+   {
+    "quote": "The investigation identified no dishonesty, improper relationship or personal benefit on the part of any person.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Sphynx_Nov-2026.pdf",
+     "document": "Investigation Sphynx – November 2026 (PDF)",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "dropped": [],
+ "generation": {
+  "model": "anthropic/claude-haiku-5.5",
+  "provider": "Claude Platform on AWS",
+  "prompt_version": "report-summaries-pilot-20261112",
+  "generated_at": "2026-11-12T07:26:55+00:00",
+  "prompt_tokens": 57036,
+  "completion_tokens": 1817,
+  "input_chars": 75287,
+  "calls": 2,
+  "verifier": {
+   "model": "google/gemini-3.5-flash-lite",
+   "prompt_tokens": 5806,
+   "completion_tokens": 704,
+   "cost_usd": 0.0035018000000000002
+  },
+  "cost_usd": 0.010113899999999999
+ }
+}

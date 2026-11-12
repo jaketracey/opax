@@ -1,0 +1,181 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2022-07-20-tp6536-operation-watts-investigation-into-allegations-of-mis",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Watts: Investigation into allegations of misuse of electorate office and ministerial office staff and resources for branch stacking and other party-related activities",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "jurisdiction": "Vic",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+  "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+  "sha256": "e19b51127346138ea6a2d4acec209870dcd1f26c7a8280acfd288a1e39a50447",
+  "pages": 236,
+  "pages_read": 63,
+  "rights": "parliament-tabled-copy"
+ },
+ "already_on_page": false,
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by a model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The investigation examined whether public funds and staff were used by members of the Moderate Labor faction of the Victorian branch of the Australian Labor Party to pursue factional agendas, including branch stacking.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+      "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+      "page": 10
+     }
+    ],
+    "support": "The allegations primarily focused on the possible use of ministerial advisers, MPs’ electorate officers and related public resources"
+   },
+   {
+    "text": "The investigation also examined the legal framework for electorate and ministerial staff, and government grants to community organisations with links to the faction.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+      "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+      "page": 4
+     }
+    ],
+    "support": "Chapter 6. Government grants provided to factionally aligned community organisations"
+   },
+   {
+    "text": "The report found that there was extensive misuse of staff for factional or party-specific purposes during business hours, which it said constituted serious misconduct by the MPs who employed and instructed them.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+      "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+      "page": 147
+     }
+    ],
+    "support": "There was extensive misuse of staff for factional or party-specific purposes during business hours."
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "selected by the model, quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There was extensive misuse of staff for factional or party-specific purposes during business hours.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+     "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+     "page": 147
+    }
+   },
+   {
+    "quote": "The investigation did not establish that ministers in the ML faction awarded any grants improperly.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+     "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+     "page": 119
+    }
+   },
+   {
+    "quote": "This work was in breach of MPs’ obligations to use public resources to discharge their staff’s public duties only, and constituted serious misconduct by the MPs who employed and instructed them.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+     "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+     "page": 147
+    }
+   }
+  ]
+ },
+ "dropped": [
+  {
+   "text": "IBAC and the Victorian Ombudsman jointly conducted Operation Watts, a coordinated investigation into allegations of misuse of electorate office and ministerial office staff and resources for branch stacking and other party-related activities.",
+   "pages": [
+    9
+   ],
+   "support": "coordinated investigation between the Independent Broad-based Anti-corruption Commission",
+   "people": [],
+   "page_corrected": {
+    "from": [
+     9
+    ],
+    "to": [
+     9
+    ]
+   },
+   "why": [
+    "copies a run of 15+ words from the report"
+   ]
+  },
+  {
+   "text": "The report said it could not recommend prosecution, and that it would be a matter for the Privileges Committees of each house to decide whether the named MPs had wilfully brought discredit upon parliament.",
+   "pages": [
+    6
+   ],
+   "support": "we cannot recommend prosecution. Rather, it will now be a matter for the Privileges Committees of each house",
+   "people": [],
+   "page_corrected": {
+    "from": [
+     6
+    ],
+    "to": [
+     6
+    ]
+   },
+   "why": [
+    "name 'Privileges Committees' not on the cited pages",
+    "copies a run of 15+ words from the report"
+   ]
+  },
+  {
+   "own_summary": {
+    "present": true,
+    "heading": "Foreword",
+    "first_page": 6,
+    "last_page": 8
+   },
+   "why": [
+    "heading not found on its first page"
+   ]
+  },
+  {
+   "text": "The report made recommendations for reform of parliamentary integrity, including a proposed new cross-party ethics committee and an independent integrity commissioner.",
+   "pages": [
+    7,
+    6
+   ],
+   "support": "We propose a new cross-party Parliamentary Ethics Committee, which could include public appointments",
+   "people": [],
+   "page_corrected": {
+    "from": [
+     6
+    ],
+    "to": [
+     7
+    ]
+   },
+   "why": [
+    "verifier: support no (Pages 6 and 7 discuss the need for reform and Privileges Committees, but do not mention a 'proposed new cross-party ethics committee and an independent integrity commissioner')",
+    "verifier: not neutral"
+   ]
+  }
+ ],
+ "generation": {
+  "model": "anthropic/claude-haiku-5.5",
+  "provider": "Claude Platform on AWS",
+  "prompt_version": "report-summaries-pilot-20261112",
+  "generated_at": "2026-11-12T07:25:46+00:00",
+  "prompt_tokens": 226015,
+  "completion_tokens": 3122,
+  "input_chars": 198363,
+  "calls": 3,
+  "verifier": {
+   "model": "google/gemini-3.5-flash-lite",
+   "prompt_tokens": 17496,
+   "completion_tokens": 1404,
+   "cost_usd": 0.0087588
+  },
+  "cost_usd": 0.0329213
+ }
+}
