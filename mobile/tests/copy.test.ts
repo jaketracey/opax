@@ -11,7 +11,7 @@ test('shared copy keeps shell wording and the shorter website menu label', () =>
     more: 'More',
     share: 'Share',
     copyLink: 'Copy link',
-    openOnWeb: 'Open on the website',
+    openOnWeb: 'Open on opax.com.au',
     follow: 'Follow',
     following: 'Following',
     seeAll: 'See all',

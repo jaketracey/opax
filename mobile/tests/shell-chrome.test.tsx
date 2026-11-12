@@ -1,3 +1,4 @@
+import { measureBarTitle } from './bar-title-metrics';
 import { Stack, type NativeStackNavigationOptions } from 'expo-router';
 import {
   HeaderHeightContext,
@@ -111,6 +112,7 @@ function tree(element: React.ReactElement) {
   act(() => {
     result = TestRenderer.create(element);
   });
+  measureBarTitle(result);
   return result;
 }
 afterEach(() => {
@@ -134,7 +136,7 @@ test.each(['(today)', '(your-mp)', '(bills)', '(search)'] as const)(
         ],
       });
       expect(items).toHaveLength(2);
-      expect(items[0]).toMatchObject({
+      expect(items.at(-1)).toMatchObject({
         label: 'Account',
         accessibilityLabel: 'Account',
         icon: {
@@ -162,8 +164,8 @@ test.each([false, true])(
     ]);
     // Talk lives in the composer (D5): the bar is New question and Account.
     expect(registration.unstable_headerRightItems()).toEqual([
-      expect.objectContaining({ label: 'Account' }),
       expect.objectContaining({ label: 'New question', disabled: true }),
+      expect.objectContaining({ label: 'Account' }),
     ]);
     act(() => view.unmount());
   },
@@ -186,12 +188,12 @@ test('Ask has history leading and New question plus Account trailing', () => {
     }),
   ]);
   expect(options.unstable_headerRightItems?.()).toEqual([
-    expect.objectContaining({ label: 'Account' }),
     expect.objectContaining({
       label: 'New question',
       disabled: false,
       onPress: onNew,
     }),
+    expect.objectContaining({ label: 'Account' }),
   ]);
   expect(designFlags.talkInAsk).toBe(true);
 });
@@ -696,7 +698,11 @@ describe('bar titles keep their initial layout clear of the bar items', () => {
     expect(style(view).maxWidth).toBe(
       barTitleWidth(Dimensions.get('window').width, 2),
     );
-    expect(style(view).opacity.__getValue()).toBe(0);
+    expect(
+      typeof style(view).opacity === 'number'
+        ? style(view).opacity
+        : style(view).opacity.__getValue(),
+    ).toBe(0);
     expect(view.root.findByType(Animated.Text).props).toMatchObject({
       children: 'Interactive Gambling Bill',
       accessibilityElementsHidden: true,
@@ -712,11 +718,10 @@ describe('bar titles keep their initial layout clear of the bar items', () => {
     expect(text.props.children).toBe('Interactive Gambling Bill');
     expect(text.props.numberOfLines).toBe(1);
     expect(text.props.ellipsizeMode).toBe('clip');
-    expect(style(view).opacity.__getValue()).toBe(1);
     expect(text.props.accessibilityElementsHidden).toBe(false);
     expect(text.props.importantForAccessibility).toBe('auto');
     expect(style(view).maxWidth).toBe(
-      barTitleWidth(Dimensions.get('window').width, 2),
+      barTitleWidth(Dimensions.get('window').width, 2, undefined, ''),
     );
     act(() => view.unmount());
   });
@@ -748,7 +753,11 @@ describe('bar titles keep their initial layout clear of the bar items', () => {
     expect(style(view).maxWidth).toBe(width);
     act(() => finish?.());
     expect(style(view).maxWidth).toBe(width);
-    expect(style(view).opacity.__getValue()).toBe(0);
+    expect(
+      typeof style(view).opacity === 'number'
+        ? style(view).opacity
+        : style(view).opacity.__getValue(),
+    ).toBe(0);
     expect(view.root.findByType(Animated.Text).props.children).toBe('Member');
     act(() => view.update(<BarTitle title="Member" shown />));
     act(() => finish?.());
@@ -825,10 +834,7 @@ test('Reduce Motion cuts the bar title instead of animating it', () => {
   mockReducedMotion = true;
   const animation = jest.spyOn(Animated, 'timing');
   const view = tree(<BarTitle title="Member" shown />);
-  expect(animation).toHaveBeenCalledWith(
-    expect.anything(),
-    expect.objectContaining({ duration: 0 }),
-  );
+  expect(animation).not.toHaveBeenCalled();
   act(() => view.unmount());
 });
 
@@ -1561,3 +1567,26 @@ test.each([18, 26, 27])(
     }
   },
 );
+
+test('More keeps its page title out and ends in one public-site action', () => {
+  for (const items of [
+    [],
+    [
+      {
+        title: 'Cite',
+        inline: true,
+        items: [{ title: 'Copy APA 7', onPress: jest.fn() }],
+      },
+      { title: 'Open on opax.com.au', onPress: jest.fn() },
+      { title: 'Share', onPress: jest.fn() },
+    ],
+  ]) {
+    const menu = pageMenu({ name: 'A full record title', items });
+    if (menu.type !== 'menu') throw new Error('Expected a menu');
+    expect(menu.menu).not.toHaveProperty('title');
+    expect(menu.menu.items.at(-1)?.label).toBe('Open on opax.com.au');
+    expect(
+      menu.menu.items.filter((row) => row.label === 'Open on opax.com.au'),
+    ).toHaveLength(1);
+  }
+});

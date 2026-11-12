@@ -286,6 +286,7 @@ test('⋯ holds an inline Cite section, then Copy link, Share and Report', () =>
     'Copy link',
     'Share',
     'Report a problem with this source',
+    'Open on opax.com.au',
   ]);
   expect(rows[0]!.inline).toBe(true);
   expect(rows[0]!.items!.map((row) => row.label)).toEqual([
@@ -312,7 +313,10 @@ test('Report and Open record leave the sheet first', () => {
   found(two);
   act(() => showCitation({ turn: 'fixture-chat:1', n: 2 }));
   const { press } = draw();
-  act(() => menuRows().at(-1)!.onPress!());
+  act(() =>
+    menuRows().find((row) => row.label === 'Report a problem with this source')!
+      .onPress!(),
+  );
   expect(router.back).toHaveBeenCalledTimes(1);
   expect(router.push).toHaveBeenCalledWith({
     pathname: '/ask-report',

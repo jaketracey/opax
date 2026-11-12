@@ -422,6 +422,7 @@ describe('Talk with TalkBack', () => {
       expect(actions.map((action: { title: string }) => action.title)).toEqual([
         'Show captions',
         'Withdraw voice consent',
+        'Open on opax.com.au',
       ]);
       app.React.act(() => pressable(bar, 'header-done').props.onPress());
       expect(spies.alert).toHaveBeenCalledWith(
@@ -454,6 +455,7 @@ describe('Talk with TalkBack', () => {
         'Report this answer',
         'Voice privacy',
         'Withdraw voice consent',
+        'Open on opax.com.au',
       ]);
       actions[1]!.onPress();
       expect(app.showMenu).toHaveBeenLastCalledWith(
@@ -777,7 +779,9 @@ test('Victorian election rows expose grouped TalkBack labels and 48dp targets', 
           place: 'St Kilda',
         }),
         app.React.createElement(RegionRow, {
-          region: overview.regions.find((r) => r.slug === 'southern-metropolitan')!,
+          region: overview.regions.find(
+            (r) => r.slug === 'southern-metropolitan',
+          )!,
         }),
       );
     });

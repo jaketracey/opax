@@ -39,6 +39,7 @@ export interface FilterToggleGroup {
 }
 export interface FilterModel<S> {
   list: FilterList;
+  title?: string;
   initial: S;
   rows: FilterRow<S>[];
   toggles?: FilterToggle<S>[];

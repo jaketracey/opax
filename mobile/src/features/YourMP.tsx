@@ -279,7 +279,7 @@ export default function YourMP() {
         onPress: () =>
           void shareRecord({ title: federal.name, path: federal.url }),
       },
-      // Last and alone: the one destructive item for the whole seat.
+      // The one destructive item for the whole seat has its own section.
       {
         title: '',
         inline: true,
@@ -328,7 +328,13 @@ export default function YourMP() {
               segment: '(your-mp)',
               signedIn: !!account.status?.signedIn,
               extra: menu.length
-                ? [pageMenu({ name: federal?.name ?? 'Your MP', items: menu })]
+                ? [
+                    pageMenu({
+                      name: federal?.name ?? 'Your MP',
+                      webPath: federal?.url,
+                      items: menu,
+                    }),
+                  ]
                 : [],
             }),
           ),

@@ -24,6 +24,8 @@ import {
 import { useKeyCommand } from '../../design/keyboard';
 import { Text, copy } from '../../design/primitives';
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { openOnOpaxItem } from '../../navigation/chrome';
+import { exploreWebPath } from '../../navigation/routes/explore';
 import { openSource } from '../../navigation/external';
 import { PHOTO_BLACK, Picture } from './Picture';
 import { openPhotoSource, photoIndex, pictureKey } from './YearGallery';
@@ -218,6 +220,7 @@ export default function PhotoViewer() {
               onPress: () =>
                 void openSource(current.source_url, 'Wikimedia Commons'),
             },
+            openOnOpaxItem(exploreWebPath('tm', { year }), 'Time machine'),
           ],
         },
       }

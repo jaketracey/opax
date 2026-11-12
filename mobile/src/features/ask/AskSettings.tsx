@@ -1,13 +1,13 @@
-import { useEffect, useSyncExternalStore } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { AccessibilityInfo } from 'react-native';
 import { router, type Href } from 'expo-router';
 import { haptic } from '../../design/haptics';
 import { InsetGroup, Screen } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
 import { useAccount } from '../account/store';
-import { TintRow } from '../sheets/SourceSheet';
+import { SwitchRow } from '../../design/controls';
 import { confirmDeleteAll } from './conversation-actions';
-import { resetAskConsent } from './consent';
+import { askConsentGiven, giveAskConsent, resetAskConsent } from './consent';
 import { chatsSnapshot, loadChats, subscribeChats } from './store';
 
 export const askSettingsCopy = {
@@ -29,6 +29,20 @@ export default function AskSettings() {
     chatsSnapshot,
   );
   const status = useAccount().status;
+  const [notice, setNotice] = useState(true);
+  const [canSkip, setCanSkip] = useState(false);
+  useEffect(() => {
+    let active = true;
+    void askConsentGiven().then((given) => {
+      if (active) {
+        setNotice(!given);
+        setCanSkip(given);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
   useEffect(() => {
     void loadChats().catch(() => undefined);
   }, []);
@@ -42,16 +56,22 @@ export default function AskSettings() {
           onPress={() => router.push('/account/conversations' as Href)}
           testID="ask-settings-conversations"
         />
-        <TintRow
-          title={askSettingsCopy.notice}
-          onPress={() => {
-            void resetAskConsent()
+        <SwitchRow
+          label={askSettingsCopy.notice}
+          value={notice}
+          disabled={!canSkip}
+          onValueChange={(next) => {
+            // Only a reader who has already accepted may turn the repeat notice off.
+            if (!canSkip) return;
+            setNotice(next);
+            void (next ? resetAskConsent() : giveAskConsent())
               .catch(() => undefined)
               .then(() => {
                 haptic('success');
-                AccessibilityInfo.announceForAccessibility(
-                  askSettingsCopy.noticeDone,
-                );
+                if (next)
+                  AccessibilityInfo.announceForAccessibility(
+                    askSettingsCopy.noticeDone,
+                  );
               });
           }}
           testID="ask-settings-notice"

@@ -182,9 +182,15 @@ describe.each(scenarios)('%s', (_name, os, voice, offered) => {
       jest.requireActual('../src/navigation/chrome').rootHeaderItems(),
     ) as { label: string; accessibilityLabel: string }[];
     expect(items.map((item) => item.label)).toEqual(
-      offered ? ['Account', 'Talk'] : ['Account'],
+      offered
+        ? os === 'ios'
+          ? ['Talk', 'Account']
+          : ['Account', 'Talk']
+        : ['Account'],
     );
-    expect(items[0]!.accessibilityLabel).toBe('Account');
+    expect(
+      items.find((item) => item.label === 'Account')!.accessibilityLabel,
+    ).toBe('Account');
   });
 
   test('the /talk route is guarded by the same switch', () => {

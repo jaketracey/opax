@@ -15,6 +15,8 @@ import {
   useWindowDimensions,
   type ColorValue,
 } from 'react-native';
+import { openOnWeb } from './external';
+import { copy } from '../design/copy';
 import { designFlags } from '../design/flags';
 import { Icon, type SFSymbol } from '../design/icon';
 import { showMenu, type MenuAction } from '../design/menu';
@@ -228,7 +230,7 @@ export function rootHeaderItems(props?: {
     icon: { type: 'sfSymbol', name: 'waveform' },
     onPress: openTalk,
   };
-  return [
+  const items: TestableHeaderItem[] = [
     {
       type: 'button',
       label: 'Account',
@@ -245,6 +247,7 @@ export function rootHeaderItems(props?: {
     ...(props?.extra?.slice(0, 1) ??
       ((inAsk || !designFlags.talkInAsk) && voiceLinked ? [talk] : [])),
   ];
+  return Platform.OS === 'ios' ? [...items.slice(1), items[0]!] : items;
 }
 
 export function askHeaderItems(props: {
@@ -313,8 +316,44 @@ function nativeMenuRows(items: RowMenuAction[]): NativeMenuRow[] {
           },
     );
 }
+/** The final action in each More menu opens the public site explicitly. */
+export function openOnOpaxItem(
+  path = '/',
+  title = 'OPAX',
+): NativeStackHeaderItemMenuAction {
+  return {
+    type: 'action',
+    label: copy.openOnWeb,
+    icon: { type: 'sfSymbol', name: 'arrow.up.right.square' },
+    onPress: () => void openOnWeb(path, title, { preferNative: false }),
+  };
+}
+
+function moreMenuRows(
+  items: RowMenuAction[],
+  path: string,
+  name: string,
+): NativeMenuRow[] {
+  let web: NativeStackHeaderItemMenuAction | undefined;
+  const collect = (rows: NativeMenuRow[]): NativeMenuRow[] =>
+    rows.flatMap((row): NativeMenuRow[] => {
+      if (row.type === 'action' && row.label === copy.openOnWeb) {
+        web = row;
+        return [];
+      }
+      if (row.type === 'submenu') {
+        const children = collect(row.items);
+        return children.length ? [{ ...row, items: children }] : [];
+      }
+      return [row];
+    });
+  const rows = collect(nativeMenuRows(items));
+  return [...rows, web ?? openOnOpaxItem(path, name)];
+}
+
 export function pageMenu(props: {
   name: string;
+  webPath?: string;
   items: RowMenuAction[];
 }): TestableHeaderItem {
   return {
@@ -324,7 +363,9 @@ export function pageMenu(props: {
     identifier: 'header-more',
     accessibilityLabel: `More for ${props.name}`,
     icon: { type: 'sfSymbol', name: 'ellipsis.circle' },
-    menu: { items: nativeMenuRows(props.items) },
+    menu: {
+      items: moreMenuRows(props.items, props.webPath ?? '/', props.name),
+    },
   };
 }
 export function shareItem(props: {
@@ -574,4 +615,5 @@ export const shortSheet = {
   sheetGrabberVisible: true,
   sheetExpandsWhenScrolledToEdge: true,
   headerTransparent: false,
+  headerTitleAlign: 'center' as const,
 };

@@ -14,6 +14,7 @@ import {
   tabRootGround,
   type TabSegment,
 } from '../chrome';
+import { sheetListOptions, sheetListRoutes } from '../sheet-lists';
 import { emptyBarTitle } from '../useTitleOnScroll';
 
 /**
@@ -199,27 +200,35 @@ export function screen(
       key={name}
       name={name}
       redirect={redirect}
-      options={({ route, navigation }) => ({
-        title:
-          typeof (route.params as { name?: unknown } | undefined)?.name ===
-            'string' && (route.params as { name: string }).name.trim()
-            ? (route.params as { name: string }).name
-            : title,
-        headerLargeTitleEnabled: false,
-        ...detailBackOptions(navigation, route.key, name, stackRootTitle),
-        ...pendingHeaderOptions(name, route.params),
-        ...(doneWhenRoot && navigation?.getState().index === 0
-          ? doneItems
-          : {}),
-        ...options,
-        ...(Platform.OS === 'android' ? { headerTitleAlign: 'left' } : {}),
-      })}
+      options={({ route, navigation }) =>
+        sheetListOptions(
+          {
+            title:
+              typeof (route.params as { name?: unknown } | undefined)?.name ===
+                'string' && (route.params as { name: string }).name.trim()
+                ? (route.params as { name: string }).name
+                : title,
+            headerLargeTitleEnabled: false,
+            ...detailBackOptions(navigation, route.key, name, stackRootTitle),
+            ...pendingHeaderOptions(name, route.params),
+            ...((doneWhenRoot || sheetListRoutes.has(name)) &&
+            navigation?.getState().index === 0
+              ? doneItems
+              : {}),
+            ...options,
+            ...(Platform.OS === 'android' ? { headerTitleAlign: 'left' } : {}),
+          },
+          name,
+          navigation?.getState?.()?.index,
+        )
+      }
     />
   );
 }
 export const sheetOptions: NativeStackNavigationOptions = {
   headerShown: true,
   ...shortSheet,
+  headerTitleAlign: 'center',
   ...opaqueBar(colors.paper),
   ...headerItems(() => [closeSheetItem()]),
   ...(Platform.OS === 'android'

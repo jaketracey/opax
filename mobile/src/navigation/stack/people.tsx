@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { detailBackOptions, screen, sheetOptions, untitled } from './screen';
-import { pendingHeaderOptions } from '../chrome';
+import { closeSheetItem, headerItems, pendingHeaderOptions } from '../chrome';
+import { sheetListOptions } from '../sheet-lists';
 
 export function peopleScreens() {
   return [
@@ -26,13 +27,20 @@ export function peopleScreens() {
               electorate: 'Electorates',
             } as Record<string, string>
           )[kind] ?? 'Parliamentarians';
-        return {
-          title,
-          headerTitle: kind === 'person' ? 'People' : title,
-          headerLargeTitleEnabled: false,
-          ...detailBackOptions(navigation, route.key, 'directory'),
-          ...pendingHeaderOptions('directory'),
-        };
+        return sheetListOptions(
+          {
+            title,
+            headerTitle: kind === 'person' ? 'People' : title,
+            headerLargeTitleEnabled: false,
+            ...detailBackOptions(navigation, route.key, 'directory'),
+            ...pendingHeaderOptions('directory'),
+            ...(navigation?.getState?.()?.index === 0
+              ? headerItems(() => [closeSheetItem()])
+              : {}),
+          },
+          'directory',
+          navigation?.getState?.()?.index,
+        );
       }}
     />,
   ];

@@ -263,7 +263,7 @@ test.each([
   },
 );
 
-test('the bar holds Filters and a menu with Sources, Share, Copy link and Open on the website', async () => {
+test('the bar holds Filters and a menu with Sources, Share, Copy link and Open on opax.com.au', async () => {
   const renderer = await open('electorate', empty);
   const items = (
     mockScreen.options!.unstable_headerRightItems as () => {
@@ -281,7 +281,7 @@ test('the bar holds Filters and a menu with Sources, Share, Copy link and Open o
     params: { list: 'directory', owner: 'electorate' },
   });
   expect(items[1]!.menu!.items.map((i) => i.label)).toEqual(
-    expect.arrayContaining(['Sources', 'Copy link', 'Open on the website']),
+    expect.arrayContaining(['Sources', 'Copy link', 'Open on opax.com.au']),
   );
   await act(async () => renderer.unmount());
 });

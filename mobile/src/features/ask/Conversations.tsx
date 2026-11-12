@@ -151,6 +151,7 @@ export default function Conversations({ mode }: { mode: 'sheet' | 'account' }) {
     ? [
         pageMenu({
           name: conversationsCopy.title,
+          webPath: '/ask',
           items: [
             {
               title: conversationsCopy.deleteAll,

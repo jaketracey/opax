@@ -37,6 +37,7 @@ export function askOptionsModel(members?: FilterChoice[]) {
   });
   return {
     ...base,
+    title: 'Options',
     rows: base.rows.map((row) =>
       row.key === 'speaker' ? { ...row, title: 'Person' } : row,
     ),

@@ -755,7 +755,7 @@ describe('the native edition reader', () => {
       ]);
       expect(
         items[1].menu.items.map((item: { label: string }) => item.label),
-      ).toEqual(['Copy link', 'Open on the website', 'How this is chosen']);
+      ).toEqual(['Copy link', 'How this is chosen', 'Open on opax.com.au']);
       expect(items[1]).toMatchObject({
         type: 'menu',
         accessibilityLabel: 'More for Daily edition',
@@ -783,7 +783,13 @@ describe('the native edition reader', () => {
         path: edition.path,
       });
       expect(openOnWeb).not.toHaveBeenCalled();
-      act(() => items[1].menu.items[1].onPress());
+      act(() =>
+        items[1].menu.items
+          .find(
+            (item: { label: string }) => item.label === 'Open on opax.com.au',
+          )
+          .onPress(),
+      );
       expect(openOnWeb).toHaveBeenCalledWith(edition.path, edition.title);
     },
   );

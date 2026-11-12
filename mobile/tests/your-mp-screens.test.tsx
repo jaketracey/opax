@@ -957,23 +957,28 @@ describe('Your MP tab', () => {
     await act(async () => r.unmount());
   });
 
-  test.each(['Grayndler', 'Ballarat'])('Your MP links to grants in %s', async (name) => {
-    const seat = seatNamed(name);
-    choose(seat.electorate_id);
-    mock.yourMP.mockResolvedValue(
-      c.yourMPFor(seat.electorate_id, index, manifest),
-    );
-    mock.profileFor.mockImplementation(async (id) => c.profileFor(id, catalogs));
-    const r = await render(<YourMP />);
-    const link = r.root
-      .findAllByType(LinkRow)
-      .find((n) => n.props.testID === 'seat-grants-all');
-    expect(link?.props.title).toBe(`Grants in ${name}`);
-    expect(link?.props.href).toEqual(
-      grantsRoute({ jur: 'federal', seat: name, state: seat.state_code }),
-    );
-    await act(async () => r.unmount());
-  });
+  test.each(['Grayndler', 'Ballarat'])(
+    'Your MP links to grants in %s',
+    async (name) => {
+      const seat = seatNamed(name);
+      choose(seat.electorate_id);
+      mock.yourMP.mockResolvedValue(
+        c.yourMPFor(seat.electorate_id, index, manifest),
+      );
+      mock.profileFor.mockImplementation(async (id) =>
+        c.profileFor(id, catalogs),
+      );
+      const r = await render(<YourMP />);
+      const link = r.root
+        .findAllByType(LinkRow)
+        .find((n) => n.props.testID === 'seat-grants-all');
+      expect(link?.props.title).toBe(`Grants in ${name}`);
+      expect(link?.props.href).toEqual(
+        grantsRoute({ jur: 'federal', seat: name, state: seat.state_code }),
+      );
+      await act(async () => r.unmount());
+    },
+  );
 
   test('Lately loads the register with the profile and lists at most five records', async () => {
     const seat = seatNamed('Ballarat');
@@ -1079,7 +1084,7 @@ describe('Your MP tab', () => {
     await act(async () => r.unmount());
   });
 
-  test('the bar menu: change, location, Ask, official page, Share, then Forget alone and last', async () => {
+  test('the bar menu: change, location, Ask, official page, Share, then Forget alone and the public site last', async () => {
     const seat = seatNamed('Grayndler');
     choose(seat.electorate_id);
     mock.yourMP.mockResolvedValue(
@@ -1129,8 +1134,13 @@ describe('Your MP tab', () => {
       ...(official ? ['Parliament of Australia page'] : []),
       ...(canShare ? ['Share'] : []),
       '',
+      'Open on opax.com.au',
     ]);
-    const last = rows.at(-1)!;
+    const last = rows.find(
+      (row) =>
+        row.type === 'submenu' &&
+        row.items?.some((item) => item.label === 'Forget my electorate'),
+    )!;
     expect(last).toMatchObject({ type: 'submenu', inline: true });
     expect(last.items!.map((i) => [i.label, i.destructive])).toEqual([
       ['Forget my electorate', true],
@@ -1194,7 +1204,11 @@ describe('Your MP tab', () => {
         .at(-1)!.unstable_headerRightItems as () => Menu[];
       const forget = header()
         .find((item) => item.type === 'menu')!
-        .menu!.items.at(-1)!.items![0]!;
+        .menu!.items.find(
+          (row) =>
+            row.type === 'submenu' &&
+            row.items?.some((item) => item.label === 'Forget my electorate'),
+        )!.items![0]!;
       act(() => forget.onPress());
       expect(confirm).toHaveBeenCalledWith(
         'Forget your electorate?',
@@ -1251,7 +1265,13 @@ describe('Your MP tab', () => {
       menu?: { items: Row[] };
     }[];
     const rows = header().find((i) => i.type === 'menu')!.menu!.items;
-    await act(async () => rows.at(-1)!.items![0]!.onPress!());
+    await act(async () =>
+      rows.find(
+        (row) =>
+          row.type === 'submenu' &&
+          row.items?.some((item) => item.label === 'Forget my electorate'),
+      )!.items![0]!.onPress!(),
+    );
     // The forget is queued behind the removal, so it lands last.
     expect(forgetChoice).not.toHaveBeenCalled();
     await act(async () => written());

@@ -122,7 +122,7 @@ export function citeItems(target: RecordTarget): RowMenuLeaf[] {
 /**
  * A record's secondary actions, in one place (records.md 2.2): Cite as an
  * inline section (`displayInline`, so a citation is two taps from the
- * page), Copy link and Open on the website. Share is the reading
+ * page), Copy link and Open on opax.com.au. Share is the reading
  * toolbar's, or the pane bar's. Opening the menu calls no API.
  */
 export function recordActions(
@@ -157,9 +157,9 @@ export function recordActions(
 }
 
 /**
- * The reader's bar: one ⋯ titled by the record, nothing else. Android's
+ * The reader's bar: one ⋯ without a title line, nothing else. Android's
  * header sheet has no inline sections, so its rows are the menu's leaves,
- * plus the toolbar's actions (`extra`) at the end (records.md section 1).
+ * alongside the toolbar's actions (`extra`) (records.md section 1).
  */
 export function recordBarItems(
   target: RecordTarget,
@@ -168,12 +168,7 @@ export function recordBarItems(
   const items = recordActions(target);
   const rows: RowMenuAction[] =
     Platform.OS === 'android' ? [...menuLeaves(items), ...extra] : items;
-  return () => {
-    const menu = pageMenu({ name: 'this record', items: rows });
-    return menu.type === 'menu'
-      ? [{ ...menu, menu: { ...menu.menu, title: target.title } }]
-      : [menu];
-  };
+  return () => [pageMenu({ name: 'this record', items: rows })];
 }
 
 /**

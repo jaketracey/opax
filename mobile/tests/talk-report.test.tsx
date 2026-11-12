@@ -164,8 +164,12 @@ test('the menu keeps web pages out of a call and offers withdrawal only after co
           entry.type === 'action' ? entry.label : '',
         )
       : [];
-  expect(labels(during)).toEqual(['Hide captions', 'Withdraw voice consent']);
-  expect(labels(before)).toEqual(['Voice privacy']);
+  expect(labels(during)).toEqual([
+    'Hide captions',
+    'Withdraw voice consent',
+    'Open on opax.com.au',
+  ]);
+  expect(labels(before)).toEqual(['Voice privacy', 'Open on opax.com.au']);
 });
 
 test.each<{ sources: VoiceSource[] }>([

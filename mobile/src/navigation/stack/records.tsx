@@ -10,8 +10,8 @@ export function recordsScreens() {
       sheetInitialDetentIndex: 1,
     }),
     screen('bill-text/[key]', '', untitled),
-    screen('recent-records', 'Just added'),
-    screen('record-list', 'Records'),
+    screen('recent-records', 'Just added', {}, false, true),
+    screen('record-list', 'Records', {}, false, true),
     screen('bill-text-contents/[key]', 'Contents', sheetOptions),
   ];
 }

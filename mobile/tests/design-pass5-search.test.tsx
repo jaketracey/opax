@@ -142,7 +142,11 @@ test('bars: All has Share; Speeches has Filters and ⋯ with Sort and Share', as
   );
   expect(labels()).toEqual(['Account', 'More', 'Filters']);
   const more = items().find((i) => i.label === 'More')!;
-  expect(more.menu!.items.map((i) => i.label)).toEqual(['Sort', 'Share']);
+  expect(more.menu!.items.map((i) => i.label)).toEqual([
+    'Sort',
+    'Share',
+    'Open on opax.com.au',
+  ]);
   expect(more.menu!.items[0]!.items!.map((i) => i.label)).toEqual([
     'Most relevant',
     'Newest first',

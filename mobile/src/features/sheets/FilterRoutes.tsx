@@ -24,10 +24,24 @@ export function FiltersLayout() {
         ...(Platform.OS === 'android' ? { header: AndroidReadingHeader } : {}),
       }}
     >
-      <Stack.Screen name="[list]" options={{ title: 'Filters' }} />
+      <Stack.Screen
+        name="[list]"
+        options={({ route }) => ({
+          title:
+            (route.params as { list?: string } | undefined)?.list === 'ask'
+              ? 'Options'
+              : 'Filters',
+          headerTitleAlign: 'center',
+        })}
+      />
       <Stack.Screen
         name="[list]/[facet]"
-        options={{ headerBackTitle: 'Filters' }}
+        options={({ route }) => ({
+          headerBackTitle:
+            (route.params as { list?: string } | undefined)?.list === 'ask'
+              ? 'Options'
+              : 'Filters',
+        })}
       />
     </Stack>
   );
