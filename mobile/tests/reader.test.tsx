@@ -6,20 +6,21 @@ import { withNavigationOptions } from './navigation-options';
 import { router } from 'expo-router';
 import { act } from 'react';
 import {
-  LayoutAnimation,
+  AccessibilityInfo,
   Platform,
   Text as NativeText,
   StyleSheet,
   useWindowDimensions,
 } from 'react-native';
-import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
+import TestRenderer from 'react-test-renderer';
 import fixtures from '../scripts/fixtures/records/contracts.json';
 import { ApiError } from '../src/api/errors';
 import { catalogs } from '../src/api/runtime';
 import {
   ContentUnavailable,
   Disclosure,
-  Icon,
+  Button,
+  SectionHeader,
   LinkRow,
   MachinePill,
 } from '../src/design/primitives';
@@ -122,11 +123,6 @@ const text = (view: TestRenderer.ReactTestRenderer) =>
     .flat(Infinity)
     .filter((c) => typeof c === 'string')
     .join('\n');
-function hostParent(node: ReactTestInstance) {
-  let parent = node.parent;
-  while (parent && typeof parent.type !== 'string') parent = parent.parent;
-  return parent!;
-}
 let mockOptions: Record<string, unknown> = {};
 const toolbars = (view: TestRenderer.ReactTestRenderer) =>
   view.root.findAll((node) => (node.type as unknown) === 'Toolbar');
@@ -158,98 +154,6 @@ beforeEach(() => {
   jest.mocked(records.similar).mockResolvedValue(record([]) as never);
 });
 
-test.each([false, true])(
-  'speech summaries start open and keep a collapsed choice with Reduce Motion %s',
-  async (reduced) => {
-    jest.mocked(useReduceMotion).mockReturnValue(reduced);
-    const animate = jest.spyOn(LayoutAnimation, 'configureNext');
-    jest
-      .mocked(records.document)
-      .mockResolvedValue(record({ ...speech, summary: 'A speech summary.' }));
-    const view = await mount(<DocumentReader />);
-    const toggle = () =>
-      view.root.find(
-        (node) =>
-          node.props.testID === 'doc-brief' &&
-          typeof node.props.onPress === 'function',
-      );
-    expect(toggle().props.accessibilityState).toEqual({ expanded: true });
-    expect(text(view)).toContain('A speech summary.');
-    expect(text(view)).toContain('Machine-written');
-    const pill = view.root.find(
-      (node) =>
-        typeof node.type === 'string' &&
-        node.props.testID === 'doc-brief-label',
-    );
-    const header = hostParent(hostParent(pill));
-    expect(StyleSheet.flatten(header.props.style)).toMatchObject({
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-    });
-    expect(StyleSheet.flatten(hostParent(pill).props.style)).toMatchObject({
-      marginLeft: 'auto',
-      maxWidth: '100%',
-    });
-    // These are separate buttons: opening provenance must not collapse the summary.
-    expect(
-      toggle().findAll((node) => node.props.testID === 'doc-brief-label'),
-    ).toHaveLength(0);
-    await act(async () =>
-      view.root
-        .find(
-          (node) =>
-            node.props.testID === 'doc-brief-label' &&
-            typeof node.props.onPress === 'function',
-        )
-        .props.onPress(),
-    );
-    expect(router.push).toHaveBeenLastCalledWith(
-      expect.objectContaining({ pathname: '/machine-note' }),
-    );
-    expect(toggle().props.accessibilityState).toEqual({ expanded: true });
-    animate.mockClear();
-    await act(async () => toggle().props.onPress());
-    expect(toggle().props.accessibilityState).toEqual({ expanded: false });
-    expect(text(view)).not.toContain('A speech summary.');
-    expect(text(view)).toContain('Machine-written');
-    if (reduced) expect(animate).not.toHaveBeenCalled();
-    else expect(animate).toHaveBeenCalledTimes(1);
-    await act(async () =>
-      view.update(
-        withNavigationOptions(<DocumentReader />, (options) => {
-          mockOptions = options;
-        }),
-      ),
-    );
-    expect(toggle().props.accessibilityState).toEqual({ expanded: false });
-    // Another speech on the same reader gets its own default.
-    await act(async () =>
-      view.update(
-        withNavigationOptions(
-          <DocumentReader recordSlug="speech-another" />,
-          (options) => {
-            mockOptions = options;
-          },
-        ),
-      ),
-    );
-    expect(toggle().props.accessibilityState).toEqual({ expanded: true });
-    await act(async () => view.unmount());
-    // A fresh visit starts open again.
-    const revisit = await mount(<DocumentReader />);
-    expect(
-      revisit.root.find(
-        (node) =>
-          node.props.testID === 'doc-brief' &&
-          typeof node.props.onPress === 'function',
-      ).props.accessibilityState,
-    ).toEqual({ expanded: true });
-    await act(async () => revisit.unmount());
-    animate.mockRestore();
-  },
-);
-
 test.each(
   [
     'speech',
@@ -267,7 +171,7 @@ test.each(
     [1, 1.786, 3.571].map((fontScale) => [kind, fontScale] as const),
   ),
 )(
-  '%s summary keeps independent header controls at font scale %s',
+  '%s has a permanent summary heading and an Ask button after the text at font scale %s',
   async (kind, fontScale) => {
     jest
       .mocked(useWindowDimensions)
@@ -281,103 +185,78 @@ test.each(
       }),
     );
     const view = await mount(<DocumentReader />);
-    const toggle = view.root.find(
-      (node) =>
-        node.props.testID === 'doc-brief' &&
-        typeof node.props.onPress === 'function',
-    );
-    const disclosure = view.root.find(
-      (node) => node.type === Disclosure && node.props.testID === 'doc-brief',
-    );
-    expect(disclosure.props.accessory.type).toBe(MachinePill);
-    const pill = view.root.find(
-      (node) =>
-        typeof node.type === 'string' &&
-        node.props.testID === 'doc-brief-label',
-    );
-    const header = hostParent(toggle);
-    expect(header).toBe(hostParent(hostParent(pill)));
-    expect(StyleSheet.flatten(header.props.style)).toMatchObject({
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-    });
-    const label = toggle.findByType(NativeText);
-    expect(label.props.children).toBe('In short');
-    const textStyle = StyleSheet.flatten(
-      hostParent(hostParent(label)).props.style,
-    );
-    // A zero flex basis squeezes the heading before the pill can wrap.
-    expect(textStyle).toMatchObject({
-      flexGrow: 1,
-      flexShrink: 1,
-      flexBasis: 'auto',
-    });
-    expect(textStyle.flex).toBeUndefined();
-    expect(toggle.findByType(Icon).props.name).toBe('chevron.down');
-    expect(toggle.findAllByType(MachinePill)).toHaveLength(0);
+    const heading = view.root
+      .findAllByType(SectionHeader)
+      .find((node) => node.props.testID === 'doc-brief')!;
+    expect(heading.props.title).toBe('In short');
+    expect(heading.props.accessory.type).toBe(MachinePill);
     expect(
       view.root
-        .findByProps({ testID: 'doc-brief-body' })
-        .findAllByType(MachinePill),
-    ).toHaveLength(0);
-    expect(
-      header
-        .findAllByType(NativeText)
-        .every((node) => node.props.numberOfLines === undefined),
-    ).toBe(true);
-    const expectedNote = {
-      title: 'Machine-written',
-      body: [
-        kind === 'speech'
-          ? 'Written by a model from this speech. It is not part of the record.'
-          : kind === 'bill_text'
-            ? 'Written by a model from this bill text. It is not part of the bill.'
-            : 'Written by a model. It is not part of the record.',
-      ],
+        .findAllByType(Disclosure)
+        .some((node) => node.props.testID === 'doc-brief'),
+    ).toBe(false);
+    const ask = view.root
+      .findAllByType(Button)
+      .find((node) => node.props.testID === 'doc-ask')!;
+    expect(ask.props).toMatchObject({
+      variant: 'primary',
+      label: 'Ask about this',
+    });
+    const subject: Record<string, string> = {
+      speech: 'speech',
+      division: 'division',
+      bill_text: 'bill text',
+      press_release: 'release',
+      government_release: 'release',
+      research_report: 'report',
+      grant_invitation: 'grant invitation',
+      grant_award: 'grant award',
+      contract: 'contract',
+      legal: 'legal record',
     };
-    const openNote = async () => {
-      await act(async () =>
-        view.root
-          .find(
-            (node) =>
-              node.props.testID === 'doc-brief-label' &&
-              typeof node.props.onPress === 'function',
-          )
-          .props.onPress(),
-      );
-      const route = jest.mocked(router.push).mock.calls.at(-1)![0] as {
-        pathname: string;
-        params: { key: string };
-      };
-      expect(route.pathname).toBe('/machine-note');
-      expect(sheetPayload(route.params.key, 'machine')).toMatchObject({
-        testID: 'doc-brief-label',
-        note: expectedNote,
-      });
-    };
-    expect(toggle.props.accessibilityState).toEqual({ expanded: true });
-    await openNote();
-    expect(toggle.props.accessibilityState).toEqual({ expanded: true });
-    expect(text(view)).toContain('Another record summary.');
-    await act(async () => toggle.props.onPress());
-    expect(toggle.props.accessibilityState).toEqual({ expanded: false });
-    expect(text(view)).not.toContain('Another record summary.');
-    expect(text(view)).toContain('Machine-written');
-    await openNote();
-    expect(toggle.props.accessibilityState).toEqual({ expanded: false });
-    await act(async () =>
-      view.update(
-        withNavigationOptions(<DocumentReader />, (options) => {
-          mockOptions = options;
-        }),
-      ),
+    expect(ask.props.accessibilityLabel).toContain(
+      `this ${subject[kind] ?? 'record'}:`,
     );
-    expect(toggle.props.accessibilityState).toEqual({ expanded: false });
+    expect(ask.props.accessibilityHint).toBe(
+      'Opens Ask with a question drafted',
+    );
+    const ids = view.root
+      .findAll((node) => typeof node.type === 'string' && node.props.testID)
+      .map((node) => node.props.testID);
+    expect(ids.indexOf('doc-ask')).toBeGreaterThan(
+      ids.indexOf('doc-brief-body'),
+    );
+    expect(text(view)).toContain('Another record summary.');
+    expect(text(view)).toContain('Machine-written');
+    await act(async () =>
+      view.root
+        .find(
+          (node) =>
+            node.props.testID === 'doc-brief-label' &&
+            typeof node.props.onPress === 'function',
+        )
+        .props.onPress(),
+    );
+    const route = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+      pathname: string;
+      params: { key: string };
+    };
+    expect(route.pathname).toBe('/machine-note');
+    expect(sheetPayload(route.params.key, 'machine')).toMatchObject({
+      testID: 'doc-brief-label',
+      note: {
+        title: 'Machine-written',
+        body: [
+          kind === 'speech'
+            ? 'Written by a model from this speech. It is not part of the record.'
+            : kind === 'bill_text'
+              ? 'Written by a model from this bill text. It is not part of the bill.'
+              : 'Written by a model. It is not part of the record.',
+        ],
+      },
+    });
+    expect(text(view)).toContain('Another record summary.');
     await act(async () => view.unmount());
-    const revisit = await mount(<DocumentReader />);
-    expect(text(revisit)).toContain('Another record summary.');
-    await act(async () => revisit.unmount());
   },
 );
 
@@ -409,7 +288,7 @@ test('closing the document aborts its pending speaker directory read', async () 
   await act(async () => finish());
 });
 
-test('Ask about this is a row that drafts a question and never sends it', async () => {
+test('Ask about this is a button that drafts a question and never sends it', async () => {
   const view = await mount(<DocumentReader />);
   // iOS draws no bottom toolbar, which the floating tab bar would cover.
   expect(toolbars(view)).toHaveLength(0);
@@ -572,6 +451,12 @@ test('an incoming search query puts the find controls in the bar, above the tab 
       node.props.testID === 'doc-find-status' &&
       typeof node.props.onPress === 'function',
   );
+  expect(StyleSheet.flatten(status.props.style).position).toBeUndefined();
+  expect(
+    view.root
+      .findByType(ReaderList)
+      .findAllByProps({ testID: 'doc-find-status' }).length,
+  ).toBeGreaterThan(0);
   expect(status.props.accessibilityLabel).toMatch(
     /^Match 1 of \d+ for paragraph$/,
   );
@@ -663,3 +548,198 @@ test('a cited passage opens in place with a highlight and keeps the usual reader
   expect(barItems().map((item) => item.label)).toContain('More');
   await act(async () => view.unmount());
 });
+
+test('an explicit find with no hits says No matches, with no zero-of-zero counter', async () => {
+  mockParams = { slug: speech.slug, q: 'no-such-phrase' };
+  const view = await mount(<DocumentReader />);
+  expect(text(view)).toContain('No matches for no-such-phrase');
+  expect(text(view)).not.toContain('0 of 0');
+  const status = view.root.find(
+    (node) =>
+      node.props.testID === 'doc-find-status' &&
+      typeof node.props.onPress === 'function',
+  );
+  expect(status.props.disabled).toBe(true);
+  expect(status.props.accessibilityHint).toBeUndefined();
+  await act(async () => view.unmount());
+});
+
+test.each([
+  [
+    'CFMEU Construction & General Division VIC/TAS Branch',
+    'CFMEU Construction and General Division Victoria–Tasmania branch',
+  ],
+  ['Example & Co', 'Example and Co spoke.'],
+])('an arriving find matches tolerant spelling: %s', async (q, body) => {
+  mockParams = {
+    slug: speech.slug,
+    q: q!,
+    find: 'auto',
+  };
+  jest
+    .mocked(records.document)
+    .mockResolvedValue(record({ ...speech, text: body! }));
+  const view = await mount(<DocumentReader />);
+  expect(barItems().map((item) => item.label)).toContain('Done');
+  expect(text(view)).toContain('1 of 1');
+  expect(view.root.findByType(ReaderList).props.find.current).toEqual({
+    part: 0,
+    start: 0,
+  });
+  await act(async () => view.unmount());
+});
+
+test('a search arrival with no matching entity opens the normal speech and its actions', async () => {
+  mockParams = { slug: speech.slug, q: 'An absent organisation', find: 'auto' };
+  const view = await mount(<DocumentReader />);
+  expect(barItems().map((item) => item.label)).toContain('More');
+  expect(barItems().map((item) => item.label)).not.toContain('Done');
+  expect(view.root.findAllByProps({ testID: 'doc-find-status' })).toHaveLength(
+    0,
+  );
+  expect(
+    view.root
+      .findByType(ReaderList)
+      .props.parts.map((part: { text: string }) => part.text)
+      .join(''),
+  ).toBe(speech.text.trim());
+  await act(async () => view.unmount());
+});
+
+test.each(
+  (['ios', 'android'] as const).flatMap((os) =>
+    [390, 1024].flatMap((width) =>
+      ['paragraph', 'no-such-phrase'].map((q) => ({ os, width, q })),
+    ),
+  ),
+)(
+  '$os at width $width has exactly one find status for $q',
+  async ({ os, width, q }) => {
+    const original = Platform.OS;
+    Platform.OS = os;
+    jest.mocked(useWindowDimensions).mockReturnValue({
+      width,
+      height: 1024,
+      scale: 2,
+      fontScale: 1,
+    });
+    try {
+      mockParams = { slug: speech.slug, q };
+      const view = await mount(<DocumentReader />);
+      const status = view.root.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID === 'doc-find-status',
+      );
+      expect(status).toHaveLength(1);
+      const inList = view.root
+        .findByType(ReaderList)
+        .findAll(
+          (node) =>
+            typeof node.type === 'string' &&
+            node.props.testID === 'doc-find-status',
+        );
+      expect(inList).toHaveLength(os === 'ios' ? 1 : 0);
+      if (q === 'no-such-phrase') {
+        expect(text(view)).toContain(`No matches for ${q}`);
+        expect(text(view)).not.toContain('0 of 0');
+      }
+      await act(async () => view.unmount());
+    } finally {
+      Platform.OS = original;
+    }
+  },
+);
+
+test.each(['ios', 'android'] as const)(
+  '%s Next and Previous announce once through the platform mechanism, including wraparound',
+  async (os) => {
+    const original = Platform.OS;
+    Platform.OS = os;
+    const announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
+    try {
+      mockParams = { slug: speech.slug, q: 'tax', find: 'auto' };
+      jest
+        .mocked(records.document)
+        .mockResolvedValue(record({ ...speech, text: 'tax and tax' }));
+      const view = await mount(<DocumentReader />);
+      const step = async (which: 'Next' | 'Previous') => {
+        await act(async () => {
+          if (os === 'ios')
+            barItems().find((item) => item.label === `${which} match`)!
+              .onPress!();
+          else
+            view.root
+              .findByType(FindControls)
+              .props[which === 'Next' ? 'onNext' : 'onPrevious']();
+        });
+      };
+      const expectPosition = (position: number) => {
+        if (os === 'ios')
+          expect(announce).toHaveBeenLastCalledWith(`Match ${position} of 2`);
+        else {
+          expect(announce).not.toHaveBeenCalled();
+          const status = view.root
+            .findAllByType(NativeText)
+            .find((node) => node.props.testID === 'doc-find-status')!;
+          expect(status.props.accessibilityLiveRegion).toBe('polite');
+          expect(status.props.children).toBe(`Match ${position} of 2 for tax`);
+        }
+      };
+      await step('Next');
+      expectPosition(1);
+      await step('Next');
+      expectPosition(2);
+      await step('Next');
+      expectPosition(1);
+      await step('Previous');
+      expectPosition(2);
+      expect(announce).toHaveBeenCalledTimes(os === 'ios' ? 4 : 0);
+      await act(async () => view.unmount());
+    } finally {
+      announce.mockRestore();
+      Platform.OS = original;
+    }
+  },
+);
+
+test('an embedded iPad reader keeps a citation highlight without an undismissable find status', async () => {
+  mockParams = { slug: speech.slug, q: 'paragraph', find: 'auto' };
+  jest
+    .mocked(useWindowDimensions)
+    .mockReturnValue({ width: 1024, height: 1366, scale: 2, fontScale: 1 });
+  const view = await mount(
+    <DocumentReader
+      recordSlug={speech.slug}
+      citedPassage="paragraph"
+      embedded
+    />,
+  );
+  expect(view.root.findAllByProps({ testID: 'doc-find-status' })).toHaveLength(
+    0,
+  );
+  expect(
+    view.root.findAllByProps({ testID: 'doc-passage-highlight' }).length,
+  ).toBeGreaterThan(0);
+  await act(async () => view.unmount());
+});
+
+test.each(['tax', 'housing afford'])(
+  'a search arrival for %s retains a literal substring highlight',
+  async (q) => {
+    mockParams = { slug: speech.slug, q, find: 'auto' };
+    jest
+      .mocked(records.document)
+      .mockResolvedValue(
+        record({ ...speech, text: 'Taxes and housing affordability.' }),
+      );
+    const view = await mount(<DocumentReader />);
+    expect(barItems().map((item) => item.label)).toContain('Done');
+    expect(text(view)).toContain('1 of 1');
+    expect(view.root.findByType(ReaderList).props.find.current).toEqual({
+      part: 0,
+      start: q === 'tax' ? 0 : 10,
+    });
+    await act(async () => view.unmount());
+  },
+);

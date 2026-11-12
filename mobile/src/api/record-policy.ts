@@ -5,18 +5,20 @@ export const isRecordSlug = (slug: string) => recordSlugPattern.test(slug);
 export const billTextPathPattern =
   /^\/bill-texts\/(au-federal-[a-z0-9-]{1,140})\/(index|[rs]\d+-[a-z0-9-]+)\.json$/;
 
-/** The web's related-speech request only: q, kind=speech, per=6, optional topic. */
+/** Related speeches: six candidates from a bounded retrieval, optional topic. */
 export function isSimilarRequest(params: URLSearchParams): boolean {
   return (
     !!params.get('q')?.trim() &&
     params.get('q')!.length <= 2000 &&
     params.get('kind') === 'speech' &&
     params.get('per') === '6' &&
+    (!params.has('top_k') || params.get('top_k') === '20') &&
+    !params.has('mode') &&
     (!params.has('topic') ||
       /^[a-z]+(?:-[a-z]+)*$/.test(params.get('topic')!)) &&
     [...params.keys()].every(
       (key) =>
-        ['q', 'kind', 'per', 'topic'].includes(key) &&
+        ['q', 'kind', 'per', 'topic', 'top_k'].includes(key) &&
         params.getAll(key).length === 1,
     )
   );

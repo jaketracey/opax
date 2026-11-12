@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, type ReactNode } from 'react';
+import { Fragment, useEffect, useMemo, useRef, type ReactNode } from 'react';
 import {
   FlatList,
   Platform,
@@ -16,6 +16,7 @@ import {
 } from '../../design/primitives';
 import { StatePageProvider } from '../../design/states';
 import { colors, layout, rhythm } from '../../design/tokens';
+import { entityMatches } from './find';
 export interface ReaderPart {
   id: string;
   text: string;
@@ -25,6 +26,7 @@ export interface ReaderPart {
 export interface ReaderFind {
   query: string;
   passage?: boolean;
+  tolerant?: boolean;
   current: { part: number; start: number } | null;
 }
 // Bound Android's selectable paragraph measurement and JS batches. The source
@@ -61,14 +63,23 @@ function textMatches(text: string, needle: string) {
 }
 
 /** Every match of `query` in the parts, in reading order. */
-export function findMatches(parts: readonly ReaderPart[], query: string) {
+export function findMatches(
+  parts: readonly ReaderPart[],
+  query: string,
+  options?: Pick<ReaderFind, 'tolerant'>,
+): { part: number; start: number }[] {
   const needle = query.trim().toLocaleLowerCase('en-AU');
   const found: { part: number; start: number }[] = [];
   if (!needle) return found;
   parts.forEach((part, index) => {
-    for (const match of textMatches(part.text, needle))
+    for (const match of options?.tolerant
+      ? entityMatches(part.text, query)
+      : textMatches(part.text, needle))
       found.push({ part: index, start: match.start });
   });
+  // Search arrivals prefer whole-word entity spellings. If none occur anywhere
+  // in the document, retain the original query's literal substring behaviour.
+  if (options?.tolerant && !found.length) return findMatches(parts, query);
   return found;
 }
 
@@ -85,7 +96,9 @@ function Marked({
   if (!query) return <>{text}</>;
   const spans: ReactNode[] = [];
   let from = 0;
-  for (const match of textMatches(text, query)) {
+  for (const match of find?.tolerant
+    ? entityMatches(text, find.query)
+    : textMatches(text, query)) {
     const current =
       find?.current?.part === index && find.current.start === match.start;
     spans.push(
@@ -133,6 +146,19 @@ export function ReaderList({
   const lastJump = useRef<typeof jumpTo>(null);
   // A readable column on iPad, with a split pane's Back first.
   const column = useScreenColumn();
+  // Highlight with the same document-wide pass as the find counter, including
+  // parts that are not mounted in the virtualised list yet.
+  const query = find?.query;
+  const tolerantFind = find?.tolerant;
+  const tolerant = useMemo(
+    () =>
+      !!tolerantFind &&
+      !!query &&
+      parts.some((part) => entityMatches(part.text, query).length > 0),
+    [parts, tolerantFind, query],
+  );
+  const marks =
+    find?.tolerant && !tolerant ? { ...find, tolerant: false } : find;
   useEffect(() => {
     if (!jumpTo) {
       lastJump.current = null;
@@ -166,7 +192,7 @@ export function ReaderList({
           ref={list}
           testID={testID}
           data={parts}
-          extraData={find}
+          extraData={marks}
           keyExtractor={(part) => part.id}
           style={styles.screen}
           contentContainerStyle={[styles.content, column.content]}
@@ -221,7 +247,7 @@ export function ReaderList({
                 testID={`reader-text-${index}`}
               >
                 {find?.query.trim() ? (
-                  <Marked text={item.text} index={index} find={find} />
+                  <Marked text={item.text} index={index} find={marks} />
                 ) : (
                   item.text
                 )}

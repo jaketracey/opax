@@ -6,13 +6,20 @@
 export const docRoute = (
   slug: string,
   name?: string,
-  open: { q?: string; match?: number; cite?: boolean; passage?: string } = {},
+  open: {
+    q?: string;
+    match?: number;
+    cite?: boolean;
+    passage?: string;
+    find?: 'auto';
+  } = {},
 ) => ({
   pathname: '/doc/[slug]' as const,
   params: {
     slug,
     ...(name ? { name } : {}),
     ...(open.q ? { q: open.q } : {}),
+    ...(open.q && open.find ? { find: open.find } : {}),
     ...(open.q && open.match != null ? { match: String(open.match) } : {}),
     ...(open.cite ? { cite: '1' } : {}),
     ...(open.passage ? { passage: open.passage.slice(0, 4000) } : {}),
