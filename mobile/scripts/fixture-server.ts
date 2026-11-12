@@ -121,11 +121,19 @@ if (rosterMode === 'vacant') {
   for (const [path, body] of files) {
     if (
       path !== '/parliamentarians.json' &&
+      !/^\/electorates\/releases\/[^/]+\/index\.json$/.test(path) &&
       !/^\/electorates\/[^/]+\/people\.json$/.test(path) &&
       !/people\.json$/.test(path)
     )
       continue;
     const raw = JSON.parse(body.toString());
+    if (Array.isArray(raw.electorates))
+      for (const seat of raw.electorates)
+        seat.representatives = seat.representatives.filter(
+          (member: { person: { legacy_person_id?: string; name: string } }) =>
+            member.person.legacy_person_id !== '10007' &&
+            member.person.name !== 'Anthony Albanese',
+        );
     if (Array.isArray(raw.people))
       raw.people = raw.people.filter(
         (person: { pid?: string; name?: string }) =>

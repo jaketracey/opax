@@ -26,7 +26,7 @@ env:
           timeout: 30000
       - openLink: opax:///vic-election
       - extendedWaitUntil:
-          visible: This page isn’t available
+          visible: '.*This page isn’t available.*'
           timeout: 30000
 - runFlow:
     when:
@@ -37,8 +37,8 @@ env:
             id: today-vic-election-status
           centerElement: true
           timeout: 60000
-      - assertVisible: Election day is Saturday 28 November
-      - assertVisible: In 8 days
+      - assertVisible: '.*Election day is Saturday 28 November.*'
+      - assertVisible: '.*In 8 days.*'
       - scrollUntilVisible:
           element:
             id: today-vic-election-authorisation
@@ -47,6 +47,14 @@ env:
           id: today-vic-election-authorisation
           text: Authorised by.*
       - takeScreenshot: ${EVIDENCE}/70-today-ahead
+      # The authorisation capture can leave this row beneath the inline bar.
+      - scrollUntilVisible:
+          element:
+            id: today-vic-election-status
+          direction: UP
+          centerElement: true
+          speed: 20
+          timeout: 30000
       - tapOn:
           id: today-vic-election-status
       - extendedWaitUntil:
@@ -55,21 +63,32 @@ env:
           timeout: 30000
       - assertVisible:
           id: vic-election-days
-      - assertVisible: Key dates
+      - assertVisible: '.*Key dates.*'
       - scrollUntilVisible:
           element:
             text: 'Lower house: 88 districts'
           centerElement: true
-      - tapOn: Suburb, postcode or district
+      - tapOn: '.*Suburb, postcode or district.*'
       - inputText: '3350'
       - extendedWaitUntil:
-          visible: Wendouree
+          visible:
+            id: vic-election-hit-0-district-wendouree
           timeout: 30000
-      - assertVisible: 55%
-      - assertVisible: of residents
+      # Each row is one accessibility element on iOS. Its spoken share
+      # is also the Android content description, rather than the child text.
       - scrollUntilVisible:
           element:
-            text: Some places cross district lines.
+            id: vic-election-hit-0-district-wendouree
+          direction: UP
+          centerElement: true
+          speed: 20
+          timeout: 30000
+      - assertVisible:
+          id: vic-election-hit-0-district-wendouree
+          text: '.*Wendouree.*55 per cent.*residents.*'
+      - scrollUntilVisible:
+          element:
+            text: '.*Some places cross district lines..*'
           centerElement: true
       - takeScreenshot: ${EVIDENCE}/70-finder
       - scrollUntilVisible:
@@ -81,8 +100,8 @@ env:
           id: vic-election-hit-0-district-eureka
       - assertVisible:
           id: vic-seat-screen
-      - assertVisible: Last held by
-      - assertVisible: Winning margin
+      - assertVisible: '.*Last held by.*'
+      - assertVisible: '.*Winning margin.*'
       - scrollUntilVisible:
           element:
             id: vic-seat-candidates-none
@@ -93,11 +112,11 @@ env:
             id: vic-seat-foot
           centerElement: true
           timeout: 60000
-      - assertVisible: Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.
-      - assertVisible: corrections@opax.com.au
+      - assertVisible: '.*Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000..*'
+      - assertVisible: '.*corrections@opax.com.au.*'
       - tapOn:
           id: BackButton
-      - tapOn: Cancel
+      - tapOn: '.*Cancel.*'
       - scrollUntilVisible:
           element:
             id: vic-election-region-southern-metropolitan
@@ -105,10 +124,10 @@ env:
           timeout: 90000
       - tapOn:
           id: vic-election-region-southern-metropolitan
-      - assertVisible: Southern Metropolitan Region
+      - assertVisible: '.*Southern Metropolitan Region.*'
       - scrollUntilVisible:
           element:
-            text: Districts in this region
+            text: '.*Districts in this region.*'
           centerElement: true
       - takeScreenshot: ${EVIDENCE}/70-region
       - tapOn:
@@ -118,7 +137,7 @@ env:
             id: vic-election-foot
           centerElement: true
           timeout: 90000
-      - assertVisible: Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.
+      - assertVisible: '.*Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000..*'
       - takeScreenshot: ${EVIDENCE}/70-hub-foot
       - launchApp:
           stopApp: true
@@ -130,8 +149,8 @@ env:
             id: today-vic-election-status
           centerElement: true
           timeout: 60000
-      - assertVisible: Election day is today
-      - assertVisible: Polls are open from 8 am to 6 pm
+      - assertVisible: '.*Election day is today.*'
+      - assertVisible: '.*Polls are open from 8 am to 6 pm.*'
       - takeScreenshot: ${EVIDENCE}/70-today-election-day
       - launchApp:
           stopApp: true
@@ -143,13 +162,25 @@ env:
             id: today-vic-election-status
           centerElement: true
           timeout: 60000
-      - assertVisible: Voting has closed
+      - assertVisible: '.*Voting has closed.*'
       - takeScreenshot: ${EVIDENCE}/70-today-closed
+      # The authorisation capture can leave this row beneath the inline bar.
+      - scrollUntilVisible:
+          element:
+            id: today-vic-election-status
+          direction: UP
+          centerElement: true
+          speed: 20
+          timeout: 30000
       - tapOn:
           id: today-vic-election-status
-      - assertVisible: Voting has closed
+      - extendedWaitUntil:
+          visible:
+            id: vic-election-screen
+          timeout: 30000
+      - assertVisible: '.*Voting has closed.*'
       - assertNotVisible:
           id: vic-election-days
-      - assertNotVisible: Key dates
-      - assertNotVisible: Apply for a postal vote by
+      - assertNotVisible: '.*Key dates.*'
+      - assertNotVisible: '.*Apply for a postal vote by.*'
       - takeScreenshot: ${EVIDENCE}/70-hub-closed

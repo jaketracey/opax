@@ -64,13 +64,29 @@ name: 13e Today's invitation to choose a seat, by name, by location, and after N
 
 # "Use my location" opens the sheet already locating. Today draws no
 # permission alert of its own; the system's, if any, belongs to the sheet.
-- launchApp:
-    clearState: true
-    permissions:
-      location: allow
-    arguments:
-      OPAXSeat: none
-      OPAXWelcomeDeclined: none
+# iOS uses granular location values; retain Android's existing grant.
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - launchApp:
+          clearState: true
+          permissions:
+            location: always
+          arguments:
+            OPAXSeat: none
+            OPAXWelcomeDeclined: none
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - launchApp:
+          clearState: true
+          permissions:
+            location: allow
+          arguments:
+            OPAXSeat: none
+            OPAXWelcomeDeclined: none
 - extendedWaitUntil:
     visible:
       id: today-screen

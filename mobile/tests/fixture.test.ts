@@ -601,6 +601,47 @@ test('null-optional roster mode changes one field and preserves the People recor
   }
 }, fixtureTestTimeout);
 
+test(
+  'vacant roster removes the member from the electorate index as well as both people catalogs',
+  async () => {
+    const fixture = startFixture('pinned', 0, {
+      OPAX_FIXTURE_ROSTER: 'vacant',
+    });
+    try {
+      await fixture.ready;
+      const manifest = JSON.parse(
+        (await getAt(fixture.port(), '/electorates/manifest.json')).body,
+      );
+      const index = JSON.parse(
+        (await getAt(fixture.port(), manifest.index_url)).body,
+      );
+      const normal = JSON.parse((await request(manifest.index_url)).body);
+      const seat = index.electorates.find(
+        (row: { name: string }) => row.name === 'Grayndler',
+      );
+      expect(seat.representatives).toEqual([]);
+      expect(
+        index.electorates.filter(
+          (row: { name: string }) => row.name !== 'Grayndler',
+        ),
+      ).toEqual(
+        normal.electorates.filter(
+          (row: { name: string }) => row.name !== 'Grayndler',
+        ),
+      );
+      for (const path of [manifest.people_url, '/parliamentarians.json']) {
+        const people = JSON.parse(
+          (await getAt(fixture.port(), path)).body,
+        ).people;
+        expect(JSON.stringify(people)).not.toContain('Anthony Albanese');
+      }
+    } finally {
+      await fixture.stop();
+    }
+  },
+  fixtureTestTimeout,
+);
+
 test('the fixture refuses an unknown roster mode at startup', async () => {
   const fixture = startFixture('pinned', 0, { OPAX_FIXTURE_ROSTER: 'live' });
   try {
