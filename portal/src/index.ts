@@ -402,6 +402,7 @@ const SEARCH_CACHE_TTL = 600
  * the key carries CACHE_EPOCH, so a corpus change retires the window anyway.
  */
 const SEARCH_WINDOW_CACHE_TTL = 3600
+const SEARCH_FALLBACK_CACHE_TTL = 60
 const RESOURCE_CACHE_TTL = 3600
 // Follow-ups belong to the answer they were written from, and they are derived
 // from it deterministically: the same question, answer and passages ask for the
@@ -592,7 +593,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
       unavailable.headers.set('cache-control', 'no-store')
       return unavailable
     }
-    if (!win.fallback) cacheStore(ctx, windowKey, json(win), SEARCH_WINDOW_CACHE_TTL)
+    cacheStore(ctx, windowKey, json(win), win.fallback ? SEARCH_FALLBACK_CACHE_TTL : SEARCH_WINDOW_CACHE_TTL)
   }
 
   const ordered = [...win.results].sort((a, b) => compareSearchResults(a, b, sort))

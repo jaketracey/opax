@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import { setImmediate } from 'node:timers/promises';
 import ts from 'typescript';
-import { searchFind, SEMANTIC_SEARCH_MS, KEYWORD_SEARCH_MS } from '../src/search-find.ts';
+import { searchFind, SEARCH_RETRIEVAL_MS, KEYWORD_HEDGE_MS, KEYWORD_SEARCH_MS } from '../src/search-find.ts';
 import { cacheKeyParams } from '../src/cache-key.ts';
 import { compareSearchResults } from '../src/search-sort.ts';
 import { normalizePassage, passageWindow } from '../src/passage-text.ts';
@@ -27,7 +27,7 @@ const hang = () => new Promise(() => {});
 const filters = { field: { and: [{ prop: 'label', labelset: 'state', label: 'federal' }] } };
 
 function fixture(upstream = answer) {
-  const calls = [], writes = [], cache = new Map(), pendingWrites = [];
+  const calls = [], writes = [], cache = new Map(), pendingWrites = [], limits = [];
   const ctx = { waitUntil: work => pendingWrites.push(work) };
   const env = { CACHE_EPOCH: 'fixture', ARAG_KB_TOKEN: 'fixture' };
   const context = {
@@ -40,12 +40,19 @@ function fixture(upstream = answer) {
     stripListingBoilerplate: text => text, foldName: text => text.toLowerCase(), personScope: () => null,
     SLUG_RE: /^(speech|legal)-(\d+)$/, DIVISION_SLUG_RE: /^division-/,
     SEARCH_PER_DEFAULT: 20, SEARCH_PER_MAX: 200, SEARCH_WINDOW_TOPK: 200, SEARCH_TOPK_MAX: 200,
-    SEARCH_WINDOW_CACHE_TTL: 3600, SEARCH_CACHE_TTL: 600,
+    SEARCH_WINDOW_CACHE_TTL: 3600, SEARCH_FALLBACK_CACHE_TTL: 60, SEARCH_CACHE_TTL: 600,
     sha256Hex: async text => text, cacheRequest: (kind, key) => new Request('https://cache.test/' + kind + '/' + encodeURIComponent(key)),
-    cacheBypass: () => false, rateLimited: async () => null,
+    cacheBypass: () => false, rateLimited: async () => { limits.push(1); return null; },
     caches: { default: {
-      match: async key => cache.get(key.url)?.clone(),
-      put: async (key, response) => { writes.push({ key: key.url, response: response.clone() }); cache.set(key.url, response); },
+      match: async key => {
+        const entry = cache.get(key.url);
+        return entry && Date.now() < entry.expires ? entry.response.clone() : undefined;
+      },
+      put: async (key, response) => {
+        writes.push({ key: key.url, response: response.clone() });
+        const seconds = Number(response.headers.get('cache-control').match(/max-age=(\d+)/)[1]);
+        cache.set(key.url, { response, expires: Date.now() + seconds * 1000 });
+      },
     } },
     ragBase: () => 'https://fake-upstream.test', sourceIdentity: { user_agent: 'opax-test' },
     fetch: async (input, init) => {
@@ -56,10 +63,10 @@ function fixture(upstream = answer) {
     },
   };
   const worker = runInNewContext(code + ';({apiSearch,apiUnifiedSearch,searchWindow})', context);
-  return { calls, writes, worker,
+  return { calls, writes, worker, limits,
     window: (mode = 'hybrid', signal) => worker.searchWindow(env, { q: 'housing', mode, kind: 'speech', topK: 2, url: new URL('https://local.test/api/search?state=federal'), signal }),
     run: async (params = {}, { unified = false, signal } = {}) => {
-      const url = new URL('https://local.test/api/' + (unified ? 'search-all' : 'search') + '?' + new URLSearchParams({ q: 'housing', kind: 'speech', top_k: '2', state: 'federal', ...params }));
+      const url = new URL('https://local.test/api/' + (unified ? 'search-all' : 'search') + '?' + new URLSearchParams(Object.entries({ q: 'housing', kind: 'speech', top_k: '2', state: 'federal', ...params }).filter(([, value]) => value !== undefined)));
       const response = await worker[unified ? 'apiUnifiedSearch' : 'apiSearch'](new Request(url, { signal }), url, env, ctx);
       await Promise.all(pendingWrites);
       return { response, data: await response.json() };
@@ -76,16 +83,57 @@ function assertSameWindow(calls) {
   return { firstFeatures, nextFeatures, firstReranker, nextReranker };
 }
 
-for (const mode of ['hybrid', 'semantic']) test(`${mode} deadline aborts the upstream and returns marked keyword results without caching`, async t => {
-  t.mock.timers.enable({ apis: ['setTimeout'] });
+for (const mode of ['hybrid', 'semantic']) test(`${mode} at 7 seconds wins over an already answered keyword hedge`, async t => {
+  t.mock.timers.enable({ apis: ['setTimeout', 'Date'] });
+  const log = t.mock.method(console, 'info', () => {});
+  const f = fixture(call => call.body.features.includes('semantic') ? new Promise(resolve => setTimeout(() => resolve(answer()), 7000)) : answer());
+  let completed = false;
+  const work = f.run({ mode }).then(result => { completed = true; return result; });
+  await setImmediate();
+  t.mock.timers.tick(KEYWORD_HEDGE_MS - 1);
+  await setImmediate();
+  assert.equal(f.calls.length, 1);
+  t.mock.timers.tick(1);
+  await setImmediate();
+  assert.equal(f.calls.length, 2);
+  assert.equal(f.calls[0].signal.aborted, false, 'the hedge does not cancel the primary');
+  assert.equal(completed, false, 'keyword waits while the preferred mode can still answer');
+  assert.equal(assertSameWindow(f.calls).nextReranker, 'noop');
+  t.mock.timers.tick(2000);
+  const { response, data } = await work;
+  assert.equal(response.status, 200);
+  assert.equal(data.mode_used, mode);
+  assert.equal(data.fallback, undefined);
+  assert.equal(log.mock.callCount(), 0);
+});
+
+test('normal fast hybrid starts no keyword call, even after the hedge time passes', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout', 'Date'] });
+  const f = fixture(() => new Promise(resolve => setTimeout(() => resolve(answer()), 3580)));
+  const work = f.run();
+  await setImmediate();
+  t.mock.timers.tick(3580);
+  const { data } = await work;
+  assert.equal(data.mode_used, 'hybrid');
+  t.mock.timers.tick(SEARCH_RETRIEVAL_MS);
+  await setImmediate();
+  assert.equal(f.calls.length, 1);
+});
+
+for (const mode of ['hybrid', 'semantic']) test(`${mode} hanging returns its keyword hedge at the 10 second cap`, async t => {
+  t.mock.timers.enable({ apis: ['setTimeout', 'Date'] });
   const f = fixture(call => call.body.features.includes('semantic') ? hang() : answer());
-  const work = f.run({ mode });
+  let completed = false;
+  const work = f.run({ mode }).then(result => { completed = true; return result; });
   await setImmediate();
-  assert.equal(f.calls.length, 1);
-  t.mock.timers.tick(SEMANTIC_SEARCH_MS - 1);
+  t.mock.timers.tick(KEYWORD_HEDGE_MS);
   await setImmediate();
+  assert.equal(f.calls.length, 2);
   assert.equal(f.calls[0].signal.aborted, false);
-  assert.equal(f.calls.length, 1);
+  assert.equal(completed, false);
+  t.mock.timers.tick(SEARCH_RETRIEVAL_MS - KEYWORD_HEDGE_MS - 1);
+  await setImmediate();
+  assert.equal(completed, false);
   t.mock.timers.tick(1);
   const { response, data } = await work;
   assert.equal(f.calls[0].signal.aborted, true);
@@ -99,14 +147,15 @@ for (const mode of ['hybrid', 'semantic']) test(`${mode} deadline aborts the ups
   const { nextFeatures, nextReranker } = assertSameWindow(f.calls);
   assert.deepEqual(nextFeatures, ['keyword']);
   assert.equal(nextReranker, 'noop');
-  assert.equal(f.writes.length, 0, 'neither the window nor its page is cached');
+  assert.equal(f.writes.length, 1, 'only the retrieval window is cached');
+  assert.equal(f.writes[0].response.headers.get('cache-control'), 'public, max-age=60');
 });
 
 for (const [failure, fail] of [
   ['HTTP error', () => new Response('', { status: 502 })],
   ['network error', () => { throw new Error('Fixture connection lost'); }],
   ['invalid JSON', () => new Response('{')],
-]) test(`${failure} recovers from semantic to keyword`, async () => {
+]) test(`${failure} recovers immediately from semantic to keyword`, async () => {
   const f = fixture(call => call.body.features.includes('semantic') ? fail() : answer());
   const { response, data } = await f.run({ mode: 'semantic' });
   assert.equal(response.status, 200);
@@ -114,34 +163,58 @@ for (const [failure, fail] of [
   assert.equal(data.mode_used, 'keyword');
   assert.equal(data.fallback, 'semantic_error');
   assertSameWindow(f.calls);
-  assert.equal(f.writes.length, 0);
+  assert.equal(f.writes.length, 1);
 });
 
-test('keyword failure recovers through semantic with the same window', async () => {
-  const f = fixture(call => call.body.features[0] === 'keyword' ? new Response('', { status: 503 }) : answer());
-  const { response, data } = await f.run({ mode: 'keyword' });
+test('failed keyword hedge never discards a working semantic primary', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout', 'Date'] });
+  const f = fixture(call => call.body.features.includes('semantic')
+    ? new Promise(resolve => setTimeout(() => resolve(answer()), 7000)) : new Response('', { status: 503 }));
+  const work = f.run({ mode: 'semantic' });
+  await setImmediate();
+  t.mock.timers.tick(KEYWORD_HEDGE_MS);
+  await setImmediate();
+  assert.equal(f.calls.length, 2);
+  t.mock.timers.tick(2000);
+  const { response, data } = await work;
   assert.equal(response.status, 200);
-  assert.equal(data.mode, 'keyword');
   assert.equal(data.mode_used, 'semantic');
-  assert.equal(data.fallback, 'keyword_error');
-  assert.deepEqual(assertSameWindow(f.calls).nextFeatures, ['semantic']);
-  assert.equal(response.headers.get('cache-control'), 'no-store');
-  assert.equal(f.writes.length, 0);
+  assert.equal(data.fallback, undefined);
 });
 
-test('hybrid recovers through semantic when the keyword service fails', async () => {
-  const f = fixture(call => call.body.features.includes('keyword') ? new Response('', { status: 503 }) : answer());
-  const { response, data } = await f.run();
-  assert.equal(response.status, 200);
-  assert.equal(data.mode, 'hybrid');
-  assert.equal(data.mode_used, 'semantic');
-  assert.equal(data.fallback, 'hybrid_error');
-  assert.deepEqual(f.calls.map(call => call.body.features), [['keyword', 'semantic'], ['keyword'], ['semantic']]);
-  const bodies = f.calls.map(({ body: { features, reranker, ...body } }) => body);
-  assert.deepEqual(bodies[1], bodies[0]);
-  assert.deepEqual(bodies[2], bodies[0]);
-  assert.equal(response.headers.get('cache-control'), 'no-store');
+for (const params of [
+  { mode: 'keyword' },
+  { q: '*', mode: 'keyword', speaker: 'Robin Example', sort: 'newest', page: '1', per: '8', top_k: undefined },
+  { q: '*', mode: 'hybrid' },
+  { q: '*', mode: 'semantic' },
+]) test(`keyword-only intent never recovers semantically: ${JSON.stringify(params)}`, async () => {
+  const f = fixture(call => call.body.features.includes('semantic') ? answer() : new Response('', { status: 503 }));
+  const { response, data } = await f.run(params);
+  assert.equal(response.status, 503);
+  assert.deepEqual(data, { error: 'find failed' });
+  assert.equal(f.calls.length, 1);
+  assert.deepEqual(f.calls[0].body.features, ['keyword']);
   assert.equal(f.writes.length, 0);
+  if (params.speaker) {
+    assert.equal(f.calls[0].body.query, '*');
+    assert.equal(f.calls[0].body.top_k, 200);
+  }
+});
+
+test('person latest-speeches keyword request gets six seconds and no semantic recovery', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout', 'Date'] });
+  const f = fixture(hang);
+  const work = f.run({ q: '*', mode: 'keyword', speaker: 'Robin Example', page: '1', per: '8', sort: 'newest', top_k: undefined });
+  await setImmediate();
+  t.mock.timers.tick(KEYWORD_SEARCH_MS - 1);
+  await setImmediate();
+  assert.equal(f.calls.length, 1);
+  assert.equal(f.calls[0].signal.aborted, false);
+  t.mock.timers.tick(1);
+  const { response } = await work;
+  assert.equal(response.status, 503);
+  assert.equal(f.calls[0].signal.aborted, true);
+  assert.equal(f.calls.length, 1);
 });
 
 test('both failed modes produce a retryable, uncached 503', async () => {
@@ -151,64 +224,73 @@ test('both failed modes produce a retryable, uncached 503', async () => {
   assert.deepEqual(data, { error: 'find failed' });
   assert.equal(response.headers.get('retry-after'), '5');
   assert.equal(response.headers.get('cache-control'), 'no-store');
-  assert.equal(f.calls.length, 3);
+  assert.equal(f.calls.length, 2);
   assert.equal(f.writes.length, 0);
   assert.equal(await f.window(), null, 'direct searchWindow callers retain their failure shape');
 });
 
-test('both hanging modes finish after their combined 10 second budget', async t => {
-  t.mock.timers.enable({ apis: ['setTimeout'] });
+test('both hanging modes stop at the shared 10 second cap', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout', 'Date'] });
   const f = fixture(hang);
   const work = f.run();
   await setImmediate();
-  t.mock.timers.tick(SEMANTIC_SEARCH_MS);
+  t.mock.timers.tick(KEYWORD_HEDGE_MS);
   await setImmediate();
   assert.equal(f.calls.length, 2);
   assert.equal(f.calls[1].signal.aborted, false);
-  t.mock.timers.tick(KEYWORD_SEARCH_MS);
+  t.mock.timers.tick(SEARCH_RETRIEVAL_MS - KEYWORD_HEDGE_MS);
   const { response } = await work;
   assert.equal(response.status, 503);
+  assert.equal(f.calls[0].signal.aborted, true);
   assert.equal(f.calls[1].signal.aborted, true);
-  assert.equal(SEMANTIC_SEARCH_MS + KEYWORD_SEARCH_MS, 10_000);
 });
 
-test('a stalled response body also reaches the semantic deadline', async t => {
-  t.mock.timers.enable({ apis: ['setTimeout'] });
+test('a stalled response body also reaches the 10 second deadline', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout', 'Date'] });
   const f = fixture((_call, number) => number === 1 ? { ok: true, json: hang } : answer());
   const work = f.run();
   await setImmediate();
-  t.mock.timers.tick(SEMANTIC_SEARCH_MS);
+  t.mock.timers.tick(KEYWORD_HEDGE_MS);
+  await setImmediate();
+  t.mock.timers.tick(SEARCH_RETRIEVAL_MS - KEYWORD_HEDGE_MS);
   const { data } = await work;
   assert.equal(data.fallback, 'hybrid_timeout');
   assert.equal(data.mode_used, 'keyword');
 });
 
-test('semantic recovery after a keyword error uses only the remaining total budget', async t => {
-  t.mock.timers.enable({ apis: ['setTimeout'] });
-  const f = fixture((_call, number) => number === 2 ? new Response('', { status: 503 }) : hang());
-  const work = f.run();
-  await setImmediate();
-  t.mock.timers.tick(SEMANTIC_SEARCH_MS);
-  await setImmediate();
-  assert.equal(f.calls.length, 3);
-  assert.equal(f.calls[2].signal.aborted, false);
-  t.mock.timers.tick(KEYWORD_SEARCH_MS);
-  const { response } = await work;
-  assert.equal(response.status, 503);
-  assert.equal(f.calls[2].signal.aborted, true);
-});
-
-test('caller cancellation stops the current attempt without a recovery call', async () => {
+for (const afterHedge of [false, true]) test(`caller cancellation aborts retrieval without a fallback, after hedge: ${afterHedge}`, async t => {
+  t.mock.timers.enable({ apis: ['setTimeout', 'Date'] });
+  const log = t.mock.method(console, 'info', () => {});
   const f = fixture(hang), parent = new AbortController();
   const work = f.window('hybrid', parent.signal);
   const rejected = assert.rejects(work, { name: 'AbortError' });
   await setImmediate();
+  if (afterHedge) { t.mock.timers.tick(KEYWORD_HEDGE_MS); await setImmediate(); }
   parent.abort();
   await rejected;
-  assert.equal(f.calls.length, 1);
-  assert.equal(f.calls[0].signal.aborted, true);
+  assert.equal(f.calls.length, afterHedge ? 2 : 1);
+  assert.ok(f.calls.every(call => call.signal.aborted));
   await assert.rejects(f.window('hybrid', parent.signal), { name: 'AbortError' });
-  assert.equal(f.calls.length, 1);
+  assert.equal(log.mock.callCount(), 0);
+});
+
+test('one structured fallback log contains modes, reason and elapsed time without query or filter values', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout', 'Date'] });
+  const logs = [];
+  t.mock.method(console, 'info', value => logs.push(value));
+  const query = 'PRIVATE_QUERY_SENTINEL', speaker = 'Private Fixture Speaker', topic = 'PRIVATE_TOPIC_SENTINEL';
+  const f = fixture(call => call.body.features.includes('semantic')
+    ? new Promise((_, reject) => setTimeout(() => reject(new Error(query + speaker + topic)), 800)) : answer());
+  const params = { q: query, speaker, topic, per: '1', page: '1' };
+  const work = f.run(params);
+  await setImmediate();
+  t.mock.timers.tick(800);
+  await work;
+  await f.run({ ...params, page: '2' });
+  assert.equal(logs.length, 1, 'cached window reuse does not emit another upstream fallback');
+  assert.equal(typeof logs[0], 'string');
+  assert.deepEqual(JSON.parse(logs[0]), { event: 'search_fallback', requested_mode: 'hybrid', mode_used: 'keyword', reason: 'hybrid_error', elapsed_ms: 800 });
+  for (const value of [query, speaker, topic]) assert.equal(logs[0].includes(value), false);
 });
 
 test('normal hybrid preserves result and page fields, reranking and normal caches', async () => {
@@ -235,12 +317,30 @@ test('normal hybrid preserves result and page fields, reranking and normal cache
   assert.equal(f.calls.length, 1, 'normal pages and windows are reused');
 });
 
-test('a fallback does not hide a recovered hybrid on the next request', async () => {
+test('fallback pages share one 60 second window and retry hybrid only after it expires', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout', 'Date'] });
   let recovered = false;
-  const f = fixture(call => !recovered && call.body.features.includes('semantic') ? new Response('', { status: 500 }) : answer());
-  assert.equal((await f.run()).data.fallback, 'hybrid_error');
+  const set = { ...payload, resources: Object.fromEntries([123, 124, 125].map((id, index) => [String(id), { ...payload.resources.fixture, slug: 'speech-' + id,
+    fields: { body: { paragraphs: { passage: { text: 'Housing public record.', score: 0.9 - index / 10, score_type: 'VECTOR' } } } } }])) };
+  const f = fixture(call => !recovered && call.body.features.includes('semantic') ? new Response('', { status: 500 }) : Response.json(set));
+  const first = await f.run({ page: '1', per: '1', top_k: '3' });
   recovered = true;
-  const { data } = await f.run();
+  const second = await f.run({ page: '2', per: '1', top_k: '3' });
+  for (const page of [first, second]) {
+    assert.equal(page.data.mode_used, 'keyword');
+    assert.equal(page.data.fallback, 'hybrid_error');
+    assert.equal(page.response.headers.get('cache-control'), 'no-store');
+    assert.equal(page.data.total, 3);
+  }
+  assert.equal(first.data.results[0].slug, 'speech-123');
+  assert.equal(second.data.results[0].slug, 'speech-124');
+  assert.equal(f.calls.length, 2, 'paging reuses the original fallback set');
+  assert.equal(f.limits.length, 1, 'paging uses no further retrieval quota');
+  assert.equal(f.writes.length, 1);
+  assert.equal(f.writes[0].response.headers.get('cache-control'), 'public, max-age=60');
+  assert.match(f.writes[0].key, /-bounded-v1/);
+  t.mock.timers.tick(60_001);
+  const { data } = await f.run({ page: '1', per: '1', top_k: '3' });
   assert.equal(data.mode_used, 'hybrid');
   assert.equal(data.fallback, undefined);
   assert.equal(f.calls.length, 3);
@@ -257,7 +357,7 @@ test('web, voice and MCP unified search retain their rows and expose fallback me
   assert.equal(data.count, 1);
   assert.deepEqual(data.warnings, []);
   assert.equal(data.catalog_matches, 0);
-  assert.equal(f.writes.length, 0);
+  assert.equal(f.writes.length, 1);
 });
 
 test('unified document search returns no-store and Retry-After when both modes fail', async () => {
