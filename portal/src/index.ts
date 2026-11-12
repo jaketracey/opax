@@ -94,6 +94,7 @@ import { cacheKeyParams } from './cache-key'
 import { communityMcp } from './community-mcp'
 import { expireVoiceSessions, voiceRoute } from './voice'
 import { appEdition } from './app-edition'
+import { appVicElection } from './app-vic-election'
 import { appManifest } from './app-manifest'
 import { appJson } from './app-http'
 import { proxyPostHog } from './posthog'
@@ -7194,6 +7195,7 @@ export default {
     // proxy or general retrieval dispatch. No composition callback is supplied.
     if (url.pathname.startsWith('/api/app/v1/edition/')) return communityResponse(await appEdition(request, env))
     if (url.pathname === '/api/app/v1/manifest') return communityResponse(await appManifest(request, env))
+    if (url.pathname === '/api/app/v1/vic-election' || url.pathname.startsWith('/api/app/v1/vic-election/')) return communityResponse(await appVicElection(request, env))
     if (url.pathname.startsWith('/api/app/')) return communityResponse(appJson(request, {error:'not_found'}, 404))
     if(url.pathname==='/map' && ['GET','HEAD'].includes(request.method)) {
       const shell=await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/map.html`))

@@ -91,6 +91,7 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
   const data = {authorisation:VIC_ELECTION_AUTHORISATION_LINE,
     corrections:{email:VIC_ELECTION_CORRECTIONS_EMAIL,response:VIC_ELECTION_CORRECTIONS_RESPONSE},
     updated,checked:config.updated,term_start:config.term_start,term_end:config.term_end,election_day:config.election_day,
+    notice:config.notice ?? null,
     nominations_close:config.nominations_close,enrolment_close:config.enrolment_close,postal_close:config.postal_close,
     results_fetched:results.fetched,sources:config.sources,licence:config.licence,boundaries:config.boundaries,
     speech_updated:roster.meta.generated,division_start:detailed.map(d=>day(d.date)).sort()[0] || null,

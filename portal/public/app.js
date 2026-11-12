@@ -7284,7 +7284,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=16a8098e60").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=24a4bae3a9").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
