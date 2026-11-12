@@ -4,18 +4,20 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {timingSafeEqual} from 'node:crypto';
-import {readFileSync,mkdtempSync} from 'node:fs';
+import {readFileSync,mkdtempSync,statSync,readdirSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {build} from 'esbuild';
-import {loadConfig,renderTools,planSync,formatPlan,parseArgs,differences} from '../voice/agent-sync.mjs';
+import {loadConfig,renderTools,planSync,formatPlan,parseArgs,differences,run,samePrompt} from '../voice/agent-sync.mjs';
 
 crypto.subtle.timingSafeEqual ??= timingSafeEqual;
 const folder=mkdtempSync(join(tmpdir(),'opax-voice-ask-test-'));
-await build({entryPoints:[new URL('../src/voice.ts',import.meta.url).pathname,new URL('../src/voice-sources.ts',import.meta.url).pathname],outdir:folder,bundle:true,platform:'node',format:'esm',logLevel:'error'});
+await build({entryPoints:[new URL('../src/voice.ts',import.meta.url).pathname,new URL('../src/voice-sources.ts',import.meta.url).pathname,new URL('../src/voice-ask.ts',import.meta.url).pathname,new URL('../src/ask-caller-budget.ts',import.meta.url).pathname],outdir:folder,bundle:true,platform:'node',format:'esm',logLevel:'error'});
 const {voiceRoute,reserveVoiceSession,claimVoiceSession}=await import(pathToFileURL(join(folder,'voice.js')));
 const {voiceSource,spokenAnswer,plainCase,askOpaxResult}=await import(pathToFileURL(join(folder,'voice-sources.js')));
+const {voiceAsk}=await import(pathToFileURL(join(folder,'voice-ask.js')));
+const {callerBudgetMs,fallbackAllowanceMs,gatheredPayload,ASK_FALLBACK_FLOOR_MS}=await import(pathToFileURL(join(folder,'ask-caller-budget.js')));
 const stored=JSON.parse(readFileSync(new URL('./fixtures/voice-ask-payload.json',import.meta.url),'utf8'));
 const hash=async value=>Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value))).toString('hex');
 
@@ -25,9 +27,9 @@ function fixture({ask=async()=>Response.json(stored),searchRows=[]}={}){
   const statement=(sql,args=[])=>({bind(...values){return statement(sql,values)},async first(){return db.prepare(sql).get(...args)||null},async all(){return {results:db.prepare(sql).all(...args)}},async run(){db.prepare(sql).run(...args);return {success:true}}});
   const env={COMMUNITY_DB:{prepare:statement},COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',VOICE_ENABLED:'true',VOICE_AGENT_ID:'agent_test',ELEVENLABS_API_KEY:'server-only-test-key',VOICE_TOOL_SECRET:'t'.repeat(43),VOICE_MONTHLY_SECONDS:'40000',ASSETS:{async fetch(){return Response.json({})}}};
   const asked=[];
-  const askStub=async(input,sessionId,signal)=>{asked.push({input,sessionId,signal});return ask(input,sessionId,signal)};
+  const askStub=async(input,sessionId,signal,budgetMs)=>{asked.push({input,sessionId,signal,budgetMs});return ask(input,sessionId,signal,budgetMs)};
   const read=async()=>Response.json({results:searchRows,index_version:'0123456789abcdef'});
-  const call=(path,data,headers={'x-opax-voice-token':env.VOICE_TOOL_SECRET})=>voiceRoute(new Request('https://opax.test/api/voice/'+path,{method:'POST',headers:{'content-type':'application/json',...headers},body:JSON.stringify(data)}),env,{waitUntil(){}},read,askStub);
+  const call=(path,data,headers={'x-opax-voice-token':env.VOICE_TOOL_SECRET},signal)=>voiceRoute(new Request('https://opax.test/api/voice/'+path,{method:'POST',headers:{'content-type':'application/json',...headers},body:JSON.stringify(data),signal}),env,{waitUntil(){}},read,askStub);
   async function live(){
     const id=crypto.randomUUID(),timestamp=Math.floor(Date.now()/1000);
     db.prepare('INSERT INTO members(id,email,created_at) VALUES(?,?,?)').run(id,'reader@example.com',timestamp);
@@ -65,7 +67,7 @@ test('ask_opax calls Ask once per question and returns a spoken answer with labe
   const result=await response.json();
   assert.equal(f.asked.length,1);
   assert.equal(f.asked[0].input.question,'Who is the highest paid agency head (agency heads)?');
-  assert.equal(f.asked[0].sessionId,sid);assert.ok(f.asked[0].signal instanceof AbortSignal);
+  assert.equal(f.asked[0].sessionId,sid);assert.ok(f.asked[0].signal instanceof AbortSignal);assert.equal(f.asked[0].budgetMs,82_000);
   assert.deepEqual(Object.keys(result).sort(),['answer','answered','question','source_notice','source_url','sources','spoken_answer']);
   assert.equal(result.answered,true);
   // Answer first, at most four sentences, no citation markers or markdown, numbers in plain words.
@@ -155,6 +157,10 @@ test('agent config is valid JSON, every tool posts under /api/voice/tools/ and a
       assert.equal(tool.api_schema.method,'POST');
       assert.deepEqual(tool.api_schema.request_headers,{'x-opax-voice-token':{secret_id:'secret_example'}});
       assert.equal(tool.api_schema.request_body_schema.properties.session_id.dynamic_variable,'opax_session_id');
+      // LiteralJsonSchemaProperty: only one of these may be set (tools/get reference).
+      for(const [key,property] of Object.entries(tool.api_schema.request_body_schema.properties)) assert.ok(['description','dynamic_variable','constant_value','is_system_provided','is_omitted'].filter(f=>f in property).length<=1,tool.name+'.'+key);
+      assert.ok(['auto','force','off'].includes(tool.pre_tool_speech));assert.ok(['immediate','post_tool_speech','async'].includes(tool.execution_mode));
+      if('tool_call_sound' in tool) assert.ok(['typing','elevator1','elevator2','elevator3','elevator4'].includes(tool.tool_call_sound));
       assert.ok(tool.response_timeout_secs>=5&&tool.response_timeout_secs<=300);
     }
   }
@@ -162,27 +168,150 @@ test('agent config is valid JSON, every tool posts under /api/voice/tools/ and a
   assert.ok(ask&&ask.response_timeout_secs>=85,'ask_opax waits longer than the Worker bound');
   assert.equal(ask.pre_tool_speech,'force');
   const prompt=config.prompt.join('\n');
-  assert.match(prompt,/call ask_opax first/);assert.match(prompt,/holding line/);assert.match(prompt,/offer the sources/);
+  assert.match(prompt,/call ask_opax first/);assert.match(prompt,/holding line/);assert.match(prompt,/offer the sources/);assert.match(prompt,/dollar amount/);
+  assert.doesNotMatch(prompt,/on your screen|one point zero/);
   assert.doesNotMatch(raw,/—/);
   assert.doesNotMatch(raw,/sk_[a-z0-9]{20,}|xi-api-key/i);
 });
 
-test('agent sync is a dry-run plan by default and only touches this agent\'s tools',()=>{
+test('staging asks through STAGING_API the way its /api/ask is served; production asks in this Worker',async()=>{
+  for(const staging of [true,false]){
+    const forwarded=[],local=[];
+    const env={COMMUNITY_ORIGIN:staging?'https://staging.opax.test':'https://opax.test',...(staging?{STAGING_API:{async fetch(request){forwarded.push(request);return Response.json({answer:'Forwarded.'})}}}:{})};
+    const ask=voiceAsk(env,async request=>{local.push(request);return Response.json({answer:'Local.'})});
+    const controller=new AbortController();
+    const response=await ask({question:'How much is a federal backbencher paid?'},'session-1',controller.signal,82_000);
+    assert.equal((await response.json()).answer,staging?'Forwarded.':'Local.');
+    const [request]=staging?forwarded:local;
+    assert.equal(forwarded.length,staging?1:0);assert.equal(local.length,staging?0:1);
+    assert.equal(request.method,'POST');assert.equal(new URL(request.url).href,env.COMMUNITY_ORIGIN+'/api/ask');
+    assert.equal(request.headers.get('accept'),'application/json');assert.equal(request.headers.get('content-type'),'application/json');
+    assert.equal(request.headers.get('cf-connecting-ip'),'voice-ask:session-1');assert.equal(request.headers.get('x-opax-ask-budget-ms'),'82000');
+    assert.deepEqual(await request.json(),{question:'How much is a federal backbencher paid?'});
+    controller.abort();assert.equal(request.signal.aborted,true);
+  }
+});
+
+test('the provider hanging up aborts the Ask run',async()=>{
+  let seen;
+  const f=fixture({ask:(input,sessionId,signal)=>{seen=signal;return new Promise((_,reject)=>signal.addEventListener('abort',()=>reject(signal.reason),{once:true}))}});
+  const sid=await f.live(),hangup=new AbortController();
+  const pending=f.call('tools/ask_opax',{session_id:sid,question:'Who is the highest paid agency head?'},undefined,hangup.signal);
+  while(!seen) await new Promise(resolve=>setTimeout(resolve,1));
+  assert.equal(seen.aborted,false);
+  hangup.abort(new DOMException('Provider closed the request','AbortError'));
+  const response=await pending;
+  assert.equal(seen.aborted,true);
+  assert.equal(response.status,200);assert.match((await response.json()).spoken_answer,/could not finish/);
+  f.db.close();
+});
+
+test('a caller budget only shortens Ask, and when it runs short Ask returns what research gathered',()=>{
+  assert.equal(callerBudgetMs(null),undefined);assert.equal(callerBudgetMs('soon'),undefined);assert.equal(callerBudgetMs('-5'),undefined);
+  assert.equal(callerBudgetMs('82000'),82_000);assert.equal(callerBudgetMs('5'),1_000);assert.equal(callerBudgetMs('999999999'),150_000);
+  assert.equal(fallbackAllowanceMs(undefined,0),90_000);
+  assert.equal(fallbackAllowanceMs(100_000,70_000),30_000);
+  assert.equal(fallbackAllowanceMs(100_000,95_000),5_000);assert.ok(fallbackAllowanceMs(100_000,95_000)<ASK_FALLBACK_FLOOR_MS);
+  assert.equal(gatheredPayload(undefined),null);assert.equal(gatheredPayload({sources:[]}),null);
+  const research={mode:'loop',rounds:2,trail:[],failure:'timeout',sources:[{title:'Example Office Determination 2025',url:'https://opax.com.au/doc/legal-700001',kind:'legal',date:'2025-07-01'},{title:'Robin Example — PAY — 2025-02-05',url:'https://opax.com.au/doc/speech-800003',kind:'speech',speaker:'EXAMPLE, Robin'}]};
+  const gathered=gatheredPayload(research);
+  assert.equal(gathered.partial,true);assert.equal(gathered.answer,'');assert.equal(gathered.sources.length,2);
+  const voiced=askOpaxResult(gathered,'https://opax.test');
+  assert.match(voiced.spoken_answer,/^I ran out of time to write a full answer, but the research found 2 records on this\./);
+  assert.doesNotMatch(voiced.spoken_answer,/could not find|no record/i);
+  assert.deepEqual(voiced.sources.map(s=>[s.type,s.title,s.date]),[['Legislation','Example Office Determination 2025','2025-07-01'],['Speech','Robin Example: Pay','2025-02-05']]);
+});
+
+// A stand-in for the ElevenLabs agents and tools API, in memory.
+function provider({prompt='Old prompt',failAgentPatches=0,padPrompt=false,extraTools=[]}={}){
   const config=loadConfig(),origin='https://staging.opax.com.au';
   const [search]=renderTools(config,{origin,secretId:'secret_live'}).filter(t=>t.name==='search_records');
-  const agent={agent_id:'agent_x',conversation_config:{agent:{prompt:{prompt:'Old prompt',llm:'example-llm',tool_ids:['tool_search','tool_other']}}}};
-  const attached=[{id:'tool_search',tool_config:{...search,description:'Old description',extra_provider_field:1}},{id:'tool_other',tool_config:{name:'end_call',type:'system'}}];
-  const plan=planSync(config,agent,attached,{origin});
-  assert.equal(plan.secret_id,'secret_live');assert.deepEqual(plan.problems,[]);
-  assert.deepEqual(plan.tools.find(t=>t.name==='ask_opax').action,'create');
-  const update=plan.tools.find(t=>t.name==='search_records');
-  assert.equal(update.action,'update');assert.deepEqual(update.changes.map(c=>c.path),['description']);
-  assert.deepEqual(plan.kept,[{id:'tool_other',name:'end_call'}]);
-  assert.ok(plan.prompt.changed);
-  const text=formatPlan(plan);assert.match(text,/create ask_opax/);assert.match(text,/keep   end_call/);assert.doesNotMatch(text,/secret_example/);
+  const tools=new Map([['tool_search',{...search,description:'Old description'}],['tool_end',{name:'end_call',type:'system'}],...extraTools]);
+  const agent={agent_id:'agent_x',conversation_config:{agent:{prompt:{prompt,llm:'example-llm',tool_ids:['tool_search','tool_end']}}}};
+  const calls=[];let next=1;
+  const call=async(method,path,body)=>{
+    calls.push(method+' '+path);
+    const url=new URL('https://api.test'+path),tool=/^\/v1\/convai\/tools\/(.+)$/.exec(url.pathname);
+    if(url.pathname==='/v1/convai/agents/agent_x'&&method==='GET') return structuredClone(agent);
+    if(url.pathname==='/v1/convai/agents/agent_x'&&method==='PATCH'){
+      if(failAgentPatches-->0) throw new Error('PATCH /v1/convai/agents/agent_x -> 500: unavailable');
+      const p=structuredClone(body.conversation_config.agent.prompt);agent.conversation_config.agent.prompt={...p,prompt:padPrompt?p.prompt+'  \r\n':p.prompt};return {};
+    }
+    if(url.pathname==='/v1/convai/tools'&&method==='GET') return {tools:[...tools].filter(([,c])=>c.name.startsWith(url.searchParams.get('search'))).map(([id,c])=>({id,tool_config:structuredClone(c)})),has_more:false};
+    if(url.pathname==='/v1/convai/tools'&&method==='POST'){const id='tool_new_'+next++;tools.set(id,{...structuredClone(body.tool_config),provider_default:1});return {id}}
+    if(tool&&method==='GET') return {id:tool[1],tool_config:structuredClone(tools.get(tool[1]))};
+    if(tool&&method==='PATCH'){tools.set(tool[1],{...structuredClone(body.tool_config),provider_default:1});return {}}
+    throw new Error('unexpected '+method+' '+path);
+  };
+  return {agent,tools,calls,call,origin};
+}
+const quiet=()=>{const lines=[];return {lines,log:line=>lines.push(String(line))}};
+
+test('agent sync: a dry run reads only; the plan matches attached tools by name',async()=>{
+  const p=provider(),out=quiet();
+  assert.equal(await run({agent:'agent_x',origin:p.origin},{call:p.call,log:out.log,backupDir:mkdtempSync(join(tmpdir(),'opax-voice-backup-'))}),0);
+  assert.ok(p.calls.every(c=>c.startsWith('GET ')),p.calls.join('\n'));
+  const text=out.lines.join('\n');
+  assert.match(text,/create ask_opax/);assert.match(text,/update search_records \(tool_search\)/);assert.match(text,/keep   end_call/);assert.match(text,/Dry run: nothing changed/);
   assert.deepEqual(parseArgs(['--agent','agent_x']),{apply:false,agent:'agent_x'});
-  assert.deepEqual(parseArgs(['--agent','agent_x','--apply','--secret-id','s1']),{apply:true,agent:'agent_x',secretId:'s1'});
-  assert.throws(()=>parseArgs(['--force']));
-  assert.deepEqual(planSync(config,{conversation_config:{agent:{prompt:{}}}},[],{origin}).problems.length,1);
+  assert.deepEqual(parseArgs(['--agent','agent_x','--apply','--secret-id','s1','--restore','/tmp/b.json']),{apply:true,agent:'agent_x',secretId:'s1',restore:'/tmp/b.json'});
+  assert.throws(()=>parseArgs(['--force']));assert.throws(()=>parseArgs(['--agent']));
   assert.deepEqual(differences({a:{b:1}},{a:{b:1,c:2}}),[]);
+  assert.ok(samePrompt('a\nb','a  \r\nb\n'));assert.ok(!samePrompt('a b','a  b'));
+  assert.equal(planSync(loadConfig(),{conversation_config:{agent:{prompt:{}}}},[],{origin:p.origin}).problems.length,1);
+});
+
+test('agent sync --apply backs up first, attaches the tools, then re-checks to in sync; restore puts it back',async()=>{
+  const p=provider({padPrompt:true}),out=quiet(),dir=mkdtempSync(join(tmpdir(),'opax-voice-backup-'));
+  assert.equal(await run({agent:'agent_x',origin:p.origin,apply:true},{call:p.call,log:out.log,backupDir:dir}),0,out.lines.join('\n'));
+  const [file]=readdirSync(dir);assert.match(file,/^agent_x-.+\.json$/);
+  assert.equal(statSync(join(dir,file)).mode&0o777,0o600);
+  const backup=JSON.parse(readFileSync(join(dir,file),'utf8'));
+  assert.equal(backup.agent.conversation_config.agent.prompt.prompt,'Old prompt');assert.equal(backup.attached.length,2);
+  const text=out.lines.join('\n');
+  assert.ok(text.includes(join(dir,file)));assert.doesNotMatch(text,/saved_at|"conversation_config"/);
+  assert.match(text,/--restore /);assert.match(text,/Check after apply/);assert.match(text,/In sync\./);
+  // Writes come after the backup, tools before the agent.
+  const writes=p.calls.filter(c=>!c.startsWith('GET '));
+  assert.equal(writes.at(-1),'PATCH /v1/convai/agents/agent_x');assert.equal(writes.filter(c=>c==='POST /v1/convai/tools').length,7);
+  const ids=p.agent.conversation_config.agent.prompt.tool_ids;
+  assert.equal(ids.length,9);assert.ok(ids.includes('tool_search')&&ids.includes('tool_end'));
+  assert.equal(p.agent.conversation_config.agent.prompt.llm,'example-llm');
+  // Restore: a dry run, then the agent and the updated tool as they were.
+  const dry=quiet();
+  assert.equal(await run({agent:'agent_x',origin:p.origin,restore:join(dir,file)},{call:p.call,log:dry.log,backupDir:dir}),0);
+  assert.match(dry.lines.join('\n'),/prompt and tool_ids: restore[\s\S]*restore search_records \(tool_search\): description[\s\S]*detach tool_new_1/);
+  const undo=quiet();
+  assert.equal(await run({agent:'agent_x',origin:p.origin,restore:join(dir,file),apply:true},{call:p.call,log:undo.log,backupDir:dir}),0,undo.lines.join('\n'));
+  assert.deepEqual(p.agent.conversation_config.agent.prompt.tool_ids,['tool_search','tool_end']);
+  assert.ok(samePrompt(p.agent.conversation_config.agent.prompt.prompt,'Old prompt'));
+  assert.equal(p.tools.get('tool_search').description,'Old description');
+  assert.equal(readdirSync(dir).length,2);
+});
+
+test('agent sync: a failed agent update says what was left, and a re-run reuses the tools it created',async()=>{
+  const p=provider({failAgentPatches:1}),dir=mkdtempSync(join(tmpdir(),'opax-voice-backup-'));
+  await assert.rejects(run({agent:'agent_x',origin:p.origin,apply:true},{call:p.call,log:()=>{},backupDir:dir}),error=>{
+    assert.match(error.message,/Agent update failed[\s\S]*agent itself is unchanged[\s\S]*Created, not attached: ask_opax tool_new_1;[\s\S]*Updated in place[\s\S]*search_records tool_search[\s\S]*--restore/);
+    return true;
+  });
+  assert.deepEqual(p.agent.conversation_config.agent.prompt.tool_ids,['tool_search','tool_end']);
+  const posts=p.calls.filter(c=>c==='POST /v1/convai/tools').length,out=quiet();
+  assert.equal(await run({agent:'agent_x',origin:p.origin,apply:true},{call:p.call,log:out.log,backupDir:dir}),0,out.lines.join('\n'));
+  assert.equal(p.calls.filter(c=>c==='POST /v1/convai/tools').length,posts,'no duplicate tools');
+  assert.match(out.lines.join('\n'),/same   ask_opax \(tool_new_1, in workspace, not attached\)/);
+  assert.ok(p.agent.conversation_config.agent.prompt.tool_ids.includes('tool_new_1'));
+});
+
+test('agent sync never reuses another environment\'s tool and fails the check when the provider differs',async()=>{
+  const config=loadConfig();
+  const [prodAsk]=renderTools(config,{origin:'https://opax.com.au',secretId:'secret_live'}).filter(t=>t.name==='ask_opax');
+  const p=provider({extraTools:[['tool_prod_ask',prodAsk]]}),out=quiet();
+  const state={agent:p.agent,attached:[],workspace:[{id:'tool_prod_ask',tool_config:prodAsk}]};
+  assert.equal(planSync(config,state.agent,state.attached,{origin:p.origin,workspace:state.workspace,secretId:'s'}).tools.find(t=>t.name==='ask_opax').action,'create');
+  // A provider that silently drops a field leaves the re-check out of sync: non-zero exit.
+  const drop={...p,call:async(method,path,body)=>{if(method==='POST'&&path==='/v1/convai/tools'){const {pre_tool_speech,...rest}=body.tool_config;return p.call(method,path,{tool_config:rest})}return p.call(method,path,body)}};
+  assert.equal(await run({agent:'agent_x',origin:p.origin,apply:true},{call:drop.call,log:out.log,backupDir:mkdtempSync(join(tmpdir(),'opax-voice-backup-'))}),1);
+  assert.match(out.lines.join('\n'),/NOT IN SYNC after apply/);
+  assert.ok(!p.agent.conversation_config.agent.prompt.tool_ids.includes('tool_prod_ask'));
 });

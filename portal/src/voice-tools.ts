@@ -8,11 +8,24 @@ import {askOpaxResult, voiceSources} from './voice-sources'
 type Data = Record<string, unknown>
 export type PublicReader = (path: string) => Promise<Response>
 /** The same /api/ask entry point readers use, called in-process with a JSON (not streamed) reply. */
-export type VoiceAsk = (input: {question: string}, sessionId: string, signal: AbortSignal) => Promise<Response>
+export type VoiceAsk = (input: {question: string}, sessionId: string, signal: AbortSignal, budgetMs: number) => Promise<Response>
 /** ElevenLabs allows a webhook tool 5 to 300 seconds (response_timeout_secs); voice/agent-config.json sets 90 for ask_opax.
  * Ask's own hard wall is 60s; this leaves its routed fallback time before the provider gives up. */
 export const ASK_OPAX_WAIT_MS = 85_000
 export const ASK_OPAX_QUESTION_CHARS = 500
+/** Ask is told this much less than the wait, so its own reply (or what research gathered) arrives before the abort. */
+export const ASK_OPAX_REPLY_MARGIN_MS = 3_000
+
+/** Aborts when any input does; AbortSignal.any where the runtime has it. */
+export function anySignal(signals: AbortSignal[]): AbortSignal {
+  if (typeof AbortSignal.any === 'function') return AbortSignal.any(signals)
+  const controller = new AbortController()
+  for (const signal of signals) {
+    if (signal.aborted) { controller.abort(signal.reason); break }
+    signal.addEventListener('abort', () => controller.abort(signal.reason), {once: true})
+  }
+  return controller.signal
+}
 
 /** Fold the optional person or topic into the question when it does not already name them. */
 export function askOpaxQuestion(args: Data): string {
@@ -85,12 +98,14 @@ function compact(value: unknown, budget = {left: 15_000}, depth = 0): unknown {
   return undefined
 }
 
-export async function runVoiceTool(name: string, args: Data, env: Env, readPublic: PublicReader, ask?: VoiceAsk): Promise<Data> {
+export async function runVoiceTool(name: string, args: Data, env: Env, readPublic: PublicReader, ask?: VoiceAsk, caller?: AbortSignal): Promise<Data> {
   const origin = env.COMMUNITY_ORIGIN
   if (name === 'ask_opax') {
     if (!ask) throw new CommunityError(503, 'Ask is not available to voice here.')
     const question = askOpaxQuestion(args)
-    const response = await ask({question}, String(args.session_id), AbortSignal.timeout(ASK_OPAX_WAIT_MS)).catch(error => {
+    // The provider hanging up (the tool request's signal) stops Ask as well as the wait running out.
+    const signal = anySignal([...(caller ? [caller] : []), AbortSignal.timeout(ASK_OPAX_WAIT_MS)])
+    const response = await ask({question}, String(args.session_id), signal, ASK_OPAX_WAIT_MS - ASK_OPAX_REPLY_MARGIN_MS).catch(error => {
       if (error instanceof Error && (error.name === 'TimeoutError' || error.name === 'AbortError')) return Response.json({error: 'timeout'}, {status: 504})
       throw error
     })

@@ -243,7 +243,7 @@ export async function voiceRoute(req: Request, env: VoiceEnv, ctx: ExecutionCont
       const session = await env.COMMUNITY_DB.prepare("SELECT v.id FROM voice_sessions v JOIN members m ON m.id=v.member_id WHERE v.id=? AND v.state='active' AND v.started_at+v.reserved_seconds>? AND m.disabled=0").bind(sessionId, now()).first()
       if (!session) throw new CommunityError(403, 'This voice session has ended.')
       await limit(env, 'voice-tool:' + sessionId, 30, 60)
-      return json(await runVoiceTool(path.slice(6), args, env, readPublic, ask))
+      return json(await runVoiceTool(path.slice(6), args, env, readPublic, ask, req.signal))
     }
     if (String(env.COMMUNITY_ENABLED) !== 'true') throw new CommunityError(503, 'Community access is being prepared.')
     if (path === 'status' && req.method === 'GET') {

@@ -96,6 +96,8 @@ import { cacheKeyParams } from './cache-key'
 import { searchFind, type SearchRetrieval } from './search-find'
 import { communityMcp } from './community-mcp'
 import { expireVoiceSessions, voiceRoute } from './voice'
+import { voiceAsk } from './voice-ask'
+import { ASK_BUDGET_HEADER, ASK_FALLBACK_FLOOR_MS, callerBudgetMs, fallbackAllowanceMs, gatheredPayload } from './ask-caller-budget'
 import { appEdition } from './app-edition'
 import { appVicElection } from './app-vic-election'
 import { appManifest } from './app-manifest'
@@ -6767,7 +6769,9 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
   }
   // The loop attempt is bounded separately; failed research must not subtract
   // its wall time from the old path's two 40s attempts plus verification.
-  let budget = new AskDeadline(Math.max(0, AGENTIC_BUDGET_MS - (Date.now() - started)), request.signal)
+  // A caller with less time (voice's ask_opax) shortens both allowances; without the header nothing changes.
+  const callerMs = callerBudgetMs(request.headers.get(ASK_BUDGET_HEADER)), callerEnd = callerMs === undefined ? undefined : started + callerMs
+  let budget = new AskDeadline(Math.max(0, Math.min(AGENTIC_BUDGET_MS, callerMs ?? AGENTIC_BUDGET_MS) - (Date.now() - started)), request.signal)
   let lastResearch: ResearchPayload | undefined, failureLogged = false
   const trackRun = (run: AgenticPayload) => { lastResearch = run.research; failureLogged ||= !!run.research_failure; onRun?.(run) }
   const routedFallback = async (research?: ResearchPayload) => {
@@ -6777,7 +6781,13 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
       if (!failureLogged) { failureLogged = true; await recordResearchFailure(question, failure) }
     }
     if (request.signal.aborted) return json({ error: 'The request was cancelled.', research }, 503)
-    if (loopRoute) { budget.dispose(); budget = new AskDeadline(90_000, request.signal) }
+    const allowance = fallbackAllowanceMs(callerEnd)
+    // Too little of the caller's time left to retrieve and write: answer with what research gathered.
+    if (callerEnd !== undefined && allowance < ASK_FALLBACK_FLOOR_MS) {
+      const gathered = gatheredPayload(research)
+      return gathered ? json(gathered) : json({ error: 'The answer took too long. Please try again.', research }, 503)
+    }
+    if (loopRoute) { budget.dispose(); budget = new AskDeadline(allowance, request.signal) }
     try { return await budget.run(async () => {
       const period = agenticPeriod(input, true)
       const fallbackInput = loopRoute && period.kind !== 'all' ? { ...input, from: period.since?.slice(0, 4), to: period.until?.slice(0, 4), since: period.since, until: period.until } : undefined
@@ -7274,12 +7284,7 @@ export default {
       if (target.pathname === '/api/search-all') return display(await apiUnifiedSearch(local, target, env, ctx), target)
       if (env.STAGING_API) return display(await env.STAGING_API.fetch(local), target)
       return display(await route(local, target, env, ctx), target)
-    }, (input, sessionId, signal) => {
-      // ask_opax: the reader's /api/ask entry point, JSON reply, with Ask's own per-key quota counted per voice session.
-      const ask = new Request(new URL('/api/ask', env.COMMUNITY_ORIGIN), { method: 'POST', signal, body: JSON.stringify(input),
-        headers: { 'content-type': 'application/json', accept: 'application/json', 'cf-connecting-ip': 'voice-ask:' + sessionId } })
-      return apiAskRouted(ask, new URL(ask.url), env, ctx)
-    }))
+    }, voiceAsk(env, ask => apiAskRouted(ask, new URL(ask.url), env, ctx))))
     if (url.pathname === '/mcp') return communityResponse(await communityMcp(request, env, async path => {
       const target = new URL(path, env.COMMUNITY_ORIGIN)
       const local = new Request(target, { headers: { 'cf-connecting-ip': request.headers.get('cf-connecting-ip') || 'mcp' } })

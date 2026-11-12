@@ -213,7 +213,11 @@ export function askOpaxResult(payload: Row, origin: string): AskOpaxResult {
   const answered = !!written && payload.answered !== false
   const fallback = typeof payload.error === 'string' ? 'I could not finish that research just now. Please ask again, or try Ask in the app.' : 'I could not find an answer to that in the public record OPAX holds. Try asking it another way.'
   // Whatever Ask wrote is spoken, answered or not: research that found something is never reduced to "no record".
-  const spoken = written ? spokenAnswer(answer) : fallback
+  // Ask ran out of time to write but research found records: say so and offer them.
+  const gathered = !written && payload.partial === true && sources.length
+    ? `I ran out of time to write a full answer, but the research found ${sources.length === 1 ? 'one record' : sources.length + ' records'} on this. They are in the sources for this answer, and Ask in the app can write it up in full.`
+    : null
+  const spoken = written ? spokenAnswer(answer) : gathered ?? fallback
   const url = sources[0]?.url ?? origin + '/ask'
   return { answered, spoken_answer: spoken, answer: written.slice(0, 4_000), sources, source_url: url, source_notice: NOTICE }
 }
