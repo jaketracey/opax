@@ -7274,6 +7274,11 @@ export default {
       if (target.pathname === '/api/search-all') return display(await apiUnifiedSearch(local, target, env, ctx), target)
       if (env.STAGING_API) return display(await env.STAGING_API.fetch(local), target)
       return display(await route(local, target, env, ctx), target)
+    }, (input, sessionId, signal) => {
+      // ask_opax: the reader's /api/ask entry point, JSON reply, with Ask's own per-key quota counted per voice session.
+      const ask = new Request(new URL('/api/ask', env.COMMUNITY_ORIGIN), { method: 'POST', signal, body: JSON.stringify(input),
+        headers: { 'content-type': 'application/json', accept: 'application/json', 'cf-connecting-ip': 'voice-ask:' + sessionId } })
+      return apiAskRouted(ask, new URL(ask.url), env, ctx)
     }))
     if (url.pathname === '/mcp') return communityResponse(await communityMcp(request, env, async path => {
       const target = new URL(path, env.COMMUNITY_ORIGIN)

@@ -1,5 +1,5 @@
 import {body, CommunityError, digest, json, limit, member, now, requireMember, sameOrigin, text} from './community-core'
-import {boundedJson, runVoiceTool, type PublicReader} from './voice-tools'
+import {boundedJson, runVoiceTool, type PublicReader, type VoiceAsk} from './voice-tools'
 import {voiceConfigured as configured, type VoiceConfig} from './voice-config'
 
 export const VOICE_ALLOWANCE_SECONDS = 600
@@ -232,7 +232,7 @@ async function connect(req: Request, env: VoiceEnv, ctx: ExecutionContext, membe
   return new Response(null, {status:101, webSocket:browser, headers:{'cache-control':'no-store','referrer-policy':'no-referrer', ...(protocols.includes('convai') ? {'sec-websocket-protocol':'convai'} : {})}})
 }
 
-export async function voiceRoute(req: Request, env: VoiceEnv, ctx: ExecutionContext, readPublic: PublicReader): Promise<Response> {
+export async function voiceRoute(req: Request, env: VoiceEnv, ctx: ExecutionContext, readPublic: PublicReader, ask?: VoiceAsk): Promise<Response> {
   try {
     const path = new URL(req.url).pathname.slice('/api/voice/'.length)
     if (path.startsWith('tools/')) {
@@ -243,7 +243,7 @@ export async function voiceRoute(req: Request, env: VoiceEnv, ctx: ExecutionCont
       const session = await env.COMMUNITY_DB.prepare("SELECT v.id FROM voice_sessions v JOIN members m ON m.id=v.member_id WHERE v.id=? AND v.state='active' AND v.started_at+v.reserved_seconds>? AND m.disabled=0").bind(sessionId, now()).first()
       if (!session) throw new CommunityError(403, 'This voice session has ended.')
       await limit(env, 'voice-tool:' + sessionId, 30, 60)
-      return json(await runVoiceTool(path.slice(6), args, env, readPublic))
+      return json(await runVoiceTool(path.slice(6), args, env, readPublic, ask))
     }
     if (String(env.COMMUNITY_ENABLED) !== 'true') throw new CommunityError(503, 'Community access is being prepared.')
     if (path === 'status' && req.method === 'GET') {
