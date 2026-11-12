@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2025-06-27-icac-public-integrity-survey-2024",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "ICAC Public Integrity Survey 2024",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/1191847/Public-Integrity-Survey-2024-FINAL-A876631.pdf",
+  "document": "ICAC Public Integrity Survey 2024",
+  "sha256": "4a86731eb64c55619faec68d6ff27a7dcae0ba2a228d4a9bf137e1326e86dc68",
+  "pages": 76,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption surveyed public officers about perceived corruption risks, decision making and reporting wrongdoing.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/1191847/Public-Integrity-Survey-2024-FINAL-A876631.pdf",
+      "document": "ICAC Public Integrity Survey 2024",
+      "page": 6
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/1191847/Public-Integrity-Survey-2024-FINAL-A876631.pdf",
+      "document": "ICAC Public Integrity Survey 2024",
+      "page": 7
+     }
+    ],
+    "section": "THE SURVEY"
+   },
+   {
+    "text": "It analysed 7,060 usable responses and cautioned that the voluntary sample was unlikely to represent all public officers.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/1191847/Public-Integrity-Survey-2024-FINAL-A876631.pdf",
+      "document": "ICAC Public Integrity Survey 2024",
+      "page": 7
+     }
+    ],
+    "section": "The sample"
+   },
+   {
+    "text": "The Commission reported that favouritism in employment remained the leading perceived corruption risk, followed by misuse of authority.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/1191847/Public-Integrity-Survey-2024-FINAL-A876631.pdf",
+      "document": "ICAC Public Integrity Survey 2024",
+      "page": 64
+     }
+    ],
+    "section": "CONCLUSIONS"
+   },
+   {
+    "text": "It found that respondents were less likely to have received training about corruption risks specific to their roles than in the previous survey.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/1191847/Public-Integrity-Survey-2024-FINAL-A876631.pdf",
+      "document": "ICAC Public Integrity Survey 2024",
+      "page": 64
+     }
+    ],
+    "section": "CONCLUSIONS"
+   },
+   {
+    "text": "The Commission called for transparent decisions and leadership that makes staff feel safe when reporting suspected wrongdoing.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/1191847/Public-Integrity-Survey-2024-FINAL-A876631.pdf",
+      "document": "ICAC Public Integrity Survey 2024",
+      "page": 64
+     }
+    ],
+    "section": "CONCLUSIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Senior leaders must support their staff to feel safe from retaliation if they report.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/1191847/Public-Integrity-Survey-2024-FINAL-A876631.pdf",
+     "document": "ICAC Public Integrity Survey 2024",
+     "page": 64
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

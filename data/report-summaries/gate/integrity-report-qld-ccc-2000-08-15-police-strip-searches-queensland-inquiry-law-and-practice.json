@@ -1,0 +1,105 @@
+{
+ "slug": "integrity-report-qld-ccc-2000-08-15-police-strip-searches-queensland-inquiry-law-and-practice",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Criminal Justice Commission examined police strip-search powers and practices in Queensland following public concern.",
+    "pages": [
+     10
+    ],
+    "support": "This report is the result of an inquiry conducted by the CJC in response to public disquiet",
+    "section": "List of recommendations",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It considered when searches were justified, how they were conducted and recorded, safeguards for detainees and the responsibilities of watchhouse staff.",
+    "pages": [
+     26,
+     27,
+     28
+    ],
+    "support": "The current requirement to record the reasons for conducting a strip search is unclear and appears to be followed inconsistently.",
+    "section": "Overview",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission found no evidence of widespread abuse, but identified inconsistent procedures, confusing rules and concerns about routine searches of some detainees.",
+    "pages": [
+     5,
+     27,
+     28
+    ],
+    "support": "the inquiry has not found any evidence of widespread abuse by Queensland police regarding their power to conduct strip searches.",
+    "section": "Foreword; Overview",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission’s sixty-five recommendations covered definitions, individual risk assessments, search procedures, reasons and records, support people, recording safeguards and training.",
+    "pages": [
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17
+    ],
+    "support": "The QPS should develop a policy on the registration and secure storage of videotapes of strip searches.",
+    "section": "List of recommendations",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The fact that not all watchhouses conduct strip searches routinely indicates that it is not necessary to strip search detainees routinely to meet the safety and other concerns of the watchhouse manager.",
+    "page": 44,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The current legislation and QPS directives relating to strip searches by QPS officers are confusing and inconsistent, and may very well have resulted in officers conducting strip searches in situations where they would not otherwise have done so.",
+    "page": 27,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Overview",
+   "first_page": 26,
+   "last_page": 29
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

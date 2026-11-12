@@ -1,0 +1,56 @@
+{
+  "slug": "integrity-report-vic-ibac-2013-11-26-tp1068-special-report-concerning-certain-operations-in-2013",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Introduction",
+    "first_page": 7,
+    "last_page": 7
+  },
+  "sentences": [
+    {
+      "text": "IBAC reported on its handling of matters largely predating its full jurisdiction, including unfinished investigations inherited from the Office of Police Integrity.",
+      "pages": [
+        3,
+        7
+      ],
+      "support": "where most or all key events took place before IBAC took full jurisdiction",
+      "section": "Letter of transmittal",
+      "people": []
+    },
+    {
+      "text": "It covered early operations, police contact involving death or serious injury, agency notifications and investigations involving alleged police misconduct.",
+      "pages": [
+        7
+      ],
+      "support": "a standing ‘own motion’ investigation that IBAC has commenced into deaths or serious injury",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "IBAC concluded that its work to that point showed the legislation substantially enabled it to operate effectively as Parliament intended.",
+      "pages": [
+        23
+      ],
+      "support": "has enabled IBAC to work effectively and as intended by Parliament",
+      "section": "Conclusion",
+      "people": []
+    },
+    {
+      "text": "It proposed maintaining capacity for both police oversight and public sector corruption investigations and reporting again after its first full year.",
+      "pages": [
+        23
+      ],
+      "support": "focusing a reasonable proportion of its investigative resources on its important police oversight role",
+      "section": "Conclusion",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The substantive work done by IBAC in 2013 means that the IBAC legislation, at least in substantial part and thus far, has enabled IBAC to work effectively and as intended by Parliament.",
+      "page": 23,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The Introduction provides an equivalent overview. This is an early-operations and legacy-matters report, with no consolidated new recommendations list. Ligatures in the extraction remain readable."
+}

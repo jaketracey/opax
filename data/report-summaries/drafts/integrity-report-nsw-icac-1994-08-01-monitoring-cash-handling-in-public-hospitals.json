@@ -1,0 +1,60 @@
+{
+  "slug": "integrity-report-nsw-icac-1994-08-01-monitoring-cash-handling-in-public-hospitals",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "OVERVIEW",
+    "first_page": 5,
+    "last_page": 5
+  },
+  "sentences": [
+    {
+      "text": "The Independent Commission Against Corruption monitored NSW hospitals in 1993/94 to assess whether management had effectively implemented earlier cash-handling recommendations.",
+      "pages": [
+        5
+      ],
+      "support": "The main aim of the cash handling monitoring project outlined in \nthe following report was to find out if management action",
+      "section": "OVERVIEW",
+      "people": []
+    },
+    {
+      "text": "The project visited two large hospitals and analysed questionnaire results from 33 other hospitals of different sizes.",
+      "pages": [
+        5
+      ],
+      "support": "the ICAC project team visited two large hospitals \nand analysed the results of a questionnaire",
+      "section": "OVERVIEW",
+      "people": []
+    },
+    {
+      "text": "The Commission found implementation worked best where senior management provided leadership, allocated tasks and coordinated the changes.",
+      "pages": [
+        13
+      ],
+      "support": "implementation of the forty-six cash handling recommendations \nwas most effective in the hospital visited where senior management provided strong leadership",
+      "section": "RESULTS OF VISITS TO HOSPITALS",
+      "people": []
+    },
+    {
+      "text": "It provided an implementation checklist covering responsibility, planned changes, resources, staff training and reviews of whether new systems achieved their aims.",
+      "pages": [
+        15
+      ],
+      "support": "Set a date for review to ensure new procedures and systems have achieved the stated outcomes",
+      "section": "IMPLEMENTATION CHECKLIST",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The cash handling monitoring project confirmed management involvement and guidance can \nincrease the effectiveness of implementation.",
+      "page": 14,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "Train all staff who will use new procedures, equipment or documents.",
+      "page": 15,
+      "kind": "recommendation"
+    }
+  ],
+  "notes": "The 46 recommendations were made in the 1992 report. This follow-up provides monitoring principles and an implementation checklist."
+}

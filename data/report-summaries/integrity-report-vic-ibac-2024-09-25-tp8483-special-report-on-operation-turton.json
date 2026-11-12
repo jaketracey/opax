@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2024-09-25-tp8483-special-report-on-operation-turton",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Special report on Operation Turton",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a2849/globalassets/tabled-paper-documents/tabled-paper-8483/operation-turton---ibac-special-report.pdf",
+  "document": "Operation Turton - IBAC special report",
+  "sha256": "f491218661accbec1115cf171cf53a65e3f8295bfb799f9ede8f1820809213ff",
+  "pages": 44,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of investigation and outcomes",
+  "first_page": 8,
+  "last_page": 11,
+  "link": "https://www.parliament.vic.gov.au/4a2849/globalassets/tabled-paper-documents/tabled-paper-8483/operation-turton---ibac-special-report.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC’s Operation Turton investigated alleged unauthorised access to and disclosure of information at the former Metropolitan Fire Brigade.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2849/globalassets/tabled-paper-documents/tabled-paper-8483/operation-turton---ibac-special-report.pdf",
+      "document": "Operation Turton - IBAC special report",
+      "page": 8
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "IBAC identified five incidents and found weaknesses in information security and workplace culture.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2849/globalassets/tabled-paper-documents/tabled-paper-8483/operation-turton---ibac-special-report.pdf",
+      "document": "Operation Turton - IBAC special report",
+      "page": 8
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2849/globalassets/tabled-paper-documents/tabled-paper-8483/operation-turton---ibac-special-report.pdf",
+      "document": "Operation Turton - IBAC special report",
+      "page": 10
+     }
+    ],
+    "section": "Summary of investigation and outcomes"
+   },
+   {
+    "text": "It concluded that information was accessed or disclosed without authority, often to advance union interests, and identified barriers to reporting and addressing improper conduct.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2849/globalassets/tabled-paper-documents/tabled-paper-8483/operation-turton---ibac-special-report.pdf",
+      "document": "Operation Turton - IBAC special report",
+      "page": 34
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "IBAC made four recommendations to Fire Rescue Victoria on consultation, information security, sharing information with unions and internal complaints.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2849/globalassets/tabled-paper-documents/tabled-paper-8483/operation-turton---ibac-special-report.pdf",
+      "document": "Operation Turton - IBAC special report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2849/globalassets/tabled-paper-documents/tabled-paper-8483/operation-turton---ibac-special-report.pdf",
+      "document": "Operation Turton - IBAC special report",
+      "page": 11
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Operation Turton found deficiencies in MFB’s culture and vulnerabilities in its information and communication technology (ICT) systems, contributing to significant corruption risks.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2849/globalassets/tabled-paper-documents/tabled-paper-8483/operation-turton---ibac-special-report.pdf",
+     "document": "Operation Turton - IBAC special report",
+     "page": 10
+    }
+   },
+   {
+    "quote": "IBAC also found barriers for reporting improper conduct and for management to address issues.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2849/globalassets/tabled-paper-documents/tabled-paper-8483/operation-turton---ibac-special-report.pdf",
+     "document": "Operation Turton - IBAC special report",
+     "page": 34
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

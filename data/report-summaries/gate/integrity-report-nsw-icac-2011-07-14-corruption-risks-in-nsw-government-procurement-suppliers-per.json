@@ -1,0 +1,86 @@
+{
+ "slug": "integrity-report-nsw-icac-2011-07-14-corruption-risks-in-nsw-government-procurement-suppliers-per",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The NSW Independent Commission Against Corruption surveyed suppliers about perceived corruption in state and local government procurement.",
+    "pages": [
+     6
+    ],
+    "support": "This research paper provides a picture of the extent of corruption from the perspective of suppliers",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The online survey received 1,515 responses and examined overall perceptions, corruption-prone behaviour and vulnerability at different procurement stages.",
+    "pages": [
+     5,
+     6
+    ],
+    "support": "a total of 1,515 responses were received by the ICAC.",
+    "section": "Executive summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission reports that about two-fifths of suppliers saw corruption as at least a moderate problem, and almost one-third had avoided bidding because of corruption concerns.",
+    "pages": [
+     5
+    ],
+    "support": "almost one-third of suppliers indicated that they had declined to bid on a government contract because of corruption concerns.",
+    "section": "Executive summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission concludes that these perceptions require attention even if inaccurate because they can affect suppliers’ willingness to compete.",
+    "pages": [
+     18
+    ],
+    "support": "Consequently, the need to address these perceptions applies even if they are inaccurate.",
+    "section": "Conclusions",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Overall, these results indicate that the supplier base of NSW state and local government procurement is concerned about corruption.",
+    "page": 18,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Executive summary",
+   "first_page": 5,
+   "last_page": 5
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

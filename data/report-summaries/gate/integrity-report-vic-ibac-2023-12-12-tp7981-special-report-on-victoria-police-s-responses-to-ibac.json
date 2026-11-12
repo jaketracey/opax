@@ -1,0 +1,109 @@
+{
+ "slug": "integrity-report-vic-ibac-2023-12-12-tp7981-special-report-on-victoria-police-s-responses-to-ibac",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "IBAC reviewed how Victoria Police responded to its recommendations to improve transparency and accountability.",
+    "pages": [
+     5
+    ],
+    "support": "an opportunity to increase transparency and accountability around Victoria Police’s responses to recommendations",
+    "section": "Reasons for this special report",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It analysed responses to 104 recommendations made between January 2016 and March 2022, including implementation, timeliness, discipline and systemic risks.",
+    "pages": [
+     5
+    ],
+    "support": "IBAC analysed how Victoria Police responded to 104 recommendations",
+    "section": "Executive summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "IBAC reported that Victoria Police accepted 92 per cent of its recommendations.",
+    "pages": [
+     9
+    ],
+    "support": "Victoria Police accepted 92 per cent of the 104 recommendations",
+    "section": "Victoria Police accepted and implemented most of IBAC’s recommendations",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "After excluding rejected recommendations and those still unfinished, IBAC assessed 98 per cent as fully or partly implemented.",
+    "pages": [
+     9
+    ],
+    "support": "IBAC assessed that Victoria Police had implemented or partially implemented 98 per cent of recommendations",
+    "section": "Victoria Police accepted and implemented most of IBAC’s recommendations",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "IBAC found that police usually reported late on implementation and identified persistent risks in force reporting, conflicts of interest, notetaking and statement making.",
+    "pages": [
+     5,
+     12,
+     16
+    ],
+    "support": "Victoria Police is usually late when reporting on the implementation of recommendations to IBAC",
+    "section": "Key findings about recommendations to Victoria Police",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Excluding rejected recommendations and recommendations not finalised as of 1 November 2022, IBAC assessed that Victoria Police had implemented or partially implemented 98 per cent of recommendations.",
+    "page": 9,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "Victoria Police is usually late when reporting on the implementation of recommendations to IBAC.",
+    "page": 5,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Executive summary",
+   "first_page": 5,
+   "last_page": 6
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

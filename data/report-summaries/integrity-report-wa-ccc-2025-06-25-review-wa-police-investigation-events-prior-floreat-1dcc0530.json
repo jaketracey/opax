@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2025-06-25-review-wa-police-investigation-events-prior-floreat-1dcc0530",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Review of WA Police investigation: Events prior to Floreat family violence incident",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC%20-%20Review%20of%20WA%20Police%20investigation%20-%20Events%20prior%20to%20Floreat%20family%20violence%20incident.pdf",
+  "document": "CCC - Review of WA Police Investigation - Events prior to Floreat family violence incident",
+  "sha256": "b597f04da93b853fdba9a845729110ef568f31722dbc6858e8f6bd7b2ae9f979",
+  "pages": 12,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Introduction and summary",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC%20-%20Review%20of%20WA%20Police%20investigation%20-%20Events%20prior%20to%20Floreat%20family%20violence%20incident.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission monitored and reviewed an internal investigation by WA Police into police contact with a family before the fatal Floreat family violence incident.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC%20-%20Review%20of%20WA%20Police%20investigation%20-%20Events%20prior%20to%20Floreat%20family%20violence%20incident.pdf",
+      "document": "CCC - Review of WA Police Investigation - Events prior to Floreat family violence incident",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC%20-%20Review%20of%20WA%20Police%20investigation%20-%20Events%20prior%20to%20Floreat%20family%20violence%20incident.pdf",
+      "document": "CCC - Review of WA Police Investigation - Events prior to Floreat family violence incident",
+      "page": 6
+     }
+    ],
+    "section": "Introduction and summary"
+   },
+   {
+    "text": "The review considered police risk assessment, protection orders, seizure of firearms and recording of family contacts.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC%20-%20Review%20of%20WA%20Police%20investigation%20-%20Events%20prior%20to%20Floreat%20family%20violence%20incident.pdf",
+      "document": "CCC - Review of WA Police Investigation - Events prior to Floreat family violence incident",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC%20-%20Review%20of%20WA%20Police%20investigation%20-%20Events%20prior%20to%20Floreat%20family%20violence%20incident.pdf",
+      "document": "CCC - Review of WA Police Investigation - Events prior to Floreat family violence incident",
+      "page": 7
+     }
+    ],
+    "section": "The Commission’s referrals"
+   },
+   {
+    "text": "The Commission concluded that the internal investigation was reasonable after an early concern was addressed, and that its findings and disciplinary outcomes were reasonably open.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC%20-%20Review%20of%20WA%20Police%20investigation%20-%20Events%20prior%20to%20Floreat%20family%20violence%20incident.pdf",
+      "document": "CCC - Review of WA Police Investigation - Events prior to Floreat family violence incident",
+      "page": 5
+     }
+    ],
+    "section": "Introduction and summary"
+   },
+   {
+    "text": "The Commission separately began its own investigation into possible police misconduct concerning firearms licensing.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC%20-%20Review%20of%20WA%20Police%20investigation%20-%20Events%20prior%20to%20Floreat%20family%20violence%20incident.pdf",
+      "document": "CCC - Review of WA Police Investigation - Events prior to Floreat family violence incident",
+      "page": 11
+     }
+    ],
+    "section": "Bombara’s firearms licence: A Commission investigation"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Accordingly, the Commission concludes that the findings made by IAU were reasonably open.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC%20-%20Review%20of%20WA%20Police%20investigation%20-%20Events%20prior%20to%20Floreat%20family%20violence%20incident.pdf",
+     "document": "CCC - Review of WA Police Investigation - Events prior to Floreat family violence incident",
+     "page": 12
+    }
+   },
+   {
+    "quote": "The Commission also considers that the action taken by WA Police in disciplining officers who had breached the Code was reasonably open.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC%20-%20Review%20of%20WA%20Police%20investigation%20-%20Events%20prior%20to%20Floreat%20family%20violence%20incident.pdf",
+     "document": "CCC - Review of WA Police Investigation - Events prior to Floreat family violence incident",
+     "page": 12
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,88 @@
+{
+ "slug": "integrity-report-nsw-icac-2011-12-14-corruption-risks-in-nsw-government-procurement-the-managemen",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The NSW Independent Commission Against Corruption examines how public sector managers can improve procurement systems and influence staff behaviour to reduce corruption.",
+    "pages": [
+     5
+    ],
+    "support": "The major purpose of this report, therefore, is to illustrate the variety of tools available to managers",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It considers procurement structures, purchasing processes and staff management, using investigation case studies to illustrate control weaknesses.",
+    "pages": [
+     6
+    ],
+    "support": "Throughout the report, case studies of real investigations are used to illustrate weaknesses related to structures, processes and people",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concludes that relying on policies, codes and training controls only a small share of corruption risks.",
+    "pages": [
+     35
+    ],
+    "support": "Simple reliance on policies, codes, and training will control only a small proportion of corruption.",
+    "section": "Conclusion",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission advises managers to combine approaches suited to their agency’s risks, rather than prescribing formal recommendations.",
+    "pages": [
+     5,
+     35
+    ],
+    "support": "The advice in this report is not presented as a list of formal recommendations.",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "When it comes to procurement, there is no single method of corruption control.",
+    "page": 35,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "Simple reliance on policies, codes, and training will control only a small proportion of corruption.",
+    "page": 35,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

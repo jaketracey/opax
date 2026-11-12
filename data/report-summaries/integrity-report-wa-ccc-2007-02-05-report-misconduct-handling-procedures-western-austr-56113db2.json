@@ -1,0 +1,34 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2007-02-05-report-misconduct-handling-procedures-western-austr-56113db2",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department for Community Development",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20Handling%20Procedures%20in%20the%20Western%20Australian%20Public%20Sector%20-%20Department%20for%20Community%20Development.pdf",
+  "document": "Report on Misconduct Handling Procedures in the Western Australian Public Sector - Department for Community Development.pdf",
+  "sha256": "30355cfcc89d299c6cd53d1d9ac7a80da9f75ce876918b54b0e65c83dca8824e",
+  "pages": 35,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "withheld",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": []
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

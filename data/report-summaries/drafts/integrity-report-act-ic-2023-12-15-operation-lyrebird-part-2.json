@@ -1,0 +1,42 @@
+{
+  "slug": "integrity-report-act-ic-2023-12-15-operation-lyrebird-part-2",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The ACT Integrity Commission considered a parliamentary committee’s corruption complaint about acquisitions for the City to the Lake Project.",
+      "pages": [
+        3,
+        4,
+        7
+      ],
+      "support": "the Commission commenced an investigation of each acquisition pursuant to s 100",
+      "section": "THE RESPONSE OF THE COMMISSION",
+      "people": []
+    },
+    {
+      "text": "This report examined the West Basin acquisitions and the use of former agency executives as consultants.",
+      "pages": [
+        3,
+        4,
+        85,
+        86
+      ],
+      "support": "This Special Report deals with the Commission’s consideration of the remainder",
+      "section": "INTRODUCTION",
+      "people": []
+    },
+    {
+      "text": "The Commission decided to discontinue the investigations because further action on the corruption report was not justified.",
+      "pages": [
+        7,
+        86
+      ],
+      "support": "the Commission has determined that the investigation must be discontinued in accordance with s 112(1)",
+      "section": "THE RESPONSE OF THE COMMISSION",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "No standalone executive summary identified. Criticisms attributed to the Auditor-General and parliamentary committee are not presented as Commission findings. Existing OPAX findings mean no additional findings quotes."
+}

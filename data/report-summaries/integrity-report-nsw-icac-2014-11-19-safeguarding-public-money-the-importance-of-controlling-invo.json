@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2014-11-19-safeguarding-public-money-the-importance-of-controlling-invo",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Safeguarding public money The importance of controlling invoice payments",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Safeguarding%20public%20money,%20The%20importance%20of%20controlling%20invoice%20payments.pdf.aspx",
+  "document": "Safeguarding public money The importance of controlling invoice payments",
+  "sha256": "c4b7b6c89215f00fd9ae20b8584dabb2d4fb0f7e0a1a282131cc5798cf144b72",
+  "pages": 40,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Introduction",
+  "first_page": 6,
+  "last_page": 8,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Safeguarding%20public%20money,%20The%20importance%20of%20controlling%20invoice%20payments.pdf.aspx#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption examines how agencies can strengthen invoice-payment controls while managing costs and processing times.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Safeguarding%20public%20money,%20The%20importance%20of%20controlling%20invoice%20payments.pdf.aspx",
+      "document": "Safeguarding public money The importance of controlling invoice payments",
+      "page": 6
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Safeguarding%20public%20money,%20The%20importance%20of%20controlling%20invoice%20payments.pdf.aspx",
+      "document": "Safeguarding public money The importance of controlling invoice payments",
+      "page": 7
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "Its research includes responses from 150 state and local government organisations and consultation across public, private and non-profit sectors.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Safeguarding%20public%20money,%20The%20importance%20of%20controlling%20invoice%20payments.pdf.aspx",
+      "document": "Safeguarding public money The importance of controlling invoice payments",
+      "page": 7
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission reports that gaps in payment controls have enabled corruption, including through weak processes and pressure on accounts payable staff.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Safeguarding%20public%20money,%20The%20importance%20of%20controlling%20invoice%20payments.pdf.aspx",
+      "document": "Safeguarding public money The importance of controlling invoice payments",
+      "page": 6
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission proposes five strategies covering staff capability, supplier records, payment-process design, consistent processing and informed expenditure review.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Safeguarding%20public%20money,%20The%20importance%20of%20controlling%20invoice%20payments.pdf.aspx",
+      "document": "Safeguarding public money The importance of controlling invoice payments",
+      "page": 7
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Safeguarding%20public%20money,%20The%20importance%20of%20controlling%20invoice%20payments.pdf.aspx",
+      "document": "Safeguarding public money The importance of controlling invoice payments",
+      "page": 8
+     }
+    ],
+    "section": "Introduction"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The solution is not a simple matter of applying more careful checks, further segregating duties or removing discretionary decision-making.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Safeguarding%20public%20money,%20The%20importance%20of%20controlling%20invoice%20payments.pdf.aspx",
+     "document": "Safeguarding public money The importance of controlling invoice payments",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,61 @@
+{
+  "slug": "integrity-report-qld-ccc-2025-07-29-corruption-perceptions-survey-2025-comparing-respondent-coho",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Key findings",
+    "first_page": 8,
+    "last_page": 10
+  },
+  "sentences": [
+    {
+      "text": "The Crime and Corruption Commission compared corruption perceptions across Queensland community members, public sector employees, council employees and police service employees to inform prevention and planning.",
+      "pages": [
+        5,
+        6
+      ],
+      "support": "so the CCC can \nmonitor the impact of its prevention agenda and \ninform future strategic planning.",
+      "section": "Research objectives",
+      "people": []
+    },
+    {
+      "text": "The analysis used 10,059 completed surveys collected in March to May 2025, with weighting applied to the community sample but not the employee samples.",
+      "pages": [
+        6
+      ],
+      "support": "In total, 16,218 surveys were commenced across four cohorts, \nwith 10,059 surveys completed.",
+      "section": "Research method",
+      "people": []
+    },
+    {
+      "text": "The CCC found that all groups felt more comfortable reporting to it than to the relevant workplace or government agency, while retaliation and inaction were shared concerns.",
+      "pages": [
+        9
+      ],
+      "support": "For all cohorts, the top two \nconcerns surrounding reporting corruption relate to an \nexpectation there may be backlash or retaliation",
+      "section": "Key commonalities across cohorts",
+      "people": []
+    },
+    {
+      "text": "The CCC reported that council employees were comparatively more comfortable with workplace reporting, while police service employees expressed lower trust in the CCC and lower expectations of meaningful action.",
+      "pages": [
+        10
+      ],
+      "support": "Local council employees tend to hold a more \npositive view of how corruption is managed, \nparticularly within their workplace.",
+      "section": "Key differences across cohorts",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "There is, however, also a shared concern as \nto whether or not meaningful action would be taken if \ncorruption were to be reported.",
+      "page": 9,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "There is, however, consistently lower \nagreement across employee cohorts that their workplace \nculture supports reporting corruption.",
+      "page": 9,
+      "kind": "finding"
+    }
+  ],
+  "notes": "The key findings overview covers commonalities on PDF page 9 and differences on page 10, following the section heading on page 8. Community results are weighted; employee results are unweighted. No formal CCC recommendations list."
+}

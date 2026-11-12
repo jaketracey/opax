@@ -1,0 +1,73 @@
+{
+  "slug": "integrity-report-vic-ibac-2014-02-19-tp1173-special-report-concerning-allegations-about-the-condu",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "IBAC Foreword",
+    "first_page": 7,
+    "last_page": 7
+  },
+  "sentences": [
+    {
+      "text": "IBAC’s delegated commissioner reviewed the Victorian Ombudsman’s report about an Office of Police Integrity investigation into a former deputy police commissioner.",
+      "pages": [
+        7,
+        8
+      ],
+      "support": "report regarding the Victorian Ombudsman’s report to IBAC concerning OPI’s investigation",
+      "section": "IBAC Foreword",
+      "people": []
+    },
+    {
+      "text": "The review assessed whether the material supported allegations of serious misconduct through leaking confidential police information to the media.",
+      "pages": [
+        7
+      ],
+      "support": "did not support an allegation that Sir Ken had engaged in serious misconduct",
+      "section": "IBAC Foreword",
+      "people": []
+    },
+    {
+      "text": "The delegated commissioner concluded that the material did not support that allegation or establish a scheme to have information passed to the media.",
+      "pages": [
+        7,
+        67
+      ],
+      "support": "I do not consider that the evidence is sufficient to conclude that this behaviour formed part of a scheme",
+      "section": "Conclusion",
+      "people": []
+    },
+    {
+      "text": "He nevertheless concluded that the former deputy commissioner had shared confidential information with others and acted without appropriate discretion.",
+      "pages": [
+        66,
+        67
+      ],
+      "support": "I consider the most probable scenario is that by reason of his frustration Sir Ken spoke unwisely to people he trusted",
+      "section": "Conclusion",
+      "people": []
+    },
+    {
+      "text": "He decided against further IBAC investigation or tabling the earlier investigation report, while referring relevant material to the Chief Commissioner of Police to consider further action.",
+      "pages": [
+        7,
+        69
+      ],
+      "support": "I determine both that no investigation of this matter be undertaken by IBAC",
+      "section": "Final determination",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Mr Kellam has concluded that the evidence available to OPI and set out in OPI’s final investigation report to the Ombudsman did not support an allegation that Sir Ken had engaged in serious misconduct by leaking or facilitating leaking to the media of confidential police information.",
+      "page": 7,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "There is no public interest to be served by further investigation.",
+      "page": 69,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "This pack is identical in source SHA-256 and extracted pages to the other February 2014 tabled-paper entry (tp1173/tp1174). Each requested slug has its own file. Findings are those of IBAC’s delegated commissioner, not the earlier OPI report. No numbered recommendations list is present."
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "integrity-report-qld-ccc-1992-03-12-report-inquiry-allegations-made-terrence-michael-mackenroth",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [],
+  "findings": [],
+  "notes": "WITHHELD: all 128 PDF pages in the supplied pages.json are empty, and text.txt contains page markers without report text. No report summary, findings, conclusions or recommendations can be verified from this source pack. No claims drafted. The gate necessarily fails its three-sentence minimum; no rule was relaxed. Readable source text is required before this report can be summarised."
+}

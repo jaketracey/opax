@@ -1,0 +1,53 @@
+{
+  "slug": "integrity-report-wa-ccc-2020-04-20-review-wa-police-force-investigation-use-force-respect-child",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Overview",
+    "first_page": 4,
+    "last_page": 4
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission reviewed police investigations into force used against a child in State care and the preparation of officers' court evidence.",
+      "pages": [
+        4
+      ],
+      "support": "The criminal investigation considered whether the child had been assaulted and whether the involved officers had attempted to pervert the course of justice.",
+      "people": []
+    },
+    {
+      "text": "The Commission considered the reasoning against an assault charge inconsistent with the disciplinary findings and believed criminal proceedings should have been brought, while WA Police disagreed.",
+      "pages": [
+        14,
+        20
+      ],
+      "support": "In the Commission's opinion, the investigation did fail and criminal proceedings for assault should have been instituted.",
+      "people": []
+    },
+    {
+      "text": "The Commission accepted that the decision against charges for attempting to pervert justice was open to the police investigator.",
+      "pages": [
+        17
+      ],
+      "support": "the conclusion by the investigating officer that there was insufficient evidence to support charges of attempting to pervert the course of justice was reasonably open.",
+      "people": []
+    },
+    {
+      "text": "Apart from the disagreement about assault, the Commission concluded that WA Police had handled the matter appropriately and completed its review.",
+      "pages": [
+        20,
+        21
+      ],
+      "support": "the WA Police Force has otherwise dealt with the matter appropriately and reached conclusions that are open.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "In the Commission's opinion, the investigation did fail and criminal proceedings for assault should have been instituted.",
+      "page": 14,
+      "kind": "opinion"
+    }
+  ],
+  "notes": "The report records disagreement between the Commission and WA Police about an assault charge. No criminal guilt is asserted and no individuals are named."
+}

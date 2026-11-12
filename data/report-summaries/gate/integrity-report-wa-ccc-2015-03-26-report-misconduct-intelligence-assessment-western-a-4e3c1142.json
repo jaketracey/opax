@@ -1,0 +1,80 @@
+{
+ "slug": "integrity-report-wa-ccc-2015-03-26-report-misconduct-intelligence-assessment-western-a-4e3c1142",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission assessed inherent corruption and misconduct risks across the WA public sector in 2014.",
+    "pages": [
+     12
+    ],
+    "section": "Inaugural Misconduct Intelligence Assessment",
+    "support": "In 2014 the Commission conducted its inaugural misconduct intelligence assessment of the Western Australian public sector.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It collected and analysed information from about 300 government departments, local governments and other organisations, without assessing the adequacy of their existing controls.",
+    "pages": [
+     12
+    ],
+    "section": "Inaugural Misconduct Intelligence Assessment",
+    "support": "it does not examine the adequacy of the control environment in place to mitigate those inherent risks.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission identified high risks in corrective services, local government, procurement, regulation, transport, health and policing.",
+    "pages": [
+     12,
+     45
+    ],
+    "section": "Use of Findings by the Commission",
+    "support": "those public sector agencies and activities identified as high risk through the assessment process now regarded as priority areas",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It used the assessment to set its priorities and urged agencies to incorporate their own risks into planning, governance and controls.",
+    "pages": [
+     45,
+     46
+    ],
+    "section": "Use of Findings by the Public Sector",
+    "support": "ensure they have appropriate control strategies and governance frameworks in place to adequately manage and mitigate them.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The changing nature and operating environment of the Western Australian public sector gives rise to new corruption threats and misconduct risks.",
+    "page": 26,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

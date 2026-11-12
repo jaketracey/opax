@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2014-12-17-election-funding-expenditure-and-disclosure-in-nsw-strengthe",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Election Funding Expenditure and disclosure in NSW - Strengthening accountability and transparency",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Election%20Funding%20Expenditure%20and%20disclosure%20in%20NSW,%20Strengthening%20accountability%20and%20transparency.pdf.aspx",
+  "document": "Election Funding Expenditure and disclosure in NSW - Strengthening accountability and transparency",
+  "sha256": "fd79ad1297a468ad8384f016c9704e193512f61daebc47cab07ec95fe8178dca",
+  "pages": 35,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Preamble and summary of recommendations",
+  "first_page": 6,
+  "last_page": 8,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Election%20Funding%20Expenditure%20and%20disclosure%20in%20NSW,%20Strengthening%20accountability%20and%20transparency.pdf.aspx#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption reviews election funding, spending and disclosure arrangements in NSW.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Election%20Funding%20Expenditure%20and%20disclosure%20in%20NSW,%20Strengthening%20accountability%20and%20transparency.pdf.aspx",
+      "document": "Election Funding Expenditure and disclosure in NSW - Strengthening accountability and transparency",
+      "page": 6
+     }
+    ],
+    "section": "Preamble and summary of recommendations"
+   },
+   {
+    "text": "It consulted experts and regulators and compared NSW electoral rules with Australian and overseas systems.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Election%20Funding%20Expenditure%20and%20disclosure%20in%20NSW,%20Strengthening%20accountability%20and%20transparency.pdf.aspx",
+      "document": "Election Funding Expenditure and disclosure in NSW - Strengthening accountability and transparency",
+      "page": 6
+     }
+    ],
+    "section": "Preamble and summary of recommendations"
+   },
+   {
+    "text": "The Commission identifies excessive administrative demands, weak party accountability, limited sanctions and inadequate disclosure as weaknesses in the system.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Election%20Funding%20Expenditure%20and%20disclosure%20in%20NSW,%20Strengthening%20accountability%20and%20transparency.pdf.aspx",
+      "document": "Election Funding Expenditure and disclosure in NSW - Strengthening accountability and transparency",
+      "page": 6
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Election%20Funding%20Expenditure%20and%20disclosure%20in%20NSW,%20Strengthening%20accountability%20and%20transparency.pdf.aspx",
+      "document": "Election Funding Expenditure and disclosure in NSW - Strengthening accountability and transparency",
+      "page": 7
+     }
+    ],
+    "section": "Preamble and summary of recommendations"
+   },
+   {
+    "text": "Its 22 recommendations address regulatory capacity, party governance, audits and penalties, public funding and more timely, accessible disclosures.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Election%20Funding%20Expenditure%20and%20disclosure%20in%20NSW,%20Strengthening%20accountability%20and%20transparency.pdf.aspx",
+      "document": "Election Funding Expenditure and disclosure in NSW - Strengthening accountability and transparency",
+      "page": 7
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Election%20Funding%20Expenditure%20and%20disclosure%20in%20NSW,%20Strengthening%20accountability%20and%20transparency.pdf.aspx",
+      "document": "Election Funding Expenditure and disclosure in NSW - Strengthening accountability and transparency",
+      "page": 8
+     }
+    ],
+    "section": "Preamble and summary of recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Incomplete, delayed and difficult-to-access disclosure information impedes civil society’s ability to offer effective oversight over electoral funding arrangements.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Election%20Funding%20Expenditure%20and%20disclosure%20in%20NSW,%20Strengthening%20accountability%20and%20transparency.pdf.aspx",
+     "document": "Election Funding Expenditure and disclosure in NSW - Strengthening accountability and transparency",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

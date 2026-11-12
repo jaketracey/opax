@@ -1,0 +1,79 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2022-06-20-corruption-audits-2021-2023",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Corruption Audits 2021–2023",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Corruption-Audit-Plan-2021-23.pdf",
+  "document": "CCC Corruption Audit Plan 2021–2023",
+  "sha256": "54d84cde5c9c334baaed3c77e6e696ebe5635df30fbc2c0aec9306cebd50177b",
+  "pages": 2,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission set out planned corruption prevention audits for July 2021 to June 2023.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Corruption-Audit-Plan-2021-23.pdf",
+      "document": "CCC Corruption Audit Plan 2021–2023",
+      "page": 1
+     }
+    ],
+    "section": "First year – Planned corruption prevention audits (2021–22)"
+   },
+   {
+    "text": "The first year’s program covered misuse of public resources, recruitment selection and a prevention project whose scope would be determined before it began.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Corruption-Audit-Plan-2021-23.pdf",
+      "document": "CCC Corruption Audit Plan 2021–2023",
+      "page": 1
+     }
+    ],
+    "section": "First year – Planned corruption prevention audits (2021–22)"
+   },
+   {
+    "text": "The second year’s program covered records of lobbying meetings, employment screening, complaint management and another prevention project.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Corruption-Audit-Plan-2021-23.pdf",
+      "document": "CCC Corruption Audit Plan 2021–2023",
+      "page": 2
+     }
+    ],
+    "section": "Second year – Planned corruption prevention audits (2022–23)"
+   },
+   {
+    "text": "The planned complaint-management audit would assess investigations, disciplinary decisions and protection against reprisals for complainants.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Corruption-Audit-Plan-2021-23.pdf",
+      "document": "CCC Corruption Audit Plan 2021–2023",
+      "page": 2
+     }
+    ],
+    "section": "COMPLAINT MANAGEMENT PRACTICES"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

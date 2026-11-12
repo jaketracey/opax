@@ -1,0 +1,41 @@
+{
+  "slug": "integrity-report-wa-ccc-2021-06-24-review-office-auditor-generals-response-misconduct-30c22bea",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission reviewed the Office of the Auditor General's response to a recommendation about secure retention of audit information.",
+      "pages": [
+        5
+      ],
+      "support": "This report reviews the response of the OAG to the recommendation in that report.",
+      "people": []
+    },
+    {
+      "text": "The review examined changes to data storage, staff instructions, portable storage devices and checks on compliance.",
+      "pages": [
+        6,
+        7
+      ],
+      "support": "The OAG continues to take steps to improve its overall data management.",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that procedures and staff awareness had improved and that the recommendation was complete.",
+      "pages": [
+        7,
+        8
+      ],
+      "support": "The Commission considers this recommendation to be complete.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Commission considers this recommendation to be complete.",
+      "page": 8,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "No separate executive summary or equivalent consolidated summary was identified; the introduction sets out the background and purpose."
+}

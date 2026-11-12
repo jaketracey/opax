@@ -1,0 +1,61 @@
+{
+  "slug": "integrity-report-sa-icac-2021-06-01-identify-disclose-and-manage-conflicts-of-interest-in-public",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Commissioner’s foreword",
+    "first_page": 4,
+    "last_page": 4
+  },
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commissioner Against Corruption issued guidance on conflicts of interest after investigations repeatedly raised the issue.",
+      "pages": [
+        4
+      ],
+      "section": "Commissioner’s foreword",
+      "support": "Conflicts of interest have also been a persistent feature in numerous other ICAC \ninvestigations as well as matters referred to agencies for investigation.",
+      "people": []
+    },
+    {
+      "text": "The Commissioner explained that a conflict can arise when personal interests intersect with public duties, including where others could reasonably perceive a conflict.",
+      "pages": [
+        5,
+        6
+      ],
+      "section": "Identifying conflicts of interest",
+      "support": "A public officer has a conflict of interest when a ‘fair and reasonable’ person \ncould perceive them as having one.",
+      "people": []
+    },
+    {
+      "text": "The Commissioner concluded that identifying, disclosing and managing conflicts is necessary to protect impartial services and public confidence.",
+      "pages": [
+        13
+      ],
+      "section": "Conclusion",
+      "support": "The appropriate identification, disclosure and management of conflicts of interest is a \nduty incumbent on all public officers and public authorities.",
+      "people": []
+    },
+    {
+      "text": "The Commissioner urged public authorities to review their conflict controls and regularly remind staff of their obligations.",
+      "pages": [
+        13
+      ],
+      "section": "Conclusion",
+      "support": "Most importantly, public authorities should regularly instruct their staff on their conflict of \ninterest obligations.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "There is nothing inherently wrong with having a conflict of interest.",
+      "page": 5,
+      "kind": "opinion"
+    },
+    {
+      "quote": "The appropriate identification, disclosure and management of conflicts of interest is a \nduty incumbent on all public officers and public authorities.",
+      "page": 13,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The foreword summarises the purpose. This is guidance rather than findings about named individuals; advice is not presented as a numbered recommendations list."
+}

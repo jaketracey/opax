@@ -1,0 +1,88 @@
+{
+ "slug": "royal-commission-cth-child-sexual-abuse",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Royal Commission into Institutional Responses to Child Sexual Abuse recommended a national strategy to prevent child sexual abuse.",
+    "pages": [
+     4
+    ],
+    "section": "Creating child safe communities through prevention",
+    "support": "The Australian Government should establish a mechanism to oversee the development and \nimplementation of a national strategy to prevent child sexual abuse.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commission recommended that institutions put children’s interests first and implement its Child Safe Standards, including child participation, suitable staff and child-focused complaint processes.",
+    "pages": [
+     6
+    ],
+    "section": "What makes institutions safer for children",
+    "support": "In order to achieve this, institutions should implement \nthe Child Safe Standards identified by the Royal Commission.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "It also recommended longer retention of abuse records and government funding for coordinated advocacy, counselling and support for survivors.",
+    "pages": [
+     22,
+     30
+    ],
+    "section": "Records and recordkeeping; Dedicated community support services for victims and survivors",
+    "support": "The Australian Government and state and territory governments should fund dedicated \ncommunity support services for victims and survivors in each jurisdiction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission recommended five years of annual implementation reports from governments and major institutions.",
+    "pages": [
+     61
+    ],
+    "section": "Monitoring and reporting on implementation",
+    "support": "through five consecutive annual reports \ntabled before their respective parliaments.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "All institutions should uphold the rights of the child.",
+    "page": 6,
+    "kind": "recommendation"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The Australian Government should establish a mechanism to oversee the development and \nimplementation of a national strategy to prevent child sexual abuse.",
+    "page": 4,
+    "kind": "recommendation"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

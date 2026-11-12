@@ -1,0 +1,82 @@
+{
+ "slug": "integrity-report-wa-ccc-2018-03-21-review-police-response-incident-country-town-where-072a76cd",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission monitored and reviewed a police investigation into an arrest and custody incident in a country town.",
+    "pages": [
+     5,
+     6
+    ],
+    "section": "INTRODUCTION",
+    "support": "The Commission closely monitored its progress and reviewed the final report.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "Its review considered a police vehicle's use, force in custody, supervision, medical care and missing custody records.",
+    "pages": [
+     17,
+     25,
+     27,
+     37
+    ],
+    "section": "Conclusion",
+    "support": "Failure to record Mr Rhodes' custody status at any stage was a serious omission.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission considered police handling of the use-of-force matter appropriate and found the decision to use managerial action rather than prosecution was available on the facts.",
+    "pages": [
+     25
+    ],
+    "section": "Conclusion",
+    "support": "In the Commission's opinion, the decision to proceed with managerial rather than prosecution action was fairly open to be made on the facts.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its four recommendations covered tailored training for repeated excessive force, custody management, custody officer experience and reporting injury or severe discomfort.",
+    "pages": [
+     38
+    ],
+    "section": "Recommendations",
+    "support": "Consideration should be given to ensuring that custody officers have sufficient training and experience to carry out their duties.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The outcome of the investigation and the action taken by the WA Police Force against the officers appears reasonable and appropriate.",
+    "page": 37,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

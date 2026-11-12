@@ -1,0 +1,65 @@
+{
+ "slug": "integrity-report-sa-icac-2015-07-02-evaluation-of-the-practices-policies-and-procedures-of-the-p",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commissioner Against Corruption began evaluating the Police Ombudsman’s procedures because of complaint delays and a parallel legislative review.",
+    "pages": [
+     3
+    ],
+    "section": "Evaluation rationale",
+    "support": "First, I had noted the time taken to deal with complaints about police and the impact that internal \nprocesses might have had on those delays.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commissioner discontinued the evaluation after procedural changes and recommendations in the separate legislative review reduced its usefulness.",
+    "pages": [
+     4
+    ],
+    "section": "Decision to discontinue",
+    "support": "In light of the recommendations in that review and in light of the procedural changes that have occurred \nin the Police Ombudsman’s office",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commissioner concluded that remaining complexity in the police complaints system required legislative amendment.",
+    "pages": [
+     4
+    ],
+    "section": "Decision to discontinue",
+    "support": "Many of the systems for the resolution of complaints and reports about police remain complex and \nunwieldy.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Many of the systems for the resolution of complaints and reports about police remain complex and \nunwieldy.",
+    "page": 4,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 3,
+  "sentences_pass": 3,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

@@ -1,0 +1,61 @@
+{
+  "slug": "integrity-report-sa-icac-2025-06-27-icac-public-integrity-survey-2024",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commission Against Corruption surveyed public officers about perceived corruption risks, decision making and reporting wrongdoing.",
+      "pages": [
+        6,
+        7
+      ],
+      "section": "THE SURVEY",
+      "support": "The Commission uses Public Integrity Surveys to better understand public officers’ perceptions of corruption and other improper conduct.",
+      "people": []
+    },
+    {
+      "text": "It analysed 7,060 usable responses and cautioned that the voluntary sample was unlikely to represent all public officers.",
+      "pages": [
+        7
+      ],
+      "section": "The sample",
+      "support": "The responses are unlikely to be representative of all public officers.",
+      "people": []
+    },
+    {
+      "text": "The Commission reported that favouritism in employment remained the leading perceived corruption risk, followed by misuse of authority.",
+      "pages": [
+        64
+      ],
+      "section": "CONCLUSIONS",
+      "support": "Favouritism in recruitment and other career opportunities continues to be seen as the greatest corruption risk facing the public sector.",
+      "people": []
+    },
+    {
+      "text": "It found that respondents were less likely to have received training about corruption risks specific to their roles than in the previous survey.",
+      "pages": [
+        64
+      ],
+      "section": "CONCLUSIONS",
+      "support": "participants overall are less likely to have received internal training on corruption risks specific to their role.",
+      "people": []
+    },
+    {
+      "text": "The Commission called for transparent decisions and leadership that makes staff feel safe when reporting suspected wrongdoing.",
+      "pages": [
+        64
+      ],
+      "section": "CONCLUSIONS",
+      "support": "Senior leaders must support their staff to feel safe from retaliation if they report.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Senior leaders must support their staff to feel safe from retaliation if they report.",
+      "page": 64,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "No separate executive summary or overview and no numbered recommendations. Results describe participants’ perceptions and experiences, not established corruption findings."
+}

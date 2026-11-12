@@ -1,0 +1,63 @@
+{
+  "slug": "integrity-report-nsw-icac-2010-05-11-profiling-the-nsw-public-sector-report-3",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Executive summary",
+    "first_page": 7,
+    "last_page": 7
+  },
+  "sentences": [
+    {
+      "text": "The NSW Independent Commission Against Corruption compares corruption risk management in local councils and state agencies to support benchmarking.",
+      "pages": [
+        8
+      ],
+      "support": "This report compares the corruption risk management of local councils and state agencies within NSW.",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "It analyses survey responses from public sector organisations and staff, gathered in 2007.",
+      "pages": [
+        7,
+        8
+      ],
+      "support": "During 2007, as part of the Profiling the NSW public sector II project",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "The Commission concludes that councils face a broader range of risks from their functions and processes, while fewer appear to use management controls than state agencies.",
+      "pages": [
+        7,
+        34
+      ],
+      "support": "The clearest finding is that fewer local councils appear to adopt management controls than state agencies.",
+      "section": "Corruption prevention controls – conclusions",
+      "people": []
+    },
+    {
+      "text": "The Commission advises councils to review management controls and computer-password practices, and cautions that survey comparisons cannot replace assessment of each organisation’s risks.",
+      "pages": [
+        7,
+        35
+      ],
+      "support": "this process cannot give a complete picture of an organisation’s corruption prevention strengths and vulnerabilities.",
+      "section": "Implications of results",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The clearest finding is that fewer local councils appear to adopt management controls than state agencies.",
+      "page": 34,
+      "kind": "finding"
+    },
+    {
+      "quote": "Corruption risks arising from staff misconduct do not appear to differ greatly between local councils and state agencies in NSW.",
+      "page": 7,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "Survey-based comparisons are qualified as apparent differences, not findings about every council or employee. No numbered formal recommendations list; the report cautions about survey limitations."
+}

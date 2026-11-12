@@ -1,0 +1,86 @@
+{
+ "slug": "integrity-report-nsw-icac-2023-11-16-fraud-and-corruption-control-evaluating-compliance-and-its-d",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The NSW Independent Commission Against Corruption assessed agencies’ compliance with the Treasury fraud and corruption control policy and barriers to meeting it.",
+    "pages": [
+     6
+    ],
+    "support": "The purpose of this publication is to assess compliance with the circular and to identify any barriers that limit compliance.",
+    "section": "Chapter 1: Background and methodology",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "Its research combined survey responses from 90 agencies, nine focus groups and analysis of agencies’ control documents.",
+    "pages": [
+     6
+    ],
+    "support": "To assess compliance with the circular, and to understand the drivers of compliance and non-compliance, the Commission conducted three research activities:",
+    "section": "Methodology",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission reports that most agencies met minimum standards, while managing third parties was the requirement agencies found hardest to meet.",
+    "pages": [
+     8,
+     10
+    ],
+    "support": "Having robust third-party management systems was seen to be the most difficult aspect of the circular to achieve.",
+    "section": "Chapter 2: Overview of compliance with the circular",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission advises agencies to improve third-party controls through due diligence, clear responsibilities, staff training and reporting arrangements.",
+    "pages": [
+     10
+    ],
+    "support": "All agencies should ensure that they implement a variety of controls to reduce third-party fraud and corruption risks",
+    "section": "Third-party management systems",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The research findings show that many agencies do not consistently apply third-party controls.",
+    "page": 10,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Chapter 2: Overview of compliance with the circular",
+   "first_page": 8,
+   "last_page": 10
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

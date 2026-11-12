@@ -1,0 +1,129 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-vic-yoorrook",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "Yoorrook Justice Commission",
+ "body": "Yoorrook Justice Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a250f/globalassets/tabled-paper-documents/tabled-paper-9287/yoorrook-for-transformation_summaryreport_accessible.pdf",
+  "document": "Yoorrook Justice Commission's Third Interim Report - Yoorrook for Transformation",
+  "sha256": "d9ebb576793ad84367d01a3300b085e6d060b9bd396546f464a165954cebccbc",
+  "pages": 47,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 14,
+  "last_page": 26,
+  "link": "https://www.parliament.vic.gov.au/4a250f/globalassets/tabled-paper-documents/tabled-paper-9287/yoorrook-for-transformation_summaryreport_accessible.pdf#page=14"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Yoorrook Justice Commission was established to investigate historical and continuing systemic injustice against First Peoples in Victoria and recommend redress.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a250f/globalassets/tabled-paper-documents/tabled-paper-9287/yoorrook-for-transformation_summaryreport_accessible.pdf",
+      "document": "Yoorrook Justice Commission's Third Interim Report - Yoorrook for Transformation",
+      "page": 15
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "This inquiry considered land and waters, health, housing, education, economic and political participation, and access to records.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a250f/globalassets/tabled-paper-documents/tabled-paper-9287/yoorrook-for-transformation_summaryreport_accessible.pdf",
+      "document": "Yoorrook Justice Commission's Third Interim Report - Yoorrook for Transformation",
+      "page": 15
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "Yoorrook found that coordinated colonial actions aimed at destroying First Peoples’ lives and communities amounted to genocide.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a250f/globalassets/tabled-paper-documents/tabled-paper-9287/yoorrook-for-transformation_summaryreport_accessible.pdf",
+      "document": "Yoorrook Justice Commission's Third Interim Report - Yoorrook for Transformation",
+      "page": 17
+     }
+    ],
+    "section": "Part D – Land injustice"
+   },
+   {
+    "text": "It also concluded that schooling was failing First Peoples’ children and that economic inequality reflected colonial exclusion.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a250f/globalassets/tabled-paper-documents/tabled-paper-9287/yoorrook-for-transformation_summaryreport_accessible.pdf",
+      "document": "Yoorrook Justice Commission's Third Interim Report - Yoorrook for Transformation",
+      "page": 18
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a250f/globalassets/tabled-paper-documents/tabled-paper-9287/yoorrook-for-transformation_summaryreport_accessible.pdf",
+      "document": "Yoorrook Justice Commission's Third Interim Report - Yoorrook for Transformation",
+      "page": 20
+     }
+    ],
+    "section": "Part E – Education; Part H – Economic and political life"
+   },
+   {
+    "text": "Its 100 recommendations cover change through treaty, urgent reforms to rights and services, accountability and redress.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a250f/globalassets/tabled-paper-documents/tabled-paper-9287/yoorrook-for-transformation_summaryreport_accessible.pdf",
+      "document": "Yoorrook Justice Commission's Third Interim Report - Yoorrook for Transformation",
+      "page": 21
+     }
+    ],
+    "section": "Yoorrook’s recommendations for change"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "From 1834, mass killings, disease, sexual violence, exclusion, linguicide, cultural erasure, environmental degradation, child removal, absorption and assimilation combined to bring about the near-complete physical destruction of First Peoples in Victoria.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a250f/globalassets/tabled-paper-documents/tabled-paper-9287/yoorrook-for-transformation_summaryreport_accessible.pdf",
+     "document": "Yoorrook Justice Commission's Third Interim Report - Yoorrook for Transformation",
+     "page": 17
+    }
+   },
+   {
+    "quote": "The Victorian schooling system is failing First Peoples’ children and young people.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a250f/globalassets/tabled-paper-documents/tabled-paper-9287/yoorrook-for-transformation_summaryreport_accessible.pdf",
+     "document": "Yoorrook Justice Commission's Third Interim Report - Yoorrook for Transformation",
+     "page": 18
+    }
+   },
+   {
+    "quote": "Current economic disparities and barriers to First Peoples’ prosperity are direct legacies of colonial practices and state-sanctioned exclusion.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a250f/globalassets/tabled-paper-documents/tabled-paper-9287/yoorrook-for-transformation_summaryreport_accessible.pdf",
+     "document": "Yoorrook Justice Commission's Third Interim Report - Yoorrook for Transformation",
+     "page": 20
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:21+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

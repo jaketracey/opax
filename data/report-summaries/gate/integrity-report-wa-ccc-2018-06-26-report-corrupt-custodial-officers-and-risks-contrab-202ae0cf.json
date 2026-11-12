@@ -1,0 +1,82 @@
+{
+ "slug": "integrity-report-wa-ccc-2018-06-26-report-corrupt-custodial-officers-and-risks-contrab-202ae0cf",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission investigated conduct by former Acacia prison custodial officers as part of a joint investigation with the Department of Justice.",
+    "pages": [
+     4
+    ],
+    "section": "INTRODUCTION",
+    "support": "The Commission is conducting an ongoing joint investigation with the Department of Justice (DoJ) into public officers engaging in serious misconduct",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The investigation examined drug supply, bribery and the risks of prisoners and organised crime groups corrupting staff.",
+    "pages": [
+     4
+    ],
+    "section": "INTRODUCTION",
+    "support": "this report highlights how prisoners and organised crime syndicates can exploit an officer's weaknesses in order to corrupt them.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission formed serious misconduct opinions against two former custodial officers over drug activities and corruption.",
+    "pages": [
+     29,
+     30
+    ],
+    "section": "Conclusions and opinions of serious misconduct",
+    "support": "The Commission forms an opinion of serious misconduct against former custodial officer",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its five recommendations addressed prison entry screening, steroid education, drug testing, staff vulnerabilities and the analysis of security reports.",
+    "pages": [
+     31
+    ],
+    "section": "Recommendations",
+    "support": "Periodic professional review of frontline prison staff be provided to identify vulnerabilities with a view to providing support and managing risk.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "The Commission planned to report on implementation after a year.",
+    "pages": [
+     31
+    ],
+    "section": "Recommendations",
+    "support": "The Commission proposes to report on the implementation of these recommendations in one year.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 0,
+  "findings_pass": 0,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

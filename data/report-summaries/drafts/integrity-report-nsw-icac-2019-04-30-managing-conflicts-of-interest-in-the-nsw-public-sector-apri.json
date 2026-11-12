@@ -1,0 +1,54 @@
+{
+  "slug": "integrity-report-nsw-icac-2019-04-30-managing-conflicts-of-interest-in-the-nsw-public-sector-apri",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The NSW Independent Commission Against Corruption provides guidance on recognising, disclosing and managing conflicts of interest in public agencies.",
+      "pages": [
+        6
+      ],
+      "support": "It explains how to identify, disclose and manage a conflict of interest",
+      "section": "About this publication",
+      "people": []
+    },
+    {
+      "text": "Its framework examines personal interests, public duties and whether an informed observer could perceive that private interests might be favoured.",
+      "pages": [
+        6,
+        7
+      ],
+      "support": "Could a reasonable person perceive that the personal interest might be favoured?",
+      "section": "What is a conflict of interest?",
+      "people": []
+    },
+    {
+      "text": "The Commission explains that a conflict usually does not itself amount to corruption, but concealment, misuse or poor management can lead to corrupt conduct.",
+      "pages": [
+        9
+      ],
+      "support": "Corrupt conduct can, however, arise when a conflict of interest is concealed, understated, mismanaged or abused.",
+      "section": "Conflicts of interest and corrupt conduct",
+      "people": []
+    },
+    {
+      "text": "The Commission advises managers to assess risks, document and implement responses, monitor changes and audit whether controls work.",
+      "pages": [
+        21,
+        25,
+        28
+      ],
+      "support": "The relevant manager should review the written declaration of a conflict of interest and prepare a plan for managing and monitoring it.",
+      "section": "Manage and monitor conflicts of interest",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "As with any other important control framework, an agency’s conflict of interest framework should be evaluated or audited from time-to-time.",
+      "page": 28,
+      "kind": "recommendation"
+    }
+  ],
+  "notes": "General guidance with no separate summary or numbered recommendations list; hypothetical examples and names are omitted."
+}

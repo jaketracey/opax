@@ -1,0 +1,95 @@
+{
+ "slug": "integrity-report-vic-ibac-2026-10-07-tp10548-special-report-on-public-sector-agency-responses-to",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "IBAC reviewed its recommendations to Victorian public sector agencies to explain their scope and how agencies responded.",
+    "pages": [
+     5
+    ],
+    "support": "highlighting the volume and breadth of recommendations IBAC has made to public sector agencies",
+    "section": "Executive summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It analysed 260 recommendations issued between 2014 and 2025, excluding recommendations to Victoria Police.",
+    "pages": [
+     5,
+     6
+    ],
+    "support": "IBAC analysed 260 recommendations made to the Victorian public sector",
+    "section": "Executive summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "IBAC reported that agencies had fully implemented 84 per cent of recommendations after excluding those still in progress or not yet started.",
+    "pages": [
+     5
+    ],
+    "support": "84 per cent of IBAC’s public sector recommendations, have been fully implemented by agencies",
+    "section": "Key findings about IBAC’s recommendations to the public sector",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It found that conflicts of interest, complaint handling, corruption reporting and procurement were the risks most commonly addressed.",
+    "pages": [
+     5
+    ],
+    "support": "The most common corruption risks targeted by IBAC’s public sector recommendations were conflicts of interest",
+    "section": "Key findings about IBAC’s recommendations to the public sector",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "IBAC assessed 168 recommendations as fully implemented, meaning IBAC is satisfied with the responses provided by agencies to demonstrate how the recommendations have been implemented.",
+    "page": 18,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The median time taken for agencies to fully implement IBAC’s recommendations was 13 months.",
+    "page": 20,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Executive summary",
+   "first_page": 5,
+   "last_page": 5
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

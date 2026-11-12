@@ -1,0 +1,55 @@
+{
+  "slug": "integrity-report-sa-icac-2026-06-25-doing-right-by-those-who-call-out-the-wrong",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commission Against Corruption reviewed the effectiveness of the state’s whistleblower protections.",
+      "pages": [
+        27
+      ],
+      "section": "Introduction",
+      "support": "This report examines the effectiveness of South Australia’s whistleblower protection regime and recommends changes to enhance it.",
+      "people": []
+    },
+    {
+      "text": "The review examined eligibility for protection, remedies for retaliation, confidentiality, support, oversight and the clarity of the law.",
+      "pages": [
+        5,
+        6,
+        7
+      ],
+      "section": "Contents",
+      "support": "Chapter 2: How should those who make disclosures be protected?",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that broader protection, better access to remedies and clearer laws would improve the regime.",
+      "pages": [
+        157
+      ],
+      "section": "Concluding remarks",
+      "support": "The areas in which recommendations made in this report are perhaps most able to effect positive change",
+      "people": []
+    },
+    {
+      "text": "Its 61 recommendations included expanding protection, improving enforcement and establishing independent support for whistleblowers.",
+      "pages": [
+        13,
+        19,
+        23
+      ],
+      "section": "Recommendations",
+      "support": "This report contains 61 recommendations to reform South Australia’s whistleblower protection regime.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "An independent, and adequately resourced, whistleblower support authority could fill a significant gap in South Australia’s whistleblower protection regime.",
+      "page": 157,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "No separate executive summary or overview. Scope is taken from the introduction and chapter headings; conclusions and all 61 recommendations were read. The source pack’s document label is “here.”."
+}

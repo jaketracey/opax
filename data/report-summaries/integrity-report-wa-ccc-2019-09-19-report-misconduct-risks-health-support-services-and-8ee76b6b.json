@@ -1,0 +1,84 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2019-09-19-report-misconduct-risks-health-support-services-and-8ee76b6b",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on misconduct risks in Health Support Services and North Metropolitan Health Service",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20misconduct%20risks%20in%20Health%20Support%20Services%20and%20North%20Metropolitan%20Health%20Service.pdf",
+  "document": "Report on misconduct risks in Health Support Services and North Metropolitan Health Service",
+  "sha256": "b1027fbae199aea71addb22f35198e14a22eaad007fd0f62638bcb1f920613d9",
+  "pages": 20,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated risks in working hours, leave and overtime arrangements at North Metropolitan Health Service.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20misconduct%20risks%20in%20Health%20Support%20Services%20and%20North%20Metropolitan%20Health%20Service.pdf",
+      "document": "Report on misconduct risks in Health Support Services and North Metropolitan Health Service",
+      "page": 4
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission also identified weaknesses in Health Support Services' payroll processes.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20misconduct%20risks%20in%20Health%20Support%20Services%20and%20North%20Metropolitan%20Health%20Service.pdf",
+      "document": "Report on misconduct risks in Health Support Services and North Metropolitan Health Service",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20misconduct%20risks%20in%20Health%20Support%20Services%20and%20North%20Metropolitan%20Health%20Service.pdf",
+      "document": "Report on misconduct risks in Health Support Services and North Metropolitan Health Service",
+      "page": 5
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission concluded that outdated technology and insufficient managerial vigilance contributed to systemic risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20misconduct%20risks%20in%20Health%20Support%20Services%20and%20North%20Metropolitan%20Health%20Service.pdf",
+      "document": "Report on misconduct risks in Health Support Services and North Metropolitan Health Service",
+      "page": 20
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "It called for shared responsibility for payroll controls, upward delegation during managers' leave and closer scrutiny of termination payments.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20misconduct%20risks%20in%20Health%20Support%20Services%20and%20North%20Metropolitan%20Health%20Service.pdf",
+      "document": "Report on misconduct risks in Health Support Services and North Metropolitan Health Service",
+      "page": 20
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

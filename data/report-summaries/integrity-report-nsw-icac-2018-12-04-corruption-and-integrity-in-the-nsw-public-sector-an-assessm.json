@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2018-12-04-corruption-and-integrity-in-the-nsw-public-sector-an-assessm",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Corruption and integrity in the NSW public sector - an assessment of current trends and events",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption-and-integrity-in-the-nsw-public-sector-an-assessment-of-current-trends-and-events_7Dec18.pdf.aspx",
+  "document": "Corruption and integrity in the NSW public sector - an assessment of current trends and events",
+  "sha256": "ed9b95cd8cb9919215c18a55fa1fbb2096534b5dcec2a1bb2da8b106b7c0ef0f",
+  "pages": 88,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 7,
+  "last_page": 9,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption-and-integrity-in-the-nsw-public-sector-an-assessment-of-current-trends-and-events_7Dec18.pdf.aspx#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption reviews contemporary corruption risks and integrity issues to help public agencies target prevention efforts.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption-and-integrity-in-the-nsw-public-sector-an-assessment-of-current-trends-and-events_7Dec18.pdf.aspx",
+      "document": "Corruption and integrity in the NSW public sector - an assessment of current trends and events",
+      "page": 7
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption-and-integrity-in-the-nsw-public-sector-an-assessment-of-current-trends-and-events_7Dec18.pdf.aspx",
+      "document": "Corruption and integrity in the NSW public sector - an assessment of current trends and events",
+      "page": 10
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "It draws on published research, its own data and stakeholder consultation, covering recruitment, procurement, regulation and government-funded non-government organisations.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption-and-integrity-in-the-nsw-public-sector-an-assessment-of-current-trends-and-events_7Dec18.pdf.aspx",
+      "document": "Corruption and integrity in the NSW public sector - an assessment of current trends and events",
+      "page": 8
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption-and-integrity-in-the-nsw-public-sector-an-assessment-of-current-trends-and-events_7Dec18.pdf.aspx",
+      "document": "Corruption and integrity in the NSW public sector - an assessment of current trends and events",
+      "page": 9
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption-and-integrity-in-the-nsw-public-sector-an-assessment-of-current-trends-and-events_7Dec18.pdf.aspx",
+      "document": "Corruption and integrity in the NSW public sector - an assessment of current trends and events",
+      "page": 10
+     }
+    ],
+    "section": "Chapter 1: Introduction"
+   },
+   {
+    "text": "The Commission identifies weak information management, unrestricted authority and governance failures as recurring factors associated with corruption.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption-and-integrity-in-the-nsw-public-sector-an-assessment-of-current-trends-and-events_7Dec18.pdf.aspx",
+      "document": "Corruption and integrity in the NSW public sector - an assessment of current trends and events",
+      "page": 7
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commission advises prevention efforts to target processes where individuals control decisions alone or can hide or manipulate information.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption-and-integrity-in-the-nsw-public-sector-an-assessment-of-current-trends-and-events_7Dec18.pdf.aspx",
+      "document": "Corruption and integrity in the NSW public sector - an assessment of current trends and events",
+      "page": 7
+     }
+    ],
+    "section": "Executive summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission’s key observation is that many agencies are falling short of acceptable employment screening practices.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption-and-integrity-in-the-nsw-public-sector-an-assessment-of-current-trends-and-events_7Dec18.pdf.aspx",
+     "document": "Corruption and integrity in the NSW public sector - an assessment of current trends and events",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,90 @@
+{
+ "slug": "integrity-report-sa-icac-2026-06-02-evaluation-of-professional-development-funds-for-medical-off",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commission Against Corruption evaluated controls over medical officers’ professional development funds in the health department and two local health networks.",
+    "pages": [
+     9,
+     11
+    ],
+    "section": "Introduction",
+    "support": "the extent to which these practices, policies and procedures effectively manage the risks of corruption.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It reviewed policies, claims data, supporting documents and staff interviews to assess how the funds were administered.",
+    "pages": [
+     11
+    ],
+    "section": "Introduction",
+    "support": "an examination of all supporting documentation relating to a random selection of claims",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that clearer definitions and procedures were needed to limit discretion and reduce the risk of funds being misused.",
+    "pages": [
+     30
+    ],
+    "section": "Conclusion",
+    "support": "There is a need for clear definitions, policies and procedures to reduce discretion and to guide decision-making.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its eight recommendations covered eligible expenses, approval and reimbursement systems, detection of duplicate claims and audits.",
+    "pages": [
+     9,
+     32,
+     33
+    ],
+    "section": "Recommendations",
+    "support": "The evaluation has identified areas vulnerable to corruption and makes eight recommendations to address these risks.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "There is a need for clear definitions, policies and procedures to reduce discretion and to guide decision-making.",
+    "page": 30,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "Review and improve the capability of the electronic reimbursement system, MOPDRS to detect duplicate claims.",
+    "page": 33,
+    "kind": "recommendation"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

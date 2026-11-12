@@ -1,0 +1,71 @@
+{
+  "slug": "integrity-report-sa-icac-2023-03-21-evaluation-of-tafe-sa",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Executive summary",
+    "first_page": 10,
+    "last_page": 11
+  },
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commission Against Corruption evaluated TAFE SA to identify weaknesses that could allow corruption.",
+      "pages": [
+        8
+      ],
+      "section": "Commissioner’s foreword",
+      "support": "strengthen the agency’s understanding of the corruption risks attending its functions and purposes.",
+      "people": []
+    },
+    {
+      "text": "The evaluation examined governance, staffing, procurement, assets, teaching, commercial activities and information management.",
+      "pages": [
+        10,
+        11
+      ],
+      "section": "Executive summary",
+      "support": "TAFE SA continues to reform and invest in information systems, data and document practices",
+      "people": []
+    },
+    {
+      "text": "The Commission considered that TAFE SA could underestimate fraud and corruption risks despite work to strengthen its governance.",
+      "pages": [
+        10
+      ],
+      "section": "Executive summary",
+      "support": "the Commission observed that TAFE SA may underestimate its fraud and corruption risks.",
+      "people": []
+    },
+    {
+      "text": "The Commission reported that completed parallel investigations found no evidence of corruption, although another investigation remained underway and procedural weaknesses had emerged.",
+      "pages": [
+        11
+      ],
+      "section": "Executive summary",
+      "support": "the completed investigations found no evidence that corruption had occurred. However, various administrative and procedural weaknesses were revealed.",
+      "people": []
+    },
+    {
+      "text": "Its 34 recommendations covered risk assessment, staff supervision, procurement controls, complaints, professional boundaries and commercial interests.",
+      "pages": [
+        11,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "section": "Recommendations",
+      "support": "The Commission has made 34 recommendations to enable TAFE SA to better recognise and address its corruption risks.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "There are opportunities for TAFE SA to strengthen its awareness and assessment of those risks and behaviours beyond the current understanding provided by its risk appetite statement and external audit function.",
+      "page": 10,
+      "kind": "finding"
+    }
+  ],
+  "notes": "Investigation status is reported as stated in this report. Allegations about teaching staff are not presented as established misconduct."
+}

@@ -1,0 +1,125 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2025-07-29-corruption-perceptions-survey-2025-queensland-public-sector",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Corruption Perceptions Survey 2025 | Queensland Public Sector Employees Report",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Public-Sector-Employee-Report.pdf",
+  "document": "Queensland Public Sector Employees Report",
+  "sha256": "7975c33dd0561cf166d36de4cd3aa97bf27c6ead31b40956e872504182f45842",
+  "pages": 86,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of key findings",
+  "first_page": 13,
+  "last_page": 14,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Public-Sector-Employee-Report.pdf#page=13"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission commissioned research on Queensland public sector employees’ corruption perceptions to monitor prevention work and guide planning.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Public-Sector-Employee-Report.pdf",
+      "document": "Queensland Public Sector Employees Report",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Public-Sector-Employee-Report.pdf",
+      "document": "Queensland Public Sector Employees Report",
+      "page": 5
+     }
+    ],
+    "section": "Research objectives"
+   },
+   {
+    "text": "An online survey collected 5,957 completed responses between 28 March and 9 May 2025 from state government and hospital and health service employees.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Public-Sector-Employee-Report.pdf",
+      "document": "Queensland Public Sector Employees Report",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Public-Sector-Employee-Report.pdf",
+      "document": "Queensland Public Sector Employees Report",
+      "page": 6
+     }
+    ],
+    "section": "Research method"
+   },
+   {
+    "text": "The CCC reported that employees ranked policy non-compliance, mishandling confidential information, and bullying and harassment among the highest workplace corruption risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Public-Sector-Employee-Report.pdf",
+      "document": "Queensland Public Sector Employees Report",
+      "page": 14
+     }
+    ],
+    "section": "Summary of key findings"
+   },
+   {
+    "text": "The CCC reported that 55% said they had witnessed or suspected corruption in the preceding five years, and 55% of that group had not reported it.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Public-Sector-Employee-Report.pdf",
+      "document": "Queensland Public Sector Employees Report",
+      "page": 14
+     }
+    ],
+    "section": "Summary of key findings"
+   },
+   {
+    "text": "The CCC reported that 72% would report corruption, but only 33% expected meaningful action and 52% expected personal repercussions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Public-Sector-Employee-Report.pdf",
+      "document": "Queensland Public Sector Employees Report",
+      "page": 14
+     }
+    ],
+    "section": "Summary of key findings"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Public sector employees are more likely to feel comfortable lodging a complaint with the CCC than they are lodging a complaint within their workplace.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Public-Sector-Employee-Report.pdf",
+     "document": "Queensland Public Sector Employees Report",
+     "page": 13
+    }
+   },
+   {
+    "quote": "There is some scepticism around the outcomes of reporting corruption; one in three agree meaningful action would be taken (33%), but similar proportions disagree (36%).",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Public-Sector-Employee-Report.pdf",
+     "document": "Queensland Public Sector Employees Report",
+     "page": 14
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

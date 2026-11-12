@@ -1,0 +1,98 @@
+{
+ "slug": "integrity-report-qld-ccc-1998-09-09-inquiry-allegations-misconduct-investigation-paedophilia-que",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The CJC commissioned Project Triton to investigate allegations that public officials had obstructed or mishandled investigations of child sexual abuse.",
+    "pages": [
+     11,
+     12,
+     13
+    ],
+    "support": "the Project Triton investigation is concerned with whether police officers have failed to investigate certain allegations of such activities or covered them up",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The inquiry examined claims about secret police files, alleged films of child abuse and murder, earlier police investigations and cases in the Whitsundays.",
+    "pages": [
+     9,
+     10
+    ],
+    "support": "allegations concerning the possible existence of two further ‘snuff’ movies have been investigated.",
+    "section": "Executive Summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The inquiry rejected the cover-up and impropriety allegations considered under its first four references.",
+    "pages": [
+     9,
+     10
+    ],
+    "support": "Those allegations received widespread and prominent publicity; yet, upon investigation, not one allegation had substance in fact.",
+    "section": "Executive Summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The inquiry found no basis to suspect police protection of offenders in the Whitsundays and concluded that allegations about the films had been properly investigated.",
+    "pages": [
+     10
+    ],
+    "support": "There is no basis to suspect that police have protected paedophiles from detection and punishment.",
+    "section": "Executive Summary",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Allegations made to law enforcement and other agencies in Queensland suggesting the existence of ‘snuff’ movies have been properly investigated and suggestions that such investigations were aborted or interfered with are baseless.",
+    "page": 10,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "There is no basis to suspect that police have protected paedophiles from detection and punishment.",
+    "page": 10,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Executive Summary",
+   "first_page": 9,
+   "last_page": 10
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

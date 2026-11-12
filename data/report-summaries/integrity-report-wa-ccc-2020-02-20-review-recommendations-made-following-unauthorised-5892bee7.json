@@ -1,0 +1,75 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2020-02-20-review-recommendations-made-following-unauthorised-5892bee7",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Review of recommendations made following unauthorised release of confidential information from the Public Transport Authority",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20following%20unauthorised%20release%20of%20confidential%20information%20from%20the%20Public%20Transport%20Authority.pdf",
+  "document": "Review of recommendations made following unauthorised release of confidential information from the Public Transport Authority",
+  "sha256": "d2ec096a733725c77457782c2b4052beac8fd9801623465f507829ed4df08d7d",
+  "pages": 10,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed the Public Transport Authority's response to two recommendations following an unauthorised disclosure of staff information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20following%20unauthorised%20release%20of%20confidential%20information%20from%20the%20Public%20Transport%20Authority.pdf",
+      "document": "Review of recommendations made following unauthorised release of confidential information from the Public Transport Authority",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The recommendations sought stronger access controls and staff awareness, and the review examined security changes, policies and training.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20following%20unauthorised%20release%20of%20confidential%20information%20from%20the%20Public%20Transport%20Authority.pdf",
+      "document": "Review of recommendations made following unauthorised release of confidential information from the Public Transport Authority",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20following%20unauthorised%20release%20of%20confidential%20information%20from%20the%20Public%20Transport%20Authority.pdf",
+      "document": "Review of recommendations made following unauthorised release of confidential information from the Public Transport Authority",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20following%20unauthorised%20release%20of%20confidential%20information%20from%20the%20Public%20Transport%20Authority.pdf",
+      "document": "Review of recommendations made following unauthorised release of confidential information from the Public Transport Authority",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The Commission concluded that the authority had adequately addressed the concerns and closed both recommendations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20following%20unauthorised%20release%20of%20confidential%20information%20from%20the%20Public%20Transport%20Authority.pdf",
+      "document": "Review of recommendations made following unauthorised release of confidential information from the Public Transport Authority",
+      "page": 10
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

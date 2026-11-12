@@ -1,0 +1,78 @@
+{
+ "slug": "integrity-report-nsw-icac-2005-07-28-profiling-the-nsw-public-sector-functions-risks-and-corrupti",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Independent Commission Against Corruption followed up NSW public sector agencies to assess progress in core prevention policies between 2001 and 2004.",
+    "pages": [
+     3
+    ],
+    "support": "The main purpose of this research was to determine whether there had been progress \nby NSW public sector organisations",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examined codes of conduct, corruption risk management, internal audit, gifts and benefits policies, and internal investigations.",
+    "pages": [
+     3
+    ],
+    "support": "The follow-up focussed \non the areas of code of conduct, corruption risk management, internal audit, gifts and \nbeneﬁ ts and internal investigations.",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "ICAC concluded that fewer agencies in the follow-up sample lacked the core strategies, but corruption risk management still needed further work.",
+    "pages": [
+     10
+    ],
+    "support": "the main area in which further work \nneeds to be done is corruption risk management.",
+    "section": "Conclusions",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "ICAC cautioned that agencies’ answers were accepted at face value, the sample did not represent the whole sector and changes were not tested for statistical significance.",
+    "pages": [
+     10
+    ],
+    "support": "All \nresponses have been accepted at face value.",
+    "section": "Conclusions",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Finally, this follow-up research suggests that the main area in which further work \nneeds to be done is corruption risk management.",
+    "page": 10,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

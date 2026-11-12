@@ -1,0 +1,42 @@
+{
+  "slug": "integrity-report-sa-icac-2015-07-02-evaluation-of-the-practices-policies-and-procedures-of-the-p",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commissioner Against Corruption began evaluating the Police Ombudsman’s procedures because of complaint delays and a parallel legislative review.",
+      "pages": [
+        3
+      ],
+      "section": "Evaluation rationale",
+      "support": "First, I had noted the time taken to deal with complaints about police and the impact that internal \nprocesses might have had on those delays.",
+      "people": []
+    },
+    {
+      "text": "The Commissioner discontinued the evaluation after procedural changes and recommendations in the separate legislative review reduced its usefulness.",
+      "pages": [
+        4
+      ],
+      "section": "Decision to discontinue",
+      "support": "In light of the recommendations in that review and in light of the procedural changes that have occurred \nin the Police Ombudsman’s office",
+      "people": []
+    },
+    {
+      "text": "The Commissioner concluded that remaining complexity in the police complaints system required legislative amendment.",
+      "pages": [
+        4
+      ],
+      "section": "Decision to discontinue",
+      "support": "Many of the systems for the resolution of complaints and reports about police remain complex and \nunwieldy.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Many of the systems for the resolution of complaints and reports about police remain complex and \nunwieldy.",
+      "page": 4,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "This short report explains a discontinued evaluation and has no separate summary. Legislative recommendations belong to a separate report; procedural changes attributed to the Acting Police Ombudsman are not presented as findings of this evaluation. PDF page 2 is blank."
+}

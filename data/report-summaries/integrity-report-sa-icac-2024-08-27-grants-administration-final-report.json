@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2024-08-27-grants-administration-final-report",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Grants administration: Final report",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/1065178/Grants-Evaluation-Final-Report-August-2024.pdf",
+  "document": "Grants administration: Final report",
+  "sha256": "fb891ee785587e8b8e81241f1ab57bf57d5da4136da867aa6686d652b85d13d3",
+  "pages": 46,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "General observations",
+  "first_page": 14,
+  "last_page": 15,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/1065178/Grants-Evaluation-Final-Report-August-2024.pdf#page=14"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption reviewed public sector grants activity and conducted targeted evaluations of grants administration.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/1065178/Grants-Evaluation-Final-Report-August-2024.pdf",
+      "document": "Grants administration: Final report",
+      "page": 8
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission found agency administration generally sound, while observing uneven practices and limited transparency across the sector.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/1065178/Grants-Evaluation-Final-Report-August-2024.pdf",
+      "document": "Grants administration: Final report",
+      "page": 14
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/1065178/Grants-Evaluation-Final-Report-August-2024.pdf",
+      "document": "Grants administration: Final report",
+      "page": 15
+     }
+    ],
+    "section": "General observations"
+   },
+   {
+    "text": "The Commission reported that its inquiries revealed no critical or systemic integrity risks, but identified opportunities to strengthen governance.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/1065178/Grants-Evaluation-Final-Report-August-2024.pdf",
+      "document": "Grants administration: Final report",
+      "page": 15
+     }
+    ],
+    "section": "General observations"
+   },
+   {
+    "text": "It suggested broader grants guidance and stronger accountability for public spending, including ministerial grant decisions, without making recommendations to specific agencies.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/1065178/Grants-Evaluation-Final-Report-August-2024.pdf",
+      "document": "Grants administration: Final report",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/1065178/Grants-Evaluation-Final-Report-August-2024.pdf",
+      "document": "Grants administration: Final report",
+      "page": 40
+     }
+    ],
+    "section": "Accountability for public money"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The legal framework and governance arrangements for public sector grants are minimal.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/1065178/Grants-Evaluation-Final-Report-August-2024.pdf",
+     "document": "Grants administration: Final report",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

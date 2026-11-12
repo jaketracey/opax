@@ -1,0 +1,93 @@
+{
+ "slug": "integrity-report-wa-ccc-2020-06-25-review-recommendations-made-department-justice-aris-3c5e656d",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission reviewed the Department of Justice's response to 51 recommendations from six reports on prison misconduct risks.",
+    "pages": [
+     6,
+     7
+    ],
+    "support": "Across the six reports, the Commission made a total of 51 recommendations to DoJ.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The review examined governance, prison security, supervision, staff training and reporting, including observations at six prisons.",
+    "pages": [
+     7,
+     8
+    ],
+    "support": "Commission officers observed a range of nominated operational practices at six prisons",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission recognised substantial change and considered that 37 recommendations had been adequately addressed.",
+    "pages": [
+     8,
+     37
+    ],
+    "support": "The Commission considers that DoJ has taken appropriate steps to address 37 of the 51 recommendations.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission left 14 recommendations open for further work and planned another review after 12 months.",
+    "pages": [
+     37
+    ],
+    "support": "The Commission considers that 14 recommendations require further work and will review DoJ's progress again in 12 months.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The Commission considers that DoJ has taken appropriate steps to address 37 of the 51 recommendations.",
+    "page": 37,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The Commission considers that 14 recommendations require further work and will review DoJ's progress again in 12 months.",
+    "page": 37,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Introduction",
+   "first_page": 5,
+   "last_page": 8
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

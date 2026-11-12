@@ -1,0 +1,98 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-act-ic-2023-12-15-operation-lyrebird-part-2",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Operation Lyrebird Part: A special report in relation to a corruption complaint concerning the identified transactions as part of the City to the Lake Project",
+ "body": "ACT Integrity Commission",
+ "source": {
+  "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2390600/Special-Report-City-to-the-Lake-Project.pdf",
+  "document": "Operation Lyrebird Part: A special report in relation to a corruption complaint concerning the identified transactions as part of the City to the Lake Project",
+  "sha256": "4cfda94bf0f5f2a4f80316ac20da1ce7ad1fb907b7659ee7ab6e14426014c362",
+  "pages": 86,
+  "rights": "commission-copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The ACT Integrity Commission considered a parliamentary committee’s corruption complaint about acquisitions for the City to the Lake Project.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2390600/Special-Report-City-to-the-Lake-Project.pdf",
+      "document": "Operation Lyrebird Part: A special report in relation to a corruption complaint concerning the identified transactions as part of the City to the Lake Project",
+      "page": 3
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2390600/Special-Report-City-to-the-Lake-Project.pdf",
+      "document": "Operation Lyrebird Part: A special report in relation to a corruption complaint concerning the identified transactions as part of the City to the Lake Project",
+      "page": 4
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2390600/Special-Report-City-to-the-Lake-Project.pdf",
+      "document": "Operation Lyrebird Part: A special report in relation to a corruption complaint concerning the identified transactions as part of the City to the Lake Project",
+      "page": 7
+     }
+    ],
+    "section": "THE RESPONSE OF THE COMMISSION"
+   },
+   {
+    "text": "This report examined the West Basin acquisitions and the use of former agency executives as consultants.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2390600/Special-Report-City-to-the-Lake-Project.pdf",
+      "document": "Operation Lyrebird Part: A special report in relation to a corruption complaint concerning the identified transactions as part of the City to the Lake Project",
+      "page": 3
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2390600/Special-Report-City-to-the-Lake-Project.pdf",
+      "document": "Operation Lyrebird Part: A special report in relation to a corruption complaint concerning the identified transactions as part of the City to the Lake Project",
+      "page": 4
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2390600/Special-Report-City-to-the-Lake-Project.pdf",
+      "document": "Operation Lyrebird Part: A special report in relation to a corruption complaint concerning the identified transactions as part of the City to the Lake Project",
+      "page": 85
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2390600/Special-Report-City-to-the-Lake-Project.pdf",
+      "document": "Operation Lyrebird Part: A special report in relation to a corruption complaint concerning the identified transactions as part of the City to the Lake Project",
+      "page": 86
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission decided to discontinue the investigations because further action on the corruption report was not justified.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2390600/Special-Report-City-to-the-Lake-Project.pdf",
+      "document": "Operation Lyrebird Part: A special report in relation to a corruption complaint concerning the identified transactions as part of the City to the Lake Project",
+      "page": 7
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2390600/Special-Report-City-to-the-Lake-Project.pdf",
+      "document": "Operation Lyrebird Part: A special report in relation to a corruption complaint concerning the identified transactions as part of the City to the Lake Project",
+      "page": 86
+     }
+    ],
+    "section": "THE RESPONSE OF THE COMMISSION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

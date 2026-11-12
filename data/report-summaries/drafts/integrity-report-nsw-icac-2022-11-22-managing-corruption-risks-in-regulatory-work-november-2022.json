@@ -1,0 +1,52 @@
+{
+  "slug": "integrity-report-nsw-icac-2022-11-22-managing-corruption-risks-in-regulatory-work-november-2022",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The NSW Independent Commission Against Corruption outlines corruption risks in regulatory work and ways to prevent them.",
+      "pages": [
+        6
+      ],
+      "support": "its focus is on highlighting common corruption risks associated with regulatory work and suggesting some potential ways to prevent corrupt conduct.",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "It examines risks created when staff move between regulators and the industries they oversee.",
+      "pages": [
+        19
+      ],
+      "section": "The revolving door",
+      "support": "This term refers to the movement of employees between the regulator (or related government role) and the regulated industry.",
+      "people": []
+    },
+    {
+      "text": "The Commission identifies discretion over enforcement, including decisions to take no action, as a source of corruption risk.",
+      "pages": [
+        9
+      ],
+      "support": "It is the discretion to take regulatory action in different parts of the pyramid",
+      "section": "Managing regulatory discretion",
+      "people": []
+    },
+    {
+      "text": "The Commission advises agencies to assess capture risks, screen recruits, train staff and manage relationships with former or prospective employers.",
+      "pages": [
+        19,
+        20
+      ],
+      "support": "Evaluate regulatory capture during risk assessments and business planning exercises.",
+      "section": "Addressing regulatory capture and the revolving door",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The safest and best option is always to refuse it and report the matter immediately.",
+      "page": 15,
+      "kind": "recommendation"
+    }
+  ],
+  "notes": "No separate summary or numbered recommendations list. The quoted recommendation refers to an offered bribe; allegations in case studies are not treated as findings."
+}

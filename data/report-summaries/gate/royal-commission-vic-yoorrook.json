@@ -1,0 +1,117 @@
+{
+ "slug": "royal-commission-vic-yoorrook",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Yoorrook Justice Commission was established to investigate historical and continuing systemic injustice against First Peoples in Victoria and recommend redress.",
+    "pages": [
+     15
+    ],
+    "section": "Introduction",
+    "support": "to examine the extent and \nimpact of historical and ongoing systemic injustice against First Peoples in Victoria",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "This inquiry considered land and waters, health, housing, education, economic and political participation, and access to records.",
+    "pages": [
+     15
+    ],
+    "section": "Introduction",
+    "support": "in relation \nto lands and waters, health, housing, education, economic prosperity, political life and \naccess to records.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "Yoorrook found that coordinated colonial actions aimed at destroying First Peoples’ lives and communities amounted to genocide.",
+    "pages": [
+     17
+    ],
+    "section": "Part D – Land injustice",
+    "support": "Yoorrook found \nthat the decimation of the First Peoples population in Victoria",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It also concluded that schooling was failing First Peoples’ children and that economic inequality reflected colonial exclusion.",
+    "pages": [
+     18,
+     20
+    ],
+    "section": "Part E – Education; Part H – Economic and political life",
+    "support": "Current economic disparities and barriers to First Peoples’ prosperity are direct \nlegacies of colonial practices and state-sanctioned exclusion.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "Its 100 recommendations cover change through treaty, urgent reforms to rights and services, accountability and redress.",
+    "pages": [
+     21
+    ],
+    "section": "Yoorrook’s recommendations for change",
+    "support": "Yoorrook makes 100 recommendations across four categories: \n•\t transformative change through the treaty process (recommendations 1 to 5)",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "From 1834, mass killings, disease, sexual violence, exclusion, linguicide, cultural erasure, \nenvironmental degradation, child removal, absorption and assimilation combined to bring \nabout the near-complete physical destruction of First Peoples in Victoria.",
+    "page": 17,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The Victorian schooling system is failing First Peoples’ children and young people.",
+    "page": 18,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "quote": "Current economic disparities and barriers to First Peoples’ prosperity are direct \nlegacies of colonial practices and state-sanctioned exclusion.",
+    "page": 20,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Executive summary",
+   "first_page": 14,
+   "last_page": 26
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 3,
+  "findings_pass": 3,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

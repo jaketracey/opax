@@ -1,0 +1,114 @@
+{
+ "slug": "integrity-report-qld-ccc-2004-01-06-protecting-children-inquiry-abuse-children-foster-care",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The CMC investigated systemic causes of abuse in Queensland foster care and the adequacy of measures to prevent, detect and respond to it.",
+    "pages": [
+     12
+    ],
+    "support": "To examine any systemic factors contributing to the incidence of any abuse of children in foster care.",
+    "section": "SUMMARY",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "Its inquiry considered carer selection and support, accountability, Indigenous children’s needs and alternatives to family-based care.",
+    "pages": [
+     13,
+     14
+    ],
+    "support": "Are foster carers adequately selected, trained, resourced, supported and monitored?",
+    "section": "SUMMARY",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that the child protection system had failed children through organisational weaknesses rather than isolated mistakes alone.",
+    "pages": [
+     11,
+     12,
+     120
+    ],
+    "support": "these documented failings cannot be solely attributed to deficiencies of individuals, but have to be recognised as organisational failure.",
+    "section": "SUMMARY; SYSTEMIC ISSUES ARISING FROM THE INVESTIGATIONS",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission’s investigations did not establish official misconduct by current or former ministers or directors-general.",
+    "pages": [
+     13
+    ],
+    "support": "The Commission’s investigations did not establish evidence of official misconduct",
+    "section": "SUMMARY",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "The Commission made 110 recommendations, including a dedicated child safety department, better staff training, support for carers and stronger oversight.",
+    "pages": [
+     15,
+     365,
+     366,
+     367,
+     372
+    ],
+    "support": "Chapters 4 to 9 contain the Commission’s 110 recommendations for reform.",
+    "section": "SUMMARY; APPENDIX E: FULL LIST OF CMC RECOMMENDATIONS",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "As a result of the evidence that it has gathered, the Commission can only conclude that the current child protection system has failed Queensland children in many important respects.",
+    "page": 11,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The Commission’s investigations did not establish evidence of official misconduct by the current or former ministers or directors-general.",
+    "page": 13,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "SUMMARY",
+   "first_page": 11,
+   "last_page": 16
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

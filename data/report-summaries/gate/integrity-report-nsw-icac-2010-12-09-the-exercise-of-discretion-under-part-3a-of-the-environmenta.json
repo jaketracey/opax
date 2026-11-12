@@ -1,0 +1,90 @@
+{
+ "slug": "integrity-report-nsw-icac-2010-12-09-the-exercise-of-discretion-under-part-3a-of-the-environmenta",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The NSW Independent Commission Against Corruption reviews discretion and corruption safeguards in state-level planning approvals, following work with the Department of Planning.",
+    "pages": [
+     4
+    ],
+    "support": "This report has been prepared in its entirety by the Commission.",
+    "section": "Chapter 1: Introduction and overview",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examines project declarations, assessment and decisions under Part 3A, together with processes for listing state-significant sites.",
+    "pages": [
+     4,
+     6
+    ],
+    "support": "Examine the Part 3A process from project declaration to determination",
+    "section": "Terms of reference of joint task force",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission identifies broad discretion, complex rules and outdated local plans as risks, while stating that corrupt use of the powers had not been established.",
+    "pages": [
+     5,
+     9,
+     10
+    ],
+    "support": "There are no established examples of the corrupt use or manipulation of discretion under Part 3A or the MD SEPP",
+    "section": "Chapter 2: Key issues",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its 20 recommendations address planning controls, independent scrutiny, transparency, the Planning and Assessment Commission and third-party appeal rights for private projects.",
+    "pages": [
+     6,
+     7,
+     8
+    ],
+    "support": "the recommendations contained in this report are only directed towards private sector projects.",
+    "section": "List of recommendations",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The greater the departure from the previous norm, the greater the corruption risk.",
+    "page": 6,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Chapter 1: Introduction and overview",
+   "first_page": 4,
+   "last_page": 8
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

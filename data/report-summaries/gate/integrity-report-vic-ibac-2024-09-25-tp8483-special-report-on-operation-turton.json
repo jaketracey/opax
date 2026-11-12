@@ -1,0 +1,96 @@
+{
+ "slug": "integrity-report-vic-ibac-2024-09-25-tp8483-special-report-on-operation-turton",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "IBAC’s Operation Turton investigated alleged unauthorised access to and disclosure of information at the former Metropolitan Fire Brigade.",
+    "pages": [
+     8
+    ],
+    "support": "Operation Turton investigated allegations of unauthorised access and disclosure of information",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "IBAC identified five incidents and found weaknesses in information security and workplace culture.",
+    "pages": [
+     8,
+     10
+    ],
+    "support": "IBAC identified five separate incidents where MFB information was accessed or disclosed without authorisation",
+    "section": "Summary of investigation and outcomes",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "It concluded that information was accessed or disclosed without authority, often to advance union interests, and identified barriers to reporting and addressing improper conduct.",
+    "pages": [
+     34
+    ],
+    "support": "IBAC also found barriers for reporting improper conduct and for management to address issues",
+    "section": "Conclusion",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "IBAC made four recommendations to Fire Rescue Victoria on consultation, information security, sharing information with unions and internal complaints.",
+    "pages": [
+     6,
+     11
+    ],
+    "support": "IBAC is making four recommendations to FRV to strengthen its information security infrastructure",
+    "section": "Recommendations",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Operation Turton found deficiencies in MFB’s culture and vulnerabilities in its information and communication technology (ICT) systems, contributing to significant corruption risks.",
+    "page": 10,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "IBAC also found barriers for reporting improper conduct and for management to address issues.",
+    "page": 34,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Summary of investigation and outcomes",
+   "first_page": 8,
+   "last_page": 11
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

@@ -1,0 +1,47 @@
+{
+  "slug": "integrity-report-act-ic-2022-10-17-suburban-land-agency-land-sales",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The ACT Integrity Commission assessed complaints referred by the Suburban Land Agency about residential land sale processes in Throsby and Whitlam.",
+      "pages": [
+        7
+      ],
+      "support": "The triggering complaints concerned the “book-to-buy” release process for residential lots in Throsby",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "It concluded that the complaints did not justify investigation, while identifying corruption risks in the sale process.",
+      "pages": [
+        7
+      ],
+      "support": "no reasonable suspicion of corruption arises, examination of the issues raised by the complaints has identified several significant matters",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "The Commission considered that undisclosed principals using several agents could undermine limits on purchases.",
+      "pages": [
+        12,
+        17
+      ],
+      "support": "any number of registrants could be acting as agents for a third party",
+      "section": "Discussion",
+      "people": []
+    },
+    {
+      "text": "It recommended reconsidering the sales conditions and suggested requiring applicants to disclose agency arrangements and confirm they had not made multiple applications.",
+      "pages": [
+        13,
+        17
+      ],
+      "support": "The Commission recommended that should be reconsidered by the ACT Government Solicitor",
+      "section": "Discussion; Conclusion",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "No standalone executive summary or numbered recommendations list identified. The report distinguishes risks and possible gaming from any finding of involvement by agency staff or the sales agent. Existing OPAX findings mean no additional findings quotes."
+}

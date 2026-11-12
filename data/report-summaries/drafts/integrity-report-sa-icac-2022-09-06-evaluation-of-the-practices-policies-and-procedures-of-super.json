@@ -1,0 +1,67 @@
+{
+  "slug": "integrity-report-sa-icac-2022-09-06-evaluation-of-the-practices-policies-and-procedures-of-super",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Executive Summary",
+    "first_page": 10,
+    "last_page": 11
+  },
+  "sentences": [
+    {
+      "text": "South Australia’s anti-corruption Commission evaluated whether Super SA’s practices and rules adequately controlled corruption risks.",
+      "pages": [
+        8
+      ],
+      "section": "Commissioner’s foreword",
+      "support": "The evaluation considered whether Super SA’s practices, policies and procedures provide adequate controls to manage corruption risks.",
+      "people": []
+    },
+    {
+      "text": "The evaluation examined governance, organisational culture, staffing, contracts and information management, excluding investment of superannuation funds.",
+      "pages": [
+        8,
+        10,
+        11
+      ],
+      "section": "Executive Summary",
+      "support": "The evaluation did not examine the investment of superannuation funds, which is managed by Funds SA.",
+      "people": []
+    },
+    {
+      "text": "The Commission reported no evidence of corruption, but found weaknesses in staff awareness, policy access, service agreements and information controls.",
+      "pages": [
+        8,
+        10,
+        11
+      ],
+      "section": "Executive Summary",
+      "support": "While external fraud risks were well understood, there was little awareness of corruption risks posed by those inside the organisation.",
+      "people": []
+    },
+    {
+      "text": "Its 24 recommendations addressed integrity training, governance arrangements, projects, recruitment, contractors and access to information.",
+      "pages": [
+        11,
+        14,
+        15,
+        16
+      ],
+      "section": "Recommendations",
+      "support": "The Commission has made 24 recommendations to assist Super SA to identify and manage corruption risks.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "While external fraud risks were well understood, there was little awareness of corruption risks posed by those inside the organisation.",
+      "page": 10,
+      "kind": "finding"
+    },
+    {
+      "quote": "Appropriate controls to guard against information misuse were not in place, or were inadequately monitored.",
+      "page": 11,
+      "kind": "finding"
+    }
+  ],
+  "notes": ""
+}

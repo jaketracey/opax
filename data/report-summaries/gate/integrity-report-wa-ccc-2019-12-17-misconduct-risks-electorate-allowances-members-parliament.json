@@ -1,0 +1,85 @@
+{
+ "slug": "integrity-report-wa-ccc-2019-12-17-misconduct-risks-electorate-allowances-members-parliament",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission issued an interim report on electorate allowance risks, using a former parliamentarian's expenditure as a case study.",
+    "pages": [
+     8
+    ],
+    "support": "This interim report concerns the conduct of a former public officer, primarily as an illustration of the misconduct risk",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commission considered unclear spending rules and absent controls a significant risk, but could not determine whether private misuse of allowances was widespread.",
+    "pages": [
+     25,
+     80
+    ],
+    "support": "The vagueness of the allowance coupled with the lack of any controls represents a significant misconduct risk to the State",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission formed an opinion of serious misconduct concerning the former member's use of allowances for private purposes and claims for tax deductions.",
+    "pages": [
+     79
+    ],
+    "support": "In respect of Mr Edman's conduct as a public officer relating to his parliamentary allowances, the Commission has formed an opinion of serious misconduct.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission stressed that this opinion did not establish guilt of an offence and that its investigation was continuing.",
+    "pages": [
+     79,
+     80
+    ],
+    "support": "An opinion of serious misconduct is not, and is not to be taken as, a finding that a person has committed or is guilty of an offence.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "The Commission suggested that the Salaries and Allowances Tribunal clarify the relationship between salary and allowances and make permitted spending more explicit.",
+    "pages": [
+     25
+    ],
+    "support": "The Commission also suggests that SAT consider reviewing the electorate allowance determination to make permitted and non-permitted expenditure more explicit.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [],
+ "own_summary": {
+  "item": {
+   "heading": "INTRODUCTION",
+   "first_page": 7,
+   "last_page": 8
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 0,
+  "findings_pass": 0,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

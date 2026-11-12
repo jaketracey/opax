@@ -1,0 +1,57 @@
+{
+  "slug": "integrity-report-sa-icac-2024-08-27-grants-administration-final-report",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "General observations",
+    "first_page": 14,
+    "last_page": 15
+  },
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commission Against Corruption reviewed public sector grants activity and conducted targeted evaluations of grants administration.",
+      "pages": [
+        8
+      ],
+      "section": "Introduction",
+      "support": "the Independent Commission Against Corruption undertook an information gathering exercise to better understand the grants function",
+      "people": []
+    },
+    {
+      "text": "The Commission found agency administration generally sound, while observing uneven practices and limited transparency across the sector.",
+      "pages": [
+        14,
+        15
+      ],
+      "section": "General observations",
+      "support": "Our initial assessment found grants administration at the agency level was generally sound.",
+      "people": []
+    },
+    {
+      "text": "The Commission reported that its inquiries revealed no critical or systemic integrity risks, but identified opportunities to strengthen governance.",
+      "pages": [
+        15
+      ],
+      "section": "General observations",
+      "support": "while no critical or systemic risks to the integrity of grants activity in South Australia were revealed by the Commission’s inquiries",
+      "people": []
+    },
+    {
+      "text": "It suggested broader grants guidance and stronger accountability for public spending, including ministerial grant decisions, without making recommendations to specific agencies.",
+      "pages": [
+        8,
+        40
+      ],
+      "section": "Accountability for public money",
+      "support": "Reform of Treasurer’s Instruction 15 to establish accountability for public officers (including Ministers) for their grants decision making",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The legal framework and governance arrangements for public sector grants are minimal.",
+      "page": 8,
+      "kind": "finding"
+    }
+  ],
+  "notes": "The General observations chapter is the report’s equivalent summary of findings. Suggestions for sector reform are not a numbered list of agency recommendations."
+}

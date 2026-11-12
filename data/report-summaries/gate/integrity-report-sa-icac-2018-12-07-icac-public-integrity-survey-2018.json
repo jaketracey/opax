@@ -1,0 +1,85 @@
+{
+ "slug": "integrity-report-sa-icac-2018-12-07-icac-public-integrity-survey-2018",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commissioner Against Corruption surveyed state and local government public officers to identify integrity risks and areas for improvement.",
+    "pages": [
+     6
+    ],
+    "section": "Commissioner’s foreword",
+    "support": "The survey was \nmade available to public officers in both state and local government.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The report analysed quantitative responses about reporting, perceived workplace risks and experiences of inappropriate conduct.",
+    "pages": [
+     6
+    ],
+    "section": "Commissioner’s foreword",
+    "support": "It deals with \nan analysis of the quantitative survey data.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commissioner reported widespread anxiety about reporting and low confidence that agencies would act or protect reporters.",
+    "pages": [
+     7
+    ],
+    "section": "Commissioner’s foreword",
+    "support": "The survey identified widespread and significant concern amongst public officers \nabout reporting impropriety, both internally and to an outside agency.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commissioner urged agencies to improve safe reporting and examine differences between the views of leaders and other staff.",
+    "pages": [
+     45
+    ],
+    "section": "Research conclusions",
+    "support": "There is a disconnect of perceptions and attitudes between ‘Senior’ and \n‘Other’ staff.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "There is a disconnect of perceptions and attitudes between ‘Senior’ and \n‘Other’ staff.",
+    "page": 45,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Commissioner’s foreword",
+   "first_page": 6,
+   "last_page": 8
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

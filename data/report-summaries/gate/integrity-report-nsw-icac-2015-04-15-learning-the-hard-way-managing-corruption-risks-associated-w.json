@@ -1,0 +1,88 @@
+{
+ "slug": "integrity-report-nsw-icac-2015-04-15-learning-the-hard-way-managing-corruption-risks-associated-w",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The NSW Independent Commission Against Corruption considers how universities can manage corruption risks arising from their international student businesses.",
+    "pages": [
+     7
+    ],
+    "support": "the Commission considers what actions universities in NSW can take in order to manage the corruption risks",
+    "section": "Why the Commission produced this paper",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "Its research included university consultations, interviews with more than 40 academics and administrators, and review of relevant legislation and literature.",
+    "pages": [
+     7
+    ],
+    "support": "More than 40 academics and administrators with significant experience with international students were interviewed",
+    "section": "Research and consultation",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission identifies tensions between revenue generation and academic standards, alongside risks from market choices and reliance on recruitment agents.",
+    "pages": [
+     6,
+     7,
+     8
+    ],
+    "support": "This creates significant tensions within those universities between generation of revenue and compliance with academic standards.",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission highlights prevention approaches involving market risk assessment, closer oversight of agents and greater separation between recruitment and academic compliance.",
+    "pages": [
+     8,
+     9
+    ],
+    "support": "separating the compliance function from the business development function, as feasible",
+    "section": "Key corruption prevention initiatives",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "This creates significant tensions within those universities between generation of revenue and compliance with academic standards.",
+    "page": 6,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Key corruption prevention initiatives",
+   "first_page": 7,
+   "last_page": 9
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

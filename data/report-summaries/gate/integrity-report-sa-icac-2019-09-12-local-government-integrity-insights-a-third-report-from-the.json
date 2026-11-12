@@ -1,0 +1,86 @@
+{
+ "slug": "integrity-report-sa-icac-2019-09-12-local-government-integrity-insights-a-third-report-from-the",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commissioner Against Corruption analysed local government responses to the Public Integrity Survey 2018.",
+    "pages": [
+     4
+    ],
+    "section": "Commissioner’s foreword",
+    "support": "This report focusses on local government data gathered in my Public Integrity \nSurvey 2018.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The survey examined perceptions of corruption risks, workplace conduct and reporting, without establishing findings about individual councils.",
+    "pages": [
+     4,
+     5
+    ],
+    "section": "ICAC Public Integrity Survey 2018",
+    "support": "It is not possible to offer specific findings in respect of individual \nCouncils.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commissioner reported that council respondents were often more positive than the wider sample but raised concerns about reporting protections and reprisals.",
+    "pages": [
+     4
+    ],
+    "section": "Commissioner’s foreword",
+    "support": "There was a common theme surrounding the inadequacy of \nprotections offered to those who wanted to make a report",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commissioner encouraged councils to improve reporting training, review information access and conflict controls, and check recruitment qualifications.",
+    "pages": [
+     30
+    ],
+    "section": "Conclusion",
+    "support": "Councils are encouraged to review \ntheir processes and controls to ensure conflicts are identified and managed in \naccordance with the Local Government Act 1999.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "While awareness of ICAC / OPI was high there remains a need for ongoing training.",
+    "page": 30,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Commissioner’s foreword",
+   "first_page": 4,
+   "last_page": 4
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

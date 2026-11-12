@@ -1,0 +1,57 @@
+{
+  "slug": "integrity-report-nsw-icac-2014-12-17-election-funding-expenditure-and-disclosure-in-nsw-strengthe",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Preamble and summary of recommendations",
+    "first_page": 6,
+    "last_page": 8
+  },
+  "sentences": [
+    {
+      "text": "The NSW Independent Commission Against Corruption reviews election funding, spending and disclosure arrangements in NSW.",
+      "pages": [
+        6
+      ],
+      "support": "The Commission focused on four key areas of the election funding and electoral expenditure framework.",
+      "section": "Preamble and summary of recommendations",
+      "people": []
+    },
+    {
+      "text": "It consulted experts and regulators and compared NSW electoral rules with Australian and overseas systems.",
+      "pages": [
+        6
+      ],
+      "support": "The Commission also undertook its own extensive research into the electoral laws of NSW and analysed electoral regimes in other jurisdictions.",
+      "section": "Preamble and summary of recommendations",
+      "people": []
+    },
+    {
+      "text": "The Commission identifies excessive administrative demands, weak party accountability, limited sanctions and inadequate disclosure as weaknesses in the system.",
+      "pages": [
+        6,
+        7
+      ],
+      "support": "the regulatory system emphasises administration rather than regulatory oversight and governance of political parties.",
+      "section": "Preamble and summary of recommendations",
+      "people": []
+    },
+    {
+      "text": "Its 22 recommendations address regulatory capacity, party governance, audits and penalties, public funding and more timely, accessible disclosures.",
+      "pages": [
+        7,
+        8
+      ],
+      "support": "Transparency is to be enhanced by increasing timeliness, accessibility and intelligibility of disclosures.",
+      "section": "Preamble and summary of recommendations",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Incomplete, delayed and difficult-to-access disclosure information impedes civil society’s ability to offer effective oversight over electoral funding arrangements.",
+      "page": 7,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The summary includes all 22 recommendations. Proposed legal changes are described as recommendations rather than current requirements."
+}

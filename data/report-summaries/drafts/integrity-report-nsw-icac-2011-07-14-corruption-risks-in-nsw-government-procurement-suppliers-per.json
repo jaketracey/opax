@@ -1,0 +1,56 @@
+{
+  "slug": "integrity-report-nsw-icac-2011-07-14-corruption-risks-in-nsw-government-procurement-suppliers-per",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Executive summary",
+    "first_page": 5,
+    "last_page": 5
+  },
+  "sentences": [
+    {
+      "text": "The NSW Independent Commission Against Corruption surveyed suppliers about perceived corruption in state and local government procurement.",
+      "pages": [
+        6
+      ],
+      "support": "This research paper provides a picture of the extent of corruption from the perspective of suppliers",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "The online survey received 1,515 responses and examined overall perceptions, corruption-prone behaviour and vulnerability at different procurement stages.",
+      "pages": [
+        5,
+        6
+      ],
+      "support": "a total of 1,515 responses were received by the ICAC.",
+      "section": "Executive summary",
+      "people": []
+    },
+    {
+      "text": "The Commission reports that about two-fifths of suppliers saw corruption as at least a moderate problem, and almost one-third had avoided bidding because of corruption concerns.",
+      "pages": [
+        5
+      ],
+      "support": "almost one-third of suppliers indicated that they had declined to bid on a government contract because of corruption concerns.",
+      "section": "Executive summary",
+      "people": []
+    },
+    {
+      "text": "The Commission concludes that these perceptions require attention even if inaccurate because they can affect suppliers’ willingness to compete.",
+      "pages": [
+        18
+      ],
+      "support": "Consequently, the need to address these perceptions applies even if they are inaccurate.",
+      "section": "Conclusions",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Overall, these results indicate that the supplier base of NSW state and local government procurement is concerned about corruption.",
+      "page": 18,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "Survey perceptions and suppliers’ reported behaviour are not findings of particular corrupt acts. No formal recommendations list. The executive summary says about two-fifths while the conclusion uses nearly half for the broad prevalence perception."
+}

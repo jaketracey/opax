@@ -1,0 +1,95 @@
+{
+ "slug": "integrity-report-wa-ccc-2020-04-09-further-review-wa-police-force-response-incident-lo-1dd0d913",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission reviewed the response by WA Police to four earlier recommendations and a later force incident involving the same officer.",
+    "pages": [
+     4
+    ],
+    "support": "The report also includes a case study detailing the circumstances of the officer's more recent excessive use of force incident",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The recommendations concerned training, custody records and management, supervision of inexperienced officers and use of force reporting.",
+    "pages": [
+     4,
+     6,
+     10,
+     12,
+     14
+    ],
+    "support": "The Commission made four recommendations for improvements to officer training and changes to policy",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that WA Police had adequately addressed the first three recommendations.",
+    "pages": [
+     20
+    ],
+    "support": "The Commission considers that the WA Police Force has taken appropriate steps to address recommendations one, two and three.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission kept the reporting recommendation open because policy changes were incomplete and planned to follow up after one year.",
+    "pages": [
+     15,
+     20
+    ],
+    "support": "In response to recommendation four, the Commission considers it incomplete and intends to follow up on this recommendation in one year's time.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The Commission considers that the WA Police Force has taken appropriate steps to address recommendations one, two and three.",
+    "page": 20,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "In response to recommendation four, the Commission considers it incomplete and intends to follow up on this recommendation in one year's time.",
+    "page": 20,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "INTRODUCTION",
+   "first_page": 4,
+   "last_page": 5
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

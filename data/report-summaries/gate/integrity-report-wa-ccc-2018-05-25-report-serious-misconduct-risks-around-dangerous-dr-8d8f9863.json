@@ -1,0 +1,100 @@
+{
+ "slug": "integrity-report-wa-ccc-2018-05-25-report-serious-misconduct-risks-around-dangerous-dr-8d8f9863",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission examined theft and misuse risks involving dangerous pharmaceutical drugs in WA Health facilities.",
+    "pages": [
+     6
+    ],
+    "section": "Purpose of this report",
+    "support": "The purpose of this report is to consider more broadly the issue of theft and misuse of dangerous and addictive pharmaceutical drugs",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It analysed notifications about missing or otherwise unaccounted-for restricted drugs at three metropolitan hospitals from 2013 to 2017.",
+    "pages": [
+     6,
+     52
+    ],
+    "section": "Summary",
+    "support": "This report considers notifications received from WA Health relating to discrepancies in Schedule 8 and Schedule 4 Restricted drugs",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that most reported discrepancies remained unexplained after investigation.",
+    "pages": [
+     52
+    ],
+    "section": "Summary",
+    "support": "Analysis of WA Health notifications (Table 6) suggests that most drug discrepancies remain unexplained after investigation.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It considered poor records and failures to follow security and handling policies to be contributing factors.",
+    "pages": [
+     52
+    ],
+    "section": "Summary",
+    "support": "the difficulties experienced by WA Health in explaining drug discrepancies is exacerbated by deficiencies in record keeping and compliance with policies",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "Its nine recommendations covered consistent policies, accountability, records, security, prompt reporting, skilled investigations, staff training and detection strategies.",
+    "pages": [
+     53,
+     54
+    ],
+    "section": "Recommendations",
+    "support": "Ongoing education and training be given to relevant staff in drug management, record keeping, reporting discrepancies and investigating discrepancies.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "WA Health is unable to account to the Commission or the community for the majority of drug discrepancies.",
+    "page": 52,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Summary",
+   "first_page": 52,
+   "last_page": 53
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

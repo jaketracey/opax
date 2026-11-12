@@ -1,0 +1,85 @@
+{
+ "slug": "integrity-report-nsw-icac-1994-03-01-community-attitudes-to-corruption-and-the-icac-public-attitu",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Independent Commission Against Corruption surveyed 502 randomly selected NSW adults in November 1993 about corruption and understanding and support of its work.",
+    "pages": [
+     3
+    ],
+    "support": "in November 1993 a survey was\nconducted of a random sample of the NSW adult population.",
+    "section": "SUMMARY",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The survey examined perceived corruption, its effects, reporting attitudes and awareness and opinions of ICAC.",
+    "pages": [
+     3
+    ],
+    "support": "In order to obtain information about the public's perceptions of corruption",
+    "section": "SUMMARY",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "ICAC reported that 55% considered public sector corruption a serious problem and 37% considered it a minor problem.",
+    "pages": [
+     3
+    ],
+    "support": "55% considered corruption in the NSW public sector to be a serious problem",
+    "section": "SUMMARY",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "ICAC reported that 92% supported its existence, while 80% considered it successful at exposing corruption and 53% at reducing it.",
+    "pages": [
+     3
+    ],
+    "support": "53% considered that the Commission had been successful or very successful in reducing\nsome of the corruption",
+    "section": "SUMMARY",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "68% disagreed or strongly disagreed that There is no point in reporting corruption in the\nNSW public sector because nothing useful will be done about it.",
+    "page": 3,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "SUMMARY",
+   "first_page": 3,
+   "last_page": 3
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

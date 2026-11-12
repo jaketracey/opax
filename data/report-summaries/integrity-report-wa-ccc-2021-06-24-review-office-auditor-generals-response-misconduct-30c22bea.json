@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2021-06-24-review-office-auditor-generals-response-misconduct-30c22bea",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Review of the Office of the Auditor General's response to misconduct risks with access to confidential information",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20the%20Office%20of%20the%20Auditor%20General%26%23039%3Bs%20response%20to%20misconduct%20risks%20with%20access%20to%20confidential%20information.pdf",
+  "document": "Review of the Office of the Auditor General's response to misconduct risks with access to confidential information",
+  "sha256": "b726ed23415ac5502c8c80318d26e2d7b10a6f2b0ddd301ad61d692b86c4af50",
+  "pages": 8,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed the Office of the Auditor General's response to a recommendation about secure retention of audit information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20the%20Office%20of%20the%20Auditor%20General%26%23039%3Bs%20response%20to%20misconduct%20risks%20with%20access%20to%20confidential%20information.pdf",
+      "document": "Review of the Office of the Auditor General's response to misconduct risks with access to confidential information",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The review examined changes to data storage, staff instructions, portable storage devices and checks on compliance.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20the%20Office%20of%20the%20Auditor%20General%26%23039%3Bs%20response%20to%20misconduct%20risks%20with%20access%20to%20confidential%20information.pdf",
+      "document": "Review of the Office of the Auditor General's response to misconduct risks with access to confidential information",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20the%20Office%20of%20the%20Auditor%20General%26%23039%3Bs%20response%20to%20misconduct%20risks%20with%20access%20to%20confidential%20information.pdf",
+      "document": "Review of the Office of the Auditor General's response to misconduct risks with access to confidential information",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The Commission concluded that procedures and staff awareness had improved and that the recommendation was complete.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20the%20Office%20of%20the%20Auditor%20General%26%23039%3Bs%20response%20to%20misconduct%20risks%20with%20access%20to%20confidential%20information.pdf",
+      "document": "Review of the Office of the Auditor General's response to misconduct risks with access to confidential information",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20the%20Office%20of%20the%20Auditor%20General%26%23039%3Bs%20response%20to%20misconduct%20risks%20with%20access%20to%20confidential%20information.pdf",
+      "document": "Review of the Office of the Auditor General's response to misconduct risks with access to confidential information",
+      "page": 8
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission considers this recommendation to be complete.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20the%20Office%20of%20the%20Auditor%20General%26%23039%3Bs%20response%20to%20misconduct%20risks%20with%20access%20to%20confidential%20information.pdf",
+     "document": "Review of the Office of the Auditor General's response to misconduct risks with access to confidential information",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

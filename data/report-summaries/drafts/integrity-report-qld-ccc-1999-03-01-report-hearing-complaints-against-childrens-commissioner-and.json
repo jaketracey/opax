@@ -1,0 +1,53 @@
+{
+  "slug": "integrity-report-qld-ccc-1999-03-01-report-hearing-complaints-against-childrens-commissioner-and",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The Criminal Justice Commission reported on an investigative hearing into allegations involving Queensland’s Children’s Commissioner and an administration officer.",
+      "pages": [
+        5
+      ],
+      "support": "The subject matter of the investigative hearing concerned allegations relating to the Children’s Commissioner of Queensland",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "The hearing examined alleged interference in recruitment and preferential treatment, along with alleged misuse of a vehicle and office equipment.",
+      "pages": [
+        7
+      ],
+      "support": "allegations that he had improperly influenced and/or interfered with the process",
+      "section": "Subject matter of hearing",
+      "people": []
+    },
+    {
+      "text": "The Commission reported that the investigation was essentially complete, but disciplinary determinations had not begun and further procedural steps remained.",
+      "pages": [
+        7,
+        8
+      ],
+      "support": "It is important to recognise that the determinative process has not yet commenced.",
+      "section": "Reporting process; Procedural requirements",
+      "people": []
+    },
+    {
+      "text": "The Commission kept detailed evidence in a confidential second part, considering public disclosure premature before any disciplinary hearing.",
+      "pages": [
+        8,
+        9
+      ],
+      "support": "the CJC is of the opinion that such matters should, for the time being, remain confidential.",
+      "section": "Confidential report",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "For these reasons, pursuant to section 27(3) of the Act, the CJC is of the opinion that such matters should, for the time being, remain confidential.",
+      "page": 8,
+      "kind": "opinion"
+    }
+  ],
+  "notes": "No separate executive summary or equivalent is present. This public Part A reports allegations and procedural status, not determinations of misconduct; Part B containing detailed evidence is confidential. No numbered recommendations are stated."
+}

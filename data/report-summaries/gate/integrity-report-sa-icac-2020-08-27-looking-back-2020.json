@@ -1,0 +1,90 @@
+{
+ "slug": "integrity-report-sa-icac-2020-08-27-looking-back-2020",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s outgoing Independent Commissioner Against Corruption reviewed seven years of the office’s work and proposed legislative reforms.",
+    "pages": [
+     5
+    ],
+    "section": "INTRODUCTION",
+    "support": "Because this is my last report I will reflect upon my last seven years as Commissioner",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commissioner described investigation, complaint oversight, agency evaluation and education as parts of the office’s broader integrity role.",
+    "pages": [
+     7
+    ],
+    "section": "What have we accomplished?",
+    "support": "In reality the investigation of corruption is but one of around 20 functions given to the office",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commissioner concluded that corruption was present but not systemic, while widespread maladministration created opportunities for corrupt conduct.",
+    "pages": [
+     38
+    ],
+    "section": "CONCLUDING REMARKS",
+    "support": "Corruption exists in South Australia but South Australia does not have a corrupt public \nadministration.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commissioner recommended a public integrity commission and changes to statutory definitions and investigation powers.",
+    "pages": [
+     25,
+     27,
+     28,
+     29
+    ],
+    "section": "LEGISLATIVE REFORM",
+    "support": "Perhaps most fundamentally I recommend that the name of the office is changed and that South \nAustralia move to the establishment of a public integrity commission.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Corruption exists in South Australia but South Australia does not have a corrupt public \nadministration.",
+    "page": 38,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "There is however \nevidence of widespread maladministration which enables individuals to engage in corrupt \nconduct.",
+    "page": 38,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

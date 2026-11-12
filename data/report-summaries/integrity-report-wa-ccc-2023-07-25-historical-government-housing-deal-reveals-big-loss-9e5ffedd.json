@@ -1,0 +1,86 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2023-07-25-historical-government-housing-deal-reveals-big-loss-9e5ffedd",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Historical Government housing deal reveals big losses – and many serious misconduct risks",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Serious_misconduct_risks_in_a_Housing_Authority_project__0.pdf",
+  "document": "Serious misconduct risks in a Housing Authority project",
+  "sha256": "ec607bea0d67775bed7623f6f61caf997db797d1cde4bd9df26641f7f9778caa",
+  "pages": 47,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 5,
+  "last_page": 8,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Serious_misconduct_risks_in_a_Housing_Authority_project__0.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated the involvement of the Housing Authority in the Stella Orion housing development.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Serious_misconduct_risks_in_a_Housing_Authority_project__0.pdf",
+      "document": "Serious misconduct risks in a Housing Authority project",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Serious_misconduct_risks_in_a_Housing_Authority_project__0.pdf",
+      "document": "Serious misconduct risks in a Housing Authority project",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The Commission estimated a loss of $29,049,936 to the Department of Communities, which questioned the amount without providing an alternative.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Serious_misconduct_risks_in_a_Housing_Authority_project__0.pdf",
+      "document": "Serious misconduct risks in a Housing Authority project",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The Commission formed no opinion of serious misconduct and was satisfied that those involved acted in good faith rather than corruptly.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Serious_misconduct_risks_in_a_Housing_Authority_project__0.pdf",
+      "document": "Serious misconduct risks in a Housing Authority project",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The Commission identified risks involving inadequate due diligence, inaccessible records and insufficient supervision of a consultant making financial decisions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Serious_misconduct_risks_in_a_Housing_Authority_project__0.pdf",
+      "document": "Serious misconduct risks in a Housing Authority project",
+      "page": 7
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

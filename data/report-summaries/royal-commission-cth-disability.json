@@ -1,0 +1,124 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-cth-disability",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability",
+ "body": "Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a2577/globalassets/tabled-paper-documents/tabled-paper-7599/final-report---executive-summary-our-vision-for-an-inclusive-australia-and-recommendations.pdf",
+  "document": "Final Report of the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability",
+  "sha256": "9dfac2e393a5796510d460892e1910a0bd7c4b4f7ee30167e69b1fe0b6ec05bb",
+  "pages": 356,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 57,
+  "last_page": 212,
+  "link": "https://www.parliament.vic.gov.au/4a2577/globalassets/tabled-paper-documents/tabled-paper-7599/final-report---executive-summary-our-vision-for-an-inclusive-australia-and-recommendations.pdf#page=57"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Disability Royal Commission was asked how governments, institutions and the community could prevent violence, abuse, neglect and exploitation and support greater inclusion of people with disability.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2577/globalassets/tabled-paper-documents/tabled-paper-7599/final-report---executive-summary-our-vision-for-an-inclusive-australia-and-recommendations.pdf",
+      "document": "Final Report of the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability",
+      "page": 59
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2577/globalassets/tabled-paper-documents/tabled-paper-7599/final-report---executive-summary-our-vision-for-an-inclusive-australia-and-recommendations.pdf",
+      "document": "Final Report of the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability",
+      "page": 60
+     }
+    ],
+    "section": "About the Royal Commission"
+   },
+   {
+    "text": "Its inquiry considered experiences across different settings and stages of life, using hearings, community engagement, submissions, private sessions and research.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2577/globalassets/tabled-paper-documents/tabled-paper-7599/final-report---executive-summary-our-vision-for-an-inclusive-australia-and-recommendations.pdf",
+      "document": "Final Report of the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability",
+      "page": 57
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2577/globalassets/tabled-paper-documents/tabled-paper-7599/final-report---executive-summary-our-vision-for-an-inclusive-australia-and-recommendations.pdf",
+      "document": "Final Report of the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability",
+      "page": 60
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commission found that people with disability continued to face high levels of violence, abuse, neglect and exploitation, alongside exclusion from many areas of life.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2577/globalassets/tabled-paper-documents/tabled-paper-7599/final-report---executive-summary-our-vision-for-an-inclusive-australia-and-recommendations.pdf",
+      "document": "Final Report of the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability",
+      "page": 57
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "Its 222 recommendations seek to prevent harm, protect human rights and improve inclusion, with coordinated implementation and independent monitoring.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2577/globalassets/tabled-paper-documents/tabled-paper-7599/final-report---executive-summary-our-vision-for-an-inclusive-australia-and-recommendations.pdf",
+      "document": "Final Report of the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability",
+      "page": 15
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2577/globalassets/tabled-paper-documents/tabled-paper-7599/final-report---executive-summary-our-vision-for-an-inclusive-australia-and-recommendations.pdf",
+      "document": "Final Report of the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability",
+      "page": 57
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2577/globalassets/tabled-paper-documents/tabled-paper-7599/final-report---executive-summary-our-vision-for-an-inclusive-australia-and-recommendations.pdf",
+      "document": "Final Report of the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability",
+      "page": 204
+     }
+    ],
+    "section": "Scope of the inquiry; Beyond the Royal Commission"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Our inquiry has shown people with disability continue to experience high rates of violence and abuse, multiple forms of neglect, and sexual and financial exploitation.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2577/globalassets/tabled-paper-documents/tabled-paper-7599/final-report---executive-summary-our-vision-for-an-inclusive-australia-and-recommendations.pdf",
+     "document": "Final Report of the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability",
+     "page": 57
+    }
+   },
+   {
+    "quote": "Based on their disability, people with disability continue to be excluded from participating in many areas of life.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2577/globalassets/tabled-paper-documents/tabled-paper-7599/final-report---executive-summary-our-vision-for-an-inclusive-australia-and-recommendations.pdf",
+     "document": "Final Report of the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability",
+     "page": 57
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

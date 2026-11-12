@@ -1,0 +1,78 @@
+{
+  "slug": "integrity-report-wa-ccc-2005-12-19-report-wa-police-property-management-practices",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Executive Summary",
+    "first_page": 11,
+    "last_page": 13
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission and WA Police jointly examined property handling after investigations exposed deficiencies in police property management.",
+      "pages": [
+        11
+      ],
+      "section": "Executive Summary",
+      "support": "it was agreed that the WA Police and the Corruption and Crime Commission would undertake a joint inquiry",
+      "people": []
+    },
+    {
+      "text": "The inquiry assessed procedures and processes against good practice and considered ways to prevent property-related corruption and misconduct.",
+      "pages": [
+        11
+      ],
+      "section": "Executive Summary",
+      "support": "assess the adequacy of police procedures and processes for managing property against recognised standards of good property practice",
+      "people": []
+    },
+    {
+      "text": "It found weaknesses in storage security, record systems, auditing, resources and staff understanding of their responsibilities.",
+      "pages": [
+        12,
+        13
+      ],
+      "section": "Executive Summary",
+      "support": "The Inquiry determined that property officers and, indeed, their supervisors, generally did not fully understand their responsibilities for the function.",
+      "people": []
+    },
+    {
+      "text": "Its 42 recommendations covered central management, staffing and training, funding, storage, systems, procedures and legislation.",
+      "pages": [
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "section": "List of Recommendations",
+      "support": "The 42 recommendations made in this report are far-reaching for WA Police.",
+      "people": []
+    },
+    {
+      "text": "The inquiry recommended giving civilian staff property management duties that did not require police powers.",
+      "pages": [
+        13,
+        15
+      ],
+      "section": "People",
+      "support": "Western Australia Police should civilianise positions that undertake property management duties as a primary job function and do not require police powers.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Inquiry found that there are no recognised national standards for police property management, which contrasts with the many legislative requirements impacting on the subject.",
+      "page": 11,
+      "kind": "finding"
+    },
+    {
+      "quote": "The Inquiry determined that property officers and, indeed, their supervisors, generally did not fully understand their responsibilities for the function.",
+      "page": 13,
+      "kind": "finding"
+    }
+  ],
+  "notes": ""
+}

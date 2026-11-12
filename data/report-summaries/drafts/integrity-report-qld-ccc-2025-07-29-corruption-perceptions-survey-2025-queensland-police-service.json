@@ -1,0 +1,62 @@
+{
+  "slug": "integrity-report-qld-ccc-2025-07-29-corruption-perceptions-survey-2025-queensland-police-service",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Summary of key findings",
+    "first_page": 13,
+    "last_page": 14
+  },
+  "sentences": [
+    {
+      "text": "The Crime and Corruption Commission commissioned research on Queensland Police Service employees’ corruption perceptions to inform prevention work and strategic planning.",
+      "pages": [
+        4,
+        5
+      ],
+      "support": "so the CCC can \nmonitor the impact of its prevention agenda and \ninform future strategic planning.",
+      "section": "Research objectives",
+      "people": []
+    },
+    {
+      "text": "The online survey received 116 completed responses between 28 March and 9 May 2025, covering police officers and staff members.",
+      "pages": [
+        4,
+        6
+      ],
+      "support": "An online survey of QPS employees was conducted between \n28 March and 9 May 2025.",
+      "section": "Research method",
+      "people": []
+    },
+    {
+      "text": "The CCC reported that confidential information misuse, bullying and harassment, policy non-compliance, and recruitment screening were among the highest perceived workplace risks.",
+      "pages": [
+        14
+      ],
+      "support": "Behaviours considered the highest risk include \nmishandling and misuse of confidential information \n(85%), bullying and harassment (83%)",
+      "section": "Summary of key findings",
+      "people": []
+    },
+    {
+      "text": "The CCC reported that 72% intended to report corruption, while 58% expected personal repercussions and only 29% expected meaningful action.",
+      "pages": [
+        14
+      ],
+      "support": "Relatively few employees, however, expect \nmeaningful action would be taken as a result \nof their reporting of corruption",
+      "section": "Summary of key findings",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "There is a firm resolve to report corruption \nin the future; however, doubt exists as to \nwhether meaningful action would be taken.",
+      "page": 14,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "There is a preference for lodging complaints with an independent \norganisation.",
+      "page": 13,
+      "kind": "finding"
+    }
+  ],
+  "notes": "Only 116 completed surveys; results describe respondents and are unweighted. Employee suggestions are not formal CCC recommendations."
+}

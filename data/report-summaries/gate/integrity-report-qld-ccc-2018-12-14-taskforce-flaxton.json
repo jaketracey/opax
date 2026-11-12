@@ -1,0 +1,94 @@
+{
+ "slug": "integrity-report-qld-ccc-2018-12-14-taskforce-flaxton",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Crime and Corruption Commission established Taskforce Flaxton to examine corruption risks in Queensland prisons and identify reforms.",
+    "pages": [
+     9
+    ],
+    "section": "Foreword",
+    "support": "commenced Taskforce Flaxton to identify corruption and risks of corruption in Queensland prisons",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The inquiry examined prison operations, the rules governing them and ways to prevent and respond to corruption.",
+    "pages": [
+     12
+    ],
+    "section": "Summary",
+    "support": "features of the legislative, policy and operational environment that may enable corrupt conduct to occur",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The CCC found that overcrowding increased corruption risks and considered the existing prison anti-corruption framework ineffective.",
+    "pages": [
+     12
+    ],
+    "section": "Summary",
+    "support": "Prison overcrowding is negatively affecting the way prisons operate and increasing corruption risk.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its 33 recommendations addressed Queensland Corrective Services performance and external oversight.",
+    "pages": [
+     9
+    ],
+    "section": "Foreword",
+    "support": "We have made 33 recommendations that seek to improve the performance of QCS and the external oversight mechanisms.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The CCC found that unique features of the prison environment create corruption risk.",
+    "page": 12,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The CCC is of the view that alleviating prison overcrowding is essential to reducing corruption risk and corruption in Queensland prisons.",
+    "page": 12,
+    "kind": "opinion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Summary and recommendations",
+   "first_page": 12,
+   "last_page": 18
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

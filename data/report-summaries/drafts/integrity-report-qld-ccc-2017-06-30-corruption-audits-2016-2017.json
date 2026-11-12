@@ -1,0 +1,60 @@
+{
+  "slug": "integrity-report-qld-ccc-2017-06-30-corruption-audits-2016-2017",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Summary",
+    "first_page": 4,
+    "last_page": 5
+  },
+  "sentences": [
+    {
+      "text": "The Crime and Corruption Commission audited council controls for employee conflicts of interest and responses to related allegations.",
+      "pages": [
+        4
+      ],
+      "section": "Summary",
+      "support": "an audit examining how allegations involving conflicts of interest by council employees are dealt with by councils",
+      "people": []
+    },
+    {
+      "text": "The CCC found that 10 of the 13 councils needed a coordinated framework for identifying, managing and monitoring conflicts.",
+      "pages": [
+        4
+      ],
+      "section": "Summary",
+      "support": "Of the 13 councils selected to participate in the audit, we recommended 10",
+      "people": []
+    },
+    {
+      "text": "It concluded that complaints were generally handled satisfactorily, while identifying scope to improve complaints procedures and outcomes.",
+      "pages": [
+        22
+      ],
+      "section": "Conclusion",
+      "support": "there is a need for councils to put into place a specific procedure for corrupt conduct complaints",
+      "people": []
+    },
+    {
+      "text": "The CCC recommended conflict management frameworks, procedures for gifts and benefits, and regular audits of conflict management.",
+      "pages": [
+        4
+      ],
+      "section": "Summary",
+      "support": "The audit identified that nine of the councils need to develop a procedure, and associated tools, for managing gifts and benefits",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The CCC audit showed considerable variation in the adequacy of procedures for handling corrupt conduct complaints across the councils.",
+      "page": 5,
+      "kind": "finding"
+    },
+    {
+      "quote": "Overall, complaints were dealt with satisfactorily.",
+      "page": 22,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The pack is the October 2017 employee conflicts audit. It does not give one numbered total for all recommendations."
+}

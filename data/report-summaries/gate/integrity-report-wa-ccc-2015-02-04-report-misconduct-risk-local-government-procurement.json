@@ -1,0 +1,89 @@
+{
+ "slug": "integrity-report-wa-ccc-2015-02-04-report-misconduct-risk-local-government-procurement",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission examined procurement misconduct risks through investigations, audits of five local governments and a review of financial governance at the City of Stirling.",
+    "pages": [
+     8
+    ],
+    "section": "Purpose",
+    "support": "describe audits carried out on behalf of the Commission into the capacity of five local governments to prevent, identify and deal with misconduct in procurement",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It found that procurement and financial governance weaknesses, including insufficient risk assessment, left local governments exposed to fraud and corruption.",
+    "pages": [
+     8
+    ],
+    "section": "Purpose",
+    "support": "This is exacerbated by a lack of risk assessment by many local governments in their procurement processes",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission favoured prevention across the sector and considered external procurement audit necessary.",
+    "pages": [
+     24,
+     27
+    ],
+    "section": "ANALYSIS",
+    "support": "In the Commission's view a whole-of-sector approach, with a focus on prevention, is needed.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its two recommendations sought Auditor General oversight of local governments and active departmental scrutiny of their procurement risk reviews.",
+    "pages": [
+     28,
+     29
+    ],
+    "section": "RECOMMENDATIONS",
+    "support": "The Commission recommends that the jurisdiction of the Auditor General be extended to include local governments.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "In the Commission's view a whole-of-sector approach, with a focus on prevention, is needed.",
+    "page": 24,
+    "kind": "opinion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "There is a need for external audit of local government procurement.",
+    "page": 27,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

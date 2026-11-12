@@ -1,0 +1,64 @@
+{
+  "slug": "integrity-report-qld-ccc-2003-06-24-seeking-justice-inquiry-how-sexual-offences-are-handled-quee",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "EXECUTIVE SUMMARY",
+    "first_page": 15,
+    "last_page": 21
+  },
+  "sentences": [
+    {
+      "text": "The Crime and Misconduct Commission inquired into Queensland’s handling of sexual offences against adults and children.",
+      "pages": [
+        15
+      ],
+      "support": "the CMC to conduct a general Inquiry into how the criminal justice system deals with sexual offences.",
+      "section": "EXECUTIVE SUMMARY",
+      "people": []
+    },
+    {
+      "text": "It examined police training and supervision, decisions to prosecute or discontinue cases, and restrictions on publishing identifying information about accused people.",
+      "pages": [
+        15,
+        16
+      ],
+      "support": "the adequacy of existing guidelines and procedures for the initiation and discontinuance of the prosecution",
+      "section": "EXECUTIVE SUMMARY",
+      "people": []
+    },
+    {
+      "text": "The Commission identified management issues that could address some concerns about police and prosecution services, and opposed a limitation period for historical sexual offences.",
+      "pages": [
+        17,
+        18
+      ],
+      "support": "the Commission identified a number of management issues",
+      "section": "EXECUTIVE SUMMARY",
+      "people": []
+    },
+    {
+      "text": "The Commission made 24 recommendations covering specialist training, documented decisions, communication, victim support, publication restrictions and a review of implementation after two years.",
+      "pages": [
+        181,
+        182,
+        183
+      ],
+      "support": "That the Office of the Director of Public Prosecutions implement procedures to ensure that all decision-making processes are supported by relevant documentation",
+      "section": "LIST OF RECOMMENDATIONS",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Commission does not favour a statute of limitations for sexual offence matters.",
+      "page": 178,
+      "kind": "opinion"
+    },
+    {
+      "quote": "The Commission believes that the identity of an accused in a sexual offence matter should be suppressed.",
+      "page": 181,
+      "kind": "opinion"
+    }
+  ],
+  "notes": "The list contains 24 recommendations: 23 substantive recommendations plus recommendation 24 on reviewing implementation. Findings from the separate Volkers investigation reproduced in Appendix 1 are not treated as findings of this inquiry."
+}

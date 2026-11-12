@@ -1,0 +1,65 @@
+{
+  "slug": "royal-commission-cth-antisemitism",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Overview of Interim Report",
+    "first_page": 15,
+    "last_page": 17
+  },
+  "sentences": [
+    {
+      "text": "The Royal Commission on Antisemitism and Social Cohesion examined security for the Chanukah event at Bondi and counter-terrorism arrangements in its interim report.",
+      "pages": [
+        15,
+        16,
+        17
+      ],
+      "section": "Overview of Interim Report",
+      "support": "The context in which to consider the adequacy of the security arrangements for the \nChanukah event",
+      "people": []
+    },
+    {
+      "text": "The Commission said further hearings were needed before it could assess whether security for the event was adequate.",
+      "pages": [
+        16
+      ],
+      "section": "Overview of Interim Report",
+      "support": "An assessment of the adequacy of these arrangements awaits further \nexploration in hearings.",
+      "people": []
+    },
+    {
+      "text": "The Commission proposed improvements to information sharing but did not suggest those changes would have prevented the attack.",
+      "pages": [
+        16,
+        17
+      ],
+      "section": "Overview of Interim Report",
+      "support": "is not suggested that had any recommended change been in place on 14 December 2025 \nthe Bondi attack might have been averted.",
+      "people": []
+    },
+    {
+      "text": "Its 14 recommendations cover event security, counter-terrorism coordination, information sharing and firearms reform, with some recommendations kept confidential.",
+      "pages": [
+        16,
+        18,
+        19
+      ],
+      "section": "Recommendations",
+      "support": "The review should include consideration of leadership \nstructures, team integration, systems access and information sharing arrangements.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The procedures adopted by NSW Police in respect of Operation Jewish High Holy Days \nshould apply to other high risk Jewish festivals and events, particularly those that have a \npublic facing element.",
+      "page": 18,
+      "kind": "recommendation"
+    },
+    {
+      "quote": "The Commonwealth and states and territories should prioritise efforts to finalise and \nimplement an updated and nationally consistent National Firearms Agreement.",
+      "page": 19,
+      "kind": "recommendation"
+    }
+  ],
+  "notes": "This is an interim report. Several chapters, parts of chapters and five recommendations are confidential; the summary does not infer their contents or treat matters awaiting hearings as findings."
+}

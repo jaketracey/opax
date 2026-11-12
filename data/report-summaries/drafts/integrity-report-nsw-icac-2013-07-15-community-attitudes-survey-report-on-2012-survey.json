@@ -1,0 +1,58 @@
+{
+  "slug": "integrity-report-nsw-icac-2013-07-15-community-attitudes-survey-report-on-2012-survey",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The NSW Independent Commission Against Corruption uses its community survey to examine perceptions of corruption, awareness of the Commission and willingness to report wrongdoing.",
+      "pages": [
+        6,
+        7
+      ],
+      "support": "The CAS directly assesses an individual’s understanding of corruption and their willingness to report it.",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "The 2012 telephone survey received 506 responses from NSW adults and supported comparisons with earlier surveys.",
+      "pages": [
+        7
+      ],
+      "support": "A total of 506 individuals responded to the survey.",
+      "section": "Methodology",
+      "people": []
+    },
+    {
+      "text": "The Commission concludes that the proportion seeing corruption as a major problem declined over the longer term, while awareness of the Commission remained high.",
+      "pages": [
+        13,
+        16
+      ],
+      "support": "there appears to have been a long-term decline in the proportion of respondents who view corruption in NSW as a major problem.",
+      "section": "Conclusions",
+      "people": []
+    },
+    {
+      "text": "The Commission found that most respondents were willing to report serious corruption, although only a slim majority expected useful action from a report.",
+      "pages": [
+        24
+      ],
+      "support": "A slim majority of respondents believes that reports of corruption will result in appropriate action.",
+      "section": "Conclusions",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Overall, there appears to have been a long-term decline in the proportion of respondents who view corruption in NSW as a major problem.",
+      "page": 13,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "Most respondents appear willing to report serious corruption.",
+      "page": 24,
+      "kind": "finding"
+    }
+  ],
+  "notes": "No overall executive summary or formal recommendations list; conclusions appear in topic chapters. Survey attitudes and intentions are not presented as actual corruption levels or reporting behaviour."
+}

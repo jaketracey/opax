@@ -1,0 +1,56 @@
+{
+  "slug": "integrity-report-sa-icac-2019-10-16-looking-back-october-2019",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commissioner Against Corruption reflected on the integrity system after six years in office.",
+      "pages": [
+        4,
+        6
+      ],
+      "section": "The ICAC Act",
+      "support": "Over six years of operation I have concluded that South Australia does not \nhave a public administration that is systemically corrupt.",
+      "people": []
+    },
+    {
+      "text": "The Commissioner discussed maladministration, staff conduct, conflicts of interest, recruitment and barriers to reporting wrongdoing.",
+      "pages": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "section": "Reporting Obligations",
+      "support": "Conflicts of interest continue to present in matters relating to procurement, \nadministrative decision making and recruitment.",
+      "people": []
+    },
+    {
+      "text": "The Commissioner concluded that maladministration and poor conduct created conditions for individual corruption even though public administration was not systemically corrupt.",
+      "pages": [
+        6
+      ],
+      "section": "Maladministration",
+      "support": "Over six years of operation I have concluded that South Australia does not \nhave a public administration that is systemically corrupt.",
+      "people": []
+    },
+    {
+      "text": "The Commissioner urged authorities to strengthen workforce and records oversight, review conflict policies and verify essential recruitment qualifications.",
+      "pages": [
+        7,
+        8
+      ],
+      "section": "Recruitment",
+      "support": "Essential qualifications for a role must always be verified as \nshould any relevant experience or knowledge a candidate professes to have.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Public administration must ensure it is managing its workforce and records \nappropriately through utilising proper systems and processes and applying \nappropriate oversight.",
+      "page": 7,
+      "kind": "recommendation"
+    }
+  ],
+  "notes": "No separate executive summary or equivalent synopsis is provided. Advice is unnumbered; the 18 recommendations mentioned in this report refer to an earlier report, so are not counted as recommendations of this report."
+}

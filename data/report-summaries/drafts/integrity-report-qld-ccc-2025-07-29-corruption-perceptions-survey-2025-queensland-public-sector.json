@@ -1,0 +1,71 @@
+{
+  "slug": "integrity-report-qld-ccc-2025-07-29-corruption-perceptions-survey-2025-queensland-public-sector",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Summary of key findings",
+    "first_page": 13,
+    "last_page": 14
+  },
+  "sentences": [
+    {
+      "text": "The Crime and Corruption Commission commissioned research on Queensland public sector employees’ corruption perceptions to monitor prevention work and guide planning.",
+      "pages": [
+        4,
+        5
+      ],
+      "support": "so the CCC can \nmonitor the impact of its prevention agenda and \ninform future strategic planning.",
+      "section": "Research objectives",
+      "people": []
+    },
+    {
+      "text": "An online survey collected 5,957 completed responses between 28 March and 9 May 2025 from state government and hospital and health service employees.",
+      "pages": [
+        4,
+        6
+      ],
+      "support": "An online survey of Queensland public sector employees was \nconducted between 28 March and 9 May 2025.",
+      "section": "Research method",
+      "people": []
+    },
+    {
+      "text": "The CCC reported that employees ranked policy non-compliance, mishandling confidential information, and bullying and harassment among the highest workplace corruption risks.",
+      "pages": [
+        14
+      ],
+      "support": "The \nbehaviours considered the highest risk included non-\ncompliance with policies and procedures, mishandling \nof confidential information and bullying and \nharassment",
+      "section": "Summary of key findings",
+      "people": []
+    },
+    {
+      "text": "The CCC reported that 55% said they had witnessed or suspected corruption in the preceding five years, and 55% of that group had not reported it.",
+      "pages": [
+        14
+      ],
+      "support": "Over half (55%) of public sector employees have either witnessed, or \nthink they have witnessed, corruption in the past 5 years.",
+      "section": "Summary of key findings",
+      "people": []
+    },
+    {
+      "text": "The CCC reported that 72% would report corruption, but only 33% expected meaningful action and 52% expected personal repercussions.",
+      "pages": [
+        14
+      ],
+      "support": "However, half of respondents (52%) \nexpect they would experience personal \nrepercussions if they  reported corruption",
+      "section": "Summary of key findings",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Public sector employees are more likely to feel comfortable lodging \na complaint with the CCC than they are lodging a complaint within \ntheir workplace.",
+      "page": 13,
+      "kind": "finding"
+    },
+    {
+      "quote": "There is some scepticism around the outcomes \nof reporting corruption; one in three agree \nmeaningful action would be taken (33%), but \nsimilar proportions disagree (36%).",
+      "page": 14,
+      "kind": "finding"
+    }
+  ],
+  "notes": "Employee results are unweighted. The page-14 headline 'Most have not been exposed to corruption' conflicts with the stated 55% witnessed-or-suspected figure; the summary follows the explicit figure. Employee suggestions are not formal CCC recommendations."
+}

@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2026-11-09-sector-insights-local-government-fy-2020-2025",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Sector insights – Local government (FY 2020–2025)",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Local-government_%28FY2020%E2%80%932025%29.pdf",
+  "document": "CCC Sector insights – Local government (FY 2020–2025)",
+  "sha256": "ce15ebc7c08458b26a06c10f214c4233a052a362b316cd276d040ac6cb46cd05",
+  "pages": 20,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 3,
+  "last_page": 3,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Local-government_%28FY2020%E2%80%932025%29.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission examined Queensland local government corruption risks using complaints, investigations, intelligence and public information from July 2020 to June 2025.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Local-government_%28FY2020%E2%80%932025%29.pdf",
+      "document": "CCC Sector insights – Local government (FY 2020–2025)",
+      "page": 3
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "It grouped councils by shared characteristics while recognising that location, size, climate and local industry shape individual councils’ risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Local-government_%28FY2020%E2%80%932025%29.pdf",
+      "document": "CCC Sector insights – Local government (FY 2020–2025)",
+      "page": 3
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "The CCC identified management of people, processes and public assets as high-risk activities, and reported that elected officials were overrepresented in complaints.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Local-government_%28FY2020%E2%80%932025%29.pdf",
+      "document": "CCC Sector insights – Local government (FY 2020–2025)",
+      "page": 4
+     }
+    ],
+    "section": "Complaint trends and insights"
+   },
+   {
+    "text": "The CCC outlined prevention measures including internal controls, employee screening, training, supervision, information management, audits and support for reporting wrongdoing.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Local-government_%28FY2020%E2%80%932025%29.pdf",
+      "document": "CCC Sector insights – Local government (FY 2020–2025)",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Local-government_%28FY2020%E2%80%932025%29.pdf",
+      "document": "CCC Sector insights – Local government (FY 2020–2025)",
+      "page": 15
+     }
+    ],
+    "section": "Prevention strategies and resources"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Managing people, processes and public assets are consistently high-risk activities for the sector.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Local-government_%28FY2020%E2%80%932025%29.pdf",
+     "document": "CCC Sector insights – Local government (FY 2020–2025)",
+     "page": 4
+    }
+   },
+   {
+    "quote": "While there are some consistent trends and themes across the local government sector, corruption risks and vulnerabilities are shaped by factors unique to the location, size, climate and primary industry of each council area.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Sector-insights_Local-government_%28FY2020%E2%80%932025%29.pdf",
+     "document": "CCC Sector insights – Local government (FY 2020–2025)",
+     "page": 3
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

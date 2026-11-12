@@ -1,0 +1,119 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2010-05-11-profiling-the-nsw-public-sector-report-3",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Profiling the NSW public sector - Report 3",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20-%20Report%203%20(May%202010).pdf.aspx",
+  "document": "Profiling the NSW public sector - Report 3",
+  "sha256": "3119fc8750c9d23e3b01e6f91f45bc0ccae3c261954129c1cae57c1d123c3d3d",
+  "pages": 36,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 7,
+  "last_page": 7,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20-%20Report%203%20(May%202010).pdf.aspx#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption compares corruption risk management in local councils and state agencies to support benchmarking.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20-%20Report%203%20(May%202010).pdf.aspx",
+      "document": "Profiling the NSW public sector - Report 3",
+      "page": 8
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It analyses survey responses from public sector organisations and staff, gathered in 2007.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20-%20Report%203%20(May%202010).pdf.aspx",
+      "document": "Profiling the NSW public sector - Report 3",
+      "page": 7
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20-%20Report%203%20(May%202010).pdf.aspx",
+      "document": "Profiling the NSW public sector - Report 3",
+      "page": 8
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission concludes that councils face a broader range of risks from their functions and processes, while fewer appear to use management controls than state agencies.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20-%20Report%203%20(May%202010).pdf.aspx",
+      "document": "Profiling the NSW public sector - Report 3",
+      "page": 7
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20-%20Report%203%20(May%202010).pdf.aspx",
+      "document": "Profiling the NSW public sector - Report 3",
+      "page": 34
+     }
+    ],
+    "section": "Corruption prevention controls – conclusions"
+   },
+   {
+    "text": "The Commission advises councils to review management controls and computer-password practices, and cautions that survey comparisons cannot replace assessment of each organisation’s risks.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20-%20Report%203%20(May%202010).pdf.aspx",
+      "document": "Profiling the NSW public sector - Report 3",
+      "page": 7
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20-%20Report%203%20(May%202010).pdf.aspx",
+      "document": "Profiling the NSW public sector - Report 3",
+      "page": 35
+     }
+    ],
+    "section": "Implications of results"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The clearest finding is that fewer local councils appear to adopt management controls than state agencies.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20-%20Report%203%20(May%202010).pdf.aspx",
+     "document": "Profiling the NSW public sector - Report 3",
+     "page": 34
+    }
+   },
+   {
+    "quote": "Corruption risks arising from staff misconduct do not appear to differ greatly between local councils and state agencies in NSW.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20public%20sector%20-%20Report%203%20(May%202010).pdf.aspx",
+     "document": "Profiling the NSW public sector - Report 3",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

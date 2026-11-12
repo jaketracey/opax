@@ -1,0 +1,71 @@
+{
+ "slug": "integrity-report-act-ic-2024-06-27-operation-luna-part-one",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The ACT Integrity Commission investigated consultancy contracts awarded by the Canberra Institute of Technology, with this report addressing disclosure to its board and responsible minister.",
+    "pages": [
+     7,
+     8
+    ],
+    "support": "in relation to the performance of their duties of disclosure to the CIT Board",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examined whether the chief executive and board chair disclosed important information about the contracts.",
+    "pages": [
+     8
+    ],
+    "support": "This Report is limited to findings regarding the conduct of the CIT’s Chief Executive Officer",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission found that the chief executive deliberately concealed information from the board and engaged in serious corrupt conduct.",
+    "pages": [
+     274,
+     275
+    ],
+    "support": "It follows that Ms Cover was guilty of serious corrupt conduct within s 10",
+    "section": "Conclusion: Ms Cover",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It found that the board chair seriously failed to exercise care and diligence, but could not make a corruption finding because intentional or reckless conduct was not established.",
+    "pages": [
+     276,
+     277
+    ],
+    "support": "the evidence does not warrant a finding that Mr Sloan’s omission was intentional or",
+    "section": "Conclusion: Mr Sloan",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 0,
+  "findings_pass": 0,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

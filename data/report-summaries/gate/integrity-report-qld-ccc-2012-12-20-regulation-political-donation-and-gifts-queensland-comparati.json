@@ -1,0 +1,98 @@
+{
+ "slug": "integrity-report-qld-ccc-2012-12-20-regulation-political-donation-and-gifts-queensland-comparati",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Crime and Misconduct Commission compared Queensland laws on political donations and gifts with Australian and overseas jurisdictions.",
+    "pages": [
+     11
+    ],
+    "section": "SUMMARY",
+    "support": "This report examines political donation legislation to map Queensland’s state and local government regulatory frameworks",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examined donation restrictions, disclosure rules and the enforcement of state and local government requirements.",
+    "pages": [
+     11
+    ],
+    "section": "SUMMARY",
+    "support": "disclosure of political donations • compliance and enforcement mechanisms.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The CMC found that Queensland state disclosure obligations were generally comparable to or stricter than elsewhere, with weaker regulation of special reporting for large gifts.",
+    "pages": [
+     11
+    ],
+    "section": "SUMMARY",
+    "support": "Queensland imposes disclosure obligations on participants in the political process that are generally similar to or stricter than most other jurisdictions.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "For local government, it found that Queensland took considerably longer than other jurisdictions to release disclosure returns publicly.",
+    "pages": [
+     12
+    ],
+    "section": "SUMMARY",
+    "support": "disclosure returns in Queensland take a much longer time to be made available to the public",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "The CMC made no recommendations, intending the comparison to inform debate and policy decisions.",
+    "pages": [
+     11
+    ],
+    "section": "SUMMARY",
+    "support": "We have not made recommendations. We anticipate that the report will inform public debate",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Queensland’s electoral donation caps are among the lowest of all comparable jurisdictions, and therefore provide the most regulation of electoral donations.",
+    "page": 11,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "SUMMARY",
+   "first_page": 11,
+   "last_page": 12
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

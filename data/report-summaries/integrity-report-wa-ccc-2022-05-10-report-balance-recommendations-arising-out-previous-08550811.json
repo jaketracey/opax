@@ -1,0 +1,130 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2022-05-10-report-balance-recommendations-arising-out-previous-08550811",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on the balance of recommendations arising out of previous Commission reports on the Department of Corrective Services",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20balance%20of%20recommendations%20arising%20out%20of%20previous%20Commission%20reports%20on%20the%20Department%20of%20Corrective%20Services.pdf",
+  "document": "Report on the balance of recommendations arising out of previous Commission reports on the Department of Corrective Services.pdf",
+  "sha256": "1d75b99b03705d980a59a8d665bf8844036282a296b68bfeff828238fb0214a7",
+  "pages": 19,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20balance%20of%20recommendations%20arising%20out%20of%20previous%20Commission%20reports%20on%20the%20Department%20of%20Corrective%20Services.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed action by the Department of Justice on 14 outstanding recommendations from its earlier prison misconduct reports.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20balance%20of%20recommendations%20arising%20out%20of%20previous%20Commission%20reports%20on%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the balance of recommendations arising out of previous Commission reports on the Department of Corrective Services.pdf",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The recommendations covered matters including staff supervision, use of force reporting and training, screening, information sharing and monitoring of misconduct prevention.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20balance%20of%20recommendations%20arising%20out%20of%20previous%20Commission%20reports%20on%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the balance of recommendations arising out of previous Commission reports on the Department of Corrective Services.pdf",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20balance%20of%20recommendations%20arising%20out%20of%20previous%20Commission%20reports%20on%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the balance of recommendations arising out of previous Commission reports on the Department of Corrective Services.pdf",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20balance%20of%20recommendations%20arising%20out%20of%20previous%20Commission%20reports%20on%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the balance of recommendations arising out of previous Commission reports on the Department of Corrective Services.pdf",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20balance%20of%20recommendations%20arising%20out%20of%20previous%20Commission%20reports%20on%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the balance of recommendations arising out of previous Commission reports on the Department of Corrective Services.pdf",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20balance%20of%20recommendations%20arising%20out%20of%20previous%20Commission%20reports%20on%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the balance of recommendations arising out of previous Commission reports on the Department of Corrective Services.pdf",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20balance%20of%20recommendations%20arising%20out%20of%20previous%20Commission%20reports%20on%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the balance of recommendations arising out of previous Commission reports on the Department of Corrective Services.pdf",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20balance%20of%20recommendations%20arising%20out%20of%20previous%20Commission%20reports%20on%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the balance of recommendations arising out of previous Commission reports on the Department of Corrective Services.pdf",
+      "page": 16
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20balance%20of%20recommendations%20arising%20out%20of%20previous%20Commission%20reports%20on%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the balance of recommendations arising out of previous Commission reports on the Department of Corrective Services.pdf",
+      "page": 17
+     }
+    ]
+   },
+   {
+    "text": "The Commission concluded that the department had made substantial progress and closed all 51 recommendations from the six earlier reports.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20balance%20of%20recommendations%20arising%20out%20of%20previous%20Commission%20reports%20on%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the balance of recommendations arising out of previous Commission reports on the Department of Corrective Services.pdf",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20balance%20of%20recommendations%20arising%20out%20of%20previous%20Commission%20reports%20on%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the balance of recommendations arising out of previous Commission reports on the Department of Corrective Services.pdf",
+      "page": 19
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission considers DoJ has taken appropriate steps to address the remaining 14 recommendations.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20balance%20of%20recommendations%20arising%20out%20of%20previous%20Commission%20reports%20on%20the%20Department%20of%20Corrective%20Services.pdf",
+     "document": "Report on the balance of recommendations arising out of previous Commission reports on the Department of Corrective Services.pdf",
+     "page": 19
+    }
+   },
+   {
+    "quote": "The Commission considers all 51 recommendations now closed.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20balance%20of%20recommendations%20arising%20out%20of%20previous%20Commission%20reports%20on%20the%20Department%20of%20Corrective%20Services.pdf",
+     "document": "Report on the balance of recommendations arising out of previous Commission reports on the Department of Corrective Services.pdf",
+     "page": 19
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,86 @@
+{
+ "slug": "integrity-report-wa-ccc-2022-05-10-report-balance-recommendations-arising-out-previous-08550811",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission reviewed action by the Department of Justice on 14 outstanding recommendations from its earlier prison misconduct reports.",
+    "pages": [
+     4
+    ],
+    "support": "This report outlines the actions taken by DoJ to address the remaining 14 recommendations.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The recommendations covered matters including staff supervision, use of force reporting and training, screening, information sharing and monitoring of misconduct prevention.",
+    "pages": [
+     6,
+     9,
+     10,
+     11,
+     13,
+     14,
+     16,
+     17
+    ],
+    "support": "Introduce a system to track and measure the effectiveness of serious misconduct strategies",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that the department had made substantial progress and closed all 51 recommendations from the six earlier reports.",
+    "pages": [
+     4,
+     19
+    ],
+    "support": "The Commission considers all 51 recommendations now closed.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The Commission considers DoJ has taken appropriate steps to address the remaining 14 recommendations.",
+    "page": 19,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The Commission considers all 51 recommendations now closed.",
+    "page": 19,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "INTRODUCTION",
+   "first_page": 4,
+   "last_page": 4
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 3,
+  "sentences_pass": 3,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

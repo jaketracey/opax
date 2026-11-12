@@ -1,0 +1,57 @@
+{
+  "slug": "royal-commission-cth-trade-union",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The Royal Commission into Trade Union Governance and Corruption devoted this volume to proposals for law reform.",
+      "pages": [
+        19
+      ],
+      "section": "A – INTRODUCTION",
+      "support": "This Volume of the Report is devoted to recommendations in relation \nto law reform.",
+      "people": []
+    },
+    {
+      "text": "It considered union regulation, officials’ duties, corrupting benefits, enterprise bargaining, competition, construction, entry rights and Royal Commission powers.",
+      "pages": [
+        19,
+        22
+      ],
+      "section": "B – STRUCTURE OF VOLUME",
+      "support": "Chapter 6 \nEnterprise Bargaining \nChapter 7 \nCompetition Issues \nChapter 8 \nBuilding and Construction",
+      "people": []
+    },
+    {
+      "text": "The Commission considered that the benefits of national regulation justified governments exploring a single regime for employee and employer organisations.",
+      "pages": [
+        68
+      ],
+      "section": "Dual State and Commonwealth regulation",
+      "support": "it is considered that the potential \nbenefits justify the States and Commonwealth giving consideration to \nimplementing a national regime",
+      "people": []
+    },
+    {
+      "text": "It recommended a separate, independent regulator for registered organisations and funding sufficient for that regulator to carry out its functions.",
+      "pages": [
+        80
+      ],
+      "section": "Registered organisations regulator",
+      "support": "The Registered Organisations Commission should \nbe an independent stand-alone regulator.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Registered Organisations Commission should \nbe an independent stand-alone regulator.",
+      "page": 80,
+      "kind": "recommendation"
+    },
+    {
+      "quote": "The Commonwealth government ensure that the registered organisations \nregulator is properly resourced to carry out its functions, with a separate budget \nfor which it is accountable.",
+      "page": 80,
+      "kind": "recommendation"
+    }
+  ],
+  "notes": "This pack is Volume 5, Law Reform. It has no separate executive summary; the Introduction describes its purpose and structure. PDF page 24 says the complete recommendations list is in Volume 1, which is not this pack. Some pages have disrupted column order, including PDF page 59; those passages were not used as support."
+}

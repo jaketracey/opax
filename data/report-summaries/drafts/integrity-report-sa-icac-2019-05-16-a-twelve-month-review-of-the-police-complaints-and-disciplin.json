@@ -1,0 +1,58 @@
+{
+  "slug": "integrity-report-sa-icac-2019-05-16-a-twelve-month-review-of-the-police-complaints-and-disciplin",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Commissioner’s foreword",
+    "first_page": 6,
+    "last_page": 7
+  },
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commissioner Against Corruption reviewed the first year of the Police Complaints and Discipline Act 2016 to inform Parliament about operational issues.",
+      "pages": [
+        6
+      ],
+      "section": "Commissioner’s foreword",
+      "support": "I have prepared this report for the purpose of informing Parliament of \nthe issues identified during the first year of operations.",
+      "people": []
+    },
+    {
+      "text": "The review examined how the Office for Public Integrity oversaw the assessment and investigation of complaints about police conduct.",
+      "pages": [
+        6
+      ],
+      "section": "Commissioner’s foreword",
+      "support": "the statutory function of oversight \nof the assessment and investigation of complaints and \nreports relating to the conduct of South Australia Police",
+      "people": []
+    },
+    {
+      "text": "The Commissioner considered the scheme to be working reasonably well but identified ambiguities and tensions with the ICAC Act.",
+      "pages": [
+        6
+      ],
+      "section": "Commissioner’s foreword",
+      "support": "There are some ambiguities in the PCDA and in some respects there are tensions \nbetween that Act and the Independent Commissioner Against Corruption Act 2012",
+      "people": []
+    },
+    {
+      "text": "The Commissioner made 18 recommendations about assessment, oversight, management resolution and investigation powers.",
+      "pages": [
+        6,
+        56,
+        57,
+        58
+      ],
+      "section": "Recommendations",
+      "support": "SA Police supports 17 of the 18 recommendations in this report disagreeing only in \nrelation to Recommendation 5.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The PCDA be amended to permit the OPI to identify a matter on its own initiative \nfor assessment by IIS or referral under section 29 to the ICAC.",
+      "page": 56,
+      "kind": "recommendation"
+    }
+  ],
+  "notes": "The foreword provides an overall assessment. This review did not replace the separate statutory review required of the Minister."
+}

@@ -1,0 +1,82 @@
+{
+ "slug": "integrity-report-wa-ccc-2021-12-02-report-wa-police-forces-identification-and-manageme-e574b722",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission reviewed two WA Police investigations into allegations of excessive force by an officer.",
+    "pages": [
+     5
+    ],
+    "support": "The Commission conducted a review of the actions taken by WA Police into the two incidents of alleged excessive use of force",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commission considered both investigations inadequate and their conclusions unsupported by adequate inquiries.",
+    "pages": [
+     5
+    ],
+    "support": "In the Commission's opinion, both investigations were inadequate and therefore the findings were not reasonably open.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission made two recommendations about early support for officers at risk of misconduct and broader reporting of force to the head or neck.",
+    "pages": [
+     6
+    ],
+    "support": "The Commission has made two recommendations to WA Police:",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "WA Police rejected both recommendations, but the Commission retained them.",
+    "pages": [
+     20,
+     22
+    ],
+    "support": "WA Police does not accept the two recommendations in this report.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "In the Commission's opinion, both investigations were inadequate and therefore the findings were not reasonably open.",
+    "page": 5,
+    "kind": "opinion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Overview",
+   "first_page": 4,
+   "last_page": 6
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

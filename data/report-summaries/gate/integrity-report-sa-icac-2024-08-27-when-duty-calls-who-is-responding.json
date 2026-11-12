@@ -1,0 +1,80 @@
+{
+ "slug": "integrity-report-sa-icac-2024-08-27-when-duty-calls-who-is-responding",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commission Against Corruption reported on police officers declining to provide sworn statements for investigations into colleagues.",
+    "pages": [
+     4,
+     5
+    ],
+    "section": "Commissioner’s foreword",
+    "support": "This is about other SAPOL officers not cooperating with an investigation into the conduct of another SAPOL officer",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The report concerned officers who could be witnesses, while expressly preserving suspects’ rights to silence and protection against self-incrimination.",
+    "pages": [
+     5
+    ],
+    "section": "Commissioner’s foreword",
+    "support": "This report is not intended to cover circumstances where a SAPOL officer suspected of committing an offence",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commissioner concluded that refusals obstructed investigations and risked undermining police integrity and public confidence.",
+    "pages": [
+     10,
+     12
+    ],
+    "section": "Consequences",
+    "support": "The lack of cooperation in these investigations by some SAPOL officers poses considerable difficulties",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The single recommendation sought power to require affidavits from public officers who were potential witnesses rather than suspects, with an offence for non-compliance.",
+    "pages": [
+     14
+    ],
+    "section": "Recommendation",
+    "support": "That the Commissioner be given a power in the ICAC Act to direct a public officer",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Having incomplete evidence in an investigation or prosecution is not in the public interest.",
+    "page": 12,
+    "kind": "opinion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2025-07-29-corruption-perceptions-survey-2025-queensland-local-council",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Corruption Perceptions Survey 2025 | Queensland Local Council Employees Report",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Local-Council-Employees-Report.pdf",
+  "document": "Queensland Local Council Employees Report",
+  "sha256": "0cb804332670d8808842badc01b71bd31802baa2d91aa1ceccfbc32de3627d6f",
+  "pages": 72,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of key findings",
+  "first_page": 13,
+  "last_page": 14,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Local-Council-Employees-Report.pdf#page=13"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission commissioned research on Queensland council employees’ corruption perceptions to monitor prevention work and inform future planning.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Local-Council-Employees-Report.pdf",
+      "document": "Queensland Local Council Employees Report",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Local-Council-Employees-Report.pdf",
+      "document": "Queensland Local Council Employees Report",
+      "page": 5
+     }
+    ],
+    "section": "Research objectives"
+   },
+   {
+    "text": "An online survey received 973 completed responses between 28 March and 9 May 2025.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Local-Council-Employees-Report.pdf",
+      "document": "Queensland Local Council Employees Report",
+      "page": 6
+     }
+    ],
+    "section": "Research method"
+   },
+   {
+    "text": "The CCC reported that policy non-compliance and mishandling confidential information were the highest perceived workplace corruption risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Local-Council-Employees-Report.pdf",
+      "document": "Queensland Local Council Employees Report",
+      "page": 14
+     }
+    ],
+    "section": "Summary of key findings"
+   },
+   {
+    "text": "The CCC reported that 55% said they had witnessed or suspected corruption in the preceding five years, and 48% of that group did not report it.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Local-Council-Employees-Report.pdf",
+      "document": "Queensland Local Council Employees Report",
+      "page": 14
+     }
+    ],
+    "section": "Summary of key findings"
+   },
+   {
+    "text": "The CCC reported that 73% intended to report corruption, while 46% expected personal repercussions and 40% doubted meaningful action would follow.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Local-Council-Employees-Report.pdf",
+      "document": "Queensland Local Council Employees Report",
+      "page": 14
+     }
+    ],
+    "section": "Summary of key findings"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The reporting of corruption among those who have witnessed or suspected it in the past 5 years is varied.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Local-Council-Employees-Report.pdf",
+     "document": "Queensland Local Council Employees Report",
+     "page": 14
+    }
+   },
+   {
+    "quote": "Local council employees are sceptical as to whether meaningful action would be taken if they report corruption, with four in ten believing this would not be the case (40%).",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Qld-Local-Council-Employees-Report.pdf",
+     "document": "Queensland Local Council Employees Report",
+     "page": 14
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

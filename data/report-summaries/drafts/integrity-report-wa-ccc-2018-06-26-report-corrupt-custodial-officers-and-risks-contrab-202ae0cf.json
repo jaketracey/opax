@@ -1,0 +1,55 @@
+{
+  "slug": "integrity-report-wa-ccc-2018-06-26-report-corrupt-custodial-officers-and-risks-contrab-202ae0cf",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission investigated conduct by former Acacia prison custodial officers as part of a joint investigation with the Department of Justice.",
+      "pages": [
+        4
+      ],
+      "section": "INTRODUCTION",
+      "support": "The Commission is conducting an ongoing joint investigation with the Department of Justice (DoJ) into public officers engaging in serious misconduct",
+      "people": []
+    },
+    {
+      "text": "The investigation examined drug supply, bribery and the risks of prisoners and organised crime groups corrupting staff.",
+      "pages": [
+        4
+      ],
+      "section": "INTRODUCTION",
+      "support": "this report highlights how prisoners and organised crime syndicates can exploit an officer's weaknesses in order to corrupt them.",
+      "people": []
+    },
+    {
+      "text": "The Commission formed serious misconduct opinions against two former custodial officers over drug activities and corruption.",
+      "pages": [
+        29,
+        30
+      ],
+      "section": "Conclusions and opinions of serious misconduct",
+      "support": "The Commission forms an opinion of serious misconduct against former custodial officer",
+      "people": []
+    },
+    {
+      "text": "Its five recommendations addressed prison entry screening, steroid education, drug testing, staff vulnerabilities and the analysis of security reports.",
+      "pages": [
+        31
+      ],
+      "section": "Recommendations",
+      "support": "Periodic professional review of frontline prison staff be provided to identify vulnerabilities with a view to providing support and managing risk.",
+      "people": []
+    },
+    {
+      "text": "The Commission planned to report on implementation after a year.",
+      "pages": [
+        31
+      ],
+      "section": "Recommendations",
+      "support": "The Commission proposes to report on the implementation of these recommendations in one year.",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "No separate executive summary or overview. Existing OPAX findings are not duplicated. Serious misconduct opinions are distinguished from criminal guilt."
+}

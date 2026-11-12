@@ -1,0 +1,64 @@
+{
+  "slug": "integrity-report-wa-ccc-2008-02-27-report-public-perceptions-survey-2008",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "EXECUTIVE SUMMARY",
+    "first_page": 5,
+    "last_page": 5
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission commissioned an independent survey of 380 WA adults about the Commission and the public sector.",
+      "pages": [
+        5
+      ],
+      "section": "EXECUTIVE SUMMARY",
+      "support": "commissioned an independent research survey of 380 Western Australians.",
+      "people": []
+    },
+    {
+      "text": "The Commission reported high public awareness and confidence in its complaint investigations, alongside broad support for its independence.",
+      "pages": [
+        5
+      ],
+      "section": "EXECUTIVE SUMMARY",
+      "support": "Confidence was equally high with 8 in 10 respondents confident that the Commission would properly investigate their complaints.",
+      "people": []
+    },
+    {
+      "text": "It also reported public concern about the detection of misconduct and possible consequences for people who complain.",
+      "pages": [
+        5
+      ],
+      "section": "EXECUTIVE SUMMARY",
+      "support": "5 in 10 respondents believing that the chances of detecting misconduct were slim",
+      "people": []
+    },
+    {
+      "text": "The Commission cautioned that the results indicated possible issues and did not provide definitive answers.",
+      "pages": [
+        8
+      ],
+      "section": "Interpretation of survey results",
+      "support": "Results should largely be considered as indicative of possible issues rather as providing definitive answers.",
+      "people": []
+    },
+    {
+      "text": "It identified understanding of its role, confidence in complaints processes and expectations about preventing misconduct as areas to address.",
+      "pages": [
+        10
+      ],
+      "section": "Conclusions",
+      "support": "confidence in public sector complaints processes; and beliefs that more can be done to stop misconduct",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Overall, the survey indicates a generally high level of recognition of and support for the Corruption and Crime Commission by the Western Australian community.",
+      "page": 10,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The pack includes both the Commission's report and a consultant's survey report. The summary uses the Commission's own assessment. Survey perceptions are not findings that misconduct occurred."
+}

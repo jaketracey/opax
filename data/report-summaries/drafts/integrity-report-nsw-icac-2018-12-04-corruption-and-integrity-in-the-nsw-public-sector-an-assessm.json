@@ -1,0 +1,58 @@
+{
+  "slug": "integrity-report-nsw-icac-2018-12-04-corruption-and-integrity-in-the-nsw-public-sector-an-assessm",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Executive summary",
+    "first_page": 7,
+    "last_page": 9
+  },
+  "sentences": [
+    {
+      "text": "The NSW Independent Commission Against Corruption reviews contemporary corruption risks and integrity issues to help public agencies target prevention efforts.",
+      "pages": [
+        7,
+        10
+      ],
+      "support": "it is a scan of the contemporary factors that contribute to corruption and other serious forms of misconduct.",
+      "section": "Executive summary",
+      "people": []
+    },
+    {
+      "text": "It draws on published research, its own data and stakeholder consultation, covering recruitment, procurement, regulation and government-funded non-government organisations.",
+      "pages": [
+        8,
+        9,
+        10
+      ],
+      "support": "the Commission has researched contemporary publications, including the reports of counterpart agencies, analysed its own data, consulted stakeholders",
+      "section": "Chapter 1: Introduction",
+      "people": []
+    },
+    {
+      "text": "The Commission identifies weak information management, unrestricted authority and governance failures as recurring factors associated with corruption.",
+      "pages": [
+        7
+      ],
+      "support": "Some of the factors that stand out include poor management of information, unfettered discretion or authority and governance failings.",
+      "section": "Executive summary",
+      "people": []
+    },
+    {
+      "text": "The Commission advises prevention efforts to target processes where individuals control decisions alone or can hide or manipulate information.",
+      "pages": [
+        7
+      ],
+      "support": "corruption prevention efforts should focus on processes where individuals have the ability to exercise unilateral control over key decisions",
+      "section": "Executive summary",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Commission’s key observation is that many agencies are falling short of acceptable employment screening practices.",
+      "page": 8,
+      "kind": "finding"
+    }
+  ],
+  "notes": "Sector-wide assessment and prevention advice, with no consolidated numbered recommendations list. Descriptions of complaints remain distinct from findings."
+}

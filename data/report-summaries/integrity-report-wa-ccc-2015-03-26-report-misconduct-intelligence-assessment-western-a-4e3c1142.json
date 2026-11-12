@@ -1,0 +1,99 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2015-03-26-report-misconduct-intelligence-assessment-western-a-4e3c1142",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on the Misconduct Intelligence Assessment of the Western Australian Public Sector",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Misconduct%20Intelligence%20Assessment%20of%20the%20Western%20Australian%20Public%20Sector.pdf",
+  "document": "Report on the Misconduct Intelligence Assessment of the Western Australian Public Sector",
+  "sha256": "96649c63d36a96aa06f9efbe7486282877c02f7e508171249b0876ef8f813916",
+  "pages": 48,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission assessed inherent corruption and misconduct risks across the WA public sector in 2014.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Misconduct%20Intelligence%20Assessment%20of%20the%20Western%20Australian%20Public%20Sector.pdf",
+      "document": "Report on the Misconduct Intelligence Assessment of the Western Australian Public Sector",
+      "page": 12
+     }
+    ],
+    "section": "Inaugural Misconduct Intelligence Assessment"
+   },
+   {
+    "text": "It collected and analysed information from about 300 government departments, local governments and other organisations, without assessing the adequacy of their existing controls.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Misconduct%20Intelligence%20Assessment%20of%20the%20Western%20Australian%20Public%20Sector.pdf",
+      "document": "Report on the Misconduct Intelligence Assessment of the Western Australian Public Sector",
+      "page": 12
+     }
+    ],
+    "section": "Inaugural Misconduct Intelligence Assessment"
+   },
+   {
+    "text": "The Commission identified high risks in corrective services, local government, procurement, regulation, transport, health and policing.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Misconduct%20Intelligence%20Assessment%20of%20the%20Western%20Australian%20Public%20Sector.pdf",
+      "document": "Report on the Misconduct Intelligence Assessment of the Western Australian Public Sector",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Misconduct%20Intelligence%20Assessment%20of%20the%20Western%20Australian%20Public%20Sector.pdf",
+      "document": "Report on the Misconduct Intelligence Assessment of the Western Australian Public Sector",
+      "page": 45
+     }
+    ],
+    "section": "Use of Findings by the Commission"
+   },
+   {
+    "text": "It used the assessment to set its priorities and urged agencies to incorporate their own risks into planning, governance and controls.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Misconduct%20Intelligence%20Assessment%20of%20the%20Western%20Australian%20Public%20Sector.pdf",
+      "document": "Report on the Misconduct Intelligence Assessment of the Western Australian Public Sector",
+      "page": 45
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Misconduct%20Intelligence%20Assessment%20of%20the%20Western%20Australian%20Public%20Sector.pdf",
+      "document": "Report on the Misconduct Intelligence Assessment of the Western Australian Public Sector",
+      "page": 46
+     }
+    ],
+    "section": "Use of Findings by the Public Sector"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The changing nature and operating environment of the Western Australian public sector gives rise to new corruption threats and misconduct risks.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Misconduct%20Intelligence%20Assessment%20of%20the%20Western%20Australian%20Public%20Sector.pdf",
+     "document": "Report on the Misconduct Intelligence Assessment of the Western Australian Public Sector",
+     "page": 26
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

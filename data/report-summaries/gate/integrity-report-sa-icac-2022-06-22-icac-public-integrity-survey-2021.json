@@ -1,0 +1,95 @@
+{
+ "slug": "integrity-report-sa-icac-2022-06-22-icac-public-integrity-survey-2021",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commission Against Corruption surveyed local government public officers about workplace corruption risks and reporting.",
+    "pages": [
+     4,
+     6
+    ],
+    "section": "THE SURVEY",
+    "support": "The survey \nfocused on perceptions about workplace vulnerability to corruption, personal \nexperiences of corruption, and reporting.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commission cautioned that the voluntary responses reflected perceptions and might not represent the whole local government workforce.",
+    "pages": [
+     6
+    ],
+    "section": "THE SURVEY",
+    "support": "As such, the responses might not \nrepresent the perceptions of all local government public officers.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission reported that participants perceived nepotism and favouritism in recruitment and career opportunities as the leading corruption risks.",
+    "pages": [
+     4
+    ],
+    "section": "COMMISSIONER’S FOREWORD",
+    "support": "Nepotism and favouritism in recruitment, promotions and other \ncareer opportunities were perceived to be the most prevalent corruption risks.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission recommended targeted training, secondary employment policies, closer monitoring of contract outcomes and safer reporting arrangements.",
+    "pages": [
+     42
+    ],
+    "section": "RECOMMENDATIONS",
+    "support": "It is \nrecommended that local councils ensure that they develop and implement policies \nrelating to secondary employment.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The potential risks associated with secondary employment need to be better \nidentified and managed.",
+    "page": 42,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "There is a need for further training and education concerning corruption risks that \nare specific to someone’s role.",
+    "page": 42,
+    "kind": "recommendation"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "COMMISSIONER’S FOREWORD",
+   "first_page": 4,
+   "last_page": 5
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

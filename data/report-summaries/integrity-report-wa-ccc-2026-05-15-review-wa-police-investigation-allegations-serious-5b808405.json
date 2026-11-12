@@ -1,0 +1,119 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2026-05-15-review-wa-police-investigation-allegations-serious-5b808405",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Review of a WA Police investigation into allegations of serious misconduct by officers during an incident in the Perth Convention and Exhibition Centre carpark",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/20260515%20Review%20of%20a%20WA%20Police%20investigation%20into%20allegations%20of%20serious%20misconduct%20by%20officers%20during%20an%20incident%20in%20the%20Perth%20Convention%20and%20Exhibition%20Centre%20carpark.pdf",
+  "document": "20260515 Review of a WA Police investigation into allegations of serious misconduct by officers during an incident in the Perth Convention and Exhibition Centre carpark.pdf",
+  "sha256": "21570008c54f2d7413012a934703edaa55223783e714857aee3b40e654a33323",
+  "pages": 24,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "The Outcome of the Review",
+  "first_page": 21,
+  "last_page": 21,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/20260515%20Review%20of%20a%20WA%20Police%20investigation%20into%20allegations%20of%20serious%20misconduct%20by%20officers%20during%20an%20incident%20in%20the%20Perth%20Convention%20and%20Exhibition%20Centre%20carpark.pdf#page=21"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed a WA Police investigation into misconduct allegations arising from a carpark encounter at the Perth Convention and Exhibition Centre.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/20260515%20Review%20of%20a%20WA%20Police%20investigation%20into%20allegations%20of%20serious%20misconduct%20by%20officers%20during%20an%20incident%20in%20the%20Perth%20Convention%20and%20Exhibition%20Centre%20carpark.pdf",
+      "document": "20260515 Review of a WA Police investigation into allegations of serious misconduct by officers during an incident in the Perth Convention and Exhibition Centre carpark.pdf",
+      "page": 3
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/20260515%20Review%20of%20a%20WA%20Police%20investigation%20into%20allegations%20of%20serious%20misconduct%20by%20officers%20during%20an%20incident%20in%20the%20Perth%20Convention%20and%20Exhibition%20Centre%20carpark.pdf",
+      "document": "20260515 Review of a WA Police investigation into allegations of serious misconduct by officers during an incident in the Perth Convention and Exhibition Centre carpark.pdf",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/20260515%20Review%20of%20a%20WA%20Police%20investigation%20into%20allegations%20of%20serious%20misconduct%20by%20officers%20during%20an%20incident%20in%20the%20Perth%20Convention%20and%20Exhibition%20Centre%20carpark.pdf",
+      "document": "20260515 Review of a WA Police investigation into allegations of serious misconduct by officers during an incident in the Perth Convention and Exhibition Centre carpark.pdf",
+      "page": 7
+     }
+    ],
+    "section": "The Commission’s Decision to Review the Investigation"
+   },
+   {
+    "text": "The review examined the investigation’s treatment of a search, a request for personal details, a move on order and the reasonableness of officers’ actions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/20260515%20Review%20of%20a%20WA%20Police%20investigation%20into%20allegations%20of%20serious%20misconduct%20by%20officers%20during%20an%20incident%20in%20the%20Perth%20Convention%20and%20Exhibition%20Centre%20carpark.pdf",
+      "document": "20260515 Review of a WA Police investigation into allegations of serious misconduct by officers during an incident in the Perth Convention and Exhibition Centre carpark.pdf",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/20260515%20Review%20of%20a%20WA%20Police%20investigation%20into%20allegations%20of%20serious%20misconduct%20by%20officers%20during%20an%20incident%20in%20the%20Perth%20Convention%20and%20Exhibition%20Centre%20carpark.pdf",
+      "document": "20260515 Review of a WA Police investigation into allegations of serious misconduct by officers during an incident in the Perth Convention and Exhibition Centre carpark.pdf",
+      "page": 21
+     }
+    ],
+    "section": "The Outcome of the Review"
+   },
+   {
+    "text": "The Commission considered the investigation inadequate and concluded that police could not properly find the search lawful because consent had been refused.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/20260515%20Review%20of%20a%20WA%20Police%20investigation%20into%20allegations%20of%20serious%20misconduct%20by%20officers%20during%20an%20incident%20in%20the%20Perth%20Convention%20and%20Exhibition%20Centre%20carpark.pdf",
+      "document": "20260515 Review of a WA Police investigation into allegations of serious misconduct by officers during an incident in the Perth Convention and Exhibition Centre carpark.pdf",
+      "page": 21
+     }
+    ],
+    "section": "The Outcome of the Review"
+   },
+   {
+    "text": "The Commission made one recommendation requiring training on declared-area powers and operational briefings when those powers were to be used.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/20260515%20Review%20of%20a%20WA%20Police%20investigation%20into%20allegations%20of%20serious%20misconduct%20by%20officers%20during%20an%20incident%20in%20the%20Perth%20Convention%20and%20Exhibition%20Centre%20carpark.pdf",
+      "document": "20260515 Review of a WA Police investigation into allegations of serious misconduct by officers during an incident in the Perth Convention and Exhibition Centre carpark.pdf",
+      "page": 24
+     }
+    ],
+    "section": "Recommendation"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In the Commission's opinion, the investigation by WA Police into the referred allegations was inadequate.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/20260515%20Review%20of%20a%20WA%20Police%20investigation%20into%20allegations%20of%20serious%20misconduct%20by%20officers%20during%20an%20incident%20in%20the%20Perth%20Convention%20and%20Exhibition%20Centre%20carpark.pdf",
+     "document": "20260515 Review of a WA Police investigation into allegations of serious misconduct by officers during an incident in the Perth Convention and Exhibition Centre carpark.pdf",
+     "page": 21
+    }
+   },
+   {
+    "quote": "The investigation did not consider all the issues raised by the referred allegations and there were other aspects of the investigation which concerned the Commission.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/20260515%20Review%20of%20a%20WA%20Police%20investigation%20into%20allegations%20of%20serious%20misconduct%20by%20officers%20during%20an%20incident%20in%20the%20Perth%20Convention%20and%20Exhibition%20Centre%20carpark.pdf",
+     "document": "20260515 Review of a WA Police investigation into allegations of serious misconduct by officers during an incident in the Perth Convention and Exhibition Centre carpark.pdf",
+     "page": 21
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

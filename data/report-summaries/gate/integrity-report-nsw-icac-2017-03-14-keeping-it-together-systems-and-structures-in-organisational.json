@@ -1,0 +1,86 @@
+{
+ "slug": "integrity-report-nsw-icac-2017-03-14-keeping-it-together-systems-and-structures-in-organisational",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The NSW Independent Commission Against Corruption provides advice on corruption risks during public sector mergers and restructures.",
+    "pages": [
+     6
+    ],
+    "support": "The aim of this report is to alert public sector managers to the corruption pitfalls during and following organisational change",
+    "section": "Overview",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examines how large organisational changes affect controls, incentives and opportunities for misconduct, using investigation case studies.",
+    "pages": [
+     6
+    ],
+    "support": "It explores why and how large-scale organisational change initiatives create opportunities for corruption",
+    "section": "Overview",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concludes that poorly managed change can create corruption opportunities through inadequate processes or unrecognised shifts in incentives.",
+    "pages": [
+     6
+    ],
+    "support": "These opportunities can arise from poorly designed, conflicting or inadequate processes",
+    "section": "Overview",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission advises agencies to build continuing change-management capacity, conduct early due diligence, strengthen high-risk controls and monitor progress against planned milestones.",
+    "pages": [
+     6,
+     7
+    ],
+    "support": "Organisations that have developed a standing change management capability are better placed to manage these challenges.",
+    "section": "Overview",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "If not managed well, organisational change can provide opportunities for corruption.",
+    "page": 6,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Overview",
+   "first_page": 6,
+   "last_page": 7
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

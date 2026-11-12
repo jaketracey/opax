@@ -1,0 +1,90 @@
+{
+ "slug": "integrity-report-wa-ccc-2019-10-24-review-recommendations-made-department-transport-ar-951af7b6",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission reviewed four recommendations arising from three reports on misconduct risks in Department of Transport licensing and vehicle examinations.",
+    "pages": [
+     3
+    ],
+    "support": "a follow up review of Transport's continued implementation of three of the earlier recommendations.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The recommendations concerned driving assessment bookings, photographs of vehicle examinations, invoice audits and recognition of overseas driving licences.",
+    "pages": [
+     4,
+     6,
+     7,
+     9
+    ],
+    "support": "Department of Transport implement a rigorous audit program of invoices against TRELIS.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that booking controls and audits had improved, accepted the proposed regulatory changes and closed all recommendations.",
+    "pages": [
+     5,
+     8,
+     10,
+     11
+    ],
+    "support": "Transport has considered and, where appropriate, taken steps to implement the Commission's recommendations.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission also closed the photographic evidence recommendation after the department considered it and declined implementation because of cost.",
+    "pages": [
+     6,
+     7
+    ],
+    "support": "Transport has considered this recommendation and determined that it is not feasible for implementation.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The Commission considers all recommendations closed.",
+    "page": 11,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The regulatory reform proposed by Transport is appropriate and logical.",
+    "page": 10,
+    "kind": "opinion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

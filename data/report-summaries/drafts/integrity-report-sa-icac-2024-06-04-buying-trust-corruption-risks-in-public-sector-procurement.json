@@ -1,0 +1,60 @@
+{
+  "slug": "integrity-report-sa-icac-2024-06-04-buying-trust-corruption-risks-in-public-sector-procurement",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commission Against Corruption studied corruption risks in public procurement to identify warning signs and improve prevention.",
+      "pages": [
+        8
+      ],
+      "section": "Commissioner’s foreword",
+      "support": "For these reasons the Commission has conducted a study into the corruption risks in public sector procurement.",
+      "people": []
+    },
+    {
+      "text": "It examined survey comments, submissions, referrals and other integrity agencies’ findings about procurement.",
+      "pages": [
+        8,
+        14
+      ],
+      "section": "Introduction",
+      "support": "This report provides analysis of qualitative survey responses and submissions, reports and complaints referred to the Commission",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that suspected corruption was too often overlooked and that reluctance to report and poor awareness could contribute.",
+      "pages": [
+        70
+      ],
+      "section": "Conclusion",
+      "support": "failure to act may also reflect a lack of awareness of behaviour that may indicate that procurement is being unduly influenced.",
+      "people": []
+    },
+    {
+      "text": "Its 18 recommendations covered procurement audits, training, conflicts of interest, gifts, confidential information, decision records and reporting obligations.",
+      "pages": [
+        8,
+        10,
+        11,
+        12
+      ],
+      "section": "Recommendations",
+      "support": "makes 18 recommendations to address weaknesses in public sector procurement open to exploitation",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "These warning signs do not necessarily constitute corruption per se.",
+      "page": 70,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "However, they should prompt public officers to make further enquiries and report suspicious conduct.",
+      "page": 70,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "No separate executive summary or overview. Warning signs and suppliers’ accounts are not presented as proven corruption."
+}

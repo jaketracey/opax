@@ -1,0 +1,81 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2023-03-14-ccc-investigation-highlights-misconduct-risk",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "CCC investigation highlights misconduct risk",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A_death_raises_questions_at_Rockingham_General_Hospital.pdf",
+  "document": "A death raises questions at Rockingham General Hospital",
+  "sha256": "4544a360957cd7d45b9fd2fe6b19496218fc36d4cd423cadf79b798e20d0d1d1",
+  "pages": 9,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary",
+  "first_page": 3,
+  "last_page": 3,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/A_death_raises_questions_at_Rockingham_General_Hospital.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated an allegation that a senior doctor tried to pressure a registrar to change a patient's recorded date of death.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A_death_raises_questions_at_Rockingham_General_Hospital.pdf",
+      "document": "A death raises questions at Rockingham General Hospital",
+      "page": 3
+     }
+    ]
+   },
+   {
+    "text": "The Commission did not substantiate the allegation and decided to take no further action.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A_death_raises_questions_at_Rockingham_General_Hospital.pdf",
+      "document": "A death raises questions at Rockingham General Hospital",
+      "page": 3
+     }
+    ]
+   },
+   {
+    "text": "The Commission identified risks in reliance on paper medical records after clinical notes could not be located.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A_death_raises_questions_at_Rockingham_General_Hospital.pdf",
+      "document": "A death raises questions at Rockingham General Hospital",
+      "page": 6
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission has completed its investigation and has not identified serious misconduct in relation to the allegation.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A_death_raises_questions_at_Rockingham_General_Hospital.pdf",
+     "document": "A death raises questions at Rockingham General Hospital",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

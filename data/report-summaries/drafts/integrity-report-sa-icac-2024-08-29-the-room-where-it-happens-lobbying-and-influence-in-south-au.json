@@ -1,0 +1,56 @@
+{
+  "slug": "integrity-report-sa-icac-2024-08-29-the-room-where-it-happens-lobbying-and-influence-in-south-au",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commission Against Corruption examined corruption risks arising from lobbying public officials and the effectiveness of the state’s regulatory scheme.",
+      "pages": [
+        22,
+        24
+      ],
+      "section": "INTRODUCTION",
+      "support": "This report examines corruption risks associated with lobbying and influencing activity aimed at public officials in South Australia",
+      "people": []
+    },
+    {
+      "text": "The Commission considered the scope of regulation, transparency, former officials’ lobbying, local government and administration of the scheme.",
+      "pages": [
+        112
+      ],
+      "section": "CONCLUDING REMARKS",
+      "support": "identified limitations in the scope of the scheme, the regulation of lobbied parties",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that the scheme exposed only a small proportion of influencing activity to public scrutiny.",
+      "pages": [
+        112
+      ],
+      "section": "CONCLUDING REMARKS",
+      "support": "In its present form the regulatory scheme in this state admits only a shaft of light on a small part of influencing activity.",
+      "people": []
+    },
+    {
+      "text": "Its 31 recommendations proposed broader coverage, disclosure of lobbying contacts, restrictions after public office, local government coverage and oversight by the Ombudsman.",
+      "pages": [
+        11,
+        14,
+        15,
+        17,
+        18
+      ],
+      "section": "RECOMMENDATIONS",
+      "support": "That the scheme created by the Lobbyists Act and Lobbyists Regulations should be regulated and administered by the Ombudsman.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Transparency is the best measure to combat the corruption risks associated with influencing activity.",
+      "page": 112,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "No separate executive summary or overview. The conclusion and recommendations are used; case studies and external submissions are not treated as findings about South Australian individuals."
+}

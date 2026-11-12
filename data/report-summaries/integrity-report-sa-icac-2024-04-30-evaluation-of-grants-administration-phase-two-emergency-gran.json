@@ -1,0 +1,99 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2024-04-30-evaluation-of-grants-administration-phase-two-emergency-gran",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Evaluation of grants administration Phase two: Emergency grants",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0014/1003550/Evaluation-Grants-Administration-Phase-Two-Emergency-Grants.pdf",
+  "document": "Evaluation of grants administration phase two: Emergency grants",
+  "sha256": "65367b6d32e1e8de33d3ef70c45f2f7fdf1a57386846c8fac1bb73b130f5e9c5",
+  "pages": 48,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption evaluated emergency grants administered by the treasury and primary industries departments.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0014/1003550/Evaluation-Grants-Administration-Phase-Two-Emergency-Grants.pdf",
+      "document": "Evaluation of grants administration phase two: Emergency grants",
+      "page": 6
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "It examined four programs responding to the pandemic, bushfires and floods, reviewing program controls rather than individual grant decisions.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0014/1003550/Evaluation-Grants-Administration-Phase-Two-Emergency-Grants.pdf",
+      "document": "Evaluation of grants administration phase two: Emergency grants",
+      "page": 12
+     }
+    ],
+    "section": "The evaluation function and process"
+   },
+   {
+    "text": "The Commission found that both departments addressed the main corruption risks appropriately, while identifying improvements.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0014/1003550/Evaluation-Grants-Administration-Phase-Two-Emergency-Grants.pdf",
+      "document": "Evaluation of grants administration phase two: Emergency grants",
+      "page": 6
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "Its nine recommendations covered staffing for emergencies, data handling, public information, conflict declarations, preparation and access to Commonwealth information.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0014/1003550/Evaluation-Grants-Administration-Phase-Two-Emergency-Grants.pdf",
+      "document": "Evaluation of grants administration phase two: Emergency grants",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0014/1003550/Evaluation-Grants-Administration-Phase-Two-Emergency-Grants.pdf",
+      "document": "Evaluation of grants administration phase two: Emergency grants",
+      "page": 9
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0014/1003550/Evaluation-Grants-Administration-Phase-Two-Emergency-Grants.pdf",
+      "document": "Evaluation of grants administration phase two: Emergency grants",
+      "page": 10
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "While several areas are identified for improvement, the agencies appropriately addressed key corruption risks in their administration of the programs.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0014/1003550/Evaluation-Grants-Administration-Phase-Two-Emergency-Grants.pdf",
+     "document": "Evaluation of grants administration phase two: Emergency grants",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

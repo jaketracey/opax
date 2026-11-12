@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2020-04-02-review-inadequate-investigation-department-communit-91960a03",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Review of an inadequate investigation by the Department of Communities into allegations of bribery",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20inadequate%20investigation%20by%20the%20Department%20of%20Communities%20into%20allegations%20of%20bribery.pdf",
+  "document": "Review of an inadequate investigation by the Department of Communities into allegations of bribery",
+  "sha256": "e7931c5634e97e1b73c826058517024bd251e592b9f7d90163e71111d5669cf9",
+  "pages": 12,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "OVERVIEW",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20inadequate%20investigation%20by%20the%20Department%20of%20Communities%20into%20allegations%20of%20bribery.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed the Department of Communities' investigation of allegations that staff accepted bribes for preferential public housing allocations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20inadequate%20investigation%20by%20the%20Department%20of%20Communities%20into%20allegations%20of%20bribery.pdf",
+      "document": "Review of an inadequate investigation by the Department of Communities into allegations of bribery",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The Commission concluded that the investigation took too long, failed to pursue basic inquiries and relied on flawed reasoning.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20inadequate%20investigation%20by%20the%20Department%20of%20Communities%20into%20allegations%20of%20bribery.pdf",
+      "document": "Review of an inadequate investigation by the Department of Communities into allegations of bribery",
+      "page": 8
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20inadequate%20investigation%20by%20the%20Department%20of%20Communities%20into%20allegations%20of%20bribery.pdf",
+      "document": "Review of an inadequate investigation by the Department of Communities into allegations of bribery",
+      "page": 10
+     }
+    ]
+   },
+   {
+    "text": "The Commission found that poor communication and recordkeeping also hindered the handling of the allegations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20inadequate%20investigation%20by%20the%20Department%20of%20Communities%20into%20allegations%20of%20bribery.pdf",
+      "document": "Review of an inadequate investigation by the Department of Communities into allegations of bribery",
+      "page": 12
+     }
+    ]
+   },
+   {
+    "text": "The Commission made no recommendations because the department had already introduced changes to its governance and integrity arrangements.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20inadequate%20investigation%20by%20the%20Department%20of%20Communities%20into%20allegations%20of%20bribery.pdf",
+      "document": "Review of an inadequate investigation by the Department of Communities into allegations of bribery",
+      "page": 12
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The DoC investigation was unnecessarily protracted, disjointed and lacked basic investigative competence.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20inadequate%20investigation%20by%20the%20Department%20of%20Communities%20into%20allegations%20of%20bribery.pdf",
+     "document": "Review of an inadequate investigation by the Department of Communities into allegations of bribery",
+     "page": 10
+    }
+   },
+   {
+    "quote": "In view of this response, the Commission makes no recommendations.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20an%20inadequate%20investigation%20by%20the%20Department%20of%20Communities%20into%20allegations%20of%20bribery.pdf",
+     "document": "Review of an inadequate investigation by the Department of Communities into allegations of bribery",
+     "page": 12
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,62 @@
+{
+  "slug": "integrity-report-nsw-icac-1995-05-01-community-attitudes-to-corruption-and-the-icac-1994",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "SUMMARY",
+    "first_page": 5,
+    "last_page": 8
+  },
+  "sentences": [
+    {
+      "text": "ICAC surveyed 402 randomly selected NSW adults by telephone in November 1994 to inform its prevention and education work.",
+      "pages": [
+        5
+      ],
+      "support": "A random sample of 402 NSW \nadults participated in the telephone survey",
+      "section": "SUMMARY",
+      "people": []
+    },
+    {
+      "text": "The survey examined perceptions of corruption, its effects, reporting attitudes, and public understanding and support of ICAC.",
+      "pages": [
+        5,
+        6,
+        7
+      ],
+      "support": "a survey to measure public perceptions of corruption and the work of the ICAC.",
+      "section": "SUMMARY",
+      "people": []
+    },
+    {
+      "text": "ICAC reported that 44% regarded public sector corruption as a major problem and 47% as a minor problem, while warning that respondents’ images did not establish corruption’s existence.",
+      "pages": [
+        5
+      ],
+      "support": "These images are not a reflection of the \nexistence of corruption",
+      "section": "SUMMARY",
+      "people": []
+    },
+    {
+      "text": "ICAC reported that 91% supported its existence, but respondents were more aware of its investigative work than its prevention and education functions.",
+      "pages": [
+        7
+      ],
+      "support": "Respondents were more likely to be aware of the Commission's investigative role (47%) \nthan its preventative (6%) or educative (0%) functions.",
+      "section": "SUMMARY",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "It appears that people have more difficulty identifying how \ncorruption actually impacts upon their own lives than in thinking about the effects of \ncorruption in more global terms (Section 3, p. 9).",
+      "page": 6,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "It may be valuable to further explore community concern about the use and misuse of \npublic funds and public trust.",
+      "page": 8,
+      "kind": "recommendation"
+    }
+  ],
+  "notes": "The source expressly distinguishes community images of corruption from evidence that corruption exists. No numbered recommendations list."
+}

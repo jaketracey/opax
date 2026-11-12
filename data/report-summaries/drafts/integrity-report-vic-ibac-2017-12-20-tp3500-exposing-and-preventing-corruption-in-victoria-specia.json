@@ -1,0 +1,57 @@
+{
+  "slug": "integrity-report-vic-ibac-2017-12-20-tp3500-exposing-and-preventing-corruption-in-victoria-specia",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Commissioner’s reflections",
+    "first_page": 5,
+    "last_page": 6
+  },
+  "sentences": [
+    {
+      "text": "IBAC reported to Parliament on its first five years of exposing and preventing public sector corruption and police misconduct.",
+      "pages": [
+        5
+      ],
+      "support": "report to Parliament on our actions to date, and reflect on future opportunities to strengthen Victoria’s corruption resistance",
+      "section": "Commissioner’s reflections",
+      "people": []
+    },
+    {
+      "text": "The report covers investigations, police oversight, prevention work and opportunities to strengthen its powers and independence.",
+      "pages": [
+        5,
+        6,
+        19
+      ],
+      "support": "Independent oversight of police to ensure they perform their duties and exercise their powers with integrity",
+      "section": "Commissioner’s reflections",
+      "people": []
+    },
+    {
+      "text": "IBAC reported completing 55 investigations and making 93 recommendations to police and public sector agencies.",
+      "pages": [
+        4
+      ],
+      "support": "Recommendations to police and public sector agencies 93",
+      "section": "The numbers at a glance",
+      "people": []
+    },
+    {
+      "text": "The Commissioner sought powers to follow public money through private providers, initiate proceeds-of-crime recovery and receive funding directly through Parliament.",
+      "pages": [
+        6
+      ],
+      "support": "IBAC be funded through appropriations directly from the Parliament",
+      "section": "Strengthening our legislation and independence",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "After just five years, it is reasonable to conclude that IBAC has changed perceptions about corruption in Victoria.",
+      "page": 5,
+      "kind": "opinion"
+    }
+  ],
+  "notes": "The Commissioner’s reflections provide an equivalent overview. The report is an institutional retrospective; its 93 recommendations are a cumulative activity measure, not a new recommendations list."
+}

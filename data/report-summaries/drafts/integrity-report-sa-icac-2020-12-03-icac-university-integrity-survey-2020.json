@@ -1,0 +1,58 @@
+{
+  "slug": "integrity-report-sa-icac-2020-12-03-icac-university-integrity-survey-2020",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "EXECUTIVE SUMMARY",
+    "first_page": 6,
+    "last_page": 8
+  },
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commissioner Against Corruption surveyed staff at the state’s three public universities about integrity and workplace experiences.",
+      "pages": [
+        5
+      ],
+      "section": "COMMISSIONER’S FOREWORD",
+      "support": "a \nsurvey designed to better understand the attitudes and experiences of public officers \nemployed by the state’s three public universities",
+      "people": []
+    },
+    {
+      "text": "The Commissioner reported concerns among respondents about safe reporting, protection from reprisals and whether universities would act on reports.",
+      "pages": [
+        6
+      ],
+      "section": "EXECUTIVE SUMMARY",
+      "support": "Only one in four agreed their employer had adequate \nprotections in place for those who report corruption or inappropriate conduct.",
+      "people": []
+    },
+    {
+      "text": "The Commissioner concluded that integrity risks and workplace cultures differed across university areas, requiring attention to local circumstances.",
+      "pages": [
+        7,
+        61
+      ],
+      "section": "RESEARCH CONCLUSIONS",
+      "support": "Consequently, universities may benefit from investigating these local \ncultures and tailoring strategies accordingly.",
+      "people": []
+    },
+    {
+      "text": "The Commissioner urged universities to improve reporting cultures and check whether staff understood and followed existing policies.",
+      "pages": [
+        8,
+        65,
+        66
+      ],
+      "section": "RESEARCH CONCLUSIONS",
+      "support": "Universities should review how they can improve the culture of reporting across the \nbreadth of their organisations",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "It is clear that the experiences and attitudes of university public officers can vary \nmarkedly between different areas of a university.",
+      "page": 61,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "Survey perceptions and reported experiences are not established findings that the alleged conduct occurred. The report gives unnumbered guidance rather than a numbered recommendations list."
+}

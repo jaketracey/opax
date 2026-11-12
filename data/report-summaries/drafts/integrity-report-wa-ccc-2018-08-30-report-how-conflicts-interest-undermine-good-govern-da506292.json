@@ -1,0 +1,59 @@
+{
+  "slug": "integrity-report-wa-ccc-2018-08-30-report-how-conflicts-interest-undermine-good-govern-da506292",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "INTRODUCTION",
+    "first_page": 5,
+    "last_page": 5
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission investigated possible serious misconduct by public officers at the Shire of Halls Creek.",
+      "pages": [
+        6
+      ],
+      "section": "The Commission's investigation",
+      "support": "Operation Oakley was an investigation commenced by the Commission to determine whether any public officer employed by or elected to the Shire",
+      "people": []
+    },
+    {
+      "text": "Its inquiries covered recruitment, outside business interests, leave entitlements and vehicle procurement.",
+      "pages": [
+        5,
+        6
+      ],
+      "section": "INTRODUCTION",
+      "support": "from the appointment of Ms Little, to his own private business interests and the management of a Shire tender",
+      "people": []
+    },
+    {
+      "text": "The Commission formed a serious misconduct opinion about the chief executive officer's appointment of his partner.",
+      "pages": [
+        17
+      ],
+      "section": "Conclusion",
+      "support": "The Commission has formed an opinion of serious misconduct in respect of Mr Kerr-Newell's appointment of Ms Little.",
+      "people": []
+    },
+    {
+      "text": "It concluded that insufficient oversight had allowed the chief executive officer to use Shire resources for private benefit.",
+      "pages": [
+        40
+      ],
+      "section": "CONCLUSION",
+      "support": "Mr Kerr-Newell's tenure went relatively unchecked which enabled him to take advantage of the Shire's resources for his own private benefit.",
+      "people": []
+    },
+    {
+      "text": "The Commission stressed fair tender processes and procurement knowledge among staff responsible for Shire finances.",
+      "pages": [
+        40
+      ],
+      "section": "CONCLUSION",
+      "support": "Councils must ensure that those who have any role in Shire finances are well-versed in procurement processes",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "The introduction provides a synopsis of the case and outcomes. No numbered recommendations list. Existing OPAX findings are not duplicated."
+}

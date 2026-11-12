@@ -1,0 +1,90 @@
+{
+ "slug": "integrity-report-wa-ccc-2011-09-02-report-management-misconduct-western-australia-police",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission assessed the WA Police capacity to manage misconduct during 2008 and 2009.",
+    "pages": [
+     17
+    ],
+    "section": "WAPOL Misconduct Management System",
+    "support": "the Commission undertook an analysis of the capacity of the WAPOL misconduct management system to prevent, identify and deal with misconduct.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It investigated three previously mishandled cases, reviewed allegations at different risk levels and visited police districts and organisational units.",
+    "pages": [
+     17
+    ],
+    "section": "WAPOL Misconduct Management System",
+    "support": "investigating three cases that had previously been the subject of inadequate WAPOL internal investigations",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission found that police dealt adequately with more than 96 per cent of allegations, but identified weaknesses in some high-risk investigations and the classification of lower-risk matters.",
+    "pages": [
+     17,
+     18,
+     20
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "This analysis revealed that more than 96% of misconduct allegations are adequately dealt with by WAPOL.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It concluded that some investigation failures reflected insufficient rigour and willingness to address difficult issues.",
+    "pages": [
+     93
+    ],
+    "section": "Conclusion",
+    "support": "Inadequacies in WAPOL investigations in relation to these cases appeared to stem from an apparent lack of will by WAPOL",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "Its seven recommendations covered apologies, conflicts of interest, computer access, investigation quality, complaint resolution training and clearer complaint procedures.",
+    "pages": [
+     94
+    ],
+    "section": "Recommendations",
+    "support": "The Commission makes the following recommendations to address the inadequacies identified in this report.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [],
+ "own_summary": {
+  "item": {
+   "heading": "EXECUTIVE SUMMARY",
+   "first_page": 17,
+   "last_page": 21
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 0,
+  "findings_pass": 0,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

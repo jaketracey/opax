@@ -1,0 +1,66 @@
+{
+  "slug": "royal-commission-cth-natural-disasters",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Overview",
+    "first_page": 19,
+    "last_page": 33
+  },
+  "sentences": [
+    {
+      "text": "The Royal Commission into National Natural Disaster Arrangements examined how Australia prepares for, responds to and recovers from natural disasters, and how it reduces disaster risks.",
+      "pages": [
+        19
+      ],
+      "section": "Overview",
+      "support": "These arrangements \nconcern all phases of disaster management: mitigation, preparedness, response, and \nrecovery.",
+      "people": []
+    },
+    {
+      "text": "It considered government responsibilities, coordination, resilience, climate adaptation and the Commonwealth’s legal role in national emergencies.",
+      "pages": [
+        19
+      ],
+      "section": "Our inquiry",
+      "support": "whether changes are needed to Australia’s legal framework for the \ninvolvement of the Commonwealth in responding to national emergencies.",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that Australia needed a national approach, with greater cooperation and resource sharing while states and territories retained primary responsibility.",
+      "pages": [
+        20,
+        23,
+        27
+      ],
+      "section": "We need a national approach",
+      "support": "We have concluded that Australia needs a national approach to natural disasters.",
+      "people": []
+    },
+    {
+      "text": "It recommended stronger national coordination, permanent resilience and recovery arrangements, compatible emergency communications, consistent public warnings and better recovery support.",
+      "pages": [
+        25,
+        26,
+        28,
+        31,
+        32
+      ],
+      "section": "Overview",
+      "support": "A standing resilience and recovery body that can scale-up to meet the \nneeds of a future disaster",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "We have concluded that Australia needs a national approach to natural disasters.",
+      "page": 23,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "A narrow focus on response and \nrecovery will leave Australia vulnerable.",
+      "page": 26,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The overview does not state an overall recommendation total; recommendations are listed by chapter on PDF pages 34–46. State and territory responsibility is retained within the proposed national approach."
+}

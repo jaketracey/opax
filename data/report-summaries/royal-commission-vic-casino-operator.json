@@ -1,0 +1,149 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-vic-casino-operator",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "Royal Commission into the Casino Operator and Licence",
+ "body": "Royal Commission into the Casino Operator and Licence",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a2547/globalassets/tabled-paper-documents/tabled-paper-5835/the_report_-_royal_commission_into_the_casino_operator_and_licence__rccol__-_15_october_2021_rdxkxngc.pdf",
+  "document": "Royal Commission into the Casino Operator and Licence",
+  "sha256": "bfda1cc89da55766f6e982f1396629b6872d3bafbe35346bc8408fa937f3980d",
+  "pages": 652,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 22,
+  "last_page": 45,
+  "link": "https://www.parliament.vic.gov.au/4a2547/globalassets/tabled-paper-documents/tabled-paper-5835/the_report_-_royal_commission_into_the_casino_operator_and_licence__rccol__-_15_october_2021_rdxkxngc.pdf#page=22"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Victoria’s Royal Commission into the Casino Operator and Licence examined whether Crown Melbourne was suitable to keep its casino licence and what action should follow.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2547/globalassets/tabled-paper-documents/tabled-paper-5835/the_report_-_royal_commission_into_the_casino_operator_and_licence__rccol__-_15_october_2021_rdxkxngc.pdf",
+      "document": "Royal Commission into the Casino Operator and Licence",
+      "page": 23
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2547/globalassets/tabled-paper-documents/tabled-paper-5835/the_report_-_royal_commission_into_the_casino_operator_and_licence__rccol__-_15_october_2021_rdxkxngc.pdf",
+      "document": "Royal Commission into the Casino Operator and Licence",
+      "page": 24
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "The Commission found Crown Melbourne unsuitable and identified failures in legal compliance, corporate oversight and dealings with its regulator.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2547/globalassets/tabled-paper-documents/tabled-paper-5835/the_report_-_royal_commission_into_the_casino_operator_and_licence__rccol__-_15_october_2021_rdxkxngc.pdf",
+      "document": "Royal Commission into the Casino Operator and Licence",
+      "page": 23
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2547/globalassets/tabled-paper-documents/tabled-paper-5835/the_report_-_royal_commission_into_the_casino_operator_and_licence__rccol__-_15_october_2021_rdxkxngc.pdf",
+      "document": "Royal Commission into the Casino Operator and Licence",
+      "page": 24
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2547/globalassets/tabled-paper-documents/tabled-paper-5835/the_report_-_royal_commission_into_the_casino_operator_and_licence__rccol__-_15_october_2021_rdxkxngc.pdf",
+      "document": "Royal Commission into the Casino Operator and Licence",
+      "page": 25
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2547/globalassets/tabled-paper-documents/tabled-paper-5835/the_report_-_royal_commission_into_the_casino_operator_and_licence__rccol__-_15_october_2021_rdxkxngc.pdf",
+      "document": "Royal Commission into the Casino Operator and Licence",
+      "page": 26
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "It recommended a Special Manager oversee the business for two years, followed by a regulatory decision on whether suitability had been restored.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2547/globalassets/tabled-paper-documents/tabled-paper-5835/the_report_-_royal_commission_into_the_casino_operator_and_licence__rccol__-_15_october_2021_rdxkxngc.pdf",
+      "document": "Royal Commission into the Casino Operator and Licence",
+      "page": 25
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2547/globalassets/tabled-paper-documents/tabled-paper-5835/the_report_-_royal_commission_into_the_casino_operator_and_licence__rccol__-_15_october_2021_rdxkxngc.pdf",
+      "document": "Royal Commission into the Casino Operator and Licence",
+      "page": 26
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "Its 33 numbered recommendations cover regulatory powers, casino governance, money laundering controls and gambling harm, including mandatory limits on gaming-machine play.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2547/globalassets/tabled-paper-documents/tabled-paper-5835/the_report_-_royal_commission_into_the_casino_operator_and_licence__rccol__-_15_october_2021_rdxkxngc.pdf",
+      "document": "Royal Commission into the Casino Operator and Licence",
+      "page": 27
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2547/globalassets/tabled-paper-documents/tabled-paper-5835/the_report_-_royal_commission_into_the_casino_operator_and_licence__rccol__-_15_october_2021_rdxkxngc.pdf",
+      "document": "Royal Commission into the Casino Operator and Licence",
+      "page": 36
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2547/globalassets/tabled-paper-documents/tabled-paper-5835/the_report_-_royal_commission_into_the_casino_operator_and_licence__rccol__-_15_october_2021_rdxkxngc.pdf",
+      "document": "Royal Commission into the Casino Operator and Licence",
+      "page": 38
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2547/globalassets/tabled-paper-documents/tabled-paper-5835/the_report_-_royal_commission_into_the_casino_operator_and_licence__rccol__-_15_october_2021_rdxkxngc.pdf",
+      "document": "Royal Commission into the Casino Operator and Licence",
+      "page": 40
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2547/globalassets/tabled-paper-documents/tabled-paper-5835/the_report_-_royal_commission_into_the_casino_operator_and_licence__rccol__-_15_october_2021_rdxkxngc.pdf",
+      "document": "Royal Commission into the Casino Operator and Licence",
+      "page": 44
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "When these facts came to light, it was inevitable that Crown Melbourne would be found unsuitable to hold its casino licence.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2547/globalassets/tabled-paper-documents/tabled-paper-5835/the_report_-_royal_commission_into_the_casino_operator_and_licence__rccol__-_15_october_2021_rdxkxngc.pdf",
+     "document": "Royal Commission into the Casino Operator and Licence",
+     "page": 24
+    }
+   },
+   {
+    "quote": "It is recommended that the Casino Control Act be amended to prohibit a casino operator from dealing with junket tour operators.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2547/globalassets/tabled-paper-documents/tabled-paper-5835/the_report_-_royal_commission_into_the_casino_operator_and_licence__rccol__-_15_october_2021_rdxkxngc.pdf",
+     "document": "Royal Commission into the Casino Operator and Licence",
+     "page": 39
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:21+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

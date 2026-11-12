@@ -1,0 +1,94 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2022-11-22-managing-corruption-risks-in-regulatory-work-november-2022",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Managing corruption risks in regulatory work (November 2022)",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing_corruption_risks_in_regulatory_work-November2022.pdf.aspx",
+  "document": "Managing corruption risks in regulatory work (November 2022)",
+  "sha256": "989bb59ac2a30a03222c54435280f474aec1926524dbc9595346cb64a3f1779a",
+  "pages": 36,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption outlines corruption risks in regulatory work and ways to prevent them.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing_corruption_risks_in_regulatory_work-November2022.pdf.aspx",
+      "document": "Managing corruption risks in regulatory work (November 2022)",
+      "page": 6
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It examines risks created when staff move between regulators and the industries they oversee.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing_corruption_risks_in_regulatory_work-November2022.pdf.aspx",
+      "document": "Managing corruption risks in regulatory work (November 2022)",
+      "page": 19
+     }
+    ],
+    "section": "The revolving door"
+   },
+   {
+    "text": "The Commission identifies discretion over enforcement, including decisions to take no action, as a source of corruption risk.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing_corruption_risks_in_regulatory_work-November2022.pdf.aspx",
+      "document": "Managing corruption risks in regulatory work (November 2022)",
+      "page": 9
+     }
+    ],
+    "section": "Managing regulatory discretion"
+   },
+   {
+    "text": "The Commission advises agencies to assess capture risks, screen recruits, train staff and manage relationships with former or prospective employers.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing_corruption_risks_in_regulatory_work-November2022.pdf.aspx",
+      "document": "Managing corruption risks in regulatory work (November 2022)",
+      "page": 19
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing_corruption_risks_in_regulatory_work-November2022.pdf.aspx",
+      "document": "Managing corruption risks in regulatory work (November 2022)",
+      "page": 20
+     }
+    ],
+    "section": "Addressing regulatory capture and the revolving door"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The safest and best option is always to refuse it and report the matter immediately.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing_corruption_risks_in_regulatory_work-November2022.pdf.aspx",
+     "document": "Managing corruption risks in regulatory work (November 2022)",
+     "page": 15
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

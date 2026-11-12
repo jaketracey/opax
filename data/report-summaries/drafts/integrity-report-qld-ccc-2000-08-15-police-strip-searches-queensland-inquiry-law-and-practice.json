@@ -1,0 +1,71 @@
+{
+  "slug": "integrity-report-qld-ccc-2000-08-15-police-strip-searches-queensland-inquiry-law-and-practice",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Overview",
+    "first_page": 26,
+    "last_page": 29
+  },
+  "sentences": [
+    {
+      "text": "The Criminal Justice Commission examined police strip-search powers and practices in Queensland following public concern.",
+      "pages": [
+        10
+      ],
+      "support": "This report is the result of an inquiry conducted by the CJC in response to public disquiet",
+      "section": "List of recommendations",
+      "people": []
+    },
+    {
+      "text": "It considered when searches were justified, how they were conducted and recorded, safeguards for detainees and the responsibilities of watchhouse staff.",
+      "pages": [
+        26,
+        27,
+        28
+      ],
+      "support": "The current requirement to record the reasons for conducting a strip search is unclear and appears to be followed inconsistently.",
+      "section": "Overview",
+      "people": []
+    },
+    {
+      "text": "The Commission found no evidence of widespread abuse, but identified inconsistent procedures, confusing rules and concerns about routine searches of some detainees.",
+      "pages": [
+        5,
+        27,
+        28
+      ],
+      "support": "the inquiry has not found any evidence of widespread abuse by Queensland police regarding their power to conduct strip searches.",
+      "section": "Foreword; Overview",
+      "people": []
+    },
+    {
+      "text": "The Commission’s sixty-five recommendations covered definitions, individual risk assessments, search procedures, reasons and records, support people, recording safeguards and training.",
+      "pages": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "support": "The QPS should develop a policy on the registration and secure storage of videotapes of strip searches.",
+      "section": "List of recommendations",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The fact that not all watchhouses conduct strip searches routinely indicates that it is not necessary to strip search detainees routinely to meet the safety and other concerns of the watchhouse manager.",
+      "page": 44,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "The current legislation and QPS directives relating to strip searches by QPS officers are confusing and inconsistent, and may very well have resulted in officers conducting strip searches in situations where they would not otherwise have done so.",
+      "page": 27,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The report’s Overview is chapter 2. The 65 recommendations are counted from the numbered list: chapters 3–11 contain 4, 9, 1, 12, 10, 12, 8, 2 and 7 respectively. The report records replacement of the cited police legislation in its Preface; the summary describes the inquiry’s findings and proposals at the time."
+}

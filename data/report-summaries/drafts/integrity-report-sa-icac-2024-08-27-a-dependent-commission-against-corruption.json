@@ -1,0 +1,53 @@
+{
+  "slug": "integrity-report-sa-icac-2024-08-27-a-dependent-commission-against-corruption",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commission Against Corruption reported on the consequences of losing its ability to refer cases directly to the Director of Public Prosecutions.",
+      "pages": [
+        4
+      ],
+      "section": "Commissioner’s foreword",
+      "support": "If the Commission is to refer a matter for prosecution, it must now refer the matter to South Australia Police (SAPOL).",
+      "people": []
+    },
+    {
+      "text": "The report compared the referral process before and after the legislative changes and considered arrangements in other jurisdictions.",
+      "pages": [
+        3,
+        7,
+        9
+      ],
+      "section": "The ICAC Act post 7 October 2021; Other jurisdictions",
+      "support": "As I stated earlier, all other anti-corruption bodies around Australia can refer matters to the Director in their jurisdiction.",
+      "people": []
+    },
+    {
+      "text": "The Commissioner concluded that the restrictions reduced independence, duplicated work, caused delay and obstructed direct contact with prosecutors.",
+      "pages": [
+        14
+      ],
+      "section": "Conclusion",
+      "support": "The loss of the Commission’s independence, double handling, delay and the lack of direct communication with the prosecutor",
+      "people": []
+    },
+    {
+      "text": "The single recommendation sought a legislative amendment restoring direct referrals to the Director of Public Prosecutions.",
+      "pages": [
+        14
+      ],
+      "section": "Recommendation",
+      "support": "The ICAC Act be amended to reinstate the capacity for the Commission to refer a matter",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The loss of the Commission’s independence, double handling, delay and the lack of direct communication with the prosecutor are all consequences of the current position.",
+      "page": 14,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "No separate executive summary or overview. Statements about the referral scheme describe the Commissioner’s report, not an independently updated account of the law."
+}

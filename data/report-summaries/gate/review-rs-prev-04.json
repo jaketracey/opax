@@ -1,0 +1,134 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2014-10-30-a-review-of-the-whistleblowers-protection-act-1993-sa",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "A Review of the Whistleblowers Protection Act 1993 (SA)",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/362963/ICAC_Whistleblowers_Protection_Act_Review.pdf",
+  "document": "A Review of the Whistleblowers Protection Act 1993 (SA)",
+  "sha256": "a79e9c8bed4429e3cbb63291c03706e7389fc53ab7bb95bb7b125847b12d3082",
+  "pages": 218,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commissioner Against Corruption reviewed the operation and effectiveness of the Whistleblowers Protection Act 1993 at the Attorney-General’s request.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/362963/ICAC_Whistleblowers_Protection_Act_Review.pdf",
+      "document": "A Review of the Whistleblowers Protection Act 1993 (SA)",
+      "page": 5
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/362963/ICAC_Whistleblowers_Protection_Act_Review.pdf",
+      "document": "A Review of the Whistleblowers Protection Act 1993 (SA)",
+      "page": 7
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The review considered protected disclosures, reporting pathways, confidentiality, victimisation remedies and oversight within the state’s integrity framework.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/362963/ICAC_Whistleblowers_Protection_Act_Review.pdf",
+      "document": "A Review of the Whistleblowers Protection Act 1993 (SA)",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/362963/ICAC_Whistleblowers_Protection_Act_Review.pdf",
+      "document": "A Review of the Whistleblowers Protection Act 1993 (SA)",
+      "page": 9
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/362963/ICAC_Whistleblowers_Protection_Act_Review.pdf",
+      "document": "A Review of the Whistleblowers Protection Act 1993 (SA)",
+      "page": 10
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/362963/ICAC_Whistleblowers_Protection_Act_Review.pdf",
+      "document": "A Review of the Whistleblowers Protection Act 1993 (SA)",
+      "page": 11
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/362963/ICAC_Whistleblowers_Protection_Act_Review.pdf",
+      "document": "A Review of the Whistleblowers Protection Act 1993 (SA)",
+      "page": 12
+     }
+    ],
+    "section": "List of Recommendations"
+   },
+   {
+    "text": "The Commissioner concluded that the Act should be replaced because it was not fulfilling its purpose of encouraging disclosures and protecting those who made them.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/362963/ICAC_Whistleblowers_Protection_Act_Review.pdf",
+      "document": "A Review of the Whistleblowers Protection Act 1993 (SA)",
+      "page": 86
+     }
+    ],
+    "section": "WBP Act – Amendment or Repeal and Re-enactment?"
+   },
+   {
+    "text": "The Commissioner made 30 recommendations addressing replacement legislation, investigation duties, reporting channels, whistleblower protection and oversight.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/362963/ICAC_Whistleblowers_Protection_Act_Review.pdf",
+      "document": "A Review of the Whistleblowers Protection Act 1993 (SA)",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/362963/ICAC_Whistleblowers_Protection_Act_Review.pdf",
+      "document": "A Review of the Whistleblowers Protection Act 1993 (SA)",
+      "page": 9
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/362963/ICAC_Whistleblowers_Protection_Act_Review.pdf",
+      "document": "A Review of the Whistleblowers Protection Act 1993 (SA)",
+      "page": 10
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/362963/ICAC_Whistleblowers_Protection_Act_Review.pdf",
+      "document": "A Review of the Whistleblowers Protection Act 1993 (SA)",
+      "page": 11
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/362963/ICAC_Whistleblowers_Protection_Act_Review.pdf",
+      "document": "A Review of the Whistleblowers Protection Act 1993 (SA)",
+      "page": 12
+     }
+    ],
+    "section": "List of Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The WBP Act be repealed and a new Act be substituted that clearly addresses the four fundamental issues relevant to whistleblowing and the further recommendations mentioned in this review.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/362963/ICAC_Whistleblowers_Protection_Act_Review.pdf",
+     "document": "A Review of the Whistleblowers Protection Act 1993 (SA)",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:35:30+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "rs-prev-04"
+ }
+}

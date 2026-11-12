@@ -1,0 +1,100 @@
+{
+ "slug": "integrity-report-nsw-icac-2016-06-22-community-attitudes-survey-report-on-the-2015-survey",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The NSW Independent Commission Against Corruption surveyed community views about corruption, its work and willingness to report wrongdoing.",
+    "pages": [
+     6
+    ],
+    "support": "The CAS is used to gauge the public’s perception of corruption and of the ICAC",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The 2015 telephone survey included 501 NSW adults, with quotas for age, gender and location.",
+    "pages": [
+     7
+    ],
+    "support": "A total of 501 eligible people agreed to participate.",
+    "section": "Methodology",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission found that most respondents regarded public sector corruption as a community problem and half believed it affected them or their families.",
+    "pages": [
+     11
+    ],
+    "support": "Most respondents reported that corruption in the NSW public sector is a problem for the community.",
+    "section": "Conclusions",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission found that most respondents were willing to report serious corruption, with overall willingness broadly stable since the previous survey.",
+    "pages": [
+     19
+    ],
+    "support": "Most respondents indicated that they were willing to report serious public sector corruption to the ICAC",
+    "section": "Conclusions",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "The Commission suggests further education for public employees and forums for suppliers about corruption and reporting.",
+    "pages": [
+     19
+    ],
+    "support": "These findings suggest that public sector employees may benefit from further training and education",
+    "section": "Conclusions",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Most respondents reported that corruption in the NSW public sector is a problem for the community.",
+    "page": 11,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "Half of the survey respondents indicated that corruption affects them or their families.",
+    "page": 11,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

@@ -1,0 +1,125 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2008-10-07-report-inquiry-alleged-misconduct-public-officers-c-37a82680",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Report on the inquiry into alleged misconduct by public officers in connection with the investigation of the murder of Mrs Pamela Lawrence, the prosecution and appeals of Mr Andrew Mark Mallard, and other related matters",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Inquiry%20into%20alleged%20misconduct%20by%20public%20officers%20in%20connection%20with%20the%20investigation%20of%20the%20murder%20of%20Mrs%20Pamela%20Lawrence.pdf",
+  "document": "Report on the Inquiry into alleged misconduct by public officers in connection with the investigation of the murder of Mrs Pamela Lawrence.pdf",
+  "sha256": "9ab92feed65819c3b9d09069febd2539c89a37469b4af8e920ea4033233228b8",
+  "pages": 206,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 15,
+  "last_page": 28,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Inquiry%20into%20alleged%20misconduct%20by%20public%20officers%20in%20connection%20with%20the%20investigation%20of%20the%20murder%20of%20Mrs%20Pamela%20Lawrence.pdf#page=15"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated possible public-officer misconduct in a murder investigation and the resulting prosecution and appeals.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Inquiry%20into%20alleged%20misconduct%20by%20public%20officers%20in%20connection%20with%20the%20investigation%20of%20the%20murder%20of%20Mrs%20Pamela%20Lawrence.pdf",
+      "document": "Report on the Inquiry into alleged misconduct by public officers in connection with the investigation of the murder of Mrs Pamela Lawrence.pdf",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Inquiry%20into%20alleged%20misconduct%20by%20public%20officers%20in%20connection%20with%20the%20investigation%20of%20the%20murder%20of%20Mrs%20Pamela%20Lawrence.pdf",
+      "document": "Report on the Inquiry into alleged misconduct by public officers in connection with the investigation of the murder of Mrs Pamela Lawrence.pdf",
+      "page": 29
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY; INTRODUCTION"
+   },
+   {
+    "text": "It examined police interviews, changes to witness statements, forensic testing and the disclosure of relevant material to prosecutors and the defence.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Inquiry%20into%20alleged%20misconduct%20by%20public%20officers%20in%20connection%20with%20the%20investigation%20of%20the%20murder%20of%20Mrs%20Pamela%20Lawrence.pdf",
+      "document": "Report on the Inquiry into alleged misconduct by public officers in connection with the investigation of the murder of Mrs Pamela Lawrence.pdf",
+      "page": 20
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Inquiry%20into%20alleged%20misconduct%20by%20public%20officers%20in%20connection%20with%20the%20investigation%20of%20the%20murder%20of%20Mrs%20Pamela%20Lawrence.pdf",
+      "document": "Report on the Inquiry into alleged misconduct by public officers in connection with the investigation of the murder of Mrs Pamela Lawrence.pdf",
+      "page": 21
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Inquiry%20into%20alleged%20misconduct%20by%20public%20officers%20in%20connection%20with%20the%20investigation%20of%20the%20murder%20of%20Mrs%20Pamela%20Lawrence.pdf",
+      "document": "Report on the Inquiry into alleged misconduct by public officers in connection with the investigation of the murder of Mrs Pamela Lawrence.pdf",
+      "page": 22
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Inquiry%20into%20alleged%20misconduct%20by%20public%20officers%20in%20connection%20with%20the%20investigation%20of%20the%20murder%20of%20Mrs%20Pamela%20Lawrence.pdf",
+      "document": "Report on the Inquiry into alleged misconduct by public officers in connection with the investigation of the murder of Mrs Pamela Lawrence.pdf",
+      "page": 23
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Inquiry%20into%20alleged%20misconduct%20by%20public%20officers%20in%20connection%20with%20the%20investigation%20of%20the%20murder%20of%20Mrs%20Pamela%20Lawrence.pdf",
+      "document": "Report on the Inquiry into alleged misconduct by public officers in connection with the investigation of the murder of Mrs Pamela Lawrence.pdf",
+      "page": 24
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Inquiry%20into%20alleged%20misconduct%20by%20public%20officers%20in%20connection%20with%20the%20investigation%20of%20the%20murder%20of%20Mrs%20Pamela%20Lawrence.pdf",
+      "document": "Report on the Inquiry into alleged misconduct by public officers in connection with the investigation of the murder of Mrs Pamela Lawrence.pdf",
+      "page": 29
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY; INTRODUCTION"
+   },
+   {
+    "text": "The Commission formed misconduct opinions about two police officers and a prosecutor concerning altered statements, misleading information and failures to disclose relevant material.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Inquiry%20into%20alleged%20misconduct%20by%20public%20officers%20in%20connection%20with%20the%20investigation%20of%20the%20murder%20of%20Mrs%20Pamela%20Lawrence.pdf",
+      "document": "Report on the Inquiry into alleged misconduct by public officers in connection with the investigation of the murder of Mrs Pamela Lawrence.pdf",
+      "page": 27
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission made six recommendations addressing possible disciplinary action, interviews with mentally ill suspects, police training, written prosecution advice and a possible professional-conduct complaint.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Inquiry%20into%20alleged%20misconduct%20by%20public%20officers%20in%20connection%20with%20the%20investigation%20of%20the%20murder%20of%20Mrs%20Pamela%20Lawrence.pdf",
+      "document": "Report on the Inquiry into alleged misconduct by public officers in connection with the investigation of the murder of Mrs Pamela Lawrence.pdf",
+      "page": 27
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Inquiry%20into%20alleged%20misconduct%20by%20public%20officers%20in%20connection%20with%20the%20investigation%20of%20the%20murder%20of%20Mrs%20Pamela%20Lawrence.pdf",
+      "document": "Report on the Inquiry into alleged misconduct by public officers in connection with the investigation of the murder of Mrs Pamela Lawrence.pdf",
+      "page": 28
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Inquiry%20into%20alleged%20misconduct%20by%20public%20officers%20in%20connection%20with%20the%20investigation%20of%20the%20murder%20of%20Mrs%20Pamela%20Lawrence.pdf",
+      "document": "Report on the Inquiry into alleged misconduct by public officers in connection with the investigation of the murder of Mrs Pamela Lawrence.pdf",
+      "page": 193
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY; 14.2 Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

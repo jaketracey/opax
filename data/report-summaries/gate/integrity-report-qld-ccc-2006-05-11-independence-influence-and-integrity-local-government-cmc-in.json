@@ -1,0 +1,111 @@
+{
+ "slug": "integrity-report-qld-ccc-2006-05-11-independence-influence-and-integrity-local-government-cmc-in",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The CMC investigated alleged misconduct involving the 2004 Gold Coast City Council election and reviewed the adequacy of local government laws.",
+    "pages": [
+     19
+    ],
+    "support": "The inquiry was also required to examine the adequacy of existing legislation",
+    "section": "SUMMARY",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examined candidate links, campaign donations, electoral bribery and councillors’ handling of personal interests.",
+    "pages": [
+     19
+    ],
+    "support": "declaring and dealing with conflicts of interest or material personal interests",
+    "section": "SUMMARY",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission found that candidates had made false or misleading statements to conceal a shared campaign fund backed by developers.",
+    "pages": [
+     24
+    ],
+    "support": "in a concerted effort to conceal the existence of a group of candidates being funded from a common developer-backed fund.",
+    "section": "PART A: SUMMARY OF FINDINGS FOR first TERM OF REFERENCE",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission concluded that the conduct harmed the election’s integrity, while the specific conflict cases examined could not amount to offences under the Act.",
+    "pages": [
+     25
+    ],
+    "support": "none of the specific cases of alleged conflicts of interest examined could amount to offences under that Act.",
+    "section": "PART A: SUMMARY OF FINDINGS FOR first TERM OF REFERENCE",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "The Commission made 19 recommendations covering donation disclosure, conflicts of interest, enforcement, council decision records and protection for council employees.",
+    "pages": [
+     26,
+     27,
+     28,
+     29,
+     30
+    ],
+    "support": "Recommendation 19: That the LGA be amended to make it an offence to breach section 230(2) of the LGA",
+    "section": "PART B: SUMMARY OF RECOMMENDATIONS FOR second and third TERMS OF REFERENCE",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The Commission is satisfied that there were a number of false or misleading statements made to the media in this matter in a concerted effort to conceal the existence of a group of candidates being funded from a common developer-backed fund.",
+    "page": 24,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "Because of the narrow definition of ‘material personal interest‘ under the LGA, none of the specific cases of alleged conflicts of interest examined could amount to offences under that Act.",
+    "page": 25,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "SUMMARY",
+   "first_page": 19,
+   "last_page": 30
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

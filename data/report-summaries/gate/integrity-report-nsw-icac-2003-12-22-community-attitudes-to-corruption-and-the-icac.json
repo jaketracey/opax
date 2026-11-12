@@ -1,0 +1,94 @@
+{
+ "slug": "integrity-report-nsw-icac-2003-12-22-community-attitudes-to-corruption-and-the-icac",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Independent Commission Against Corruption commissioned a telephone survey of 500 NSW residents in April 2003 to examine public views of corruption and ICAC.",
+    "pages": [
+     6
+    ],
+    "support": "The survey was conducted by telephone within a two week period in April, \n2003.",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examined perceived corruption and its effects, attitudes to reporting, and awareness and perceptions of ICAC, with comparisons to earlier surveys.",
+    "pages": [
+     6
+    ],
+    "support": "This document provides a brief summary of the findings of the 2003 survey, \nincluding some comparisons with the findings of previous surveys.",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "ICAC reported that 82% perceived corruption as a problem in NSW, while 97% supported reporting it and 89% believed individuals had a responsibility to report.",
+    "pages": [
+     4
+    ],
+    "support": "most respondents believing it is OK to \nreport corruption (97%) and that individuals have a responsibility to report \ncorruption (89%).",
+    "section": "Executive summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "ICAC also reported that 71% said they would probably report corruption, but only 34% knew where to report it.",
+    "pages": [
+     5
+    ],
+    "support": "only a third (34%) said they knew where to report \ncorruption in the NSW public sector.",
+    "section": "Executive summary",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Public cynicism about the outcomes of reporting corruption appears to be \nwaning.",
+    "page": 4,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "There was also evidence of improving confidence that people who report \ncorruption will not suffer negative consequences.",
+    "page": 4,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Executive summary",
+   "first_page": 4,
+   "last_page": 5
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

@@ -1,0 +1,69 @@
+{
+ "slug": "integrity-report-nsw-icac-2024-01-17-managing-conflicts-of-duties-in-the-nsw-public-sector-januar",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The NSW Independent Commission Against Corruption provides guidance on recognising and managing conflicts between public duties.",
+    "pages": [
+     1,
+     8
+    ],
+    "support": "The aim of the publication is to provide guidance to public officials and agencies on identifying and handling conflicts of duties.",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examines competing public obligations that affect stakeholders or the wider community, distinguishing these from conflicts involving private interests.",
+    "pages": [
+     1
+    ],
+    "support": "A conflict of duties deals with two or more different public duties an individual or an agency has that may conflict",
+    "section": "What is a conflict of duties?",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission cautions that unresolved conflicts can undermine impartial decisions, public confidence and the legitimacy of regulation.",
+    "pages": [
+     2
+    ],
+    "support": "Further, conflicting duties can erode the legitimacy of an agency’s regulatory activities.",
+    "section": "Why is a conflict of duties an issue?",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its five suggested steps cover identifying conflicts, checking relevant guidance, assessing risks, removing a duty and strengthening accountability.",
+    "pages": [
+     3
+    ],
+    "support": "The following steps may be taken to address conflicts of duties",
+    "section": "How to address conflicts of duties?",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 0,
+  "findings_pass": 0,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

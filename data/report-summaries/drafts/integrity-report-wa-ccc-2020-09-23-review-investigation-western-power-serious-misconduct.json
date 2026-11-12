@@ -1,0 +1,53 @@
+{
+  "slug": "integrity-report-wa-ccc-2020-09-23-review-investigation-western-power-serious-misconduct",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission reviewed an investigation by Western Power into allegations that an employee falsified power pole inspection records.",
+      "pages": [
+        5,
+        7
+      ],
+      "support": "The Commission conducted a review of Western Power's investigation.",
+      "people": []
+    },
+    {
+      "text": "The Commission considered the investigation thorough and accepted that Western Power's conclusions were supported by the available evidence.",
+      "pages": [
+        7
+      ],
+      "support": "The conclusions reached by Western Power were open to be made based on the evidence available.",
+      "people": []
+    },
+    {
+      "text": "The Commission considered notification of suspected misconduct late and disagreed with the decision against reporting the conduct to police.",
+      "pages": [
+        8
+      ],
+      "support": "The Commission has concerns with the decision by Western Power not to report the employee's conduct to the WA Police Force.",
+      "people": []
+    },
+    {
+      "text": "The Commission made no formal recommendations, recognising the investigation and changes to auditing intended to detect similar conduct.",
+      "pages": [
+        9
+      ],
+      "support": "In view of Western Power's investigation, the Commission makes no formal recommendations.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The conclusions reached by Western Power were open to be made based on the evidence available.",
+      "page": 7,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "In view of Western Power's investigation, the Commission makes no formal recommendations.",
+      "page": 9,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "No separate executive summary or equivalent consolidated summary was identified; the introduction begins a chronological account."
+}

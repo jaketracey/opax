@@ -1,0 +1,51 @@
+{
+  "slug": "integrity-report-wa-ccc-2016-10-10-report-matter-governance-shire-dowerin",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "OVERVIEW",
+    "first_page": 7,
+    "last_page": 9
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission investigated how the Shire of Dowerin's chief executive officer could steal public money over several years without detection.",
+      "pages": [
+        7
+      ],
+      "section": "OVERVIEW",
+      "support": "The Commission decided to investigate the circumstances in which Mr Alcock was able to steal so much money over such a long period without detection.",
+      "people": []
+    },
+    {
+      "text": "Its examination covered council oversight, financial controls and the failure of successive audits to detect the theft.",
+      "pages": [
+        7,
+        8
+      ],
+      "section": "OVERVIEW",
+      "support": "Successive audits had failed to discover anything wrong with the accounts.",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that stronger policies, an audit committee and scrutiny of credit card statements would probably have exposed the theft earlier.",
+      "pages": [
+        8
+      ],
+      "section": "OVERVIEW",
+      "support": "the probabilities are that the embezzlement would have been discovered much sooner and the losses mitigated.",
+      "people": []
+    },
+    {
+      "text": "It formed no serious misconduct opinions about Shire officers or councillors and stressed councils' responsibility for governing local government affairs.",
+      "pages": [
+        8,
+        9
+      ],
+      "section": "OVERVIEW",
+      "support": "The Commission has formed no opinions of serious misconduct about officers and councillors of the Shire of Dowerin.",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "Existing OPAX findings are not duplicated. The report expressly declines to form serious misconduct opinions. No separate numbered recommendations list."
+}

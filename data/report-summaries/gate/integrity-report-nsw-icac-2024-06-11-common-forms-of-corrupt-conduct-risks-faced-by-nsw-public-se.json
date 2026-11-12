@@ -1,0 +1,86 @@
+{
+ "slug": "integrity-report-nsw-icac-2024-06-11-common-forms-of-corrupt-conduct-risks-faced-by-nsw-public-se",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The NSW Independent Commission Against Corruption prepared this guidance to help public agencies identify common corruption risks and assess their controls.",
+    "pages": [
+     7,
+     8
+    ],
+    "support": "This publication is intended to assist NSW public sector agencies to understand the nature and prevalence of common and systemic corruption issues",
+    "section": "Purpose of this publication",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commission reviewed five years of its information holdings to identify recurring types of reported misconduct.",
+    "pages": [
+     8
+    ],
+    "support": "the Commission has reviewed its information holdings covering a five-year period.",
+    "section": "Purpose of this publication",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission identifies human resources and staff administration as the workplace function most commonly reported by agencies, followed by allocation of funds, materials and services.",
+    "pages": [
+     8
+    ],
+    "support": "human resources and staff administration is the most common workplace function in matters reported by agencies.",
+    "section": "Summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its guidance covers corruption controls, warning signs, detection and investigation across these functions and related issues such as conflicts of interest and gifts.",
+    "pages": [
+     8
+    ],
+    "support": "the following chapters outline a range of measures that can assist as corruption controls, as well as highlight key risks and red flags.",
+    "section": "Purpose of this publication",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The Commission’s annual reports have consistently shown that human resources and staff administration is the most common workplace function in matters reported by agencies.",
+    "page": 8,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Summary",
+   "first_page": 8,
+   "last_page": 8
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

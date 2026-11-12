@@ -1,0 +1,57 @@
+{
+  "slug": "integrity-report-nsw-icac-2012-02-15-anti-corruption-safeguards-and-the-nsw-planning-system",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Chapter 1: Introduction and overview",
+    "first_page": 6,
+    "last_page": 9
+  },
+  "sentences": [
+    {
+      "text": "The NSW Independent Commission Against Corruption sets out safeguards it considers necessary to reduce corruption risks in the planning system.",
+      "pages": [
+        6
+      ],
+      "support": "the Commission is communicating its view on the key anti-corruption safeguards that ought to underpin the NSW planning system",
+      "section": "Chapter 1: Introduction and overview",
+      "people": []
+    },
+    {
+      "text": "It examines decision-making criteria, competing public interests, transparency, complexity, community participation and third-party appeals.",
+      "pages": [
+        7,
+        8
+      ],
+      "support": "the Commission puts forward what it believes are six key corruption prevention safeguards",
+      "section": "Key corruption prevention safeguards",
+      "people": []
+    },
+    {
+      "text": "The Commission cautions that frequent planning complaints do not themselves demonstrate corruption, while broad discretion over departures from plans creates risk.",
+      "pages": [
+        7
+      ],
+      "support": "This high ranking in complaint numbers, however, does not directly correlate with evidence of corruption.",
+      "section": "Planning, corruption and the Commission",
+      "people": []
+    },
+    {
+      "text": "Its 16 recommendations cover objective criteria, oversight, simpler rules, clearer decisions, public consultation and wider access to merit appeals.",
+      "pages": [
+        8,
+        9
+      ],
+      "support": "The Commission has also made a number of recommendations that support the key safeguards.",
+      "section": "List of recommendations",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "This high ranking in complaint numbers, however, does not directly correlate with evidence of corruption.",
+      "page": 7,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "Recommendations were made in the context of developing new planning legislation. The introduction and overview includes the consolidated recommendations through PDF page 9."
+}

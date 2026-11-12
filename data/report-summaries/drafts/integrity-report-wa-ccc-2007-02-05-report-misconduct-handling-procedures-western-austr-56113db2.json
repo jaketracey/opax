@@ -1,0 +1,8 @@
+{
+  "slug": "integrity-report-wa-ccc-2007-02-05-report-misconduct-handling-procedures-western-austr-56113db2",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [],
+  "findings": [],
+  "notes": "WITHHELD: The text extraction is unusable throughout the report. All substantive pages contain extensive control characters and substituted glyph codes, including the apparent executive summary and conclusion. No readable summary, complete findings sentence or support excerpt can be verified against pages.json. No source-based summary can be drafted without a corrected pack. The gate's minimum sentence requirement is intentionally not met; no rule has been weakened."
+}

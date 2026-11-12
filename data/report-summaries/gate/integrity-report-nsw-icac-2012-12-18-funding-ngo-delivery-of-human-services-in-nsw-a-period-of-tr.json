@@ -1,0 +1,96 @@
+{
+ "slug": "integrity-report-nsw-icac-2012-12-18-funding-ngo-delivery-of-human-services-in-nsw-a-period-of-tr",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The NSW Independent Commission Against Corruption examines controls over government funding for non-government providers of human services.",
+    "pages": [
+     6,
+     7
+    ],
+    "support": "As human services delivery in NSW transitions to the NGO delivery model",
+    "section": "Corruption prevention context",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "Its research included more than 75 consultation sessions, 33 submissions and case studies of Victoria and Scotland.",
+    "pages": [
+     8
+    ],
+    "support": "The Commission has also considered the issues raised in the 33 submissions it received",
+    "section": "Research and consultation",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission considers that Victoria’s model of local service areas is more suitable for NSW than Scotland’s council-based model without substantial council amalgamations.",
+    "pages": [
+     9
+    ],
+    "support": "the Victorian model is more applicable to NSW than the council-based model of Scotland.",
+    "section": "Research and consultation",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its 18 recommendations address local decision-making, funding accountability, shared information, central oversight and provider accreditation.",
+    "pages": [
+     13,
+     14,
+     16,
+     23,
+     25
+    ],
+    "support": "That NSW funding agencies move toward a standards and accreditation framework that assures service and governance capacity.",
+    "section": "Recommendations",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "The Commission also recommends extending the NSW Auditor-General’s powers to audit government-funded non-government organisations.",
+    "pages": [
+     8
+    ],
+    "support": "That legislation be amended to provide the NSW Auditor-General with power to inspect, examine and audit the accounts of NGOs",
+    "section": "Recommendation 1",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "That legislation be amended to provide the NSW Auditor-General with power to inspect, examine and audit the accounts of NGOs that have been provided with government funding.",
+    "page": 8,
+    "kind": "recommendation"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

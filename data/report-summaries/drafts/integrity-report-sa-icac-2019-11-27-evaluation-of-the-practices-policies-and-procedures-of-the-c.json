@@ -1,0 +1,62 @@
+{
+  "slug": "integrity-report-sa-icac-2019-11-27-evaluation-of-the-practices-policies-and-procedures-of-the-c",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Executive Summary",
+    "first_page": 8,
+    "last_page": 10
+  },
+  "sentences": [
+    {
+      "text": "South Australia’s Deputy Independent Commissioner Against Corruption evaluated practices at the City of Playford Council to identify improvements to integrity controls.",
+      "pages": [
+        6,
+        8,
+        9
+      ],
+      "section": "Executive Summary",
+      "support": "My role is limited to evaluating processes \nin the context of protecting the integrity \nof a public institution",
+      "people": []
+    },
+    {
+      "text": "The evaluation focused on current administration practices, including policies, records, procurement and human resources.",
+      "pages": [
+        8,
+        9,
+        10
+      ],
+      "section": "Executive Summary",
+      "support": "This report also addresses opportunities to improve integrity measures in respect of \nprocurement and human resource management.",
+      "people": []
+    },
+    {
+      "text": "The Deputy Commissioner identified weaknesses in policy implementation, compliance and records management that exposed the council to integrity risks.",
+      "pages": [
+        9
+      ],
+      "section": "Executive Summary",
+      "support": "those weaknesses primarily relate to the manner in which policies and \nprocedures are implemented and adhered to",
+      "people": []
+    },
+    {
+      "text": "The Deputy Commissioner made 21 recommendations covering governance, records, recruitment, performance management and procurement.",
+      "pages": [
+        10,
+        12,
+        13,
+        14
+      ],
+      "section": "Recommendations",
+      "support": "I have made 21 recommendations which I hope will be of assistance to the City \nof Playford",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "However, there remain a number of weaknesses in current council operations that \nleave it susceptible to corruption, misconduct or maladministration.",
+      "page": 9,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The evaluation assesses current systems and does not adjudicate historical allegations or service delivery performance."
+}

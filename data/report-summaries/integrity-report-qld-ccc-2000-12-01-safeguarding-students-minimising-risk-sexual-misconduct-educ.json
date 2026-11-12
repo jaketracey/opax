@@ -1,0 +1,34 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2000-12-01-safeguarding-students-minimising-risk-sexual-misconduct-educ",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+  "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+  "sha256": "dab36e25f061688c0719ee87837f95173d33f348021d5adc5182099f579d70b4",
+  "pages": 107,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "withheld",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": []
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

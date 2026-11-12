@@ -1,0 +1,92 @@
+{
+ "slug": "integrity-report-wa-ccc-2024-06-13-review-main-roads-investigation-misconduct-two-managers",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission reviewed how Main Roads handled misconduct allegations involving two managers.",
+    "pages": [
+     4
+    ],
+    "support": "This report details the Commission's review of the actions taken by Main Roads in dealing with these allegations of misconduct.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commission considered the external investigation thorough, but found Main Roads had initially done little to address wider misconduct risks.",
+    "pages": [
+     12,
+     13
+    ],
+    "support": "Limited action had been taken to understand and address the broader serious misconduct risks.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission made three recommendations covering financial audits, procurement oversight and fixed asset policies.",
+    "pages": [
+     5
+    ],
+    "support": "The Commission made three recommendations to Main Roads:",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "After considering further action by Main Roads, the Commission concluded that all three recommendations could be closed.",
+    "pages": [
+     5,
+     16
+    ],
+    "support": "The Commission considers Main Roads has taken appropriate steps to address the recommendations.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "On the evidence available, the Commission considers the conclusions reached that both managers engaged in misconduct were open to be made.",
+    "page": 12,
+    "kind": "opinion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The Commission considers all recommendations closed.",
+    "page": 16,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Overview",
+   "first_page": 4,
+   "last_page": 5
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

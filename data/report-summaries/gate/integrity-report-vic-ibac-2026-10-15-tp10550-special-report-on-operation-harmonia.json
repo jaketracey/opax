@@ -1,0 +1,110 @@
+{
+ "slug": "integrity-report-vic-ibac-2026-10-15-tp10550-special-report-on-operation-harmonia",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "IBAC’s Operation Harmonia investigated allegations that senior officers at the former Department of Jobs, Precincts and Regions failed to address or report losses from COVID-19 business support grants.",
+    "pages": [
+     6,
+     13
+    ],
+    "support": "failed to act on internal and external indicators of fraud, corruption and other losses",
+    "section": "What IBAC did",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examined the treatment of backdated GST registrations and information provided to ministers, the Auditor-General and the Victorian Ombudsman.",
+    "pages": [
+     9,
+     13
+    ],
+    "support": "Over the course of this investigation IBAC also considered the provision of information to the Victorian Ombudsman",
+    "section": "What IBAC did",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "IBAC found that senior officers withheld information about a suspected $285 million loss from the secretary and minister, preventing them from considering a response.",
+    "pages": [
+     27,
+     41
+    ],
+    "support": "compromised the government’s ability to develop an appropriate response to address the suspected loss of $285 million in public funds",
+    "section": "What the investigation found",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "IBAC also found that information was withheld from the Ombudsman and misleading information was given to an incoming minister.",
+    "pages": [
+     41
+    ],
+    "support": "The investigation also found that Executive Director A withheld key information from the Ombudsman",
+    "section": "Conclusion",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "IBAC made no recommendations, emphasising the need for frank advice and a culture that supports staff raising concerns.",
+    "pages": [
+     12
+    ],
+    "support": "IBAC has not made recommendations in this instance but notes that fostering an environment in which providing frank and fearless advice is valued",
+    "section": "Summary of investigation and outcomes",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "IBAC’s investigation found that critical information was withheld from the Secretary and the Minister, contrary to the public sector values of integrity and responsiveness.",
+    "page": 41,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "IBAC found that a letter provided to the Victorian Ombudsman withheld key information about the department’s method for assessing GST registration.",
+    "page": 29,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Summary of investigation and outcomes",
+   "first_page": 11,
+   "last_page": 32
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

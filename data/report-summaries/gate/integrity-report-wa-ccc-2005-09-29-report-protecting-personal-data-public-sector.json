@@ -1,0 +1,125 @@
+{
+ "slug": "integrity-report-wa-ccc-2005-09-29-report-protecting-personal-data-public-sector",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission examined safeguards against unauthorised access to and disclosure of confidential personal information held by public agencies.",
+    "pages": [
+     9,
+     10
+    ],
+    "section": "Inquiry methods",
+    "support": "the legislative and policy framework for dealing with unauthorised access and disclosure of confidential personal information",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "Its work covered laws and policies, staff selection and supervision, and staff awareness, using submissions, agency fieldwork and a staff survey.",
+    "pages": [
+     9,
+     10
+    ],
+    "section": "Inquiry methods",
+    "support": "Specific information was also gained from several sample agencies, which was tested through fieldwork in those sample agencies.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that legislation and policy were fragmented and inadequate.",
+    "pages": [
+     78
+    ],
+    "section": "Opinions",
+    "support": "It is this Commission’s opinion that the relevant legislation and policy is inadequate and piecemeal",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It also found shortcomings in recruitment checks, training and supervision of staff handling confidential information.",
+    "pages": [
+     78
+    ],
+    "section": "Opinions",
+    "support": "The training and supervision of public sector staff in the requirements to maintain confidentiality in the course of their employment are inadequate.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "Its recommendations sought legislative reform, consolidated policies, stronger staff screening and access controls, and induction on information responsibilities.",
+    "pages": [
+     78,
+     79,
+     80,
+     81
+    ],
+    "section": "Recommendations",
+    "support": "It is recommended that all agencies re-evaluate their information management systems to ensure that safeguards are in place to mitigate unauthorised access and disclosure",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 5,
+   "item": {
+    "text": "The Commission intended to review progress after about three years.",
+    "pages": [
+     82
+    ],
+    "section": "Follow-up",
+    "support": "The Corruption and Crime Commission intends conducting a follow-up review in approximately three years’ time.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "It is this Commission’s opinion that the relevant legislation and policy is inadequate and piecemeal, and improvements need to be made to the framework surrounding confidential personal information.",
+    "page": 78,
+    "kind": "opinion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The training and supervision of public sector staff in the requirements to maintain confidentiality in the course of their employment are inadequate.",
+    "page": 78,
+    "kind": "opinion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Executive Summary",
+   "first_page": 9,
+   "last_page": 12
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 6,
+  "sentences_pass": 6,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

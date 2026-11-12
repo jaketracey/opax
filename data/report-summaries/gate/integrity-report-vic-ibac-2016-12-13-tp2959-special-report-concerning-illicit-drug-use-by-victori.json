@@ -1,0 +1,97 @@
+{
+ "slug": "integrity-report-vic-ibac-2016-12-13-tp2959-special-report-concerning-illicit-drug-use-by-victori",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "IBAC reported on illicit drug use by Victoria Police officers and the systems intended to prevent and detect it.",
+    "pages": [
+     8
+    ],
+    "support": "broader consideration of Victoria Police’s systems and practices to detect and prevent illicit drug use by its officers",
+    "section": "Overview",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It drew on Operations Apsley, Hotham and Yarrowitch, which examined drug use and officers’ associations with criminal figures.",
+    "pages": [
+     8,
+     9
+    ],
+    "support": "Both investigations examined the police officers’ subsequent associations with criminal figures",
+    "section": "IBAC’s investigations",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "IBAC found that illicit drug use had become routine within a connected group of officers and identified weaknesses in policy, recruitment and drug testing.",
+    "pages": [
+     9,
+     10
+    ],
+    "support": "Operation Apsley identified a group of interconnected police officers for whom illicit drug use was an accepted and regular part",
+    "section": "Systemic issues",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It made two recommendations for a comprehensive review of police drug use and controls, followed by progress and final reports on improvements.",
+    "pages": [
+     11,
+     45
+    ],
+    "support": "undertake a comprehensive review of the use of illicit drugs by Victoria Police officers",
+    "section": "Conclusions and recommendations",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Operation Apsley identified a group of interconnected police officers for whom illicit drug use was an accepted and regular part of their social lives.",
+    "page": 9,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "IBAC considers the investigations detailed in this report are likely to represent only snapshots of a more widespread and serious problem for Victoria Police.",
+    "page": 11,
+    "kind": "opinion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Overview",
+   "first_page": 7,
+   "last_page": 11
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

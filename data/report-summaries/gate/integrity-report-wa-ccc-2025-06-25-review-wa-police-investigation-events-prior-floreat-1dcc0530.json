@@ -1,0 +1,96 @@
+{
+ "slug": "integrity-report-wa-ccc-2025-06-25-review-wa-police-investigation-events-prior-floreat-1dcc0530",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission monitored and reviewed an internal investigation by WA Police into police contact with a family before the fatal Floreat family violence incident.",
+    "pages": [
+     4,
+     6
+    ],
+    "section": "Introduction and summary",
+    "support": "it had decided to actively monitor the IAU investigation into the police \nresponse",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The review considered police risk assessment, protection orders, seizure of firearms and recording of family contacts.",
+    "pages": [
+     6,
+     7
+    ],
+    "section": "The Commission’s referrals",
+    "support": "Areas of primary interest in the investigation included the decision not to \nissue a Police Order",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that the internal investigation was reasonable after an early concern was addressed, and that its findings and disciplinary outcomes were reasonably open.",
+    "pages": [
+     5
+    ],
+    "section": "Introduction and summary",
+    "support": "The Commission further considers that \nthe findings made by IAU and the actions taken by WA Police in response \nto those findings are reasonably open.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission separately began its own investigation into possible police misconduct concerning firearms licensing.",
+    "pages": [
+     11
+    ],
+    "section": "Bombara’s firearms licence: A Commission investigation",
+    "support": "The Commission has therefore commenced its own full investigation into \nthe allegation of police misconduct",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Accordingly, the Commission concludes that the findings \nmade by IAU were reasonably open.",
+    "page": 12,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The Commission also considers that the action taken by WA Police in \ndisciplining officers who had breached the Code was reasonably open.",
+    "page": 12,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Introduction and summary",
+   "first_page": 4,
+   "last_page": 5
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

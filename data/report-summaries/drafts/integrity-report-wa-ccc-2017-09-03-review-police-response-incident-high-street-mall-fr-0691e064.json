@@ -1,0 +1,42 @@
+{
+  "slug": "integrity-report-wa-ccc-2017-09-03-review-police-response-incident-high-street-mall-fr-0691e064",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Introduction and overview",
+    "first_page": 4,
+    "last_page": 6
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission investigated police conduct during an arrest in High Street Mall in Fremantle and reviewed the Internal Affairs Unit investigation.",
+      "pages": [
+        4,
+        5
+      ],
+      "section": "Introduction and overview",
+      "support": "The Commission conducted an investigation and reviewed IAU's investigation of the incident.",
+      "people": []
+    },
+    {
+      "text": "The Commission formed misconduct opinions about two officers' use of force, including twisting a restrained person's finger to dislocation.",
+      "pages": [
+        5,
+        38
+      ],
+      "section": "Introduction and overview",
+      "support": "1/C Donohoe's action in twisting the finger of a restrained person to the point of dislocation was unreasonable and excessive.",
+      "people": []
+    },
+    {
+      "text": "It concluded that force used to subdue the person was excessive but expressed no opinion about criminal offences.",
+      "pages": [
+        37
+      ],
+      "section": "Conclusion",
+      "support": "The Commission does not express any opinion on whether it constitutes an offence.",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "Existing OPAX findings are not duplicated. The police investigation was incomplete at the time of reporting. No separate numbered recommendations list."
+}

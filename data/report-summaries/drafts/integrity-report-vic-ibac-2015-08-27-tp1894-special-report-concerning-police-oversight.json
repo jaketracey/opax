@@ -1,0 +1,62 @@
+{
+  "slug": "integrity-report-vic-ibac-2015-08-27-tp1894-special-report-concerning-police-oversight",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Foreword",
+    "first_page": 9,
+    "last_page": 9
+  },
+  "sentences": [
+    {
+      "text": "IBAC reported on its oversight of Victoria Police since becoming fully operational in early 2013.",
+      "pages": [
+        9,
+        15
+      ],
+      "support": "This report provides a focused account of IBAC’s key police oversight activities",
+      "section": "Foreword",
+      "people": []
+    },
+    {
+      "text": "It covered prevention projects, reviews of police investigations and the progress and outcomes of IBAC investigations.",
+      "pages": [
+        15
+      ],
+      "support": "reviews of Victoria Police investigations – both reviews of individual cases and reviews that highlight systemic issues",
+      "section": "About this report",
+      "people": []
+    },
+    {
+      "text": "A delegated inquiry found serious negligence in handling human source information and failures to follow policy, while making no finding of unlawful behaviour.",
+      "pages": [
+        35
+      ],
+      "support": "found negligence of a high order in the management of human source information by Victoria Police",
+      "section": "Inquiry findings and recommendations",
+      "people": []
+    },
+    {
+      "text": "IBAC recorded 20 statutory recommendations to Victoria Police, addressing matters including human sources, subpoenas, victims of crime assistance and oversight of prosecutors.",
+      "pages": [
+        38,
+        39
+      ],
+      "support": "To date, IBAC has made twenty section 159 recommendations to Victoria Police",
+      "section": "Progress on recommendations arising from previous investigations",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "In his final report, Mr Kellam found negligence of a high order in the management of human source information by Victoria Police and he concluded that Victoria Police had failed to act in accordance with appropriate policies and guidelines.",
+      "page": 35,
+      "kind": "finding"
+    },
+    {
+      "quote": "This matter highlighted a systemic issue: the significant authority granted to often junior police prosecutors operating with little or no oversight.",
+      "page": 38,
+      "kind": "finding"
+    }
+  ],
+  "notes": "The Foreword is an equivalent overview; the separate snapshot on PDF page 11 is explicitly based mainly on 2014/15 figures. Twenty refers to cumulative section 159 recommendations, not a new list. The prosecutor finding quote concerns Operation Oldfield."
+}

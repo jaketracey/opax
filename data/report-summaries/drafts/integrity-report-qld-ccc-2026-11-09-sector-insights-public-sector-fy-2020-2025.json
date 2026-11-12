@@ -1,0 +1,57 @@
+{
+  "slug": "integrity-report-qld-ccc-2026-11-09-sector-insights-public-sector-fy-2020-2025",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Overview",
+    "first_page": 3,
+    "last_page": 4
+  },
+  "sentences": [
+    {
+      "text": "The Crime and Corruption Commission examined Queensland public sector corruption risks through complaints, investigations, intelligence and public information from July 2020 to June 2025.",
+      "pages": [
+        3
+      ],
+      "support": "complaints received by the CCC relating to the Queensland public sector between 1 July 2020 and \n30 June 2025",
+      "section": "Overview",
+      "people": []
+    },
+    {
+      "text": "It covered agencies within the CCC’s jurisdiction outside local government and the Queensland Police Service, including departments, boards, elected officials and other public bodies.",
+      "pages": [
+        3,
+        4
+      ],
+      "support": "all agencies within our jurisdiction \nwhich are not part of local government or the Queensland Police Service.",
+      "section": "Overview",
+      "people": []
+    },
+    {
+      "text": "The CCC identified public interactions, confidential information and human resource management as high-risk activities and reported an increase in complaint numbers.",
+      "pages": [
+        5
+      ],
+      "support": "Interacting with members of the public, managing confidential information and human resource \nmanagement are high-risk activities for the public sector.",
+      "section": "Complaint trends and insights",
+      "people": []
+    },
+    {
+      "text": "The CCC outlined prevention measures covering recruitment, induction, specialist training, recordkeeping, supervision, procurement oversight and workplace culture.",
+      "pages": [
+        15,
+        16
+      ],
+      "support": "Some strategies that can help prevent corruption in the public sector include:",
+      "section": "Prevention strategies and resources",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Interacting with members of the public, managing confidential information and human resource \nmanagement are high-risk activities for the public sector.",
+      "page": 5,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "Complaint trends do not establish the incidence of corrupt conduct. Prevention strategies are unnumbered; no formal recommendation count is asserted."
+}

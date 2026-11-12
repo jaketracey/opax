@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-1997-05-01-community-attitudes-to-corruption-and-the-icac-1996",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Community attitudes to corruption and the ICAC 1996",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201996.pdf.aspx",
+  "document": "Community attitudes to corruption and the ICAC 1996",
+  "sha256": "a0ffe0caa5c276b197153bd2bab2d99fc9673c446394f2e6b46c3f1eec07d4a8",
+  "pages": 60,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201996.pdf.aspx#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "ICAC’s 1996 community attitude survey sought to inform its prevention and education programs through the views of 511 randomly selected NSW adults.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201996.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC 1996",
+      "page": 6
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It examined corruption perceptions, standards expected in public and private workplaces, reporting attitudes and support for ICAC.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201996.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC 1996",
+      "page": 6
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "ICAC reported that respondents judged public sector workplace behaviour more strictly than comparable behaviour in private business.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201996.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC 1996",
+      "page": 6
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "ICAC reported that 90% felt responsible for reporting corruption, while 76% believed those who reported it would suffer.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201996.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC 1996",
+      "page": 7
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Respondents regarded workplace behaviour in the public sector more stringently than workplace behaviour in private business.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201996.pdf.aspx",
+     "document": "Community attitudes to corruption and the ICAC 1996",
+     "page": 6
+    }
+   },
+   {
+    "quote": "A very high percentage feel they have some responsibility to report corruption (90%), and that they know how serious corruption needs to be before reporting it (58%).",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201996.pdf.aspx",
+     "document": "Community attitudes to corruption and the ICAC 1996",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

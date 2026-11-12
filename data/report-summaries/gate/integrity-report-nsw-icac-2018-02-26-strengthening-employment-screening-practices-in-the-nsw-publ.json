@@ -1,0 +1,86 @@
+{
+ "slug": "integrity-report-nsw-icac-2018-02-26-strengthening-employment-screening-practices-in-the-nsw-publ",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The NSW Independent Commission Against Corruption provides tools for public agencies to reduce fraud in job applications.",
+    "pages": [
+     7
+    ],
+    "support": "This report provides a range of techniques and tools that agencies can apply to address employment application fraud.",
+    "section": "Executive summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examines screening frameworks, responsibility for checks, checking methods and the screening of temporary workers.",
+    "pages": [
+     7
+    ],
+    "support": "assigning roles and responsibilities for employment screening, improving the quality of employment screening checks and screening non-permanent workers.",
+    "section": "Executive summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission reports that inadequate screening contributed to corruption exposed in several of its investigations.",
+    "pages": [
+     7
+    ],
+    "support": "corrupt conduct in the NSW public sector that was brought about, or in some way attributable to, inadequate employment screening practices.",
+    "section": "Executive summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission recommends screening tailored to each role’s risks and comparable checks for permanent and non-permanent workers.",
+    "pages": [
+     7,
+     8
+    ],
+    "support": "Non-permanent workers should be subject to employment screening checks in the same way as those undertaken on permanent employees.",
+    "section": "Executive summary",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "This report recommends that agencies adopt a risk-based approach for preventing employment application fraud and ensure that any screening checks are standardised and justifiable.",
+    "page": 7,
+    "kind": "recommendation"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Executive summary",
+   "first_page": 7,
+   "last_page": 8
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

@@ -1,0 +1,56 @@
+{
+ "slug": "integrity-report-nsw-icac-2009-05-19-profiling-the-nsw-public-sector-2007-functions-risks-and-cor",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Independent Commission Against Corruption prepared this organisational questionnaire to profile NSW public sector functions, corruption risks and prevention practices.",
+    "pages": [
+     2
+    ],
+    "support": "conducting research to \ndevelop a profile of the functions, corruption risks and corruption prevention strategies \nwithin the NSW public sector.",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It asks organisations to rate potential corruption risks and indicate whether those risks are managed adequately or need more attention.",
+    "pages": [
+     11
+    ],
+    "support": "Indicate the extent you \nconsider each of these to be a potential corruption risk within your organisation",
+    "section": "Corruption risk areas",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "It also asks about designated responsibility for prevention, risk management processes and employee training on codes of conduct.",
+    "pages": [
+     17,
+     20
+    ],
+    "support": "The following questions ask about your organisation’s strategies in addressing a variety \nof corruption risks.",
+    "section": "Organisational strategies",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 3,
+  "sentences_pass": 3,
+  "findings": 0,
+  "findings_pass": 0,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2023-08-23-public-sector-procurement",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Public Sector Procurement",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/936262/Public-Sector-Procurement-report.pdf",
+  "document": "Public Sector Procurement",
+  "sha256": "57f2d35a5c933433b25c713a8325541229639dc8f2eb40c457c5f209f5695612",
+  "pages": 60,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption surveyed procurement officers and suppliers about corruption risks in public contracting.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/936262/Public-Sector-Procurement-report.pdf",
+      "document": "Public Sector Procurement",
+      "page": 6
+     }
+    ],
+    "section": "METHOD"
+   },
+   {
+    "text": "The surveys examined conflicts of interest, gifts, confidential information, procurement practices and barriers to reporting.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/936262/Public-Sector-Procurement-report.pdf",
+      "document": "Public Sector Procurement",
+      "page": 5
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission reported that procurement officers generally viewed procurement integrity more positively than suppliers, but could underestimate corruption risks.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/936262/Public-Sector-Procurement-report.pdf",
+      "document": "Public Sector Procurement",
+      "page": 44
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "The Commission concluded that some suspicions went unreported and that suppliers did not sufficiently understand their public officer status and reporting obligations.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/936262/Public-Sector-Procurement-report.pdf",
+      "document": "Public Sector Procurement",
+      "page": 44
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "The Commission said recommendations would follow in a second report providing further analysis.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/936262/Public-Sector-Procurement-report.pdf",
+      "document": "Public Sector Procurement",
+      "page": 4
+     }
+    ],
+    "section": "COMMISSIONER’S FOREWORD"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "However, procurement officers may underestimate corruption risks in procurement.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/936262/Public-Sector-Procurement-report.pdf",
+     "document": "Public Sector Procurement",
+     "page": 44
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

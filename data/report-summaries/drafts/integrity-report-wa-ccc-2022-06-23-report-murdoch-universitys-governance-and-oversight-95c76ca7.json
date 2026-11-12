@@ -1,0 +1,37 @@
+{
+  "slug": "integrity-report-wa-ccc-2022-06-23-report-murdoch-universitys-governance-and-oversight-95c76ca7",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Introduction",
+    "first_page": 4,
+    "last_page": 4
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission investigated concerns about compliance with cattle identification and movement rules at Murdoch University.",
+      "pages": [
+        4
+      ],
+      "support": "The Commission commenced an investigation following reports of Mr Thomas' non-compliance with biosecurity requirements in relation to the identification and movement of cattle.",
+      "people": []
+    },
+    {
+      "text": "The Commission formed an opinion of serious misconduct about the livestock manager's use of university cattle for personal benefit and to assist private cattle studs.",
+      "pages": [
+        4
+      ],
+      "support": "The Commission has formed an opinion of serious misconduct by Mr Thomas.",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that weak governance, poor record controls and inadequate audits allowed deception to remain undetected and put biosecurity at risk.",
+      "pages": [
+        19
+      ],
+      "support": "Mr Thomas's deception remained uncovered for years due to the lack of proper governance surrounding the Murdoch University farms.",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "Introduction provides the report-wide overview. The existing OPAX finding is not duplicated."
+}

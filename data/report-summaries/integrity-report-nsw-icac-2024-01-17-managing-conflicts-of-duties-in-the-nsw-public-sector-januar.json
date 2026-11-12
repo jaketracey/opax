@@ -1,0 +1,84 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2024-01-17-managing-conflicts-of-duties-in-the-nsw-public-sector-januar",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Managing conflicts of duties in the NSW public sector (January 2024)",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing%20conflicts%20of%20duties%20in%20the%20NSW%20public%20sector%20-%20Jan24.pdf.aspx",
+  "document": "Managing conflicts of duties in the NSW public sector (January 2024)",
+  "sha256": "e47af0abf1882ebd53983f9532b99f53612dfafafb5ae48c6d954d221e8283d7",
+  "pages": 8,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption provides guidance on recognising and managing conflicts between public duties.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing%20conflicts%20of%20duties%20in%20the%20NSW%20public%20sector%20-%20Jan24.pdf.aspx",
+      "document": "Managing conflicts of duties in the NSW public sector (January 2024)",
+      "page": 1
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing%20conflicts%20of%20duties%20in%20the%20NSW%20public%20sector%20-%20Jan24.pdf.aspx",
+      "document": "Managing conflicts of duties in the NSW public sector (January 2024)",
+      "page": 8
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It examines competing public obligations that affect stakeholders or the wider community, distinguishing these from conflicts involving private interests.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing%20conflicts%20of%20duties%20in%20the%20NSW%20public%20sector%20-%20Jan24.pdf.aspx",
+      "document": "Managing conflicts of duties in the NSW public sector (January 2024)",
+      "page": 1
+     }
+    ],
+    "section": "What is a conflict of duties?"
+   },
+   {
+    "text": "The Commission cautions that unresolved conflicts can undermine impartial decisions, public confidence and the legitimacy of regulation.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing%20conflicts%20of%20duties%20in%20the%20NSW%20public%20sector%20-%20Jan24.pdf.aspx",
+      "document": "Managing conflicts of duties in the NSW public sector (January 2024)",
+      "page": 2
+     }
+    ],
+    "section": "Why is a conflict of duties an issue?"
+   },
+   {
+    "text": "Its five suggested steps cover identifying conflicts, checking relevant guidance, assessing risks, removing a duty and strengthening accountability.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Managing%20conflicts%20of%20duties%20in%20the%20NSW%20public%20sector%20-%20Jan24.pdf.aspx",
+      "document": "Managing conflicts of duties in the NSW public sector (January 2024)",
+      "page": 3
+     }
+    ],
+    "section": "How to address conflicts of duties?"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

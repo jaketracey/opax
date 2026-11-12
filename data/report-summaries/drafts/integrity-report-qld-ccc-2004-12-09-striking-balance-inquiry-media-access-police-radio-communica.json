@@ -1,0 +1,71 @@
+{
+  "slug": "integrity-report-qld-ccc-2004-12-09-striking-balance-inquiry-media-access-police-radio-communica",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "SUMMARY",
+    "first_page": 13,
+    "last_page": 13
+  },
+  "sentences": [
+    {
+      "text": "The Crime and Misconduct Commission held an inquiry following a referral about media concerns over encrypted police radio communications.",
+      "pages": [
+        13
+      ],
+      "support": "media organisations had expressed concern about the implementation of a Queensland Police Service (QPS) decision to adopt encrypted digital radio communication technology",
+      "section": "SUMMARY",
+      "people": []
+    },
+    {
+      "text": "The Commission examined how to balance media scrutiny and reporting with police safety, personal privacy and confidentiality.",
+      "pages": [
+        13
+      ],
+      "support": "The recommendations aim to reconcile and balance these competing interests",
+      "section": "SUMMARY",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that media access to police communications should protect operational safety and individual privacy.",
+      "pages": [
+        65
+      ],
+      "support": "the media should have access to police communications in a way that maintains the safety and security of police operations",
+      "section": "STRIKING A BALANCE: RECOMMENDATIONS",
+      "people": []
+    },
+    {
+      "text": "The Commission recommended a secure feed from police dispatch records for authorised media outlets, with exclusions and delays for specified incidents.",
+      "pages": [
+        14
+      ],
+      "support": "secure electronic transfer of information about operational police activity via a direct data-feed",
+      "section": "RECOMMENDATIONS",
+      "people": []
+    },
+    {
+      "text": "Its 14 recommendations also covered privacy safeguards, staffing, costs and continuing consultation between police and the media.",
+      "pages": [
+        13,
+        15,
+        16
+      ],
+      "support": "The Commission makes 14 recommendations to ensure efﬁcient, transparent and technically feasible information-sharing practices",
+      "section": "SUMMARY; RECOMMENDATIONS",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "That the QPS take all necessary steps to safeguard the privacy of individuals by ensuring that information identifying a person be excluded from the dispatch data-feed.",
+      "page": 15,
+      "kind": "recommendation"
+    },
+    {
+      "quote": "That the establishment and ongoing costs associated with the delivery of the dispatch data-feed and media notes be met by the QPS.",
+      "page": 15,
+      "kind": "recommendation"
+    }
+  ],
+  "notes": "The extraction includes occasional NUL control characters and typographic ligatures; cited passages remain readable and verifiable."
+}

@@ -1,0 +1,63 @@
+{
+  "slug": "integrity-report-wa-ccc-2018-10-26-report-misconduct-risks-wa-prisons",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission examined misconduct risks in WA prisons through its joint investigation with the Department of Justice.",
+      "pages": [
+        5,
+        6
+      ],
+      "section": "Scope and purpose of this report",
+      "support": "The joint investigation into corruption within WA prisons has focused on contraband entering prisons and inappropriate associations between prison staff and prisoners.",
+      "people": []
+    },
+    {
+      "text": "The report brought together lessons from that investigation, other misconduct agencies and Auditor General reports.",
+      "pages": [
+        5,
+        7
+      ],
+      "section": "Introduction",
+      "support": "This report brings together lessons from those reports and from misconduct agencies across Australia",
+      "people": []
+    },
+    {
+      "text": "The Commission found deficiencies in the department's identification and management of serious misconduct risks.",
+      "pages": [
+        6
+      ],
+      "section": "Introduction",
+      "support": "The Commission has identified a number of areas where DoJ's identification and management of serious misconduct risk is inadequate.",
+      "people": []
+    },
+    {
+      "text": "Its twenty recommendations covered corruption prevention, investigations, information sharing, screening, drug testing and monitoring the effectiveness of controls.",
+      "pages": [
+        45,
+        46
+      ],
+      "section": "Recommendations",
+      "support": "introduce a system to track and measure the effectiveness of serious misconduct strategies",
+      "people": []
+    },
+    {
+      "text": "The Commission planned to review implementation after a year.",
+      "pages": [
+        5
+      ],
+      "section": "Introduction",
+      "support": "It will report on the implementation of those recommendations in one year.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Commission has identified a number of areas where DoJ's identification and management of serious misconduct risk is inadequate.",
+      "page": 6,
+      "kind": "finding"
+    }
+  ],
+  "notes": "No separate executive summary or overview. Twenty recommendations are lettered a to t. Some security-related material was redacted by the Commission."
+}

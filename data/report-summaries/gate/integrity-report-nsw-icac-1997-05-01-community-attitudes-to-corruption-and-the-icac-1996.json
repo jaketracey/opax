@@ -1,0 +1,94 @@
+{
+ "slug": "integrity-report-nsw-icac-1997-05-01-community-attitudes-to-corruption-and-the-icac-1996",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "ICAC’s 1996 community attitude survey sought to inform its prevention and education programs through the views of 511 randomly selected NSW adults.",
+    "pages": [
+     6
+    ],
+    "support": "The 1996 community attitude survey was conducted with a random sample of 511 people",
+    "section": "EXECUTIVE SUMMARY",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examined corruption perceptions, standards expected in public and private workplaces, reporting attitudes and support for ICAC.",
+    "pages": [
+     6
+    ],
+    "support": "The survey explored people's general \nattitudes to corruption, particularly in relation to public and private sector workplaces.",
+    "section": "EXECUTIVE SUMMARY",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "ICAC reported that respondents judged public sector workplace behaviour more strictly than comparable behaviour in private business.",
+    "pages": [
+     6
+    ],
+    "support": "Respondents regarded workplace behaviour in the public sector more stringently \nthan workplace behaviour in private business.",
+    "section": "EXECUTIVE SUMMARY",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "ICAC reported that 90% felt responsible for reporting corruption, while 76% believed those who reported it would suffer.",
+    "pages": [
+     7
+    ],
+    "support": "A very high percentage feel they have some \nresponsibility to report corruption (90%)",
+    "section": "EXECUTIVE SUMMARY",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Respondents regarded workplace behaviour in the public sector more stringently \nthan workplace behaviour in private business.",
+    "page": 6,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "A very high percentage feel they have some \nresponsibility to report corruption (90%), and that they know how serious corruption needs \nto be before reporting it (58%).",
+    "page": 7,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "EXECUTIVE SUMMARY",
+   "first_page": 6,
+   "last_page": 7
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

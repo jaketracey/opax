@@ -1,0 +1,79 @@
+{
+ "slug": "integrity-report-nsw-icac-2022-11-22-managing-corruption-risks-in-regulatory-work-november-2022",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The NSW Independent Commission Against Corruption outlines corruption risks in regulatory work and ways to prevent them.",
+    "pages": [
+     6
+    ],
+    "support": "its focus is on highlighting common corruption risks associated with regulatory work and suggesting some potential ways to prevent corrupt conduct.",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examines risks created when staff move between regulators and the industries they oversee.",
+    "pages": [
+     19
+    ],
+    "section": "The revolving door",
+    "support": "This term refers to the movement of employees between the regulator (or related government role) and the regulated industry.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission identifies discretion over enforcement, including decisions to take no action, as a source of corruption risk.",
+    "pages": [
+     9
+    ],
+    "support": "It is the discretion to take regulatory action in different parts of the pyramid",
+    "section": "Managing regulatory discretion",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission advises agencies to assess capture risks, screen recruits, train staff and manage relationships with former or prospective employers.",
+    "pages": [
+     19,
+     20
+    ],
+    "support": "Evaluate regulatory capture during risk assessments and business planning exercises.",
+    "section": "Addressing regulatory capture and the revolving door",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The safest and best option is always to refuse it and report the matter immediately.",
+    "page": 15,
+    "kind": "recommendation"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

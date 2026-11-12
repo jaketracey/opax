@@ -1,0 +1,100 @@
+{
+ "slug": "integrity-report-nsw-icac-2007-09-04-corruption-risks-in-nsw-development-approval-processes-posit",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Independent Commission Against Corruption examined whether NSW development approval processes contained corruption risks that were not being managed.",
+    "pages": [
+     6
+    ],
+    "support": "the Commission decided to consider whether there are unmanaged corruption risks in NSW \ndevelopment approval processes.",
+    "section": "Executive summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It considered 187 submissions alongside its inquiries, complaints and research, covering councillor roles, conflicts of interest, council land, consultants, planning agreements and political donations.",
+    "pages": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "support": "received a total of  \n187 submissions from a wide range of individuals, agencies and organisations.",
+    "section": "Executive summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that councillors’ different roles did not themselves create a corruption risk, but supported clearer reasons for decisions and greater transparency.",
+    "pages": [
+     7
+    ],
+    "support": "The Commission has concluded that these different roles are not in themselves a corruption \nrisk",
+    "section": "Executive summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its 24 recommendations address decision reasons, conflicts of interest, voting records, appeals, land dealings, consultants, planning agreements and political donations.",
+    "pages": [
+     10,
+     11,
+     12,
+     13
+    ],
+    "support": "That individual local councils implement systems that record how councillors vote on \ndevelopment matters.",
+    "section": "List of recommendations",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The Commission has concluded that these different roles are not in themselves a corruption \nrisk, and that its further consideration of most of these options is not warranted.",
+    "page": 7,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The \nCommission is of the view that the absence of reasons does not necessarily suggest corrupt \nconduct, however, it considers that reasons should be given for all development decisions.",
+    "page": 7,
+    "kind": "opinion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Executive summary",
+   "first_page": 6,
+   "last_page": 9
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

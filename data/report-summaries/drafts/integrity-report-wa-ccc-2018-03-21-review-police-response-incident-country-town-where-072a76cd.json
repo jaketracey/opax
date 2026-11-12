@@ -1,0 +1,55 @@
+{
+  "slug": "integrity-report-wa-ccc-2018-03-21-review-police-response-incident-country-town-where-072a76cd",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission monitored and reviewed a police investigation into an arrest and custody incident in a country town.",
+      "pages": [
+        5,
+        6
+      ],
+      "section": "INTRODUCTION",
+      "support": "The Commission closely monitored its progress and reviewed the final report.",
+      "people": []
+    },
+    {
+      "text": "Its review considered a police vehicle's use, force in custody, supervision, medical care and missing custody records.",
+      "pages": [
+        17,
+        25,
+        27,
+        37
+      ],
+      "section": "Conclusion",
+      "support": "Failure to record Mr Rhodes' custody status at any stage was a serious omission.",
+      "people": []
+    },
+    {
+      "text": "The Commission considered police handling of the use-of-force matter appropriate and found the decision to use managerial action rather than prosecution was available on the facts.",
+      "pages": [
+        25
+      ],
+      "section": "Conclusion",
+      "support": "In the Commission's opinion, the decision to proceed with managerial rather than prosecution action was fairly open to be made on the facts.",
+      "people": []
+    },
+    {
+      "text": "Its four recommendations covered tailored training for repeated excessive force, custody management, custody officer experience and reporting injury or severe discomfort.",
+      "pages": [
+        38
+      ],
+      "section": "Recommendations",
+      "support": "Consideration should be given to ensuring that custody officers have sufficient training and experience to carry out their duties.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The outcome of the investigation and the action taken by the WA Police Force against the officers appears reasonable and appropriate.",
+      "page": 37,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "No separate executive summary or overview. Four recommendation paragraphs appear at 175 to 178; no numerical total is stated. Conclusions concern the adequacy of police handling, rather than fresh criminal findings."
+}

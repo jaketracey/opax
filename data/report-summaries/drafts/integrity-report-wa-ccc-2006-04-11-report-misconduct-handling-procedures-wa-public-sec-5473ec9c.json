@@ -1,0 +1,58 @@
+{
+  "slug": "integrity-report-wa-ccc-2006-04-11-report-misconduct-handling-procedures-wa-public-sec-5473ec9c",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "EXECUTIVE SUMMARY",
+    "first_page": 4,
+    "last_page": 4
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission reviewed misconduct handling capacity at the Department of Local Government and Regional Development.",
+      "pages": [
+        4,
+        6
+      ],
+      "section": "EXECUTIVE SUMMARY",
+      "support": "This review was conducted with the support of the Department of Local Government and Regional Development",
+      "people": []
+    },
+    {
+      "text": "It examined the department's investigations, complaint handling, records and relationship with councils and the Commission.",
+      "pages": [
+        4
+      ],
+      "section": "EXECUTIVE SUMMARY",
+      "support": "The Department has a methodical and comprehensive complaints handling system for complaints received from local governments",
+      "people": []
+    },
+    {
+      "text": "The Commission found investigations generally timely, but identified fragmented complaint information and limits on the department's ability to prevent misconduct.",
+      "pages": [
+        4,
+        23
+      ],
+      "section": "CONCLUSION",
+      "support": "the Department remains uninformed about most of the matters received",
+      "people": []
+    },
+    {
+      "text": "Its five recommendations covered investigative authority, an interagency agreement, records, disciplinary arrangements, monthly information sharing and checks on misconduct reporting.",
+      "pages": [
+        4,
+        5
+      ],
+      "section": "RECOMMENDATIONS",
+      "support": "At the conclusion of this report, the Commission makes the following five recommendations",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "This review found that, in most cases, the Department investigates matters of misconduct in a timely fashion.",
+      "page": 4,
+      "kind": "finding"
+    }
+  ],
+  "notes": ""
+}

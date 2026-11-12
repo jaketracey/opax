@@ -1,0 +1,125 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2004-12-09-striking-balance-inquiry-media-access-police-radio-communica",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Striking a balance: An inquiry into media access to police radio communications",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Striking-a-balance-An-inquiry-into-access-to-police-radio-communications-Report-2004.pdf",
+  "document": "Striking a balance: An inquiry into media access to police radio communications (9 December 2004)",
+  "sha256": "3e096e9b9f949f8756135c16fa438cfb51d758b315fe5a05d9c96db4ca059fdd",
+  "pages": 88,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY",
+  "first_page": 13,
+  "last_page": 13,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Striking-a-balance-An-inquiry-into-access-to-police-radio-communications-Report-2004.pdf#page=13"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission held an inquiry following a referral about media concerns over encrypted police radio communications.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Striking-a-balance-An-inquiry-into-access-to-police-radio-communications-Report-2004.pdf",
+      "document": "Striking a balance: An inquiry into media access to police radio communications (9 December 2004)",
+      "page": 13
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "The Commission examined how to balance media scrutiny and reporting with police safety, personal privacy and confidentiality.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Striking-a-balance-An-inquiry-into-access-to-police-radio-communications-Report-2004.pdf",
+      "document": "Striking a balance: An inquiry into media access to police radio communications (9 December 2004)",
+      "page": 13
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "The Commission concluded that media access to police communications should protect operational safety and individual privacy.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Striking-a-balance-An-inquiry-into-access-to-police-radio-communications-Report-2004.pdf",
+      "document": "Striking a balance: An inquiry into media access to police radio communications (9 December 2004)",
+      "page": 65
+     }
+    ],
+    "section": "STRIKING A BALANCE: RECOMMENDATIONS"
+   },
+   {
+    "text": "The Commission recommended a secure feed from police dispatch records for authorised media outlets, with exclusions and delays for specified incidents.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Striking-a-balance-An-inquiry-into-access-to-police-radio-communications-Report-2004.pdf",
+      "document": "Striking a balance: An inquiry into media access to police radio communications (9 December 2004)",
+      "page": 14
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   },
+   {
+    "text": "Its 14 recommendations also covered privacy safeguards, staffing, costs and continuing consultation between police and the media.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Striking-a-balance-An-inquiry-into-access-to-police-radio-communications-Report-2004.pdf",
+      "document": "Striking a balance: An inquiry into media access to police radio communications (9 December 2004)",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Striking-a-balance-An-inquiry-into-access-to-police-radio-communications-Report-2004.pdf",
+      "document": "Striking a balance: An inquiry into media access to police radio communications (9 December 2004)",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Striking-a-balance-An-inquiry-into-access-to-police-radio-communications-Report-2004.pdf",
+      "document": "Striking a balance: An inquiry into media access to police radio communications (9 December 2004)",
+      "page": 16
+     }
+    ],
+    "section": "SUMMARY; RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "That the QPS take all necessary steps to safeguard the privacy of individuals by ensuring that information identifying a person be excluded from the dispatch data-feed.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Striking-a-balance-An-inquiry-into-access-to-police-radio-communications-Report-2004.pdf",
+     "document": "Striking a balance: An inquiry into media access to police radio communications (9 December 2004)",
+     "page": 15
+    }
+   },
+   {
+    "quote": "That the establishment and ongoing costs associated with the delivery of the dispatch data-feed and media notes be met by the QPS.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Striking-a-balance-An-inquiry-into-access-to-police-radio-communications-Report-2004.pdf",
+     "document": "Striking a balance: An inquiry into media access to police radio communications (9 December 2004)",
+     "page": 15
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

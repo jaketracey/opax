@@ -1,0 +1,100 @@
+{
+ "slug": "royal-commission-cth-natural-disasters",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Royal Commission into National Natural Disaster Arrangements examined how Australia prepares for, responds to and recovers from natural disasters, and how it reduces disaster risks.",
+    "pages": [
+     19
+    ],
+    "section": "Overview",
+    "support": "These arrangements \nconcern all phases of disaster management: mitigation, preparedness, response, and \nrecovery.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It considered government responsibilities, coordination, resilience, climate adaptation and the Commonwealth’s legal role in national emergencies.",
+    "pages": [
+     19
+    ],
+    "section": "Our inquiry",
+    "support": "whether changes are needed to Australia’s legal framework for the \ninvolvement of the Commonwealth in responding to national emergencies.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that Australia needed a national approach, with greater cooperation and resource sharing while states and territories retained primary responsibility.",
+    "pages": [
+     20,
+     23,
+     27
+    ],
+    "section": "We need a national approach",
+    "support": "We have concluded that Australia needs a national approach to natural disasters.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It recommended stronger national coordination, permanent resilience and recovery arrangements, compatible emergency communications, consistent public warnings and better recovery support.",
+    "pages": [
+     25,
+     26,
+     28,
+     31,
+     32
+    ],
+    "section": "Overview",
+    "support": "A standing resilience and recovery body that can scale-up to meet the \nneeds of a future disaster",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "We have concluded that Australia needs a national approach to natural disasters.",
+    "page": 23,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "A narrow focus on response and \nrecovery will leave Australia vulnerable.",
+    "page": 26,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Overview",
+   "first_page": 19,
+   "last_page": 33
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

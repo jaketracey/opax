@@ -1,0 +1,49 @@
+{
+  "slug": "integrity-report-wa-ccc-2021-06-17-final-review-wa-police-force-response-incident-lock-5313ee93",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission conducted a final review of one outstanding recommendation arising from a police use of force incident in a country town lock-up.",
+      "pages": [
+        5,
+        6
+      ],
+      "support": "This final review considers the WA Police Force's further response to the outstanding recommendation.",
+      "people": []
+    },
+    {
+      "text": "The review considered revised rules requiring force reports when an officer identifies bodily injury or the person subjected to force identifies or claims it, regardless of medical care.",
+      "pages": [
+        7
+      ],
+      "support": "Under the amended policy, a use of force report is required if bodily injury is identified by an officer or identified or claimed by the subject.",
+      "people": []
+    },
+    {
+      "text": "The Commission considered the reporting instructions clearer and closed the remaining recommendation.",
+      "pages": [
+        7,
+        8
+      ],
+      "support": "The changes appear to provide clearer instructions for when a use of force report is required",
+      "people": []
+    },
+    {
+      "text": "The Commission said the effect of the changes would depend on their application by officers and committed to continued monitoring.",
+      "pages": [
+        8
+      ],
+      "support": "the true test of the changes implemented, can only be determined through the application of the policy by officers.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Commission considers this recommendation is complete.",
+      "page": 8,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "No separate executive summary or equivalent consolidated summary was identified. This final review addresses one of four earlier recommendations."
+}

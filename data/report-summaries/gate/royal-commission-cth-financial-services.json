@@ -1,0 +1,114 @@
+{
+ "slug": "royal-commission-cth-financial-services",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The financial services Royal Commission examined misconduct and behaviour that fell below community expectations in financial services businesses.",
+    "pages": [
+     35
+    ],
+    "section": "1. Introduction",
+    "support": "whether any conduct of financial services entities might have amounted \nto misconduct",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It considered banking, financial advice, superannuation and insurance, as well as industry culture, governance, remuneration and regulators.",
+    "pages": [
+     42
+    ],
+    "section": "1. Introduction",
+    "support": "The focus of this Report must be on issues, causes and responses.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that rewards encouraged misconduct, customers faced unequal power and information, conflicts harmed clients’ interests and wrongdoing too often escaped proper accountability.",
+    "pages": [
+     35,
+     36,
+     37
+    ],
+    "section": "Four observations",
+    "support": "the \nconnection between conduct and reward; the asymmetry of power and \ninformation",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It placed primary responsibility on the businesses concerned and their boards and senior managers.",
+    "pages": [
+     38
+    ],
+    "section": "Primary responsibility",
+    "support": "the primary responsibility for misconduct in \nthe financial services industry lies with the entities concerned",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "The Commission recommended changes to lending, advice fees, insurance, superannuation, remuneration and regulatory oversight, including duties for mortgage brokers to prioritise borrowers’ interests.",
+    "pages": [
+     54,
+     59,
+     63,
+     65,
+     69,
+     75
+    ],
+    "section": "Recommendations by subject matter",
+    "support": "mortgage brokers must act in the best interests of \nthe intending borrower.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Fourth, too often, financial services entities that broke the law were \nnot properly held to account.",
+    "page": 37,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "There can be no doubt that the primary responsibility for misconduct in \nthe financial services industry lies with the entities concerned and those \nwho managed and controlled those entities: their boards and senior \nmanagement.",
+    "page": 38,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "1. Introduction",
+   "first_page": 35,
+   "last_page": 84
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

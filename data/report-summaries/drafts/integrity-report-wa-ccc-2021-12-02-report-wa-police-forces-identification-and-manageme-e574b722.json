@@ -1,0 +1,52 @@
+{
+  "slug": "integrity-report-wa-ccc-2021-12-02-report-wa-police-forces-identification-and-manageme-e574b722",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Overview",
+    "first_page": 4,
+    "last_page": 6
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission reviewed two WA Police investigations into allegations of excessive force by an officer.",
+      "pages": [
+        5
+      ],
+      "support": "The Commission conducted a review of the actions taken by WA Police into the two incidents of alleged excessive use of force",
+      "people": []
+    },
+    {
+      "text": "The Commission considered both investigations inadequate and their conclusions unsupported by adequate inquiries.",
+      "pages": [
+        5
+      ],
+      "support": "In the Commission's opinion, both investigations were inadequate and therefore the findings were not reasonably open.",
+      "people": []
+    },
+    {
+      "text": "The Commission made two recommendations about early support for officers at risk of misconduct and broader reporting of force to the head or neck.",
+      "pages": [
+        6
+      ],
+      "support": "The Commission has made two recommendations to WA Police:",
+      "people": []
+    },
+    {
+      "text": "WA Police rejected both recommendations, but the Commission retained them.",
+      "pages": [
+        20,
+        22
+      ],
+      "support": "WA Police does not accept the two recommendations in this report.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "In the Commission's opinion, both investigations were inadequate and therefore the findings were not reasonably open.",
+      "page": 5,
+      "kind": "opinion"
+    }
+  ],
+  "notes": "The report focuses on processes and uses pseudonyms. The summary uses roles and does not repeat the individual allegations."
+}

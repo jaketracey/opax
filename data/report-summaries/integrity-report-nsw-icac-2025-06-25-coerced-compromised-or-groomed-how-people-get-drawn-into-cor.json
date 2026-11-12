@@ -1,0 +1,89 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2025-06-25-coerced-compromised-or-groomed-how-people-get-drawn-into-cor",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Coerced, compromised or groomed – how people get drawn into corrupt conduct (June 2025)",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Coerced%20compromised%20or%20groomed%20-%2025June25.pdf.aspx",
+  "document": "Coerced, compromised or groomed – how people get drawn into corrupt conduct (June 2025)",
+  "sha256": "cfef51ac9df95dba45157fa94ace4d0b4585199abb1a0c3df1f91e48c31c2ee2",
+  "pages": 40,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption explains how people can be manipulated into participating in corruption.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Coerced%20compromised%20or%20groomed%20-%2025June25.pdf.aspx",
+      "document": "Coerced, compromised or groomed – how people get drawn into corrupt conduct (June 2025)",
+      "page": 6
+     }
+    ],
+    "section": "Chapter 1: Introduction"
+   },
+   {
+    "text": "It uses investigation examples and case studies to examine coercion, compromise and grooming, including manipulation between public officials.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Coerced%20compromised%20or%20groomed%20-%2025June25.pdf.aspx",
+      "document": "Coerced, compromised or groomed – how people get drawn into corrupt conduct (June 2025)",
+      "page": 6
+     }
+    ],
+    "section": "Chapter 1: Introduction"
+   },
+   {
+    "text": "The Commission reports that detailed plans to groom officials over long periods are unusual in its experience.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Coerced%20compromised%20or%20groomed%20-%2025June25.pdf.aspx",
+      "document": "Coerced, compromised or groomed – how people get drawn into corrupt conduct (June 2025)",
+      "page": 9
+     }
+    ],
+    "section": "Chapter 3: About manipulative conduct"
+   },
+   {
+    "text": "The Commission advises agencies to disrupt potentially improper relationships through measures such as staff rotation, shared responsibilities and team assignments.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Coerced%20compromised%20or%20groomed%20-%2025June25.pdf.aspx",
+      "document": "Coerced, compromised or groomed – how people get drawn into corrupt conduct (June 2025)",
+      "page": 36
+     }
+    ],
+    "section": "Chapter 7: Tips for public agencies"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Consequently, a checklist of warning signs may not provide much protection against a skilled, determined manipulator.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Coerced%20compromised%20or%20groomed%20-%2025June25.pdf.aspx",
+     "document": "Coerced, compromised or groomed – how people get drawn into corrupt conduct (June 2025)",
+     "page": 34
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

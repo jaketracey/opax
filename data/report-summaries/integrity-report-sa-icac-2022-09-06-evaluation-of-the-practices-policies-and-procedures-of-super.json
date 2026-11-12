@@ -1,0 +1,139 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2022-09-06-evaluation-of-the-practices-policies-and-procedures-of-super",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Evaluation of the Practices, Policies and Procedures of Super SA",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/documents/Report-Evaluation-of-Super-SA.pdf",
+  "document": "Evaluation of the Practices, Policies & Procedures of Super SA",
+  "sha256": "6c602fab7cd09867b927748f8f556cdf8c870ac48b5aeeee776e07b78c859ce4",
+  "pages": 104,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive Summary",
+  "first_page": 10,
+  "last_page": 11,
+  "link": "https://icac.sa.gov.au/documents/Report-Evaluation-of-Super-SA.pdf#page=10"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s anti-corruption Commission evaluated whether Super SA’s practices and rules adequately controlled corruption risks.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Report-Evaluation-of-Super-SA.pdf",
+      "document": "Evaluation of the Practices, Policies & Procedures of Super SA",
+      "page": 8
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The evaluation examined governance, organisational culture, staffing, contracts and information management, excluding investment of superannuation funds.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Report-Evaluation-of-Super-SA.pdf",
+      "document": "Evaluation of the Practices, Policies & Procedures of Super SA",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/Report-Evaluation-of-Super-SA.pdf",
+      "document": "Evaluation of the Practices, Policies & Procedures of Super SA",
+      "page": 10
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/Report-Evaluation-of-Super-SA.pdf",
+      "document": "Evaluation of the Practices, Policies & Procedures of Super SA",
+      "page": 11
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "The Commission reported no evidence of corruption, but found weaknesses in staff awareness, policy access, service agreements and information controls.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Report-Evaluation-of-Super-SA.pdf",
+      "document": "Evaluation of the Practices, Policies & Procedures of Super SA",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/Report-Evaluation-of-Super-SA.pdf",
+      "document": "Evaluation of the Practices, Policies & Procedures of Super SA",
+      "page": 10
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/Report-Evaluation-of-Super-SA.pdf",
+      "document": "Evaluation of the Practices, Policies & Procedures of Super SA",
+      "page": 11
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "Its 24 recommendations addressed integrity training, governance arrangements, projects, recruitment, contractors and access to information.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Report-Evaluation-of-Super-SA.pdf",
+      "document": "Evaluation of the Practices, Policies & Procedures of Super SA",
+      "page": 11
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/Report-Evaluation-of-Super-SA.pdf",
+      "document": "Evaluation of the Practices, Policies & Procedures of Super SA",
+      "page": 14
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/Report-Evaluation-of-Super-SA.pdf",
+      "document": "Evaluation of the Practices, Policies & Procedures of Super SA",
+      "page": 15
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/Report-Evaluation-of-Super-SA.pdf",
+      "document": "Evaluation of the Practices, Policies & Procedures of Super SA",
+      "page": 16
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "While external fraud risks were well understood, there was little awareness of corruption risks posed by those inside the organisation.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/Report-Evaluation-of-Super-SA.pdf",
+     "document": "Evaluation of the Practices, Policies & Procedures of Super SA",
+     "page": 10
+    }
+   },
+   {
+    "quote": "Appropriate controls to guard against information misuse were not in place, or were inadequately monitored.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/Report-Evaluation-of-Super-SA.pdf",
+     "document": "Evaluation of the Practices, Policies & Procedures of Super SA",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

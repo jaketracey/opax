@@ -1,0 +1,101 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2018-08-30-report-how-conflicts-interest-undermine-good-govern-da506292",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report into how conflicts of interest undermine good governance - A report on the Chief Executive Officer of the Shire of Halls Creek",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20how%20conflicts%20of%20interest%20undermine%20good%20governance%20-%20A%20report%20on%20the%20Chief%20Executive%20Officer%20of%20the%20Shire%20of%20Halls%20Creek.pdf",
+  "document": "Report into how conflicts of interest undermine good governance - A report on the Chief Executive Officer of the Shire of Halls Creek",
+  "sha256": "364bc7d9f12efcd897886366fc4d8dd019f865b4adace66fc3d744e9a80f0253",
+  "pages": 40,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20how%20conflicts%20of%20interest%20undermine%20good%20governance%20-%20A%20report%20on%20the%20Chief%20Executive%20Officer%20of%20the%20Shire%20of%20Halls%20Creek.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated possible serious misconduct by public officers at the Shire of Halls Creek.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20how%20conflicts%20of%20interest%20undermine%20good%20governance%20-%20A%20report%20on%20the%20Chief%20Executive%20Officer%20of%20the%20Shire%20of%20Halls%20Creek.pdf",
+      "document": "Report into how conflicts of interest undermine good governance - A report on the Chief Executive Officer of the Shire of Halls Creek",
+      "page": 6
+     }
+    ],
+    "section": "The Commission's investigation"
+   },
+   {
+    "text": "Its inquiries covered recruitment, outside business interests, leave entitlements and vehicle procurement.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20how%20conflicts%20of%20interest%20undermine%20good%20governance%20-%20A%20report%20on%20the%20Chief%20Executive%20Officer%20of%20the%20Shire%20of%20Halls%20Creek.pdf",
+      "document": "Report into how conflicts of interest undermine good governance - A report on the Chief Executive Officer of the Shire of Halls Creek",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20how%20conflicts%20of%20interest%20undermine%20good%20governance%20-%20A%20report%20on%20the%20Chief%20Executive%20Officer%20of%20the%20Shire%20of%20Halls%20Creek.pdf",
+      "document": "Report into how conflicts of interest undermine good governance - A report on the Chief Executive Officer of the Shire of Halls Creek",
+      "page": 6
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission formed a serious misconduct opinion about the chief executive officer's appointment of his partner.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20how%20conflicts%20of%20interest%20undermine%20good%20governance%20-%20A%20report%20on%20the%20Chief%20Executive%20Officer%20of%20the%20Shire%20of%20Halls%20Creek.pdf",
+      "document": "Report into how conflicts of interest undermine good governance - A report on the Chief Executive Officer of the Shire of Halls Creek",
+      "page": 17
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "It concluded that insufficient oversight had allowed the chief executive officer to use Shire resources for private benefit.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20how%20conflicts%20of%20interest%20undermine%20good%20governance%20-%20A%20report%20on%20the%20Chief%20Executive%20Officer%20of%20the%20Shire%20of%20Halls%20Creek.pdf",
+      "document": "Report into how conflicts of interest undermine good governance - A report on the Chief Executive Officer of the Shire of Halls Creek",
+      "page": 40
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "The Commission stressed fair tender processes and procurement knowledge among staff responsible for Shire finances.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20how%20conflicts%20of%20interest%20undermine%20good%20governance%20-%20A%20report%20on%20the%20Chief%20Executive%20Officer%20of%20the%20Shire%20of%20Halls%20Creek.pdf",
+      "document": "Report into how conflicts of interest undermine good governance - A report on the Chief Executive Officer of the Shire of Halls Creek",
+      "page": 40
+     }
+    ],
+    "section": "CONCLUSION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

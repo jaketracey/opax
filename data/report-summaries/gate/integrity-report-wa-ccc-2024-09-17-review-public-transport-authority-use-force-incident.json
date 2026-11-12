@@ -1,0 +1,98 @@
+{
+ "slug": "integrity-report-wa-ccc-2024-09-17-review-public-transport-authority-use-force-incident",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission reviewed how the Public Transport Authority handled an allegation of excessive force during a transit arrest.",
+    "pages": [
+     4
+    ],
+    "section": "OVERVIEW",
+    "support": "the Commission \ndecided to conduct a review of the action taken by the PTA.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The review examined local incident handling, internal scrutiny and wider controls over transit officers’ use of force.",
+    "pages": [
+     4,
+     5,
+     12
+    ],
+    "section": "Commission’s review",
+    "support": "The Commission reviewed the actions taken by the PTA, including the local \nmanagement by the Security Services Branch",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that the Authority’s response was inadequate and that more force had been used than the arrest required.",
+    "pages": [
+     17
+    ],
+    "section": "CONCLUSION",
+    "support": "The Commission considers the action taken by the PTA to be inadequate.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission made one recommendation to revise use of force procedures, covering oversight, policy breaches and the legal and policy basis for force.",
+    "pages": [
+     5,
+     17,
+     18
+    ],
+    "section": "CONCLUSION",
+    "support": "Review, update, and implement policies and procedures associated \nwith managing use of force incidents",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The actions taken by the PTA failed to demonstrate a comprehensive and \ntransparent investigation of the incident.",
+    "page": 12,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "All use of force incidents should be thoroughly scrutinised to ensure a \nTransit Officer's actions are lawful, appropriate, and reasonable in the \ncircumstances.",
+    "page": 17,
+    "kind": "recommendation"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "OVERVIEW",
+   "first_page": 4,
+   "last_page": 5
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

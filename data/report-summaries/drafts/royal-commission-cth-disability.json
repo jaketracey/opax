@@ -1,0 +1,64 @@
+{
+  "slug": "royal-commission-cth-disability",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Executive summary",
+    "first_page": 57,
+    "last_page": 212
+  },
+  "sentences": [
+    {
+      "text": "The Disability Royal Commission was asked how governments, institutions and the community could prevent violence, abuse, neglect and exploitation and support greater inclusion of people with disability.",
+      "pages": [
+        59,
+        60
+      ],
+      "section": "About the Royal Commission",
+      "support": "Our terms of reference require us to inquire into what governments, institutions \nand the community should do",
+      "people": []
+    },
+    {
+      "text": "Its inquiry considered experiences across different settings and stages of life, using hearings, community engagement, submissions, private sessions and research.",
+      "pages": [
+        57,
+        60
+      ],
+      "section": "Executive summary",
+      "support": "we gathered information through public hearings, \ncommunity engagements, submissions, responses to issues papers, private sessions, policy \nwork, research and data analysis.",
+      "people": []
+    },
+    {
+      "text": "The Commission found that people with disability continued to face high levels of violence, abuse, neglect and exploitation, alongside exclusion from many areas of life.",
+      "pages": [
+        57
+      ],
+      "section": "Executive summary",
+      "support": "Our inquiry has shown people with disability continue to experience high rates of violence \nand abuse, multiple forms of neglect, and sexual and financial exploitation.",
+      "people": []
+    },
+    {
+      "text": "Its 222 recommendations seek to prevent harm, protect human rights and improve inclusion, with coordinated implementation and independent monitoring.",
+      "pages": [
+        15,
+        57,
+        204
+      ],
+      "section": "Scope of the inquiry; Beyond the Royal Commission",
+      "support": "The Final report contains a total of 222 recommendations.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Our inquiry has shown people with disability continue to experience high rates of violence \nand abuse, multiple forms of neglect, and sexual and financial exploitation.",
+      "page": 57,
+      "kind": "finding"
+    },
+    {
+      "quote": "Based on their disability, people with disability continue to be \nexcluded from participating in many areas of life.",
+      "page": 57,
+      "kind": "finding"
+    }
+  ],
+  "notes": "The executive summary includes endnotes through PDF page 212; its narrative ends on PDF page 207. Some recommendations reflect differing Commissioner positions, so the summary does not imply unanimity on individual models of service provision."
+}

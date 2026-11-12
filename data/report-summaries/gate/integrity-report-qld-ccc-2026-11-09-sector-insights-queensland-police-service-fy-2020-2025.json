@@ -1,0 +1,96 @@
+{
+ "slug": "integrity-report-qld-ccc-2026-11-09-sector-insights-queensland-police-service-fy-2020-2025",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Crime and Corruption Commission analysed Queensland Police Service corruption risks using complaints, investigations, intelligence and public information from July 2020 to June 2025.",
+    "pages": [
+     3
+    ],
+    "support": "complaints received by the CCC relating to the Queensland Police Service between 1 July 2020 \nand 30 June 2025",
+    "section": "Overview",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "Its analysis includes both corrupt conduct and police misconduct, with risks varying between operational policing and corporate or administrative work.",
+    "pages": [
+     3,
+     5
+    ],
+    "support": "references to “corruption” include both corrupt conduct and police misconduct.",
+    "section": "Overview",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The CCC identified incident responses, offence investigations and confidential information management as high-risk activities, while noting that most complaints were referred to the police service.",
+    "pages": [
+     5
+    ],
+    "support": "Responding to incidents, investigating offences and managing confidential information are \nhigh-risk activities for the sector.",
+    "section": "Complaint trends and insights",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The CCC outlined prevention measures including employee screening, ongoing training, supervision, information controls and audits of policing and corporate activities.",
+    "pages": [
+     17,
+     18
+    ],
+    "support": "Robust employee and recruit screening, supported by initial and ongoing training and education",
+    "section": "Prevention strategies and resources",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Responding to incidents, investigating offences and managing confidential information are \nhigh-risk activities for the sector.",
+    "page": 5,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "Corruption risks vary based on role and level of interaction with the community.",
+    "page": 5,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Overview",
+   "first_page": 3,
+   "last_page": 4
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

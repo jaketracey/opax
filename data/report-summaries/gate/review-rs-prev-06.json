@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2007-02-23-report-corruption-prevention-review-government-empl-60c10638",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on corruption prevention review of the Government Employees Housing Authority",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20prevention%20review%20of%20the%20Government%20Employees%20Housing%20Authority.pdf",
+  "document": "Report on corruption prevention review of the Government Employees Housing Authority.pdf",
+  "sha256": "e457540920b6513d90d7105f43ab41a9adc44eb5b8829562f0275678289b5d47",
+  "pages": 45,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 7,
+  "last_page": 9,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20prevention%20review%20of%20the%20Government%20Employees%20Housing%20Authority.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated eligibility for subsidised Government Employees Housing Authority accommodation and then reviewed corruption prevention arrangements.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20prevention%20review%20of%20the%20Government%20Employees%20Housing%20Authority.pdf",
+      "document": "Report on corruption prevention review of the Government Employees Housing Authority.pdf",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20prevention%20review%20of%20the%20Government%20Employees%20Housing%20Authority.pdf",
+      "document": "Report on corruption prevention review of the Government Employees Housing Authority.pdf",
+      "page": 8
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "Its investigation examined 500 tenancies across five locations, with a further case referred by the authority.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20prevention%20review%20of%20the%20Government%20Employees%20Housing%20Authority.pdf",
+      "document": "Report on corruption prevention review of the Government Employees Housing Authority.pdf",
+      "page": 7
+     }
+    ],
+    "section": "The investigation"
+   },
+   {
+    "text": "The Commission concluded that unclear eligibility rules and inadequate administrative and communication systems weakened eligibility checks and the detection of possible misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20prevention%20review%20of%20the%20Government%20Employees%20Housing%20Authority.pdf",
+      "document": "Report on corruption prevention review of the Government Employees Housing Authority.pdf",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20prevention%20review%20of%20the%20Government%20Employees%20Housing%20Authority.pdf",
+      "document": "Report on corruption prevention review of the Government Employees Housing Authority.pdf",
+      "page": 8
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It recognised improvements during the review and made six recommendations on eligibility law and policy, application forms, awareness, communications and random checks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20prevention%20review%20of%20the%20Government%20Employees%20Housing%20Authority.pdf",
+      "document": "Report on corruption prevention review of the Government Employees Housing Authority.pdf",
+      "page": 8
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20prevention%20review%20of%20the%20Government%20Employees%20Housing%20Authority.pdf",
+      "document": "Report on corruption prevention review of the Government Employees Housing Authority.pdf",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20prevention%20review%20of%20the%20Government%20Employees%20Housing%20Authority.pdf",
+      "document": "Report on corruption prevention review of the Government Employees Housing Authority.pdf",
+      "page": 33
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20prevention%20review%20of%20the%20Government%20Employees%20Housing%20Authority.pdf",
+      "document": "Report on corruption prevention review of the Government Employees Housing Authority.pdf",
+      "page": 34
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In the Commission’s opinion, these factors reduced both GEHA’s ability to ensure that those residing in GEHA accommodation are eligible to do so, as well as the likelihood of potential misconduct being identified.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20corruption%20prevention%20review%20of%20the%20Government%20Employees%20Housing%20Authority.pdf",
+     "document": "Report on corruption prevention review of the Government Employees Housing Authority.pdf",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:40:05+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "rs-prev-06"
+ }
+}

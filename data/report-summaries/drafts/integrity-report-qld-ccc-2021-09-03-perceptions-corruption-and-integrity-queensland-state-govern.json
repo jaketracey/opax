@@ -1,0 +1,70 @@
+{
+  "slug": "integrity-report-qld-ccc-2021-09-03-perceptions-corruption-and-integrity-queensland-state-govern",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "WHAT WE FOUND",
+    "first_page": 2,
+    "last_page": 5
+  },
+  "sentences": [
+    {
+      "text": "The Crime and Corruption Commission surveyed employees across Queensland’s public service departments to understand perceived corruption risks and attitudes to reporting and prevention.",
+      "pages": [
+        1
+      ],
+      "support": "to better understand their perceptions of corruption risks and attitudes towards \nreporting and preventing corruption.",
+      "section": "ABOUT THE SURVEY",
+      "people": []
+    },
+    {
+      "text": "The anonymous online survey ran in May and June 2021 and received answers from more than fourteen thousand employees across 19 departments, including hospital and health services but excluding police.",
+      "pages": [
+        1
+      ],
+      "support": "The online survey was open for a six-week period between May and June 2021.",
+      "section": "ABOUT THE SURVEY",
+      "people": []
+    },
+    {
+      "text": "The CCC reported that 65% believed corruption occurred in Queensland’s public service, compared with 22% who believed it occurred in their own work unit.",
+      "pages": [
+        2
+      ],
+      "support": "Two-thirds of respondents (65 per cent, n = 8678) \nagreed",
+      "section": "WHAT WE FOUND",
+      "people": []
+    },
+    {
+      "text": "The CCC identified concerns about reprisals and management inaction as barriers to reporting, despite widespread willingness to report suspected wrongdoing.",
+      "pages": [
+        4,
+        6
+      ],
+      "support": "Several barriers to reporting corruption were identified by respondents.",
+      "section": "PERCEIVED BARRIERS TO REPORTING CORRUPTION",
+      "people": []
+    },
+    {
+      "text": "The CCC urged departments to support reporting, review relevant controls, maintain accessible guidance and provide continuing education about potentially corrupt conduct.",
+      "pages": [
+        6
+      ],
+      "support": "Public service departments should ensure they foster an environment that encourages and supports the \nreporting of suspected wrongdoing.",
+      "section": "OPPORTUNITIES FOR PUBLIC SERVICE DEPARTMENTS",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Public service departments should ensure they foster an environment that encourages and supports the \nreporting of suspected wrongdoing.",
+      "page": 6,
+      "kind": "recommendation"
+    },
+    {
+      "quote": "Departments should ensure their corruption prevention \nresources are accessible, informative, and up to date.",
+      "page": 6,
+      "kind": "recommendation"
+    }
+  ],
+  "notes": "WHAT WE FOUND is the factsheet's findings overview. Percentages use valid responses to individual questions; departmental response rates ranged from 2% to 25%. Advice is unnumbered. The source records 14 452 respondents; the summary uses a rounded lower bound because digit grouping prevents the gate recognising a comma-formatted total."
+}

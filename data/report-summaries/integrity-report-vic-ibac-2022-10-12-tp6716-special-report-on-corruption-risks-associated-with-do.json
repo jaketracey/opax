@@ -1,0 +1,134 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2022-10-12-tp6716-special-report-on-corruption-risks-associated-with-do",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Special report on corruption risks associated with donations and lobbying",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a2875/globalassets/tabled-paper-documents/tabled-paper-6716/special_report_-_corruption_risks_associated_with_donations_and_lobbying_-_october_2022_168gdyz5.pdf",
+  "document": "SPECIAL_REPORT_-_corruption_risks_associated_with_donations_and_lobbying_-_October_2022_168GDYz5",
+  "sha256": "b3a38d56becdecb668075098185b1a8c178e0ee19618a2b98d7020fc4e21181b",
+  "pages": 53,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Foreword",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4a2875/globalassets/tabled-paper-documents/tabled-paper-6716/special_report_-_corruption_risks_associated_with_donations_and_lobbying_-_october_2022_168gdyz5.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC reviewed corruption risks in Victoria’s political donation and lobbying arrangements to propose regulatory reforms.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2875/globalassets/tabled-paper-documents/tabled-paper-6716/special_report_-_corruption_risks_associated_with_donations_and_lobbying_-_october_2022_168gdyz5.pdf",
+      "document": "SPECIAL_REPORT_-_corruption_risks_associated_with_donations_and_lobbying_-_October_2022_168GDYz5",
+      "page": 7
+     }
+    ],
+    "section": "Foreword"
+   },
+   {
+    "text": "It analysed Victoria’s rules, consulted stakeholders and considered experience from other jurisdictions and its own investigations.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2875/globalassets/tabled-paper-documents/tabled-paper-6716/special_report_-_corruption_risks_associated_with_donations_and_lobbying_-_october_2022_168gdyz5.pdf",
+      "document": "SPECIAL_REPORT_-_corruption_risks_associated_with_donations_and_lobbying_-_October_2022_168GDYz5",
+      "page": 7
+     }
+    ],
+    "section": "Foreword"
+   },
+   {
+    "text": "IBAC concluded that lobbying regulation inadequately protected the public interest and that stronger donation rules were needed at state and council levels.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2875/globalassets/tabled-paper-documents/tabled-paper-6716/special_report_-_corruption_risks_associated_with_donations_and_lobbying_-_october_2022_168gdyz5.pdf",
+      "document": "SPECIAL_REPORT_-_corruption_risks_associated_with_donations_and_lobbying_-_October_2022_168GDYz5",
+      "page": 32
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2875/globalassets/tabled-paper-documents/tabled-paper-6716/special_report_-_corruption_risks_associated_with_donations_and_lobbying_-_october_2022_168gdyz5.pdf",
+      "document": "SPECIAL_REPORT_-_corruption_risks_associated_with_donations_and_lobbying_-_October_2022_168GDYz5",
+      "page": 51
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "It made four recommendations covering donation disclosure and enforcement, campaign expenditure, lobbying legislation and oversight of lobbyists.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2875/globalassets/tabled-paper-documents/tabled-paper-6716/special_report_-_corruption_risks_associated_with_donations_and_lobbying_-_october_2022_168gdyz5.pdf",
+      "document": "SPECIAL_REPORT_-_corruption_risks_associated_with_donations_and_lobbying_-_October_2022_168GDYz5",
+      "page": 8
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2875/globalassets/tabled-paper-documents/tabled-paper-6716/special_report_-_corruption_risks_associated_with_donations_and_lobbying_-_october_2022_168gdyz5.pdf",
+      "document": "SPECIAL_REPORT_-_corruption_risks_associated_with_donations_and_lobbying_-_October_2022_168GDYz5",
+      "page": 9
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2875/globalassets/tabled-paper-documents/tabled-paper-6716/special_report_-_corruption_risks_associated_with_donations_and_lobbying_-_october_2022_168gdyz5.pdf",
+      "document": "SPECIAL_REPORT_-_corruption_risks_associated_with_donations_and_lobbying_-_October_2022_168GDYz5",
+      "page": 10
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2875/globalassets/tabled-paper-documents/tabled-paper-6716/special_report_-_corruption_risks_associated_with_donations_and_lobbying_-_october_2022_168gdyz5.pdf",
+      "document": "SPECIAL_REPORT_-_corruption_risks_associated_with_donations_and_lobbying_-_October_2022_168GDYz5",
+      "page": 11
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2875/globalassets/tabled-paper-documents/tabled-paper-6716/special_report_-_corruption_risks_associated_with_donations_and_lobbying_-_october_2022_168gdyz5.pdf",
+      "document": "SPECIAL_REPORT_-_corruption_risks_associated_with_donations_and_lobbying_-_October_2022_168GDYz5",
+      "page": 12
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2875/globalassets/tabled-paper-documents/tabled-paper-6716/special_report_-_corruption_risks_associated_with_donations_and_lobbying_-_october_2022_168gdyz5.pdf",
+      "document": "SPECIAL_REPORT_-_corruption_risks_associated_with_donations_and_lobbying_-_October_2022_168GDYz5",
+      "page": 13
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "A high-level review of lobbying regulation in other jurisdictions makes it clear that the regulation of lobbying in Victoria is inadequate.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2875/globalassets/tabled-paper-documents/tabled-paper-6716/special_report_-_corruption_risks_associated_with_donations_and_lobbying_-_october_2022_168gdyz5.pdf",
+     "document": "SPECIAL_REPORT_-_corruption_risks_associated_with_donations_and_lobbying_-_October_2022_168GDYz5",
+     "page": 51
+    }
+   },
+   {
+    "quote": "The existing regulatory regime does not serve to fully protect the public interest and to restrain, or at least constrain, the disproportionate, excessive and privileged practices of lobbyists.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2875/globalassets/tabled-paper-documents/tabled-paper-6716/special_report_-_corruption_risks_associated_with_donations_and_lobbying_-_october_2022_168gdyz5.pdf",
+     "document": "SPECIAL_REPORT_-_corruption_risks_associated_with_donations_and_lobbying_-_October_2022_168GDYz5",
+     "page": 51
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,78 @@
+{
+ "slug": "integrity-report-sa-icac-2022-06-28-icac-public-integrity-survey-2021-local-government-integrity",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commission Against Corruption examined local government responses to its public integrity survey.",
+    "pages": [
+     4
+    ],
+    "section": "COMMISSIONER’S FOREWORD",
+    "support": "This report focuses on the views of public officer workings in the local government.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The voluntary survey received 1114 responses from local government public officers and asked about perceived risks, experiences and reporting.",
+    "pages": [
+     6
+    ],
+    "section": "THE SURVEY",
+    "support": "It received 1114 responses from public officers within the local government sector.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission reported lower perceived corruption than in its earlier survey, with recruitment favouritism still seen as the leading risk.",
+    "pages": [
+     4
+    ],
+    "section": "COMMISSIONER’S FOREWORD",
+    "support": "The perceptions of levels of corruption had also decreased since the Commission’s first Public Integrity Survey conducted in 2018.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission recommended further training, clearer employment decisions, controls on outside employment, scrutiny of contracts and protection for people reporting concerns.",
+    "pages": [
+     42
+    ],
+    "section": "RECOMMENDATIONS",
+    "support": "It is recommended that local councils ensure that they develop and implement policies relating to secondary employment.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "All public officers should feel safe to report.",
+    "page": 42,
+    "kind": "recommendation"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

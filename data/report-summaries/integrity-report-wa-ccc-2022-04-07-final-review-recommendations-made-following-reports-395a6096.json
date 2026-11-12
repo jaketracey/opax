@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2022-04-07-final-review-recommendations-made-following-reports-395a6096",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "A final review of recommendations made following reports on dangerous drugs in WA hospitals",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20final%20review%20of%20recommendations%20made%20following%20reports%20on%20dangerous%20drugs%20in%20WA%20hospitals.pdf",
+  "document": "A final review of recommendations made following reports on dangerous drugs in WA hospitals.pdf",
+  "sha256": "d6e7876df6042333306c19d5ae2b80c524232166537009c9835f0a6372365937",
+  "pages": 10,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20final%20review%20of%20recommendations%20made%20following%20reports%20on%20dangerous%20drugs%20in%20WA%20hospitals.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission conducted a final review of two outstanding recommendations about controlled medicines in WA Health.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20final%20review%20of%20recommendations%20made%20following%20reports%20on%20dangerous%20drugs%20in%20WA%20hospitals.pdf",
+      "document": "A final review of recommendations made following reports on dangerous drugs in WA hospitals.pdf",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20final%20review%20of%20recommendations%20made%20following%20reports%20on%20dangerous%20drugs%20in%20WA%20hospitals.pdf",
+      "document": "A final review of recommendations made following reports on dangerous drugs in WA hospitals.pdf",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The recommendations sought procedures aligned with legislation and consistent rules for drug management, records and reporting of discrepancies.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20final%20review%20of%20recommendations%20made%20following%20reports%20on%20dangerous%20drugs%20in%20WA%20hospitals.pdf",
+      "document": "A final review of recommendations made following reports on dangerous drugs in WA hospitals.pdf",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The Commission concluded that the medicines policy framework addressed earlier inconsistencies and that WA Health had adequately responded to the remaining recommendations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20final%20review%20of%20recommendations%20made%20following%20reports%20on%20dangerous%20drugs%20in%20WA%20hospitals.pdf",
+      "document": "A final review of recommendations made following reports on dangerous drugs in WA hospitals.pdf",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20final%20review%20of%20recommendations%20made%20following%20reports%20on%20dangerous%20drugs%20in%20WA%20hospitals.pdf",
+      "document": "A final review of recommendations made following reports on dangerous drugs in WA hospitals.pdf",
+      "page": 10
+     }
+    ]
+   },
+   {
+    "text": "The Commission closed all recommendations while recognising that controlled drugs would continue to present misconduct risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20final%20review%20of%20recommendations%20made%20following%20reports%20on%20dangerous%20drugs%20in%20WA%20hospitals.pdf",
+      "document": "A final review of recommendations made following reports on dangerous drugs in WA hospitals.pdf",
+      "page": 10
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission considers WA Health has taken adequate action to address the remaining two recommendations.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20final%20review%20of%20recommendations%20made%20following%20reports%20on%20dangerous%20drugs%20in%20WA%20hospitals.pdf",
+     "document": "A final review of recommendations made following reports on dangerous drugs in WA hospitals.pdf",
+     "page": 10
+    }
+   },
+   {
+    "quote": "The Commission considers all recommendations closed.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20final%20review%20of%20recommendations%20made%20following%20reports%20on%20dangerous%20drugs%20in%20WA%20hospitals.pdf",
+     "document": "A final review of recommendations made following reports on dangerous drugs in WA hospitals.pdf",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

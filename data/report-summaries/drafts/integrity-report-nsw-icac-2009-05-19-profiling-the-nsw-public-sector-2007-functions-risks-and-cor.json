@@ -1,0 +1,37 @@
+{
+  "slug": "integrity-report-nsw-icac-2009-05-19-profiling-the-nsw-public-sector-2007-functions-risks-and-cor",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The Independent Commission Against Corruption prepared this organisational questionnaire to profile NSW public sector functions, corruption risks and prevention practices.",
+      "pages": [
+        2
+      ],
+      "support": "conducting research to \ndevelop a profile of the functions, corruption risks and corruption prevention strategies \nwithin the NSW public sector.",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "It asks organisations to rate potential corruption risks and indicate whether those risks are managed adequately or need more attention.",
+      "pages": [
+        11
+      ],
+      "support": "Indicate the extent you \nconsider each of these to be a potential corruption risk within your organisation",
+      "section": "Corruption risk areas",
+      "people": []
+    },
+    {
+      "text": "It also asks about designated responsibility for prevention, risk management processes and employee training on codes of conduct.",
+      "pages": [
+        17,
+        20
+      ],
+      "support": "The following questions ask about your organisation’s strategies in addressing a variety \nof corruption risks.",
+      "section": "Organisational strategies",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "This source is a blank organisational survey instrument, not a results report. It has no executive summary, findings or recommendations."
+}

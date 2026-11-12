@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2025-07-29-corruption-perceptions-survey-2025-comparing-respondent-coho",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Corruption Perceptions Survey 2025 | Comparing Respondent Cohorts Report",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Cohort-Comparisons-Report.pdf",
+  "document": "Comparing Respondent Cohorts Report",
+  "sha256": "0e130139defca9af60a9b3a925cb7e2b48ab16b0c2d700aa60557deb28524cad",
+  "pages": 29,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Key findings",
+  "first_page": 8,
+  "last_page": 10,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Cohort-Comparisons-Report.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission compared corruption perceptions across Queensland community members, public sector employees, council employees and police service employees to inform prevention and planning.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Cohort-Comparisons-Report.pdf",
+      "document": "Comparing Respondent Cohorts Report",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Cohort-Comparisons-Report.pdf",
+      "document": "Comparing Respondent Cohorts Report",
+      "page": 6
+     }
+    ],
+    "section": "Research objectives"
+   },
+   {
+    "text": "The analysis used 10,059 completed surveys collected in March to May 2025, with weighting applied to the community sample but not the employee samples.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Cohort-Comparisons-Report.pdf",
+      "document": "Comparing Respondent Cohorts Report",
+      "page": 6
+     }
+    ],
+    "section": "Research method"
+   },
+   {
+    "text": "The CCC found that all groups felt more comfortable reporting to it than to the relevant workplace or government agency, while retaliation and inaction were shared concerns.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Cohort-Comparisons-Report.pdf",
+      "document": "Comparing Respondent Cohorts Report",
+      "page": 9
+     }
+    ],
+    "section": "Key commonalities across cohorts"
+   },
+   {
+    "text": "The CCC reported that council employees were comparatively more comfortable with workplace reporting, while police service employees expressed lower trust in the CCC and lower expectations of meaningful action.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Cohort-Comparisons-Report.pdf",
+      "document": "Comparing Respondent Cohorts Report",
+      "page": 10
+     }
+    ],
+    "section": "Key differences across cohorts"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There is, however, also a shared concern as to whether or not meaningful action would be taken if corruption were to be reported.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Cohort-Comparisons-Report.pdf",
+     "document": "Comparing Respondent Cohorts Report",
+     "page": 9
+    }
+   },
+   {
+    "quote": "There is, however, consistently lower agreement across employee cohorts that their workplace culture supports reporting corruption.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CPS25-Cohort-Comparisons-Report.pdf",
+     "document": "Comparing Respondent Cohorts Report",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

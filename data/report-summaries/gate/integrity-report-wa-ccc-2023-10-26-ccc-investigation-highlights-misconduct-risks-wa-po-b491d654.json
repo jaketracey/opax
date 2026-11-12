@@ -1,0 +1,72 @@
+{
+ "slug": "integrity-report-wa-ccc-2023-10-26-ccc-investigation-highlights-misconduct-risks-wa-po-b491d654",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission investigated allegations about a senior police officer's disclosure of confidential information and use of police vehicles.",
+    "pages": [
+     4
+    ],
+    "support": "Operation Pemaquid focussed on two matters of potential misconduct: the release of confidential information; and the misuse of police motor vehicles.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commission formed opinions of police misconduct concerning the officer's vehicle use and repeated disclosure of confidential information.",
+    "pages": [
+     11
+    ],
+    "support": "The Commission has formed an opinion of police misconduct on two matters:",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission emphasised that its misconduct opinion did not establish guilt of a criminal or disciplinary offence.",
+    "pages": [
+     38
+    ],
+    "support": "An opinion that misconduct has occurred is not to be taken as a finding or opinion that a particular person is guilty",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission made two recommendations: review the vehicle commuting policy and regularly remind staff about confidentiality.",
+    "pages": [
+     21,
+     30
+    ],
+    "support": "WA Police gives periodic reminders that stress the importance of confidentiality.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [],
+ "own_summary": {
+  "item": {
+   "heading": "INTRODUCTION",
+   "first_page": 4,
+   "last_page": 5
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 0,
+  "findings_pass": 0,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

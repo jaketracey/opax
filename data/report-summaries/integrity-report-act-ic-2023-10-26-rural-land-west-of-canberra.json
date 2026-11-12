@@ -1,0 +1,78 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-act-ic-2023-10-26-rural-land-west-of-canberra",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Rural Land West of Canberra: A report dealing with allegations of corrupt conduct involving the acquisition of nine rural properties by the ACT Government",
+ "body": "ACT Integrity Commission",
+ "source": {
+  "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0017/2311541/Special-Report-Rural-Land-West-of-Canberra.pdf",
+  "document": "Rural Land West of Canberra: A report dealing with allegations of corrupt conduct involving the acquisition of nine rural properties by the ACT Government",
+  "sha256": "91609f514c7108ac7ae4524913e8f66c2365a8b8141ff33cdf461c00eef6d060",
+  "pages": 32,
+  "rights": "commission-copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The ACT Integrity Commission considered a corruption complaint about the government’s acquisition of nine rural properties west of Canberra.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0017/2311541/Special-Report-Rural-Land-West-of-Canberra.pdf",
+      "document": "Rural Land West of Canberra: A report dealing with allegations of corrupt conduct involving the acquisition of nine rural properties by the ACT Government",
+      "page": 5
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0017/2311541/Special-Report-Rural-Land-West-of-Canberra.pdf",
+      "document": "Rural Land West of Canberra: A report dealing with allegations of corrupt conduct involving the acquisition of nine rural properties by the ACT Government",
+      "page": 6
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It examined the acquisitions against the land acquisition policy framework and considered earlier audit and parliamentary scrutiny.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0017/2311541/Special-Report-Rural-Land-West-of-Canberra.pdf",
+      "document": "Rural Land West of Canberra: A report dealing with allegations of corrupt conduct involving the acquisition of nine rural properties by the ACT Government",
+      "page": 6
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission dismissed the complaint, concluding that other Territory laws had already dealt appropriately with the subject and further action was unjustified.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0017/2311541/Special-Report-Rural-Land-West-of-Canberra.pdf",
+      "document": "Rural Land West of Canberra: A report dealing with allegations of corrupt conduct involving the acquisition of nine rural properties by the ACT Government",
+      "page": 31
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0017/2311541/Special-Report-Rural-Land-West-of-Canberra.pdf",
+      "document": "Rural Land West of Canberra: A report dealing with allegations of corrupt conduct involving the acquisition of nine rural properties by the ACT Government",
+      "page": 32
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

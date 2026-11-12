@@ -1,0 +1,90 @@
+{
+ "slug": "integrity-report-qld-ccc-2023-01-30-influence-and-transparency-queenslands-public-sector-minimis",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Crime and Corruption Commission examined improper influence on Queensland state and local government decisions to identify corruption risks and possible safeguards.",
+    "pages": [
+     7
+    ],
+    "support": "The CCC looked more broadly at examples and patterns of lobbying influence, decision-making and transparency across \nboth state and local government.",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It considered its information holdings and investigations, public complaints and submissions, and approaches used in other jurisdictions.",
+    "pages": [
+     7,
+     10
+    ],
+    "support": "was informed by our information holdings, analysis of the results of our corruption investigations, and the views and \nconcerns",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The CCC concluded that gaps remained in Queensland’s integrity framework, including risks from former officials’ connections, privileged access and undisclosed interactions.",
+    "pages": [
+     10
+    ],
+    "support": "There remain gaps in Queensland’s integrity framework which allow for continued risk of corrupt practices (or the \nperception of them).",
+    "section": "Improper influence and corrupt conduct",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It proposed seven reforms covering broader disclosure rules, visibility of contacts, former officials’ lobbying, compliance audits, a shared reporting platform, board conflicts and education.",
+    "pages": [
+     33,
+     34,
+     35
+    ],
+    "support": "The CCC has proposed seven reforms for consideration by the Queensland Government",
+    "section": "Appendix: Collated list of proposed reforms",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "There remain gaps in Queensland’s integrity framework which allow for continued risk of corrupt practices (or the \nperception of them).",
+    "page": 10,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "Transparency of influence is currently limited by narrow definitions and reporting requirements.",
+    "page": 33,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

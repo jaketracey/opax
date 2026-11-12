@@ -1,0 +1,100 @@
+{
+ "slug": "integrity-report-vic-ibac-2022-10-12-tp6716-special-report-on-corruption-risks-associated-with-do",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "IBAC reviewed corruption risks in Victoria’s political donation and lobbying arrangements to propose regulatory reforms.",
+    "pages": [
+     7
+    ],
+    "support": "has identified several areas of risk in relation to donations and lobbying",
+    "section": "Foreword",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It analysed Victoria’s rules, consulted stakeholders and considered experience from other jurisdictions and its own investigations.",
+    "pages": [
+     7
+    ],
+    "support": "conducted a detailed policy analysis of the issues under consideration",
+    "section": "Foreword",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "IBAC concluded that lobbying regulation inadequately protected the public interest and that stronger donation rules were needed at state and council levels.",
+    "pages": [
+     32,
+     51
+    ],
+    "support": "the regulation of lobbying in Victoria is inadequate",
+    "section": "Conclusion",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It made four recommendations covering donation disclosure and enforcement, campaign expenditure, lobbying legislation and oversight of lobbyists.",
+    "pages": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13
+    ],
+    "support": "IBAC recommends that the government introduce legislation to regulate lobbying at both the state and local levels of government",
+    "section": "Recommendations",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "A high-level review of lobbying regulation in other jurisdictions makes it clear that the regulation of lobbying in Victoria is inadequate.",
+    "page": 51,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The existing regulatory regime does not serve to fully protect the public interest and to restrain, or at least constrain, the disproportionate, excessive and privileged practices of lobbyists.",
+    "page": 51,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Foreword",
+   "first_page": 6,
+   "last_page": 7
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

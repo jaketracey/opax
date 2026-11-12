@@ -1,0 +1,61 @@
+{
+  "slug": "integrity-report-sa-icac-2022-06-22-icac-public-integrity-survey-2021",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "COMMISSIONER’S FOREWORD",
+    "first_page": 4,
+    "last_page": 5
+  },
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commission Against Corruption surveyed local government public officers about workplace corruption risks and reporting.",
+      "pages": [
+        4,
+        6
+      ],
+      "section": "THE SURVEY",
+      "support": "The survey \nfocused on perceptions about workplace vulnerability to corruption, personal \nexperiences of corruption, and reporting.",
+      "people": []
+    },
+    {
+      "text": "The Commission cautioned that the voluntary responses reflected perceptions and might not represent the whole local government workforce.",
+      "pages": [
+        6
+      ],
+      "section": "THE SURVEY",
+      "support": "As such, the responses might not \nrepresent the perceptions of all local government public officers.",
+      "people": []
+    },
+    {
+      "text": "The Commission reported that participants perceived nepotism and favouritism in recruitment and career opportunities as the leading corruption risks.",
+      "pages": [
+        4
+      ],
+      "section": "COMMISSIONER’S FOREWORD",
+      "support": "Nepotism and favouritism in recruitment, promotions and other \ncareer opportunities were perceived to be the most prevalent corruption risks.",
+      "people": []
+    },
+    {
+      "text": "The Commission recommended targeted training, secondary employment policies, closer monitoring of contract outcomes and safer reporting arrangements.",
+      "pages": [
+        42
+      ],
+      "section": "RECOMMENDATIONS",
+      "support": "It is \nrecommended that local councils ensure that they develop and implement policies \nrelating to secondary employment.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The potential risks associated with secondary employment need to be better \nidentified and managed.",
+      "page": 42,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "There is a need for further training and education concerning corruption risks that \nare specific to someone’s role.",
+      "page": 42,
+      "kind": "recommendation"
+    }
+  ],
+  "notes": "The foreword provides the report’s overall synopsis. Recommendations are unnumbered. Survey responses are perceptions, not substantiated corruption findings; the foreword and methodology give different timing descriptions, so survey dates are omitted."
+}

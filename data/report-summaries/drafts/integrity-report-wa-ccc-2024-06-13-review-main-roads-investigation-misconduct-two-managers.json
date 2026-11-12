@@ -1,0 +1,58 @@
+{
+  "slug": "integrity-report-wa-ccc-2024-06-13-review-main-roads-investigation-misconduct-two-managers",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Overview",
+    "first_page": 4,
+    "last_page": 5
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission reviewed how Main Roads handled misconduct allegations involving two managers.",
+      "pages": [
+        4
+      ],
+      "support": "This report details the Commission's review of the actions taken by Main Roads in dealing with these allegations of misconduct.",
+      "people": []
+    },
+    {
+      "text": "The Commission considered the external investigation thorough, but found Main Roads had initially done little to address wider misconduct risks.",
+      "pages": [
+        12,
+        13
+      ],
+      "support": "Limited action had been taken to understand and address the broader serious misconduct risks.",
+      "people": []
+    },
+    {
+      "text": "The Commission made three recommendations covering financial audits, procurement oversight and fixed asset policies.",
+      "pages": [
+        5
+      ],
+      "support": "The Commission made three recommendations to Main Roads:",
+      "people": []
+    },
+    {
+      "text": "After considering further action by Main Roads, the Commission concluded that all three recommendations could be closed.",
+      "pages": [
+        5,
+        16
+      ],
+      "support": "The Commission considers Main Roads has taken appropriate steps to address the recommendations.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "On the evidence available, the Commission considers the conclusions reached that both managers engaged in misconduct were open to be made.",
+      "page": 12,
+      "kind": "opinion"
+    },
+    {
+      "quote": "The Commission considers all recommendations closed.",
+      "page": 16,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": ""
+}

@@ -1,0 +1,115 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2018-10-26-report-misconduct-risks-wa-prisons",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report into misconduct risks in WA prisons",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20in%20WA%20prisons.pdf",
+  "document": "Report into misconduct risks in WA prisons",
+  "sha256": "8f8e9ac188a056374f03bb50c3035b7e742dfaef363d7aec2a434724c1c3928e",
+  "pages": 56,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission examined misconduct risks in WA prisons through its joint investigation with the Department of Justice.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20in%20WA%20prisons.pdf",
+      "document": "Report into misconduct risks in WA prisons",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20in%20WA%20prisons.pdf",
+      "document": "Report into misconduct risks in WA prisons",
+      "page": 6
+     }
+    ],
+    "section": "Scope and purpose of this report"
+   },
+   {
+    "text": "The report brought together lessons from that investigation, other misconduct agencies and Auditor General reports.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20in%20WA%20prisons.pdf",
+      "document": "Report into misconduct risks in WA prisons",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20in%20WA%20prisons.pdf",
+      "document": "Report into misconduct risks in WA prisons",
+      "page": 7
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission found deficiencies in the department's identification and management of serious misconduct risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20in%20WA%20prisons.pdf",
+      "document": "Report into misconduct risks in WA prisons",
+      "page": 6
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "Its twenty recommendations covered corruption prevention, investigations, information sharing, screening, drug testing and monitoring the effectiveness of controls.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20in%20WA%20prisons.pdf",
+      "document": "Report into misconduct risks in WA prisons",
+      "page": 45
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20in%20WA%20prisons.pdf",
+      "document": "Report into misconduct risks in WA prisons",
+      "page": 46
+     }
+    ],
+    "section": "Recommendations"
+   },
+   {
+    "text": "The Commission planned to review implementation after a year.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20in%20WA%20prisons.pdf",
+      "document": "Report into misconduct risks in WA prisons",
+      "page": 5
+     }
+    ],
+    "section": "Introduction"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission has identified a number of areas where DoJ's identification and management of serious misconduct risk is inadequate.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20misconduct%20risks%20in%20WA%20prisons.pdf",
+     "document": "Report into misconduct risks in WA prisons",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

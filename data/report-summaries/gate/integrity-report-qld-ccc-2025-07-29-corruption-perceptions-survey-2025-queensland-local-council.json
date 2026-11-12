@@ -1,0 +1,108 @@
+{
+ "slug": "integrity-report-qld-ccc-2025-07-29-corruption-perceptions-survey-2025-queensland-local-council",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Crime and Corruption Commission commissioned research on Queensland council employees’ corruption perceptions to monitor prevention work and inform future planning.",
+    "pages": [
+     4,
+     5
+    ],
+    "support": "so the CCC can \nmonitor the impact of its prevention agenda and \ninform future strategic planning.",
+    "section": "Research objectives",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "An online survey received 973 completed responses between 28 March and 9 May 2025.",
+    "pages": [
+     6
+    ],
+    "support": "An online survey of Queensland local council employees was \nconducted between 28 March and 9 May 2025.",
+    "section": "Research method",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The CCC reported that policy non-compliance and mishandling confidential information were the highest perceived workplace corruption risks.",
+    "pages": [
+     14
+    ],
+    "support": "The behaviours considered the highest risk include \nnon-compliance with policies and procedures and \nmishandling of confidential information",
+    "section": "Summary of key findings",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The CCC reported that 55% said they had witnessed or suspected corruption in the preceding five years, and 48% of that group did not report it.",
+    "pages": [
+     14
+    ],
+    "support": "Over half (55%) of local council employees have either witnessed, or \nthink they have witnessed, corruption in the past 5 years.",
+    "section": "Summary of key findings",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "The CCC reported that 73% intended to report corruption, while 46% expected personal repercussions and 40% doubted meaningful action would follow.",
+    "pages": [
+     14
+    ],
+    "support": "Local council employees are sceptical as to \nwhether meaningful action would be taken if \nthey report corruption",
+    "section": "Summary of key findings",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The reporting of corruption among those who have witnessed or \nsuspected it in the past 5 years is varied.",
+    "page": 14,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "Local council employees are sceptical as to \nwhether meaningful action would be taken if \nthey report corruption, with four in ten \nbelieving this would not be the case (40%).",
+    "page": 14,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Summary of key findings",
+   "first_page": 13,
+   "last_page": 14
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

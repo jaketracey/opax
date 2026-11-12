@@ -1,0 +1,101 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2020-04-20-review-wa-police-force-investigation-use-force-respect-child",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Review of a WA Police Force investigation into use of force in respect of a child",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20a%20WA%20Police%20Force%20investigation%20into%20use%20of%20force%20in%20respect%20of%20a%20child.pdf",
+  "document": "Review of a WA Police Force investigation into use of force in respect of a child",
+  "sha256": "9af675555732dd8fd4779a90fa957689a19a7e503aa0abf3a75a67f282654296",
+  "pages": 21,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20a%20WA%20Police%20Force%20investigation%20into%20use%20of%20force%20in%20respect%20of%20a%20child.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed police investigations into force used against a child in State care and the preparation of officers' court evidence.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20a%20WA%20Police%20Force%20investigation%20into%20use%20of%20force%20in%20respect%20of%20a%20child.pdf",
+      "document": "Review of a WA Police Force investigation into use of force in respect of a child",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The Commission considered the reasoning against an assault charge inconsistent with the disciplinary findings and believed criminal proceedings should have been brought, while WA Police disagreed.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20a%20WA%20Police%20Force%20investigation%20into%20use%20of%20force%20in%20respect%20of%20a%20child.pdf",
+      "document": "Review of a WA Police Force investigation into use of force in respect of a child",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20a%20WA%20Police%20Force%20investigation%20into%20use%20of%20force%20in%20respect%20of%20a%20child.pdf",
+      "document": "Review of a WA Police Force investigation into use of force in respect of a child",
+      "page": 20
+     }
+    ]
+   },
+   {
+    "text": "The Commission accepted that the decision against charges for attempting to pervert justice was open to the police investigator.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20a%20WA%20Police%20Force%20investigation%20into%20use%20of%20force%20in%20respect%20of%20a%20child.pdf",
+      "document": "Review of a WA Police Force investigation into use of force in respect of a child",
+      "page": 17
+     }
+    ]
+   },
+   {
+    "text": "Apart from the disagreement about assault, the Commission concluded that WA Police had handled the matter appropriately and completed its review.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20a%20WA%20Police%20Force%20investigation%20into%20use%20of%20force%20in%20respect%20of%20a%20child.pdf",
+      "document": "Review of a WA Police Force investigation into use of force in respect of a child",
+      "page": 20
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20a%20WA%20Police%20Force%20investigation%20into%20use%20of%20force%20in%20respect%20of%20a%20child.pdf",
+      "document": "Review of a WA Police Force investigation into use of force in respect of a child",
+      "page": 21
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In the Commission's opinion, the investigation did fail and criminal proceedings for assault should have been instituted.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20a%20WA%20Police%20Force%20investigation%20into%20use%20of%20force%20in%20respect%20of%20a%20child.pdf",
+     "document": "Review of a WA Police Force investigation into use of force in respect of a child",
+     "page": 14
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

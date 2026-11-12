@@ -1,0 +1,57 @@
+{
+  "slug": "integrity-report-sa-icac-2019-08-20-in-their-own-words-a-second-report-from-icac-public-integrit",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Commissioner’s foreword",
+    "first_page": 6,
+    "last_page": 7
+  },
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commissioner Against Corruption examined written responses to the Public Integrity Survey 2018 about agency culture and practices.",
+      "pages": [
+        6
+      ],
+      "section": "Commissioner’s foreword",
+      "support": "This report examines what public officers had to say, in their own words, about the \nculture and practices of the agencies within which they are employed.",
+      "people": []
+    },
+    {
+      "text": "The Commissioner cautioned that the survey recorded participants’ perceptions and did not establish whether their accounts were true.",
+      "pages": [
+        6
+      ],
+      "section": "Commissioner’s foreword",
+      "support": "Of course a survey does not prove the truth of the comments made",
+      "people": []
+    },
+    {
+      "text": "The Commissioner reported recurring concerns about fear of reprisals, the usefulness of reporting and the effect of poor workplace conduct.",
+      "pages": [
+        7,
+        70
+      ],
+      "section": "Conclusion",
+      "support": "Some participants cast doubt over the utility of \nreporting.",
+      "people": []
+    },
+    {
+      "text": "The Commissioner urged agencies to consult staff, protect reporting and regularly review integrity controls and compliance with policies.",
+      "pages": [
+        70,
+        71
+      ],
+      "section": "Conclusion",
+      "support": "Agencies should ensure they regularly revisit their integrity risks to \nmonitor their controls to ensure these controls remain fit for purpose.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Agencies have an obligation to create an \nenvironment where staff are both free to report without reprisal and can be confident \ntheir reports will be handled appropriately.",
+      "page": 70,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The report analyses perceptions and participant accounts, not substantiated allegations. Its improvement proposals are unnumbered."
+}

@@ -1,0 +1,89 @@
+{
+ "slug": "integrity-report-wa-ccc-2010-04-22-misconduct-handling-procedures-western-australian-p-a6fc8cb4",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission reviewed how the Department of Health managed misconduct across WA Health.",
+    "pages": [
+     11
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "review (“the review”) of the Department of Health’s (“the Department”) management of misconduct",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "Its work included staff interviews and a survey, reviews of health service sites and an examination of restricted drug management.",
+    "pages": [
+     11
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "The Commission also undertook a thematic review of the management and handling of Schedule 4 and Schedule 8 drugs",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission found limited practical capacity to address misconduct and insufficient leadership of misconduct management.",
+    "pages": [
+     11,
+     124
+    ],
+    "section": "Summary",
+    "support": "There is no high level ownership or direction of misconduct management within WA Health.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It considered WA Health unable to demonstrate fair, reliable and transparent accountability for its handling of misconduct risks and incidents.",
+    "pages": [
+     124
+    ],
+    "section": "Overall Opinion",
+    "support": "unable to adequately account to the wider community for the way it manages misconduct risk",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "Its four recommendations sought a clear commitment and practical strategy, sufficient resources and cooperation with the Commission.",
+    "pages": [
+     125
+    ],
+    "section": "Recommendations",
+    "support": "That the Department of Health articulate and promote its commitment to managing misconduct throughout WA Health.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [],
+ "own_summary": {
+  "item": {
+   "heading": "EXECUTIVE SUMMARY",
+   "first_page": 11,
+   "last_page": 13
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 0,
+  "findings_pass": 0,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

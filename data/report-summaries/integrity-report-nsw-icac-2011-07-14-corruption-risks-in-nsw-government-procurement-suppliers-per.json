@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2011-07-14-corruption-risks-in-nsw-government-procurement-suppliers-per",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Corruption risks in NSW Government procurement - Suppliers perception of corruption",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Suppliers%20perception%20of%20corruption.pdf.aspx",
+  "document": "Corruption risks in NSW Government procurement - Suppliers perception of corruption",
+  "sha256": "3b9ac5b7a80df6d15d0114b7004f6dba5f2816bec8a0b5f9a4b47abc35c09780",
+  "pages": 22,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Suppliers%20perception%20of%20corruption.pdf.aspx#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption surveyed suppliers about perceived corruption in state and local government procurement.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Suppliers%20perception%20of%20corruption.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - Suppliers perception of corruption",
+      "page": 6
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The online survey received 1,515 responses and examined overall perceptions, corruption-prone behaviour and vulnerability at different procurement stages.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Suppliers%20perception%20of%20corruption.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - Suppliers perception of corruption",
+      "page": 5
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Suppliers%20perception%20of%20corruption.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - Suppliers perception of corruption",
+      "page": 6
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commission reports that about two-fifths of suppliers saw corruption as at least a moderate problem, and almost one-third had avoided bidding because of corruption concerns.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Suppliers%20perception%20of%20corruption.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - Suppliers perception of corruption",
+      "page": 5
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commission concludes that these perceptions require attention even if inaccurate because they can affect suppliers’ willingness to compete.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Suppliers%20perception%20of%20corruption.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - Suppliers perception of corruption",
+      "page": 18
+     }
+    ],
+    "section": "Conclusions"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Overall, these results indicate that the supplier base of NSW state and local government procurement is concerned about corruption.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20Suppliers%20perception%20of%20corruption.pdf.aspx",
+     "document": "Corruption risks in NSW Government procurement - Suppliers perception of corruption",
+     "page": 18
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

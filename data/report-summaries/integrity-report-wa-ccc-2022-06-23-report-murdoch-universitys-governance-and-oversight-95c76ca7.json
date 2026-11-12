@@ -1,0 +1,71 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2022-06-23-report-murdoch-universitys-governance-and-oversight-95c76ca7",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "A report on Murdoch University's governance and oversight of farm management",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20Murdoch%20University%26%23039%3Bs%20governance%20and%20oversight%20of%20farm%20management.pdf",
+  "document": "A report on Murdoch University's governance and oversight of farm management.pdf",
+  "sha256": "8d73e9d3fab595bf6dfb58c7fd929c10b30c18d498d54aa2aefada912f8cd43c",
+  "pages": 19,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Introduction",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20Murdoch%20University%26%23039%3Bs%20governance%20and%20oversight%20of%20farm%20management.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated concerns about compliance with cattle identification and movement rules at Murdoch University.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20Murdoch%20University%26%23039%3Bs%20governance%20and%20oversight%20of%20farm%20management.pdf",
+      "document": "A report on Murdoch University's governance and oversight of farm management.pdf",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The Commission formed an opinion of serious misconduct about the livestock manager's use of university cattle for personal benefit and to assist private cattle studs.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20Murdoch%20University%26%23039%3Bs%20governance%20and%20oversight%20of%20farm%20management.pdf",
+      "document": "A report on Murdoch University's governance and oversight of farm management.pdf",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "The Commission concluded that weak governance, poor record controls and inadequate audits allowed deception to remain undetected and put biosecurity at risk.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20Murdoch%20University%26%23039%3Bs%20governance%20and%20oversight%20of%20farm%20management.pdf",
+      "document": "A report on Murdoch University's governance and oversight of farm management.pdf",
+      "page": 19
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

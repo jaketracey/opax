@@ -1,0 +1,103 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2011-12-14-corruption-risks-in-nsw-government-procurement-the-managemen",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Corruption risks in NSW Government procurement - The management challenge",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20The%20management%20challenge.pdf.aspx",
+  "document": "Corruption risks in NSW Government procurement - The management challenge",
+  "sha256": "42c6d561a23aa673534fca765df25467c5db757396375e99deb43a0c58834895",
+  "pages": 37,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption examines how public sector managers can improve procurement systems and influence staff behaviour to reduce corruption.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20The%20management%20challenge.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - The management challenge",
+      "page": 5
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It considers procurement structures, purchasing processes and staff management, using investigation case studies to illustrate control weaknesses.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20The%20management%20challenge.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - The management challenge",
+      "page": 6
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission concludes that relying on policies, codes and training controls only a small share of corruption risks.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20The%20management%20challenge.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - The management challenge",
+      "page": 35
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commission advises managers to combine approaches suited to their agency’s risks, rather than prescribing formal recommendations.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20The%20management%20challenge.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - The management challenge",
+      "page": 5
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20The%20management%20challenge.pdf.aspx",
+      "document": "Corruption risks in NSW Government procurement - The management challenge",
+      "page": 35
+     }
+    ],
+    "section": "Introduction"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "When it comes to procurement, there is no single method of corruption control.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20The%20management%20challenge.pdf.aspx",
+     "document": "Corruption risks in NSW Government procurement - The management challenge",
+     "page": 35
+    }
+   },
+   {
+    "quote": "Simple reliance on policies, codes, and training will control only a small proportion of corruption.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Corruption%20risks%20in%20NSW%20Government%20procurement%20-%20The%20management%20challenge.pdf.aspx",
+     "document": "Corruption risks in NSW Government procurement - The management challenge",
+     "page": 35
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

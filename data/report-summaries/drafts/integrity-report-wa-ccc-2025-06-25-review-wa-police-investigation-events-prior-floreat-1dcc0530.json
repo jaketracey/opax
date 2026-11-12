@@ -1,0 +1,62 @@
+{
+  "slug": "integrity-report-wa-ccc-2025-06-25-review-wa-police-investigation-events-prior-floreat-1dcc0530",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Introduction and summary",
+    "first_page": 4,
+    "last_page": 5
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission monitored and reviewed an internal investigation by WA Police into police contact with a family before the fatal Floreat family violence incident.",
+      "pages": [
+        4,
+        6
+      ],
+      "section": "Introduction and summary",
+      "support": "it had decided to actively monitor the IAU investigation into the police \nresponse",
+      "people": []
+    },
+    {
+      "text": "The review considered police risk assessment, protection orders, seizure of firearms and recording of family contacts.",
+      "pages": [
+        6,
+        7
+      ],
+      "section": "The Commission’s referrals",
+      "support": "Areas of primary interest in the investigation included the decision not to \nissue a Police Order",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that the internal investigation was reasonable after an early concern was addressed, and that its findings and disciplinary outcomes were reasonably open.",
+      "pages": [
+        5
+      ],
+      "section": "Introduction and summary",
+      "support": "The Commission further considers that \nthe findings made by IAU and the actions taken by WA Police in response \nto those findings are reasonably open.",
+      "people": []
+    },
+    {
+      "text": "The Commission separately began its own investigation into possible police misconduct concerning firearms licensing.",
+      "pages": [
+        11
+      ],
+      "section": "Bombara’s firearms licence: A Commission investigation",
+      "support": "The Commission has therefore commenced its own full investigation into \nthe allegation of police misconduct",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Accordingly, the Commission concludes that the findings \nmade by IAU were reasonably open.",
+      "page": 12,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "The Commission also considers that the action taken by WA Police in \ndisciplining officers who had breached the Code was reasonably open.",
+      "page": 12,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "No new Commission recommendations are listed. The 18 recommendations described in the report were made by the police Internal Affairs Unit and accepted by WA Police. The Commission’s separate firearms licensing investigation was ongoing at publication."
+}

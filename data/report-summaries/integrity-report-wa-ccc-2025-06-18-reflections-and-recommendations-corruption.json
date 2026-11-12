@@ -1,0 +1,94 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2025-06-18-reflections-and-recommendations-corruption",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Reflections and Recommendations on Corruption",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20-%20Reflections%20and%20Recommendations%20on%20Corruption.pdf",
+  "document": "Report - Reflections and Recommendations on Corruption",
+  "sha256": "6944b810c0468cd1f23c83eac63994a66592f1071d3f3a034ec9e61c0fd59566",
+  "pages": 87,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Western Australia’s outgoing Corruption and Crime Commissioner reviewed the Commission’s administration over the preceding decade to guide the new Joint Standing Committee.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20-%20Reflections%20and%20Recommendations%20on%20Corruption.pdf",
+      "document": "Report - Reflections and Recommendations on Corruption",
+      "page": 6
+     }
+    ],
+    "section": "The reason for this report on an administrative matter"
+   },
+   {
+    "text": "The report explains misconduct assessment, oversight of agency investigations and the Commission’s own investigations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20-%20Reflections%20and%20Recommendations%20on%20Corruption.pdf",
+      "document": "Report - Reflections and Recommendations on Corruption",
+      "page": 27
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20-%20Reflections%20and%20Recommendations%20on%20Corruption.pdf",
+      "document": "Report - Reflections and Recommendations on Corruption",
+      "page": 28
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20-%20Reflections%20and%20Recommendations%20on%20Corruption.pdf",
+      "document": "Report - Reflections and Recommendations on Corruption",
+      "page": 29
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20-%20Reflections%20and%20Recommendations%20on%20Corruption.pdf",
+      "document": "Report - Reflections and Recommendations on Corruption",
+      "page": 30
+     }
+    ],
+    "section": "How Reports to the Commission are Dealt With"
+   },
+   {
+    "text": "The Commissioner concluded that the Corruption, Crime and Misconduct Act was no longer fully suited to its purpose and needed replacement.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20-%20Reflections%20and%20Recommendations%20on%20Corruption.pdf",
+      "document": "Report - Reflections and Recommendations on Corruption",
+      "page": 77
+     }
+    ],
+    "section": "A New Anti-Corruption Act"
+   },
+   {
+    "text": "The Commissioner made three recommendations addressing organised-crime powers, a broader definition of public officer and replacement legislation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20-%20Reflections%20and%20Recommendations%20on%20Corruption.pdf",
+      "document": "Report - Reflections and Recommendations on Corruption",
+      "page": 81
+     }
+    ],
+    "section": "Summary of Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,49 @@
+{
+  "slug": "integrity-report-wa-ccc-2025-05-08-report-risks-confidential-information-control-public-sector",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "INTRODUCTION",
+    "first_page": 4,
+    "last_page": 5
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission investigated a former Department of Finance officer’s downloading of confidential records before moving to private employment.",
+      "pages": [
+        4
+      ],
+      "section": "INTRODUCTION",
+      "support": "The Commission undertook a cooperative investigation with Finance, \nnamed Operation Stremoy, to investigate the Officer's actions.",
+      "people": []
+    },
+    {
+      "text": "The Commission made no finding of serious misconduct because it could not establish that the officer acted outside authorised access to the documents.",
+      "pages": [
+        14
+      ],
+      "section": "CONCLUSION",
+      "support": "For \nthis reason, the Commission has not made a finding of serious misconduct \nagainst the Officer.",
+      "people": []
+    },
+    {
+      "text": "The Commission identified risks involving USB controls, unclear confidentiality agreements and insufficient reminders to departing staff.",
+      "pages": [
+        14
+      ],
+      "section": "CONCLUSION",
+      "support": "the Commission has identified the following serious misconduct \nrisks arising from the circumstances in which the Officer's conduct \noccurred",
+      "people": []
+    },
+    {
+      "text": "The Commission made two recommendations to strengthen confidentiality agreements and remind departing employees of continuing obligations, which Finance accepted.",
+      "pages": [
+        5
+      ],
+      "section": "INTRODUCTION",
+      "support": "In its response to the draft report Finance has accepted the \nrecommendations.",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "Findings are omitted because OPAX already lists findings. The summary preserves the Commission’s express decision not to find serious misconduct; it does not infer an unauthorised purpose or disclosure."
+}

@@ -1,0 +1,78 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2015-07-02-evaluation-of-the-practices-policies-and-procedures-of-the-p",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Evaluation of the Practices, Policies and Procedures of the Police Ombudsman",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/370806/Evaluation_of_the_Practices_Policies_and_Procedures_of_the_Police_Ombudsman.pdf",
+  "document": "Evaluation of the Practices, Policies and Procedures of the Police Ombudsman",
+  "sha256": "372d2ccae4d81f5c375c5198f24d47947a06232244b0725c66786170d8ef0486",
+  "pages": 4,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commissioner Against Corruption began evaluating the Police Ombudsman’s procedures because of complaint delays and a parallel legislative review.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/370806/Evaluation_of_the_Practices_Policies_and_Procedures_of_the_Police_Ombudsman.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Police Ombudsman",
+      "page": 3
+     }
+    ],
+    "section": "Evaluation rationale"
+   },
+   {
+    "text": "The Commissioner discontinued the evaluation after procedural changes and recommendations in the separate legislative review reduced its usefulness.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/370806/Evaluation_of_the_Practices_Policies_and_Procedures_of_the_Police_Ombudsman.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Police Ombudsman",
+      "page": 4
+     }
+    ],
+    "section": "Decision to discontinue"
+   },
+   {
+    "text": "The Commissioner concluded that remaining complexity in the police complaints system required legislative amendment.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/370806/Evaluation_of_the_Practices_Policies_and_Procedures_of_the_Police_Ombudsman.pdf",
+      "document": "Evaluation of the Practices, Policies and Procedures of the Police Ombudsman",
+      "page": 4
+     }
+    ],
+    "section": "Decision to discontinue"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Many of the systems for the resolution of complaints and reports about police remain complex and unwieldy.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0006/370806/Evaluation_of_the_Practices_Policies_and_Procedures_of_the_Police_Ombudsman.pdf",
+     "document": "Evaluation of the Practices, Policies and Procedures of the Police Ombudsman",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

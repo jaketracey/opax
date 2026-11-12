@@ -1,0 +1,88 @@
+{
+ "slug": "royal-commission-cth-trade-union",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Royal Commission into Trade Union Governance and Corruption devoted this volume to proposals for law reform.",
+    "pages": [
+     19
+    ],
+    "section": "A – INTRODUCTION",
+    "support": "This Volume of the Report is devoted to recommendations in relation \nto law reform.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It considered union regulation, officials’ duties, corrupting benefits, enterprise bargaining, competition, construction, entry rights and Royal Commission powers.",
+    "pages": [
+     19,
+     22
+    ],
+    "section": "B – STRUCTURE OF VOLUME",
+    "support": "Chapter 6 \nEnterprise Bargaining \nChapter 7 \nCompetition Issues \nChapter 8 \nBuilding and Construction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission considered that the benefits of national regulation justified governments exploring a single regime for employee and employer organisations.",
+    "pages": [
+     68
+    ],
+    "section": "Dual State and Commonwealth regulation",
+    "support": "it is considered that the potential \nbenefits justify the States and Commonwealth giving consideration to \nimplementing a national regime",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It recommended a separate, independent regulator for registered organisations and funding sufficient for that regulator to carry out its functions.",
+    "pages": [
+     80
+    ],
+    "section": "Registered organisations regulator",
+    "support": "The Registered Organisations Commission should \nbe an independent stand-alone regulator.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The Registered Organisations Commission should \nbe an independent stand-alone regulator.",
+    "page": 80,
+    "kind": "recommendation"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The Commonwealth government ensure that the registered organisations \nregulator is properly resourced to carry out its functions, with a separate budget \nfor which it is accountable.",
+    "page": 80,
+    "kind": "recommendation"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

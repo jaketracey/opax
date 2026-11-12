@@ -1,0 +1,86 @@
+{
+ "slug": "integrity-report-sa-icac-undated-icac-public-integrity-survey-2024-local-government-insights",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commission Against Corruption analysed local government responses to its third Public Integrity Survey.",
+    "pages": [
+     6
+    ],
+    "section": "COMMISSIONER’S FOREWORD",
+    "support": "It analyses the perceptions and \nexperiences of public officers in the local government \nsector.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The survey focused on decision making, discretionary powers and improper influence, while comparing compatible results with earlier surveys.",
+    "pages": [
+     6,
+     7
+    ],
+    "section": "THE SURVEY",
+    "support": "The 2024 survey focused specifically on risks relating to decision making, including \nthe use of discretionary powers, and improper influence.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission reported increasing perceptions of corruption vulnerability, while cautioning that greater awareness could explain the change.",
+    "pages": [
+     6
+    ],
+    "section": "COMMISSIONER’S FOREWORD",
+    "support": "This does not necessarily \nmean that local councils are experiencing more corrupt conduct.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission identified risks around recruitment favouritism, procurement, confidential information and unchecked decision making, and encouraged officers to use reporting systems.",
+    "pages": [
+     60
+    ],
+    "section": "CONCLUSIONS",
+    "support": "Decision making that lacks transparency, accountability, and \nappropriate checks and balances, may be vulnerable to misuse of authority.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Decision making that lacks transparency, accountability, and \nappropriate checks and balances, may be vulnerable to misuse of authority.",
+    "page": 60,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "COMMISSIONER’S FOREWORD",
+   "first_page": 6,
+   "last_page": 6
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

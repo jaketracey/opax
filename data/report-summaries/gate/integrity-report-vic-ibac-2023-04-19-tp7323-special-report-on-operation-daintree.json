@@ -1,0 +1,113 @@
+{
+ "slug": "integrity-report-vic-ibac-2023-04-19-tp7323-special-report-on-operation-daintree",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "IBAC’s Operation Daintree examined the award and management of a health worker training contract after a referral from the Victorian Ombudsman.",
+    "pages": [
+     6,
+     7
+    ],
+    "support": "the Ombudsman’s notification that a ministerial advisor working in the Health Minister’s office exerted pressure on DHHS staff",
+    "section": "Summary of the investigation and outcomes",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It considered a $1.2 million contract with the Health Education Federation and a related election promise for further training.",
+    "pages": [
+     6
+    ],
+    "support": "This contract and the 2018 election commitment were the primary focus",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "IBAC found that ministerial advisers improperly influenced procurement and contract management, while senior departmental officers allowed perceived government preferences to affect their work.",
+    "pages": [
+     8,
+     31
+    ],
+    "support": "The conduct of the ministerial advisors improperly influenced and undermined the DHHS processes of procurement and management of the contract",
+    "section": "What IBAC’s investigation found",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It did not find sufficient evidence to establish corrupt conduct under the IBAC Act.",
+    "pages": [
+     82
+    ],
+    "support": "Operation Daintree did not find sufficient evidence to establish that any person had committed corrupt conduct",
+    "section": "Conclusion",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "IBAC made 17 recommendations on lobbying, ministerial and adviser accountability, complaints protections, training and procurement controls.",
+    "pages": [
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "support": "the Department of Health reviews and, where necessary, strengthens its procurement policies, systems and practices",
+    "section": "Section 159 recommendations",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The investigation found that a senior advisor to the Health Minister improperly intruded into the process of DHHS awarding the contract to the HEF.",
+    "page": 8,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "Operation Daintree did not find sufficient evidence to establish that any person had committed corrupt conduct within the meaning of the IBAC Act - noting that this would include a requirement to be satisfied that a relevant offence had been committed.",
+    "page": 82,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Summary of the investigation and outcomes",
+   "first_page": 6,
+   "last_page": 15
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

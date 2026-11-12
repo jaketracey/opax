@@ -1,0 +1,130 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2026-10-15-tp10550-special-report-on-operation-harmonia",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Special report on Operation Harmonia",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a940d/globalassets/tabled-paper-documents/tabled-paper-10550/ibac_harmonia_special_report_web-updated-2.pdf",
+  "document": "IBAC_Harmonia_Special_Report_Web UPDATED 2",
+  "sha256": "7937ba2c5470919694636435f33a665d688a1a49ef27d42adde245213cf6a642",
+  "pages": 64,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of investigation and outcomes",
+  "first_page": 11,
+  "last_page": 32,
+  "link": "https://www.parliament.vic.gov.au/4a940d/globalassets/tabled-paper-documents/tabled-paper-10550/ibac_harmonia_special_report_web-updated-2.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC’s Operation Harmonia investigated allegations that senior officers at the former Department of Jobs, Precincts and Regions failed to address or report losses from COVID-19 business support grants.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a940d/globalassets/tabled-paper-documents/tabled-paper-10550/ibac_harmonia_special_report_web-updated-2.pdf",
+      "document": "IBAC_Harmonia_Special_Report_Web UPDATED 2",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a940d/globalassets/tabled-paper-documents/tabled-paper-10550/ibac_harmonia_special_report_web-updated-2.pdf",
+      "document": "IBAC_Harmonia_Special_Report_Web UPDATED 2",
+      "page": 13
+     }
+    ],
+    "section": "What IBAC did"
+   },
+   {
+    "text": "It examined the treatment of backdated GST registrations and information provided to ministers, the Auditor-General and the Victorian Ombudsman.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a940d/globalassets/tabled-paper-documents/tabled-paper-10550/ibac_harmonia_special_report_web-updated-2.pdf",
+      "document": "IBAC_Harmonia_Special_Report_Web UPDATED 2",
+      "page": 9
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a940d/globalassets/tabled-paper-documents/tabled-paper-10550/ibac_harmonia_special_report_web-updated-2.pdf",
+      "document": "IBAC_Harmonia_Special_Report_Web UPDATED 2",
+      "page": 13
+     }
+    ],
+    "section": "What IBAC did"
+   },
+   {
+    "text": "IBAC found that senior officers withheld information about a suspected $285 million loss from the secretary and minister, preventing them from considering a response.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a940d/globalassets/tabled-paper-documents/tabled-paper-10550/ibac_harmonia_special_report_web-updated-2.pdf",
+      "document": "IBAC_Harmonia_Special_Report_Web UPDATED 2",
+      "page": 27
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a940d/globalassets/tabled-paper-documents/tabled-paper-10550/ibac_harmonia_special_report_web-updated-2.pdf",
+      "document": "IBAC_Harmonia_Special_Report_Web UPDATED 2",
+      "page": 41
+     }
+    ],
+    "section": "What the investigation found"
+   },
+   {
+    "text": "IBAC also found that information was withheld from the Ombudsman and misleading information was given to an incoming minister.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a940d/globalassets/tabled-paper-documents/tabled-paper-10550/ibac_harmonia_special_report_web-updated-2.pdf",
+      "document": "IBAC_Harmonia_Special_Report_Web UPDATED 2",
+      "page": 41
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "IBAC made no recommendations, emphasising the need for frank advice and a culture that supports staff raising concerns.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a940d/globalassets/tabled-paper-documents/tabled-paper-10550/ibac_harmonia_special_report_web-updated-2.pdf",
+      "document": "IBAC_Harmonia_Special_Report_Web UPDATED 2",
+      "page": 12
+     }
+    ],
+    "section": "Summary of investigation and outcomes"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "IBAC’s investigation found that critical information was withheld from the Secretary and the Minister, contrary to the public sector values of integrity and responsiveness.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a940d/globalassets/tabled-paper-documents/tabled-paper-10550/ibac_harmonia_special_report_web-updated-2.pdf",
+     "document": "IBAC_Harmonia_Special_Report_Web UPDATED 2",
+     "page": 41
+    }
+   },
+   {
+    "quote": "IBAC found that a letter provided to the Victorian Ombudsman withheld key information about the department’s method for assessing GST registration.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a940d/globalassets/tabled-paper-documents/tabled-paper-10550/ibac_harmonia_special_report_web-updated-2.pdf",
+     "document": "IBAC_Harmonia_Special_Report_Web UPDATED 2",
+     "page": 29
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,57 @@
+{
+  "slug": "integrity-report-nsw-icac-2011-12-14-corruption-risks-in-nsw-government-procurement-the-managemen",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The NSW Independent Commission Against Corruption examines how public sector managers can improve procurement systems and influence staff behaviour to reduce corruption.",
+      "pages": [
+        5
+      ],
+      "support": "The major purpose of this report, therefore, is to illustrate the variety of tools available to managers",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "It considers procurement structures, purchasing processes and staff management, using investigation case studies to illustrate control weaknesses.",
+      "pages": [
+        6
+      ],
+      "support": "Throughout the report, case studies of real investigations are used to illustrate weaknesses related to structures, processes and people",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "The Commission concludes that relying on policies, codes and training controls only a small share of corruption risks.",
+      "pages": [
+        35
+      ],
+      "support": "Simple reliance on policies, codes, and training will control only a small proportion of corruption.",
+      "section": "Conclusion",
+      "people": []
+    },
+    {
+      "text": "The Commission advises managers to combine approaches suited to their agency’s risks, rather than prescribing formal recommendations.",
+      "pages": [
+        5,
+        35
+      ],
+      "support": "The advice in this report is not presented as a list of formal recommendations.",
+      "section": "Introduction",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "When it comes to procurement, there is no single method of corruption control.",
+      "page": 35,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "Simple reliance on policies, codes, and training will control only a small proportion of corruption.",
+      "page": 35,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "No separate summary. The report expressly states that it does not present formal recommendations; its conclusion is on PDF page 35."
+}

@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-act-ic-2022-08-23-operation-raven",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Operation Raven: A report dealing with the sale of Block 30 in Dickson to the Tradies Club and a related land purchase agreement by the ACT Government",
+ "body": "ACT Integrity Commission",
+ "source": {
+  "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2062370/Operation-Raven-Special-Report-FINAL.pdf",
+  "document": "Operation Raven: A report dealing with the sale of Block 30 in Dickson to the Tradies Club and a related land purchase agreement by the ACT Government",
+  "sha256": "5b48c41fae933fea125957c9358ea6f3110e6286b058e7ef86ae480651cbda3e",
+  "pages": 148,
+  "rights": "commission-copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive Summary",
+  "first_page": 6,
+  "last_page": 10,
+  "link": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2062370/Operation-Raven-Special-Report-FINAL.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The ACT Integrity Commission assessed a corruption complaint referred after parliamentary scrutiny of the sale of a Dickson car park to the Tradies Club.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2062370/Operation-Raven-Special-Report-FINAL.pdf",
+      "document": "Operation Raven: A report dealing with the sale of Block 30 in Dickson to the Tradies Club and a related land purchase agreement by the ACT Government",
+      "page": 6
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2062370/Operation-Raven-Special-Report-FINAL.pdf",
+      "document": "Operation Raven: A report dealing with the sale of Block 30 in Dickson to the Tradies Club and a related land purchase agreement by the ACT Government",
+      "page": 7
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "It examined the sale process and the government’s linked purchase of land at Downer.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2062370/Operation-Raven-Special-Report-FINAL.pdf",
+      "document": "Operation Raven: A report dealing with the sale of Block 30 in Dickson to the Tradies Club and a related land purchase agreement by the ACT Government",
+      "page": 6
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2062370/Operation-Raven-Special-Report-FINAL.pdf",
+      "document": "Operation Raven: A report dealing with the sale of Block 30 in Dickson to the Tradies Club and a related land purchase agreement by the ACT Government",
+      "page": 148
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commission concluded that the sale met legal requirements and raised no reasonable suspicion of corruption, although some decisions needed better documentation.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2062370/Operation-Raven-Special-Report-FINAL.pdf",
+      "document": "Operation Raven: A report dealing with the sale of Block 30 in Dickson to the Tradies Club and a related land purchase agreement by the ACT Government",
+      "page": 7
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2062370/Operation-Raven-Special-Report-FINAL.pdf",
+      "document": "Operation Raven: A report dealing with the sale of Block 30 in Dickson to the Tradies Club and a related land purchase agreement by the ACT Government",
+      "page": 9
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "It discontinued the matter because it considered further action on the corruption report unjustified.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0020/2062370/Operation-Raven-Special-Report-FINAL.pdf",
+      "document": "Operation Raven: A report dealing with the sale of Block 30 in Dickson to the Tradies Club and a related land purchase agreement by the ACT Government",
+      "page": 148
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

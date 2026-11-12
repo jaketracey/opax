@@ -1,0 +1,62 @@
+{
+  "slug": "integrity-report-vic-ibac-2024-10-09-tp8500-special-report-on-operation-leo",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Summary of investigation and outcomes",
+    "first_page": 7,
+    "last_page": 17
+  },
+  "sentences": [
+    {
+      "text": "IBAC’s Operation Leo investigated alleged bribery and misconduct involving Moonee Valley City Council councillors.",
+      "pages": [
+        6
+      ],
+      "support": "which examined allegations of bribery and misconduct by councillors in the Moonee Valley City Council",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "It examined property matters and whether councillors sought benefits or favoured the Essendon Royals Soccer Club.",
+      "pages": [
+        6,
+        7
+      ],
+      "support": "whether some MVCC councillors used their positions as elected officials to seek or obtain preferential outcomes",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "IBAC found that councillors bypassed council processes and used their positions to favour third parties, but found no evidence of payments from the club president or associates.",
+      "pages": [
+        10,
+        24
+      ],
+      "support": "IBAC did not find any evidence that MVCC councillors received payments from the ERSC president or any of his associates",
+      "section": "What the investigation found",
+      "people": []
+    },
+    {
+      "text": "It made one recommendation for the model councillor code to require reporting of suspected corruption and explain how to report it.",
+      "pages": [
+        23
+      ],
+      "support": "a clear expectation that councillors report suspected corrupt conduct",
+      "section": "Failure to report corrupt conduct",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "IBAC’s investigation identified that several councillors used their positions to influence MVCC decisions, bypass MVCC decision-making processes and inappropriately disclose MVCC information.",
+      "page": 24,
+      "kind": "finding"
+    },
+    {
+      "quote": "IBAC did not find any evidence that MVCC councillors received payments from the ERSC president or any of his associates, including the construction manager.",
+      "page": 10,
+      "kind": "finding"
+    }
+  ],
+  "notes": "The absence of evidence of cash payments is kept distinct from findings about other inducements and misuse of position. No witnesses or complainants are named."
+}

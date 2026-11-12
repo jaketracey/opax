@@ -1,0 +1,76 @@
+{
+  "slug": "royal-commission-cth-financial-services",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "1. Introduction",
+    "first_page": 35,
+    "last_page": 84
+  },
+  "sentences": [
+    {
+      "text": "The financial services Royal Commission examined misconduct and behaviour that fell below community expectations in financial services businesses.",
+      "pages": [
+        35
+      ],
+      "section": "1. Introduction",
+      "support": "whether any conduct of financial services entities might have amounted \nto misconduct",
+      "people": []
+    },
+    {
+      "text": "It considered banking, financial advice, superannuation and insurance, as well as industry culture, governance, remuneration and regulators.",
+      "pages": [
+        42
+      ],
+      "section": "1. Introduction",
+      "support": "The focus of this Report must be on issues, causes and responses.",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that rewards encouraged misconduct, customers faced unequal power and information, conflicts harmed clients’ interests and wrongdoing too often escaped proper accountability.",
+      "pages": [
+        35,
+        36,
+        37
+      ],
+      "section": "Four observations",
+      "support": "the \nconnection between conduct and reward; the asymmetry of power and \ninformation",
+      "people": []
+    },
+    {
+      "text": "It placed primary responsibility on the businesses concerned and their boards and senior managers.",
+      "pages": [
+        38
+      ],
+      "section": "Primary responsibility",
+      "support": "the primary responsibility for misconduct in \nthe financial services industry lies with the entities concerned",
+      "people": []
+    },
+    {
+      "text": "The Commission recommended changes to lending, advice fees, insurance, superannuation, remuneration and regulatory oversight, including duties for mortgage brokers to prioritise borrowers’ interests.",
+      "pages": [
+        54,
+        59,
+        63,
+        65,
+        69,
+        75
+      ],
+      "section": "Recommendations by subject matter",
+      "support": "mortgage brokers must act in the best interests of \nthe intending borrower.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Fourth, too often, financial services entities that broke the law were \nnot properly held to account.",
+      "page": 37,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "There can be no doubt that the primary responsibility for misconduct in \nthe financial services industry lies with the entities concerned and those \nwho managed and controlled those entities: their boards and senior \nmanagement.",
+      "page": 38,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The Introduction provides an overview of the inquiry’s observations, principles and recommendations rather than a separately titled executive summary. No overall recommendation count is stated in the cited overview, so none is asserted."
+}

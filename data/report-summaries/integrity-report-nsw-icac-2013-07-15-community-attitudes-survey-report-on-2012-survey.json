@@ -1,0 +1,108 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2013-07-15-community-attitudes-survey-report-on-2012-survey",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Community Attitudes Survey - Report on 2012 survey",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20Attitudes%20Survey%20-%20Report%20on%202012%20survey%20(July%202013).pdf.aspx",
+  "document": "Community Attitudes Survey - Report on 2012 survey",
+  "sha256": "1b90e51718f7639a67266f9fa0f6fcf6bba7b9895a17a4cb7735ff9c18f45d63",
+  "pages": 28,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption uses its community survey to examine perceptions of corruption, awareness of the Commission and willingness to report wrongdoing.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20Attitudes%20Survey%20-%20Report%20on%202012%20survey%20(July%202013).pdf.aspx",
+      "document": "Community Attitudes Survey - Report on 2012 survey",
+      "page": 6
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20Attitudes%20Survey%20-%20Report%20on%202012%20survey%20(July%202013).pdf.aspx",
+      "document": "Community Attitudes Survey - Report on 2012 survey",
+      "page": 7
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The 2012 telephone survey received 506 responses from NSW adults and supported comparisons with earlier surveys.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20Attitudes%20Survey%20-%20Report%20on%202012%20survey%20(July%202013).pdf.aspx",
+      "document": "Community Attitudes Survey - Report on 2012 survey",
+      "page": 7
+     }
+    ],
+    "section": "Methodology"
+   },
+   {
+    "text": "The Commission concludes that the proportion seeing corruption as a major problem declined over the longer term, while awareness of the Commission remained high.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20Attitudes%20Survey%20-%20Report%20on%202012%20survey%20(July%202013).pdf.aspx",
+      "document": "Community Attitudes Survey - Report on 2012 survey",
+      "page": 13
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20Attitudes%20Survey%20-%20Report%20on%202012%20survey%20(July%202013).pdf.aspx",
+      "document": "Community Attitudes Survey - Report on 2012 survey",
+      "page": 16
+     }
+    ],
+    "section": "Conclusions"
+   },
+   {
+    "text": "The Commission found that most respondents were willing to report serious corruption, although only a slim majority expected useful action from a report.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20Attitudes%20Survey%20-%20Report%20on%202012%20survey%20(July%202013).pdf.aspx",
+      "document": "Community Attitudes Survey - Report on 2012 survey",
+      "page": 24
+     }
+    ],
+    "section": "Conclusions"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Overall, there appears to have been a long-term decline in the proportion of respondents who view corruption in NSW as a major problem.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20Attitudes%20Survey%20-%20Report%20on%202012%20survey%20(July%202013).pdf.aspx",
+     "document": "Community Attitudes Survey - Report on 2012 survey",
+     "page": 13
+    }
+   },
+   {
+    "quote": "Most respondents appear willing to report serious corruption.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20Attitudes%20Survey%20-%20Report%20on%202012%20survey%20(July%202013).pdf.aspx",
+     "document": "Community Attitudes Survey - Report on 2012 survey",
+     "page": 24
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

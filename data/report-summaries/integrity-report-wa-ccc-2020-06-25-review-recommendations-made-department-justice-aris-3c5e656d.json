@@ -1,0 +1,115 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2020-06-25-review-recommendations-made-department-justice-aris-3c5e656d",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Review of recommendations made to the Department of Justice arising from six reports",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20the%20Department%20of%20Justice%20arising%20from%20six%20reports.pdf",
+  "document": "Review of recommendations made to the Department of Justice arising from six reports",
+  "sha256": "da12c2e8fb2c3c2a963006151cd4698875c2c5718bdc9a619671bc42fd0b786b",
+  "pages": 52,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Introduction",
+  "first_page": 5,
+  "last_page": 8,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20the%20Department%20of%20Justice%20arising%20from%20six%20reports.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed the Department of Justice's response to 51 recommendations from six reports on prison misconduct risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20the%20Department%20of%20Justice%20arising%20from%20six%20reports.pdf",
+      "document": "Review of recommendations made to the Department of Justice arising from six reports",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20the%20Department%20of%20Justice%20arising%20from%20six%20reports.pdf",
+      "document": "Review of recommendations made to the Department of Justice arising from six reports",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The review examined governance, prison security, supervision, staff training and reporting, including observations at six prisons.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20the%20Department%20of%20Justice%20arising%20from%20six%20reports.pdf",
+      "document": "Review of recommendations made to the Department of Justice arising from six reports",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20the%20Department%20of%20Justice%20arising%20from%20six%20reports.pdf",
+      "document": "Review of recommendations made to the Department of Justice arising from six reports",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The Commission recognised substantial change and considered that 37 recommendations had been adequately addressed.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20the%20Department%20of%20Justice%20arising%20from%20six%20reports.pdf",
+      "document": "Review of recommendations made to the Department of Justice arising from six reports",
+      "page": 8
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20the%20Department%20of%20Justice%20arising%20from%20six%20reports.pdf",
+      "document": "Review of recommendations made to the Department of Justice arising from six reports",
+      "page": 37
+     }
+    ]
+   },
+   {
+    "text": "The Commission left 14 recommendations open for further work and planned another review after 12 months.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20the%20Department%20of%20Justice%20arising%20from%20six%20reports.pdf",
+      "document": "Review of recommendations made to the Department of Justice arising from six reports",
+      "page": 37
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission considers that DoJ has taken appropriate steps to address 37 of the 51 recommendations.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20the%20Department%20of%20Justice%20arising%20from%20six%20reports.pdf",
+     "document": "Review of recommendations made to the Department of Justice arising from six reports",
+     "page": 37
+    }
+   },
+   {
+    "quote": "The Commission considers that 14 recommendations require further work and will review DoJ's progress again in 12 months.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20recommendations%20made%20to%20the%20Department%20of%20Justice%20arising%20from%20six%20reports.pdf",
+     "document": "Review of recommendations made to the Department of Justice arising from six reports",
+     "page": 37
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

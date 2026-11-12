@@ -1,0 +1,43 @@
+{
+  "slug": "integrity-report-act-ic-2025-07-25-operation-luna-part-2",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Key findings",
+    "first_page": 6,
+    "last_page": 7
+  },
+  "sentences": [
+    {
+      "text": "The ACT Integrity Commission examined possible corruption in negotiations and advance payments for the Canberra Institute of Technology’s sixth consultancy contract with Redrouge Nominees Pty Ltd.",
+      "pages": [
+        5
+      ],
+      "support": "focused on whether corrupt conduct occurred in connexion with the negotiations concerning and the payment schedule agreed",
+      "section": "The focus of this investigation",
+      "people": []
+    },
+    {
+      "text": "The contract required a third of its price to be paid when it was signed, followed by further payments ahead of the services.",
+      "pages": [
+        5,
+        6
+      ],
+      "support": "one third was to be paid on execution of the contract",
+      "section": "The focus of this investigation",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that the then chief executive and an executive director engaged in serious corrupt conduct through the intentional falsification of a key procurement document.",
+      "pages": [
+        6,
+        65,
+        66
+      ],
+      "support": "The integrity of public procurements is a matter of serious public concern and the intentional falsification of a crucial document",
+      "section": "Findings as to corrupt conduct",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "Existing OPAX findings retained on the report page; no additional findings quotes. The report makes no finding that a criminal offence was committed (PDF pages 58–59). No recommendations list identified."
+}

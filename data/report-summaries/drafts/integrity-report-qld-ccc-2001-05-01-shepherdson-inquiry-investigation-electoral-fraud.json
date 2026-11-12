@@ -1,0 +1,72 @@
+{
+  "slug": "integrity-report-qld-ccc-2001-05-01-shepherdson-inquiry-investigation-electoral-fraud",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "EXECUTIVE SUMMARY",
+    "first_page": 9,
+    "last_page": 15
+  },
+  "sentences": [
+    {
+      "text": "An independent inquiry for the CJC examined alleged electoral-roll misconduct linked to ALP preselections and a state by-election.",
+      "pages": [
+        9
+      ],
+      "support": "The Inquiry set out to investigate any alleged official misconduct affecting the electoral roll",
+      "section": "EXECUTIVE SUMMARY",
+      "people": []
+    },
+    {
+      "text": "The inquiry assessed whether admissible evidence should be referred for possible prosecution, rather than determining guilt.",
+      "pages": [
+        10
+      ],
+      "support": "The purpose of this Inquiry was not to determine guilt.",
+      "section": "EXECUTIVE SUMMARY",
+      "people": []
+    },
+    {
+      "text": "The inquiry found that some party members treated knowingly false enrolments as a preselection tactic, but found no evidence of general use to influence public elections.",
+      "pages": [
+        11
+      ],
+      "support": "No evidence, however, was revealed indicating that the tactic had been generally used to influence the outcome of public elections.",
+      "section": "EXECUTIVE SUMMARY",
+      "people": []
+    },
+    {
+      "text": "It recommended prosecution referrals for possible forgery charges and explained that time limits prevented action on many consensual false enrolments.",
+      "pages": [
+        10,
+        11,
+        13
+      ],
+      "support": "sufficient to recommend that the matter be referred to the Queensland Director of Public Prosecutions",
+      "section": "EXECUTIVE SUMMARY",
+      "people": []
+    },
+    {
+      "text": "It offered reform suggestions on identity and residence checks, preselection oversight, electoral penalties and prosecution time limits, without making formal electoral-reform recommendations.",
+      "pages": [
+        10,
+        15
+      ],
+      "support": "the terms of reference did not call for the making of formal recommendations for electoral reform.",
+      "section": "EXECUTIVE SUMMARY",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The information gathered during the Inquiry clearly established that the practice of making consensual false enrolments to bolster the chances of specific candidates in preselections was regarded by some Party members as a legitimate campaign tactic.",
+      "page": 11,
+      "kind": "finding"
+    },
+    {
+      "quote": "No evidence, however, was revealed indicating that the tactic had been generally used to influence the outcome of public elections.",
+      "page": 11,
+      "kind": "finding"
+    }
+  ],
+  "notes": "The inquiry distinguished prosecution referrals from guilt and electoral-reform suggestions from formal recommendations; no numbered reform-recommendation total is asserted."
+}

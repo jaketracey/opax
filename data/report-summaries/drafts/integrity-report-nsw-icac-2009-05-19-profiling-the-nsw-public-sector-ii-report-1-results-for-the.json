@@ -1,0 +1,60 @@
+{
+  "slug": "integrity-report-nsw-icac-2009-05-19-profiling-the-nsw-public-sector-ii-report-1-results-for-the",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Executive summary",
+    "first_page": 7,
+    "last_page": 7
+  },
+  "sentences": [
+    {
+      "text": "The Independent Commission Against Corruption surveyed NSW public sector organisations and employees in 2007 about corruption risks and prevention practices.",
+      "pages": [
+        7
+      ],
+      "support": "In 2007, the ICAC sent surveys examining corruption risks \nand corruption prevention strategies to NSW public sector \norganisations and staff.",
+      "section": "Executive summary",
+      "people": []
+    },
+    {
+      "text": "ICAC reported responses from 317 organisations and 493 employees, covering organisational practices and staff perceptions across NSW.",
+      "pages": [
+        7
+      ],
+      "support": "Responses were received from 317 \norganisations and 493 staff.",
+      "section": "Executive summary",
+      "people": []
+    },
+    {
+      "text": "ICAC reported that organisations most often identified procurement, recordkeeping and conflicts of interest as risks, while employees most often perceived favouritism and harassment as workplace problems.",
+      "pages": [
+        7
+      ],
+      "support": "The risks most commonly identified \nby organisations include procurement, recordkeeping and \nconflicts of interest.",
+      "section": "Executive summary",
+      "people": []
+    },
+    {
+      "text": "ICAC also reported gaps in staff awareness: 47% did not know they had to retain business emails and 36% had heard of the Protected Disclosures Act 1994.",
+      "pages": [
+        7
+      ],
+      "support": "were not aware that they were required to \n\n\nretain emails of business value",
+      "section": "Executive summary",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Organisation responses indicated that high corruption \nrisk functions are generally performed in the context of \na policy framework.",
+      "page": 7,
+      "kind": "finding"
+    },
+    {
+      "quote": "Many organisations indicated that they have a variety \nof corruption prevention strategies in place but not \nall organisations use the same strategies.",
+      "page": 7,
+      "kind": "finding"
+    }
+  ],
+  "notes": "Descriptive survey findings, not findings that particular misconduct occurred; no numbered recommendations list."
+}

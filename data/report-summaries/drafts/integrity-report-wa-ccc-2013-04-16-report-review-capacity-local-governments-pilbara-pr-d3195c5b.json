@@ -1,0 +1,62 @@
+{
+  "slug": "integrity-report-wa-ccc-2013-04-16-report-review-capacity-local-governments-pilbara-pr-d3195c5b",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "EXECUTIVE SUMMARY",
+    "first_page": 11,
+    "last_page": 13
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission reviewed the capacity of all four Pilbara local governments to prevent and handle misconduct between 2010 and 2012.",
+      "pages": [
+        11
+      ],
+      "section": "EXECUTIVE SUMMARY",
+      "support": "between 2010-2012 the Corruption and Crime Commission (“the Commission”) engaged with each of the Pilbara local governments",
+      "people": []
+    },
+    {
+      "text": "It examined organisational systems, policies and practices rather than conducting a compliance audit or seeking individual misconduct cases.",
+      "pages": [
+        41,
+        42
+      ],
+      "section": "Misconduct and the Local Government Legislative Framework",
+      "support": "The intent of the review was not to test compliance with local government legislation, nor was it to identify instances of misconduct.",
+      "people": []
+    },
+    {
+      "text": "The Commission found that all four councils were addressing their exposure, although their progress differed and earlier systematic prevention had been limited.",
+      "pages": [
+        11,
+        12
+      ],
+      "section": "EXECUTIVE SUMMARY",
+      "support": "As a result of the Commission’s engagement, all four local governments are taking steps to overcome their exposure to a particularly heightened level of misconduct risk.",
+      "people": []
+    },
+    {
+      "text": "Its two recommendations sought continued development of comprehensive misconduct systems and progress reports to the Department of Local Government by 30 June 2013.",
+      "pages": [
+        43
+      ],
+      "section": "Recommendations",
+      "support": "The Commission recommends that by 30 June 2013",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Commission views the work both planned and undertaken as positive.",
+      "page": 12,
+      "kind": "opinion"
+    },
+    {
+      "quote": "Whatever community perceptions about the existence of such cases, the review did not identify any.",
+      "page": 42,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The review concerns organisational capacity and expressly did not identify substantive misconduct cases. The original deadline is retained as a historical recommendation."
+}

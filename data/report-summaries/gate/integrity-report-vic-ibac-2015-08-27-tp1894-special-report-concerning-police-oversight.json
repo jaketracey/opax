@@ -1,0 +1,96 @@
+{
+ "slug": "integrity-report-vic-ibac-2015-08-27-tp1894-special-report-concerning-police-oversight",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "IBAC reported on its oversight of Victoria Police since becoming fully operational in early 2013.",
+    "pages": [
+     9,
+     15
+    ],
+    "support": "This report provides a focused account of IBAC’s key police oversight activities",
+    "section": "Foreword",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It covered prevention projects, reviews of police investigations and the progress and outcomes of IBAC investigations.",
+    "pages": [
+     15
+    ],
+    "support": "reviews of Victoria Police investigations – both reviews of individual cases and reviews that highlight systemic issues",
+    "section": "About this report",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "A delegated inquiry found serious negligence in handling human source information and failures to follow policy, while making no finding of unlawful behaviour.",
+    "pages": [
+     35
+    ],
+    "support": "found negligence of a high order in the management of human source information by Victoria Police",
+    "section": "Inquiry findings and recommendations",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "IBAC recorded 20 statutory recommendations to Victoria Police, addressing matters including human sources, subpoenas, victims of crime assistance and oversight of prosecutors.",
+    "pages": [
+     38,
+     39
+    ],
+    "support": "To date, IBAC has made twenty section 159 recommendations to Victoria Police",
+    "section": "Progress on recommendations arising from previous investigations",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "In his final report, Mr Kellam found negligence of a high order in the management of human source information by Victoria Police and he concluded that Victoria Police had failed to act in accordance with appropriate policies and guidelines.",
+    "page": 35,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "This matter highlighted a systemic issue: the significant authority granted to often junior police prosecutors operating with little or no oversight.",
+    "page": 38,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Foreword",
+   "first_page": 9,
+   "last_page": 9
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

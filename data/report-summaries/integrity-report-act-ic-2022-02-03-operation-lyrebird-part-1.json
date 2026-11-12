@@ -1,0 +1,78 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-act-ic-2022-02-03-operation-lyrebird-part-1",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Operation Lyrebird - Part 1: A report dealing with allegations of corrupt conduct involving the acquisition of a lease for land adjacent to Glebe Park in Canberra City.",
+ "body": "ACT Integrity Commission",
+ "source": {
+  "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/1943580/Special-Report-Operation-Lyrebird-Part-1-Acquisition-of-Block-24-Section-65-Canberra-City-3-February-2022.pdf",
+  "document": "Operation Lyrebird - Part 1: A report dealing with allegations of corrupt conduct involving the acquisition of a lease for land adjacent to Glebe Park in Canberra City.",
+  "sha256": "a09deab9077f94767541c783fb8ce750a21665a2e8a47a29d8f2bbbfe321f2de",
+  "pages": 44,
+  "rights": "commission-copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The ACT Integrity Commission considered a parliamentary committee’s corruption complaint about a lease acquisition beside Glebe Park in Canberra City.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/1943580/Special-Report-Operation-Lyrebird-Part-1-Acquisition-of-Block-24-Section-65-Canberra-City-3-February-2022.pdf",
+      "document": "Operation Lyrebird - Part 1: A report dealing with allegations of corrupt conduct involving the acquisition of a lease for land adjacent to Glebe Park in Canberra City.",
+      "page": 5
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/1943580/Special-Report-Operation-Lyrebird-Part-1-Acquisition-of-Block-24-Section-65-Canberra-City-3-February-2022.pdf",
+      "document": "Operation Lyrebird - Part 1: A report dealing with allegations of corrupt conduct involving the acquisition of a lease for land adjacent to Glebe Park in Canberra City.",
+      "page": 6
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It examined the earlier audit and committee reports and the documentary and oral material gathered for them.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/1943580/Special-Report-Operation-Lyrebird-Part-1-Acquisition-of-Block-24-Section-65-Canberra-City-3-February-2022.pdf",
+      "document": "Operation Lyrebird - Part 1: A report dealing with allegations of corrupt conduct involving the acquisition of a lease for land adjacent to Glebe Park in Canberra City.",
+      "page": 6
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission concluded that there was no reasonable basis to suspect corrupt conduct in the acquisition and that further investigation was unjustified.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/1943580/Special-Report-Operation-Lyrebird-Part-1-Acquisition-of-Block-24-Section-65-Canberra-City-3-February-2022.pdf",
+      "document": "Operation Lyrebird - Part 1: A report dealing with allegations of corrupt conduct involving the acquisition of a lease for land adjacent to Glebe Park in Canberra City.",
+      "page": 43
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0003/1943580/Special-Report-Operation-Lyrebird-Part-1-Acquisition-of-Block-24-Section-65-Canberra-City-3-February-2022.pdf",
+      "document": "Operation Lyrebird - Part 1: A report dealing with allegations of corrupt conduct involving the acquisition of a lease for land adjacent to Glebe Park in Canberra City.",
+      "page": 44
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

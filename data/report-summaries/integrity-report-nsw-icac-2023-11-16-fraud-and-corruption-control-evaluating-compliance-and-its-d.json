@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2023-11-16-fraud-and-corruption-control-evaluating-compliance-and-its-d",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Fraud and corruption control evaluating compliance and its drivers (November 2023)",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Fraud%20and%20corruption%20control%20evaluating%20compliance%20and%20its%20drivers%20-%20Nov23.pdf.aspx",
+  "document": "Fraud and corruption control evaluating compliance and its drivers (November 2023)",
+  "sha256": "e7b83b51579d46827be06da63c5c805655e709bdf30b005718df30a7d84f802b",
+  "pages": 32,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chapter 2: Overview of compliance with the circular",
+  "first_page": 8,
+  "last_page": 10,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Fraud%20and%20corruption%20control%20evaluating%20compliance%20and%20its%20drivers%20-%20Nov23.pdf.aspx#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption assessed agencies’ compliance with the Treasury fraud and corruption control policy and barriers to meeting it.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Fraud%20and%20corruption%20control%20evaluating%20compliance%20and%20its%20drivers%20-%20Nov23.pdf.aspx",
+      "document": "Fraud and corruption control evaluating compliance and its drivers (November 2023)",
+      "page": 6
+     }
+    ],
+    "section": "Chapter 1: Background and methodology"
+   },
+   {
+    "text": "Its research combined survey responses from 90 agencies, nine focus groups and analysis of agencies’ control documents.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Fraud%20and%20corruption%20control%20evaluating%20compliance%20and%20its%20drivers%20-%20Nov23.pdf.aspx",
+      "document": "Fraud and corruption control evaluating compliance and its drivers (November 2023)",
+      "page": 6
+     }
+    ],
+    "section": "Methodology"
+   },
+   {
+    "text": "The Commission reports that most agencies met minimum standards, while managing third parties was the requirement agencies found hardest to meet.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Fraud%20and%20corruption%20control%20evaluating%20compliance%20and%20its%20drivers%20-%20Nov23.pdf.aspx",
+      "document": "Fraud and corruption control evaluating compliance and its drivers (November 2023)",
+      "page": 8
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Fraud%20and%20corruption%20control%20evaluating%20compliance%20and%20its%20drivers%20-%20Nov23.pdf.aspx",
+      "document": "Fraud and corruption control evaluating compliance and its drivers (November 2023)",
+      "page": 10
+     }
+    ],
+    "section": "Chapter 2: Overview of compliance with the circular"
+   },
+   {
+    "text": "The Commission advises agencies to improve third-party controls through due diligence, clear responsibilities, staff training and reporting arrangements.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Fraud%20and%20corruption%20control%20evaluating%20compliance%20and%20its%20drivers%20-%20Nov23.pdf.aspx",
+      "document": "Fraud and corruption control evaluating compliance and its drivers (November 2023)",
+      "page": 10
+     }
+    ],
+    "section": "Third-party management systems"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The research findings show that many agencies do not consistently apply third-party controls.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Fraud%20and%20corruption%20control%20evaluating%20compliance%20and%20its%20drivers%20-%20Nov23.pdf.aspx",
+     "document": "Fraud and corruption control evaluating compliance and its drivers (November 2023)",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,64 @@
+{
+  "slug": "integrity-report-wa-ccc-2018-11-01-review-arrest-incident-wa-police-hamilton-hill",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Overview",
+    "first_page": 4,
+    "last_page": 5
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission reviewed a police investigation into an arrest at Hamilton Hill and the preparation of prosecution evidence.",
+      "pages": [
+        4,
+        5
+      ],
+      "section": "Overview",
+      "support": "This investigation examined both the conduct of the officers during the incident, and those who prepared the evidence for prosecution.",
+      "people": []
+    },
+    {
+      "text": "The Commission assessed whether the police investigation's conclusions were reasonably available on the evidence.",
+      "pages": [
+        5,
+        20
+      ],
+      "section": "The Commission's second review",
+      "support": "The Commission reviewed IAU's investigation to ensure that the investigation was conducted adequately and IAU's findings were reasonably open on the evidence.",
+      "people": []
+    },
+    {
+      "text": "It concluded that the investigation was comprehensive and formed no opinion of misconduct.",
+      "pages": [
+        5,
+        22
+      ],
+      "section": "Conclusion",
+      "support": "The Commission has concluded that the IAU investigation was comprehensive.",
+      "people": []
+    },
+    {
+      "text": "The Commission supported introducing police body cameras and planned to seek an update on work addressing prosecution issues after a year.",
+      "pages": [
+        21,
+        22
+      ],
+      "section": "Conclusion",
+      "support": "In one year's time, the Commission will seek further information from the WA Police Force",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Commission has concluded that the IAU investigation was comprehensive.",
+      "page": 22,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "The conclusions reached by IAU as to the conduct of various officers were open.",
+      "page": 22,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The Commission reviewed whether police conclusions were open; it did not make a fresh misconduct finding."
+}

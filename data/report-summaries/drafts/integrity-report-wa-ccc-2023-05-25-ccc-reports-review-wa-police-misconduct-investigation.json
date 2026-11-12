@@ -1,0 +1,56 @@
+{
+  "slug": "integrity-report-wa-ccc-2023-05-25-ccc-reports-review-wa-police-misconduct-investigation",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Overview",
+    "first_page": 4,
+    "last_page": 5
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission reviewed WA Police's handling of a complaint about an arrest for disorderly behaviour.",
+      "pages": [
+        4
+      ],
+      "support": "This report details how the Commission monitored and reviewed the way WA Police dealt with an allegation of misconduct.",
+      "people": []
+    },
+    {
+      "text": "The Commission found the investigation inadequate, citing excessive delay, poor transparency and weaknesses in quality assurance.",
+      "pages": [
+        14
+      ],
+      "support": "Deficiencies in WA Police processes, such as the quality assurance process, were exposed by the lack of transparency.",
+      "people": []
+    },
+    {
+      "text": "The Commission accepted that the arrest was lawful but considered it and the subsequent assault charge oppressive in the circumstances.",
+      "pages": [
+        5
+      ],
+      "support": "The Commission considers the arrest and subsequent Assault Public Officer charge were oppressive in the circumstances.",
+      "people": []
+    },
+    {
+      "text": "The Commission made one recommendation to clarify timeframes for investigations and reviews, with a further review planned after 12 months.",
+      "pages": [
+        14
+      ],
+      "support": "Review and amend policies and procedures to clearly articulate acceptable timeframes for investigation and review, including internal reviews of such investigations.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Commission considers the investigation inadequate.",
+      "page": 14,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "The Commission considers the arrest, and the subsequent charge of Assault Public Officer, were oppressive in the circumstances.",
+      "page": 13,
+      "kind": "opinion"
+    }
+  ],
+  "notes": ""
+}

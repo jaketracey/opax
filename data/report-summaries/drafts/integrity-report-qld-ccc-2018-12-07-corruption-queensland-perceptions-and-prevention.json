@@ -1,0 +1,51 @@
+{
+  "slug": "integrity-report-qld-ccc-2018-12-07-corruption-queensland-perceptions-and-prevention",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The Crime and Corruption Commission funded additional Queensland participation in a national survey about corruption perceptions and experiences.",
+      "pages": [
+        1
+      ],
+      "section": "Corruption in Queensland: perceptions and prevention",
+      "support": "The Crime and Corruption Commission (CCC) provided additional funding to increase the number of Queenslanders surveyed.",
+      "people": []
+    },
+    {
+      "text": "The CCC reported that Queensland respondents trusted local government more than state or federal government.",
+      "pages": [
+        2
+      ],
+      "section": "Survey results",
+      "support": "more confidence in the local government than either the state government or federal government.",
+      "people": []
+    },
+    {
+      "text": "The CCC reported that nearly one in five Queensland respondents accepted using political connections for personal benefit or helping relatives and friends into public jobs without proper processes.",
+      "pages": [
+        3
+      ],
+      "section": "Views on specific behaviours",
+      "support": "Nearly one in five Queensland respondents believe that using political connections for personal gain",
+      "people": []
+    },
+    {
+      "text": "The CCC concluded that further work was needed to improve public confidence and reduce tolerance of corruption.",
+      "pages": [
+        3
+      ],
+      "section": "Views on specific behaviours",
+      "support": "more work to do to increase the community’s confidence in government, reduce tolerance for corruption",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "While the Queensland results are largely on par with the national average, they confirm there is more work to do to increase the community’s confidence in government, reduce tolerance for corruption and reduce perceptions that corruption is occurring in Queensland.",
+      "page": 3,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "A short survey snapshot without a separate executive summary; perceptions are reported as survey responses, not established misconduct. No new recommendations list."
+}

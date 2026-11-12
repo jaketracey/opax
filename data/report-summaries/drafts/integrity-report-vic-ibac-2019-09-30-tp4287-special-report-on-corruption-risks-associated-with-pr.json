@@ -1,0 +1,63 @@
+{
+  "slug": "integrity-report-vic-ibac-2019-09-30-tp4287-special-report-on-corruption-risks-associated-with-pr",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Summary of investigations and key findings",
+    "first_page": 7,
+    "last_page": 12
+  },
+  "sentences": [
+    {
+      "text": "IBAC examined procurement corruption in Victorian councils through Operations Dorset and Royston, drawing also on other investigations.",
+      "pages": [
+        8,
+        9
+      ],
+      "support": "two investigations by IBAC into allegations of corrupt conduct involving procurement in the Victorian local government sector",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "The investigations concerned procurement and conflicts of interest at Darebin City Council and the City of Ballarat Council.",
+      "pages": [
+        9,
+        10
+      ],
+      "support": "subverted procurement processes and failed to declare and manage conflicts of interest",
+      "section": "IBAC’s investigations",
+      "people": []
+    },
+    {
+      "text": "IBAC found that a Darebin project manager helped an associate gain financially and that a Ballarat manager unlawfully authorised payments and obtained benefits.",
+      "pages": [
+        9,
+        10
+      ],
+      "support": "IBAC found the project manager played a critical role in an associate obtaining a large financial advantage",
+      "section": "IBAC’s investigations",
+      "people": []
+    },
+    {
+      "text": "It made two recommendations for the councils to strengthen procurement controls and for Local Government Victoria to consider a supplier code of conduct.",
+      "pages": [
+        12
+      ],
+      "support": "Local Government Victoria consider the development of a code of conduct for suppliers to Victorian councils",
+      "section": "Recommendations",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "IBAC found the project manager played a critical role in an associate obtaining a large financial advantage from the council.",
+      "page": 9,
+      "kind": "finding"
+    },
+    {
+      "quote": "IBAC found that over a two-year period, Mr Carey unlawfully authorised payments totalling $184,123 and that he obtained $103,630 in benefits by way of direct pecuniary interest or secret commissions.",
+      "page": 10,
+      "kind": "finding"
+    }
+  ],
+  "notes": "The summary uses roles rather than names and does not expand on reported criminal proceedings. Two numbered recommendations are made in this report."
+}

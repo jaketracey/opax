@@ -1,0 +1,89 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2018-12-07-corruption-queensland-perceptions-and-prevention",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Corruption in Queensland: perceptions and prevention",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Corruption-in-Queensland-Corruption-Barometer-2018.pdf",
+  "document": "Corruption in Queensland: perceptions and prevention",
+  "sha256": "da1f2b0ad2b4e69207933f10932a50b572393f41308df8f74407b22947a38bef",
+  "pages": 5,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission funded additional Queensland participation in a national survey about corruption perceptions and experiences.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Corruption-in-Queensland-Corruption-Barometer-2018.pdf",
+      "document": "Corruption in Queensland: perceptions and prevention",
+      "page": 1
+     }
+    ],
+    "section": "Corruption in Queensland: perceptions and prevention"
+   },
+   {
+    "text": "The CCC reported that Queensland respondents trusted local government more than state or federal government.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Corruption-in-Queensland-Corruption-Barometer-2018.pdf",
+      "document": "Corruption in Queensland: perceptions and prevention",
+      "page": 2
+     }
+    ],
+    "section": "Survey results"
+   },
+   {
+    "text": "The CCC reported that nearly one in five Queensland respondents accepted using political connections for personal benefit or helping relatives and friends into public jobs without proper processes.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Corruption-in-Queensland-Corruption-Barometer-2018.pdf",
+      "document": "Corruption in Queensland: perceptions and prevention",
+      "page": 3
+     }
+    ],
+    "section": "Views on specific behaviours"
+   },
+   {
+    "text": "The CCC concluded that further work was needed to improve public confidence and reduce tolerance of corruption.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Corruption-in-Queensland-Corruption-Barometer-2018.pdf",
+      "document": "Corruption in Queensland: perceptions and prevention",
+      "page": 3
+     }
+    ],
+    "section": "Views on specific behaviours"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "While the Queensland results are largely on par with the national average, they confirm there is more work to do to increase the community’s confidence in government, reduce tolerance for corruption and reduce perceptions that corruption is occurring in Queensland.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/2019-08/Corruption-in-Queensland-Corruption-Barometer-2018.pdf",
+     "document": "Corruption in Queensland: perceptions and prevention",
+     "page": 3
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

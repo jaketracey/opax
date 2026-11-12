@@ -1,0 +1,38 @@
+{
+  "slug": "integrity-report-act-ic-2022-02-03-operation-lyrebird-part-1",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The ACT Integrity Commission considered a parliamentary committee’s corruption complaint about a lease acquisition beside Glebe Park in Canberra City.",
+      "pages": [
+        5,
+        6
+      ],
+      "support": "the lease of land adjacent to Glebe Park comprising Block 24",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "It examined the earlier audit and committee reports and the documentary and oral material gathered for them.",
+      "pages": [
+        6
+      ],
+      "support": "detailed examination of the Auditor-General’s Report as well as that of the Committee",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that there was no reasonable basis to suspect corrupt conduct in the acquisition and that further investigation was unjustified.",
+      "pages": [
+        43,
+        44
+      ],
+      "support": "The evidence does not provide grounds for a reasonable suspicion",
+      "section": "Conclusion",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "No standalone executive summary identified. Existing OPAX findings mean no additional findings quotes. No recommendations list identified."
+}

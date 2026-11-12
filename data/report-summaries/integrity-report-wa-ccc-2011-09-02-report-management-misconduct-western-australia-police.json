@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2011-09-02-report-management-misconduct-western-australia-police",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on the Management of Misconduct by Western Australia Police",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Management%20of%20Misconduct%20by%20Western%20Australia%20Police.pdf",
+  "document": "Report on the Management of Misconduct by Western Australia Police",
+  "sha256": "57fe5e086761f1271de3d85c4fe3272b193463e8514a13641e41440e14f2caf5",
+  "pages": 94,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 17,
+  "last_page": 21,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Management%20of%20Misconduct%20by%20Western%20Australia%20Police.pdf#page=17"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission assessed the WA Police capacity to manage misconduct during 2008 and 2009.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Management%20of%20Misconduct%20by%20Western%20Australia%20Police.pdf",
+      "document": "Report on the Management of Misconduct by Western Australia Police",
+      "page": 17
+     }
+    ],
+    "section": "WAPOL Misconduct Management System"
+   },
+   {
+    "text": "It investigated three previously mishandled cases, reviewed allegations at different risk levels and visited police districts and organisational units.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Management%20of%20Misconduct%20by%20Western%20Australia%20Police.pdf",
+      "document": "Report on the Management of Misconduct by Western Australia Police",
+      "page": 17
+     }
+    ],
+    "section": "WAPOL Misconduct Management System"
+   },
+   {
+    "text": "The Commission found that police dealt adequately with more than 96 per cent of allegations, but identified weaknesses in some high-risk investigations and the classification of lower-risk matters.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Management%20of%20Misconduct%20by%20Western%20Australia%20Police.pdf",
+      "document": "Report on the Management of Misconduct by Western Australia Police",
+      "page": 17
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Management%20of%20Misconduct%20by%20Western%20Australia%20Police.pdf",
+      "document": "Report on the Management of Misconduct by Western Australia Police",
+      "page": 18
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Management%20of%20Misconduct%20by%20Western%20Australia%20Police.pdf",
+      "document": "Report on the Management of Misconduct by Western Australia Police",
+      "page": 20
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It concluded that some investigation failures reflected insufficient rigour and willingness to address difficult issues.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Management%20of%20Misconduct%20by%20Western%20Australia%20Police.pdf",
+      "document": "Report on the Management of Misconduct by Western Australia Police",
+      "page": 93
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "Its seven recommendations covered apologies, conflicts of interest, computer access, investigation quality, complaint resolution training and clearer complaint procedures.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Management%20of%20Misconduct%20by%20Western%20Australia%20Police.pdf",
+      "document": "Report on the Management of Misconduct by Western Australia Police",
+      "page": 94
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

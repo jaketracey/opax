@@ -1,0 +1,37 @@
+{
+  "slug": "integrity-report-wa-ccc-2024-05-15-procurement-and-tendering-risks-again-spotlight",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "INTRODUCTION",
+    "first_page": 4,
+    "last_page": 5
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission investigated whether serious misconduct occurred in the award of a security services tender by the Mid West Ports Authority.",
+      "pages": [
+        4
+      ],
+      "support": "which led to the commencement of an investigation to determine whether serious misconduct had or may have occurred",
+      "people": []
+    },
+    {
+      "text": "The Commission identified risks arising from departures from ordinary procurement and tender procedures.",
+      "pages": [
+        4
+      ],
+      "support": "the Commission's investigation identified several serious misconduct risks regarding the deviation from standard procurement and tender procedures during the process.",
+      "people": []
+    },
+    {
+      "text": "The Commission made no serious misconduct finding against any employee of the authority and reported the risks to assist public authorities with prevention.",
+      "pages": [
+        15
+      ],
+      "support": "did not make a finding of serious misconduct against any MWPA employee.",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "INTRODUCTION provides an overview of the investigation, its purpose and outcome; used as the equivalent summary. The existing OPAX finding is not duplicated."
+}

@@ -75,11 +75,11 @@
   "items": []
  },
  "gate": {
-  "checked_at": "2026-11-12T08:08:34+00:00",
+  "checked_at": "2026-11-12T08:47:17+00:00",
   "dropped": []
  },
  "generation": {
   "engine": "Codex (gpt-6.1-sol)",
-  "lane": "orchestrator-recheck-2"
+  "lane": "central-core"
  }
 }

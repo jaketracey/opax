@@ -1,0 +1,54 @@
+{
+ "slug": "integrity-report-wa-ccc-2020-02-20-review-recommendations-made-following-unauthorised-5892bee7",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission reviewed the Public Transport Authority's response to two recommendations following an unauthorised disclosure of staff information.",
+    "pages": [
+     4
+    ],
+    "support": "This report details the Commission's review of that response.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The recommendations sought stronger access controls and staff awareness, and the review examined security changes, policies and training.",
+    "pages": [
+     4,
+     6,
+     8
+    ],
+    "support": "The Commission also made two recommendations that the PTA:",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that the authority had adequately addressed the concerns and closed both recommendations.",
+    "pages": [
+     10
+    ],
+    "support": "The Commission considers these recommendations to be closed.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 3,
+  "sentences_pass": 3,
+  "findings": 0,
+  "findings_pass": 0,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

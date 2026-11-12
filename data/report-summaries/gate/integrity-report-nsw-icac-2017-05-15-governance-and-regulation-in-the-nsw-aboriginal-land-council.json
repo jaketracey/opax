@@ -1,0 +1,97 @@
+{
+ "slug": "integrity-report-nsw-icac-2017-05-15-governance-and-regulation-in-the-nsw-aboriginal-land-council",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The NSW Independent Commission Against Corruption examines governance challenges in local Aboriginal land councils and how accountability and regulation could be improved.",
+    "pages": [
+     7
+    ],
+    "support": "This report examines those challenges and the factors contributing to them.",
+    "section": "Executive summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It considers member participation, board capacity, conflicts of interest and oversight by the NSW Aboriginal Land Council and the Registrar.",
+    "pages": [
+     7,
+     8
+    ],
+    "support": "Member participation rates at meetings in many LALCs are low",
+    "section": "Executive summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission identifies low participation, limits to board training and overlapping regulatory functions as barriers to effective accountability.",
+    "pages": [
+     7,
+     8
+    ],
+    "support": "there is an overlap between regulators such as NSWALC and the Registrar",
+    "section": "Executive summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission makes 11 improvement suggestions covering member engagement, governance rules, board skills, regulatory coordination, resources and oversight of council entities.",
+    "pages": [
+     8,
+     9
+    ],
+    "support": "The following suggestions for improvement are made in this report.",
+    "section": "Suggestions for improvement",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "There is scope to strengthen the effectiveness of both the Registrar and NSWALC in overseeing LALCs.",
+    "page": 40,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "There is potential to strengthen members’ ability to hold the leadership of LALCs accountable.",
+    "page": 22,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Executive summary",
+   "first_page": 7,
+   "last_page": 9
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

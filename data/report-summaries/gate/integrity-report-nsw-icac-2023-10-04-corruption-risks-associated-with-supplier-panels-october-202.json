@@ -1,0 +1,79 @@
+{
+ "slug": "integrity-report-nsw-icac-2023-10-04-corruption-risks-associated-with-supplier-panels-october-202",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The NSW Independent Commission Against Corruption explains corruption risks in agencies’ internal supplier panels.",
+    "pages": [
+     1
+    ],
+    "support": "explains the key corruption risks associated with forming, using and maintaining supplier panels.",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examines how suppliers are selected, how work is allocated and how panels are maintained.",
+    "pages": [
+     2
+    ],
+    "support": "supplier-panel procurement can be divided into three phases",
+    "section": "What is a supplier panel?",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission cautions that weaknesses in selecting panel members can leave later purchasing vulnerable to corruption.",
+    "pages": [
+     2
+    ],
+    "support": "if the processes used to establish the panel in Phase 1 are flawed",
+    "section": "Phase 1 – panel formation",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission recommends formal contracting arrangements and a panel administrator to monitor purchasing, prices, due diligence and conflicts of interest.",
+    "pages": [
+     7,
+     8
+    ],
+    "support": "the Commission recommends that an agency’s legal or contract management staff be involved in executing the necessary contractual arrangements.",
+    "section": "Phase 3 – Panel maintenance",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Agencies should therefore treat formation of a supplier panel with the same level of formality and probity as a procurement exercise.",
+    "page": 3,
+    "kind": "recommendation"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

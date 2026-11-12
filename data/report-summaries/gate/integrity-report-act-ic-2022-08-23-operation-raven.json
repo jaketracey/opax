@@ -1,0 +1,78 @@
+{
+ "slug": "integrity-report-act-ic-2022-08-23-operation-raven",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The ACT Integrity Commission assessed a corruption complaint referred after parliamentary scrutiny of the sale of a Dickson car park to the Tradies Club.",
+    "pages": [
+     6,
+     7
+    ],
+    "support": "The Committee’s referral was accepted by the Commission as a corruption complaint",
+    "section": "Executive Summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examined the sale process and the government’s linked purchase of land at Downer.",
+    "pages": [
+     6,
+     148
+    ],
+    "support": "examined the facts surrounding the sale of Block 30 and the purchase of the Downer site",
+    "section": "Conclusion",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that the sale met legal requirements and raised no reasonable suspicion of corruption, although some decisions needed better documentation.",
+    "pages": [
+     7,
+     9
+    ],
+    "support": "the Commission found that the land sale process itself was adequate and complied with all necessary legal requirements",
+    "section": "Executive Summary",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It discontinued the matter because it considered further action on the corruption report unjustified.",
+    "pages": [
+     148
+    ],
+    "support": "further dealing with the corruption report is not justified",
+    "section": "Conclusion",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [],
+ "own_summary": {
+  "item": {
+   "heading": "Executive Summary",
+   "first_page": 6,
+   "last_page": 10
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 0,
+  "findings_pass": 0,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

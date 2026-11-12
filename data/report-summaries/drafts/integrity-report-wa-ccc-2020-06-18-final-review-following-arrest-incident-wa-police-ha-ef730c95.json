@@ -1,0 +1,48 @@
+{
+  "slug": "integrity-report-wa-ccc-2020-06-18-final-review-following-arrest-incident-wa-police-ha-ef730c95",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission reviewed action by WA Police following concerns about prosecution standards raised in an earlier report on an arrest at Hamilton Hill.",
+      "pages": [
+        5
+      ],
+      "support": "This report considers the actions taken by the WA Police Force in response to the concerns raised in the initial report.",
+      "people": []
+    },
+    {
+      "text": "The review considered organisational changes and a statewide examination of prosecuting services, including brief quality and prosecutor experience.",
+      "pages": [
+        6,
+        7
+      ],
+      "support": "The Prosecuting Services Division advised that a number of preliminary findings had been identified.",
+      "people": []
+    },
+    {
+      "text": "The Commission recognised progress but remained cautious about effectiveness because the statewide review findings had not been endorsed or published.",
+      "pages": [
+        7
+      ],
+      "support": "the Commission remains cautious as to the effectiveness of such actions in addressing future risks.",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that WA Police was taking appropriate action and closed its review.",
+      "pages": [
+        7
+      ],
+      "support": "The Commission considers the WA Police Force is taking appropriate steps and considers this review to be complete.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Commission considers the WA Police Force is taking appropriate steps and considers this review to be complete.",
+      "page": 7,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "No separate executive summary or equivalent consolidated summary was identified. Preliminary findings of the police review are distinguished from the Commission's conclusions."
+}

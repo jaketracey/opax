@@ -1,0 +1,97 @@
+{
+ "slug": "integrity-report-vic-ibac-2016-10-20-tp2847-special-report-on-operation-exmouth",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "IBAC’s Operation Exmouth investigated allegations that a senior Places Victoria manager improperly awarded work to related businesses under its Fibre to the Home project.",
+    "pages": [
+     6
+    ],
+    "support": "Operation Exmouth investigated allegations that Mr Petrone dishonestly awarded contracts for work under the Fibre to the Home project",
+    "section": "Overview",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "IBAC found that the manager helped a related family secure a financial advantage while disregarding procurement and conflict of interest rules.",
+    "pages": [
+     6,
+     20
+    ],
+    "support": "IBAC’s investigation found that Mr Petrone played a critical role in one family",
+    "section": "Overview",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "It also found inadequate guidance and missed opportunities to detect the conduct, but considered the evidence insufficient to substantiate allegations of criminal behaviour.",
+    "pages": [
+     20
+    ],
+    "support": "IBAC considered it was insufficient to substantiate allegations which might amount to criminal behaviour",
+    "section": "Conclusion",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "IBAC made three recommendations on controls and reporting at Places Victoria, and contractors’ understanding of public sector integrity obligations.",
+    "pages": [
+     6,
+     20,
+     21
+    ],
+    "support": "The Victorian Public Sector Commission consider ways to inform contractors to the public sector of their obligations",
+    "section": "Recommendations",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "IBAC’s investigation found that Mr Petrone played a critical role in one family (with whom he has a familial relationship) obtaining a large financial advantage through their subcontracting businesses.",
+    "page": 6,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "After due consideration of the available evidence, IBAC considered it was insufficient to substantiate allegations which might amount to criminal behaviour on the part of Mr Petrone.",
+    "page": 20,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Overview",
+   "first_page": 5,
+   "last_page": 6
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

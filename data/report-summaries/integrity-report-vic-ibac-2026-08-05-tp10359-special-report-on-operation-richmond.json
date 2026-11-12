@@ -1,0 +1,135 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2026-08-05-tp10359-special-report-on-operation-richmond",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Special report on Operation Richmond",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a2cbe/globalassets/tabled-paper-documents/tabled-paper-10359/operation-richmond-special-report---august-2026.pdf",
+  "document": "Operation Richmond special report - August 2026",
+  "sha256": "113af613742e6b8556c74fdd20d0b9de39a134819f9b4d933c9365ea01472d9c",
+  "pages": 120,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 16,
+  "last_page": 19,
+  "link": "https://www.parliament.vic.gov.au/4a2cbe/globalassets/tabled-paper-documents/tabled-paper-10359/operation-richmond-special-report---august-2026.pdf#page=16"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC’s Operation Richmond investigated alleged corruption in fire service bargaining agreements and the establishment of Fire Rescue Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2cbe/globalassets/tabled-paper-documents/tabled-paper-10359/operation-richmond-special-report---august-2026.pdf",
+      "document": "Operation Richmond special report - August 2026",
+      "page": 6
+     }
+    ],
+    "section": "Commissioner foreword"
+   },
+   {
+    "text": "It examined negotiations for the Country Fire Authority and Metropolitan Fire Brigade agreements and decisions associated with fire service restructuring.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2cbe/globalassets/tabled-paper-documents/tabled-paper-10359/operation-richmond-special-report---august-2026.pdf",
+      "document": "Operation Richmond special report - August 2026",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2cbe/globalassets/tabled-paper-documents/tabled-paper-10359/operation-richmond-special-report---august-2026.pdf",
+      "document": "Operation Richmond special report - August 2026",
+      "page": 16
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2cbe/globalassets/tabled-paper-documents/tabled-paper-10359/operation-richmond-special-report---august-2026.pdf",
+      "document": "Operation Richmond special report - August 2026",
+      "page": 18
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "IBAC did not substantiate the alleged blackmail or find corrupt conduct under its Act, but found conduct by senior officials that increased corruption risks.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2cbe/globalassets/tabled-paper-documents/tabled-paper-10359/operation-richmond-special-report---august-2026.pdf",
+      "document": "Operation Richmond special report - August 2026",
+      "page": 16
+     }
+    ],
+    "section": "What IBAC found"
+   },
+   {
+    "text": "IBAC concluded that undisclosed negotiations weakened accountability and that board appointments were manipulated to secure support for the agreements.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2cbe/globalassets/tabled-paper-documents/tabled-paper-10359/operation-richmond-special-report---august-2026.pdf",
+      "document": "Operation Richmond special report - August 2026",
+      "page": 16
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2cbe/globalassets/tabled-paper-documents/tabled-paper-10359/operation-richmond-special-report---august-2026.pdf",
+      "document": "Operation Richmond special report - August 2026",
+      "page": 19
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "It made three recommendations covering ministerial values and conduct rules, a ministerial handbook and training on ministers’ obligations.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2cbe/globalassets/tabled-paper-documents/tabled-paper-10359/operation-richmond-special-report---august-2026.pdf",
+      "document": "Operation Richmond special report - August 2026",
+      "page": 19
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2cbe/globalassets/tabled-paper-documents/tabled-paper-10359/operation-richmond-special-report---august-2026.pdf",
+      "document": "Operation Richmond special report - August 2026",
+      "page": 30
+     }
+    ],
+    "section": "Corruption risks and recommendations for reform"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "IBAC found no evidence for the alleged blackmail and did not substantiate that allegation.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2cbe/globalassets/tabled-paper-documents/tabled-paper-10359/operation-richmond-special-report---august-2026.pdf",
+     "document": "Operation Richmond special report - August 2026",
+     "page": 16
+    }
+   },
+   {
+    "quote": "IBAC found that the appointment processes for the CFA and MFB Boards lacked transparency and were manipulated to ensure that the appointees would be amenable to resolving the respective disputes and following directions to approve the respective EBAs in a form acceptable to government.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2cbe/globalassets/tabled-paper-documents/tabled-paper-10359/operation-richmond-special-report---august-2026.pdf",
+     "document": "Operation Richmond special report - August 2026",
+     "page": 19
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

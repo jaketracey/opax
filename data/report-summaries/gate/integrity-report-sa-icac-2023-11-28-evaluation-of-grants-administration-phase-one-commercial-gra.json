@@ -1,0 +1,83 @@
+{
+ "slug": "integrity-report-sa-icac-2023-11-28-evaluation-of-grants-administration-phase-one-commercial-gra",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commission Against Corruption evaluated commercial grants administered by the industry and trade departments.",
+    "pages": [
+     6,
+     14
+    ],
+    "section": "The evaluation function and process",
+    "support": "focused on commercial, investment, research and entrepreneurial grants schemes.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examined policies, staff interviews and a sample of recipients, focusing on three programs supporting research, new businesses and exports.",
+    "pages": [
+     15
+    ],
+    "section": "The evaluation function and process",
+    "support": "conducting a sample audit of grant recipients for selected programs",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission found many sound features in grants management while identifying ways to strengthen controls against corruption.",
+    "pages": [
+     6
+    ],
+    "section": "Commissioner’s foreword",
+    "support": "the Commission was encouraged to find many sound features in the practices, policies and procedures underpinning grants management.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its 29 recommendations addressed conflicts of interest, training, records, due diligence, information security and program review across the two departments.",
+    "pages": [
+     8,
+     9,
+     10,
+     11,
+     12
+    ],
+    "section": "Recommendations",
+    "support": "Recommendations 1 - 15 are addressed to the Department for Industry, Innovation and Science",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Despite the exposure of these two departments to considerable corruption risks, the Commission was encouraged to find many sound features in the practices, policies and procedures underpinning grants management.",
+    "page": 6,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

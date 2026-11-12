@@ -1,0 +1,64 @@
+{
+  "slug": "royal-commission-cth-defence-veteran-suicide",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Executive summary",
+    "first_page": 13,
+    "last_page": 101
+  },
+  "sentences": [
+    {
+      "text": "The Royal Commission into Defence and Veteran Suicide was asked to identify systemic problems and propose ways to prevent suicide and suicidality among current and former ADF members.",
+      "pages": [
+        11
+      ],
+      "section": "Commissioners’ foreword",
+      "support": "This Royal Commission was tasked with identifying systemic problems and proposing \nsystemic solutions",
+      "people": []
+    },
+    {
+      "text": "It examined cultural, structural and systemic issues across the ADF, Defence and the Department of Veterans’ Affairs.",
+      "pages": [
+        11,
+        14
+      ],
+      "section": "Executive summary",
+      "support": "We \nwere directed to focus on cultural, structural and systemic issues",
+      "people": []
+    },
+    {
+      "text": "The Commission found that institutional problems in Defence and the Department of Veterans’ Affairs contributed to persistently high levels of suicide and suicidality.",
+      "pages": [
+        25
+      ],
+      "section": "Executive summary",
+      "support": "Our inquiry has found that numerous institutional drivers within Defence and DVA \ncontribute to the persistently high rates of suicide and suicidality",
+      "people": []
+    },
+    {
+      "text": "Its 122 recommendations address harm prevention, early intervention, coordination of support, institutional capability and stronger oversight.",
+      "pages": [
+        77,
+        78,
+        79,
+        80
+      ],
+      "section": "Recommendations: Lines of effort",
+      "support": "A full list of our 122 recommendations is outlined in the following section of this report.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Our inquiry has found that numerous institutional drivers within Defence and DVA \ncontribute to the persistently high rates of suicide and suicidality among serving and \nex-serving ADF members.",
+      "page": 25,
+      "kind": "finding"
+    },
+    {
+      "quote": "There is no comprehensive oversight of the defence and veteran ecosystem and its \nperformance in relation to suicide prevention.",
+      "page": 79,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The executive summary includes endnotes through PDF page 101; its narrative ends on PDF page 83. Witness accounts and research findings are not presented as independent findings of the Commission."
+}

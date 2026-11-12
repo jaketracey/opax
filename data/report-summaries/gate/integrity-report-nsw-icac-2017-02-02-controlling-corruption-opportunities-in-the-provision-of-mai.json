@@ -1,0 +1,95 @@
+{
+ "slug": "integrity-report-nsw-icac-2017-02-02-controlling-corruption-opportunities-in-the-provision-of-mai",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The NSW Independent Commission Against Corruption provides guidance for officials responsible for facilities maintenance systems and contracts.",
+    "pages": [
+     7
+    ],
+    "support": "The purpose of this report is to guide public officials who are accountable for decisions about facilities maintenance systems",
+    "section": "Overview",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It draws on interviews with senior staff from 24 organisations and case studies to examine outsourced maintenance arrangements.",
+    "pages": [
+     7,
+     8
+    ],
+    "support": "The report is informed by interviews with senior staff from 24 public and private sector organisations",
+    "section": "Overview",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concludes that effective maintenance controls require asset and cost knowledge, separation of key duties and connected information about performance.",
+    "pages": [
+     38
+    ],
+    "support": "Collecting and linking maintenance data about asset conditions and service history is a powerful method for preventing corruption.",
+    "section": "Chapter 7: Conclusion",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission advises agencies to select contracting arrangements that match their staff capabilities and information systems, then review them as circumstances change.",
+    "pages": [
+     38
+    ],
+    "support": "Agencies should design maintenance arrangements in accordance with their experience and capability.",
+    "section": "Chapter 7: Conclusion",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Regardless of its commercial arrangements, an agency should aim to be an informed client.",
+    "page": 38,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "Agencies should design maintenance arrangements in accordance with their experience and capability.",
+    "page": 38,
+    "kind": "recommendation"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Overview",
+   "first_page": 7,
+   "last_page": 7
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

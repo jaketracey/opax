@@ -1,0 +1,98 @@
+{
+ "slug": "integrity-report-wa-ccc-2026-02-10-final-review-wa-police-action-recommendations-deplo-f0b2b7ee",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission completed a final review of WA Police’s response to two earlier recommendations about deploying police dogs.",
+    "pages": [
+     3,
+     4
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "provided a list of completed actions in addressing the \nCommission's two recommendations.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The review examined canine policies and oversight, and research into the disproportionate deployment of dogs on Aboriginal and Torres Strait Islander people.",
+    "pages": [
+     3,
+     4,
+     5
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "WA Police undertake further analysis of police dog use to explore and address \nreasons for the higher representation",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that revised policies and procedures reduced ambiguity and risk and improved accountability for dog deployments.",
+    "pages": [
+     5
+    ],
+    "section": "The Commission’s review",
+    "support": "The written standards provide a framework for officer accountability and enable internal \nand external parties to oversee and/or investigate police dog deployment incidents.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission closed both recommendations as appropriately addressed, while noting that incomplete data limited analysis of disproportionate deployment.",
+    "pages": [
+     5,
+     7
+    ],
+    "section": "The Commission’s conclusion",
+    "support": "While data constraints limited further review, the Commission acknowledges the actions \ntaken by WA Police to integrate culturally sensitive practices into policy and procedures.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The Commission considers that WA Police appropriately responded to recommendation \none, and it is deemed closed.",
+    "page": 5,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The Commission considers that WA Police responded appropriately to recommendation \ntwo, and it is deemed closed.",
+    "page": 7,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "EXECUTIVE SUMMARY",
+   "first_page": 3,
+   "last_page": 4
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

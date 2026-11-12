@@ -1,0 +1,57 @@
+{
+  "slug": "integrity-report-nsw-icac-2013-08-20-managing-it-contractors-improving-it-outcomes",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Insights derived from effective organisations",
+    "first_page": 6,
+    "last_page": 7
+  },
+  "sentences": [
+    {
+      "text": "The NSW Independent Commission Against Corruption examines ways to manage information technology contractors while reducing corruption risks and achieving project goals.",
+      "pages": [
+        5,
+        6,
+        7
+      ],
+      "support": "provide insight into the diverse range of strategies and tactics used by organisations to minimise corruption and opportunistic behaviour",
+      "section": "Insights derived from effective organisations",
+      "people": []
+    },
+    {
+      "text": "It draws on discussions with executives, managers and auditors from public and private organisations about their contracting controls.",
+      "pages": [
+        6
+      ],
+      "support": "The Commission spoke with chief executive officers (CEOs), operations managers, IT managers, project managers and auditors",
+      "section": "Insights derived from effective organisations",
+      "people": []
+    },
+    {
+      "text": "The Commission reports that its investigations linked corruption opportunities to inadequate attention to basic controls over projects and contractors.",
+      "pages": [
+        6
+      ],
+      "support": "the Commission’s investigations and public inquiries have found that the opportunities and motivation for corrupt behaviour occurred",
+      "section": "Insights derived from effective organisations",
+      "people": []
+    },
+    {
+      "text": "Its guidance centres on five areas: business cases, separation of design and development, contractor selection, project supervision and exit planning.",
+      "pages": [
+        26
+      ],
+      "support": "all of these organisations pay close attention to the following five broad levers.",
+      "section": "Conclusion",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Contractors are able to manipulate their continued employment in the absence of an effective exit strategy.",
+      "page": 7,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The introductory Insights derived from effective organisations section provides an overview of the five control areas. No numbered formal recommendations list."
+}

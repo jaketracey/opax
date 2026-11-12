@@ -1,0 +1,90 @@
+{
+ "slug": "integrity-report-wa-ccc-2007-02-23-report-corruption-prevention-review-government-empl-60c10638",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission investigated eligibility for subsidised Government Employees Housing Authority accommodation and then reviewed corruption prevention arrangements.",
+    "pages": [
+     7,
+     8
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "the Commission formed the view that there was a need to undertake a corruption prevention review",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "Its investigation examined 500 tenancies across five locations, with a further case referred by the authority.",
+    "pages": [
+     7
+    ],
+    "section": "The investigation",
+    "support": "This investigation adopted a case study approach, examining 500 tenancies in five locations.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that unclear eligibility rules and inadequate administrative and communication systems weakened eligibility checks and the detection of possible misconduct.",
+    "pages": [
+     7,
+     8
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "these factors reduced both GEHA’s ability to ensure that those residing in GEHA accommodation are eligible",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It recognised improvements during the review and made six recommendations on eligibility law and policy, application forms, awareness, communications and random checks.",
+    "pages": [
+     8,
+     9,
+     33,
+     34
+    ],
+    "section": "Recommendations",
+    "support": "The Commission has made six recommendations in this report.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "In the Commission’s opinion, these factors reduced both GEHA’s ability to ensure that those residing in GEHA accommodation are eligible to do so, as well as the likelihood of potential misconduct being identified.",
+    "page": 8,
+    "kind": "opinion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "EXECUTIVE SUMMARY",
+   "first_page": 7,
+   "last_page": 9
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

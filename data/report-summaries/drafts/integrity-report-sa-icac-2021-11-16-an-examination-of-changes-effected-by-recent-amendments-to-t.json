@@ -1,0 +1,62 @@
+{
+  "slug": "integrity-report-sa-icac-2021-11-16-an-examination-of-changes-effected-by-recent-amendments-to-t",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Introduction",
+    "first_page": 4,
+    "last_page": 4
+  },
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commissioner Against Corruption assessed amendments to the ICAC Act and their effects on the public integrity system.",
+      "pages": [
+        4
+      ],
+      "section": "Introduction",
+      "support": "the changes made to the Act also have \nsignificant consequences for the entire scheme designed to ensure the integrity of public \nadministration",
+      "people": []
+    },
+    {
+      "text": "The Commissioner concluded that the changes increased the risk of corruption going undetected and weakened public administration’s ability to address it.",
+      "pages": [
+        4
+      ],
+      "section": "Introduction",
+      "support": "the \nchanges create an increased risk of corruption remaining hidden and undermine the \nability of public administration to deal with it.",
+      "people": []
+    },
+    {
+      "text": "The Commissioner said the amendments narrowed the Commission’s jurisdiction, removed its power to initiate investigations and restricted public reporting.",
+      "pages": [
+        5,
+        7,
+        8
+      ],
+      "section": "Curtailing the Commission’s operations",
+      "support": "The changes made by the amending Act limit the Commission’s jurisdiction, curtail \nits independence",
+      "people": []
+    },
+    {
+      "text": "The Commissioner also concluded that more complex reporting requirements were likely to reduce information reported about corruption, misconduct and maladministration.",
+      "pages": [
+        13
+      ],
+      "section": "The changes will mean less conduct is reported",
+      "support": "The new and more complex reporting requirements are likely \nto mean that less information about corruption, misconduct and maladministration is \nreported.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The changes made by the amending Act limit the Commission’s jurisdiction, curtail \nits independence and reduce its ability to effectively identify, deal with and prevent \ncorruption in public administration.",
+      "page": 5,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "The new and more complex reporting requirements are likely \nto mean that less information about corruption, misconduct and maladministration is \nreported.",
+      "page": 13,
+      "kind": "opinion"
+    }
+  ],
+  "notes": "The Introduction provides an overall assessment. This is the Commissioner’s contemporary assessment of legislative effects, not a statement of current law. No numbered recommendations list appears."
+}

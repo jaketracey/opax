@@ -1,0 +1,83 @@
+{
+ "slug": "integrity-report-sa-icac-2024-08-29-the-room-where-it-happens-lobbying-and-influence-in-south-au",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commission Against Corruption examined corruption risks arising from lobbying public officials and the effectiveness of the state’s regulatory scheme.",
+    "pages": [
+     22,
+     24
+    ],
+    "section": "INTRODUCTION",
+    "support": "This report examines corruption risks associated with lobbying and influencing activity aimed at public officials in South Australia",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commission considered the scope of regulation, transparency, former officials’ lobbying, local government and administration of the scheme.",
+    "pages": [
+     112
+    ],
+    "section": "CONCLUDING REMARKS",
+    "support": "identified limitations in the scope of the scheme, the regulation of lobbied parties",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that the scheme exposed only a small proportion of influencing activity to public scrutiny.",
+    "pages": [
+     112
+    ],
+    "section": "CONCLUDING REMARKS",
+    "support": "In its present form the regulatory scheme in this state admits only a shaft of light on a small part of influencing activity.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its 31 recommendations proposed broader coverage, disclosure of lobbying contacts, restrictions after public office, local government coverage and oversight by the Ombudsman.",
+    "pages": [
+     11,
+     14,
+     15,
+     17,
+     18
+    ],
+    "section": "RECOMMENDATIONS",
+    "support": "That the scheme created by the Lobbyists Act and Lobbyists Regulations should be regulated and administered by the Ombudsman.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Transparency is the best measure to combat the corruption risks associated with influencing activity.",
+    "page": 112,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

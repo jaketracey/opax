@@ -1,0 +1,160 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2005-12-19-report-wa-police-property-management-practices",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on WA Police Property Management Practices",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf",
+  "document": "Report on WA Police Property Management Practices.pdf",
+  "sha256": "ea28a4712829c903b3fba8af5d465b3122bc6314b8aa67252f2a4452984bc128",
+  "pages": 141,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive Summary",
+  "first_page": 11,
+  "last_page": 13,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission and WA Police jointly examined property handling after investigations exposed deficiencies in police property management.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf",
+      "document": "Report on WA Police Property Management Practices.pdf",
+      "page": 11
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "The inquiry assessed procedures and processes against good practice and considered ways to prevent property-related corruption and misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf",
+      "document": "Report on WA Police Property Management Practices.pdf",
+      "page": 11
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "It found weaknesses in storage security, record systems, auditing, resources and staff understanding of their responsibilities.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf",
+      "document": "Report on WA Police Property Management Practices.pdf",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf",
+      "document": "Report on WA Police Property Management Practices.pdf",
+      "page": 13
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "Its 42 recommendations covered central management, staffing and training, funding, storage, systems, procedures and legislation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf",
+      "document": "Report on WA Police Property Management Practices.pdf",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf",
+      "document": "Report on WA Police Property Management Practices.pdf",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf",
+      "document": "Report on WA Police Property Management Practices.pdf",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf",
+      "document": "Report on WA Police Property Management Practices.pdf",
+      "page": 16
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf",
+      "document": "Report on WA Police Property Management Practices.pdf",
+      "page": 17
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf",
+      "document": "Report on WA Police Property Management Practices.pdf",
+      "page": 18
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf",
+      "document": "Report on WA Police Property Management Practices.pdf",
+      "page": 19
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf",
+      "document": "Report on WA Police Property Management Practices.pdf",
+      "page": 20
+     }
+    ],
+    "section": "List of Recommendations"
+   },
+   {
+    "text": "The inquiry recommended giving civilian staff property management duties that did not require police powers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf",
+      "document": "Report on WA Police Property Management Practices.pdf",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf",
+      "document": "Report on WA Police Property Management Practices.pdf",
+      "page": 15
+     }
+    ],
+    "section": "People"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Inquiry found that there are no recognised national standards for police property management, which contrasts with the many legislative requirements impacting on the subject.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf",
+     "document": "Report on WA Police Property Management Practices.pdf",
+     "page": 11
+    }
+   },
+   {
+    "quote": "The Inquiry determined that property officers and, indeed, their supervisors, generally did not fully understand their responsibilities for the function.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20WA%20Police%20Property%20Management%20Practices.pdf",
+     "document": "Report on WA Police Property Management Practices.pdf",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

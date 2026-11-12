@@ -1,0 +1,80 @@
+{
+ "slug": "integrity-report-sa-icac-2024-04-30-evaluation-of-grants-administration-phase-two-emergency-gran",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commission Against Corruption evaluated emergency grants administered by the treasury and primary industries departments.",
+    "pages": [
+     6
+    ],
+    "section": "Commissioner’s foreword",
+    "support": "examines four programs administered by two departments, which delivered relief and recovery payments and other measures",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examined four programs responding to the pandemic, bushfires and floods, reviewing program controls rather than individual grant decisions.",
+    "pages": [
+     12
+    ],
+    "section": "The evaluation function and process",
+    "support": "practices, policies, and procedures have been evaluated at the program level, rather than at the level of administration of individual grants.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission found that both departments addressed the main corruption risks appropriately, while identifying improvements.",
+    "pages": [
+     6
+    ],
+    "section": "Commissioner’s foreword",
+    "support": "While several areas are identified for improvement, the agencies appropriately addressed key corruption risks in their administration of the programs.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its nine recommendations covered staffing for emergencies, data handling, public information, conflict declarations, preparation and access to Commonwealth information.",
+    "pages": [
+     8,
+     9,
+     10
+    ],
+    "section": "Recommendations",
+    "support": "Identifying and establishing data sharing arrangements in South Australian government agencies where emergency grants programs support similar activities.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "While several areas are identified for improvement, the agencies appropriately addressed key corruption risks in their administration of the programs.",
+    "page": 6,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

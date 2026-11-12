@@ -1,0 +1,55 @@
+{
+  "slug": "integrity-report-wa-ccc-2010-10-21-special-report-corruption-and-crime-commission-its-7e001fcd",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "Western Australia’s Corruption and Crime Commission brought together common legal principles and methods for use by reference in later misconduct reports.",
+      "pages": [
+        10
+      ],
+      "support": "set out those matters in a single section 88 report",
+      "section": "Purpose of Report",
+      "people": []
+    },
+    {
+      "text": "It explained its jurisdiction, the meaning of misconduct and public officer, and rules governing reporting and disclosure.",
+      "pages": [
+        11,
+        12,
+        13,
+        16,
+        17
+      ],
+      "support": "The term “public officer” is defined in section 3 of the CCC Act",
+      "section": "Generic or common matters",
+      "people": []
+    },
+    {
+      "text": "The Commission explained that it forms misconduct opinions using the civil standard of proof and does not determine criminal or disciplinary guilt.",
+      "pages": [
+        18
+      ],
+      "support": "the Commission does not determine whether any person has committed a criminal or disciplinary offence",
+      "section": "Opinions of Misconduct",
+      "people": []
+    },
+    {
+      "text": "It also described the opportunity for people and bodies to respond before adverse matters are reported.",
+      "pages": [
+        16
+      ],
+      "support": "the Commission must give the person or body a reasonable opportunity to make representations",
+      "section": "Reporting by the Commission",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Commission may form an opinion as to misconduct on the evidence before it only if satisfied of misconduct on the balance of probabilities.",
+      "page": 18,
+      "kind": "opinion"
+    }
+  ],
+  "notes": "No executive summary or equivalent findings overview is present. This report explains common legal and reporting principles; it does not investigate a particular allegation or make a numbered set of recommendations. Its legal descriptions are summarised as the Commission’s account in this report, not as current legal advice."
+}

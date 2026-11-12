@@ -1,0 +1,61 @@
+{
+  "slug": "integrity-report-qld-ccc-2026-11-09-sector-insights-local-government-fy-2020-2025",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Overview",
+    "first_page": 3,
+    "last_page": 3
+  },
+  "sentences": [
+    {
+      "text": "The Crime and Corruption Commission examined Queensland local government corruption risks using complaints, investigations, intelligence and public information from July 2020 to June 2025.",
+      "pages": [
+        3
+      ],
+      "support": "complaints received by the CCC relating to the local government sector between 1 July 2020 and \n30 June 2025",
+      "section": "Overview",
+      "people": []
+    },
+    {
+      "text": "It grouped councils by shared characteristics while recognising that location, size, climate and local industry shape individual councils’ risks.",
+      "pages": [
+        3
+      ],
+      "support": "corruption \nrisks and vulnerabilities are shaped by factors unique to the location, size, climate and primary industry",
+      "section": "Overview",
+      "people": []
+    },
+    {
+      "text": "The CCC identified management of people, processes and public assets as high-risk activities, and reported that elected officials were overrepresented in complaints.",
+      "pages": [
+        4
+      ],
+      "support": "Managing people, processes and public assets are consistently high-risk activities for the sector.",
+      "section": "Complaint trends and insights",
+      "people": []
+    },
+    {
+      "text": "The CCC outlined prevention measures including internal controls, employee screening, training, supervision, information management, audits and support for reporting wrongdoing.",
+      "pages": [
+        14,
+        15
+      ],
+      "support": "Some strategies that can help prevent corruption in local government include:",
+      "section": "Prevention strategies and resources",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Managing people, processes and public assets are consistently high-risk activities for the sector.",
+      "page": 4,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "While there are some consistent trends and themes across the local government sector, corruption \nrisks and vulnerabilities are shaped by factors unique to the location, size, climate and primary industry \nof each council area.",
+      "page": 3,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "Overrepresentation concerns complaints, not established corruption. Prevention strategies are unnumbered; no formal recommendation count is asserted."
+}

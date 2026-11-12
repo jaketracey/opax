@@ -1,0 +1,67 @@
+{
+  "slug": "integrity-report-qld-ccc-2019-05-09-corruption-audits-2019-2021",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Summary of audit",
+    "first_page": 10,
+    "last_page": 10
+  },
+  "sentences": [
+    {
+      "text": "The Crime and Corruption Commission audited three Queensland universities to assess how effectively they prevented and dealt with research fraud.",
+      "pages": [
+        8
+      ],
+      "support": "The objective of the audit was to evaluate the adequacy and effectiveness of the measures put in \nplace",
+      "section": "Scope and objective",
+      "people": []
+    },
+    {
+      "text": "It reviewed research governance, sampled funded projects and examined corruption complaints and serious research-misconduct allegations, excluding technical reviews of research data and teaching-related academic integrity.",
+      "pages": [
+        8,
+        9
+      ],
+      "support": "It excluded any technical \nreview of research data, results and outputs",
+      "section": "Scope and objective",
+      "people": []
+    },
+    {
+      "text": "The CCC found satisfactory prevention and complaints systems overall, while identifying improvements needed in governance, conflicts of interest, peer review, investigations and disciplinary responses.",
+      "pages": [
+        10
+      ],
+      "support": "The CCC found that the three universities had in place satisfactory complaints management and \nprevention systems",
+      "section": "Summary of audit",
+      "people": []
+    },
+    {
+      "text": "The CCC made twenty numbered recommendations across separate lists, addressing governance, training, compliance reporting, conflicts, peer review, investigation practices and university assets.",
+      "pages": [
+        12,
+        13,
+        15,
+        17,
+        18,
+        20,
+        22
+      ],
+      "support": "Mandate the completion of research training for all researchers and staff involved in research \nactivities, and schedule refresher training at least every two years.",
+      "section": "Recommendations",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The CCC’s audit found that one university’s investigation into research fraud did not adequately deal \nwith one of the most serious allegations of corrupt conduct made as a public interest disclosure (the \ncomplaint).",
+      "page": 18,
+      "kind": "finding"
+    },
+    {
+      "quote": "The CCC is of the view that in this matter consideration of further disciplinary action would have \nbeen appropriate to promote public confidence in the integrity of the university.",
+      "page": 22,
+      "kind": "opinion"
+    }
+  ],
+  "notes": "Metadata mismatch: the OPAX title/slug says Corruption Audits 2019-2021, but the supplied document is Reducing the risk of research fraud, July 2020. Summary follows that document. Twenty numbered recommendations are spread across seven lists (3+3+3+3+1+5+2). Findings quotes concern the university investigation and disciplinary handling, not independent findings that every underlying allegation was substantiated."
+}

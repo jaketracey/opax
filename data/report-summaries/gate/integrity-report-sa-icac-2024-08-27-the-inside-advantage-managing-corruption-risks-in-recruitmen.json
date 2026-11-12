@@ -1,0 +1,88 @@
+{
+ "slug": "integrity-report-sa-icac-2024-08-27-the-inside-advantage-managing-corruption-risks-in-recruitmen",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commission Against Corruption investigated allegations that public funds paid for selected internal applicants to obtain recruitment assistance.",
+    "pages": [
+     4
+    ],
+    "section": "Commissioner’s foreword",
+    "support": "The Commission investigated allegations that a Chief Executive of a public authority paid a recruitment company",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commission established that a chief executive approved assistance for four internal applicants, while a fifth applicant received no equivalent funding.",
+    "pages": [
+     5
+    ],
+    "section": "The investigation",
+    "support": "The investigation established that a Chief Executive approved the use of public funds to assist four internal candidates",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission found no corruption because there was no intention to favour candidates unfairly, but considered that the process could reasonably appear to give some an unfair advantage.",
+    "pages": [
+     5,
+     7
+    ],
+    "section": "The investigation; Conclusion",
+    "support": "The Commission determined that there was no intention to unfairly favour any candidate and therefore that there was no corruption.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its recommended safeguards covered conflict declarations, disclosure of prior development assistance, equal access to support, independent panel members and alternative referees.",
+    "pages": [
+     6
+    ],
+    "section": "Recommendations",
+    "support": "Clearly setting out that internal candidates must not receive, at the public agency’s expense, coaching, advice or information",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The Commission determined that there was no intention to unfairly favour any candidate and therefore that there was no corruption.",
+    "page": 5,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "While it may not have been the Chief Executive’s intention to unfairly advantage some applicants, it would be a reasonable perception that such an advantage was afforded to some applicants.",
+    "page": 7,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

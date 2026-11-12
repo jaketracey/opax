@@ -1,0 +1,43 @@
+{
+  "slug": "integrity-report-wa-ccc-2023-03-14-ccc-investigation-highlights-misconduct-risk",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Summary",
+    "first_page": 3,
+    "last_page": 3
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission investigated an allegation that a senior doctor tried to pressure a registrar to change a patient's recorded date of death.",
+      "pages": [
+        3
+      ],
+      "support": "It was alleged that an executive officer attempted to coerce a Medical Service Registrar into changing the date of death",
+      "people": []
+    },
+    {
+      "text": "The Commission did not substantiate the allegation and decided to take no further action.",
+      "pages": [
+        3
+      ],
+      "support": "The investigation did not substantiate the allegation. The Commission will therefore take no further action.",
+      "people": []
+    },
+    {
+      "text": "The Commission identified risks in reliance on paper medical records after clinical notes could not be located.",
+      "pages": [
+        6
+      ],
+      "support": "It did, however, highlight the serious misconduct risks in relying on paper records.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Commission has completed its investigation and has not identified serious misconduct in relation to the allegation.",
+      "page": 9,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The Commission expressly makes no finding about the cause or circumstances of the patient's death. No patient or medical practitioner is named in the summary."
+}

@@ -1,0 +1,57 @@
+{
+ "slug": "integrity-report-nsw-icac-2009-05-19-profiling-the-nsw-public-sector-2007-understanding-and-manag",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Independent Commission Against Corruption prepared this staff questionnaire to research public sector corruption risks and their management.",
+    "pages": [
+     2
+    ],
+    "support": "The Independent Commission Against Corruption (ICAC) is researching corruption \nrisks and risk management within the public sector.",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The questionnaire was sent to about 1200 randomly selected employees from about 30 public sector organisations.",
+    "pages": [
+     2
+    ],
+    "support": "A second questionnaire has been sent to approximately 1200 randomly \nselected employees from approximately 30 public sector organisations.",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "It asks employees about codes of conduct, gifts, access to electronic services and internal channels for reporting misconduct.",
+    "pages": [
+     11,
+     13,
+     19
+    ],
+    "support": "Does your organisation have a channel for internal reporting of misconduct or \nstaff wrongdoing?",
+    "section": "Organisational Strategies",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 3,
+  "sentences_pass": 3,
+  "findings": 0,
+  "findings_pass": 0,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

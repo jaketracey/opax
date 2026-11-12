@@ -1,0 +1,112 @@
+{
+ "slug": "integrity-report-vic-ibac-2022-10-25-tp6746-special-report-on-police-misconduct-issues-and-risks",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "IBAC reviewed misconduct risks involving Victoria Police’s Critical Incident Response Team through investigations, oversight and research.",
+    "pages": [
+     7,
+     8
+    ],
+    "support": "IBAC’s investigations, research, reviews, complaints received and other work in overseeing police have identified police misconduct issues and risks",
+    "section": "Reason for this report",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It focused on the Inflation Nightclub incident and Operations Lynd and Wingan, while drawing on other police and coronial work.",
+    "pages": [
+     8
+    ],
+    "support": "three incidents that are the focus of this report: the Inflation Nightclub incident and IBAC’s Operations Lynd and Wingan",
+    "section": "Reason for this report",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "IBAC found that force was proportionate in Lynd and Wingan, but officers failed to tell detained people why they were being held, contrary to human rights requirements.",
+    "pages": [
+     9
+    ],
+    "support": "this force was proportionate in the circumstances. However, IBAC also found",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It identified recurring weaknesses in force reporting, risk assessment, deployment communication and gender diversity.",
+    "pages": [
+     10,
+     11,
+     12,
+     53
+    ],
+    "support": "CIRT officers have repeatedly failed to accurately and comprehensively report their use of force",
+    "section": "Main misconduct risks and issues",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "IBAC made six further recommendations on force reporting, operational risk, deployment responsibilities and diversity.",
+    "pages": [
+     13,
+     14
+    ],
+    "support": "IBAC believes that there are further opportunities for Victoria Police to reduce the risk of misconduct by CIRT officers",
+    "section": "Recommendations",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "CIRT officers have repeatedly failed to accurately and comprehensively report their use of force.",
+    "page": 10,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "In Operation Lynd, IBAC found that CIRT lacked a handover procedure for individuals in its custody, and that CIRT officers did not understand their arrest and handover responsibilities, placing them at risk of acting inconsistently with the human rights of persons in their custody.",
+    "page": 11,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Overview, main findings, and recommendations",
+   "first_page": 7,
+   "last_page": 14
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

@@ -1,0 +1,59 @@
+{
+  "slug": "integrity-report-nsw-icac-2011-07-14-corruption-risks-in-nsw-government-procurement-recommendatio",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "NSW government procurement: the Commission’s interest",
+    "first_page": 4,
+    "last_page": 7
+  },
+  "sentences": [
+    {
+      "text": "The NSW Independent Commission Against Corruption reviews systemic weaknesses in public procurement and proposes reforms for government.",
+      "pages": [
+        4,
+        5
+      ],
+      "support": "The work of the ICAC indicates that statewide corruption risks with regard to procurement stem from a combination of system design and implementation weaknesses",
+      "section": "NSW government procurement: the Commission’s interest",
+      "people": []
+    },
+    {
+      "text": "Its research includes surveys of agencies and suppliers, interviews, focus groups, policy analysis and review of investigation and complaint data.",
+      "pages": [
+        4
+      ],
+      "support": "conducted interviews and focus groups with public sector procurement specialists and suppliers to government",
+      "section": "NSW government procurement: the Commission’s interest",
+      "people": []
+    },
+    {
+      "text": "The Commission concludes that unclear leadership, fragmented structures and complex rules weaken procurement, alongside inadequate support and compliance oversight.",
+      "pages": [
+        5,
+        18
+      ],
+      "support": "The ICAC’s examination of NSW public sector procurement has revealed a system that has grown and evolved over time without any clear leadership",
+      "section": "Conclusion",
+      "people": []
+    },
+    {
+      "text": "Its seven recommendations cover central leadership, a system review, simpler and aligned rules, better advice, staff competence and compliance monitoring.",
+      "pages": [
+        5,
+        6,
+        7
+      ],
+      "support": "This report makes the following seven recommendations aimed at establishing clear leadership",
+      "section": "NSW government procurement: the Commission’s interest",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The central agencies have focused on their policy considerations at the expense of providing assistance through effective information, advice, and support.",
+      "page": 18,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The opening Commission’s interest section provides the diagnosis and consolidated seven-recommendation overview. Submissions are not treated as independently established findings."
+}

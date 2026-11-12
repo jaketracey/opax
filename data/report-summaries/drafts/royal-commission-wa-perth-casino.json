@@ -1,0 +1,77 @@
+{
+  "slug": "royal-commission-wa-perth-casino",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Foreword",
+    "first_page": 10,
+    "last_page": 13
+  },
+  "sentences": [
+    {
+      "text": "The Perth Casino Royal Commission examined whether the casino licensee and associated Crown companies were suitable to conduct casino gaming, and whether Western Australia’s regulation was adequate.",
+      "pages": [
+        10
+      ],
+      "section": "Foreword",
+      "support": "The second area was the adequacy of the framework to regulate casinos in \nWestern Australia.",
+      "people": []
+    },
+    {
+      "text": "The Commission found that the licensee was unsuitable to retain its licence and that the associated companies were unsuitable to organise or conduct casino gaming.",
+      "pages": [
+        10,
+        14
+      ],
+      "section": "Foreword; Answers to Questions in the Terms of Reference",
+      "support": "Burswood Nominees Ltd is not a ‘suitable person’ to continue to hold the gaming licence for \nPerth Casino.",
+      "people": []
+    },
+    {
+      "text": "It also concluded that casino legislation needed replacement and identified shortcomings in the regulator’s performance and departmental support.",
+      "pages": [
+        11
+      ],
+      "section": "Foreword",
+      "support": "We have concluded that the legislation by which Perth Casino \nis regulated is not fit for purpose",
+      "people": []
+    },
+    {
+      "text": "The Commission proposed a path back to suitability involving about two years of remediation overseen by an independent monitor.",
+      "pages": [
+        10
+      ],
+      "section": "Foreword",
+      "support": "with their remediation \nactivities overseen by an independent monitor. This pathway would take about two years to travel.",
+      "people": []
+    },
+    {
+      "text": "Its 59 numbered recommendations address governance, gambling risks, regulatory capability and research data, including compulsory limits on gaming-machine losses and playing time.",
+      "pages": [
+        16,
+        17,
+        24
+      ],
+      "section": "Recommendations",
+      "support": "binding loss pre-commitment and play period limits scheme for electronic gaming machine \n(EGM) play at Perth Casino",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Burswood Nominees Ltd is not a ‘suitable person’ to continue to hold the gaming licence for \nPerth Casino.",
+      "page": 10,
+      "kind": "finding"
+    },
+    {
+      "quote": "We have concluded that the legislation by which Perth Casino \nis regulated is not fit for purpose and requires replacement with a modern regulatory framework.",
+      "page": 11,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "Consequently, some of Perth \nCasino’s patrons have suffered considerable and avoidable harms as a result of their gambling.",
+      "page": 12,
+      "kind": "finding"
+    }
+  ],
+  "notes": "The Foreword serves as an overview of scope, principal findings and proposed reforms; formal answers on suitability follow on PDF pages 14–15. The recommendation count is taken from the numbered list ending at 59 on PDF page 24. Suitability findings and proposed remediation are reported as at the report, without later developments."
+}

@@ -1,0 +1,57 @@
+{
+  "slug": "integrity-report-sa-icac-2024-08-27-the-inside-advantage-managing-corruption-risks-in-recruitmen",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commission Against Corruption investigated allegations that public funds paid for selected internal applicants to obtain recruitment assistance.",
+      "pages": [
+        4
+      ],
+      "section": "Commissioner’s foreword",
+      "support": "The Commission investigated allegations that a Chief Executive of a public authority paid a recruitment company",
+      "people": []
+    },
+    {
+      "text": "The Commission established that a chief executive approved assistance for four internal applicants, while a fifth applicant received no equivalent funding.",
+      "pages": [
+        5
+      ],
+      "section": "The investigation",
+      "support": "The investigation established that a Chief Executive approved the use of public funds to assist four internal candidates",
+      "people": []
+    },
+    {
+      "text": "The Commission found no corruption because there was no intention to favour candidates unfairly, but considered that the process could reasonably appear to give some an unfair advantage.",
+      "pages": [
+        5,
+        7
+      ],
+      "section": "The investigation; Conclusion",
+      "support": "The Commission determined that there was no intention to unfairly favour any candidate and therefore that there was no corruption.",
+      "people": []
+    },
+    {
+      "text": "Its recommended safeguards covered conflict declarations, disclosure of prior development assistance, equal access to support, independent panel members and alternative referees.",
+      "pages": [
+        6
+      ],
+      "section": "Recommendations",
+      "support": "Clearly setting out that internal candidates must not receive, at the public agency’s expense, coaching, advice or information",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Commission determined that there was no intention to unfairly favour any candidate and therefore that there was no corruption.",
+      "page": 5,
+      "kind": "finding"
+    },
+    {
+      "quote": "While it may not have been the Chief Executive’s intention to unfairly advantage some applicants, it would be a reasonable perception that such an advantage was afforded to some applicants.",
+      "page": 7,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "No separate executive summary or overview. Recommendations comprise five lettered safeguards under a single introductory recommendation, so no overall numbered recommendation count is asserted."
+}

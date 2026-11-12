@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2018-04-04-implementation-recommendations-arising-commissions-d59070d3",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "The Implementation of Recommendations Arising from the Commission's Investigation into Operation Aviemore - A Further Report",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20Implementation%20of%20Recommendations%20Arising%20from%20the%20Commission%26%23039%3Bs%20Investigation%20into%20Operation%20Aviemore%20-%20A%20Further%20Report.pdf",
+  "document": "The Implementation of Recommendations Arising from the Commission's Investigation into Operation Aviemore - A Further Report",
+  "sha256": "a2ce88b49c9b1f2c417c5f0d7744d3e5b0fb8f0fff29ddc228a01d24a7f3d25c",
+  "pages": 20,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed implementation of seven recommendations arising from its Operation Aviemore investigation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20Implementation%20of%20Recommendations%20Arising%20from%20the%20Commission%26%23039%3Bs%20Investigation%20into%20Operation%20Aviemore%20-%20A%20Further%20Report.pdf",
+      "document": "The Implementation of Recommendations Arising from the Commission's Investigation into Operation Aviemore - A Further Report",
+      "page": 4
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The recommendations addressed police interviewing, understanding and applying investigation powers, and police procedures.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20Implementation%20of%20Recommendations%20Arising%20from%20the%20Commission%26%23039%3Bs%20Investigation%20into%20Operation%20Aviemore%20-%20A%20Further%20Report.pdf",
+      "document": "The Implementation of Recommendations Arising from the Commission's Investigation into Operation Aviemore - A Further Report",
+      "page": 4
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission considered five recommendations implemented, with further work needed on cultural awareness training and interviewees' understanding of cautions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20Implementation%20of%20Recommendations%20Arising%20from%20the%20Commission%26%23039%3Bs%20Investigation%20into%20Operation%20Aviemore%20-%20A%20Further%20Report.pdf",
+      "document": "The Implementation of Recommendations Arising from the Commission's Investigation into Operation Aviemore - A Further Report",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20Implementation%20of%20Recommendations%20Arising%20from%20the%20Commission%26%23039%3Bs%20Investigation%20into%20Operation%20Aviemore%20-%20A%20Further%20Report.pdf",
+      "document": "The Implementation of Recommendations Arising from the Commission's Investigation into Operation Aviemore - A Further Report",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20Implementation%20of%20Recommendations%20Arising%20from%20the%20Commission%26%23039%3Bs%20Investigation%20into%20Operation%20Aviemore%20-%20A%20Further%20Report.pdf",
+      "document": "The Implementation of Recommendations Arising from the Commission's Investigation into Operation Aviemore - A Further Report",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20Implementation%20of%20Recommendations%20Arising%20from%20the%20Commission%26%23039%3Bs%20Investigation%20into%20Operation%20Aviemore%20-%20A%20Further%20Report.pdf",
+      "document": "The Implementation of Recommendations Arising from the Commission's Investigation into Operation Aviemore - A Further Report",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20Implementation%20of%20Recommendations%20Arising%20from%20the%20Commission%26%23039%3Bs%20Investigation%20into%20Operation%20Aviemore%20-%20A%20Further%20Report.pdf",
+      "document": "The Implementation of Recommendations Arising from the Commission's Investigation into Operation Aviemore - A Further Report",
+      "page": 20
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "It planned to assess progress on the two outstanding recommendations in 2019.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20Implementation%20of%20Recommendations%20Arising%20from%20the%20Commission%26%23039%3Bs%20Investigation%20into%20Operation%20Aviemore%20-%20A%20Further%20Report.pdf",
+      "document": "The Implementation of Recommendations Arising from the Commission's Investigation into Operation Aviemore - A Further Report",
+      "page": 20
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission considers five of the seven recommendations have been implemented and will review progress on two recommendations in 2019.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20Implementation%20of%20Recommendations%20Arising%20from%20the%20Commission%26%23039%3Bs%20Investigation%20into%20Operation%20Aviemore%20-%20A%20Further%20Report.pdf",
+     "document": "The Implementation of Recommendations Arising from the Commission's Investigation into Operation Aviemore - A Further Report",
+     "page": 20
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

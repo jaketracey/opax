@@ -1,0 +1,151 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2005-09-29-report-protecting-personal-data-public-sector",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on Protecting Personal Data in the Public Sector",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Protecting%20Personal%20Data%20in%20the%20Public%20Sector.pdf",
+  "document": "Report on Protecting Personal Data in the Public Sector.pdf",
+  "sha256": "a08a094f90bb253089da1aed86c68aeffd275ebe64543b4ee01cfa72fec72b8c",
+  "pages": 101,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive Summary",
+  "first_page": 9,
+  "last_page": 12,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Protecting%20Personal%20Data%20in%20the%20Public%20Sector.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission examined safeguards against unauthorised access to and disclosure of confidential personal information held by public agencies.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Protecting%20Personal%20Data%20in%20the%20Public%20Sector.pdf",
+      "document": "Report on Protecting Personal Data in the Public Sector.pdf",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Protecting%20Personal%20Data%20in%20the%20Public%20Sector.pdf",
+      "document": "Report on Protecting Personal Data in the Public Sector.pdf",
+      "page": 10
+     }
+    ],
+    "section": "Inquiry methods"
+   },
+   {
+    "text": "Its work covered laws and policies, staff selection and supervision, and staff awareness, using submissions, agency fieldwork and a staff survey.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Protecting%20Personal%20Data%20in%20the%20Public%20Sector.pdf",
+      "document": "Report on Protecting Personal Data in the Public Sector.pdf",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Protecting%20Personal%20Data%20in%20the%20Public%20Sector.pdf",
+      "document": "Report on Protecting Personal Data in the Public Sector.pdf",
+      "page": 10
+     }
+    ],
+    "section": "Inquiry methods"
+   },
+   {
+    "text": "The Commission concluded that legislation and policy were fragmented and inadequate.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Protecting%20Personal%20Data%20in%20the%20Public%20Sector.pdf",
+      "document": "Report on Protecting Personal Data in the Public Sector.pdf",
+      "page": 78
+     }
+    ],
+    "section": "Opinions"
+   },
+   {
+    "text": "It also found shortcomings in recruitment checks, training and supervision of staff handling confidential information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Protecting%20Personal%20Data%20in%20the%20Public%20Sector.pdf",
+      "document": "Report on Protecting Personal Data in the Public Sector.pdf",
+      "page": 78
+     }
+    ],
+    "section": "Opinions"
+   },
+   {
+    "text": "Its recommendations sought legislative reform, consolidated policies, stronger staff screening and access controls, and induction on information responsibilities.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Protecting%20Personal%20Data%20in%20the%20Public%20Sector.pdf",
+      "document": "Report on Protecting Personal Data in the Public Sector.pdf",
+      "page": 78
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Protecting%20Personal%20Data%20in%20the%20Public%20Sector.pdf",
+      "document": "Report on Protecting Personal Data in the Public Sector.pdf",
+      "page": 79
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Protecting%20Personal%20Data%20in%20the%20Public%20Sector.pdf",
+      "document": "Report on Protecting Personal Data in the Public Sector.pdf",
+      "page": 80
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Protecting%20Personal%20Data%20in%20the%20Public%20Sector.pdf",
+      "document": "Report on Protecting Personal Data in the Public Sector.pdf",
+      "page": 81
+     }
+    ],
+    "section": "Recommendations"
+   },
+   {
+    "text": "The Commission intended to review progress after about three years.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Protecting%20Personal%20Data%20in%20the%20Public%20Sector.pdf",
+      "document": "Report on Protecting Personal Data in the Public Sector.pdf",
+      "page": 82
+     }
+    ],
+    "section": "Follow-up"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "It is this Commission’s opinion that the relevant legislation and policy is inadequate and piecemeal, and improvements need to be made to the framework surrounding confidential personal information.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Protecting%20Personal%20Data%20in%20the%20Public%20Sector.pdf",
+     "document": "Report on Protecting Personal Data in the Public Sector.pdf",
+     "page": 78
+    }
+   },
+   {
+    "quote": "The training and supervision of public sector staff in the requirements to maintain confidentiality in the course of their employment are inadequate.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Protecting%20Personal%20Data%20in%20the%20Public%20Sector.pdf",
+     "document": "Report on Protecting Personal Data in the Public Sector.pdf",
+     "page": 78
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

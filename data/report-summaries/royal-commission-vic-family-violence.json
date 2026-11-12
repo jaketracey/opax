@@ -1,0 +1,124 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-vic-family-violence",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "Royal Commission into Family Violence",
+ "body": "Royal Commission into Family Violence",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a25f6/globalassets/tabled-paper-documents/tabled-paper-2291/1a_rfv_112ppa4_summaryrecommendations.web_dxqylhqv.pdf",
+  "document": "Report of the Royal Commission into Family Violence (8 Volumes) - Part 1",
+  "sha256": "72b21501a6f1ea617d10d8b15b1cad3ba1ea2044a3aa4c0ce53be26a909ba05d",
+  "pages": 116,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary",
+  "first_page": 9,
+  "last_page": 24,
+  "link": "https://www.parliament.vic.gov.au/4a25f6/globalassets/tabled-paper-documents/tabled-paper-2291/1a_rfv_112ppa4_summaryrecommendations.web_dxqylhqv.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Victoria’s Royal Commission into Family Violence was asked to identify effective prevention, early intervention, victim support, perpetrator accountability and coordinated responses.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25f6/globalassets/tabled-paper-documents/tabled-paper-2291/1a_rfv_112ppa4_summaryrecommendations.web_dxqylhqv.pdf",
+      "document": "Report of the Royal Commission into Family Violence (8 Volumes) - Part 1",
+      "page": 9
+     }
+    ],
+    "section": "The Commission’s task"
+   },
+   {
+    "text": "It examined the response across police, courts, support services, child protection and other government and community services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25f6/globalassets/tabled-paper-documents/tabled-paper-2291/1a_rfv_112ppa4_summaryrecommendations.web_dxqylhqv.pdf",
+      "document": "Report of the Royal Commission into Family Violence (8 Volumes) - Part 1",
+      "page": 9
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25f6/globalassets/tabled-paper-documents/tabled-paper-2291/1a_rfv_112ppa4_summaryrecommendations.web_dxqylhqv.pdf",
+      "document": "Report of the Royal Commission into Family Violence (8 Volumes) - Part 1",
+      "page": 14
+     }
+    ],
+    "section": "The Commission’s task; System limitations"
+   },
+   {
+    "text": "The Commission concluded that services were overwhelmed, responses were poorly coordinated, information sharing was inadequate and too little effort went into prevention and recovery.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25f6/globalassets/tabled-paper-documents/tabled-paper-2291/1a_rfv_112ppa4_summaryrecommendations.web_dxqylhqv.pdf",
+      "document": "Report of the Royal Commission into Family Violence (8 Volumes) - Part 1",
+      "page": 14
+     }
+    ],
+    "section": "System limitations"
+   },
+   {
+    "text": "Its 227 numbered recommendations seek stronger risk assessment and information sharing, better services and accountability, and sustained investment in prevention and response.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25f6/globalassets/tabled-paper-documents/tabled-paper-2291/1a_rfv_112ppa4_summaryrecommendations.web_dxqylhqv.pdf",
+      "document": "Report of the Royal Commission into Family Violence (8 Volumes) - Part 1",
+      "page": 22
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25f6/globalassets/tabled-paper-documents/tabled-paper-2291/1a_rfv_112ppa4_summaryrecommendations.web_dxqylhqv.pdf",
+      "document": "Report of the Royal Commission into Family Violence (8 Volumes) - Part 1",
+      "page": 53
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25f6/globalassets/tabled-paper-documents/tabled-paper-2291/1a_rfv_112ppa4_summaryrecommendations.web_dxqylhqv.pdf",
+      "document": "Report of the Royal Commission into Family Violence (8 Volumes) - Part 1",
+      "page": 54
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25f6/globalassets/tabled-paper-documents/tabled-paper-2291/1a_rfv_112ppa4_summaryrecommendations.web_dxqylhqv.pdf",
+      "document": "Report of the Royal Commission into Family Violence (8 Volumes) - Part 1",
+      "page": 114
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Services are not currently equipped to meet this high level of demand, which undermines the safety of those experiencing family violence and their potential for recovery.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a25f6/globalassets/tabled-paper-documents/tabled-paper-2291/1a_rfv_112ppa4_summaryrecommendations.web_dxqylhqv.pdf",
+     "document": "Report of the Royal Commission into Family Violence (8 Volumes) - Part 1",
+     "page": 14
+    }
+   },
+   {
+    "quote": "Victims are too often left to carry the burden of managing risk.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a25f6/globalassets/tabled-paper-documents/tabled-paper-2291/1a_rfv_112ppa4_summaryrecommendations.web_dxqylhqv.pdf",
+     "document": "Report of the Royal Commission into Family Violence (8 Volumes) - Part 1",
+     "page": 14
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:21+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

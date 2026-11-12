@@ -1,0 +1,46 @@
+{
+  "slug": "integrity-report-wa-ccc-2023-07-25-historical-government-housing-deal-reveals-big-loss-9e5ffedd",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "INTRODUCTION",
+    "first_page": 5,
+    "last_page": 8
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission investigated the involvement of the Housing Authority in the Stella Orion housing development.",
+      "pages": [
+        5,
+        6
+      ],
+      "support": "The Commission commenced Operation Skerryvore to enquire into the project.",
+      "people": []
+    },
+    {
+      "text": "The Commission estimated a loss of $29,049,936 to the Department of Communities, which questioned the amount without providing an alternative.",
+      "pages": [
+        5
+      ],
+      "support": "The Commission estimates the current loss to DoC at $29,049,936.",
+      "people": []
+    },
+    {
+      "text": "The Commission formed no opinion of serious misconduct and was satisfied that those involved acted in good faith rather than corruptly.",
+      "pages": [
+        6
+      ],
+      "support": "After extensive investigation the Commission has formed no opinion of serious misconduct.",
+      "people": []
+    },
+    {
+      "text": "The Commission identified risks involving inadequate due diligence, inaccessible records and insufficient supervision of a consultant making financial decisions.",
+      "pages": [
+        7
+      ],
+      "support": "A person engaged as a consultant made extensive managerial and commercial decisions without adequate supervision by the Director General.",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "INTRODUCTION provides the investigation outcome and a consolidated account of misconduct risks. The existing OPAX finding is not duplicated."
+}

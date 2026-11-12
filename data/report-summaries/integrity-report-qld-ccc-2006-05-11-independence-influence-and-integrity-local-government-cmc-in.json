@@ -1,0 +1,135 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2006-05-11-independence-influence-and-integrity-local-government-cmc-in",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Independence, influence and integrity in local government: A CMC inquiry into the 2004 Gold Coast City Council election",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gold-Coast-City-Council-Elections-Operation-Grand/Independence-influence-and-integrity-in-local-government-Report-2005.pdf",
+  "document": "Independence, influence and integrity in local government: A CMC inquiry into the 2004 Gold Coast City Council... (11 May 2006)",
+  "sha256": "4e28670163efbfd4f78f64eb87c12b327950da70f045d6bf439947f996fa15a6",
+  "pages": 216,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY",
+  "first_page": 19,
+  "last_page": 30,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gold-Coast-City-Council-Elections-Operation-Grand/Independence-influence-and-integrity-in-local-government-Report-2005.pdf#page=19"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The CMC investigated alleged misconduct involving the 2004 Gold Coast City Council election and reviewed the adequacy of local government laws.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gold-Coast-City-Council-Elections-Operation-Grand/Independence-influence-and-integrity-in-local-government-Report-2005.pdf",
+      "document": "Independence, influence and integrity in local government: A CMC inquiry into the 2004 Gold Coast City Council... (11 May 2006)",
+      "page": 19
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "It examined candidate links, campaign donations, electoral bribery and councillors’ handling of personal interests.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gold-Coast-City-Council-Elections-Operation-Grand/Independence-influence-and-integrity-in-local-government-Report-2005.pdf",
+      "document": "Independence, influence and integrity in local government: A CMC inquiry into the 2004 Gold Coast City Council... (11 May 2006)",
+      "page": 19
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "The Commission found that candidates had made false or misleading statements to conceal a shared campaign fund backed by developers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gold-Coast-City-Council-Elections-Operation-Grand/Independence-influence-and-integrity-in-local-government-Report-2005.pdf",
+      "document": "Independence, influence and integrity in local government: A CMC inquiry into the 2004 Gold Coast City Council... (11 May 2006)",
+      "page": 24
+     }
+    ],
+    "section": "PART A: SUMMARY OF FINDINGS FOR first TERM OF REFERENCE"
+   },
+   {
+    "text": "The Commission concluded that the conduct harmed the election’s integrity, while the specific conflict cases examined could not amount to offences under the Act.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gold-Coast-City-Council-Elections-Operation-Grand/Independence-influence-and-integrity-in-local-government-Report-2005.pdf",
+      "document": "Independence, influence and integrity in local government: A CMC inquiry into the 2004 Gold Coast City Council... (11 May 2006)",
+      "page": 25
+     }
+    ],
+    "section": "PART A: SUMMARY OF FINDINGS FOR first TERM OF REFERENCE"
+   },
+   {
+    "text": "The Commission made 19 recommendations covering donation disclosure, conflicts of interest, enforcement, council decision records and protection for council employees.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gold-Coast-City-Council-Elections-Operation-Grand/Independence-influence-and-integrity-in-local-government-Report-2005.pdf",
+      "document": "Independence, influence and integrity in local government: A CMC inquiry into the 2004 Gold Coast City Council... (11 May 2006)",
+      "page": 26
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gold-Coast-City-Council-Elections-Operation-Grand/Independence-influence-and-integrity-in-local-government-Report-2005.pdf",
+      "document": "Independence, influence and integrity in local government: A CMC inquiry into the 2004 Gold Coast City Council... (11 May 2006)",
+      "page": 27
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gold-Coast-City-Council-Elections-Operation-Grand/Independence-influence-and-integrity-in-local-government-Report-2005.pdf",
+      "document": "Independence, influence and integrity in local government: A CMC inquiry into the 2004 Gold Coast City Council... (11 May 2006)",
+      "page": 28
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gold-Coast-City-Council-Elections-Operation-Grand/Independence-influence-and-integrity-in-local-government-Report-2005.pdf",
+      "document": "Independence, influence and integrity in local government: A CMC inquiry into the 2004 Gold Coast City Council... (11 May 2006)",
+      "page": 29
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gold-Coast-City-Council-Elections-Operation-Grand/Independence-influence-and-integrity-in-local-government-Report-2005.pdf",
+      "document": "Independence, influence and integrity in local government: A CMC inquiry into the 2004 Gold Coast City Council... (11 May 2006)",
+      "page": 30
+     }
+    ],
+    "section": "PART B: SUMMARY OF RECOMMENDATIONS FOR second and third TERMS OF REFERENCE"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission is satisfied that there were a number of false or misleading statements made to the media in this matter in a concerted effort to conceal the existence of a group of candidates being funded from a common developer-backed fund.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gold-Coast-City-Council-Elections-Operation-Grand/Independence-influence-and-integrity-in-local-government-Report-2005.pdf",
+     "document": "Independence, influence and integrity in local government: A CMC inquiry into the 2004 Gold Coast City Council... (11 May 2006)",
+     "page": 24
+    }
+   },
+   {
+    "quote": "Because of the narrow definition of ‘material personal interest‘ under the LGA, none of the specific cases of alleged conflicts of interest examined could amount to offences under that Act.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gold-Coast-City-Council-Elections-Operation-Grand/Independence-influence-and-integrity-in-local-government-Report-2005.pdf",
+     "document": "Independence, influence and integrity in local government: A CMC inquiry into the 2004 Gold Coast City Council... (11 May 2006)",
+     "page": 25
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

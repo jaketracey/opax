@@ -1,0 +1,70 @@
+{
+  "slug": "integrity-report-vic-ibac-2014-04-15-tp1241-special-report-following-ibac-s-first-year-of-being-f",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Introduction",
+    "first_page": 7,
+    "last_page": 8
+  },
+  "sentences": [
+    {
+      "text": "IBAC reported on its first year of full operations, covering public sector corruption investigations and police misconduct oversight.",
+      "pages": [
+        7
+      ],
+      "support": "concerns IBAC’s performance of its functions in its first year of full operations, including",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "It also reviewed internal police investigations, prevention and education work, and the operation of the new integrity legislation.",
+      "pages": [
+        7
+      ],
+      "support": "reviews of internal police investigations and recommendations for reform",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "In Operation Continent, IBAC confirmed fraudulent purchasing at a council depot and identified weaknesses in records, assets, controls and contractor relationships, while other allegations remained unsubstantiated.",
+      "pages": [
+        10
+      ],
+      "support": "confirmed fraudulent purchasing, but could not substantiate the other allegations",
+      "section": "Investigations",
+      "people": []
+    },
+    {
+      "text": "It reported that Victoria Police had implemented 20 of 40 outstanding recommendations inherited from the former Office of Police Integrity.",
+      "pages": [
+        18
+      ],
+      "support": "Victoria Police advised IBAC that 20 of these recommendations had been implemented",
+      "section": "Reviews and recommendations",
+      "people": []
+    },
+    {
+      "text": "IBAC raised legislative issues for Parliament, including its investigation threshold, preliminary inquiries and mandatory corruption notifications.",
+      "pages": [
+        7,
+        31
+      ],
+      "support": "Issues for consideration for the Parliament of Victoria include",
+      "section": "Introduction",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Victoria Police’s oversight and review of the investigation was inadequate.",
+      "page": 10,
+      "kind": "finding"
+    },
+    {
+      "quote": "IBAC’s investigation led it to conclude that the complaint was unfounded and the complainant was informed accordingly.",
+      "page": 13,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The Introduction gives an equivalent overview of this institutional report. The second findings quote concerns Operation Blackwood. Recommendation counts describe earlier OPI recommendations rather than a new numbered list. Some running headers incorrectly refer to the separate Sir Ken Jones report; the main text is readable. The first findings quote concerns the investigation reviewed in Operation Derwent."
+}

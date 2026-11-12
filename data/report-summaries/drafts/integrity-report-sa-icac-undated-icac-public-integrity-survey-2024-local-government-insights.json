@@ -1,0 +1,56 @@
+{
+  "slug": "integrity-report-sa-icac-undated-icac-public-integrity-survey-2024-local-government-insights",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "COMMISSIONER’S FOREWORD",
+    "first_page": 6,
+    "last_page": 6
+  },
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commission Against Corruption analysed local government responses to its third Public Integrity Survey.",
+      "pages": [
+        6
+      ],
+      "section": "COMMISSIONER’S FOREWORD",
+      "support": "It analyses the perceptions and \nexperiences of public officers in the local government \nsector.",
+      "people": []
+    },
+    {
+      "text": "The survey focused on decision making, discretionary powers and improper influence, while comparing compatible results with earlier surveys.",
+      "pages": [
+        6,
+        7
+      ],
+      "section": "THE SURVEY",
+      "support": "The 2024 survey focused specifically on risks relating to decision making, including \nthe use of discretionary powers, and improper influence.",
+      "people": []
+    },
+    {
+      "text": "The Commission reported increasing perceptions of corruption vulnerability, while cautioning that greater awareness could explain the change.",
+      "pages": [
+        6
+      ],
+      "section": "COMMISSIONER’S FOREWORD",
+      "support": "This does not necessarily \nmean that local councils are experiencing more corrupt conduct.",
+      "people": []
+    },
+    {
+      "text": "The Commission identified risks around recruitment favouritism, procurement, confidential information and unchecked decision making, and encouraged officers to use reporting systems.",
+      "pages": [
+        60
+      ],
+      "section": "CONCLUSIONS",
+      "support": "Decision making that lacks transparency, accountability, and \nappropriate checks and balances, may be vulnerable to misuse of authority.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Decision making that lacks transparency, accountability, and \nappropriate checks and balances, may be vulnerable to misuse of authority.",
+      "page": 60,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The survey measures perceptions rather than verified corruption and may not represent all council public officers. The report provides conclusions and reporting advice without a numbered recommendations list."
+}

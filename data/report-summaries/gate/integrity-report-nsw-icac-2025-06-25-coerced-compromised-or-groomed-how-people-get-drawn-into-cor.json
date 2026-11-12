@@ -1,0 +1,78 @@
+{
+ "slug": "integrity-report-nsw-icac-2025-06-25-coerced-compromised-or-groomed-how-people-get-drawn-into-cor",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The NSW Independent Commission Against Corruption explains how people can be manipulated into participating in corruption.",
+    "pages": [
+     6
+    ],
+    "support": "provides insights into how individuals can, contrary to their initial instincts, be drawn into a corrupt scheme.",
+    "section": "Chapter 1: Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It uses investigation examples and case studies to examine coercion, compromise and grooming, including manipulation between public officials.",
+    "pages": [
+     6
+    ],
+    "support": "Drawing on examples from its own investigations and case studies from other bodies",
+    "section": "Chapter 1: Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission reports that detailed plans to groom officials over long periods are unusual in its experience.",
+    "pages": [
+     9
+    ],
+    "support": "it is unusual to see evidence of detailed, long-term plans to target and groom a public official.",
+    "section": "Chapter 3: About manipulative conduct",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission advises agencies to disrupt potentially improper relationships through measures such as staff rotation, shared responsibilities and team assignments.",
+    "pages": [
+     36
+    ],
+    "support": "a useful anti-corruption technique is to disrupt the potential for improper relationships to form between insiders and outsiders.",
+    "section": "Chapter 7: Tips for public agencies",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Consequently, a checklist of warning signs may not provide much protection against a skilled, determined manipulator.",
+    "page": 34,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

@@ -1,0 +1,99 @@
+{
+ "slug": "integrity-report-sa-icac-2021-06-24-evaluation-of-the-practices-policies-and-procedures-of-the-d",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commissioner Against Corruption evaluated the Department for Correctional Services to identify ways to reduce corruption and other integrity risks.",
+    "pages": [
+     8,
+     9
+    ],
+    "section": "Executive Summary",
+    "support": "The purpose of this evaluation is to identify \nopportunities to minimise the risks of corruption, misconduct and maladministration \nwithin the Department.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The evaluation concentrated on prisons and examined organisational culture, reporting, policies, recruitment, training and performance management.",
+    "pages": [
+     8,
+     9
+    ],
+    "section": "Executive Summary",
+    "support": "The evaluation has focused primarily on the corruption and integrity risks inherent \nin prison environments, together with some aspects of departmental practice.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commissioner considered the Department’s policies and procedures sound but identified improvements to their management, recruitment, training and performance expectations.",
+    "pages": [
+     10
+    ],
+    "section": "Executive Summary",
+    "support": "I have identified some further opportunities for enhancing recruitment and training \nprocesses, together with strengthening expectations in respect of performance \nmanagement.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commissioner made 24 recommendations covering staff training, policy controls, prisoner interactions, prison security and performance management.",
+    "pages": [
+     10,
+     12,
+     13,
+     14
+    ],
+    "section": "Recommendations",
+    "support": "In all I have made 24 recommendations. I am pleased that the Chief Executive of the \nDepartment has indicated",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Introduce regular and mandatory training about grooming and inappropriate \nrelationships for all staff who have regular contact with prisoners.",
+    "page": 13,
+    "kind": "recommendation"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "Reinforce the need for absolute compliance with access control screening \nprocedures for all persons entering a prison, including staff.",
+    "page": 13,
+    "kind": "recommendation"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Executive Summary",
+   "first_page": 8,
+   "last_page": 10
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

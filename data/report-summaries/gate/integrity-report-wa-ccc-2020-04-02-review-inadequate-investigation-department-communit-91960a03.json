@@ -1,0 +1,91 @@
+{
+ "slug": "integrity-report-wa-ccc-2020-04-02-review-inadequate-investigation-department-communit-91960a03",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission reviewed the Department of Communities' investigation of allegations that staff accepted bribes for preferential public housing allocations.",
+    "pages": [
+     4
+    ],
+    "support": "The Commission referred the matter back to DoC to investigate but maintained active oversight",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commission concluded that the investigation took too long, failed to pursue basic inquiries and relied on flawed reasoning.",
+    "pages": [
+     8,
+     10
+    ],
+    "support": "The DoC investigation was unnecessarily protracted, disjointed and lacked basic investigative competence.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission found that poor communication and recordkeeping also hindered the handling of the allegations.",
+    "pages": [
+     12
+    ],
+    "support": "DoC's poor communication, recordkeeping and investigative practices seriously inhibited the ability to properly address the allegations received on this occasion.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission made no recommendations because the department had already introduced changes to its governance and integrity arrangements.",
+    "pages": [
+     12
+    ],
+    "support": "In view of this response, the Commission makes no recommendations.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The DoC investigation was unnecessarily protracted, disjointed and lacked basic investigative competence.",
+    "page": 10,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "In view of this response, the Commission makes no recommendations.",
+    "page": 12,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "OVERVIEW",
+   "first_page": 4,
+   "last_page": 4
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

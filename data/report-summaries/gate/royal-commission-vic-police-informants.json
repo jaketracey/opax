@@ -1,0 +1,113 @@
+{
+ "slug": "royal-commission-vic-police-informants",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "Victoria’s Royal Commission into the Management of Police Informants examined police use of a defence barrister as an informant and how criminal cases might have been affected.",
+    "pages": [
+     6,
+     7,
+     8
+    ],
+    "section": "The Commission’s task",
+    "support": "The number of, and extent to which, cases may have been affected",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It also examined safeguards for informants with confidentiality obligations, disclosure to prosecutors and courts, and reforms to prevent similar conduct.",
+    "pages": [
+     8,
+     33
+    ],
+    "section": "The Commission’s task",
+    "support": "the use of information from such sources in criminal proceedings",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that convictions or findings of guilt involving 1,011 people may have been affected by police use of the barrister.",
+    "pages": [
+     6,
+     17
+    ],
+    "section": "Final Report Summary",
+    "support": "the Commission has concluded that \nthe convictions or findings of guilt of 1,011 people may have been affected",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It identified failures in leadership, governance, supervision, training and risk management that allowed the conduct to continue.",
+    "pages": [
+     23
+    ],
+    "section": "Victoria Police’s conduct: systemic issues and causal factors",
+    "support": "These include failures \nof leadership and governance, of management and supervision, of policy and training",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "Its 111 recommendations cover further investigation, disclosure to affected people, informant management, independent oversight and implementation monitoring.",
+    "pages": [
+     36,
+     37,
+     38
+    ],
+    "section": "Work beyond the Commission; Recommendations",
+    "support": "The Commission has made 111 recommendations, as listed below.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "After a rigorous analysis of the evidence, including all relevant submissions, the Commission has concluded that \nthe convictions or findings of guilt of 1,011 people may have been affected by Victoria Police’s use of Ms Gobbo \nas a human source.",
+    "page": 17,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The conduct of some officers fell well short of an acceptable standard.",
+    "page": 23,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Final Report Summary",
+   "first_page": 6,
+   "last_page": 37
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

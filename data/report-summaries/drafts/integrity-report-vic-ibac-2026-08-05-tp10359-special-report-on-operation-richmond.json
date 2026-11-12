@@ -1,0 +1,73 @@
+{
+  "slug": "integrity-report-vic-ibac-2026-08-05-tp10359-special-report-on-operation-richmond",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Overview",
+    "first_page": 16,
+    "last_page": 19
+  },
+  "sentences": [
+    {
+      "text": "IBAC’s Operation Richmond investigated alleged corruption in fire service bargaining agreements and the establishment of Fire Rescue Victoria.",
+      "pages": [
+        6
+      ],
+      "support": "an investigation into allegations of corrupt conduct relating to the negotiation of enterprise bargaining agreements",
+      "section": "Commissioner foreword",
+      "people": []
+    },
+    {
+      "text": "It examined negotiations for the Country Fire Authority and Metropolitan Fire Brigade agreements and decisions associated with fire service restructuring.",
+      "pages": [
+        6,
+        16,
+        18
+      ],
+      "support": "Operation Richmond was expanded to include allegations relating to the negotiation of the former MFB EBA and the establishment of FRV",
+      "section": "Overview",
+      "people": []
+    },
+    {
+      "text": "IBAC did not substantiate the alleged blackmail or find corrupt conduct under its Act, but found conduct by senior officials that increased corruption risks.",
+      "pages": [
+        16
+      ],
+      "support": "IBAC found no evidence for the alleged blackmail and did not substantiate that allegation",
+      "section": "What IBAC found",
+      "people": []
+    },
+    {
+      "text": "IBAC concluded that undisclosed negotiations weakened accountability and that board appointments were manipulated to secure support for the agreements.",
+      "pages": [
+        16,
+        19
+      ],
+      "support": "IBAC found that the appointment processes for the CFA and MFB Boards lacked transparency",
+      "section": "Overview",
+      "people": []
+    },
+    {
+      "text": "It made three recommendations covering ministerial values and conduct rules, a ministerial handbook and training on ministers’ obligations.",
+      "pages": [
+        19,
+        30
+      ],
+      "support": "This report also contains three targeted recommendations that aim to",
+      "section": "Corruption risks and recommendations for reform",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "IBAC found no evidence for the alleged blackmail and did not substantiate that allegation.",
+      "page": 16,
+      "kind": "finding"
+    },
+    {
+      "quote": "IBAC found that the appointment processes for the CFA and MFB Boards lacked transparency and were manipulated to ensure that the appointees would be amenable to resolving the respective disputes and following directions to approve the respective EBAs in a form acceptable to government.",
+      "page": 19,
+      "kind": "finding"
+    }
+  ],
+  "notes": "The report expressly does not find corrupt conduct as defined in the IBAC Act. Alleged blackmail was not substantiated. Individuals are described by roles in the summary."
+}

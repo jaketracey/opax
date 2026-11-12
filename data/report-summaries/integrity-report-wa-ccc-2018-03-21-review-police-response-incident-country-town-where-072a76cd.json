@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2018-03-21-review-police-response-incident-country-town-where-072a76cd",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Review of Police Response to an Incident in a Country Town where Excessive Force was used and an Arrested Person’s Details not Recorded",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20Police%20Response%20to%20an%20Incident%20in%20a%20Country%20Town%20where%20Excessive%20Force%20was%20used%20and%20an%20Arrested%20Person%E2%80%99s%20Details%20not%20Recorded.pdf",
+  "document": "Review of Police Response to an Incident in a Country Town where Excessive Force was used and an Arrested Person’s Details not Recorded",
+  "sha256": "0c9c09fc1a4f0068f38355a2db1058624c4679a727112c6bcfe52826d3b8edd4",
+  "pages": 38,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission monitored and reviewed a police investigation into an arrest and custody incident in a country town.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20Police%20Response%20to%20an%20Incident%20in%20a%20Country%20Town%20where%20Excessive%20Force%20was%20used%20and%20an%20Arrested%20Person%E2%80%99s%20Details%20not%20Recorded.pdf",
+      "document": "Review of Police Response to an Incident in a Country Town where Excessive Force was used and an Arrested Person’s Details not Recorded",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20Police%20Response%20to%20an%20Incident%20in%20a%20Country%20Town%20where%20Excessive%20Force%20was%20used%20and%20an%20Arrested%20Person%E2%80%99s%20Details%20not%20Recorded.pdf",
+      "document": "Review of Police Response to an Incident in a Country Town where Excessive Force was used and an Arrested Person’s Details not Recorded",
+      "page": 6
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "Its review considered a police vehicle's use, force in custody, supervision, medical care and missing custody records.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20Police%20Response%20to%20an%20Incident%20in%20a%20Country%20Town%20where%20Excessive%20Force%20was%20used%20and%20an%20Arrested%20Person%E2%80%99s%20Details%20not%20Recorded.pdf",
+      "document": "Review of Police Response to an Incident in a Country Town where Excessive Force was used and an Arrested Person’s Details not Recorded",
+      "page": 17
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20Police%20Response%20to%20an%20Incident%20in%20a%20Country%20Town%20where%20Excessive%20Force%20was%20used%20and%20an%20Arrested%20Person%E2%80%99s%20Details%20not%20Recorded.pdf",
+      "document": "Review of Police Response to an Incident in a Country Town where Excessive Force was used and an Arrested Person’s Details not Recorded",
+      "page": 25
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20Police%20Response%20to%20an%20Incident%20in%20a%20Country%20Town%20where%20Excessive%20Force%20was%20used%20and%20an%20Arrested%20Person%E2%80%99s%20Details%20not%20Recorded.pdf",
+      "document": "Review of Police Response to an Incident in a Country Town where Excessive Force was used and an Arrested Person’s Details not Recorded",
+      "page": 27
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20Police%20Response%20to%20an%20Incident%20in%20a%20Country%20Town%20where%20Excessive%20Force%20was%20used%20and%20an%20Arrested%20Person%E2%80%99s%20Details%20not%20Recorded.pdf",
+      "document": "Review of Police Response to an Incident in a Country Town where Excessive Force was used and an Arrested Person’s Details not Recorded",
+      "page": 37
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commission considered police handling of the use-of-force matter appropriate and found the decision to use managerial action rather than prosecution was available on the facts.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20Police%20Response%20to%20an%20Incident%20in%20a%20Country%20Town%20where%20Excessive%20Force%20was%20used%20and%20an%20Arrested%20Person%E2%80%99s%20Details%20not%20Recorded.pdf",
+      "document": "Review of Police Response to an Incident in a Country Town where Excessive Force was used and an Arrested Person’s Details not Recorded",
+      "page": 25
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "Its four recommendations covered tailored training for repeated excessive force, custody management, custody officer experience and reporting injury or severe discomfort.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20Police%20Response%20to%20an%20Incident%20in%20a%20Country%20Town%20where%20Excessive%20Force%20was%20used%20and%20an%20Arrested%20Person%E2%80%99s%20Details%20not%20Recorded.pdf",
+      "document": "Review of Police Response to an Incident in a Country Town where Excessive Force was used and an Arrested Person’s Details not Recorded",
+      "page": 38
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The outcome of the investigation and the action taken by the WA Police Force against the officers appears reasonable and appropriate.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Review%20of%20Police%20Response%20to%20an%20Incident%20in%20a%20Country%20Town%20where%20Excessive%20Force%20was%20used%20and%20an%20Arrested%20Person%E2%80%99s%20Details%20not%20Recorded.pdf",
+     "document": "Review of Police Response to an Incident in a Country Town where Excessive Force was used and an Arrested Person’s Details not Recorded",
+     "page": 37
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

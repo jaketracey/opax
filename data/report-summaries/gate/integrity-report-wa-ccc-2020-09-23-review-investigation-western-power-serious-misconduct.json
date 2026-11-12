@@ -1,0 +1,84 @@
+{
+ "slug": "integrity-report-wa-ccc-2020-09-23-review-investigation-western-power-serious-misconduct",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission reviewed an investigation by Western Power into allegations that an employee falsified power pole inspection records.",
+    "pages": [
+     5,
+     7
+    ],
+    "support": "The Commission conducted a review of Western Power's investigation.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commission considered the investigation thorough and accepted that Western Power's conclusions were supported by the available evidence.",
+    "pages": [
+     7
+    ],
+    "support": "The conclusions reached by Western Power were open to be made based on the evidence available.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission considered notification of suspected misconduct late and disagreed with the decision against reporting the conduct to police.",
+    "pages": [
+     8
+    ],
+    "support": "The Commission has concerns with the decision by Western Power not to report the employee's conduct to the WA Police Force.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission made no formal recommendations, recognising the investigation and changes to auditing intended to detect similar conduct.",
+    "pages": [
+     9
+    ],
+    "support": "In view of Western Power's investigation, the Commission makes no formal recommendations.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The conclusions reached by Western Power were open to be made based on the evidence available.",
+    "page": 7,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "In view of Western Power's investigation, the Commission makes no formal recommendations.",
+    "page": 9,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

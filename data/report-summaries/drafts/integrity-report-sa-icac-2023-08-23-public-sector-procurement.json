@@ -1,0 +1,60 @@
+{
+  "slug": "integrity-report-sa-icac-2023-08-23-public-sector-procurement",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commission Against Corruption surveyed procurement officers and suppliers about corruption risks in public contracting.",
+      "pages": [
+        6
+      ],
+      "section": "METHOD",
+      "support": "online surveys with procurement officers and suppliers conducted by the Independent Commission Against Corruption",
+      "people": []
+    },
+    {
+      "text": "The surveys examined conflicts of interest, gifts, confidential information, procurement practices and barriers to reporting.",
+      "pages": [
+        5
+      ],
+      "section": "INTRODUCTION",
+      "support": "These risks are public officers failing to declare and manage conflicts of interest",
+      "people": []
+    },
+    {
+      "text": "The Commission reported that procurement officers generally viewed procurement integrity more positively than suppliers, but could underestimate corruption risks.",
+      "pages": [
+        44
+      ],
+      "section": "CONCLUSION",
+      "support": "procurement officers have more positive views about the integrity of public sector procurement compared to suppliers.",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that some suspicions went unreported and that suppliers did not sufficiently understand their public officer status and reporting obligations.",
+      "pages": [
+        44
+      ],
+      "section": "CONCLUSION",
+      "support": "Suppliers who are contracted to public authorities are not sufficiently aware of their status as public officers",
+      "people": []
+    },
+    {
+      "text": "The Commission said recommendations would follow in a second report providing further analysis.",
+      "pages": [
+        4
+      ],
+      "section": "COMMISSIONER’S FOREWORD",
+      "support": "The Commission intends to publish a second report which will provide further analysis of corruption risks in public sector procurement and provide recommendations.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "However, procurement officers may underestimate corruption risks in procurement.",
+      "page": 44,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "No separate executive summary or overview. This report presents survey results and reserves recommendations for a later report; respondents’ perceptions are not treated as proven corruption."
+}

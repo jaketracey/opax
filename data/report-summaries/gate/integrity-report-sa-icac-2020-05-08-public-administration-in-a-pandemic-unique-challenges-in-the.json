@@ -1,0 +1,83 @@
+{
+ "slug": "integrity-report-sa-icac-2020-05-08-public-administration-in-a-pandemic-unique-challenges-in-the",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commissioner Against Corruption examined how the COVID-19 pandemic could affect integrity in public administration.",
+    "pages": [
+     4
+    ],
+    "section": "PUBLIC ADMINISTRATION IN A PANDEMIC: UNIQUE CHALLENGES IN THE CURRENT CLIMATE",
+    "support": "this report should focus on how the pandemic might impact upon integrity \nin public administration in South Australia.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commissioner identified risks involving remote supervision, information security, procurement, contract management and pressure on public officers.",
+    "pages": [
+     5,
+     6,
+     7,
+     8
+    ],
+    "section": "High Risk Functions",
+    "support": "Procurement, contract \nmanagement and information management are some such prominent risk areas \nthat are likely to come under increased pressure.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commissioner warned that disruption, economic uncertainty and reduced oversight could increase opportunities for improper conduct.",
+    "pages": [
+     5
+    ],
+    "section": "Integrity in Public Administration in Light of COVID-19",
+    "support": "It is important to be mindful that during times of significant disruption and \neconomic uncertainty, corruption and inappropriate conduct can become \nmore prevalent.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commissioner urged agencies to review contingency arrangements, maintain expenditure oversight, protect information and support staff experiencing difficulties.",
+    "pages": [
+     5,
+     7,
+     9
+    ],
+    "section": "High Risk Functions",
+    "support": "agencies should ensure that all \nprocurements and expenditure remains the subject of appropriate oversight",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Remote working arrangements also pose significant risks around information \nand cyber security.",
+    "page": 6,
+    "kind": "opinion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

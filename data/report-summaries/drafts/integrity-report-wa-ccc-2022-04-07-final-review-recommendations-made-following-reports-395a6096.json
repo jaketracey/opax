@@ -1,0 +1,58 @@
+{
+  "slug": "integrity-report-wa-ccc-2022-04-07-final-review-recommendations-made-following-reports-395a6096",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Overview",
+    "first_page": 4,
+    "last_page": 4
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission conducted a final review of two outstanding recommendations about controlled medicines in WA Health.",
+      "pages": [
+        4,
+        7
+      ],
+      "support": "Two recommendations were left open to allow for the implementation of DoH's over-arching medicines handling policy.",
+      "people": []
+    },
+    {
+      "text": "The recommendations sought procedures aligned with legislation and consistent rules for drug management, records and reporting of discrepancies.",
+      "pages": [
+        7
+      ],
+      "support": "WA Health's Operational Directives and hospital policies be reviewed to ensure that policies for drug management, recording and reporting discrepancies are consistent across WA Health.",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that the medicines policy framework addressed earlier inconsistencies and that WA Health had adequately responded to the remaining recommendations.",
+      "pages": [
+        9,
+        10
+      ],
+      "support": "These changes address the highlighted areas of inconsistency from previous Commission reports.",
+      "people": []
+    },
+    {
+      "text": "The Commission closed all recommendations while recognising that controlled drugs would continue to present misconduct risks.",
+      "pages": [
+        10
+      ],
+      "support": "the Commission acknowledges that management of controlled drugs will remain an area of continued misconduct risk for WA Health to mitigate.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Commission considers WA Health has taken adequate action to address the remaining two recommendations.",
+      "page": 10,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "The Commission considers all recommendations closed.",
+      "page": 10,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": ""
+}

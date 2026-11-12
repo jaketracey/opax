@@ -1,0 +1,92 @@
+{
+ "slug": "integrity-report-sa-icac-2019-11-27-evaluation-of-the-practices-policies-and-procedures-of-the-c",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Deputy Independent Commissioner Against Corruption evaluated practices at the City of Playford Council to identify improvements to integrity controls.",
+    "pages": [
+     6,
+     8,
+     9
+    ],
+    "section": "Executive Summary",
+    "support": "My role is limited to evaluating processes \nin the context of protecting the integrity \nof a public institution",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The evaluation focused on current administration practices, including policies, records, procurement and human resources.",
+    "pages": [
+     8,
+     9,
+     10
+    ],
+    "section": "Executive Summary",
+    "support": "This report also addresses opportunities to improve integrity measures in respect of \nprocurement and human resource management.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Deputy Commissioner identified weaknesses in policy implementation, compliance and records management that exposed the council to integrity risks.",
+    "pages": [
+     9
+    ],
+    "section": "Executive Summary",
+    "support": "those weaknesses primarily relate to the manner in which policies and \nprocedures are implemented and adhered to",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Deputy Commissioner made 21 recommendations covering governance, records, recruitment, performance management and procurement.",
+    "pages": [
+     10,
+     12,
+     13,
+     14
+    ],
+    "section": "Recommendations",
+    "support": "I have made 21 recommendations which I hope will be of assistance to the City \nof Playford",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "However, there remain a number of weaknesses in current council operations that \nleave it susceptible to corruption, misconduct or maladministration.",
+    "page": 9,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Executive Summary",
+   "first_page": 8,
+   "last_page": 10
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

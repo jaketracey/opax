@@ -1,0 +1,85 @@
+{
+ "slug": "integrity-report-qld-ccc-2016-12-12-publicising-allegations-corrupt-conduct-it-public-interest",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The CCC examined whether publicising corruption allegations served the public interest and whether restrictions were needed.",
+    "pages": [
+     10
+    ],
+    "section": "Summary and recommendation",
+    "support": "examine whether it is in the public interest to publicise allegations of corrupt conduct",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It considered public submissions, a public forum, legislation, earlier reports and its own operational information.",
+    "pages": [
+     10
+    ],
+    "section": "Summary and recommendation",
+    "support": "reviewed relevant legislation, previous reports and relevant existing CCC data",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The CCC favoured retaining the law except for publicity about councillors and candidates during local government elections.",
+    "pages": [
+     10
+    ],
+    "section": "Summary and recommendation",
+    "support": "with one exception, there should be no change to the law.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its recommendation asked the government to consider an offence for publicising allegations, or the fact of a CCC complaint, about councillors and candidates during local elections without first notifying the CCC and allowing at least three months for assessment.",
+    "pages": [
+     11
+    ],
+    "section": "Recommendation",
+    "support": "without first notifying the CCC and allowing the CCC at least three months to determine whether the allegations have merit.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "On balance, the CCC is of the view that, with one exception, there should be no change to the law.",
+    "page": 43,
+    "kind": "opinion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Summary and recommendation",
+   "first_page": 10,
+   "last_page": 11
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

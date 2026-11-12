@@ -1,0 +1,57 @@
+{
+  "slug": "integrity-report-nsw-icac-2014-11-19-safeguarding-public-money-the-importance-of-controlling-invo",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Introduction",
+    "first_page": 6,
+    "last_page": 8
+  },
+  "sentences": [
+    {
+      "text": "The NSW Independent Commission Against Corruption examines how agencies can strengthen invoice-payment controls while managing costs and processing times.",
+      "pages": [
+        6,
+        7
+      ],
+      "support": "seeks to present approaches to the design and management of the payment process",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "Its research includes responses from 150 state and local government organisations and consultation across public, private and non-profit sectors.",
+      "pages": [
+        7
+      ],
+      "support": "The methodology and summary analysis of 150 survey respondents are presented in the appendix.",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "The Commission reports that gaps in payment controls have enabled corruption, including through weak processes and pressure on accounts payable staff.",
+      "pages": [
+        6
+      ],
+      "support": "Commission investigations have shown that corrupt conduct is able to occur because of gaps in invoice payment control.",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "The Commission proposes five strategies covering staff capability, supplier records, payment-process design, consistent processing and informed expenditure review.",
+      "pages": [
+        7,
+        8
+      ],
+      "support": "The Commission has identified the following five strategies for tightening the payment process.",
+      "section": "Introduction",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The solution is not a simple matter of applying more careful checks, further segregating duties or removing discretionary decision-making.",
+      "page": 6,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The Introduction provides the report’s overview and consolidated five-strategy list on PDF pages 6–8. These are strategies rather than a numbered formal recommendations list."
+}

@@ -1,0 +1,97 @@
+{
+ "slug": "integrity-report-wa-ccc-2026-05-15-review-wa-police-investigation-allegations-serious-5b808405",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission reviewed a WA Police investigation into misconduct allegations arising from a carpark encounter at the Perth Convention and Exhibition Centre.",
+    "pages": [
+     3,
+     5,
+     7
+    ],
+    "section": "The Commission’s Decision to Review the Investigation",
+    "support": "the Commission decided to undertake a review pursuant to s 41 of the CCM Act.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The review examined the investigation’s treatment of a search, a request for personal details, a move on order and the reasonableness of officers’ actions.",
+    "pages": [
+     6,
+     21
+    ],
+    "section": "The Outcome of the Review",
+    "support": "The investigation did not consider all the issues raised by the referred allegations",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission considered the investigation inadequate and concluded that police could not properly find the search lawful because consent had been refused.",
+    "pages": [
+     21
+    ],
+    "section": "The Outcome of the Review",
+    "support": "In the Commission's opinion, the investigation by WA Police into the referred allegations was \ninadequate.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission made one recommendation requiring training on declared-area powers and operational briefings when those powers were to be used.",
+    "pages": [
+     24
+    ],
+    "section": "Recommendation",
+    "support": "The Commission recommends under s 43, CCM Act that WA Police officers are:",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "In the Commission's opinion, the investigation by WA Police into the referred allegations was \ninadequate.",
+    "page": 21,
+    "kind": "opinion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The investigation did not consider all the issues raised by the referred allegations \nand there were other aspects of the investigation which concerned the Commission.",
+    "page": 21,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "The Outcome of the Review",
+   "first_page": 21,
+   "last_page": 21
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

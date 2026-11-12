@@ -1,0 +1,79 @@
+{
+ "slug": "integrity-report-wa-ccc-2023-11-09-further-review-department-transports-management-unl-e9ff2852",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission reviewed the Department of Transport's response to four recommendations about unauthorised access to its TRELIS database.",
+    "pages": [
+     4
+    ],
+    "support": "This report describes the actions taken by DoT in addressing these recommendations.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The earlier recommendations covered access policies, investigation processes, activity alerts and agreements governing external users.",
+    "pages": [
+     5
+    ],
+    "support": "Review current TRELIS activity alerts to ensure they are contemporary, focused, and effective.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that the department had improved its ability to prevent serious misconduct and had adequately addressed all four recommendations.",
+    "pages": [
+     4,
+     12
+    ],
+    "support": "The Commission considers the recommendations have been adequately addressed.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The Commission considers DoT has taken appropriate steps to address the recommendations.",
+    "page": 12,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The Commission considers all recommendations closed.",
+    "page": 12,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "OVERVIEW",
+   "first_page": 4,
+   "last_page": 4
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 3,
+  "sentences_pass": 3,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

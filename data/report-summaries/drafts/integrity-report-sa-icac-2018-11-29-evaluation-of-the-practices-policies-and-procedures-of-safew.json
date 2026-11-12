@@ -1,0 +1,83 @@
+{
+  "slug": "integrity-report-sa-icac-2018-11-29-evaluation-of-the-practices-policies-and-procedures-of-safew",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Executive summary",
+    "first_page": 8,
+    "last_page": 10
+  },
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commissioner Against Corruption evaluated the regulatory arm of SafeWork SA to identify ways to reduce corruption and other integrity risks.",
+      "pages": [
+        6,
+        234
+      ],
+      "section": "Conclusion",
+      "support": "The recommendations are intended to advance comprehensive and effective \nsystems for preventing or minimising corruption, misconduct and maladministration in \npublic administration.",
+      "people": []
+    },
+    {
+      "text": "The evaluation examined governance, policies, inspections, investigations, staff management and information controls.",
+      "pages": [
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "section": "Recommendations",
+      "support": "That SafeWork SA provides management training to all existing managers and \nteam leaders",
+      "people": []
+    },
+    {
+      "text": "The Commissioner concluded that weak policies, poor oversight and limited understanding of risks exposed the agency to corruption, misconduct and maladministration.",
+      "pages": [
+        8
+      ],
+      "section": "Executive summary",
+      "support": "All of these factors create a working environment at serious risk of corruption, \nmisconduct and maladministration.",
+      "people": []
+    },
+    {
+      "text": "The Commissioner also found that a communication barrier prevented safety risks identified by education staff from reaching regulatory inspectors.",
+      "pages": [
+        10
+      ],
+      "section": "Executive summary",
+      "support": "One of the most significant findings in this evaluation has been the intentional \ncreation of a communication barrier",
+      "people": []
+    },
+    {
+      "text": "The Commissioner made 39 recommendations covering communication, governance, inspection safeguards, investigations, training and confidential information.",
+      "pages": [
+        10,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "section": "Recommendations",
+      "support": "I have made 39 recommendations as a consequence of \nthis evaluation.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "All of these factors create a working environment at serious risk of corruption, \nmisconduct and maladministration.",
+      "page": 8,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "One of the most significant findings in this evaluation has been the intentional \ncreation of a communication barrier between SafeWork SA’s educator arm and its \nregulatory arm.",
+      "page": 10,
+      "kind": "finding"
+    }
+  ],
+  "notes": "Recommendations are formally addressed to the Chief Executive of the Department of Treasury and Finance and concern agency systems, not findings against particular staff."
+}

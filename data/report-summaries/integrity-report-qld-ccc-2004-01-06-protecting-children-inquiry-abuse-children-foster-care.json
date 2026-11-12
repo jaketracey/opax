@@ -1,0 +1,150 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2004-01-06-protecting-children-inquiry-abuse-children-foster-care",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Protecting children: An inquiry into abuse of children in foster care",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Abuse-of-children-in-foster-care/Protecting-children-An-inquiry-into-abuse-of-children-in-foster-care-Report-2004.pdf",
+  "document": "Protecting children: An inquiry into abuse of children in foster care - full report (6 January 2004)",
+  "sha256": "e6d7cc34631d68ff35f51d8aa324d467790b75d312433da455570ffe85b856a3",
+  "pages": 393,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY",
+  "first_page": 11,
+  "last_page": 16,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Abuse-of-children-in-foster-care/Protecting-children-An-inquiry-into-abuse-of-children-in-foster-care-Report-2004.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The CMC investigated systemic causes of abuse in Queensland foster care and the adequacy of measures to prevent, detect and respond to it.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Abuse-of-children-in-foster-care/Protecting-children-An-inquiry-into-abuse-of-children-in-foster-care-Report-2004.pdf",
+      "document": "Protecting children: An inquiry into abuse of children in foster care - full report (6 January 2004)",
+      "page": 12
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "Its inquiry considered carer selection and support, accountability, Indigenous children’s needs and alternatives to family-based care.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Abuse-of-children-in-foster-care/Protecting-children-An-inquiry-into-abuse-of-children-in-foster-care-Report-2004.pdf",
+      "document": "Protecting children: An inquiry into abuse of children in foster care - full report (6 January 2004)",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Abuse-of-children-in-foster-care/Protecting-children-An-inquiry-into-abuse-of-children-in-foster-care-Report-2004.pdf",
+      "document": "Protecting children: An inquiry into abuse of children in foster care - full report (6 January 2004)",
+      "page": 14
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "The Commission concluded that the child protection system had failed children through organisational weaknesses rather than isolated mistakes alone.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Abuse-of-children-in-foster-care/Protecting-children-An-inquiry-into-abuse-of-children-in-foster-care-Report-2004.pdf",
+      "document": "Protecting children: An inquiry into abuse of children in foster care - full report (6 January 2004)",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Abuse-of-children-in-foster-care/Protecting-children-An-inquiry-into-abuse-of-children-in-foster-care-Report-2004.pdf",
+      "document": "Protecting children: An inquiry into abuse of children in foster care - full report (6 January 2004)",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Abuse-of-children-in-foster-care/Protecting-children-An-inquiry-into-abuse-of-children-in-foster-care-Report-2004.pdf",
+      "document": "Protecting children: An inquiry into abuse of children in foster care - full report (6 January 2004)",
+      "page": 120
+     }
+    ],
+    "section": "SUMMARY; SYSTEMIC ISSUES ARISING FROM THE INVESTIGATIONS"
+   },
+   {
+    "text": "The Commission’s investigations did not establish official misconduct by current or former ministers or directors-general.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Abuse-of-children-in-foster-care/Protecting-children-An-inquiry-into-abuse-of-children-in-foster-care-Report-2004.pdf",
+      "document": "Protecting children: An inquiry into abuse of children in foster care - full report (6 January 2004)",
+      "page": 13
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "The Commission made 110 recommendations, including a dedicated child safety department, better staff training, support for carers and stronger oversight.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Abuse-of-children-in-foster-care/Protecting-children-An-inquiry-into-abuse-of-children-in-foster-care-Report-2004.pdf",
+      "document": "Protecting children: An inquiry into abuse of children in foster care - full report (6 January 2004)",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Abuse-of-children-in-foster-care/Protecting-children-An-inquiry-into-abuse-of-children-in-foster-care-Report-2004.pdf",
+      "document": "Protecting children: An inquiry into abuse of children in foster care - full report (6 January 2004)",
+      "page": 365
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Abuse-of-children-in-foster-care/Protecting-children-An-inquiry-into-abuse-of-children-in-foster-care-Report-2004.pdf",
+      "document": "Protecting children: An inquiry into abuse of children in foster care - full report (6 January 2004)",
+      "page": 366
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Abuse-of-children-in-foster-care/Protecting-children-An-inquiry-into-abuse-of-children-in-foster-care-Report-2004.pdf",
+      "document": "Protecting children: An inquiry into abuse of children in foster care - full report (6 January 2004)",
+      "page": 367
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Abuse-of-children-in-foster-care/Protecting-children-An-inquiry-into-abuse-of-children-in-foster-care-Report-2004.pdf",
+      "document": "Protecting children: An inquiry into abuse of children in foster care - full report (6 January 2004)",
+      "page": 372
+     }
+    ],
+    "section": "SUMMARY; APPENDIX E: FULL LIST OF CMC RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "As a result of the evidence that it has gathered, the Commission can only conclude that the current child protection system has failed Queensland children in many important respects.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Abuse-of-children-in-foster-care/Protecting-children-An-inquiry-into-abuse-of-children-in-foster-care-Report-2004.pdf",
+     "document": "Protecting children: An inquiry into abuse of children in foster care - full report (6 January 2004)",
+     "page": 11
+    }
+   },
+   {
+    "quote": "The Commission’s investigations did not establish evidence of official misconduct by the current or former ministers or directors-general.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Abuse-of-children-in-foster-care/Protecting-children-An-inquiry-into-abuse-of-children-in-foster-care-Report-2004.pdf",
+     "document": "Protecting children: An inquiry into abuse of children in foster care - full report (6 January 2004)",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

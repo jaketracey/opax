@@ -1,0 +1,98 @@
+{
+ "slug": "royal-commission-cth-disability",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Disability Royal Commission was asked how governments, institutions and the community could prevent violence, abuse, neglect and exploitation and support greater inclusion of people with disability.",
+    "pages": [
+     59,
+     60
+    ],
+    "section": "About the Royal Commission",
+    "support": "Our terms of reference require us to inquire into what governments, institutions \nand the community should do",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "Its inquiry considered experiences across different settings and stages of life, using hearings, community engagement, submissions, private sessions and research.",
+    "pages": [
+     57,
+     60
+    ],
+    "section": "Executive summary",
+    "support": "we gathered information through public hearings, \ncommunity engagements, submissions, responses to issues papers, private sessions, policy \nwork, research and data analysis.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission found that people with disability continued to face high levels of violence, abuse, neglect and exploitation, alongside exclusion from many areas of life.",
+    "pages": [
+     57
+    ],
+    "section": "Executive summary",
+    "support": "Our inquiry has shown people with disability continue to experience high rates of violence \nand abuse, multiple forms of neglect, and sexual and financial exploitation.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its 222 recommendations seek to prevent harm, protect human rights and improve inclusion, with coordinated implementation and independent monitoring.",
+    "pages": [
+     15,
+     57,
+     204
+    ],
+    "section": "Scope of the inquiry; Beyond the Royal Commission",
+    "support": "The Final report contains a total of 222 recommendations.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Our inquiry has shown people with disability continue to experience high rates of violence \nand abuse, multiple forms of neglect, and sexual and financial exploitation.",
+    "page": 57,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "Based on their disability, people with disability continue to be \nexcluded from participating in many areas of life.",
+    "page": 57,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Executive summary",
+   "first_page": 57,
+   "last_page": 212
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

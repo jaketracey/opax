@@ -1,0 +1,70 @@
+{
+  "slug": "integrity-report-qld-ccc-2020-11-20-perceptions-corruption-and-integrity-local-government",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "WHAT WE FOUND",
+    "first_page": 1,
+    "last_page": 3
+  },
+  "sentences": [
+    {
+      "text": "The Crime and Corruption Commission surveyed Queensland council employees to assess perceived corruption risks, reporting barriers and opportunities for prevention.",
+      "pages": [
+        1
+      ],
+      "support": "pinpoint barriers to reporting corruption and suspected wrongdoing among local government employees",
+      "section": "WHAT WE DID",
+      "people": []
+    },
+    {
+      "text": "The online survey ran from mid-May to early June 2020 and analysed responses from more than 6500 employees across 68 councils.",
+      "pages": [
+        1
+      ],
+      "support": "Analysed survey responses from over 6500 local government employees across 68 councils",
+      "section": "WHAT WE DID",
+      "people": []
+    },
+    {
+      "text": "The CCC reported that employees more often perceived corruption in the wider sector than in their own workplace, and identified misuse of authority and conflicts of interest as common concerns.",
+      "pages": [
+        1,
+        2
+      ],
+      "support": "Most local government employees identified \nthat corruption occurs and is a problem \nin the broader local government sector.",
+      "section": "WHAT WE FOUND",
+      "people": []
+    },
+    {
+      "text": "The CCC reported strong willingness to report corruption, alongside uncertainty about reporting channels and concerns about management inaction, careers and workplace relationships.",
+      "pages": [
+        2
+      ],
+      "support": "A number of barriers to reporting corruption \nwere identified by local government employees:",
+      "section": "REPORTING CORRUPTION",
+      "people": []
+    },
+    {
+      "text": "The CCC called for targeted reporting education, support from managers and accessible, practical internal guidance.",
+      "pages": [
+        4
+      ],
+      "support": "Local governments should ensure their internal resources are accessible, \nup-to-date and provide clear and practical advice to their employees.",
+      "section": "WHERE TO FROM HERE?",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "There is a high level of willingness among \ncouncil employees to report corruption.",
+      "page": 2,
+      "kind": "finding"
+    },
+    {
+      "quote": "Local governments should ensure their internal resources are accessible, \nup-to-date and provide clear and practical advice to their employees.",
+      "page": 4,
+      "kind": "recommendation"
+    }
+  ],
+  "notes": "WHAT WE FOUND is the factsheet's findings overview. Percentages exclude missing responses and vary by question. Advice is unnumbered."
+}

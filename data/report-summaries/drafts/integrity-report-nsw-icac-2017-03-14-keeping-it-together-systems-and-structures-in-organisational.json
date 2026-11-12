@@ -1,0 +1,56 @@
+{
+  "slug": "integrity-report-nsw-icac-2017-03-14-keeping-it-together-systems-and-structures-in-organisational",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Overview",
+    "first_page": 6,
+    "last_page": 7
+  },
+  "sentences": [
+    {
+      "text": "The NSW Independent Commission Against Corruption provides advice on corruption risks during public sector mergers and restructures.",
+      "pages": [
+        6
+      ],
+      "support": "The aim of this report is to alert public sector managers to the corruption pitfalls during and following organisational change",
+      "section": "Overview",
+      "people": []
+    },
+    {
+      "text": "It examines how large organisational changes affect controls, incentives and opportunities for misconduct, using investigation case studies.",
+      "pages": [
+        6
+      ],
+      "support": "It explores why and how large-scale organisational change initiatives create opportunities for corruption",
+      "section": "Overview",
+      "people": []
+    },
+    {
+      "text": "The Commission concludes that poorly managed change can create corruption opportunities through inadequate processes or unrecognised shifts in incentives.",
+      "pages": [
+        6
+      ],
+      "support": "These opportunities can arise from poorly designed, conflicting or inadequate processes",
+      "section": "Overview",
+      "people": []
+    },
+    {
+      "text": "The Commission advises agencies to build continuing change-management capacity, conduct early due diligence, strengthen high-risk controls and monitor progress against planned milestones.",
+      "pages": [
+        6,
+        7
+      ],
+      "support": "Organisations that have developed a standing change management capability are better placed to manage these challenges.",
+      "section": "Overview",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "If not managed well, organisational change can provide opportunities for corruption.",
+      "page": 6,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "Practical guidance without a numbered recommendations list. The overview continues onto PDF page 7."
+}

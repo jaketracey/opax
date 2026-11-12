@@ -1,0 +1,52 @@
+{
+  "slug": "integrity-report-wa-ccc-2019-10-24-implementation-recommendations-arising-commissions-03efeb2f",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission reviewed the WA Police response to the two remaining recommendations from its Operation Aviemore investigation.",
+      "pages": [
+        3
+      ],
+      "section": "Introduction",
+      "support": "The Commission made a commitment to re-evaluate the Police response to the two outstanding recommendations",
+      "people": []
+    },
+    {
+      "text": "Its review included police briefings and observation of investigative interviewing and cultural awareness training.",
+      "pages": [
+        3
+      ],
+      "section": "Introduction",
+      "support": "Commission officers attended relevant components of two investigative interviewing training courses and a full day Cultural Awareness Training Course",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that police were addressing the investigation's issues and taking broader steps to change their relationship with Aboriginal people.",
+      "pages": [
+        11
+      ],
+      "section": "Conclusion",
+      "support": "Police are continuing not only to address the issues arising from Operation Aviemore, but have taken a wider approach",
+      "people": []
+    },
+    {
+      "text": "The Commission closed all seven recommendations, while noting continuing challenges in helping interviewees understand the criminal caution.",
+      "pages": [
+        10,
+        11
+      ],
+      "section": "Conclusion",
+      "support": "The Commission considers that Police have taken responsibility to address all seven recommendations and therefore considers these closed.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Commission considers that Police have taken responsibility to address all seven recommendations and therefore considers these closed.",
+      "page": 11,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "No separate executive summary or overview. The conclusion closes the recommendations while the review records continuing work on the caution initiative."
+}

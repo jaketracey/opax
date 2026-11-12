@@ -1,0 +1,51 @@
+{
+  "slug": "integrity-report-nsw-icac-2025-06-25-coerced-compromised-or-groomed-how-people-get-drawn-into-cor",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The NSW Independent Commission Against Corruption explains how people can be manipulated into participating in corruption.",
+      "pages": [
+        6
+      ],
+      "support": "provides insights into how individuals can, contrary to their initial instincts, be drawn into a corrupt scheme.",
+      "section": "Chapter 1: Introduction",
+      "people": []
+    },
+    {
+      "text": "It uses investigation examples and case studies to examine coercion, compromise and grooming, including manipulation between public officials.",
+      "pages": [
+        6
+      ],
+      "support": "Drawing on examples from its own investigations and case studies from other bodies",
+      "section": "Chapter 1: Introduction",
+      "people": []
+    },
+    {
+      "text": "The Commission reports that detailed plans to groom officials over long periods are unusual in its experience.",
+      "pages": [
+        9
+      ],
+      "support": "it is unusual to see evidence of detailed, long-term plans to target and groom a public official.",
+      "section": "Chapter 3: About manipulative conduct",
+      "people": []
+    },
+    {
+      "text": "The Commission advises agencies to disrupt potentially improper relationships through measures such as staff rotation, shared responsibilities and team assignments.",
+      "pages": [
+        36
+      ],
+      "support": "a useful anti-corruption technique is to disrupt the potential for improper relationships to form between insiders and outsiders.",
+      "section": "Chapter 7: Tips for public agencies",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Consequently, a checklist of warning signs may not provide much protection against a skilled, determined manipulator.",
+      "page": 34,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "Prevention guidance, with no executive summary or numbered formal recommendations list; the tips are practical advice. Case-study allegations and individual names are omitted."
+}

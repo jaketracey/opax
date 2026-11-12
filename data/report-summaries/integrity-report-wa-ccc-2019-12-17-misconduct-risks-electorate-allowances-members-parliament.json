@@ -1,0 +1,101 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2019-12-17-misconduct-risks-electorate-allowances-members-parliament",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Misconduct risks in electorate allowances for Members of Parliament",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20risks%20in%20electorate%20allowances%20for%20Members%20of%20Parliament.pdf",
+  "document": "Misconduct risks in electorate allowances for Members of Parliament",
+  "sha256": "9449a69cb768504ac53b65f4585017b8a479184e01f1f92af7b1a18fadb5482b",
+  "pages": 80,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 7,
+  "last_page": 8,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20risks%20in%20electorate%20allowances%20for%20Members%20of%20Parliament.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission issued an interim report on electorate allowance risks, using a former parliamentarian's expenditure as a case study.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20risks%20in%20electorate%20allowances%20for%20Members%20of%20Parliament.pdf",
+      "document": "Misconduct risks in electorate allowances for Members of Parliament",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The Commission considered unclear spending rules and absent controls a significant risk, but could not determine whether private misuse of allowances was widespread.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20risks%20in%20electorate%20allowances%20for%20Members%20of%20Parliament.pdf",
+      "document": "Misconduct risks in electorate allowances for Members of Parliament",
+      "page": 25
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20risks%20in%20electorate%20allowances%20for%20Members%20of%20Parliament.pdf",
+      "document": "Misconduct risks in electorate allowances for Members of Parliament",
+      "page": 80
+     }
+    ]
+   },
+   {
+    "text": "The Commission formed an opinion of serious misconduct concerning the former member's use of allowances for private purposes and claims for tax deductions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20risks%20in%20electorate%20allowances%20for%20Members%20of%20Parliament.pdf",
+      "document": "Misconduct risks in electorate allowances for Members of Parliament",
+      "page": 79
+     }
+    ]
+   },
+   {
+    "text": "The Commission stressed that this opinion did not establish guilt of an offence and that its investigation was continuing.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20risks%20in%20electorate%20allowances%20for%20Members%20of%20Parliament.pdf",
+      "document": "Misconduct risks in electorate allowances for Members of Parliament",
+      "page": 79
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20risks%20in%20electorate%20allowances%20for%20Members%20of%20Parliament.pdf",
+      "document": "Misconduct risks in electorate allowances for Members of Parliament",
+      "page": 80
+     }
+    ]
+   },
+   {
+    "text": "The Commission suggested that the Salaries and Allowances Tribunal clarify the relationship between salary and allowances and make permitted spending more explicit.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20risks%20in%20electorate%20allowances%20for%20Members%20of%20Parliament.pdf",
+      "document": "Misconduct risks in electorate allowances for Members of Parliament",
+      "page": 25
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

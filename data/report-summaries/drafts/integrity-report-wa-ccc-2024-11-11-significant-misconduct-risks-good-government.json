@@ -1,0 +1,72 @@
+{
+  "slug": "integrity-report-wa-ccc-2024-11-11-significant-misconduct-risks-good-government",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "INTRODUCTION",
+    "first_page": 4,
+    "last_page": 9
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission’s Operation Godrevy investigated allegations of preferential travel-pass treatment and misuse of electorate staff for party campaigning.",
+      "pages": [
+        4,
+        6,
+        7
+      ],
+      "section": "INTRODUCTION",
+      "support": "The scope of the Commission's investigation was to form opinions as to \nwhether any public officer engaged in serious misconduct",
+      "people": []
+    },
+    {
+      "text": "The Commission formed no opinion that serious misconduct had occurred in either allegation.",
+      "pages": [
+        7,
+        8
+      ],
+      "section": "INTRODUCTION",
+      "support": "The Commission has formed no opinion of serious misconduct with respect \nto this allegation.",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that missing time records prevented verification of claims that campaigning during office hours was offset by public duties performed later.",
+      "pages": [
+        49
+      ],
+      "section": "Opinions",
+      "support": "The absence of accurate documentation of hours worked made it \nimpossible for the Commission to verify claims",
+      "people": []
+    },
+    {
+      "text": "The Commission considered the absence of electorate office time recording a serious misconduct risk.",
+      "pages": [
+        9
+      ],
+      "section": "INTRODUCTION",
+      "support": "In the Commission's opinion, if an MP does not utilise a time recording \nsystem in their electorate office",
+      "people": []
+    },
+    {
+      "text": "The Commission made three recommendations to introduce time recording, clarify restrictions on party work and provide a constituent management system.",
+      "pages": [
+        9
+      ],
+      "section": "INTRODUCTION",
+      "support": "DPC \nimplement a time recording procedure for MPs to use in each electorate \noffice.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The absence of accurate documentation of hours worked made it \nimpossible for the Commission to verify claims that campaigning work \nduring office hours was made up for by public duties performed outside \nthose hours.",
+      "page": 49,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "In the Commission's opinion, if an MP does not utilise a time recording \nsystem in their electorate office, their failure to do so is a serious \nmisconduct risk.",
+      "page": 9,
+      "kind": "opinion"
+    }
+  ],
+  "notes": "The Introduction contains the overall findings and recommendations. Three distinct recommendations are stated in paragraphs 34–35 and repeated in the Conclusion. The Commission’s suspicions about campaigning are not presented as proven misconduct; witnesses are unnamed in the summary."
+}

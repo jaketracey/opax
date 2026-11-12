@@ -1,0 +1,60 @@
+{
+  "slug": "integrity-report-sa-icac-2014-10-30-a-review-of-the-whistleblowers-protection-act-1993-sa",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "South Australia’s Independent Commissioner Against Corruption reviewed the operation and effectiveness of the Whistleblowers Protection Act 1993 at the Attorney-General’s request.",
+      "pages": [
+        5,
+        7
+      ],
+      "section": "Introduction",
+      "support": "The Attorney-General has requested me to conduct that review and report to \nhim.",
+      "people": []
+    },
+    {
+      "text": "The review considered protected disclosures, reporting pathways, confidentiality, victimisation remedies and oversight within the state’s integrity framework.",
+      "pages": [
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "section": "List of Recommendations",
+      "support": "That WBL include an offence for disclosing the identity \nof a person who has made a public interest disclosure",
+      "people": []
+    },
+    {
+      "text": "The Commissioner concluded that the Act should be replaced because it was not fulfilling its purpose of encouraging disclosures and protecting those who made them.",
+      "pages": [
+        86
+      ],
+      "section": "WBP Act – Amendment or Repeal and Re-enactment?",
+      "support": "I do \nnot think it is fulfilling its primary objective of facilitating disclosure and \nproviding protections for those who make disclosures.",
+      "people": []
+    },
+    {
+      "text": "The Commissioner made 30 recommendations addressing replacement legislation, investigation duties, reporting channels, whistleblower protection and oversight.",
+      "pages": [
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "section": "List of Recommendations",
+      "support": "That WBL provide an obligation, subject to appropriate \nexceptions, to investigate disclosures.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The WBP Act be repealed and a new Act be \nsubstituted that clearly addresses the four fundamental issues relevant to \nwhistleblowing and the further recommendations mentioned in this review.",
+      "page": 8,
+      "kind": "recommendation"
+    }
+  ],
+  "notes": "There is no executive summary or equivalent synopsis; a List of Recommendations appears on PDF pages 8–12. The summary draws on the Commissioner’s assessment and recommendations, not submissions or findings from research cited within the review."
+}

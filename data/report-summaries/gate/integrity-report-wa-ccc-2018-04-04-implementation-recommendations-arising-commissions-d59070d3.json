@@ -1,0 +1,82 @@
+{
+ "slug": "integrity-report-wa-ccc-2018-04-04-implementation-recommendations-arising-commissions-d59070d3",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission reviewed implementation of seven recommendations arising from its Operation Aviemore investigation.",
+    "pages": [
+     4
+    ],
+    "section": "Introduction",
+    "support": "This report details the actions taken by Police responding to those recommendations.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The recommendations addressed police interviewing, understanding and applying investigation powers, and police procedures.",
+    "pages": [
+     4
+    ],
+    "section": "Introduction",
+    "support": "improvements relating to interviewing practices, the understanding and implementation of the Criminal Investigation Act 2006 (CI Act) and the Police Manual.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission considered five recommendations implemented, with further work needed on cultural awareness training and interviewees' understanding of cautions.",
+    "pages": [
+     10,
+     12,
+     13,
+     14,
+     20
+    ],
+    "section": "Conclusion",
+    "support": "The Commission considers five of the seven recommendations have been implemented",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It planned to assess progress on the two outstanding recommendations in 2019.",
+    "pages": [
+     20
+    ],
+    "section": "Conclusion",
+    "support": "will review progress on two recommendations in 2019.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The Commission considers five of the seven recommendations have been implemented and will review progress on two recommendations in 2019.",
+    "page": 20,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

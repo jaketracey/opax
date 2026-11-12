@@ -1,0 +1,50 @@
+{
+  "slug": "integrity-report-wa-ccc-2016-07-01-report-matter-governance-murdoch-university",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "INTRODUCTION",
+    "first_page": 7,
+    "last_page": 10
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission and Murdoch University jointly investigated complaints concerning the then vice-chancellor's conduct.",
+      "pages": [
+        7
+      ],
+      "section": "INTRODUCTION",
+      "support": "The Commission undertook a co-operative investigation with Murdoch.",
+      "people": []
+    },
+    {
+      "text": "The report examined senior appointments, an appointment's termination and breaches of policies on adult material.",
+      "pages": [
+        9,
+        10
+      ],
+      "section": "Matters that fall within the scope of this report",
+      "support": "the breach of policy by downloading adult material and subsequent attempts to delete it.",
+      "people": []
+    },
+    {
+      "text": "The Commission formed a serious misconduct opinion about one senior appointment and misconduct opinions about misleading statements and the adult material policy breaches.",
+      "pages": [
+        10
+      ],
+      "section": "Matters that fall within the scope of this report",
+      "support": "In one area the Commission has formed an opinion of serious misconduct",
+      "people": []
+    },
+    {
+      "text": "It considered further recommendations unnecessary on credit card use and document retention because the university had accepted consultants' recommendations and improved its practices.",
+      "pages": [
+        9
+      ],
+      "section": "Destruction of documents",
+      "support": "improved its practices surrounding credit card use and document retention, the Commission has no need to make any recommendations.",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "The introduction includes the report's scope and synopsis of opinions. Existing OPAX findings are not duplicated. No misconduct opinion was formed about credit card use."
+}

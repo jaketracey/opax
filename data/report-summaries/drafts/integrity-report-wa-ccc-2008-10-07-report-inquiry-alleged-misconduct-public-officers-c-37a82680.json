@@ -1,0 +1,57 @@
+{
+  "slug": "integrity-report-wa-ccc-2008-10-07-report-inquiry-alleged-misconduct-public-officers-c-37a82680",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "EXECUTIVE SUMMARY",
+    "first_page": 15,
+    "last_page": 28
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission investigated possible public-officer misconduct in a murder investigation and the resulting prosecution and appeals.",
+      "pages": [
+        15,
+        29
+      ],
+      "support": "whether any public officer engaged in misconduct in connection with the investigation",
+      "section": "EXECUTIVE SUMMARY; INTRODUCTION",
+      "people": []
+    },
+    {
+      "text": "It examined police interviews, changes to witness statements, forensic testing and the disclosure of relevant material to prosecutors and the defence.",
+      "pages": [
+        20,
+        21,
+        22,
+        23,
+        24,
+        29
+      ],
+      "support": "the duty of disclosure and the responsibility of police and other officers to make such disclosure",
+      "section": "EXECUTIVE SUMMARY; INTRODUCTION",
+      "people": []
+    },
+    {
+      "text": "The Commission formed misconduct opinions about two police officers and a prosecutor concerning altered statements, misleading information and failures to disclose relevant material.",
+      "pages": [
+        27
+      ],
+      "support": "The Commission has formed a number of opinions as to misconduct and made a number of recommendations",
+      "section": "EXECUTIVE SUMMARY",
+      "people": []
+    },
+    {
+      "text": "The Commission made six recommendations addressing possible disciplinary action, interviews with mentally ill suspects, police training, written prosecution advice and a possible professional-conduct complaint.",
+      "pages": [
+        27,
+        28,
+        193
+      ],
+      "support": "That consideration is given by the Commissioner of Police to making special provision for the interviewing by investigating police of mentally ill suspects.",
+      "section": "EXECUTIVE SUMMARY; 14.2 Recommendations",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "The OPAX page already lists three findings, so findings is empty as required. The report expresses misconduct opinions and recommends consideration of disciplinary action; these are not criminal convictions or findings that disciplinary action occurred. Inconsistent trial and appeal dates within the executive summary are omitted rather than reconciled using outside material."
+}

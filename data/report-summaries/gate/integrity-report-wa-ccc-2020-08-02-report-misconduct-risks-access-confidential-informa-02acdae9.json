@@ -1,0 +1,98 @@
+{
+ "slug": "integrity-report-wa-ccc-2020-08-02-report-misconduct-risks-access-confidential-informa-02acdae9",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission investigated risks involving confidential information at the Office of the Auditor General.",
+    "pages": [
+     4
+    ],
+    "support": "In view of the potential misconduct risk in the exposure of confidential information, the Commission commenced an investigation",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commission found that inadequate access controls allowed two auditors to obtain private information about colleagues.",
+    "pages": [
+     4,
+     5
+    ],
+    "support": "Two auditors, each a certified practicing accountant (CPA), had routinely accessed confidential information about other OAG officers",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission identified a risk from police names and addresses retained on a laptop after an audit, while finding no evidence that the information was shared.",
+    "pages": [
+     6
+    ],
+    "support": "There is no evidence the police data was shared with others.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission formed an opinion of serious misconduct concerning an auditor's deliberate destruction of an encrypted storage device and its data.",
+    "pages": [
+     26,
+     27
+    ],
+    "support": "In the circumstances, an opinion of serious misconduct is appropriate.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "The Commission stressed that its misconduct opinion did not establish guilt of a criminal or disciplinary offence.",
+    "pages": [
+     27
+    ],
+    "support": "An opinion that serious misconduct has occurred is not, and is not to be taken as a finding or opinion",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 5,
+   "item": {
+    "text": "The Commission made five recommendations covering access restrictions, secure retention of audit data, internal checks and staff education.",
+    "pages": [
+     28,
+     29
+    ],
+    "support": "The Commission recommends that public authorities ensure confidential material used for an audit by the OAG remains confidential at the conclusion of the audit.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [],
+ "own_summary": {
+  "item": {
+   "heading": "Overview",
+   "first_page": 4,
+   "last_page": 7
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 6,
+  "sentences_pass": 6,
+  "findings": 0,
+  "findings_pass": 0,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

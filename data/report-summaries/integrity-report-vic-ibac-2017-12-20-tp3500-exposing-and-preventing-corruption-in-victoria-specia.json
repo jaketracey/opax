@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2017-12-20-tp3500-exposing-and-preventing-corruption-in-victoria-specia",
+ "report_type": "integrity_report",
+ "subtype": "special_report",
+ "title": "Exposing and preventing corruption in Victoria special report: IBAC's first five years",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a2845/globalassets/tabled-paper-documents/tabled-paper-3500/ibac_five_year_report_december_2017_bqwpgjct.pdf",
+  "document": "IBAC_Five_year_report_December_2017_BQwPgJCt",
+  "sha256": "dd00b20c15d6eb2ffc47fedd9243db1976a07426f8dc399fafafe66dfd7a4cef",
+  "pages": 24,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s reflections",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4a2845/globalassets/tabled-paper-documents/tabled-paper-3500/ibac_five_year_report_december_2017_bqwpgjct.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC reported to Parliament on its first five years of exposing and preventing public sector corruption and police misconduct.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2845/globalassets/tabled-paper-documents/tabled-paper-3500/ibac_five_year_report_december_2017_bqwpgjct.pdf",
+      "document": "IBAC_Five_year_report_December_2017_BQwPgJCt",
+      "page": 5
+     }
+    ],
+    "section": "Commissioner’s reflections"
+   },
+   {
+    "text": "The report covers investigations, police oversight, prevention work and opportunities to strengthen its powers and independence.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2845/globalassets/tabled-paper-documents/tabled-paper-3500/ibac_five_year_report_december_2017_bqwpgjct.pdf",
+      "document": "IBAC_Five_year_report_December_2017_BQwPgJCt",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2845/globalassets/tabled-paper-documents/tabled-paper-3500/ibac_five_year_report_december_2017_bqwpgjct.pdf",
+      "document": "IBAC_Five_year_report_December_2017_BQwPgJCt",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2845/globalassets/tabled-paper-documents/tabled-paper-3500/ibac_five_year_report_december_2017_bqwpgjct.pdf",
+      "document": "IBAC_Five_year_report_December_2017_BQwPgJCt",
+      "page": 19
+     }
+    ],
+    "section": "Commissioner’s reflections"
+   },
+   {
+    "text": "IBAC reported completing 55 investigations and making 93 recommendations to police and public sector agencies.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2845/globalassets/tabled-paper-documents/tabled-paper-3500/ibac_five_year_report_december_2017_bqwpgjct.pdf",
+      "document": "IBAC_Five_year_report_December_2017_BQwPgJCt",
+      "page": 4
+     }
+    ],
+    "section": "The numbers at a glance"
+   },
+   {
+    "text": "The Commissioner sought powers to follow public money through private providers, initiate proceeds-of-crime recovery and receive funding directly through Parliament.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2845/globalassets/tabled-paper-documents/tabled-paper-3500/ibac_five_year_report_december_2017_bqwpgjct.pdf",
+      "document": "IBAC_Five_year_report_December_2017_BQwPgJCt",
+      "page": 6
+     }
+    ],
+    "section": "Strengthening our legislation and independence"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "After just five years, it is reasonable to conclude that IBAC has changed perceptions about corruption in Victoria.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2845/globalassets/tabled-paper-documents/tabled-paper-3500/ibac_five_year_report_december_2017_bqwpgjct.pdf",
+     "document": "IBAC_Five_year_report_December_2017_BQwPgJCt",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,79 @@
+{
+ "slug": "integrity-report-sa-icac-2024-06-04-icac-university-integrity-survey-2023",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commission Against Corruption surveyed staff at the state’s three public universities about perceived corruption and other improper conduct.",
+    "pages": [
+     6,
+     7
+    ],
+    "section": "THE SURVEY",
+    "support": "Staff employed at the University of Adelaide, University of South Australia and Flinders University were invited to participate",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The voluntary survey received 2,527 responses and focused on research integrity, records management and outside professional activities.",
+    "pages": [
+     7
+    ],
+    "section": "THE SURVEY",
+    "support": "The current survey focuses on research integrity, records management and outside professional activities.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission reported that recruitment favouritism and misuse of authority remained the largest perceived corruption risks, while reported access to adequate training had declined.",
+    "pages": [
+     57
+    ],
+    "section": "CONCLUSION",
+    "support": "Nepotism and favouritism in recruitment and misuse of authority continue to be seen as the largest corruption risks.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission urged universities to improve integrity messaging, support staff reporting and explain reporting duties and protections.",
+    "pages": [
+     57
+    ],
+    "section": "CONCLUSION",
+    "support": "All three universities would do well to invest in their messaging on integrity standards and their expectations around reporting.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The proportion of respondents who have received sufficient training on corruption risks has decreased from 2020 to 2023.",
+    "page": 57,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

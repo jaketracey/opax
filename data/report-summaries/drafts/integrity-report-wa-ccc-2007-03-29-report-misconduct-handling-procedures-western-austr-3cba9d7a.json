@@ -1,0 +1,55 @@
+{
+  "slug": "integrity-report-wa-ccc-2007-03-29-report-misconduct-handling-procedures-western-austr-3cba9d7a",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "EXECUTIVE SUMMARY",
+    "first_page": 7,
+    "last_page": 7
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission reviewed misconduct handling capacity at the Department of Consumer Employment Protection.",
+      "pages": [
+        7
+      ],
+      "section": "EXECUTIVE SUMMARY",
+      "support": "It is part of a program of reviews to assess the ability of the Public Sector Agencies to deal with misconduct",
+      "people": []
+    },
+    {
+      "text": "The review considered internal investigations and the department's role in identifying suspected misconduct elsewhere in the public sector.",
+      "pages": [
+        7
+      ],
+      "section": "EXECUTIVE SUMMARY",
+      "support": "It is in a unique position to identify and notify the Commission of misconduct external to itself.",
+      "people": []
+    },
+    {
+      "text": "The Commission considered the department committed to misconduct guidelines, staff education and reporting obligations.",
+      "pages": [
+        7
+      ],
+      "section": "EXECUTIVE SUMMARY",
+      "support": "The Commission considers that DOCEP is making a very serious attempt to establish appropriate misconduct guidelines for its staff",
+      "people": []
+    },
+    {
+      "text": "Its two recommendations sought monitoring of internal investigation capacity and continued notification of suspected misconduct outside the department.",
+      "pages": [
+        7
+      ],
+      "section": "EXECUTIVE SUMMARY",
+      "support": "The Commission has made two recommendations in this report",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Commission considers that DOCEP is making a very serious attempt to establish appropriate misconduct guidelines for its staff, to roll out those guidelines in a timely fashion and to educate the Executive and staff about their obligations and responsibilities under the Act.",
+      "page": 7,
+      "kind": "opinion"
+    }
+  ],
+  "notes": ""
+}

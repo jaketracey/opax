@@ -1,0 +1,108 @@
+{
+ "slug": "integrity-report-qld-ccc-2009-06-01-perceptions-misconduct-queensland-correctional-institutions",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Crime and Misconduct Commission and Griffith University surveyed Queensland custodial officers to track changes in their perceptions of misconduct.",
+    "pages": [
+     7
+    ],
+    "section": "Summary",
+    "support": "the Crime and Misconduct Commission (CMC) and Griffith University replicated the survey to assess any changes",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The research compared officers’ views about misconduct, reporting, training, management and working conditions across surveys in 2001 and 2007.",
+    "pages": [
+     7
+    ],
+    "section": "Summary",
+    "support": "whether there have been any changes in these views in the intervening time.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The CMC reported that officers perceived misconduct as less frequent and more likely to be detected, but were more willing to justify it.",
+    "pages": [
+     8
+    ],
+    "section": "Key findings",
+    "support": "However, there was a significant increase in the willingness of officers to justify occasions of misconduct.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The CMC identified continuing concerns about perceived favouritism, reporting misconduct and relationships with management.",
+    "pages": [
+     8,
+     11
+    ],
+    "section": "Key findings",
+    "support": "including a perceived lack of protection from management for officers who report suspected misconduct",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "Its three recommendations covered recruitment and selection, compulsory ethics training and a review of internal misconduct reporting.",
+    "pages": [
+     11
+    ],
+    "section": "Recommendations and suggestions for improvement",
+    "support": "That Queensland Corrective Services systematically provide all staff, including management, with integrity and ethical training",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "However, there was a significant increase in the willingness of officers to justify occasions of misconduct.",
+    "page": 8,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "CCOs seem reluctant to report misconduct and have generally unfavourable perceptions of senior staff and management.",
+    "page": 68,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Summary",
+   "first_page": 7,
+   "last_page": 12
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

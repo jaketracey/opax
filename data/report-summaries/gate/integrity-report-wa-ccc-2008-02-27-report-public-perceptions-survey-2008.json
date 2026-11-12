@@ -1,0 +1,98 @@
+{
+ "slug": "integrity-report-wa-ccc-2008-02-27-report-public-perceptions-survey-2008",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission commissioned an independent survey of 380 WA adults about the Commission and the public sector.",
+    "pages": [
+     5
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "commissioned an independent research survey of 380 Western Australians.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commission reported high public awareness and confidence in its complaint investigations, alongside broad support for its independence.",
+    "pages": [
+     5
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "Confidence was equally high with 8 in 10 respondents confident that the Commission would properly investigate their complaints.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "It also reported public concern about the detection of misconduct and possible consequences for people who complain.",
+    "pages": [
+     5
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "5 in 10 respondents believing that the chances of detecting misconduct were slim",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission cautioned that the results indicated possible issues and did not provide definitive answers.",
+    "pages": [
+     8
+    ],
+    "section": "Interpretation of survey results",
+    "support": "Results should largely be considered as indicative of possible issues rather as providing definitive answers.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "It identified understanding of its role, confidence in complaints processes and expectations about preventing misconduct as areas to address.",
+    "pages": [
+     10
+    ],
+    "section": "Conclusions",
+    "support": "confidence in public sector complaints processes; and beliefs that more can be done to stop misconduct",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Overall, the survey indicates a generally high level of recognition of and support for the Corruption and Crime Commission by the Western Australian community.",
+    "page": 10,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "EXECUTIVE SUMMARY",
+   "first_page": 5,
+   "last_page": 5
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

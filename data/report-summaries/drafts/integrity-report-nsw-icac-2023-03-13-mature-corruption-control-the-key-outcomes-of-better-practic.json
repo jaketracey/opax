@@ -1,0 +1,52 @@
+{
+  "slug": "integrity-report-nsw-icac-2023-03-13-mature-corruption-control-the-key-outcomes-of-better-practic",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The NSW Independent Commission Against Corruption outlines better practice to help agencies assess and improve their corruption controls.",
+      "pages": [
+        1,
+        6
+      ],
+      "support": "It aims to facilitate agencies to assess the maturity of their corruption control programs and identify any immature elements.",
+      "section": "Mature corruption control: the key outcomes of better practice",
+      "people": []
+    },
+    {
+      "text": "Its framework covers building integrity, prevention, detection and responses to integrity breaches.",
+      "pages": [
+        1
+      ],
+      "support": "Better practice corruption control is built on four key pillars of control",
+      "section": "Pillars of control",
+      "people": []
+    },
+    {
+      "text": "The Commission cautions that adopting many controls is insufficient if they do not match agency risks or are poorly implemented.",
+      "pages": [
+        4
+      ],
+      "support": "The adoption of a broad range of controls is, by itself, insufficient to ensure good corruption control.",
+      "section": "Supporting systems and processes",
+      "people": []
+    },
+    {
+      "text": "Its guidance calls for supporting arrangements for risk management, control frameworks, staff responsibilities and competence.",
+      "pages": [
+        4
+      ],
+      "support": "specific systems and processes that work together to support the implementation of an agency’s corruption control program",
+      "section": "Supporting systems and processes",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The adoption of a broad range of controls is, by itself, insufficient to ensure good corruption control.",
+      "page": 4,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "Short framework guide without a separate summary, investigation findings or numbered recommendations."
+}

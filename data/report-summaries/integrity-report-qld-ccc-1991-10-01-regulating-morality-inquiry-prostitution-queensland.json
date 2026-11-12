@@ -1,0 +1,34 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1991-10-01-regulating-morality-inquiry-prostitution-queensland",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Regulating Morality? An Inquiry into Prostitution in Queensland",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Regulating-morality-an-inquiry-into-prostitution-in-qld-Report-1991.pdf",
+  "document": "Regulating Morality? An Inquiry into Prostitution in Queensland (September 1991)",
+  "sha256": "d5b4996783c3584b11b9c411b7efb9c4f0a0dc0732539a77183907393365b309",
+  "pages": 372,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "withheld",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": []
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

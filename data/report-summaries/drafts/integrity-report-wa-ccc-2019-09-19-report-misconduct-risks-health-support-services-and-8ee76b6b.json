@@ -1,0 +1,46 @@
+{
+  "slug": "integrity-report-wa-ccc-2019-09-19-report-misconduct-risks-health-support-services-and-8ee76b6b",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission investigated risks in working hours, leave and overtime arrangements at North Metropolitan Health Service.",
+      "pages": [
+        4
+      ],
+      "section": "INTRODUCTION",
+      "support": "Concerned about the serious misconduct risks arising out of the systems in place around working hours, leave and overtime claims",
+      "people": []
+    },
+    {
+      "text": "The Commission also identified weaknesses in Health Support Services' payroll processes.",
+      "pages": [
+        4,
+        5
+      ],
+      "section": "INTRODUCTION",
+      "support": "The Commission has identified some weaknesses in HSS Payroll",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that outdated technology and insufficient managerial vigilance contributed to systemic risks.",
+      "pages": [
+        20
+      ],
+      "section": "Conclusion",
+      "support": "the investigation uncovered systemic risks, partly due to dated technology and partly due to lack of appropriate managerial vigilance.",
+      "people": []
+    },
+    {
+      "text": "It called for shared responsibility for payroll controls, upward delegation during managers' leave and closer scrutiny of termination payments.",
+      "pages": [
+        20
+      ],
+      "section": "Conclusion",
+      "support": "Termination payouts must receive greater scrutiny from managers who have direct oversight",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "No separate executive summary or overview, and no numbered recommendations list. Existing OPAX findings are not duplicated."
+}

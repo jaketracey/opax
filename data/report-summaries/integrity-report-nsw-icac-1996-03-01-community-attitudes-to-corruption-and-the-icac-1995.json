@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-1996-03-01-community-attitudes-to-corruption-and-the-icac-1995",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Community attitudes to corruption and the ICAC 1995",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201995.pdf.aspx",
+  "document": "Community attitudes to corruption and the ICAC 1995",
+  "sha256": "62184c4028d80edb1a5307cc5abc072f343051b15a236cce6c6e5ee9401ae4b0",
+  "pages": 53,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY",
+  "first_page": 5,
+  "last_page": 7,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201995.pdf.aspx#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "ICAC surveyed 515 NSW adults, mainly in October 1995, to inform its education and corruption prevention work.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201995.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC 1995",
+      "page": 5
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "The telephone survey examined public sector services and integrity, views of corruption, possible reporting avenues and support for ICAC.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201995.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC 1995",
+      "page": 5
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "ICAC reported that 58% considered public sector corruption a major problem, compared with 44% in the 1994 survey.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201995.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC 1995",
+      "page": 6
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "ICAC reported that 71% expected people reporting corruption to suffer, while half believed they could do nothing personally about it.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201995.pdf.aspx",
+      "document": "Community attitudes to corruption and the ICAC 1995",
+      "page": 6
+     }
+    ],
+    "section": "SUMMARY"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Public support for the ICAC has remained consistently high.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201995.pdf.aspx",
+     "document": "Community attitudes to corruption and the ICAC 1995",
+     "page": 38
+    }
+   },
+   {
+    "quote": "Members of the public in NSW appear to strongly support both a corruption prevention and an education role for the ICAC, in addition to its investigative function.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Community%20attitudes%20to%20corruption%20and%20the%20ICAC%20-%201995.pdf.aspx",
+     "document": "Community attitudes to corruption and the ICAC 1995",
+     "page": 39
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

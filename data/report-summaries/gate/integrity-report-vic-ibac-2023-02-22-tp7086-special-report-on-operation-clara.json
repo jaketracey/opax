@@ -1,0 +1,97 @@
+{
+ "slug": "integrity-report-vic-ibac-2023-02-22-tp7086-special-report-on-operation-clara",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "IBAC’s Operation Clara investigated whether a Victorian Planning Authority director misused his position or improperly influenced officials involved in the East Werribee project.",
+    "pages": [
+     7
+    ],
+    "support": "misused his public position on the board of the VPA to favour the Australian Education City",
+    "section": "What IBAC did",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examined the director’s lobbying for the Australian Education City consortium, conflicts of interest and attempts to obtain financial benefits.",
+    "pages": [
+     8,
+     17,
+     18
+    ],
+    "support": "sought to use his public position on the board of the VPA to favour AEC",
+    "section": "What the investigation found",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "IBAC found that the director lobbied officials without declaring relevant conflicts or registering the consortium as a client, and sought to use his board role to advance private interests.",
+    "pages": [
+     8,
+     17
+    ],
+    "support": "IBAC’s investigation found that Mr Theophanous sought to use his public position",
+    "section": "What the investigation found",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It made four recommendations covering board appointments, lobbying restrictions, directors’ conduct rules and the time limit for commencing certain planning authority prosecutions.",
+    "pages": [
+     31
+    ],
+    "support": "prohibit public entity board directors from engaging in lobbying activities on any matter that relates to the functions of the public entity",
+    "section": "Conclusions and recommendations",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "IBAC’s investigation found that Mr Theophanous sought to use his public position on the board of the VPA to favour AEC and further his other business interests as a registered lobbyist.",
+    "page": 17,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "IBAC’s investigation did not identify any direct financial payments from AEC to Mr Theophanous.",
+    "page": 19,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Summary of the investigation and outcomes",
+   "first_page": 7,
+   "last_page": 20
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

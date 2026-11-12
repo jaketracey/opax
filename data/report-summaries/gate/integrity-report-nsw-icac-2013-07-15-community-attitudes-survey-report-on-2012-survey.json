@@ -1,0 +1,89 @@
+{
+ "slug": "integrity-report-nsw-icac-2013-07-15-community-attitudes-survey-report-on-2012-survey",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The NSW Independent Commission Against Corruption uses its community survey to examine perceptions of corruption, awareness of the Commission and willingness to report wrongdoing.",
+    "pages": [
+     6,
+     7
+    ],
+    "support": "The CAS directly assesses an individual’s understanding of corruption and their willingness to report it.",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The 2012 telephone survey received 506 responses from NSW adults and supported comparisons with earlier surveys.",
+    "pages": [
+     7
+    ],
+    "support": "A total of 506 individuals responded to the survey.",
+    "section": "Methodology",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concludes that the proportion seeing corruption as a major problem declined over the longer term, while awareness of the Commission remained high.",
+    "pages": [
+     13,
+     16
+    ],
+    "support": "there appears to have been a long-term decline in the proportion of respondents who view corruption in NSW as a major problem.",
+    "section": "Conclusions",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission found that most respondents were willing to report serious corruption, although only a slim majority expected useful action from a report.",
+    "pages": [
+     24
+    ],
+    "support": "A slim majority of respondents believes that reports of corruption will result in appropriate action.",
+    "section": "Conclusions",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Overall, there appears to have been a long-term decline in the proportion of respondents who view corruption in NSW as a major problem.",
+    "page": 13,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "Most respondents appear willing to report serious corruption.",
+    "page": 24,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2025-05-08-report-risks-confidential-information-control-public-sector",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on Risks to Confidential Information Control in the Public Sector",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_risks_to_confidential_information_control_in_the_public_sector_1.pdf",
+  "document": "Report on risks to confidential information control in the public sector 1",
+  "sha256": "01c2ba9a41ddf0be6dd86f2b0f17c6953266c54a03eee7a80c4b57129f00ff84",
+  "pages": 14,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_risks_to_confidential_information_control_in_the_public_sector_1.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated a former Department of Finance officer’s downloading of confidential records before moving to private employment.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_risks_to_confidential_information_control_in_the_public_sector_1.pdf",
+      "document": "Report on risks to confidential information control in the public sector 1",
+      "page": 4
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission made no finding of serious misconduct because it could not establish that the officer acted outside authorised access to the documents.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_risks_to_confidential_information_control_in_the_public_sector_1.pdf",
+      "document": "Report on risks to confidential information control in the public sector 1",
+      "page": 14
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "The Commission identified risks involving USB controls, unclear confidentiality agreements and insufficient reminders to departing staff.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_risks_to_confidential_information_control_in_the_public_sector_1.pdf",
+      "document": "Report on risks to confidential information control in the public sector 1",
+      "page": 14
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "The Commission made two recommendations to strengthen confidentiality agreements and remind departing employees of continuing obligations, which Finance accepted.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report_on_risks_to_confidential_information_control_in_the_public_sector_1.pdf",
+      "document": "Report on risks to confidential information control in the public sector 1",
+      "page": 5
+     }
+    ],
+    "section": "INTRODUCTION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

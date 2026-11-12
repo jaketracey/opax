@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2021-06-01-identify-disclose-and-manage-conflicts-of-interest-in-public",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Identify, Disclose and Manage: Conflicts of Interest in Public Administration",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/documents/ICAC_Identify_Disclose_Manage_2021.pdf",
+  "document": "Identify, Disclose and Manage: Conflicts of Interest in Public Administration",
+  "sha256": "cb6c25b2cdb52e8628973e5402e0a0c71da170aacd8e847b257426bb29f72687",
+  "pages": 16,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://icac.sa.gov.au/documents/ICAC_Identify_Disclose_Manage_2021.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commissioner Against Corruption issued guidance on conflicts of interest after investigations repeatedly raised the issue.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC_Identify_Disclose_Manage_2021.pdf",
+      "document": "Identify, Disclose and Manage: Conflicts of Interest in Public Administration",
+      "page": 4
+     }
+    ],
+    "section": "Commissioner’s foreword"
+   },
+   {
+    "text": "The Commissioner explained that a conflict can arise when personal interests intersect with public duties, including where others could reasonably perceive a conflict.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC_Identify_Disclose_Manage_2021.pdf",
+      "document": "Identify, Disclose and Manage: Conflicts of Interest in Public Administration",
+      "page": 5
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC_Identify_Disclose_Manage_2021.pdf",
+      "document": "Identify, Disclose and Manage: Conflicts of Interest in Public Administration",
+      "page": 6
+     }
+    ],
+    "section": "Identifying conflicts of interest"
+   },
+   {
+    "text": "The Commissioner concluded that identifying, disclosing and managing conflicts is necessary to protect impartial services and public confidence.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC_Identify_Disclose_Manage_2021.pdf",
+      "document": "Identify, Disclose and Manage: Conflicts of Interest in Public Administration",
+      "page": 13
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commissioner urged public authorities to review their conflict controls and regularly remind staff of their obligations.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/ICAC_Identify_Disclose_Manage_2021.pdf",
+      "document": "Identify, Disclose and Manage: Conflicts of Interest in Public Administration",
+      "page": 13
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There is nothing inherently wrong with having a conflict of interest.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/ICAC_Identify_Disclose_Manage_2021.pdf",
+     "document": "Identify, Disclose and Manage: Conflicts of Interest in Public Administration",
+     "page": 5
+    }
+   },
+   {
+    "quote": "The appropriate identification, disclosure and management of conflicts of interest is a duty incumbent on all public officers and public authorities.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/ICAC_Identify_Disclose_Manage_2021.pdf",
+     "document": "Identify, Disclose and Manage: Conflicts of Interest in Public Administration",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,83 @@
+{
+ "slug": "integrity-report-sa-icac-2017-09-25-evaluation-of-the-practices-policies-and-procedures-of-the-p",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commissioner Against Corruption evaluated the Public Trustee’s systems to identify ways to prevent corruption, misconduct and maladministration.",
+    "pages": [
+     6,
+     7
+    ],
+    "section": "INTRODUCTION",
+    "support": "The recommendations in this report are intended to provide practical ways to advance comprehensive and \neffective systems",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The evaluation focused on administering trusts and deceased and personal estates, together with preparing wills.",
+    "pages": [
+     7,
+     8
+    ],
+    "section": "INTRODUCTION",
+    "support": "The focus of this report is on Public Trustee’s practices, policies and procedures in relation to Public \nTrustee’s core business",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commissioner concluded that integrity risks would remain high without the recommended changes and that adequate resources were needed to reduce them.",
+    "pages": [
+     82
+    ],
+    "section": "CONCLUSION",
+    "support": "Accordingly \nPublic Trustee will need adequate resourcing in order to effectively reduce that risk.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commissioner made 19 recommendations addressing organisational arrangements, electronic systems, information security, training, customer service and estate assets.",
+    "pages": [
+     8,
+     11,
+     12,
+     13
+    ],
+    "section": "RECOMMENDATIONS",
+    "support": "I have made 19 recommendations in this report",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Many of the recommendations in this report would have the same effect but without the implementation of \nthose recommendations, the risk of corruption, misconduct and maladministration will remain high.",
+    "page": 82,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

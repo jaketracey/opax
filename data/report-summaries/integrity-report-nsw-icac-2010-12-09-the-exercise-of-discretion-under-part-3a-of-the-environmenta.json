@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2010-12-09-the-exercise-of-discretion-under-part-3a-of-the-environmenta",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "The exercise of discretion under Part 3A of the Environmental Planning and Assessment Act 1979",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/The%20exercise%20of%20discretion%20under%20Part%203A%20of%20the%20Environment%20Planning%20and%20Assessment%20Act%201979.pdf.aspx",
+  "document": "The exercise of discretion under Part 3A of the Environmental Planning and Assessment Act 1979",
+  "sha256": "1b64ff4f64d3e44ed1ddb2c9800d608a1f82e98d324b84c29556cbf04cc52c7b",
+  "pages": 38,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chapter 1: Introduction and overview",
+  "first_page": 4,
+  "last_page": 8,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/232/The%20exercise%20of%20discretion%20under%20Part%203A%20of%20the%20Environment%20Planning%20and%20Assessment%20Act%201979.pdf.aspx#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Independent Commission Against Corruption reviews discretion and corruption safeguards in state-level planning approvals, following work with the Department of Planning.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/The%20exercise%20of%20discretion%20under%20Part%203A%20of%20the%20Environment%20Planning%20and%20Assessment%20Act%201979.pdf.aspx",
+      "document": "The exercise of discretion under Part 3A of the Environmental Planning and Assessment Act 1979",
+      "page": 4
+     }
+    ],
+    "section": "Chapter 1: Introduction and overview"
+   },
+   {
+    "text": "It examines project declarations, assessment and decisions under Part 3A, together with processes for listing state-significant sites.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/The%20exercise%20of%20discretion%20under%20Part%203A%20of%20the%20Environment%20Planning%20and%20Assessment%20Act%201979.pdf.aspx",
+      "document": "The exercise of discretion under Part 3A of the Environmental Planning and Assessment Act 1979",
+      "page": 4
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/The%20exercise%20of%20discretion%20under%20Part%203A%20of%20the%20Environment%20Planning%20and%20Assessment%20Act%201979.pdf.aspx",
+      "document": "The exercise of discretion under Part 3A of the Environmental Planning and Assessment Act 1979",
+      "page": 6
+     }
+    ],
+    "section": "Terms of reference of joint task force"
+   },
+   {
+    "text": "The Commission identifies broad discretion, complex rules and outdated local plans as risks, while stating that corrupt use of the powers had not been established.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/The%20exercise%20of%20discretion%20under%20Part%203A%20of%20the%20Environment%20Planning%20and%20Assessment%20Act%201979.pdf.aspx",
+      "document": "The exercise of discretion under Part 3A of the Environmental Planning and Assessment Act 1979",
+      "page": 5
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/The%20exercise%20of%20discretion%20under%20Part%203A%20of%20the%20Environment%20Planning%20and%20Assessment%20Act%201979.pdf.aspx",
+      "document": "The exercise of discretion under Part 3A of the Environmental Planning and Assessment Act 1979",
+      "page": 9
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/The%20exercise%20of%20discretion%20under%20Part%203A%20of%20the%20Environment%20Planning%20and%20Assessment%20Act%201979.pdf.aspx",
+      "document": "The exercise of discretion under Part 3A of the Environmental Planning and Assessment Act 1979",
+      "page": 10
+     }
+    ],
+    "section": "Chapter 2: Key issues"
+   },
+   {
+    "text": "Its 20 recommendations address planning controls, independent scrutiny, transparency, the Planning and Assessment Commission and third-party appeal rights for private projects.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/The%20exercise%20of%20discretion%20under%20Part%203A%20of%20the%20Environment%20Planning%20and%20Assessment%20Act%201979.pdf.aspx",
+      "document": "The exercise of discretion under Part 3A of the Environmental Planning and Assessment Act 1979",
+      "page": 6
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/The%20exercise%20of%20discretion%20under%20Part%203A%20of%20the%20Environment%20Planning%20and%20Assessment%20Act%201979.pdf.aspx",
+      "document": "The exercise of discretion under Part 3A of the Environmental Planning and Assessment Act 1979",
+      "page": 7
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/The%20exercise%20of%20discretion%20under%20Part%203A%20of%20the%20Environment%20Planning%20and%20Assessment%20Act%201979.pdf.aspx",
+      "document": "The exercise of discretion under Part 3A of the Environmental Planning and Assessment Act 1979",
+      "page": 8
+     }
+    ],
+    "section": "List of recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The greater the departure from the previous norm, the greater the corruption risk.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/The%20exercise%20of%20discretion%20under%20Part%203A%20of%20the%20Environment%20Planning%20and%20Assessment%20Act%201979.pdf.aspx",
+     "document": "The exercise of discretion under Part 3A of the Environmental Planning and Assessment Act 1979",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

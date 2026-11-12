@@ -1,0 +1,71 @@
+{
+ "slug": "integrity-report-sa-icac-2023-07-06-discussion-paper-lobbying-and-influence",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commission Against Corruption sought submissions on lobbying regulation to determine whether further work was needed.",
+    "pages": [
+     5
+    ],
+    "section": "How does South Australia compare?",
+    "support": "The Commission is calling for submissions relating to lobbying regulation in South Australia",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The discussion paper asked about the definition of lobbying, obligations on officials being lobbied, former officials’ employment, local government and consistency between jurisdictions.",
+    "pages": [
+     5,
+     6,
+     7,
+     8
+    ],
+    "section": "Issues for consideration",
+    "support": "Should the conduct of lobbied parties be more closely regulated?",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission explained that lobbying could inform policy, while opaque or exclusive access could increase the risk of improper influence.",
+    "pages": [
+     3
+    ],
+    "section": "Lobbying: A risky necessity",
+    "support": "The lobbying of Government officials can play a positive role in informing Government policies and priorities",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It invited responses to its questions and other lobbying issues to guide its consideration of reform.",
+    "pages": [
+     5
+    ],
+    "section": "How does South Australia compare?",
+    "support": "Your submission may address the issues and questions detailed below, or any other aspect of lobbying",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 0,
+  "findings_pass": 0,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

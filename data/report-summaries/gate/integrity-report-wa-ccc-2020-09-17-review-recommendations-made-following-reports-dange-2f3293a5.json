@@ -1,0 +1,92 @@
+{
+ "slug": "integrity-report-wa-ccc-2020-09-17-review-recommendations-made-following-reports-dange-2f3293a5",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission reviewed the response by WA Health to 19 recommendations about managing controlled drugs in public hospitals.",
+    "pages": [
+     5
+    ],
+    "support": "The purpose of this report is to review what actions have been taken in response to the Commission's recommendations.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The review included visits to nine hospitals and examined accountability, policies, audits, technology, drug discrepancies and staff training.",
+    "pages": [
+     10
+    ],
+    "support": "Commission officers attended nine regional and metropolitan hospitals and engaged directly with operational staff",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission found substantial progress but continuing differences in drug management between and within health service providers.",
+    "pages": [
+     5,
+     27
+    ],
+    "support": "Significant variations in drug management processes and practices were evident during the Commission's review",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission closed 17 recommendations and kept two about policies and procedures open for another review after 12 months.",
+    "pages": [
+     5,
+     27
+    ],
+    "support": "WA Health has considered and taken satisfactory action to address 17 of the 19 recommendations.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "WA Health has considered and taken satisfactory action to address 17 of the 19 recommendations.",
+    "page": 27,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "Significant variations in drug management processes and practices were evident during the Commission's review, not only across WA Health but also within the individual HSPs.",
+    "page": 27,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Overview",
+   "first_page": 5,
+   "last_page": 5
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

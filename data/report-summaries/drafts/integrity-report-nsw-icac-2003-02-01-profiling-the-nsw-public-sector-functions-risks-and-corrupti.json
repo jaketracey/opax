@@ -1,0 +1,63 @@
+{
+  "slug": "integrity-report-nsw-icac-2003-02-01-profiling-the-nsw-public-sector-functions-risks-and-corrupti",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "E X E C U T I V E S U M M A RY",
+    "first_page": 10,
+    "last_page": 14
+  },
+  "sentences": [
+    {
+      "text": "The Independent Commission Against Corruption surveyed NSW public sector organisations and staff to identify perceived corruption risks and existing prevention practices.",
+      "pages": [
+        10
+      ],
+      "support": "In late 2001, the ICAC commenced a major research\nproject to develop a snapshot of corruption-related issues",
+      "section": "Executive summary",
+      "people": []
+    },
+    {
+      "text": "It received completed surveys from 265 organisations and 357 staff across 20 organisations; the research explored potential opportunities for corruption rather than measuring existing corruption.",
+      "pages": [
+        10
+      ],
+      "support": "The research does not quantify existing corruption.\nInstead, it explores perceptions of potential opportunities\nfor corruption.",
+      "section": "Executive summary",
+      "people": []
+    },
+    {
+      "text": "ICAC identified misuse of confidential information, misuse of public assets and corrupt tendering as the main perceived risks confronting organisations.",
+      "pages": [
+        79
+      ],
+      "support": "An overview of the results suggests that the major risks\ncurrently confronting organisations relate to misuse of\nconfidential information",
+      "section": "Conclusion",
+      "people": []
+    },
+    {
+      "text": "ICAC made 29 recommendations covering risk management, conduct codes, gifts, information security, recruitment, procurement, audit, protected disclosures and internal investigations.",
+      "pages": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "support": "ensure that internal reporting mechanisms are effective\nand include protection for those that use them",
+      "section": "Executive summary",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "However, public sector\norganisations must remain vigilant in monitoring and\nreviewing their risk management practices.",
+      "page": 79,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "The ICAC encourages all organisations to adopt the\nseven-step risk management process as a general approach\nto identifying and treating risks.",
+      "page": 80,
+      "kind": "recommendation"
+    }
+  ],
+  "notes": "The extracted executive-summary heading is letter-spaced. The research measures perceptions and reported practices, not existing corruption."
+}

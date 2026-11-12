@@ -1,0 +1,96 @@
+{
+ "slug": "integrity-report-sa-icac-2015-06-30-review-of-legislative-schemes",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "South Australia’s Independent Commissioner Against Corruption reviewed police complaints legislation and public administration complaint pathways at the Attorney-General’s request.",
+    "pages": [
+     4
+    ],
+    "section": "LETTER OF TRANSMITTAL",
+    "support": "By letter dated 30 October 2014 you requested that I undertake a review of the legislative \nschemes governing",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The review considered complaint oversight, assessment, investigation and whether intake processes could be consolidated.",
+    "pages": [
+     4
+    ],
+    "section": "LETTER OF TRANSMITTAL",
+    "support": "with a particular focus on whether or not the complaint/report processes \nto those offices can be consolidated in one office.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commissioner concluded that overlapping responsibilities and slow resolution made the existing integrity system cumbersome.",
+    "pages": [
+     5
+    ],
+    "section": "INTRODUCTION",
+    "support": "There are too many \nagencies and those agencies overlap in their respective responsibilities.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commissioner made 29 recommendations, including replacing police complaints legislation, abolishing the Police Ombudsman and giving the Office for Public Integrity oversight of police complaint handling.",
+    "pages": [
+     7,
+     8,
+     9
+    ],
+    "section": "SUMMARY OF RECOMMENDATIONS",
+    "support": "New police complaints legislation should invest the role of overseeing the \nmanagement of complaints and reports about police in the OPI.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Complaints and reports about public administration are taking too long to resolve.",
+    "page": 5,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "New police complaints legislation should invest the role of overseeing the \nmanagement of complaints and reports about police in the OPI.",
+    "page": 7,
+    "kind": "recommendation"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "INTRODUCTION",
+   "first_page": 5,
+   "last_page": 5
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

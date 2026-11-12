@@ -1,0 +1,124 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1998-09-09-inquiry-allegations-misconduct-investigation-paedophilia-que",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Inquiry into Allegations of Misconduct in the Investigation of Paedophilia in Queensland: Kimmins Report",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-misconduct-paedophilia-Kimmins/Inquiry-into-allegations-of-misconduct-in-the-investigation-of-paedophilia-in-qld-Report-1998.pdf",
+  "document": "Inquiry into Allegations of Misconduct in the Investigation of Paedophilia in Queensland: Kimmins Report (August 1998)",
+  "sha256": "70ac9bf53b839141b13d0f71ee3eded48ac8f3c6da82dcfcad100357cfe770a3",
+  "pages": 181,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive Summary",
+  "first_page": 9,
+  "last_page": 10,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-misconduct-paedophilia-Kimmins/Inquiry-into-allegations-of-misconduct-in-the-investigation-of-paedophilia-in-qld-Report-1998.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The CJC commissioned Project Triton to investigate allegations that public officials had obstructed or mishandled investigations of child sexual abuse.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-misconduct-paedophilia-Kimmins/Inquiry-into-allegations-of-misconduct-in-the-investigation-of-paedophilia-in-qld-Report-1998.pdf",
+      "document": "Inquiry into Allegations of Misconduct in the Investigation of Paedophilia in Queensland: Kimmins Report (August 1998)",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-misconduct-paedophilia-Kimmins/Inquiry-into-allegations-of-misconduct-in-the-investigation-of-paedophilia-in-qld-Report-1998.pdf",
+      "document": "Inquiry into Allegations of Misconduct in the Investigation of Paedophilia in Queensland: Kimmins Report (August 1998)",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-misconduct-paedophilia-Kimmins/Inquiry-into-allegations-of-misconduct-in-the-investigation-of-paedophilia-in-qld-Report-1998.pdf",
+      "document": "Inquiry into Allegations of Misconduct in the Investigation of Paedophilia in Queensland: Kimmins Report (August 1998)",
+      "page": 13
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The inquiry examined claims about secret police files, alleged films of child abuse and murder, earlier police investigations and cases in the Whitsundays.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-misconduct-paedophilia-Kimmins/Inquiry-into-allegations-of-misconduct-in-the-investigation-of-paedophilia-in-qld-Report-1998.pdf",
+      "document": "Inquiry into Allegations of Misconduct in the Investigation of Paedophilia in Queensland: Kimmins Report (August 1998)",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-misconduct-paedophilia-Kimmins/Inquiry-into-allegations-of-misconduct-in-the-investigation-of-paedophilia-in-qld-Report-1998.pdf",
+      "document": "Inquiry into Allegations of Misconduct in the Investigation of Paedophilia in Queensland: Kimmins Report (August 1998)",
+      "page": 10
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "The inquiry rejected the cover-up and impropriety allegations considered under its first four references.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-misconduct-paedophilia-Kimmins/Inquiry-into-allegations-of-misconduct-in-the-investigation-of-paedophilia-in-qld-Report-1998.pdf",
+      "document": "Inquiry into Allegations of Misconduct in the Investigation of Paedophilia in Queensland: Kimmins Report (August 1998)",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-misconduct-paedophilia-Kimmins/Inquiry-into-allegations-of-misconduct-in-the-investigation-of-paedophilia-in-qld-Report-1998.pdf",
+      "document": "Inquiry into Allegations of Misconduct in the Investigation of Paedophilia in Queensland: Kimmins Report (August 1998)",
+      "page": 10
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "The inquiry found no basis to suspect police protection of offenders in the Whitsundays and concluded that allegations about the films had been properly investigated.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-misconduct-paedophilia-Kimmins/Inquiry-into-allegations-of-misconduct-in-the-investigation-of-paedophilia-in-qld-Report-1998.pdf",
+      "document": "Inquiry into Allegations of Misconduct in the Investigation of Paedophilia in Queensland: Kimmins Report (August 1998)",
+      "page": 10
+     }
+    ],
+    "section": "Executive Summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Allegations made to law enforcement and other agencies in Queensland suggesting the existence of ‘snuff’ movies have been properly investigated and suggestions that such investigations were aborted or interfered with are baseless.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-misconduct-paedophilia-Kimmins/Inquiry-into-allegations-of-misconduct-in-the-investigation-of-paedophilia-in-qld-Report-1998.pdf",
+     "document": "Inquiry into Allegations of Misconduct in the Investigation of Paedophilia in Queensland: Kimmins Report (August 1998)",
+     "page": 10
+    }
+   },
+   {
+    "quote": "There is no basis to suspect that police have protected paedophiles from detection and punishment.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-misconduct-paedophilia-Kimmins/Inquiry-into-allegations-of-misconduct-in-the-investigation-of-paedophilia-in-qld-Report-1998.pdf",
+     "document": "Inquiry into Allegations of Misconduct in the Investigation of Paedophilia in Queensland: Kimmins Report (August 1998)",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

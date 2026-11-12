@@ -1,0 +1,78 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2009-05-19-profiling-the-nsw-public-sector-2007-understanding-and-manag",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Profiling the NSW public sector 2007 - Understanding and managing corruption risks - Staff survey",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector%202007,%20Understanding%20and%20managing%20corruption%20risks%20-%20Staff%20survey.pdf.aspx",
+  "document": "Profiling the NSW public sector 2007 - Understanding and managing corruption risks - Staff survey",
+  "sha256": "a33c3f9f6edffec9f3cd20b34ebce4074bb39fca757cc03e79c0e8ccfca1ab97",
+  "pages": 24,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Commission Against Corruption prepared this staff questionnaire to research public sector corruption risks and their management.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector%202007,%20Understanding%20and%20managing%20corruption%20risks%20-%20Staff%20survey.pdf.aspx",
+      "document": "Profiling the NSW public sector 2007 - Understanding and managing corruption risks - Staff survey",
+      "page": 2
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The questionnaire was sent to about 1200 randomly selected employees from about 30 public sector organisations.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector%202007,%20Understanding%20and%20managing%20corruption%20risks%20-%20Staff%20survey.pdf.aspx",
+      "document": "Profiling the NSW public sector 2007 - Understanding and managing corruption risks - Staff survey",
+      "page": 2
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It asks employees about codes of conduct, gifts, access to electronic services and internal channels for reporting misconduct.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector%202007,%20Understanding%20and%20managing%20corruption%20risks%20-%20Staff%20survey.pdf.aspx",
+      "document": "Profiling the NSW public sector 2007 - Understanding and managing corruption risks - Staff survey",
+      "page": 11
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector%202007,%20Understanding%20and%20managing%20corruption%20risks%20-%20Staff%20survey.pdf.aspx",
+      "document": "Profiling the NSW public sector 2007 - Understanding and managing corruption risks - Staff survey",
+      "page": 13
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/232/Profiling%20the%20NSW%20Public%20Sector%202007,%20Understanding%20and%20managing%20corruption%20risks%20-%20Staff%20survey.pdf.aspx",
+      "document": "Profiling the NSW public sector 2007 - Understanding and managing corruption risks - Staff survey",
+      "page": 19
+     }
+    ],
+    "section": "Organisational Strategies"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:17+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

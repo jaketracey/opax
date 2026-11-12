@@ -1,0 +1,108 @@
+{
+ "slug": "integrity-report-qld-ccc-2025-07-29-corruption-perceptions-survey-2025-queensland-community-repo",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Crime and Corruption Commission surveyed community corruption perceptions to assess its prevention work and inform strategic planning.",
+    "pages": [
+     5,
+     12
+    ],
+    "support": "so the CCC can \nmonitor the impact of its prevention agenda and \ninform future strategic planning.",
+    "section": "Research objectives",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The online survey collected 3,013 completed responses between 31 March and 20 April 2025, with results weighted by age, gender and region to reflect Queensland’s population.",
+    "pages": [
+     6
+    ],
+    "support": "The sample was weighted to \nreflect the population statistics for age, gender and \ngeographical regions.",
+    "section": "Research method",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The CCC reported that 73% saw corruption as a problem in Queensland and 78% expressed at least a fair amount of trust in the CCC.",
+    "pages": [
+     12
+    ],
+    "support": "16% indicate 'very high' trust and a further 62% 'a fair amount of \ntrust' in the organisation.",
+    "section": "Summary of key findings",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The CCC reported that 37% said they had witnessed or suspected corruption in the preceding five years, and 57% of that group had not reported it.",
+    "pages": [
+     13
+    ],
+    "support": "Over one in three community members have either witnessed, or think \nthey have witnessed, corruption in the past 5 years (37%).",
+    "section": "Summary of key findings",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "The CCC identified a need for further community education about reporting processes and channels.",
+    "pages": [
+     13
+    ],
+    "support": "Continued education is needed to inform the community on the \nprocess and channels for reporting corruption.",
+    "section": "Summary of key findings",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Continued education is needed to inform the community on the \nprocess and channels for reporting corruption.",
+    "page": 13,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "There is some scepticism around the outcomes \nof reporting corruption; 41% agree meaningful \naction would be taken, but 23% disagree.",
+    "page": 13,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Summary of key findings",
+   "first_page": 12,
+   "last_page": 13
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

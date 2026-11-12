@@ -1,0 +1,58 @@
+{
+  "slug": "integrity-report-wa-ccc-2020-09-17-review-recommendations-made-following-reports-dange-2f3293a5",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Overview",
+    "first_page": 5,
+    "last_page": 5
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission reviewed the response by WA Health to 19 recommendations about managing controlled drugs in public hospitals.",
+      "pages": [
+        5
+      ],
+      "support": "The purpose of this report is to review what actions have been taken in response to the Commission's recommendations.",
+      "people": []
+    },
+    {
+      "text": "The review included visits to nine hospitals and examined accountability, policies, audits, technology, drug discrepancies and staff training.",
+      "pages": [
+        10
+      ],
+      "support": "Commission officers attended nine regional and metropolitan hospitals and engaged directly with operational staff",
+      "people": []
+    },
+    {
+      "text": "The Commission found substantial progress but continuing differences in drug management between and within health service providers.",
+      "pages": [
+        5,
+        27
+      ],
+      "support": "Significant variations in drug management processes and practices were evident during the Commission's review",
+      "people": []
+    },
+    {
+      "text": "The Commission closed 17 recommendations and kept two about policies and procedures open for another review after 12 months.",
+      "pages": [
+        5,
+        27
+      ],
+      "support": "WA Health has considered and taken satisfactory action to address 17 of the 19 recommendations.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "WA Health has considered and taken satisfactory action to address 17 of the 19 recommendations.",
+      "page": 27,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "Significant variations in drug management processes and practices were evident during the Commission's review, not only across WA Health but also within the individual HSPs.",
+      "page": 27,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The proposed medicines policy had been published but its implementation and practical effect were still to be reviewed at the report date."
+}

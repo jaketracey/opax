@@ -1,0 +1,101 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2010-04-22-misconduct-handling-procedures-western-australian-p-a6fc8cb4",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Misconduct handling procedures in the Western Australian public sector – WA Health",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20handling%20procedures%20in%20the%20Western%20Australian%20public%20sector%20%E2%80%93%20WA%20Health.pdf",
+  "document": "Misconduct handling procedures in the Western Australian public sector – WA Health",
+  "sha256": "31ab78e18058fa660ddf567a5d6f7405b07e4cf4be631e78457cb1734effa504",
+  "pages": 153,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 11,
+  "last_page": 13,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20handling%20procedures%20in%20the%20Western%20Australian%20public%20sector%20%E2%80%93%20WA%20Health.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed how the Department of Health managed misconduct across WA Health.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20handling%20procedures%20in%20the%20Western%20Australian%20public%20sector%20%E2%80%93%20WA%20Health.pdf",
+      "document": "Misconduct handling procedures in the Western Australian public sector – WA Health",
+      "page": 11
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "Its work included staff interviews and a survey, reviews of health service sites and an examination of restricted drug management.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20handling%20procedures%20in%20the%20Western%20Australian%20public%20sector%20%E2%80%93%20WA%20Health.pdf",
+      "document": "Misconduct handling procedures in the Western Australian public sector – WA Health",
+      "page": 11
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission found limited practical capacity to address misconduct and insufficient leadership of misconduct management.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20handling%20procedures%20in%20the%20Western%20Australian%20public%20sector%20%E2%80%93%20WA%20Health.pdf",
+      "document": "Misconduct handling procedures in the Western Australian public sector – WA Health",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20handling%20procedures%20in%20the%20Western%20Australian%20public%20sector%20%E2%80%93%20WA%20Health.pdf",
+      "document": "Misconduct handling procedures in the Western Australian public sector – WA Health",
+      "page": 124
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "It considered WA Health unable to demonstrate fair, reliable and transparent accountability for its handling of misconduct risks and incidents.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20handling%20procedures%20in%20the%20Western%20Australian%20public%20sector%20%E2%80%93%20WA%20Health.pdf",
+      "document": "Misconduct handling procedures in the Western Australian public sector – WA Health",
+      "page": 124
+     }
+    ],
+    "section": "Overall Opinion"
+   },
+   {
+    "text": "Its four recommendations sought a clear commitment and practical strategy, sufficient resources and cooperation with the Commission.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20handling%20procedures%20in%20the%20Western%20Australian%20public%20sector%20%E2%80%93%20WA%20Health.pdf",
+      "document": "Misconduct handling procedures in the Western Australian public sector – WA Health",
+      "page": 125
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:20+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

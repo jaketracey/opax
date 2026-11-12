@@ -1,0 +1,99 @@
+{
+ "slug": "integrity-report-qld-ccc-2018-06-30-corruption-audits-2017-2019",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The CCC audited how five Queensland councils administered councillor discretionary funds, focusing on accountability, transparency and corruption risks.",
+    "pages": [
+     4
+    ],
+    "section": "Summary",
+    "support": "To examine five selected councils and determine if they were effectively administering councillor discretionary funds",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It also assessed how two public authorities handled corruption allegations concerning grants and funding.",
+    "pages": [
+     4
+    ],
+    "section": "Summary",
+    "support": "To assess whether the Department of Local Government, Racing and Multicultural Affairs, and Redland City Council had dealt with allegations",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The CCC identified 11 areas needing improvement, including incomplete applications, conflicts of interest and monitoring of spending.",
+    "pages": [
+     4,
+     5
+    ],
+    "section": "Summary",
+    "support": "The CCC observed 11 areas for improvement across the five councils.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The CCC was satisfied with the handling of the seven complaints it reviewed.",
+    "pages": [
+     22
+    ],
+    "section": "Agencies’ dealings with allegations of corrupt conduct",
+    "support": "had dealt effectively with the seven complaints of corrupt conduct relating to grants and funding activities.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "It recommended improvements to council controls and moving discretionary funding into community grants programs with stronger assessment rules.",
+    "pages": [
+     5
+    ],
+    "section": "Summary",
+    "support": "the funds could be moved into specific community grants programs that require more robust guidelines",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The expenditure of funds at each councillor’s discretion created obvious risks in relation to the potential for fraud, corruption and abuse.",
+    "page": 4,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Summary",
+   "first_page": 4,
+   "last_page": 5
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

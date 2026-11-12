@@ -1,0 +1,64 @@
+{
+  "slug": "integrity-report-nsw-icac-2001-04-01-unravelling-corruption-ii-exploring-changes-in-the-public-se",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "SUMMARY",
+    "first_page": 4,
+    "last_page": 7
+  },
+  "sentences": [
+    {
+      "text": "The Independent Commission Against Corruption repeated its employee survey in 1999 to assess how NSW public sector perceptions and reporting attitudes had changed since 1993.",
+      "pages": [
+        4
+      ],
+      "support": "In 1999, the Independent Commission Against Corruption repeated its 1993 Unravelling \nCorruption survey",
+      "section": "SUMMARY",
+      "people": []
+    },
+    {
+      "text": "The research compared responses to workplace scenarios and examined whether experience in particular work affected recognition of corruption and willingness to act.",
+      "pages": [
+        4,
+        5
+      ],
+      "support": "an \nexamination of the effect of experience in a particular area of work",
+      "section": "SUMMARY",
+      "people": []
+    },
+    {
+      "text": "ICAC concluded that respondents more often recognised corruption and said they would report it, while unclear definitions and fear of retaliation remained barriers.",
+      "pages": [
+        4,
+        5,
+        6
+      ],
+      "support": "Factors identified from this research as the most significant potential barriers stopping \nemployees from taking action about workplace misconduct are:",
+      "section": "SUMMARY",
+      "people": []
+    },
+    {
+      "text": "ICAC set out six main lessons about shared understanding, selection-panel training, reporting channels, induction, management action and creating a safe reporting culture.",
+      "pages": [
+        6,
+        7
+      ],
+      "support": "More needs to be done to create organisational cultures in which employees feel \nsafe to report corruption.",
+      "section": "Major lessons for corruption minimisation in the public sector",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "More needs to be done to create organisational cultures in which employees feel \nsafe to report corruption.",
+      "page": 7,
+      "kind": "recommendation"
+    },
+    {
+      "quote": "Review the nature of training given to those who participate in selection panels to \naddress the risks identified in recruitment selection.",
+      "page": 6,
+      "kind": "recommendation"
+    }
+  ],
+  "notes": "The six numbered items are labelled major lessons, not formal numbered recommendations. Survey scenarios and attitudes are not findings of actual misconduct."
+}

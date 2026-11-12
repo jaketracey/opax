@@ -1,0 +1,66 @@
+{
+  "slug": "integrity-report-qld-ccc-2004-01-23-prosecution-pauline-hanson-and-david-ettridge-report-inquiry",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "SUMMARY",
+    "first_page": 5,
+    "last_page": 5
+  },
+  "sentences": [
+    {
+      "text": "The CMC responded to Parliament’s request by examining whether litigation involving the founders of One Nation had involved unfairness or political interference.",
+      "pages": [
+        5
+      ],
+      "support": "It examines whether there was any unfairness in the proceedings and any evidence of political interference.",
+      "section": "SUMMARY",
+      "people": []
+    },
+    {
+      "text": "It reviewed police and prosecution files, trial and appeal records, interviews and submissions.",
+      "pages": [
+        5
+      ],
+      "support": "the CMC examined all relevant police and prosecution files, and considered the record of both the civil trial and the criminal trial",
+      "section": "SUMMARY",
+      "people": []
+    },
+    {
+      "text": "The Commission found no demonstrated misconduct in the litigation or police investigation, no evidence of political interference and no denial of due process.",
+      "pages": [
+        5,
+        25
+      ],
+      "support": "The Commission also found no evidence of political pressure or other improper influence or impropriety.",
+      "section": "SUMMARY; FINDINGS",
+      "people": []
+    },
+    {
+      "text": "The Commission reserved the systemic issue of prosecution-service funding for a later report.",
+      "pages": [
+        25
+      ],
+      "support": "The Commission proposes to deal with the systemic question of resourcing of the ODPP in a second report",
+      "section": "CONCLUSION",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Commission is of the opinion that no misconduct or other impropriety has been shown to have been associated with the conduct of the litigation concerning Ms Hanson and Mr Ettridge, or with the police investigations leading to the prosecution.",
+      "page": 25,
+      "kind": "opinion"
+    },
+    {
+      "quote": "The Commission also found no evidence of political pressure or other improper influence or impropriety.",
+      "page": 25,
+      "kind": "finding"
+    },
+    {
+      "quote": "The Commission found nothing to show a failure to accord due process, in accordance with the rule of law, to Ms Hanson and Mr Ettridge.",
+      "page": 25,
+      "kind": "finding"
+    }
+  ],
+  "notes": "The report makes findings rather than a numbered set of recommendations; systemic prosecution-service resourcing was reserved for a later report."
+}

@@ -1,0 +1,98 @@
+{
+ "slug": "royal-commission-vic-family-violence",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "Victoria’s Royal Commission into Family Violence was asked to identify effective prevention, early intervention, victim support, perpetrator accountability and coordinated responses.",
+    "pages": [
+     9
+    ],
+    "section": "The Commission’s task",
+    "support": "the Commission’s task was to identify the most effective ways to:",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examined the response across police, courts, support services, child protection and other government and community services.",
+    "pages": [
+     9,
+     14
+    ],
+    "section": "The Commission’s task; System limitations",
+    "support": "develop and refine systemic responses to family violence",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that services were overwhelmed, responses were poorly coordinated, information sharing was inadequate and too little effort went into prevention and recovery.",
+    "pages": [
+     14
+    ],
+    "section": "System limitations",
+    "support": "the Commission identified gaps and obstacles that are limiting the \neffective implementation of laws, policies, and programs:",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its 227 numbered recommendations seek stronger risk assessment and information sharing, better services and accountability, and sustained investment in prevention and response.",
+    "pages": [
+     22,
+     53,
+     54,
+     114
+    ],
+    "section": "Recommendations",
+    "support": "The Victorian Government investigate options for increasing its capacity to invest in preventing \nand responding to family violence",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Services are not currently equipped to meet this high level of demand, which \nundermines the safety of those experiencing family violence and their potential for recovery.",
+    "page": 14,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "Victims are too often left to carry the \nburden of managing risk.",
+    "page": 14,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Summary",
+   "first_page": 9,
+   "last_page": 24
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

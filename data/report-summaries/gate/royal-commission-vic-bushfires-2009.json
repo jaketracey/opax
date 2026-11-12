@@ -1,0 +1,113 @@
+{
+ "slug": "royal-commission-vic-bushfires-2009",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The 2009 Victorian Bushfires Royal Commission examined the causes of the January and February fires, preparation, emergency response and measures to reduce future risks.",
+    "pages": [
+     12
+    ],
+    "section": "Summary of the report",
+    "support": "The Commission was asked to inquire into and report on the causes and circumstances of the fires",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It investigated fifteen fires in detail, including the circumstances of deaths and the operation of bushfire safety policies.",
+    "pages": [
+     11,
+     15
+    ],
+    "section": "Summary of the report",
+    "support": "the Commission examined in detail 15 fires that caused \n(or had the potential to cause) the greatest damage.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that the stay or go policy retained sound principles but did not adequately account for the most severe fires or provide enough alternatives.",
+    "pages": [
+     15
+    ],
+    "section": "Victoria’s bushfire safety policy",
+    "support": "As a result of its inquiries the Commission concludes that the central tenets of the stay or go policy remain sound.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It also found that divided leadership responsibilities and incompatible agency systems hindered the emergency response.",
+    "pages": [
+     28
+    ],
+    "section": "Organisational structure",
+    "support": "it highlighted serious deficiencies in top-level leadership as a result of divided \nresponsibilities",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "Its 67 numbered recommendations address safety policy, emergency operations, infrastructure, planning, land management, research and implementation oversight.",
+    "pages": [
+     33,
+     35,
+     40,
+     43,
+     45,
+     47
+    ],
+    "section": "Recommendations",
+    "support": "The State appoint an independent monitor or the Victorian Auditor-General to assess progress",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The 7 February fires did, however, severely test the policy and exposed weaknesses in the way it was applied.",
+    "page": 15,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The absolute priority is to improve operational performance.",
+    "page": 28,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Summary of the report",
+   "first_page": 11,
+   "last_page": 32
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

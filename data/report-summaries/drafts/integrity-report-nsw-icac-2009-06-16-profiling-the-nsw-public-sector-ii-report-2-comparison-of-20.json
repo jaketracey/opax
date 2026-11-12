@@ -1,0 +1,61 @@
+{
+  "slug": "integrity-report-nsw-icac-2009-06-16-profiling-the-nsw-public-sector-ii-report-2-comparison-of-20",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Executive summary",
+    "first_page": 7,
+    "last_page": 7
+  },
+  "sentences": [
+    {
+      "text": "The Independent Commission Against Corruption compared chief executives’ survey responses from 2001 and 2007 to assess changes in corruption risks and prevention across the NSW public sector.",
+      "pages": [
+        7,
+        8
+      ],
+      "support": "their responses \nwere compared with responses to similar surveys that \nhad been sent to NSW public sector CEOs in 2001.",
+      "section": "Executive summary",
+      "people": []
+    },
+    {
+      "text": "The comparison covered 165 organisations, excluding local councils, county councils and local Aboriginal land councils because they were outside the earlier survey.",
+      "pages": [
+        8
+      ],
+      "support": "Local councils, \ncounty councils and local Aboriginal land councils are \nnot included in this comparison subsample",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "ICAC concluded that perceived corruption risks had remained broadly stable while organisations reported adopting more prevention strategies, suggesting improved risk management.",
+      "pages": [
+        7
+      ],
+      "support": "Together, these findings may indicate that the corruption \nrisk management of the NSW public sector as a whole \nhas improved.",
+      "section": "Executive summary",
+      "people": []
+    },
+    {
+      "text": "ICAC advised organisations to review their prevention strategies for areas needing further controls.",
+      "pages": [
+        24
+      ],
+      "support": "Organisations should, however, examine their own \nusage of corruption prevention strategies to identify any \nareas where further strategies are warranted.",
+      "section": "Further considerations",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "In conclusion, the corruption risk management of the \nNSW public sector as a whole appears to have improved \nsince 2001.",
+      "page": 24,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "Organisations should, however, examine their own \nusage of corruption prevention strategies to identify any \nareas where further strategies are warranted.",
+      "page": 24,
+      "kind": "recommendation"
+    }
+  ],
+  "notes": "Survey comparisons concern reported practices and perceived risks; no numbered recommendations list."
+}

@@ -1,0 +1,108 @@
+{
+ "slug": "royal-commission-act-criminal-justice",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The ACT Board of Inquiry examined possible misconduct by police, prosecutors and the Victims of Crime Commissioner in a criminal matter.",
+    "pages": [
+     1,
+     8
+    ],
+    "section": "1. Introduction",
+    "support": "required to inquire whether anybody in the named classes of people - police, prosecution \nand the Victims of Crime Commissioner - had done anything improper.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Board found that police had investigated thoroughly, although mistakes caused unnecessary distress without affecting the investigation or prejudicing the case.",
+    "pages": [
+     9
+    ],
+    "section": "1. Introduction",
+    "support": "None of these mistakes \nactually affected the substance of the investigation and none of them prejudiced the case.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Board also made serious misconduct findings against the then Director of Public Prosecutions, while declining to determine fitness to remain in office or practise as a barrister.",
+    "pages": [
+     10
+    ],
+    "section": "1. Introduction",
+    "support": "I have found it necessary to make several serious findings of misconduct",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its ten numbered recommendations address charging decisions, counselling records, disclosure, police dealings with defence lawyers, retrial decisions and complaints between agencies.",
+    "pages": [
+     197,
+     198,
+     199,
+     200,
+     201
+    ],
+    "section": "8. Recommendations",
+    "support": "enact \nlegislation to codify the scope and content of the obligation of disclosure owed by \nthe Prosecution in criminal proceedings.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "Regrettably, I have found it necessary to make several serious findings of misconduct on \nthe part of Mr Shane Drumgold SC, the Director of Public Prosecutions.",
+    "page": 10,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "None of these mistakes \nactually affected the substance of the investigation and none of them prejudiced the case.",
+    "page": 9,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "quote": "I recommend that the government, in consultation with stakeholders, enact \nlegislation to codify the scope and content of the obligation of disclosure owed by \nthe Prosecution in criminal proceedings.",
+    "page": 200,
+    "kind": "recommendation"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "1. Introduction",
+   "first_page": 7,
+   "last_page": 11
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 3,
+  "findings_pass": 3,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

@@ -1,0 +1,90 @@
+{
+ "slug": "integrity-report-wa-ccc-2023-10-12-deployment-police-dogs-recommendation-review",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission reviewed WA Police's response to its earlier recommendations about the deployment of police dogs.",
+    "pages": [
+     4
+    ],
+    "support": "The Commission commenced its review of the WA Police response to the recommendations, earlier than planned.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The two recommendations sought clearer operational rules and analysis of why Aboriginal and Torres Strait Islander people were overrepresented in dog deployments.",
+    "pages": [
+     4
+    ],
+    "support": "The Commission made two recommendations to WA Police:",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission recognised the proposed changes but concluded that it was too early to assess whether the recommendations had been addressed.",
+    "pages": [
+     9
+    ],
+    "support": "However, it is considered too early to assess whether the two recommendations have been addressed.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission planned to review progress by WA Police again after 12 months.",
+    "pages": [
+     9
+    ],
+    "support": "The Commission will conduct a further review of action taken by WA Police in 12 months time.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The Commission acknowledges the commitment of WA Police to addressing the inherent risks associated with the use of police dogs.",
+    "page": 9,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "However, it is considered too early to assess whether the two recommendations have been addressed.",
+    "page": 9,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "OVERVIEW",
+   "first_page": 4,
+   "last_page": 5
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

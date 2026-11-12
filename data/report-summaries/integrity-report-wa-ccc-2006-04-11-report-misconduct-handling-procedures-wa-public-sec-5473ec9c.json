@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2006-04-11-report-misconduct-handling-procedures-wa-public-sec-5473ec9c",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on Misconduct handling procedures in the WA public sector - Department of Local Government and Regional Development",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20handling%20procedures%20in%20the%20WA%20public%20sector%20-%20Department%20of%20Local%20Government%20and%20Regional%20Development.pdf",
+  "document": "Report on Misconduct handling procedures in the WA public sector - Department of Local Government and Regional Development.pdf",
+  "sha256": "2e569d607c9bd6e41ea7f30d07fe0cfbdb77dc7ea69911fa70f57b6834281fed",
+  "pages": 23,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20handling%20procedures%20in%20the%20WA%20public%20sector%20-%20Department%20of%20Local%20Government%20and%20Regional%20Development.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed misconduct handling capacity at the Department of Local Government and Regional Development.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20handling%20procedures%20in%20the%20WA%20public%20sector%20-%20Department%20of%20Local%20Government%20and%20Regional%20Development.pdf",
+      "document": "Report on Misconduct handling procedures in the WA public sector - Department of Local Government and Regional Development.pdf",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20handling%20procedures%20in%20the%20WA%20public%20sector%20-%20Department%20of%20Local%20Government%20and%20Regional%20Development.pdf",
+      "document": "Report on Misconduct handling procedures in the WA public sector - Department of Local Government and Regional Development.pdf",
+      "page": 6
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It examined the department's investigations, complaint handling, records and relationship with councils and the Commission.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20handling%20procedures%20in%20the%20WA%20public%20sector%20-%20Department%20of%20Local%20Government%20and%20Regional%20Development.pdf",
+      "document": "Report on Misconduct handling procedures in the WA public sector - Department of Local Government and Regional Development.pdf",
+      "page": 4
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission found investigations generally timely, but identified fragmented complaint information and limits on the department's ability to prevent misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20handling%20procedures%20in%20the%20WA%20public%20sector%20-%20Department%20of%20Local%20Government%20and%20Regional%20Development.pdf",
+      "document": "Report on Misconduct handling procedures in the WA public sector - Department of Local Government and Regional Development.pdf",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20handling%20procedures%20in%20the%20WA%20public%20sector%20-%20Department%20of%20Local%20Government%20and%20Regional%20Development.pdf",
+      "document": "Report on Misconduct handling procedures in the WA public sector - Department of Local Government and Regional Development.pdf",
+      "page": 23
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "Its five recommendations covered investigative authority, an interagency agreement, records, disciplinary arrangements, monthly information sharing and checks on misconduct reporting.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20handling%20procedures%20in%20the%20WA%20public%20sector%20-%20Department%20of%20Local%20Government%20and%20Regional%20Development.pdf",
+      "document": "Report on Misconduct handling procedures in the WA public sector - Department of Local Government and Regional Development.pdf",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20handling%20procedures%20in%20the%20WA%20public%20sector%20-%20Department%20of%20Local%20Government%20and%20Regional%20Development.pdf",
+      "document": "Report on Misconduct handling procedures in the WA public sector - Department of Local Government and Regional Development.pdf",
+      "page": 5
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "This review found that, in most cases, the Department investigates matters of misconduct in a timely fashion.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Misconduct%20handling%20procedures%20in%20the%20WA%20public%20sector%20-%20Department%20of%20Local%20Government%20and%20Regional%20Development.pdf",
+     "document": "Report on Misconduct handling procedures in the WA public sector - Department of Local Government and Regional Development.pdf",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:19+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

@@ -1,0 +1,38 @@
+{
+  "slug": "integrity-report-act-ic-2023-10-26-rural-land-west-of-canberra",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The ACT Integrity Commission considered a corruption complaint about the government’s acquisition of nine rural properties west of Canberra.",
+      "pages": [
+        5,
+        6
+      ],
+      "support": "the ACT Land Development Agency had acquired nine rural properties",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "It examined the acquisitions against the land acquisition policy framework and considered earlier audit and parliamentary scrutiny.",
+      "pages": [
+        6
+      ],
+      "support": "against the requirements set out in the Planning and Development (Land Acquisition Policy Framework) Direction 2014",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "The Commission dismissed the complaint, concluding that other Territory laws had already dealt appropriately with the subject and further action was unjustified.",
+      "pages": [
+        31,
+        32
+      ],
+      "support": "the subject matter has already been appropriately dealt with under other laws in force in the Territory",
+      "section": "Conclusion",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "No standalone executive summary identified. Existing OPAX findings mean no additional findings quotes. No recommendations list identified."
+}

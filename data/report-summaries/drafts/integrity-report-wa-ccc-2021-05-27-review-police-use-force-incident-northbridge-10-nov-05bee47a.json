@@ -1,0 +1,54 @@
+{
+  "slug": "integrity-report-wa-ccc-2021-05-27-review-police-use-force-incident-northbridge-10-nov-05bee47a",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Introduction",
+    "first_page": 5,
+    "last_page": 7
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission investigated an arrest in Northbridge, examining force, a move on order and the treatment of the arrested person.",
+      "pages": [
+        5,
+        7
+      ],
+      "support": "The Commission's investigation was not confined to the use of force.",
+      "people": []
+    },
+    {
+      "text": "The Commission accepted that the arrest was lawful but considered the neck restraint excessive and formed an opinion of serious misconduct against the arresting officer.",
+      "pages": [
+        41
+      ],
+      "support": "The Commission has formed an opinion of serious misconduct against S/C Valleekanthan.",
+      "people": []
+    },
+    {
+      "text": "The Commission considered another officer's move on order unlawful and formed an opinion of reviewable police action.",
+      "pages": [
+        42
+      ],
+      "support": "Issuing the order in such circumstance is reviewable police action, as it is action that is contrary to law.",
+      "people": []
+    },
+    {
+      "text": "The Commission also identified risks involving medical care, the length of detention and inaccurate custody records.",
+      "pages": [
+        43
+      ],
+      "support": "the length of time for detention of an arrested person, and the accuracy of recordkeeping by police officers.",
+      "people": []
+    },
+    {
+      "text": "The Commission emphasised that a serious misconduct opinion did not determine guilt of a criminal or disciplinary offence.",
+      "pages": [
+        42
+      ],
+      "support": "An opinion that serious misconduct has occurred is not, and is not to be taken as, a finding or opinion",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "Introduction gives the incident, investigation scope and principal opinions. The existing OPAX finding is not duplicated. Names and witness accounts are omitted."
+}

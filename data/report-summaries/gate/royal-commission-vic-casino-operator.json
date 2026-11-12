@@ -1,0 +1,103 @@
+{
+ "slug": "royal-commission-vic-casino-operator",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "Victoria’s Royal Commission into the Casino Operator and Licence examined whether Crown Melbourne was suitable to keep its casino licence and what action should follow.",
+    "pages": [
+     23,
+     24
+    ],
+    "section": "Overview",
+    "support": "The Commission was established to inquire into, and report on, the suitability of Crown \nMelbourne to hold its casino licence.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commission found Crown Melbourne unsuitable and identified failures in legal compliance, corporate oversight and dealings with its regulator.",
+    "pages": [
+     23,
+     24,
+     25,
+     26
+    ],
+    "section": "Overview",
+    "support": "When these facts came to light, it was inevitable that Crown Melbourne would be found \nunsuitable to hold its casino licence.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "It recommended a Special Manager oversee the business for two years, followed by a regulatory decision on whether suitability had been restored.",
+    "pages": [
+     25,
+     26
+    ],
+    "section": "Overview",
+    "support": "the Special Manager should be appointed to oversee \nand control its affairs for a period of two years.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its 33 numbered recommendations cover regulatory powers, casino governance, money laundering controls and gambling harm, including mandatory limits on gaming-machine play.",
+    "pages": [
+     27,
+     36,
+     38,
+     40,
+     44
+    ],
+    "section": "Recommendations",
+    "support": "One recommendation is to make compulsory a pre-commitment system that imposes limits \non time and money spent on gambling.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "When these facts came to light, it was inevitable that Crown Melbourne would be found \nunsuitable to hold its casino licence.",
+    "page": 24,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "It is recommended that the Casino Control Act be amended to prohibit a casino \noperator from dealing with junket tour operators.",
+    "page": 39,
+    "kind": "recommendation"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Overview",
+   "first_page": 22,
+   "last_page": 45
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

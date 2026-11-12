@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2021-09-03-perceptions-corruption-and-integrity-queensland-state-govern",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Perceptions of corruption and integrity in Queensland State Government departments",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-Qld-state-government-departments-September-2021.pdf",
+  "document": "Perceptions of corruption and integrity in Queensland State Government Departments (PDF)",
+  "sha256": "b13bee03076f1f5d0b56a3250219ae5d40aecb3d4f42ef180839144a38b613e4",
+  "pages": 6,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "WHAT WE FOUND",
+  "first_page": 2,
+  "last_page": 5,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-Qld-state-government-departments-September-2021.pdf#page=2"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission surveyed employees across Queensland’s public service departments to understand perceived corruption risks and attitudes to reporting and prevention.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-Qld-state-government-departments-September-2021.pdf",
+      "document": "Perceptions of corruption and integrity in Queensland State Government Departments (PDF)",
+      "page": 1
+     }
+    ],
+    "section": "ABOUT THE SURVEY"
+   },
+   {
+    "text": "The anonymous online survey ran in May and June 2021 and received answers from more than fourteen thousand employees across 19 departments, including hospital and health services but excluding police.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-Qld-state-government-departments-September-2021.pdf",
+      "document": "Perceptions of corruption and integrity in Queensland State Government Departments (PDF)",
+      "page": 1
+     }
+    ],
+    "section": "ABOUT THE SURVEY"
+   },
+   {
+    "text": "The CCC reported that 65% believed corruption occurred in Queensland’s public service, compared with 22% who believed it occurred in their own work unit.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-Qld-state-government-departments-September-2021.pdf",
+      "document": "Perceptions of corruption and integrity in Queensland State Government Departments (PDF)",
+      "page": 2
+     }
+    ],
+    "section": "WHAT WE FOUND"
+   },
+   {
+    "text": "The CCC identified concerns about reprisals and management inaction as barriers to reporting, despite widespread willingness to report suspected wrongdoing.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-Qld-state-government-departments-September-2021.pdf",
+      "document": "Perceptions of corruption and integrity in Queensland State Government Departments (PDF)",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-Qld-state-government-departments-September-2021.pdf",
+      "document": "Perceptions of corruption and integrity in Queensland State Government Departments (PDF)",
+      "page": 6
+     }
+    ],
+    "section": "PERCEIVED BARRIERS TO REPORTING CORRUPTION"
+   },
+   {
+    "text": "The CCC urged departments to support reporting, review relevant controls, maintain accessible guidance and provide continuing education about potentially corrupt conduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-Qld-state-government-departments-September-2021.pdf",
+      "document": "Perceptions of corruption and integrity in Queensland State Government Departments (PDF)",
+      "page": 6
+     }
+    ],
+    "section": "OPPORTUNITIES FOR PUBLIC SERVICE DEPARTMENTS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Public service departments should ensure they foster an environment that encourages and supports the reporting of suspected wrongdoing.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-Qld-state-government-departments-September-2021.pdf",
+     "document": "Perceptions of corruption and integrity in Queensland State Government Departments (PDF)",
+     "page": 6
+    }
+   },
+   {
+    "quote": "Departments should ensure their corruption prevention resources are accessible, informative, and up to date.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Perceptions-of-corruption-and-integrity-in-Qld-state-government-departments-September-2021.pdf",
+     "document": "Perceptions of corruption and integrity in Queensland State Government Departments (PDF)",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}

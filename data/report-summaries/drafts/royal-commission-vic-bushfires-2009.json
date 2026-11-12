@@ -1,0 +1,75 @@
+{
+  "slug": "royal-commission-vic-bushfires-2009",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Summary of the report",
+    "first_page": 11,
+    "last_page": 32
+  },
+  "sentences": [
+    {
+      "text": "The 2009 Victorian Bushfires Royal Commission examined the causes of the January and February fires, preparation, emergency response and measures to reduce future risks.",
+      "pages": [
+        12
+      ],
+      "section": "Summary of the report",
+      "support": "The Commission was asked to inquire into and report on the causes and circumstances of the fires",
+      "people": []
+    },
+    {
+      "text": "It investigated fifteen fires in detail, including the circumstances of deaths and the operation of bushfire safety policies.",
+      "pages": [
+        11,
+        15
+      ],
+      "section": "Summary of the report",
+      "support": "the Commission examined in detail 15 fires that caused \n(or had the potential to cause) the greatest damage.",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that the stay or go policy retained sound principles but did not adequately account for the most severe fires or provide enough alternatives.",
+      "pages": [
+        15
+      ],
+      "section": "Victoria’s bushfire safety policy",
+      "support": "As a result of its inquiries the Commission concludes that the central tenets of the stay or go policy remain sound.",
+      "people": []
+    },
+    {
+      "text": "It also found that divided leadership responsibilities and incompatible agency systems hindered the emergency response.",
+      "pages": [
+        28
+      ],
+      "section": "Organisational structure",
+      "support": "it highlighted serious deficiencies in top-level leadership as a result of divided \nresponsibilities",
+      "people": []
+    },
+    {
+      "text": "Its 67 numbered recommendations address safety policy, emergency operations, infrastructure, planning, land management, research and implementation oversight.",
+      "pages": [
+        33,
+        35,
+        40,
+        43,
+        45,
+        47
+      ],
+      "section": "Recommendations",
+      "support": "The State appoint an independent monitor or the Victorian Auditor-General to assess progress",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The 7 February fires did, however, severely test the policy and exposed weaknesses in the way it was applied.",
+      "page": 15,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "The absolute priority is to improve operational performance.",
+      "page": 28,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "This pack is the Final Report summary volume. The count of 67 is taken from the numbered recommendations list, which ends on PDF page 47. Policy observations are attributed to the Commission and are not presented as current emergency advice."
+}

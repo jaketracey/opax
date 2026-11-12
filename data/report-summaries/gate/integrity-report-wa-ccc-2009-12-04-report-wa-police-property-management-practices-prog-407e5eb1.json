@@ -1,0 +1,97 @@
+{
+ "slug": "integrity-report-wa-ccc-2009-12-04-report-wa-police-property-management-practices-prog-407e5eb1",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission and WA Police jointly evaluated progress on the 42 recommendations from their 2005 property management inquiry.",
+    "pages": [
+     11
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "In April 2009 the Commission and WAPOL commenced a joint evaluation of WAPOL’s progress against the 42 recommendations.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The evaluation found twenty-three recommendations completed, twelve moving towards completion, one unable to be addressed and six no longer relevant.",
+    "pages": [
+     11
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "Twenty three recommendations have been finalised. \n \n• Twelve recommendations are progressing towards finalisation. \n \n• One recommendation has not been able to be addressed. \n \n• Six recommendations are no longer relevant.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that police had improved property management through organisational changes, new storage premises and stronger security.",
+    "pages": [
+     11,
+     31
+    ],
+    "section": "CONCLUSION",
+    "support": "WAPOL has made good progress in relation to the management of property.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It identified remaining work on old property holdings, security assurance and clarifying responsibilities with prosecuting authorities.",
+    "pages": [
+     11,
+     12,
+     31
+    ],
+    "section": "CONCLUSION",
+    "support": "Some purging of old (on transfer, closed business areas and PTS items) holdings is still to take place",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "WAPOL has made good progress in relation to the management of property.",
+    "page": 31,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "In these areas, WAPOL has met the letter of the recommendation, but has been unable to achieve the outcome the recommendations suggested.",
+    "page": 31,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "EXECUTIVE SUMMARY",
+   "first_page": 11,
+   "last_page": 12
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

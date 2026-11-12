@@ -1,0 +1,95 @@
+{
+ "slug": "integrity-report-wa-ccc-2014-06-12-report-fraud-and-corruption-procurement-wa-health-d-51bc04d4",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission examined WA Health's ability to manage procurement fraud and corruption risks following an investigation of a hospital facilities manager.",
+    "pages": [
+     11,
+     13
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "A subsequent Commission review of WA Health's capacity to deal with its fraud and corruption risks in procurement",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commission found that weak financial controls and supervision had enabled corrupt conduct to remain undetected for six years.",
+    "pages": [
+     33
+    ],
+    "section": "Conclusions",
+    "support": "Wickramasinghe's conduct went undetected for six years because of poor financial controls and poor supervision of him.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "It concluded that these weaknesses reflected a systemic failure across WA Health to manage procurement fraud and corruption risks.",
+    "pages": [
+     34
+    ],
+    "section": "Conclusions",
+    "support": "It was a symptom of systemic failure to manage fraud and corruption risks in procurement across WA Health.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "Its five recommendations covered risk assessment, compliance and transparency, internal audit, staff training, conflicts of interest, gifts and outside employment.",
+    "pages": [
+     35
+    ],
+    "section": "Recommendations",
+    "support": "In that context, the Commission makes the following five recommendations to WA Health",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "WA Health has limited capacity to effectively manage conflicts of interest, gifts and benefits and outside employment.",
+    "page": 33,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "There is no systematic training in recognising and reporting fraud and corruption for WA Health staff engaged in procurement.",
+    "page": 34,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "EXECUTIVE SUMMARY",
+   "first_page": 11,
+   "last_page": 11
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

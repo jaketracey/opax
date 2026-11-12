@@ -1,0 +1,95 @@
+{
+ "slug": "integrity-report-wa-ccc-2024-06-28-review-wa-police-investigation-arrest-aboriginal-teenager",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission reviewed WA Police’s handling of a complaint about the arrest and alleged excessive force used against a 14-year-old Aboriginal girl.",
+    "pages": [
+     4
+    ],
+    "section": "OVERVIEW",
+    "support": "a complaint \nregarding the alleged unlawful arrest and excessive force used on a \n14-year-old Aboriginal girl.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The Commission concluded that police investigations were delayed and incomplete, with important issues addressed only after its intervention.",
+    "pages": [
+     14
+    ],
+    "section": "Commission review",
+    "support": "WA Police's actions were incomplete, protracted and relied upon \nCommission intervention to identify and address key issues.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission considered the arrest and force unlawful and unreasonable, and found that police quality assurance had not ensured an adequate response.",
+    "pages": [
+     17
+    ],
+    "section": "CONCLUSION",
+    "support": "In the Commission's opinion the arrest and subsequent force used were \nunlawful, unreasonable, oppressive, and unjust.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission said its review of an earlier recommendation on police investigation processes would also consider quality assurance.",
+    "pages": [
+     5,
+     18
+    ],
+    "section": "CONCLUSION",
+    "support": "The quality assurance process will be considered as part \nof this review.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "In the Commission's opinion the arrest and subsequent force used were \nunlawful, unreasonable, oppressive, and unjust.",
+    "page": 17,
+    "kind": "opinion"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "WA Police's actions were incomplete, protracted and relied upon \nCommission intervention to identify and address key issues.",
+    "page": 14,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "OVERVIEW",
+   "first_page": 4,
+   "last_page": 5
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 2,
+  "findings_pass": 2,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

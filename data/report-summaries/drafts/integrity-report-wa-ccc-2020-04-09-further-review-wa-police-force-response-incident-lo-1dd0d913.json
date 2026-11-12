@@ -1,0 +1,61 @@
+{
+  "slug": "integrity-report-wa-ccc-2020-04-09-further-review-wa-police-force-response-incident-lo-1dd0d913",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "INTRODUCTION",
+    "first_page": 4,
+    "last_page": 5
+  },
+  "sentences": [
+    {
+      "text": "The Corruption and Crime Commission reviewed the response by WA Police to four earlier recommendations and a later force incident involving the same officer.",
+      "pages": [
+        4
+      ],
+      "support": "The report also includes a case study detailing the circumstances of the officer's more recent excessive use of force incident",
+      "people": []
+    },
+    {
+      "text": "The recommendations concerned training, custody records and management, supervision of inexperienced officers and use of force reporting.",
+      "pages": [
+        4,
+        6,
+        10,
+        12,
+        14
+      ],
+      "support": "The Commission made four recommendations for improvements to officer training and changes to policy",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that WA Police had adequately addressed the first three recommendations.",
+      "pages": [
+        20
+      ],
+      "support": "The Commission considers that the WA Police Force has taken appropriate steps to address recommendations one, two and three.",
+      "people": []
+    },
+    {
+      "text": "The Commission kept the reporting recommendation open because policy changes were incomplete and planned to follow up after one year.",
+      "pages": [
+        15,
+        20
+      ],
+      "support": "In response to recommendation four, the Commission considers it incomplete and intends to follow up on this recommendation in one year's time.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The Commission considers that the WA Police Force has taken appropriate steps to address recommendations one, two and three.",
+      "page": 20,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "In response to recommendation four, the Commission considers it incomplete and intends to follow up on this recommendation in one year's time.",
+      "page": 20,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "INTRODUCTION outlines the review scope and overall assessment. Names in the source case study are pseudonyms and are not used in the summary."
+}

@@ -1,0 +1,86 @@
+{
+ "slug": "integrity-report-vic-ibac-2013-11-26-tp1068-special-report-concerning-certain-operations-in-2013",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "IBAC reported on its handling of matters largely predating its full jurisdiction, including unfinished investigations inherited from the Office of Police Integrity.",
+    "pages": [
+     3,
+     7
+    ],
+    "support": "where most or all key events took place before IBAC took full jurisdiction",
+    "section": "Letter of transmittal",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It covered early operations, police contact involving death or serious injury, agency notifications and investigations involving alleged police misconduct.",
+    "pages": [
+     7
+    ],
+    "support": "a standing ‘own motion’ investigation that IBAC has commenced into deaths or serious injury",
+    "section": "Introduction",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "IBAC concluded that its work to that point showed the legislation substantially enabled it to operate effectively as Parliament intended.",
+    "pages": [
+     23
+    ],
+    "support": "has enabled IBAC to work effectively and as intended by Parliament",
+    "section": "Conclusion",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It proposed maintaining capacity for both police oversight and public sector corruption investigations and reporting again after its first full year.",
+    "pages": [
+     23
+    ],
+    "support": "focusing a reasonable proportion of its investigative resources on its important police oversight role",
+    "section": "Conclusion",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The substantive work done by IBAC in 2013 means that the IBAC legislation, at least in substantial part and thus far, has enabled IBAC to work effectively and as intended by Parliament.",
+    "page": 23,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Introduction",
+   "first_page": 7,
+   "last_page": 7
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

@@ -1,0 +1,90 @@
+{
+ "slug": "integrity-report-wa-ccc-2006-08-03-report-first-two-years-wa-police-reform-program",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Corruption and Crime Commission evaluated the first two years of WA Police reform following the royal commission's request that it monitor implementation.",
+    "pages": [
+     4,
+     7
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "recommended that the Corruption and Crime Commission (the Commission) monitor the implementation of the reform program",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examined recruitment and training, management, service delivery, complaint investigations and corruption prevention.",
+    "pages": [
+     4,
+     5,
+     6,
+     7
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "This report is an account and evaluation of measures undertaken by WAPOL to ensure long-term cultural change and improve service delivery.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission concluded that police had begun reform and strengthened organisational integrity and governance.",
+    "pages": [
+     81
+    ],
+    "section": "CONCLUSION",
+    "support": "WAPOL has gone some way toward building stronger organisational integrity and sound corporate governance systems and processes.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It identified continuing challenges in serious complaint investigations, individual performance management, policy development and organisational change.",
+    "pages": [
+     6,
+     81
+    ],
+    "section": "CONCLUSION",
+    "support": "The Commission believes WAPOL needs to consider the issues of investigative competence and willingness to fully investigate complaints against police as a priority.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "There is no doubt that WAPOL has gone some way toward building stronger organisational integrity and sound corporate governance systems and processes.",
+    "page": 81,
+    "kind": "conclusion"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "EXECUTIVE SUMMARY",
+   "first_page": 4,
+   "last_page": 7
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 1,
+  "findings_pass": 1,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

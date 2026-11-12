@@ -1,0 +1,52 @@
+{
+  "slug": "integrity-report-nsw-icac-2023-10-04-corruption-risks-associated-with-supplier-panels-october-202",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The NSW Independent Commission Against Corruption explains corruption risks in agencies’ internal supplier panels.",
+      "pages": [
+        1
+      ],
+      "support": "explains the key corruption risks associated with forming, using and maintaining supplier panels.",
+      "section": "Introduction",
+      "people": []
+    },
+    {
+      "text": "It examines how suppliers are selected, how work is allocated and how panels are maintained.",
+      "pages": [
+        2
+      ],
+      "support": "supplier-panel procurement can be divided into three phases",
+      "section": "What is a supplier panel?",
+      "people": []
+    },
+    {
+      "text": "The Commission cautions that weaknesses in selecting panel members can leave later purchasing vulnerable to corruption.",
+      "pages": [
+        2
+      ],
+      "support": "if the processes used to establish the panel in Phase 1 are flawed",
+      "section": "Phase 1 – panel formation",
+      "people": []
+    },
+    {
+      "text": "The Commission recommends formal contracting arrangements and a panel administrator to monitor purchasing, prices, due diligence and conflicts of interest.",
+      "pages": [
+        7,
+        8
+      ],
+      "support": "the Commission recommends that an agency’s legal or contract management staff be involved in executing the necessary contractual arrangements.",
+      "section": "Phase 3 – Panel maintenance",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "Agencies should therefore treat formation of a supplier panel with the same level of formality and probity as a procurement exercise.",
+      "page": 3,
+      "kind": "recommendation"
+    }
+  ],
+  "notes": "Guidance without a separate summary or numbered formal recommendations list; coverage excludes whole-of-government schemes and contracts."
+}

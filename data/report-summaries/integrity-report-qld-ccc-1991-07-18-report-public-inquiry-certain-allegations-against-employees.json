@@ -1,0 +1,34 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1991-07-18-report-public-inquiry-certain-allegations-against-employees",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Report on a Public Inquiry into certain allegations against employees of the Queensland Prison Service and its successor, the Queensland Corrective Services Commission",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-certain-allegations-employees-qld-prison-service/A-public-inquiry-into-certain-allegations-against-employees-of-the-qld-prison-service-and-QCS-Report-1991.pdf",
+  "document": "Report on a Public Inquiry into certain allegations against employees of the Queensland Prison Service and its... (18 July 1991)",
+  "sha256": "e3292fa1a4476c2af8a3f09b1c18c3f618c7e8c2b6d200f99dfe6eb007abbd4a",
+  "pages": 274,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "withheld",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": []
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:47:18+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-core"
+ }
+}
