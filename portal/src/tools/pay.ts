@@ -69,6 +69,12 @@ export const tool: ToolDefinition = {
   async handler(env, args) {
     const pay = await readToolAsset(env, '/pay.json') as PayData | null
     if (!pay?.current || !pay.base?.length) return { rows: [], citations: [], notes: [], error: 'Parliamentary pay records are unavailable.' }
+    // A public office's current rate is not a dated MP spell: an order or limit must not send it there.
+    const asked = typeof args.office === 'string' ? args.office : typeof args.person === 'string' && !pay.names[fold(args.person)] ? args.person : ''
+    if (asked && PUBLIC_SERVICE.test(asked) && !/\bparliamentary secretar/i.test(asked) && !args.people && !args.as_of && !args.since && !args.until && (!args.jurisdiction || args.jurisdiction === 'federal')) {
+      const rates = await officeRates(env, asked, Number(args.limit) || 5).catch(() => null)
+      if (rates) return rates
+    }
     if (args.people || args.party || args.chamber || args.order || args.as_of || args.since || args.until || args.jurisdiction && args.jurisdiction !== 'federal') return datedPay(pay as unknown as HistoricalPayData, args)
     const base = pay.base[pay.base.length - 1].amount, asAt = pay.meta.as_of, limit = Number(args.limit) || 5
     const href = (name: string) => siteUrl(env, `${personUrl(name)}#person-pay`)

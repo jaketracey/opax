@@ -124,7 +124,8 @@ test('the parliamentary_pay tool returns the Tribunal rate for a public office',
  assert.equal(finance.rows[0].office,'Secretary of the Department of Finance');assert.equal(finance.rows[0].frl_id,'F2026L90001');
  assert.equal(finance.citations[0].url,'https://www.legislation.gov.au/F2026L90001/latest/text');
  assert.match(finance.citations[0].text,/\$900,000 to \$950,000/);
- const heads=await payTool.handler(env,{office:'agency heads',limit:3});
+ // A ranking argument does not turn a public office into a dated MP lookup.
+ const heads=await payTool.handler(env,{office:'agency heads',limit:3,order:'desc'});
  assert.deepEqual(heads.rows.map(r=>r.office),['Secretary of the Department of the Prime Minister and Cabinet','Secretary to the Treasury','Chair, Australian Lighthouse Authority']);
  const ombudsman=await payTool.handler(env,{office:'Commonwealth Ombudsman'});
  assert.equal(ombudsman.rows[0].holder.name,'Finch Placeholder');
