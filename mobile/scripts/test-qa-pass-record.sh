@@ -9,7 +9,8 @@ python3 - "$SCRIPTS" "$SCRATCH" "$(command -v node)" <<'PYTEST'
 import datetime, json, os, shlex, shutil, subprocess, sys, time
 from pathlib import Path
 
-scripts, scratch, real_node = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3]
+# ESLint reports real paths; on macOS $TMPDIR (/var/...) is a symlink to /private/var/...
+scripts, scratch, real_node = Path(sys.argv[1]), Path(sys.argv[2]).resolve(), sys.argv[3]
 env = {k: v for k, v in os.environ.items()
        if not k.startswith(('OPAX_', 'EXPO_', 'NODE_', 'GIT_', 'BASH_FUNC_'))
        and k not in {'CI', 'BASH_ENV', 'ENV'}}
