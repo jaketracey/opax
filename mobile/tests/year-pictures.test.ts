@@ -175,7 +175,8 @@ test('existing image cache deduplicates photos, bounds downloads, survives a new
   const getPortrait = jest.fn(async (_path: string) => {
     active++;
     peak = Math.max(peak, active);
-    await new Promise((resolve) => setTimeout(resolve, 5));
+    // Yield asynchronously without coupling 189 fixture downloads to host timers.
+    await Promise.resolve();
     active--;
     return pictureBytes;
   });
@@ -209,4 +210,4 @@ test('existing image cache deduplicates photos, bounds downloads, survives a new
   expect(await offline.get(yearPictureKey(paths[0]!))).toBe(
     files.get(yearPictureKey(paths[0]!))!.localURI,
   );
-});
+}, 30000);

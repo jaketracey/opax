@@ -2,10 +2,12 @@
 // follow-up on identical, immutable public bytes. No historical worktree needed.
 import { strictEqual, ok } from 'node:assert';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { posix, resolve } from 'node:path';
 import { runInNewContext } from 'node:vm';
 import ts from 'typescript';
 import snapshot from '../scripts/fixture-snapshot.json';
+import baselineSources from './profile-baselines.json';
 import { catalogs, people, pinned } from './pinned';
 import {
   profileFor,
@@ -42,16 +44,27 @@ function licenceRefused(profile: unknown) {
   return !!credit && !commonsLicenceShown(credit.licence);
 }
 function historicalSelector(revision: string) {
+  // These historical commits were local review heads, not public git refs.
+  // Retain their exact API sources so a fresh public clone runs both sweeps.
+  const sources = (baselineSources as Record<
+    string,
+    Record<string, { sha256: string; source: string }>
+  >)[revision];
+  ok(sources, `Historical selector fixture is unavailable: ${revision}`);
   const modules = new Map<string, Record<string, unknown>>();
   const load = (path: string): Record<string, unknown> => {
     if (!path.startsWith('mobile/src/api/') || !path.endsWith('.ts'))
       throw new Error('Historical selector import is outside the API modules.');
     const cached = modules.get(path);
     if (cached) return cached;
-    const source = execFileSync('git', ['show', `${revision}:${path}`], {
-      cwd: root,
-      maxBuffer: 1024 * 1024,
-    }).toString();
+    const fixture = sources[path];
+    ok(fixture, `Historical selector module is unavailable: ${revision}:${path}`);
+    const { source, sha256 } = fixture;
+    strictEqual(
+      createHash('sha256').update(source).digest('hex'),
+      sha256,
+      `Historical selector fixture changed: ${revision}:${path}`,
+    );
     const code = ts.transpileModule(source, {
       compilerOptions: {
         module: ts.ModuleKind.CommonJS,
