@@ -18,14 +18,42 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { useAndroidRootScroll } from '../src/navigation/useAndroidRootScroll';
+import BillsList from '../src/features/bills/BillsList';
+import AskScreen from '../src/features/ask/AskScreen';
 
 jest.mock('expo-router', () => ({
   ...jest.requireActual('expo-router'),
   Stack: { Screen: () => null },
   useIsPreview: () => false,
   useSegments: () => [],
+  useLocalSearchParams: () => ({}),
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() },
 }));
+jest.mock('../src/api/runtime', () => ({
+  catalogs: {
+    bills: () => new Promise(() => {}),
+    roster: () => new Promise(() => {}),
+  },
+  client: {},
+}));
+jest.mock('../src/api/useOffline', () => ({ useOffline: () => false }));
+jest.mock('../src/features/account/store', () => ({
+  useAccount: () => ({ status: null }),
+  accountSnapshot: () => ({ status: null }),
+}));
+jest.mock('../src/features/your-mp/useSeat', () => ({
+  useSeat: () => ({ status: 'none' }),
+  savedSeatDirectory: () => null,
+}));
+jest.mock('../src/features/ask/store', () => {
+  const saved = { v: 1, active: null, chats: [] };
+  return {
+    chatsSnapshot: () => saved,
+    subscribeChats: () => () => {},
+    subscribeChatDeletion: () => () => {},
+    loadChats: () => Promise.resolve(),
+  };
+});
 jest.mock(
   'react-native-safe-area-context',
   () => jest.requireActual('react-native-safe-area-context/jest/mock').default,
@@ -81,7 +109,6 @@ test('Android header actions use icons, ripple, hints and disabled semantics', (
   for (const button of buttons) {
     expect(button.props.android_ripple).toBeDefined();
     expect(button.props.onLongPress).toEqual(expect.any(Function));
-    expect(button.props.accessibilityHint).toBeTruthy();
     expect(StyleSheet.flatten(button.props.style)).toMatchObject({
       minWidth: 48,
       minHeight: 48,
@@ -89,6 +116,39 @@ test('Android header actions use icons, ripple, hints and disabled semantics', (
   }
   expect(buttons.at(-1)!.findByType(Icon).props.name).toBe('ellipsis');
 });
+
+test.each(['ios', 'android'] as const)(
+  '%s rendered header actions speak each label and menu hint once',
+  (os) => {
+    platform(os);
+    const tree = render(
+      androidHeaderBar([
+        { type: 'button', label: 'Done', onPress: jest.fn() },
+        ...pageItems({ name: 'Record', share: jest.fn(), menu: [] })(),
+      ]),
+    );
+    const buttons = tree.findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        node.props.accessibilityRole === 'button',
+    );
+    expect(
+      buttons.map((button) => [
+        button.props.accessibilityLabel,
+        button.props.accessibilityHint,
+      ]),
+    ).toEqual([
+      ['Done', undefined],
+      ['Share Record', undefined],
+      ['More for Record', 'Opens more actions'],
+    ]);
+    for (const button of buttons) {
+      const { accessibilityLabel, accessibilityHint } = button.props;
+      if (accessibilityHint)
+        expect(accessibilityLabel).not.toContain(accessibilityHint);
+    }
+  },
+);
 
 test.each([
   'newspaper',
@@ -293,6 +353,50 @@ test('action menus have a dialog title and native Modal handles Back before the 
     tree.findAll((node) => node.props.role === 'dialog').length,
   ).toBeGreaterThan(0);
 });
+
+test.each([
+  ['bills', 'Bills', BillsList],
+  ['ask', 'Ask', AskScreen],
+] as const)(
+  'Android %s renders its root heading inside the real scrolling screen',
+  async (name, title, Component) => {
+    platform('android');
+    const navigation = {
+      getState: () => ({
+        key: 'root-stack',
+        routeNames: [name, 'bill/[key]'],
+        routes: [{ key: 'root', name }],
+      }),
+      getParent: () => undefined,
+      isFocused: () => true,
+      addListener: () => () => {},
+      setOptions: jest.fn(),
+      setParams: jest.fn(),
+    };
+    let view!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      view = TestRenderer.create(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={{ key: 'root', name }}>
+            <Component />
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+    });
+    const headings = view.root.findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        node.props.testID === 'android-root-title',
+    );
+    expect(headings).toHaveLength(1);
+    expect(headings[0]!.props.accessibilityRole).toBe('header');
+    expect(headings[0]!.children).toEqual([title]);
+    let parent = headings[0]!.parent;
+    while (parent && parent.type !== ScrollView) parent = parent.parent;
+    expect(parent).not.toBeNull();
+    expect(parent!.props.onScroll).toEqual(expect.any(Function));
+  },
+);
 
 test.each(
   [false, true].flatMap((clamp) =>

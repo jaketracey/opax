@@ -51,21 +51,51 @@ function present(next: Menu) {
 export function confirmAction(
   title: string,
   actions: readonly MenuAction[],
-  anchor?: number | MenuAnchor,
+  anchor?: number | MenuAnchor | View,
   message?: string,
   onDismiss?: () => void,
 ) {
   if (Platform.OS === 'android') {
-    const next = { title, message, actions, onDismiss };
-    if (typeof anchor === 'number') {
-      UIManager.measureInWindow(anchor, (x, y, width, height) =>
-        present({
-          ...next,
-          anchor: { x, y, width, height },
-          returnFocus: anchor,
-        }),
-      );
-    } else present({ ...next, anchor: anchor ?? recentMenuAnchor() });
+    const trigger =
+      anchor && typeof anchor === 'object' && 'measureInWindow' in anchor
+        ? anchor
+        : undefined;
+    const next = {
+      title,
+      message,
+      actions,
+      onDismiss,
+      anchor:
+        typeof anchor === 'object' && !trigger
+          ? (anchor as MenuAnchor)
+          : recentMenuAnchor(),
+      returnFocus:
+        typeof anchor === 'number'
+          ? anchor
+          : trigger
+            ? (findNodeHandle(trigger) ?? undefined)
+            : undefined,
+    };
+    // Bridgeless numeric measurement can omit its callback. Opening must not
+    // depend on it; prefer the trigger's Fabric-aware instance measurement.
+    present(next);
+    const measured = (x: number, y: number, width: number, height: number) => {
+      if (
+        menu !== next ||
+        ![x, y, width, height].every(Number.isFinite) ||
+        width <= 0 ||
+        height <= 0
+      )
+        return;
+      present({ ...next, anchor: { x, y, width, height } });
+    };
+    try {
+      if (trigger) trigger.measureInWindow(measured);
+      else if (typeof anchor === 'number')
+        UIManager.measureInWindow(anchor, measured);
+    } catch {
+      // A detached trigger still leaves the fallback menu available.
+    }
     return;
   }
   const remove = onKeyCommand('list-escape', () => {

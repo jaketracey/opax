@@ -23,18 +23,22 @@ export function ScopeChips<T extends string>({
     <ScrollView
       ref={scroll}
       horizontal
+      accessibilityRole="tablist"
       accessibilityLabel={label}
       showsHorizontalScrollIndicator={false}
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={styles.choices}
       testID={testID}
     >
-      {options.map((option) => {
+      {options.map((option, index) => {
         const selected = option.value === value;
         return (
           <Pressable
             key={option.value}
+            role="tab"
             accessibilityRole="tab"
+            // RN has no public set-size/position props on both platforms.
+            accessibilityLabel={`${option.label}, ${index + 1} of ${options.length}`}
             accessibilityState={{ selected }}
             onLayout={(e) => {
               positions.current.set(option.value, e.nativeEvent.layout.x);

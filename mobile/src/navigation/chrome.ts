@@ -395,7 +395,7 @@ export function androidHeaderBar(items: TestableHeaderItem[]) {
               accessibilityRole: 'button',
               accessibilityLabel: item.accessibilityLabel ?? item.label,
               accessibilityHint:
-                item.type === 'menu' ? 'Opens more actions' : item.label,
+                item.type === 'menu' ? 'Opens more actions' : undefined,
               accessibilityState: {
                 disabled: item.type === 'button' && !!item.disabled,
               },
