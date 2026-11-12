@@ -125,7 +125,12 @@ test('byte client uses one bounded free read, rejects redirects and non-WebP, JS
   });
   await expect(client.get(paths[0]!, (v) => v)).rejects.toThrow('byte client');
   expect(transport).not.toHaveBeenCalled();
-  expect(await client.getYearPicture(paths[0]!)).toEqual(pictureBytes);
+  // Compare every byte natively, without Jest enumerating typed-array properties.
+  expect(
+    Buffer.from(await client.getYearPicture(paths[0]!)).equals(
+      Buffer.from(pictureBytes),
+    ),
+  ).toBe(true);
   expect(transport).toHaveBeenCalledTimes(1);
   expect(transport.mock.calls[0]![1]).toMatchObject({
     redirect: 'manual',
@@ -159,7 +164,7 @@ test('existing image cache deduplicates photos, bounds downloads, survives a new
   const store = {
     read: async (key: string) => files.get(key),
     write: async (key: string, bytes: Uint8Array) => {
-      expect(bytes).toEqual(pictureBytes);
+      expect(Buffer.from(bytes).equals(Buffer.from(pictureBytes))).toBe(true);
       const saved = { localURI: `file:///cache/${key}.webp`, savedAt: 1000 };
       files.set(key, saved);
       return saved;
