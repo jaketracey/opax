@@ -2729,71 +2729,69 @@ exports[`iOS design at font scale 1 Field retains its iOS output 1`] = `
   >
     Find your MP
   </Text>
-  <View>
-    <TextInput
-      accessibilityHint="Electorate or name"
-      accessibilityLabel="Find your MP"
-      allowFontScaling={true}
-      clearButtonMode="while-editing"
-      defaultValue="Grayndler"
-      maxFontSizeMultiplier={0}
-      onBlur={[Function]}
-      onFocus={[Function]}
-      placeholderTextColor={
+  <TextInput
+    accessibilityHint="Electorate or name"
+    accessibilityLabel="Find your MP"
+    allowFontScaling={true}
+    clearButtonMode="while-editing"
+    defaultValue="Grayndler"
+    maxFontSizeMultiplier={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    placeholderTextColor={
+      {
+        "dynamic": {
+          "dark": "#8A8F84",
+          "highContrastDark": "#A9AEA2",
+          "highContrastLight": "#575C52",
+          "light": "#6F7468",
+        },
+      }
+    }
+    style={
+      [
         {
-          "dynamic": {
-            "dark": "#8A8F84",
-            "highContrastDark": "#A9AEA2",
-            "highContrastLight": "#575C52",
-            "light": "#6F7468",
+          "backgroundColor": {
+            "dynamic": {
+              "dark": "#20241E",
+              "highContrastDark": "#20241E",
+              "highContrastLight": "#FFFFFF",
+              "light": "#FFFFFF",
+            },
           },
-        }
-      }
-      style={
-        [
-          {
-            "backgroundColor": {
-              "dynamic": {
-                "dark": "#20241E",
-                "highContrastDark": "#20241E",
-                "highContrastLight": "#FFFFFF",
-                "light": "#FFFFFF",
-              },
+          "borderColor": {
+            "dynamic": {
+              "dark": "#7E8378",
+              "highContrastDark": "#7E8378",
+              "highContrastLight": "#8D897B",
+              "light": "#8D897B",
             },
-            "borderColor": {
-              "dynamic": {
-                "dark": "#7E8378",
-                "highContrastDark": "#7E8378",
-                "highContrastLight": "#8D897B",
-                "light": "#8D897B",
-              },
-            },
-            "borderCurve": "continuous",
-            "borderRadius": 10,
-            "borderWidth": 1,
-            "color": {
-              "dynamic": {
-                "dark": "#ECEAE2",
-                "highContrastDark": "#ECEAE2",
-                "highContrastLight": "#23271F",
-                "light": "#23271F",
-              },
-            },
-            "fontFamily": undefined,
-            "fontSize": 17,
-            "minHeight": 48,
-            "paddingHorizontal": 16,
-            "paddingVertical": 8,
           },
-          null,
-          null,
-          null,
-          null,
-          null,
-        ]
-      }
-    />
-  </View>
+          "borderCurve": "continuous",
+          "borderRadius": 10,
+          "borderWidth": 1,
+          "color": {
+            "dynamic": {
+              "dark": "#ECEAE2",
+              "highContrastDark": "#ECEAE2",
+              "highContrastLight": "#23271F",
+              "light": "#23271F",
+            },
+          },
+          "fontFamily": undefined,
+          "fontSize": 17,
+          "minHeight": 48,
+          "paddingHorizontal": 16,
+          "paddingVertical": 8,
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+      ]
+    }
+  />
   <Text
     accessibilityElementsHidden={true}
     accessibilityLanguage="en-AU"
@@ -10116,71 +10114,69 @@ exports[`iOS design at font scale 2 Field retains its iOS output 1`] = `
   >
     Find your MP
   </Text>
-  <View>
-    <TextInput
-      accessibilityHint="Electorate or name"
-      accessibilityLabel="Find your MP"
-      allowFontScaling={true}
-      clearButtonMode="while-editing"
-      defaultValue="Grayndler"
-      maxFontSizeMultiplier={0}
-      onBlur={[Function]}
-      onFocus={[Function]}
-      placeholderTextColor={
+  <TextInput
+    accessibilityHint="Electorate or name"
+    accessibilityLabel="Find your MP"
+    allowFontScaling={true}
+    clearButtonMode="while-editing"
+    defaultValue="Grayndler"
+    maxFontSizeMultiplier={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    placeholderTextColor={
+      {
+        "dynamic": {
+          "dark": "#8A8F84",
+          "highContrastDark": "#A9AEA2",
+          "highContrastLight": "#575C52",
+          "light": "#6F7468",
+        },
+      }
+    }
+    style={
+      [
         {
-          "dynamic": {
-            "dark": "#8A8F84",
-            "highContrastDark": "#A9AEA2",
-            "highContrastLight": "#575C52",
-            "light": "#6F7468",
+          "backgroundColor": {
+            "dynamic": {
+              "dark": "#20241E",
+              "highContrastDark": "#20241E",
+              "highContrastLight": "#FFFFFF",
+              "light": "#FFFFFF",
+            },
           },
-        }
-      }
-      style={
-        [
-          {
-            "backgroundColor": {
-              "dynamic": {
-                "dark": "#20241E",
-                "highContrastDark": "#20241E",
-                "highContrastLight": "#FFFFFF",
-                "light": "#FFFFFF",
-              },
+          "borderColor": {
+            "dynamic": {
+              "dark": "#7E8378",
+              "highContrastDark": "#7E8378",
+              "highContrastLight": "#8D897B",
+              "light": "#8D897B",
             },
-            "borderColor": {
-              "dynamic": {
-                "dark": "#7E8378",
-                "highContrastDark": "#7E8378",
-                "highContrastLight": "#8D897B",
-                "light": "#8D897B",
-              },
-            },
-            "borderCurve": "continuous",
-            "borderRadius": 10,
-            "borderWidth": 1,
-            "color": {
-              "dynamic": {
-                "dark": "#ECEAE2",
-                "highContrastDark": "#ECEAE2",
-                "highContrastLight": "#23271F",
-                "light": "#23271F",
-              },
-            },
-            "fontFamily": undefined,
-            "fontSize": 17,
-            "minHeight": 48,
-            "paddingHorizontal": 16,
-            "paddingVertical": 8,
           },
-          null,
-          null,
-          null,
-          null,
-          null,
-        ]
-      }
-    />
-  </View>
+          "borderCurve": "continuous",
+          "borderRadius": 10,
+          "borderWidth": 1,
+          "color": {
+            "dynamic": {
+              "dark": "#ECEAE2",
+              "highContrastDark": "#ECEAE2",
+              "highContrastLight": "#23271F",
+              "light": "#23271F",
+            },
+          },
+          "fontFamily": undefined,
+          "fontSize": 17,
+          "minHeight": 48,
+          "paddingHorizontal": 16,
+          "paddingVertical": 8,
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+      ]
+    }
+  />
   <Text
     accessibilityElementsHidden={true}
     accessibilityLanguage="en-AU"

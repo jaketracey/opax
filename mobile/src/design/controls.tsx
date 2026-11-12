@@ -42,7 +42,7 @@ import { Hoverable, columns, useLayout } from './adaptive';
 import { haptic } from './haptics';
 import { Icon, type SFSymbol } from './icon';
 import { ChoiceChip } from './labels';
-import { Group, InsetGroup } from './layout';
+import { Group } from './layout';
 import { showMenu } from './menu';
 import { phoneCopy } from './phone-copy';
 import { symbols } from './symbols';
@@ -1463,7 +1463,6 @@ export function Field({
   const ref = inputRef ?? ownRef;
   const [focused, setFocused] = useState(false);
   const disabled = input.editable === false;
-  const FieldGroup = grouped ? InsetGroup : View;
   const description = [error ? `Error: ${error}` : null, hint]
     .filter(Boolean)
     .join('. ');
@@ -1487,7 +1486,7 @@ export function Field({
   return (
     <View style={styles.field}>
       {/* The input carries the label, so VoiceOver reads it once. */}
-      {!labelHidden && !grouped ? (
+      {!labelHidden ? (
         <Text
           variant={grouped ? 'groupHeader' : 'secondary'}
           tone="inkSoft"
@@ -1505,55 +1504,48 @@ export function Field({
           ) : null}
         </Text>
       ) : null}
-      <FieldGroup
-        {...(grouped
-          ? {
-              header: labelHidden
-                ? undefined
-                : `${label}${required ? ' (required)' : ''}`,
-            }
-          : {})}
-      >
-        <TextInput
-          ref={ref}
-          {...input}
-          testID={testID}
-          accessibilityLabel={required ? `${label}, required` : label}
-          accessibilityHint={description || undefined}
-          onFocus={(event) => {
-            setFocused(true);
-            input.onFocus?.(event);
-          }}
-          onBlur={(event) => {
-            setFocused(false);
-            input.onBlur?.(event);
-          }}
-          clearButtonMode="while-editing"
-          allowFontScaling
-          maxFontSizeMultiplier={0}
-          // Faint text is for raised surfaces only; a disabled field is sunken.
-          placeholderTextColor={disabled ? colors.inkSoft : colors.inkFaint}
-          style={[
-            styles.input,
-            variant === 'code'
-              ? {
-                  fontFamily: textStyles.tileFigure.fontFamily,
-                  fontSize: textStyles.tileFigure.fontSize,
-                  lineHeight: textStyles.tileFigure.lineHeight,
-                  fontWeight: textStyles.tileFigure.fontWeight,
-                  fontVariant: textStyles.tileFigure.tabular
-                    ? ['tabular-nums']
-                    : undefined,
-                }
-              : null,
-            grouped ? styles.groupedInput : null,
-            disabled ? styles.inputDisabled : null,
-            // Focus changes the colour, never the boundary width.
-            focused ? styles.inputFocused : null,
-            error ? styles.inputError : null,
-          ]}
-        />
-      </FieldGroup>
+      {/* The input owns the fill, radius and every border state. InsetGroup
+          adds a padded surface outside that boundary, so a single field must
+          not use it, even on a grouped screen. */}
+      <TextInput
+        ref={ref}
+        {...input}
+        testID={testID}
+        accessibilityLabel={required ? `${label}, required` : label}
+        accessibilityHint={description || undefined}
+        onFocus={(event) => {
+          setFocused(true);
+          input.onFocus?.(event);
+        }}
+        onBlur={(event) => {
+          setFocused(false);
+          input.onBlur?.(event);
+        }}
+        clearButtonMode="while-editing"
+        allowFontScaling
+        maxFontSizeMultiplier={0}
+        // Faint text is for raised surfaces only; a disabled field is sunken.
+        placeholderTextColor={disabled ? colors.inkSoft : colors.inkFaint}
+        style={[
+          styles.input,
+          variant === 'code'
+            ? {
+                fontFamily: textStyles.tileFigure.fontFamily,
+                fontSize: textStyles.tileFigure.fontSize,
+                lineHeight: textStyles.tileFigure.lineHeight,
+                fontWeight: textStyles.tileFigure.fontWeight,
+                fontVariant: textStyles.tileFigure.tabular
+                  ? ['tabular-nums']
+                  : undefined,
+              }
+            : null,
+          grouped ? styles.groupedInput : null,
+          disabled ? styles.inputDisabled : null,
+          // Focus changes the colour, never the boundary width.
+          focused ? styles.inputFocused : null,
+          error ? styles.inputError : null,
+        ]}
+      />
       {hint ? (
         <Text
           variant="footnote"
@@ -1964,13 +1956,6 @@ const styles = StyleSheet.create({
     gap: rhythm.line,
   },
   menuRowTitle: { flex: 1 },
-  groupedFieldSpacing: { gap: rhythm.groupHeader },
-  groupedField: {
-    backgroundColor: colors.raised,
-    borderRadius: radii.container,
-    borderCurve: 'continuous',
-    overflow: 'hidden',
-  },
   groupedInput: { borderRadius: radii.container, borderCurve: 'continuous' },
   composerBody: {
     gap: 8,
