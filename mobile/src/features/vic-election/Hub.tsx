@@ -1,11 +1,12 @@
 import { setElectionClock } from '../today/launch-fixture';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { SectionList, View } from 'react-native';
+import { Animated, SectionList, View } from 'react-native';
 import type { SearchBarCommands } from 'react-native-screens';
 import { FigureBlock } from '../../design/record';
 import { Skeleton, OfflineLine } from '../../design/states';
 import { Text } from '../../design/text';
+import { rhythm } from '../../design/tokens';
 import { useListSearchBar } from '../../design/search-bar';
 import { RouteOptions } from '../../navigation/preview';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
@@ -17,6 +18,7 @@ import { dayCount, dateWords, phase, savedDistrict, timeWords } from './model';
 import { useOverview } from './reads';
 import { KeyDates } from './KeyDates';
 import { Finder } from './Finder';
+import { useContentArrival } from './useContentArrival';
 import { SeatRow, RegionRow } from './rows';
 import {
   About,
@@ -32,14 +34,28 @@ import {
 } from './shared';
 
 export default function Hub() {
-  const params = useLocalSearchParams<{ q?: string; fixture?: string }>();
+  const params = useLocalSearchParams<{
+    q?: string;
+    place?: string;
+    fixture?: string;
+  }>();
   useEffect(() => {
     if (params.fixture) setElectionClock(params.fixture);
   }, [params.fixture]);
-  const [q, setQ] = useState((params.q ?? '').slice(0, 60));
-  const [submit, setSubmit] = useState(params.q ? 1 : 0);
+  const routeQuery = (params.q ?? params.place ?? '').slice(0, 60);
+  const [search, setSearch] = useState({
+    routeQuery,
+    q: routeQuery,
+    submit: routeQuery ? 1 : 0,
+  });
+  // Reset before committing children, so an incoming place never draws old hits.
+  // The hub and finder stay mounted, retaining focus and list position.
+  if (search.routeQuery !== routeQuery)
+    setSearch({ routeQuery, q: routeQuery, submit: routeQuery ? 1 : 0 });
+  const { q, submit } = search;
   const read = useOverview();
   const o = read.record?.data;
+  const arrivalOpacity = useContentArrival(!o && !read.error, !!o);
   const now = useElectionNow(
     o
       ? [
@@ -66,12 +82,11 @@ export default function Hub() {
     );
   const scroll = useRef(0);
   const change = (text: string): void => {
-    setQ(text.slice(0, 60));
+    setSearch((prev) => ({ ...prev, q: text.slice(0, 60), submit: 0 }));
     if (text.length > 60)
       (searchBar.ref as { current: SearchBarCommands | null }).current?.setText(
         text.slice(0, 60),
       );
-    setSubmit(0);
     if (!text.trim())
       requestAnimationFrame(() =>
         listRef.current
@@ -83,17 +98,19 @@ export default function Hub() {
     placeholder: c.placeholder,
     onChangeText: change,
     onSearchButtonPress: (text) => {
-      setQ(text.slice(0, 60));
-      setSubmit((n) => n + 1);
+      setSearch((prev) => ({
+        ...prev,
+        q: text.slice(0, 60),
+        submit: prev.submit + 1,
+      }));
     },
     onCancelButtonPress: () => change(''),
   });
   useEffect(() => {
-    if (params.q)
-      (searchBar.ref as { current: SearchBarCommands | null }).current?.setText(
-        params.q.slice(0, 60),
-      );
-  }, [params.q, searchBar.ref]);
+    (searchBar.ref as { current: SearchBarCommands | null }).current?.setText(
+      routeQuery,
+    );
+  }, [routeQuery, searchBar.ref]);
   const finding = q.trim().length >= 3 || (submit > 0 && !!q.trim());
   const state = o ? phase(o, now) : null;
   const header = (
@@ -107,7 +124,7 @@ export default function Hub() {
         <OfflineLine savedAt={read.record.savedAt} />
       ) : null}
       {o && !finding ? (
-        <>
+        <Animated.View style={{ gap: rhythm.block, opacity: arrivalOpacity }}>
           {o.notice ? (
             <Block testID="vic-election-notice">
               <Text wordSafe variant="body">
@@ -155,7 +172,7 @@ export default function Hub() {
             </Block>
           ) : null}
           <KeyDates o={o} now={now} />
-        </>
+        </Animated.View>
       ) : null}
     </>
   );
@@ -208,6 +225,7 @@ export default function Hub() {
       />
       <ElectionList
         sections={sections}
+        arrivalOpacity={arrivalOpacity}
         header={header}
         footer={
           o && read.record && !finding ? (

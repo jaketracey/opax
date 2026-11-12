@@ -1,6 +1,6 @@
 import { electionMenu } from './actions';
 import type { ReactNode, Ref } from 'react';
-import { SectionList, StyleSheet, View } from 'react-native';
+import { Animated, SectionList, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import type { RecordResult } from '../../api/client';
 import { RegionProvider, SidebarSafe } from '../../design/adaptive';
@@ -198,6 +198,7 @@ export function ElectionList({
   listRef,
   onScroll,
   onLayout,
+  arrivalOpacity,
 }: {
   sections: ElectionSection[];
   header?: ReactNode;
@@ -208,6 +209,7 @@ export function ElectionList({
   >;
   onScroll?: (y: number) => void;
   onLayout?: () => void;
+  arrivalOpacity?: Animated.Value;
 }) {
   const column = useScreenColumn();
   return (
@@ -234,18 +236,24 @@ export function ElectionList({
             sections={sections}
             keyExtractor={(row) => row.key}
             renderItem={({ item: row }) => (
-              <View style={{ paddingBottom: rhythm.tight }}>{row.element}</View>
+              <Animated.View
+                style={{ paddingBottom: rhythm.tight, opacity: arrivalOpacity }}
+              >
+                {row.element}
+              </Animated.View>
             )}
             renderSectionHeader={({ section }) =>
               section.title ? (
-                <View style={styles.heading}>
+                <Animated.View
+                  style={[styles.heading, { opacity: arrivalOpacity }]}
+                >
                   <SectionTitle>{section.title}</SectionTitle>
                   {section.note ? (
                     <Text wordSafe variant="footnote" tone="inkSoft">
                       {section.note}
                     </Text>
                   ) : null}
-                </View>
+                </Animated.View>
               ) : null
             }
             ListHeaderComponent={
@@ -255,7 +263,11 @@ export function ElectionList({
               </View>
             }
             ListFooterComponent={
-              <View style={{ gap: rhythm.block }}>{footer}</View>
+              <Animated.View
+                style={{ gap: rhythm.block, opacity: arrivalOpacity }}
+              >
+                {footer}
+              </Animated.View>
             }
             onScroll={(e) => onScroll?.(e.nativeEvent.contentOffset.y)}
             scrollEventThrottle={16}

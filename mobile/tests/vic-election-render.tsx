@@ -104,25 +104,39 @@ export function resetVic() {
   mockVic.params = {};
   mockVic.find.mockReset();
 }
-export function renderVic(element: ReactElement) {
+function vicTree(
+  element: ReactElement,
+  observe: (options: Record<string, unknown>) => void,
+) {
+  return withNavigationOptions(
+    <SafeAreaFrameContext.Provider
+      value={{ x: 0, y: 0, width: 390, height: 844 }}
+    >
+      <SafeAreaInsetsContext.Provider
+        value={{ top: 47, bottom: 34, left: 0, right: 0 }}
+      >
+        <View>{element}</View>
+      </SafeAreaInsetsContext.Provider>
+    </SafeAreaFrameContext.Provider>,
+    observe,
+  );
+}
+export function renderVic(
+  element: ReactElement,
+  observe: (options: Record<string, unknown>) => void = () => {},
+) {
   let result!: TestRenderer.ReactTestRenderer;
   act(() => {
-    result = TestRenderer.create(
-      withNavigationOptions(
-        <SafeAreaFrameContext.Provider
-          value={{ x: 0, y: 0, width: 390, height: 844 }}
-        >
-          <SafeAreaInsetsContext.Provider
-            value={{ top: 47, bottom: 34, left: 0, right: 0 }}
-          >
-            <View>{element}</View>
-          </SafeAreaInsetsContext.Provider>
-        </SafeAreaFrameContext.Provider>,
-        () => {},
-      ),
-    );
+    result = TestRenderer.create(vicTree(element, observe));
   });
   return result;
+}
+export function rerenderVic(
+  result: TestRenderer.ReactTestRenderer,
+  element: ReactElement,
+  observe: (options: Record<string, unknown>) => void = () => {},
+) {
+  act(() => result.update(vicTree(element, observe)));
 }
 export const words = (r: TestRenderer.ReactTestRenderer) =>
   r.root
