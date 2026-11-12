@@ -33,7 +33,7 @@
 .video-facade:hover .video-play circle { fill: var(--bronze-bright); fill-opacity: 0.16; }
 .video-text { display: flex; flex-direction: column; gap: var(--sp-4); min-width: 0; }
 .video-title { font: var(--type-strong); color: var(--on-navy); overflow-wrap: anywhere; }
-.video-meta { font: var(--type-metadata); color: var(--on-navy-soft); }
+.video-meta { font: var(--type-fine); color: var(--on-navy-soft); max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .video-caption { margin-top: var(--space-tight); font: var(--type-metadata); }
 .video-caption a { display: inline-flex; align-items: center; min-height: var(--size-target); }
 /* "More Senate video", "All first speeches": the way on to /video/senate under a block of cards. */

@@ -172,11 +172,10 @@ test('facade: only the thumbnail before a press; the nocookie player after it, t
   assert.equal(thumb.getAttribute('alt'), '', 'decorative: the button names the video');
   assert.equal(thumb.getAttribute('loading'), 'lazy');
   assert.equal(document.querySelector('svg.video-play').getAttribute('aria-hidden'), 'true');
-  const link = document.querySelector('.video-caption a');
-  assert.equal(link.textContent, 'Watch on YouTube');
-  assert.equal(link.href, 'https://www.youtube.com/watch?v=qtFixture12');
+  assert.equal(document.querySelector('.video-caption'), null, 'no caption under a Question Time card');
+  assert.doesNotMatch(document.documentElement.outerHTML, /Watch on YouTube/);
   assert.equal(loader.urls.filter(u => /youtube|google/.test(u)).length, 0, `no player request before play: ${loader.urls}`);
-  assert.doesNotMatch(document.documentElement.outerHTML.replace(/<a [^>]*>Watch on YouTube<\/a>/, ''), /youtube-nocookie|youtube\.com\/embed/);
+  assert.doesNotMatch(document.documentElement.outerHTML, /youtube-nocookie|youtube\.com\/embed/);
   // Keyboard activation is the native button's: Enter and Space both dispatch click.
   button.focus();
   button.click();
