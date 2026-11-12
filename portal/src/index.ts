@@ -3837,15 +3837,15 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   about: {
     title: 'About OPAX',
-    description: 'What OPAX is for, who makes it, and how answers are produced from the Australian parliamentary record, disclosed money and the public registers around it.',
+    description: 'What OPAX holds: parliamentary records, public money, people and interests, official reports and inquiries, and source-linked registers.',
   },
   methods: {
     title: 'Methods & how to cite · OPAX',
-    description: 'The sources behind the OPAX record, from Hansard to electoral disclosures, with its known limits and how to cite an answer or a speech.',
+    description: 'How OPAX collects and cites parliamentary records, official reports, hearing transcripts, annual report tables and quoted agency figures, with source restrictions and known limits.',
   },
   stats: {
     title: 'Sources & coverage · OPAX',
-    description: 'Live counts for every collection in the OPAX record: speeches, divisions, bills and official statements, by parliament and year.',
+    description: 'Publishers, jurisdictions, years, snapshot counts, reuse terms and refresh arrangements for OPAX collections, alongside live search index counts.',
   },
   declared: {
     title: 'Declared interests · OPAX',
@@ -4608,8 +4608,8 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
           card: { kicker: 'Search the record', title: 'Search the record', lines: ['Speeches matching this query, with speaker, party, date and a link to the official source for each.'] },
         })
       }
-      // /privacy and /support are served whole: the policy text a store reviewer,
-      // a crawler or a reader without scripts sees is the panel's own.
+      // Information and policy pages share the panel's full text with crawlers
+      // and readers without scripts, including generated coverage tables.
       const prerender = SERVER_PANELS.has(route.page) ? await serverPanel(env, route.page) : null
       return base({
         title: page.title,

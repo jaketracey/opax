@@ -40,6 +40,21 @@ const {default:worker}=await import('data:text/javascript;base64,'+Buffer.from(c
 const origin='https://opax.com.au';
 const env={COMMUNITY_ORIGIN:origin,ASSETS:{async fetch(req){const path=new URL(req.url).pathname;const file=new URL(path==='/'?'index.html':path==='/home'?'home.html':path==='/community'?'community.html':path.slice(1),pub);if(!existsSync(file)) return new Response('Missing',{status:404}); const response=new Response(readFileSync(file),{headers:{'content-type':path.endsWith('.json')?'application/json':'text/html'}}); if(path.endsWith('.json')) response.json=()=>read(path); return response;}}};
 async function get(path){const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});assert.equal(r.status,200,path);return r.text();}
+test('About, coverage and Methods routes render new collections from the canonical panels', async () => {
+  for (const path of ['/about','/stats','/methods']) {
+    const html = await get(path);
+    assert.match(html, new RegExp(`data-panel-copy="${path.slice(1)}"`), path);
+    for (const phrase of ['annual report', 'hearing transcript', 'integrity']) assert.ok(html.toLowerCase().includes(phrase), `${path}: ${phrase}`);
+    if (path !== '/methods') assert.match(html, /href="\/official-reports/, path);
+    if (path === '/stats') {
+      const {coverageCollections} = await import('../../scripts/build_coverage.mjs');
+      for (const row of coverageCollections()) {
+        const entry = html.split(`<tr data-coverage="${row.id}"`)[1]?.split('</tr>')[0];
+        assert.ok(entry?.includes(`data-count="${row.count}"`), row.id);
+      }
+    }
+  }
+});
 test('official report page and API share the schema 1 record, independent of research report gates', async () => {
   const slug='royal-commission-cth-robodebt';
   const data=await read('/report-records/'+slug+'.json');

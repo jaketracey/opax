@@ -257,7 +257,9 @@ test('off: the app shell and the home page drop the reports-only copy and draw n
   const on = await probe('/about', ON);
   assert.equal(on.gates, 'vic-election reports');
   assert.deepEqual(on.links, ['/reports', ...SEVEN.map(s => `/reports/${s}`)].sort());
-  assert.equal(on.reportsOnly, 2);
+  // About now describes the official report collections, which remain available
+  // with essays off. Essay navigation still opens only under the reports gate.
+  assert.equal(on.reportsOnly, 0);
   assert.equal(on.researchOption, true);
   assert.equal(on.grants, 'Reports › Where community funding goes');
   const homeOn = await probe('/', ON);
