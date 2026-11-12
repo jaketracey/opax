@@ -1,17 +1,21 @@
 # Deploy the portal Worker to production.
 #
 # Starts when:
-#   * a push to main changes portal/public/corpus.json. Only the nightly refresh does that
-#     (scripts/vm/nightly.sh stamps refresh.checked_at every night, so every nightly commit
-#     carries it), so the nightly's push is what deploys its data; or
+#   * a push to main changes anything the Worker is built from: portal/, scripts/ (hub data
+#     and build scripts), or the locked Python dependencies. That covers the nightly refresh
+#     (it always changes portal/public/corpus.json) and every merged portal or data PR, so a
+#     merge no longer waits for someone to remember a hand-started run (12 Nov 2026: merges
+#     #293 and #296 both needed one); or
 #   * someone runs it by hand (Actions > Deploy > Run workflow, or `gh workflow run deploy.yml`).
-# It is deliberately NOT triggered by other pushes, so a human's own `npm run deploy` from a
-# laptop works exactly as before, and never by pull_request: this repository is public and the
-# job holds the Cloudflare deploy token. A human commit that touches corpus.json (a manual
-# refresh) does deploy; that is wanted.
+# Pushes that only touch the apps (mobile/), docs or tooling do not deploy. Never triggered by
+# pull_request: this repository is public and the job holds the Cloudflare deploy token.
+# Several merges close together queue in the deploy-production group below; the first step
+# skips a run when main's head is already deployed or deploying, so they collapse to one deploy.
+# A human's own `npm run deploy` from a laptop still works as before.
 #
-# The restamp commit this job pushes back does not touch corpus.json and carries [skip ci], so
-# it cannot start another run.
+# The restamp commit this job pushes back touches portal/public/, but it cannot start another
+# run: it carries [skip ci], it is pushed with the job's GITHUB_TOKEN (whose pushes never start
+# workflows), and the job's `if` below skips any push by github-actions[bot].
 #
 # Secrets (Settings > Secrets and variables > Actions):
 #   CLOUDFLARE_API_TOKEN    Workers Scripts / Routes / KV / R2 / Tail / Observability write,
@@ -28,7 +32,10 @@ on:
   push:
     branches: [main]
     paths:
-      - portal/public/corpus.json
+      - portal/**
+      - scripts/**
+      - pyproject.toml
+      - uv.lock
   workflow_dispatch:
     inputs:
       skip_tests:
