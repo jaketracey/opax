@@ -12,6 +12,8 @@ import {
 import {
   Animated,
   Platform,
+  ScrollView,
+  Text as NativeText,
   View as NativeView,
   useWindowDimensions,
   type LayoutChangeEvent,
@@ -20,6 +22,7 @@ import {
   type Text,
   type View,
 } from 'react-native';
+import { NavigationRouteContext } from 'expo-router/react-navigation';
 import { useSafeSetOptions } from './preview';
 import { useNamedBackTitle } from './useNamedBackOptions';
 import { useHeaderBottom } from '../design/useHeaderBottom';
@@ -37,31 +40,6 @@ export const TitleAnchorContext = createContext<
 // Mirrors the existing inline navigation ramp (17 pt to 23 pt). The device
 // reviewer must confirm this cap at AX5; this lane never boots a simulator.
 export const inlineTitleScaleCap = 23 / 17;
-const barTitleEllipsisWidth = 17;
-
-// SF Pro 17 pt advances tuned to lane lead's device measurements, 10 Nov 2026.
-const backTitleAdvances = [
-  [" ijl.,':;I", 5],
-  ['frt', 6.5],
-  ['mw', 14],
-  ['MW', 15.5],
-  ['0123456789', 10],
-  ['B', 12.5],
-  ['L', 13.5],
-  ['s', 8.5],
-] as const;
-
-/** Chevron and padding plus text advances, rounded up to whole points. */
-export function backPillWidth(title: string): number {
-  let width = 48;
-  for (const character of title) {
-    width +=
-      backTitleAdvances.find(([glyphs]) => glyphs.includes(character))?.[1] ??
-      (/[A-Z]/.test(character) ? 11.5 : 9.5);
-  }
-  return Math.ceil(width);
-}
-
 /**
  * The widest a bar title may be between the bar's items: iOS 26
  * draws each item as a 44 pt glass circle 16 pt from the edge, and a group
@@ -76,11 +54,19 @@ export function barTitleWidth(
   trailing = 2,
   trailingWidth?: number,
   backTitle?: string,
-  fontScale = 1,
+  measuredBackWidth?: number,
 ): number {
+  if (backTitle === '') {
+    const room = Math.max(
+      0,
+      windowWidth -
+        (16 + 44 + 8) -
+        (16 + (trailingWidth ?? 44 + 60 * Math.max(0, trailing - 1)) + 8),
+    );
+    return windowWidth >= 600 ? Math.min(room, windowWidth / 2) : room;
+  }
   if (backTitle) {
-    const leadingReserve =
-      16 + 48 + (backPillWidth(backTitle) - 48) * fontScale + 20;
+    const leadingReserve = 16 + 48 + (measuredBackWidth ?? 0) + 20;
     const trailingReserve =
       16 + (trailingWidth ?? 44 + 60 * Math.max(0, trailing - 1)) + 20;
     const room = Math.max(0, windowWidth - leadingReserve - trailingReserve);
@@ -99,42 +85,47 @@ export function barTitleWidth(
   return windowWidth >= 600 ? Math.min(room, windowWidth / 2) : room;
 }
 
-/** Keep at least one complete word and its ellipsis, never a letter stub. */
-export function minimumBarTitleWidth(title: string, fontScale = 1): number {
+/** Useful alternatives, measured by native Text in the bar's own font. */
+export function barTitleCandidates(title: string, person = false): string[] {
   const words = title.trim().split(/\s+/);
-  const firstWord = words[0] ?? '';
-  const advance = backPillWidth(firstWord) - 48;
-  return Math.ceil(
-    Math.max(60, advance + (words.length > 1 ? barTitleEllipsisWidth : 0)) *
-      Math.min(fontScale, inlineTitleScaleCap),
-  );
+  if (person) return [...new Set([title, words.at(-1)!])];
+  return [
+    title,
+    ...Array.from(
+      { length: Math.max(0, words.length - 2) },
+      (_, index) => `${words.slice(0, words.length - 1 - index).join(' ')}…`,
+    ),
+  ];
 }
 
-/** The longest leading whole words that fit, or no useful bar title. */
-export function shortenBarTitle(
+/** Full subject first, then the back name, then a useful whole-word cut. */
+export function retreatBarTitle(
   title: string,
-  room: number,
-  fontScale = 1,
-): string | null {
-  if (room < minimumBarTitleWidth(title, fontScale)) return null;
-  const scale = Math.min(fontScale, inlineTitleScaleCap);
-  const fits = (text: string, extra = 0) =>
-    (backPillWidth(text) - 48 + extra) * scale <= room;
-  if (fits(title)) return title;
-  const words = title.trim().split(/\s+/);
-  for (let count = words.length - 1; count > 0; count--) {
-    const wordsToShow = words.slice(0, count).join(' ');
-    if (fits(wordsToShow, barTitleEllipsisWidth)) return `${wordsToShow}…`;
-  }
-  return null;
+  namedRoom: number,
+  minimalRoom: number,
+  measure: (text: string) => number | undefined,
+  person = false,
+): { text: string | null; mode: 'default' | 'minimal'; room: number } {
+  const fits = (text: string, room: number) => {
+    const width = measure(text);
+    return width !== undefined && width <= room;
+  };
+  if (fits(title, namedRoom))
+    return { text: title, mode: 'default', room: namedRoom };
+  if (fits(title, minimalRoom))
+    return { text: title, mode: 'minimal', room: minimalRoom };
+  const text =
+    barTitleCandidates(title, person)
+      .slice(1)
+      .find((candidate) => fits(candidate, minimalRoom)) ?? null;
+  return { text, mode: 'minimal', room: minimalRoom };
 }
 
 /**
- * On iOS 26, react-native-screens sizes the centre title subview from its
- * first layout. Starting with zero width and empty text prevents later
- * titles from drawing, even when scroll measurement and setOptions work.
- * Keep the known title laid out within the named back and trailing items,
- * and hide it with opacity alone. Lane-lead simulator probes confirmed it.
+ * Keep the subject laid out from the first frame for react-native-screens.
+ * Hidden horizontal probes give native font advances without truncation,
+ * including Dynamic Type and Bold Text. A measurement belongs to its title
+ * and type size, so a resize or a new subject cannot reuse stale advances.
  */
 export function BarTitle({
   title,
@@ -142,17 +133,17 @@ export function BarTitle({
   trailing = 2,
   trailingWidth,
   backTitle,
+  person = false,
 }: {
   title: string;
   shown: boolean;
-  /** How many items the bar draws after the title: ⋯ alone is 1. */
   trailing?: number;
-  /** Combined item widths for a bar with a text pill, excluding margins. */
   trailingWidth?: number;
-  /** Resolved native back name, used to keep its pill clear of the title. */
   backTitle?: string;
+  person?: boolean;
 }) {
   const reduceMotion = useReduceMotionSetting();
+  const setOptions = useSafeSetOptions();
   const { width, fontScale } = useWindowDimensions();
   const insets = useContext(SafeAreaInsetsContext);
   const adaptive = useAdaptiveDevice();
@@ -160,21 +151,46 @@ export function BarTitle({
     adaptive || insets?.left !== insets?.right
       ? width - (insets?.left ?? 0) - (insets?.right ?? 0)
       : width;
-  const room = barTitleWidth(
+  const key = `${title}:${backTitle}:${fontScale}`;
+  const [metrics, setMetrics] = useState<Record<string, number>>({});
+  const measured = (text: string) => metrics[`${key}:${text}`];
+  const candidates = barTitleCandidates(title, person);
+  const backWidth = metrics[`${key}:back`];
+  const ready =
+    candidates.every((text) => measured(text) !== undefined) &&
+    (!backTitle || backWidth !== undefined);
+  const namedRoom = barTitleWidth(
     safeWidth,
     trailing,
     trailingWidth,
     backTitle,
-    fontScale,
+    backWidth,
   );
-  const shortened = shortenBarTitle(title, room, fontScale);
-  const fits = shortened !== null;
+  const minimalRoom = barTitleWidth(safeWidth, trailing, trailingWidth, '');
+  const retreat = retreatBarTitle(
+    title,
+    namedRoom,
+    minimalRoom,
+    measured,
+    person,
+  );
+  const fits = ready && retreat.text !== null;
   const visible = shown && fits;
-  const [opacity] = useState(() => new Animated.Value(visible ? 1 : 0));
+  const [opacity] = useState(() => new Animated.Value(0));
+  useLayoutEffect(() => {
+    if (Platform.OS === 'ios' && ready)
+      setOptions({
+        headerBackButtonDisplayMode: shown ? retreat.mode : 'default',
+      });
+  }, [setOptions, ready, shown, retreat.mode]);
   useEffect(() => {
+    if (reduceMotion !== false) {
+      opacity.setValue(visible ? 1 : 0);
+      return;
+    }
     const fade = Animated.timing(opacity, {
       toValue: visible ? 1 : 0,
-      duration: reduceMotion === false ? motion.duration.crossfade : 0,
+      duration: motion.duration.crossfade,
       useNativeDriver: true,
     });
     fade.start();
@@ -185,27 +201,82 @@ export function BarTitle({
     tabular: _tabular,
     ...style
   } = textStyles.inlineTitle;
+  const measure =
+    (text: string) =>
+    (event: { nativeEvent: { lines: { width: number }[] } }) => {
+      const line = event.nativeEvent.lines[0];
+      if (!line || !Number.isFinite(line.width) || line.width <= 0) return;
+      setMetrics((old) =>
+        old[`${key}:${text}`] === line.width
+          ? old
+          : { ...old, [`${key}:${text}`]: line.width },
+      );
+    };
+  const room = ready && shown ? retreat.room : namedRoom;
   return createElement(
-    Animated.Text,
-    {
-      numberOfLines: 1,
-      ellipsizeMode: 'clip',
-      maxFontSizeMultiplier: inlineTitleScaleCap,
-      accessibilityLabel: title,
-      accessibilityElementsHidden: !visible,
-      importantForAccessibility: visible ? 'auto' : 'no-hide-descendants',
-      testID: 'bar-title',
-      style: [
-        style,
-        {
-          color: colors.ink,
-          // A resize must hide an undersized title before a fade can draw it.
-          opacity: fits ? opacity : 0,
-          maxWidth: room,
+    NativeView,
+    { style: { maxWidth: room } },
+    createElement(
+      Animated.Text,
+      {
+        numberOfLines: 1,
+        ellipsizeMode: 'clip',
+        maxFontSizeMultiplier: inlineTitleScaleCap,
+        accessibilityLabel: title,
+        accessibilityElementsHidden: !visible,
+        importantForAccessibility: visible ? 'auto' : 'no-hide-descendants',
+        testID: 'bar-title',
+        style: [
+          style,
+          { color: colors.ink, opacity: fits ? opacity : 0, maxWidth: room },
+        ],
+      },
+      shown && ready ? (retreat.text ?? title) : title,
+    ),
+    createElement(
+      ScrollView,
+      {
+        horizontal: true,
+        scrollEnabled: false,
+        pointerEvents: 'none',
+        accessibilityElementsHidden: true,
+        importantForAccessibility: 'no-hide-descendants',
+        style: {
+          position: 'absolute',
+          width: safeWidth,
+          height: 0,
+          opacity: 0,
         },
-      ],
-    },
-    shortened ?? title,
+      },
+      ...candidates.map((text) =>
+        createElement(
+          NativeText,
+          {
+            key: `${key}:${text}`,
+            testID: 'bar-title-probe',
+            maxFontSizeMultiplier: inlineTitleScaleCap,
+            style,
+            onTextLayout: measure(text),
+          },
+          text,
+        ),
+      ),
+      backTitle
+        ? createElement(
+            NativeText,
+            {
+              key: `${key}:back`,
+              testID: 'bar-back-probe',
+              style: {
+                fontSize: textStyles.inlineTitle.fontSize,
+                fontWeight: '400',
+              },
+              onTextLayout: measure('back'),
+            },
+            backTitle,
+          )
+        : null,
+    ),
   );
 }
 
@@ -248,6 +319,7 @@ export function useTitleOnScroll(
 ) {
   const setOptions = useSafeSetOptions();
   const namedBackTitle = useNamedBackTitle();
+  const person = useContext(NavigationRouteContext)?.name === 'person/[slug]';
   const backTitle =
     Platform.OS === 'ios' ? (backTitleOverride ?? namedBackTitle) : undefined;
   const headerHeight = useHeaderBottom();
@@ -282,11 +354,20 @@ export function useTitleOnScroll(
                   trailing,
                   trailingWidth,
                   backTitle,
+                  person,
                 }),
             },
       );
     },
-    [title, setOptions, trailing, trailingWidth, backTitle, verticalBar],
+    [
+      title,
+      setOptions,
+      trailing,
+      trailingWidth,
+      backTitle,
+      person,
+      verticalBar,
+    ],
   );
   const measureHeading = useCallback(() => {
     if (verticalBar) return;
@@ -333,6 +414,7 @@ export function useTitleOnScroll(
                 trailing,
                 trailingWidth,
                 backTitle,
+                person,
               }),
           }),
     });
@@ -349,6 +431,7 @@ export function useTitleOnScroll(
     trailing,
     trailingWidth,
     backTitle,
+    person,
     windowRef,
     measureHeading,
     invalidateMeasurements,
