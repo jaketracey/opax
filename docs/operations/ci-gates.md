@@ -26,8 +26,8 @@ analytics, voice and asset stamping. It never invokes the deploy script.
 That tree also predates the portal Python loaders. Discovery runs whenever
 `portal/test/*_test.py` files exist and otherwise reports their absence.
 
-Dates use `Australia/Melbourne` and the locale is `C.UTF-8`. Only the npm
-download cache is retained. Public source and fixture output can appear in logs;
+Dates use `Australia/Melbourne` and the locale is `C.UTF-8`. Two download
+caches are retained: npm's and `setup-uv`'s Python package cache. Public source and fixture output can appear in logs;
 never add private fixtures or evidence to the committed tree.
 
 ## Reviewer and integrator flow
