@@ -40,7 +40,8 @@ export function Picture({
   rounded?: boolean;
   /** Cover previews use the native centred crop; viewers keep the whole photo. */
   resizeMode?: 'contain' | 'cover';
-  failure?: 'quiet' | 'inline';
+  /** Collapse an unavailable preview without leaving an empty photo frame. */
+  failure?: 'quiet' | 'inline' | 'collapse';
 }) {
   const [retry, setRetry] = useState(0);
   const [saved, setSaved] = useState<{
@@ -101,6 +102,7 @@ export function Picture({
   const identity = `${file}/${retry}`;
   const ready = !!uri && shown === identity;
   const key = yearPictureKey('/' + file);
+  if (current?.failed && failure === 'collapse') return null;
   return (
     <View
       testID={`tm-photo-${key}${ready ? '-loaded' : '-placeholder'}`}

@@ -123,6 +123,7 @@ export function ArchiveCard({
         ratio={4 / 3}
         rounded={false}
         resizeMode="cover"
+        failure="collapse"
       />
       <View style={styles.words}>
         <Kicker symbol="clock.arrow.circlepath" ink="tint">

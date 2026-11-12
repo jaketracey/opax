@@ -333,7 +333,7 @@ test('the Time machine opens on a year at once, with its menu, pager, voices and
   act(() => renderer.unmount());
 });
 
-test('a failed archive image keeps its caption and credit without an error overlay', async () => {
+test('a failed archive image collapses its empty frame and keeps its caption and credit', async () => {
   const picture = manifest['2014']!.find((p) =>
     p.file.includes('march-in-march'),
   )!;
@@ -356,10 +356,25 @@ test('a failed archive image keeps its caption and credit without an error overl
   expect(texts(renderer)).not.toContain('Try again');
   expect(renderer.root.findAllByType(InlineError)).toHaveLength(0);
   expect(renderer.root.findAllByType(Image)).toHaveLength(0);
-  const frame = renderer.root.findAllByProps({
-    testID: `tm-photo-${key}-placeholder`,
-  })[0]!;
-  expect(frame.props.style.aspectRatio).toBe(4 / 3);
+  expect(
+    renderer.root.findAllByProps({
+      testID: `tm-photo-${key}-placeholder`,
+    }),
+  ).toHaveLength(0);
+  act(() => renderer.unmount());
+});
+
+test('an archive fetch failure also leaves no empty photo frame on Today', async () => {
+  jest.mocked(yearPictures.get).mockRejectedValue(new Error('offline'));
+  let renderer!: TestRenderer.ReactTestRenderer;
+  const picture = manifest['2014']![0]!;
+  await act(async () => {
+    renderer = TestRenderer.create(
+      <ArchiveCard year={2014} picture={picture} />,
+    );
+  });
+  expect(renderer.root.findByType(Picture).children).toHaveLength(0);
+  expect(texts(renderer)).toContain(picture.caption);
   act(() => renderer.unmount());
 });
 
