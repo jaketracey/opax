@@ -26,7 +26,7 @@ import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { headerItems, rootHeaderItems } from '../../navigation/chrome';
 import { resultsRoute } from '../../navigation/routes/search';
 import { useAccount } from '../account/store';
-import { isVisibleQuestion, useAskNow, useOpenAsk } from '../ask/open';
+import { useAskNow, useOpenAsk } from '../ask/open';
 import { SearchIdle } from './SearchIdle';
 import { SearchField } from './SearchField';
 import { SearchSuggestions } from './SearchSuggestions';
@@ -34,7 +34,7 @@ import { ResultsView } from './ResultsView';
 import { useResultsControls } from './controls';
 import { filtersFromParams, defaultSpeechFilters } from './filters';
 import { recentSearches, type RecentSearch } from './recent';
-import { askDraft } from './recovery';
+import { askDraft, asksAsTyped } from './recovery';
 import { capQuery, isScope, type Scope } from './scopes';
 import { useSearchSources } from './sources';
 import type { GroupKind } from './ranking';
@@ -101,7 +101,7 @@ function SearchContent({
   // otherwise it drafts "What has parliament said about …?" to edit.
   const askTyped = (words: string) => {
     const question = askDraft(words);
-    if (isVisibleQuestion(words, question)) askNow({ question });
+    if (asksAsTyped(words)) askNow({ question });
     else openAsk({ question });
   };
   const q = submitted?.q ?? '';

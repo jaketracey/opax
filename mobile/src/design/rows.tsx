@@ -1133,6 +1133,7 @@ export function SuggestionRow({
   href,
   onPress,
   menu,
+  accessibilityHint,
   testID,
 }: {
   name: string;
@@ -1144,6 +1145,7 @@ export function SuggestionRow({
   href?: Href;
   onPress?: () => void;
   menu?: RowMenuAction[];
+  accessibilityHint?: string;
   testID?: string;
 }) {
   const stacked = useAccessibilitySize();
@@ -1167,6 +1169,7 @@ export function SuggestionRow({
       accessible
       accessibilityRole={href ? 'link' : 'button'}
       accessibilityLabel={[name, secondary].filter(Boolean).join(', ')}
+      accessibilityHint={accessibilityHint}
       testID={testID}
       onPress={onPress}
       style={({ pressed }) => [

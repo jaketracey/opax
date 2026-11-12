@@ -407,3 +407,19 @@ test('the people top hit carries its id on a plain view around the row, outside 
   }
   await act(async () => r.unmount());
 });
+
+test.each([
+  ['Who voted for the Fixture Bill?', 'Asks this question'],
+  ['housing', undefined],
+])('the Ask row typed as %j has the hint %j', async (typed, hint) => {
+  const r = await mount();
+  await type(typed);
+  const row = r.root
+    .findAll(
+      (n) =>
+        n.props.testID === 'search-ask-row' &&
+        typeof n.props.onPress === 'function',
+    )
+    .at(-1)!;
+  expect(row.props.accessibilityHint).toBe(hint);
+});
