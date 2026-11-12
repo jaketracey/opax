@@ -14,11 +14,25 @@ import { Text } from './text';
 import { colors, minimumTarget, rhythm, type Accent } from './tokens';
 
 /** Expand and collapse smoothly, or instantly with Reduce Motion. */
-export function animateLayout(reduceMotion: boolean) {
+export function animateLayout(
+  reduceMotion: boolean,
+  duration = 220,
+  easing: 'easeInEaseOut' | 'easeOut' = 'easeInEaseOut',
+) {
   if (reduceMotion) return;
   LayoutAnimation.configureNext(
-    LayoutAnimation.create(220, 'easeInEaseOut', 'opacity'),
+    LayoutAnimation.create(duration, easing, 'opacity'),
   );
+}
+
+/**
+ * A short line or block appearing or going (a confirmation under a button,
+ * a failed preview collapsing): the content below slides over 200 ms,
+ * ease-out, alongside the line's own fade. Instant with Reduce Motion.
+ * Call it just before the state change that adds or removes the view.
+ */
+export function animateResize(reduceMotion: boolean) {
+  animateLayout(reduceMotion, 200, 'easeOut');
 }
 
 /**

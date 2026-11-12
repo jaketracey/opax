@@ -6,6 +6,7 @@ import { readFileSync } from 'node:fs';
 import snapshot from '../scripts/fixture-snapshot.json';
 import {
   decodeEdition,
+  decodeInterest,
   decodeRoster,
   decodeSearch,
   decodeSlugs,
@@ -418,35 +419,39 @@ function getAt(
 }
 const notPublished = { error: 'edition_not_published', date: '2026-10-04' };
 
-test('Android opts into only its emulator host alias and keeps the path boundary', async () => {
-  const fixture = startFixture('pinned', 0, {
-    OPAX_TARGET_PLATFORM: 'android',
-  });
-  try {
-    await fixture.ready;
-    const port = fixture.port();
-    expect(
-      (
-        await getAt(port, '/parliamentarians.json', {
-          Host: `10.0.2.2:${port}`,
-        })
-      ).status,
-    ).toBe(200);
-    for (const Host of [
-      `10.0.2.3:${port}`,
-      `10.0.2.2:${port + 1}`,
-      'opax.com.au',
-    ])
+test(
+  'Android opts into only its emulator host alias and keeps the path boundary',
+  async () => {
+    const fixture = startFixture('pinned', 0, {
+      OPAX_TARGET_PLATFORM: 'android',
+    });
+    try {
+      await fixture.ready;
+      const port = fixture.port();
       expect(
-        (await getAt(port, '/parliamentarians.json', { Host })).status,
+        (
+          await getAt(port, '/parliamentarians.json', {
+            Host: `10.0.2.2:${port}`,
+          })
+        ).status,
+      ).toBe(200);
+      for (const Host of [
+        `10.0.2.3:${port}`,
+        `10.0.2.2:${port + 1}`,
+        'opax.com.au',
+      ])
+        expect(
+          (await getAt(port, '/parliamentarians.json', { Host })).status,
+        ).toBe(404);
+      expect(
+        (await getAt(port, '/api/report', { Host: `10.0.2.2:${port}` })).status,
       ).toBe(404);
-    expect(
-      (await getAt(port, '/api/report', { Host: `10.0.2.2:${port}` })).status,
-    ).toBe(404);
-  } finally {
-    await fixture.stop();
-  }
-}, fixtureTestTimeout);
+    } finally {
+      await fixture.stop();
+    }
+  },
+  fixtureTestTimeout,
+);
 
 describe('the no-edition fixture', () => {
   let fixture: ReturnType<typeof startFixture>;
@@ -501,16 +506,20 @@ describe('the withdrawn-edition fixture', () => {
   });
 });
 
-test('the fixture refuses an unknown edition mode at startup', async () => {
-  const fixture = startFixture('preview');
-  try {
-    await expect(fixture.ready).rejects.toThrow(
-      'OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn',
-    );
-  } finally {
-    await fixture.stop();
-  }
-}, fixtureTestTimeout);
+test(
+  'the fixture refuses an unknown edition mode at startup',
+  async () => {
+    const fixture = startFixture('preview');
+    try {
+      await expect(fixture.ready).rejects.toThrow(
+        'OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn',
+      );
+    } finally {
+      await fixture.stop();
+    }
+  },
+  fixtureTestTimeout,
+);
 
 // Journey 26: the follows fixture moves one declaration and one bill stage.
 describe('the changed-data fixture', () => {
@@ -562,55 +571,108 @@ describe('the changed-data fixture', () => {
   });
 });
 
-test('the fixture refuses an unknown data mode at startup', async () => {
-  const fixture = startFixture('pinned', 0, { OPAX_FIXTURE_DATA: 'live' });
+test(
+  'the fixture refuses an unknown data mode at startup',
+  async () => {
+    const fixture = startFixture('pinned', 0, { OPAX_FIXTURE_DATA: 'live' });
 
-  try {
-    await expect(fixture.ready).rejects.toThrow(
-      'OPAX_FIXTURE_DATA must be pinned or changed',
-    );
-  } finally {
-    await fixture.stop();
-  }
-}, fixtureTestTimeout);
+    try {
+      await expect(fixture.ready).rejects.toThrow(
+        'OPAX_FIXTURE_DATA must be pinned or changed',
+      );
+    } finally {
+      await fixture.stop();
+    }
+  },
+  fixtureTestTimeout,
+);
 
-test('null-optional roster mode changes one field and preserves the People record', async () => {
-  const fixture = startFixture('pinned', 0, {
-    OPAX_FIXTURE_ROSTER: 'null-optional',
-  });
-  try {
-    await fixture.ready;
-    const response = await getAt(fixture.port(), '/parliamentarians.json');
-    expect(response.status).toBe(200);
-    const raw = JSON.parse(response.body);
-    const normal = JSON.parse((await request('/parliamentarians.json')).body);
-    const index = normal.people.findIndex(
-      (row: { pid?: string }) => row.pid === '10007',
-    );
-    normal.people[index].speeches = null;
-    expect(raw).toEqual(normal);
-    const decoded = decodeRoster(raw);
-    expect(decoded.people).toHaveLength(normal.people.length);
-    expect(decoded.people.find((row) => row.pid === '10007')).toMatchObject({
-      name: 'Anthony Albanese',
-      speeches: undefined,
+test(
+  'null-optional roster mode changes one field and preserves the People record',
+  async () => {
+    const fixture = startFixture('pinned', 0, {
+      OPAX_FIXTURE_ROSTER: 'null-optional',
     });
-    expect(fixture.log()).toContain('pid=10007 speeches=null');
-  } finally {
-    await fixture.stop();
-  }
-}, fixtureTestTimeout);
+    try {
+      await fixture.ready;
+      const response = await getAt(fixture.port(), '/parliamentarians.json');
+      expect(response.status).toBe(200);
+      const raw = JSON.parse(response.body);
+      const normal = JSON.parse((await request('/parliamentarians.json')).body);
+      const index = normal.people.findIndex(
+        (row: { pid?: string }) => row.pid === '10007',
+      );
+      normal.people[index].speeches = null;
+      expect(raw).toEqual(normal);
+      const decoded = decodeRoster(raw);
+      expect(decoded.people).toHaveLength(normal.people.length);
+      expect(decoded.people.find((row) => row.pid === '10007')).toMatchObject({
+        name: 'Anthony Albanese',
+        speeches: undefined,
+      });
+      expect(fixture.log()).toContain('pid=10007 speeches=null');
+    } finally {
+      await fixture.stop();
+    }
+  },
+  fixtureTestTimeout,
+);
 
-test('the fixture refuses an unknown roster mode at startup', async () => {
-  const fixture = startFixture('pinned', 0, { OPAX_FIXTURE_ROSTER: 'live' });
-  try {
-    await expect(fixture.ready).rejects.toThrow(
-      'OPAX_FIXTURE_ROSTER must be pinned, null-optional or vacant',
-    );
-  } finally {
-    await fixture.stop();
-  }
-}, fixtureTestTimeout);
+test(
+  'vacant roster removes the member from the electorate index as well as both people catalogs',
+  async () => {
+    const fixture = startFixture('pinned', 0, {
+      OPAX_FIXTURE_ROSTER: 'vacant',
+    });
+    try {
+      await fixture.ready;
+      const manifest = JSON.parse(
+        (await getAt(fixture.port(), '/electorates/manifest.json')).body,
+      );
+      const index = JSON.parse(
+        (await getAt(fixture.port(), manifest.index_url)).body,
+      );
+      const normal = JSON.parse((await request(manifest.index_url)).body);
+      const seat = index.electorates.find(
+        (row: { name: string }) => row.name === 'Grayndler',
+      );
+      expect(seat.representatives).toEqual([]);
+      expect(
+        index.electorates.filter(
+          (row: { name: string }) => row.name !== 'Grayndler',
+        ),
+      ).toEqual(
+        normal.electorates.filter(
+          (row: { name: string }) => row.name !== 'Grayndler',
+        ),
+      );
+      for (const path of [manifest.people_url, '/parliamentarians.json']) {
+        const people = JSON.parse(
+          (await getAt(fixture.port(), path)).body,
+        ).people;
+        expect(JSON.stringify(people)).not.toContain('Anthony Albanese');
+      }
+    } finally {
+      await fixture.stop();
+    }
+  },
+  fixtureTestTimeout,
+);
+
+test(
+  'the fixture refuses an unknown roster mode at startup',
+  async () => {
+    const fixture = startFixture('pinned', 0, { OPAX_FIXTURE_ROSTER: 'live' });
+    try {
+      await expect(fixture.ready).rejects.toThrow(
+        'OPAX_FIXTURE_ROSTER must be pinned, null-optional or vacant',
+      );
+    } finally {
+      await fixture.stop();
+    }
+  },
+  fixtureTestTimeout,
+);
 
 test('search results open matching native excerpt resources and preserve related-speech fixtures', async () => {
   const response = await request(
@@ -628,6 +690,15 @@ test('search results open matching native excerpt resources and preserve related
   expect(decodeSimilar(JSON.parse(related.body)).length).toBeGreaterThan(0);
   const unknown = await request('/api/resource/speech-999999997');
   expect(unknown.status).toBe(404);
+});
+
+// The federal-and-state-seat flows open the Melbourne member's register
+// page. Without this pinned record the fixture refused it (build 60).
+test('serves the Melbourne member register record the seat flows open', async () => {
+  const result = await request('/interests/11053.json');
+  expect(result.status).toBe(200);
+  const record = decodeInterest(JSON.parse(result.body));
+  expect(record.total).toBe(42);
 });
 
 test('serves official report search rows in the live API shape', async () => {

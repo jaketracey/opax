@@ -14,6 +14,7 @@ import {
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { router } from 'expo-router';
 import {
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -38,6 +39,7 @@ import {
 } from 'react-native';
 import type { FollowKind } from '../features/follows/store';
 import { useAccessibilitySize, useReduceMotion } from './accessibility';
+import { animateResize } from './disclosure';
 import { Hoverable, columns, useLayout } from './adaptive';
 import { haptic } from './haptics';
 import { Icon, type SFSymbol } from './icon';
@@ -382,9 +384,20 @@ export function FollowButton({
   const [bounce, setBounce] = useState(false);
   const [busy, setBusy] = useState(false);
   const [limitReached, setLimitReached] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [message, setMessageNow] = useState<string | null>(null);
   const marked = useRef(false);
   const reduceMotion = useReduceMotion();
+  const shownMessage = useRef<string | null>(null);
+  // Every message (first follow, limit, save error) takes its own height
+  // only while shown; the content below slides rather than jumps.
+  const setMessage = useCallback(
+    (next: string | null) => {
+      if (next !== shownMessage.current) animateResize(reduceMotion);
+      shownMessage.current = next;
+      setMessageNow(next);
+    },
+    [reduceMotion],
+  );
   const opacity = useAnimatedValue(1);
   const [confirmation, setConfirmation] = useState(false);
   useEffect(() => {
@@ -410,7 +423,7 @@ export function FollowButton({
       }
     });
     return () => animation.stop();
-  }, [confirmation, opacity, reduceMotion]);
+  }, [confirmation, opacity, reduceMotion, setMessage]);
   useEffect(() => {
     if (!current) marked.current = false;
     else if (!marked.current) {
@@ -1521,7 +1534,13 @@ export function Field({
           setFocused(false);
           input.onBlur?.(event);
         }}
-        clearButtonMode="while-editing"
+        // A one-time code never shows the clear button: at AX3 it took
+        // the first digit's room while focused. Backspace still deletes.
+        clearButtonMode={
+          variant === 'code' || input.textContentType === 'oneTimeCode'
+            ? 'never'
+            : 'while-editing'
+        }
         allowFontScaling
         maxFontSizeMultiplier={0}
         // Faint text is for raised surfaces only; a disabled field is sunken.

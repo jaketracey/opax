@@ -12,6 +12,7 @@ import { localImageURI } from '../../api/image-policy';
 import { yearPictures } from '../../api/runtime';
 import { yearPictureKey } from '../../api/year-picture-policy';
 import { useReduceMotion } from '../../design/accessibility';
+import { animateResize } from '../../design/disclosure';
 import { InlineError } from '../../design/primitives';
 import { Text } from '../../design/text';
 import { colors, radii, rhythm } from '../../design/tokens';
@@ -40,7 +41,8 @@ export function Picture({
   rounded?: boolean;
   /** Cover previews use the native centred crop; viewers keep the whole photo. */
   resizeMode?: 'contain' | 'cover';
-  failure?: 'quiet' | 'inline';
+  /** Collapse an unavailable preview without leaving an empty photo frame. */
+  failure?: 'quiet' | 'inline' | 'collapse';
 }) {
   const [retry, setRetry] = useState(0);
   const [saved, setSaved] = useState<{
@@ -55,6 +57,12 @@ export function Picture({
   const reduced = useReduceMotion();
   useEffect(() => {
     let active = true;
+    // A collapsing preview gives back its 4:3 frame smoothly, so the content
+    // below slides up instead of snapping (instant with Reduce Motion).
+    const fail = () => {
+      if (failure === 'collapse') animateResize(reduced);
+      setSaved({ file, retry, failed: true });
+    };
     Promise.resolve()
       .then(() => yearPictures.get(yearPictureKey('/' + file), retry > 0))
       .then((value) => {
@@ -69,7 +77,7 @@ export function Picture({
               if (!visible) failed = true;
               if (!active) return;
               if (failed) {
-                setSaved({ file, retry, failed: true });
+                fail();
                 return;
               }
               setShown(`${file}/${retry}`);
@@ -85,12 +93,12 @@ export function Picture({
           });
       })
       .catch(() => {
-        if (active) setSaved({ file, retry, failed: true });
+        if (active) fail();
       });
     return () => {
       active = false;
     };
-  }, [file, retry, reduced, reveal]);
+  }, [file, retry, reduced, reveal, failure]);
   const current = saved?.file === file && saved.retry === retry ? saved : null;
   let uri: string | undefined;
   try {
@@ -101,6 +109,7 @@ export function Picture({
   const identity = `${file}/${retry}`;
   const ready = !!uri && shown === identity;
   const key = yearPictureKey('/' + file);
+  if (current?.failed && failure === 'collapse') return null;
   return (
     <View
       testID={`tm-photo-${key}${ready ? '-loaded' : '-placeholder'}`}

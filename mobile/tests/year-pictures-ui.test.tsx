@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- jest.mock factories build inert host elements. */
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Image, Platform, StyleSheet, Text as NativeText } from 'react-native';
+import {
+  Image,
+  LayoutAnimation,
+  Platform,
+  StyleSheet,
+  Text as NativeText,
+} from 'react-native';
 import { colors } from '../src/design/tokens';
 import { router } from 'expo-router';
 import { Button, InlineError } from '../src/design/primitives';
@@ -99,9 +105,10 @@ jest.mock('../src/api/image-policy', () => ({
     return uri;
   },
 }));
+let mockReduceMotion = true;
 jest.mock('../src/design/accessibility', () => ({
   ...jest.requireActual('../src/design/accessibility'),
-  useReduceMotion: () => true,
+  useReduceMotion: () => mockReduceMotion,
   useAccessibilitySize: () => false,
 }));
 const texts = (r: TestRenderer.ReactTestRenderer) =>
@@ -333,7 +340,7 @@ test('the Time machine opens on a year at once, with its menu, pager, voices and
   act(() => renderer.unmount());
 });
 
-test('a failed archive image keeps its caption and credit without an error overlay', async () => {
+test('a failed archive image collapses its empty frame and keeps its caption and credit', async () => {
   const picture = manifest['2014']!.find((p) =>
     p.file.includes('march-in-march'),
   )!;
@@ -350,16 +357,99 @@ test('a failed archive image keeps its caption and credit without an error overl
   expect(yearPictures.get).toHaveBeenCalledWith(key, false);
   const image = renderer.root.findByType(Image);
   expect(image.props.source.uri).toBe(`file:///cache/${key}.webp`);
+  // Reduce Motion (this suite's default): the frame goes at once.
+  const layout = jest.spyOn(LayoutAnimation, 'configureNext');
   act(() => image.props.onError());
+  expect(layout).not.toHaveBeenCalled();
+  layout.mockRestore();
   expect(texts(renderer)).toContain(picture.caption);
   expect(texts(renderer)).toContain(`Photo: ${picture.credit}`);
   expect(texts(renderer)).not.toContain('Try again');
   expect(renderer.root.findAllByType(InlineError)).toHaveLength(0);
   expect(renderer.root.findAllByType(Image)).toHaveLength(0);
-  const frame = renderer.root.findAllByProps({
-    testID: `tm-photo-${key}-placeholder`,
-  })[0]!;
-  expect(frame.props.style.aspectRatio).toBe(4 / 3);
+  expect(
+    renderer.root.findAllByProps({
+      testID: `tm-photo-${key}-placeholder`,
+    }),
+  ).toHaveLength(0);
+  act(() => renderer.unmount());
+});
+
+test.each(['ios', 'android'])(
+  'on %s a failed archive frame collapses with a 200 ms ease-out so the content below slides up',
+  async (os) => {
+    jest.replaceProperty(Platform, 'OS', os as typeof Platform.OS);
+    mockReduceMotion = false;
+    const picture = manifest['2014']![0]!;
+    const key = yearPictureKey('/' + picture.file);
+    let renderer!: TestRenderer.ReactTestRenderer;
+    try {
+      await act(async () => {
+        renderer = TestRenderer.create(
+          <ArchiveCard year={2014} picture={picture} />,
+        );
+      });
+      const frame = () =>
+        renderer.root.findAll(
+          (n) =>
+            typeof n.type === 'string' &&
+            n.props.testID === `tm-photo-${key}-placeholder`,
+        ).length > 0;
+      expect(frame()).toBe(true);
+      const before: boolean[] = [];
+      const layout = jest
+        .spyOn(LayoutAnimation, 'configureNext')
+        .mockImplementation(() => before.push(frame()));
+      act(() => renderer.root.findByType(Image).props.onError());
+      // Configured while the 4:3 frame was still laid out, then the frame
+      // is removed in the animated commit.
+      expect(before).toEqual([true]);
+      expect(frame()).toBe(false);
+      expect(layout.mock.calls[0]![0]).toMatchObject({
+        duration: 200,
+        update: { type: 'easeOut' },
+        delete: { type: 'easeOut', property: 'opacity' },
+      });
+      expect(texts(renderer)).toContain(picture.caption);
+    } finally {
+      mockReduceMotion = true;
+      jest.restoreAllMocks();
+      if (renderer) act(() => renderer.unmount());
+    }
+  },
+);
+
+test('a viewer photo that fails inline never animates a collapse', async () => {
+  mockReduceMotion = false;
+  const layout = jest.spyOn(LayoutAnimation, 'configureNext');
+  let renderer!: TestRenderer.ReactTestRenderer;
+  try {
+    await act(async () => {
+      renderer = TestRenderer.create(
+        <Picture file={manifest['2025']![0]!.file} failure="inline" />,
+      );
+    });
+    act(() => renderer.root.findByType(Image).props.onError());
+    expect(renderer.root.findAllByType(InlineError)).toHaveLength(1);
+    expect(layout).not.toHaveBeenCalled();
+  } finally {
+    mockReduceMotion = true;
+    layout.mockRestore();
+    act(() => renderer.unmount());
+  }
+});
+
+test('an archive fetch failure also leaves no empty photo frame on Today', async () => {
+  jest.mocked(yearPictures.get).mockRejectedValue(new Error('offline'));
+  let renderer!: TestRenderer.ReactTestRenderer;
+  const picture = manifest['2014']![0]!;
+  await act(async () => {
+    renderer = TestRenderer.create(
+      <ArchiveCard year={2014} picture={picture} />,
+    );
+  });
+  expect(renderer.root.findByType(Picture).children).toHaveLength(0);
+  expect(texts(renderer)).toContain(picture.caption);
   act(() => renderer.unmount());
 });
 

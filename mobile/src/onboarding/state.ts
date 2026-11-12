@@ -75,6 +75,23 @@ export function sydneyDate(now: Date = new Date()): string {
 }
 
 let declinedThisLaunch = false;
+let liveDeclinedAt: string | null = null;
+const declineListeners = new Set<() => void>();
+/** The live welcome choice, before its asynchronous disk save completes. */
+export function useWelcomeDeclinedAt(): string | null {
+  return useSyncExternalStore(
+    subscribeWelcomeDecline,
+    liveDecline,
+    liveDecline,
+  );
+}
+const liveDecline = () => liveDeclinedAt;
+function subscribeWelcomeDecline(listener: () => void) {
+  declineListeners.add(listener);
+  return () => {
+    declineListeners.delete(listener);
+  };
+}
 /**
  * Records the welcome as seen. `declined` is "Not now" (the bar button,
  * two-finger Z, Escape, Android back): it also records the day, so Today can
@@ -84,9 +101,13 @@ let declinedThisLaunch = false;
 export async function markWelcomeSeen({
   declined = false,
 }: { declined?: boolean } = {}): Promise<void> {
-  if (declined) declinedThisLaunch = true;
+  if (declined) {
+    declinedThisLaunch = true;
+    liveDeclinedAt = sydneyDate();
+    declineListeners.forEach((listener) => listener());
+  }
   const previous = await store.read().catch(() => null);
-  const declinedAt = declined ? sydneyDate() : previous?.declinedAt;
+  const declinedAt = liveDeclinedAt ?? previous?.declinedAt;
   await store.save({
     version: TOUR_VERSION,
     ...(declinedAt ? { declinedAt } : {}),
@@ -97,7 +118,8 @@ export function markTourSeen(): Promise<void> {
 }
 /** The day of the last welcome "Not now" on this device, if any. */
 export async function welcomeDeclinedAt(): Promise<string | null> {
-  return (await store.read().catch(() => null))?.declinedAt ?? null;
+  const saved = await store.read().catch(() => null);
+  return liveDeclinedAt ?? saved?.declinedAt ?? null;
 }
 /** "Not now" was chosen during this launch (Today's declined-session rule). */
 export function welcomeDeclinedThisLaunch(): boolean {
@@ -202,5 +224,7 @@ export function resetTourForTests() {
   state = 'checking';
   checked = null;
   declinedThisLaunch = false;
+  liveDeclinedAt = null;
+  declineListeners.clear();
   listeners.clear();
 }

@@ -23,6 +23,7 @@ import { Screen } from '../src/design/layout';
 import { rhythm } from '../src/design/tokens';
 import { OfflineLine } from '../src/design/states';
 import Today from '../src/features/Today';
+import { WelcomePage } from '../src/features/welcome/Welcome';
 import { Masthead } from '../src/features/today/Masthead';
 import { useOverview as useElectionOverview } from '../src/features/vic-election/reads';
 import { decodeOverview } from '../src/features/vic-election/decoders';
@@ -35,7 +36,11 @@ import { loadChoice } from '../src/features/your-mp/choice-store';
 import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 import { releaseSplash } from '../src/launch/splash';
 import { largeTitleBar } from '../src/navigation/chrome';
-import { welcomeDeclinedThisLaunch } from '../src/onboarding/state';
+import {
+  resetTourForTests,
+  welcomeDeclinedThisLaunch,
+} from '../src/onboarding/state';
+import { TwoSlotStore } from '../src/storage/two-slot';
 import { responseBytes } from './fixture-bytes';
 import {
   bills,
@@ -102,6 +107,7 @@ jest.mock('../src/features/explore/runtime', () => ({
   explore: { pictures: jest.fn(() => Promise.reject(new Error('Offline'))) },
 }));
 jest.mock('../src/launch/splash', () => ({ releaseSplash: jest.fn() }));
+jest.mock('../src/launch/LaunchHandoff', () => ({ LaunchHandoff: () => null }));
 jest.mock('../src/features/ask/open', () => ({ useOpenAsk: () => jest.fn() }));
 jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
@@ -129,6 +135,12 @@ jest.mock('expo-router', () => {
     Link,
     router: { push: jest.fn(), navigate: jest.fn(), dismissTo: jest.fn() },
     useSegments: () => [],
+    useNavigation: () => ({
+      getParent: () => ({
+        goBack: () => mockFocusEffects.forEach((effect) => effect()),
+      }),
+      addListener: () => () => undefined,
+    }),
     Stack: { Screen: () => null },
     // Today's focus effects, kept so a test can "show" Today again.
     useFocusEffect: (effect: () => void) =>
@@ -138,6 +150,25 @@ jest.mock('expo-router', () => {
   };
 });
 const mockFocusEffects: (() => void)[] = [];
+const mockWelcomeFiles = new Map<string, string>();
+jest.mock('expo-file-system', () => ({
+  Paths: { document: 'documents' },
+  File: class {
+    name: string;
+    constructor(_directory: unknown, name: string) {
+      this.name = name;
+    }
+    get exists() {
+      return mockWelcomeFiles.has(this.name);
+    }
+    async text() {
+      return mockWelcomeFiles.get(this.name)!;
+    }
+    write(body: string) {
+      mockWelcomeFiles.set(this.name, body);
+    }
+  },
+}));
 jest.mock('../src/onboarding/state', () => ({
   ...jest.requireActual('../src/onboarding/state'),
   welcomeDeclinedThisLaunch: jest.fn(() => false),
@@ -222,6 +253,8 @@ async function render(element: ReactElement) {
 afterEach(async () => {
   mockFocusEffects.splice(0);
   await act(async () => mounted.splice(0).forEach((r) => r.unmount()));
+  resetTourForTests();
+  mockWelcomeFiles.clear();
 });
 
 function setUp({
@@ -329,6 +362,72 @@ test.each(['index', 'your-mp', 'bills', 'search', 'ask'])(
 );
 
 describe('the launch order', () => {
+  test('live welcome Not now moves the invitation even when Today focuses before the save finishes', async () => {
+    resetTourForTests();
+    mockWelcomeFiles.clear();
+    setUp({ cached: 'missing' });
+    jest
+      .mocked(readInvitationDates)
+      .mockImplementation(
+        jest.requireActual('../src/features/today/invitation-store')
+          .readInvitationDates,
+      );
+    jest
+      .mocked(welcomeDeclinedThisLaunch)
+      .mockImplementation(
+        jest.requireActual('../src/onboarding/state').welcomeDeclinedThisLaunch,
+      );
+    const r = await render(
+      <SafeAreaInsetsContext.Provider
+        value={{ top: 59, bottom: 34, left: 0, right: 0 }}
+      >
+        <Today />
+        <WelcomePage />
+      </SafeAreaInsetsContext.Provider>,
+    );
+    expect(
+      r.root.findAllByProps({ testID: 'welcome-screen' }).length,
+    ).toBeGreaterThan(0);
+    expect(blocks(r.root)[0]).toBe('today-invitation');
+    let finishSave!: () => void;
+    const pending = new Promise<void>((resolve) => {
+      finishSave = resolve;
+    });
+    const save = TwoSlotStore.prototype.save;
+    const slowSave = jest
+      .spyOn(TwoSlotStore.prototype, 'save')
+      .mockImplementationOnce(async function (value) {
+        await pending;
+        return save.call(this, value);
+      });
+    try {
+      // The real Not now handler starts saving and closes the modal. Its
+      // navigation callback focuses Today while the old flag is still on disk.
+      await act(async () =>
+        r.root
+          .findByType(WelcomePage)
+          .findByProps({
+            testID: 'welcome-screen',
+          })
+          .props.onAccessibilityEscape(),
+      );
+      expect(mockWelcomeFiles.size).toBe(0);
+      expect(blocks(r.root)[0]).toBe('today-pair');
+      await act(async () => {
+        finishSave();
+        await pending;
+      });
+      const order = blocks(r.root);
+      expect(order[0]).toBe('today-pair');
+      expect(order.indexOf('today-invitation')).toBe(
+        order.indexOf('today-bills') + 1,
+      );
+    } finally {
+      finishSave();
+      slowSave.mockRestore();
+      jest.mocked(welcomeDeclinedThisLaunch).mockReturnValue(false);
+    }
+  });
   test('A, with a seat: Your MP, then the edition; the daily pair opens More to explore', async () => {
     setUp({ seat: true, cached: { date: addDays(today, -1) } });
     const r = await render(<Today />);

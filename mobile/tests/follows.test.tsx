@@ -8,6 +8,7 @@ import {
   AccessibilityInfo,
   Animated,
   ActionSheetIOS,
+  LayoutAnimation,
   Platform,
   ScrollView,
   StyleSheet,
@@ -1110,7 +1111,35 @@ describe('delight follow moments', () => {
           testID="moment"
         />,
       );
+      const shown = () =>
+        r.root
+          .findByType(FollowButton)
+          .findAllByType(Text)
+          .some(
+            (text) => text.props.children === 'Changes will show on Today.',
+          );
+      // At rest nothing is reserved under the button: no hidden sentence.
+      expect(shown()).toBe(false);
+      expect(
+        r.root
+          .findByType(FollowButton)
+          .findAll((n) => n.type === Text && n.props.variant === 'footnote'),
+      ).toHaveLength(0);
+      // Each change in the line's presence is preceded by a 200 ms ease-out
+      // layout animation, so the content below slides instead of jumping.
+      const layout = jest
+        .spyOn(LayoutAnimation, 'configureNext')
+        .mockImplementation(() => before.push(shown()));
+      const before: boolean[] = [];
       await act(async () => r.root.findByType(Button).props.onPress());
+      expect(shown()).toBe(true);
+      expect(before).toEqual([false]);
+      expect(layout.mock.calls[0]![0]).toMatchObject({
+        duration: 200,
+        update: { type: 'easeOut' },
+        create: { type: 'easeOut', property: 'opacity' },
+        delete: { type: 'easeOut', property: 'opacity' },
+      });
       expect(r.root.findByType(Button).props).toMatchObject({
         label: 'Following',
         symbol: 'checkmark',
@@ -1119,7 +1148,7 @@ describe('delight follow moments', () => {
       expect(
         r.root
           .findAllByType(Text)
-          .some((n) => n.props.children === 'Changes will show on Today.'),
+          .some((n) => n.props.testID === 'moment-message'),
       ).toBe(true);
       expect(announce).toHaveBeenCalledTimes(1);
       expect(announce).toHaveBeenCalledWith('Changes will show on Today.');
@@ -1130,14 +1159,18 @@ describe('delight follow moments', () => {
       expect(
         r.root
           .findAllByType(Text)
-          .some((n) => n.props.children === 'Changes will show on Today.'),
+          .some((n) => n.props.testID === 'moment-message'),
       ).toBe(true);
       act(() => jest.advanceTimersByTime(500));
       expect(
         r.root
           .findAllByType(Text)
-          .some((n) => n.props.children === 'Changes will show on Today.'),
+          .some((n) => n.props.testID === 'moment-message'),
       ).toBe(false);
+      expect(shown()).toBe(false);
+      // The line goes the same way it came: animated before it is removed.
+      expect(before).toEqual([false, true]);
+      expect(layout.mock.calls[1]![0]).toMatchObject({ duration: 200 });
       act(() => r.unmount());
       for (const id of ['fixture-two', 'fixture-three'])
         await follow({ kind: 'party', id, title: id });
@@ -1151,16 +1184,17 @@ describe('delight follow moments', () => {
       expect(
         fourth.root
           .findAllByType(Text)
-          .some((n) => n.props.children === 'Changes will show on Today.'),
+          .some((n) => n.props.testID === 'follow-message'),
       ).toBe(false);
       expect(announce).toHaveBeenCalledTimes(1);
       act(() => fourth.unmount());
     },
   );
-  test('Reduce Motion uses zero-duration opacity and a four-second hold', async () => {
+  test('Reduce Motion uses zero-duration opacity, no layout animation and a four-second hold', async () => {
     jest.useFakeTimers();
     jest.spyOn(accessibility, 'useReduceMotion').mockReturnValue(true);
     const timing = jest.spyOn(Animated, 'timing');
+    const layout = jest.spyOn(LayoutAnimation, 'configureNext');
     const r = await mount(
       <FollowButton kind="party" id="fixture-party" title="Fixture party" />,
     );
@@ -1168,20 +1202,78 @@ describe('delight follow moments', () => {
     expect(timing.mock.calls.map(([, config]) => config.duration)).toEqual([
       0, 0,
     ]);
+    // The line takes its height at once: no height animation at all.
+    expect(layout).not.toHaveBeenCalled();
     act(() => jest.advanceTimersByTime(3999));
     expect(
       r.root
         .findAllByType(Text)
-        .some((n) => n.props.children === 'Changes will show on Today.'),
+        .some((n) => n.props.testID === 'follow-message'),
     ).toBe(true);
     act(() => jest.advanceTimersByTime(100));
     expect(
       r.root
         .findAllByType(Text)
-        .some((n) => n.props.children === 'Changes will show on Today.'),
+        .some((n) => n.props.testID === 'follow-message'),
     ).toBe(false);
+    expect(layout).not.toHaveBeenCalled();
     act(() => r.unmount());
   });
+  test.each(['ios', 'android'] as const)(
+    '%s limit and save-error messages arrive and go with the same layout animation',
+    async (platform) => {
+      jest.replaceProperty(Platform, 'OS', platform);
+      for (let i = 1; i <= FOLLOW_LIMIT; i++)
+        await follow({ kind: 'bill', id: `au-federal-r${i}`, title: `B${i}` });
+      const r = await mount(
+        <FollowButton kind="party" id="fixture-party" title="Fixture party" />,
+      );
+      const button = () => r.root.findAllByType(Button)[0]!;
+      const message = () =>
+        r.root
+          .findAllByType(Text)
+          .find((n) => n.props.testID === 'follow-message');
+      const editFollowing = () =>
+        r.root.findAll((n) => n.props.testID === 'follow-edit-following')
+          .length > 0;
+      const before: [boolean, boolean][] = [];
+      const layout = jest
+        .spyOn(LayoutAnimation, 'configureNext')
+        .mockImplementation(() => before.push([!!message(), editFollowing()]));
+      expect(message()).toBeUndefined();
+      await act(async () => button().props.onPress());
+      expect(message()!.props.children).toBe(
+        `You can follow up to ${FOLLOW_LIMIT}. Unfollow one to add this.`,
+      );
+      expect(editFollowing()).toBe(true);
+      // The message and its Edit Following button arrive in one animated
+      // change.
+      expect(before).toEqual([[false, false]]);
+      // A save error replaces it: the limit message goes (animated), then the
+      // error arrives (animated).
+      await clearFollows();
+      mockChanges = 0;
+      mockFailAt = 1;
+      try {
+        await act(async () => button().props.onPress());
+      } finally {
+        mockFailAt = 0;
+      }
+      expect(String(message()!.props.children)).toMatch(/could not be saved/);
+      expect(editFollowing()).toBe(false);
+      expect(before).toEqual([
+        [false, false],
+        [true, true],
+        [false, false],
+      ]);
+      for (const [config] of layout.mock.calls)
+        expect(config).toMatchObject({
+          duration: 200,
+          update: { type: 'easeOut' },
+        });
+      act(() => r.unmount());
+    },
+  );
   test('clearing and duplicate follows never reset or spend the counter', async () => {
     const item = {
       kind: 'party' as const,

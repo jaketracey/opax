@@ -124,7 +124,11 @@ name: 28 Welcome on first launch, Continue to the seat step, a postcode answered
     visible:
       id: seat-saved-row
     timeout: 10000
-- assertVisible: Saved
+# iOS reads the saved row as one label ("Grayndler. Anthony Albanese,
+# Labor. Saved."), so match the row by id and its label by pattern.
+- assertVisible:
+    id: seat-saved-row
+    text: '.*Saved.*'
 - assertVisible: Done
 - takeScreenshot: ${EVIDENCE}/28-replay-seat
 - tapOn: Done
