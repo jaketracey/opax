@@ -34,7 +34,7 @@ function add(key, kind, title, href, text, extra={}) {
   const { aliases='', from=year(extra.date), to=year(extra.date), state='', parties=[], speakers=[], topics=[], slug='', ...rest }=extra;
   const record={kind,title,href,snippet:String(text || ''),...rest};
   record.slug=slug||'catalog-'+docs.length; record.resource='';
-  docs.push({key, record, meta:[kind,from||0,to||from||0,(Array.isArray(state)?state:[state]).join('|'),parties.map(party).filter(Boolean).join('|'),speakers.map(normalize).filter(Boolean).join('|'),topics.join('|')],titleTokens:tokens(title+' '+aliases),bodyTokens:tokens(text+' '+kind+' '+({receipt:'donations political funding',donor:'donations political funding',contract:'procurement contracts',grant:'grants funding',pay:'salary salaries paid earn earns earnings remuneration wage income'}[kind]||'')+' '+(rest.source||''))});
+  docs.push({key, record, meta:[kind,from||0,to||from||0,(Array.isArray(state)?state:[state]).join('|'),parties.map(party).filter(Boolean).join('|'),speakers.map(normalize).filter(Boolean).join('|'),topics.join('|'),rest.chamber||'',rest.date||''],titleTokens:tokens(title+' '+aliases),bodyTokens:tokens(text+' '+kind+' '+({receipt:'donations political funding',donor:'donations political funding',contract:'procurement contracts',grant:'grants funding',pay:'salary salaries paid earn earns earnings remuneration wage income'}[kind]||'')+' '+(rest.source||''))});
   counts[kind]=(counts[kind]||0)+1;
 }
 // Grant program rows (contract 2026-09-13, section 3): one record per listed program, kind grant.
@@ -144,7 +144,7 @@ async function main() {
  for(const file of await files('bills')) {
   if(file==='index.json')continue;
   const b=await read('bills/'+file), summary=b.summary;
-  add('bill:'+b.key,'bill',b.short_title||b.title,'/bill/'+encodeURIComponent(b.key),[b.status?.replaceAll('_',' '),b.portfolio,summary?.sentences?.join(' '),summary?.affected].filter(Boolean).join('. '),{aliases:[b.title,...(b.aliases||[])].join(' '),date:b.introduced,state:b.jurisdiction,parties:[b.sponsor_party||''],speakers:[b.sponsor||''],source:'Bill register',...(summary?{machine:true}:{})});
+  add('bill:'+b.key,'bill',b.short_title||b.title,'/bill/'+encodeURIComponent(b.key),[b.status?.replaceAll('_',' '),b.portfolio,summary?.sentences?.join(' '),summary?.affected].filter(Boolean).join('. '),{aliases:[b.title,...(b.aliases||[])].join(' '),date:b.introduced,chamber:b.originating_house,state:b.jurisdiction,parties:[b.sponsor_party||''],speakers:[b.sponsor||''],source:'Bill register',...(summary?{machine:true}:{})});
  }
  const interestIndex = await read('interests/index.json');
  const speakerNames = new Set((await read('speakers.json')).map(([name]) => name));
@@ -156,7 +156,8 @@ async function main() {
   // corpus name. Only names absent from both indexes need the official register.
   const href=interestHref(p,person,speakerNames);
   for(const [category,b] of Object.entries(p.buckets||{})) for(const [i,item] of (b.items||[]).entries()) {
-   add(`interest:${file}:${category}:${i}`,'interest',`${p.name} — ${category.replaceAll('_',' ')}`,href,`${item.description}. ${item.holder||''}. ${item.kind||''}.`,{aliases:person?.name||'',date:item.date||null,from:year(item.date||p.as_at),to:year(item.date||p.as_at),dateLabel:item.date?undefined:(p.as_at?'Register as at '+p.as_at:undefined),state:p.jurisdiction,speakers:[...new Set([p.name,person?.name].filter(Boolean))],parties:[person?.party_now||person?.party||''],source:'Register of interests',url:p.source_url});
+   const date=item.date||p.as_at||p.statement_date||null;
+   add(`interest:${file}:${category}:${i}`,'interest',`${p.name} — ${category.replaceAll('_',' ')}`,href,`${item.description}. ${item.holder||''}. ${item.kind||''}.`,{aliases:person?.name||'',date,chamber:p.chamber,from:year(date),to:year(date),dateLabel:item.date?undefined:(date?'Register as at '+date:undefined),state:p.jurisdiction,speakers:[...new Set([p.name,person?.name].filter(Boolean))],parties:[person?.party_now||person?.party||''],source:'Register of interests',url:p.source_url});
   }
  }
  const recent=await read('interests/recent.json');

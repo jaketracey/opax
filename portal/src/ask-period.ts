@@ -55,7 +55,7 @@ function periodTokens(text: string): { start: string; end: string; index: number
   scan(/\b((?:19|20)\d{2})(s)?\b/g, m => [`${m[1]}-01-01`, `${Number(m[1]) + (m[2] === 's' ? 9 : 0)}-12-31`], true)
   return tokens
 }
-export function inferPeriod(question: string, override?: unknown): Period {
+export function inferPeriod(question: string, override?: unknown, now = new Date()): Period {
   const q = question.toLowerCase()
   if (override === 'all' || /\b(?:whole record|all[ -]time|across the record)\b/.test(q)) return { kind: 'all', label: 'Counting speeches across the whole record.' }
   if (/\bthis term\b/.test(q) && /\blast term\b/.test(q)) return { kind: 'window', since: TERMS['47th'][0], label: 'Counting speeches in the current and previous parliaments, since July 2022.' }
@@ -74,6 +74,10 @@ export function inferPeriod(question: string, override?: unknown): Period {
     const ends = bounds.filter(b => !['after', 'since', 'from'].includes(b.operator ?? ''))
     const since = starts.map(b => b.start).sort().at(0), until = ends.map(b => b.end).sort().at(-1)
     return { kind: 'window', ...(since ? { since } : {}), ...(until ? { until } : {}), label: `Records from ${since ?? 'the start of the record'} to ${until ?? 'the present'}.` }
+  }
+  if (/\b(?:this|current) (?:calendar )?year\b/.test(q)) {
+    const year = now.getFullYear()
+    return { kind: 'window', since: `${year}-01-01`, until: `${year}-12-31`, label: `Calendar year ${year}.` }
   }
   if (/\b(?:is|are)\s+(?:\S+\s+){0,4}(?:making|speaking|debating|discussing|talking)\b|\b(?:speaks|says|mentions|debates|discusses)\b|\b(?:is|are)\s+(?:\S+\s+){0,3}(?:debated|discussed)\b/.test(q)) return { kind: 'current', since: TERMS['48th'][0], label: 'Counting speeches in the current parliament since July 2025.' }
   return { kind: 'all', label: 'Counting speeches across the whole record.' }

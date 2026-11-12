@@ -5,6 +5,7 @@ import { receiptYearWindow } from './receipt-period'
 import { requestedBillTitle, billTitleMatches } from './bill-title'
 import { recordIntentText, recordCountKind, billIntroductionListQuestion } from './ask-scope-intent'
 import { speechRankingGrain, partyPolicyTopic } from './ask-answer-grain'
+import { canonicalChamber, questionChamber } from './ask-chamber'
 export interface AskConstraints {
   period: Period; dated: boolean; jurisdiction?: string; chamber?: string; party?: string
   people: string[]; locationState?: string; stateGovernment?: boolean; place?: string; superlative?: 'highest' | 'lowest'; trend: boolean
@@ -29,7 +30,7 @@ export function extractAskConstraints(question: string, period: Period, named: N
   const jurisdiction = /\bfederal|commonwealth\b/.test(jurisdictionText) ? 'federal' : detected
   const locationState = detected && detected !== 'federal' ? detected : undefined
   const stateGovernment = /\b(?:state|queensland|qld|victorian?|nsw|south australian?) (?:government|grants?)\b/.test(jurisdictionText)
-  const chamber = String(filters.chamber || (/\bsenat(?:e|ors?)\b/.test(q) ? 'senate' : /house of representatives/.test(q) ? 'representatives' : '')) || undefined
+  const chamber = canonicalChamber(filters.chamber || questionChamber(q, jurisdiction)) || undefined
   const party = named.correctedParty ? undefined : String(filters.party || (named.parties.length === 1 ? named.parties[0] : '')) || undefined
   const place = /\b(?:electorate|seat) of ([A-Z][\p{L}'-]*(?: [A-Z][\p{L}'-]*)*)/u.exec(question)?.[1]?.trim()
   const contractSupplier = /\b(?:which|what)\s+(?:department|agency)\s+(?:gives?|awards?|awarded)\s+(.+?)\s+(?:(?:the\s+)?(?:most|more|largest)\s+)?contracts?\b/i.exec(question)?.[1]?.trim()
@@ -41,7 +42,7 @@ export function extractAskConstraints(question: string, period: Period, named: N
 }
 /** Restrict model arguments using only parameters the tool actually supports. */
 export function constrainStep(step: PlanStep, c: AskConstraints, properties: Record<string, unknown>): PlanStep {
-  const a = { ...step.args }, has = (k: string) => Object.hasOwn(properties, k)
+  const a = { ...step.args }, has = (k: string) => Object.hasOwn(properties, k) && !(step.tool === 'public_finances' && a.dataset !== 'vic_gifts' && ['chamber','since','until'].includes(k))
   if (step.tool === 'count_speeches' && c.speechRankingGrain && has('group_by')) {
     a.group_by = c.speechRankingGrain
     if (!c.people.length) delete a.speaker
