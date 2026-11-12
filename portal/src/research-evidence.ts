@@ -17,9 +17,10 @@ const CLAIM_VERB = /\b(?:said|says|say|argued?|argues|supported?|supports|oppose
 const INQUIRY = /(?:\b(?:at|of|before|to|in|from|for)\s+)?(?:\b[Tt]he\s+)?(?:\p{Lu}[\p{L}'’-]*\s+){0,6}(?:[Rr]oyal\s+[Cc]ommission|[Cc]ommission|[Ii]nquiry|[Ss]pecial\s+[Cc]ommission\s+of\s+[Ii]nquiry)\b(?:\s+(?:into|on|of)\s+(?:the\s+)?(?:\p{Lu}[\p{L}'’-]*\s*)+)?/gu
 const HEARING_ROLE = /^(?:(?:the|all|some|other|its)\s+)*(?:witnesses|counsel(?:\s+assisting)?|commissioners?)$/i
 function unresolvedPersonQuestion(question: string): boolean {
+  question = question.slice(0, 2000)
   const asked = /\b(?:has|have|did|does|do)\s+([\p{L}'’-]+(?:\s+[\p{L}'’-]+){0,7})\s+(?:said|say|says|spoken|spoke|speak|propos\w*|argu\w*|voted?)\b/iu.exec(question)?.[1]
   const subject = asked === undefined ? undefined : asked.replace(INQUIRY, ' ').replace(/\s+/g, ' ').trim()
-  if (asked !== undefined && asked !== subject && (!subject || HEARING_ROLE.test(subject))) return false
+  if (asked !== undefined && (!subject || HEARING_ROLE.test(subject))) return false
   const collective = /^(?:(?:the|all|these|those|australian|federal|state)\s+)*(?:records?|parliament|senate|house|committees?|government|opposition|members|mps|senators|politicians)$/i
   const groups = subject?.replace(/\b(?:the|and|or|party)\b/gi, ' ').trim().split(/\s+/).filter(Boolean)
   return !!subject && !collective.test(subject) && !groups?.every(word => collective.test(word)) || /\b(?:speeches|remarks|statements|votes)\s+(?:by|from|of)\s+(?!the\b|all\b)[\p{L}'’-]+/iu.test(question)
