@@ -33,7 +33,12 @@ import { isPartyLabel } from '../design/party';
 import { phoneCopy } from '../design/phone-copy';
 import { StatStrip, type StatTileProps } from '../design/record';
 import { LinkRow } from '../design/rows';
-import { ContentUnavailable, InlineError, Skeleton } from '../design/states';
+import {
+  ContentUnavailable,
+  InlineError,
+  Skeleton,
+  SkeletonCrossfade,
+} from '../design/states';
 import { Text } from '../design/text';
 import { rhythm } from '../design/tokens';
 import { useHeaderBottom } from '../design/useHeaderBottom';
@@ -320,67 +325,86 @@ export function ProfileScreen({
           }}
         />
       )}
-      {load.status !== 'ready' ? (
-        <Screen
-          column="wide"
-          centred={load.status === 'not-found'}
-          testID="person-pending-screen"
-          barTitle={load.status === 'not-found' ? 'No profile' : undefined}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={refresh} />
-          }
-        >
-          {load.status === 'not-found' ? (
-            <PersonNotFound
-              onSearch={() =>
-                router.navigate({
-                  pathname: '/search',
-                  params: {
-                    q: routeName ?? slug.replace(/-/g, ' '),
-                    scope: 'people',
-                  },
-                })
-              }
-            />
-          ) : load.status === 'error' ? (
-            load.offline ? (
-              <ContentUnavailable
-                symbol="wifi.slash"
-                title={phoneCopy('Not saved on this iPhone yet')}
-                body="It will load when you’re back online."
-                action={{ label: 'Try again', onPress: refresh }}
-                testID="person-error"
-              />
-            ) : (
-              <ContentUnavailable
-                symbol="exclamationmark.triangle"
-                title="Couldn’t load this profile"
-                body="Check your connection and try again."
-                action={{
-                  label: 'Try again',
-                  onPress: refresh,
-                  testID: 'person-error-retry',
-                }}
-                testID="person-error"
-              />
-            )
-          ) : (
+      <SkeletonCrossfade
+        loading={load.status === 'loading'}
+        ready={load.status === 'ready'}
+        cached={!!ready?.profile.blocks.identity.stale}
+        cachedAt={ready?.profile.blocks.identity.savedAt}
+        fill
+        skeleton={
+          <Screen
+            column="wide"
+            testID="person-pending-screen"
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+            }
+          >
             <PersonSkeleton />
-          )}
-        </Screen>
-      ) : !identity ? null : (
-        <ProfileContent
-          slug={slug}
-          loaded={load}
-          identity={identity}
-          webPath={webPath}
-          arrival={arrival}
-          refreshing={refreshing}
-          refresh={refresh}
-          retry={retry}
-          attempt={attempt}
-        />
-      )}
+          </Screen>
+        }
+      >
+        {load.status !== 'ready' && load.status !== 'loading' ? (
+          <Screen
+            column="wide"
+            centred={load.status === 'not-found'}
+            testID="person-pending-screen"
+            barTitle={load.status === 'not-found' ? 'No profile' : undefined}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+            }
+          >
+            {load.status === 'not-found' ? (
+              <PersonNotFound
+                onSearch={() =>
+                  router.navigate({
+                    pathname: '/search',
+                    params: {
+                      q: routeName ?? slug.replace(/-/g, ' '),
+                      scope: 'people',
+                    },
+                  })
+                }
+              />
+            ) : load.status === 'error' ? (
+              load.offline ? (
+                <ContentUnavailable
+                  symbol="wifi.slash"
+                  title={phoneCopy('Not saved on this iPhone yet')}
+                  body="It will load when you’re back online."
+                  action={{ label: 'Try again', onPress: refresh }}
+                  testID="person-error"
+                />
+              ) : (
+                <ContentUnavailable
+                  symbol="exclamationmark.triangle"
+                  title="Couldn’t load this profile"
+                  body="Check your connection and try again."
+                  action={{
+                    label: 'Try again',
+                    onPress: refresh,
+                    testID: 'person-error-retry',
+                  }}
+                  testID="person-error"
+                />
+              )
+            ) : (
+              <PersonSkeleton />
+            )}
+          </Screen>
+        ) : load.status !== 'ready' || !identity ? null : (
+          <ProfileContent
+            slug={slug}
+            loaded={load}
+            identity={identity}
+            webPath={webPath}
+            arrival={arrival}
+            refreshing={refreshing}
+            refresh={refresh}
+            retry={retry}
+            attempt={attempt}
+          />
+        )}
+      </SkeletonCrossfade>
     </>
   );
 }

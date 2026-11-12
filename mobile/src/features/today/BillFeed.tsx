@@ -67,7 +67,7 @@ export function billRowText(bill: Bill, kind: RecentBillsKind = 'new') {
   };
 }
 
-/** Three bill rows in an inset group (no line limit on titles). */
+/** Three compact previews; the bill page keeps the full title and portfolio. */
 export function BillFeed({
   bills,
   kind = 'new',
@@ -81,6 +81,7 @@ export function BillFeed({
         const text = billRowText(bill, kind);
         return (
           <BillRow
+            preview
             key={bill.key}
             billKey={bill.key}
             title={text.name}

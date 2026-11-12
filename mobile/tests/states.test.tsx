@@ -314,7 +314,7 @@ describe('every drawn state is in the contrast table and passes', () => {
       expectListed(pressed);
     }
   });
-  test('only the timed follow confirmation fades; control states keep contrast', () => {
+  test('only follow confirmation and the cold skeleton crossfade fade; controls keep contrast', () => {
     const dir = resolve(__dirname, '../src/design');
     for (const file of readdirSync(dir).filter((f) => f.endsWith('.tsx'))) {
       const source = readFileSync(resolve(dir, file), 'utf8');
@@ -324,8 +324,13 @@ describe('every drawn state is in the contrast table and passes', () => {
       // The loading button's label is fully hidden (0), never faded.
       expect({ file, values: values.filter((v) => v !== '0') }).toEqual({
         file,
-        // Lane B's brief explicitly gives the transient follow line a fade.
-        values: file === 'controls.tsx' ? ['confirmation ? opacity : 1'] : [],
+        // The follow confirmation and the shared cold skeleton are the two timed fades.
+        values:
+          file === 'controls.tsx'
+            ? ['confirmation ? opacity : 1']
+            : file === 'states.tsx'
+              ? ['loading']
+              : [],
       });
     }
   });

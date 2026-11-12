@@ -48,6 +48,8 @@ name: 09 Electorate representation, elections, Census context and sources
     visible:
       id: electorate-name
     timeout: 15000
+# Let the cold skeleton crossfade finish before the first content check.
+- waitForAnimationToEnd
 - assertVisible: Grayndler
 - takeScreenshot: ${EVIDENCE}/09-identity
 # The representative is one combined label. Inspect the name in the capture.

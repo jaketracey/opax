@@ -228,8 +228,11 @@ export function SourceLine({
   accessibilityLabel,
   onPress,
   testID,
+  overlap = false,
   ...details
 }: SourceDetails & {
+  /** Today: the touch band overlaps upward so the text follows the group gap. */
+  overlap?: boolean;
   /** The sheet's title. */
   title?: string;
   /** Replaces the drawn text: "View original". */
@@ -268,6 +271,7 @@ export function SourceLine({
             : onPress()
         }
         testID={testID}
+        overlap={overlap}
       />
     </>
   );
@@ -288,7 +292,9 @@ export function SourceAffordance({
   onPress,
   testID,
   ref,
+  overlap = false,
 }: {
+  overlap?: boolean;
   glyph: SFSymbol;
   date?: string | null;
   /** The source's name (or "View original"), in the link colour. */
@@ -304,6 +310,10 @@ export function SourceAffordance({
   // A hugging line's width follows its text, so word-safe sizing could chase
   // its own frame. At accessibility sizes it takes the column's full width.
   const fixed = useAccessibilitySize();
+  const [textHeight, setTextHeight] = useState<number>(
+    textStyles.footnote.lineHeight,
+  );
+  const bandInset = Math.max(0, (minimumTarget - textHeight) / 2);
   const highlight = useRowHighlight();
   // The footnote line until the text reports its own (Dynamic Type).
   const [firstLine, setFirstLine] = useState<number>(
@@ -320,6 +330,15 @@ export function SourceAffordance({
       onPress={onPress}
       style={({ pressed }) => [
         styles.line,
+        ...(overlap
+          ? [
+              {
+                marginTop: -bandInset,
+                paddingVertical: bandInset,
+                alignItems: 'flex-start' as const,
+              },
+            ]
+          : []),
         fixed ? styles.fixed : styles.hug,
         pressed ? { backgroundColor: highlight } : null,
       ]}
@@ -342,6 +361,11 @@ export function SourceAffordance({
             accessible={false}
             style={styles.shrink}
             onTextLayout={(event) => {
+              const total = event.nativeEvent.lines.reduce(
+                (sum, line) => sum + line.height,
+                0,
+              );
+              if (overlap && total > 0) setTextHeight(total);
               const height = event.nativeEvent.lines[0]?.height;
               if (height && Math.abs(height - firstLine) > 0.5)
                 setFirstLine(height);

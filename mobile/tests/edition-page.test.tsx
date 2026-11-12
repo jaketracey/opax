@@ -35,7 +35,7 @@ import { BillRow, LinkRow, ValueRow } from '../src/design/rows';
 import { ContentUnavailable, Skeleton } from '../src/design/states';
 import { symbols } from '../src/design/symbols';
 import { Text } from '../src/design/text';
-import { colors } from '../src/design/tokens';
+import { colors, textStyles } from '../src/design/tokens';
 import { EditionCard } from '../src/features/edition/EditionCard';
 import { EditionStory } from '../src/features/edition/EditionStory';
 import { ArchivePhotograph, Plate } from '../src/features/edition/Plate';
@@ -576,7 +576,7 @@ describe('the replacement edition card', () => {
     },
   );
   test.each([1, 3.12])(
-    'the edition status line scales without a cap at scale %s',
+    'the edition detail takes the kicker cap at AX sizes, scale %s',
     async (fontScale) => {
       Platform.OS = 'ios';
       const window = { width: 390, height: 844, scale: 3, fontScale };
@@ -588,7 +588,7 @@ describe('the replacement edition card', () => {
       expect(line.props.children).toBe('Education portfolio');
       expect(line.props.allowFontScaling).toBe(true);
       expect(line.props.dynamicTypeRamp).toBe('subheadline');
-      expect(line.props.maxFontSizeMultiplier).toBe(0);
+      expect(line.props.maxFontSizeMultiplier).toBe(fontScale >= 2 ? 1.353 : 0);
       expect(line.props.numberOfLines).toBeUndefined();
       expect(
         root
@@ -1101,4 +1101,144 @@ test('money and people keep category bands and incoming edition links stay nativ
   expect(fromWebPath('/edition?id=2026-11-08')).toEqual(
     editionRoute('2026-11-08'),
   );
+});
+
+test('edition story has one continuous rail, a footnote date range and says the passed outcome once', async () => {
+  const { root } = await render(<EditionStory />);
+  expect(host(root, 'stage-timeline-rail')).toHaveLength(1);
+  const stages = root.findAll(
+    (node) =>
+      typeof node.type === 'string' &&
+      node.props.accessible &&
+      typeof node.props.onLayout === 'function' &&
+      /, (?:12 Aug|10 Sep|14 Sep|15 Sep|18 Sep) 2026/.test(
+        node.props.accessibilityLabel ?? '',
+      ),
+  );
+  expect(stages).toHaveLength(5);
+  act(() =>
+    stages.forEach((node, index) =>
+      node.props.onLayout({
+        nativeEvent: { layout: { y: index * 80, height: 64 } },
+      }),
+    ),
+  );
+  const rail = StyleSheet.flatten(
+    host(root, 'stage-timeline-rail')[0]!.props.style,
+  );
+  expect(rail).toMatchObject({
+    width: 2,
+    top: textStyles.footnote.lineHeight / 2,
+  });
+  expect(rail.bottom).toBe(64 - textStyles.footnote.lineHeight / 2);
+  expect(
+    StyleSheet.flatten(
+      host(root, 'stage-timeline-rail-complete')[0]!.props.style,
+    ).height,
+  ).toBe(320);
+  const caption = root
+    .findAllByType(Text)
+    .find((node) => node.props.testID === 'stage-timeline-caption')!;
+  expect(caption.props.variant).toBe('footnote');
+  expect(caption.props.children).toBe('12 August 2026 to 18 September 2026');
+  const drawn = root
+    .findAll((node) => node.type === 'Text')
+    .flatMap((node) => node.props.children)
+    .filter((value) => typeof value === 'string')
+    .join(' ');
+  expect(drawn.match(/Passed 18 Sep 2026\./g)).toHaveLength(1);
+});
+
+test('AX5 plate detail stays below the title size and both stage ends share one left-aligned line', async () => {
+  const window = { width: 402, height: 874, scale: 3, fontScale: 3.571 };
+  Dimensions.set({ window, screen: window });
+  const { root } = await render(
+    <EditionCard edition={ready} today="2026-10-05" />,
+  );
+  const title = host(root, 'today-edition-title')[0]!;
+  expect(title.props.allowFontScaling).toBe(false);
+  const titleSize = StyleSheet.flatten(title.props.style).fontSize;
+  for (const id of [
+    'today-edition-line',
+    'today-edition-kicker',
+    'today-edition-art-ends',
+  ]) {
+    const line = host(root, id)[0]!;
+    expect(line.props.maxFontSizeMultiplier).toBe(1.353);
+    expect(
+      Number(StyleSheet.flatten(line.props.style).fontSize) *
+        line.props.maxFontSizeMultiplier,
+    ).toBeLessThanOrEqual(titleSize);
+  }
+  const ends = host(root, 'today-edition-art-ends')[0]!;
+  expect(ends.props).toMatchObject({
+    numberOfLines: 2,
+    adjustsFontSizeToFit: true,
+  });
+  expect(StyleSheet.flatten(ends.props.style).textAlign).toBe('left');
+  expect(ends.props.children.join('')).toBe(
+    'Introduced 12 Aug · Royal Assent 18 Sep',
+  );
+});
+
+test('AX5: a long first stage name wraps to a second line, never an ellipsis; default sizes keep one row', async () => {
+  const long = {
+    ...ready,
+    data: {
+      ...edition,
+      facts: {
+        ...edition.facts,
+        events: [
+          {
+            date: '12 Aug 2026',
+            text: 'Second reading amendments agreed in the Senate',
+          },
+          { date: '18 Sep 2026', text: 'Royal Assent' },
+        ],
+      },
+    },
+  };
+  const ax5 = { width: 402, height: 874, scale: 3, fontScale: 3.571 };
+  Dimensions.set({ window: ax5, screen: ax5 });
+  const { root } = await render(
+    <EditionCard edition={long} today="2026-10-05" />,
+  );
+  const ends = host(root, 'today-edition-art-ends')[0]!;
+  expect(ends.props.children.join('')).toBe(
+    'Second reading amendments agreed 12 Aug · Royal Assent 18 Sep',
+  );
+  expect(ends.props.numberOfLines).toBe(2);
+  // Shrinking stays a last resort, capped at 75 %; nothing truncates the
+  // head or middle of the line.
+  expect(ends.props.minimumFontScale).toBe(0.75);
+  expect(ends.props.ellipsizeMode ?? 'tail').toBe('tail');
+  expect(StyleSheet.flatten(ends.props.style).textAlign).toBe('left');
+
+  // Default text size: the two ends sit in one row, each its own line.
+  const standard = { width: 402, height: 874, scale: 3, fontScale: 1 };
+  // The AX5 card is still mounted, and redraws at the new size.
+  act(() => Dimensions.set({ window: standard, screen: standard }));
+  const { root: plain } = await render(
+    <EditionCard edition={long} today="2026-10-05" />,
+  );
+  expect(host(plain, 'today-edition-art-ends')).toHaveLength(0);
+  const row = plain
+    .findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        StyleSheet.flatten(node.props.style)?.justifyContent ===
+          'space-between' &&
+        StyleSheet.flatten(node.props.style)?.flexDirection === 'row',
+    )
+    .find((node) =>
+      node
+        .findAll((child) => typeof child.type === 'string')
+        .some((child) =>
+          [child.props.children]
+            .flat()
+            .join('')
+            .includes('Second reading amendments agreed'),
+        ),
+    );
+  expect(row).toBeDefined();
 });

@@ -1,4 +1,5 @@
 import { measureBarTitle } from './bar-title-metrics';
+import { SkeletonCrossfade } from '../src/design/states';
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Redirect } from 'expo-router';
@@ -166,6 +167,11 @@ test('a grant program fact opens that program using its decoded id', async () =>
   expect(data.facts.find((f) => f.label === 'Program')?.href).toEqual(expected);
   Object.assign(mockParams, params);
   const view = await mount(MoneyItem);
+  expect(view.root.findByType(SkeletonCrossfade).props).toMatchObject({
+    loading: false,
+    ready: true,
+    sectioned: true,
+  });
   expect(
     view.root
       .findAllByType(ValueRow)

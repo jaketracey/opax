@@ -72,7 +72,11 @@ export function MoreToExplore({
   const Tiles = regular ? SurfaceGrid : TileGrid;
   return (
     <View testID="today-explore" style={styles.section}>
-      <SectionHeader title="More to explore" testID="today-explore-title" />
+      <SectionHeader
+        compact
+        title="More to explore"
+        testID="today-explore-title"
+      />
       <View style={styles.body}>
         {pair}
         <Tiles testID="today-explore-tiles">

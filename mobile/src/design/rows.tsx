@@ -428,6 +428,8 @@ export function ValueRow({
 }
 
 export interface BillRowProps {
+  /** Today previews; full record lists keep their complete text. */
+  preview?: boolean;
   billKey?: string;
   title: string;
   status: string;
@@ -480,6 +482,7 @@ function BillLink({
   );
 }
 export function BillRow({
+  preview = false,
   billKey,
   title,
   status,
@@ -574,13 +577,34 @@ export function BillRow({
             </Text>
           ) : null}
         </View>
-        <Text wordSafe variant="rowRecord" testID={testID && `${testID}-title`}>
+        <Text
+          wordSafe={!preview}
+          variant="rowRecord"
+          numberOfLines={preview ? 3 : undefined}
+          ellipsizeMode={preview ? 'tail' : undefined}
+          testID={testID && `${testID}-title`}
+        >
           {title}
         </Text>
-        {who || affiliation ? (
+        {preview && affiliation ? (
+          <PartyLabel
+            {...affiliation}
+            linked
+            nested
+            singleLine
+            prefix={who ?? undefined}
+            testID={testID && `${testID}-party`}
+          />
+        ) : who || affiliation ? (
           <View style={[styles.line, stacked ? styles.stacked : null]}>
             {who ? (
-              <Text wordSafe variant="secondary">
+              <Text
+                wordSafe={!preview}
+                variant="secondary"
+                numberOfLines={preview ? 1 : undefined}
+                ellipsizeMode={preview ? 'tail' : undefined}
+                style={preview ? { flex: 1 } : undefined}
+              >
                 {who}
               </Text>
             ) : null}

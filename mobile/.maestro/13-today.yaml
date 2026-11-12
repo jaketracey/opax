@@ -71,6 +71,8 @@ name: 13 Today front page, its native records and dated original sources
     timeout: 90000
     visibilityPercentage: 1
     centerElement: true
+# The first ready rows can still be crossfading from their skeleton.
+- waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/13-bills
 - scrollUntilVisible:
     element:
@@ -89,6 +91,7 @@ name: 13 Today front page, its native records and dated original sources
     direction: DOWN
     timeout: 90000
     visibilityPercentage: 1
+- waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/13-open-bill
 # On iOS 27 an uncentred source link can sit under the tab bar.
 - assertVisible:

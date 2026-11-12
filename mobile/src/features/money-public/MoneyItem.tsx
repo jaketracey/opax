@@ -10,6 +10,7 @@ import { catalogs } from '../../api/runtime';
 import { counted, formatDate, formatMoney } from '../../design/format';
 import { Screen, SectionHeader } from '../../design/layout';
 import { LinkRow, MoneyRow, ValueRow } from '../../design/rows';
+import { SkeletonCrossfade } from '../../design/states';
 import { SourceLine } from '../../design/source';
 import { symbols } from '../../design/symbols';
 import { Heading, Text } from '../../design/text';
@@ -748,119 +749,135 @@ function MoneyItemRecord({ raw }: { raw: Record<string, string> }) {
           />
         }
       >
-        <MoneyStatus
-          status={status}
-          name="This record"
-          rows={5}
-          notFound={{ title: "This record isn't available any more" }}
-          testID="money-item"
-        />
-        {item ? (
-          <>
-            <View
-              ref={titleRef}
-              collapsable={false}
-              onLayout={scrollTitle.onTitleLayout}
-              style={{ gap: rhythm.line }}
-            >
-              <Text wordSafe variant="secondary" testID="money-item-meta">
-                {item.meta}
-              </Text>
-              <Heading
-                level={1}
-                kind={item.individual ? 'page' : 'record'}
-                testID="money-item-title"
-              >
-                {item.name}
-              </Heading>
-              <Text
-                wordSafe
-                variant="figure"
-                tabular
-                testID="money-item-amount"
-              >
-                {formatMoney(item.amount)}
-              </Text>
-            </View>
-            {item.children.length ? (
-              <View testID="money-item-records">
-                {item.children.map((c, i) => (
-                  <MoneyRow
-                    key={c.key}
-                    name={c.name}
-                    detail={c.detail}
-                    amount={c.amount}
-                    href={c.href}
-                    testID={`money-item-record-${i}`}
-                  />
-                ))}
-              </View>
-            ) : item.facts.length ? (
-              <View>
-                <Text wordSafe variant="groupHeader">
-                  {`As at ${formatDate(item.asOf, 'long')}`}
-                </Text>
-                {item.facts.map((f) =>
-                  f.long ? (
-                    <LongFact key={f.label} fact={f} />
-                  ) : (
-                    <ValueRow
-                      key={f.label}
-                      label={f.label}
-                      value={f.value}
-                      href={f.href}
-                      testID={`money-item-fact-${slug(f.label)}`}
-                    />
-                  ),
-                )}
-              </View>
-            ) : null}
-            {item.originals.length ? (
-              <Section title="Originals">
-                {item.originals.map((o, i) => (
-                  <LinkRow
-                    key={o.label}
-                    title={o.label}
-                    external={{ url: o.url, label: o.label }}
-                    testID={`money-item-original-${i}`}
-                  />
-                ))}
-              </Section>
-            ) : null}
-            {item.onward.length ? (
-              <View>
-                {item.onward.map((o) => (
-                  <LinkRow
-                    key={o.key}
-                    title={o.title}
-                    detail={o.detail}
-                    symbol={o.symbol}
-                    href={o.href}
-                    testID={`money-item-open-${o.key}`}
-                  />
-                ))}
-              </View>
-            ) : null}
-            {item.notes.length ? (
-              <Section title="Notes">
-                {item.notes.map((n) => (
-                  <Text key={n} wordSafe variant="body">
-                    {readableDates(n)}
-                  </Text>
-                ))}
-              </Section>
-            ) : null}
-            <SourceLine
-              asOf={item.asOf}
-              citation={[moneyCitation(item.register)]}
-              savedAt={saved.savedAt}
-              state={saved.state}
-              originals={item.originals}
-              notes={saved.stateNotes}
-              testID="money-item-source"
+        <SkeletonCrossfade
+          loading={!status.record && !status.error}
+          ready={!!item}
+          cached={!!status.record?.stale}
+          cachedAt={status.record?.savedAt}
+          sectioned
+          skeleton={
+            <MoneyStatus
+              status={status}
+              name="This record"
+              rows={5}
+              testID="money-item"
             />
-          </>
-        ) : null}
+          }
+        >
+          <MoneyStatus
+            status={status}
+            name="This record"
+            rows={5}
+            notFound={{ title: "This record isn't available any more" }}
+            testID="money-item"
+          />
+          {item ? (
+            <>
+              <View
+                ref={titleRef}
+                collapsable={false}
+                onLayout={scrollTitle.onTitleLayout}
+                style={{ gap: rhythm.line }}
+              >
+                <Text wordSafe variant="secondary" testID="money-item-meta">
+                  {item.meta}
+                </Text>
+                <Heading
+                  level={1}
+                  kind={item.individual ? 'page' : 'record'}
+                  testID="money-item-title"
+                >
+                  {item.name}
+                </Heading>
+                <Text
+                  wordSafe
+                  variant="figure"
+                  tabular
+                  testID="money-item-amount"
+                >
+                  {formatMoney(item.amount)}
+                </Text>
+              </View>
+              {item.children.length ? (
+                <View testID="money-item-records">
+                  {item.children.map((c, i) => (
+                    <MoneyRow
+                      key={c.key}
+                      name={c.name}
+                      detail={c.detail}
+                      amount={c.amount}
+                      href={c.href}
+                      testID={`money-item-record-${i}`}
+                    />
+                  ))}
+                </View>
+              ) : item.facts.length ? (
+                <View>
+                  <Text wordSafe variant="groupHeader">
+                    {`As at ${formatDate(item.asOf, 'long')}`}
+                  </Text>
+                  {item.facts.map((f) =>
+                    f.long ? (
+                      <LongFact key={f.label} fact={f} />
+                    ) : (
+                      <ValueRow
+                        key={f.label}
+                        label={f.label}
+                        value={f.value}
+                        href={f.href}
+                        testID={`money-item-fact-${slug(f.label)}`}
+                      />
+                    ),
+                  )}
+                </View>
+              ) : null}
+              {item.originals.length ? (
+                <Section title="Originals">
+                  {item.originals.map((o, i) => (
+                    <LinkRow
+                      key={o.label}
+                      title={o.label}
+                      external={{ url: o.url, label: o.label }}
+                      testID={`money-item-original-${i}`}
+                    />
+                  ))}
+                </Section>
+              ) : null}
+              {item.onward.length ? (
+                <View>
+                  {item.onward.map((o) => (
+                    <LinkRow
+                      key={o.key}
+                      title={o.title}
+                      detail={o.detail}
+                      symbol={o.symbol}
+                      href={o.href}
+                      testID={`money-item-open-${o.key}`}
+                    />
+                  ))}
+                </View>
+              ) : null}
+              {item.notes.length ? (
+                <Section title="Notes">
+                  {item.notes.map((n) => (
+                    <Text key={n} wordSafe variant="body">
+                      {readableDates(n)}
+                    </Text>
+                  ))}
+                </Section>
+              ) : null}
+              <SourceLine
+                asOf={item.asOf}
+                citation={[moneyCitation(item.register)]}
+                savedAt={saved.savedAt}
+                state={saved.state}
+                originals={item.originals}
+                notes={saved.stateNotes}
+                testID="money-item-source"
+              />
+            </>
+          ) : null}
+        </SkeletonCrossfade>
       </Screen>
     </>
   );

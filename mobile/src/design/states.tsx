@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useLayoutEffect,
   useRef,
   useState,
   useSyncExternalStore,
@@ -14,14 +15,18 @@ import {
 } from 'react';
 import {
   AccessibilityInfo,
+  Animated,
+  Easing,
   Platform,
   StyleSheet,
   View,
   useWindowDimensions,
   type DimensionValue,
+  type StyleProp,
+  type ViewStyle,
 } from 'react-native';
 import { ApiError } from '../api/errors';
-import { useAccessibilitySize } from './accessibility';
+import { useAccessibilitySize, useReduceMotionSetting } from './accessibility';
 import { columns, ReadableColumn, useLayout } from './adaptive';
 import { Button } from './controls';
 import { copy } from './copy';
@@ -35,6 +40,7 @@ import {
   controlHeight,
   hairline,
   minimumTarget,
+  motion,
   radii,
   rhythm,
   rhythmRegular,
@@ -586,6 +592,214 @@ export function Skeleton({
         )}
       </View>
     </View>
+  );
+}
+/** Screen supplies its own section gap, including adaptive-width boundaries. */
+export const ScreenSectionGapContext = createContext<number>(rhythm.section);
+
+/** Inputs to a cold-load crossfade; see SkeletonCrossfade. */
+export type SkeletonCrossfadeInput = {
+  loading: boolean;
+  skeleton: ReactNode;
+  /** Errors and empty states replace the skeleton immediately. */
+  ready?: boolean;
+  /** A saved record never has an entrance animation, even after a slow read. */
+  cached?: boolean;
+  /** The oldest saved record: a timestamp before this read identifies a cache hit. */
+  cachedAt?: number | null;
+};
+
+/** The crossfade's timing, owned by the loader so its layers can move. */
+export type SkeletonCrossfadeState = {
+  loading: boolean;
+  /** The skeleton to draw: the live one, or the last one while it fades. */
+  skeleton: ReactNode;
+  visible: boolean;
+  fade: boolean;
+  /** The content layer's opacity, 0 to 1; the skeleton draws its inverse. */
+  reveal: Animated.Value;
+};
+
+/**
+ * The crossfade's state without its layers. A loader whose seeded content
+ * must stay still (a bill's header from the tapped row) keeps that content
+ * outside CrossfadeLayers, and may render the layers in a new place once
+ * its content arrives: all timing lives here.
+ */
+export function useSkeletonCrossfade({
+  loading,
+  skeleton,
+  ready = true,
+  cached = false,
+  cachedAt,
+}: SkeletonCrossfadeInput): SkeletonCrossfadeState {
+  const reduceMotion = useReduceMotionSetting();
+  const [opacity] = useState(() => new Animated.Value(loading ? 0 : 1));
+  const [phase, setPhase] = useState({
+    loading,
+    skeleton,
+    visible: false,
+    eligible: false,
+    fade: false,
+    startedAt: 0,
+  });
+  // Capture the last committed loading shape before its props become content.
+  // A new loading cycle resets the grace period; revalidation never enters it.
+  if (loading !== phase.loading) {
+    setPhase(
+      loading
+        ? {
+            loading,
+            skeleton,
+            visible: false,
+            eligible: false,
+            fade: false,
+            startedAt: 0,
+          }
+        : {
+            ...phase,
+            loading,
+            fade:
+              phase.eligible &&
+              ready &&
+              !cached &&
+              !(cachedAt != null && cachedAt < phase.startedAt) &&
+              reduceMotion === false,
+          },
+    );
+  } else if (loading && skeleton !== phase.skeleton) {
+    setPhase({ ...phase, skeleton });
+  } else if (phase.fade && reduceMotion !== false) {
+    setPhase({ ...phase, fade: false });
+  }
+  useLayoutEffect(() => {
+    if (!loading) return;
+    opacity.setValue(0);
+    const startedAt = Date.now();
+    // Reserve the final shape without flashing a skeleton on a warm read.
+    const reveal = setTimeout(() => {
+      setPhase((was) => ({ ...was, visible: true, startedAt }));
+    }, 100);
+    return () => clearTimeout(reveal);
+  }, [loading, opacity]);
+  useLayoutEffect(() => {
+    if (!loading || !phase.visible) return;
+    // Count from the visible skeleton's commit, including a busy JS thread.
+    const eligible = setTimeout(() => {
+      setPhase((was) => ({ ...was, eligible: true }));
+    }, 100);
+    return () => clearTimeout(eligible);
+  }, [loading, phase.visible]);
+  useLayoutEffect(() => {
+    if (loading) return;
+    if (!phase.fade) {
+      opacity.setValue(1);
+      return;
+    }
+    let active = true;
+    const fade = Animated.timing(opacity, {
+      toValue: 1,
+      duration: motion.duration.crossfade,
+      easing: Easing.bezier(...motion.easing.standard),
+      useNativeDriver: true,
+    });
+    fade.start(({ finished }) => {
+      if (active && finished) setPhase((was) => ({ ...was, fade: false }));
+    });
+    return () => {
+      active = false;
+      fade.stop();
+    };
+  }, [loading, phase.fade, opacity]);
+  return {
+    loading,
+    skeleton: loading ? skeleton : phase.skeleton,
+    visible: phase.visible,
+    fade: phase.fade,
+    reveal: opacity,
+  };
+}
+
+/** The skeleton and content layers of a crossfade. Holds no state. */
+export function CrossfadeLayers({
+  crossfade: { loading, skeleton, visible, fade, reveal: opacity },
+  children,
+  sectioned = false,
+  fill = false,
+  style,
+}: {
+  crossfade: SkeletonCrossfadeState;
+  children?: ReactNode;
+  /** Preserve Screen's spacing when its children are fragments. */
+  sectioned?: boolean;
+  /** For a loader whose content owns its scrolling screen. */
+  fill?: boolean;
+  style?: StyleProp<ViewStyle>;
+}) {
+  const sectionGap = useContext(ScreenSectionGapContext);
+  const contentStyle = [
+    fill ? { flex: 1 } : null,
+    sectioned ? { gap: sectionGap } : null,
+  ];
+  return (
+    <View style={[fill ? { flex: 1 } : null, style]}>
+      {(loading || fade) && (
+        <Animated.View
+          pointerEvents={loading ? 'auto' : 'none'}
+          accessibilityElementsHidden={!loading || !visible}
+          importantForAccessibility={
+            loading && visible ? 'auto' : 'no-hide-descendants'
+          }
+          style={[
+            ...contentStyle,
+            !loading ? StyleSheet.absoluteFill : null,
+            {
+              opacity: loading
+                ? visible
+                  ? 1
+                  : 0
+                : opacity.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [1, 0],
+                  }),
+            },
+          ]}
+        >
+          {skeleton}
+        </Animated.View>
+      )}
+      {!loading && (
+        <Animated.View style={[...contentStyle, { opacity }]}>
+          {children}
+        </Animated.View>
+      )}
+    </View>
+  );
+}
+/** A cold skeleton yields to content in place. Fast and saved reads appear at once. */
+export function SkeletonCrossfade({
+  children,
+  sectioned,
+  fill,
+  style,
+  ...input
+}: SkeletonCrossfadeInput & {
+  children: ReactNode;
+  /** Preserve Screen's spacing when its children are fragments. */
+  sectioned?: boolean;
+  /** For a loader whose content owns its scrolling screen. */
+  fill?: boolean;
+  style?: StyleProp<ViewStyle>;
+}) {
+  return (
+    <CrossfadeLayers
+      crossfade={useSkeletonCrossfade(input)}
+      sectioned={sectioned}
+      fill={fill}
+      style={style}
+    >
+      {children}
+    </CrossfadeLayers>
   );
 }
 /** Compatibility alias while screen lanes adopt the named shapes. */

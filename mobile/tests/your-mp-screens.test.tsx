@@ -1,3 +1,4 @@
+import { SkeletonCrossfade } from '../src/design/states';
 import { withNavigationOptions } from './navigation-options';
 import { Icon } from '../src/design/icon';
 import {
@@ -191,6 +192,11 @@ test('profile failure in expenses preserves votes, pay and identity; absent loca
   mock.person.mockResolvedValue(result(person));
   mock.profileFor.mockResolvedValue(p);
   const r = await render(<Person />);
+  expect(r.root.findByType(SkeletonCrossfade).props).toMatchObject({
+    loading: false,
+    ready: true,
+    fill: true,
+  });
   expect(text(r)).toContain('Penny Wong');
   expect(text(r)).toContain('Entitlements set by instrument, not payslips.');
   expect(

@@ -58,7 +58,7 @@ import {
   SurfaceContext,
 } from './row-padding';
 import { usePaneBar, useSplitPane } from './split';
-import { StatePageProvider } from './states';
+import { ScreenSectionGapContext, StatePageProvider } from './states';
 import { Heading, Text } from './text';
 import {
   colors,
@@ -67,6 +67,7 @@ import {
   minimumTarget,
   radii,
   rhythm,
+  textStyles,
   rhythmRegular,
 } from './tokens';
 import { useStableKeyboard } from './useStableKeyboard';
@@ -309,7 +310,11 @@ export function Screen({
                     >
                       {bar}
                       {androidRoot.title}
-                      {anchorHeadings(withOffline(children, offline))}
+                      <ScreenSectionGapContext.Provider
+                        value={regular ? rhythmRegular.section : rhythm.section}
+                      >
+                        {anchorHeadings(withOffline(children, offline))}
+                      </ScreenSectionGapContext.Provider>
                     </View>
                   </TitleContentContext.Provider>
                 </TitleHeadingContext.Provider>
@@ -477,6 +482,7 @@ export function SectionHeader({
   accessory,
   testID,
   level = 2,
+  compact = false,
 }: {
   title: string;
   action?: SectionAction;
@@ -484,7 +490,12 @@ export function SectionHeader({
   accessory?: ReactNode;
   testID?: string;
   level?: 2 | 3;
+  /** Today: the title owns the band; the action keeps its full target. */
+  compact?: boolean;
 }) {
+  const [titleHeight, setTitleHeight] = useState<number>(
+    textStyles.sectionTitle.lineHeight,
+  );
   const headingLayout = useContext(SectionHeadingLayoutContext);
   const stacked = useAccessibilitySize();
   const button = action ? (
@@ -495,6 +506,9 @@ export function SectionHeader({
       testID={action.testID}
       style={({ pressed }) => [
         styles.sectionAction,
+        ...(compact && !stacked
+          ? [{ marginVertical: -Math.max(0, minimumTarget - titleHeight) / 2 }]
+          : []),
         pressed ? { backgroundColor: colors.sunken } : null,
       ]}
     >
@@ -503,14 +517,18 @@ export function SectionHeader({
       </Text>
     </Pressable>
   ) : null;
+  const bandStyle = accessory
+    ? styles.sectionHeadWrapping
+    : stacked
+      ? styles.sectionHeadStacked
+      : styles.sectionHead;
   return (
     <View
       style={
-        accessory
-          ? styles.sectionHeadWrapping
-          : stacked
-            ? styles.sectionHeadStacked
-            : styles.sectionHead
+        // Stacked at AX sizes, the header keeps its own margin to the group.
+        compact && !stacked
+          ? [bandStyle, { minHeight: 0, marginBottom: 0 }]
+          : bandStyle
       }
     >
       <Heading
@@ -518,8 +536,11 @@ export function SectionHeader({
         style={accessory ? styles.sectionHeadTitle : styles.grow}
         testID={testID}
         onLayout={
-          headingLayout && testID
-            ? (event) => headingLayout(testID, event)
+          compact || (headingLayout && testID)
+            ? (event) => {
+                if (compact) setTitleHeight(event.nativeEvent.layout.height);
+                if (headingLayout && testID) headingLayout(testID, event);
+              }
             : undefined
         }
       >

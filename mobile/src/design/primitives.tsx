@@ -248,6 +248,7 @@ export type { SplitLayoutProps, SplitPane } from './split';
 export {
   Collapse,
   ContentUnavailable,
+  CrossfadeLayers,
   EmptyState,
   ErrorState,
   InlineError,
@@ -255,7 +256,10 @@ export {
   OfflineBanner,
   OfflineLine,
   Skeleton,
+  SkeletonCrossfade,
   StatePageProvider,
+  useSkeletonCrossfade,
+  type SkeletonCrossfadeState,
   errorMessage,
   stateCopy,
 } from './states';

@@ -88,6 +88,8 @@ name: 10 Filter and search the bill list, then open a bill
     visible:
       id: bill-screen
     timeout: 15000
+# Let the cold skeleton crossfade finish before the first content check.
+- waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/10-bill
 # The status names its event, never the status word beside a bare date.
 - scrollUntilVisible:

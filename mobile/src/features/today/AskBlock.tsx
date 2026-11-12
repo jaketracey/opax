@@ -34,7 +34,11 @@ export function AskBlock({ today }: { today: SydneyDate }) {
   return (
     <PadReading>
       <View testID="today-ask" style={{ gap: rhythm.heading }}>
-        <SectionHeader title="Ask about parliament" testID="today-ask-title" />
+        <SectionHeader
+          compact
+          title="Ask about parliament"
+          testID="today-ask-title"
+        />
         <InsetGroup>
           {starters.map((question, i) => (
             <LinkRow

@@ -23,6 +23,8 @@ name: Open a profile from Search and check its party label (PARTY, never NOT_PAR
     visible:
       id: person-screen-title
     timeout: 15000
+# Let the cold skeleton crossfade finish before the first content check.
+- waitForAnimationToEnd
 - scrollUntilVisible:
     element:
       id: person-party

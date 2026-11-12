@@ -205,6 +205,9 @@ function StageTimelineContent({
   const { fontScale } = useWindowDimensions();
   const [width, setWidth] = useState(0);
   const [firstLines, setFirstLines] = useState<Record<string, number>>({});
+  const [stageFrames, setStageFrames] = useState<
+    Record<string, { y: number; height: number }>
+  >({});
   const { sizes, measure } = useTextMeasurements();
   const keys = stages.map(
     (stage, index) => `${fontScale}:${index}:${stage.label}:${stage.date}`,
@@ -275,6 +278,17 @@ function StageTimelineContent({
         (index === 0 || bound.left >= bounds[index - 1]!.right + 8),
     );
   const vertical = large || stages.length > 4 || !fits;
+  const dotCentres = keys.map(
+    (key) =>
+      (stageFrames[key]?.y ?? 0) +
+      Math.max(
+        size.partyDot / 2,
+        (firstLines[key] ?? textStyles.footnote.lineHeight * fontScale) / 2,
+      ),
+  );
+  const firstCentre = dotCentres[0] ?? 0;
+  const lastFrame = stageFrames[keys.at(-1) ?? ''];
+  const lastOffset = (dotCentres.at(-1) ?? 0) - (lastFrame?.y ?? 0);
   const ink = onBand ? 'onBand' : 'ink';
   return (
     <View
@@ -314,6 +328,33 @@ function StageTimelineContent({
             : [styles.horizontalTimeline, { height: 10 + 8 + labelHeight }]
         }
       >
+        {vertical && stages.length > 1 ? (
+          <View
+            testID="stage-timeline-rail"
+            pointerEvents="none"
+            style={{
+              position: 'absolute',
+              left: (size.partyDot - 2) / 2,
+              width: 2,
+              top: firstCentre,
+              bottom: lastFrame ? lastFrame.height - lastOffset : 0,
+              backgroundColor: onBand ? colors.onBandSoft : colors.inkFaint,
+            }}
+          >
+            <View
+              testID="stage-timeline-rail-complete"
+              style={{
+                width: 2,
+                height: Math.max(
+                  0,
+                  (dotCentres[Math.min(latestIndex, stages.length - 1)] ??
+                    firstCentre) - firstCentre,
+                ),
+                backgroundColor: colors[ink],
+              }}
+            />
+          </View>
+        ) : null}
         {!vertical ? (
           <View
             style={[
@@ -327,6 +368,19 @@ function StageTimelineContent({
             key={index}
             accessible
             accessibilityLabel={`${stage.label}, ${stage.date}${index === latestIndex ? ', latest stage' : ''}`}
+            onLayout={
+              vertical
+                ? (event) => {
+                    const { y, height } = event.nativeEvent.layout;
+                    const key = keys[index]!;
+                    setStageFrames((seen) =>
+                      seen[key]?.y === y && seen[key]?.height === height
+                        ? seen
+                        : { ...seen, [key]: { y, height } },
+                    );
+                  }
+                : undefined
+            }
             style={
               vertical
                 ? styles.verticalStage
@@ -400,7 +454,11 @@ function StageTimelineContent({
           </View>
         ))}
       </View>
-      <Text variant="footnote" tone={onBand ? 'onBandSoft' : 'inkSoft'}>
+      <Text
+        testID="stage-timeline-caption"
+        variant="footnote"
+        tone={onBand ? 'onBandSoft' : 'inkSoft'}
+      >
         {provenance({ dateRange, citation })}
       </Text>
     </View>
