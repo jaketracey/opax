@@ -1541,7 +1541,13 @@ export function Field({
             setFocused(false);
             input.onBlur?.(event);
           }}
-          clearButtonMode="while-editing"
+          // A one-time code never shows the clear button: at AX3 it took
+          // the first digit's room while focused. Backspace still deletes.
+          clearButtonMode={
+            variant === 'code' || input.textContentType === 'oneTimeCode'
+              ? 'never'
+              : 'while-editing'
+          }
           allowFontScaling
           maxFontSizeMultiplier={0}
           // Faint text is for raised surfaces only; a disabled field is sunken.

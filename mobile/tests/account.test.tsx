@@ -208,6 +208,15 @@ const button = (renderer: Renderer, testID: string) =>
     (node) =>
       node.props.testID === testID && typeof node.props.onPress === 'function',
   )[0]!;
+/** The native input under a Field, with its focus state applied. */
+const hostInput = async (renderer: Renderer, testID: string) => {
+  const find = () =>
+    renderer.root.find(
+      (node) => node.type === 'TextInput' && node.props.testID === testID,
+    );
+  await act(async () => find().props.onFocus?.({ nativeEvent: {} }));
+  return find();
+};
 const field = (renderer: Renderer, testID: string) =>
   renderer.root
     .findAllByType(Field)
@@ -796,6 +805,17 @@ describe('Sign in by code', () => {
       }
     },
   );
+  test('the sign-in code field never shows a clear button, even focused; email keeps it', async () => {
+    const renderer = await codeStep();
+    // At AX3 the clear button took the first digit's room while focused.
+    expect(
+      (await hostInput(renderer, 'account-sign-in-code')).props.clearButtonMode,
+    ).toBe('never');
+    const signIn = await render(<TalkSignInScreen />);
+    expect(
+      (await hostInput(signIn, 'account-email')).props.clearButtonMode,
+    ).toBe('while-editing');
+  });
   test('step 2: the code field is one-time-code and paste friendly, and a full code signs in', async () => {
     const onSignedIn = jest.fn();
     const renderer = await codeStep(onSignedIn);
@@ -1120,6 +1140,13 @@ describe('Delete account', () => {
       }
     },
   );
+  test('the deletion code field never shows a clear button, even focused', async () => {
+    const renderer = await codeStep();
+    expect(
+      (await hostInput(renderer, 'account-deletion-code')).props
+        .clearButtonMode,
+    ).toBe('never');
+  });
   test('step 2: a hidden-label code field, then a deliberate, confirmed Delete', async () => {
     const renderer = await codeStep();
     expect(field(renderer, 'account-deletion-code').props).toMatchObject({
