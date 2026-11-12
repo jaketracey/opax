@@ -191,3 +191,48 @@ Implementation commit: `0288bdd7f` (new commit; no amendments to the reviewed co
 | research follow-up fixture | 23,137 | 23,313 |
 
 The graph chunk manifest and importer cache stamps were refreshed with the map bundle. Unrelated release-build outputs were restored; map importers retain only their map-related stamp changes and the required downstream stamps. No new source fetch, push, deployment or production write was performed. Local logs are under ignored staging/receipt-types/fix1-* files. Integration with the Ask-owned reader changes remains the orchestrator's separate lane dependency before publication.
+
+## Fix round 2 (13 November 2026)
+
+Implementation commit `3528d04c3` makes the 2D receipt selector persist `receipt=donations` with `history.replaceState`. Choosing All receipt types removes the parameter. The handler preserves the host history state, other query parameters and the hash, and only updates full maps on `/money` or `/map`. Embedded maps and other routes keep their own URL.
+
+The mounted-map tests in `portal/test/money-map-card-references.test.mjs` now run against the published money.json with the WebGL engine stub enabled and disabled. Both paths select each measure, assert the exact gambling amounts and four-party rankings, check one replacement and no added history entries, then open fresh documents from the resulting links on both map routes. This covers reload and sharing for donation-only and all receipt types.
+
+| Acceptance item | Done, implementation and proof |
+| --- | --- |
+| 1. Donation-only URL state | Done: the fallback now writes the browser URL. The two mounted-view regressions prove selection, removal, reload and shared-link restoration of $2,468,918 donations and $8,668,512 all receipt types, with every party amount unchanged. |
+| 2. Merge and fresh stamps | Done: merged origin/main at `3d4af6c96f704eada2d8ccc694ba510ff7d412f7`, which includes `2be5d6f54`. The only conflicts were stamp values in agencies.js, app.js and index.html. Rebuilt the graph and release assets, restored unrelated generated outputs to the merged index, then regenerated and checked the final stamps. All five graph JavaScript bundles match a fresh in-memory source rebuild. |
+| 3. Preserve the reviewed data | Done: money.json, the shared eligibility predicate and both Ask-owned files have their pre-round SHA256 values. The lane Python suite retains the six-row exclusion regression. An independent cached CSV/ZIP/Decimal recount again matches all 866 receipt edges and 16,063 rows, plus gambling/finance totals and rankings. All 411 typed nodes reconcile to edge amounts and year/count cells. Removing additive fields reproduces the original 1,860,309 bytes exactly. |
+
+The independent reconciliation output is byte-for-byte identical to `2026-11-12-aec-receipt-types-reconciliation.json`:
+
+| Scope | Industry | Donation-only AUD | All receipt types AUD |
+| --- | --- | ---: | ---: |
+| Uncapped | Gambling | 4,152,439 | 12,343,894 |
+| Typed map | Gambling | 2,468,918 | 8,668,512 |
+| Uncapped | Finance | 39,059,336 | 203,671,178 |
+| Typed map | Finance | 24,731,335 | 169,586,920 |
+
+| Gate | Result |
+| --- | --- |
+| Node | 24.21.0; existing dependencies reused, lockfile unchanged |
+| `npx wrangler types` | Pass |
+| `npm run build:graph` | Pass |
+| `npm run build:release` after merging main | Pass |
+| `npx tsc --noEmit` | Pass |
+| `nice -n 10 npm test` | 4,777 passed; zero failed, skipped or cancelled |
+| Lane Python tests | 43 passed, 32 subtests passed |
+| Focused map, fallback and receipt tests | 19 passed |
+| Final stamp check, five-bundle source comparison and diff whitespace | Pass |
+| Independent receipt and node reconciliation, original legacy-byte comparison | Pass |
+
+| Artifact | Before round 2 bytes | Final bytes |
+| --- | ---: | ---: |
+| money.json | 2,410,933 | 2,410,933 |
+| money-map.js | 147,703 | 148,003 |
+| explain.js | 58,132 | 58,132 |
+| Three shared graph chunks, combined | 706,827 | 706,827 |
+
+Only the map entry bundle changes among the five rebuilt graph bundles. The related import stamps in agencies.js, app.js, suppliers.js, home.js and map-page.js, and the app, home and map HTML stamps are fresh. The numerical report and reconciliation JSON require no regeneration. The original stripped graph SHA256 is `fcd9baefc8ab9048197ebb606302808fffac8a633dc1457112390e9845a65aeb`. Local gate logs and the additional node/byte preservation evidence are under ignored `staging/receipt-types/fix2-*` paths.
+
+No AEC source fetch, push, deployment or production write was made. The P1 numeric by_type Ask reader change remains with im-ask-money-rank; neither Ask-owned source file was edited here. The exact Ask field contract remains in the fix round 1 handoff above.

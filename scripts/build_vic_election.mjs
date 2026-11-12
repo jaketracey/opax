@@ -10,6 +10,7 @@ import {personIndex, personSlug} from '../portal/src/person-slug.ts';
 import {personNameKey} from '../portal/public/canonical-urls.js';
 import {day, latest} from '../portal/public/hubs-data.js';
 import {divisionPlain} from '../portal/public/division-markdown.js';
+import {validateVicElection, validateVicPlaces} from '../portal/src/vic-election-data.ts';
 import {VIC_ELECTION_PATH, VIC_ELECTION_PLACES, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_CORRECTIONS_EMAIL, VIC_ELECTION_CORRECTIONS_RESPONSE} from '../portal/public/vic-election.js';
 
 // Only the result fields the hub shows: no candidate names.
@@ -93,15 +94,20 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
   const data = {authorisation:VIC_ELECTION_AUTHORISATION_LINE,
     corrections:{email:VIC_ELECTION_CORRECTIONS_EMAIL,response:VIC_ELECTION_CORRECTIONS_RESPONSE},
     updated,checked:config.updated,term_start:config.term_start,term_end:config.term_end,election_day:config.election_day,
+    notice:config.notice ?? null,
     nominations_close:config.nominations_close,enrolment_close:config.enrolment_close,postal_close:config.postal_close,
     results_fetched:results.fetched,sources:config.sources,licence:config.licence,boundaries:config.boundaries,
     speech_updated:roster.meta.generated,division_start:detailed.map(d=>day(d.date)).sort()[0] || null,
     division_end:latest(detailed.map(d=>d.date)),interests_available:false,seats,pages};
-  await mkdir(join(root,'hubs'),{recursive:true});
-  await writeFile(join(root,'hubs/vic-election-2026.json'),JSON.stringify(data)+'\n');
   // The finder's index: place -> [district index, share in tenths of a percent].
   const {suburb,postcode,council,attribution,note} = places;
-  await writeFile(join(root,VIC_ELECTION_PLACES.replace(/^\//,'')),JSON.stringify({attribution,note,districts:districtNames,suburb,postcode,council})+'\n');
+  const placeData = {attribution,note,districts:districtNames,suburb,postcode,council};
+  // Reject incompatible optional data before either deployable asset is written.
+  validateVicElection(data);
+  validateVicPlaces(placeData,data);
+  await mkdir(join(root,'hubs'),{recursive:true});
+  await writeFile(join(root,'hubs/vic-election-2026.json'),JSON.stringify(data)+'\n');
+  await writeFile(join(root,VIC_ELECTION_PLACES.replace(/^\//,'')),JSON.stringify(placeData)+'\n');
   return {districts:config.districts.length,regions:config.regions.length,members:seats.reduce((n,s)=>n+s.members.length,0),pages:pages.length};
 }
 if (process.argv[1] === fileURLToPath(import.meta.url)) console.log('Victorian election:',JSON.stringify(await buildVicElection(fileURLToPath(new URL('../portal/public/',import.meta.url)))));
