@@ -49,8 +49,11 @@ export function renderMethodsModels(html, config) {
   return html;
 }
 
+// The page buildMethods writes (portal/public/-relative), for stamp_assets.mjs --files.
+export const METHODS_PAGE = 'index.html';
+
 export function buildMethods({check = false} = {}) {
-  const path = new URL('public/index.html', portal);
+  const path = new URL(`public/${METHODS_PAGE}`, portal);
   const before = readFileSync(path, 'utf8');
   const after = renderCoverage(renderMethodsModels(before, configuredModels()));
   if (check && after !== before) throw Error('Methods or coverage is stale; run npm run build:methods and npm run stamp');
