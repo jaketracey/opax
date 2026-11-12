@@ -1,3 +1,4 @@
+import { projectTitle } from './project-title';
 import { throwIfAborted } from '../../api/abort';
 import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -158,14 +159,16 @@ export default function Allocation() {
   );
   const titleOf = useCallback(
     (r: (typeof all)[number]) =>
-      (stage === 'history' ||
-      ('recipient' in r && r.recipient === unnamedRecipient)
-        ? undefined
-        : data?.locations?.records.find(
-            (l) =>
-              l.id === r.id &&
-              l.kind === (stage === 'invitations' ? 'invitation' : 'award'),
-          )?.title) ?? r.title,
+      projectTitle(
+        (stage === 'history' ||
+        ('recipient' in r && r.recipient === unnamedRecipient)
+          ? undefined
+          : data?.locations?.records.find(
+              (l) =>
+                l.id === r.id &&
+                l.kind === (stage === 'invitations' ? 'invitation' : 'award'),
+            )?.title) ?? r.title,
+      ),
     [data, stage],
   );
   const filtered = all.filter(
@@ -355,6 +358,7 @@ export default function Allocation() {
         render={(r, i) => (
           <MoneyRow
             name={titleOf(r)}
+            nameLines={2}
             detail={[
               stateLabel(r.state),
               r.date ? formatDate(r.date, 'short') : '',

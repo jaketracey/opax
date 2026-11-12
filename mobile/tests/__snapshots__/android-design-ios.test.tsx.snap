@@ -65,41 +65,6 @@ exports[`iOS design at font scale 1 BarSeries retains its iOS output 1`] = `
         >
           2026
         </Text>
-        <Text
-          accessibilityLanguage="en-AU"
-          allowFontScaling={true}
-          dynamicTypeRamp="footnote"
-          maxFontSizeMultiplier={0}
-          onLayout={[Function]}
-          onTextLayout={[Function]}
-          style={
-            [
-              {
-                "color": {
-                  "dynamic": {
-                    "dark": "#A9AEA2",
-                    "highContrastDark": "#ECEAE2",
-                    "highContrastLight": "#23271F",
-                    "light": "#575C52",
-                  },
-                },
-                "flexShrink": 1,
-                "fontSize": 13,
-                "fontWeight": "400",
-                "lineHeight": 18.00100300902708,
-              },
-              {
-                "fontVariant": [
-                  "tabular-nums",
-                ],
-              },
-              null,
-              undefined,
-            ]
-          }
-        >
-          100
-        </Text>
       </View>
     </View>
     <View
@@ -116,6 +81,88 @@ exports[`iOS design at font scale 1 BarSeries retains its iOS output 1`] = `
         importantForAccessibility="no-hide-descendants"
         pointerEvents="none"
       />
+      <Text
+        accessibilityLanguage="en-AU"
+        allowFontScaling={true}
+        dynamicTypeRamp="footnote"
+        maxFontSizeMultiplier={0}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "color": {
+                "dynamic": {
+                  "dark": "#A9AEA2",
+                  "highContrastDark": "#ECEAE2",
+                  "highContrastLight": "#23271F",
+                  "light": "#575C52",
+                },
+              },
+              "flexShrink": 1,
+              "fontSize": 13,
+              "fontWeight": "400",
+              "lineHeight": 18.00100300902708,
+            },
+            {
+              "fontVariant": [
+                "tabular-nums",
+              ],
+            },
+            null,
+            {
+              "backgroundColor": "#FAF9F6",
+              "position": "absolute",
+              "right": 0,
+              "textAlign": "right",
+              "top": 0,
+            },
+          ]
+        }
+        testID="bar-series-scale-1"
+      >
+        100
+      </Text>
+      <Text
+        accessibilityLanguage="en-AU"
+        allowFontScaling={true}
+        dynamicTypeRamp="footnote"
+        maxFontSizeMultiplier={0}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "color": {
+                "dynamic": {
+                  "dark": "#A9AEA2",
+                  "highContrastDark": "#ECEAE2",
+                  "highContrastLight": "#23271F",
+                  "light": "#575C52",
+                },
+              },
+              "flexShrink": 1,
+              "fontSize": 13,
+              "fontWeight": "400",
+              "lineHeight": 18.00100300902708,
+            },
+            {
+              "fontVariant": [
+                "tabular-nums",
+              ],
+            },
+            null,
+            {
+              "backgroundColor": "#FAF9F6",
+              "position": "absolute",
+              "right": 0,
+              "textAlign": "right",
+              "top": 80,
+            },
+          ]
+        }
+        testID="bar-series-scale-0.5"
+      >
+        50
+      </Text>
       <View
         accessibilityLabel="2026, 100"
         accessibilityRole="button"
@@ -165,6 +212,41 @@ exports[`iOS design at font scale 1 BarSeries retains its iOS output 1`] = `
         }
       />
     </View>
+    <Text
+      accessibilityLanguage="en-AU"
+      allowFontScaling={true}
+      dynamicTypeRamp="footnote"
+      maxFontSizeMultiplier={0}
+      onLayout={[Function]}
+      style={
+        [
+          {
+            "color": {
+              "dynamic": {
+                "dark": "#A9AEA2",
+                "highContrastDark": "#ECEAE2",
+                "highContrastLight": "#23271F",
+                "light": "#575C52",
+              },
+            },
+            "flexShrink": 1,
+            "fontSize": 13,
+            "fontWeight": "400",
+            "lineHeight": 18.00100300902708,
+          },
+          {
+            "fontVariant": [
+              "tabular-nums",
+            ],
+          },
+          null,
+          undefined,
+        ]
+      }
+      testID="bar-series-caption"
+    >
+      2026 so far: 100
+    </Text>
     <View
       accessibilityLabel="Show as table"
       accessibilityRole="button"
@@ -3860,7 +3942,9 @@ exports[`iOS design at font scale 1 MoneyRow retains its iOS output 1`] = `
                   ],
                 },
                 null,
-                undefined,
+                {
+                  "textAlign": "right",
+                },
               ]
             }
           >
@@ -7287,41 +7371,6 @@ exports[`iOS design at font scale 2 BarSeries retains its iOS output 1`] = `
         >
           2026
         </Text>
-        <Text
-          accessibilityLanguage="en-AU"
-          allowFontScaling={true}
-          dynamicTypeRamp="footnote"
-          maxFontSizeMultiplier={0}
-          onLayout={[Function]}
-          onTextLayout={[Function]}
-          style={
-            [
-              {
-                "color": {
-                  "dynamic": {
-                    "dark": "#A9AEA2",
-                    "highContrastDark": "#ECEAE2",
-                    "highContrastLight": "#23271F",
-                    "light": "#575C52",
-                  },
-                },
-                "flexShrink": 1,
-                "fontSize": 13,
-                "fontWeight": "400",
-                "lineHeight": 18.00100300902708,
-              },
-              {
-                "fontVariant": [
-                  "tabular-nums",
-                ],
-              },
-              null,
-              undefined,
-            ]
-          }
-        >
-          100
-        </Text>
       </View>
     </View>
     <View
@@ -7338,6 +7387,88 @@ exports[`iOS design at font scale 2 BarSeries retains its iOS output 1`] = `
         importantForAccessibility="no-hide-descendants"
         pointerEvents="none"
       />
+      <Text
+        accessibilityLanguage="en-AU"
+        allowFontScaling={true}
+        dynamicTypeRamp="footnote"
+        maxFontSizeMultiplier={0}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "color": {
+                "dynamic": {
+                  "dark": "#A9AEA2",
+                  "highContrastDark": "#ECEAE2",
+                  "highContrastLight": "#23271F",
+                  "light": "#575C52",
+                },
+              },
+              "flexShrink": 1,
+              "fontSize": 13,
+              "fontWeight": "400",
+              "lineHeight": 18.00100300902708,
+            },
+            {
+              "fontVariant": [
+                "tabular-nums",
+              ],
+            },
+            null,
+            {
+              "backgroundColor": "#FAF9F6",
+              "position": "absolute",
+              "right": 0,
+              "textAlign": "right",
+              "top": 0,
+            },
+          ]
+        }
+        testID="bar-series-scale-1"
+      >
+        100
+      </Text>
+      <Text
+        accessibilityLanguage="en-AU"
+        allowFontScaling={true}
+        dynamicTypeRamp="footnote"
+        maxFontSizeMultiplier={0}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "color": {
+                "dynamic": {
+                  "dark": "#A9AEA2",
+                  "highContrastDark": "#ECEAE2",
+                  "highContrastLight": "#23271F",
+                  "light": "#575C52",
+                },
+              },
+              "flexShrink": 1,
+              "fontSize": 13,
+              "fontWeight": "400",
+              "lineHeight": 18.00100300902708,
+            },
+            {
+              "fontVariant": [
+                "tabular-nums",
+              ],
+            },
+            null,
+            {
+              "backgroundColor": "#FAF9F6",
+              "position": "absolute",
+              "right": 0,
+              "textAlign": "right",
+              "top": 80,
+            },
+          ]
+        }
+        testID="bar-series-scale-0.5"
+      >
+        50
+      </Text>
       <View
         accessibilityLabel="2026, 100"
         accessibilityRole="button"
@@ -7387,6 +7518,41 @@ exports[`iOS design at font scale 2 BarSeries retains its iOS output 1`] = `
         }
       />
     </View>
+    <Text
+      accessibilityLanguage="en-AU"
+      allowFontScaling={true}
+      dynamicTypeRamp="footnote"
+      maxFontSizeMultiplier={0}
+      onLayout={[Function]}
+      style={
+        [
+          {
+            "color": {
+              "dynamic": {
+                "dark": "#A9AEA2",
+                "highContrastDark": "#ECEAE2",
+                "highContrastLight": "#23271F",
+                "light": "#575C52",
+              },
+            },
+            "flexShrink": 1,
+            "fontSize": 13,
+            "fontWeight": "400",
+            "lineHeight": 18.00100300902708,
+          },
+          {
+            "fontVariant": [
+              "tabular-nums",
+            ],
+          },
+          null,
+          undefined,
+        ]
+      }
+      testID="bar-series-caption"
+    >
+      2026 so far: 100
+    </Text>
     <View
       accessibilityLabel="Show as table"
       accessibilityRole="button"
@@ -11233,7 +11399,10 @@ exports[`iOS design at font scale 2 MoneyRow retains its iOS output 1`] = `
                   ],
                 },
                 null,
-                undefined,
+                {
+                  "alignSelf": "flex-end",
+                  "textAlign": "right",
+                },
               ]
             }
           >

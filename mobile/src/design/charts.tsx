@@ -48,6 +48,33 @@ const provenance = ({ dateRange, citation }: ChartProvenance) => {
 
 type Measurement = { width: number; height: number };
 
+/** Only call a financial year or calendar year partial when its dated source is within it. */
+export function latestBarCaption(
+  label: string,
+  value: string,
+  asOf: DateInput,
+): string {
+  const date = asOf instanceof Date ? asOf : new Date(asOf);
+  const year = date.getUTCFullYear();
+  const financial = /^(\d{4})[–-](\d{2}|\d{4})$/.exec(label);
+  const start = financial ? Number(financial[1]) : null;
+  const end = financial
+    ? financial[2]!.length === 2
+      ? start! + (String(start! + 1).slice(-2) === financial[2] ? 1 : 0)
+      : Number(financial[2])
+    : null;
+  const partial =
+    start !== null && end === start + 1
+      ? (year === start && date.getUTCMonth() >= 6) ||
+        (year === end &&
+          date.getUTCMonth() < 6 &&
+          !(date.getUTCMonth() === 5 && date.getUTCDate() === 30))
+      : /^\d{4}$/.test(label) &&
+        Number(label) === year &&
+        !(date.getUTCMonth() === 11 && date.getUTCDate() === 31);
+  return `${label}${partial ? ' so far' : ''}: ${value}`;
+}
+
 /** Move only a chart annotation, keeping it with the datum on its fold side. */
 export function clearChartLabel(
   rect: LabelRect,
@@ -456,7 +483,6 @@ function BarSeriesContent({
   dateRange,
   citation,
   labels,
-  values = 'latest',
   height = 160,
   sourceLine,
   tableTestID,
@@ -475,6 +501,7 @@ function BarSeriesContent({
   onSelect?: (index: number) => void;
   /** Minimum x-label stride; native measurements may require a larger step. */
   labels?: { every?: number };
+  /** Retained for callers; scale labels and the caption replace floating values. */
   values?: 'latest' | 'all' | 'none';
   height?: number;
 }) {
@@ -509,35 +536,6 @@ function BarSeriesContent({
     labels?.every,
   ).map(clearLabel);
   const xHeight = Math.max(0, ...xLabels.map((label) => label.height));
-  const valueIndexes = data.flatMap((_, index) =>
-    values === 'all' || (values === 'latest' && index === data.length - 1)
-      ? [index]
-      : [],
-  );
-  const measuredValues = valueIndexes.every(
-    (index) => sizes[`${keys[index]}:value`],
-  );
-  const valueLabels =
-    measuredValues && width
-      ? valueIndexes.map((index) =>
-          clearLabel(
-            positionLabel(index, sizes[`${keys[index]}:value`]!, step, width),
-          ),
-        )
-      : [];
-  const oversizedValues = valueLabels.some((label) => label.width > width);
-  // Stagger explicit all-value labels into measured rows when necessary.
-  const laneEnds: number[] = [];
-  const placedValues = valueLabels.map((label) => {
-    let lane = laneEnds.findIndex((right) => right + 8 <= label.left);
-    if (lane < 0) lane = laneEnds.length;
-    laneEnds[lane] = label.left + label.width;
-    return { ...label, lane };
-  });
-  const valueLineHeight = Math.max(
-    0,
-    ...valueLabels.map((label) => label.height),
-  );
   const darkMode = useColorScheme() === 'dark';
   const contrast = useIncreaseContrast();
   const palette = darkMode
@@ -549,11 +547,8 @@ function BarSeriesContent({
       : light;
   const colour = palette[ink === 'ink' ? 'ink' : accents[ink].ink];
   const table = onShowTable ?? (() => setShowTable((old) => !old));
-  const tableLabel = onShowTable
-    ? 'Table'
-    : showTable
-      ? 'Hide table'
-      : 'Show as table';
+  const tableLabel = showTable ? 'Show as chart' : 'Show as table';
+  const latest = data.at(-1);
   const tableActions = onShowTable
     ? [{ name: 'showTable', label: 'Show as table' }]
     : undefined;
@@ -590,127 +585,107 @@ function BarSeriesContent({
               >
                 {item.label}
               </Text>
-              <Text
-                variant="footnote"
-                tabular
-                onTextLayout={measure(`${keys[index]}:value`)}
-              >
-                {format(item.value)}
-              </Text>
             </View>
           ))}
         </View>
       ) : null}
-      {!spark && valueLabels.length ? (
+      {!showTable ? (
         <View
-          testID="bar-series-values"
-          pointerEvents="none"
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-          style={
-            oversizedValues
-              ? styles.valuesFlow
-              : { height: laneEnds.length * (valueLineHeight + 4) }
-          }
+          onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
+          testID="bar-series-plot"
+          style={{ height: plotHeight }}
         >
-          {placedValues.map((label) => (
-            <Text
-              key={label.index}
-              variant="footnote"
-              tabular
-              style={
-                oversizedValues
-                  ? undefined
-                  : [
-                      styles.positionedLabel,
-                      {
-                        left: label.left,
-                        width: label.width,
-                        top: label.lane * (valueLineHeight + 4),
-                      },
-                    ]
-              }
-            >
-              {format(data[label.index]!.value)}
-            </Text>
-          ))}
+          <View
+            pointerEvents="none"
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+          >
+            <SizedCanvas width={width} height={plotHeight}>
+              {!spark
+                ? [0, 0.5, 1].map((position) => (
+                    <Rect
+                      key={position}
+                      x={0}
+                      y={Math.min(plotHeight - 1, plotHeight * position)}
+                      width={width}
+                      height={1}
+                      color={palette.dividerSubtle}
+                    />
+                  ))
+                : null}
+              {data.map((item, index) => {
+                const barHeight = maximum
+                  ? (Math.max(0, Number.isFinite(item.value) ? item.value : 0) /
+                      maximum) *
+                    plotHeight
+                  : 0;
+                return (
+                  <Rect
+                    key={`${item.label}:${index}`}
+                    x={index * step + 2}
+                    y={plotHeight - barHeight}
+                    width={Math.max(0, step - 4)}
+                    height={barHeight}
+                    color={
+                      onSelect && index === selectedIndex
+                        ? palette.navy
+                        : emphasisFrom !== undefined && index < emphasisFrom
+                          ? palette.inkSoft
+                          : colour
+                    }
+                  />
+                );
+              })}
+            </SizedCanvas>
+          </View>
+          {!spark
+            ? [1, 0.5].map((fraction) => (
+                <Text
+                  key={fraction}
+                  testID={`bar-series-scale-${fraction}`}
+                  variant="footnote"
+                  tone="inkSoft"
+                  tabular
+                  style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: plotHeight * (1 - fraction),
+                    textAlign: 'right',
+                    backgroundColor: palette.paper,
+                  }}
+                >
+                  {format(maximum * fraction)}
+                </Text>
+              ))
+            : null}
+          {!spark
+            ? data.map((item, index) => {
+                const a11y = {
+                  accessibilityLabel: `${item.label}, ${format(item.value)}`,
+                  accessibilityActions: tableActions,
+                  onAccessibilityAction: tableAction,
+                };
+                const style = [
+                  styles.barTarget,
+                  { left: index * step, width: step },
+                ];
+                return onSelect ? (
+                  <Pressable
+                    key={keys[index]}
+                    {...a11y}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: selectedIndex === index }}
+                    style={style}
+                    onPress={() => onSelect(index)}
+                  />
+                ) : (
+                  <View key={keys[index]} {...a11y} accessible style={style} />
+                );
+              })
+            : null}
         </View>
       ) : null}
-      <View
-        onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
-        testID="bar-series-plot"
-        style={{ height: plotHeight }}
-      >
-        <View
-          pointerEvents="none"
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-        >
-          <SizedCanvas width={width} height={plotHeight}>
-            {!spark
-              ? [0, 0.5, 1].map((position) => (
-                  <Rect
-                    key={position}
-                    x={0}
-                    y={Math.min(plotHeight - 1, plotHeight * position)}
-                    width={width}
-                    height={1}
-                    color={palette.dividerSubtle}
-                  />
-                ))
-              : null}
-            {data.map((item, index) => {
-              const barHeight = maximum
-                ? (Math.max(0, Number.isFinite(item.value) ? item.value : 0) /
-                    maximum) *
-                  plotHeight
-                : 0;
-              return (
-                <Rect
-                  key={`${item.label}:${index}`}
-                  x={index * step + 2}
-                  y={plotHeight - barHeight}
-                  width={Math.max(0, step - 4)}
-                  height={barHeight}
-                  color={
-                    onSelect && index === selectedIndex
-                      ? palette.navy
-                      : emphasisFrom !== undefined && index < emphasisFrom
-                        ? palette.inkSoft
-                        : colour
-                  }
-                />
-              );
-            })}
-          </SizedCanvas>
-        </View>
-        {!spark
-          ? data.map((item, index) => {
-              const a11y = {
-                accessibilityLabel: `${item.label}, ${format(item.value)}`,
-                accessibilityActions: tableActions,
-                onAccessibilityAction: tableAction,
-              };
-              const style = [
-                styles.barTarget,
-                { left: index * step, width: step },
-              ];
-              return onSelect ? (
-                <Pressable
-                  key={keys[index]}
-                  {...a11y}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: selectedIndex === index }}
-                  style={style}
-                  onPress={() => onSelect(index)}
-                />
-              ) : (
-                <View key={keys[index]} {...a11y} accessible style={style} />
-              );
-            })
-          : null}
-      </View>
-      {!spark && xLabels.length ? (
+      {!spark && !showTable && xLabels.length ? (
         <View
           testID="bar-series-axis"
           pointerEvents="none"
@@ -735,6 +710,20 @@ function BarSeriesContent({
       ) : null}
       {!spark ? (
         <>
+          {latest && !showTable ? (
+            <Text
+              variant="footnote"
+              tone="inkSoft"
+              tabular
+              testID="bar-series-caption"
+            >
+              {latestBarCaption(
+                latest.label,
+                format(latest.value),
+                dateRange.end,
+              )}
+            </Text>
+          ) : null}
           <Button
             testID={tableTestID}
             label={tableLabel}
@@ -817,7 +806,6 @@ const styles = StyleSheet.create({
   verticalStageWords: { gap: 4, flexShrink: 1 },
   stageLabel: { fontFamily: fonts.sansSemiBold, fontWeight: '600' },
   positionedLabel: { position: 'absolute', textAlign: 'center' },
-  valuesFlow: { gap: 4 },
   barTarget: {
     position: 'absolute',
     top: 0,

@@ -3,7 +3,12 @@ import { Rect } from '@shopify/react-native-skia';
 import { act, type ReactElement } from 'react';
 import * as RN from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import { BarSeries, StageTimeline, VoteSplit } from '../src/design/charts';
+import {
+  BarSeries,
+  latestBarCaption,
+  StageTimeline,
+  VoteSplit,
+} from '../src/design/charts';
 import { Button } from '../src/design/controls';
 import { light } from '../src/design/palette';
 import { SourceLine } from '../src/design/source';
@@ -81,7 +86,7 @@ test.each(['default', 'spark'] as const)(
     );
     if (variant === 'default') {
       act(() => r.root.findByType(Button).props.onPress());
-      expect(r.root.findByType(Button).props.label).toBe('Hide table');
+      expect(r.root.findByType(Button).props.label).toBe('Show as chart');
       expect(
         r.root
           .findAllByType(Text)
@@ -119,9 +124,7 @@ test.each([false, true])(
     expect(accessibleBar.props.accessibilityActions).toEqual(
       enabled ? [{ name: 'showTable', label: 'Show as table' }] : undefined,
     );
-    expect(r.root.findByType(Button).props.label).toBe(
-      enabled ? 'Table' : 'Show as table',
-    );
+    expect(r.root.findByType(Button).props.label).toBe('Show as table');
     if (enabled) {
       act(() =>
         root.props.onAccessibilityAction({
@@ -508,17 +511,25 @@ test.each([undefined, 'latest', 'all', 'none'] as const)(
     );
     measureSeries(r, 30, 60);
     const bands = r.root.findAllByProps({ testID: 'bar-series-values' });
-    if (values === 'none') expect(bands).toHaveLength(0);
-    else {
-      const texts = bands[0]!.findAllByType(Text);
-      expect(texts).toHaveLength(values === 'all' ? 15 : 1);
-      expect(texts.at(-1)!.props.children).toBe('15');
-      expect(
-        texts.every(
-          (text) => RN.StyleSheet.flatten(text.props.style).width >= 60,
-        ),
-      ).toBe(true);
-    }
+    expect(bands).toHaveLength(0);
+    const caption = r.root
+      .findAllByType(Text)
+      .find((text) => text.props.testID === 'bar-series-caption')!;
+    expect(caption.props.children).toBe(`${dense.at(-1)!.label}: 15`);
+    const maximum = r.root
+      .findAllByType(Text)
+      .find((text) => text.props.testID === 'bar-series-scale-1')!;
+    const half = r.root
+      .findAllByType(Text)
+      .find((text) => text.props.testID === 'bar-series-scale-0.5')!;
+    expect(maximum.props).toMatchObject({
+      children: '15',
+      variant: 'footnote',
+      tabular: true,
+      tone: 'inkSoft',
+    });
+    expect(half.props.children).toBe('7.5');
+    expect(RN.StyleSheet.flatten(maximum.props.style).textAlign).toBe('right');
   },
 );
 test.each([undefined, 200])(
@@ -541,7 +552,7 @@ test.each([undefined, 200])(
     ).toBe(height ?? 160);
   },
 );
-test('the inline table has a visible heading and a matching Hide table spoken action', () => {
+test('the inline table has a visible heading and a matching Show as chart spoken action', () => {
   const r = render(
     <BarSeries
       {...proof}
@@ -553,8 +564,8 @@ test('the inline table has a visible heading and a matching Hide table spoken ac
   );
   act(() => r.root.findByType(Button).props.onPress());
   expect(r.root.findByType(Button).props).toMatchObject({
-    label: 'Hide table',
-    accessibilityLabel: 'Hide table',
+    label: 'Show as chart',
+    accessibilityLabel: 'Show as chart',
   });
   const heading = r.root
     .findAllByType(Text)
@@ -563,4 +574,16 @@ test('the inline table has a visible heading and a matching Hide table spoken ac
     variant: 'subsectionTitle',
     children: 'Monthly totals',
   });
+});
+
+test('a partial financial year is dated by its source, and a completed year has no invented qualifier', () => {
+  expect(latestBarCaption('2025–26', '$290k', '2026-03-12')).toBe(
+    '2025–26 so far: $290k',
+  );
+  expect(latestBarCaption('2025–26', '$290k', '2026-06-30')).toBe(
+    '2025–26: $290k',
+  );
+  expect(latestBarCaption('2025–26', '$290k', '2026-11-12')).toBe(
+    '2025–26: $290k',
+  );
 });

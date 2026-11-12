@@ -166,7 +166,10 @@ export default function Largest() {
             <MoneyRow
               name={r.recipient}
               detail={[
-                r.program,
+                r.program?.trim().toLocaleLowerCase() ===
+                r.recipient.trim().toLocaleLowerCase()
+                  ? null
+                  : r.program,
                 `from ${formatDate(r.start, 'short').replace(/ \d{4}$/, '')}`,
               ]
                 .filter(Boolean)

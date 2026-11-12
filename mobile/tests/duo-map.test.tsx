@@ -477,11 +477,13 @@ test.each([
       right,
     });
     stageLayout(tree, mockWidth, mockHeight);
-    const top = tree.root.findAllByType(View).find(
-      (node) =>
-        node.props.onLayout &&
-        StyleSheet.flatten(node.props.style)?.paddingTop === 8,
-    )!;
+    const top = tree.root
+      .findAllByType(View)
+      .find(
+        (node) =>
+          node.props.onLayout &&
+          StyleSheet.flatten(node.props.style)?.paddingTop === 8,
+      )!;
     const panel = tree.root.findByType(MoneyMapPanel);
     act(() => {
       top.props.onLayout({ nativeEvent: { layout: { height: 100 } } });
@@ -642,7 +644,7 @@ test('scrolling charts keep the plot and table in place while midpoint axis and 
         }),
       ),
   );
-  for (const id of ['bar-series-axis', 'bar-series-values']) {
+  for (const id of ['bar-series-axis']) {
     const words = tree.root.findByProps({ testID: id }).findAllByType(Text);
     words.forEach((word) => {
       const style = StyleSheet.flatten(word.props.style);
@@ -654,6 +656,12 @@ test('scrolling charts keep the plot and table in place while midpoint axis and 
       ).toBe(false);
     });
   }
+  expect(
+    tree.root.findAllByProps({ testID: 'bar-series-values' }),
+  ).toHaveLength(0);
+  expect(
+    tree.root.findAllByProps({ testID: 'bar-series-caption' }).length,
+  ).toBeGreaterThan(0);
   expect(StyleSheet.flatten(plot.props.style)).toEqual({ height: 160 });
   expect(
     tree.root.findByProps({ testID: 'bar-series-content' }).props.style,

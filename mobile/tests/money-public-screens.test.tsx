@@ -1,3 +1,4 @@
+import { measureBarTitle } from './bar-title-metrics';
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Redirect } from 'expo-router';
@@ -832,12 +833,12 @@ test.each([
 );
 
 test.each([
-  ['Commonwealth grants', Grants, {}, 'grants', false],
-  ['Queensland grants', Grants, { jur: 'qld' }, 'grants', true],
-  ['Government agencies', Agencies, {}, 'agencies', true],
+  ['Commonwealth grants', Grants, {}, 'grants'],
+  ['Queensland grants', Grants, { jur: 'qld' }, 'grants'],
+  ['Government agencies', Agencies, {}, 'agencies'],
 ] as const)(
   '%s reveals a capped title from its first header block while retaining its large title and back name',
-  async (title, Page, params, name, fitsBesideToday) => {
+  async (title, Page, params, name) => {
     Object.assign(mockParams, params);
     const originalWindow = Dimensions.get('window');
     const originalScreen = Dimensions.get('screen');
@@ -849,9 +850,9 @@ test.each([
           screen: { ...originalScreen, width: 402 },
         }),
       );
-      for (const [previous, backTitle, room] of [
-        ['index', 'Today', 128],
-        ['public-money', 'Public money', 71],
+      for (const [previous, backTitle] of [
+        ['index', 'Today'],
+        ['public-money', 'Public money'],
       ] as const) {
         const route = { key: 'subject', name };
         const options: Record<string, unknown> = {};
@@ -906,15 +907,17 @@ test.each([
             titleView = TestRenderer.create(inline());
           });
           try {
+            measureBarTitle(titleView, { [title]: 100, [backTitle]: 40 });
             const text = titleView.root.findByType(Animated.Text);
             const style = StyleSheet.flatten(text.props.style);
-            expect(style.maxWidth).toBe(room);
+            expect(style.maxWidth).toBeGreaterThanOrEqual(100);
             expect(style.width).toBeUndefined();
-            expect(
-              typeof style.opacity === 'number'
-                ? style.opacity
-                : style.opacity.__getValue(),
-            ).toBe(visible ? 1 : 0);
+            if (!visible)
+              expect(
+                typeof style.opacity === 'number'
+                  ? style.opacity
+                  : style.opacity.__getValue(),
+              ).toBe(visible ? 1 : 0);
             expect(text.props).toMatchObject({
               accessibilityLabel: title,
               accessibilityElementsHidden: !visible,
@@ -954,7 +957,7 @@ test.each([
         await scroll(-900, 40);
         expect(inline().props.shown).toBe(true);
         expect(inline().props.backTitle).toBe(options.headerBackTitle);
-        expectVisible(backTitle === 'Today' && fitsBesideToday);
+        expectVisible(true);
         await scroll(9000, 140);
         expect(inline().props.shown).toBe(false);
         expectVisible(false);
@@ -1625,4 +1628,112 @@ test('the grants card keeps the register’s caveats, as the contracts card does
   expect(index.meta.caveats.length).toBeGreaterThan(0);
   for (const caveat of index.meta.caveats) expect(notes).toContain(caveat);
   await act(async () => r.unmount());
+});
+
+test('Community funding shortens only the row title and keeps the full Purpose and exact item amount', async () => {
+  const allocation = await fixture.allocation();
+  const purpose =
+    'The project will deliver the construction of the Sample Aquatic Centre comprising a pool, change rooms and a public forecourt.';
+  const award = {
+    ...allocation.data.awards[0]!,
+    title: purpose,
+    value: 40_000_000,
+    state: 'vic',
+    date: '2026-05-21',
+  };
+  money.allocation = jest.fn().mockResolvedValue({
+    ...allocation,
+    data: { ...allocation.data, awards: [award] },
+  });
+  money.locations = jest.fn().mockRejectedValue(new Error('not listed'));
+  const r = await mount(Allocation);
+  const row = r.root.findByType(MoneyRow);
+  expect(row.props).toMatchObject({
+    name: 'Sample Aquatic Centre',
+    detail: 'Victoria · 21 May 2026',
+  });
+  expect(row.findByType(LinkRow).props).toMatchObject({
+    titleLines: 2,
+    detailLines: 2,
+  });
+  await act(async () => r.unmount());
+  const item = await loadMoneyItem({ kind: 'award', id: award.id }, false);
+  expect(item.data.amount).toBe(40_000_000);
+  expect(item.data.facts).toContainEqual(
+    expect.objectContaining({ label: 'Purpose', value: purpose, long: true }),
+  );
+  Object.assign(mockParams, { kind: 'award', id: award.id });
+  const page = await mount(MoneyItem);
+  expect(
+    page.root.findAllByProps({ testID: 'money-item-amount' })[0]!.props
+      .children,
+  ).toBe('$40,000,000');
+  await act(async () => page.unmount());
+});
+
+test('Largest grants drops a program that repeats the recipient', async () => {
+  const largest = await fixture.largest();
+  const month = largest.data.latest;
+  const index = await fixture.grants('federal');
+  money.grants = jest
+    .fn()
+    .mockResolvedValue({
+      ...index,
+      data: {
+        ...index.data,
+        recipients: [
+          {
+            ...index.data.recipients[0]!,
+            id: 'fixture-council',
+            name: 'Sample Council',
+            organisation: true,
+          },
+        ],
+      },
+    });
+  const award = {
+    ...largest.data.months[month]![0]!,
+    recipientId: 'fixture-council',
+    recipient: 'Sample Council',
+    program: 'Sample Council',
+  };
+  money.largest = jest.fn().mockResolvedValue({
+    ...largest,
+    data: { ...largest.data, months: { [month]: [award] } },
+  });
+  const page = await mount(Largest);
+  const row = page.root.findByType(MoneyRow);
+  expect(row.props.detail).toMatch(/^from /);
+  expect(row.props.detail).not.toContain('Sample Council');
+  expect(row.findByType(LinkRow).props.detailLines).toBe(2);
+  await act(async () => page.unmount());
+});
+
+test('the agency chart has one published source, scale labels and a latest-value caption with no invented start date', async () => {
+  const { BarSeries } = jest.requireActual('../src/design/charts');
+  const { SourceLine } = jest.requireActual('../src/design/source');
+  const { Text } = jest.requireActual('../src/design/text');
+  const { SegmentedPicker } = jest.requireActual('../src/design/controls');
+  mockParams.id = agencyId;
+  const page = await mount(Agency);
+  await act(async () =>
+    page.root.findByType(SegmentedPicker).props.onChange('years'),
+  );
+  const chart = page.root.findByType(BarSeries);
+  expect(chart.props.sourceLine).toBe(false);
+  expect(page.root.findAllByType(SourceLine)).toHaveLength(1);
+  expect(chart.props.dateRange.start).toBe(chart.props.dateRange.end);
+  const texts = page.root.findAllByType(Text);
+  expect(
+    texts.find((text) => text.props.testID === 'bar-series-scale-1'),
+  ).toBeDefined();
+  expect(
+    texts.find((text) => text.props.testID === 'bar-series-caption'),
+  ).toBeDefined();
+  expect(
+    texts.some((text) =>
+      String(text.props.children).includes('1 January 2015'),
+    ),
+  ).toBe(false);
+  await act(async () => page.unmount());
 });

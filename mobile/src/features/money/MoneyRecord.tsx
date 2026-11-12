@@ -330,6 +330,7 @@ function RegisterSection({
           tableTitle={bars.tableTitle}
           dateRange={bars.dateRange}
           citation={bars.source}
+          sourceLine={false}
         />
       ) : null}
       {children}

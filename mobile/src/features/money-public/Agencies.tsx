@@ -192,6 +192,7 @@ export default function Agencies() {
         render={(a, i) => (
           <MoneyRow
             name={a.name}
+            nameLines={2}
             detail={`${counted(a.count, 'contract')} · ${counted(a.suppliers, 'supplier')}`}
             amount={a.total}
             href={agencyRoute(a.id, a.name)}
@@ -457,10 +458,10 @@ function AgencyRecord({ params }: { params: AgencyParams }) {
                         tableTitle="Contract value by year the contract started"
                         onShowTable={() => setTable(true)}
                         labels={{ every: 3 }}
-                        values="none"
+                        sourceLine={false}
                         height={200}
                         dateRange={{
-                          start: `${chartYears[0]!.year}-01-01`,
+                          start: data.meta.asOf,
                           end: data.meta.asOf,
                         }}
                         citation={'AusTender'}
