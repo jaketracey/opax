@@ -1,5 +1,7 @@
 # AEC receipt types, 12 November 2026
 
+Fix round 1 also makes the map consume that typed measure and shares the row-selection rule with the uncapped comparison. The two Ask-owned source files remain unchanged in this lane.
+
 The federal graph now carries a recipient-side typed measure. The existing `total`, `count`, `byYear`, node selection, ordering, source references and public-money overlays are unchanged. Removing only `meta.receipt_types`, `by_type` and `by_type_year` produces the exact original JSON value. Existing all-record totals include donor declarations; use the new cells to measure recipient-side donations or all receipt types.
 
 ## Contract for Ask and the money map
@@ -101,14 +103,14 @@ The review database under ignored `staging/receipt-types/` was copied from read-
 
 | Regenerated tracked file | Before bytes | After bytes | gzip bytes after |
 | --- | ---: | ---: | ---: |
-| portal/public/graph/money.json | 1,860,309 | 2,411,061 | 314,155 |
-| docs/reports/2026-11-12-aec-receipt-types.json | new | 47,303 | 5,323 |
+| portal/public/graph/money.json | 1,860,309 | 2,410,933 | 314,248 |
+| docs/reports/2026-11-12-aec-receipt-types.json | new | 47,217 | 5,461 |
 
 The graph remains below the 25 MiB per-asset limit. No other federal graph is used by receiptAnswer/isReceiptGraph: voice-money selects money.json for federal queries and money.qld.json, money.vic.json or money.tas.json for state queries. The money map and party register API read this same graph contract. The existing app-reader suite is included in the portal gate; the app catalogue currently omits money, so this repository has no dedicated app-API graph reader to change. No state graph, AEC extras, donor catalogue or app payload schema needed changing.
 
 The research follow-up fixture fingerprint is re-pinned for the additive types and provenance note; all existing gold rows remain unchanged. Reader tests load the new graph through isReceiptGraph, the actual map buildGraph function and the party-money API, and reconcile each typed financial-year cell.
 
-## Validation
+## Initial validation
 
 - `uv run --with pytest pytest tests/test_aec_receipt_types.py tests/test_money_sources.py tests/test_money_associated_entities.py scripts/test_donor_disclosure.py -q`: 42 passed, 32 subtests passed. This includes repeated offline imports, schema migration, raw-file schema drift, exact matching, donor/recipient double-count prevention, stale-type removal, paused registry entries and holding the nightly export after a failed type backfill.
 - Portal with Node 24.21.0: `npm ci`, `npx wrangler types`, `npm run build:release` and `npx tsc --noEmit` passed. The initial full test invocation exposed system Python dependency gaps and checks racing the release build. With the uv environment on PATH and release stamps settled, ordinary `npm test` passed 4,732 of 4,733 tests; the unrelated overview cancellation timing test passed immediately in isolation. `npm test -- --test-concurrency=4` then passed all 4,733 tests. This includes existing app-reader tests and the new typed graph, map and party-money API tests.
@@ -116,3 +118,76 @@ The research follow-up fixture fingerprint is re-pinned for the additive types a
 - Supplemental checks: the repository source-access guard reported 2,823 existing violations, with zero in lane changes; the changed-file guard passed. An additional unchanged nightly SEO test failed because its expected generated division fixture was absent. Neither unrelated area was changed.
 
 Unrelated tracked release-build outputs were restored after verification. The importer/exporter implementation is commit `14e04fca0`; the graph, reader checks, pinned fixture and this report are in the following data commit. No push, deploy, production write, person link or AEC fetch was performed. Detailed gate logs and the isolated review database remain under ignored `staging/receipt-types/` in this worktree.
+
+## Fix round 1: selection, map reader and Ask handoff
+
+Both graph attachment and the uncapped comparison now call `ReceiptSelection.exclusion` in `scripts/aec_receipt_selection.py`. The shared rule requires recipient-side, positive, itemised Political Party Return receipts, an exact unambiguous recipient-party mapping, no exact reviewed-outlier key, and no government/party-unit entity or public-funding/party-name donor spelling. A canonical entity's presence on the map never overrides an excluded raw donor spelling. The map's additional restriction is existing donor-party edge membership. Visible industry tags remain the released graph tags; uncapped tags use the documented canonical donor classification. There is no separate per-name exclusion policy.
+
+The six Perth Trades Hall / Labor Business Roundtable rows are now excluded from both scopes. They remove $1,135,207 from visible typed all-types receipts, including $175,000 labelled Donation Received, all from the unions selection. Visible typed unions become $70,298,062 donation-only / $184,916,932 all types. Uncapped comparisons are unchanged. The graph now contains 16,063 eligible recipient rows. The regression `test_graph_and_uncapped_report_share_per_name_exclusions_for_an_on_map_entity` uses invented names with the six reviewed amounts and types, resolving an eligible spelling and a party-name spelling to the same entity; both production consumers exclude the same six rows and agree before the map cap.
+
+`portal/graph/index.ts` projects typed fields through `windowFigures` and `receiptGraphView` before building geometry, summing an industry, rendering a card or reporting a filtered view. The full map offers “All receipt types” (default) and “Donation-only”. `receipt=donations` preserves donation-only in the URL. Year filters use the first year of `by_type_year` financial-year keys; event keys use their polling year, including the documented named by-elections. A dated selection excludes unassignable periods. CPI scales the selected typed year cells. Public awards and graphs without typed fields retain their previous semantics. The 2D fallback uses the same projection and offers the same measure choice. Empty typed objects mean zero eligible receipts and never fall back to legacy totals.
+
+The actual map-conversion regression reproduces the review's gambling figures and all four party ranks:
+
+| Map selection | AUD | Ranking |
+| --- | ---: | --- |
+| Gambling donations | 2,468,918 | Liberal 1,093,352; Labor 1,067,066; Nationals 258,500; LNP 50,000 |
+| Gambling all receipt types | 8,668,512 | Labor 4,699,593; Liberal 3,538,879; Nationals 343,740; LNP 86,300 |
+| Finance donations | 24,731,335 | Liberal 14,402,567; Labor 8,694,783; Nationals 1,335,985; LNP 270,000; Greens 28,000 |
+| Finance all receipt types | 169,586,920 | Labor 82,267,799; Liberal 64,102,300; Nationals 10,982,297; LNP 10,209,821; Katter's Australian Party 1,017,881 |
+
+A mounted-map regression switches the select control, checks the emitted amounts and card labels, then applies a financial-year filter. A separate year-window regression poisons legacy `total`, `byYear` and `undated` values and requires the amounts and counts from `by_type_year`. Existing API compatibility tests continue to check that released legacy fields retain their previous values.
+
+The independent verifier `scripts/reconcile_aec_receipts.py` imports only Python standard-library modules. It reads cached `Detailed Receipts.csv` using csv/zipfile and Decimal, with existing DB classifications, identity mappings and review exclusions. It independently checks all 866 typed receipt edges and their financial-year/type amount/count cells, then compares uncapped and visible-map gambling and finance totals and top-five rankings with the regenerated report. Its output is `2026-11-12-aec-receipt-types-reconciliation.json`. No pipeline receipt calculation or production predicate is imported by the verifier.
+
+Ask reader handoff, for im-ask-money-rank:
+
+- Availability: `graph.meta.receipt_types.available === true`, with `schema === 1`. `graph.meta.receipt_types.donation_type` is the literal string `donation_received`.
+- Lifetime amount: `edge.by_type` has shape `Record<normalised_AEC_receipt_type, AUD_number>`. Donation-only is `edge.by_type.donation_received ?? 0`; all receipt types is the sum of every value in `edge.by_type`. Do not use legacy `edge.total` for either typed measure.
+- Period amounts and counts: `edge.by_type_year` has shape `Record<financial_year_or_event, Record<normalised_AEC_receipt_type, [AUD_number, row_count_integer]>>`. Financial-year keys are short form, such as `2024-25`. Sum the chosen type cells in the selected periods; lifetime row count is the corresponding count-cell sum over all periods. Use these cells for year filters, rather than legacy `byYear`. Event strings and undated periods are not financial-year strings; do not silently coerce them into a financial year.
+- Type names in this cache are `donation_received`, `other_receipt`, `subscription`, `public_funding`, `unspecified` and `unknown`. Unknown means a blank source type. Missing donation cells mean zero recorded eligible donations. The cache has no explicit loan type; Other Receipt cannot establish lending or a donation.
+- Only donor-to-party receipt edges belong in this measure. Never add grant/contract edges. Typed node cells sum the visible receipt edges; party legacy totals cover a wider selection. The graph remains a capped donor selection and cannot establish an exhaustive industry total.
+- `total`, `count`, `byYear`, `firstYear`, `lastYear`, source references, node/edge membership and public-money overlays in money.json are unchanged for released readers. The two files owned by the Ask lane, `portal/src/voice-money.ts` and `portal/src/ask-money-industry.ts`, were not edited here.
+
+Reproduce the independent check without fetching:
+
+```sh
+uv run python scripts/reconcile_aec_receipts.py --db staging/receipt-types/review.sqlite --legacy-graph staging/receipt-types/fix1-legacy-money.json --out staging/receipt-types/fix1-reconciliation.json
+```
+
+### Fix round 1 gates and self-review
+
+Implementation commit: `0288bdd7f` (new commit; no amendments to the reviewed commits).
+
+| Gate | Result |
+| --- | --- |
+| Lane and related Python tests | 43 passed, 32 subtests passed |
+| `npm run build:graph` | Pass; map, explainer and shared chunks regenerated |
+| `npx wrangler types` | Pass |
+| `npm run build:release` | Pass |
+| `npx tsc --noEmit` | Pass |
+| `nice -n 10 npm test` with Node 24.21.0 and repository Python on PATH | 4,737 passed, zero failed or skipped |
+| Focused map, fallback and research gold tests | 26 passed |
+| Independent CSV/Decimal reconciliation | 866 receipt edges and all typed year/count cells match; uncapped and map gambling/finance totals and top-five rankings match |
+| Legacy graph invariant | Removing only additive fields reproduces the original 1,860,309-byte released graph exactly |
+| Changed-file source guard and final diff whitespace check | Pass |
+| Ask ownership boundary | Both Ask-owned files are byte-for-byte unchanged |
+
+| Acceptance item | Done, implementation and proof |
+| --- | --- |
+| 1. One selection rule | Done: both production paths call ReceiptSelection.exclusion. The six-row alias regression asserts equal exclusions, $1,135,207 all types / $175,000 donations removed, and equal uncapped/map values before the cap. |
+| 2. Map reader | Done: windowFigures/receiptGraphView project typed fields for geometry, industry amounts, cards, year filters and the 2D fallback. Actual map conversion asserts the review's four-party gambling ranks and $2,468,918 / $8,668,512; mounted controls assert measure switching and year filtering. |
+| 3. Regeneration and reconciliation | Done: money.json, report, fixture fingerprint and map bundles regenerated. The independent standard-library verifier checks gambling and finance and every typed receipt edge; the legacy-byte invariant proves released fields are untouched. |
+| 4. Ask handoff | Done: exact field names, shapes, availability, missing-cell semantics and financial-year/event handling are listed immediately above. The Ask-owned files were not edited. |
+
+| Regenerated artifact | Reviewed bytes | Fix round 1 bytes |
+| --- | ---: | ---: |
+| money.json | 2,411,061 | 2,410,933 |
+| numerical report JSON | 47,303 | 47,217 |
+| independent reconciliation JSON | new | 4,731 |
+| money-map.js | 144,360 | 147,703 |
+| explain.js | 58,132 | 58,132 |
+| three shared graph chunks, combined | 700,514 | 706,827 |
+| research follow-up fixture | 23,137 | 23,313 |
+
+The graph chunk manifest and importer cache stamps were refreshed with the map bundle. Unrelated release-build outputs were restored; map importers retain only their map-related stamp changes and the required downstream stamps. No new source fetch, push, deployment or production write was performed. Local logs are under ignored staging/receipt-types/fix1-* files. Integration with the Ask-owned reader changes remains the orchestrator's separate lane dependency before publication.

@@ -1349,12 +1349,13 @@
     "unmatched": 9413
   },
   "full_party_receipts_scope": "All cached Political Party Return itemised recipient receipts, uncapped donors. Exact existing recipient-party mappings and existing canonical donor industry tags. No donor declarations, public bodies, internal party transfers, nonpositive amounts or reviewed outliers. Property is OPAX's broad property/construction tag, not a reviewed developer-only list. Mining excludes the separate fossil_fuels tag.",
+  "selection_rule": "Both scopes use aec_receipt_selection.ReceiptSelection.exclusion, including per-name public-funding and party-name exclusions even when another alias of the entity is visible. The map additionally requires an existing donor-party edge. Visible industry tags remain the released graph node tags; uncapped tags follow industry_method.",
   "industry_method": "Resolve donor names with the existing exact alias index. Sum existing AEC-row amounts by classified industry for each donor entity, ignoring other/unidentified; largest tag wins. Resolver-kind union forces unions. No new industry labels are inferred from the CSV.",
   "full_party_receipts_exclusions": {
-    "government_or_internal": 8277,
-    "no_exact_unambiguous_party_mapping": 1692,
+    "nonparty_or_unmapped_recipient": 2113,
     "flagged_review": 25,
-    "blank_donor_or_nonpositive": 1
+    "government_or_internal": 7856,
+    "blank_or_nonpositive": 1
   },
   "industries_full_party_receipts": {
     "gambling": {
@@ -1762,10 +1763,6 @@
           {
             "recipient": "Nationals",
             "aud": 3626595.0
-          },
-          {
-            "recipient": "Country Liberal Party",
-            "aud": 0
           }
         ]
       },
@@ -1787,21 +1784,17 @@
           {
             "recipient": "LNP",
             "aud": 654500.0
-          },
-          {
-            "recipient": "Country Liberal Party",
-            "aud": 0
           }
         ]
       }
     },
     "unions": {
       "all_types": {
-        "aud": 186052139.0,
+        "aud": 184916932.0,
         "top5": [
           {
             "recipient": "Labor",
-            "aud": 182937703.0
+            "aud": 181802496.0
           },
           {
             "recipient": "Greens",
@@ -1818,11 +1811,11 @@
         ]
       },
       "donation_only": {
-        "aud": 70473062.0,
+        "aud": 70298062.0,
         "top5": [
           {
             "recipient": "Labor",
-            "aud": 67716836.0
+            "aud": 67541836.0
           },
           {
             "recipient": "Greens",
@@ -1831,10 +1824,6 @@
           {
             "recipient": "Katter's Australian Party",
             "aud": 320000.0
-          },
-          {
-            "recipient": "Nationals",
-            "aud": 0
           }
         ]
       }
@@ -1854,10 +1843,6 @@
           {
             "recipient": "Nationals",
             "aud": 363200.0
-          },
-          {
-            "recipient": "LNP",
-            "aud": 0
           }
         ]
       },
@@ -1875,10 +1860,6 @@
           {
             "recipient": "Nationals",
             "aud": 302200.0
-          },
-          {
-            "recipient": "LNP",
-            "aud": 0
           }
         ]
       }
