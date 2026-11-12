@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {Worker} from 'node:worker_threads';
 import assert from 'node:assert/strict';
 import {JSDOM} from 'jsdom';
 import {offline, loadWorker, outbound} from './worker-harness.mjs';
@@ -97,4 +98,41 @@ test('topic rows link recorded sources and accurately label absent or unsafe sou
     assert.equal(source.textContent,'Source link not recorded');
     assert.equal(source.querySelector('a'),null);
   }
+});
+
+// Run the actual app entry and its browser modules over the Worker's HTML.
+// The fixture transport rejects external requests and never uses the network.
+for(const path of paths) test(`hydration keeps exactly one visible record tree: ${path}`,{timeout:20000},async()=>{
+  const document = await (await worker(path)).text();
+  const {counts,speeches} = await import('./fixtures/server-html.mjs');
+  const result = await new Promise((resolve,reject)=>{
+    const child = new Worker(new URL('./helpers/directory-shell.mjs',import.meta.url),{
+      execArgv:['--experimental-vm-modules','--disable-warning=ExperimentalWarning'],
+      workerData:{path,document,files,recordCore:true,html:true,settleMs:150,
+        selector:'#prerender[data-record-hydrated]',panel:path.startsWith('/money/') ? 'panel-money-records' : 'panel-subject',
+        apiFixtures:{'/api/search':speeches,'/api/topic/housing':counts,'/api/topic/climate-environment':counts}},
+    });
+    const timeout = setTimeout(()=>{child.terminate();reject(Error('Hydration timed out'));},15000);
+    let message;
+    child.on('message',value=>{message=value;});
+    child.on('error',reject);
+    child.on('exit',code=>{clearTimeout(timeout);code || message?.error ? reject(Error(message?.error || `Exit ${code}`)) : resolve(message);});
+  });
+  assert.deepEqual(result.errors,[],path);
+  assert.equal(result.rows,1,'The real renderer adopted the server table');
+  assert.equal(result.emptiedCore,false,'Painted server rows never become empty');
+  const before = new JSDOM(document).window.document;
+  const after = new JSDOM(result.html).window.document;
+  const core = after.querySelector('#prerender');
+  assert.ok(core.dataset.recordHydrated);
+  for(const original of before.querySelectorAll('[data-record-title]')) {
+    const title = original.textContent;
+    const matches = [...after.querySelectorAll('*')].filter(el=>!el.children.length && el.textContent === title);
+    assert.equal(matches.length,1,`Exactly one title across the whole page: ${title}`);
+    assert.ok(matches[0].closest('[data-record-list]'));
+  }
+  assert.equal([...after.querySelectorAll('h1')].filter(el=>el.textContent === core.querySelector('h1').textContent).length,1,'One record page title in the DOM');
+  assert.equal(core.querySelector('h1').textContent,before.querySelector('#prerender h1').textContent);
+  assert.deepEqual([...core.querySelectorAll('tbody')].map(el=>el.innerHTML),[...before.querySelectorAll('#prerender tbody')].map(el=>el.innerHTML),'Hydration retains the original rows');
+  assert.equal(after.querySelectorAll('.grant-recipient-records,.agency-suppliers,.supplier-contract-list,.gr-pgrants,.topic-arc-list').length,0,'No second record list');
 });

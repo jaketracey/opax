@@ -297,15 +297,15 @@
 /* A person's record stays unseen while its head settles (app.js revealGrid). */
 .subject-grid.is-settling { visibility: hidden; }
 #prerender { padding-bottom: var(--sp-24); }
-/* Record previews stay in place through hydration. The full interactive lists
-   mount below, so loading charts and controls cannot move the overview. */
+/* The server table is the interactive record list. Hydration attaches controls
+   in place, retaining the painted rows and their geometry. */
 .spa-ready #prerender[data-record-core],
 .spa-booting #prerender[data-record-core] { display: block; }
 .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender[data-record-core] > * { display: revert; }
-.record-core-ready #money-records-head > :is(h1,h2),
-.record-core-ready #subject-body .agency-page > .ui-page-head > h1,
-.record-core-ready #subject-body > .subject-head > h1,
-.record-core-ready .grant-recipient-header > h1 { display: none; }
+.record-core-ready #money-records-head > :is(h1,h2) { display: none; }
+.record-core-tools { flex-wrap: wrap; }
+.record-core-pages { display: flex; align-items: center; flex-wrap: wrap; gap: var(--sp-8); }
+.record-core-scroll small { display: block; color: var(--ink-soft); }
 .record-core-scroll { overflow-x: auto; margin-block: var(--sp-16); }
 .record-core-scroll table { width: 100%; border-collapse: collapse; text-align: left; font: var(--type-metadata); }
 .record-core-scroll caption { text-align: left; font-weight: var(--weight-strong); padding-block: var(--sp-8); }

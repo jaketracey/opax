@@ -6896,6 +6896,9 @@ async function renderTopicArc(slug, phrase, key, mount) {
       mount.remove();
       return false;
     }
+    const {hydrateRecordCore} = await import('/record-core.js');
+    if (!active()) return;
+    if (hydrateRecordCore('topic',data,{slug})) { mount.remove(); return true; }
     const briefs = {};
     const attempted = new Set();
     let order = "newest", visible = 30, revision = 0;
@@ -7014,6 +7017,7 @@ async function openTopicPage(slug, manageFocus) {
   }
   body.innerHTML = subjectSkeleton("Topic", name, `<span id="subject-loader" class="subject-loader"></span>`);
   body.querySelector(".subject-grid").classList.add("topic-page-grid");
+  if (document.querySelector('#prerender [data-record-list="topic"]')) body.querySelector('h1')?.remove();
   if (manageFocus) $("subject-title")?.focus();
   showPageLoader("subject-loader", "Counting the labelled record.");
   const sections = $("subject-sections");
