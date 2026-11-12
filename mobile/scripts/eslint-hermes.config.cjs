@@ -1,18 +1,19 @@
-// Run only the whole-program rule, with the canonical config's parser/options,
-// plugin and global ignores. This pass must never use an ESLint result cache.
+// Keep the canonical parsers, plugins, ignores and inline directive support,
+// but run only the whole-program rule. Never cache this pass's results.
 const config = require('../eslint.config');
 const rule = 'opax/hermes-builtins';
 module.exports = [
-  ...config.filter((entry) =>
-    Object.keys(entry).every((key) => ['name', 'ignores'].includes(key)),
-  ),
-  ...config
-    .filter((entry) => entry.rules?.[rule])
-    .map((entry) => ({
-      ...entry,
-      plugins: {
-        opax: config.find((block) => block.plugins?.opax).plugins.opax,
-      },
-      rules: { [rule]: entry.rules[rule] },
-    })),
+  ...config.map((entry) => ({
+    ...entry,
+    ...(entry.rules && {
+      rules: Object.fromEntries(
+        Object.entries(entry.rules).map(([name, setting]) => [
+          name,
+          name === rule ? setting : 'off',
+        ]),
+      ),
+    }),
+  })),
+  // Directives for rules checked in the file pass are not unused warnings here.
+  { linterOptions: { reportUnusedDisableDirectives: 'off' } },
 ];

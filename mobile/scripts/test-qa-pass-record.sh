@@ -282,12 +282,13 @@ parser = json.dumps(command([real_node, '-p',
 write(mobile/'eslint.config.js', 'const hermesBuiltins = '+hermes+'\n'+
       'module.exports = [{files:["src/**/*.ts"], languageOptions:{parser:require('+parser+'),'+
       'parserOptions:{project:"./tsconfig.json",tsconfigRootDir:__dirname}},'+
-      'plugins:{opax:{rules:{"hermes-builtins":hermesBuiltins}}},rules:{"opax/hermes-builtins":"error"}}];\n')
+      'plugins:{opax:{rules:{"hermes-builtins":hermesBuiltins}},other:{rules:{known:{create(){return {}}}}}},'+
+      'rules:{"opax/hermes-builtins":"error"}}];\n')
 write(mobile/'tsconfig.json', json.dumps({'compilerOptions': {'noEmit': True, 'strict': True,
       'target': 'ESNext', 'module': 'NodeNext', 'moduleResolution': 'NodeNext', 'lib': ['ESNext'], 'types': []},
       'include': ['src/**/*.ts']}))
 caller = mobile/'src/zz/a.ts'; dependency = mobile/'src/zz/b.ts'
-write(caller, "import { values } from './b';\nexport const mapped = (m: Map<string, number>) => values(m).map(x => x);\n")
+write(caller, "/* eslint-disable other/known */\nimport { values } from './b';\nexport const mapped = (m: Map<string, number>) => values(m).map(x => x);\n")
 array_version = 'export const values = (m: Map<string, number>) => [...m.values()];\n'
 iterator_version = 'export const values = (m: Map<string, number>) => m.values();\n'
 write(dependency, array_version)
