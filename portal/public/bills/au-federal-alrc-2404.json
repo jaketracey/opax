@@ -139,7 +139,7 @@
    "key": "federal-representatives-1115",
    "date": "2013-06-17",
    "house": "representatives",
-   "question": "Long debate text truncated.",
+   "question": null,
    "stage": "Second reading",
    "ayes": 73,
    "noes": 70,
