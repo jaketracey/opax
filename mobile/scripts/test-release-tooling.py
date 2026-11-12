@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import struct
 import subprocess
 import sys
@@ -17,7 +18,7 @@ import tempfile
 import tarfile
 import unittest
 import zipfile
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).parent))
@@ -400,6 +401,7 @@ class ReleaseStepTests(unittest.TestCase):
             out.mkdir()
             with patch.dict(os.environ, self.values), patch.object(step, "load_credentials"), \
                  patch.object(step, "clean_commit"), patch.object(step, "run_logged") as logged, \
+                 patch.object(step, "APPLE_RSYNC", Path(sys.executable)), \
                  contextlib.redirect_stdout(io.StringIO()):
                 step.run("archive", mobile, out)
                 cmd = logged.call_args.args[0]
@@ -409,6 +411,79 @@ class ReleaseStepTests(unittest.TestCase):
                 self.assertTrue(logged.call_args.kwargs["public_env"])
                 step.run("export", mobile, out)
                 self.assertIn("-exportArchive", logged.call_args.args[0])
+
+    def test_export_environment_resolves_only_rsync_through_private_shim(self):
+        with tempfile.TemporaryDirectory() as d:
+            mobile = Path(d).resolve()
+            out = mobile / "output"
+            out.mkdir()
+            caller_bin = mobile / "bin"
+            caller_bin.mkdir()
+            for name in ("rsync", "xcodebuild"):
+                tool = caller_bin / name
+                tool.write_text("#!/bin/sh\nexit 93\n")
+                tool.chmod(0o755)
+            # Stand in for /usr/bin/rsync on every host, including Linux.
+            apple_rsync = mobile / "apple-rsync"
+            apple_rsync.write_text("#!/bin/sh\nexit 0\n")
+            apple_rsync.chmod(0o755)
+            caller_path = str(caller_bin) + os.pathsep + os.defpath
+            shim_paths = []
+
+            def inspect_environment(command, **kwargs):
+                env = kwargs["env"]  # Inspect the real run_logged -> Popen boundary.
+                self.assertIn("-exportArchive", command)
+                shim, inherited = env["PATH"].split(os.pathsep, 1)
+                self.assertEqual(inherited, caller_path)
+                shim_paths.append(Path(shim))
+                self.assertEqual(list(Path(shim).iterdir()), [Path(shim) / "rsync"])
+                self.assertEqual(Path(shim).stat().st_mode & 0o777, 0o700)
+                resolved = shutil.which("rsync", path=env["PATH"])
+                self.assertEqual(Path(resolved).resolve(), apple_rsync)
+                self.assertNotEqual(resolved, str(caller_bin / "rsync"))
+                self.assertEqual(shutil.which("xcodebuild", path=env["PATH"]),
+                                 str(caller_bin / "xcodebuild"))
+                self.assertNotIn("ASC_KEY_ID", env)
+                return Mock(stdout=io.StringIO(), wait=Mock(return_value=0))
+
+            self.assertEqual(step.APPLE_RSYNC, Path("/usr/bin/rsync"))
+            self.assertEqual(shutil.which("rsync", path=caller_path), str(caller_bin / "rsync"))
+            with patch.dict(os.environ, {**self.values, "PATH": caller_path}), \
+                 patch.object(step, "load_credentials"), patch.object(step, "clean_commit"), \
+                 patch.object(step, "APPLE_RSYNC", apple_rsync), \
+                 patch("release_support.subprocess.Popen", side_effect=inspect_environment) as popen, \
+                 contextlib.redirect_stdout(io.StringIO()):
+                step.run("export", mobile, out)
+                popen.assert_called_once()
+                self.assertEqual(os.environ["PATH"], caller_path)
+            self.assertFalse(shim_paths[0].exists())
+
+    def test_non_export_steps_preserve_caller_path(self):
+        for name in ("dependencies", "prebuild", "archive", "upload"):
+            with self.subTest(step=name), tempfile.TemporaryDirectory() as d:
+                mobile, out, _ = self.upload_fixture(d)
+                caller_path = str(mobile / "caller-bin") + os.pathsep + os.defpath
+                with patch.dict(os.environ, {**self.values, "PATH": caller_path}), \
+                     patch.object(step, "load_credentials"), patch.object(step, "clean_commit"), \
+                     patch.object(step, "dependency_command", return_value=["npm", "ci"]), \
+                     patch("release_support.subprocess.Popen") as popen, \
+                     contextlib.redirect_stdout(io.StringIO()):
+                    popen.side_effect = lambda *a, **kw: Mock(stdout=io.StringIO(), wait=Mock(return_value=0))
+                    step.run(name, mobile, out, "1")
+                    self.assertTrue(popen.called)
+                    for call in popen.call_args_list:
+                        self.assertEqual(call.kwargs["env"]["PATH"], caller_path)
+                    self.assertEqual(os.environ["PATH"], caller_path)
+
+    def test_export_refuses_missing_apple_rsync(self):
+        with tempfile.TemporaryDirectory() as d:
+            mobile = Path(d).resolve()
+            with patch.dict(os.environ, self.values), patch.object(step, "load_credentials"), \
+                 patch.object(step, "clean_commit"), patch.object(step, "run_logged") as logged, \
+                 patch.object(step, "APPLE_RSYNC", mobile / "missing-rsync"):
+                with self.assertRaisesRegex(ReleaseError, "Apple's executable /usr/bin/rsync"):
+                    step.run("export", mobile, mobile)
+                logged.assert_not_called()
 
     def upload_fixture(self, d):
         mobile = Path(d).resolve()

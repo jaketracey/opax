@@ -45,7 +45,7 @@ command(['git', 'init', '-q'])
 write(seed/'.gitignore', 'node_modules/\n.qa.local.env\n')
 (seed/'mobile/scripts').mkdir(parents=True, exist_ok=True)
 for name in ('qa.sh', 'qa-env.sh', 'qa-pass-record.sh', 'lint.sh',
-             'eslint-file.config.cjs', 'eslint-hermes.config.cjs', 'jest-changed.sh',
+             'eslint-file.config.cjs', 'eslint-hermes.config.cjs', 'eslint-uncached-rules.cjs', 'jest-changed.sh',
              'sim-health.sh', 'qa-simulator.sh', 'android-gradle.sh', 'build-play.sh', 'release-ios.sh'):
     shutil.copyfile(scripts/name, seed/'mobile/scripts'/name)
 for name in ('test-release-tooling.py', 'test-privacy-scan.py', 'test-android-harness.py', 'test-android-results.py'):
@@ -243,7 +243,7 @@ shutil.rmtree(mobile/'node_modules')
 lint_visits = scratch/'lint-visits'
 env['QA_TEST_LINT_VISITS'] = str(lint_visits)
 write(mobile/'scripts/cache-rule.js', "module.exports = {create(context) { require('fs').appendFileSync(process.env.QA_TEST_LINT_VISITS, context.filename+'\\n'); return {}; }};\n")
-write(mobile/'eslint.config.js', "const plugin = require("+json.dumps(str(scripts.parent/'node_modules/eslint-plugin-import'))+");\nmodule.exports = [{files:['**/*.mjs'], plugins:{import:plugin, audit:{rules:{visit:require('./scripts/cache-rule')}}}, rules:{'import/no-unresolved':'error','audit/visit':'error'}}];\n")
+write(mobile/'eslint.config.js', "const plugin = require("+json.dumps(str(scripts.parent/'node_modules/eslint-plugin-import'))+");\nmodule.exports = [{files:['**/*.mjs'], plugins:{import:plugin, audit:{rules:{visit:require('./scripts/cache-rule')}}}, rules:{'import/no-unresolved':'error','import/namespace':'error','import/named':'error','import/default':'error','audit/visit':'error'}}];\n")
 a = mobile/'src/a.mjs'; b = mobile/'src/b.mjs'
 a.write_text("import { value } from './b.mjs';\nexport { value };\n"); b.write_text('export const value = 1;\n')
 command(['git', 'add', '.'], repo); command(['git', 'commit', '-qm', 'Lint fixture'], repo)
@@ -273,6 +273,36 @@ b.unlink()
 result = command(['bash', 'scripts/lint.sh', 'src/a.mjs'], mobile, expect=1)
 assert 'import/no-unresolved' in result
 ok('a warm lint cache still fails an unchanged importer after tracked dependency deletion')
+# Export-map checks must revisit unchanged importers when only a dependency's
+# bytes change. Keep an unrelated export so namespace validation still runs.
+for rule, importer, valid in (
+        ('namespace', "import * as dependency from './b.mjs';\nexport const value = dependency.value;\n",
+         'export const value = 1;\nexport const retained = 2;\n'),
+        ('named', "import { value } from './b.mjs';\nexport { value };\n",
+         'export const value = 1;\nexport const retained = 2;\n'),
+        ('default', "import value from './b.mjs';\nexport { value };\n",
+         'export default 1;\nexport const retained = 2;\n')):
+    a.write_text(importer)
+    for state in ('committed', 'staged', 'unstaged'):
+        b.write_text(valid)
+        command(['git', 'add', '.'], repo)
+        command(['git', 'commit', '--allow-empty', '-qm', 'Restore dependency export'], repo)
+        command(['bash', 'scripts/lint.sh', 'src/a.mjs'], mobile)
+        command(['bash', 'scripts/lint.sh', 'src/a.mjs'], mobile)
+        b.write_text('export const retained = 2;\n')
+        if state in ('committed', 'staged'):
+            command(['git', 'add', '.'], repo)
+        if state == 'committed':
+            command(['git', 'commit', '-qm', 'Remove dependency export'], repo)
+        lint_visits.write_text('')
+        result = command(['bash', 'scripts/lint.sh', 'src/a.mjs'], mobile, expect=1)
+        assert 'import/'+rule in result, (rule, state, result)
+        assert str(a) not in lint_visits.read_text().splitlines(), (rule, state)
+        assert a.read_text() == importer
+        result = command(['bash', 'scripts/lint.sh', 'src/a.mjs'], mobile,
+                         {'OPAX_LINT_NO_CACHE': '1'}, expect=1)
+        assert 'import/'+rule in result, (rule, state, result)
+    ok(f'uncached import/{rule} rejects removed exports in committed, staged and unstaged states (rc=1)')
 # Use the actual Hermes rule and TypeScript parser, with an unchanged caller
 # whose imported return type switches from number[] to MapIterator<number>.
 config_source = (scripts.parent/'eslint.config.js').read_text()

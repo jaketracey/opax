@@ -52,8 +52,8 @@ def redact(text):
                   "[private key redacted]", text, flags=re.S)
 
 
-def run_logged(command, log, *, public_env=False):
-    env = os.environ.copy()
+def run_logged(command, log, *, public_env=False, env=None):
+    env = (os.environ if env is None else env).copy()
     if public_env:
         for name in (*PRIVATE_NAMES, "OPAX_BUNDLE_ID", "OPAX_INTERNAL_TESTER_EMAIL", "OPAX_BUILD_GATE", "OPAX_SIM_GATE",
                      "OPAX_CAPACITY_CMD", "OPAX_PASTEBOARD_LOCK", "OPAX_ALLOWED_UDIDS"):
