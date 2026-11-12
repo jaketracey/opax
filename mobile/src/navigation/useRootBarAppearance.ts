@@ -35,6 +35,12 @@ function searchState(navigation: object) {
   return state;
 }
 
+// A sibling RouteOptions can disable the title after Screen renders but
+// before its layout effects run. Never apply chrome from that stale read.
+function currentLargeTitle(navigation: object | undefined) {
+  return !navigation || searchState(navigation).value.largeTitle !== false;
+}
+
 /**
  * RouteOptions and Screen can be siblings. Share large-title ownership
  * from the actual route options, keyed by the route's navigation object.
@@ -123,12 +129,20 @@ export function useRootBarAppearance(
   const name = root?.name ?? '';
   const colour =
     ground ?? (roots.includes(name) ? tabRootGround(name) : colors.paper);
-  const ownsBar = owner === 'options' || rootOptions.largeTitle === undefined;
+  const ownsBar =
+    owner === 'options' ||
+    rootOptions.largeTitle === undefined ||
+    (name === 'search' && rootOptions.largeTitle === false);
   const rootKey = root?.key;
   const identifier = rootKey ? `opax-root-bar-${rootKey}` : undefined;
 
   useLayoutEffect(() => {
-    if (!rootKey || !ownsBar) return;
+    if (
+      !rootKey ||
+      !ownsBar ||
+      largeTitleEnabled !== currentLargeTitle(navigation)
+    )
+      return;
     setOptions(
       largeTitleEnabled && !verticalBar
         ? {
@@ -142,6 +156,7 @@ export function useRootBarAppearance(
   }, [
     rootKey,
     ownsBar,
+    navigation,
     setOptions,
     colour,
     solid,
@@ -154,7 +169,13 @@ export function useRootBarAppearance(
   // accessibility fallback needs this native sibling. Header-height updates
   // resize it, without deriving opacity or changing any route appearances.
   useLayoutEffect(() => {
-    if (!identifier || !ownsBar || !largeTitleEnabled || verticalBar || !solid)
+    if (
+      !identifier ||
+      !ownsBar ||
+      !currentLargeTitle(navigation) ||
+      verticalBar ||
+      !solid
+    )
       return;
     if (navigation?.isFocused()) void RootBar?.setSolid?.(identifier, colour);
   }, [
@@ -171,7 +192,13 @@ export function useRootBarAppearance(
     navigation,
   ]);
   useLayoutEffect(() => {
-    if (!identifier || !ownsBar || !largeTitleEnabled || verticalBar || !solid)
+    if (
+      !identifier ||
+      !ownsBar ||
+      !currentLargeTitle(navigation) ||
+      verticalBar ||
+      !solid
+    )
       return;
     const focus = navigation?.addListener('focus', () => {
       void RootBar?.setSolid?.(identifier, colour);
@@ -198,11 +225,12 @@ export function useRootBarAppearance(
   // sibling that the new owner has just applied. Its lifetime follows the
   // route and accessibility mode, independently of appearance ownership.
   useLayoutEffect(() => {
-    if (!identifier || !largeTitleEnabled || verticalBar || !solid) return;
+    if (!identifier || !currentLargeTitle(navigation) || verticalBar || !solid)
+      return;
     return () => {
       void RootBar?.remove(identifier);
     };
-  }, [identifier, largeTitleEnabled, verticalBar, solid]);
+  }, [identifier, largeTitleEnabled, navigation, verticalBar, solid]);
   return !!root;
 }
 

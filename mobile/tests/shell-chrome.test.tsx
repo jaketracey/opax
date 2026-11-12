@@ -1001,18 +1001,19 @@ function fadePage(
       ? colors.sunken
       : colors.paper
     : tabRootGround(name);
-  const page = (height: number) => (
+  const page = (height: number, grouped = name !== 'bills') => (
     <NavigationContext.Provider value={navigation as never}>
       <NavigationRouteContext.Provider value={route}>
         <SafeAreaInsetsContext.Provider
           value={{ top: 24, bottom: 0, left: 0, right: 0 }}
         >
           <HeaderHeightContext.Provider value={height}>
-            {name !== 'your-mp' && (!usesScreen || explicit || pinned) && (
-              <RouteOptions options={options} />
-            )}
+            {name !== 'your-mp' &&
+              (!usesScreen || explicit || pinned || extraOptions) && (
+                <RouteOptions options={options} />
+              )}
             {usesScreen && (
-              <Screen grouped={name !== 'bills'}>
+              <Screen grouped={grouped}>
                 {name === 'your-mp' && <RouteOptions options={options} />}
                 <View />
               </Screen>
@@ -1154,6 +1155,124 @@ test.each(tabCases)(
       } finally {
         mockSolidBar = false;
         act(() => renderer.unmount());
+      }
+    }),
+);
+
+// SearchSplit disables the large title through a sibling RouteOptions. The
+// scrolling Screen still owns Search's changing idle/results ground.
+const searchOwnerCases = [
+  ['iPhone', false],
+  ['iPad split', true],
+] as const;
+function searchOwnerPage(split: boolean) {
+  return fadePage(
+    'search',
+    '(search)',
+    false,
+    false,
+    false,
+    split ? { headerLargeTitleEnabled: false } : undefined,
+  );
+}
+function expectSolidSearch(
+  navigation: ReturnType<typeof searchOwnerPage>['navigation'],
+  split: boolean,
+  ground = colors.sunken,
+) {
+  expect(RootBar!.remove).not.toHaveBeenCalled();
+  const resolved = Object.assign(
+    {},
+    ...navigation.setOptions.mock.calls.map(([options]) => options),
+  );
+  expect(resolved).toMatchObject(
+    split
+      ? {
+          ...opaqueBar(ground),
+          headerTransparent: false,
+          headerLargeTitleEnabled: false,
+        }
+      : { ...largeTitleBar(ground, true), headerLargeTitleEnabled: true },
+  );
+  expect(resolved.scrollEdgeEffects).toEqual({ top: 'hidden', bottom: 'soft' });
+  if (!split)
+    expect(RootBar!.setSolid).toHaveBeenLastCalledWith(
+      'opax-root-bar-search-root',
+      ground,
+    );
+}
+
+test.each(searchOwnerCases)(
+  'Search owner shape on %s keeps a cold solid bar while mounted',
+  (_device, split) =>
+    withGlass(() => {
+      mockSolidBar = true;
+      const { page, navigation } = searchOwnerPage(split);
+      const renderer = tree(page(120));
+      try {
+        expectSolidSearch(navigation, split);
+        act(() => renderer.update(page(68)));
+        expectSolidSearch(navigation, split);
+      } finally {
+        act(() => renderer.unmount());
+        mockSolidBar = false;
+      }
+    }),
+);
+
+test.each(searchOwnerCases)(
+  'Search owner shape on %s responds to live solid mode on then off',
+  (_device, split) =>
+    withGlass(() => {
+      const { page, navigation } = searchOwnerPage(split);
+      const renderer = tree(page(68));
+      try {
+        mockSolidBar = true;
+        act(() => renderer.update(page(68)));
+        expectSolidSearch(navigation, split);
+        // Results change the ground without changing appearance ownership.
+        act(() => renderer.update(page(68, false)));
+        expectSolidSearch(navigation, split, colors.paper);
+        mockSolidBar = false;
+        act(() => renderer.update(page(68, false)));
+        expect(navigation.setOptions).toHaveBeenLastCalledWith(
+          expect.objectContaining({
+            headerTransparent: true,
+            headerStyle: {},
+            scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
+          }),
+        );
+        if (!split)
+          expect(RootBar!.remove).toHaveBeenLastCalledWith(
+            'opax-root-bar-search-root',
+          );
+      } finally {
+        act(() => renderer.unmount());
+        mockSolidBar = false;
+      }
+    }),
+);
+
+test.each(searchOwnerCases)(
+  'Search owner shape on %s keeps its solid bar after refocus',
+  (_device, split) =>
+    withGlass(() => {
+      mockSolidBar = true;
+      const { page, navigation, listeners } = searchOwnerPage(split);
+      const renderer = tree(page(68));
+      try {
+        navigation.isFocused.mockReturnValue(false);
+        act(() => listeners.get('blur')?.forEach((listener) => listener()));
+        jest.mocked(RootBar!.remove).mockClear();
+        jest.mocked(RootBar!.setSolid!).mockClear();
+        navigation.isFocused.mockReturnValue(true);
+        act(() => listeners.get('focus')?.forEach((listener) => listener()));
+        expectSolidSearch(navigation, split);
+        act(() => renderer.update(page(120)));
+        expectSolidSearch(navigation, split);
+      } finally {
+        act(() => renderer.unmount());
+        mockSolidBar = false;
       }
     }),
 );
