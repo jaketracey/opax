@@ -148,6 +148,7 @@ export function Plate({
             variant="secondary"
             tone="onBandSoft"
             style={styles.title}
+            maxFontSizeMultiplier={large ? 1.353 : undefined}
           >
             {[person.party, person.place].filter(Boolean).join(' · ')}
           </Text>
@@ -158,6 +159,7 @@ export function Plate({
           variant="secondary"
           tone="onBandSoft"
           testID={`${testID}-line`}
+          maxFontSizeMultiplier={large ? 1.353 : undefined}
         >
           {detailLine}
         </Text>
@@ -239,26 +241,45 @@ export function PlateArt({
               <View key={i} style={styles.dot} />
             ))}
           </View>
-          <View style={styles.ends}>
+          {large ? (
             <Text
-              wordSafe
+              testID={testID && `${testID}-ends`}
               variant="footnote"
               tone="onBandSoft"
-              style={styles.end}
+              maxFontSizeMultiplier={1.353}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.75}
+              style={{ marginTop: rhythm.tight, textAlign: 'left' }}
             >
               {first.text.split(/ in |,/)[0]}{' '}
               {first.date.replace(/ \d{4}$/, '')}
-            </Text>
-            <Text
-              wordSafe
-              variant="footnote"
-              tone="onBandSoft"
-              style={[styles.end, styles.latest]}
-            >
+              {' · '}
               {latest.text.split(/ in |,/)[0]}{' '}
               {latest.date.replace(/ \d{4}$/, '')}
             </Text>
-          </View>
+          ) : (
+            <View style={styles.ends}>
+              <Text
+                wordSafe
+                variant="footnote"
+                tone="onBandSoft"
+                style={styles.end}
+              >
+                {first.text.split(/ in |,/)[0]}{' '}
+                {first.date.replace(/ \d{4}$/, '')}
+              </Text>
+              <Text
+                wordSafe
+                variant="footnote"
+                tone="onBandSoft"
+                style={[styles.end, styles.latest]}
+              >
+                {latest.text.split(/ in |,/)[0]}{' '}
+                {latest.date.replace(/ \d{4}$/, '')}
+              </Text>
+            </View>
+          )}
         </View>
       ) : division ? (
         <VoteSplit {...division} countsStyle="votes" onBand {...provenance} />
