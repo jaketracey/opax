@@ -130,6 +130,7 @@ false and `$geoip_disable` true.
 | `opax_source_open` | `from_section`, `destination` (`app` or `browser`) |
 | `opax_chip` | `chip_kind` (`ask`), `placement` (`ask` or `today`) |
 | `opax_voice_card` | `action` (`open`), `account` (`signed_in` or `signed_out`) |
+| `opax_first_run` | `step` (`welcome`, `seat` or `state`), `outcome` (`chosen` or `skipped`), and for a choice `method` (`search`, `location` or `browse`) |
 | `opax_route_error` | `error_class`: fixed constructor-name category; `route_pattern`: a fixed route-file pattern such as `/person/[slug]`; optional `error_message`: an exact, content-free diagnostic from a fixed allowlist, at most 80 characters |
 | `opax_app_start` | `duration_ms`: JS entry to the first committed Today render, only when Today is the first focused route of a cold JS runtime |
 | `opax_screen_ready` | `route_pattern`: one of `/`, `/person/[slug]`, `/bill/[key]`, `/your-mp`, `/search`, `/ask`; `duration_ms`: navigation to the first content commit, at most once per sampled visit |
@@ -148,6 +149,26 @@ are off, and GeoIP is disabled. The install ID is a random UUID made by the SDK 
 app's documents folder; it is not the IDFV or IDFA and is not linked to an
 account. `tests/analytics-sdk.test.ts` runs the real SDK against a mocked
 network and proves a raw question cannot reach any request.
+
+`opax_first_run` reports how the welcome's electorate step ended, so the
+first-run funnel can tell a choice from a skip (the `$screen` names alone
+cannot: both end on `/`). It is sent once when a reader leaves the welcome
+from the welcome page (`welcome`), the electorate step (`seat`) or a Browse by
+state list (`state`), by choosing a seat (`chosen`) or by "Not now" or
+"Choose later" (`skipped`). `method` is the control that chose: the search
+field, the "Use my location" row or a Browse list. All three are fixed words.
+The seat, the state, anything typed (a name, a suburb, a postcode), the
+location permission answer and any position are never sent, and a refused or
+failed locate sends nothing. The `/seat` sheet opened later from Today or
+Your MP sends nothing, and neither does "Done" on a replayed welcome with a
+seat saved. A replayed welcome that ends in a new choice or a skip does send
+the event; replays are rare and cannot be told apart without a new property.
+
+The first-run screens keep their `$screen` names, so funnels built before
+this event still compare: `/welcome`, `/welcome/seat`,
+`/welcome/seat/state/[code]`, then `/`. `/consent` is Ask's "Before you ask"
+screen, shown before a reader's first question; it is not part of first run
+and the app has no analytics consent step.
 
 `opax_route_error` reports once for each error caught by the reporting route
 boundary, including a new failure after Try again. It uses `track`, the same
