@@ -85,7 +85,7 @@
    "key": "federal-senate-2412",
    "date": "2013-06-27",
    "house": "senate",
-   "question": "Long debate text truncated.",
+   "question": null,
    "stage": "Second reading",
    "ayes": 31,
    "noes": 36,

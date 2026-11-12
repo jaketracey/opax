@@ -4,6 +4,7 @@ import {donorDisclosure,donorLabelHTML,type DonorDisclosureRecord} from '../publ
 import { shortDate } from '../public/format.js'
 import { personUrl, partyUrl } from '../public/party-page.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
+import sponsorParties from '../public/facts/sponsor-parties.json' with {type:'json'}
 import {rosterSeatParty, type RosterSeatParty} from '../public/roster-party.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
@@ -58,7 +59,7 @@ interface Votes { name: string; jurisdiction: string; for?: Vote[]; against?: Vo
 interface RecentVotes { _meta: { schema: number; source: string; coverage: string }; people: Record<string, { name: string; jurisdiction: string; recent: Vote[] }> }
 interface Interest {
   source_url?: string; total: number; as_at?: string; ocr_rows?: number; unread_pages?: number;
-  buckets: Record<string, { count: number; items: { description: string; holder?: string; kind?: string; page?: number; date?: string; url?: string }[] }>;
+  buckets: Record<string, { count: number; items: { description: string; holder?: string | null; kind?: string; page?: number; date?: string; url?: string }[] }>;
 }
 interface MoneyNode { id: string; label: string; kind: string; industry?: string; aliases?: string[]; total: number }
 interface MoneyGraph { meta: { sourceShort?: string; source?: string; coverage?: string; source_url?: string }; nodes: MoneyNode[]; edges: { source: string; target: string; total: number; grant?: boolean; flow?: string }[] }
@@ -326,13 +327,13 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   const sponsor = sponsorFor(b,people)
   // Only the party the export recorded for the sponsor on the day (bills-001):
   // the roster's current party is not evidence for an earlier bill.
-  const party = b.sponsor_party
+  const party = b.sponsor_party && sponsorParties.includes(b.sponsor_party) ? b.sponsor_party : null
   // A private member's "(s) ..." sponsor print is not a portfolio (bills-007).
   const portfolio = b.portfolio && !/^\s*\(s\)/.test(b.portfolio) ? b.portfolio : ''
   const description = `${human(b.status || 'Status not recorded')}${b.status_as_of ? `, as at ${b.status_as_of}` : ''}. ${portfolio ? `${portfolio} portfolio.` : ''}`
   const coSponsors = (b.sponsors || []).slice(1).map(s=>{
     const person = sponsorPerson(s.name, s.person_id ?? undefined, people) as Person | null
-    return (person ? link(personHref(person,slugs),person.name) : escapeHtml(s.name)) + (s.party ? ` (${escapeHtml(s.party)})` : '')
+    return (person ? link(personHref(person,slugs),person.name) : escapeHtml(s.name)) + (s.party && sponsorParties.includes(s.party) ? ` (${escapeHtml(s.party)})` : '')
   })
   let body = `<dl><dt>Sponsor</dt><dd>${sponsor ? link(personHref(sponsor,slugs),sponsor.name) : escapeHtml(b.sponsor || 'Not recorded')}</dd>${party ? `<dt>Sponsor's recorded party</dt><dd>${link(partyUrl(party),party)}</dd>` : ''}${coSponsors.length ? `<dt>Co-sponsors</dt><dd>${coSponsors.join(', ')}</dd>` : ''}<dt>Portfolio</dt><dd>${escapeHtml(portfolio || 'Not recorded')}</dd></dl>`
   const stages = billStageLines(b.key_dates || []).map(d=>`<li>${escapeHtml(d.label)} — ${escapeHtml(d.date)} (${escapeHtml(chamber(d.house))})${original(d.url)}</li>`)

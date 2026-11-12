@@ -291,7 +291,7 @@ export async function speechTrend(deps: ToolDeps, input: TrendInput): Promise<To
 }
 
 // ---------------------------------------------------------------- find_people
-interface Person { name: string; speeches: number | null; party?: string; party_now?: string; states?: string[]; chambers?: string[]; first?: number; last?: number; pid?: string; current?: boolean; representation?: { electorate: string; jurisdiction: string; chamber: string; state?: string | null }[] }
+interface Person { name: string; speeches: number | null; roster_only?: boolean; party?: string; party_now?: string; states?: string[]; chambers?: string[]; first?: number; last?: number; pid?: string; current?: boolean; representation?: { electorate: string; jurisdiction: string; chamber: string; state?: string | null }[] }
 const fold = (s: string) => s.normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[‘’ʼ`]/g, "'").toLowerCase().replace(/\s+/g, ' ').trim()
 export async function findPeople(deps: ToolDeps, input: { name: string; limit?: number }): Promise<ToolResult> {
   const origin = deps.origin ?? 'https://opax.com.au'
@@ -301,7 +301,7 @@ export async function findPeople(deps: ToolDeps, input: { name: string; limit?: 
   if (!Array.isArray(data?.people)) return { tool: 'find_people', ok: false, error: 'The parliamentary roster is unavailable.', cite: [], notes: [] }
   const resolution = resolvePersonName(name, data.people)
   const limit = Math.max(resolution.status === 'ambiguous' ? 2 : 1, Math.min(Math.floor(Number(input.limit)) || 5, 10))
-  const candidates = resolution.candidates.slice(0, limit).map(({ person: p, confidence }) => ({ name: p.name, confidence, party: p.party_now ?? p.party ?? null, states: p.states ?? [], chambers: p.chambers ?? [], years: [p.first ?? null, p.last ?? null], current: p.current ?? null, speeches_indexed: p.speeches, representation: p.representation ?? [] }))
+  const candidates = resolution.candidates.slice(0, limit).map(({ person: p, confidence }) => ({ name: p.name, confidence, party: p.party_now ?? p.party ?? null, states: p.states ?? [], chambers: p.chambers ?? [], years: [p.first ?? null, p.last ?? null], current: p.current ?? null, speeches_indexed: p.roster_only ? null : p.speeches, representation: p.representation ?? [] }))
   // Existing callers use people[0] in subsequent filters. Only put a resolved
   // identity there, so an ambiguous lookup cannot silently select a stranger.
   const hits = resolution.status === 'matched' ? candidates.slice(0, 1) : []
@@ -315,7 +315,7 @@ export async function findPeople(deps: ToolDeps, input: { name: string; limit?: 
   return {
     tool: 'find_people', ok: true, data: { people: enriched, candidates, match_status: resolution.status, ...(clarification ? { clarification } : {}) }, query: { name },
     cite: hits.map((h) => ({ kind: 'record' as const, label: h.name, url: `${origin}/subject/person/${encodeURIComponent(h.name)}` })),
-    notes: hits.length ? ['Use the name exactly as returned in speaker filters: it is the name the record indexes speeches under.']
+    notes: hits.length ? resolved?.roster_only ? ['Recorded parliamentary service identifies this person; no speech total is published for this profile.'] : ['Use the name exactly as returned in speaker filters: it is the name the record indexes speeches under.']
       : clarification ? ['Multiple real people match equally. Ask the clarification question before using a person in another tool.']
       : [`OPAX has no record of a parliamentarian named "${name}" in this roster. Do not substitute someone who matches only part of the supplied name.`],
   }

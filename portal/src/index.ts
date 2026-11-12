@@ -51,6 +51,8 @@ import {grantsHTML} from './grants-table'
 import {saGrantsPage,saGrantsReader} from './sa-grants'
 import {actInvoicesPage} from './act-invoices'
 import {GRANTS_COVERAGE} from '../public/grants-table.js'
+import {resolveProgram, programKey, type GrantProgram} from '../public/facts/grant-programs.js'
+import sponsorParties from '../public/facts/sponsor-parties.json' with {type:'json'}
 import { hubPage } from './hubs'
 import { estimatesPage, readEstimatesRecord, type EstimatesCommittee, type EstimatesRecord, type EstimatesRound, type EstimatesRounds } from './estimates'
 import { sydneyDay } from '../public/hubs-data.js'
@@ -5042,7 +5044,7 @@ async function loadPartyPages(env: Env): Promise<PartyPage[]> {
 // inventory. Adding crawl discovery must not remove an existing record URL.
 async function loadPartyLabels(env: Env): Promise<string[]> {
   partyLabelsMemo ??= Promise.all([loadMoney(env),loadPeople(env),loadBills(env),loadPartyPages(env)]).then(([money,people,bills,pages])=>[...new Set([
-    ...[...money.parties.values()].map(p=>p.label),...people.people.map(p=>p.party || ''),...people.people.map(p=>p.party_now || ''),...[...bills.byKey.values()].map(b=>b.sponsor_party || ''),...pages.flatMap(p=>p.aliases)
+    ...[...money.parties.values()].map(p=>p.label),...people.people.map(p=>p.party || ''),...people.people.map(p=>p.party_now || ''),...[...bills.byKey.values()].map(b=>b.sponsor_party && sponsorParties.includes(b.sponsor_party) ? b.sponsor_party : ''),...pages.flatMap(p=>p.aliases)
   ].filter(Boolean))]).catch(error=>{partyLabelsMemo=null;throw error})
   return partyLabelsMemo
 }
@@ -5313,17 +5315,25 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
 
 /** The figures the daily edition posts about a program, when it has been told by seat (scripts/build_social_catalog.mjs). */
 interface SocialProgram { key: string; n: string; t: number; c: number; y0?: string | null; y1?: string | null; mapped: [number, number]; groups: Record<string, [number, number]>; seatShare: Record<string, number> }
-const PROGRAM_KEY_RE = /^[a-z0-9][a-z0-9-]{0,79}$/
+const PROGRAM_KEY_RE = /^[a-z0-9][a-z0-9-]*$/
+let grantProgramsMemo: Promise<{programs: GrantProgram[]}> | null = null
+function loadGrantPrograms(env: Env): Promise<{programs: GrantProgram[]}> {
+  grantProgramsMemo ??= assetJson<{programs: GrantProgram[]}>(env, '/graph/grants.federal.json')
+    .catch(error => { grantProgramsMemo = null; throw error })
+  return grantProgramsMemo
+}
 const MONTH_RE = /^\d{4}-(0[1-9]|1[0-2])$/
 const MONTH_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
 /** /money/grants?jur=federal&program=<key>: one program's file, opened in the grants explorer. */
 async function grantProgramMeta(raw: string, url: URL, env: Env): Promise<PageMeta> {
-  const key = raw.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
-  const canonical = `${SITE_ORIGIN}/money/grants?jur=federal&program=${encodeURIComponent(key)}`
-  const program = PROGRAM_KEY_RE.test(key)
+  const catalogue = await loadGrantPrograms(env).catch(() => null)
+  const row = resolveProgram(catalogue?.programs, raw)
+  const key = row ? row.key || programKey(row.id) : ''
+  const canonical = `${SITE_ORIGIN}/money/grants?jur=federal&program=${encodeURIComponent(row?.id || raw)}`
+  const program = row && PROGRAM_KEY_RE.test(key)
     ? await assetJson<{ id: string; n: string; ag?: string; t: number; c: number; r?: number; y0?: string; y1?: string }>(env, `/grants/federal/programs/${key}.json`).catch(() => null) : null
-  if (!program || typeof program.n !== 'string' || !Number.isFinite(program.t)) {
+  if (!program || program.id !== row?.id || typeof program.n !== 'string' || !Number.isFinite(program.t)) {
     return { title: 'Grant program not found · OPAX', description: STATIC_PAGES['money/grants'].description, canonical, ogType: 'website', status: 404, jsonLd: null, prerender: null, card: null }
   }
   const social = await assetJson<{ programs?: SocialProgram[] }>(env, '/social/programs.json').catch(() => null)

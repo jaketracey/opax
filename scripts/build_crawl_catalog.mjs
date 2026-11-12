@@ -8,6 +8,7 @@ import { personNameKey } from '../portal/public/canonical-urls.js';
 import { splitSpeakers } from '../portal/public/speech-attribution.js';
 import { TOPIC_NAMES } from '../portal/src/topic-names.mjs';
 import { fileKey } from '../portal/public/grants.js';
+import {resolveProgram, programKey} from '../portal/public/facts/grant-programs.js';
 import {foldDonorName} from '../portal/public/donor-entity.js';
 import { renderPersonAnswer } from '../portal/src/seo-content.ts';
 
@@ -322,8 +323,11 @@ export async function buildCrawl(root, {read: sourceRead, reports: published = r
     for (const p of data.programs || []) {
       if (!validId(p.id)) continue;
       // Only indexed programs with an actual exported profile get discovery URLs.
-      const profile=await read(`grants/${jur}/programs/${p.key || fileKey(p.id).replace(/^x-/, '')}.json`);
-      add('grant-programs','/money/grants?' + new URLSearchParams({jur,program:p.id}),latestDate((profile.grants || []).flatMap(g=>[g.published,g.updated_at,g.s]),data.meta.generated),undefined,data.meta.generated);
+      const row=resolveProgram(data.programs,p.id);
+      if (!row) throw new Error(`Unresolved grant program: ${p.id}`);
+      const profile=await read(`grants/${jur}/programs/${row.key || programKey(row.id)}.json`);
+      if (profile.id !== row.id) throw new Error(`Grant program identity mismatch: ${p.id}`);
+      add('grant-programs','/money/grants?' + new URLSearchParams({jur,program:row.id}),latestDate((profile.grants || []).flatMap(g=>[g.published,g.updated_at,g.s]),data.meta.generated),undefined,data.meta.generated);
     }
   }
   const supplierShards=new Map();

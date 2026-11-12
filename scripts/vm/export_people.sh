@@ -26,6 +26,7 @@ sqlite3 -readonly -json "$DB" "SELECT full_name, state, chamber, electorate, ent
     --research portal/public/research/mlci.json >&2
 # Surname-only prints ("Shoebridge") fold into the one full-name person they certainly are (scripts/roster_fold.py).
 "$PY" scripts/roster_fold.py --directory "$T/directory.json" --members "$T/members.json" >&2
+"$PY" scripts/roster_source_profiles.py --directory "$T/directory.json" >&2
 "$PY" scripts/export_parliamentarians.py --check-directory "$T/directory.json" >&2
 if [ "${OPAX_ROSTER_ACCEPT:-}" != 1 ]; then
   "$PY" scripts/roster_overlay.py --directory "$T/directory.json" >&2

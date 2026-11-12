@@ -8,7 +8,7 @@
  "introduced": "2017-11-15",
  "originating_house": "senate",
  "sponsor": "SMITH, Sen Dean",
- "sponsor_party": "Liberal Party of Australia",
+ "sponsor_party": "Liberal",
  "sponsor_person_id": "10768",
  "portfolio": null,
  "status": "passed",
@@ -1184,8 +1184,8 @@
    "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2017-12-06.6.1) to adjourn debate. In other words, they put off further discussion on this bill until the next sitting day. ### What does this bill do? This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1099) will allow same-sex couples to marry under Australian law. However, it will also: > *enable ministers of religion, religious marriage celebrants, chaplains and bodies established for religious purposes to refuse to solemnise or provide facilities, goods and services for marriages on religious grounds; and make amendments ... to provide that a refusal by a minister of religion, religious marriage celebrant or chaplain to solemnise marriage in prescribed circumstances does not constitute unlawful discrimination.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd054).",
    "stage": "Second reading",
    "ayes": 73,
-   "noes": 73,
-   "outcome": "negative",
+   "noes": 72,
+   "outcome": "affirmative",
    "party_splits": {
     "Centre Alliance": {
      "ayes": 1,

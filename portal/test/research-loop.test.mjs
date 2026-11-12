@@ -251,6 +251,14 @@ test('person_quotes: the named member\'s own speeches only, newest first, one pa
  const ids=[...out.matchAll(/"slug":"(speech-\d)"/g)].map(m=>m[1]);assert.deepEqual([...new Set(ids)],['speech-2','speech-1']);
  assert.equal((out.match(/A second paragraph about housing/g)||[]).length,0,'one passage per speech');
 });
+test('person_quotes keeps an exact speech name when another row carries its alias',async()=>{
+ const seen=[];
+ const f=fixtures(model([reply([call('person_quotes',{person:'Alex Example',topic:'housing'})]),reply([call('answer',valid)])]),{searchBody:(query,limit,context,filters)=>{seen.push(filters);return {query,top_k:limit}}});
+ f.deps.kb=async()=>({resources:{}});
+ f.deps.asset=async path=>path==='/parliamentarians.json'?{people:[{name:'Alex Example',pid:'19996',speeches:147},{name:'Alex Sample',pid:'19995',speeches:900,aliases:['Alex Example']}]}:null;
+ await api.runAgentic('What has Alex Example said about housing?',f.deps,async()=>{},40_000,api.inferPeriod('housing'),{},emptyScope);
+ assert.deepEqual(seen,[{speaker:'Alex Example'}]);
+});
 test('prompt cache: every turn sends a byte-identical prefix (instructions and tools), and messages only grow',async()=>{
  const f=qualitativeFixture([reply([call('search',{query:'housing'})]),reply([call('search',{query:'affordability safeguards'})]),reply([call('answer',valid)])]);await f.run();
  const calls=f.model.doGenerateCalls;assert.equal(calls.length,3);

@@ -1,5 +1,5 @@
 import {donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
-import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, plural, procurementSourceHTML, procurementRailHTML, slowNotice, statsHTML, withheldHTML } from './suppliers.js?v=dd97509dc3';
+import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, plural, procurementSourceHTML, procurementRailHTML, slowNotice, statsHTML, withheldHTML } from './suppliers.js?v=b585fc384a';
 import { procurementGraph } from './procurement-data.js';
 import { shortMoney } from './format.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -116,6 +116,17 @@ function supplierSortHTML() {
  return `<div class="search-sort-picker agency-supplier-sort"><input type="hidden" value="value_desc"><button type="button" class="ui-button search-sort-trigger" aria-haspopup="menu" aria-expanded="false" aria-controls="agency-supplier-sort-menu" aria-label="Sort suppliers: Highest value"><span class="search-sort-label">Highest value</span><svg class="search-sort-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg></button><div id="agency-supplier-sort-menu" class="search-sort-menu" role="menu" aria-label="Sort suppliers" hidden>${SUPPLIER_SORTS.map(([value,label,note])=>`<button type="button" role="menuitemradio" aria-checked="${value==='value_desc'}" data-value="${value}" tabindex="-1"><span><strong>${label}</strong><small>${note}</small></span><span class="search-sort-check" aria-hidden="true">✓</span></button>`).join('')}<p>Applies to all matching suppliers.</p></div></div>`;
 }
 
+/** Identity comes from the same ABN-bounded supplier profile as the contracts. */
+export function agencySupplierMetadataHTML(supplier) {
+  const identity = supplier.identity || {};
+  const abnURL = supplier.abn && identity.abn_url === `https://abr.business.gov.au/ABN/View?abn=${supplier.abn}` ? identity.abn_url : null;
+  const abn = supplier.abn ? abnURL ? `<a href="${esc(abnURL)}" target="_blank" rel="noopener noreferrer">ABN ${esc(supplier.abn)}</a>` : `ABN ${esc(supplier.abn)}` : 'No ABN recorded';
+  const kind = identity.kind ? String(identity.kind).replaceAll('_', ' ') : '';
+  const type = [kind, identity.type ? `ABR type ${identity.type}` : ''].filter(Boolean).map(esc).join(' · ');
+  const legal = identity.legal_name && identity.legal_name !== supplier.name ? `<p class="ui-row-meta">Legal name: ${esc(identity.legal_name)}</p>` : '';
+  return `${legal}<p class="ui-row-meta">${abn}${type ? ` · ${type}` : ''}</p>`;
+}
+
 function renderProfile(root, profile, meta, helpers, life) {
   const top = profile.suppliers[0];
   const mapped = Math.min(60, profile.suppliers.filter(s => s.total > 0).length);
@@ -143,7 +154,7 @@ function renderProfile(root, profile, meta, helpers, life) {
     const q = (supplierQuery?.value || '').trim().toLocaleLowerCase();
     const rows = sortAgencySuppliers(profile.suppliers.filter(s => `${s.name} ${s.abn || ''}`.toLocaleLowerCase().includes(q)), supplierSort?.value || 'value_desc');
     root.querySelector('.agency-supplier-count').textContent = `${plural(rows.length, 'supplier')}${q ? ' matching this filter' : ''}`;
-    root.querySelector('.agency-suppliers').innerHTML = rows.length ? rows.slice(0,suppliersVisible).map(s => `<li class="ui-row"><div><p class="ui-row-name"><a href="${supplierUrl(s.id)}">${esc(s.name)}</a></p><p class="ui-row-meta">${s.abn ? `ABN ${esc(s.abn)}` : 'No ABN recorded'}</p>${s.donor_links.length ? `<p class="ui-row-meta">${s.donor_links.map(l => donorLabelHTML(l)).join(' · ')}</p>` : ''}</div><div class="ui-row-figure">${money(s.total)}<span class="ui-row-meta">${plural(s.count, 'contract')}</span></div></li>`).join('') : '<li class="ui-empty">No suppliers match this filter.</li>';
+    root.querySelector('.agency-suppliers').innerHTML = rows.length ? rows.slice(0,suppliersVisible).map(s => `<li class="ui-row"><div><p class="ui-row-name"><a href="${supplierUrl(s.id)}">${esc(s.name)}</a></p>${agencySupplierMetadataHTML(s)}${s.donor_links.length ? `<p class="ui-row-meta">${s.donor_links.map(l => donorLabelHTML(l)).join(' · ')}</p>` : ''}</div><div class="ui-row-figure">${money(s.total)}<span class="ui-row-meta">${plural(s.count, 'contract')}</span></div></li>`).join('') : '<li class="ui-empty">No suppliers match this filter.</li>';
     const more = root.querySelector('.agency-suppliers-more'); more.innerHTML = rows.length > suppliersVisible ? '<button type="button" class="ui-button">Show more suppliers</button>' : '';
     more.querySelector('button')?.addEventListener('click', () => { const first = suppliersVisible; suppliersVisible += 20; suppliers(); root.querySelectorAll('.agency-suppliers > li')[first]?.querySelector('a')?.focus(); });
   }
