@@ -255,6 +255,7 @@ export {
   OfflineBanner,
   OfflineLine,
   Skeleton,
+  SkeletonCrossfade,
   StatePageProvider,
   errorMessage,
   stateCopy,

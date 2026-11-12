@@ -149,6 +149,7 @@ export function FollowingBlock({
       style={{ opacity, gap: rhythm.heading }}
     >
       <SectionHeader
+        compact
         title="Following"
         action={{
           accessibilityLabel: 'See all followed items',

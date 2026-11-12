@@ -439,3 +439,64 @@ describe('the declarations list’s first screen (P2-19, P3-9; people.md 2.7)', 
     },
   );
 });
+
+test('Today bill previews clamp titles to three lines and portfolio or sponsor metadata to one', () => {
+  const { root } = render(<BillFeed bills={recentBills.data!} />);
+  for (const row of root.findAllByType(BillRow)) {
+    expect(row.props.preview).toBe(true);
+    const title = row
+      .findAllByType(Text)
+      .find((node) => node.props.variant === 'rowRecord')!;
+    expect(title.props).toMatchObject({
+      numberOfLines: 3,
+      ellipsizeMode: 'tail',
+      wordSafe: false,
+    });
+    const meta = row
+      .findAllByType(Text)
+      .filter((node) => node.props.children === row.props.meta?.portfolio);
+    for (const line of meta)
+      expect(line.props).toMatchObject({
+        numberOfLines: 1,
+        ellipsizeMode: 'tail',
+      });
+  }
+  const bill = billDisplay({
+    ...bills.bills.find((b) => b.introduced)!,
+    portfolio: null,
+    sponsor: 'Taylor, Alex',
+    sponsor_party: 'NATS',
+  });
+  const sponsored = render(<BillFeed bills={[bill]} />).root.findByType(
+    PartyLabel,
+  );
+  expect(sponsored.props).toMatchObject({
+    singleLine: true,
+    prefix: 'Alex Taylor',
+  });
+  expect(
+    sponsored
+      .findAllByType(Text)
+      .every((node) => node.props.numberOfLines === 1),
+  ).toBe(true);
+});
+
+test('Bills rows outside Today keep their full titles and metadata', () => {
+  const { root } = render(
+    <BillRow
+      title="A complete record title"
+      status="Introduced"
+      meta={{ portfolio: 'A complete portfolio name' }}
+      menu={[]}
+    />,
+  );
+  const lines = root.findAllByType(Text);
+  expect(lines.every((node) => node.props.numberOfLines === undefined)).toBe(
+    true,
+  );
+  expect(
+    lines
+      .filter((node) => ['rowRecord', 'secondary'].includes(node.props.variant))
+      .every((node) => node.props.wordSafe),
+  ).toBe(true);
+});

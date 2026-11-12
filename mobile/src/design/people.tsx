@@ -246,6 +246,8 @@ export function PartyLabel({
   href,
   onDeep = false,
   compact = false,
+  singleLine = false,
+  prefix,
 }: Omit<PartyContext, 'status'> & {
   status?: PartyStatus;
   dense?: boolean;
@@ -264,6 +266,9 @@ export function PartyLabel({
   onDeep?: boolean;
   /** Tight text stacks; the parent must leave room below for the hit target. */
   compact?: boolean;
+  /** Compact bill previews on Today. */
+  singleLine?: boolean;
+  prefix?: string;
 }) {
   const identity = partyIdentity(party);
   const scheme = useColorScheme();
@@ -332,6 +337,16 @@ export function PartyLabel({
       }
       testID={testID}
     >
+      {prefix ? (
+        <Text
+          variant="secondary"
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={{ flexShrink: 1 }}
+        >
+          {prefix}
+        </Text>
+      ) : null}
       {dot ? (
         <View
           accessibilityElementsHidden
@@ -349,7 +364,9 @@ export function PartyLabel({
         />
       ) : null}
       <Text
-        wordSafe={fixed}
+        wordSafe={fixed && !singleLine}
+        numberOfLines={singleLine ? 1 : undefined}
+        ellipsizeMode={singleLine ? 'tail' : undefined}
         variant="secondary"
         tone={
           onDeep ? 'onNavySoft' : nested && partyLinked ? 'link' : undefined

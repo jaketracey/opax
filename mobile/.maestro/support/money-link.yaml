@@ -19,6 +19,8 @@ name: A money link keeps the current tab and returns to its root
       id: ${READY}
       text: ${TITLE}
     timeout: 120000
+# Let the cold skeleton crossfade finish before the first content check.
+- waitForAnimationToEnd
 - assertVisible:
     id: BackButton
     text: ${BACK}

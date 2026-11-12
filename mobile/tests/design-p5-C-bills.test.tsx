@@ -1,6 +1,9 @@
+import { SkeletonCrossfade } from '../src/design/states';
+import { SectionHeader } from '../src/design/layout';
+import { SourceAffordance } from '../src/design/source';
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
-import { Platform, StyleSheet, useWindowDimensions } from 'react-native';
+import { Platform, StyleSheet, View, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { router } from 'expo-router';
 import { Catalogs } from '../src/api/catalogs';
@@ -604,5 +607,34 @@ test('a consultation that closed yesterday in Sydney reads closed on an Australi
     expect(words).toContain('and closed 10 Nov');
   } finally {
     jest.useRealTimers();
+  }
+});
+
+test('bill content uses the shared loader while its headers and source bands keep their spacing', async () => {
+  mockParams.key = 'au-federal-r7529';
+  const root = await render(<BillDetail />);
+  expect(root.findByType(SkeletonCrossfade).props).toMatchObject({
+    loading: false,
+    ready: true,
+    sectioned: true,
+  });
+  const headers = root.findAllByType(SectionHeader);
+  expect(headers.length).toBeGreaterThan(0);
+  for (const header of headers) {
+    expect(header.props.compact).toBeUndefined();
+    expect(
+      StyleSheet.flatten(header.findByType(View).props.style).minHeight,
+    ).toBe(44);
+  }
+  const sources = root.findAllByType(SourceAffordance);
+  expect(sources.length).toBeGreaterThan(0);
+  for (const source of sources) {
+    expect(source.props.overlap).toBe(false);
+    const target = source.find(
+      (node) => typeof node.props.style === 'function',
+    );
+    expect(
+      StyleSheet.flatten(target.props.style({ pressed: false })).marginTop,
+    ).toBeUndefined();
   }
 });

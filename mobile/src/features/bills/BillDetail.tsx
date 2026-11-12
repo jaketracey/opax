@@ -62,6 +62,7 @@ import {
   Screen,
   Section,
   Skeleton,
+  SkeletonCrossfade,
   SourceLine,
   StageTimeline,
   StatusCapsule,
@@ -367,84 +368,93 @@ export default function BillDetail({
           />
         }
       >
-        {notFound ? (
-          <ContentUnavailable
-            symbol="doc.text.magnifyingglass"
-            title="Bill not found"
-            body="This link may be old."
-            action={{
-              label: 'Search bills',
-              onPress: () =>
-                router.push(billListRoute({ scope: 'all', focus: '1' })),
-              testID: 'bill-not-found-search',
-            }}
-            testID="bill-not-found"
-          />
-        ) : offline && !record ? (
-          <ContentUnavailable
-            symbol="wifi.slash"
-            title={words.notSaved}
-            body={words.notSavedBody}
-            testID="bill-offline-uncached"
-          />
-        ) : error && !record ? (
-          <ContentUnavailable
-            symbol="exclamationmark.triangle"
-            title="This bill couldn't be loaded"
-            action={{
-              label: words.tryAgain,
-              onPress: retry,
-              testID: 'bill-error-retry',
-            }}
-            testID="bill-error"
-          />
-        ) : !view ? (
-          seed ? (
-            <>
-              <SeededHead row={seed} />
-              <View
-                accessible
-                accessibilityRole="progressbar"
-                accessibilityLabel="Loading the bill"
-                accessibilityState={{ busy: true }}
-                testID="bill-loading"
-              >
-                <BodySkeleton />
-              </View>
-            </>
-          ) : (
-            <ColdSkeleton />
-          )
-        ) : null}
-        {view && identity && record ? (
-          <BillPage
-            view={view}
-            identity={identity}
-            name={name}
-            titleRef={embedded ? undefined : titleRef}
-            onTitleLayout={embedded ? undefined : barTitle.onTitleLayout}
-            onAsk={ask}
-            directory={directory}
-            savedAt={savedAt}
-            stale={
-              record.stale
-                ? record.staleReason
-                  ? { kind: 'failed', at: record.savedAt, retry: refresh }
-                  : { kind: 'offline', at: record.savedAt }
-                : null
-            }
-            follow={follow}
-            targets={targets}
-            arrival={
-              embedded
-                ? {}
-                : {
-                    division: params.division,
-                    section: params.section,
-                  }
-            }
-          />
-        ) : null}
+        <SkeletonCrossfade
+          loading={!view && !failed}
+          ready={!!view}
+          cached={!!record?.stale}
+          cachedAt={record?.savedAt}
+          sectioned
+          skeleton={
+            seed ? (
+              <>
+                <SeededHead row={seed} />
+                <View
+                  accessible
+                  accessibilityRole="progressbar"
+                  accessibilityLabel="Loading the bill"
+                  accessibilityState={{ busy: true }}
+                  testID="bill-loading"
+                >
+                  <BodySkeleton />
+                </View>
+              </>
+            ) : (
+              <ColdSkeleton />
+            )
+          }
+        >
+          {notFound ? (
+            <ContentUnavailable
+              symbol="doc.text.magnifyingglass"
+              title="Bill not found"
+              body="This link may be old."
+              action={{
+                label: 'Search bills',
+                onPress: () =>
+                  router.push(billListRoute({ scope: 'all', focus: '1' })),
+                testID: 'bill-not-found-search',
+              }}
+              testID="bill-not-found"
+            />
+          ) : offline && !record ? (
+            <ContentUnavailable
+              symbol="wifi.slash"
+              title={words.notSaved}
+              body={words.notSavedBody}
+              testID="bill-offline-uncached"
+            />
+          ) : error && !record ? (
+            <ContentUnavailable
+              symbol="exclamationmark.triangle"
+              title="This bill couldn't be loaded"
+              action={{
+                label: words.tryAgain,
+                onPress: retry,
+                testID: 'bill-error-retry',
+              }}
+              testID="bill-error"
+            />
+          ) : null}
+          {view && identity && record ? (
+            <BillPage
+              view={view}
+              identity={identity}
+              name={name}
+              titleRef={embedded ? undefined : titleRef}
+              onTitleLayout={embedded ? undefined : barTitle.onTitleLayout}
+              onAsk={ask}
+              directory={directory}
+              savedAt={savedAt}
+              stale={
+                record.stale
+                  ? record.staleReason
+                    ? { kind: 'failed', at: record.savedAt, retry: refresh }
+                    : { kind: 'offline', at: record.savedAt }
+                  : null
+              }
+              follow={follow}
+              targets={targets}
+              arrival={
+                embedded
+                  ? {}
+                  : {
+                      division: params.division,
+                      section: params.section,
+                    }
+              }
+            />
+          ) : null}
+        </SkeletonCrossfade>
       </Screen>
       {embedded || failed || Platform.OS === 'ios' || !canShare ? null : (
         <BillToolbar onShare={share} canShare={!!identity} />

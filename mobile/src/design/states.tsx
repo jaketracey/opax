@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useLayoutEffect,
   useRef,
   useState,
   useSyncExternalStore,
@@ -14,14 +15,18 @@ import {
 } from 'react';
 import {
   AccessibilityInfo,
+  Animated,
+  Easing,
   Platform,
   StyleSheet,
   View,
   useWindowDimensions,
   type DimensionValue,
+  type StyleProp,
+  type ViewStyle,
 } from 'react-native';
 import { ApiError } from '../api/errors';
-import { useAccessibilitySize } from './accessibility';
+import { useAccessibilitySize, useReduceMotionSetting } from './accessibility';
 import { columns, ReadableColumn, useLayout } from './adaptive';
 import { Button } from './controls';
 import { copy } from './copy';
@@ -35,6 +40,7 @@ import {
   controlHeight,
   hairline,
   minimumTarget,
+  motion,
   radii,
   rhythm,
   rhythmRegular,
@@ -585,6 +591,154 @@ export function Skeleton({
           ))
         )}
       </View>
+    </View>
+  );
+}
+/** Screen supplies its own section gap, including adaptive-width boundaries. */
+export const ScreenSectionGapContext = createContext<number>(rhythm.section);
+
+/** A cold skeleton yields to content in place. Fast and saved reads appear at once. */
+export function SkeletonCrossfade({
+  loading,
+  skeleton,
+  children,
+  ready = true,
+  cached = false,
+  cachedAt,
+  sectioned = false,
+  fill = false,
+  style,
+}: {
+  loading: boolean;
+  skeleton: ReactNode;
+  children: ReactNode;
+  /** Errors and empty states replace the skeleton immediately. */
+  ready?: boolean;
+  /** A saved record never has an entrance animation, even after a slow read. */
+  cached?: boolean;
+  /** The oldest saved record: a timestamp before this read identifies a cache hit. */
+  cachedAt?: number | null;
+  /** Preserve Screen's spacing when its children are fragments. */
+  sectioned?: boolean;
+  /** For a loader whose content owns its scrolling screen. */
+  fill?: boolean;
+  style?: StyleProp<ViewStyle>;
+}) {
+  const reduceMotion = useReduceMotionSetting();
+  const sectionGap = useContext(ScreenSectionGapContext);
+  const [opacity] = useState(() => new Animated.Value(loading ? 0 : 1));
+  const [phase, setPhase] = useState({
+    loading,
+    skeleton,
+    visible: false,
+    eligible: false,
+    fade: false,
+    startedAt: 0,
+  });
+  // Capture the last committed loading shape before its props become content.
+  // A new loading cycle resets the grace period; revalidation never enters it.
+  if (loading !== phase.loading) {
+    setPhase(
+      loading
+        ? {
+            loading,
+            skeleton,
+            visible: false,
+            eligible: false,
+            fade: false,
+            startedAt: 0,
+          }
+        : {
+            ...phase,
+            loading,
+            fade:
+              phase.eligible &&
+              ready &&
+              !cached &&
+              !(cachedAt != null && cachedAt < phase.startedAt) &&
+              reduceMotion === false,
+          },
+    );
+  } else if (loading && skeleton !== phase.skeleton) {
+    setPhase({ ...phase, skeleton });
+  } else if (phase.fade && reduceMotion !== false) {
+    setPhase({ ...phase, fade: false });
+  }
+  useLayoutEffect(() => {
+    if (!loading) return;
+    opacity.setValue(0);
+    const startedAt = Date.now();
+    // Reserve the final shape without flashing a skeleton on a warm read.
+    const reveal = setTimeout(() => {
+      setPhase((was) => ({ ...was, visible: true, startedAt }));
+    }, 100);
+    return () => clearTimeout(reveal);
+  }, [loading, opacity]);
+  useLayoutEffect(() => {
+    if (!loading || !phase.visible) return;
+    // Count from the visible skeleton's commit, including a busy JS thread.
+    const eligible = setTimeout(() => {
+      setPhase((was) => ({ ...was, eligible: true }));
+    }, 100);
+    return () => clearTimeout(eligible);
+  }, [loading, phase.visible]);
+  useLayoutEffect(() => {
+    if (loading) return;
+    if (!phase.fade) {
+      opacity.setValue(1);
+      return;
+    }
+    let active = true;
+    const fade = Animated.timing(opacity, {
+      toValue: 1,
+      duration: motion.duration.crossfade,
+      easing: Easing.bezier(...motion.easing.standard),
+      useNativeDriver: true,
+    });
+    fade.start(({ finished }) => {
+      if (active && finished) setPhase((was) => ({ ...was, fade: false }));
+    });
+    return () => {
+      active = false;
+      fade.stop();
+    };
+  }, [loading, phase.fade, opacity]);
+  const contentStyle = [
+    fill ? { flex: 1 } : null,
+    sectioned ? { gap: sectionGap } : null,
+  ];
+  return (
+    <View style={[fill ? { flex: 1 } : null, style]}>
+      {(loading || phase.fade) && (
+        <Animated.View
+          pointerEvents={loading ? 'auto' : 'none'}
+          accessibilityElementsHidden={!loading || !phase.visible}
+          importantForAccessibility={
+            loading && phase.visible ? 'auto' : 'no-hide-descendants'
+          }
+          style={[
+            ...contentStyle,
+            !loading ? StyleSheet.absoluteFill : null,
+            {
+              opacity: loading
+                ? phase.visible
+                  ? 1
+                  : 0
+                : opacity.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [1, 0],
+                  }),
+            },
+          ]}
+        >
+          {loading ? skeleton : phase.skeleton}
+        </Animated.View>
+      )}
+      {!loading && (
+        <Animated.View style={[...contentStyle, { opacity }]}>
+          {children}
+        </Animated.View>
+      )}
     </View>
   );
 }

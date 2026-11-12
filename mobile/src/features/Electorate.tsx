@@ -37,6 +37,7 @@ import {
   Screen,
   SectionHeader,
   Skeleton,
+  SkeletonCrossfade,
   StatStrip,
   Text,
   TitleAnchor,
@@ -253,49 +254,59 @@ function ElectorateContent({
           <RefreshControl refreshing={refreshing} onRefresh={refresh} />
         }
       >
-        {failure && !loaded ? (
-          failure.code === 'not-found' ? (
-            <ContentUnavailable
-              symbol="map"
-              title="We couldn't find this electorate."
-              body="Search for an electorate or its member."
-              action={{
-                label: 'Search',
-                onPress: () => router.navigate('/search'),
-              }}
-              testID="electorate-error"
+        <SkeletonCrossfade
+          loading={!loaded && !failure}
+          ready={!!loaded}
+          cached={!!loaded?.stale}
+          cachedAt={loaded?.savedAt}
+          sectioned
+          skeleton={<ElectorateSkeleton />}
+        >
+          {failure && !loaded ? (
+            failure.code === 'not-found' ? (
+              <ContentUnavailable
+                symbol="map"
+                title="We couldn't find this electorate."
+                body="Search for an electorate or its member."
+                action={{
+                  label: 'Search',
+                  onPress: () => router.navigate('/search'),
+                }}
+                testID="electorate-error"
+              />
+            ) : (
+              <ContentUnavailable
+                symbol={offline ? 'wifi.slash' : 'exclamationmark.triangle'}
+                title={
+                  offline
+                    ? copy.notSaved
+                    : "This electorate couldn't be loaded."
+                }
+                body={offline ? copy.notSavedBody : undefined}
+                action={
+                  offline
+                    ? undefined
+                    : {
+                        label: copy.tryAgain,
+                        onPress: refresh,
+                        testID: 'electorate-retry',
+                      }
+                }
+                testID="electorate-error"
+              />
+            )
+          ) : null}
+          {loaded && identity ? (
+            <ElectoratePage
+              loaded={loaded}
+              asof={asof}
+              embedded={embedded}
+              section={section}
+              scroll={scroll}
+              onDate={setChosen}
             />
-          ) : (
-            <ContentUnavailable
-              symbol={offline ? 'wifi.slash' : 'exclamationmark.triangle'}
-              title={
-                offline ? copy.notSaved : "This electorate couldn't be loaded."
-              }
-              body={offline ? copy.notSavedBody : undefined}
-              action={
-                offline
-                  ? undefined
-                  : {
-                      label: copy.tryAgain,
-                      onPress: refresh,
-                      testID: 'electorate-retry',
-                    }
-              }
-              testID="electorate-error"
-            />
-          )
-        ) : null}
-        {!loaded && !failure ? <ElectorateSkeleton /> : null}
-        {loaded && identity ? (
-          <ElectoratePage
-            loaded={loaded}
-            asof={asof}
-            embedded={embedded}
-            section={section}
-            scroll={scroll}
-            onDate={setChosen}
-          />
-        ) : null}
+          ) : null}
+        </SkeletonCrossfade>
       </Screen>
     </>
   );

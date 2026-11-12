@@ -16,9 +16,9 @@ import {
   type SectionAction,
 } from '../../design/layout';
 import { SourceLine, type SourceDetails } from '../../design/source';
-import { InlineError } from '../../design/states';
+import { InlineError, SkeletonCrossfade } from '../../design/states';
 import { Text } from '../../design/text';
-import { minimumTarget, rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm, textStyles } from '../../design/tokens';
 
 /**
  * One read for a Today block. `null` until the first answer; a pull to
@@ -152,17 +152,30 @@ export function TodayBlock<T>({
     <View testID={testID} style={styles.block}>
       {title ? (
         <SectionHeader
+          compact
           title={title}
           action={action}
           testID={`${testID}-title`}
         />
       ) : null}
       {above}
-      <View style={styles.body}>
-        {body}
-        {sourced ? <SourceLine {...line} /> : null}
-        {state.kind === 'loading' ? <SourceSkeleton /> : null}
-      </View>
+      <SkeletonCrossfade
+        loading={state.kind === 'loading'}
+        ready={state.kind === 'ready'}
+        cached={report?.savedAt != null}
+        cachedAt={report?.cachedAt}
+        skeleton={
+          <View style={styles.body}>
+            {skeleton}
+            <SourceSkeleton />
+          </View>
+        }
+      >
+        <View style={styles.body}>
+          {body}
+          {sourced ? <SourceLine {...line} overlap /> : null}
+        </View>
+      </SkeletonCrossfade>
     </View>
   );
 }
@@ -182,7 +195,10 @@ const styles = StyleSheet.create({
   block: { gap: rhythm.heading },
   body: { gap: rhythm.group },
   empty: { paddingVertical: rhythm.row },
-  sourceSkeleton: { height: minimumTarget },
+  sourceSkeleton: {
+    height: minimumTarget,
+    marginTop: -(minimumTarget - textStyles.footnote.lineHeight) / 2,
+  },
 });
 
 /** What one block tells the page: its saved copy's time, and whether it

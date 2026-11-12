@@ -1,3 +1,4 @@
+import { SourceAffordance } from '../src/design/source';
 import { withNavigationOptions } from './navigation-options';
 import { act, type ReactElement } from 'react';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
@@ -10,10 +11,10 @@ import Electorate, {
   identityLine,
 } from '../src/features/Electorate';
 import { router } from 'expo-router';
-import { ContentUnavailable } from '../src/design/states';
+import { ContentUnavailable, SkeletonCrossfade } from '../src/design/states';
 import { PartyLabel, PersonRow } from '../src/design/people';
 import { Heading, Text } from '../src/design/text';
-import { Screen } from '../src/design/layout';
+import { Screen, SectionHeader } from '../src/design/layout';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import Members from '../src/features/your-mp/Members';
 import Election from '../src/features/your-mp/Election';
@@ -185,6 +186,10 @@ test('the pending electorate reserves the map, title and member layout with one 
   load('Boothby');
   mock.electorateFor.mockReturnValue(new Promise(() => {}));
   const r = await render(<Electorate />);
+  expect(r.root.findByType(SkeletonCrossfade).props).toMatchObject({
+    loading: true,
+    sectioned: true,
+  });
   const host = (id: string) =>
     r.root.find(
       (node) => typeof node.type === 'string' && node.props.testID === id,
@@ -958,4 +963,36 @@ test('a Members link to a seat not in the release says so, never loads for good'
     "These members couldn't be found.",
   );
   await act(async () => r.unmount());
+});
+
+test('electorate content uses the shared loader while its headers and source bands keep their spacing', async () => {
+  const dimensions = jest
+    .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
+    .mockReturnValue({ width: 402, height: 874, scale: 3, fontScale: 1 });
+  load('Boothby');
+  const r = await render(<Electorate />);
+  expect(r.root.findByType(SkeletonCrossfade).props).toMatchObject({
+    loading: false,
+    ready: true,
+  });
+  const headers = r.root.findAllByType(SectionHeader);
+  expect(headers.length).toBeGreaterThan(0);
+  for (const header of headers) {
+    expect(header.props.compact).toBeUndefined();
+    expect(
+      StyleSheet.flatten(header.findByType(View).props.style).minHeight,
+    ).toBe(44);
+  }
+  const sources = r.root.findAllByType(SourceAffordance);
+  expect(sources.length).toBeGreaterThan(0);
+  for (const source of sources) {
+    expect(source.props.overlap).toBe(false);
+    const target = source.find(
+      (node) => typeof node.props.style === 'function',
+    );
+    expect(
+      StyleSheet.flatten(target.props.style({ pressed: false })).marginTop,
+    ).toBeUndefined();
+  }
+  dimensions.mockRestore();
 });
