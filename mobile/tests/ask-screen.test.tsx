@@ -13,12 +13,14 @@ import {
   Dimensions,
   InteractionManager,
   Keyboard,
+  Platform,
   ScrollView,
   StyleSheet,
   TextInput,
   View,
 } from 'react-native';
 import AskScreen, { PhoneDock } from '../src/features/ask/AskScreen';
+import { useScreenReady } from '../src/analytics/timing';
 import {
   AskDock,
   COMPOSER_HEIGHT_SHARE,
@@ -54,6 +56,7 @@ import { emptyReservedRegions } from '../src/design/fold';
 
 // The bar's items, as AskScreen sets them through Stack.Screen.
 const mockBar: { options: Record<string, unknown> } = { options: {} };
+jest.mock('../src/analytics/timing', () => ({ useScreenReady: jest.fn() }));
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
   Stack: {
@@ -226,6 +229,54 @@ async function mount(screen = <AskScreen />) {
   });
   return view!;
 }
+
+test.each([
+  ['ios', 'composer'],
+  ['ios', 'content'],
+  ['android', 'composer'],
+  ['android', 'content'],
+] as const)(
+  'Ask on %s waits for both layouts, with %s arriving first',
+  async (platform, first) => {
+    const os = jest.replaceProperty(Platform, 'OS', platform);
+    try {
+      await mount();
+      expect(byId('ask-idle')).not.toHaveLength(0);
+      expect(useScreenReady).toHaveBeenLastCalledWith('/ask', false);
+      const content = byId('ask-screen').find(
+        (node) => typeof node.props.onContentSizeChange === 'function',
+      )!.props.onContentSizeChange;
+      const composer = byId('ask-dock').find(
+        (node) => typeof node.props.onLayout === 'function',
+      )!.props.onLayout;
+      const dockLayout = (height: number) => ({
+        nativeEvent: { layout: { width: 390, height, x: 0, y: 0 } },
+      });
+      act(() => {
+        content(0, 400);
+        composer(dockLayout(0));
+      });
+      expect(useScreenReady).toHaveBeenLastCalledWith('/ask', false);
+      act(() => {
+        if (first === 'composer') composer(dockLayout(100));
+        else content(390, 400);
+      });
+      expect(useScreenReady).toHaveBeenLastCalledWith('/ask', false);
+      act(() => {
+        if (first === 'composer') content(390, 400);
+        else composer(dockLayout(100));
+      });
+      expect(useScreenReady).toHaveBeenLastCalledWith('/ask', true);
+      act(() => {
+        content(390, 450);
+        composer(dockLayout(110));
+      });
+      expect(useScreenReady).toHaveBeenLastCalledWith('/ask', true);
+    } finally {
+      os.restore();
+    }
+  },
+);
 
 function immediateFocusRequests() {
   const interactions = jest

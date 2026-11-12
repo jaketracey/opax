@@ -145,11 +145,14 @@ export function Screen({
   barTitle,
   offline,
   onLayout: onPageLayout,
+  onContentLayout,
   maintainVisibleContentPosition,
   contentInsetAdjustmentBehavior = 'automatic',
   clampScrollOnContentChange = false,
 }: {
   onLayout?: ViewProps['onLayout'];
+  /** The rendered content, rather than the surrounding scroll viewport. */
+  onContentLayout?: ViewProps['onLayout'];
   maintainVisibleContentPosition?: React.ComponentProps<
     typeof ScrollView
   >['maintainVisibleContentPosition'];
@@ -272,6 +275,7 @@ export function Screen({
                   <TitleContentContext.Provider value={contentRoot}>
                     <View
                       ref={contentRoot}
+                      onLayout={onContentLayout}
                       style={{
                         gap: regular ? rhythmRegular.section : rhythm.section,
                       }}

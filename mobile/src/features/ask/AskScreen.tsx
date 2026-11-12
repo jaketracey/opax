@@ -82,7 +82,6 @@ const announce = (text: string) =>
  * idle; within a session it keeps what was on screen.
  */
 export default function AskScreen() {
-  useScreenReady('/ask', true);
   const offline = useOffline();
   const atTop = useRef(true);
   const ground = askGround();
@@ -109,6 +108,11 @@ export default function AskScreen() {
   const [profiles, setProfiles] = useState<Map<string, AskPerson>>(new Map());
   const [names, setNames] = useState<string[]>([]);
   const [dockHeight, setDockHeight] = useState(0);
+  const [contentReady, setContentReady] = useState(false);
+  useScreenReady('/ask', dockHeight > 0 && contentReady);
+  const onContentSizeChange = useCallback((width: number, height: number) => {
+    if (width > 0 && height > 0) setContentReady(true);
+  }, []);
   // Bar items are built during render, so New question touches no refs:
   // it asks for the top, and an effect scrolls there.
   const [topRequest, setTopRequest] = useState(0);
@@ -312,6 +316,7 @@ export default function AskScreen() {
         adaptive ? { minIndexForVisible: 0 } : undefined
       }
       onLayout={column.onLayout}
+      onContentSizeChange={onContentSizeChange}
       onScroll={(event) => {
         atTop.current = event.nativeEvent.contentOffset.y <= 4;
         if (adaptive) anchor.onScroll(event.nativeEvent.contentOffset.y);

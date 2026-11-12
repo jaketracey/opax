@@ -182,9 +182,15 @@ or when a notification is unavailable, the first screen render supplies it.
 A retained screen starts a fresh visit when it gains focus. The end is the
 first committed content or terminal empty/error state: Today's launch/seat
 read has settled, person profile and bill record reads have settled, Your MP
-has read its seat and primary representative block, or Search's Browse and
-Ask's composer have mounted. Background block refreshes and Ask/search request
-latency remain separate from screen readiness. Embedded iPad detail panes do
+has read its seat and primary representative block. Search waits for a
+positive-sized layout of its rendered content (the idle Browse list on a
+plain visit, or the initial content for a linked search). The scroll viewport
+mounting or laying out alone does not count. Ask waits for both a positive
+composer layout and a positive-sized layout of its idle or conversation
+content. These layout callbacks measure content readiness rather than screen
+mount, and do not claim that the pixels have reached the display. Background
+block refreshes and Ask/search request latency remain separate from screen
+readiness. Embedded iPad detail panes do
 not create screen visits.
 
 `SCREEN_READY_SAMPLE_RATE` in `mobile/src/analytics/timing.ts` is 0.1 (10%).

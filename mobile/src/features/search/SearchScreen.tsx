@@ -1,11 +1,18 @@
 import { RouteOptions } from '../../navigation/preview';
 import { useScreenReady } from '../../analytics/timing';
-import { useEffect, useRef, useState, type RefObject } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from 'react';
 import {
   Keyboard,
   Platform,
   RefreshControl,
   ScrollView,
+  type LayoutChangeEvent,
   type TextInput,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -61,7 +68,12 @@ export function SearchScreen({
   onRows?: Parameters<typeof ResultsView>[0]['onRows'];
 }) {
   const params = useLocalSearchParams<Record<string, string>>();
-  useScreenReady('/search', true);
+  const [contentReady, setContentReady] = useState(false);
+  useScreenReady('/search', contentReady);
+  const onContentLayout = useCallback((event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+    if (width > 0 && height > 0) setContentReady(true);
+  }, []);
   const [text, setText] = useState('');
   const [editing, setEditing] = useState(false);
   const [submitted, setSubmitted] = useState<{
@@ -213,6 +225,7 @@ export function SearchScreen({
         }}
       />
       <Screen
+        onContentLayout={onContentLayout}
         // A fresh scroll view starts at UIKit's adjusted top inset, restoring
         // the expanded large title as well as Browse. scrollTo(y: 0) would
         // leave the content beneath the bar with the large title collapsed.
