@@ -1671,6 +1671,58 @@ test('Community funding shortens only the row title and keeps the full Purpose a
   await act(async () => page.unmount());
 });
 
+test('Community funding searches the full purpose and resolved title behind the short row name', async () => {
+  const allocation = await fixture.allocation();
+  const award = {
+    ...allocation.data.awards[0]!,
+    recipient: 'Sample Council',
+    title:
+      'The project will deliver the construction of the Sample Aquatic Centre comprising a pool and change rooms.',
+  };
+  money.allocation = jest.fn().mockResolvedValue({
+    ...allocation,
+    data: { ...allocation.data, awards: [award] },
+  });
+  money.locations = jest.fn().mockResolvedValue({
+    stale: false,
+    savedAt: 10,
+    asOf: null,
+    data: {
+      asOf: allocation.data.asOf,
+      methodology: [],
+      records: [
+        {
+          id: award.id,
+          kind: 'award',
+          verified: true,
+          title: 'Sample Aquatic Centre including a diving hall',
+          sites: [],
+        },
+      ],
+    },
+  });
+  const page = await mount(Allocation);
+  const search =
+    page.root.findByType(RouteOptions).props.options.headerSearchBarOptions;
+  expect(page.root.findByType(MoneyRow).props.name).toBe(
+    'Sample Aquatic Centre',
+  );
+  for (const query of ['pool', 'diving hall', award.id]) {
+    await act(async () =>
+      search.onChangeText({ nativeEvent: { text: query } }),
+    );
+    expect(page.root.findByType(MoneyList).props.rows).toEqual([award]);
+    expect(page.root.findByType(MoneyRow).props.name).toBe(
+      'Sample Aquatic Centre',
+    );
+  }
+  await act(async () =>
+    search.onChangeText({ nativeEvent: { text: 'unrelated project' } }),
+  );
+  expect(page.root.findByType(MoneyList).props.rows).toEqual([]);
+  await act(async () => page.unmount());
+});
+
 test('Largest grants drops a program that repeats the recipient', async () => {
   const largest = await fixture.largest();
   const month = largest.data.latest;

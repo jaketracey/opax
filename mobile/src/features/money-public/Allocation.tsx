@@ -157,27 +157,26 @@ export default function Allocation() {
           : (data?.allocation.awards ?? []),
     [data, stage],
   );
-  const titleOf = useCallback(
+  const resolvedTitleOf = useCallback(
     (r: (typeof all)[number]) =>
-      projectTitle(
-        (stage === 'history' ||
-        ('recipient' in r && r.recipient === unnamedRecipient)
-          ? undefined
-          : data?.locations?.records.find(
-              (l) =>
-                l.id === r.id &&
-                l.kind === (stage === 'invitations' ? 'invitation' : 'award'),
-            )?.title) ?? r.title,
-      ),
+      (stage === 'history' ||
+      ('recipient' in r && r.recipient === unnamedRecipient)
+        ? undefined
+        : data?.locations?.records.find(
+            (l) =>
+              l.id === r.id &&
+              l.kind === (stage === 'invitations' ? 'invitation' : 'award'),
+          )?.title) ?? r.title,
     [data, stage],
   );
+  const titleOf = (r: (typeof all)[number]) => projectTitle(resolvedTitleOf(r));
   const filtered = all.filter(
     (p) =>
       inState(p.state, state) &&
       (stage !== 'history' || !through || p.date.slice(0, 4) <= through),
   );
   const rows = filtered
-    .filter((p) => matches(search.query, p.id, titleOf(p)))
+    .filter((p) => matches(search.query, p.id, p.title, resolvedTitleOf(p)))
     .sort((a, b) => b.value - a.value);
   const noun =
     stage === 'awards'
