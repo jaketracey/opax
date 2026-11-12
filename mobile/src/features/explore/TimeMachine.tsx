@@ -20,7 +20,7 @@ import { YearBills } from './YearBills';
 import { YearBrief } from './YearBrief';
 import { YearGallery } from './YearGallery';
 import { YearHeader, YearPager } from './YearHeader';
-import { FIRST_YEAR, LAST_YEAR, useYearChoice } from './YearMenu';
+import { FIRST_YEAR, LAST_YEAR } from './YearMenu';
 import { YearVoices, type RosterLookup } from './YearVoices';
 
 /** The latest complete year: 2025 in November 2026. */
@@ -40,11 +40,11 @@ export function linkedYear(value: string | string[] | undefined) {
   const year = Number(raw);
   return year >= FIRST_YEAR && year <= LAST_YEAR ? year : null;
 }
-const loadBills = () => catalogs.bills();
-const loadRoster = async () => {
+const loadBills = (signal?: AbortSignal) => catalogs.bills(undefined, signal);
+const loadRoster = async (signal?: AbortSignal) => {
   const [roster, slugs] = await Promise.all([
-    catalogs.roster(),
-    catalogs.slugs(),
+    catalogs.roster(undefined, signal),
+    catalogs.slugs(undefined, signal),
   ]);
   return {
     ...roster,
@@ -88,18 +88,32 @@ export default function TimeMachine() {
     saveExploreChoice({ year: next });
     scroll.current?.scrollTo({ y: 0, animated: false });
   }, []);
-  useYearChoice(setYear);
-  const shown = year ?? defaultYear();
   return (
     <>
-      <ExploreChrome name="Time machine" game="tm" />
-      <YearPage
-        key={shown}
-        year={shown}
-        photo={photo}
-        onYear={setYear}
-        scrollRef={scroll}
+      {/* Share and Copy link carry the year shown, as a year link opens. */}
+      <ExploreChrome
+        name="Time machine"
+        game="tm"
+        params={year === null ? undefined : { year: String(year) }}
       />
+      {year === null ? (
+        <Screen testID="explore-tm-screen" barTitle="Time machine">
+          <Skeleton
+            shape="text"
+            count={5}
+            label="Loading Time machine"
+            testID="tm-choice-loading"
+          />
+        </Screen>
+      ) : (
+        <YearPage
+          key={year}
+          year={year}
+          photo={photo}
+          onYear={setYear}
+          scrollRef={scroll}
+        />
+      )}
     </>
   );
 }
@@ -115,7 +129,10 @@ function YearPage({
   onYear: (year: number) => void;
   scrollRef: React.RefObject<ScrollView | null>;
 }) {
-  const loadYear = useCallback(() => explore.year(year), [year]);
+  const loadYear = useCallback(
+    (signal?: AbortSignal) => explore.year(year, signal),
+    [year],
+  );
   const brief = useRead(loadYear),
     pictures = useRead(explore.pictures),
     bills = useRead(loadBills),

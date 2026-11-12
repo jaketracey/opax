@@ -4,15 +4,20 @@ import { useFonts } from 'expo-font';
 import { Stack, router, useRootNavigationState, type Href } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Linking, StyleSheet, View } from 'react-native';
+import { Linking, Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { startAnalytics, useScreenTracking } from '../analytics';
-import { isPad } from '../design/adaptive';
+import { useNavigationTiming } from '../analytics/timing';
+import { isPad, useWindowTraits } from '../design/adaptive';
 import { hasSourcePreview } from '../design/environment';
 import { AndroidMenuHost } from '../design/menu';
 import { colors } from '../design/tokens';
 import { RootLaunchHandoff } from '../launch/LaunchHandoff';
-import { decideSplashPlain, holdSplashForWelcome } from '../launch/splash';
+import {
+  decideLaunchSequence,
+  decideSplashPlain,
+  holdSplashForWelcome,
+} from '../launch/splash';
 import { useStackChrome } from '../navigation/chrome';
 import { KeyboardShortcuts } from '../navigation/KeyboardShortcuts';
 import { welcomeRoute } from '../navigation/routes';
@@ -30,8 +35,12 @@ import {
   useTourState,
 } from '../onboarding/state';
 export const unstable_settings = rootSettings;
+// Last resort: a page that fails to draw shows Try again instead of closing.
+export { RouteErrorBoundary as ErrorBoundary } from '../navigation/RouteErrorBoundary';
 
 export default function Layout() {
+  // Keep traits and adaptive-device detection live throughout this session.
+  useWindowTraits();
   const [loaded, error] = useFonts({
     [fonts.serif]: require('../../assets/fonts/Merriweather.ttf'),
     [fonts.serifBold]: require('../../assets/fonts/Merriweather-Bold.ttf'),
@@ -46,8 +55,12 @@ export default function Layout() {
   const endHandoff = useCallback(() => setHandedOver(true), []);
   const launch = useLaunchWelcome(tour);
   useScreenTracking();
+  useNavigationTiming();
   useEffect(() => {
     void checkFirstLaunch();
+    // Beside the first-launch check: which splash sequence a plain launch
+    // plays (launch/played.ts). The cover draws either way; motion waits.
+    void decideLaunchSequence();
     startAnalytics();
   }, []);
   // The launch decision, once (shell.md 3, first-launch 4.1 L2 and 4.5): the
@@ -86,7 +99,7 @@ export default function Layout() {
   if (!loaded && !error) return null;
   return (
     <SafeAreaProvider>
-      <StatusBar style="auto" />
+      <StatusBar style={Platform.OS === 'android' ? 'dark' : 'auto'} />
       <View style={styles.app}>
         <AndroidMenuHost />
         <ExternalURLProbe />

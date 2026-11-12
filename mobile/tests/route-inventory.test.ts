@@ -3,6 +3,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import React, { act } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { Platform } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { Redirect, Stack, useLocalSearchParams } from 'expo-router';
 import SharedLayout, {
   unstable_settings,
@@ -40,6 +42,7 @@ jest.mock('expo-router', () => {
     Redirect: () => null,
     useLocalSearchParams: jest.fn(),
     useRootNavigationState: () => ({ key: 'root' }),
+    useNavigationContainerRef: () => ({ isReady: () => false }),
     useSegments: () => [],
     router: { push: jest.fn(), back: jest.fn() },
   };
@@ -48,6 +51,7 @@ jest.mock('../src/navigation/KeyboardShortcuts', () => ({
   KeyboardShortcuts: () => null,
 }));
 jest.mock('../src/launch/splash', () => ({
+  decideLaunchSequence: jest.fn(async () => undefined),
   decideSplashPlain: jest.fn(),
   holdSplashForWelcome: jest.fn(),
 }));
@@ -76,6 +80,29 @@ jest.mock('../src/design/environment', () => ({
 }));
 
 const app = resolve(__dirname, '../src/app');
+test.each([
+  ['ios', 'auto'],
+  ['android', 'dark'],
+] as const)(
+  '%s root keeps the appropriate system icon appearance',
+  (os, style) => {
+    const original = Platform.OS;
+    let tree: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      Object.defineProperty(Platform, 'OS', { value: os, configurable: true });
+      act(() => {
+        tree = TestRenderer.create(React.createElement(RootLayout));
+      });
+      expect(tree!.root.findByType(StatusBar).props.style).toBe(style);
+    } finally {
+      if (tree) act(() => tree!.unmount());
+      Object.defineProperty(Platform, 'OS', {
+        value: original,
+        configurable: true,
+      });
+    }
+  },
+);
 const sharedFolder = '(tabs)/(today,your-mp,bills,search,ask)';
 const layouts = {
   shared: SharedLayout,
@@ -441,7 +468,7 @@ test.each(builders)(
   },
 );
 
-test('sheet presentations and named fallback titles come from the owning modules', () => {
+test('sheet presentations and blank detail loading titles come from the owning modules', () => {
   let view!: TestRenderer.ReactTestRenderer;
   act(() => {
     view = TestRenderer.create(
@@ -453,7 +480,7 @@ test('sheet presentations and named fallback titles come from the owning modules
       .findAllByType(Stack.Screen)
       .find((node) => node.props.name === name)!
       .props.options({ route: { params } });
-  expect(options('person/[slug]').title).toBe('Parliamentarian');
+  expect(options('person/[slug]').title).toBe('');
   expect(options('person/[slug]', { name: 'Loaded name' }).title).toBe(
     'Loaded name',
   );

@@ -50,6 +50,7 @@ export function useFollowStates(refresh = 0) {
   const [saved, setSaved] = useState<StoredFollowResult | null>(null);
   const [resultLoading, setResultLoading] = useState(true);
   const [foreground, setForeground] = useState(0);
+  const [completedRefresh, setCompletedRefresh] = useState(refresh);
   const handledRefresh = useRef(refresh);
   const needs = needsFor(follows ?? []);
   const any = !!follows?.length;
@@ -130,6 +131,9 @@ export function useFollowStates(refresh = 0) {
                     'Followed records could not be loaded. Try again.',
                   ),
           }));
+      })
+      .finally(() => {
+        if (active) setCompletedRefresh(refresh);
       });
     return () => {
       active = false;
@@ -230,6 +234,7 @@ export function useFollowStates(refresh = 0) {
     savedResult: saved,
     resultLoading,
     changeSetKey,
+    refreshing: any && refresh !== completedRefresh,
   };
 }
 

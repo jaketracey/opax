@@ -1,3 +1,9 @@
+import {
+  associatedLine,
+  donorAssociated,
+  donorAssociatedTo,
+} from '../../../api/associated';
+import { AssociatedEntityLabel } from '../../../design/AssociatedEntityLabel';
 import type { Href } from 'expo-router';
 import {
   useCallback,
@@ -15,6 +21,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useReduceMotion } from '../../../design/accessibility';
+import { Icon } from '../../../design/icon';
 import {
   counted,
   formatMoney,
@@ -39,6 +46,8 @@ import {
   radii,
   rhythm,
 } from '../../../design/tokens';
+import { useRecordLink } from '../../../navigation/record-link';
+import { moneyMapEntityRoute } from '../record-routes';
 import { moneyYears } from '../records';
 import {
   clusterLabel,
@@ -86,6 +95,48 @@ export function focusFlows(model: MapModel, index: number) {
   });
 }
 
+export interface FlowGroup {
+  key: 'donations' | 'public';
+  title: string;
+  /** Rows keep their place in the strongest-first list, for their test ids. */
+  rows: (PanelFocus['flows'][number] & { index: number })[];
+  note?: string;
+}
+export const PUBLIC_MONEY_NOTE =
+  'A different register: grants and contracts are recorded apart and never added to donations.';
+/**
+ * The panel's flow sections. A party's flows are all donations and a hub's
+ * all public money; a donor's are split, so money it gave never sits under
+ * one heading with money it was paid.
+ */
+export function focusFlowGroups(
+  node: MapNode,
+  flows: PanelFocus['flows'],
+): FlowGroup[] {
+  const rows = flows.map((flow, index) => ({ ...flow, index }));
+  if (node.kind === 'hub')
+    return [{ key: 'public', title: 'Largest recipients on the map', rows }];
+  if (node.kind === 'party')
+    return [{ key: 'donations', title: 'Largest donors', rows }];
+  const donations = rows.filter((r) => r.edge.type === 'donations');
+  const publicMoney = rows.filter((r) => r.edge.type !== 'donations');
+  return [
+    ...(donations.length
+      ? [{ key: 'donations' as const, title: 'Where it went', rows: donations }]
+      : []),
+    ...(publicMoney.length
+      ? [
+          {
+            key: 'public' as const,
+            title: 'Public money received',
+            rows: publicMoney,
+            note: PUBLIC_MONEY_NOTE,
+          },
+        ]
+      : []),
+  ];
+}
+
 /**
  * The stage's bottom panel. At rest: the two totals and a Legend button.
  * With a focus: the disc's name, kind and figure, previous and next along
@@ -100,6 +151,7 @@ export function MoneyMapPanel({
   legend,
   sourceLine,
   stageHeight,
+  maxHeight,
   expanded,
   onExpanded,
   onClear,
@@ -112,6 +164,8 @@ export function MoneyMapPanel({
   legend: ReactNode;
   sourceLine: ReactNode;
   stageHeight: number;
+  /** The space below fixed controls in the current clear interaction region. */
+  maxHeight?: number;
   expanded: boolean;
   onExpanded: (expanded: boolean) => void;
   onClear: () => void;
@@ -119,11 +173,16 @@ export function MoneyMapPanel({
   onPeekHeight: (height: number) => void;
 }) {
   const reduced = useReduceMotion();
+  const entityRoute = focus
+    ? moneyMapEntityRoute(focus.node, focus.record)
+    : null;
+  const entityLink = useRecordLink(entityRoute ?? undefined);
   const [peek, setPeek] = useState(0);
   const height = useSharedValue(0);
-  const target = expanded
+  const wanted = expanded
     ? Math.max(peek, Math.round(stageHeight * EXPANDED_SHARE))
     : peek;
+  const target = maxHeight === undefined ? wanted : Math.min(wanted, maxHeight);
   useEffect(() => {
     if (!peek) return;
     height.value = reduced
@@ -172,9 +231,28 @@ export function MoneyMapPanel({
       </Text>
     </View>
   );
+  const entityTitle = focus ? (
+    <View style={styles.grow}>
+      <Text variant="footnote" wordSafe testID="money-map-focus-meta">
+        {focusMetaLine(focus.node)}
+      </Text>
+      <Text
+        variant="name"
+        tone={entityRoute ? 'navy' : 'ink'}
+        wordSafe
+        testID="money-map-focus-name"
+      >
+        {focus.node.label}
+      </Text>
+    </View>
+  ) : null;
   return (
     <Animated.View
-      style={[styles.panel, style]}
+      style={[
+        styles.panel,
+        style,
+        maxHeight === undefined ? null : { maxHeight },
+      ]}
       testID={focus ? 'money-map-panel-focus' : 'money-map-panel'}
     >
       <GestureDetector gesture={drag}>
@@ -189,7 +267,9 @@ export function MoneyMapPanel({
         </Pressable>
       </GestureDetector>
       <ScrollView
-        scrollEnabled={expanded}
+        scrollEnabled={
+          expanded || (maxHeight !== undefined && peek > maxHeight)
+        }
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
@@ -205,18 +285,23 @@ export function MoneyMapPanel({
           {focus ? (
             <View style={styles.block}>
               <View style={styles.titleRow}>
-                <View style={styles.grow}>
-                  <Text
-                    variant="footnote"
-                    wordSafe
-                    testID="money-map-focus-meta"
+                {entityRoute ? (
+                  <Pressable
+                    accessibilityRole="link"
+                    accessibilityLabel={`${focusMetaLine(focus.node)}, ${focus.node.label}`}
+                    onPress={entityLink.open}
+                    style={({ pressed }) => [
+                      styles.entityLink,
+                      pressed && styles.pressed,
+                    ]}
+                    testID="money-map-focus-link"
                   >
-                    {focusMetaLine(focus.node)}
-                  </Text>
-                  <Text variant="name" wordSafe testID="money-map-focus-name">
-                    {focus.node.label}
-                  </Text>
-                </View>
+                    {entityTitle}
+                    <Icon name={symbols.chevron} size={16} />
+                  </Pressable>
+                ) : (
+                  entityTitle
+                )}
                 <IconButton
                   symbol={symbols.close}
                   accessibilityLabel="Clear the focus"
@@ -224,6 +309,14 @@ export function MoneyMapPanel({
                   testID="money-map-focus-clear"
                 />
               </View>
+              <AssociatedEntityLabel
+                associated={
+                  focus.node.kind === 'donor'
+                    ? donorAssociated(focus.node)
+                    : null
+                }
+                testID="money-map-focus-associated"
+              />
               <View
                 accessible
                 accessibilityLabel={`${moneyAccessibilityLabel(focus.node.amount, true)}, ${focusFigureLine(focus.node)}`}
@@ -290,43 +383,60 @@ export function MoneyMapPanel({
         {expanded ? (
           focus ? (
             <View style={styles.block} testID="money-map-focus-flows">
-              <LinkRow
-                title="Open record"
-                detail={`${formatMoney(focus.node.amount)} with every source`}
-                symbol={symbols.money}
-                symbolInk="money"
-                href={focus.record}
-                testID="money-map-open-record"
-              />
-              <SectionHeader
-                title={
-                  focus.node.kind === 'party'
-                    ? 'Largest donors'
-                    : focus.node.kind === 'hub'
-                      ? 'Largest recipients on the map'
-                      : 'Where it went'
-                }
-                level={3}
-              />
-              <View>
-                {focus.flows.map(({ edge, other }, index) => (
-                  <MoneyRow
-                    key={`${edge.index}`}
-                    name={other.label}
-                    detail={`${moneyYears(edge.firstYear, edge.lastYear)} · ${counted(
-                      edge.count,
-                      edge.type === 'donations'
-                        ? 'donation'
-                        : edge.type === 'grants'
-                          ? 'grant'
-                          : 'contract',
-                    )}`}
-                    amount={edge.amount}
-                    href={focus.flowRecord(other)}
-                    testID={`money-map-flow-${index}`}
-                  />
-                ))}
-              </View>
+              {entityRoute ? (
+                <LinkRow
+                  title="Open record"
+                  detail={`${formatMoney(focus.node.amount)} with every source`}
+                  symbol={symbols.money}
+                  symbolInk="money"
+                  href={focus.record}
+                  testID="money-map-open-record"
+                />
+              ) : null}
+              {focusFlowGroups(focus.node, focus.flows).map((group) => (
+                <View
+                  key={group.key}
+                  style={styles.block}
+                  testID={`money-map-flows-${group.key}`}
+                >
+                  <SectionHeader title={group.title} level={3} />
+                  <View>
+                    {group.rows.map(({ edge, other, index }) => (
+                      <MoneyRow
+                        key={`${edge.index}`}
+                        name={other.label}
+                        detail={[
+                          associatedLine(
+                            focus.node.kind === 'party'
+                              ? donorAssociatedTo(other, focus.node.label)
+                              : other.kind === 'donor'
+                                ? donorAssociated(other)
+                                : null,
+                          ),
+                          `${moneyYears(edge.firstYear, edge.lastYear)} · ${counted(
+                            edge.count,
+                            edge.type === 'donations'
+                              ? 'donation'
+                              : edge.type === 'grants'
+                                ? 'grant'
+                                : 'contract',
+                          )}`,
+                        ]
+                          .filter(Boolean)
+                          .join(' · ')}
+                        amount={edge.amount}
+                        href={focus.flowRecord(other)}
+                        testID={`money-map-flow-${index}`}
+                      />
+                    ))}
+                  </View>
+                  {group.note ? (
+                    <Text variant="footnote" wordSafe>
+                      {group.note}
+                    </Text>
+                  ) : null}
+                </View>
+              ))}
               {sourceLine}
             </View>
           ) : (
@@ -375,6 +485,8 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: rhythm.block,
+    // Air under the handle, so a figure never crowds it.
+    paddingTop: rhythm.tight,
     paddingBottom: rhythm.block,
     gap: rhythm.block,
   },
@@ -385,12 +497,24 @@ const styles = StyleSheet.create({
     gap: rhythm.tight,
   },
   grow: { flex: 1, gap: 2 },
+  entityLink: {
+    flex: 1,
+    minHeight: minimumTarget,
+    minWidth: minimumTarget,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+  },
+  pressed: { opacity: 0.6 },
   restRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    alignItems: 'flex-end',
+    // The figures share one top line whatever their captions wrap to.
+    alignItems: 'flex-start',
     gap: rhythm.block,
   },
-  figure: { gap: 2, minWidth: 120 },
-  legendButton: { marginLeft: 'auto' },
+  // The figures share the row and the Legend button hugs its end; only a
+  // large type size wraps them.
+  figure: { gap: 2, flexGrow: 1, flexShrink: 1, flexBasis: 120 },
+  legendButton: { marginLeft: 'auto', alignSelf: 'center' },
 });

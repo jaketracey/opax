@@ -17,7 +17,7 @@ test.each([
   ['agencies', 'Government agencies'],
   ['connections', 'Programs and places'],
   ['money-record', 'Money record'],
-  ['money-item', 'Money record'],
+  ['money-item', ''],
   ['explore/[tool]', 'The record quiz'],
   ['division-history', 'Votes in parliament'],
 ])('%s retains its route title for the next Back button', (name, title) => {
@@ -42,6 +42,6 @@ test.each([
   if (name !== 'explore/[tool]') {
     expect(
       next.props.options({ route: routes[2], navigation }).headerBackTitle,
-    ).toBe(title);
+    ).toBe(name === 'money-item' ? 'Back' : title);
   }
 });

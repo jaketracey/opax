@@ -34,6 +34,7 @@ jest.mock('../src/design/adaptive', () => {
   return {
     ...actual,
     useLayout: () => ({
+      rule: 'pad',
       size: mockLayout.regular ? 'regular' : 'compact',
       regular: mockLayout.regular,
       wide: mockLayout.width >= 1100,
@@ -55,27 +56,27 @@ jest.mock('expo-router', () => ({
 describe('size classes', () => {
   test('regular from 700pt, on iPad only', () => {
     expect(breakpoints.regular).toBe(700);
-    expect(sizeClassFor(699, true)).toBe('compact');
-    expect(sizeClassFor(700, true)).toBe('regular');
+    expect(sizeClassFor(699, 'pad')).toBe('compact');
+    expect(sizeClassFor(700, 'pad')).toBe('regular');
     // A 1/3 Split View window on a 13-inch iPad.
-    expect(sizeClassFor(375, true)).toBe('compact');
+    expect(sizeClassFor(375, 'pad')).toBe('compact');
     // The iPhone is compact in every orientation (Pro Max landscape: 956pt).
-    expect(sizeClassFor(956, false)).toBe('compact');
+    expect(sizeClassFor(956, 'phone')).toBe('compact');
   });
   test('the readable column centres on regular width and keeps the margin on compact', () => {
-    expect(readableInset(402, columns.readable, 20, 'compact')).toBe(20);
-    expect(readableInset(1032, columns.readable, 20, 'regular')).toBe(166);
+    expect(readableInset(402, columns.readable, 20, 'phone')).toBe(20);
+    expect(readableInset(1032, columns.readable, 20, 'pad')).toBe(166);
     // Never tighter than 1.6x the margin on a just-regular window.
-    expect(readableInset(720, columns.readable, 20, 'regular')).toBe(32);
+    expect(readableInset(720, columns.readable, 20, 'pad')).toBe(32);
   });
   test('grid columns follow the grid width, its counts and the minimum card width', () => {
-    expect(gridColumns(362, { pad: false })).toBe(1);
-    expect(gridColumns(968, { pad: true })).toBe(2);
-    expect(gridColumns(1180, { pad: true })).toBe(3);
-    expect(gridColumns(1180, { pad: true, columns: { wide: 2 } })).toBe(2);
+    expect(gridColumns(362, { rule: 'phone' })).toBe(1);
+    expect(gridColumns(968, { rule: 'pad' })).toBe(2);
+    expect(gridColumns(1180, { rule: 'pad' })).toBe(3);
+    expect(gridColumns(1180, { rule: 'pad', columns: { wide: 2 } })).toBe(2);
     // AX sizes scale the minimum width: three 560pt cards do not fit 1180pt.
-    expect(gridColumns(1180, { pad: true, minItemWidth: 560 })).toBe(2);
-    expect(gridColumns(968, { pad: true, minItemWidth: 560 })).toBe(1);
+    expect(gridColumns(1180, { rule: 'pad', minItemWidth: 560 })).toBe(2);
+    expect(gridColumns(968, { rule: 'pad', minItemWidth: 560 })).toBe(1);
   });
 });
 
@@ -339,10 +340,10 @@ describe('two panes and the reading measure (design pass 4E)', () => {
   });
   test('a figure in the readable column reaches the wide one, never on compact', () => {
     // 13-inch landscape full screen (the money map), and portrait.
-    expect(columnBreakout(1376, 'readable', 'regular')).toBe(240);
-    expect(columnBreakout(1032, 'readable', 'regular')).toBe(134);
-    expect(columnBreakout(1376, 'wide', 'regular')).toBe(0);
-    expect(columnBreakout(402, 'readable', 'compact')).toBe(0);
+    expect(columnBreakout(1376, 'readable', 'pad')).toBe(240);
+    expect(columnBreakout(1032, 'readable', 'pad')).toBe(134);
+    expect(columnBreakout(1376, 'wide', 'pad')).toBe(0);
+    expect(columnBreakout(402, 'readable', 'phone')).toBe(0);
     // The phone never breaks out (sizeClassFor is compact off iPad).
     expect(columnBreakout(956, 'readable')).toBe(0);
   });

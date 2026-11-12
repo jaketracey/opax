@@ -16,6 +16,7 @@ import { frontPageDeck } from '../explore/quiz/data';
 import { explore } from '../explore/runtime';
 import { archiveYear, questionIndex, type SydneyDate } from './rules';
 import { rules } from './sources';
+import { SurfaceGrid } from './SurfaceGrid';
 import { useTodayRead } from './TodayBlock';
 
 /** A licence that allows the photograph on the front page (no NC or ND terms). */
@@ -77,7 +78,7 @@ function Kicker({
 }
 
 /**
- * From the archive (today.md 5.10): the day's photograph at 16:10, the year,
+ * From the archive: the day's photograph fills a 4:3 frame, then the year,
  * the caption up to three lines, expanding at accessibility text sizes,
  * and "Photo: {credit}", never clamped. One element; it opens
  * the Time machine on that year with that photograph first.
@@ -115,7 +116,12 @@ export function ArchiveCard({
       ]}
       style={styles.card}
     >
-      <Picture file={picture.file} ratio={16 / 10} rounded={false} />
+      <Picture
+        file={picture.file}
+        ratio={4 / 3}
+        rounded={false}
+        resizeMode="cover"
+      />
       <View style={styles.words}>
         <Kicker symbol="clock.arrow.circlepath" ink="tint">
           From the archive
@@ -182,40 +188,46 @@ export function DailyPair({
   const read = useTodayRead(
     'pictures',
     // The manifest is optional: a failed read collapses the archive card.
+    // The answer is wrapped so a failure (no manifest) is not mistaken for
+    // a read still in flight, which would keep the skeleton up for good.
     async () => {
       try {
-        return await explore.pictures();
+        return { manifest: await explore.pictures() };
       } catch {
-        return null;
+        return { manifest: null };
       }
     },
     attempt,
   );
   const loading = read === null && attempt === 0;
-  const archive = read ? archivePicture(read.data, today) : null;
+  const archive = read?.manifest
+    ? archivePicture(read.manifest.data, today)
+    : null;
   const question = dailyQuestion(today);
   if (!loading && !archive && !question) return null;
   return (
     <View testID="today-pair" style={styles.pair}>
-      {loading ? (
-        <View style={[styles.cell, styles.loading]}>
-          <Skeleton
-            shape="card"
-            count={1}
-            label="Loading the archive photograph"
-            testID="today-archive-loading"
-          />
-        </View>
-      ) : archive ? (
-        <View style={styles.cell}>
-          <ArchiveCard year={archive.year} picture={archive.picture} />
-        </View>
-      ) : null}
-      {question ? (
-        <View style={styles.cell}>
-          <QuestionCard question={question} />
-        </View>
-      ) : null}
+      <SurfaceGrid testID="today-pair-grid" gap={12}>
+        {loading ? (
+          <View style={[styles.cell, styles.loading]}>
+            <Skeleton
+              shape="card"
+              count={1}
+              label="Loading the archive photograph"
+              testID="today-archive-loading"
+            />
+          </View>
+        ) : archive ? (
+          <View style={styles.cell}>
+            <ArchiveCard year={archive.year} picture={archive.picture} />
+          </View>
+        ) : null}
+        {question ? (
+          <View style={styles.cell}>
+            <QuestionCard question={question} />
+          </View>
+        ) : null}
+      </SurfaceGrid>
     </View>
   );
 }

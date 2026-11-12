@@ -32,6 +32,8 @@ import { MatchRow, type RowSources } from './rows';
 import { moneyGroups, registerGroups, type Scope } from './scopes';
 import type { SpeechList } from './speeches';
 import { SpeechResults } from './SpeechResults';
+import { ReportResults } from './ReportResults';
+import type { Read, GroupPage } from './requests';
 
 const seeAllNoun: Record<GroupKind, string> = {
   topics: 'topics',
@@ -81,6 +83,7 @@ export function AllResults({
   recover,
   onOpenFilters,
   onRetrySources,
+  reports = null,
 }: {
   q: string;
   sources: (MatchSources & RowSources) | null;
@@ -92,6 +95,7 @@ export function AllResults({
   /** Tapping the Speeches group's filter line opens Filters. */
   onOpenFilters?: () => void;
   onRetrySources?: () => void;
+  reports?: Read<GroupPage> | null;
 }) {
   const local = allLocal(q, sources);
   const speechRows = speeches.rows;
@@ -101,9 +105,11 @@ export function AllResults({
     speeches.first?.status === 'ready' &&
     !!speechRows &&
     !speechRows.length;
+  const noReports =
+    reports?.status === 'ready' && !reports.result.data.results.length;
   return (
     <Group gap={rhythm.group} testID="search-results">
-      {nothing ? (
+      {nothing && noReports ? (
         <EmptyResults where="all" q={q} filters={filters} recover={recover} />
       ) : null}
       {!sources && onRetrySources ? (
@@ -165,6 +171,7 @@ export function AllResults({
           </View>
         </View>
       ))}
+      <ReportResults q={q} read={reports} />
       {speeches.first?.status === 'ready' &&
       speechRows &&
       !speechRows.length ? null : (

@@ -22,6 +22,8 @@ import Program from '../src/features/money-public/Program';
 import { MoneyList, TitleAlias } from '../src/features/money-public/parts';
 import { RouteOptions } from '../src/navigation/preview';
 import { rootBackTitle } from '../src/navigation/stack/screen';
+import { publicMoneyScreens } from '../src/navigation/stack/public-money';
+import { billsScreens } from '../src/navigation/stack/bills';
 import { catalogs } from '../src/api/runtime';
 import { Screen, TitleAnchor } from '../src/design/layout';
 import { Heading } from '../src/design/text';
@@ -41,6 +43,7 @@ import {
 
 const mockParams = { seat: 'federal-senate-nsw-new-south-wales' };
 jest.mock('expo-router', () => ({
+  Stack: { Screen: () => null },
   router: { push: jest.fn() },
   useLocalSearchParams: () => mockParams,
   useSegments: () => [],
@@ -97,13 +100,13 @@ function navigationFor(...names: string[]) {
 
 test.each([
   [['index', 'explore/index', 'explore/[tool]'], 'Tools'],
-  [['bills', 'bill/[key]', 'bill-text/[key]', 'division-history'], 'Bill text'],
-  [['index', 'leads', 'lead/[id]', 'money-item'], 'Lead'],
+  [['bills', 'bill/[key]', 'bill-text/[key]', 'division-history'], 'Back'],
+  [['index', 'leads', 'lead/[id]', 'money-item'], 'Back'],
   [['index', 'explore/[tool]'], 'Today'],
   [['bills', 'bill/[key]'], 'Bills'],
-  [['index', 'grants', 'grant-program'], 'Commonwealth grants'],
+  [['index', 'grants', 'grant-program'], 'Grants'],
   [['your-mp', 'members'], 'Your MP'],
-  [['index', 'bill/[key]', 'bill-text/[key]'], undefined],
+  [['index', 'bill/[key]', 'bill-text/[key]'], 'Back'],
   [['index'], undefined],
 ] as const)('%j supplies the named back options %s', (names, title) => {
   const { route, navigation } = navigationFor(...names);
@@ -124,13 +127,26 @@ test.each([
     );
   });
   expect(backTitle).toBe(title);
-  expect(options).toEqual({
-    headerBackButtonDisplayMode: 'default',
-    ...(title ? { headerBackTitle: title } : {}),
-    ...(['Tools', 'Bill text', 'Lead'].includes(title ?? '')
-      ? { headerBackButtonMenuEnabled: false }
-      : {}),
+  expect(options).toEqual(
+    title
+      ? {
+          headerBackButtonDisplayMode: 'default',
+          headerBackTitle: title,
+          headerBackButtonMenuEnabled: true,
+        }
+      : {},
+  );
+  const first = options;
+  act(() => {
+    view!.update(
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <Probe />
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>,
+    );
   });
+  expect(options).toBe(first);
 });
 
 test('named back options leave Android to its native header', () => {
@@ -197,7 +213,18 @@ test.each([
     previous,
     'grant-program',
   );
-  const options: Record<string, unknown> = {};
+  const registration = publicMoneyScreens().find(
+    (screen) => screen.props.name === 'grant-program',
+  )!;
+  const options: Record<string, unknown> = registration.props.options({
+    route,
+    navigation,
+  });
+  expect(options).toMatchObject({
+    headerBackTitle: backTitle,
+    headerBackButtonDisplayMode: 'default',
+    headerBackButtonMenuEnabled: true,
+  });
   navigation.setOptions.mockImplementation((next) =>
     Object.assign(options, next),
   );
@@ -214,14 +241,15 @@ test.each([
     headerBackTitle: backTitle,
     headerBackButtonDisplayMode: 'default',
   });
-  if (previous === 'grants')
-    expect(options.headerBackButtonMenuEnabled).toBe(false);
-  const inline = (options.headerTitle as () => React.ReactElement)();
-  expect(inline.props).toMatchObject({
-    backTitle,
-    trailing: 1,
-    shown: false,
-  });
+  expect(
+    navigation.setOptions.mock.calls.every(
+      ([next]) =>
+        !Object.keys(next).some((key) => key.startsWith('headerBack')),
+    ),
+  ).toBe(true);
+  // No subject has arrived, so the stack's empty title view remains installed.
+  expect(options.title).toBe('');
+  expect(typeof options.headerTitle).toBe('function');
 });
 
 test('Agencies restores the system Government agencies title and its alias', async () => {
@@ -263,7 +291,18 @@ test('Votes keeps Filters before More, its named back button and its scrolling t
     'bill-text/[key]',
     'division-history',
   );
-  const options: Record<string, unknown> = {};
+  const registration = billsScreens().find(
+    (screen) => screen.props.name === 'division-history',
+  )!;
+  const options: Record<string, unknown> = registration.props.options({
+    route,
+    navigation,
+  });
+  expect(options).toMatchObject({
+    headerBackTitle: 'Back',
+    headerBackButtonDisplayMode: 'default',
+    headerBackButtonMenuEnabled: true,
+  });
   navigation.setOptions.mockImplementation((next) =>
     Object.assign(options, next),
   );
@@ -278,9 +317,8 @@ test('Votes keeps Filters before More, its named back button and its scrolling t
   });
   expect(options).toMatchObject({
     title: 'Votes in parliament',
-    headerBackTitle: 'Bill text',
+    headerBackTitle: 'Back',
     headerBackButtonDisplayMode: 'default',
-    headerBackButtonMenuEnabled: false,
   });
   const items = (
     options.unstable_headerRightItems as () => NativeStackHeaderItem[]
@@ -318,7 +356,7 @@ test('Votes keeps Filters before More, its named back button and its scrolling t
   const inline = () => (options.headerTitle as () => React.ReactElement)();
   expect(inline().type).toBe(BarTitle);
   expect(inline().props.shown).toBe(false);
-  expect(inline().props.backTitle).toBe('Bill text');
+  expect(inline().props.backTitle).toBe('Back');
   const list = view!.root.findByType(SectionList);
   const heading = list.props.ListHeaderComponent.props.children[0];
   expect(heading.props.collapsable).toBe(false);
@@ -341,7 +379,7 @@ test('Votes keeps Filters before More, its named back button and its scrolling t
   // JS offset still looks like a negative resting inset.
   await native.answer(1, -20, 60);
   expect(inline().props.shown).toBe(true);
-  expect(inline().props.backTitle).toBe('Bill text');
+  expect(inline().props.backTitle).toBe('Back');
   act(() =>
     list.props.onScroll({ nativeEvent: { contentOffset: { y: 9000 } } }),
   );
@@ -601,7 +639,7 @@ test('a shortened bar title exposes the full accessibility label', () => {
 });
 
 test.each([false, true])(
-  'an unknown back title leaves the title at its intrinsic width, shown=%s',
+  'a list back title reserves its named pill, shown=%s',
   (shown) => {
     const { route, navigation } = navigationFor('index', 'leads', 'lead/[id]');
     let backTitle: string | undefined;
@@ -625,7 +663,7 @@ test.each([false, true])(
         </NavigationContext.Provider>,
       );
     });
-    expect(backTitle).toBeUndefined();
+    expect(backTitle).toBe('Leads');
     const text = view!.root.findByType(Animated.Text);
     const style = StyleSheet.flatten(text.props.style);
     expect(style.width).toBeUndefined();
@@ -833,7 +871,7 @@ test('Screen-provided content anchors keep the baseline threshold', () => {
   expect(inline().props.shown).toBe(false);
 });
 
-test('Android keeps its baseline content-coordinate measurement and string title', async () => {
+test('Android pushed bars keep a small title visible across scroll positions', async () => {
   const original = Platform.OS;
   try {
     Platform.OS = 'android';
@@ -843,11 +881,11 @@ test('Android keeps its baseline content-coordinate measurement and string title
     expect(native.measure).toHaveBeenCalledTimes(1);
     await native.answer(0, 200);
     act(() => hook.onScroll(179));
-    expect(header()).toBe('');
+    expect(header()).toBe('Votes in parliament');
     act(() => hook.onScroll(181));
     expect(header()).toBe('Votes in parliament');
     act(() => hook.onScroll(0));
-    expect(header()).toBe('');
+    expect(header()).toBe('Votes in parliament');
     act(() => view!.unmount());
     view = undefined;
   } finally {
@@ -855,7 +893,7 @@ test('Android keeps its baseline content-coordinate measurement and string title
   }
 });
 
-test('Android Screen.barTitle keeps its content anchor rather than measuring window coordinates', () => {
+test('Android Screen.barTitle stays visible while its content anchor scrolls', () => {
   const original = Platform.OS;
   Platform.OS = 'android';
   const options: Record<string, unknown> = {};
@@ -886,7 +924,7 @@ test('Android Screen.barTitle keeps its content anchor rather than measuring win
       });
       anchor.props.onLayout(headingLayout);
     });
-    expect(options.headerTitle).toBe('');
+    expect(options.headerTitle).toBe('Members');
     const scroll = (y: number) =>
       act(() =>
         view!.root
@@ -894,11 +932,11 @@ test('Android Screen.barTitle keeps its content anchor rather than measuring win
           .props.onScroll({ nativeEvent: { contentOffset: { y } } }),
       );
     scroll(155);
-    expect(options.headerTitle).toBe('');
+    expect(options.headerTitle).toBe('Members');
     scroll(157);
     expect(options.headerTitle).toBe('Members');
     scroll(0);
-    expect(options.headerTitle).toBe('');
+    expect(options.headerTitle).toBe('Members');
     act(() => view!.unmount());
     view = undefined;
   } finally {

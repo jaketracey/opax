@@ -4,24 +4,70 @@ export type AskStage =
   | 'Searching the record'
   | 'Writing the answer'
   | 'Searching again';
+export type AskStep = {
+  id: string;
+  label: string;
+  arg?: string;
+  state: 'running' | 'done' | 'failed' | 'error';
+};
 export type StreamHandlers = {
+  /** A parsed stage/step or answer token, never a raw chunk or keep-alive. */
+  progress?: () => void;
   stage: (stage: AskStage) => void;
+  step?: (step: AskStep) => void;
   delta: (text: string) => void;
   retry: () => void;
   /** How many records were found: a count, never their titles. */
   reading?: (count: number) => void;
 };
+
+function parseStep(value: unknown): AskStep | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const { id, label, arg, state } = value as Record<string, unknown>;
+  if (
+    typeof id !== 'string' ||
+    !id.trim() ||
+    typeof label !== 'string' ||
+    !label.trim() ||
+    (arg !== undefined && (typeof arg !== 'string' || arg.length > 40)) ||
+    typeof state !== 'string' ||
+    !['running', 'done', 'failed', 'error'].includes(state)
+  )
+    return null;
+  return {
+    id,
+    label,
+    ...(arg ? { arg } : {}),
+    state: state as AskStep['state'],
+  };
+}
+export type AskReason =
+  | 'stall'
+  | 'deadline'
+  | 'network'
+  | 'server'
+  | 'no_answer';
 export class AskFailure extends Error {
   constructor(
     public code:
       | 'rate-limited'
       | 'blocked'
       | 'offline'
+      | 'timeout'
       | 'partial'
       | 'empty'
       | 'cancelled'
       | 'invalid',
     message: string,
+    public reason: AskReason | undefined = code === 'cancelled'
+      ? undefined
+      : code === 'offline'
+        ? 'network'
+        : code === 'timeout'
+          ? 'stall'
+          : code === 'empty'
+            ? 'no_answer'
+            : 'server',
   ) {
     super(message);
   }
@@ -31,7 +77,11 @@ export class AskStream {
   private buffer = '';
   private final: unknown;
   private completed = false;
+  private shown = false;
   constructor(private on: StreamHandlers) {}
+  get done() {
+    return this.completed;
+  }
   push(text: string, end = false) {
     this.buffer += text;
     let match: RegExpExecArray | null;
@@ -61,31 +111,53 @@ export class AskStream {
     } catch {
       return;
     }
-    if (!v || typeof v !== 'object') return;
+    if (!v || typeof v !== 'object' || Array.isArray(v)) return;
     if (event === 'done') {
       this.final = v;
       this.completed = true;
     } else if (event === 'error')
       throw new AskFailure(
-        'partial',
-        typeof v.error === 'string' ? v.error : 'The answer stream failed.',
+        this.shown ? 'partial' : 'invalid',
+        'The answer stream failed.',
       );
-    else if (event === 'delta' && typeof v.text === 'string')
+    else if (event === 'delta' && typeof v.text === 'string') {
+      if (v.text.trim()) {
+        this.shown = true;
+        this.on.progress?.();
+      }
       this.on.delta(v.text);
-    else if (event === 'retry') {
+    } else if (event === 'retry') {
+      this.shown = false;
       this.on.retry();
       this.on.stage('Searching again');
     } else if (event === 'status') {
-      if (v.phase === 'searching') this.on.stage('Searching the record');
-      else if (['retrieved', 'writing', 'reading'].includes(String(v.phase)))
+      if (v.phase === 'step') {
+        const step = parseStep(v.step);
+        if (step) {
+          this.on.progress?.();
+          this.on.step?.(step);
+        }
+      } else if (v.phase === 'searching') {
+        this.on.progress?.();
+        this.on.stage('Searching the record');
+      } else if (
+        v.phase === 'retrieved' ||
+        v.phase === 'writing' ||
+        v.phase === 'reading'
+      ) {
+        this.on.progress?.();
         this.on.stage('Writing the answer');
+      }
       if (v.phase === 'retrieved' && Array.isArray(v.sources))
         this.on.reading?.(v.sources.length);
     }
   }
   result() {
+    // "Stopped partway" only when words are on screen to have stopped.
     if (!this.completed)
-      throw new AskFailure('partial', 'The answer stream ended early.');
+      throw this.shown
+        ? new AskFailure('partial', 'The answer stream ended early.')
+        : new AskFailure('invalid', 'No answer came back.');
     return this.final;
   }
 }

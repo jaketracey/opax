@@ -83,7 +83,8 @@ function useFeedFilters() {
  */
 export default function Declarations() {
   const load = useCallback(
-    (refresh: boolean) => catalogs.declarations(refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      catalogs.declarations(refresh, signal),
     [],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);

@@ -17,6 +17,7 @@ import {
   type DirectoryRecord,
 } from '../src/features/directories/data';
 import { filterStore } from '../src/features/sheets/filter-model';
+import { peopleScreens } from '../src/navigation/stack/people';
 
 const mockParams: Record<string, string> = { kind: 'person' };
 const mockScreen: { options?: Record<string, unknown> } = {};
@@ -187,9 +188,9 @@ test('nothing precedes the first row; source and count stay at the foot', async 
   expect(count.props.variant).toBe('footnote');
   expect(count.props.wordSafe).toBe(true);
   expect(said(count)).toBe('2 parties');
-  // Party rows: members on record, no money and no speeches.
+  // Party rows label the sitting count explicitly.
   const row = byID(renderer, 'directory-party-labor')[0]!;
-  expect(row.props.accessibilityLabel).toBe('Labor, 2 members on record');
+  expect(row.props.accessibilityLabel).toBe('Labor, 2 sitting members');
   expect(
     row.findAllByType(NativeText).filter((node) => node.props.children === ''),
   ).toHaveLength(0);
@@ -213,7 +214,7 @@ test.each([
     jest
       .mocked(loadDirectory)
       .mockReturnValue(new Promise<DirectoryRecord>(() => {}));
-    const route = { key: 'directory', name: 'subject/[kind]' };
+    const route = { key: 'directory', name: 'directory', params: { kind } };
     const navigation = {
       getState: () => ({
         index: 1,
@@ -225,6 +226,15 @@ test.each([
       isFocused: () => true,
       addListener: () => () => {},
     };
+    const registration = peopleScreens().find(
+      (screen) => screen.props.name === 'directory',
+    )!;
+    mockScreen.options = registration.props.options({ route, navigation });
+    expect(mockScreen.options).toMatchObject({
+      headerBackTitle: 'Search',
+      headerBackButtonDisplayMode: 'default',
+      headerBackButtonMenuEnabled: true,
+    });
     let renderer!: TestRenderer.ReactTestRenderer;
     await act(async () => {
       renderer = TestRenderer.create(
@@ -243,7 +253,7 @@ test.each([
       title,
       headerTitle,
       headerBackTitle: 'Search',
-      headerBackButtonMenuEnabled: false,
+      headerBackButtonMenuEnabled: true,
       headerBackButtonDisplayMode: 'default',
     });
     expect(byID(renderer, 'directory-title')).toHaveLength(0);
@@ -329,7 +339,11 @@ test('a failed read is a whole-screen state with the plain reason and Try again'
   );
   expect(state.props.action.label).toBe('Try again');
   await act(async () => state.props.action.onPress());
-  expect(loadDirectory).toHaveBeenLastCalledWith('person', false);
+  expect(loadDirectory).toHaveBeenLastCalledWith(
+    'person',
+    false,
+    expect.any(AbortSignal),
+  );
   await act(async () => renderer.unmount());
 });
 

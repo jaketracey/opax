@@ -8,11 +8,13 @@ import {
 } from '../../api/electorate-geometry';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { SizedCanvas } from '../../design/canvas';
+import { ReservedRegionArea, useReservedRegions } from '../../design/fold-area';
 import { jurisdictionName } from '../../design/parliament';
 import { SourceLine } from '../../design/source';
 import { radii } from '../../design/tokens';
 import { dark, light } from '../../design/tokens.generated';
 import { useOutlineProbe } from './outline-probe';
+import { mapRegions } from '../money/map/regions';
 
 /** The outline's colours by the ground it is drawn on (Dir 2.2). */
 export function outlineColours(
@@ -44,7 +46,15 @@ export function hasOutline(boundaries: readonly Boundary[]): boolean {
  * caller places the source line and leaves the drawing out when the file has
  * no outline (this draws nothing then).
  */
-export function OutlineMap({
+export function OutlineMap(props: Parameters<typeof OutlineMapContent>[0]) {
+  return (
+    <ReservedRegionArea>
+      <OutlineMapContent {...props} />
+    </ReservedRegionArea>
+  );
+}
+
+function OutlineMapContent({
   boundaries,
   name,
   state,
@@ -69,15 +79,20 @@ export function OutlineMap({
   const boundary = displayBoundary(boundaries),
     ref = useCanvasRef();
   const [width, setWidth] = useState(0);
+  const regions = useReservedRegions();
   const large = useAccessibilitySize();
   const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
   const height =
     fixedHeight ??
     (variant === 'thumb' ? (large ? 72 : 120) : large ? 120 : 200);
   const drawn = Math.max(0, height - topInset);
+  const { scene } = mapRegions(
+    { x: 0, y: topInset, width, height: drawn },
+    regions,
+  );
   const path =
-    boundary?.geometry && width > 32 && drawn > 32
-      ? outlinePath(boundary.geometry, width, drawn)
+    boundary?.geometry && scene.width > 32 && scene.height > 32
+      ? outlinePath(boundary.geometry, scene.width, scene.height)
       : '';
   // Only the page's own drawing is probed. A thumb can sit on a tab that is
   // mounted but not on screen (NativeTabs mounts every tab at launch), where
@@ -116,8 +131,9 @@ export function OutlineMap({
     >
       <SizedCanvas
         ref={ref}
-        width={width}
-        height={drawn}
+        width={scene.width}
+        height={scene.height}
+        style={{ position: 'absolute', left: scene.x, top: scene.y }}
         accessible={false}
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"

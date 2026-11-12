@@ -208,6 +208,33 @@ test('follow-up requests keep rewritten subject, two answers of source pins and 
   expect(body.speaker).toBe(c.speaker);
   expect(body.kind).toBe('speech');
 });
+test('follow-ups pin only the records earlier answers cited, so an old subject does not stick', () => {
+  const id = (n: number) => n.toString(16).padStart(32, '0');
+  const source = (n: number, cited: boolean) => ({
+    resource: id(n),
+    slug: `fixture-${n}`,
+    title: `Fixture record ${n}`,
+    cited,
+  });
+  const thread = [
+    { role: 'user' as const, text: 'What records concern the fixture union?' },
+    {
+      role: 'answer' as const,
+      text: 'Fixture union answer.',
+      sources: [source(1, true), source(2, false)],
+    },
+    { role: 'user' as const, text: 'What housing records were published?' },
+    {
+      role: 'answer' as const,
+      text: 'Fixture housing answer.',
+      // The union records were pinned last turn and came back uncited.
+      sources: [source(3, true), source(1, false), source(2, false)],
+    },
+  ] as Parameters<typeof requestBody>[2];
+  expect(
+    requestBody('And in 2026?', defaultOptions, thread).prior_resources,
+  ).toEqual([id(3), id(1)]);
+});
 test('saved chats bound count and bytes, trim retrieved passages and retain the account shape', () => {
   const c = chat();
   const decoded = decodeChat(c)!;
@@ -692,6 +719,7 @@ describe('analytics: each question measured once, never its words', () => {
         follow_up: false,
         duration_ms: 250,
         cancelled: false,
+        reason: 'network',
       },
     ]);
     post.mockImplementationOnce(

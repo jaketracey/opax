@@ -39,7 +39,7 @@ jest.mock('../src/features/search/navigation', () => ({
   openSearchPerson: jest.fn(),
 }));
 const mockBar: { options?: Record<string, any> } = {};
-let mockParams: Record<string, string | undefined> = {};
+let mockParams: Record<string, string | string[] | undefined> = {};
 jest.mock('expo-router', () => {
   const React = jest.requireActual('react');
   return {
@@ -80,10 +80,10 @@ const sources = (identity = true) =>
     bills,
     provenance: { people: source, electorates: source, bills: source },
   }) as unknown as Awaited<ReturnType<typeof catalogs.suggestionSources>>;
-const empty = () => ({
+const empty = (kind = 'speech') => ({
   data: decodeRecords({
     query: 'x',
-    kind: 'speech',
+    kind,
     sort: 'relevance',
     page: 1,
     per_page: 20,
@@ -126,6 +126,44 @@ async function mount() {
   });
   return r;
 }
+
+test.each(['search-key', 'speech-suggestion'])(
+  'submitting from %s dismisses the iOS keyboard and keeps the results',
+  async (action) => {
+    jest.mocked(recordSearch.search).mockResolvedValue(empty() as never);
+    const r = await mount();
+    const nativeBar = {
+      setText: jest.fn(),
+      blur: jest.fn(),
+      cancelSearch: jest.fn(),
+    };
+    bar().ref.current = nativeBar;
+    const dismiss = jest.spyOn(Keyboard, 'dismiss');
+    try {
+      await type('housing');
+      if (action === 'search-key') await submit('housing');
+      else
+        await act(async () =>
+          r.root.findByType(SearchSuggestions).props.onSearchSpeeches(),
+        );
+      expect(nativeBar.blur).toHaveBeenCalled();
+      expect(dismiss).toHaveBeenCalled();
+      expect(nativeBar.cancelSearch).not.toHaveBeenCalled();
+      expect(r.root.findByType(ScopeBar).props.value).toBe(
+        action === 'search-key' ? 'all' : 'speeches',
+      );
+    } finally {
+      dismiss.mockRestore();
+    }
+  },
+);
+
+test('a repeated linked query parameter returns to Browse without a request', async () => {
+  mockParams = { q: ['housing', 'education'], scope: 'speeches' };
+  const r = await mount();
+  expect(r.root.findAllByType(SearchIdle)).toHaveLength(1);
+  expect(recordSearch.search).not.toHaveBeenCalled();
+});
 
 test.each(['typing', 'results'])(
   'selecting Search from %s restores Browse with a fresh native scroll view and no keyboard',
@@ -258,7 +296,16 @@ test('offline, Speeches says it needs a connection while on-device groups stay',
   expect(ids(r)).toContain('search-result-anthony-albanese');
   expect(ids(r)).not.toContain('search-empty');
   await act(async () => error.props.onRetry());
-  expect(recordSearch.search).toHaveBeenCalledTimes(2);
+  expect(
+    jest
+      .mocked(recordSearch.search)
+      .mock.calls.filter(([, f]) => f.kind !== 'report'),
+  ).toHaveLength(2);
+  expect(
+    jest
+      .mocked(recordSearch.search)
+      .mock.calls.filter(([, f]) => f.kind === 'report'),
+  ).toHaveLength(1);
   await act(async () => r.unmount());
 });
 
@@ -292,7 +339,12 @@ test('electorate suggestions open the native identifier route', async () => {
 });
 
 test('a scope with nothing offers Show all results, which keeps the query', async () => {
-  jest.mocked(recordSearch.search).mockResolvedValue(empty() as never);
+  jest
+    .mocked(recordSearch.search)
+    .mockImplementation(
+      async (_q, f) =>
+        empty(f.kind === 'report' ? 'report' : 'speech') as never,
+    );
   const r = await mount();
   await submit('zzzznevermatching');
   // All finds nothing anywhere: No results with Ask OPAX about this.
@@ -306,7 +358,7 @@ test('a scope with nothing offers Show all results, which keeps the query', asyn
   );
   await act(async () => all.props.onPress());
   expect(r.root.findByType(ScopeBar).props.value).toBe('all');
-  expect(recordSearch.search).toHaveBeenCalledTimes(1);
+  expect(recordSearch.search).toHaveBeenCalledTimes(2);
   await act(async () => r.unmount());
 });
 

@@ -10,6 +10,7 @@ import { FigureBlock } from '../../design/record';
 import { LinkRow, ValueRow } from '../../design/rows';
 import { symbols } from '../../design/symbols';
 import { moneyRoute } from '../../navigation/routes/money-map';
+import { partyRoute } from '../../navigation/routes/people';
 import { moneyRows, topicMoneyTitles, type IndustryMoney } from './model';
 import type { ReadMeta } from './parts';
 import {
@@ -80,6 +81,7 @@ export function TopicMoney({
               key={row.party}
               label={row.party}
               value={formatMoney(row.money)}
+              href={partyRoute(row.party)}
               testID={`topic-money-party-${row.party}`}
             />
           ))}

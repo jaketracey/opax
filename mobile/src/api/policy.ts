@@ -18,6 +18,7 @@ import {
   isSimilarRequest,
 } from './record-policy';
 import { allowsReportsPath } from './reports-policy';
+import { isOfficialReportPath } from './official-report-policy';
 import { isYearPicturePath } from './year-picture-policy';
 // Public GETs; paid search and briefs require an explicit action in the UI.
 // Adding a path requires a source/cost review and test.
@@ -144,6 +145,7 @@ export function assertAllowedPath(path: string): void {
   )
     return;
   if (communityRequestAllowed(path)) return;
+  if (isOfficialReportPath(path)) return;
   if (allowsReportsPath(path)) return;
   if (isExplorePaidPath(path) || isExploreStaticPath(path)) return;
   if (isYearPicturePath(path)) return;
@@ -249,6 +251,10 @@ export function assertAllowedPath(path: string): void {
     releasePath.test(pathname!) ||
     billPath.test(pathname!) ||
     interestPath.test(pathname!) ||
+    // Static per-seat grant slices, including numbered continuation files.
+    /^\/grants\/federal\/seats\/[a-z0-9]+(?:-[a-z0-9]+)*\.json$/.test(
+      pathname!,
+    ) ||
     /^\/grants\/(?:federal|qld)\/programs\/[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.json$/.test(
       pathname!,
     ) ||

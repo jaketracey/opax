@@ -6,6 +6,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type RefObject,
 } from 'react';
 import {
   AccessibilityInfo,
@@ -21,17 +22,23 @@ import {
   type LayoutChangeEvent,
 } from 'react-native';
 import { router, useFocusEffect, type Href } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation, usePreventRemove } from 'expo-router/react-navigation';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import {
   Button,
   Composer,
   InlineError,
   MachinePill,
   Text,
-  isPad,
   useAccessibilitySize,
   useReduceMotion,
 } from '../../design/primitives';
+import { useAdaptiveDevice, useLayout } from '../../design/adaptive';
+import { placeClear, type Rect } from '../../design/fold';
+import { ReservedRegionArea, useReservedRegions } from '../../design/fold-area';
 import { designFlags } from '../../design/flags';
 import { colors, layout, rhythm } from '../../design/tokens';
 import { closeSheetItem, androidHeaderBar } from '../../navigation/chrome';
@@ -55,6 +62,8 @@ import {
 import { recordDestination } from './sources';
 import { useTalk } from './useTalk';
 import { AnswerCaption } from './AnswerCaption';
+import { workingCaption } from './caption-text';
+import { TranscriptEdge, TRANSCRIPT_EDGE_HEIGHT } from './TranscriptEdge';
 import { reportAnswer, reportChoices, type ReportAnswer } from './reportAnswer';
 import { VoiceOrb, type OrbPhase } from './VoiceOrb';
 import { useVoiceLevels } from './useVoiceLevels';
@@ -70,6 +79,7 @@ import {
 import { takeConsentAfterSignIn, takeStartAfterConsent } from './consent-store';
 import { leaveTalk } from './leave';
 import { publishTalk, resetTalk, takeChosenSource } from './live';
+import { talkDockPlacement } from './geometry';
 
 type Action =
   | 'start'
@@ -99,6 +109,27 @@ const ORB_MAX = 240;
 const ORB_AX = 120;
 const ORB_CALL = 72;
 const STATUS_LINE = 40;
+
+function AndroidCallGuard({
+  active,
+  permittedRef,
+  close,
+}: {
+  active: boolean;
+  permittedRef: RefObject<boolean>;
+  close: (finish: () => void) => void;
+}) {
+  const navigation = useNavigation();
+  useEffect(() => {
+    if (active) permittedRef.current = false;
+  }, [active, permittedRef]);
+  usePreventRemove(active, ({ data }) => {
+    const finish = () => navigation.dispatch(data.action);
+    if (permittedRef.current) finish();
+    else close(finish);
+  });
+  return null;
+}
 /** One question a day from the reviewed Ask starter list (7.3 item 3). */
 function exampleQuestion(): string | null {
   // The list is not shipped yet (DIR 9.D item D5): no hand-written fallback.
@@ -114,9 +145,27 @@ function exampleQuestion(): string | null {
 export default function TalkScreen({
   onReportAnswer = reportAnswer,
 }: { onReportAnswer?: ReportAnswer } = {}) {
+  return (
+    <SafeAreaView edges={['left', 'right']} style={styles.page}>
+      <ReservedRegionArea style={styles.page}>
+        <TalkContent onReportAnswer={onReportAnswer} />
+      </ReservedRegionArea>
+    </SafeAreaView>
+  );
+}
+
+function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
   const call = useTalk();
+  const exitConfirmed = useRef(false);
   const { snapshot: s } = call;
   const insets = useSafeAreaInsets();
+  const adaptive = useAdaptiveDevice();
+  const layoutRule = useLayout();
+  const regions = useReservedRegions();
+  const [body, setBody] = useState<Rect | null>(null);
+  const [dock, setDock] = useState<{ width: number; height: number } | null>(
+    null,
+  );
   const reduceMotion = useReduceMotion();
   const large = useAccessibilitySize();
   const [queuedSource, setQueuedSource] = useState<VoiceSource | null>(null);
@@ -124,9 +173,7 @@ export default function TalkScreen({
   const [notice, setNotice] = useState<string | null>(null);
   const [captions, setCaptions] = useCaptionsPreference();
   const [screenReader, setScreenReader] = useState(false);
-  const [stage, setStage] = useState<{ width: number; height: number } | null>(
-    null,
-  );
+  const [stage, setStage] = useState<Rect | null>(null);
   const priorAnnouncement = useRef('');
   const statusNode = useRef<View>(null);
   const captionsList = useRef<ScrollView>(null);
@@ -137,6 +184,7 @@ export default function TalkScreen({
   // Checking status without a Start is not an active conversation.
   const active = call.active && (s.state !== 'checking' || call.busy);
   const blocked = refusal(s.status);
+  const signedOut = call.error === 'signedOut' || blocked === 'signedOut';
   const failure = call.error === 'signedOut' ? null : call.error;
   const offline = failure === 'network' || failure === 'timeout';
   const statusFailed = !s.status && failure !== null;
@@ -162,6 +210,8 @@ export default function TalkScreen({
             ? failureCopy[blocked]
             : null));
   const lastTurn = s.transcript[s.transcript.length - 1];
+  const working =
+    active && s.state !== 'ending' ? workingCaption(lastTurn) : null;
   const phase: OrbPhase = !active
     ? 'rest'
     : s.state === 'ending'
@@ -193,13 +243,17 @@ export default function TalkScreen({
         ? talkCopy.offline
         : talkCopy.checkFailed
       : (message ??
-        (s.status ? talkCopy.status.ready : talkCopy.status.checking)));
-  const action: Action = !s.status
-    ? statusFailed
-      ? 'retry'
-      : 'checking'
-    : blocked === 'signedOut'
-      ? 'signIn'
+        (signedOut
+          ? failureCopy.signedOut
+          : s.status
+            ? talkCopy.status.ready
+            : talkCopy.status.checking)));
+  const action: Action = signedOut
+    ? 'signIn'
+    : !s.status
+      ? statusFailed
+        ? 'retry'
+        : 'checking'
       : blocked === 'callOpen'
         ? 'retry'
         : blocked
@@ -257,17 +311,21 @@ export default function TalkScreen({
       );
   }, [compact, reduceMotion]);
 
-  const close = () => {
+  const close = (finish: () => void = leaveTalk) => {
     if (active)
       Alert.alert(talkCopy.endConfirm.title, undefined, [
         { text: talkCopy.endConfirm.keep, style: 'cancel' },
         {
           text: talkCopy.endConfirm.end,
           style: 'destructive',
-          onPress: () => void call.end().then(leaveTalk),
+          onPress: () =>
+            void call.end().then(() => {
+              exitConfirmed.current = true;
+              finish();
+            }),
         },
       ]);
-    else leaveTalk();
+    else finish();
   };
   function openRecord(source: VoiceSource) {
     if (!webPageUrl(source.path)) return;
@@ -367,18 +425,21 @@ export default function TalkScreen({
   }, [s.sources, active, live, stateText, phase]);
   useEffect(() => resetTalk, []);
   // Android's Back is the sheet's Done: during a call it asks first.
-  useEffect(() => {
-    if (!android || !active) return;
-    const subscription = BackHandler.addEventListener(
-      'hardwareBackPress',
-      () => {
-        handlers.current.close();
-        return true;
-      },
-    );
-    return () => subscription.remove();
-  }, [active]);
-  const menuTitle = timeLeft(live, s.remaining, s.status);
+  useFocusEffect(
+    useCallback(() => {
+      if (!android || !active) return;
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        () => {
+          handlers.current.close();
+          return true;
+        },
+      );
+      return () => subscription.remove();
+    }, [active]),
+  );
+  // After a session expires the cached status still says signed in.
+  const menuTitle = timeLeft(live, s.remaining, signedOut ? null : s.status);
   const reportable = canReport(s.transcript);
   const records = useMemo(() => reportChoices(s.sources), [s.sources]);
   const canCaption = active || s.transcript.length > 0;
@@ -421,11 +482,15 @@ export default function TalkScreen({
   ]);
 
   const onStage = (event: LayoutChangeEvent) => {
-    const { width, height } = event.nativeEvent.layout;
+    const { x, y, width, height } = event.nativeEvent.layout;
     setStage((prior) =>
-      prior && prior.width === width && prior.height === height
+      prior &&
+      prior.x === x &&
+      prior.y === y &&
+      prior.width === width &&
+      prior.height === height
         ? prior
-        : { width, height },
+        : { x, y, width, height },
     );
   };
   const cap = large ? ORB_AX : ORB_MAX;
@@ -434,6 +499,32 @@ export default function TalkScreen({
   const orbSize = stage
     ? Math.max(0, Math.min(stage.width, stage.height - below, cap))
     : 0;
+  const bottom = Math.max(insets.bottom, rhythm.block);
+  const dockPlacement =
+    body && dock
+      ? talkDockPlacement(body, dock, bottom, layout.screenMargin, regions)
+      : { paddingBottom: bottom, translateX: 0 };
+  const stageBounds =
+    body && stage
+      ? {
+          x: body.x + stage.x,
+          y: body.y + stage.y,
+          width: stage.width,
+          height: stage.height,
+        }
+      : null;
+  const orbWanted = stageBounds
+    ? {
+        x: stageBounds.x + (stageBounds.width - orbSize) / 2,
+        y: stageBounds.y + (stageBounds.height - orbSize - below) / 2,
+        width: orbSize,
+        height: orbSize + below,
+      }
+    : null;
+  const orbClear =
+    orbWanted && stageBounds
+      ? placeClear(orbWanted, regions, stageBounds)
+      : null;
   const statusProps = {
     ref: statusNode,
     accessible: true,
@@ -473,13 +564,31 @@ export default function TalkScreen({
         if (live) void call.mute();
       }}
     >
+      {android ? (
+        <AndroidCallGuard
+          active={active}
+          permittedRef={exitConfirmed}
+          close={close}
+        />
+      ) : null}
       <RouteOptions options={screenOptions} />
       <View
         testID="talk-sheet"
+        onLayout={({ nativeEvent: { layout: next } }) =>
+          setBody((prior) =>
+            prior &&
+            prior.x === next.x &&
+            prior.y === next.y &&
+            prior.width === next.width &&
+            prior.height === next.height
+              ? prior
+              : next,
+          )
+        }
         style={[
           styles.body,
-          isPad ? styles.pad : null,
-          { paddingBottom: Math.max(insets.bottom, rhythm.block) },
+          layoutRule.regular ? styles.pad : null,
+          { paddingBottom: dockPlacement.paddingBottom },
         ]}
       >
         {compact ? (
@@ -506,35 +615,78 @@ export default function TalkScreen({
           </View>
         ) : null}
         {showTranscript ? (
-          <ScrollView
-            ref={captionsList}
-            testID="talk-captions-list"
-            style={styles.transcript}
-            contentContainerStyle={styles.transcriptContent}
-            keyboardShouldPersistTaps="handled"
-            onContentSizeChange={() => {
-              // Pinned to the newest turn unless the reader scrolled up.
-              if (pinned.current)
-                captionsList.current?.scrollToEnd({ animated: !reduceMotion });
-            }}
-            onScroll={(event) => {
-              const { contentOffset, contentSize, layoutMeasurement } =
-                event.nativeEvent;
-              pinned.current =
-                contentOffset.y + layoutMeasurement.height >=
-                contentSize.height - 24;
-            }}
-            scrollEventThrottle={32}
-          >
-            <MachinePill note={talkMachineNote} testID="talk-machine" />
-            {s.transcript.map((turn) => (
-              <AnswerCaption key={`${turn.role}-${turn.id}`} turn={turn} />
-            ))}
-          </ScrollView>
+          <View style={styles.transcript}>
+            <ScrollView
+              ref={captionsList}
+              testID="talk-captions-list"
+              style={styles.transcript}
+              contentContainerStyle={styles.transcriptContent}
+              keyboardShouldPersistTaps="handled"
+              onContentSizeChange={() => {
+                // Pinned to the newest turn unless the reader scrolled up.
+                if (pinned.current)
+                  captionsList.current?.scrollToEnd({
+                    animated: !reduceMotion,
+                  });
+              }}
+              onScroll={(event) => {
+                const { contentOffset, contentSize, layoutMeasurement } =
+                  event.nativeEvent;
+                pinned.current =
+                  contentOffset.y + layoutMeasurement.height >=
+                  contentSize.height - 24;
+              }}
+              scrollEventThrottle={32}
+            >
+              <MachinePill note={talkMachineNote} testID="talk-machine" />
+              {s.transcript.map((turn) => (
+                <AnswerCaption
+                  key={`${turn.role}-${turn.id}`}
+                  turn={turn}
+                  sources={
+                    turn.role === 'agent'
+                      ? sources.filter(
+                          (source) => s.sourceTurns?.[source.path] === turn.id,
+                        )
+                      : undefined
+                  }
+                  onOpenSource={openRecord}
+                  onMoreSources={() => router.push(talkSourcesRoute)}
+                />
+              ))}
+              {working ? (
+                <Text
+                  wordSafe
+                  variant="body"
+                  tone="inkSoft"
+                  testID="talk-working"
+                  accessibilityLabel={talkCopy.opaxSaid(working)}
+                >
+                  {working}
+                </Text>
+              ) : null}
+            </ScrollView>
+            <TranscriptEdge />
+          </View>
         ) : (
-          <View style={styles.stage} onLayout={onStage}>
+          <View
+            style={[styles.stage, adaptive ? { minHeight: 0 } : null]}
+            onLayout={onStage}
+          >
             {/* Absolute, so the orb never props the stage open. */}
-            <View style={styles.orbFrame}>
+            <View
+              style={[
+                styles.orbFrame,
+                orbClear && orbWanted
+                  ? {
+                      transform: [
+                        { translateX: orbClear.x - orbWanted.x },
+                        { translateY: orbClear.y - orbWanted.y },
+                      ],
+                    }
+                  : null,
+              ]}
+            >
               {compact ? null : (
                 <View
                   {...statusProps}
@@ -567,7 +719,19 @@ export default function TalkScreen({
           </View>
         )}
         <ScrollView
-          style={styles.dockScroll}
+          style={[
+            styles.dockScroll,
+            { transform: [{ translateX: dockPlacement.translateX }] },
+          ]}
+          onLayout={({ nativeEvent: { layout: next } }) =>
+            setDock((prior) =>
+              prior &&
+              prior.width === next.width &&
+              prior.height === next.height
+                ? prior
+                : { width: next.width, height: next.height },
+            )
+          }
           contentContainerStyle={styles.dock}
           keyboardShouldPersistTaps="handled"
           // Sized to its content; it scrolls only when AX text needs it.
@@ -858,7 +1022,11 @@ const styles = StyleSheet.create({
   callRowStacked: { flexDirection: 'column', gap: rhythm.tight },
   callOrb: { width: ORB_CALL, height: ORB_CALL },
   transcript: { flex: 1 },
-  transcriptContent: { gap: rhythm.block, paddingVertical: rhythm.tight },
+  transcriptContent: {
+    gap: rhythm.block,
+    paddingTop: TRANSCRIPT_EDGE_HEIGHT + rhythm.tight,
+    paddingBottom: rhythm.tight,
+  },
   dockScroll: { flexGrow: 0, flexShrink: 1 },
   dock: { gap: rhythm.tight, alignItems: 'stretch' },
   centre: { textAlign: 'center' },

@@ -1,3 +1,4 @@
+import { Pressable } from './pressable';
 import type { Href } from 'expo-router';
 import {
   Children,
@@ -8,7 +9,6 @@ import {
   type ReactNode,
 } from 'react';
 import {
-  Pressable,
   StyleSheet,
   View,
   useColorScheme,

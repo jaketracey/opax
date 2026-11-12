@@ -1,6 +1,14 @@
+import { associatedLine, donorAssociatedTo } from '../api/associated';
 import { RouteOptions } from '../navigation/preview';
 import { router, useLocalSearchParams, type Href } from 'expo-router';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Platform,
   RefreshControl,
@@ -11,9 +19,9 @@ import {
 import type { PartyPageRecord } from '../api/catalogs';
 import { nameKey } from '../api/ids';
 import type { PartyMember } from '../api/party-page';
-import { catalogs, portraits } from '../api/runtime';
+import { apiClient, catalogs, portraits } from '../api/runtime';
 import { useReduceMotion } from '../design/accessibility';
-import { PadGrid, isPad, useLayout } from '../design/adaptive';
+import { useLayout } from '../design/adaptive';
 import { Disclosure } from '../design/disclosure';
 import {
   counted,
@@ -24,7 +32,7 @@ import {
   formatMoneyCompact,
   moneyAccessibilityLabel,
 } from '../design/format';
-import { Group, Screen, Section } from '../design/layout';
+import { Group, Screen, Section, TitleAnchor } from '../design/layout';
 import { isPartyLabel, partySlug } from '../design/party';
 import { FaceStack, PersonRow } from '../design/people';
 import { StatStrip, type StatTileProps } from '../design/record';
@@ -59,6 +67,9 @@ import { NewDot } from './follows/NewDot';
 import { followKey, useFollows } from './follows/store';
 import { useFollowStates } from './follows/useFollowStates';
 import { ProfileBlock } from './people/Block';
+import { decodeMoneyGraph, moneyCatalogs, type MoneyGraph } from './money/data';
+import { associatedEntityRoute } from './money/record-routes';
+import { donorNodeFor } from './money/lookup';
 import { usePageActions } from './people/PageActions';
 import { partyTimingID } from './people/party-timing';
 import {
@@ -73,13 +84,25 @@ import {
 } from './people/PartyDepth';
 import { ProfileHeader } from './people/ProfileHeader';
 import { MoreFromRecord } from './people/Sections';
+import { SurfaceGrid } from './today/SurfaceGrid';
 import { profileGrid } from './split/grid';
 
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 const partyArrival = (v: unknown): PartySection | undefined =>
   v === 'members' || v === 'receipts' || v === 'changes' ? v : undefined;
 
-/** The Parliamentarians directory filtered to a party's sitting members. */
+async function openAssociatedEntity(name: string) {
+  let graph: MoneyGraph | null = null;
+  try {
+    graph = (await apiClient.get(moneyCatalogs.federal.path, decodeMoneyGraph))
+      .data;
+  } catch {
+    // A name search is still available when the donor index cannot be read.
+  }
+  router.push(associatedEntityRoute(name, graph));
+}
+
+/** Sitting party members across federal, state and territory parliaments. */
 export const partyMembersRoute = (label: string, sitting = true): Href => ({
   pathname: '/directory',
   params: {
@@ -107,6 +130,58 @@ export default function Party() {
 
 type View_ = NonNullable<PartyPageRecord['data']>;
 
+function AssociatedEntityRows({
+  rows,
+  party,
+}: {
+  rows: NonNullable<View_['associated']['data']>['rows'];
+  party: string;
+}) {
+  const [graph, setGraph] = useState<MoneyGraph | null>();
+  useEffect(() => {
+    let active = true;
+    void Promise.resolve()
+      .then(() => apiClient.get(moneyCatalogs.federal.path, decodeMoneyGraph))
+      .then(
+        (record) => {
+          if (active) setGraph(record?.data ?? null);
+        },
+        () => {
+          if (active) setGraph(null);
+        },
+      );
+    return () => {
+      active = false;
+    };
+  }, [rows]);
+  return (
+    <View>
+      {rows.slice(0, 8).map((entity, index) => (
+        <LinkRow
+          key={entity.name}
+          title={entity.name}
+          detail={[
+            associatedLine(
+              donorAssociatedTo(
+                donorNodeFor({ name: entity.name }, graph ?? null),
+                party,
+              ),
+            ),
+            entity.year,
+            entity.receipts !== null
+              ? `receipts ${formatMoney(entity.receipts)}`
+              : null,
+          ]
+            .filter(Boolean)
+            .join(' · ')}
+          onPress={() => openAssociatedEntity(entity.name)}
+          testID={`party-associated-${index}`}
+        />
+      ))}
+    </View>
+  );
+}
+
 export function PartyPage({
   input,
   arrival,
@@ -120,10 +195,14 @@ export function PartyPage({
   // "Independent" is a label, not a party: no page, no read.
   const notAParty = !isPartyLabel(input) && /^independent/i.test(input);
   const load = useCallback(
-    (refresh: boolean, publish: (record: PartyPageRecord) => void) =>
+    (
+      refresh: boolean,
+      publish: (record: PartyPageRecord) => void,
+      signal?: AbortSignal,
+    ) =>
       notAParty
         ? new Promise<PartyPageRecord>(() => {})
-        : catalogs.partyPage(input, refresh, publish),
+        : catalogs.partyPage(input, refresh, publish, signal),
     [input, notAParty],
   );
   const { record, error, refresh, retry, refreshing } = useCatalogRecord(load);
@@ -179,11 +258,10 @@ export function PartyPage({
     <>
       {embedded ? null : (
         <RouteOptions
+          stableItems
           options={{
             // The back button on the next page names this one.
-            ...(view || notAParty || record
-              ? { title: view?.label ?? 'Party' }
-              : {}),
+            title: view?.label ?? '',
             ...headerItems(
               view
                 ? pageItems({
@@ -201,9 +279,11 @@ export function PartyPage({
         <Screen
           column="wide"
           testID="party-screen"
-          barTitle={notAParty || record ? 'Party' : undefined}
+          // "Not a party" makes no read, so a pull would spin forever.
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+            notAParty ? undefined : (
+              <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+            )
           }
         >
           {pending}
@@ -376,7 +456,7 @@ function PartyContent({
   if (members && view.members.status !== 'error')
     tiles.push({
       value: formatCount(members.currentCount),
-      label: 'sitting members',
+      label: members.currentCount === 1 ? 'sitting member' : 'sitting members',
       onPress: () => jump('members'),
       testID: 'party-figure-members',
     });
@@ -417,10 +497,10 @@ function PartyContent({
     view.associated.status === 'error' ||
     view.associated.status === 'loading';
 
-  // On an iPad at regular width, related sections pair (people.md 2.2):
+  // At regular width, related sections pair (people.md 2.2):
   // Members with Recent votes, Receipts with Debts and associated entities.
-  // The phone keeps one column in its own order.
-  const pairs = isPad && layout.regular;
+  // Compact windows keep one column in their own order.
+  const pairs = layout.regular;
   const membersSection = (
     <ProfileBlock
       title="Members"
@@ -440,7 +520,7 @@ function PartyContent({
       about={() => ({
         title: 'Members',
         notes: [
-          'Current members use their current party. The directory is updated periodically. Undated affiliations appear separately as recorded; former members are excluded.',
+          'Sitting members include federal, state and territory parliamentarians with a confirmed current party affiliation. The directory is updated periodically. Undated affiliations appear separately as recorded; former members are excluded.',
           view.rosterAsAt
             ? `Roster as at ${formatDate(view.rosterAsAt)}.`
             : null,
@@ -450,7 +530,7 @@ function PartyContent({
       {(data) => (
         <View>
           <LinkRow
-            title={`${formatCount(data.currentCount)} sitting members`}
+            title={counted(data.currentCount, 'sitting member')}
             leading={
               <View style={styles.faces}>
                 {newMembers ? <NewDot testID="party-members-new" /> : null}
@@ -458,7 +538,7 @@ function PartyContent({
               </View>
             }
             href={partyMembersRoute(label)}
-            accessibilityLabel={`${counted(data.currentCount, `sitting ${label} member`)}`}
+            accessibilityLabel={`${counted(data.currentCount, `sitting ${label} member`)}${newMembers ? '. New' : ''}`}
             accessibilityHint={`Opens Parliamentarians filtered to ${label}`}
             testID="party-current-count"
           />
@@ -510,7 +590,7 @@ function PartyContent({
           'AEC disclosure data: donations under the disclosure threshold are not reported and cannot appear here, so totals are a floor, not a ceiling.',
           'Sources are the largest donor-to-party flows in the disclosure returns, largest first; they are not all of the party’s receipts. No sequence or causal link is inferred.',
           disclosureYearNote,
-          ...(fundingRecord ? fundingNotes(fundingRecord) : []),
+          ...(fundingRecord ? fundingNotes(fundingRecord, label) : []),
         ],
       })}
     >
@@ -526,7 +606,7 @@ function PartyContent({
             </Text>
             <Text wordSafe variant="secondary">
               {[
-                `disclosed, from ${formatCount(data.node.count)} donations and receipts`,
+                `disclosed, from ${formatCount(data.node.count)} ${data.node.count === 1 ? 'donation or receipt' : 'donations and receipts'}`,
                 data.node.firstYear !== undefined &&
                 data.node.lastYear !== undefined
                   ? data.node.firstYear === data.node.lastYear
@@ -546,6 +626,7 @@ function PartyContent({
               <MoneyRow
                 key={donor.id}
                 name={donor.name}
+                detail={donor.associated ?? undefined}
                 amount={donor.amount}
                 href={
                   donor.id.startsWith('donor:individual')
@@ -589,9 +670,10 @@ function PartyContent({
       <Group>
         {funding.read.status === 'loading' ? (
           <FundingLoading />
-        ) : view.receipts.status === 'error' &&
-          funding.read.status === 'error' ? (
-          // The Receipts section is in error too: say it once here.
+        ) : funding.read.status === 'error' &&
+          (view.receipts.status === 'error' || view.receipts.data === null) ? (
+          // Receipts draws no funding error when it is in error itself or
+          // has nothing to show: say it once here.
           <FundingError retry={funding.retry} />
         ) : fundingRecord ? (
           <PartyDebts record={fundingRecord} name={label} />
@@ -614,30 +696,7 @@ function PartyContent({
             <Text wordSafe variant="subsectionTitle" accessibilityRole="header">
               Associated entities
             </Text>
-            <View>
-              {associated.rows.slice(0, 8).map((entity) => (
-                <LinkRow
-                  key={entity.name}
-                  title={entity.name}
-                  detail={[
-                    entity.year,
-                    entity.receipts !== null
-                      ? `receipts ${formatMoney(entity.receipts)}`
-                      : null,
-                  ]
-                    .filter(Boolean)
-                    .join(' · ')}
-                  external
-                  onPress={() =>
-                    void openOnWeb(
-                      `/subject/campaigner/${encodeURIComponent(entity.name)}`,
-                      entity.name,
-                    )
-                  }
-                  accessibilityHint="Opens in the in-app browser"
-                />
-              ))}
-            </View>
+            <AssociatedEntityRows rows={associated.rows} party={label} />
             {associated.total > Math.min(8, associated.rows.length) ? (
               <Text wordSafe variant="footnote">
                 {`${formatCount(Math.min(8, associated.rows.length))} of ${formatCount(associated.total)} shown, largest receipts first.`}
@@ -765,6 +824,9 @@ function PartyContent({
       </ProfileBlock>
     ) : null;
 
+  // ProfileHeader owns the H1, so Screen cannot find it among its children.
+  // Match the person's measured title handover on iOS only.
+  const ProfileTitle = Platform.OS === 'ios' ? TitleAnchor : Fragment;
   return (
     <Screen
       column="wide"
@@ -776,34 +838,20 @@ function PartyContent({
       }
     >
       <View style={styles.top} testID={titleTiming ?? 'party'}>
-        <ProfileHeader
-          variant="party"
-          name={label}
-          follow={{ kind: 'party', id }}
-          testID="party"
-          titleTestID="party-title"
-          onTitleLayout={() => {
-            if (!titleTiming) setTitleTiming(partyTimingID());
-          }}
-        />
+        <ProfileTitle>
+          <ProfileHeader
+            variant="party"
+            name={label}
+            follow={{ kind: 'party', id }}
+            testID="party"
+            titleTestID="party-title"
+            onTitleLayout={() => {
+              if (!titleTiming) setTitleTiming(partyTimingID());
+            }}
+          />
+        </ProfileTitle>
         {tiles.length ? (
-          <Group gap={rhythm.tight}>
-            <StatStrip tiles={tiles} testID="party-figures" />
-            <SourceLine
-              title="Party sources"
-              asOf={stripCitations[0]?.asOf ?? null}
-              citation={stripCitations}
-              state={
-                view.members.partial || view.receipts.partial ? 'partial' : null
-              }
-              notes={[
-                view.members.partial || view.receipts.partial
-                  ? 'Some records for this party could not be read.'
-                  : null,
-              ]}
-              testID="party-figures-source"
-            />
-          </Group>
+          <StatStrip tiles={tiles} testID="party-figures" />
         ) : null}
       </View>
       {follow && changes.length ? (
@@ -824,16 +872,16 @@ function PartyContent({
       {pairs ? (
         <>
           <View onLayout={(e) => placed('members')(e.nativeEvent.layout.y)}>
-            <PadGrid {...profileGrid}>
+            <SurfaceGrid {...profileGrid} testID="party-members-grid">
               {membersSection}
               {votesSection}
-            </PadGrid>
+            </SurfaceGrid>
           </View>
           <View onLayout={(e) => placed('receipts')(e.nativeEvent.layout.y)}>
-            <PadGrid {...profileGrid}>
+            <SurfaceGrid {...profileGrid} testID="party-receipts-grid">
               {receiptsSection}
               {debtsSection}
-            </PadGrid>
+            </SurfaceGrid>
           </View>
         </>
       ) : (
@@ -854,6 +902,22 @@ function PartyContent({
         kinds={['mentions']}
         testID="party-more"
       />
+      {tiles.length ? (
+        <SourceLine
+          title="Party sources"
+          asOf={stripCitations[0]?.asOf ?? null}
+          citation={stripCitations}
+          state={
+            view.members.partial || view.receipts.partial ? 'partial' : null
+          }
+          notes={[
+            view.members.partial || view.receipts.partial
+              ? 'Some records for this party could not be read.'
+              : null,
+          ]}
+          testID="party-figures-source"
+        />
+      ) : null}
       {/* The page's end, for journeys that scroll to it; nothing drawn. */}
       <View testID="party-end" collapsable={false} style={styles.end} />
     </Screen>

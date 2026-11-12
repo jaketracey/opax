@@ -1,3 +1,4 @@
+import { throwIfAborted } from '../../api/abort';
 import { catalogs } from '../../api/runtime';
 import { buildPortraitIndexAsync } from '../../api/portrait-index';
 import {
@@ -21,10 +22,11 @@ const outOfStep = (records: string) =>
     `The ${records} records are out of step. Try again shortly.`,
   );
 /** The roster and the dated seats must come from one release. */
-async function directory(refresh: boolean) {
+async function directory(refresh: boolean, signal?: AbortSignal) {
   try {
-    return await catalogs.directory(refresh);
+    return await catalogs.directory(refresh, signal);
   } catch (error) {
+    throwIfAborted(signal);
     if (
       error instanceof ApiError &&
       error.code === 'invalid-data' &&
@@ -49,6 +51,7 @@ export interface DirectoryRecord {
 export async function loadDirectory(
   kind: DirectoryKind,
   refresh = false,
+  signal?: AbortSignal,
 ): Promise<DirectoryRecord> {
   const rows = {
     people: [] as PeopleRow[],
@@ -60,10 +63,10 @@ export async function loadDirectory(
   const sources: DirectoryRecord['sources'] = [];
   if (kind === 'person') {
     const [d, votes, photos, credits] = await Promise.all([
-      directory(refresh),
-      catalogs.votes(),
-      catalogs.photoPeople(refresh),
-      catalogs.photoCredits(refresh),
+      directory(refresh, signal),
+      catalogs.votes(signal),
+      catalogs.photoPeople(refresh, signal),
+      catalogs.photoCredits(refresh, signal),
     ]);
     const portraits = await buildPortraitIndexAsync({
       roster: d.roster.data,
@@ -91,23 +94,27 @@ export async function loadDirectory(
       },
     );
   } else if (kind === 'party') {
-    const [roster, federal, qld, vic] = await Promise.all([
-      catalogs.roster(refresh),
-      catalogs.partyFile('federal', refresh),
-      catalogs.partyFile('qld', refresh),
-      catalogs.partyFile('vic', refresh),
+    const [d, federal, qld, vic] = await Promise.all([
+      directory(refresh, signal),
+      catalogs.partyFile('federal', refresh, signal),
+      catalogs.partyFile('qld', refresh, signal),
+      catalogs.partyFile('vic', refresh, signal),
     ]);
-    rows.parties = partyRows(roster.data, {
+    rows.parties = partyRows(d, {
       federal: federal.data,
       qld: qld.data,
       vic: vic.data,
     });
     rows.facets = partyFacets;
-    records.push(roster, federal, qld, vic);
+    records.push(...Object.values(d), federal, qld, vic);
     sources.push(
       {
-        asAt: roster.data.meta.generated,
+        asAt: d.roster.data.meta.generated,
         label: 'OPAX parliamentary roster',
+      },
+      {
+        asAt: d.people.data.meta.generated,
+        label: 'Dated parliamentary seats',
       },
       ...[
         [federal, 'AEC returns'],
@@ -119,8 +126,8 @@ export async function loadDirectory(
       })),
     );
   } else {
-    const manifest = await catalogs.manifest(refresh),
-      index = await catalogs.electorates(manifest.data, refresh);
+    const manifest = await catalogs.manifest(refresh, signal),
+      index = await catalogs.electorates(manifest.data, refresh, signal);
     if (index.data.meta.release_id !== manifest.data.release_id)
       throw outOfStep('electorate');
     rows.electorates = index.data.electorates;

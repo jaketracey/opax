@@ -16,6 +16,7 @@ import {
 import { MoneyCatalogs } from '../src/features/money-public/catalog';
 import { decodeGrantIndex } from '../src/features/money-public/data';
 import { money } from '../src/features/money-public/runtime';
+import { grantsRoute } from '../src/navigation/routes/public-money';
 
 jest.mock('expo-router', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -84,7 +85,7 @@ describe('SeatGrants defaults to the seat home variant', () => {
 });
 
 describe('SeatGrants variant="seat-home"', () => {
-  test('"Grants in {seat}", the span line, the minimum caveat, no action before D5', async () => {
+  test('"Grants in {seat}", the span line, the minimum caveat and a plain seat grants row', async () => {
     const r = await render(
       <SeatGrants name={seat.name} state={seat.state} variant="seat-home" />,
     );
@@ -103,10 +104,14 @@ describe('SeatGrants variant="seat-home"', () => {
     expect(figure.props.citation.notes[0]).toBe(SEAT_RULE);
     expect(figure.props.citation.notes[1]).toMatch(/postcode/);
     expect(figure.props.citation.testID).toBe('seat-grants-source');
-    // Nothing onward and nothing national until the per-seat slice ships.
-    expect(byID(r.root, 'seat-grants-all')).toHaveLength(0);
+    const link = r.root.findByType(LinkRow);
+    expect(link.props.title).toBe(`Grants in ${seat.name}`);
+    expect(link.props.href).toEqual(
+      grantsRoute({ jur: 'federal', seat: seat.name, state: seat.state }),
+    );
+    expect(link.props.symbol).toBeUndefined();
+    expect(link.props.testID).toBe('seat-grants-all');
     expect(byID(r.root, 'seat-public-money')).toHaveLength(0);
-    expect(r.root.findAllByType(LinkRow)).toHaveLength(0);
     await act(async () => r.unmount());
   });
   test('an unmatched seat draws the sentence and its source line', async () => {

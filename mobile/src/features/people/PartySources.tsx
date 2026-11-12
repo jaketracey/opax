@@ -37,8 +37,11 @@ export default function PartySources() {
   const params = useLocalSearchParams<{ slug?: string; name?: string }>();
   const input = one(params.name) ?? one(params.slug) ?? '';
   const load = useCallback(
-    (refresh: boolean, publish: (record: PartyPageRecord) => void) =>
-      catalogs.partyPage(input, refresh, publish),
+    (
+      refresh: boolean,
+      publish: (record: PartyPageRecord) => void,
+      signal?: AbortSignal,
+    ) => catalogs.partyPage(input, refresh, publish, signal),
     [input],
   );
   const { record, error, retry } = useCatalogRecord(load);
@@ -117,6 +120,7 @@ export default function PartySources() {
             renderItem={({ item, index, section }) => (
               <MoneyRow
                 name={item.name}
+                detail={item.associated ?? undefined}
                 amount={item.amount}
                 href={
                   item.id.startsWith('donor:individual')
@@ -133,6 +137,21 @@ export default function PartySources() {
                   count={8}
                   label="Loading largest sources"
                   testID="party-sources-loading"
+                />
+              ) : receipts?.status === 'error' ? (
+                // A failed read is not an empty disclosure record.
+                <ContentUnavailable
+                  symbol="exclamationmark.triangle"
+                  title="Couldn’t load largest sources"
+                  body="Check your connection and try again."
+                  action={{ label: 'Try again', onPress: retry }}
+                  testID="party-sources-error"
+                />
+              ) : !view ? (
+                <ContentUnavailable
+                  symbol="person.3"
+                  title="This party isn’t in OPAX’s records yet"
+                  testID="party-sources-not-found"
                 />
               ) : (
                 <ContentUnavailable

@@ -12,6 +12,7 @@ import type { Block, Inline } from './answer-markdown';
 
 /** Opens a link in an answer: native pages in the Ask stack, else the browser. */
 export function openAnswerLink(path: string) {
+  if (!path.trim()) return;
   try {
     const url = new URL(path, webOrigin);
     if (url.protocol !== 'https:' || url.username || url.password) return;
@@ -37,6 +38,7 @@ export type Claim = { block: string; sentence: number };
 export function AnswerBody({
   blocks,
   streaming = false,
+  selectionMode = false,
   onCite,
   onLink = openAnswerLink,
   titleFor,
@@ -49,6 +51,8 @@ export function AnswerBody({
   blocks: Block[];
   /** Links are inert and no marks are drawn until the final answer. */
   streaming?: boolean;
+  /** Android's explicit Select text mode, so ordinary citation taps stay live. */
+  selectionMode?: boolean;
   onCite?: (numbers: number[], claim: Claim) => void;
   onLink?: (href: string, title: string) => void;
   /** A source's title and date, for a mark's spoken label. */
@@ -66,8 +70,11 @@ export function AnswerBody({
   // A final answer stays selectable (the system Copy menu, journeys/ask.md
   // 4.5). iOS only: on iOS a tap on a nested mark or link still reaches
   // React Native's touch handler (RCTParagraphComponentView's long press
-  // only claims a hold); Android's setTextIsSelectable takes the touches.
-  const selectable = !streaming && Platform.OS === 'ios';
+  // only claims a hold); Android's setTextIsSelectable takes the touches,
+  // so it is enabled only after the reader chooses Select text.
+  const selectable =
+    !streaming &&
+    (Platform.OS === 'ios' || (Platform.OS === 'android' && selectionMode));
   const isLit = (span: Inline, block: string) =>
     !streaming &&
     claim?.block === block &&

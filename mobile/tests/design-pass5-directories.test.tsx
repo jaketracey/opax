@@ -60,15 +60,33 @@ jest.mock('../src/features/split/RecordDetail', () => ({
   RecordDetail: () => null,
   RecordShare: () => null,
 }));
-// A live iPad flag: the screen reads `isPad` at render, after imports load.
+// A live adaptive-device flag, read at render after imports load.
 const mockPad = { pad: false };
 jest.mock('../src/design/primitives', () => {
   const actual = jest.requireActual('../src/design/primitives');
+  const React = jest.requireActual('react');
   const pad = () => !!(globalThis as { __opaxTestPad?: boolean }).__opaxTestPad;
   const out = {
     ...actual,
+    useAdaptiveDevice: pad,
     useLayout: () => ({ ...actual.useLayout(), regular: pad() }),
-    SplitLayout: ({ list }: { list: React.ReactNode }) => list,
+    SplitLayout: ({
+      list,
+      selected,
+      initialSelection,
+      onSelect,
+    }: {
+      list: React.ReactNode;
+      selected: unknown;
+      initialSelection?: () => unknown;
+      onSelect: (entry: unknown) => void;
+    }) => {
+      const first = initialSelection?.();
+      React.useEffect(() => {
+        if (pad() && !selected && first) onSelect(first);
+      }, [selected, first, onSelect]);
+      return list;
+    },
   };
   Object.defineProperty(out, 'isPad', { get: pad, enumerable: true });
   return out;

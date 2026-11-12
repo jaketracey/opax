@@ -62,7 +62,7 @@ export function EmptyResults({
         !!filters &&
         hasFilters(filters) &&
         (where === 'speeches' || where === 'all'),
-      records: filters?.kind === 'all',
+      records: !!filters && filters.kind !== 'speech',
     });
   const [first, ...rest] = state.actions;
   return (

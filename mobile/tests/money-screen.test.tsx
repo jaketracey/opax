@@ -1,5 +1,6 @@
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
+import { FlatList } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { apiClient } from '../src/api/runtime';
 import MoneyScreen, {
@@ -10,12 +11,18 @@ import MoneyScreen, {
 import MoneyDonors from '../src/features/money/MoneyDonors';
 import { MoneyMap } from '../src/features/money/map/MoneyMap';
 import { decodeMoneyGraph } from '../src/features/money/data';
-import { defaultMoneyFilters } from '../src/features/money/view';
+import {
+  defaultMoneyFilters,
+  moneyView,
+  rankedDonors,
+} from '../src/features/money/view';
+import { filtersFromParams } from '../src/features/money/records';
 import { filterStore } from '../src/features/sheets/filter-model';
 import {
   Button,
   LinkRow,
   MoneyRow,
+  OfflineLine,
   PopUpButton,
   SegmentedPicker,
   SourceLine,
@@ -335,6 +342,44 @@ test('a donors search with no match keeps its caption over one plain line', asyn
   await act(async () => r.unmount());
 });
 
+test('the complete donors list virtualises rows while retaining every named donor', async () => {
+  let r!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    r = TestRenderer.create(<MoneyDonors />);
+  });
+  const list = r.root.findByType(FlatList);
+  const named = graph.nodes.filter((n) => n.kind === 'donor' && !n.withheld);
+  expect(list.props.data).toHaveLength(named.length);
+  expect(
+    list.props.data.every((n: { withheld?: boolean }) => !n.withheld),
+  ).toBe(true);
+  const mounted = r.root.findAllByType(MoneyRow);
+  expect(mounted.length).toBeGreaterThan(0);
+  expect(mounted.length).toBeLessThan(named.length);
+  expect(byTestID(r, SourceLine, 'money-donors-source')).toBeDefined();
+});
+
+test.each([
+  ['industry', { industry: 'unions' }],
+  ['minimum flow', { min: '1000000000000000' }],
+  ['layers', { layers: 'contracts' }],
+] as const)(
+  'the donors page respects the carried %s filter',
+  async (_name, params) => {
+    Object.assign(mockParams, params);
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(<MoneyDonors />);
+    });
+    const expected = rankedDonors(
+      moneyView(graph, filtersFromParams(graph, mockParams)),
+    ).filter((n) => !n.withheld);
+    const actual: { id: string }[] = r.root.findByType(FlatList).props.data;
+    expect(actual.length).toBe(expected.length);
+    expect(actual.every((node, i) => node.id === expected[i]?.id)).toBe(true);
+  },
+);
+
 test('the donors page states an industry window in plain words', async () => {
   Object.assign(mockParams, { industry: 'unions' });
   let r!: TestRenderer.ReactTestRenderer;
@@ -348,5 +393,78 @@ test('the donors page states an industry window in plain words', async () => {
   expect(byTestID(r, Text, 'money-donors-window')!.props.children).toBe(
     'union donors',
   );
+  await act(async () => r.unmount());
+});
+
+test('the List view counts one receipt and one donor in the singular', async () => {
+  const raw = structuredClone(pinned('/graph/money.json')) as {
+    nodes: { id: string; kind: string; withheld?: boolean; count: number }[];
+    edges: { source: string; target: string }[];
+  };
+  const keep = raw.nodes.find((n) => n.kind === 'donor' && !n.withheld)!;
+  const dropped = new Set(
+    raw.nodes
+      .filter((n) => n.kind === 'donor' && n.id !== keep.id)
+      .map((n) => n.id),
+  );
+  raw.nodes = raw.nodes.filter((n) => !dropped.has(n.id));
+  raw.edges = raw.edges.filter(
+    (e) => !dropped.has(e.source) && !dropped.has(e.target),
+  );
+  for (const n of raw.nodes) if (n.kind === 'party') n.count = 1;
+  jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+    data: decode(path === '/graph/money.json' ? raw : pinned(path)),
+    stale: false,
+    asOf: '2026-09-21',
+    savedAt: 1,
+  }));
+  const r = await render();
+  const party = r.root.findAll(
+    (x) => x.props.testID === 'money-party-0' && 'detail' in x.props,
+  )[0]!;
+  expect(party.props.detail).toMatch(/^1 receipt · /);
+  const all = r.root.findAll(
+    (x) => x.props.action?.testID === 'money-donors-all',
+  )[0]!;
+  expect(all.props.action.accessibilityLabel).toBe('See all 1 donor');
+  await act(async () => r.unmount());
+});
+
+test.each([
+  ['offline', undefined, 1],
+  ['the server was unavailable', 'unavailable', 0],
+  ['the latest copy was unreadable', 'unreadable', 0],
+] as const)(
+  'a saved donors list says offline only when %s calls for it',
+  async (_name, staleReason, lines) => {
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: true,
+      asOf: '2026-09-21',
+      savedAt: 1,
+      ...(staleReason ? { staleReason } : {}),
+    }));
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(<MoneyDonors />);
+    });
+    expect(r.root.findAllByType(OfflineLine)).toHaveLength(lines);
+    await act(async () => r.unmount());
+  },
+);
+
+test('the List view gives the public money rows and their totals distinct IDs', async () => {
+  const { StatStrip } = jest.requireActual('../src/design/primitives');
+  const r = await render();
+  const rows = r.root
+    .findAllByType(MoneyRow)
+    .map((x) => x.props.testID as string)
+    .filter((id) => id.startsWith('money-public-'));
+  expect(rows.length).toBeGreaterThan(0);
+  const tiles = r.root
+    .findAllByType(StatStrip)
+    .flatMap((x) => x.props.tiles.map((t: { testID: string }) => t.testID));
+  expect(tiles.length).toBeGreaterThan(0);
+  for (const id of tiles) expect(rows).not.toContain(id);
   await act(async () => r.unmount());
 });

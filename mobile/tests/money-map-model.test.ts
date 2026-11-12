@@ -2,6 +2,7 @@ import { decodeMoneyGraph, type MoneyNode } from '../src/features/money/data';
 import {
   buildModel,
   clusterLabel,
+  isPublicEdge,
   nextAlongFlows,
   otherEnd,
   type MapEdge,
@@ -13,6 +14,10 @@ import {
   EDGE_FLOOR,
   edgeCapAmount,
   edgeWidth,
+  PUBLIC_EDGE_CAP,
+  publicEdgeCapAmount,
+  publicEdgeEquivalent,
+  publicEdgeWidth,
   HUB_RADIUS,
   NODE_FLOOR,
   nodeFloorAmount,
@@ -25,6 +30,14 @@ import {
   moneyFlowType,
   moneyView,
 } from '../src/features/money/view';
+import { contrastRatio } from '../src/design/contrast';
+import { partyColors } from '../src/design/palette';
+import {
+  clusterColour,
+  inkOn,
+  partyMapColour,
+  SURFACE,
+} from '../src/features/money/ported/palette';
 import { pinned } from './pinned';
 
 const federal = decodeMoneyGraph(pinned('/graph/money.json'));
@@ -73,6 +86,36 @@ describe('buildModel on the federal graph', () => {
     }
   });
 
+  test('a party disc is its party colour, with a label ink that reads on paper', () => {
+    const parties = model.nodes.filter((n) => n.kind === 'party');
+    expect(parties.length).toBeGreaterThan(1);
+    for (const node of parties) {
+      const { colour, ink } = partyMapColour(node.label);
+      expect(node.colour).toBe(colour);
+      expect(contrastRatio(ink, SURFACE)).toBeGreaterThanOrEqual(4.5);
+    }
+    // Labor and the Liberals are the app's party dots, not one grey.
+    const labor = parties.find((n) => /labor/i.test(n.label));
+    const liberal = parties.find((n) => /^liberal/i.test(n.label));
+    if (labor) expect(labor.colour).toBe(partyColors.labor);
+    if (liberal) expect(liberal.colour).toBe(partyColors.liberal);
+    expect(new Set(parties.map((n) => n.colour)).size).toBeGreaterThan(1);
+    // An unmapped party takes the app's "other" dot, as its chips do; only a
+    // label that is no party at all keeps the neutral grey.
+    expect(partyMapColour('Not a party').colour).toBe(partyColors.other);
+    expect(partyMapColour('Party not recorded').colour).toBe(
+      clusterColour(PARTIES).colour,
+    );
+  });
+
+  test('inkOn darkens a colour only as far as 4.5:1 on paper needs', () => {
+    expect(inkOn('#1D4F91')).toBe('#1d4f91');
+    const lnp = inkOn(partyColors.lnp);
+    expect(lnp).not.toBe(partyColors.lnp.toLowerCase());
+    expect(contrastRatio(lnp, SURFACE)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(lnp, SURFACE)).toBeLessThan(5.2);
+  });
+
   test('byId maps every node id to its index', () => {
     expect(model.byId.size).toBe(model.nodes.length);
     for (const node of model.nodes)
@@ -118,7 +161,12 @@ describe('buildModel on the federal graph', () => {
 
   test('an edge runs from source to target, takes its source colour and is sized by amount', () => {
     for (const edge of model.edges) {
-      expect(edge.width).toBe(edgeWidth(edge.amount));
+      expect(edge.width).toBe(
+        edge.type === 'donations'
+          ? edgeWidth(edge.amount)
+          : publicEdgeWidth(edge.amount),
+      );
+      expect(isPublicEdge(edge)).toBe(edge.type !== 'donations');
       expect(edge.colour).toBe(model.nodes[edge.a]!.colour);
       if (edge.type === 'donations') {
         expect(model.nodes[edge.a]!.kind).toBe('donor');
@@ -284,4 +332,32 @@ test('clusterLabel names the parties, public money and each industry', () => {
   expect(clusterLabel('mining & energy')).toBe('Mining and energy');
   expect(clusterLabel('health_pharma')).toBe('Health pharma');
   expect(clusterLabel('finance')).toBe('Finance');
+});
+
+describe('the public money scale', () => {
+  test('is lighter than the donation scale, with the same floor and its own cap', () => {
+    expect(publicEdgeWidth(0)).toBe(EDGE_FLOOR);
+    expect(publicEdgeWidth(-1)).toBe(EDGE_FLOOR);
+    expect(publicEdgeWidth(1e9)).toBeCloseTo(6, 9);
+    expect(publicEdgeWidth(1e13)).toBe(PUBLIC_EDGE_CAP);
+    const cap = publicEdgeCapAmount();
+    expect(publicEdgeWidth(cap)).toBeCloseTo(PUBLIC_EDGE_CAP, 9);
+    expect(publicEdgeWidth(cap * 0.9)).toBeLessThan(PUBLIC_EDGE_CAP);
+    // Square-root law: four times the money, twice the width.
+    expect(publicEdgeWidth(4e8)).toBeCloseTo(2 * publicEdgeWidth(1e8), 9);
+    for (const amount of [1e6, 1e8, 1e9, 1e10])
+      expect(publicEdgeWidth(amount)).toBeLessThan(edgeWidth(amount));
+  });
+  test('states the donation a public line is as wide as', () => {
+    const equivalent = publicEdgeEquivalent(1e9);
+    expect(edgeWidth(equivalent)).toBeCloseTo(publicEdgeWidth(1e9), 9);
+    expect(equivalent).toBeGreaterThan(4e7);
+    expect(equivalent).toBeLessThan(5e7);
+  });
+  test('the federal map draws its contract lines on the public scale', () => {
+    const publicEdges = model.edges.filter(isPublicEdge);
+    expect(publicEdges.length).toBeGreaterThan(0);
+    for (const edge of publicEdges)
+      expect(edge.width).toBeLessThanOrEqual(PUBLIC_EDGE_CAP);
+  });
 });

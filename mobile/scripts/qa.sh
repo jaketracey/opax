@@ -21,6 +21,10 @@ else
   nice -n 10 bash scripts/test-jest-retry.sh
   bash scripts/qa-pass-record.sh write harness
 fi
+echo 'OPAX QA: Android flow preparation'
+nice -n 10 node --test scripts/test-android-flows.mjs
+nice -n 10 python3 scripts/test-android-harness.py
+nice -n 10 python3 scripts/test-android-results.py
 echo 'OPAX QA: design tokens'
 nice -n 10 node scripts/build-design-tokens.mjs --check
 if record=$(passed gate); then
@@ -36,3 +40,5 @@ for gate in qa-static qa-advisories; do
   echo "OPAX QA: $gate"
   nice -n 10 npm run "$gate"
 done
+echo 'OPAX QA: Android production export'
+nice -n 10 bash scripts/check-release-bundle.sh --android

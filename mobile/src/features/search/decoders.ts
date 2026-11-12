@@ -13,16 +13,34 @@ import {
   url,
   invalid,
 } from '../../api/validation';
+import {
+  decodeReportCitation,
+  reportSearchFields,
+  reportSlug,
+  reportType,
+} from '../../api/report-decoders';
 
 const kind = matching(/^[a-z][a-z_]*$/);
 const localHref = matching(/^\/(?!\/)[^\s\\]*$/);
-export const decodeRecord = shape({
+/** Search links from OPAX exports may include the public origin. */
+function recordHref(value: unknown) {
+  const href = nonempty(value);
+  if (href.startsWith('/')) return localHref(href);
+  const absolute = new URL(url(href));
+  if (
+    absolute.protocol !== 'https:' ||
+    !['opax.com.au', 'www.opax.com.au'].includes(absolute.host)
+  )
+    invalid();
+  return localHref(absolute.pathname + absolute.search + absolute.hash);
+}
+const recordShape = shape({
   kind,
   title: nonempty,
   slug: nonempty,
   resource: text,
   snippet: text,
-  href: optional(localHref),
+  href: optional(recordHref),
   source: optional(text),
   url: optional(url),
   date: optional(date),
@@ -31,7 +49,26 @@ export const decodeRecord = shape({
   party: optional(text),
   state: optional(text),
   speaker_type: optional(text),
+  report_type: optional(reportType),
+  body: optional(nonempty),
+  jurisdiction: optional(nonempty),
+  year: optional(nonempty),
+  citation: optional(decodeReportCitation),
+  source_url: optional(url),
 });
+export function decodeRecord(value: unknown) {
+  const row = recordShape(value);
+  if (row.kind !== 'report') return row;
+  const report = reportSearchFields(value);
+  const slug = reportSlug(row.slug);
+  if (
+    row.href !== `/report/${slug}` ||
+    row.resource !== '' ||
+    !slug.startsWith(report.report_type.replace(/_/g, '-') + '-')
+  )
+    invalid();
+  return { ...row, ...report };
+}
 export type SearchRecord = ReturnType<typeof decodeRecord>;
 const pageShape = shape({
   query: text,

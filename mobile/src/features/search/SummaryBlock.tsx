@@ -17,17 +17,12 @@ import {
 import { rhythm } from '../../design/tokens';
 import type { SearchSummary } from './decoders';
 import type { SpeechFilters } from './filters';
-import { searchPathRoute } from './navigation';
+import { recordRoute } from '../records/route';
 import { resultMeta, resultTitle, savedCopy } from './present';
 import { failureRecovery } from './recovery';
 import { summaryKey, summaryRequest, useRead } from './requests';
 import type { SpeechSort } from './speeches';
 
-const scopeWord: Record<SpeechSort, string> = {
-  relevance: 'top',
-  newest: 'newest',
-  oldest: 'oldest',
-};
 const machineNote = {
   title: 'Machine-written',
   body: [
@@ -44,7 +39,6 @@ const machineNote = {
 export function SummaryBlock({
   q,
   filters,
-  sort,
   roster,
 }: {
   q: string;
@@ -107,7 +101,7 @@ export function SummaryBlock({
     <Group gap={rhythm.block} testID="records-summary">
       <MachinePill note={machineNote} testID="records-summary-machine" />
       <Text variant="secondary" testID="summary-scope-line">
-        {`From the ${scopeWord[sort]} ${counted(Math.min(20, summary.data.reviewed_count || 20), 'speech', 'speeches')} for “${q.trim()}”`}
+        {`From the top ${counted(Math.min(20, summary.data.reviewed_count || 20), 'speech', 'speeches')} for “${q.trim()}”`}
       </Text>
       {summary.data.points.map((point, index) => {
         const numbers = point.source_ids
@@ -124,7 +118,7 @@ export function SummaryBlock({
             onAccessibilityAction={(event) => {
               const n = Number(event.nativeEvent.actionName.split('-')[1]);
               const route = sources[n - 1]
-                ? searchPathRoute(sources[n - 1]!.href)
+                ? recordRoute(sources[n - 1]!)
                 : null;
               if (route) router.push(route);
             }}
@@ -133,7 +127,29 @@ export function SummaryBlock({
             {numbers.length ? (
               <Text variant="body" tone="navy">
                 {' '}
-                {numbers.map((n) => `[${n}]`).join('')}
+                {numbers.map((n) => {
+                  const route = recordRoute(sources[n - 1]!);
+                  return (
+                    <Text
+                      key={n}
+                      variant="body"
+                      tone="navy"
+                      accessibilityRole={route ? 'link' : undefined}
+                      accessibilityLabel={`Open citation ${n}, ${resultTitle({ ...sources[n - 1]!, kind: 'speech' })}`}
+                      onPress={
+                        route
+                          ? (event) => {
+                              event.stopPropagation();
+                              router.push(route);
+                            }
+                          : undefined
+                      }
+                      testID={`summary-citation-${index}-${n}`}
+                    >
+                      {`[${n}]`}
+                    </Text>
+                  );
+                })}
               </Text>
             ) : null}
           </Text>
@@ -143,7 +159,7 @@ export function SummaryBlock({
         <SectionHeader title={`Records cited (${sources.length})`} level={3} />
         <InsetGroup>
           {sources.map((s, index) => {
-            const route = searchPathRoute(s.href);
+            const route = recordRoute(s);
             return (
               <RecordRow
                 key={s.id}
@@ -169,7 +185,9 @@ export function SummaryBlock({
             ? 'Some sources were temporarily unavailable when this summary was written.'
             : null,
           saved.note,
-          ...sources.map((s, i) => `${i + 1}. ${s.title}`),
+          ...sources.map(
+            (s, i) => `${i + 1}. ${resultTitle({ ...s, kind: 'speech' })}`,
+          ),
         ]}
         testID="records-summary-sources"
       />

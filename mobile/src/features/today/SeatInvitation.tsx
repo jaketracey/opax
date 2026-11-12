@@ -11,6 +11,7 @@ import { Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
 import { dark, light } from '../../design/tokens.generated';
 import { seatRoute } from '../../navigation/routes';
+import { seatCopy } from '../seat/seat-model';
 import { migratedSeat, useSeat } from '../your-mp/useSeat';
 import outline from './australia-outline.json';
 import { hideInvitation } from './invitation-store';
@@ -37,7 +38,7 @@ export function invitationBody(
   )
     return `${old.name} is no longer an electorate.`;
   if (old) return 'Choose your current federal electorate.';
-  return 'Add your electorate to see your MP, how they vote and the grants in your area.';
+  return seatCopy.why;
 }
 
 /**

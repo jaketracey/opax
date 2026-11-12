@@ -1,10 +1,13 @@
 import { router } from 'expo-router';
 import { act, type ReactNode } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { Platform } from 'react-native';
+import { confirmAction } from '../src/design/menu';
 import { CitationMark } from '../src/design/citation-mark';
 import { haptic } from '../src/design/haptics';
 import { dispatchKeyCommand } from '../src/design/keyboard';
 import { FigureBlock } from '../src/design/record';
+import { RecordRow } from '../src/design/rows';
 import type { SourceDetails } from '../src/design/source';
 import { AnswerBody } from '../src/features/ask/AnswerBody';
 import {
@@ -13,13 +16,18 @@ import {
   askSourceDetails,
 } from '../src/features/ask/AnswerView';
 import { useAskSources } from '../src/features/ask/SourcesPane';
+import { RecordDetail } from '../src/features/split/RecordDetail';
 import { parseAnswer } from '../src/features/ask/answer-markdown';
 import {
   citationSelection,
   citationSheetLeft,
 } from '../src/features/ask/citation-state';
 import { copyCitation } from '../src/features/ask/cite';
-import type { Source, Turn } from '../src/features/ask/model';
+import {
+  decodeAnswer,
+  type Source,
+  type Turn,
+} from '../src/features/ask/model';
 import type { AskPerson } from '../src/features/ask/people';
 import { copyText } from '../src/features/records/actions';
 import { shareRecord } from '../src/navigation/share';
@@ -89,6 +97,10 @@ jest.mock('../src/features/ask/cite', () => ({
   copyCitation: jest.fn().mockResolvedValue(undefined),
 }));
 jest.mock('../src/design/haptics', () => ({ haptic: jest.fn() }));
+jest.mock('../src/design/menu', () => ({
+  ...jest.requireActual('../src/design/menu'),
+  confirmAction: jest.fn(),
+}));
 jest.mock('../src/features/CachedPortrait', () => ({
   CachedPortrait: () => null,
 }));
@@ -171,7 +183,7 @@ afterEach(() => {
   act(() => citationSheetLeft());
   jest.clearAllMocks();
 });
-function draw(turn: Turn = answer(), pane = false) {
+function draw(turn: Turn = answer(), pane = false, onRephrase = jest.fn()) {
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
     renderer = TestRenderer.create(
@@ -182,6 +194,7 @@ function draw(turn: Turn = answer(), pane = false) {
         chat="fixture-chat"
         profiles={profiles}
         paneShowsSources={pane}
+        onRephrase={onRephrase}
       />,
     );
   });
@@ -235,6 +248,28 @@ test('the answer leads with one machine pill and its records, cited once each', 
   // Retrieved but not cited stays in the sources sheet, not under the answer.
   expect(words()).not.toContain('Synthetic Fixture Bill 4');
   expect(words()).not.toMatch(/\[\d\] Synthetic|Also retrieved|retrieved/);
+});
+
+test("a cited row says the speaker's party and exposes both record links", () => {
+  const { renderer } = draw();
+  const row = renderer.root
+    .findAllByType(RecordRow)
+    .find((node) => node.props.testID === 'ask-citation-2')!;
+  const title = row.find(
+    (node) =>
+      typeof node.type !== 'string' &&
+      node.props.accessibilityLabel?.startsWith('2.') &&
+      node.props.accessible === true,
+  );
+  expect(title.props.accessibilityLabel).toMatch(
+    /Sam Placeholder, Example Party$/,
+  );
+  // The shared row exposes sibling links, so each can receive focus directly.
+  const links = row.findAll((node) => node.props.accessibilityRole === 'link');
+  for (const label of ['Open Sam Placeholder', 'Open Example Party party page'])
+    expect(links.some((node) => node.props.accessibilityLabel === label)).toBe(
+      true,
+    );
 });
 
 test('adjacent citations merge into one mark that opens the first source beside its claim', () => {
@@ -296,6 +331,38 @@ test('the answer text stays selectable and its marks still open on a tap; stream
   });
   expect(streamed.root.findAll((n) => n.props.selectable === true)).toEqual([]);
   act(() => streamed.unmount());
+  expect(
+    renderer.root.findAllByProps({ testID: 'ask-selection-done' }),
+  ).toHaveLength(0);
+});
+
+test('Android enables text selection on demand and returns to citation taps', () => {
+  const original = Platform.OS;
+  Platform.OS = 'android';
+  try {
+    const { renderer, press } = draw();
+    const selectable = () => {
+      let block = renderer.root.findAllByType(CitationMark)[0]!.parent;
+      while (block && block.props.selectable === undefined)
+        block = block.parent;
+      return block?.props.selectable;
+    };
+    expect(selectable()).toBe(false);
+    act(() => press('ask-answer-menu'));
+    const choices = jest.mocked(confirmAction).mock.calls.at(-1)![1];
+    const select = choices.find((item) => item.title === 'Select text')!;
+    act(() => select.onPress());
+    expect(selectable()).toBe(true);
+    expect(
+      renderer.root.findAllByProps({ testID: 'ask-selection-done' }).length,
+    ).toBeGreaterThan(0);
+    act(() => press('ask-selection-done'));
+    expect(selectable()).toBe(false);
+    act(() => press('ask-citation-mark-1'));
+    expect(presentSheet).toHaveBeenCalledTimes(1);
+  } finally {
+    Platform.OS = original;
+  }
 });
 test('People in this answer are full person rows, the reader’s own member marked', () => {
   const { ids, words } = draw();
@@ -308,6 +375,29 @@ test('People in this answer are full person rows, the reader’s own member mark
     place: 'Member for Example, New South Wales',
     yourMP: true,
   });
+});
+
+test('Records cited decode titles once while People keep their roster names', () => {
+  const title = "Australia's &amp; interests";
+  const turn = answer({
+    sources: [
+      source(1, true, [], {
+        title: 'Australia&#039;s &amp;amp; interests',
+        speaker: 'Sam Placeholder',
+      }),
+    ],
+  });
+  const { words, ids } = draw(turn);
+  expect(words()).toContain(title);
+  expect(words()).not.toContain('&#039;');
+  expect(
+    ids('ask-citation-1').some((row) =>
+      row.props.accessibilityLabel?.includes(title),
+    ),
+  ).toBe(true);
+  expect(ids('ask-person-sam-placeholder')[0]!.props.name).toBe(
+    'Sam Placeholder',
+  );
 });
 
 test('the foot is the dated Answered line and one answer menu', async () => {
@@ -328,6 +418,11 @@ test('the foot is the dated Answered line and one answer menu', async () => {
     expect(menuButton(label)).toBeTruthy();
   // The ⋯ label itself is a 44 by 44 target.
   const menu = renderer.root.find((n) => n.props.swift === 'Menu');
+  expect(
+    renderer.root
+      .findAll((n) => n.props.swift === 'Button')
+      .map((n) => n.props.label),
+  ).not.toContain('Select text');
   expect(menu.props.modifiers).toContainEqual({
     modifier: 'frame',
     args: [{ minWidth: 44, minHeight: 44 }],
@@ -406,6 +501,34 @@ test('the sources sheet never repeats a record title as a serif line', () => {
   expect(words()).not.toMatch(/retrieved|—/);
 });
 
+test('source notes and original-source labels decode their raw titles once', () => {
+  const turn = answer({
+    sources: [
+      source(1, true, [], {
+        title: 'Australia&#039;s &amp;amp; interests',
+        source: 'Science &amp; &quot;Industry&quot;',
+      }),
+    ],
+  });
+  turn.carried = { source: 'Australia&#039;s &amp;amp; interests' };
+  const details = askSourceDetails({
+    turn,
+    question,
+    chat: 'fixture-chat',
+    index: 1,
+    legacy: null,
+  });
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(<>{details.extra}</>);
+  });
+  mounted.push(renderer);
+  const { words } = helpers(renderer);
+  expect(words()).toContain('Science & "Industry"');
+  expect(words()).toContain("passage from “Australia's &amp; interests”");
+  expect(words()).not.toMatch(/&#039;|&amp;amp;|&quot;/);
+});
+
 test('a figure is drawn only with its own date and source', () => {
   const { renderer } = draw(
     answer({
@@ -431,12 +554,19 @@ test('a figure is drawn only with its own date and source', () => {
   });
 });
 
-test('an empty answer says so above its records and offers Search', () => {
-  const { words, ids, press } = draw(answer({ answer: '' }));
+test('an empty answer describes the search, offers rephrasing and Search, and retains related records', () => {
+  const onRephrase = jest.fn();
+  const { words, ids, press } = draw(answer({ answer: '' }), false, onRephrase);
   expect(words()).toContain(
     'No written answer came back. The records found are listed below.',
   );
   expect(ids('ask-error-empty').length).toBeGreaterThan(0);
+  expect(words()).toContain(`Searched OPAX records for “${question.text}”.`);
+  expect(words()).toContain('Try naming a person, bill or topic and a year.');
+  expect(words()).toContain('Records found');
+  expect(words()).not.toContain('Records cited');
+  act(() => press('ask-rephrase'));
+  expect(onRephrase).toHaveBeenCalledWith(question.text);
   act(() => press('ask-search-opax'));
   expect(router.push).toHaveBeenCalledWith(
     expect.objectContaining({
@@ -446,6 +576,51 @@ test('an empty answer says so above its records and offers Search', () => {
   const none = draw(answer({ answer: '', sources: [] }));
   expect(none.words()).toContain('No written answer came back.');
   expect(none.words()).not.toContain('listed below');
+});
+
+test('a written evidence gap keeps its answer and ready announcement', () => {
+  const limitation = 'No verified position in the selected speeches.';
+  const turn = answer({
+    answer: limitation,
+    answer_status: 'evidence_gap',
+    sources: [],
+  });
+  const { words, ids } = draw(turn);
+  expect(words()).toContain(limitation);
+  expect(ids('ask-answer-1').length).toBeGreaterThan(0);
+  expect(ids('ask-machine-label').length).toBeGreaterThan(0);
+  expect(ids('ask-no-answer')).toHaveLength(0);
+  expect(ids('ask-error-empty')).toHaveLength(0);
+  expect(words()).not.toContain('No written answer came back');
+  expect(answerReadyAnnouncement(turn)).toBe('Answer ready, no records cited');
+});
+
+test('a cited evidence gap retains its limitation text, citation marks and cited record links', () => {
+  const limitation =
+    'The selected records do not establish that no receipts occurred.';
+  const payload = {
+    answer: limitation,
+    answer_status: 'evidence_gap',
+    money_ranking: true,
+    model_written: false,
+    citations: { 'r1/f/text/0': [[0, limitation.length]] },
+    sources: [source(1, true)],
+  };
+  const turn = answer(decodeAnswer(payload));
+  const { words, ids, renderer, press } = draw(turn);
+  expect(words()).toContain(limitation);
+  expect(words()).toContain('Records cited (1)');
+  expect(words()).not.toContain('Records found');
+  expect(ids('ask-no-answer')).toHaveLength(0);
+  expect(ids('ask-citation-1').length).toBeGreaterThan(0);
+  expect(
+    renderer.root.findAllByType(CitationMark).map((mark) => mark.props.label),
+  ).toEqual(['1']);
+  act(() => press('ask-citation-mark-1'));
+  expect(citationSelection()).toMatchObject({ turn: 'fixture-chat:1', n: 1 });
+  expect(turn.result?.answer).toBe(payload.answer);
+  expect(turn.result?.citations).toEqual(payload.citations);
+  expect(answerReadyAnnouncement(turn)).toBe('Answer ready, 1 record cited');
 });
 
 test('on iPad with the pane the column hides Records cited', () => {
@@ -467,9 +642,15 @@ test('the ready announcement counts cited records', () => {
 });
 
 describe('the iPad pane is never empty', () => {
-  function Pane({ thread }: { thread: Turn[] }) {
+  function Pane({
+    thread,
+    chat = 'fixture-chat',
+  }: {
+    thread: Turn[];
+    chat?: string;
+  }) {
     return useAskSources(thread, {
-      chat: 'fixture-chat',
+      chat,
       profiles,
       onAsk: mockAsk,
     }).pane;
@@ -483,6 +664,25 @@ describe('the iPad pane is never empty', () => {
     mounted.push(renderer);
     return helpers(renderer);
   }
+  test('a source title is decoded once in the pane and its opened record', () => {
+    const title = "Australia's &amp; interests";
+    const turn = answer({
+      sources: [
+        source(1, true, [], {
+          title: 'Australia&#039;s &amp;amp; interests',
+          slug: 'press-pmt-fixture-title',
+          href: '/doc/press-pmt-fixture-title',
+        }),
+      ],
+    });
+    const { words, ids, press, renderer } = drawPane([question, turn]);
+    expect(words()).toContain(title);
+    expect(ids('citation-title')[0]!.props.children).toBe(title);
+    act(() => press('citation-open-record'));
+    expect(renderer.root.findByType(RecordDetail).props.entry.title).toBe(
+      title,
+    );
+  });
   test('idle: Try asking, whose starters ask at once', () => {
     const { words, renderer, press } = drawPane([]);
     expect(words()).toContain('Try asking');
@@ -527,5 +727,26 @@ describe('the iPad pane is never empty', () => {
     act(() => dispatchKeyCommand('list-up'));
     expect(citationSelection()?.n).toBe(1);
     expect(presentSheet).not.toHaveBeenCalled();
+  });
+  test('another conversation with the same number of turns starts at its first citation', () => {
+    const { words, press, renderer } = drawPane([question, answer()]);
+    act(() => press('ask-pane-source-3'));
+    const next = answer({ sources: [source(1, true)] });
+    act(() =>
+      renderer.update(<Pane chat="fixture-other" thread={[question, next]} />),
+    );
+    expect(words()).toContain('Synthetic passage 1 from the record.');
+    expect(citationSelection()).toBeNull();
+  });
+  test('an earlier citation stays available when another answer arrives in the same conversation', () => {
+    const { press, renderer } = drawPane([question, answer()]);
+    act(() => press('ask-pane-source-3'));
+    const selected = citationSelection();
+    act(() =>
+      renderer.update(
+        <Pane thread={[question, answer(), question, answer()]} />,
+      ),
+    );
+    expect(citationSelection()).toEqual(selected);
   });
 });

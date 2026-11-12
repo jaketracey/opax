@@ -8,6 +8,8 @@ import {
 } from '../../design/format';
 import {
   Group,
+  InsetGroup,
+  LinkRow,
   SectionHeader,
   SourceLine,
   Text,
@@ -15,6 +17,7 @@ import {
 import { FigureBlock } from '../../design/record';
 import { InlineError, Skeleton } from '../../design/states';
 import { rhythm } from '../../design/tokens';
+import { grantsRoute } from '../../navigation/routes/public-money';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import type { GrantIndex } from './data';
 import {
@@ -82,7 +85,7 @@ export function SeatFigure({
     testID: `${testID}-source`,
   };
   const years = index.meta.years;
-  if (!seat)
+  if (!seat || seat.count === 0)
     return (
       <Group gap={rhythm.tight}>
         <Text wordSafe testID={`${testID}-unmatched`}>
@@ -109,8 +112,8 @@ export function SeatFigure({
  * Grants in a seat, embedded on Your MP and the electorate page.
  *
  * `seat-home` is the shared block (specs/money.md 2.3, specs/your-mp.md 3.6): "Grants in
- * Grayndler" with no action until the per-seat slice ships (D5), the span
- * line, the minimum caveat and the postcode note in its source sheet.
+ * Grayndler", the span line, the minimum caveat and the postcode note in
+ * its source sheet, followed by a row opening the seat's grant list.
  */
 export function SeatGrants({
   name,
@@ -124,7 +127,8 @@ export function SeatGrants({
   variant?: 'seat-home';
 }) {
   const load = useCallback(
-    (refresh: boolean) => money.grants('federal', refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      money.grants('federal', refresh, signal),
     [],
   );
   const status = useCatalogRecord(load),
@@ -159,6 +163,13 @@ export function SeatGrants({
             testID="seat-grants-loading"
           />
         )}
+        <InsetGroup>
+          <LinkRow
+            title={`Grants in ${name}`}
+            href={grantsRoute({ jur: 'federal', seat: name, state })}
+            testID="seat-grants-all"
+          />
+        </InsetGroup>
       </View>
     );
   return null;

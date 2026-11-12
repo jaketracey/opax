@@ -1,5 +1,5 @@
 import { act } from 'react';
-import { Text as NativeText } from 'react-native';
+import { Text as NativeText, StyleSheet } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import live from './fixtures/interests/live-2026-10-08.json';
 import {
@@ -178,4 +178,28 @@ test('an absent field adds nothing, never a placeholder', () => {
   expect(
     registerTotalsLine({ total: 3, alterations: { added: 3, deleted: 0 } }),
   ).toBe('3 added');
+});
+
+test('a long entry’s More is a full 44 pt target', async () => {
+  const register = decodeInterest(people['10758']);
+  const bucket = register.buckets.liabilities!;
+  // A fixture entry past the 280-character fold.
+  bucket.items = [
+    {
+      ...bucket.items[0]!,
+      description: `Fixture liability · ${'A long fixture detail. '.repeat(20)}`,
+    },
+  ];
+  register.buckets = { liabilities: bucket };
+  const r = await renderOpen(register);
+  const more = r.root.find(
+    (n) =>
+      typeof n.type === 'string' &&
+      n.props.accessibilityLabel === 'More' &&
+      n.props.accessibilityRole === 'button',
+  );
+  expect(StyleSheet.flatten(more.props.style).minHeight).toBeGreaterThanOrEqual(
+    44,
+  );
+  act(() => r.unmount());
 });

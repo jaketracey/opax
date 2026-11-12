@@ -1,7 +1,9 @@
+import { associatedLine, donorAssociated } from '../../api/associated';
 import { RouteOptions, useSafeSetOptions } from '../../navigation/preview';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import {
   useCallback,
+  useContext,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -12,16 +14,23 @@ import {
   BackHandler,
   Platform,
   RefreshControl,
+  ScrollView,
   StyleSheet,
   useWindowDimensions,
   View,
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  SafeAreaInsetsContext,
+  SafeAreaView,
+} from 'react-native-safe-area-context';
+import { useAdaptiveDevice } from '../../design/adaptive';
+import { ReservedRegionArea, useReservedRegions } from '../../design/fold-area';
 import type { RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
 import { copy } from '../../design/copy';
 import {
+  counted,
   formatCount,
   formatMoneyCompact,
   moneyAccessibilityLabel,
@@ -66,6 +75,8 @@ import {
   type PanelFocus,
 } from './map/MoneyMapPanel';
 import { MoneyMapSearch } from './map/MoneyMapSearch';
+import { MINI_HEIGHT, MINI_WIDTH } from './map/MiniMap';
+import { mapControlLayout } from './map/regions';
 import { buildModel, nextAlongFlows, type MapModel } from './map/model';
 import { moneyPageMenu } from './menu';
 import { MoneyTestHooks } from './money-probe';
@@ -389,29 +400,31 @@ export default function MoneyScreen() {
     ) : null;
   if (mode === 'map' && record && graph && filters && view && !body)
     return (
-      <MapMode
-        record={record}
-        graph={graph}
-        view={view}
-        filters={filters}
-        jurisdiction={jurisdiction}
-        params={params}
-        write={write}
-        options={{ ...options, title }}
-        controls={
-          <>
-            {jurisdictionControl}
-            {summary}
-            {picker}
-            {hooks}
-          </>
-        }
-        offline={
-          record.stale && record.staleReason !== 'unreadable' ? (
-            <OfflineLine savedAt={record.savedAt} testID="money-offline" />
-          ) : null
-        }
-      />
+      <ReservedRegionArea style={styles.root}>
+        <MapMode
+          record={record}
+          graph={graph}
+          view={view}
+          filters={filters}
+          jurisdiction={jurisdiction}
+          params={params}
+          write={write}
+          options={{ ...options, title }}
+          controls={
+            <>
+              {jurisdictionControl}
+              {summary}
+              {picker}
+              {hooks}
+            </>
+          }
+          offline={
+            record.stale && !record.staleReason ? (
+              <OfflineLine savedAt={record.savedAt} testID="money-offline" />
+            ) : null
+          }
+        />
+      </ReservedRegionArea>
     );
   return (
     <ListMode
@@ -426,7 +439,7 @@ export default function MoneyScreen() {
         </>
       }
       offline={
-        record?.stale && record.staleReason !== 'unreadable' ? (
+        record?.stale && !record.staleReason ? (
           <OfflineLine savedAt={record.savedAt} testID="money-offline" />
         ) : null
       }
@@ -479,6 +492,9 @@ function MapMode({
   const navigation = useNavigation();
   const router = useRouter();
   const { regular } = useLayout();
+  const adaptive = useAdaptiveDevice();
+  const regions = useReservedRegions();
+  const safe = useContext(SafeAreaInsetsContext);
   const large = useAccessibilitySize();
   // The camera is driven by state: each command runs once, by its seq.
   const [command, setCommand] = useState<MapCommand | null>(null);
@@ -507,15 +523,78 @@ function MapMode({
   const [stage, setStage] = useState({ width: 0, height: 0 });
   const [topHeight, setTopHeight] = useState(0);
   const [peek, setPeek] = useState(0);
+  const [controlsHeight, setControlsHeight] = useState(0);
   const window = useWindowDimensions();
+  // The stage runs under the tab bar and the home indicator; the panel host
+  // sits above them, so the band beneath it is measured from its layout and
+  // counted in the map's bottom inset with the panel's peek.
+  const [below, setBelow] = useState(0);
+  const managed =
+    adaptive ||
+    [...regions.divisions, ...regions.occlusions].some((r) => r.active);
+  const pose = mapControlLayout(
+    {
+      x: safe?.left ?? 0,
+      y: 0,
+      width: Math.max(
+        1,
+        (stage.width || window.width) - (safe?.left ?? 0) - (safe?.right ?? 0),
+      ),
+      height: Math.max(
+        1,
+        (stage.height || window.height) - (safe?.bottom ?? 0),
+      ),
+    },
+    regions,
+    topHeight,
+    controlsHeight,
+    !searchOpen && !expanded,
+  );
+  const horizontalControls = managed && pose.horizontal;
+  const panelMaxHeight = managed ? pose.panelMaxHeight : undefined;
+  const topMaxHeight = managed ? pose.topMaxHeight : undefined;
   const insets = useMemo(
-    () => ({
-      top: topHeight + rhythm.tight,
-      bottom: peek + rhythm.tight,
-      left: rhythm.tight,
-      right: 44 + rhythm.block * 2,
-    }),
-    [topHeight, peek],
+    () =>
+      pose.folded
+        ? {
+            top: rhythm.tight,
+            bottom: (safe?.bottom ?? 0) + rhythm.tight,
+            left: (safe?.left ?? 0) + rhythm.tight,
+            right: (safe?.right ?? 0) + rhythm.tight,
+          }
+        : {
+            top:
+              topHeight +
+              rhythm.tight +
+              (managed
+                ? pose.controls.y +
+                  (horizontalControls && !searchOpen && !expanded
+                    ? 48 + rhythm.block
+                    : 0)
+                : 0),
+            bottom: managed
+              ? (safe?.bottom ?? 0) +
+                Math.min(peek, panelMaxHeight ?? peek) +
+                rhythm.tight
+              : below + peek + rhythm.tight,
+            left: (safe?.left ?? 0) + rhythm.tight,
+            right:
+              (safe?.right ?? 0) +
+              (horizontalControls ? rhythm.tight : 44 + rhythm.block * 2),
+          },
+    [
+      pose.folded,
+      safe,
+      managed,
+      topHeight,
+      peek,
+      below,
+      panelMaxHeight,
+      horizontalControls,
+      pose.controls.y,
+      searchOpen,
+      expanded,
+    ],
   );
   // Android's Back closes the search, then the panel, then the focus.
   useEffect(() => {
@@ -644,6 +723,18 @@ function MapMode({
     />
   );
   const cardWidth = regular ? { maxWidth: 420 } : null;
+  const topContent = searchOpen ? (
+    <MoneyMapSearch
+      model={model}
+      onChoose={flyTo}
+      onClose={() => setSearchOpen(false)}
+    />
+  ) : (
+    <View style={styles.card} testID="money-map-card">
+      {controls}
+      {offline}
+    </View>
+  );
   return (
     <GestureHandlerRootView style={styles.root}>
       <RouteOptions options={options} />
@@ -670,42 +761,89 @@ function MapMode({
           accessibilityLabel={moneyMapLabel(model, focus)}
           actions={actions}
           overview={
-            large || searchOpen || expanded
+            large ||
+            searchOpen ||
+            expanded ||
+            (managed && pose.controls.width < MINI_WIDTH + rhythm.block * 2) ||
+            (managed &&
+              pose.controls.height - topHeight - controlsHeight - peek <
+                MINI_HEIGHT + rhythm.block * 2)
               ? null
-              : { left: rhythm.block, bottom: peek + rhythm.block }
+              : {
+                  left:
+                    (managed ? pose.controls.x : (safe?.left ?? 0)) +
+                    rhythm.block,
+                  bottom: managed
+                    ? (stage.height || window.height) -
+                      pose.controls.y -
+                      pose.controls.height +
+                      Math.min(peek, panelMaxHeight ?? peek) +
+                      rhythm.block
+                    : below + peek + rhythm.block,
+                }
           }
         />
         <SafeAreaView
-          edges={['top', 'bottom']}
+          // The stack's opaque bar already sits above the stage: a top
+          // edge here would count the status bar twice and push the card
+          // down the map. The frame owns the safe sides so its absolute
+          // controls clear a side rail too, without counting padding twice.
+          edges={managed ? [] : ['bottom']}
           pointerEvents="box-none"
-          style={styles.chrome}
+          style={[
+            styles.chrome,
+            managed
+              ? {
+                  left: pose.controls.x,
+                  top: pose.controls.y,
+                  width: pose.controls.width,
+                  height: pose.controls.height,
+                  right: undefined,
+                  bottom: undefined,
+                }
+              : { left: safe?.left ?? 0, right: safe?.right ?? 0 },
+          ]}
+          testID="money-map-chrome"
         >
           <View
-            style={[styles.top, cardWidth]}
+            style={[
+              styles.top,
+              cardWidth,
+              managed ? { maxHeight: topMaxHeight } : null,
+            ]}
             pointerEvents="box-none"
             onLayout={(event) =>
               setTopHeight(Math.ceil(event.nativeEvent.layout.height))
             }
           >
-            {searchOpen ? (
-              <MoneyMapSearch
-                model={model}
-                onChoose={flyTo}
-                onClose={() => setSearchOpen(false)}
-              />
+            {managed ? (
+              <ScrollView
+                scrollEnabled={managed}
+                style={{ flexGrow: 0 }}
+                keyboardShouldPersistTaps="handled"
+              >
+                {topContent}
+              </ScrollView>
             ) : (
-              <View style={styles.card} testID="money-map-card">
-                {controls}
-                {offline}
-              </View>
+              topContent
             )}
           </View>
-          {searchOpen ? null : (
+          {searchOpen || expanded ? null : (
             <View
-              style={[styles.controls, { top: topHeight + rhythm.block }]}
+              style={[
+                styles.controls,
+                { top: topHeight + rhythm.block },
+                horizontalControls
+                  ? { left: rhythm.block, right: undefined }
+                  : null,
+              ]}
               pointerEvents="box-none"
+              onLayout={(event) =>
+                setControlsHeight(Math.ceil(event.nativeEvent.layout.height))
+              }
             >
               <MoneyMapControls
+                horizontal={horizontalControls}
                 onSearch={() => setSearchOpen(true)}
                 onZoomIn={() => dispatch({ type: 'zoom', direction: 1 })}
                 onZoomOut={() => dispatch({ type: 'zoom', direction: -1 })}
@@ -717,6 +855,12 @@ function MapMode({
           <View
             style={[styles.panelHost, regular ? styles.panelRegular : null]}
             pointerEvents="box-none"
+            onLayout={(event) => {
+              if (managed) return;
+              const { y, height } = event.nativeEvent.layout;
+              const gap = Math.max(0, Math.round(stage.height - (y + height)));
+              setBelow((previous) => (previous === gap ? previous : gap));
+            }}
           >
             <MoneyMapPanel
               focus={panelFocus}
@@ -725,6 +869,7 @@ function MapMode({
               legend={<MoneyMapLegend model={model} />}
               sourceLine={sourceLine}
               stageHeight={stage.height || window.height}
+              maxHeight={panelMaxHeight}
               expanded={expanded}
               onExpanded={setExpanded}
               // Clearing ends the subject: the next focus starts at the peek.
@@ -905,7 +1050,7 @@ function ListBody({
     <PartyMoneyRow
       key={node.id}
       name={node.label}
-      detail={`${formatCount(node.count)} receipts · ${moneyYears(node.firstYear, node.lastYear)}`}
+      detail={`${counted(node.count, 'receipt')} · ${moneyYears(node.firstYear, node.lastYear)}`}
       amount={node.total}
       href={record_(node)}
       testID={`money-party-${index}`}
@@ -921,7 +1066,7 @@ function ListBody({
             title="Donors"
             action={{
               label: copy.seeAll,
-              accessibilityLabel: `See all ${formatCount(named.length)} donors`,
+              accessibilityLabel: `See all ${counted(named.length, 'donor')}`,
               href: moneyDonorsRoute({
                 jurisdiction,
                 ...moneyWindowParams(filters),
@@ -938,7 +1083,12 @@ function ListBody({
               <MoneyRow
                 key={node.id}
                 name={node.label}
-                detail={donorDetail(node)}
+                detail={[
+                  associatedLine(donorAssociated(node)),
+                  donorDetail(node),
+                ]
+                  .filter(Boolean)
+                  .join(' · ')}
                 amount={node.total}
                 href={record_(node)}
                 testID={`money-donor-${index}`}
@@ -996,7 +1146,7 @@ function ListBody({
                       {
                         value: formatMoneyCompact(grants.total),
                         label: 'in grants',
-                        testID: 'money-public-grants',
+                        testID: 'money-public-grants-total',
                       },
                     ]
                   : []),
@@ -1005,7 +1155,7 @@ function ListBody({
                       {
                         value: formatMoneyCompact(contracts.total),
                         label: 'in contracts',
-                        testID: 'money-public-contracts',
+                        testID: 'money-public-contracts-total',
                       },
                     ]
                   : []),
@@ -1044,6 +1194,8 @@ const styles = StyleSheet.create({
     padding: rhythm.block,
     gap: rhythm.tight,
   },
+  // Floating under the card (its `top` is the card's measured height), out
+  // of the column so the expanded panel keeps its share of the stage.
   controls: { position: 'absolute', right: rhythm.block },
   grow: { flex: 1 },
   panelHost: { width: '100%' },

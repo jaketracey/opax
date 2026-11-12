@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import {
   Button as SwiftButton,
   HStack,
@@ -42,27 +42,29 @@ export function yearDecades(first = FIRST_YEAR, last = LAST_YEAR) {
 }
 
 // The year sheet (VoiceOver, Android) hands its choice back to the page.
-const listeners = new Set<(year: number) => void>();
-export function chooseYear(year: number) {
-  listeners.forEach((listener) => listener(year));
+const listeners = new Map<string, (year: number) => void>();
+export function chooseYear(year: number, owner: string | undefined) {
+  if (owner) listeners.get(owner)?.(year);
 }
-export function useYearChoice(onChoose: (year: number) => void) {
+function useYearChoice(onChoose: (year: number) => void) {
+  const owner = useId();
   const latest = useRef(onChoose);
   useEffect(() => {
     latest.current = onChoose;
   }, [onChoose]);
   useEffect(() => {
     const listener = (year: number) => latest.current(year);
-    listeners.add(listener);
+    listeners.set(owner, listener);
     return () => {
-      listeners.delete(listener);
+      listeners.delete(owner);
     };
-  }, []);
+  }, [owner]);
+  return owner;
 }
 
 /**
  * The year as the page title and its own menu. The title is React Native
- * text, so it scales and wraps like every page title; on iOS a SwiftUI menu
+ * text, scaling down to keep its chevron inline; on iOS a SwiftUI menu
  * is laid exactly over it as its hit area. VoiceOver and Android activate the
  * title itself, which opens the same choice as a checkmark list sheet.
  */
@@ -73,6 +75,7 @@ export function YearMenu({
   year: number;
   onChange: (year: number) => void;
 }) {
+  const owner = useYearChoice(onChange);
   const [size, setSize] = useState<{ width: number; height: number } | null>(
     null,
   );
@@ -89,7 +92,10 @@ export function YearMenu({
           accessibilityRole="button"
           accessibilityLabel={`Year, ${year}`}
           accessibilityHint="Double-tap to choose another year."
-          onPress={() => router.push(exploreYearsRoute(String(year)))}
+          onPress={() => {
+            const route = exploreYearsRoute(String(year));
+            router.push({ ...route, params: { ...route.params, owner } });
+          }}
           onLayout={(event) => {
             const { width, height } = event.nativeEvent.layout;
             setSize((old) =>
@@ -101,9 +107,18 @@ export function YearMenu({
           testID="tm-year-menu"
           style={styles.title}
         >
-          <Heading level={1} kind="page" testID="tm-selected-year">
-            {String(year)}
-          </Heading>
+          <View style={styles.yearFrame}>
+            <Heading
+              level={1}
+              kind="page"
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              style={styles.year}
+              testID="tm-selected-year"
+            >
+              {String(year)}
+            </Heading>
+          </View>
           <Icon name={symbols.menu} size={17} tone="inkSoft" maxScale={2} />
         </Pressable>
       </TitleAnchor>
@@ -151,12 +166,14 @@ const styles = StyleSheet.create({
   wrap: { alignSelf: 'flex-start', maxWidth: '100%' },
   title: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
     alignItems: 'center',
     gap: rhythm.tight,
     alignSelf: 'flex-start',
     maxWidth: '100%',
   },
+  yearFrame: { flexShrink: 1, minWidth: 0 },
+  year: { flexShrink: 0 },
   overlay: { position: 'absolute', left: 0, top: 0 },
 });
 
@@ -166,6 +183,7 @@ const styles = StyleSheet.create({
  * React Native). Choosing closes the sheet.
  */
 export function YearSheet({ year }: { year: number | null }) {
+  const { owner } = useLocalSearchParams<{ owner?: string }>();
   return (
     <Screen grouped testID="tm-years-sheet">
       {yearDecades().map((decade) => (
@@ -179,7 +197,7 @@ export function YearSheet({ year }: { year: number | null }) {
               onPress={() => {
                 if (y !== year) {
                   haptic('selection');
-                  chooseYear(y);
+                  chooseYear(y, owner);
                 }
                 router.back();
               }}

@@ -1,6 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, View } from 'react-native';
-import type { Roster } from '../../api/catalog-decoders';
+import { router } from 'expo-router';
+import type { Roster, Slugs } from '../../api/catalog-decoders';
+import { catalogs } from '../../api/runtime';
+import { counted } from '../../design/format';
 import {
   Group,
   InlineError,
@@ -11,13 +14,16 @@ import {
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
 import { docRoute } from '../../navigation/routes/records';
+import { personRoute } from '../../navigation/routes/people';
+import { SpeakerPortrait } from '../records/speaker';
+import { openSource } from '../../navigation/external';
 import type { SearchRecord } from './decoders';
 import type { RecoveryHandlers } from './EmptyResults';
 import { EmptyResults } from './EmptyResults';
 import { excerptFor } from './Excerpt';
-import type { SpeechFilters } from './filters';
-import { searchPathRoute } from './navigation';
-import { resultMeta, resultTitle } from './present';
+import { filtersKey, type SpeechFilters } from './filters';
+import { InterestRow } from './InterestRow';
+import { resultMeta, resultTitle, speechSlug, speechSpeaker } from './present';
 import { failureRecovery } from './recovery';
 import type { SpeechList, SpeechSort } from './speeches';
 import { SummaryBlock } from './SummaryBlock';
@@ -27,13 +33,8 @@ export const SUMMARY_AFTER = 3;
 
 /** The reader for a result row, with the query for its find bar. */
 export function speechRoute(row: SearchRecord, q: string) {
-  const slug = /^\/doc\/([^/?#]+)/.exec(row.href ?? '')?.[1];
-  if (slug)
-    return {
-      ...docRoute(decodeURIComponent(slug)),
-      params: { slug: decodeURIComponent(slug), q: q.trim() },
-    };
-  return row.href ? searchPathRoute(row.href) : null;
+  const slug = speechSlug(row);
+  return slug ? docRoute(slug, undefined, { q: q.trim() }) : null;
 }
 
 /** A speech or record as a `RecordRow` `compact`, opening the reader. */
@@ -42,14 +43,30 @@ export function SpeechRow({
   q,
   index,
   testID,
+  roster = null,
+  slugs = null,
 }: {
   row: SearchRecord;
   q: string;
   index: number;
   testID?: string;
+  roster?: Roster | null;
+  slugs?: Slugs | null;
 }) {
-  const slug = /^\/doc\/([^/?#]+)/.exec(row.href ?? '')?.[1];
   const route = speechRoute(row, q);
+  if (row.kind === 'interest')
+    return (
+      <InterestRow
+        row={row}
+        testID={testID ?? `records-result-${index}`}
+        fallback={() => {
+          if (route) router.push(route);
+          else if (row.url)
+            return openSource(row.url, row.source || 'Original source');
+        }}
+      />
+    );
+  const speaker = speechSpeaker(row, roster, slugs);
   return (
     <RecordRow
       compact
@@ -57,7 +74,22 @@ export function SpeechRow({
       title={resultTitle(row)}
       excerpt={excerptFor(row.snippet, row.resource, q)}
       speaker={
-        row.speaker ? { name: row.speaker, party: row.party ?? null } : null
+        speaker
+          ? {
+              name: speaker.name,
+              party: speaker.party,
+              href: speaker.slug
+                ? personRoute(speaker.slug, speaker.name)
+                : undefined,
+              portrait: speaker.slug ? (
+                <SpeakerPortrait
+                  key={speaker.slug}
+                  name={speaker.name}
+                  slug={speaker.slug}
+                />
+              ) : undefined,
+            }
+          : null
       }
       href={route ?? undefined}
       external={
@@ -65,7 +97,7 @@ export function SpeechRow({
           ? { url: row.url, label: row.source || 'Original source' }
           : undefined
       }
-      menu={slug ? 'record' : undefined}
+      menu={route ? 'record' : undefined}
       testID={testID ?? `records-result-${index}`}
     />
   );
@@ -99,18 +131,52 @@ export function SpeechResults({
   onRetrySources?: () => void;
   announce?: boolean;
 }) {
-  const announced = useRef<string | null>(null);
-  const noun = filters.kind === 'all' ? 'records' : 'speeches';
+  const [people, setPeople] = useState<{ roster: Roster; slugs: Slugs } | null>(
+    null,
+  );
   useEffect(() => {
-    if (!announce || !list.rows || announced.current === list.count) return;
-    if (announced.current !== null && list.pages > 1)
-      AccessibilityInfo.announceForAccessibility(`20 more ${noun} loaded`);
+    if (!roster) return;
+    let active = true;
+    void (async () => {
+      try {
+        const result = await catalogs.slugs();
+        if (active) setPeople({ roster, slugs: result.data });
+      } catch {
+        // Speech links remain available if the person catalogue cannot load.
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [roster]);
+  const slugs = people?.roster === roster ? people.slugs : null;
+  const announced = useRef<{ key: string; rows: number } | null>(null);
+  const noun = filters.kind !== 'speech' ? 'records' : 'speeches';
+  const announcementKey = JSON.stringify([q.trim(), filtersKey(filters), sort]);
+  useEffect(() => {
+    if (!announce || !list.rows || list.first?.status !== 'ready') return;
+    const previous = announced.current;
+    if (previous?.key === announcementKey && list.rows.length <= previous.rows)
+      return;
+    if (previous?.key === announcementKey && list.pages > 1)
+      AccessibilityInfo.announceForAccessibility(
+        `${counted(list.rows.length - previous.rows, noun === 'records' ? 'more record' : 'more speech', `more ${noun}`)} loaded`,
+      );
     else if (list.count)
       AccessibilityInfo.announceForAccessibility(
         `${list.count} for ${q.trim()}`,
       );
-    announced.current = list.count;
-  }, [announce, list.rows, list.count, list.pages, noun, q]);
+    announced.current = { key: announcementKey, rows: list.rows.length };
+  }, [
+    announce,
+    announcementKey,
+    list.first?.status,
+    list.rows,
+    list.count,
+    list.pages,
+    noun,
+    q,
+  ]);
   const first = list.first;
   // Speech rows are shown only for roster speakers, so they wait on the
   // roster; when it failed, say so with Try again rather than spin.
@@ -161,7 +227,14 @@ export function SpeechResults({
     return (
       <InsetGroup>
         {rows.slice(0, 3).map((row, index) => (
-          <SpeechRow key={row.slug} row={row} q={q} index={index} />
+          <SpeechRow
+            key={row.slug}
+            row={row}
+            q={q}
+            index={index}
+            roster={roster}
+            slugs={slugs}
+          />
         ))}
         {list.total > 3 ? (
           <LinkRow
@@ -179,10 +252,17 @@ export function SpeechResults({
     <Group gap={rhythm.block} testID="records-results">
       <InsetGroup>
         {head.map((row, index) => (
-          <SpeechRow key={row.slug} row={row} q={q} index={index} />
+          <SpeechRow
+            key={row.slug}
+            row={row}
+            q={q}
+            index={index}
+            roster={roster}
+            slugs={slugs}
+          />
         ))}
       </InsetGroup>
-      {head.length === SUMMARY_AFTER && filters.kind !== 'all' ? (
+      {head.length === SUMMARY_AFTER && filters.kind === 'speech' ? (
         <SummaryBlock q={q} filters={filters} sort={sort} roster={roster} />
       ) : null}
       {rest.length ? (
@@ -193,6 +273,8 @@ export function SpeechResults({
               row={row}
               q={q}
               index={index + SUMMARY_AFTER}
+              roster={roster}
+              slugs={slugs}
             />
           ))}
         </InsetGroup>
@@ -210,7 +292,7 @@ export function SpeechResults({
         <View>
           <InsetGroup>
             <LinkRow
-              title={`Show 20 more ${noun}`}
+              title={`Show ${counted(list.nextCount, noun === 'records' ? 'more record' : 'more speech', `more ${noun}`)}`}
               accessory="none"
               onPress={list.loadMore}
               testID="results-more"

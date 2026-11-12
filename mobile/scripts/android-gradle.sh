@@ -17,7 +17,12 @@ android_gradle_args() {
   [[ "$jobs" =~ ^[1-9][0-9]?$ ]] || { echo 'OPAX_NATIVE_JOBS must be 1 to 99' >&2; return 2; }
   export OPAX_NATIVE_JOBS=$jobs
   ANDROID_GRADLE_ARGS=(--init-script "$PWD/scripts/gradle/opax-build-speed.init.gradle"
-    --build-cache "--max-workers=$workers")
+    "--max-workers=$workers")
+  if [ "${OPAX_GRADLE_BUILD_CACHE:-1}" = 1 ]; then
+    ANDROID_GRADLE_ARGS+=(--build-cache)
+  else
+    ANDROID_GRADLE_ARGS+=(--no-build-cache)
+  fi
   if [ "${OPAX_GRADLE_DAEMON:-1}" = 0 ]; then
     ANDROID_GRADLE_ARGS+=(--no-daemon)
   else

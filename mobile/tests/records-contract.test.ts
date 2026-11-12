@@ -309,6 +309,7 @@ test('year normalisation, removable chips and sharing preserve filter state with
       from: '2025',
       to: '2026',
       party: 'Labor',
+      sort: 'newest',
       link: '1',
     },
   });

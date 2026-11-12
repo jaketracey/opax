@@ -2,26 +2,53 @@ import { router } from 'expo-router';
 import { act } from 'react';
 import {
   AppState,
+  Platform,
+  RefreshControl,
+  ScrollView,
   Text as NativeText,
+  View,
   useWindowDimensions,
 } from 'react-native';
 import TestRenderer from 'react-test-renderer';
+import {
+  HeaderHeightContext,
+  NavigationContext,
+  NavigationRouteContext,
+} from 'expo-router/react-navigation';
 import { Catalogs } from '../src/api/catalogs';
-import { catalogs as runtime } from '../src/api/runtime';
+import { apiClient, catalogs as runtime } from '../src/api/runtime';
 import { moneyAccessibilityLabel } from '../src/design/format';
 import { partyColors } from '../src/design/palette';
 import { PartyLabel, PersonRow, Portrait } from '../src/design/people';
+import { Screen, TitleAnchor } from '../src/design/layout';
+import { RegionProvider } from '../src/design/adaptive';
+import { SourceLine } from '../src/design/source';
+import { sheetPayload } from '../src/navigation/sheets';
+import { StatStrip } from '../src/design/record';
 import { ContentUnavailable } from '../src/design/states';
 import { textStyles } from '../src/design/tokens';
 import { DivisionSplits, RecordedParty } from '../src/features/bills/parts';
-import { PartyPage, faceCandidates, loadFaces } from '../src/features/Party';
-import { firstLineOffset } from '../src/features/people/ProfileHeader';
+import {
+  PartyPage,
+  faceCandidates,
+  loadFaces,
+  partyMembersRoute,
+} from '../src/features/Party';
+import { ProfileBlock } from '../src/features/people/Block';
+import { decodeMoneyGraph } from '../src/features/money/data';
+import {
+  firstLineOffset,
+  ProfileHeader,
+} from '../src/features/people/ProfileHeader';
+import { peopleScreens } from '../src/navigation/stack/people';
 import { openOnWeb } from '../src/navigation/external';
 import {
   moneyRecordRoute,
   partyRoute,
   personRoute,
+  resultsRoute,
 } from '../src/navigation/routes';
+import { LinkRow } from '../src/design/rows';
 import { pinned, slugs } from './pinned';
 import { describeWrappingColumns } from './wrapping-columns';
 jest.mock('expo-router', () => ({
@@ -37,6 +64,7 @@ jest.mock('expo-router', () => ({
   Stack: { Screen: () => null },
 }));
 jest.mock('../src/api/runtime', () => ({
+  apiClient: { get: jest.fn() },
   catalogs: { partyPage: jest.fn(), followSources: jest.fn() },
   peopleDepth: {
     access: jest.fn(async () => {
@@ -80,14 +108,203 @@ beforeEach(() => {
     .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
   jest.clearAllMocks();
   jest.mocked(runtime.partyPage).mockResolvedValue(view);
+  jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+    data: decode(pinned(path)),
+    stale: false,
+    asOf: '2026-09-21',
+    savedAt: 1,
+  }));
 });
-async function render() {
+async function render(input = 'Labor') {
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    renderer = TestRenderer.create(<PartyPage input="Labor" />);
+    renderer = TestRenderer.create(<PartyPage input={input} />);
   });
   return renderer;
 }
+
+test.each([
+  ['phone', 390, 1, false, undefined],
+  ['iPad', 1194, 1, false, undefined],
+  ['Duo detail pane at AX5', 1114, 3.1, true, 540],
+] as const)(
+  '%s puts party provenance after all sections',
+  async (_label, width, fontScale, embedded, paneWidth) => {
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ width, height: 844, scale: 3, fontScale });
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(
+        <RegionProvider
+          value={paneWidth ? { width: paneWidth, height: 844 } : null}
+        >
+          <PartyPage input="Labor" embedded={embedded} />
+        </RegionProvider>,
+      );
+    });
+    const lines = r.root.findAllByType(SourceLine);
+    expect(
+      lines.filter((line) => line.props.testID === 'party-figures-source'),
+    ).toHaveLength(1);
+    expect(lines.at(-1)!.props.testID).toBe('party-figures-source');
+    expect(lines.length).toBeGreaterThan(1);
+    const ids = r.root
+      .findAll((node) => typeof node.type === 'string' && node.props.testID)
+      .map((node) => node.props.testID);
+    expect(ids.indexOf('party-figures-source')).toBeGreaterThan(
+      ids.indexOf('party-more'),
+    );
+    expect(ids.indexOf('party-end')).toBeGreaterThan(
+      ids.indexOf('party-figures-source'),
+    );
+    const target = r.root.find(
+      (node) =>
+        node.props.testID === 'party-figures-source' &&
+        typeof node.props.onPress === 'function',
+    );
+    expect(target.props.accessibilityLabel).toContain('Updated');
+    expect(target.props.accessibilityHint).toBe('Opens the sources');
+    await act(async () => target.props.onPress());
+    const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+      params: { key: string };
+    };
+    expect(sheetPayload(params.key, 'source')?.details).toMatchObject({
+      citation: lines.at(-1)!.props.citation,
+    });
+    act(() => r.unmount());
+  },
+);
+
+test.each([
+  ['Animal Justice Party', 1],
+  ['Legalise Cannabis Victoria', 2],
+  ['Libertarian Party', 1],
+])(
+  '%s shows the state-only count in the stat and Members row',
+  async (label, count) => {
+    jest
+      .mocked(runtime.partyPage)
+      .mockResolvedValueOnce(await api.partyPage(label));
+    const r = await render(label);
+    expect(r.root.findByType(StatStrip).props.tiles).toContainEqual(
+      expect.objectContaining({
+        value: String(count),
+        label: count === 1 ? 'sitting member' : 'sitting members',
+        testID: 'party-figure-members',
+      }),
+    );
+    const row = r.root
+      .findAllByType(LinkRow)
+      .find((n) => n.props.testID === 'party-current-count')!;
+    expect(row.props.title).toBe(
+      `${count} ${count === 1 ? 'sitting member' : 'sitting members'}`,
+    );
+    const href = {
+      pathname: '/directory',
+      params: { kind: 'person', party: label, sitting: '1' },
+    };
+    expect(partyMembersRoute(label)).toEqual(href);
+    expect(row.props.href).toEqual(href);
+    const block = r.root
+      .findAllByType(ProfileBlock)
+      .find((n) => n.props.id === 'party-members')!;
+    expect(block.props.action).toMatchObject({ label: 'See all', href });
+    act(() => r.unmount());
+  },
+);
+
+test('a loaded party heading reveals its named bar title when it scrolls under the header', async () => {
+  let finishLoading!: (loaded: typeof view) => void;
+  jest.mocked(runtime.partyPage).mockReturnValueOnce(
+    new Promise((resolve) => {
+      finishLoading = resolve;
+    }),
+  );
+  const routes = [
+    { key: 'root', name: 'index' },
+    {
+      key: 'party',
+      name: 'party/[slug]',
+      params: { slug: 'labor' },
+    },
+  ];
+  const screen = peopleScreens().find(
+    (item) => item.props.name === 'party/[slug]',
+  )!;
+  let options: Record<string, unknown> = {};
+  const navigation = {
+    getState: () => ({ index: 1, routes }),
+    setOptions: (next: object) => Object.assign(options, next),
+    isFocused: () => true,
+    addListener: () => () => {},
+  };
+  options = screen.props.options({ route: routes[1], navigation });
+  expect(options).toMatchObject({
+    title: '',
+    headerBackTitle: 'Today',
+  });
+  let r!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    r = TestRenderer.create(
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={routes[1]!}>
+          <HeaderHeightContext.Provider value={100}>
+            <PartyPage input="Labor" />
+          </HeaderHeightContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>,
+    );
+  });
+  expect(options.title).toBe('');
+  await act(async () => finishLoading(view));
+  const inline = () => (options.headerTitle as () => React.ReactElement)();
+  expect(options.title).toBe('Labor');
+  expect(inline().props).toMatchObject({ title: 'Labor', shown: false });
+  const heading = r.root.findByType(ProfileHeader);
+  const anchor = r.root.findByType(TitleAnchor);
+  expect(anchor.findByType(ProfileHeader)).toBe(heading);
+  const measured = anchor.findByType(View);
+  expect(measured.props.collapsable).toBe(false);
+  let pageY = 180;
+  const measure = jest.fn((done) => done(0, 0, 300, 80, 0, pageY));
+  act(() => measured.props.ref({ measure }));
+  const scroll = () =>
+    act(() =>
+      r.root.findByType(ScrollView).props.onScroll({
+        nativeEvent: { contentOffset: { y: 200 } },
+      }),
+    );
+  scroll();
+  expect(measure).toHaveBeenCalled();
+  expect(inline().props.shown).toBe(false);
+  pageY = 50;
+  scroll();
+  expect(inline().props).toMatchObject({ title: 'Labor', shown: true });
+  pageY = 180;
+  scroll();
+  expect(inline().props.shown).toBe(false);
+  expect(options).toMatchObject({
+    headerBackTitle: 'Today',
+    headerBackButtonDisplayMode: 'default',
+    headerBackButtonMenuEnabled: true,
+  });
+  act(() => r.unmount());
+});
+
+test('Party keeps its existing Android heading and bar title behaviour', async () => {
+  const original = Platform.OS;
+  Platform.OS = 'android';
+  try {
+    const r = await render();
+    expect(r.root.findByType(Screen).props.barTitle).toBe('Labor');
+    expect(r.root.findAllByType(TitleAnchor)).toHaveLength(0);
+    expect(r.root.findByType(ProfileHeader).props.name).toBe('Labor');
+    act(() => r.unmount());
+  } finally {
+    Platform.OS = original;
+  }
+});
 const press = (r: TestRenderer.ReactTestRenderer, id: string) =>
   act(() =>
     r.root
@@ -485,6 +702,21 @@ test('failed read offers retry and does not mistake a network failure for an unk
   expect(drawn(r)).toContain('Try again');
   act(() => r.unmount());
 });
+test('with no receipts held, a failed returns read is said under Debts, not an empty heading', async () => {
+  // The funding read fails by default in this file.
+  jest.mocked(runtime.partyPage).mockResolvedValue({
+    ...view,
+    data: {
+      ...view.data!,
+      receipts: { ...view.data!.receipts, status: 'missing', data: null },
+      associated: { ...view.data!.associated, status: 'ready', data: null },
+    },
+  } as typeof view);
+  const r = await render();
+  expect(has(r, 'party-debts-section')).toBe(true);
+  expect(has(r, 'party-funding-error')).toBe(true);
+  act(() => r.unmount());
+});
 test('Independent is not a party: it points to independent members', async () => {
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
@@ -492,6 +724,8 @@ test('Independent is not a party: it points to independent members', async () =>
   });
   expect(has(r, 'party-not-a-party')).toBe(true);
   expect(unavailable(r)).toEqual(['Not a party']);
+  // Nothing is read for a label, so there is nothing to pull to refresh.
+  expect(r.root.findAllByType(RefreshControl)).toHaveLength(0);
   press(r, 'party-not-a-party-action');
   expect(router.push).toHaveBeenCalledWith({
     pathname: '/directory',
@@ -652,6 +886,84 @@ test('the Money map row opens the party in the public money record', async () =>
   );
   expect(has(r, 'party-public-money')).toBe(false);
   await act(async () => r.unmount());
+});
+
+test('associated entity rows open their own donor records or search, never grant records', async () => {
+  const liberal = await api.partyPage('Liberal');
+  const rows = liberal.data!.associated.data!.rows;
+  expect(rows.map((entity) => entity.name)).toEqual([
+    'Cormack Foundation Pty Ltd',
+    'Bunori Pty Limited',
+    'Vapold Pty Ltd',
+    'The Menzies Research Centre Limited',
+    'Parakeelia Pty Ltd',
+    'Liberal Asset Management (Custodians) Limited',
+  ]);
+  jest.mocked(runtime.partyPage).mockResolvedValueOnce(liberal);
+  const r = await render('Liberal');
+  for (const [index, entity] of rows.entries()) {
+    const row = r.root
+      .findAllByType(LinkRow)
+      .find((n) => n.props.testID === `party-associated-${index}`)!;
+    expect(row.props.external).toBeUndefined();
+    expect(row.props.detail).toContain('receipts $');
+    // LinkRow's in-app accessory is a chevron when external is absent.
+    expect(row.props.accessibilityHint).not.toBe('Opens in the in-app browser');
+    await act(async () => row.props.onPress!());
+    expect(router.push).toHaveBeenLastCalledWith(
+      entity.name === 'Vapold Pty Ltd'
+        ? moneyRecordRoute(
+            { node: 'donor:vapold', jurisdiction: 'federal' },
+            'Vapold Pty Ltd',
+          )
+        : resultsRoute('all', { q: entity.name }),
+    );
+    const route = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+      pathname: string;
+      params: Record<string, string>;
+    };
+    expect(route.pathname).not.toBe('/grants');
+    expect(route.params).not.toHaveProperty('rid');
+  }
+  expect(apiClient.get).toHaveBeenCalledWith(
+    '/graph/money.json',
+    decodeMoneyGraph,
+  );
+  expect(openOnWeb).not.toHaveBeenCalled();
+  act(() => r.unmount());
+});
+
+test('associated entities open name search when the donor index cannot be loaded', async () => {
+  const associated = structuredClone(view);
+  associated.data!.associated = {
+    ...associated.data!.associated,
+    status: 'ready',
+    data: {
+      rows: [
+        {
+          name: 'Cormack Foundation',
+          year: '2024-25',
+          receipts: 1000000,
+          payments: null,
+          debts: null,
+        },
+      ],
+      total: 1,
+      notes: [],
+    },
+  };
+  jest.mocked(runtime.partyPage).mockResolvedValueOnce(associated);
+  jest.mocked(apiClient.get).mockRejectedValueOnce(new Error('offline'));
+  const r = await render();
+  const row = r.root
+    .findAllByType(LinkRow)
+    .find((n) => n.props.testID === 'party-associated-0')!;
+  await act(async () => row.props.onPress!());
+  expect(router.push).toHaveBeenCalledWith(
+    resultsRoute('all', { q: 'Cormack Foundation' }),
+  );
+  expect(openOnWeb).not.toHaveBeenCalled();
+  act(() => r.unmount());
 });
 
 test('a total division scan failure is unavailable rather than no party votes', async () => {

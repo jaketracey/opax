@@ -2,7 +2,7 @@ import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
-import { Text } from '../../design/primitives';
+import { Skeleton, Text } from '../../design/primitives';
 import { useListSearchBar } from '../../design/search-bar';
 import { StatePageProvider } from '../../design/states';
 import { colors, hairline, layout, rhythm } from '../../design/tokens';
@@ -25,13 +25,17 @@ export default function BillTextContents() {
     version?: string;
   }>();
   const load = useCallback(
-    () =>
+    (signal?: AbortSignal) =>
       version
-        ? records.billVersion(key, version)
+        ? records.billVersion(key, version, signal)
         : records
-            .billManifest(key)
+            .billManifest(key, signal)
             .then((manifest) =>
-              records.billVersion(key, manifest.data.default_version_id),
+              records.billVersion(
+                key,
+                manifest.data.default_version_id,
+                signal,
+              ),
             ),
     [key, version],
   );
@@ -82,6 +86,15 @@ export default function BillTextContents() {
                 onRetry={retry}
                 testID="bill-text-contents-error"
               />
+            ) : !value ? (
+              <View style={styles.row}>
+                <Skeleton
+                  shape="rows"
+                  count={5}
+                  label="Loading sections"
+                  testID="bill-text-contents-loading"
+                />
+              </View>
             ) : null
           }
           ListEmptyComponent={

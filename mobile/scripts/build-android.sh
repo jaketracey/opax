@@ -13,11 +13,19 @@ case "$VARIANT" in
 esac
 if [ "${2:-}" != --inside-gate ]; then
   OPAX_LOAD_LIMIT=180 bash scripts/capacity.sh >&2
-  build_command bash "$PWD/scripts/build-android.sh" "$VARIANT" --inside-gate
+  android_build_command bash "$PWD/scripts/build-android.sh" "$VARIANT" --inside-gate
   exit
 fi
 : "${JAVA_HOME:?Set JAVA_HOME to the local Java 21 installation}"
 : "${ANDROID_HOME:?Set ANDROID_HOME to the Android SDK}"
+ABIS=${OPAX_ANDROID_ABIS:-arm64-v8a}
+if [ -z "${OPAX_ANDROID_ABIS:-}" ] && [ "$(uname -s)" = Linux ] && [ "$(uname -m)" = x86_64 ]; then
+  ABIS=x86_64
+fi
+if [[ ! "$ABIS" =~ ^(arm64-v8a|armeabi-v7a|x86|x86_64)(,(arm64-v8a|armeabi-v7a|x86|x86_64))*$ ]]; then
+  echo 'OPAX_ANDROID_ABIS must be a comma-separated list of Android ABIs' >&2
+  exit 2
+fi
 export OPAX_VARIANT=$VARIANT OPAX_TARGET_PLATFORM=android
 export OPAX_FIXTURE_PORT=${OPAX_FIXTURE_PORT:-8910} CI=1 EXPO_NO_TELEMETRY=1
 OUT="$PWD/build/android/$VARIANT"
@@ -33,7 +41,7 @@ android_restore_state "$STATE"
 (cd android && "$JAVA_HOME/bin/java" -Xmx64m -Xms64m --enable-native-access=ALL-UNNAMED \
   -Dorg.gradle.appname=gradlew -classpath gradle/wrapper/gradle-wrapper.jar \
   org.gradle.wrapper.GradleWrapperMain "$TASK" "${ANDROID_GRADLE_ARGS[@]}" \
-  -PreactNativeArchitectures=arm64-v8a) > "$OUT/gradle.log" 2>&1
+  "-PreactNativeArchitectures=$ABIS") > "$OUT/gradle.log" 2>&1
 APK="android/app/build/outputs/apk/$TYPE/app-$TYPE.apk"
 test -s "$APK"
 /bin/cp -f "$APK" "$OUT/opax-$TYPE.apk"

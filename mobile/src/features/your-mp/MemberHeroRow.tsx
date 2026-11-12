@@ -16,6 +16,7 @@ import {
   useRowInset,
 } from '../../design/row-padding';
 import { useFaceURIs } from './FaceStackRow';
+import { partyFromCode } from '../bills/party-codes';
 
 export interface OfficialPage {
   label: 'Parliament of Australia page' | 'Parliament of Victoria page';
@@ -108,7 +109,7 @@ export function MemberHeroRow({
           if (e.nativeEvent.actionName === 'official' && official)
             void openSource(official.url, official.label);
           if (e.nativeEvent.actionName === 'party' && party)
-            router.push(partyRoute(party));
+            router.push(partyRoute(partyFromCode(party)));
         }}
         onPress={() => router.push(href)}
         style={({ pressed }) => [
@@ -124,7 +125,7 @@ export function MemberHeroRow({
             name={name}
             nameBeside
           />
-          <View style={styles.words}>
+          <View style={[styles.words, !stacked && styles.wordsInline]}>
             {/* Spec 2.1: SF Semibold on title2; tileFigure is the role with those metrics. */}
             <Text
               wordSafe
@@ -133,8 +134,26 @@ export function MemberHeroRow({
             >
               {name}
             </Text>
-            {context ? <PartyLabel {...context} linked={false} nested /> : null}
-            {tenure ? <Text variant="secondary">{tenure}</Text> : null}
+            {context ? (
+              <View style={styles.partyAndTenure}>
+                <PartyLabel
+                  {...context}
+                  linked
+                  nested
+                  compact
+                  testID={testID && `${testID}-party`}
+                />
+                {tenure ? (
+                  <Text wordSafe variant="secondary">
+                    {tenure}
+                  </Text>
+                ) : null}
+              </View>
+            ) : tenure ? (
+              <Text wordSafe variant="secondary">
+                {tenure}
+              </Text>
+            ) : null}
           </View>
         </View>
         <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />
@@ -159,5 +178,12 @@ const styles = StyleSheet.create({
     gap: rhythm.tight,
   },
   stacked: { flexDirection: 'column', alignItems: 'flex-start' },
-  words: { flex: 1, gap: rhythm.line },
+  words: {
+    flexDirection: 'column',
+    gap: rhythm.line,
+    alignSelf: 'stretch',
+  },
+  wordsInline: { flex: 1 },
+  // Tenure supplies the room below the compact party link's hit target.
+  partyAndTenure: { minHeight: minimumTarget, gap: rhythm.line },
 });

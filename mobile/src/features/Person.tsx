@@ -1,11 +1,14 @@
 import { RouteOptions } from '../navigation/preview';
+import { useScreenReady } from '../analytics/timing';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
+  AccessibilityInfo,
   Platform,
   RefreshControl,
   StyleSheet,
   View,
+  type LayoutChangeEvent,
   type ScrollView,
 } from 'react-native';
 import type { Electorate } from '../api/catalogs';
@@ -14,18 +17,18 @@ import { catalogs } from '../api/runtime';
 import { useReduceMotion } from '../design/accessibility';
 import { PadGrid, ReadableColumn } from '../design/adaptive';
 import { Disclosure } from '../design/disclosure';
-import { formatCount, formatMoney } from '../design/format';
-import { Group, Screen, TitleAnchor } from '../design/layout';
+import { counted, formatCount, formatMoney } from '../design/format';
+import {
+  Group,
+  Screen,
+  SectionHeadingLayoutContext,
+  TitleAnchor,
+} from '../design/layout';
 import { isPartyLabel } from '../design/party';
 import { phoneCopy } from '../design/phone-copy';
 import { StatStrip, type StatTileProps } from '../design/record';
 import { LinkRow } from '../design/rows';
-import {
-  ContentUnavailable,
-  InlineError,
-  LoadingState,
-  Skeleton,
-} from '../design/states';
+import { ContentUnavailable, InlineError, Skeleton } from '../design/states';
 import { Text } from '../design/text';
 import { rhythm } from '../design/tokens';
 import { useHeaderBottom } from '../design/useHeaderBottom';
@@ -209,6 +212,7 @@ export function ProfileScreen({
   embedded?: boolean;
 }) {
   const [load, setLoad] = useState<Load>({ status: 'loading' });
+  useScreenReady('/person/[slug]', load.status !== 'loading', !embedded);
   const [attempt, setAttempt] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
@@ -271,9 +275,10 @@ export function ProfileScreen({
     <>
       {embedded ? null : (
         <RouteOptions
+          stableItems
           options={{
             // The back button on the next page names this one.
-            ...(name ? { title: name } : {}),
+            title: name ?? '',
             ...headerItems(
               identity
                 ? pageItems({
@@ -289,6 +294,7 @@ export function ProfileScreen({
       )}
       {load.status !== 'ready' ? (
         <Screen
+          column="wide"
           testID="person-pending-screen"
           barTitle={load.status === 'not-found' ? 'No profile' : undefined}
           refreshControl={
@@ -330,15 +336,7 @@ export function ProfileScreen({
               />
             )
           ) : (
-            <>
-              <LoadingState
-                shape="people"
-                count={1}
-                label="Loading profile"
-                testID="person-loading"
-              />
-              <Skeleton shape="rows" count={3} label="Loading profile" />
-            </>
+            <PersonSkeleton />
           )}
         </Screen>
       ) : !identity ? null : (
@@ -358,9 +356,29 @@ export function ProfileScreen({
   );
 }
 
+function PersonSkeleton() {
+  return (
+    <Skeleton
+      shape="person-profile"
+      label="Loading the profile"
+      testID="person-loading"
+    />
+  );
+}
+
 type VoteRowData = NonNullable<
   ProfileView['blocks']['votes']['data']
 >['for'][number] & { position: 'for' | 'against' };
+
+const headingSections: Record<string, ProfileSection | undefined> = {
+  'person-votes-heading': 'votes',
+  'person-interests-heading': 'interests',
+  'person-pay-heading': 'pay',
+  'person-expenses-heading': 'expenses',
+  'person-receipts-heading': 'receipts',
+  'person-diary-heading': 'diary',
+  'person-more-heading': 'more',
+};
 
 function ProfileContent({
   slug,
@@ -387,6 +405,17 @@ function ProfileContent({
   const b = profile.blocks;
   const scroll = useRef<ScrollView>(null);
   const y = useRef<Partial<Record<ProfileSection | 'changes', number>>>({});
+  // Keep native host refs, never the synthetic layout event's target.
+  const headings = useRef<
+    Partial<Record<ProfileSection | 'changes', View | null>>
+  >({});
+  const headingY = useRef<Partial<Record<ProfileSection, number>>>({});
+  const headingHosts = useRef<
+    Partial<Record<ProfileSection, LayoutChangeEvent['currentTarget']>>
+  >({});
+  const focusAfterScroll = useRef<{ y: number; focus: () => void } | null>(
+    null,
+  );
   const headerBottom = useHeaderBottom();
   const reduceMotion = useReduceMotion();
   const yourMP = useIsMyMember(slug);
@@ -400,27 +429,148 @@ function ProfileContent({
     animated: boolean;
     at: number;
   } | null>(null);
+  const completedJump = useRef<typeof goTo>(null);
   const jump = (to: ProfileSection | 'changes') =>
     setGoTo({ to, animated: !reduceMotion, at: Date.now() });
   useEffect(() => {
     if (!goTo) return;
-    const top = y.current[goTo.to];
-    if (top === undefined) return;
-    // The scroll view runs under the native header on iOS.
-    const offset = Platform.OS === 'ios' ? headerBottom : 0;
-    scroll.current?.scrollTo({
-      y: Math.max(0, top - offset - rhythm.heading),
-      animated: goTo.animated,
-    });
+    const view = scroll.current;
+    if (!view) return;
+    let active = true;
+    let finished = false;
+    let focusTimer: ReturnType<typeof setTimeout> | undefined;
+    let overlay = Platform.OS === 'ios' ? headerBottom : 0;
+    const inset = Platform.OS === 'ios' ? rhythm.block : rhythm.heading;
+    const finish = (top: number) => {
+      if (!active || finished || !Number.isFinite(top)) return;
+      finished = true;
+      completedJump.current = goTo;
+      clearTimeout(fallbackTimer);
+      const destination = Math.max(-overlay, top - overlay - inset);
+      const focus = () => {
+        if (!active || focusAfterScroll.current?.focus !== focus) return;
+        const heading = headingHosts.current[goTo.to as ProfileSection];
+        if (!heading) return;
+        focusAfterScroll.current = null;
+        clearTimeout(focusTimer);
+        AccessibilityInfo.sendAccessibilityEvent(heading, 'focus');
+      };
+      focusAfterScroll.current = { y: destination, focus };
+      view.scrollTo({
+        y: destination,
+        animated: goTo.animated,
+      });
+      // onScroll focuses at arrival. Also cover an unchanged or clamped offset,
+      // which need not emit a scroll event, and honour Reduce Motion.
+      focusTimer = setTimeout(focus, goTo.animated ? 500 : 0);
+    };
+    const fallback = () => {
+      const top = y.current[goTo.to];
+      if (top === undefined) return;
+      // Screen's content padding precedes the section's onLayout coordinate.
+      finish(
+        top + rhythm.block + (headingY.current[goTo.to as ProfileSection] ?? 0),
+      );
+    };
+    // Native measurement callbacks can also disappear while a view remounts.
+    const fallbackTimer = setTimeout(fallback, 100);
+    const measure = () => {
+      if (!active || finished) return;
+      try {
+        const text = headingHosts.current[goTo.to as ProfileSection];
+        const heading = text ?? headings.current[goTo.to];
+        // RN exposes the host ref at runtime; its TS declaration omits it.
+        const inner =
+          (
+            view as ScrollView & { getInnerViewRef?: () => View | null }
+          ).getInnerViewRef?.() ?? view.getInnerViewNode();
+        if (!heading?.measureLayout || inner == null) {
+          fallback();
+          return;
+        }
+        heading.measureLayout(
+          inner,
+          (_x, top) => {
+            if (Number.isFinite(top))
+              finish(
+                top +
+                  (text
+                    ? 0
+                    : (headingY.current[goTo.to as ProfileSection] ?? 0)),
+              );
+            else fallback();
+          },
+          fallback,
+        );
+      } catch {
+        fallback();
+      }
+    };
+    try {
+      if (Platform.OS === 'ios') {
+        const viewport = view.getNativeScrollRef();
+        if (viewport?.measureInWindow) {
+          viewport.measureInWindow((_x, viewportTop) => {
+            if (!active || finished) return;
+            // Opaque bars already place the viewport below the bar.
+            overlay = Number.isFinite(viewportTop)
+              ? Math.max(0, headerBottom - viewportTop)
+              : 0;
+            measure();
+          });
+        } else fallback();
+      } else measure();
+    } catch {
+      fallback();
+    }
+    return () => {
+      active = false;
+      clearTimeout(fallbackTimer);
+      clearTimeout(focusTimer);
+      focusAfterScroll.current = null;
+    };
   }, [goTo, headerBottom]);
   // Arriving at a section (`?section=`): once, when its place is known.
   const arrived = useRef(false);
-  const placed = (to: ProfileSection | 'changes') => (top: number) => {
-    y.current[to] = top;
+  const arrive = (to: ProfileSection | 'changes') => {
     if (arrival && !arrived.current && arrival === to) {
       arrived.current = true;
       setGoTo({ to, animated: false, at: Date.now() });
     }
+  };
+  const placed = (to: ProfileSection | 'changes', event: LayoutChangeEvent) => {
+    y.current[to] = event.nativeEvent.layout.y;
+    if (Platform.OS !== 'ios' || to === 'changes') arrive(to);
+    // A tap can arrive before the section has completed its first layout.
+    setGoTo((pending) =>
+      pending?.to === to && pending !== completedJump.current
+        ? { ...pending }
+        : pending,
+    );
+  };
+  const headingPlaced = (testID: string, event: LayoutChangeEvent) => {
+    const section = headingSections[testID];
+    if (!section) return;
+    headingY.current[section] = event.nativeEvent.layout.y;
+    // Capture the native heading during dispatch, not the pooled event or its
+    // numeric target. This also accounts for nested iPad grid containers.
+    const host = event.currentTarget;
+    const firstHeading =
+      !headingHosts.current[section] &&
+      host &&
+      typeof host.measureLayout === 'function';
+    if (host && typeof host.measureLayout === 'function')
+      headingHosts.current[section] = host;
+    arrive(section);
+    // The heading can mount after the wrapper or the measurement timeout,
+    // including after a fallback scroll which is still waiting to focus it.
+    setGoTo((pending) =>
+      pending?.to === section &&
+      (pending !== completedJump.current ||
+        (firstHeading && focusAfterScroll.current !== null))
+        ? { ...pending }
+        : pending,
+    );
   };
 
   // What changed since the reader last looked, for a followed person.
@@ -505,8 +655,8 @@ function ProfileContent({
   if (votes !== null && b.votes.status !== 'error')
     tiles.push({
       value: formatCount(votes),
-      label: since ? `votes since ${since}` : 'votes',
-      onPress: () => jump('votes'),
+      label: `${votes === 1 ? 'vote' : 'votes'}${since ? ` since ${since}` : ''}`,
+      onPress: b.votes.status !== 'unlinked' ? () => jump('votes') : undefined,
       testID: 'person-figure-votes',
     });
   const interests = interestsCount(profile);
@@ -514,7 +664,8 @@ function ProfileContent({
     tiles.push({
       value: formatCount(interests),
       label: 'declared interests',
-      onPress: () => jump('interests'),
+      onPress:
+        b.interests.status !== 'unlinked' ? () => jump('interests') : undefined,
       testID: 'person-figure-interests',
     });
   const pay = annualPay(profile);
@@ -522,7 +673,7 @@ function ProfileContent({
     tiles.push({
       value: formatMoney(pay),
       label: 'a year in pay',
-      onPress: () => jump('pay'),
+      onPress: b.pay.status !== 'unlinked' ? () => jump('pay') : undefined,
       testID: 'person-figure-pay',
     });
   const strip = stripSources(profile);
@@ -661,7 +812,7 @@ function ProfileContent({
           return (
             <Group gap={rhythm.tight}>
               <Text wordSafe variant="secondary" testID="person-votes-summary">
-                {`Voted in ${formatCount(v.total)} divisions${from && to ? `, ${from === to ? from : `${from} to ${to}`}` : ''}`}
+                {`Voted in ${counted(v.total, 'division')}${from && to ? `, ${from === to ? from : `${from} to ${to}`}` : ''}`}
               </Text>
               {rows.length ? (
                 <View testID="person-bill-votes">
@@ -777,6 +928,10 @@ function ProfileContent({
       column="wide"
       barTitle={identity.name}
       scrollRef={scroll}
+      onScroll={(offset) => {
+        const pending = focusAfterScroll.current;
+        if (pending && Math.abs(offset - pending.y) <= 1) pending.focus();
+      }}
       testID="person-screen"
       offline={
         b.identity.stale && b.identity.savedAt != null
@@ -811,29 +966,17 @@ function ProfileContent({
           />
         </TitleAnchor>
         {tiles.length ? (
-          <Group gap={rhythm.tight}>
-            <StatStrip tiles={tiles} testID="person-figures" />
-            <BlockSource
-              block={b.identity}
-              title="Profile sources"
-              citation={strip.citation}
-              line={{ asOf: strip.asOf, partial: stripPartial }}
-              notes={[
-                stripPartial
-                  ? 'Some records for this person could not be read.'
-                  : null,
-                profile.personId === null
-                  ? 'This person is matched by the parliamentary roster’s ID and name. More records may be on opax.com.au.'
-                  : null,
-                'These are dated public records. Representation may have changed since collection.',
-              ]}
-              testID="person-figures-source"
-            />
-          </Group>
+          <StatStrip tiles={tiles} testID="person-figures" />
         ) : null}
       </ReadableColumn>
       {follow && changes.length ? (
-        <View onLayout={(e) => placed('changes')(e.nativeEvent.layout.y)}>
+        <View
+          ref={(view) => {
+            headings.current.changes = view;
+          }}
+          collapsable={false}
+          onLayout={(e) => placed('changes', e)}
+        >
           <AddedSinceGroup
             follow={follow}
             changes={changes}
@@ -851,14 +994,21 @@ function ProfileContent({
           />
         </View>
       ) : null}
-      {PROFILE_SECTIONS.filter(shows).map((section) => (
-        <View
-          key={section}
-          onLayout={(e) => placed(section)(e.nativeEvent.layout.y)}
-        >
-          {sections[section]()}
-        </View>
-      ))}
+      <SectionHeadingLayoutContext.Provider value={headingPlaced}>
+        {PROFILE_SECTIONS.filter(shows).map((section) => (
+          <View
+            key={section}
+            ref={(view) => {
+              headings.current[section] = view;
+            }}
+            collapsable={false}
+            testID={`person-${section}-anchor`}
+            onLayout={(e) => placed(section, e)}
+          >
+            {sections[section]()}
+          </View>
+        ))}
+      </SectionHeadingLayoutContext.Provider>
       {footRow ? (
         <LinkRow
           title={`${identity.name} on opax.com.au`}
@@ -867,6 +1017,26 @@ function ProfileContent({
           accessibilityHint="Opens in the in-app browser"
           testID="person-web-foot"
         />
+      ) : null}
+      {tiles.length ? (
+        <ReadableColumn>
+          <BlockSource
+            block={b.identity}
+            title="Profile sources"
+            citation={strip.citation}
+            line={{ asOf: strip.asOf, partial: stripPartial }}
+            notes={[
+              stripPartial
+                ? 'Some records for this person could not be read.'
+                : null,
+              profile.personId === null
+                ? 'This person is matched by the parliamentary roster’s ID and name. More records may be on opax.com.au.'
+                : null,
+              'These are dated public records. Representation may have changed since collection.',
+            ]}
+            testID="person-figures-source"
+          />
+        </ReadableColumn>
       ) : null}
       {/* The page's end, for journeys that scroll to it; nothing drawn. */}
       <View testID="person-end" collapsable={false} style={styles.end} />

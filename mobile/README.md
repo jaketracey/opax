@@ -294,28 +294,50 @@ attack regression tests.
 
 ## Launch and welcome tour
 
-**Splash.** `expo-splash-screen` shows the brand mark (the favicon's navy
-square and gold seven-point star, `portal/public/favicon.svg`) above the
-"OPAX" wordmark, centred on paper, with no other text. From `mobile/`,
-`swift scripts/render-splash.swift` writes the SVG sources in
-`assets/splash/` (the star path copied unchanged, the wordmark outlined from
-the bundled Merriweather Bold) and renders every PNG from those SVGs with
-Core Graphics: no Homebrew, npm package or network. Commit the SVGs and PNGs
-together. The app is light-only (`UIUserInterfaceStyle` Light) and iOS draws
-the launch screen in the app's style, so the paper splash shows in both system
-appearances. The navy `splash-dark` artwork is rendered but not configured:
-the plugin would switch the whole app to Automatic to show it, and
-`qa-static` fails if `UIUserInterfaceStyle` is no longer Light.
+**Splash.** `expo-splash-screen` paints the brand navy (#142A43) full screen
+and shows the gold seven-point star (`portal/public/favicon.svg`, path
+copied unchanged) above the "OPAX" wordmark in paper, with no other text.
+From `mobile/`, `swift scripts/render-splash.swift` writes the SVG sources
+in `assets/splash/` (the wordmark outlined from the bundled Merriweather
+Bold), renders every PNG from those SVGs with Core Graphics (no Homebrew, npm
+package or network) and rewrites `src/launch/geometry.generated.ts`, the
+glyph positions the animation starts from. Commit all three together. The
+field is navy in both appearances, so one `backgroundColor` serves both: the
+app stays light-only (`UIUserInterfaceStyle` Light), and a `dark` splash block
+would switch it to Automatic, which `qa-static` rejects. The status bar is
+light over the launch screen (`UIStatusBarStyle`), and the cover keeps it
+light until it goes.
 
-**Handoff.** `src/launch/splash.ts` holds the native splash until
-`LaunchHandoff` has drawn the same image in the same place, then hides it (no
-seam). A 1pt bronze rule draws out under the wordmark as the veil fades,
-starting the moment the first screen (Today, or the tour) has rendered, with
-no minimum hold and never later than 760ms; the fade takes 440ms, so at most
-1.2s. Content is mounted and touchable under it from the first frame; the
-veil takes no touches and is hidden from VoiceOver. Reduce Motion: no rule, a
-240ms fade. A failsafe hides the native splash after 4s if the handoff never
-draws. Beats are in `src/launch/timing.ts`.
+**Animated splash.** `src/launch/splash.ts` holds the native splash until
+`LaunchHandoff` (`src/launch/LaunchHandoff.tsx`) has drawn the same two
+layers, the star and the wordmark, in the same place, then hides it (no
+seam). On the first cold launch per device (per `SPLASH_VERSION` in
+`src/launch/played.ts`; flip `fullSplashPolicy` to play it on every cold
+launch) the cover plays the full sequence, 1.9 s: a 100 ms settle, then over
+900 ms the four letters of OPAX travel, staggered 72 ms apart, from the
+wordmark into the full name, one word a line ("Open", "Parliamentary",
+"Accountability", "eXchange", the X of eXchange being the wordmark's X),
+each word's remaining letters fading in beside its letter while the star
+rises and settles above the name; a 550 ms hold; then a 350 ms fade to the
+app beneath, the lockup receding to 96 percent. Every later cold launch plays
+the short sequence: the lockup holds until the first screen has laid out,
+never past 400 ms, then a 240 ms crossfade. Warm launches mount no cover.
+Reduce Motion: the name crossfades in place of the unfold (1.35 s), and the
+short sequence is a cut. VoiceOver hears "OPAX, Open Parliamentary
+Accountability eXchange" once as the name unfolds, then lands in the app; the
+cover is hidden from it. A tap skips to the exit as soon as the app is ready.
+The app loads underneath from the first frame and the sequence never adds
+time beyond its own length: a plain launch leaves when the sequence ends, a
+first launch waits for the welcome's layout, and a failsafe hides the native
+splash after 4 s if nothing draws. The name is set in Merriweather Bold at
+the wordmark's 30pt, growing with Dynamic Type to 44pt and never wider than
+the longest word fits on the screen, so nothing wraps or clips on an iPhone
+SE or an iPad. The wordmark's glyph pens and the words' advances come from
+`src/launch/geometry.generated.ts`; beats are in `src/launch/timing.ts`;
+the layout is `src/launch/choreography.ts`; the words are
+`src/launch/copy.ts`. On a first launch the welcome draws the cover and
+unfolds the name there, since the root's cover sits under its full-screen
+modal; the root's own cover then goes without a fade.
 
 **Welcome tour.** Five pages over the app (`src/onboarding/`): what OPAX is,
 Your MP, profiles, Bills and Today, Search. Each page is a scene built from

@@ -10,11 +10,13 @@ import {
   Platform,
   Pressable,
   Text,
+  ToastAndroid,
   View,
   useWindowDimensions,
   type ColorValue,
 } from 'react-native';
 import { designFlags } from '../design/flags';
+import { Icon, type SFSymbol } from '../design/icon';
 import { showMenu, type MenuAction } from '../design/menu';
 import type { RowMenuAction } from '../design/row-link';
 import {
@@ -29,6 +31,10 @@ import {
 import { accountSnapshot } from '../features/account/store';
 import { voiceLinked } from '../voice/linked';
 import { canShare } from './share';
+import {
+  useVerticalBarEdge,
+  type VerticalBarEdge,
+} from '../../modules/opax-root-bar';
 
 /**
  * Header styling shared by every stack, using the selected heading face
@@ -37,6 +43,18 @@ import { canShare } from './share';
 /** iOS 26 and later: the system glass bar and scroll edge effects. */
 export const glassBar = () =>
   Platform.OS === 'ios' && parseInt(String(Platform.Version), 10) >= 26;
+
+/** Protect the content edge where UIKit actually places the bar. */
+export function barScrollEdges(edge: VerticalBarEdge) {
+  return edge === 'unspecified'
+    ? { top: 'hard' as const, bottom: 'soft' as const }
+    : {
+        top: 'soft' as const,
+        bottom: 'soft' as const,
+        left: edge === 'leading' ? ('hard' as const) : ('soft' as const),
+        right: edge === 'trailing' ? ('hard' as const) : ('soft' as const),
+      };
+}
 
 /**
  * Colour UIKit's standard and scroll-edge appearances, without inserting a
@@ -56,29 +74,26 @@ export const opaqueBar = (ground: ColorValue = colors.paper) => ({
  * Keep both appearances transparent while expanded. A scroll-edge background
  * also suppresses the title, even with a transparent standard appearance.
  * The screen supplies the page ground beneath the native scroll edge.
- * A native height change adds the standard colour on collapse and clears it
- * on return. Empty styles replace the navigator's opaque defaults.
- * A soft edge leaves the large title clear at rest. Shrinking below the known
- * expanded height selects the protective hard edge; a settled full height or
- * overscroll restores soft. A permanently hard edge paints a divider at rest.
- * Soft alone blurs only the status strip, leaving content sharp behind the
- * title. Switching the edge keeps both expanded appearances background-free.
+ * Empty styles replace the navigator's opaque defaults. Keep them and the
+ * soft edge stable throughout scrolling: replacing an appearance or switching
+ * hard/soft applies without animation. A permanently hard edge paints a
+ * divider at rest. Soft alone protects only the status strip.
+ * useRootBarAppearance fades a native backing and divider beneath the bar,
+ * following its collapse height. This protects the collapsed title without
+ * covering large titles, inserting a React headerBackground or colouring an
+ * appearance, including during the return to the top.
  */
-export const largeTitleBar = (
-  ground: ColorValue = colors.paper,
-  collapsed = false,
-  scrolled = collapsed,
-) =>
+export const largeTitleBar = (ground: ColorValue = colors.paper) =>
   glassBar()
     ? {
-        headerStyle: collapsed ? { backgroundColor: ground } : {},
+        headerStyle: {},
         headerLargeStyle: {},
         contentStyle: { backgroundColor: ground },
         headerTransparent: true,
-        headerShadowVisible: true,
+        headerShadowVisible: false,
         headerLargeTitleShadowVisible: false,
         scrollEdgeEffects: {
-          top: collapsed || scrolled ? ('hard' as const) : ('soft' as const),
+          top: 'soft' as const,
           bottom: 'soft' as const,
         },
       }
@@ -103,6 +118,7 @@ export const androidBar = {
 
 export function useStackChrome() {
   const { fontScale } = useWindowDimensions();
+  const barEdge = useVerticalBarEdge();
   const category = contentSizeCategory(fontScale);
   const sizes = {
     largeTitle: largeTitleSizes[category],
@@ -110,6 +126,9 @@ export function useStackChrome() {
   };
   return {
     headerTintColor: colors.navy,
+    ...(Platform.OS === 'android'
+      ? { headerTitleAlign: 'left' as const, statusBarStyle: 'dark' as const }
+      : {}),
     // Inline and sheet bars must not inherit Expo's transparent form-sheet
     // default. Large-title roots opt into translucency for native collapse.
     headerTransparent: false,
@@ -140,10 +159,15 @@ export function useStackChrome() {
     // through the title and bar buttons. The hard edge is UIKit's own opaque
     // boundary with a divider. The bottom stays soft at the minimising tab
     // bar. The visible native appearance uses the page ground, without a blur.
-    scrollEdgeEffects: { top: 'hard' as const, bottom: 'soft' as const },
+    scrollEdgeEffects: barScrollEdges(barEdge),
     headerLargeTitleEnabled: false,
     headerLargeTitleShadowVisible: false,
     headerBackButtonDisplayMode: 'default' as const,
+    // Keep UIKit's own item and its automatic shortening to Back. A disabled
+    // menu creates a custom back item on every native header update.
+    ...(Platform.OS === 'ios'
+      ? { headerBackTitle: 'Back', headerBackButtonMenuEnabled: true }
+      : {}),
     contentStyle: { backgroundColor: colors.paper },
   };
 }
@@ -161,6 +185,8 @@ const openTalk = () => router.push('/talk');
 // Expo preserves extra item properties through to the native dictionary.
 // RNSBarButtonItem must map testID to accessibilityIdentifier for iOS test
 // selectors. identifier alone only matches items across UIKit transitions.
+// Always supply label with an icon: Expo maps it to UIKit's title, which
+// vertical bars and overflow menus need independently of accessibilityLabel.
 export type TestableHeaderItem = NativeStackHeaderItem & { testID?: string };
 
 /** Account is outermost. A root has room for just one feature action. */
@@ -347,8 +373,8 @@ function menuActions(items: HeaderMenu['menu']['items']): MenuAction[] {
 }
 
 /**
- * Android's bar for a screen's items: a button's word, and a menu's word
- * that opens its rows as a bottom sheet. Labelled, scalable touch targets.
+ * Android app-bar actions use Material symbols, 48dp targets and ripples.
+ * Keep a word for actions without a symbol, including Done and Cancel.
  */
 export function androidHeaderBar(items: TestableHeaderItem[]) {
   return createElement(
@@ -368,6 +394,20 @@ export function androidHeaderBar(items: TestableHeaderItem[]) {
                 `header-${item.label.toLowerCase().replaceAll(' ', '-')}`,
               accessibilityRole: 'button',
               accessibilityLabel: item.accessibilityLabel ?? item.label,
+              accessibilityHint:
+                item.type === 'menu' ? 'Opens more actions' : item.label,
+              accessibilityState: {
+                disabled: item.type === 'button' && !!item.disabled,
+              },
+              disabled: item.type === 'button' && item.disabled,
+              android_ripple: { color: colors.navyWash, borderless: true },
+              onLongPress: () => {
+                if (Platform.OS === 'android')
+                  ToastAndroid.show(
+                    item.accessibilityLabel ?? item.label,
+                    ToastAndroid.SHORT,
+                  );
+              },
               onPress:
                 item.type === 'menu'
                   ? () => {
@@ -386,21 +426,36 @@ export function androidHeaderBar(items: TestableHeaderItem[]) {
                 minWidth: 48,
                 minHeight: 48,
                 justifyContent: 'center',
+                alignItems: 'center',
                 paddingHorizontal: 8,
+                opacity: item.type === 'button' && item.disabled ? 0.38 : 1,
               },
             },
-            createElement(
-              Text,
-              {
-                maxFontSizeMultiplier: 1.5,
-                style: {
-                  color: colors.navy,
-                  fontFamily: fonts.sansSemiBold,
-                  fontSize: androidBar.action,
-                },
-              },
-              item.label,
-            ),
+            item.type === 'menu' ||
+              item.icon?.type === 'sfSymbol' ||
+              item.label === 'Cancel'
+              ? createElement(Icon, {
+                  name:
+                    item.type === 'menu'
+                      ? 'ellipsis'
+                      : item.label === 'Cancel'
+                        ? 'xmark'
+                        : (item.icon as { name: SFSymbol }).name,
+                  size: 24,
+                  maxScale: 1,
+                })
+              : createElement(
+                  Text,
+                  {
+                    maxFontSizeMultiplier: 1.5,
+                    style: {
+                      color: colors.navy,
+                      fontFamily: fonts.sansSemiBold,
+                      fontSize: androidBar.action,
+                    },
+                  },
+                  item.label,
+                ),
           )
         : null,
     ),
@@ -428,6 +483,45 @@ export function headerItems(
       ? { headerRight: () => androidHeaderBar(visible?.() ?? []) }
       : {}),
   };
+}
+
+/** Space for data-dependent actions, present in the navigator's first layout. */
+export function pendingHeaderItems(
+  name: string | undefined,
+  params?: object,
+): NativeStackHeaderItem[] | undefined {
+  if (
+    Platform.OS !== 'ios' ||
+    (name === 'money-item' && (params as { sheet?: unknown })?.sheet === '1')
+  )
+    return undefined;
+  const alwaysTwo = name === 'directory' || name === 'division-history';
+  const moreOnly = name === 'money-record' || name === 'grant-program';
+  const shareAndMore = [
+    'electorate/[id]',
+    'person/[slug]',
+    'party/[slug]',
+    'bill/[key]',
+    'doc/[slug]',
+    'lead/[id]',
+    'topic/[slug]',
+    'agency',
+    'money-item',
+    'connection',
+    'grants',
+    'agencies',
+    'explore/index',
+    'explore/[tool]',
+  ].includes(name ?? '');
+  if (!alwaysTwo && !moreOnly && !shareAndMore) return undefined;
+  const count = alwaysTwo || (shareAndMore && canShare) ? 2 : 1;
+  // Match the 44 pt items and 16 pt group gap used by barTitleWidth.
+  return [{ type: 'spacing', spacing: 44 + 60 * (count - 1) }];
+}
+
+export function pendingHeaderOptions(name: string, params?: object) {
+  const items = pendingHeaderItems(name, params);
+  return items ? headerItems(() => items) : {};
 }
 
 /**

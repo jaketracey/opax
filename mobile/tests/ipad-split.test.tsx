@@ -33,6 +33,7 @@ jest.mock('../src/design/adaptive', () => {
   return {
     ...actual,
     useLayout: () => ({
+      rule: 'pad',
       size: mockLayout.regular ? 'regular' : 'compact',
       regular: mockLayout.regular,
       wide: mockLayout.width >= 1100,

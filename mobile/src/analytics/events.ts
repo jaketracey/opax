@@ -3,7 +3,7 @@
  * portal/analytics/privacy.mjs (docs/ANALYTICS.md). Only the event names
  * below leave the device, and each carries only its listed categories,
  * counts and flags. No question, search phrase, answer, title, postcode,
- * route parameter or error text is ever accepted: every value is checked
+ * route parameter or arbitrary error text is ever accepted: every value is checked
  * against a fixed list or a number range, and anything else is dropped.
  *
  * `cleanEvent` guards what app code asks to send. `scrubEvent` runs on the
@@ -11,6 +11,7 @@
  * so SDK enrichment (deep link URLs, screen sizes, flags, person
  * properties) cannot slip through either.
  */
+import { routeErrorPattern } from './route-patterns';
 
 type Value = string | number | boolean;
 type Rule = (value: unknown) => Value | undefined;
@@ -38,6 +39,7 @@ const pattern =
   (re: RegExp): Rule =>
   (value) =>
     typeof value === 'string' && re.test(value) ? value : undefined;
+const askReason = oneOf('stall', 'deadline', 'network', 'server', 'no_answer');
 
 /** A screen's top-level section, from its route file name (never a parameter). */
 const sectionPattern = /^[a-z][a-z0-9-]{0,31}$/;
@@ -45,6 +47,56 @@ export const section: Rule = (value) =>
   typeof value === 'string' && sectionPattern.test(value) ? value : 'other';
 const version = pattern(/^\d{1,4}(?:\.\d{1,4}){0,3}$/);
 const build = pattern(/^\d{1,10}$/);
+
+// Constructor names are categories, never error.name/message/stack or a
+// caller-provided class name. Unknown constructors use the fixed "other".
+const errorClasses = new Set([
+  'Error',
+  'AggregateError',
+  'EvalError',
+  'RangeError',
+  'ReferenceError',
+  'SyntaxError',
+  'TypeError',
+  'URIError',
+  'ApiError',
+  'PersonIdentityError',
+  'ChatSyncError',
+  'AskFailure',
+  'other',
+]);
+const errorClass: Rule = (value) =>
+  typeof value === 'string' && errorClasses.has(value) ? value : 'other';
+
+export const ERROR_MESSAGE_MAX_LENGTH = 80;
+// Exact, content-free diagnostics only. Redacting arbitrary prose cannot
+// reliably remove record names or user text. Never truncate unsafe input.
+const errorMessages = new Set([
+  'Network request failed',
+  'Failed to fetch',
+  'The request timed out',
+  'Maximum call stack size exceeded',
+  'Rendered more hooks than during the previous render.',
+  'Rendered fewer hooks than expected.',
+  'Missing OPAX build configuration',
+]);
+export function scrubErrorMessage(value: unknown): string | undefined {
+  return typeof value === 'string' &&
+    value.length <= ERROR_MESSAGE_MAX_LENGTH &&
+    errorMessages.has(value)
+    ? value
+    : undefined;
+}
+
+export const timedRoutes = [
+  '/',
+  '/person/[slug]',
+  '/bill/[key]',
+  '/your-mp',
+  '/search',
+  '/ask',
+] as const;
+export type TimedRoute = (typeof timedRoutes)[number];
 
 /**
  * Where a search ran: speeches, every record type ("Type: All records"), or
@@ -65,6 +117,16 @@ export const searchScopes = [
 
 /** Custom events: the website's names where they match, with app properties. */
 export const eventFields = {
+  opax_route_error: {
+    error_class: errorClass,
+    route_pattern: routeErrorPattern,
+    error_message: scrubErrorMessage,
+  },
+  opax_app_start: { duration_ms: duration },
+  opax_screen_ready: {
+    route_pattern: oneOf(...timedRoutes),
+    duration_ms: duration,
+  },
   opax_ask_started: { from_section: section, follow_up: flag },
   opax_ask_completed: {
     from_section: section,
@@ -72,12 +134,14 @@ export const eventFields = {
     duration_ms: duration,
     source_count: count,
     has_answer: flag,
+    reason: askReason,
   },
   opax_ask_failed: {
     from_section: section,
     follow_up: flag,
     duration_ms: duration,
     cancelled: flag,
+    reason: askReason,
   },
   opax_search_started: {
     scope: oneOf(...searchScopes),
@@ -107,6 +171,13 @@ export const eventFields = {
   opax_voice_card: {
     action: oneOf('open'),
     account: oneOf('signed_in', 'signed_out'),
+  },
+  // The welcome's electorate step: which screen, how it ended and which
+  // control chose. Never a seat, a state, typed text or a position.
+  opax_first_run: {
+    step: oneOf('welcome', 'seat', 'state'),
+    outcome: oneOf('chosen', 'skipped'),
+    method: oneOf('search', 'location', 'browse'),
   },
 } as const satisfies Record<string, Record<string, Rule>>;
 export type AnalyticsEvent = keyof typeof eventFields;
@@ -232,6 +303,14 @@ export function scrubEvent<T extends CaptureEvent>(
     app_build: context.appBuild,
     environment: context.environment,
   };
+  // This report has its own fixed route allowlist. Do not inherit the SDK's
+  // screen property, which is irrelevant here and may contain a pathname.
+  if (
+    captured.event === 'opax_route_error' ||
+    captured.event === 'opax_screen_ready' ||
+    captured.event === 'opax_app_start'
+  )
+    delete properties.$screen_name;
   if (captured.event === '$screen' && !properties.$screen_name) return null;
   return {
     ...captured,

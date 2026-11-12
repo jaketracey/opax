@@ -1,12 +1,20 @@
+import { symbols } from './symbols';
+import { Pressable } from './pressable';
 import { useContext } from 'react';
-import { Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { presentSheet } from '../navigation/sheets';
 import { useAccessibilitySize } from './accessibility';
 import { Icon } from './icon';
 import { SurfaceContext, useRowHighlight } from './row-padding';
 import { type SourceDetails } from './source';
 import { Text } from './text';
-import { colors, minimumTarget, radii, rhythm } from './tokens';
+import {
+  androidControls,
+  colors,
+  minimumTarget,
+  radii,
+  rhythm,
+} from './tokens';
 
 // Labels use continuous capsules. Only MachinePill acts; its navy wash keeps
 // it distinct from an active bill's never-interactive status capsule.
@@ -29,11 +37,14 @@ export function statusTone(
 }
 export function StatusCapsule({
   status,
+  label = status,
   testID,
   hidden = false,
   accessibilityLabel,
 }: {
   status: string;
+  /** Reader-facing words; the raw status still determines the colour. */
+  label?: string;
   testID?: string;
   hidden?: boolean;
   accessibilityLabel?: string;
@@ -45,7 +56,7 @@ export function StatusCapsule({
     <View
       accessible={!hidden}
       accessibilityLabel={
-        hidden ? undefined : (accessibilityLabel ?? `Status: ${status}`)
+        hidden ? undefined : (accessibilityLabel ?? `Status: ${label}`)
       }
       accessibilityElementsHidden={hidden}
       importantForAccessibility={hidden ? 'no-hide-descendants' : 'auto'}
@@ -68,7 +79,7 @@ export function StatusCapsule({
         tone={active ? 'billsInk' : 'inkSoft'}
         style={styles.shrink}
       >
-        {status}
+        {label}
       </Text>
     </View>
   );
@@ -93,12 +104,22 @@ export function Tag({
     <View
       style={[
         styles.tag,
+        ...(Platform.OS === 'android' && onPress
+          ? [
+              {
+                borderRadius: androidControls.chipRadius,
+                borderCurve: 'continuous',
+                paddingHorizontal: 12,
+                backgroundColor: 'transparent',
+              } as const,
+            ]
+          : []),
         fixed ? styles.fixed : styles.hug,
         pressed ? { backgroundColor: highlight } : null,
       ]}
     >
       <Text
-        wordSafe={fixed}
+        wordSafe={Platform.OS === 'android' || fixed}
         variant="capsule"
         tone={onPress ? 'navy' : 'ink'}
         accessible={false}
@@ -126,7 +147,21 @@ export function Tag({
       accessibilityLabel={`${kind}: ${label}`}
       testID={testID}
       onPress={onPress}
-      style={[styles.tagTarget, fixed ? styles.fixed : styles.hug]}
+      style={[
+        styles.tagTarget,
+        fixed ? styles.fixed : styles.hug,
+        ...(Platform.OS === 'android'
+          ? [
+              {
+                borderRadius: androidControls.chipRadius,
+                borderCurve: 'continuous',
+                borderWidth: 1,
+                borderColor: colors.lineControl,
+                backgroundColor: colors.navyWash,
+              } as const,
+            ]
+          : []),
+      ]}
     >
       {({ pressed }) => face(pressed)}
     </Pressable>
@@ -164,9 +199,13 @@ export function ChoiceChip({
   if (Platform.OS === 'ios') return null;
   return (
     <Pressable
-      accessibilityRole="button"
+      accessibilityRole={Platform.OS === 'android' ? 'checkbox' : 'button'}
       accessibilityLabel={accessibilityLabel ?? label}
-      accessibilityState={{ selected, disabled }}
+      accessibilityState={{
+        selected,
+        disabled,
+        ...(Platform.OS === 'android' ? { checked: selected } : {}),
+      }}
       accessibilityValue={position ? { text: position } : undefined}
       testID={testID}
       disabled={disabled}
@@ -174,24 +213,65 @@ export function ChoiceChip({
       onPress={onPress}
       style={({ pressed }) => [
         styles.choice,
+        Platform.OS === 'android'
+          ? ({
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8,
+              minHeight: androidControls.target,
+              borderRadius: androidControls.chipRadius,
+              borderCurve: 'continuous',
+              borderWidth: 1,
+              borderColor: colors.lineControl,
+            } as const)
+          : null,
         fixed ? styles.choiceFixed : null,
+        ...(Platform.OS === 'android'
+          ? [
+              {
+                borderRadius: androidControls.chipRadius,
+                borderCurve: 'continuous',
+              } as const,
+            ]
+          : []),
         {
-          backgroundColor: disabled
-            ? colors.sunken
-            : selected
-              ? pressed
-                ? colors.navyRaised
-                : colors.navy
-              : pressed
+          backgroundColor:
+            Platform.OS === 'android'
+              ? disabled
                 ? colors.sunken
-                : colors.navyWash,
+                : selected
+                  ? colors.navyWash
+                  : 'transparent'
+              : disabled
+                ? colors.sunken
+                : selected
+                  ? pressed
+                    ? colors.navyRaised
+                    : colors.navy
+                  : pressed
+                    ? colors.sunken
+                    : colors.navyWash,
         },
       ]}
     >
+      {selected && Platform.OS === 'android' ? (
+        <Icon
+          name={symbols.selected}
+          size={18}
+          maxScale={1}
+          tone={disabled ? 'inkSoft' : 'navy'}
+        />
+      ) : null}
       <Text
         variant="strong"
-        tone={disabled ? 'inkSoft' : selected ? 'onNavy' : 'navy'}
-        wordSafe={fixed}
+        tone={
+          disabled
+            ? 'inkSoft'
+            : selected && Platform.OS !== 'android'
+              ? 'onNavy'
+              : 'navy'
+        }
+        wordSafe={Platform.OS === 'android' || fixed}
         style={fixed ? styles.shrink : styles.center}
       >
         {label}
@@ -229,8 +309,16 @@ const styles = StyleSheet.create({
   // The pill is 32pt drawn; its row is the 44pt target.
   machineTarget: {
     minHeight: minimumTarget,
+    maxWidth: '100%',
     justifyContent: 'center',
     marginVertical: -rhythm.tight,
+  },
+  androidMachineTarget: {
+    borderRadius: androidControls.chipRadius,
+    borderCurve: 'continuous',
+    borderWidth: 1,
+    borderColor: colors.lineControl,
+    backgroundColor: colors.navyWash,
   },
   machine: {
     flexDirection: 'row',
@@ -289,13 +377,25 @@ export function MachinePill({
         accessibilityLargeContentTitle="Machine-written"
         testID={testID}
         onPress={() => presentSheet({ kind: 'machine', note, testID })}
-        style={styles.machineTarget}
+        style={
+          Platform.OS === 'android'
+            ? [styles.machineTarget, styles.androidMachineTarget]
+            : styles.machineTarget
+        }
       >
         {({ pressed }) => (
           <View
             style={[
               styles.machine,
               styles.hug,
+              ...(Platform.OS === 'android'
+                ? [
+                    {
+                      borderRadius: androidControls.chipRadius,
+                      borderCurve: 'continuous',
+                    } as const,
+                  ]
+                : []),
               { backgroundColor: pressed ? highlight : colors.navyWash },
             ]}
           >

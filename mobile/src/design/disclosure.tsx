@@ -1,10 +1,10 @@
+import { Pressable } from './pressable';
 import { useEffect, useState, type ReactNode } from 'react';
 import { ownsRowPadding, useRowCellStyle } from './row-padding';
 import {
   Animated,
   Easing,
   LayoutAnimation,
-  Pressable,
   StyleSheet,
   View,
 } from 'react-native';
@@ -39,6 +39,7 @@ export function Disclosure({
   defaultOpen = false,
   open: controlled,
   onToggle,
+  accessory,
   children,
 }: {
   label?: string;
@@ -56,6 +57,8 @@ export function Disclosure({
   /** Controlled state; leave unset for a self-contained disclosure. */
   open?: boolean;
   onToggle?: (open: boolean) => void;
+  /** A separate control beside the disclosure, outside its tap target. */
+  accessory?: ReactNode;
   children: ReactNode | (() => ReactNode);
 }) {
   const [own, setOwn] = useState(defaultOpen);
@@ -76,66 +79,82 @@ export function Disclosure({
       }).start();
   }, [open, reduceMotion, turn]);
   const tint = 'inkSoft';
-  return (
-    <View>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={
-          accessibilityLabel ??
-          [label, value, detail].filter(Boolean).join(', ')
-        }
-        accessibilityState={{ expanded: open }}
-        testID={testID}
-        onPress={() => {
-          animateLayout(reduceMotion);
-          const next = !open;
-          if (controlled === undefined) setOwn(next);
-          onToggle?.(next);
-        }}
-        style={({ pressed }) => [
-          styles.row,
-          cellStyle,
-          pressed ? { backgroundColor: colors.sunken } : null,
+  const header = (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={
+        accessibilityLabel ?? [label, value, detail].filter(Boolean).join(', ')
+      }
+      accessibilityState={{ expanded: open }}
+      testID={testID}
+      onPress={() => {
+        animateLayout(reduceMotion);
+        const next = !open;
+        if (controlled === undefined) setOwn(next);
+        onToggle?.(next);
+      }}
+      style={({ pressed }) => [
+        styles.row,
+        cellStyle,
+        accessory ? styles.withAccessory : null,
+        pressed ? { backgroundColor: colors.sunken } : null,
+      ]}
+    >
+      {icon ? <Icon name={icon} size={17} tone={tint} /> : null}
+      <View
+        style={[
+          styles.text,
+          accessory ? styles.intrinsicText : styles.fillText,
+          stacked ? styles.stacked : null,
         ]}
       >
-        {icon ? <Icon name={icon} size={17} tone={tint} /> : null}
-        <View style={[styles.text, stacked ? styles.stacked : null]}>
-          <View style={styles.label}>
-            <Text wordSafe variant="strong">
-              {label}
-            </Text>
-            {detail ? (
-              <Text wordSafe variant="secondary">
-                {detail}
-              </Text>
-            ) : null}
-          </View>
-          {value ? (
-            <Text variant="strong" tabular tone="inkSoft" style={styles.value}>
-              {value}
+        <View style={styles.label}>
+          <Text wordSafe variant="strong">
+            {label}
+          </Text>
+          {detail ? (
+            <Text wordSafe variant="secondary">
+              {detail}
             </Text>
           ) : null}
         </View>
-        <Animated.View
-          style={{
-            transform: [
-              {
-                rotate: turn.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: ['0deg', '180deg'],
-                }),
-              },
-            ],
-          }}
-        >
-          <Icon
-            name={disclosureChevron}
-            size={13}
-            maxScale={1.5}
-            tone="inkFaint"
-          />
-        </Animated.View>
-      </Pressable>
+        {value ? (
+          <Text variant="strong" tabular tone="inkSoft" style={styles.value}>
+            {value}
+          </Text>
+        ) : null}
+      </View>
+      <Animated.View
+        style={{
+          transform: [
+            {
+              rotate: turn.interpolate({
+                inputRange: [0, 1],
+                outputRange: ['0deg', '180deg'],
+              }),
+            },
+          ],
+        }}
+      >
+        <Icon
+          name={disclosureChevron}
+          size={13}
+          maxScale={1.5}
+          tone="inkFaint"
+        />
+      </Animated.View>
+    </Pressable>
+  );
+  return (
+    <View>
+      {accessory ? (
+        <View style={styles.header}>
+          {header}
+          <View style={styles.accessory}>{accessory}</View>
+        </View>
+      ) : (
+        header
+      )}
       {open ? (
         <View
           style={styles.body}
@@ -151,6 +170,18 @@ export function Disclosure({
 const disclosureChevron = 'chevron.down';
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: rhythm.tight,
+  },
+  withAccessory: { flexGrow: 1, flexShrink: 0, maxWidth: '100%' },
+  accessory: {
+    marginLeft: 'auto',
+    maxWidth: '100%',
+    paddingVertical: rhythm.tight,
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -159,11 +190,13 @@ const styles = StyleSheet.create({
     paddingVertical: rhythm.row,
   },
   text: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'baseline',
     gap: rhythm.tight,
   },
+  fillText: { flex: 1 },
+  // Measure the label before deciding whether the accessory needs another line.
+  intrinsicText: { flexGrow: 1, flexShrink: 1, flexBasis: 'auto' },
   stacked: { flexDirection: 'column', alignItems: 'flex-start', gap: 0 },
   label: { flexShrink: 1, flexGrow: 1, gap: 2 },
   value: { flexShrink: 0 },

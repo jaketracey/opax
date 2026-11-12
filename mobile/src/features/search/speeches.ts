@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import { decodeEntities } from '../../api/passage-text';
 import type { Roster } from '../../api/catalog-decoders';
 import type { RecordResult } from '../../api/client';
 import type { SourceDetails } from '../../design/primitives';
@@ -48,6 +49,8 @@ export interface SpeechList {
   rows: SearchRecord[] | null;
   total: number;
   more: boolean;
+  /** Source records on the next page, before eligibility filtering. */
+  nextCount: number;
   /** The last page's read while it loads or after it failed. */
   next: Read<RecordsPage> | null;
   pages: number;
@@ -61,7 +64,7 @@ export interface SpeechList {
 }
 
 const noun = (f: SpeechFilters) =>
-  f.kind === 'all'
+  f.kind !== 'speech'
     ? (['record', 'records'] as const)
     : (['speech', 'speeches'] as const);
 
@@ -102,7 +105,13 @@ export function speechSource(
     rule,
     originals: rows.flatMap((row) =>
       row.url
-        ? [{ label: row.source || 'Hansard', url: row.url, record: row.title }]
+        ? [
+            {
+              label: row.source || 'Hansard',
+              url: row.url,
+              record: decodeEntities(row.title),
+            },
+          ]
         : [],
     ),
     notes: [
@@ -111,6 +120,11 @@ export function speechSource(
       saved.note,
     ],
   };
+}
+
+function uniqueBySlug(rows: SearchRecord[]): SearchRecord[] {
+  const seen = new Set<string>();
+  return rows.filter((row) => !seen.has(row.slug) && !!seen.add(row.slug));
 }
 
 export function useSpeechList(
@@ -137,9 +151,13 @@ export function useSpeechList(
   const results = reads.flatMap((read) =>
     read.status === 'ready' ? [read.result] : [],
   );
+  // Ranked pages can overlap when the index shifts between reads: a record
+  // already shown on an earlier page is not drawn twice.
   const rows = results.length
     ? roster
-      ? results.flatMap((result) => eligibleRows(result.data, roster) ?? [])
+      ? uniqueBySlug(
+          results.flatMap((result) => eligibleRows(result.data, roster) ?? []),
+        )
       : null
     : null;
   const lastResult = results.at(-1);
@@ -153,6 +171,16 @@ export function useSpeechList(
     rows,
     total,
     more,
+    nextCount: lastResult
+      ? Math.max(
+          0,
+          Math.min(
+            lastResult.data.per_page,
+            lastResult.data.total -
+              lastResult.data.page * lastResult.data.per_page,
+          ),
+        )
+      : 0,
     pages,
     next: pages > 1 ? last : null,
     count: results[0]

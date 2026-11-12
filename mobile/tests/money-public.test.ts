@@ -114,6 +114,7 @@ describe('public-money privacy before presentation', () => {
     expect(safe.recipient).toBe(unnamedRecipient);
     expect(safe.purpose).toBe('');
     expect(safe.recipientId).toBe('');
+    expect(safe.sourceUrl).toBeNull();
   });
   test('a program filed under a sentence of description is named by its ID, and still joins on the filed name (money-08)', () => {
     const input = raw('/graph/grants.federal.json');
@@ -158,6 +159,33 @@ describe('public-money privacy before presentation', () => {
     input.contracts[0].title = 'Ada Example service';
     const profile = d.decodeAgency(input);
     expect(JSON.stringify(profile)).not.toContain('Ada Example');
+  });
+  test('a contract honours its linked supplier’s individual entity type before its trading name', () => {
+    const directory = raw('/agencies.json');
+    const input = raw(directory.agencies[0].profile_path);
+    input.suppliers = [
+      {
+        ...input.suppliers[0],
+        id: 'fixture-supplier',
+        name: 'Fixture Trading Pty Ltd',
+        entity_type: 'individual',
+        abn_type: 'IND',
+      },
+    ];
+    input.contracts = [
+      {
+        ...input.contracts[0],
+        supplier_id: 'fixture-supplier',
+        supplier: 'Fixture Trading Pty Ltd',
+        title: 'Services from Fixture Trading Pty Ltd',
+      },
+    ];
+    const profile = d.decodeAgency(input);
+    expect(profile.contracts[0]).toMatchObject({
+      supplier: 'Individual supplier',
+      title: '',
+    });
+    expect(JSON.stringify(profile)).not.toContain('Fixture Trading');
   });
   test('private donor names never survive Discover summaries, evidence and chart participants', () => {
     const input = decodeDiscovery(raw('/discovery.json')).signals.find(

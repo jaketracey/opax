@@ -1,3 +1,4 @@
+import { throwIfAborted } from '../../api/abort';
 import { RouteOptions } from '../../navigation/preview';
 import type { Href } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router';
@@ -18,14 +19,13 @@ import {
   grantProgramRoute,
 } from '../../navigation/routes/public-money';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
-import { useNamedBackOptions } from '../../navigation/useNamedBackOptions';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { evidenceRecord } from '../leads/evidence';
 import { discoveryAsOf, discoverPath, leadFor } from '../leads/model';
 import { combine } from './catalog';
 import { largestFor, programRecipients, type Jurisdiction } from './data';
 import { stateName } from './Grants';
-import { CONTRACTS_CAVEAT } from './HubCards';
+import { CONTRACTS_CAVEAT, GRANTS_CAVEAT } from './HubCards';
 import {
   MoneyStatus,
   fy,
@@ -45,7 +45,7 @@ import {
 import { money } from './runtime';
 
 /** One fact row: a label and the record's words. Empty values are left out. */
-type Fact = { label: string; value: string; long?: boolean };
+type Fact = { label: string; value: string; long?: boolean; href?: Href };
 /** A row onward, named by its destination ("Open {organisation}"). */
 type Onward = {
   key: string;
@@ -96,8 +96,6 @@ const fullState = (code: string) => {
 const GRANTCONNECT = 'https://www.grants.gov.au/';
 const SEAT_NOTE =
   'The electorate is the one GrantConnect gives by delivery or recipient postcode, so it is approximate. It says nothing about who arranged the grant.';
-const LATEST_AWARD =
-  'Values are the latest published award value, not payments made.';
 
 const isJurisdiction = (j: string): j is Jurisdiction =>
   j === 'federal' || j === 'qld';
@@ -106,8 +104,9 @@ const isJurisdiction = (j: string): j is Jurisdiction =>
 export async function loadMoneyItem(
   params: MoneyItemParams & { from?: string; org?: string },
   refresh: boolean,
+  signal?: AbortSignal,
 ): Promise<RecordResult<MoneyItemView>> {
-  const record = await readMoneyItem(params, refresh);
+  const record = await readMoneyItem(params, refresh, signal);
   return params.org === 'self'
     ? {
         ...record,
@@ -124,14 +123,15 @@ export async function loadMoneyItem(
 async function readMoneyItem(
   params: MoneyItemParams & { from?: string },
   refresh: boolean,
+  signal?: AbortSignal,
 ): Promise<RecordResult<MoneyItemView>> {
   const from = params.from ?? '';
   switch (params.kind) {
     case 'evidence': {
       if (!/^(0|[1-9]\d*)$/.test(params.i)) throw gone();
-      const record = await catalogs.discovery(refresh);
-      const signal = record.data.signals.find((s) => s.id === params.lead);
-      const lead = signal ? leadFor(signal) : null;
+      const record = await catalogs.discovery(refresh, signal);
+      const leadSignal = record.data.signals.find((s) => s.id === params.lead);
+      const lead = leadSignal ? leadFor(leadSignal) : null;
       const evidence = lead?.evidence[Number(params.i)];
       const item = evidence ? evidenceRecord(evidence) : null;
       if (!lead || !evidence || !item) throw gone();
@@ -163,9 +163,20 @@ async function readMoneyItem(
       if (!isJurisdiction(params.jur)) throw gone();
       if (params.kind === 'grant' && !params.program)
         return params.rid
-          ? loadRecipientGrant(params.jur, params.rid, params.id, refresh)
+          ? loadRecipientGrant(
+              params.jur,
+              params.rid,
+              params.id,
+              refresh,
+              signal,
+            )
           : Promise.reject(gone());
-      const record = await money.program(params.jur, params.program!, refresh);
+      const record = await money.program(
+        params.jur,
+        params.program!,
+        refresh,
+        signal,
+      );
       const program = record.data;
       const programRow = (): Onward[] =>
         from === program.key || from === program.id
@@ -201,7 +212,11 @@ async function readMoneyItem(
             asOf: program.asOf,
             register,
             facts: facts([
-              { label: 'Program', value: program.name },
+              {
+                label: 'Program',
+                value: program.name,
+                href: grantProgramRoute(program.id, program.jur, program.name),
+              },
               { label: 'Agency', value: program.agency },
               { label: 'Purpose', value: g.title, long: true },
               { label: 'Electorate', value: g.seat },
@@ -234,6 +249,7 @@ async function readMoneyItem(
               ...programRow(),
             ],
             notes: [
+              program.jur === 'federal' ? GRANTS_CAVEAT : '',
               g.seat ? SEAT_NOTE : '',
               g.organisation ? '' : privateNote,
             ].filter(Boolean),
@@ -297,15 +313,18 @@ async function readMoneyItem(
               : []),
             ...programRow(),
           ],
-          notes: individuals ? [privateNote] : [],
+          notes: [
+            ...(program.jur === 'federal' ? [GRANTS_CAVEAT] : []),
+            ...(individuals ? [privateNote] : []),
+          ],
           path: `/money/grants?jur=${program.jur}&program=${encodeURIComponent(program.id)}`,
         },
       };
     }
     case 'largest': {
       const [largest, index] = await Promise.all([
-        money.largest(refresh),
-        money.grants('federal', refresh),
+        money.largest(refresh, signal),
+        money.grants('federal', refresh, signal),
       ]);
       const r = largestFor(largest.data, index.data, params.month).find(
         (x) => x.id === params.id,
@@ -322,11 +341,21 @@ async function readMoneyItem(
           asOf: largest.data.asOf,
           register: 'GrantConnect',
           facts: facts([
-            { label: 'Program', value: r.program },
+            {
+              label: 'Program',
+              value: r.program,
+              href: program
+                ? grantProgramRoute(program.id, 'federal', program.name)
+                : undefined,
+            },
             { label: 'Agency', value: r.agency },
             { label: 'Purpose', value: r.purpose, long: true },
             { label: 'Selection', value: r.selection },
             { label: 'Starts', value: short(r.start) },
+            {
+              label: 'Other awards that month',
+              value: r.more ? r.more.toLocaleString('en-AU') : '',
+            },
             { label: 'Register ID', value: r.id },
           ]),
           children: [],
@@ -372,7 +401,7 @@ async function readMoneyItem(
     }
     case 'contract':
     case 'supplier': {
-      const record = await money.agency(params.agency, refresh);
+      const record = await money.agency(params.agency, refresh, signal);
       const profile = record.data.profile;
       const agencyRow: Onward[] =
         from === profile.id
@@ -408,7 +437,11 @@ async function readMoneyItem(
             asOf: record.data.meta.asOf,
             register: 'AusTender',
             facts: facts([
-              { label: 'Agency', value: profile.name },
+              {
+                label: 'Agency',
+                value: profile.name,
+                href: agencyRoute(profile.id, profile.name),
+              },
               { label: 'Purpose', value: c.title, long: true },
               { label: 'Procurement', value: procurement(c.method) },
               { label: 'Published', value: short(c.published) },
@@ -499,8 +532,11 @@ async function readMoneyItem(
     case 'award':
     case 'project': {
       const [allocation, locations] = await Promise.all([
-        money.allocation(refresh),
-        money.locations(refresh).catch(() => null),
+        money.allocation(refresh, signal),
+        money.locations(refresh, signal).catch(() => {
+          throwIfAborted(signal);
+          return null;
+        }),
       ]);
       const list =
         params.kind === 'award'
@@ -508,12 +544,14 @@ async function readMoneyItem(
           : allocation.data.projects;
       const p = list.find((x) => x.id === params.id);
       if (!p) throw gone();
-      const located = locations?.data.records.find(
-        (l) =>
-          l.id === p.id &&
-          l.kind === (params.kind === 'award' ? 'award' : 'invitation'),
-      );
       const individual = p.recipient === unnamedRecipient;
+      const located = individual
+        ? undefined
+        : locations?.data.records.find(
+            (l) =>
+              l.id === p.id &&
+              l.kind === (params.kind === 'award' ? 'award' : 'invitation'),
+          );
       return {
         ...(locations ? combine([allocation, locations], null) : allocation),
         data: {
@@ -557,13 +595,18 @@ async function readMoneyItem(
             },
           ],
           onward: [],
-          notes: [individual ? privateNote : ''].filter(Boolean),
+          notes: [
+            params.kind === 'award'
+              ? GRANTS_CAVEAT
+              : 'An invitation to apply is not a grant award or a payment.',
+            individual ? privateNote : '',
+          ].filter(Boolean),
           path: null,
         },
       };
     }
     case 'earlier': {
-      const history = await money.history(refresh);
+      const history = await money.history(refresh, signal);
       const r = history.data.records.find((x) => x.id === params.id);
       if (!r) throw gone();
       return {
@@ -584,7 +627,7 @@ async function readMoneyItem(
           children: [],
           originals: [{ label: `GrantConnect · ${r.id}`, url: r.sourceUrl }],
           onward: [],
-          notes: [LATEST_AWARD],
+          notes: [GRANTS_CAVEAT],
           path: null,
         },
       };
@@ -664,29 +707,32 @@ export function itemParams(
  * SourceLine.
  */
 export default function MoneyItem() {
-  const backOptions = useNamedBackOptions();
   const raw = useLocalSearchParams<Record<string, string>>();
+  return <MoneyItemRecord key={JSON.stringify(itemParams(raw))} raw={raw} />;
+}
+
+function MoneyItemRecord({ raw }: { raw: Record<string, string> }) {
   const params = itemParams(raw);
   const key = JSON.stringify(params);
   const load = useCallback(
-    (refresh: boolean) => {
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) => {
       const p = JSON.parse(key) as ReturnType<typeof itemParams>;
-      return p ? loadMoneyItem(p, refresh) : Promise.reject(gone());
+      return p ? loadMoneyItem(p, refresh, signal) : Promise.reject(gone());
     },
     [key],
   );
   const status = useCatalogRecord(load);
   const item = status.record?.data;
-  const name = item?.name ?? raw.name ?? 'Money record';
+  const name = item?.name ?? raw.name ?? '';
   const titleRef = useRef<View>(null);
   const scrollTitle = useTitleOnScroll(titleRef, name);
   const saved = recordSource(status.record);
   return (
     <>
       <RouteOptions
+        stableItems
         options={{
           title: name,
-          ...backOptions,
           ...(item?.path ? moneyBar({ name, path: item.path }) : {}),
         }}
       />
@@ -760,6 +806,7 @@ export default function MoneyItem() {
                       key={f.label}
                       label={f.label}
                       value={f.value}
+                      href={f.href}
                       testID={`money-item-fact-${slug(f.label)}`}
                     />
                   ),

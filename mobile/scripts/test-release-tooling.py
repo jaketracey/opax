@@ -946,6 +946,15 @@ class BundleAttackTests(unittest.TestCase):
                 self.assertTrue(verify.has_analytics(entry))
         self.assertEqual(verify.ANALYTICS_CONFIG["host"], "https://opax.com.au/ingest")
 
+    def test_svg_amplitude_attribute_is_not_the_amplitude_sdk(self):
+        # react-native-svg's FeComponentTransferFunction ships the bare SVG
+        # attribute name; the SDK's markers and hosts are still refused.
+        self.assertFalse(verify.has_analytics(b"amplitude"))
+        for entry in (b"@amplitude/analytics-react-native", b"AmplitudeClient", b"amplitudeApiKey",
+                      b"https://api2.amplitude.com/2/httpapi", b"https://cdn.amplitude.com/libs/x.js"):
+            with self.subTest(entry=entry):
+                self.assertTrue(verify.has_analytics(entry))
+
     def test_analytics_check_reads_hermes_entries_and_still_refuses_sdk_and_host_plants(self):
         storage = b"ignoreAllLogsENTRY_EXIT"
         safe = hermes_bundle(storage, [packed(storage, entry) for entry in (b"ignoreAllLogs", b"ENTRY_EXIT")])
@@ -1123,6 +1132,9 @@ class ProductionVoiceTests(unittest.TestCase):
             for marker in (b"DebugSyntheticEngineFactory", b"OPAXVoiceFixturePort", b"http://127.0.0.1:8923", b"test@example.invalid"):
                 binary.write_bytes(body + marker)
                 with self.subTest(marker=marker), self.assertRaises(ReleaseError): verify.verify_voice_native_code(app)
+
+
+from test_android_release import AndroidReleaseTests
 
 
 if __name__ == "__main__":

@@ -4,6 +4,7 @@ import type { NativeStackHeaderItem } from 'expo-router';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  ActivityIndicator,
   Animated,
   Text as NativeText,
   PanResponder,
@@ -21,7 +22,7 @@ import {
   useReduceMotion,
 } from '../../design/accessibility';
 import { useKeyCommand } from '../../design/keyboard';
-import { Text } from '../../design/primitives';
+import { Text, copy } from '../../design/primitives';
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
 import { PHOTO_BLACK, Picture } from './Picture';
@@ -298,6 +299,47 @@ export default function PhotoViewer() {
           ))}
         </ScrollView>
       </Animated.View>
+      {!photos.length ? (
+        // Never a bare black page: say what is happening, on the black.
+        <View style={styles.status} testID="photo-viewer-status">
+          {!read.record && !read.error ? (
+            <ActivityIndicator
+              color={colors.onBand}
+              accessibilityLabel="Loading photographs"
+            />
+          ) : (
+            <>
+              <Text
+                wordSafe
+                variant="body"
+                style={{ color: colors.onBand, textAlign: 'center' }}
+              >
+                {read.record
+                  ? 'No photographs for this year'
+                  : "Photographs couldn't be loaded"}
+              </Text>
+              {read.record ? null : (
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={read.retry}
+                  style={styles.retry}
+                  testID="photo-viewer-retry"
+                >
+                  <Text
+                    variant="body"
+                    style={{
+                      color: colors.onBand,
+                      textDecorationLine: 'underline',
+                    }}
+                  >
+                    {copy.tryAgain}
+                  </Text>
+                </Pressable>
+              )}
+            </>
+          )}
+        </View>
+      ) : null}
       {current && chrome ? (
         <View
           style={[styles.panel, { backgroundColor: glass ? undefined : band }]}
@@ -363,6 +405,19 @@ const styles = StyleSheet.create({
     paddingBottom: rhythm.section,
   },
   credit: { minHeight: minimumTarget, justifyContent: 'center' },
+  status: {
+    ...StyleSheet.absoluteFill,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: rhythm.block,
+    paddingHorizontal: rhythm.screen,
+  },
+  retry: {
+    minHeight: minimumTarget,
+    minWidth: minimumTarget,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   androidDone: {
     minHeight: 48,
     minWidth: 48,

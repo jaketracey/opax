@@ -1,9 +1,9 @@
+import { Pressable } from './pressable';
 import { router, type Href } from 'expo-router';
 import type { ReactNode } from 'react';
 import { isValidElement, useState } from 'react';
 import {
   Image,
-  Pressable,
   StyleSheet,
   View,
   useColorScheme,
@@ -39,6 +39,7 @@ import { SelectedMark, selectedWash, splitRowStyles } from './selection';
 import { symbols } from './symbols';
 import { Text } from './text';
 import { nameProbeProps } from './text-probe';
+import { partyFromCode } from '../features/bills/party-codes';
 import {
   colors,
   hairline,
@@ -239,17 +240,20 @@ export function PartyLabel({
   formerly,
   dense = false,
   testID,
-  linked = true,
   nested = false,
+  linked = !nested,
+  href,
   onDeep = false,
+  compact = false,
 }: Omit<PartyContext, 'status'> & {
   status?: PartyStatus;
   dense?: boolean;
   testID?: string;
   linked?: boolean;
+  href?: Href;
   /**
-   * Inside a row or control that already says the party: drawn only, not a
-   * separate VoiceOver element and never a link of its own.
+   * Inside a row: drawn only by default. With linked, use an inline link
+   * that stops the row press. Grouped rows also expose party actions.
    */
   nested?: boolean;
   /**
@@ -257,29 +261,42 @@ export function PartyLabel({
    * on a raised ring, which keeps every party colour at 3:1 against navy.
    */
   onDeep?: boolean;
+  /** Tight text stacks; the parent must leave room below for the hit target. */
+  compact?: boolean;
 }) {
   const identity = partyIdentity(party);
   const scheme = useColorScheme();
   const dot = partyDot(party, scheme === 'dark' ? 'dark' : 'light');
   const text = partyText({ party, status, formerly }, dense);
-  const partyLinked = linked && !nested && isPartyLabel(party);
-  const previousLinked =
-    linked && !nested && !!text.previous && isPartyLabel(formerly);
+  const partyLinked = linked && (!!href || isPartyLabel(party));
+  const previousLinked = linked && !!text.previous && isPartyLabel(formerly);
   const fixed = useAccessibilitySize();
   const dotSize = partyDotSize(useWindowDimensions().fontScale);
-  const Container = partyLinked ? Pressable : View;
+  const Container = partyLinked && (!nested || compact) ? Pressable : View;
+  const openParty = () =>
+    router.push(href ?? partyRoute(partyFromCode(identity.name)));
   return (
     <Container
       style={[
         styles.party,
         fixed ? styles.partyFixed : styles.partyHug,
-        partyLinked ? styles.partyLinked : null,
+        partyLinked
+          ? compact
+            ? styles.partyCompactLink
+            : styles.partyLinked
+          : null,
       ]}
-      {...(partyLinked
+      {...(partyLinked && (!nested || compact)
         ? {
-            accessibilityRole: 'link' as const,
-            accessibilityHint: 'Opens the party record',
-            onPress: () => router.push(partyRoute(identity.name)),
+            accessibilityRole: nested ? undefined : ('link' as const),
+            accessibilityHint: nested ? undefined : 'Opens the party record',
+            hitSlop: compact
+              ? { bottom: minimumTarget - textStyles.secondary.lineHeight }
+              : undefined,
+            onPress: (event: import('react-native').GestureResponderEvent) => {
+              if (nested) event.stopPropagation();
+              openParty();
+            },
           }
         : {})}
       {...(previousLinked
@@ -300,14 +317,18 @@ export function PartyLabel({
                 formerly &&
                 isPartyLabel(formerly)
               )
-                router.push(partyRoute(formerly));
+                router.push(partyRoute(partyFromCode(formerly)));
             },
           }
         : {})}
       accessible={!nested}
       accessibilityLabel={nested ? undefined : text.spoken}
-      accessibilityElementsHidden={nested}
-      importantForAccessibility={nested ? 'no-hide-descendants' : 'auto'}
+      accessibilityElementsHidden={nested && !partyLinked && !previousLinked}
+      importantForAccessibility={
+        nested && !partyLinked && !previousLinked
+          ? 'no-hide-descendants'
+          : 'auto'
+      }
       testID={testID}
     >
       {dot ? (
@@ -329,19 +350,44 @@ export function PartyLabel({
       <Text
         wordSafe={fixed}
         variant="secondary"
-        tone={onDeep ? 'onNavySoft' : undefined}
+        tone={
+          onDeep ? 'onNavySoft' : nested && partyLinked ? 'link' : undefined
+        }
         style={styles.partyText}
+        accessibilityRole={nested && partyLinked ? 'link' : undefined}
+        accessibilityLabel={
+          nested && partyLinked ? `Open ${identity.name} party page` : undefined
+        }
+        onPress={
+          nested && partyLinked
+            ? (event) => {
+                event.stopPropagation();
+                openParty();
+              }
+            : undefined
+        }
+        testID={testID && `${testID}-link`}
       >
         {text.visible}
         {text.previous ? (
           <Text
             variant="secondary"
-            tone={onDeep ? 'onNavySoft' : undefined}
+            tone={
+              onDeep
+                ? 'onNavySoft'
+                : nested && previousLinked
+                  ? 'link'
+                  : undefined
+            }
+            accessibilityRole={previousLinked ? 'link' : undefined}
+            accessibilityLabel={
+              previousLinked ? `Open ${formerly} party page` : undefined
+            }
             onPress={
               previousLinked && formerly
                 ? (event) => {
                     event.stopPropagation();
-                    router.push(partyRoute(formerly));
+                    router.push(partyRoute(partyFromCode(formerly)));
                   }
                 : undefined
             }
@@ -495,29 +541,43 @@ export function PersonRow({
               Your MP
             </Text>
           ) : null}
-          {context ? (
-            <View style={styles.personParty}>
-              <PartyLabel {...context} linked={false} nested />
-            </View>
-          ) : null}
-          {former ? (
-            <Text
-              wordSafe
-              variant="secondary"
-              testID={testID && `${testID}-former`}
+          {context || former || place || detail ? (
+            <View
+              style={[
+                styles.personDetails,
+                context ? styles.personParty : null,
+              ]}
             >
-              {former}
-            </Text>
-          ) : null}
-          {place ? (
-            <Text wordSafe variant="secondary">
-              {place}
-            </Text>
-          ) : null}
-          {detail ? (
-            <Text wordSafe variant="secondary">
-              {detail}
-            </Text>
+              {context ? (
+                <PartyLabel
+                  {...context}
+                  linked
+                  nested
+                  compact
+                  href={partyHref}
+                  testID={testID && `${testID}-party`}
+                />
+              ) : null}
+              {former ? (
+                <Text
+                  wordSafe
+                  variant="secondary"
+                  testID={testID && `${testID}-former`}
+                >
+                  {former}
+                </Text>
+              ) : null}
+              {place ? (
+                <Text wordSafe variant="secondary">
+                  {place}
+                </Text>
+              ) : null}
+              {detail ? (
+                <Text wordSafe variant="secondary">
+                  {detail}
+                </Text>
+              ) : null}
+            </View>
           ) : null}
         </View>
       </View>
@@ -526,17 +586,6 @@ export function PersonRow({
       ) : null}
     </>
   );
-  if (!href && !onPress && !select)
-    return (
-      <View
-        accessible
-        accessibilityLabel={label}
-        testID={testID}
-        style={[styles.person, cellStyle]}
-      >
-        {body}
-      </View>
-    );
   const partyActions = [
     ...(partyHref || (context && isPartyLabel(context.party))
       ? [
@@ -559,6 +608,32 @@ export function PersonRow({
         ]
       : []),
   ];
+  const onPartyAction = (event: { nativeEvent: { actionName: string } }) => {
+    if (event.nativeEvent.actionName === 'openParty') {
+      if (partyHref) router.push(partyHref);
+      else if (context?.party && isPartyLabel(context.party))
+        router.push(partyRoute(partyFromCode(context.party)));
+    }
+    if (
+      event.nativeEvent.actionName === 'openPreviousParty' &&
+      context?.formerly &&
+      isPartyLabel(context.formerly)
+    )
+      router.push(partyRoute(partyFromCode(context.formerly)));
+  };
+  if (!href && !onPress && !select)
+    return (
+      <View
+        accessible
+        accessibilityLabel={label}
+        accessibilityActions={partyActions}
+        onAccessibilityAction={onPartyAction}
+        testID={testID}
+        style={[styles.person, cellStyle]}
+      >
+        {body}
+      </View>
+    );
   const row = (
     <Pressable
       accessible
@@ -566,19 +641,7 @@ export function PersonRow({
       accessibilityLabel={label}
       accessibilityState={selected !== undefined ? { selected } : undefined}
       accessibilityActions={partyActions}
-      onAccessibilityAction={(event) => {
-        if (event.nativeEvent.actionName === 'openParty') {
-          if (partyHref) router.push(partyHref);
-          else if (context?.party && isPartyLabel(context.party))
-            router.push(partyRoute(context.party));
-        }
-        if (
-          event.nativeEvent.actionName === 'openPreviousParty' &&
-          context?.formerly &&
-          isPartyLabel(context.formerly)
-        )
-          router.push(partyRoute(context.formerly));
-      }}
+      onAccessibilityAction={onPartyAction}
       testID={testID}
       onPress={select ?? onPress}
       style={({ pressed }) => [
@@ -648,6 +711,7 @@ const styles = StyleSheet.create({
   partyHug: { alignSelf: 'flex-start' },
   partyFixed: { alignSelf: 'stretch', width: '100%' },
   partyLinked: { minHeight: minimumTarget, minWidth: minimumTarget },
+  partyCompactLink: { minWidth: minimumTarget },
   partyText: { flexShrink: 1, fontWeight: '600' },
   dotRinged: {
     borderWidth: 1.5,
@@ -678,8 +742,10 @@ const styles = StyleSheet.create({
   personText: { gap: rhythm.line, alignSelf: 'stretch' },
   personTextInline: { flex: 1 },
   personName: { flexShrink: 0 },
-  // The party takes its own line, with a little air before the place.
-  personParty: { flexDirection: 'row', paddingVertical: 1 },
+  personDetails: { gap: rhythm.line },
+  // Seat and role sit within the compact party link's expanded hit target,
+  // so only a stack without those lines needs blank space below the party.
+  personParty: { minHeight: minimumTarget },
 });
 
 ownsRowPadding(PersonRow);

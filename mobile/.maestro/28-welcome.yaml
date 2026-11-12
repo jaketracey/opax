@@ -1,5 +1,5 @@
 appId: au.com.opax.app
-name: 28 Welcome on first launch, Continue to the seat step, choose a seat, no repeat, replay from Account
+name: 28 Welcome on first launch, Continue to the seat step, a postcode answered plainly, choose a seat, no repeat, replay from Account
 ---
 # E2E builds treat the welcome as seen, so other journeys are never blocked.
 # The launch argument -OPAXWelcomeTour on asks for the production behaviour.
@@ -51,14 +51,28 @@ name: 28 Welcome on first launch, Continue to the seat step, choose a seat, no r
 - assertVisible: Your electorate
 - assertVisible: Not now
 - assertVisible:
+    id: welcome-seat-why
+- assertVisible:
     id: use-my-location
 - assertVisible:
     id: seat-browse-nsw
 - assertNotVisible: Allow Once
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/28-seat-step
-# The field is focused on arrival.
+# A postcode is answered plainly, with the ways on straight after it; the
+# location row is offered, never started, so nothing is asked.
 - tapOn: Electorate or member.s name
+- inputText: '2042'
+- extendedWaitUntil:
+    visible:
+      id: seat-no-results
+    timeout: 30000
+- assertVisible: OPAX can.t look up postcodes yet.
+- assertVisible:
+    id: use-my-location
+- assertNotVisible: Allow Once
+- takeScreenshot: ${EVIDENCE}/28-seat-step-postcode
+- eraseText: 4
 - inputText: Grayndler
 - extendedWaitUntil:
     visible:

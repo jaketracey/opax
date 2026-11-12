@@ -5,6 +5,7 @@ import Animated, {
   type SharedValue,
 } from 'react-native-reanimated';
 import { Text } from '../../../design/primitives';
+import { colors } from '../../../design/tokens';
 import { clusterLabelOpacity, nameOpacity } from './camera';
 import type { LabelSlot } from './labels';
 
@@ -16,20 +17,46 @@ const LabelText = memo(function LabelText({
   text,
   ink,
   strong,
+  sub,
 }: {
   text: string;
   ink: string;
   strong: boolean;
+  sub?: string;
 }) {
+  const variant = strong ? 'capsule' : 'footnote';
+  // A paper halo keeps a name legible over the lines it sits on: the same
+  // text in paper beneath, blurred a little, under the inked text.
   return (
-    <Text
-      variant={strong ? 'capsule' : 'footnote'}
-      wordSafe
-      accessible={false}
-      style={{ color: ink }}
-    >
-      {text}
-    </Text>
+    <View>
+      <Text
+        variant={variant}
+        wordSafe
+        accessible={false}
+        style={[styles.underlay, styles.halo]}
+      >
+        {text}
+      </Text>
+      <Text
+        variant={variant}
+        wordSafe
+        accessible={false}
+        style={[styles.halo, { color: ink }]}
+      >
+        {text}
+      </Text>
+      {sub ? (
+        <Text
+          variant="footnote"
+          wordSafe
+          tone="inkSoft"
+          accessible={false}
+          style={styles.halo}
+        >
+          {sub}
+        </Text>
+      ) : null}
+    </View>
   );
 });
 
@@ -82,6 +109,7 @@ function Slot({
     >
       <LabelText
         text={slot.text}
+        sub={slot.sub}
         ink={slot.ink}
         strong={slot.kind === 'focus' || slot.kind === 'cluster'}
       />
@@ -140,4 +168,16 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   slot: { position: 'absolute', left: 0, top: 0 },
+  halo: {
+    textShadowColor: colors.paper,
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 3,
+  },
+  underlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    color: colors.paper,
+  },
 });

@@ -14,6 +14,7 @@ import {
 } from './filters';
 import { groups, type CatalogGroup } from './scopes';
 import { track } from '../../analytics';
+import { invalid } from '../../api/validation';
 
 /**
  * Every paid search read goes through here (journeys/search.md 3.4, cost
@@ -191,6 +192,9 @@ export type GroupRow = {
   url?: string | null;
   date?: string | null;
   personSlug?: string;
+  report_type?: string;
+  body?: string;
+  year?: string | null;
 };
 export type GroupPage = {
   results: GroupRow[];
@@ -227,6 +231,7 @@ async function groupRead(
     { ...defaultFilters, kind, mode: 'keyword' },
     page,
   );
+  if (kind === 'report' && result.data.kind !== 'report') invalid();
   return result as unknown as RecordResult<GroupPage>;
 }
 

@@ -1,5 +1,6 @@
 import { RouteOptions } from '../../navigation/preview';
 import { useState, useSyncExternalStore } from 'react';
+import { Platform, View } from 'react-native';
 import {
   router,
   Stack,
@@ -12,11 +13,16 @@ import { useStackChrome } from '../../navigation/chrome';
 import type { FilterList } from '../../navigation/routes/filters';
 import { filterModels, ensureFilterModel } from './filter-models';
 import { beginFilterSession } from './filter-model';
+import { AndroidReadingHeader } from '../../navigation/AndroidReadingHeader';
 
 export function FiltersLayout() {
-  return (
+  const stack = (
     <Stack
-      screenOptions={{ ...useStackChrome(), headerLargeTitleEnabled: false }}
+      screenOptions={{
+        ...useStackChrome(),
+        headerLargeTitleEnabled: false,
+        ...(Platform.OS === 'android' ? { header: AndroidReadingHeader } : {}),
+      }}
     >
       <Stack.Screen name="[list]" options={{ title: 'Filters' }} />
       <Stack.Screen
@@ -24,6 +30,18 @@ export function FiltersLayout() {
         options={{ headerBackTitle: 'Filters' }}
       />
     </Stack>
+  );
+  return Platform.OS === 'android' ? (
+    <View
+      role="dialog"
+      accessibilityLabel="Filters"
+      accessibilityViewIsModal
+      style={{ flex: 1 }}
+    >
+      {stack}
+    </View>
+  ) : (
+    stack
   );
 }
 function knownList(list: string | undefined): list is FilterList {

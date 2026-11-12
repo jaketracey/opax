@@ -55,7 +55,10 @@ export function speechFilters(
     if (typeof value === 'string' || typeof value === 'number')
       out[key] = String(value);
   }
-  if (out.kind !== 'all') out.kind = 'speech';
+  if (!['speech', 'press_release', 'all'].includes(out.kind))
+    out.kind = 'speech';
+  if (!['hybrid', 'semantic', 'keyword'].includes(out.mode))
+    out.mode = 'hybrid';
   return out;
 }
 /** Route params (`type=all` widens to every record) as filters. */
@@ -68,7 +71,8 @@ export function filtersFromParams(
   };
   return speechFilters({
     ...Object.fromEntries(filterParamKeys.map((key) => [key, one(key)])),
-    kind: one('type') === 'all' ? 'all' : 'speech',
+    kind: one('type') || 'speech',
+    mode: one('mode') || 'hybrid',
   });
 }
 export function filtersToParams(f: SpeechFilters): Record<string, string> {
@@ -76,13 +80,14 @@ export function filtersToParams(f: SpeechFilters): Record<string, string> {
     ...Object.fromEntries(
       filterParamKeys.filter((key) => f[key]).map((key) => [key, f[key]]),
     ),
-    ...(f.kind === 'all' ? { type: 'all' } : {}),
+    ...(f.kind !== 'speech' ? { type: f.kind } : {}),
+    ...(f.mode !== 'hybrid' ? { mode: f.mode } : {}),
   };
 }
 /** The request filters RecordSearch sends (unchanged request keys). */
 export function requestFilters(f: SpeechFilters): SearchFilters {
   return normaliseFilters({
-    kind: f.kind === 'all' ? 'all' : 'speech',
+    kind: ['all', 'press_release'].includes(f.kind) ? f.kind : 'speech',
     mode: (['hybrid', 'semantic', 'keyword'].includes(f.mode)
       ? f.mode
       : 'hybrid') as SearchFilters['mode'],
@@ -99,9 +104,7 @@ export function filtersKey(f: SpeechFilters): string {
   return keys.map((key) => `${key}=${f[key]}`).join('&');
 }
 export function hasFilters(f: SpeechFilters): boolean {
-  return keys.some(
-    (key) => key !== 'mode' && f[key] !== defaultSpeechFilters[key],
-  );
+  return keys.some((key) => f[key] !== defaultSpeechFilters[key]);
 }
 
 const parliaments: Readonly<Record<string, string>> = {
@@ -132,14 +135,22 @@ export function filtersLine(f: SpeechFilters): string {
       ? (allTopics.find((t) => t.slug === f.topic)?.title ?? f.topic)
       : '',
     years,
-    f.kind === 'all' ? 'All records' : '',
+    f.kind === 'all'
+      ? 'All records'
+      : f.kind === 'press_release'
+        ? 'Media releases and transcripts'
+        : '',
+    f.mode === 'keyword'
+      ? 'Exact words only'
+      : f.mode === 'semantic'
+        ? 'Match meaning'
+        : '',
   ]
     .filter(Boolean)
     .join(' · ');
 }
-export const clearedFilters = (f: SpeechFilters): SpeechFilters => ({
+export const clearedFilters = (): SpeechFilters => ({
   ...defaultSpeechFilters,
-  mode: f.mode,
 });
 
 /** Parliamentarians for the Person row, sitting first, then by surname. */

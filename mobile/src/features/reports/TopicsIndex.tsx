@@ -44,7 +44,10 @@ export function orderTopics(rows: readonly Row[], order: Order): Row[] {
 
 export default function TopicsIndex() {
   const [refresh, setRefresh] = useState(0);
-  const load = useCallback(() => reports.topics(refresh > 0), [refresh]);
+  const load = useCallback(
+    (signal?: AbortSignal) => reports.topics(refresh > 0, signal),
+    [refresh],
+  );
   const read = useRead(load);
   const [order, setOrder] = useState<Order>('name');
   const [query, setQuery] = useState('');
@@ -178,7 +181,7 @@ export default function TopicsIndex() {
                     key={t.slug}
                     title={t.title}
                     detail={t.description}
-                    accessory="none"
+                    href={topicRoute(t.slug)}
                     testID={`topic-unlabelled-${t.slug}`}
                   />
                 ))}

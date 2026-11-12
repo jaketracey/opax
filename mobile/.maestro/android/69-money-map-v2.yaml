@@ -220,7 +220,7 @@ name: 69 Money map on Android, zoom, focus, search to fly, next flow, minimum fl
     text: List
     selected: true
 - runFlow:
-    file: support/money-screen-scroll.yaml
+    file: ../support/money-screen-scroll.yaml
     env:
       TARGET_ID: money-donor-caption
 - assertVisible:

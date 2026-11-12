@@ -1,11 +1,11 @@
 import { router, type Href } from 'expo-router';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { useAccessibilitySize } from '../../design/accessibility';
+import { Pressable, StyleSheet } from 'react-native';
 import { CitationBadge } from '../../design/citation-mark';
 import { Icon } from '../../design/icon';
 import { confirmAction } from '../../design/menu';
-import { PartyLabel } from '../../design/people';
-import { RowLink, type RowMenuAction } from '../../design/row-link';
+import { type RowMenuAction } from '../../design/row-link';
+import { RecordRow } from '../../design/rows';
+import { speakerSlot } from '../records/speaker';
 import {
   useRowCellStyle,
   useRowHighlight,
@@ -15,13 +15,15 @@ import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
-import { fromWebPath } from '../../navigation/routes';
 import { docRoute } from '../../navigation/routes/records';
 import { shareRecord } from '../../navigation/share';
 import { citationPassage } from './CitationContent';
 import { citeStyles, copyCitation } from './cite';
 import type { Source } from './model';
 import { personName, sourceMeta, sourceTitle } from './source-present';
+import { recordRoute } from '../records/route';
+import { openAnswerLink } from './AnswerBody';
+import type { AskPerson } from './people';
 
 /** A source's long-press menu, the same in Records cited, the sheet and the pane. */
 export function sourceMenu(
@@ -64,20 +66,24 @@ export function sourceMenu(
   ];
 }
 export function sourceRoute(source: Source): Href | null {
-  if (!source.href.startsWith('/')) return null;
-  try {
-    // A relative href needs no origin: retry its path without the query
-    // or fragment (origins belong in build config, qa-static).
-    const route =
-      fromWebPath(source.href) ?? fromWebPath(source.href.split(/[?#]/)[0]!);
-    return route?.pathname === '/doc/[slug]' && source.slug
-      ? docRoute(source.slug, sourceTitle(source), {
-          passage: citationPassage(source) ?? undefined,
-        })
-      : route;
-  } catch {
-    return null;
-  }
+  const route = recordRoute(source);
+  return route?.pathname === '/doc/[slug]'
+    ? docRoute(route.params.slug, sourceTitle(source), {
+        passage: citationPassage(source) ?? undefined,
+      })
+    : route;
+}
+/** The pane and the phone use the same repaired document destination. */
+export function sourcePath(source: Source): string {
+  const route = sourceRoute(source);
+  if (typeof route !== 'object' || route?.pathname !== '/doc/[slug]')
+    return source.href || source.url || '';
+  const passage = citationPassage(source);
+  return `/doc/${route.params?.slug}${
+    passage
+      ? `?${new URLSearchParams({ passage: passage.slice(0, 4000) })}`
+      : ''
+  }`;
 }
 /**
  * One cited record: the numeral badge (as in the text), one meta line, the
@@ -90,6 +96,7 @@ export function CitedRecordRow({
   onPress,
   onShowPassage,
   selected = false,
+  profiles,
   testID,
 }: {
   record: Source;
@@ -99,67 +106,39 @@ export function CitedRecordRow({
   onPress?: () => void;
   onShowPassage?: () => void;
   selected?: boolean;
+  profiles?: Map<string, AskPerson>;
   testID?: string;
 }) {
-  const stacked = useAccessibilitySize();
-  const highlight = useRowHighlight();
-  const cellStyle = useRowCellStyle();
-  useRowInset(n && !stacked ? 46 : 16);
   const title = sourceTitle(source);
   const meta = sourceMeta(source);
   const speaker = source.speaker ? personName(source.speaker) : null;
+  const person = source.speaker
+    ? (profiles?.get(source.speaker) ?? profiles?.get(speaker ?? ''))
+    : undefined;
   const href = sourceRoute(source);
   const open = () =>
     onPress
       ? onPress()
       : href
         ? router.push(href)
-        : source.url
-          ? void openSource(source.url, title)
-          : undefined;
-  const row = (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={[n ? `${n}.` : null, meta, title, speaker]
-        .filter(Boolean)
-        .join(', ')}
-      accessibilityState={selected ? { selected } : undefined}
-      onPress={open}
+        : openAnswerLink(source.url || source.href || '');
+  const slot = speakerSlot(speaker, source.party ?? null, person?.slug);
+  return (
+    <RecordRow
+      meta={meta}
+      title={title}
+      leading={
+        n
+          ? { content: <CitationBadge label={String(n)} />, label: `${n}.` }
+          : undefined
+      }
+      speaker={slot ? { ...slot, linkedParty: true } : null}
+      href={href ?? undefined}
+      onPress={onPress ?? (!href ? open : undefined)}
+      selected={selected}
+      menu={sourceMenu(source, onShowPassage)}
       testID={testID}
-      style={({ pressed }) => [
-        styles.row,
-        cellStyle,
-        stacked ? styles.stacked : null,
-        pressed || selected ? { backgroundColor: highlight } : null,
-      ]}
-    >
-      {n ? <CitationBadge label={String(n)} /> : null}
-      <View style={styles.main}>
-        <Text wordSafe variant="secondary">
-          {meta}
-        </Text>
-        <Text wordSafe variant="rowRecord">
-          {title}
-        </Text>
-        {speaker ? (
-          <View style={styles.speaker}>
-            <Text variant="secondary">{speaker}</Text>
-            {source.party ? <PartyLabel party={source.party} /> : null}
-          </View>
-        ) : null}
-      </View>
-      {stacked ? null : (
-        <Icon name={symbols.chevron} size={13} tone="inkFaint" maxScale={1.5} />
-      )}
-    </Pressable>
-  );
-  const menu = sourceMenu(source, onShowPassage);
-  return href ? (
-    <RowLink href={href} menu={menu} select={onPress}>
-      {row}
-    </RowLink>
-  ) : (
-    row
+    />
   );
 }
 /**
@@ -175,6 +154,7 @@ export function AskSuggestionRow({
   onPress,
   offline = false,
   menu,
+  minimumHeight,
   testID,
 }: {
   question: string;
@@ -182,6 +162,8 @@ export function AskSuggestionRow({
   onPress: () => void;
   offline?: boolean;
   menu?: RowMenuAction[];
+  /** Ask next's two-line slot; the full question remains its accessible label. */
+  minimumHeight?: number;
   testID?: string;
 }) {
   const highlight = useRowHighlight();
@@ -221,6 +203,7 @@ export function AskSuggestionRow({
       style={({ pressed }) => [
         styles.row,
         cellStyle,
+        minimumHeight ? { minHeight: minimumHeight } : null,
         pressed && !offline ? { backgroundColor: highlight } : null,
       ]}
     >
@@ -228,6 +211,7 @@ export function AskSuggestionRow({
       <Text
         wordSafe
         variant="body"
+        numberOfLines={minimumHeight ? 2 : undefined}
         tone={offline ? 'inkSoft' : undefined}
         style={styles.main}
       >
@@ -255,12 +239,5 @@ const styles = StyleSheet.create({
     minHeight: minimumTarget,
     paddingVertical: rhythm.row,
   },
-  stacked: { flexDirection: 'column', alignItems: 'flex-start' },
   main: { flex: 1, gap: rhythm.line },
-  speaker: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: rhythm.tight,
-  },
 });

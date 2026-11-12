@@ -1,3 +1,4 @@
+import { isAbortError } from '../../api/abort';
 import { RouteOptions } from '../../navigation/preview';
 import type { NativeStackHeaderItem } from 'expo-router';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -26,6 +27,7 @@ import {
 import { catalogs } from '../../api/runtime';
 import { formatDate } from '../../design/format';
 import { haptic } from '../../design/haptics';
+import { billStatus } from '../../design/parliament';
 import {
   BillRow,
   Disclosure,
@@ -73,6 +75,7 @@ import {
   textChunks,
   type DocumentRecord,
 } from './model';
+import { useSpeechSpeakers } from './speaker';
 import { useRecordNavigation } from './navigation';
 import {
   ReaderList,
@@ -82,6 +85,7 @@ import {
 } from './ReaderList';
 import { recordBarItems } from './RecordActions';
 import { RecordLoadError } from './RecordLoadError';
+import { FindControls } from './FindControls';
 import { records } from './runtime';
 import { recordCaveat, recordOriginal, recordSource } from './source';
 import { useRead } from './useRead';
@@ -117,8 +121,6 @@ const machineNote = (doc: DocumentRecord) =>
     : doc.labels.kind === 'speech'
       ? 'Written by a model from this speech. It is not part of the record.'
       : 'Written by a model. It is not part of the record.';
-/** A text this long (about 4,800 characters) repeats its source line at the end. */
-const LONG_TEXT_PARTS = 4;
 /** First paint waits this long for the speaker's roster match (records.md 2.3). */
 const SPEAKER_WINDOW = 400;
 const titleKey = (value: string) =>
@@ -142,8 +144,9 @@ function useSpeaker(doc: DocumentRecord | null) {
   const [late, setLate] = useState<string | null>(null);
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
     void catalogs
-      .directory()
+      .directory(undefined, controller.signal)
       .then((found) => {
         arrived.current = true;
         if (active) setDirectory(found);
@@ -154,6 +157,7 @@ function useSpeaker(doc: DocumentRecord | null) {
       });
     return () => {
       active = false;
+      controller.abort();
     };
   }, []);
   const wanted = !!doc?.speaker && doc.labels.speaker_type !== 'witness';
@@ -267,7 +271,10 @@ export default function DocumentReader({
     passage?: string;
   }>();
   const slug = recordSlug ?? params.slug ?? '';
-  const load = useCallback(() => records.document(slug), [slug]);
+  const load = useCallback(
+    (signal?: AbortSignal) => records.document(slug, signal),
+    [slug],
+  );
   const { value, error, retry } = useRead(load);
   const doc = value?.data ?? null;
   const speaker = useSpeaker(doc);
@@ -345,7 +352,9 @@ export default function DocumentReader({
     <>
       {embedded ? null : (
         <RouteOptions
+          stableItems
           options={{
+            title: shown ? headline : '',
             ...headerItems(
               findBar
                 ? () => findItems(find)
@@ -383,6 +392,16 @@ export default function DocumentReader({
           }}
         />
       )}
+      {android && !embedded && shown && find.open ? (
+        <FindControls
+          query={find.query}
+          current={find.current}
+          total={find.total}
+          onPrevious={find.previous}
+          onNext={find.next}
+          onDone={find.done}
+        />
+      ) : null}
       <ReaderList
         testID="doc-reader"
         parts={shown ? parts : []}
@@ -414,15 +433,13 @@ export default function DocumentReader({
         footer={
           shown ? (
             <View>
-              {parts.length >= LONG_TEXT_PARTS ? (
-                <View style={styles.endSource}>
-                  <RecordSourceLine doc={shown} testID="doc-source-end" />
-                </View>
-              ) : null}
               <LinkedBill key={`bill-${shown.slug}`} doc={shown} />
               {shown.labels.kind === 'speech' ? (
                 <Similar key={`similar-${shown.slug}`} doc={shown} />
               ) : null}
+              <View style={styles.endSource}>
+                <RecordSourceLine doc={shown} testID="doc-source" />
+              </View>
               <View style={styles.after}>
                 <PageFoot variant="today" />
               </View>
@@ -528,6 +545,17 @@ function Bar({ width, height }: { width: `${number}%`; height: number }) {
   return <View style={[styles.bar, { width, height }]} />;
 }
 
+/** Metadata can be partial: blank strings and booleans are not zero votes. */
+function divisionCount(raw: unknown): number | null {
+  if (
+    typeof raw !== 'number' &&
+    (typeof raw !== 'string' || !/^\d+$/.test(raw.trim()))
+  )
+    return null;
+  const value = Number(raw);
+  return Number.isSafeInteger(value) && value >= 0 ? value : null;
+}
+
 function ReaderHeader({
   doc,
   headline,
@@ -548,15 +576,13 @@ function ReaderHeader({
   const meta = metaLine(doc, { date: false });
   const caveat = recordCaveat(doc);
   const organisation = organisationOf(doc);
-  const ayes = Number(doc.metadata.ayes_count);
-  const noes = Number(doc.metadata.noes_count);
+  const ayes = divisionCount(doc.metadata.ayes_count);
+  const noes = divisionCount(doc.metadata.noes_count);
   const day = recordDate(doc);
   const votes =
     doc.labels.kind === 'division' &&
-    Number.isFinite(ayes) &&
-    Number.isFinite(noes) &&
-    doc.metadata.ayes_count != null &&
-    doc.metadata.noes_count != null &&
+    ayes !== null &&
+    noes !== null &&
     // The split's spoken label names its date; an undated division has none.
     !!day;
   return (
@@ -577,9 +603,6 @@ function ReaderHeader({
         </Heading>
       </View>
       <Speaker doc={doc} row={speaker} />
-      <View style={styles.source}>
-        <RecordSourceLine doc={doc} testID="doc-source" />
-      </View>
       {caveat ? (
         <Text
           variant="footnote"
@@ -613,12 +636,19 @@ function ReaderHeader({
       ) : null}
       {doc.summary ? (
         <View style={styles.block}>
-          <Disclosure label="In short" testID="doc-brief">
-            <View style={styles.brief}>
+          <Disclosure
+            key={doc.slug}
+            label="In short"
+            testID="doc-brief"
+            defaultOpen
+            accessory={
               <MachinePill
                 note={{ title: 'Machine-written', body: [machineNote(doc)] }}
                 testID="doc-brief-label"
               />
+            }
+          >
+            <View style={styles.brief}>
               <Text selectable variant="body">
                 {doc.summary}
               </Text>
@@ -791,7 +821,8 @@ function LinkedBillRow({ bill }: { bill: BillEntry }) {
     <BillRow
       billKey={bill.key}
       title={bill.title}
-      status={bill.status}
+      status={billStatus(bill.status)}
+      rawStatus={bill.status}
       date={bill.introduced}
       dateLabel="Introduced"
       meta={
@@ -820,6 +851,7 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
     doc.labels.kind === 'bill_text' && /^au-federal-[a-z0-9-]+$/.test(key);
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
     const subject = textBill
       ? ''
       : metaString(doc, 'bill_ref') ||
@@ -828,7 +860,7 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
         titleSubject(doc);
     if (!textBill && !subject) return;
     void catalogs
-      .bills()
+      .bills(undefined, controller.signal)
       .then((result) => {
         const matches = result.data.bills.filter((entry) =>
           textBill
@@ -847,6 +879,7 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
       .catch(() => {});
     return () => {
       active = false;
+      controller.abort();
     };
   }, [doc, key, textBill]);
   if (!found && !textBill) return null;
@@ -886,21 +919,37 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
 
 type SimilarResult = Awaited<ReturnType<Records['similar']>>;
 function Similar({ doc }: { doc: DocumentRecord }) {
+  const speakerFor = useSpeechSpeakers();
   const navigation = useRecordNavigation();
   const [value, setValue] = useState<SimilarResult | null>(null);
   const [error, setError] = useState<unknown>(null),
     [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const request = useRef<AbortController | null>(null);
+  useEffect(
+    () => () => {
+      request.current?.abort();
+    },
+    [doc.slug],
+  );
   const loadSimilar = () => {
     setOpen(true);
     if (value || loading) return;
     setError(null);
     setLoading(true);
+    const controller = new AbortController();
+    request.current = controller;
     void records
-      .similar(doc, topics)
-      .then(setValue)
-      .catch(setError)
-      .finally(() => setLoading(false));
+      .similar(doc, topics, controller.signal)
+      .then((next) => {
+        if (!controller.signal.aborted) setValue(next);
+      })
+      .catch((error: unknown) => {
+        if (!controller.signal.aborted && !isAbortError(error)) setError(error);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
   };
   const rows: ReactNode[] =
     value?.data.map((row, index) => {
@@ -919,22 +968,17 @@ function Similar({ doc }: { doc: DocumentRecord }) {
           meta={metaLine(record)}
           title={recordHeadline(record)}
           excerpt={{ text: serverPassage(row.snippet) || '' }}
-          speaker={row.speaker ? { name: row.speaker, party: row.party } : null}
-          {...(navigation.inPane ? {} : { href: docRoute(row.slug) })}
+          speaker={speakerFor(row)}
+          href={docRoute(row.slug)}
+          onPress={
+            navigation.inPane
+              ? () => navigation.openDoc(row.slug, recordHeadline(record))
+              : undefined
+          }
           testID={`doc-similar-${index}`}
         />
       );
-      return navigation.inPane ? (
-        <Pressable
-          key={row.slug}
-          accessibilityRole="link"
-          onPress={() => navigation.openDoc(row.slug, recordHeadline(record))}
-        >
-          {drawn}
-        </Pressable>
-      ) : (
-        <View key={row.slug}>{drawn}</View>
-      );
+      return <View key={row.slug}>{drawn}</View>;
     }) ?? [];
   return (
     <View style={styles.after}>

@@ -66,7 +66,8 @@ export function displayName(name: string) {
  */
 export default function Connections() {
   const load = useCallback(
-      (refresh: boolean) => money.connections(refresh),
+      (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+        money.connections(refresh, signal),
       [],
     ),
     status = useCatalogRecord(load),

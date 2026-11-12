@@ -5,6 +5,7 @@ import {
   useContext,
   useMemo,
   useState,
+  useSyncExternalStore,
   type ReactNode,
 } from 'react';
 import {
@@ -22,22 +23,27 @@ import {
 } from '../../modules/opax-ipad';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { rhythm, rhythmRegular } from './tokens';
+import { OpaxDuo, type WindowTraits } from '../../modules/opax-duo';
+import { evenColumns } from './fold';
+
+export type { WindowTraits } from '../../modules/opax-duo';
+export {
+  ReservedRegionArea,
+  ReservedRegionsProvider,
+  useReservedRegions,
+} from './fold-area';
 
 /**
- * iPad layout (Oct 2026). One rule decides every adaptive layout: a region
- * is `regular` when it is at least `breakpoints.regular` points wide on an
- * iPad, and `compact` otherwise. The width is the live window's (or the
- * measured region's inside a split pane), never the device's: a 1/3 Split
- * View window on an iPad Pro is compact, and rotation or a Stage Manager
- * resize re-renders with the new class.
- *
- * The iPhone is always compact, in every orientation, so its layouts and
- * journeys stay exactly as they were (a 17 Pro Max in landscape is 956pt
- * wide, but the phone keeps its one-column app).
+ * One rule for measured regions: iPad from 700pt, regular/regular phone
+ * windows from 560pt. Every other phone window stays compact, including
+ * Pro Max landscape (regular/compact). Read the live key window's traits
+ * and the region's bounds, never a device model or interface orientation.
  */
 export const breakpoints = {
   /** Two panes, a sidebar and multi-column grids from here. */
   regular: 700,
+  /** A region in a regular/regular iPhone window. */
+  regularPhone: 560,
   /** Three-column grids from here (a 13-inch iPad in landscape). */
   wide: 1100,
 } as const;
@@ -55,16 +61,36 @@ export const columns = {
  * lands, a third of a 13-inch iPad's landscape region.
  */
 export const splitPane = { width: 360, min: 300, max: 440 } as const;
+export const splitPanePhoneRegular = {
+  fraction: 0.42,
+  min: 260,
+  maxFraction: 0.5,
+} as const;
 
 /**
  * The narrow pane of every two-pane layout (a split's list, Ask's sources),
  * from the width of the region the two panes share (inside the sidebar's
- * inset): a third of it, between `splitPane.min` and `splitPane.max`, never
- * more than half. At accessibility sizes it is 45%, so the pane's rows keep
- * whole words. The wide pane takes the rest.
+ * inset): a third on iPad within `splitPane` bounds, or 42% on a regular
+ * phone with a 260pt minimum and a half-width ceiling. At accessibility
+ * sizes it is 45%, so the pane's rows keep whole words. The wide pane takes the rest.
  */
-export function splitPaneWidth(width: number, large = false): number {
+export function splitPaneWidth(
+  width: number,
+  large = false,
+  rule: LayoutRule = currentRule(),
+): number {
   if (large) return Math.round(width * 0.45);
+  if (rule === 'phone-regular') {
+    return Math.round(
+      Math.min(
+        Math.max(
+          width * splitPanePhoneRegular.fraction,
+          splitPanePhoneRegular.min,
+        ),
+        width * splitPanePhoneRegular.maxFraction,
+      ),
+    );
+  }
   return Math.round(
     Math.min(
       Math.max(width / 3, splitPane.min),
@@ -76,8 +102,117 @@ export function splitPaneWidth(width: number, large = false): number {
 
 export type SizeClass = 'compact' | 'regular';
 
-/** An iPad (or an iPad app on a Mac): the only place regular layouts draw. */
+/** iPad-only behaviour: keyboard, pointer, drags, sidebar labels and phoneCopy. */
 export const isPad = Platform.OS === 'ios' && Platform.isPad;
+
+export type LayoutRule = 'pad' | 'phone-regular' | 'phone';
+
+const traitsRegular = (traits: WindowTraits | null) =>
+  traits?.horizontal === 'regular' && traits.vertical === 'regular';
+let nativeTraits = OpaxDuo?.getWindowTraits() ?? null;
+let traitsOverride: WindowTraits | null | undefined;
+// A phone is adaptive once it shows a fold region, a regular/regular window
+// or vertical bars (the closed iPhone Duo: its outer display has no fold).
+const traitsAdaptive = (traits: WindowTraits | null) =>
+  !!traits?.foldable || !!traits?.verticalBars || traitsRegular(traits);
+let adaptivePhone = traitsAdaptive(nativeTraits);
+let traitsSnapshot = { traits: nativeTraits, adaptive: isPad || adaptivePhone };
+const traitsListeners = new Set<() => void>();
+let nativeSubscription: { remove(): void } | undefined;
+
+function publishTraits() {
+  const traits =
+    Platform.OS === 'ios'
+      ? traitsOverride === undefined
+        ? nativeTraits
+        : traitsOverride
+      : null;
+  adaptivePhone ||= traitsAdaptive(traits);
+  const adaptive = isPad || (Platform.OS === 'ios' && adaptivePhone);
+  const previous = traitsSnapshot.traits;
+  if (
+    previous?.horizontal === traits?.horizontal &&
+    previous?.vertical === traits?.vertical &&
+    previous?.foldable === traits?.foldable &&
+    previous?.verticalBars === traits?.verticalBars &&
+    traitsSnapshot.adaptive === adaptive
+  )
+    return;
+  traitsSnapshot = { traits, adaptive };
+  traitsListeners.forEach((listener) => listener());
+}
+
+function subscribeTraits(listener: () => void) {
+  traitsListeners.add(listener);
+  if (!nativeSubscription && OpaxDuo) {
+    nativeSubscription = OpaxDuo.addListener('onWindowTraits', (traits) => {
+      nativeTraits = traits;
+      publishTraits();
+    });
+    // Close the gap between the synchronous first render and subscribing.
+    nativeTraits = OpaxDuo.getWindowTraits();
+    publishTraits();
+  }
+  return () => {
+    traitsListeners.delete(listener);
+    if (!traitsListeners.size) {
+      nativeSubscription?.remove();
+      nativeSubscription = undefined;
+    }
+  };
+}
+
+const getTraitsSnapshot = () => traitsSnapshot;
+const serverTraitsSnapshot = { traits: null, adaptive: false };
+const getServerTraitsSnapshot = () => serverTraitsSnapshot;
+
+/** Live key-window traits, synchronously seeded; null off iOS or without the module. */
+export function useWindowTraits(): WindowTraits | null {
+  return useSyncExternalStore(
+    subscribeTraits,
+    getTraitsSnapshot,
+    getServerTraitsSnapshot,
+  ).traits;
+}
+
+/** Undefined restores native traits. Null simulates an unavailable bridge. */
+export function setWindowTraitsOverride(
+  traits: WindowTraits | null | undefined,
+) {
+  traitsOverride = traits;
+  publishTraits();
+}
+
+/** Test isolation only: folding and remounting consumers never reset this session flag. */
+export function resetAdaptiveDeviceForTests() {
+  adaptivePhone = false;
+  publishTraits();
+}
+
+/** The current window rule, shared by every measured region within it. */
+export function currentRule(
+  traits: WindowTraits | null = traitsSnapshot.traits,
+): LayoutRule {
+  return isPad
+    ? 'pad'
+    : Platform.OS === 'ios' && traitsRegular(traits)
+      ? 'phone-regular'
+      : 'phone';
+}
+
+/**
+ * Replace module-level isPad at whole-view-tree forks with this hook. Once
+ * a phone reports a division or regular/regular traits, it stays adaptive
+ * for the session so display changes keep the same screen tree mounted.
+ * Keep isPad for iPad-only keyboard, pointer, drags, labels and phoneCopy.
+ */
+export function useAdaptiveDevice(): boolean {
+  return useSyncExternalStore(
+    subscribeTraits,
+    getTraitsSnapshot,
+    getServerTraitsSnapshot,
+  ).adaptive;
+}
 
 // Shell 0.4 S8: UIKit's screen inset grows from 16 pt to 20 pt at 414 pt.
 const screenMarginBreakpoint = 414;
@@ -94,10 +229,11 @@ export function useScreenMargin() {
 }
 
 export interface Layout {
+  rule: LayoutRule;
   size: SizeClass;
   /** `size === 'regular'`. */
   regular: boolean;
-  /** Regular and at least `breakpoints.wide`: room for three columns. */
+  /** Regular iPad region at least `breakpoints.wide`: room for three columns. */
   wide: boolean;
   /** The region's width: the measured pane or screen, else the window. */
   width: number;
@@ -107,9 +243,15 @@ export interface Layout {
   landscape: boolean;
 }
 
-/** The size class for a width; iPad only (the iPhone is always compact). */
-export function sizeClassFor(width: number, pad = isPad): SizeClass {
-  return pad && width >= breakpoints.regular ? 'regular' : 'compact';
+/** Apply the window rule to a measured region's width. */
+export function sizeClassFor(
+  width: number,
+  rule: LayoutRule = currentRule(),
+): SizeClass {
+  return (rule === 'pad' && width >= breakpoints.regular) ||
+    (rule === 'phone-regular' && width >= breakpoints.regularPhone)
+    ? 'regular'
+    : 'compact';
 }
 
 const RegionContext = createContext<{ width: number; height: number } | null>(
@@ -125,20 +267,22 @@ const RegionContext = createContext<{ width: number; height: number } | null>(
 export function useLayout(): Layout {
   const window = useWindowDimensions();
   const region = useContext(RegionContext);
+  const rule = currentRule(useWindowTraits());
   return useMemo(() => {
     const width = region?.width ?? window.width;
     const height = region?.height ?? window.height;
-    const size = sizeClassFor(width);
+    const size = sizeClassFor(width, rule);
     return {
+      rule,
       size,
       regular: size === 'regular',
-      wide: size === 'regular' && width >= breakpoints.wide,
+      wide: rule === 'pad' && size === 'regular' && width >= breakpoints.wide,
       width,
       height,
       window: { width: window.width, height: window.height },
       landscape: window.width > window.height,
     };
-  }, [region?.width, region?.height, window.width, window.height]);
+  }, [region?.width, region?.height, window.width, window.height, rule]);
 }
 
 /**
@@ -206,9 +350,9 @@ export function readableInset(
   width: number,
   max: number = columns.readable,
   margin: number = rhythm.screen,
-  size: SizeClass = sizeClassFor(width),
+  rule: LayoutRule = currentRule(),
 ): number {
-  if (size === 'compact') return margin;
+  if (sizeClassFor(width, rule) === 'compact') return margin;
   return Math.max(margin * 1.6, Math.round((width - max) / 2));
 }
 
@@ -220,10 +364,10 @@ export function readableInset(
 export function columnBreakout(
   width: number,
   column: keyof typeof columns,
-  size: SizeClass = sizeClassFor(width),
+  rule: LayoutRule = currentRule(),
 ): number {
-  if (size === 'compact') return 0;
-  const inset = (max: number) => readableInset(width, max, rhythm.screen, size);
+  if (sizeClassFor(width, rule) === 'compact') return 0;
+  const inset = (max: number) => readableInset(width, max, rhythm.screen, rule);
   return Math.max(0, inset(columns[column]) - inset(columns.wide));
 }
 
@@ -292,8 +436,9 @@ export interface GridColumns {
 
 /**
  * Responsive columns for card fronts. Columns follow the grid's own width:
- * `columns.compact` (default 1) below 700pt, `regular` (2) and `wide` (3)
- * above, never narrower than `minItemWidth` scaled with the text size, so
+ * `columns.compact` (default 1) below its rule threshold, `regular` (2)
+ * above, and `wide` (3) on wide iPad regions. Regular phones cap at two.
+ * Cards are never narrower than `minItemWidth` scaled with the text size, so
  * at accessibility sizes the grid steps down to fewer, wider cards. Cells
  * in a row share its height; a child with `flexGrow: 1` fills its cell.
  */
@@ -319,6 +464,7 @@ export function Grid({
   const items = Children.toArray(children).filter(Boolean);
   const count = gridColumns(width, {
     columns: counts,
+    rule: layout.rule,
     minItemWidth: minItemWidth * Math.min(Math.max(fontScale, 1), 2),
     gap,
   });
@@ -350,15 +496,19 @@ export function Grid({
   );
 }
 
-/** Card collections on iPad; preserves the compact view tree and spacing. */
+/** Card collections on regular layouts, including two-column phone spreads. */
 export function PadGrid({ children, ...props }: Parameters<typeof Grid>[0]) {
-  const { regular } = useLayout();
-  if (!isPad || !regular) return <>{children}</>;
+  const { regular, rule } = useLayout();
+  if (!regular) return <>{children}</>;
   const items = Children.toArray(children);
   return (
     <Grid
       columns={{ regular: 2, wide: Math.min(3, items.length) }}
-      minItemWidth={320}
+      minItemWidth={
+        rule === 'phone-regular'
+          ? (breakpoints.regularPhone - rhythm.block) / 2
+          : 320
+      }
       rowGap={rhythm.section}
       {...props}
     >
@@ -367,10 +517,10 @@ export function PadGrid({ children, ...props }: Parameters<typeof Grid>[0]) {
   );
 }
 
-/** Prose inside a wide spread keeps a readable measure on iPad. */
+/** Prose inside any regular spread keeps a readable measure. */
 export function PadReading({ children }: { children: ReactNode }) {
   const { regular } = useLayout();
-  if (!isPad || !regular) return <>{children}</>;
+  if (!regular) return <>{children}</>;
   return (
     <ReadableColumn style={{ alignSelf: 'flex-start' }}>
       {children}
@@ -385,15 +535,15 @@ export function gridColumns(
     columns: counts = {},
     minItemWidth = 280,
     gap = rhythm.block,
-    pad = isPad,
+    rule = currentRule(),
   }: {
     columns?: GridColumns;
     minItemWidth?: number;
     gap?: number;
-    pad?: boolean;
+    rule?: LayoutRule;
   } = {},
 ): number {
-  const size = sizeClassFor(width, pad);
+  const size = sizeClassFor(width, rule);
   const wanted =
     size === 'compact'
       ? (counts.compact ?? 1)
@@ -401,7 +551,10 @@ export function gridColumns(
         ? (counts.wide ?? 3)
         : (counts.regular ?? 2);
   const fit = Math.max(1, Math.floor((width + gap) / (minItemWidth + gap)));
-  return Math.max(1, Math.min(wanted, fit));
+  const count = Math.max(1, Math.min(wanted, fit));
+  return rule === 'phone-regular' && size === 'regular'
+    ? evenColumns(Math.min(count, 2))
+    : count;
 }
 
 /**
@@ -474,7 +627,13 @@ export function useHover() {
  * not. This native safe-area view pads its leading and trailing edges by the
  * insets of the screen it sits in; nested ones defer to the outermost. `Screen`, `KeyboardStableScreen`, the
  * reader and the Bills split already use it; wrap any other full-screen
- * FlatList in it. On iPhone and Android it renders its child alone.
+ * FlatList in it. On an iPhone that can draw regular layouts (iPhone Duo,
+ * `useAdaptiveDevice()`) it is on as well: there the tab bar and toolbar sit
+ * vertically beside the content (the outer display, landscape) and report
+ * themselves as leading or trailing safe-area insets, which a scroll view's
+ * content also ignores. It stays on in every pose, so folding never remounts
+ * a screen; with no side insets it pads nothing. On other iPhones and Android
+ * it renders its child alone.
  */
 // The native view pads by its screen's insets, not by its own overlap with
 // them, so only the outermost one applies (a pane inside the Bills split).
@@ -487,7 +646,9 @@ export function SidebarSafe({
   style?: StyleProp<ViewStyle>;
 }) {
   const inside = useContext(SidebarSafeContext);
-  if (!isPad || inside) return <>{children}</>;
+  const adaptive = useAdaptiveDevice();
+  if (!(isPad || (Platform.OS === 'ios' && adaptive)) || inside)
+    return <>{children}</>;
   return (
     <SafeAreaView
       edges={['left', 'right']}

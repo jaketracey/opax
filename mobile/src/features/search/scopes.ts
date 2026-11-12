@@ -1,4 +1,4 @@
-import { documentKinds, excludedKinds } from './contracts';
+import { documentKinds, excludedKinds, type SearchSort } from './contracts';
 
 /**
  * Four scopes, drawn in content (journeys/search.md 3.4, D-7). Money is not
@@ -21,20 +21,37 @@ export const scopeLabel = (scope: Scope) =>
  * groups name the one `/api/search-all` kind their single read uses.
  */
 export const groups = {
-  topics: { label: 'Topics', noun: 'topics' },
-  electorates: { label: 'Electorates', noun: 'electorates' },
-  parties: { label: 'Parties', noun: 'parties' },
+  reports: {
+    label: 'Reports',
+    noun: 'reports',
+    one: 'report',
+    catalog: 'report',
+  },
+  topics: { label: 'Topics', noun: 'topics', one: 'topic' },
+  electorates: {
+    label: 'Electorates',
+    noun: 'electorates',
+    one: 'electorate',
+  },
+  parties: { label: 'Parties', noun: 'parties', one: 'party' },
   interests: {
     label: 'Declared interests',
     noun: 'declared interests',
+    one: 'declared interest',
     catalog: 'interest',
   },
-  pay: { label: 'Pay', noun: 'pay records', catalog: 'pay' },
-  expenses: { label: 'Expenses', noun: 'expense records', catalog: 'expense' },
-  grants: { label: 'Grants', noun: 'grants', catalog: 'grant' },
+  pay: { label: 'Pay', noun: 'pay records', one: 'pay record', catalog: 'pay' },
+  expenses: {
+    label: 'Expenses',
+    noun: 'expense records',
+    one: 'expense record',
+    catalog: 'expense',
+  },
+  grants: { label: 'Grants', noun: 'grants', one: 'grant', catalog: 'grant' },
   agencies: {
     label: 'Government agencies',
     noun: 'government agencies',
+    one: 'government agency',
     catalog: 'agency',
   },
 } as const;
@@ -60,6 +77,7 @@ export const moneyGroups: readonly CatalogGroup[] = ['grants', 'agencies'];
  * ("speech", "person", "interest"), folded onto a scope or a group.
  */
 const aliases: Readonly<Record<string, Scope | Group>> = {
+  report: 'reports',
   speech: 'speeches',
   record: 'speeches',
   records: 'speeches',
@@ -107,6 +125,7 @@ export function targetForWebKind(
   if (['person', 'interest', 'pay', 'expense'].includes(kind))
     return { scope: 'people' };
   if (kind === 'bill') return { scope: 'bills' };
+  if (kind === 'report') return { group: 'reports' };
   if (kind === 'grant') return { group: 'grants' };
   if (kind === 'agency') return { group: 'agencies' };
   if (kind === 'party') return { group: 'parties' };
@@ -117,7 +136,9 @@ export function targetForWebKind(
 }
 
 /** Link queries are untrusted: at most 100 characters, cut at a whole word. */
-export function capQuery(q: string, max = 100): string {
+export function capQuery(q: unknown, max = 100): string {
+  // A repeated `q=` arrives from expo-router as an array: not a query.
+  if (typeof q !== 'string') return '';
   const text = q.replace(/\s+/g, ' ').trim();
   if (text.length <= max) return text;
   const cut = text.slice(0, max + 1);
@@ -133,25 +154,34 @@ export function webSearchPath(
   q: string,
   target: ResultsTarget,
   filters: Record<string, string> = {},
+  sort: SearchSort = 'relevance',
 ): string {
   const kind = target.group
     ? (
-        { grants: 'grant', agencies: 'agency', parties: 'party' } as Partial<
-          Record<Group, string>
-        >
+        {
+          grants: 'grant',
+          reports: 'report',
+          agencies: 'agency',
+          parties: 'party',
+          interests: 'interest',
+          pay: 'pay',
+          expenses: 'expense',
+        } as Partial<Record<Group, string>>
       )[target.group]
     : (
         {
           all: 'all',
           people: 'person',
           bills: 'bill',
-          speeches: undefined,
+          speeches: filters.type || 'speech',
         } as const
       )[target.scope];
   const params = new URLSearchParams({ view: 'search', q: capQuery(q) });
   if (kind) params.set('kind', kind);
-  if (target.scope === 'speeches')
+  if (target.scope === 'speeches' || target.scope === 'all')
     for (const [key, value] of Object.entries(filters))
       if (value && key !== 'type') params.set(key, value);
+  if (target.scope === 'speeches' && sort !== 'relevance')
+    params.set('sort', sort);
   return `/ask?${params}`;
 }

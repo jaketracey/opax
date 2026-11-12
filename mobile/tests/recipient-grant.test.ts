@@ -1,6 +1,7 @@
 import { apiClient } from '../src/api/runtime';
 import { loadRecipientGrant } from '../src/features/money-public/recipient-grant';
 import { pinned } from './pinned';
+import { organisationHref } from '../src/features/money-public/routes';
 
 jest.mock('../src/api/runtime', () => ({ apiClient: { get: jest.fn() } }));
 const index = pinned('/graph/grants.federal.json') as any;
@@ -27,6 +28,13 @@ test('a recipient award without a program key retains its own value and GrantCon
   );
   expect(record.data.amount).toBe(grant.v);
   expect(record.data.name).toBe('Fraser Coast Regional Council');
+  expect(record.data.onward).toEqual([
+    {
+      key: 'organisation',
+      title: 'Open Fraser Coast Regional Council',
+      href: organisationHref(recipient.id, recipient.n, 'federal'),
+    },
+  ]);
   expect(record.data.originals[0]?.url).toBe(
     `https://www.grants.gov.au/Ga/Show/${grant.guid}`,
   );
@@ -39,4 +47,56 @@ test('an unknown award never substitutes a recipient total or another award', as
   await expect(
     loadRecipientGrant('federal', recipient.id, 'not-an-award', false),
   ).rejects.toMatchObject({ code: 'not-found' });
+});
+
+test('a recipient award retains the oldest saved date and partial state from both catalogues', async () => {
+  jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+    data: decode(path.startsWith('/graph/') ? index : shard),
+    asOf: null,
+    savedAt: path.startsWith('/graph/') ? 100 : 1000,
+    stale: path.startsWith('/graph/'),
+    partial: path.startsWith('/graph/'),
+    staleReason: path.startsWith('/graph/') ? 'unreadable' : undefined,
+  }));
+  const record = await loadRecipientGrant(
+    'federal',
+    recipient.id,
+    recipient.grants[0].id,
+    true,
+  );
+  expect(record).toMatchObject({
+    stale: true,
+    partial: true,
+    savedAt: 100,
+    staleReason: 'unreadable',
+  });
+});
+
+test('an individual recipient has no identifying original link through the recipient shard', async () => {
+  const privateRecipient = {
+    ...recipient,
+    n: 'Fixture Private Recipient',
+    k: 'individual',
+  };
+  jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+    data: decode(
+      path.startsWith('/graph/') ? index : { fixture: privateRecipient },
+    ),
+    asOf: null,
+    savedAt: 1000,
+    stale: false,
+  }));
+  const record = await loadRecipientGrant(
+    'federal',
+    recipient.id,
+    recipient.grants[0].id,
+    false,
+  );
+  expect(record.data.name).toBe('Individual recipient');
+  expect(record.data.originals).toEqual([]);
+  expect(record.data.onward).toEqual([]);
+  expect(record.data.path).toBeNull();
+  expect(JSON.stringify(record.data)).not.toContain(
+    'Fixture Private Recipient',
+  );
 });

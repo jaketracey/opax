@@ -46,6 +46,8 @@ export const DONATIONS_CAVEAT =
   "Totals are a minimum: donations under the disclosure threshold aren't published.";
 export const CONTRACTS_CAVEAT =
   'Contract values as last published, not amounts paid.';
+export const GRANTS_CAVEAT =
+  'Award values as last published, not amounts paid.';
 export const FUTURE_YEARS_NOTE =
   "Some agreements are recorded against financial years that haven't started yet.";
 
@@ -70,7 +72,7 @@ export function grantsFigure(index: GrantIndex, words = 'Commonwealth grants') {
         value: year.total,
         line: `in ${counted(year.count, words.replace(/s$/, ''), words)} in ${fy(latest)}`,
         allYears: {
-          label: `All years, ${fyRange(years[0] ?? '', latest)}`,
+          label: `All years, ${fyRange(years[0] ?? '', years.at(-1) ?? '')}`,
           value: index.counts.dollars,
         },
       }
@@ -251,7 +253,8 @@ const sheet = (record: RecordResult<unknown>, details: SourceDetails) => {
 
 export function GrantsCard() {
   const load = useCallback(
-    (refresh: boolean) => money.grants('federal', refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      money.grants('federal', refresh, signal),
     [],
   );
   const status = useCatalogRecord(load);
@@ -275,7 +278,13 @@ export function GrantsCard() {
             originals: index.meta.sourceUrl
               ? [{ label: 'GrantConnect', url: index.meta.sourceUrl }]
               : [],
-            notes: [index.meta.coverage, FUTURE_YEARS_NOTE],
+            notes: [
+              index.meta.coverage,
+              GRANTS_CAVEAT,
+              FUTURE_YEARS_NOTE,
+              index.meta.threshold,
+              ...index.meta.caveats,
+            ],
             licence: index.meta.licence,
           }),
         };
@@ -285,7 +294,11 @@ export function GrantsCard() {
 }
 
 export function ContractsCard() {
-  const load = useCallback((refresh: boolean) => money.agencies(refresh), []);
+  const load = useCallback(
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      money.agencies(refresh, signal),
+    [],
+  );
   const status = useCatalogRecord(load);
   return (
     <QuestionCard

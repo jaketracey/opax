@@ -17,11 +17,12 @@ import {
   Platform,
   StyleSheet,
   View,
+  useWindowDimensions,
   type DimensionValue,
 } from 'react-native';
 import { ApiError } from '../api/errors';
 import { useAccessibilitySize } from './accessibility';
-import { columns, useLayout } from './adaptive';
+import { columns, ReadableColumn, useLayout } from './adaptive';
 import { Button } from './controls';
 import { copy } from './copy';
 import { type DateInput } from './format';
@@ -29,7 +30,18 @@ import { Icon, type SFSymbol } from './icon';
 import { phoneCopy } from './phone-copy';
 import { symbols } from './symbols';
 import { Text } from './text';
-import { colors, radii, rhythm, rhythmRegular, type Accent } from './tokens';
+import {
+  colors,
+  controlHeight,
+  hairline,
+  minimumTarget,
+  radii,
+  rhythm,
+  rhythmRegular,
+  textStyles,
+  type Accent,
+  type TextVariant,
+} from './tokens';
 
 export const stateCopy = {
   offlineUncached: phoneCopy(
@@ -137,7 +149,9 @@ type SkeletonShape =
   | 'divisions'
   | 'card'
   | 'figure'
-  | 'bill-header';
+  | 'bill-header'
+  | 'person-profile'
+  | 'electorate-profile';
 const bar = (
   width: DimensionValue,
   height = 14,
@@ -158,6 +172,278 @@ const bar = (
     ]}
   />
 );
+/** Detail placeholders follow the same type, row and spacing tokens as content. */
+function DetailSkeleton({
+  person,
+  label,
+  onSunken,
+  testID,
+}: {
+  person: boolean;
+  label: string;
+  onSunken: boolean;
+  testID?: string;
+}) {
+  const large = useAccessibilitySize();
+  const { regular } = useLayout();
+  const { fontScale } = useWindowDimensions();
+  const sectionGap = regular ? rhythmRegular.section : rhythm.section;
+  const height = (variant: TextVariant) =>
+    textStyles[variant].lineHeight * fontScale;
+  const part = (name: string) => (testID ? `${testID}-${name}` : undefined);
+  const bone = (
+    name: string,
+    width: DimensionValue,
+    blockHeight: number,
+    round = false,
+    onRaised = false,
+  ) => (
+    <View
+      testID={part(name)}
+      style={{
+        width,
+        height: blockHeight,
+        borderRadius: round ? blockHeight / 2 : radii.thumb,
+        borderCurve: 'continuous',
+        backgroundColor: onRaised || !onSunken ? colors.sunken : colors.raised,
+      }}
+    />
+  );
+  const line = (
+    name: string,
+    width: DimensionValue,
+    variant: TextVariant = 'secondary',
+    onRaised = false,
+  ) => bone(name, width, height(variant), false, onRaised);
+  const source = (name: string) => (
+    <View style={{ minHeight: minimumTarget, justifyContent: 'center' }}>
+      {line(name, '65%', 'footnote')}
+    </View>
+  );
+  const heading = (name: string) => (
+    <View
+      style={
+        large
+          ? { marginBottom: rhythm.heading - rhythm.block }
+          : { minHeight: minimumTarget, justifyContent: 'center' }
+      }
+    >
+      {line(name, '48%', 'sectionTitle')}
+    </View>
+  );
+  const member = (name: string) => (
+    <View
+      testID={part(name)}
+      style={{
+        flexDirection: large ? 'column' : 'row',
+        alignItems: 'flex-start',
+        gap: large ? rhythm.tight : rhythm.heading,
+        paddingVertical: rhythm.row,
+        paddingHorizontal: rhythm.block,
+        minHeight: minimumTarget,
+      }}
+    >
+      {bone(`${name}-portrait`, 44, 44, true, true)}
+      <View
+        style={{
+          ...(large ? { alignSelf: 'stretch' } : { flex: 1 }),
+          gap: rhythm.line,
+        }}
+      >
+        {line(`${name}-name`, '65%', 'name', true)}
+        <View style={{ paddingVertical: 1 }}>
+          {line(`${name}-party`, '42%', 'strong', true)}
+        </View>
+        {line(`${name}-term`, '75%', 'secondary', true)}
+      </View>
+    </View>
+  );
+  const cards = (children: ReactNode) => (
+    <View
+      style={{
+        backgroundColor: colors.raised,
+        borderRadius: radii.container,
+        borderCurve: 'continuous',
+        overflow: 'hidden',
+      }}
+    >
+      {children}
+    </View>
+  );
+  const divider = (name: string) => (
+    <View
+      testID={part(name)}
+      style={{ height: hairline, backgroundColor: colors.dividerSubtle }}
+    />
+  );
+  const content = person ? (
+    <>
+      <ReadableColumn style={{ gap: rhythm.block }}>
+        <View style={{ gap: rhythm.block }}>
+          <View
+            style={{
+              gap: rhythm.tight,
+              alignItems: large ? 'flex-start' : 'center',
+            }}
+          >
+            {bone('portrait', 96, 96, true)}
+            {line('name', '70%', 'pageTitle')}
+            {bone('follow', large ? '100%' : 112, controlHeight.default, true)}
+          </View>
+          <View>
+            <View
+              style={{
+                minHeight: minimumTarget,
+                paddingVertical: rhythm.row,
+                justifyContent: 'center',
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: rhythm.tight,
+                }}
+              >
+                {bone('party-dot', 10, 10, true)}
+                {line('party', '40%', 'body')}
+              </View>
+            </View>
+            {divider('identity-divider')}
+            <View style={{ gap: rhythm.line, paddingVertical: rhythm.row }}>
+              {line('seat', '65%', 'body')}
+              {line('seat-detail', '45%')}
+            </View>
+            {divider('identity-end')}
+          </View>
+        </View>
+        <View style={{ gap: rhythm.tight }}>
+          <View
+            testID={part('stat-strip')}
+            style={{
+              flexDirection: large ? 'column' : 'row',
+              gap: rhythm.block,
+            }}
+          >
+            {[0, 1, 2].map((index) => (
+              <View
+                key={index}
+                testID={part(`stat-tile-${index}`)}
+                style={large ? undefined : { flex: 1 }}
+              >
+                {index ? (
+                  <View
+                    testID={part(`stat-divider-${index}`)}
+                    style={
+                      large
+                        ? {
+                            height: hairline,
+                            backgroundColor: colors.dividerSubtle,
+                            marginBottom: rhythm.block,
+                          }
+                        : {
+                            position: 'absolute',
+                            top: 0,
+                            bottom: 0,
+                            left: -rhythm.tight,
+                            width: hairline,
+                            backgroundColor: colors.dividerSubtle,
+                          }
+                    }
+                  />
+                ) : null}
+                <View style={{ minHeight: minimumTarget, gap: rhythm.line }}>
+                  {line(`stat-value-${index}`, '85%', 'tileFigure')}
+                  {bone(
+                    `stat-label-${index}`,
+                    '90%',
+                    height('footnote') * (large ? 1 : 2),
+                  )}
+                </View>
+              </View>
+            ))}
+          </View>
+          {source('source')}
+        </View>
+      </ReadableColumn>
+      <View style={{ gap: rhythm.heading }}>
+        {heading('votes-heading')}
+        <View style={{ gap: rhythm.tight }}>
+          {line('votes-summary', '70%')}
+          <View>
+            {[0, 1, 2].map((index) => (
+              <View
+                key={index}
+                testID={part(`vote-${index}`)}
+                style={{
+                  paddingVertical: rhythm.row,
+                  gap: rhythm.line,
+                  minHeight: minimumTarget,
+                }}
+              >
+                {bone(
+                  `vote-${index}-position`,
+                  92,
+                  Math.max(28, height('footnote') + rhythm.tight),
+                  true,
+                )}
+                {line(`vote-${index}-title`, '90%', 'rowRecord')}
+                {line(`vote-${index}-date`, '60%')}
+              </View>
+            ))}
+          </View>
+        </View>
+      </View>
+    </>
+  ) : (
+    <>
+      <View style={{ gap: rhythm.heading }}>
+        {bone('map', '100%', large ? 120 : 200)}
+        {source('source')}
+      </View>
+      <View style={{ gap: rhythm.tight }}>
+        <View style={{ gap: rhythm.line }}>
+          {line('title', '60%', 'pageTitle')}
+          {line('chamber', '90%')}
+        </View>
+        {bone('follow', 112, controlHeight.default, true)}
+      </View>
+      <View style={{ gap: rhythm.heading }}>
+        {heading('members-heading')}
+        {cards(member('member'))}
+        <View style={{ gap: rhythm.groupHeader }}>
+          {line('past-heading', '40%', 'groupHeader')}
+          {cards(
+            <>
+              {member('past-0')}
+              {divider('past-divider')}
+              {member('past-1')}
+            </>,
+          )}
+        </View>
+        {source('members-source')}
+      </View>
+    </>
+  );
+  return (
+    <View
+      accessible
+      accessibilityRole="progressbar"
+      accessibilityLabel={label}
+      accessibilityState={{ busy: true }}
+      testID={testID}
+    >
+      <View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        style={{ gap: sectionGap }}
+      >
+        {content}
+      </View>
+    </View>
+  );
+}
+
 /** Final geometry and count, no shimmer or entrance movement. */
 export function Skeleton({
   shape = 'rows',
@@ -172,6 +458,15 @@ export function Skeleton({
   onSunken?: boolean;
   testID?: string;
 }) {
+  if (shape === 'person-profile' || shape === 'electorate-profile')
+    return (
+      <DetailSkeleton
+        person={shape === 'person-profile'}
+        label={label}
+        onSunken={onSunken}
+        testID={testID}
+      />
+    );
   if (shape === 'bill-header')
     return (
       <View

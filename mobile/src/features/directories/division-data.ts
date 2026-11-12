@@ -1,3 +1,5 @@
+import { throwIfAborted } from '../../api/abort';
+import { ReadSession } from '../../api/read-session';
 import { catalogs } from '../../api/runtime';
 import type { Catalogs } from '../../api/catalogs';
 import type { BillDetail } from '../../api/catalog-decoders';
@@ -19,8 +21,9 @@ export async function readDivisionHistory(
   source: Pick<Catalogs, 'bills' | 'bill'>,
   refresh = false,
   publish?: (record: DivisionRecord) => void,
+  signal?: AbortSignal,
 ): Promise<DivisionRecord> {
-  const index = await source.bills(refresh);
+  const index = await source.bills(refresh, signal);
   const candidates = index.data.bills
     .filter((b) => b.divisions > 0)
     .sort((a, b) =>
@@ -38,11 +41,16 @@ export async function readDivisionHistory(
     savedAt: index.savedAt,
     partial: !!index.partial,
   };
-  publish?.({ ...view });
+  throwIfAborted(signal);
+  // Bill status dates do not bound their division dates. No batch is a final
+  // chronological prefix until every candidate has settled, so publish once.
   for (let i = 0; i < candidates.length; i += 8) {
     const batch = await Promise.allSettled(
-      candidates.slice(i, i + 8).map((b) => source.bill(b.key, refresh)),
+      candidates
+        .slice(i, i + 8)
+        .map((b) => source.bill(b.key, refresh, signal)),
     );
+    throwIfAborted(signal);
     const files: BillDetail[] = [];
     for (let j = 0; j < batch.length; j++) {
       const result = batch[j]!;
@@ -59,34 +67,33 @@ export async function readDivisionHistory(
       view.savedAt = Math.min(view.savedAt, result.value.savedAt);
       files.push(result.value.data);
     }
-    view.rows = [...view.rows, ...divisionRows(files)].sort(
-      (a, b) => b.date.localeCompare(a.date) || a.key.localeCompare(b.key),
-    );
-    publish?.({ ...view });
+    view.rows.push(...divisionRows(files));
     await new Promise<void>((resolve) => setTimeout(resolve, 0));
   }
   if (candidates.length && !view.loaded)
     throw new ApiError('http', 'Bill division records could not be loaded.');
+  throwIfAborted(signal);
+  view.rows.sort(
+    (a, b) => b.date.localeCompare(a.date) || a.key.localeCompare(b.key),
+  );
+  publish?.(view);
   return view;
 }
-let saved: DivisionRecord | undefined;
-let reading: Promise<DivisionRecord> | undefined;
+const session = new ReadSession<DivisionRecord>();
 export function loadDivisionHistory(
   refresh = false,
   publish?: (record: DivisionRecord) => void,
+  signal?: AbortSignal,
 ) {
-  if (saved && !refresh && !saved.failed && !saved.stale)
-    return Promise.resolve(saved);
-  if (reading && !refresh) return reading;
-  const pending = readDivisionHistory(catalogs, refresh, publish).then(
-    (record) => {
-      saved = record;
-      return record;
+  return session.read(
+    'divisions',
+    (requestSignal) =>
+      readDivisionHistory(catalogs, refresh, publish, requestSignal),
+    {
+      fresh: refresh,
+      signal,
+      keepPrevious: true,
+      retain: (record) => !record.failed && !record.stale,
     },
   );
-  const tracked = pending.finally(() => {
-    if (reading === tracked) reading = undefined;
-  });
-  reading = tracked;
-  return tracked;
 }

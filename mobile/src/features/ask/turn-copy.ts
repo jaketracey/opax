@@ -6,6 +6,7 @@ import type { AskFailure } from './stream';
  */
 export const askErrors = {
   offline: "OPAX couldn't be reached. Check your connection.",
+  timeout: 'This answer took too long.',
   partial: 'This answer stopped partway.',
   'rate-limited': 'OPAX is busy right now.',
   blocked: "This question couldn't be sent.",
@@ -27,6 +28,7 @@ export function askErrorCopy(failure: Pick<AskFailure, 'code'>): {
     case 'empty':
       return { message: askErrors.empty, retry: false };
     case 'offline':
+    case 'timeout':
     case 'partial':
     case 'rate-limited':
     case 'invalid':

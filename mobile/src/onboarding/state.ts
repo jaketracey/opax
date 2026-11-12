@@ -8,8 +8,10 @@ import { e2eTourRequested } from './launch-flag';
 /**
  * The welcome shows once on this device, on the first launch, and again
  * from Account › Replay welcome. "Seen" is a small file in the app's
- * documents, like the seat choice. Continue on the short welcome, choosing a
- * seat and "Not now" all count as seen. 1.0 readers who saw the five-page
+ * documents, like the seat choice. Continue (on the short welcome it closes;
+ * on the full one it opens the electorate step), choosing a seat and
+ * "Not now" all count as seen, so a launch never repeats a page the reader
+ * has already passed. 1.0 readers who saw the five-page
  * tour keep their flag (same file, same version), so they never see the new
  * welcome unless they replay it.
  *
@@ -77,7 +79,7 @@ let declinedThisLaunch = false;
  * Records the welcome as seen. `declined` is "Not now" (the bar button,
  * two-finger Z, Escape, Android back): it also records the day, so Today can
  * keep the invitation off its first screen that session (first-launch 4.4).
- * Choosing a seat and the short welcome's Continue decline nothing.
+ * Choosing a seat and Continue decline nothing, and keep an earlier day.
  */
 export async function markWelcomeSeen({
   declined = false,

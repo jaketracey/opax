@@ -13,6 +13,7 @@ export function recordDestination(path: string) {
       native.pathname === '/bill/[key]' ||
       native.pathname === '/electorate/[id]' ||
       native.pathname === '/doc/[slug]' ||
+      native.pathname === '/report/[slug]' ||
       native.pathname === '/bill-text/[key]')
   )
     return native;
@@ -24,6 +25,7 @@ export function recordDestination(path: string) {
 export type DatedSource = { title: string; path: string; date?: string | null };
 
 const kinds: [RegExp, string][] = [
+  [/^\/report\//, 'Report'],
   [/^\/bill-text\//, 'Bill text'],
   [/^\/bills?\//, 'Bill'],
   [/^\/(?:subject\/)?person\//, 'Parliamentarian'],

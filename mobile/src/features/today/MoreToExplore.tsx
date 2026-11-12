@@ -1,3 +1,5 @@
+import { useLayout } from '../../design/adaptive';
+import { SurfaceGrid } from './SurfaceGrid';
 import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Tile, TileGrid } from '../../design/card';
@@ -66,16 +68,18 @@ export function MoreToExplore({
   /** Case A: the daily pair, drawn here under the header. */
   pair?: ReactNode;
 }) {
+  const { regular } = useLayout();
+  const Tiles = regular ? SurfaceGrid : TileGrid;
   return (
     <View testID="today-explore" style={styles.section}>
       <SectionHeader title="More to explore" testID="today-explore-title" />
       <View style={styles.body}>
         {pair}
-        <TileGrid testID="today-explore-tiles">
+        <Tiles testID="today-explore-tiles">
           {exploreTiles.map((tile) => (
             <Tile key={tile.testID} {...tile} />
           ))}
-        </TileGrid>
+        </Tiles>
       </View>
       <InsetGroup>
         <LinkRow

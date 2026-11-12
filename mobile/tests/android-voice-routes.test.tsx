@@ -66,6 +66,7 @@ jest.mock('expo-router', () => {
     router: { push: jest.fn(), back: jest.fn(), navigate: jest.fn() },
     useFocusEffect: jest.fn(),
     useRootNavigationState: () => ({ key: 'root' }),
+    useNavigationContainerRef: () => ({ isReady: () => false }),
     useSegments: () => [],
   };
 });
@@ -94,6 +95,7 @@ jest.mock('expo-constants', () => ({
   },
 }));
 jest.mock('../src/launch/splash', () => ({
+  decideLaunchSequence: jest.fn(async () => undefined),
   decideSplashPlain: jest.fn(),
   holdSplashForWelcome: jest.fn(),
 }));

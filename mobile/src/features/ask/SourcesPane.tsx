@@ -15,8 +15,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 // From adaptive, not primitives: screen tests mock primitives' components.
-import { useAccessibilitySize } from '../../design/accessibility';
-import { LayoutRegion, splitPaneWidth, useLayout } from '../../design/adaptive';
+import { LayoutRegion } from '../../design/adaptive';
 import { IconButton } from '../../design/controls';
 import { InsetGroup } from '../../design/layout';
 import { useListKeys } from '../../design/list-keys';
@@ -29,17 +28,17 @@ import { RecordDetail, RecordShare } from '../split/RecordDetail';
 import { answerBlocks } from './answer-markdown';
 import { openAnswerLink } from './AnswerBody';
 import { AskIdle } from './AskIdle';
-import { CitedRecordRow } from './AskRows';
-import { firstClaim, selectCitation } from './citation-state';
+import { CitedRecordRow, sourcePath } from './AskRows';
 import {
-  CitationContent,
-  citationCopy,
-  citationPassage,
-} from './CitationContent';
+  citationSelection,
+  firstClaim,
+  selectCitation,
+} from './citation-state';
+import { CitationContent, citationCopy } from './CitationContent';
 import { askGround } from './ground';
 import { turnKey, type Turn } from './model';
 import type { AskPerson } from './people';
-import { citedSources } from './source-present';
+import { citedSources, sourceTitle } from './source-present';
 
 /**
  * Ask on iPad regular width (journeys/ask.md 4.12): the conversation in the
@@ -87,13 +86,18 @@ export function useAskSources(
   const shown =
     active !== null && thread[active]?.role === 'answer' ? active : latest;
   // A new answer brings the pane to it, on citation 1.
-  const [seen, setSeen] = useState(latest);
-  if (seen !== latest) {
-    setSeen(latest);
+  const [seen, setSeen] = useState({ chat, latest });
+  if (seen.chat !== chat || seen.latest !== latest) {
+    setSeen({ chat, latest });
     setActive(null);
     setMark(null);
     setStack([]);
   }
+  useEffect(() => {
+    const selection = citationSelection();
+    if (selection && (!chat || !selection.turn.startsWith(`${chat}:`)))
+      selectCitation(null);
+  }, [chat]);
   const answers = useRef(new Map<number, RefObject<View | null>>());
   const { height } = useWindowDimensions();
   const measuring = useRef(false);
@@ -207,9 +211,6 @@ function SourcesPane({
   onAsk?: (question: string) => void;
   readFailed: boolean;
 }) {
-  const { width } = useLayout();
-  const large = useAccessibilitySize();
-  const paneWidth = splitPaneWidth(width, large);
   const top = stack.at(-1);
   const ground = askGround();
   const pane: SplitPane<RecordEntry> = {
@@ -229,7 +230,7 @@ function SourcesPane({
       <View
         style={[
           styles.pane,
-          { width: paneWidth, backgroundColor: colors[ground] },
+          { width: '100%', backgroundColor: colors[ground] },
         ]}
         testID="ask-sources-pane"
       >
@@ -304,7 +305,7 @@ function SourceList({
     ordered.map((s) => s.resource),
     (key) => {
       const s = ordered.find((item) => item.resource === key);
-      if (s) open(s.href, s.title);
+      if (s) open(sourcePath(s), sourceTitle(s));
     },
     () => undefined,
   );
@@ -347,14 +348,7 @@ function SourceList({
             n={marked}
             profiles={profiles}
             focusKey={`${answer.at ?? ''}:${marked}`}
-            onOpenRecord={() =>
-              open(
-                source.slug && citationPassage(source)
-                  ? `/doc/${source.slug}?${new URLSearchParams({ passage: citationPassage(source)!.slice(0, 4000) })}`
-                  : source.href,
-                source.title,
-              )
-            }
+            onOpenRecord={() => open(sourcePath(source), sourceTitle(source))}
             onOpenPerson={(person) =>
               open(`/subject/person/${person.slug}`, person.name)
             }
@@ -373,9 +367,12 @@ function SourceList({
               <CitedRecordRow
                 key={s.resource}
                 record={s}
+                profiles={profiles}
                 n={numbered ? i + 1 : undefined}
                 selected={numbered ? marked === i + 1 : cursor === s.resource}
-                onPress={() => (numbered ? move(i + 1) : open(s.href, s.title))}
+                onPress={() =>
+                  numbered ? move(i + 1) : open(sourcePath(s), sourceTitle(s))
+                }
                 testID={`ask-pane-source-${i + 1}`}
               />
             ))}
@@ -390,8 +387,9 @@ function SourceList({
               <CitedRecordRow
                 key={s.resource}
                 record={s}
+                profiles={profiles}
                 selected={cursor === s.resource}
-                onPress={() => open(s.href, s.title)}
+                onPress={() => open(sourcePath(s), sourceTitle(s))}
               />
             ))}
           </InsetGroup>

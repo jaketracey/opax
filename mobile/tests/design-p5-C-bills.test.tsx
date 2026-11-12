@@ -1,6 +1,6 @@
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { Platform, StyleSheet, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { router } from 'expo-router';
 import { Catalogs } from '../src/api/catalogs';
@@ -15,9 +15,11 @@ import {
 import { SegmentedPicker } from '../src/design/controls';
 import BillDetail, { rulerPoints } from '../src/features/bills/BillDetail';
 import BillsList from '../src/features/bills/BillsList';
+import { ScopeChips } from '../src/features/search/ScopeChips';
 import { billTextRoute } from '../src/navigation/routes';
 import { divisionHistoryRoute } from '../src/navigation/routes/bills';
 import { pinned, slugs } from './pinned';
+import { filterStore } from '../src/features/sheets/filter-model';
 
 // Design pass 5, lane C (bills): the bill header's actions (P1-3), the
 // shared bill row (P2-8), a lapsed bill's last stop (P2-9), the list's
@@ -128,6 +130,41 @@ const texts = (root: ReactTestInstance): string[] =>
   root.children.flatMap((child) =>
     typeof child === 'string' ? [child] : texts(child),
   );
+
+test('the timeline reveals stages sharing dates even when every date is on the ruler', async () => {
+  mockParams.key = 'au-federal-r7534';
+  const record = await fixture.billFor(mockParams.key);
+  mock.billFor.mockResolvedValue({
+    ...record,
+    data: {
+      ...record.data,
+      keyDates: {
+        ...record.data.keyDates,
+        data: [
+          { stage: 'Introduced', date: '2026-10-01', house: 'representatives' },
+          {
+            stage: 'Second reading',
+            date: '2026-10-01',
+            house: 'representatives',
+          },
+          { stage: 'Third reading', date: '2026-10-02', house: 'senate' },
+          { stage: 'Royal assent', date: '2026-10-02', house: null },
+        ],
+      },
+    },
+  });
+  const root = await render(<BillDetail />);
+  const disclosure = root.find(
+    (node) => node.props.testID === 'bill-dates-all' && !!node.props.onPress,
+  );
+  await act(async () => disclosure.props.onPress());
+  expect(texts(host(root, 'bill-date-0')[0]!).join(' ')).toContain(
+    'Second reading',
+  );
+  expect(texts(host(root, 'bill-date-1')[0]!).join(' ')).toContain(
+    'Third reading',
+  );
+});
 /** The bar's trailing items, from the newest Stack.Screen options. */
 function barItems() {
   const options = mockScreens.findLast(
@@ -179,14 +216,14 @@ describe('bill header (P1-3)', () => {
           (node) => node.type === Button && node.props.variant === 'primary',
         ),
       ).toHaveLength(0);
-      // "Bill text" is a navigation row, after the header's source line.
+      // "Bill text" is a navigation row, before the page's source line.
       const text = root.find(
         (node) =>
           node.type === LinkRow && node.props.testID === 'bill-read-text',
       );
       expect(text.props.title).toBe('Bill text');
       const ids = order(root);
-      expect(ids.indexOf('bill-read-text')).toBeGreaterThan(
+      expect(ids.indexOf('bill-read-text')).toBeLessThan(
         ids.indexOf('bill-source'),
       );
       act(() => text.props.onPress());
@@ -198,7 +235,9 @@ describe('bill header (P1-3)', () => {
 
   test("the bar's ⋯ holds the links; Ask and Share are the toolbar (P3-12)", async () => {
     mockParams.key = 'au-federal-r7534';
-    await render(<BillDetail />);
+    const root = await render(<BillDetail />);
+    expect(root.findAllByType(ScopeChips)).toHaveLength(0);
+    expect(root.findAllByProps({ testID: 'bill-share' })).toHaveLength(0);
     const menu = barItems().find((item) => item.type === 'menu')!;
     expect(menu.menu!.items.map((item) => item.label)).toEqual([
       'Copy link',
@@ -206,6 +245,40 @@ describe('bill header (P1-3)', () => {
       'Open on opax.com.au',
     ]);
   });
+});
+
+test('Android bills keep whole scope labels at 2x and wrap the bottom actions; iOS uses the existing picker', async () => {
+  const original = Platform.OS;
+  try {
+    Platform.OS = 'android';
+    window(402, 2);
+    const list = await render(<BillsList />);
+    expect(
+      list
+        .findByType(ScopeChips)
+        .props.options.map((o: { label: string }) => o.label),
+    ).toEqual(['Before parliament', 'Passed', 'All']);
+    expect(list.findAllByType(SegmentedPicker)).toHaveLength(0);
+    mockParams.key = 'au-federal-r7534';
+    const detail = await render(<BillDetail />);
+    const toolbar = detail.find((n) => {
+      if (typeof n.type !== 'string' || !n.props.style) return false;
+      const style = StyleSheet.flatten(n.props.style);
+      return (
+        style?.flexWrap === 'wrap' && style?.justifyContent === 'space-between'
+      );
+    });
+    expect(toolbar).toBeTruthy();
+    expect(
+      detail.findAllByProps({ testID: 'bill-share' }).length,
+    ).toBeGreaterThan(0);
+    Platform.OS = 'ios';
+    const ios = await render(<BillsList />);
+    expect(ios.findAllByType(ScopeChips)).toHaveLength(0);
+    expect(ios.findAllByType(SegmentedPicker).length).toBeGreaterThan(0);
+  } finally {
+    Platform.OS = original;
+  }
 });
 
 describe('how it moved: a terminal status names the last stop (P2-9)', () => {
@@ -265,6 +338,29 @@ describe('how it moved: a terminal status names the last stop (P2-9)', () => {
 });
 
 describe('Bills list (P2-8, P2-19)', () => {
+  test('a search the filters empty says the filters are on and offers to clear them', async () => {
+    mockParams.scope = 'all';
+    mockParams.q = 'Wilkie';
+    const root = await render(<BillsList pushed />);
+    // The newest pushed list's own filter store.
+    let store: ReturnType<typeof filterStore> | undefined;
+    for (let i = 1; i < 500; i += 1)
+      store = filterStore('bills', `list-${i}`) ?? store;
+    await act(async () => store!.set({ ...store!.get(), status: 'exposure' }));
+    const empty = root.find(
+      (node) =>
+        node.props.testID === 'bills-search-empty' &&
+        typeof node.props.title === 'string',
+    );
+    expect(empty.props.body).toMatch(/Filters are on/);
+    const clear = root.find(
+      (node) =>
+        node.props.testID === 'bills-search-clear' && !!node.props.onPress,
+    );
+    await act(async () => clear.props.onPress());
+    expect(root.findAllByType(BillRow).length).toBeGreaterThan(0);
+  });
+
   test('rows are the shared bill row: serif title, status and its dated event, sponsor with a party label', async () => {
     mockParams.scope = 'all';
     mockParams.q = 'Wilkie';
@@ -413,4 +509,52 @@ describe('party codes on bill rows (P2-17)', () => {
     expect(partyFromCode('')).toBeNull();
     expect(partyFromCode(null)).toBeNull();
   });
+});
+
+test('a consultation that closed yesterday in Sydney reads closed on an Australian morning', async () => {
+  mockParams.key = 'au-federal-r7534';
+  const record = await fixture.billFor(mockParams.key);
+  mock.billFor.mockResolvedValue({
+    ...record,
+    data: {
+      ...record.data,
+      identity: {
+        ...record.data.identity,
+        data: { ...record.data.identity.data!, status: 'exposure_draft' },
+      },
+      consultation: {
+        ...record.data.consultation,
+        status: 'ready',
+        data: {
+          url: 'https://example.gov.au/consultation',
+          opens: '2026-10-01',
+          closes: '2026-11-10',
+          note: '',
+        },
+      },
+    },
+  });
+  // 08:00 on 11 Nov in Sydney is still 10 Nov in UTC.
+  jest.useFakeTimers({
+    now: new Date('2026-11-10T21:00:00Z'),
+    doNotFake: [
+      'nextTick',
+      'setImmediate',
+      'clearImmediate',
+      'setTimeout',
+      'clearTimeout',
+      'setInterval',
+      'clearInterval',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+    ],
+  });
+  try {
+    const root = await render(<BillDetail />);
+    const words = texts(host(root, 'bill-consultation')[0]!).join(' ');
+    expect(words).toContain('and closed 10 Nov');
+  } finally {
+    jest.useRealTimers();
+  }
 });

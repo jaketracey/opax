@@ -183,7 +183,7 @@ describe('a lead’s card', () => {
 });
 
 describe('a lead’s page', () => {
-  test('the route has a title before loading and after the subject arrives', async () => {
+  test('the route starts blank and names the subject once it arrives', async () => {
     let resolve!: (value: RecordResult<typeof discovery>) => void;
     jest.mocked(runtime.discovery).mockReturnValue(
       new Promise((done) => {
@@ -194,15 +194,15 @@ describe('a lead’s page', () => {
     mockParams.id = lead.id;
     const r = await render(<LeadDetail />);
     const options = () => r.root.findByType(RouteOptions).props.options;
-    expect(options().title).toBe('Lead');
+    expect(options().title).toBe('');
     await act(async () =>
       resolve({ data: discovery, stale: false, savedAt: 1, asOf: null }),
     );
-    expect(options().title).toBe('Lead');
+    expect(options().title).toBe(lead.comparison.heading);
     await act(async () => r.unmount());
   });
 
-  test('a scrolled lead reveals Lead rather than its comparison heading', async () => {
+  test('a scrolled lead reveals its comparison heading without a generic title', async () => {
     const lead = leads.find((l) => l.category === 'procurement_concentration')!;
     mockParams.id = lead.id;
     let options: Record<string, unknown> = {};
@@ -244,7 +244,7 @@ describe('a lead’s page', () => {
     expect(inline().props.shown).toBe(false);
     await answer(1, -50);
     expect(inline().props).toMatchObject({
-      title: 'Lead',
+      title: lead.comparison.heading,
       shown: true,
       trailing: 1,
     });

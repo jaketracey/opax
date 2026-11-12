@@ -18,7 +18,14 @@ import {
   useRef,
   useState,
 } from 'react';
-import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
+import {
+  AccessibilityInfo,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { decodeEntities } from '../../api/passage-text';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { IconButton } from '../../design/controls';
 import { Disclosure } from '../../design/disclosure';
@@ -31,7 +38,7 @@ import { FigureBlock } from '../../design/record';
 import { LinkRow } from '../../design/rows';
 import { SourceAffordance, type SourceDetails } from '../../design/source';
 import { Text } from '../../design/text';
-import { rhythm } from '../../design/tokens';
+import { colors, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
 import { personRoute } from '../../navigation/routes';
 import { askReportRoute } from '../../navigation/routes/ask';
@@ -43,7 +50,7 @@ import { copyText } from '../records/actions';
 import { useIsMyMember } from '../your-mp/useIsMyMember';
 import { answerBlocks, parseAnswer } from './answer-markdown';
 import { AnswerBody, openAnswerLink, type Claim } from './AnswerBody';
-import { CitedRecordRow, sourceRoute } from './AskRows';
+import { CitedRecordRow, sourcePath, sourceRoute } from './AskRows';
 import {
   caveat,
   figureBlocks,
@@ -57,7 +64,14 @@ import {
   useCitationSelection,
 } from './citation-state';
 import { copyCitation } from './cite';
-import { defaultOptions, turnKey, type Source, type Turn } from './model';
+import {
+  defaultOptions,
+  isNoAnswer,
+  turnKey,
+  type Source,
+  type Turn,
+} from './model';
+import { noAnswerSearch } from './no-answer';
 import { peopleInAnswer, type AskPerson } from './people';
 import { answerCopyText, answeredLong, answeredText } from './share-answer';
 import { citedSources, sourceDate, sourceTitle } from './source-present';
@@ -81,7 +95,7 @@ export const answerNotes = {
   people: 'People are listed in the order the answer cites them.',
   carried: (source: string) =>
     source
-      ? `This suggested question used a passage from “${source}”, found for the previous answer.`
+      ? `This suggested question used a passage from “${decodeEntities(source)}”, found for the previous answer.`
       : 'This suggested question used a passage found for the previous answer.',
 };
 /** The thread scrolls a claim above the half-height citation sheet. */
@@ -99,6 +113,7 @@ export function AnswerView({
   legacy = null,
   profiles,
   paneShowsSources = false,
+  onRephrase,
 }: {
   turn: Turn;
   question: Turn;
@@ -110,6 +125,7 @@ export function AnswerView({
   profiles: Map<string, AskPerson>;
   /** iPad regular width: the pane lists the sources, so the column does not. */
   paneShowsSources?: boolean;
+  onRephrase: (question: string) => void;
 }) {
   const pane = useAskPane();
   const self = useRef<View>(null);
@@ -117,8 +133,11 @@ export function AnswerView({
   const reveal = useContext(AskRevealContext);
   const stacked = useAccessibilitySize();
   const key = turnKey(chat, index);
+  const [textSelection, setTextSelection] = useState<string | null>(null);
+  const selectingText = Platform.OS === 'android' && textSelection === key;
   const selection = useCitationSelection();
   const mine = selection?.turn === key ? selection : null;
+  const revealedClaim = useRef<object | undefined>(undefined);
   useEffect(() => {
     if (!pane) return;
     return pane.register(index, self);
@@ -126,6 +145,9 @@ export function AnswerView({
   // The claim moves just above the sheet's top edge as the sheet opens or
   // is re-targeted.
   useEffect(() => {
+    // A resize changes reveal geometry, but must retain the reading anchor.
+    if (revealedClaim.current === mine?.claim) return;
+    revealedClaim.current = mine?.claim;
     const target = mine?.claim && blockRefs.current.get(mine.claim.block);
     if (target) reveal?.(target);
   }, [mine?.claim, reveal]);
@@ -143,7 +165,12 @@ export function AnswerView({
     () => (data.money_overview ? parseAnswer(data.money_overview) : null),
     [data.money_overview],
   );
-  const groups = citedSources(data.sources);
+  const empty = isNoAnswer(data);
+  const groups = citedSources(
+    empty
+      ? data.sources.map((source) => ({ ...source, cited: false }))
+      : data.sources,
+  );
   const numbered = groups.numbered;
   const scoped = ['needs_scope', 'needs_period'].includes(
     data.answer_status ?? '',
@@ -173,9 +200,12 @@ export function AnswerView({
   };
   const answered = answeredText(turn, legacy);
   const openSources = () =>
-    presentSource(askSourceDetails({ turn, question, chat, index, legacy }), {
-      testID: 'ask-answer-sources',
-    });
+    presentSource(
+      askSourceDetails({ turn, question, chat, index, legacy, profiles }),
+      {
+        testID: 'ask-answer-sources',
+      },
+    );
   const copyAnswer = async () => {
     if (await copyText(answerCopyText(question, turn, legacy)))
       haptic('success');
@@ -191,9 +221,25 @@ export function AnswerView({
     });
   const report = () => router.push(askReportRoute(key));
   const cited = numbered ? groups.cited : [];
-  const empty = !data.answer.trim();
+  const selectionProps =
+    Platform.OS === 'android' ? { selectionMode: selectingText } : {};
+  const toggleTextSelection = () =>
+    setTextSelection(selectingText ? null : key);
   const body = (
     <View style={styles.answer} testID="ask-answer">
+      {selectingText ? (
+        <Pressable
+          accessibilityRole="button"
+          android_ripple={{ color: colors.dividerSubtle }}
+          onPress={toggleTextSelection}
+          style={styles.selectionDone}
+          testID="ask-selection-done"
+        >
+          <Text variant="secondary" tone="navy" wordSafe>
+            Done selecting text
+          </Text>
+        </Pressable>
+      ) : null}
       {kind ? (
         <Text wordSafe variant="secondary" testID="ask-answer-kind">
           {kind}
@@ -202,7 +248,7 @@ export function AnswerView({
       {overview ? (
         <View style={styles.block}>
           <MachinePill note={machineNote} testID="ask-machine-label" />
-          <AnswerBody blocks={overview} onLink={go} />
+          <AnswerBody blocks={overview} onLink={go} {...selectionProps} />
         </View>
       ) : null}
       {empty ? null : (
@@ -211,6 +257,7 @@ export function AnswerView({
             <MachinePill note={machineNote} testID="ask-machine-label" />
           ) : null}
           <AnswerBody
+            {...selectionProps}
             blocks={blocks}
             onCite={cite}
             onLink={go}
@@ -242,6 +289,7 @@ export function AnswerView({
         return (
           <View key={i} style={styles.block}>
             <AnswerBody
+              {...selectionProps}
               blocks={[
                 {
                   kind: 'quote',
@@ -252,6 +300,7 @@ export function AnswerView({
             {source ? (
               <CitedRecordRow
                 record={source}
+                profiles={profiles}
                 n={numbered ? n : undefined}
                 onPress={() =>
                   cite([n], { block: `excerpt.${i}`, sentence: 0 })
@@ -278,11 +327,25 @@ export function AnswerView({
         </InsetGroup>
       ) : null}
       {empty ? (
-        <View style={styles.block}>
-          <Text wordSafe testID="ask-error-empty">
+        <View style={styles.block} testID="ask-no-answer">
+          <Text wordSafe accessibilityRole="header" testID="ask-error-empty">
             {groups.cited.length ? askErrors.empty : askErrors.emptyNone}
           </Text>
-          <SearchOpaxRow question={question.text} />
+          <Text wordSafe variant="secondary" testID="ask-searched">
+            {noAnswerSearch(data, question)}
+          </Text>
+          <InsetGroup>
+            <LinkRow
+              title="Rephrase your question"
+              detail="Try naming a person, bill or topic and a year."
+              symbol="square.and.pencil"
+              onPress={() =>
+                onRephrase(data.suggested_question?.trim() || question.text)
+              }
+              testID="ask-rephrase"
+            />
+            <SearchOpaxRow question={question.text} grouped />
+          </InsetGroup>
         </View>
       ) : null}
       {scoped ? <SearchOpaxRow question={question.text} /> : null}
@@ -302,6 +365,7 @@ export function AnswerView({
               <CitedRecordRow
                 key={source.resource}
                 record={source}
+                profiles={profiles}
                 n={numbered ? i + 1 : undefined}
                 selected={mine?.n === i + 1}
                 // An open citation sheet moves to this source instead.
@@ -309,10 +373,10 @@ export function AnswerView({
                   mine
                     ? () => showCitation({ turn: key, n: i + 1 })
                     : pane
-                      ? () => go(source.href, source.title)
+                      ? () => go(sourcePath(source), sourceTitle(source))
                       : sourceRoute(source)
                         ? undefined
-                        : () => go(source.href, source.title)
+                        : () => go(sourcePath(source), sourceTitle(source))
                 }
                 onShowPassage={
                   numbered
@@ -350,6 +414,10 @@ export function AnswerView({
           onShare={shareQuestion}
           onReport={report}
           cited={cited}
+          {...(Platform.OS === 'android' &&
+          (blocks.length || overview?.length || data.evidence_excerpts?.length)
+            ? { onSelectText: toggleTextSelection, selectingText }
+            : {})}
         />
       </View>
     </View>
@@ -368,12 +436,14 @@ export function askSourceDetails({
   chat,
   index,
   legacy,
+  profiles,
 }: {
   turn: Turn;
   question: Turn;
   chat: string;
   index: number;
   legacy: LegacyDate;
+  profiles?: Map<string, AskPerson>;
 }): SourceDetails {
   const data = turn.result || {
     answer: turn.text,
@@ -386,7 +456,7 @@ export function askSourceDetails({
     router.back();
     const href = sourceRoute(source);
     if (href) router.push(href);
-    else openAnswerLink(source.href);
+    else openAnswerLink(sourcePath(source));
   };
   const originals = groups.cited.filter((s) => s.url?.startsWith('https://'));
   const calculated = isCalculated(data);
@@ -423,6 +493,7 @@ export function askSourceDetails({
               <CitedRecordRow
                 key={source.resource}
                 record={source}
+                profiles={profiles}
                 n={groups.numbered ? i + 1 : undefined}
                 onPress={() => leave(source)}
                 testID={`ask-sources-cited-${i + 1}`}
@@ -439,7 +510,10 @@ export function askSourceDetails({
             {originals.map((source) => (
               <LinkRow
                 key={source.resource}
-                title={[source.source, sourceTitle(source)]
+                title={[
+                  decodeEntities(source.source ?? ''),
+                  sourceTitle(source),
+                ]
                   .filter(Boolean)
                   .join(' · ')}
                 detail={sourceDate(source) ?? 'Date not published'}
@@ -455,6 +529,7 @@ export function askSourceDetails({
               <CitedRecordRow
                 key={source.resource}
                 record={source}
+                profiles={profiles}
                 onPress={() => leave(source)}
               />
             ))}
@@ -585,11 +660,15 @@ function AnswerMenu({
   onShare,
   onReport,
   cited,
+  onSelectText,
+  selectingText = false,
 }: {
   onCopy: () => void;
   onShare: () => void;
   onReport: () => void;
   cited: Source[];
+  onSelectText?: () => void;
+  selectingText?: boolean;
 }) {
   const citeAll = (style: 'apa' | 'aglc') => () =>
     void copyCitation(cited, style);
@@ -602,6 +681,16 @@ function AnswerMenu({
         onPress={() =>
           confirmAction('', [
             { title: 'Copy answer', onPress: onCopy },
+            ...(onSelectText
+              ? [
+                  {
+                    title: selectingText
+                      ? 'Done selecting text'
+                      : 'Select text',
+                    onPress: onSelectText,
+                  },
+                ]
+              : []),
             { title: 'Share question', onPress: onShare },
             ...(cited.length
               ? [
@@ -653,6 +742,8 @@ function AnswerMenu({
 }
 /** Announced once when an answer lands (journeys/ask.md 4.15). */
 export function answerReadyAnnouncement(turn: Turn) {
+  if (isNoAnswer(turn.result ?? { answer: turn.text }))
+    return 'No answer found. Rephrase your question or search OPAX.';
   const count = (turn.result?.sources ?? turn.sources ?? []).filter(
     (s) => s.cited,
   ).length;
@@ -665,6 +756,11 @@ export function announceAnswer(turn: Turn) {
   );
 }
 const styles = StyleSheet.create({
+  selectionDone: {
+    minHeight: 48,
+    justifyContent: 'center',
+    paddingVertical: rhythm.tight,
+  },
   answer: { gap: rhythm.group },
   block: { gap: rhythm.tight },
   labelled: { gap: rhythm.groupHeader },

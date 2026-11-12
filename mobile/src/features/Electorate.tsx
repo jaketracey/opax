@@ -1,4 +1,5 @@
-import { partyFromCode } from './bills/party-codes';
+import { PARTY_NOT_RECORDED, isPartyLabel } from '../design/party';
+import { RecordNameLink } from '../design/record';
 import { RouteOptions } from '../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
@@ -50,16 +51,19 @@ import {
 } from '../design/row-padding';
 import { symbols } from '../design/symbols';
 import { colors, minimumTarget, rhythm } from '../design/tokens';
-import { glassBar, headerItems, pageItems } from '../navigation/chrome';
+import { headerItems, pageItems } from '../navigation/chrome';
 import { openOnWeb } from '../navigation/external';
 import {
   electionRoute,
   electorateDateRoute,
   electorateRoute,
   membersRoute,
+  partyRoute,
+  personRoute,
 } from '../navigation/routes';
 import { copyRecordLink, shareRecord } from '../navigation/share';
 import { presentSource } from '../navigation/sheets';
+import { emptyBarTitle } from '../navigation/useTitleOnScroll';
 import { useOpenAsk } from './ask/open';
 import { onElectorateDate } from './directories/ElectorateDateSheet';
 import {
@@ -168,17 +172,24 @@ export default function Electorate() {
   );
 }
 
-export function ElectorateScreen({
-  id,
-  embedded = false,
-  initialDate = '',
-  section,
-}: {
+interface ElectorateScreenProps {
   id: string;
   embedded?: boolean;
   initialDate?: string;
   section?: 'changes';
-}) {
+}
+
+/** Embedded panes can reuse this component for a different electorate. */
+export function ElectorateScreen(props: ElectorateScreenProps) {
+  return <ElectorateContent key={props.id} {...props} />;
+}
+
+function ElectorateContent({
+  id,
+  embedded = false,
+  initialDate = '',
+  section,
+}: ElectorateScreenProps) {
   const [chosen, setChosen] = useState<string | null>(null);
   const asof =
     chosen ?? (initialDate && validDate(initialDate) ? initialDate : '');
@@ -237,7 +248,6 @@ export function ElectorateScreen({
         column="readable"
         testID="electorate-screen"
         scrollRef={scroll}
-        barTitle={embedded ? undefined : identity?.name}
         offline={loaded?.stale ? { savedAt: loaded.savedAt } : null}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={refresh} />
@@ -293,26 +303,16 @@ export function ElectorateScreen({
 
 function ElectorateSkeleton() {
   return (
-    <View testID="electorate-loading" style={{ gap: rhythm.section }}>
-      <Skeleton
-        shape="card"
-        count={1}
-        label="Loading the electorate"
-        onSunken
-      />
-      <Skeleton
-        shape="text"
-        count={3}
-        label="Loading the electorate"
-        onSunken
-      />
-      <Skeleton shape="people" count={1} label="Loading the members" onSunken />
-      <Skeleton shape="rows" count={2} label="Loading the elections" onSunken />
-    </View>
+    <Skeleton
+      shape="electorate-profile"
+      label="Loading the electorate"
+      testID="electorate-loading"
+      onSunken
+    />
   );
 }
 
-/** The bar's items: Share, then ⋯. Back and Share only while loading. */
+/** The centre stays blank; the content heading names this screen. */
 function ElectorateBar({
   loaded,
   asof,
@@ -320,18 +320,32 @@ function ElectorateBar({
   loaded: LoadedElectorate | null;
   asof: string;
 }) {
+  const { share, menu } = useElectorateMenu(loaded?.seat ?? pendingSeat, asof);
   return (
-    <>
-      <RouteOptions
-        options={{
-          headerTransparent: glassBar(),
-          ...(loaded ? {} : headerItems(undefined)),
-        }}
-      />
-      {loaded ? <ElectorateMenu seat={loaded.seat} asof={asof} /> : null}
-    </>
+    <RouteOptions
+      stableItems
+      options={{
+        // Route metadata names subsequent Back buttons without drawing a title.
+        title: loaded?.seat.name ?? '',
+        headerTitle: emptyBarTitle,
+        ...headerItems(
+          loaded
+            ? pageItems({ name: loaded.seat.name, share, menu })
+            : undefined,
+        ),
+      }}
+    />
   );
 }
+
+/** The menu hook cannot offer to save a seat until its identity is known. */
+const pendingSeat = {
+  electorate_id: '',
+  name: '',
+  jurisdiction: '',
+  chamber: '',
+  status: 'historical',
+} as Seat;
 
 /** The ⋯ items in order; a hidden item is left out, never disabled. */
 export function useElectorateMenu(
@@ -392,15 +406,6 @@ export function useElectorateMenu(
     },
     menu,
   };
-}
-
-function ElectorateMenu({ seat, asof }: { seat: Seat; asof: string }) {
-  const { share, menu } = useElectorateMenu(seat, asof);
-  return (
-    <RouteOptions
-      options={headerItems(pageItems({ name: seat.name, share, menu }))}
-    />
-  );
 }
 
 /** Embedded panes (iPad, Talk) have no bar: the ⋯ items as one button. */
@@ -624,6 +629,7 @@ function ElectoratePage({
             <ElectionRow
               key={e.election_id}
               record={e}
+              directory={loaded.directory}
               seatId={identity.id}
               jurisdiction={identity.jurisdiction}
               testID={`election-row-${i}`}
@@ -733,10 +739,10 @@ function MembersSection({
   const many = view.capacity > 1 || rows.length > 1;
   const senate = identity.chamber === 'senate';
   const shown = rows.length > 6 ? rows.slice(0, 6) : rows;
-  const header = abolished
-    ? 'Past members'
-    : asof
-      ? `${many ? 'Members' : 'Member'} on ${formatDate(asof)}`
+  const header = asof
+    ? `${many ? 'Members' : 'Member'} on ${formatDate(asof)}`
+    : abolished
+      ? 'Past members'
       : many
         ? 'Members'
         : 'Member';
@@ -752,14 +758,14 @@ function MembersSection({
   return (
     <View testID="electorate-members" style={{ gap: rhythm.heading }}>
       <SectionHeader title={header} testID="electorate-members-heading" />
-      {abolished ? null : asof ? (
+      {asof ? (
         <DatedMembers
           view={view}
           directory={directory}
           asof={asof}
           onBackToToday={onBackToToday}
         />
-      ) : rows.length ? (
+      ) : abolished ? null : rows.length ? (
         <InsetGroup>
           <RepresentativeRows
             rows={shown}
@@ -788,7 +794,7 @@ function MembersSection({
       <ElectorateHistory
         view={view}
         directory={directory}
-        header={!abolished}
+        header={!abolished || !!asof}
       />
       <BlockSource
         block={block}
@@ -807,11 +813,13 @@ function MembersSection({
 /** One election, closed: its title, winner, party and date. */
 function ElectionRow({
   record,
+  directory,
   seatId,
   jurisdiction,
   testID,
 }: {
   record: ElectionRecord;
+  directory: Directory;
   seatId: string;
   jurisdiction: string;
   testID: string;
@@ -819,12 +827,19 @@ function ElectionRow({
   const cellStyle = useRowCellStyle();
   useRowInset(0);
   const summary = electionSummary(record, jurisdiction);
+  const winner = summary.winner;
+  const profile = winner?.personId
+    ? representativeProfile(winner.personId, directory)
+    : null;
+  const winnerHref = profile
+    ? personRoute(profile.slug, winner!.name)
+    : undefined;
   const href = electionRoute(seatId, summary.key);
   const date = formatDate(summary.date, 'short');
   const label = [
     summary.title,
     summary.winner
-      ? `${summary.winner.name}, ${summary.winner.party ?? 'Independent'}`
+      ? `${summary.winner.name}, ${summary.winner.party ?? PARTY_NOT_RECORDED}`
       : null,
     formatDate(summary.date),
   ]
@@ -845,6 +860,20 @@ function ElectionRow({
         accessibilityRole="link"
         accessibilityLabel={label}
         accessibilityHint="Opens the election"
+        accessibilityActions={[
+          ...(winnerHref
+            ? [{ name: 'winner', label: `Open ${winner!.name}` }]
+            : []),
+          ...(isPartyLabel(winner?.party)
+            ? [{ name: 'party', label: `Open ${winner!.party} party page` }]
+            : []),
+        ]}
+        onAccessibilityAction={(event) => {
+          if (event.nativeEvent.actionName === 'winner' && winnerHref)
+            router.push(winnerHref);
+          if (event.nativeEvent.actionName === 'party' && winner?.party)
+            router.push(partyRoute(winner.party));
+        }}
         onPress={() => router.push(href)}
         style={({ pressed }) => [
           styles.electionRow,
@@ -858,15 +887,20 @@ function ElectionRow({
           </Text>
           {summary.winner ? (
             <>
-              <Text wordSafe variant="body">
-                {summary.winner.name}
-              </Text>
-              <PartyLabel
-                party={partyFromCode(summary.winner.party) ?? 'Independent'}
-                status="unknown"
-                nested
-                linked={false}
+              <RecordNameLink
+                name={summary.winner.name}
+                href={winnerHref}
+                testID={`${testID}-winner`}
               />
+              <View style={styles.party}>
+                <PartyLabel
+                  party={summary.winner.party}
+                  status="unknown"
+                  nested
+                  linked
+                  compact
+                />
+              </View>
             </>
           ) : null}
           <Text wordSafe variant="secondary">
@@ -889,5 +923,6 @@ const styles = StyleSheet.create({
     minHeight: minimumTarget,
   },
   electionWords: { flex: 1, gap: rhythm.line },
+  party: { minHeight: minimumTarget },
   end: { height: 1 },
 });

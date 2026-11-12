@@ -1,7 +1,8 @@
 import { router } from 'expo-router';
 import { useState, useSyncExternalStore } from 'react';
 import { View } from 'react-native';
-import { formatDate } from '../../design/format';
+import { decodeEntities } from '../../api/passage-text';
+import { counted, formatDate } from '../../design/format';
 import {
   Group,
   InlineError,
@@ -18,6 +19,7 @@ import {
 } from '../../navigation/routes/public-money';
 import { resultsRoute } from '../../navigation/routes/search';
 import { isGrantProgram } from './eligibility';
+import { InterestRow } from './InterestRow';
 import { EmptyResults, type RecoveryHandlers } from './EmptyResults';
 import {
   openSearchPath,
@@ -36,6 +38,7 @@ import {
   type Read,
 } from './requests';
 import { groups, type CatalogGroup } from './scopes';
+import { ReportRow } from './ReportResults';
 
 /**
  * Where a money row goes (journeys/money.md 7 and 12.1): an organisation
@@ -52,7 +55,7 @@ export function moneyDestination(row: GroupRow) {
   if (rid)
     return moneyRecordRoute(
       { rid: decodeURIComponent(rid), jur: params.get('jur') ?? 'federal' },
-      row.title,
+      decodeEntities(row.title),
     );
   if (['grant_award', 'contract'].includes(row.kind) || params.get('award'))
     return moneyItemRoute(
@@ -60,7 +63,7 @@ export function moneyDestination(row: GroupRow) {
         kind: row.kind === 'contract' ? 'contract' : 'grant',
         id: params.get('award') ?? row.slug,
       },
-      row.title,
+      decodeEntities(row.title),
     );
   if (
     row.kind === 'grant' &&
@@ -129,7 +132,7 @@ export function useGroupList(group: CatalogGroup, q: string) {
                 {
                   label: row.source || 'Original source',
                   url: row.url,
-                  record: row.title,
+                  record: decodeEntities(row.title),
                 },
               ]
             : [],
@@ -147,11 +150,17 @@ export function useGroupList(group: CatalogGroup, q: string) {
     next: pages > 1 ? last : null,
     rows: head ? rows : null,
     more,
+    nextCount: lastData
+      ? Math.max(
+          0,
+          Math.min(
+            lastData.per_page,
+            lastData.total - lastData.page * lastData.per_page,
+          ),
+        )
+      : 0,
     count: head
-      ? countLabel(head.data.total, [
-          groups[group].noun.replace(/s$/, ''),
-          groups[group].noun,
-        ])
+      ? countLabel(head.data.total, [groups[group].one, groups[group].noun])
       : null,
     source,
     load: () => {
@@ -179,13 +188,14 @@ function CatalogRow({
   index: number;
 }) {
   const [failed, setFailed] = useState(false);
+  const title = decodeEntities(row.title);
   const money = group === 'grants' || group === 'agencies';
   const destination = money ? moneyDestination(row) : null;
   const open = () => {
     setFailed(false);
     const action = row.personSlug
       ? openSearchPerson(row.personSlug)
-      : openSearchPath(row.href, row.title);
+      : openSearchPath(row.href, title);
     void action.catch(() => setFailed(true));
   };
   const detail = [
@@ -194,10 +204,20 @@ function CatalogRow({
   ]
     .filter(Boolean)
     .join(' · ');
+  if (group === 'reports')
+    return <ReportRow row={row} testID={`results-${group}-${index}`} />;
+  if (row.kind === 'interest')
+    return (
+      <InterestRow
+        row={row}
+        testID={`results-${group}-${index}`}
+        fallback={() => openSearchPath(row.href, title)}
+      />
+    );
   return (
     <View>
       <LinkRow
-        title={row.title.replace(/\s+[\u2014–-]\s+.*$/, '')}
+        title={title.replace(/\s+[\u2014–-]\s+.*$/, '')}
         detail={
           money
             ? detail
@@ -280,7 +300,7 @@ export function GroupResults({
       ) : list.more ? (
         <InsetGroup>
           <LinkRow
-            title={`Show 20 more ${noun}`}
+            title={`Show ${counted(list.nextCount, `more ${groups[group].one}`, `more ${noun}`)}`}
             accessory="none"
             onPress={list.loadMore}
             testID="results-more"

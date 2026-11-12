@@ -106,6 +106,7 @@ export function decodeGrantIndex(v: unknown) {
     seats: array((v) => {
       const r = object(v);
       return {
+        key: opt(r.key),
         name: nonempty(r.n),
         state: nonempty(r.st),
         total: number(r.t),
@@ -127,6 +128,33 @@ export function decodeGrantIndex(v: unknown) {
   };
 }
 export type GrantIndex = ReturnType<typeof decodeGrantIndex>;
+export function decodeGrant(v: unknown) {
+  const g = object(v);
+  const recipient = publicRecipient(
+    nonempty(g.rn),
+    opt(g.k),
+    abnType(g),
+    opt(g.rid),
+  );
+  const guid = opt(g.guid);
+  return {
+    id: nonempty(g.id),
+    ...recipient,
+    recipientId: recipient.organisation ? opt(g.rid) : '',
+    title: recipient.organisation ? opt(g.n) : '',
+    guid: recipient.organisation ? guid : '',
+    value: number(g.v),
+    seat: opt(g.el),
+    state: opt(g.elst),
+    year: opt(g.fy),
+    start: opt(g.s),
+    selection: opt(g.sel),
+    sourceUrl:
+      recipient.organisation && /^[a-f0-9-]{36}$/.test(guid)
+        ? `https://www.grants.gov.au/Ga/Show/${guid}`
+        : null,
+  };
+}
 export function decodeProgram(v: unknown) {
   const d = object(v);
   return {
@@ -159,33 +187,7 @@ export function decodeProgram(v: unknown) {
               count: count(e.c),
             };
           })(d.electorates),
-    grants: array((v) => {
-      const g = object(v);
-      const recipient = publicRecipient(
-        nonempty(g.rn),
-        opt(g.k),
-        abnType(g),
-        opt(g.rid),
-      );
-      const guid = opt(g.guid);
-      return {
-        id: nonempty(g.id),
-        ...recipient,
-        recipientId: recipient.organisation ? opt(g.rid) : '',
-        title: recipient.organisation ? opt(g.n) : '',
-        guid: recipient.organisation ? guid : '',
-        value: number(g.v),
-        seat: opt(g.el),
-        state: opt(g.elst),
-        year: opt(g.fy),
-        start: opt(g.s),
-        selection: opt(g.sel),
-        sourceUrl:
-          recipient.organisation && /^[a-f0-9-]{36}$/.test(guid)
-            ? `https://www.grants.gov.au/Ga/Show/${guid}`
-            : null,
-      };
-    })(d.grants),
+    grants: array(decodeGrant)(d.grants),
   };
 }
 export type Program = ReturnType<typeof decodeProgram>;
@@ -308,6 +310,7 @@ export function largestFor(
       organisation: recipient.organisation,
       purpose: recipient.organisation ? r.purpose : '',
       recipientId: recipient.organisation ? r.recipientId : '',
+      sourceUrl: recipient.organisation ? r.sourceUrl : null,
     };
   });
 }
@@ -340,6 +343,20 @@ export function decodeAgencies(v: unknown) {
 }
 export function decodeAgency(v: unknown) {
   const d = object(v);
+  const suppliers = array((v) => {
+    const s = object(v),
+      id = nonempty(s.id),
+      name = nonempty(s.name),
+      organisation = isOrganisation(name, opt(s.entity_type), abnType(s), id);
+    return {
+      id,
+      name: organisation ? name : unnamedSupplier,
+      organisation,
+      total: number(s.total),
+      count: count(s.count),
+    };
+  })(d.suppliers);
+  const supplierEntities = new Map(suppliers.map((s) => [s.id, s]));
   return {
     id: nonempty(d.id),
     name: nonempty(d.name),
@@ -356,26 +373,18 @@ export function decodeAgency(v: unknown) {
       };
     })(d.years),
     undated: number(object(d.undated).total),
-    suppliers: array((v) => {
-      const s = object(v),
-        name = nonempty(s.name),
-        organisation = isOrganisation(name, opt(s.entity_type), abnType(s));
-      return {
-        id: nonempty(s.id),
-        name: organisation ? name : unnamedSupplier,
-        organisation,
-        total: number(s.total),
-        count: count(s.count),
-      };
-    })(d.suppliers),
+    suppliers,
     supplierCount: d.supplier_count === undefined ? 0 : count(d.supplier_count),
     contracts: array((v) => {
       const c = object(v),
         name = nonempty(c.supplier),
-        organisation = isOrganisation(name, opt(c.entity_type), abnType(c));
+        supplierId = opt(c.supplier_id),
+        organisation =
+          supplierEntities.get(supplierId)?.organisation !== false &&
+          isOrganisation(name, opt(c.entity_type), abnType(c), supplierId);
       return {
         id: nonempty(c.id),
-        supplierId: opt(c.supplier_id),
+        supplierId,
         title: organisation ? nonempty(c.title) : '',
         supplier: organisation ? name : unnamedSupplier,
         value: number(c.amount),

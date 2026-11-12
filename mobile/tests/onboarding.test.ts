@@ -4,6 +4,7 @@ import { e2eTourRequested } from '../src/onboarding/launch-flag';
 import { fadeStart, handoff, longestHandoff } from '../src/launch/timing';
 import * as splash from '../src/launch/splash';
 import { welcomeCopy } from '../src/features/welcome/copy';
+import { invitationPlace } from '../src/features/today/order';
 
 // An in-memory documents folder for the "seen" flag.
 const mockFiles = new Map<string, string>();
@@ -201,6 +202,90 @@ describe('welcome visibility', () => {
     const goBack = jest.fn();
     closeWelcome({ getParent: () => ({ goBack }) });
     expect(goBack).toHaveBeenCalledTimes(1);
+  });
+});
+
+// First-run drop-off (12 Nov): what the next cold launch shows after the app
+// is closed at each step. The welcome's own calls are in welcome.test.tsx
+// and first-run-drop.test.tsx; these hold what the device remembers.
+describe('relaunch during first run', () => {
+  /** A cold launch: is the welcome due, and where does Today's invitation sit? */
+  async function relaunch() {
+    const state = loadState(false);
+    await state.checkFirstLaunch();
+    const welcomeDeclinedAt = await state.welcomeDeclinedAt();
+    return {
+      welcome: state.tourState() === 'visible',
+      declinedThisLaunch: state.welcomeDeclinedThisLaunch(),
+      invitation: invitationPlace(
+        { hiddenUntil: null, welcomeDeclinedAt },
+        state.sydneyDate(),
+      ),
+    };
+  }
+  test('closed on the welcome page, before Continue: the welcome shows again', async () => {
+    const first = loadState(false);
+    await first.checkFirstLaunch();
+    expect(first.tourState()).toBe('visible');
+    first.hideTour();
+    // Nothing tapped, nothing written.
+    expect([...mockFiles.keys()]).toEqual([]);
+    expect(await relaunch()).toEqual({
+      welcome: true,
+      declinedThisLaunch: false,
+      invitation: 'lead',
+    });
+  });
+  test('closed on the electorate step or a Browse list, after Continue: Today, with the invitation in its own slot', async () => {
+    const first = loadState(false);
+    await first.checkFirstLaunch();
+    first.hideTour();
+    // Continue (Welcome.tsx): seen, nothing declined.
+    await first.markWelcomeSeen();
+    expect(await relaunch()).toEqual({
+      welcome: false,
+      declinedThisLaunch: false,
+      invitation: 'lead',
+    });
+  });
+  test('after "Choose later" or "Not now": Today, the invitation after Bills', async () => {
+    const first = loadState(false);
+    await first.checkFirstLaunch();
+    first.hideTour();
+    await first.markWelcomeSeen();
+    await first.markWelcomeSeen({ declined: true });
+    expect(first.welcomeDeclinedThisLaunch()).toBe(true);
+    expect(await relaunch()).toEqual({
+      welcome: false,
+      declinedThisLaunch: false,
+      invitation: 'after-bills',
+    });
+  });
+  test('after choosing a seat: Today, and nothing was declined', async () => {
+    const first = loadState(false);
+    await first.checkFirstLaunch();
+    first.hideTour();
+    await first.markWelcomeSeen();
+    await first.markWelcomeSeen({ declined: false });
+    expect(await first.welcomeDeclinedAt()).toBeNull();
+    expect((await relaunch()).welcome).toBe(false);
+  });
+  test('Continue and "Not now" written back to back still keep the decline', async () => {
+    const first = loadState(false);
+    await Promise.all([
+      first.markWelcomeSeen(),
+      first.markWelcomeSeen({ declined: true }),
+    ]);
+    expect(await first.welcomeDeclinedAt()).toBe(first.sydneyDate());
+    expect(await first.welcomeSeen()).toBe(true);
+  });
+  test('a 1.0 reader and an e2e launch are unchanged: no welcome', async () => {
+    mockFiles.set(SEEN, JSON.stringify({ version: 1, generation: 1 }));
+    expect((await relaunch()).welcome).toBe(false);
+    mockFiles.clear();
+    const e2e = loadState(true);
+    await e2e.checkFirstLaunch();
+    expect(e2e.tourState()).toBe('hidden');
   });
 });
 

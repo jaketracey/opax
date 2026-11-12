@@ -1,5 +1,10 @@
 import { withNavigationOptions } from './navigation-options';
-import { act, create, type ReactTestRenderer } from 'react-test-renderer';
+import {
+  act,
+  create,
+  type ReactTestInstance,
+  type ReactTestRenderer,
+} from 'react-test-renderer';
 import type { NativeStackHeaderItem } from 'expo-router';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
@@ -8,11 +13,14 @@ import {
   Dimensions,
   InteractionManager,
   Keyboard,
+  Platform,
   ScrollView,
   StyleSheet,
   TextInput,
+  View,
 } from 'react-native';
 import AskScreen, { PhoneDock } from '../src/features/ask/AskScreen';
+import { useScreenReady } from '../src/analytics/timing';
 import {
   AskDock,
   COMPOSER_HEIGHT_SHARE,
@@ -38,9 +46,17 @@ import {
 } from '../src/design/keyboard';
 import { useOpenAsk } from '../src/features/ask/open';
 import { fromWebPath } from '../src/navigation/external';
+import * as Duo from '../modules/opax-duo';
+import {
+  resetAdaptiveDeviceForTests,
+  setWindowTraitsOverride,
+} from '../src/design/adaptive';
+import { ReservedRegionsProvider } from '../src/design/fold-area';
+import { emptyReservedRegions } from '../src/design/fold';
 
 // The bar's items, as AskScreen sets them through Stack.Screen.
 const mockBar: { options: Record<string, unknown> } = { options: {} };
+jest.mock('../src/analytics/timing', () => ({ useScreenReady: jest.fn() }));
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
   Stack: {
@@ -203,16 +219,64 @@ afterEach(async () => {
   jest.mocked(catalogs.roster).mockRejectedValue(new Error('Offline'));
   mockDirectory.current = null;
 });
-async function mount() {
+async function mount(screen = <AskScreen />) {
   await act(async () => {
     view = create(
-      withNavigationOptions(<AskScreen />, (options) => {
+      withNavigationOptions(screen, (options) => {
         mockBar.options = options;
       }),
     );
   });
   return view!;
 }
+
+test.each([
+  ['ios', 'composer'],
+  ['ios', 'content'],
+  ['android', 'composer'],
+  ['android', 'content'],
+] as const)(
+  'Ask on %s waits for both layouts, with %s arriving first',
+  async (platform, first) => {
+    const os = jest.replaceProperty(Platform, 'OS', platform);
+    try {
+      await mount();
+      expect(byId('ask-idle')).not.toHaveLength(0);
+      expect(useScreenReady).toHaveBeenLastCalledWith('/ask', false);
+      const content = byId('ask-screen').find(
+        (node) => typeof node.props.onContentSizeChange === 'function',
+      )!.props.onContentSizeChange;
+      const composer = byId('ask-dock').find(
+        (node) => typeof node.props.onLayout === 'function',
+      )!.props.onLayout;
+      const dockLayout = (height: number) => ({
+        nativeEvent: { layout: { width: 390, height, x: 0, y: 0 } },
+      });
+      act(() => {
+        content(0, 400);
+        composer(dockLayout(0));
+      });
+      expect(useScreenReady).toHaveBeenLastCalledWith('/ask', false);
+      act(() => {
+        if (first === 'composer') composer(dockLayout(100));
+        else content(390, 400);
+      });
+      expect(useScreenReady).toHaveBeenLastCalledWith('/ask', false);
+      act(() => {
+        if (first === 'composer') content(390, 400);
+        else composer(dockLayout(100));
+      });
+      expect(useScreenReady).toHaveBeenLastCalledWith('/ask', true);
+      act(() => {
+        content(390, 450);
+        composer(dockLayout(110));
+      });
+      expect(useScreenReady).toHaveBeenLastCalledWith('/ask', true);
+    } finally {
+      os.restore();
+    }
+  },
+);
 
 function immediateFocusRequests() {
   const interactions = jest
@@ -501,6 +565,108 @@ test('a cold launch opens idle, with the last conversation first under Conversat
   expect(client.askPost).not.toHaveBeenCalled();
 });
 
+test.each([false, true])(
+  'phone idle touches pass through the composer overlay, native region view = %s',
+  async (native) => {
+    const window = Dimensions.get('window');
+    const regionView = jest.replaceProperty(
+      Duo,
+      'ReservedRegionView',
+      native ? View : null,
+    );
+    act(() => {
+      Dimensions.set({
+        window: { ...window, width: 402, height: 874, fontScale: 1 },
+      });
+      setWindowTraitsOverride({
+        horizontal: 'compact',
+        vertical: 'regular',
+        foldable: false,
+      });
+      resetAdaptiveDeviceForTests();
+    });
+    jest.mocked(chatsSnapshot).mockReturnValue(oneChat);
+    jest
+      .mocked(client.askPost)
+      .mockResolvedValueOnce(answer)
+      .mockResolvedValueOnce({ questions: [] });
+    askSession.setDraft('A prefilled fixture question?');
+    try {
+      await mount(
+        <ReservedRegionsProvider value={emptyReservedRegions}>
+          <AskScreen />
+        </ReservedRegionsProvider>,
+      );
+      expect(byId('ask-idle')).not.toEqual([]);
+      expect(one('ask-question').props.value).toBe(
+        'A prefilled fixture question?',
+      );
+      const scroll = view!.root.findByType(ScrollView);
+      // Omitted scrollEnabled uses React Native's enabled default.
+      expect(scroll.props.scrollEnabled ?? true).toBe(true);
+      expect(scroll.props.maintainVisibleContentPosition).toBeUndefined();
+      const column = byId('ask-conversation-column').find(
+        (node) => typeof node.type === 'string',
+      )!;
+      expect(column.children[0]).toBe(scroll);
+      // Renderer presses bypass native hit testing. Also inspect every
+      // full-height layer in the siblings drawn above the scrolling content.
+      const fullHeightLayers: ReactTestInstance[] = [];
+      const inspectOverlay = (node: ReactTestInstance | string) => {
+        if (typeof node === 'string') return;
+        if (typeof node.type === 'string') {
+          const style = StyleSheet.flatten(node.props.style);
+          const fillsHeight =
+            style?.flex === 1 ||
+            style?.flexGrow === 1 ||
+            style?.height === '100%' ||
+            (style?.position === 'absolute' &&
+              style.top === 0 &&
+              style.bottom === 0);
+          // Stop at the bounded composer band. Its controls accept touches.
+          if (!fillsHeight) return;
+          fullHeightLayers.push(node);
+        }
+        node.children.forEach(inspectOverlay);
+      };
+      column.children.slice(1).forEach(inspectOverlay);
+      expect(fullHeightLayers.length).toBeGreaterThan(0);
+      expect(
+        fullHeightLayers
+          .filter((node) => {
+            const pointerEvents =
+              node.props.pointerEvents ??
+              StyleSheet.flatten(node.props.style)?.pointerEvents;
+            return pointerEvents !== 'box-none' && pointerEvents !== 'none';
+          })
+          .map((node) => node.props.testID ?? node.type),
+      ).toEqual([]);
+      expect(
+        StyleSheet.flatten(byId('ask-sources-column')[0]!.props.style).display,
+      ).toBe('none');
+
+      await press('ask-conversation-0');
+      expect(askSession.snapshot().id).toBe('saved-fixture');
+      expect(client.askPost).not.toHaveBeenCalled();
+      await act(async () => askSession.newConversation());
+      const starter = a11y('ask-starter-0', 'accessibilityLabel');
+      await press('ask-starter-0');
+      expect(jest.mocked(client.askPost).mock.calls[0]?.[1]).toMatchObject({
+        question: starter,
+      });
+    } finally {
+      await act(async () => {
+        view?.unmount();
+        view = null;
+        Dimensions.set({ window });
+        setWindowTraitsOverride(undefined);
+        resetAdaptiveDeviceForTests();
+      });
+      regionView.restore();
+    }
+  },
+);
+
 test('Ask stands on the grouped ground, so its inset groups read as raised', async () => {
   expect(designFlags.groupedSurfaces).toBe(true);
   await mount();
@@ -770,8 +936,20 @@ test('a sent question shows the status line, Stop, and is revealed below the hea
   );
   await act(async () => {
     on!.stage('Searching the record');
+    // Status copy has a minimum dwell time, even for a fast lookup.
+    await new Promise((resolve) => setTimeout(resolve, 650));
   });
   expect(textOf('ask-status')).toBe('Searching the record');
+  await act(async () => {
+    on!.step?.({
+      id: 'hearings',
+      label: 'Checking committee hearings',
+      arg: 'housing',
+      state: 'running',
+    });
+    await new Promise((resolve) => setTimeout(resolve, 650));
+  });
+  expect(textOf('ask-status')).toBe('Checking committee hearings: housing');
   // An error after text keeps the question with one plain sentence, never
   // the server's words, and Try again.
   await act(async () => {
@@ -1155,4 +1333,181 @@ test('with the keyboard up the composer sits on a band of ground: nothing reads 
   );
   expect(band().backgroundColor).toBeUndefined();
   act(() => r.unmount());
+});
+
+test('Android observes IME show/hide and removes the bottom inset after native resize; iOS keeps will-change events', async () => {
+  const original = Platform.OS;
+  const measured: ((
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+  ) => void)[] = [];
+  const visible = jest.spyOn(Keyboard, 'isVisible').mockReturnValue(true);
+  const measure = jest
+    .spyOn(View.prototype, 'measureInWindow')
+    .mockImplementation((callback) => {
+      measured.push(callback);
+    });
+  const handlers = new Map<string, (event: unknown) => void>();
+  const listener = jest
+    .spyOn(Keyboard, 'addListener')
+    .mockImplementation((name, handler) => {
+      handlers.set(name, handler as (event: unknown) => void);
+      return { remove: jest.fn() };
+    });
+  try {
+    Platform.OS = 'android';
+    const screen = await mount();
+    expect(handlers.has('keyboardDidShow')).toBe(true);
+    expect(handlers.has('keyboardWillChangeFrame')).toBe(false);
+    act(() =>
+      handlers.get('keyboardDidShow')!({ endCoordinates: { screenY: 500 } }),
+    );
+    expect(measured.length).toBeGreaterThan(0);
+    const phone = () => screen.root.findByType(PhoneDock);
+    expect(phone().props).toMatchObject({ keyboard: 0, keyboardVisible: true });
+    act(() => handlers.get('keyboardDidHide')!({}));
+    // A native measure that arrives after IME Back must not lift the dock again.
+    visible.mockReturnValue(false);
+    act(() => measured.forEach((callback) => callback(0, 0, 402, 900)));
+    expect(phone().props).toMatchObject({
+      keyboard: 0,
+      keyboardVisible: false,
+    });
+    act(() => screen.unmount());
+    view = null;
+    handlers.clear();
+    Platform.OS = 'ios';
+    await mount();
+    expect(handlers.has('keyboardWillChangeFrame')).toBe(true);
+    expect(handlers.has('keyboardWillHide')).toBe(true);
+    expect(handlers.has('keyboardDidShow')).toBe(false);
+  } finally {
+    listener.mockRestore();
+    visible.mockRestore();
+    measure.mockRestore();
+    Platform.OS = original;
+  }
+});
+
+test('Android dock has a tonal raised surface and removable option chips; iOS keeps its options line', () => {
+  const original = Platform.OS;
+  let dock!: ReactTestRenderer;
+  try {
+    Platform.OS = 'android';
+    act(() => {
+      askSession.options({
+        ...askSession.composerOptions(),
+        topic: 'housing',
+        from: '2024',
+        to: '2025',
+      });
+      dock = create(
+        <AskDock
+          onSend={() => {}}
+          onStop={() => {}}
+          onOptions={() => {}}
+          offline={false}
+        />,
+      );
+    });
+    const surfaces = dock.root.findAll(
+      (n) =>
+        n.props.style && StyleSheet.flatten(n.props.style)?.elevation === 2,
+    );
+    expect(surfaces.length).toBeGreaterThan(0);
+    const inputStyle = () =>
+      StyleSheet.flatten(dock.root.findByType(TextInput).props.style);
+    expect(inputStyle().minHeight).toBeGreaterThanOrEqual(48);
+    expect(inputStyle().textAlignVertical).toBe('top');
+    const remove = dock.root.find(
+      (n) =>
+        n.props.testID === 'ask-option-remove-years' &&
+        typeof n.props.onPress === 'function',
+    );
+    expect(remove.props.accessibilityLabel).toBe('Remove Years, 2024 to 2025');
+    act(() => remove.props.onPress());
+    expect(askSession.composerOptions()).toMatchObject({
+      from: '',
+      to: '',
+      topic: 'housing',
+    });
+    expect(
+      dock.root.findAllByProps({ testID: 'ask-options-line' }).length,
+    ).toBeGreaterThan(0);
+    const clear = dock.root.find(
+      (n) =>
+        n.props.testID === 'ask-options-clear' &&
+        typeof n.props.onPress === 'function',
+    );
+    expect(StyleSheet.flatten(clear.props.style).minHeight).toBe(48);
+    act(() => clear.props.onPress());
+    expect(askSession.composerOptions().topic).toBe('');
+    expect(
+      dock.root.findAllByProps({ testID: 'ask-options-line' }),
+    ).toHaveLength(0);
+    act(() =>
+      askSession.options({ ...askSession.composerOptions(), topic: 'housing' }),
+    );
+    Platform.OS = 'ios';
+    act(() =>
+      dock.update(
+        <AskDock
+          onSend={() => {}}
+          onStop={() => {}}
+          onOptions={() => {}}
+          offline={false}
+        />,
+      ),
+    );
+    expect(
+      dock.root.findAllByProps({ testID: 'ask-option-remove-topic' }),
+    ).toHaveLength(0);
+    expect(inputStyle().minHeight).toBe(44);
+    expect(inputStyle().textAlignVertical).toBeUndefined();
+    expect(
+      dock.root.findAllByProps({ testID: 'ask-options-line' }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      dock.root.findAll(
+        (n) =>
+          n.props.style && StyleSheet.flatten(n.props.style)?.elevation === 2,
+      ),
+    ).toHaveLength(0);
+  } finally {
+    act(() => dock?.unmount());
+    Platform.OS = original;
+  }
+});
+
+test('while an answer runs, Options and Clear are unavailable; an arrival waiting brings them back', async () => {
+  let finish: (v: unknown) => void = () => {};
+  jest.mocked(client.askPost).mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  await mount();
+  act(() =>
+    askSession.options({ ...askSession.snapshot().options, kind: 'speech' }),
+  );
+  await type('A running question?');
+  await press('ask-submit');
+  const disabled = (id: string) =>
+    view!.root.findAll(
+      (n) =>
+        n.props.testID === id && n.props.accessibilityState?.disabled === true,
+    ).length > 0;
+  expect(askSession.snapshot().busy).toBe(true);
+  expect(disabled('ask-composer-options')).toBe(true);
+  expect(disabled('ask-options-line')).toBe(true);
+  expect(disabled('ask-options-clear')).toBe(true);
+  await act(async () =>
+    arriveInAsk({ question: 'A waiting fixture question?', kind: 'speech' }),
+  );
+  expect(disabled('ask-composer-options')).toBe(false);
+  expect(disabled('ask-options-clear')).toBe(false);
+  await act(async () => finish(answer));
 });

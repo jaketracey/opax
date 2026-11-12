@@ -42,16 +42,19 @@ export const LARGEST_RULE = 'The largest new agreement for each recipient';
  */
 export default function Largest() {
   const { month: requested } = useLocalSearchParams<{ month?: string }>();
-  const load = useCallback(async (refresh: boolean) => {
-    const [largest, index] = await Promise.all([
-      money.largest(refresh),
-      money.grants('federal', refresh),
-    ]);
-    return combine([largest, index], {
-      largest: largest.data,
-      index: index.data,
-    });
-  }, []);
+  const load = useCallback(
+    async (refresh: boolean, _publish: unknown, signal?: AbortSignal) => {
+      const [largest, index] = await Promise.all([
+        money.largest(refresh, signal),
+        money.grants('federal', refresh, signal),
+      ]);
+      return combine([largest, index], {
+        largest: largest.data,
+        index: index.data,
+      });
+    },
+    [],
+  );
   const status = useCatalogRecord(load),
     data = status.record?.data;
   const months = Object.keys(data?.largest.months ?? {})
@@ -133,7 +136,11 @@ export default function Largest() {
         empty={
           <ContentUnavailable
             symbol="calendar"
-            title={`No grant agreements started in ${label}.`}
+            title={
+              label
+                ? `No grant agreements started in ${label}.`
+                : 'No grant agreements to show.'
+            }
             testID="largest-empty"
           />
         }

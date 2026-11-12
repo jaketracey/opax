@@ -14,6 +14,7 @@ import { RecordRow } from '../../design/rows';
 import { SourceLine } from '../../design/source';
 import {
   ContentUnavailable,
+  InlineError,
   Skeleton,
   StatePageProvider,
 } from '../../design/states';
@@ -24,6 +25,7 @@ import { canonicalUrl } from '../../navigation/external';
 import { fromWebPath } from '../../navigation/routes';
 import { shareRecord } from '../../navigation/share';
 import { presentSource } from '../../navigation/sheets';
+import { useSpeechSpeakers } from '../records/speaker';
 import { useOpenAsk } from '../ask/open';
 import { askDraft, pageActions } from './PageActions';
 import { recordListTitle, type RecordListKind } from './Sections';
@@ -47,6 +49,7 @@ type Load =
       record: RecordResult<unknown>;
       more: boolean;
       paging: boolean;
+      pageError: boolean;
     };
 
 const noun = (kind: 'speeches' | 'mentions', n: number) =>
@@ -65,6 +68,7 @@ export default function RecordList({
   /** `/person/[slug]/speeches` fixes the kind; `record-list` reads it. */
   kind?: RecordListKind;
 } = {}) {
+  const speakerFor = useSpeechSpeakers();
   const params = useLocalSearchParams<{
     slug?: string;
     person?: string;
@@ -90,6 +94,8 @@ export default function RecordList({
   const [load, setLoad] = useState<Load>({ status: 'loading' });
   const [attempt, setAttempt] = useState(0);
   const pages = useRef(0);
+  const paging = useRef(false);
+  const generation = useRef(0);
   const read = useCallback(
     (page: number) =>
       kind === 'news'
@@ -101,6 +107,8 @@ export default function RecordList({
     // News is not listed yet: nothing to read.
     if (kind === 'news') return;
     let active = true;
+    generation.current += 1;
+    paging.current = false;
     pages.current = 1;
     read(1)
       .then((page: Page) => {
@@ -112,6 +120,7 @@ export default function RecordList({
           record: page.records,
           more: page.records.data.results.length >= PER,
           paging: false,
+          pageError: false,
         });
       })
       .catch((e: { code?: string }) => {
@@ -123,32 +132,55 @@ export default function RecordList({
       });
     return () => {
       active = false;
+      generation.current += 1;
     };
   }, [read, attempt, kind]);
-  const next = () => {
-    if (load.status !== 'ready' || !load.more || load.paging) return;
+  const next = (retry = false) => {
+    if (
+      load.status !== 'ready' ||
+      !load.more ||
+      paging.current ||
+      (load.pageError && !retry)
+    )
+      return;
     const page = pages.current + 1;
-    setLoad({ ...load, paging: true });
+    const visit = generation.current;
+    // FlatList can emit another end event before React commits the spinner.
+    paging.current = true;
+    setLoad({ ...load, paging: true, pageError: false });
     read(page)
       .then((more: Page) => {
+        if (generation.current !== visit) return;
         pages.current = page;
+        setLoad((was) => {
+          if (was.status !== 'ready') return was;
+          const seen = new Set(was.rows.map((row) => row.slug));
+          const added = more.records.data.results.filter((row) => {
+            if (seen.has(row.slug)) return false;
+            seen.add(row.slug);
+            return true;
+          });
+          return {
+            ...was,
+            rows: [...was.rows, ...added],
+            briefs: { ...was.briefs, ...more.briefs },
+            more: more.records.data.results.length >= PER,
+            paging: false,
+            pageError: false,
+          };
+        });
+      })
+      .catch(() => {
+        if (generation.current !== visit) return;
         setLoad((was) =>
           was.status === 'ready'
-            ? {
-                ...was,
-                rows: [...was.rows, ...more.records.data.results],
-                briefs: { ...was.briefs, ...more.briefs },
-                more: more.records.data.results.length >= PER,
-                paging: false,
-              }
+            ? { ...was, pageError: true, paging: false }
             : was,
         );
       })
-      .catch(() =>
-        setLoad((was) =>
-          was.status === 'ready' ? { ...was, more: false, paging: false } : was,
-        ),
-      );
+      .finally(() => {
+        if (generation.current === visit) paging.current = false;
+      });
   };
   const ready = load.status === 'ready' ? load : null;
   const source = {
@@ -256,7 +288,7 @@ export default function RecordList({
             contentContainerStyle={[styles.content, content]}
             data={ready?.rows ?? []}
             keyExtractor={(r, i) => `${r.slug}-${i}`}
-            onEndReached={next}
+            onEndReached={() => next()}
             onEndReachedThreshold={0.5}
             ListHeaderComponent={
               briefsShown ? (
@@ -301,6 +333,7 @@ export default function RecordList({
               return (
                 <RecordRow
                   title={displayedRecordTitle(r)}
+                  speaker={kind === 'speeches' ? speakerFor(r) : undefined}
                   meta={[
                     kind === 'speeches' ? 'Speech' : r.speaker || 'Mention',
                     chamberName(r.chamber, r.state),
@@ -326,7 +359,13 @@ export default function RecordList({
             }}
             ListFooterComponent={
               ready && ready.rows.length ? (
-                ready.more ? (
+                ready.pageError ? (
+                  <InlineError
+                    subject={`More ${title.toLowerCase()}`}
+                    onRetry={() => next(true)}
+                    testID="record-list-page-error"
+                  />
+                ) : ready.paging ? (
                   <Skeleton
                     shape="rows"
                     count={2}

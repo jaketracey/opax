@@ -1,6 +1,8 @@
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
-import { Text } from 'react-native';
+import { router } from 'expo-router';
+import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { SectionHeader } from '../src/design/layout';
 import TestRenderer from 'react-test-renderer';
 import fixtures from '../scripts/fixtures/records/contracts.json';
 import { CatalogCache } from '../src/api/cache';
@@ -21,6 +23,7 @@ import {
   decodeRecent,
 } from '../src/features/records/model';
 import { records } from '../src/features/records/runtime';
+import { sheetPayload } from '../src/navigation/sheets';
 import {
   bills,
   index,
@@ -38,6 +41,10 @@ const record = <T,>(data: T) => ({
   savedAt: 1,
   asOf: null,
 });
+jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
+  __esModule: true,
+  default: jest.fn(),
+}));
 jest.mock('../src/features/records/runtime', () => ({
   records: {
     document: jest.fn(),
@@ -119,6 +126,9 @@ async function mount(component: React.ReactElement) {
 }
 beforeEach(() => {
   jest.clearAllMocks();
+  jest
+    .mocked(useWindowDimensions)
+    .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
   const empty = {
     status: 'empty',
     data: [],
@@ -245,6 +255,7 @@ test('bill text switches chosen bytes and never presents the old version as the 
   expect(records.billVersion).toHaveBeenLastCalledWith(
     'au-federal-r7534',
     'r7534-first-reps',
+    expect.any(AbortSignal),
   );
   expect(records.billVersion).toHaveBeenCalledTimes(2);
   expect(
@@ -252,38 +263,78 @@ test('bill text switches chosen bytes and never presents the old version as the 
   ).toBe('First reading: synthetic fixture');
   await act(async () => view.unmount());
 });
-test('bill text leads with the bill page summary, labelled as machine-written', async () => {
-  const bill = decodeBill(pinned('/bills/au-federal-r7534.json'));
-  const view = await mount(<BillTextReader />);
-  // Only the pill shows; its sheet holds the stored attribution.
-  const pill = view.root
-    .findAllByProps({ testID: 'bill-text-summary-label' })
-    .find((node) => node.props.note);
-  expect(pill!.props.note.body).toContain(bill.summary!.attribution);
-  // VoiceOver hears the pill as plain "Machine-written".
-  expect(
-    view.root
+test.each([1, 1.786, 3.571])(
+  'bill text keeps its summary pill beside In short at font scale %s',
+  async (fontScale) => {
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale });
+    const bill = decodeBill(pinned('/bills/au-federal-r7534.json'));
+    const view = await mount(<BillTextReader />);
+    // Only the pill shows; its sheet holds the stored attribution.
+    const pill = view.root
       .findAllByProps({ testID: 'bill-text-summary-label' })
-      .find((node) => node.props.accessibilityLabel)?.props.accessibilityLabel,
-  ).toBe('Machine-written');
-  expect(
-    view.root
-      .findByProps({ testID: 'bill-text-summary-text' })
-      .findAllByType(Text)
-      .map((node) => node.props.children),
-  ).toEqual(bill.summary!.sentences.slice(0, 3));
-  // The summary sits above the version and the reading action.
-  const order = view.root
-    .findAll((node) => typeof node.props.testID === 'string')
-    .map((node) => node.props.testID as string);
-  expect(order.indexOf('bill-text-stage')).toBeLessThan(
-    order.indexOf('bill-text-summary'),
-  );
-  expect(order.indexOf('bill-text-summary')).toBeLessThan(
-    order.indexOf('reader-text-0'),
-  );
-  await act(async () => view.unmount());
-});
+      .find((node) => node.props.note);
+    expect(pill!.props.note.body).toContain(bill.summary!.attribution);
+    const header = view.root
+      .findAllByType(SectionHeader)
+      .find((node) => node.props.title === 'In short');
+    expect(
+      header!.findAllByProps({ testID: 'bill-text-summary-label' }),
+    ).toContain(pill);
+    expect(
+      StyleSheet.flatten(header!.findByType(View).props.style),
+    ).toMatchObject({
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+    });
+    expect(
+      header!
+        .findAllByType(Text)
+        .every((node) => node.props.numberOfLines === undefined),
+    ).toBe(true);
+    const button = header!.find(
+      (node) =>
+        node.props.testID === 'bill-text-summary-label' &&
+        typeof node.props.onPress === 'function',
+    );
+    await act(async () => button.props.onPress());
+    const route = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+      pathname: string;
+      params: { key: string };
+    };
+    expect(route.pathname).toBe('/machine-note');
+    expect(sheetPayload(route.params.key, 'machine')).toMatchObject({
+      testID: 'bill-text-summary-label',
+      note: { title: 'Machine-written', body: [bill.summary!.attribution] },
+    });
+    // VoiceOver hears the pill as plain "Machine-written".
+    expect(
+      view.root
+        .findAllByProps({ testID: 'bill-text-summary-label' })
+        .find((node) => node.props.accessibilityLabel)?.props
+        .accessibilityLabel,
+    ).toBe('Machine-written');
+    expect(
+      view.root
+        .findByProps({ testID: 'bill-text-summary-text' })
+        .findAllByType(Text)
+        .map((node) => node.props.children),
+    ).toEqual(bill.summary!.sentences.slice(0, 3));
+    // The summary sits above the version and the reading action.
+    const order = view.root
+      .findAll((node) => typeof node.props.testID === 'string')
+      .map((node) => node.props.testID as string);
+    expect(order.indexOf('bill-text-stage')).toBeLessThan(
+      order.indexOf('bill-text-summary'),
+    );
+    expect(order.indexOf('bill-text-summary')).toBeLessThan(
+      order.indexOf('reader-text-0'),
+    );
+    await act(async () => view.unmount());
+  },
+);
 test.each([
   [
     'has no summary',

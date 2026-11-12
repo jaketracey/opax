@@ -1,15 +1,23 @@
 import { RouteOptions } from '../../navigation/preview';
-import { useEffect, useRef, useState, type RefObject } from 'react';
+import { useScreenReady } from '../../analytics/timing';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from 'react';
 import {
   Keyboard,
   Platform,
   RefreshControl,
   ScrollView,
+  type LayoutChangeEvent,
   type TextInput,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import type { SearchBarCommands } from 'react-native-screens';
-import { Field, Screen } from '../../design/primitives';
+import { Screen } from '../../design/primitives';
 import { searchTabRole, useFocusRequest } from '../../design/keyboard';
 import { useListSearchBar } from '../../design/search-bar';
 import { headerItems, rootHeaderItems } from '../../navigation/chrome';
@@ -17,6 +25,7 @@ import { resultsRoute } from '../../navigation/routes/search';
 import { useAccount } from '../account/store';
 import { useOpenAsk } from '../ask/open';
 import { SearchIdle } from './SearchIdle';
+import { SearchField } from './SearchField';
 import { SearchSuggestions } from './SearchSuggestions';
 import { ResultsView } from './ResultsView';
 import { useResultsControls } from './controls';
@@ -27,6 +36,7 @@ import { capQuery, isScope, type Scope } from './scopes';
 import { useSearchSources } from './sources';
 import type { GroupKind } from './ranking';
 import { useSearchTabReset } from './tab-reset';
+import { useAndroidSearchKeyboard } from './useAndroidSearchKeyboard';
 
 export const SEARCH_PLACEHOLDER = 'People, bills, topics and more';
 const OWNER = 'search-root';
@@ -49,8 +59,8 @@ export function searchPhase(
 
 /**
  * The Search root (journeys/search.md 3.1 to 3.4): one field, idle with
- * Recent and Browse, on-device suggestions while typing (no request), and
- * results in four scopes on the keyboard's Search key. Editing keeps the
+ * Recent and Browse, local suggestions plus debounced report catalogue
+ * suggestions while typing, and results in four scopes on the Search key. Editing keeps the
  * results under the suggestions; Cancel returns to them unchanged.
  */
 export function SearchScreen({
@@ -60,6 +70,12 @@ export function SearchScreen({
   onRows?: Parameters<typeof ResultsView>[0]['onRows'];
 }) {
   const params = useLocalSearchParams<Record<string, string>>();
+  const [contentReady, setContentReady] = useState(false);
+  useScreenReady('/search', contentReady);
+  const onContentLayout = useCallback((event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+    if (width > 0 && height > 0) setContentReady(true);
+  }, []);
   const [text, setText] = useState('');
   const [editing, setEditing] = useState(false);
   const [submitted, setSubmitted] = useState<{
@@ -101,9 +117,17 @@ export function SearchScreen({
   function submit(raw: string, nextScope: Scope, link = false) {
     const words = link ? capQuery(raw) : raw.trim();
     if (!words) return;
+    if (Platform.OS === 'android') {
+      input.current?.blur();
+      Keyboard.dismiss();
+    }
     fieldText(words);
     setEditing(false);
     setSubmitted({ q: words, scope: nextScope });
+    if (Platform.OS === 'ios') {
+      (search.ref as RefObject<SearchBarCommands | null>).current?.blur();
+      Keyboard.dismiss();
+    }
     // A query that arrived by link never enters Recent (4.5).
     if (!link) recentSearches.add(words, nextScope);
     scroll.current?.scrollTo({ y: 0, animated: false });
@@ -130,6 +154,9 @@ export function SearchScreen({
     onSearchButtonPress: (value) => submit(value, 'all'),
     onCancelButtonPress: cancel,
     autoFocus: false,
+  });
+  useAndroidSearchKeyboard(input, () => {
+    if (editing) cancel();
   });
   useSearchTabReset(() => {
     // A retained link query must not replay over this reset. Removing it also
@@ -195,6 +222,7 @@ export function SearchScreen({
             ? {
                 headerSearchBarOptions: {
                   ...search,
+                  obscureBackground: false,
                   placement: searchBarPlacement(),
                 },
               }
@@ -206,6 +234,7 @@ export function SearchScreen({
         }}
       />
       <Screen
+        onContentLayout={onContentLayout}
         // A fresh scroll view starts at UIKit's adjusted top inset, restoring
         // the expanded large title as well as Browse. scrollTo(y: 0) would
         // leave the content beneath the bar with the large title collapsed.
@@ -218,17 +247,12 @@ export function SearchScreen({
         }
       >
         {Platform.OS === 'android' ? (
-          <Field
-            label="Search"
-            labelHidden
+          <SearchField
             inputRef={input}
             value={text}
             placeholder={SEARCH_PLACEHOLDER}
             onChangeText={type}
             onSubmitEditing={() => submit(text, 'all')}
-            returnKeyType="search"
-            autoCapitalize="none"
-            autoCorrect={false}
             testID="search-input"
           />
         ) : null}

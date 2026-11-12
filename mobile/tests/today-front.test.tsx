@@ -1,5 +1,5 @@
 import { act, type ReactElement, type ReactNode } from 'react';
-import { useWindowDimensions, View } from 'react-native';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { router } from 'expo-router';
 import {
@@ -10,6 +10,11 @@ import {
 import { ApiError } from '../src/api/errors';
 import { formatDate } from '../src/design/format';
 import { InsetGroup } from '../src/design/layout';
+import { SurfaceContext } from '../src/design/row-padding';
+import { Icon } from '../src/design/icon';
+import { PersonRow } from '../src/design/people';
+import { symbols } from '../src/design/symbols';
+import { rhythm } from '../src/design/tokens';
 import { PageFoot } from '../src/design/record';
 import { BillRow } from '../src/design/rows';
 import { SourceLine } from '../src/design/source';
@@ -18,6 +23,7 @@ import { Text } from '../src/design/text';
 import { BillFeed, billRowText } from '../src/features/today/BillFeed';
 import {
   DeclarationGroup,
+  DeclarationEntry,
   LONG_ENTRY,
   declarationsForRoute,
   entryPreview,
@@ -325,9 +331,9 @@ describe('Just declared', () => {
   const one = (entry = item) => (
     <DeclarationGroup entries={[{ item: entry, index: 0 }]} />
   );
-  test('the member as a PersonRow, then the entry as one link to the filtered feed', () => {
+  test('the member and entry share one link to the filtered feed', () => {
     const { root } = render(one());
-    expect(host(root, 'today-declaration-person-0')).not.toHaveLength(0);
+    expect(host(root, 'today-declaration-person-0-name')).not.toHaveLength(0);
     expect(strings(host(root, 'today-declaration-change-0')[0]!)).toBe(
       `${item.category} · ${registerChangeLabel(item.kind)} ${changeDate(item.date)}`,
     );
@@ -338,6 +344,142 @@ describe('Just declared', () => {
     });
     expect(strings(root)).not.toMatch(/The entry in full|\bMore\b/);
   });
+  test.each([1, 3.571])(
+    'each declaration has one link, one chevron and padded content at font scale %s',
+    (fontScale) => {
+      jest
+        .mocked(useWindowDimensions)
+        .mockReturnValue({ ...standard, fontScale });
+      const profiled = { ...item, profileSlug: 'susan-mcdonald' };
+      const { root } = render(one(profiled));
+      expect(root.findAllByType(PersonRow)).toHaveLength(0);
+      const links = root.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.accessible === true &&
+          node.props.accessibilityRole === 'link',
+      );
+      expect(links).toHaveLength(1);
+      const row = host(root, 'today-declaration-0')[0]!;
+      expect(links[0]).toBe(row);
+      expect(row.props.accessible).toBe(true);
+      expect(row.props.accessibilityLabel).toContain(item.name);
+      expect(row.props.accessibilityLabel).toContain(item.party);
+      expect(row.props.accessibilityLabel).toContain(item.category);
+      expect(row.props.accessibilityLabel).toContain(
+        entryPreview(item.description!),
+      );
+      expect(
+        root
+          .findAllByType(Icon)
+          .filter((node) => node.props.name === symbols.chevron),
+      ).toHaveLength(1);
+      const pressable = row.find(
+        (node) =>
+          node.type === 'View' &&
+          node.props.accessible === false &&
+          node.props.accessibilityRole === 'link',
+      );
+      expect(StyleSheet.flatten(pressable.props.style)).toMatchObject({
+        paddingTop: rhythm.row,
+        paddingBottom: rhythm.row + rhythm.heading,
+      });
+      const name = host(root, 'today-declaration-person-0-name')[0]!;
+      const words = host(root, 'today-declaration-text-0')[0]!;
+      const meta = host(root, 'today-declaration-change-0')[0]!;
+      const columnOf = (node: ReactTestInstance) => {
+        let column = node.parent!;
+        while (column.type !== 'View') column = column.parent!;
+        return column;
+      };
+      expect(columnOf(name)).toBe(columnOf(words));
+      expect(columnOf(meta)).toBe(columnOf(words));
+      expect(columnOf(columnOf(words)).props.accessibilityElementsHidden).toBe(
+        true,
+      );
+      expect(
+        root.findAll((node) => node.props.numberOfLines !== undefined),
+      ).toHaveLength(0);
+      act(() => row.props.onAccessibilityTap());
+      expect(router.push).toHaveBeenLastCalledWith(
+        declarationsForRoute(item.name),
+      );
+    },
+  );
+  test.each([1, 3.571])(
+    'every grouped row keeps the larger bottom inset when its meta wraps at font scale %s',
+    (fontScale) => {
+      jest
+        .mocked(useWindowDimensions)
+        .mockReturnValue({ ...standard, fontScale });
+      const { root } = render(
+        <SurfaceContext.Provider value="sunken">
+          <InsetGroup>
+            {items.map((entry, index) => (
+              <DeclarationEntry
+                key={entry.id}
+                item={{
+                  ...entry,
+                  category: 'Sponsored travel or hospitality',
+                  date: '2026-10-09',
+                  kind: 'addition',
+                }}
+                index={index}
+              />
+            ))}
+          </InsetGroup>
+        </SurfaceContext.Provider>,
+      );
+      for (const index of items.keys()) {
+        const meta = host(root, `today-declaration-change-${index}`)[0]!;
+        expect(strings(meta)).toBe(
+          'Sponsored travel or hospitality · added 9 Oct',
+        );
+        const lineHeight =
+          StyleSheet.flatten(meta.props.style).lineHeight * fontScale;
+        const height = lineHeight * 2;
+        // Supply a two-line native measurement, including at AX5. Jest does
+        // not lay out native glyphs; the row must leave space after both lines.
+        act(() => {
+          meta.props.onLayout({
+            nativeEvent: { layout: { x: 0, y: 100, width: 240, height } },
+          });
+          meta.props.onTextLayout({
+            nativeEvent: {
+              lines: ['Sponsored travel or ', 'hospitality · added 9 Oct'].map(
+                (text, line) => ({
+                  text,
+                  x: 0,
+                  y: line * lineHeight,
+                  width: 240,
+                  height: lineHeight,
+                }),
+              ),
+            },
+          });
+        });
+        const row = host(root, `today-declaration-${index}`)[0]!;
+        const pressable = row.find(
+          (node) =>
+            node.type === 'View' &&
+            node.props.accessible === false &&
+            node.props.accessibilityRole === 'link',
+        );
+        const style = StyleSheet.flatten(pressable.props.style);
+        expect(style.paddingTop).toBe(rhythm.row);
+        expect(style.paddingBottom).toBe(rhythm.row + rhythm.heading);
+        expect(style.paddingBottom).toBeGreaterThan(style.paddingTop);
+        expect(style.height).toBeUndefined();
+        expect(style.maxHeight).toBeUndefined();
+        expect(StyleSheet.flatten(meta.props.style).minHeight).toBe(
+          Math.ceil(height) + 1,
+        );
+        expect(meta.props.allowFontScaling).toBe(true);
+        expect(meta.props.maxFontSizeMultiplier).toBe(0);
+        expect(meta.props.numberOfLines).toBeUndefined();
+      }
+    },
+  );
   test('a long entry shows its opening, cut at a word, in the record’s words', () => {
     const long = items.find((i) => (i.description?.length ?? 0) > LONG_ENTRY);
     if (!long) return;

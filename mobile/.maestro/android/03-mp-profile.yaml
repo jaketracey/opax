@@ -70,6 +70,18 @@ name: 03 Read a sourced profile
     id: source-destination-url
 - takeScreenshot: ${EVIDENCE}/03-source-destination-end
 - tapOn: Done
+# Hardware Back closes the destination preview one level at a time. If the
+# Android Sources page remains, leave it before reaching the profile action.
+- runFlow:
+    when:
+      visible:
+        id: person-figures-source-sheet-original-0
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: person-figures-source
+    timeout: 15000
 # Share uses the canonical web path; e2e carries a non-resolving origin.
 - tapOn: Share Anthony Albanese
 - assertVisible: https://opax.invalid/subject/person/anthony-albanese

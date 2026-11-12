@@ -1,0 +1,66 @@
+{
+  "meta": {
+    "generated": "2026-11-10",
+    "jurisdiction": "federal",
+    "source": "GrantConnect",
+    "source_url": "https://www.grants.gov.au/",
+    "licence": "CC BY 4.0",
+    "years": [
+      "2020-21",
+      "2021-22"
+    ],
+    "caveats": [
+      "An award is not a payment."
+    ],
+    "counts": {
+      "programs_total": 1,
+      "grants": 28,
+      "dollars": 25799562.46,
+      "recipients": 28,
+      "donor_recipients": 0,
+      "donor_dollars": 0,
+      "donor_share": 0,
+      "electorate_known_share": 0.5
+    }
+  },
+  "jur": "federal",
+  "key": "maribyrnong",
+  "n": "Maribyrnong",
+  "st": "vic",
+  "t": 25799562.46,
+  "c": 28,
+  "page": 2,
+  "next": null,
+  "grants": [
+    {
+      "id": "GA172295",
+      "rid": "abn:50203962957",
+      "rn": "Fixture Association 27",
+      "k": "association",
+      "n": "Fixture project",
+      "pid": "GO6809",
+      "pr": "Fixture support program",
+      "v": 47400,
+      "fy": "2021-22",
+      "s": "2021-06-17",
+      "el": "Maribyrnong",
+      "elst": "vic",
+      "guid": "3c91da88-5af6-425c-93da-bccf662cde5e"
+    },
+    {
+      "id": "GA172296",
+      "rid": "abn:50203962958",
+      "rn": "Fixture Association 28",
+      "k": "association",
+      "n": "Fixture project",
+      "pid": "GO6809",
+      "pr": "Fixture support program",
+      "v": 47300,
+      "fy": "2021-22",
+      "s": "2021-06-17",
+      "el": "Maribyrnong",
+      "elst": "vic",
+      "guid": "3c91da88-5af6-425c-93da-bccf662cde5e"
+    }
+  ]
+}

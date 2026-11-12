@@ -133,7 +133,8 @@ export default function Conversations({ mode }: { mode: 'sheet' | 'account' }) {
     );
   };
   const open = (chat: Chat) => {
-    askSession.open(chat.id);
+    // Not while an answer is being written: the sheet stays where it is.
+    if (!askSession.open(chat.id)) return;
     if (mode === 'sheet') router.back();
     // Leaves the Account sheet for the conversation in the Ask tab.
     else router.navigate('/ask' as Href);
@@ -258,10 +259,8 @@ export default function Conversations({ mode }: { mode: 'sheet' | 'account' }) {
                         <SwiftText
                           modifiers={[
                             lineLimit(2),
-                            foregroundStyle({
-                              type: 'hierarchical',
-                              style: 'primary',
-                            }),
+                            // Hierarchical styles inherit the native button tint.
+                            foregroundStyle(colors.ink),
                           ]}
                         >
                           {chat.title}
@@ -269,10 +268,7 @@ export default function Conversations({ mode }: { mode: 'sheet' | 'account' }) {
                         <SwiftText
                           modifiers={[
                             font({ textStyle: 'subheadline' }),
-                            foregroundStyle({
-                              type: 'hierarchical',
-                              style: 'secondary',
-                            }),
+                            foregroundStyle(colors.inkSoft),
                           ]}
                         >
                           {conversationMeta(chat, now)}

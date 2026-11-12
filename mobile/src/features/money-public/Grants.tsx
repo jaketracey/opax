@@ -1,11 +1,12 @@
+import { throwIfAborted } from '../../api/abort';
 import { RouteOptions } from '../../navigation/preview';
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { View as NativeView, Platform, RefreshControl } from 'react-native';
+import { View as NativeView } from 'react-native';
 import { catalogs } from '../../api/runtime';
-import { SegmentedPicker } from '../../design/controls';
+import { Button, SegmentedPicker } from '../../design/controls';
 import { formatMoney, formatMoneyCompact } from '../../design/format';
-import { Screen } from '../../design/layout';
+import { Section } from '../../design/layout';
 import { FigureBlock } from '../../design/record';
 import { LinkRow, MoneyRow, ValueRow } from '../../design/rows';
 import { EmptyState } from '../../design/states';
@@ -22,13 +23,14 @@ import { useNamedBackTitle } from '../../navigation/useNamedBackOptions';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { stateChoices } from '../sheets/filter-models';
 import type { GrantIndex, Jurisdiction } from './data';
-import { FUTURE_YEARS_NOTE, grantsFigure } from './HubCards';
+import { FUTURE_YEARS_NOTE, GRANTS_CAVEAT, grantsFigure } from './HubCards';
 import {
   ListCaption,
   MoneyList,
   MoneyStatus,
   TitleAlias,
   counted,
+  fy,
   fyRange,
   matches,
   moneyBar,
@@ -39,7 +41,9 @@ import {
 } from './parts';
 import { organisationHref } from './routes';
 import { money } from './runtime';
-import { SeatFigure } from './SeatGrants';
+import { combine } from './catalog';
+import { SeatFigure, seatRow } from './SeatGrants';
+import { useSeatGrants } from './useSeatGrants';
 
 /** "New South Wales" for "nsw". */
 export const stateName = (code: string) =>
@@ -86,7 +90,8 @@ export default function Grants() {
 
 function useGrantIndex(jur: Jurisdiction) {
   const load = useCallback(
-    (refresh: boolean) => money.grants(jur, refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      money.grants(jur, refresh, signal),
     [jur],
   );
   return useCatalogRecord(load);
@@ -142,7 +147,11 @@ function GrantList({
         ? 'Recipients'
         : 'Electorates',
   );
-  const query = search.query || (initialView === 'seat' ? (seat ?? '') : '');
+  // A seat in the link seeds the electorates search once; typing or another
+  // view drops it, so cancelling the search shows the full list again.
+  const [seeded, setSeeded] = useState(initialView === 'seat');
+  if (seeded && search.query) setSeeded(false);
+  const query = search.query || (seeded ? (seat ?? '') : '');
   const organisations = useMemo(
     () =>
       (data?.recipients ?? [])
@@ -196,13 +205,6 @@ function GrantList({
       <RouteOptions
         options={{
           title,
-          ...(Platform.OS === 'ios' && backTitle
-            ? {
-                headerBackTitle: backTitle,
-                headerBackButtonMenuEnabled: false,
-                headerBackButtonDisplayMode: 'default' as const,
-              }
-            : {}),
           headerLargeTitleEnabled: true,
           headerLargeTitleShadowVisible: false,
           headerSearchBarOptions: search.options,
@@ -213,9 +215,7 @@ function GrantList({
         loaded={!!data}
         id="grants-list"
         rows={rows}
-        rowKey={(r) =>
-          'key' in r ? r.key : `${r.name}-${'state' in r ? r.state : ''}`
-        }
+        rowKey={(r) => ('id' in r ? r.id : `${r.name}-${r.state}`)}
         refreshing={status.refreshing}
         refresh={status.refresh}
         onScroll={scrollTitle.onScroll}
@@ -237,6 +237,7 @@ function GrantList({
                 <FigureBlock
                   value={formatMoneyCompact(figure.value)}
                   ink="money"
+                  caveat={jur === 'federal' ? GRANTS_CAVEAT : undefined}
                   label={
                     jur === 'qld'
                       ? `recorded annual spending, ${fyRange(data.meta.years[0] ?? '', data.meta.years.at(-1) ?? '')}`
@@ -280,7 +281,8 @@ function GrantList({
                     value={view}
                     onChange={(next) => {
                       setView(next);
-                      search.setQuery('');
+                      setSeeded(false);
+                      search.clear();
                     }}
                     options={[
                       {
@@ -318,7 +320,7 @@ function GrantList({
           ) : null
         }
         render={(r, i) =>
-          'key' in r ? (
+          'id' in r && 'key' in r ? (
             <MoneyRow
               name={r.name}
               detail={counted(r.count, 'grant')}
@@ -373,22 +375,39 @@ function GrantList({
 
 /**
  * Grants in one seat (specs/money.md 2.2, journeys/money.md 12.2 item 5):
- * gated on the per-seat slice (D5). Until it ships the seat view is the
- * seat's figure, its source and a row to the electorate: no picker, no
- * caption, no "See all" and no national figure or list.
+ * the index supplies the figure; the seat slice supplies the grant rows.
  */
 function SeatView({ seat, state }: { seat: string; state?: string }) {
-  const load = useCallback(async (refresh: boolean) => {
-    const index = await money.grants('federal', refresh);
-    // The electorate page's id, from the shared directory; the row is left
-    // out if the directory can't be read.
-    const directory = await Promise.resolve()
-      .then(() => catalogs.directory())
-      .catch(() => null);
-    return { ...index, directory };
-  }, []);
+  const load = useCallback(
+    async (refresh: boolean, _publish: unknown, signal?: AbortSignal) => {
+      const index = await money.grants('federal', refresh, signal);
+      // The electorate page's id, from the shared directory; the row is left
+      // out if the directory can't be read.
+      const directory = await Promise.resolve()
+        .then(() => catalogs.directory(undefined, signal))
+        .catch(() => {
+          throwIfAborted(signal);
+          return null;
+        });
+      return { ...index, directory };
+    },
+    [],
+  );
   const status = useCatalogRecord(load),
     data = status.record?.data;
+  const entry = data ? seatRow(data, seat, state) : undefined;
+  const recipients = useMemo(
+    () =>
+      new Set(
+        data?.recipients.filter((r) => r.organisation).map((r) => r.id),
+      ),
+    [data],
+  );
+  const grants = useSeatGrants(entry?.key);
+  const saved =
+    status.record && grants.record && !grants.record.data.missing
+      ? combine([status.record, grants.record], status.record.data)
+      : status.record;
   const title = `Grants in ${seat}`;
   const electorate =
     status.record?.directory?.electorates.data.electorates.find(
@@ -405,58 +424,163 @@ function SeatView({ seat, state }: { seat: string; state?: string }) {
   return (
     <>
       <RouteOptions options={{ title, ...moneyBar({ name: title }) }} />
-      <Screen
+      <MoneyList
         onScroll={barTitle.onScroll}
-        testID="grants-seat"
-        refreshControl={
-          <RefreshControl
-            refreshing={status.refreshing}
-            onRefresh={status.refresh}
-          />
+        id="grants-seat"
+        loaded={!!data}
+        rows={grants.grants}
+        rowKey={(r) => r.id}
+        refreshing={status.refreshing || grants.refreshing}
+        refresh={() => {
+          status.refresh();
+          grants.refresh();
+        }}
+        header={
+          <>
+            <NativeView
+              ref={barTitleRef}
+              collapsable={false}
+              onLayout={barTitle.onTitleLayout}
+            >
+              <Heading level={1} kind="page" testID="grants-title">
+                {title}
+              </Heading>
+            </NativeView>
+            {state ? (
+              <Text wordSafe variant="secondary" testID="grants-seat-state">
+                {stateName(state)}
+              </Text>
+            ) : null}
+            <MoneyStatus
+              status={{ ...status, record: saved }}
+              name={title}
+              rows={1}
+              testID="grants-status"
+            />
+            {data ? (
+              <SeatFigure
+                index={data}
+                record={saved}
+                name={seat}
+                state={state}
+                testID="grants-seat"
+              />
+            ) : null}
+            {data ? (
+              <>
+                <Text
+                  wordSafe
+                  variant="footnote"
+                  testID="grants-seat-award-note"
+                >
+                  An award is not a payment.
+                </Text>
+                <MoneyStatus
+                  status={{
+                    ...grants,
+                    record: grants.record
+                      ? { ...grants.record, stale: false }
+                      : null,
+                  }}
+                  name="Grants"
+                  figure={false}
+                  testID="grants-seat-records"
+                />
+                {grants.record &&
+                !grants.record.data.missing &&
+                grants.grants.length ? (
+                  <ListCaption testID="grants-seat-caption">
+                    {`${grants.grants.length < (entry?.count ?? 0) ? `${grants.grants.length.toLocaleString('en-AU')} of ` : ''}${counted(entry?.count ?? grants.grants.length, 'grant')}, largest first`}
+                  </ListCaption>
+                ) : null}
+              </>
+            ) : null}
+          </>
         }
-      >
-        <NativeView
-          ref={barTitleRef}
-          collapsable={false}
-          onLayout={barTitle.onTitleLayout}
-        >
-          <Heading level={1} kind="page" testID="grants-title">
-            {title}
-          </Heading>
-        </NativeView>
-        {state ? (
-          <Text wordSafe variant="secondary" testID="grants-seat-state">
-            {stateName(state)}
-          </Text>
-        ) : null}
-        <MoneyStatus
-          status={status}
-          name={title}
-          rows={1}
-          testID="grants-status"
-        />
-        {data ? (
-          <SeatFigure
-            index={data}
-            record={status.record}
-            name={seat}
-            state={state}
-            testID="grants-seat"
-          />
-        ) : null}
-        {data && electorate ? (
-          <LinkRow
-            title={electorate.name}
-            symbol="map"
-            testID="grants-seat-electorate"
-            href={electorateRoute(
-              electorate.electorate_id,
-              undefined,
-              electorate.name,
-            )}
-          />
-        ) : null}
-      </Screen>
+        render={(r, i) => {
+          // Only the index can back a named organisation's record page.
+          // Program files contain a sample and cannot back a fallback link.
+          const listed =
+            r.organisation && !!r.recipientId && recipients.has(r.recipientId);
+          return (
+            <MoneyRow
+              name={r.name}
+              detail={[r.program, fy(r.year)].filter(Boolean).join(' · ')}
+              amount={r.value}
+              href={
+                listed
+                  ? organisationHref(r.recipientId, r.name, 'federal')
+                  : undefined
+              }
+              testID={`grants-seat-grant-${i}`}
+            />
+          );
+        }}
+        empty={
+          // A seat with no index row already says it has no matched grants
+          // in its figure; a listed seat whose file is missing says only
+          // that the list isn't published, never a zero.
+          !!entry?.count &&
+          (grants.record?.data.missing ||
+            (grants.record && !grants.grants.length)) ? (
+            <EmptyState
+              message={`The individual grants for ${seat} aren't listed yet.`}
+              testID="grants-seat-empty"
+            />
+          ) : null
+        }
+        footer={
+          <>
+            {grants.record &&
+            (grants.record.data.next ||
+              grants.record.data.grants.length > grants.grants.length) ? (
+              <Button
+                label={`Show all ${(entry?.count ?? 0).toLocaleString('en-AU')}`}
+                variant="plain"
+                loading={grants.loadingMore}
+                onPress={grants.showAll}
+                testID="grants-seat-show-all"
+              />
+            ) : null}
+            {grants.record?.data.moreError ? (
+              <MoneyStatus
+                status={{
+                  record: null,
+                  error: grants.record.data.moreError,
+                  retry: grants.showAll,
+                }}
+                name="Remaining grants"
+                figure={false}
+                testID="grants-seat-more"
+              />
+            ) : null}
+            {data && electorate ? (
+              <LinkRow
+                title={electorate.name}
+                symbol="map"
+                testID="grants-seat-electorate"
+                href={electorateRoute(
+                  electorate.electorate_id,
+                  undefined,
+                  electorate.name,
+                )}
+              />
+            ) : null}
+            {data?.meta.sourceUrl ? (
+              <Section title="Originals" testID="grants-seat-originals">
+                <LinkRow
+                  title={moneyCitation(data.meta.source).label}
+                  external={{
+                    url: data.meta.sourceUrl,
+                    label: moneyCitation(data.meta.source).label,
+                  }}
+                  testID="grants-seat-original"
+                />
+              </Section>
+            ) : null}
+          </>
+        }
+      />
     </>
   );
 }

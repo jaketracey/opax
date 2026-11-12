@@ -1,4 +1,5 @@
 import { RouteOptions } from '../../navigation/preview';
+import { SectionHeader } from '../../design/layout';
 import {
   headerItems,
   pageMenu,
@@ -89,7 +90,10 @@ export default function BillTextReader({
   const bills = useBillNavigation();
   const openAsk = useOpenAsk();
   const navigation = useContext(NavigationContext);
-  const loadManifest = useCallback(() => records.billManifest(key), [key]);
+  const loadManifest = useCallback(
+    (signal?: AbortSignal) => records.billManifest(key, signal),
+    [key],
+  );
   const manifestState = useRead(loadManifest);
   const manifest = manifestState.value?.data;
   const [chosen, setChosen] = useState<{ key: string; id: string } | null>(
@@ -103,7 +107,8 @@ export default function BillTextReader({
     null;
   const shown = manifest?.versions.find((row) => row.id === id) ?? null;
   const loadVersion = useCallback(
-    () => (id ? records.billVersion(key, id) : Promise.resolve(null)),
+    (signal?: AbortSignal) =>
+      id ? records.billVersion(key, id, signal) : Promise.resolve(null),
     [key, id],
   );
   const versionState = useRead(loadVersion);
@@ -112,7 +117,10 @@ export default function BillTextReader({
     versionState.value?.data.version.id === id ? versionState.value.data : null;
   // The bill page's summary and short title: read beside the text, drawn
   // only if it arrives within the window, so nothing above the text moves.
-  const loadSummary = useCallback(() => catalogs.billFor(key), [key]);
+  const loadSummary = useCallback(
+    (signal?: AbortSignal) => catalogs.billFor(key, undefined, signal),
+    [key],
+  );
   const summaryState = useRead(loadSummary);
   const summarySettled = !!(summaryState.value || summaryState.error);
   const [late, setLate] = useState<string | null>(null);
@@ -140,7 +148,7 @@ export default function BillTextReader({
       : null;
   const shortTitle =
     summaryState.value?.data.identity.data?.shortTitle ?? manifest?.title ?? '';
-  const routeTitle = ready && shortTitle ? shortTitle : 'Bill text';
+  const routeTitle = ready ? shortTitle : '';
   const changes = summary?.changes.filter(Boolean) ?? [];
   const [jumpTo, setJump] = useState<{ index: number; attempt: number } | null>(
     null,
@@ -373,6 +381,7 @@ export default function BillTextReader({
     <>
       {embedded ? null : (
         <RouteOptions
+          stableItems
           options={{
             title: routeTitle,
             ...headerItems(ready ? barItems : undefined),
@@ -424,13 +433,6 @@ export default function BillTextReader({
                   {stageText(shown.stage_label)}
                 </Text>
               ) : null}
-              <View style={styles.source}>
-                <VersionSourceLine
-                  version={shown}
-                  coverage={manifest.coverage_note}
-                  testID="bill-text-source"
-                />
-              </View>
               {askRow ? (
                 <View style={styles.rows}>
                   <LinkRow
@@ -443,20 +445,29 @@ export default function BillTextReader({
               ) : null}
               {summary ? (
                 <View style={styles.block} testID="bill-text-summary">
-                  <Text
-                    wordSafe
-                    variant="subsectionTitle"
-                    accessibilityRole="header"
-                  >
-                    In short
-                  </Text>
-                  <MachinePill
-                    note={{
-                      title: 'Machine-written',
-                      body: [summary.attribution],
-                    }}
-                    testID="bill-text-summary-label"
+                  <SectionHeader
+                    title="In short"
+                    level={3}
+                    accessory={
+                      <MachinePill
+                        note={{
+                          title: 'Machine-written',
+                          body: [summary.attribution],
+                        }}
+                        testID="bill-text-summary-label"
+                      />
+                    }
                   />
+                  {summary.describes_version ? (
+                    <Text
+                      wordSafe
+                      variant="footnote"
+                      tone="inkSoft"
+                      testID="bill-text-summary-version"
+                    >
+                      {`Describes the bill ${summary.describes_version}.`}
+                    </Text>
+                  ) : null}
                   <View testID="bill-text-summary-text" style={styles.brief}>
                     {firstSentences(summary.sentences).map(
                       (sentence, index) => (
@@ -532,15 +543,8 @@ export default function BillTextReader({
           )
         }
         footer={
-          ready && current ? (
+          ready && manifest ? (
             <View>
-              <View style={styles.endSource}>
-                <VersionSourceLine
-                  version={shown}
-                  coverage={manifest?.coverage_note ?? null}
-                  testID="bill-text-source-end"
-                />
-              </View>
               {paneRows ? (
                 <View style={styles.rows}>
                   <LinkRow
@@ -550,6 +554,13 @@ export default function BillTextReader({
                   />
                 </View>
               ) : null}
+              <View style={styles.endSource}>
+                <VersionSourceLine
+                  version={shown}
+                  coverage={manifest?.coverage_note ?? null}
+                  testID="bill-text-source"
+                />
+              </View>
               <View style={styles.after}>
                 <PageFoot variant="today" />
               </View>
@@ -701,7 +712,6 @@ function BillTextSkeleton() {
 const styles = StyleSheet.create({
   meta: { marginBottom: rhythm.line },
   stage: { marginTop: rhythm.line },
-  source: { marginTop: rhythm.tight },
   rows: { marginTop: rhythm.tight },
   block: { marginTop: rhythm.block, gap: rhythm.tight },
   brief: { gap: rhythm.tight },

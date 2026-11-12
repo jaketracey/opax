@@ -22,10 +22,11 @@ import {
   isAccessibilityCategory,
   rhythm,
 } from '../../design/tokens';
-import { isPad, useLayout, useScreenMargin } from '../../design/adaptive';
+import { useLayout, useScreenMargin } from '../../design/adaptive';
 import { LaunchHandoff } from '../../launch/LaunchHandoff';
 import { releaseSplash } from '../../launch/splash';
 import { welcomeSeatRoute } from '../../navigation/routes';
+import { firstRunSkipped } from '../../onboarding/measure';
 import { closeWelcome, markWelcomeSeen } from '../../onboarding/state';
 import { useSeat } from '../your-mp/useSeat';
 import { welcomeCopy } from './copy';
@@ -69,9 +70,10 @@ export function WelcomePage({
   const [laidOut, setLaidOut] = useState(false);
   const [covered, setCovered] = useState(launch);
   const leaving = useRef(false);
+  const advancing = useRef(false);
   const accessible = isAccessibilityCategory(fontScale);
   const pinned = continuePinned(fontScale);
-  const wide = isPad && layout.regular;
+  const wide = layout.regular;
   // The short welcome is the same page with Continue only (first-launch
   // 4.5 D2): the same ground.
   const ground = designFlags.groupedSurfaces ? colors.sunken : colors.paper;
@@ -81,17 +83,28 @@ export function WelcomePage({
     if (leaving.current) return;
     leaving.current = true;
     void markWelcomeSeen({ declined }).catch(() => undefined);
+    if (declined) firstRunSkipped('welcome');
     closeWelcome(navigation as Parameters<typeof closeWelcome>[0]);
   };
   const next = () => {
+    if (leaving.current || advancing.current) return;
     if (short) leave(false);
-    else router.push(welcomeSeatRoute());
+    else {
+      advancing.current = true;
+      // Continue has shown the page and its notice, so the welcome counts as
+      // seen from here: a reader who leaves the app on the electorate step
+      // comes back to Today and its invitation, not to this page again.
+      void markWelcomeSeen().catch(() => undefined);
+      router.push(welcomeSeatRoute());
+    }
   };
   // Two-finger Z, Escape and Android back: "Not now" (today.md 3.2). A
   // replay with a seat saved changes nothing; the short welcome declines
-  // nothing, so they act as its Continue.
-  const notNow = () =>
-    leave(!short && seat.status !== 'chosen' && seat.status !== 'loading');
+  // nothing, so they act as its Continue. Only a saved seat makes it a
+  // no-op: on a first launch the seat read can still be in flight, and a
+  // "Not now" then must still move Today's invitation (a replay's seat has
+  // long been read).
+  const notNow = () => leave(!short && seat.status !== 'chosen');
 
   useFocusEffect(() => {
     if (Platform.OS !== 'android') return;
@@ -104,7 +117,10 @@ export function WelcomePage({
   const [focused, setFocused] = useState(true);
   useEffect(() => {
     const blur = navigation.addListener('blur', () => setFocused(false));
-    const focus = navigation.addListener('focus', () => setFocused(true));
+    const focus = navigation.addListener('focus', () => {
+      advancing.current = false;
+      setFocused(true);
+    });
     return () => {
       blur();
       focus();
@@ -162,6 +178,8 @@ export function WelcomePage({
           styles.scroll,
           {
             paddingHorizontal: margin,
+            paddingLeft: margin + insets.left,
+            paddingRight: margin + insets.right,
             paddingTop: insets.top + (wide ? rhythm.section : 56),
             // Unpinned, the scroll's end leaves the whole button above the
             // home indicator.
@@ -253,6 +271,8 @@ export function WelcomePage({
             styles.foot,
             {
               paddingHorizontal: margin,
+              paddingLeft: margin + insets.left,
+              paddingRight: margin + insets.right,
               backgroundColor: ground,
               paddingBottom: Math.max(insets.bottom, rhythm.block),
             },
@@ -264,8 +284,11 @@ export function WelcomePage({
         </View>
       ) : null}
       {covered ? (
+        // A first launch: the name unfolds here, over the welcome, since the
+        // root's cover sits under this full-screen modal.
         <LaunchHandoff
           ready={laidOut}
+          sequence="full"
           onDone={() => setCovered(false)}
           testID="welcome-launch-cover"
         />

@@ -37,3 +37,44 @@ The shared route folder is `app/(tabs)/(today,your-mp,bills,search,ask)/`. Route
 Use one navy tint. Category inks belong to subject figures and hierarchical symbols. Party colour is a dot beside a name. Corners use purpose-named radii and continuous curves. Menus use native row or bar menus on iOS, with destructive confirmation and Android fallbacks in `design/menu`.
 
 Deprecated recipe baselines are empty and all design rules are errors. Before committing, run `npm run typecheck`, `npm run lint` and `npm test`. Device captures, large-title rendering, colour matching, AX5 layout and iPad behaviour are checked by the orchestrator; unit tests do not establish those visual outcomes.
+
+## iPhone Duo
+
+`useLayout()` adds `rule: 'pad' | 'phone-regular' | 'phone'`. iPad regions remain regular from 700pt. An iPhone region is regular from 560pt only while its key window has regular width and regular height traits. Other phone windows stay compact, including Pro Max landscape. `wide` is iPad-only. Pass the rule to `sizeClassFor(width, rule)`, `gridColumns(width, { rule })`, `readableInset(width, max, margin, rule)` and `columnBreakout(width, column, rule)` when measuring a region. Regular phone grids cap at two even columns, with one column when the minimum card width or accessibility text needs it. `PadGrid` and `PadReading` follow the layout rule; `SidebarSafe` remains iPad-only.
+
+`useWindowTraits(): WindowTraits | null` reads the live key window, with a synchronous native snapshot for first render and `{ horizontal, vertical, foldable }` updates. `useAdaptiveDevice()` replaces `isPad` at whole-screen view-tree forks: it is true on iPad and stays true for a phone session after any division is detected or regular/regular traits appear. This keeps the same tree mounted across display changes. Keep `isPad` for iPad-only keyboard shortcuts, pointer effects, URL drags, sidebar labels and `phoneCopy`. The root subscribes for the whole session. Tests use `setWindowTraitsOverride(traits)`; `undefined` restores native traits, `null` simulates no bridge. `resetAdaptiveDeviceForTests()` resets session detection between tests only.
+
+`ReservedRegionArea` is a plain container with `style`, `testID` and optional `onChange(regions)`. `useReservedRegions()` supplies `{ divisions, occlusions }` in that area's own points; each region is `{ x, y, width, height, active }`, with margins already included. `ReservedRegionsProvider value={regions}` supplies a local manual override or test seam. Nested native areas measure their own geometry. Off iOS or without the module, an area renders a plain View and regions are empty unless explicitly overridden.
+
+Pure helpers live in `fold.ts`: `activeVerticalFold(divisions)` and `activeHorizontalFold(divisions)` return an active region or null. `sidesOf(fold, bounds)` returns `{ leading, trailing }` or `{ top, bottom }` rectangles with the whole fold strip excluded. `placeClear(rect, regions, bounds)` retains a fixed element's size, prefers the larger side of a straddled division (trailing or bottom on a tie), then moves the least distance outside active camera occlusions. Clear elements stay put; if no free rectangle can fit, it returns a bounds-clamped position without resizing. `evenColumns(count)` rounds multi-column counts down to an even count and retains a usable single column. Move fixed controls and focal points; scrolling prose and lists continue across folds.
+
+`modules/opax-duo` loads on both iPhone and iPad. Its reserved-region code is compiled only when the podspec detects an iOS SDK of 27.1 or later, then guarded at runtime for iOS 27.1. Duo full-screen behaviour and reserved regions need that SDK. On the 27.0 SDK the view is a plain container that emits nothing and `foldable` is false; window traits still work.
+
+## Android controls
+
+Android design pressables use `design/pressable`: bounded foreground ripples on
+rows, cards and chips, borderless feedback on icon buttons, and minimum 48 dp
+targets. State layers have paper, filled-surface and high-contrast tokens. The
+iOS branch forwards its original props. Keep feature pressables on these shared
+controls so their targets, labels and feedback remain consistent.
+
+`Button` keeps its existing props and variants; Android also accepts `filled`,
+`tonal`, `outlined` and `text`. Existing `primary`, `secondary`, `plain` and
+`destructive` calls retain their meanings. Controls grow with wrapping text.
+`SwitchRow` draws the shell's Material 3 switch. `ChoiceChip` exposes a checked
+filter with a visible check; segments expose selected tabs. `Field` supplies the
+Android focus boundary, selection colour and labelled clear action. A field
+with `returnKeyType="search"` also draws a decorative search icon.
+
+`showMenu` and `confirmAction` keep their existing arguments. Android can also
+receive a `{ x, y, width, height }` window-coordinate anchor as the third
+argument and an optional dismissal callback as the fifth. Design touch surfaces
+record their measured anchor for existing callers; `PopUpButton` measures its
+own trigger. Android menus support Back, outside tap, scrolling and menu-item
+semantics. iOS retains its native action sheet and numeric iPad anchors.
+
+`Stepper` and `Slider` are additive Android controls with a required label,
+value, finite min/max, positive step and `onValueChange`. They expose adjustable
+increment/decrement actions and numeric bounds. They render nothing on iOS;
+existing iOS screens continue to use their native pickers. The slider and switch
+load Compose only inside Android branches, using the existing shell modules.

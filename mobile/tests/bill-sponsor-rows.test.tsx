@@ -1,11 +1,14 @@
 import { act } from 'react';
-import { Text, useWindowDimensions } from 'react-native';
+import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import * as d from '../src/api/catalogs';
 import { Catalogs } from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
 import { PartyLabel, PersonRow, Portrait } from '../src/design/people';
+import { Icon } from '../src/design/icon';
 import { SourceLine } from '../src/design/source';
+import { Text as DesignText } from '../src/design/text';
+import { minimumTarget, textStyles } from '../src/design/tokens';
 import BillDetail from '../src/features/bills/BillDetail';
 import { RecordedParty } from '../src/features/bills/parts';
 import { sponsorRows } from '../src/features/bills/sponsors';
@@ -224,6 +227,116 @@ const native = (root: ReactTestInstance, testID: string) =>
     (node) => typeof node.type === 'string' && node.props.testID === testID,
   );
 
+function parentView(node: ReactTestInstance): ReactTestInstance {
+  let parent = node.parent;
+  while (parent && parent.type !== View) parent = parent.parent;
+  if (!parent) throw new Error('Expected a containing View');
+  return parent;
+}
+
+test.each([1, 1.786, 3.571])(
+  'sponsors and co-sponsors use a tight party, seat and role stack at font scale %s',
+  async (fontScale) => {
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale });
+    for (const names of [
+      ['Larissa Waters'],
+      ['Larissa Waters', 'Penny Wong'],
+    ]) {
+      const record = await fixture.billFor('au-federal-r6850');
+      Object.assign(record.data.identity.data!, {
+        sponsorMembers: names.map((name) => ({ name, suffix: '' })),
+        sponsorParty: null,
+        sponsorPersonId: null,
+      });
+      mock.billFor.mockResolvedValue(record);
+      const r = await render('au-federal-r6850');
+      const rows = block(r.root).findAllByType(PersonRow);
+      expect(rows.map((row) => row.props.name)).toEqual(names);
+      expect(rows[0]!.props).toMatchObject({
+        party: 'Greens',
+        place: 'Senator for Queensland',
+        detail: names.length === 1 ? 'Sponsor' : 'Sponsors',
+      });
+      for (const row of rows) {
+        const party = row.findByType(PartyLabel);
+        expect(party.props.compact).toBe(true);
+        const metadata = parentView(party);
+        const words = parentView(metadata);
+        const name = row
+          .findAllByType(DesignText)
+          .find((text) => text.props.testID === `${row.props.testID}-name`)!;
+        expect(parentView(name)).toBe(words);
+        expect(StyleSheet.flatten(words.props.style).gap).toBe(4);
+        expect(StyleSheet.flatten(metadata.props.style)).toMatchObject({
+          gap: 4,
+          minHeight: minimumTarget,
+        });
+        expect(
+          metadata
+            .findAllByType(DesignText)
+            .flatMap((text) => [text.props.children].flat())
+            .filter((child) => typeof child === 'string'),
+        ).toEqual(
+          [row.props.party, row.props.place, row.props.detail].filter(Boolean),
+        );
+        for (const text of metadata.findAllByType(DesignText)) {
+          expect(text.props.numberOfLines).toBeUndefined();
+          expect(
+            StyleSheet.flatten(text.props.style)?.marginVertical,
+          ).toBeUndefined();
+          expect(
+            StyleSheet.flatten(text.props.style)?.marginTop,
+          ).toBeUndefined();
+          expect(
+            StyleSheet.flatten(text.props.style)?.marginBottom,
+          ).toBeUndefined();
+        }
+        const partyLink = party.find(
+          (node) =>
+            !!node.props.hitSlop && typeof node.props.onPress === 'function',
+        );
+        expect(
+          StyleSheet.flatten(partyLink.props.style).minHeight,
+        ).toBeUndefined();
+        expect(
+          textStyles.secondary.lineHeight + partyLink.props.hitSlop.bottom,
+        ).toBe(minimumTarget);
+        const visual = row.find(
+          (node) => typeof node.props.style === 'function',
+        );
+        expect(
+          StyleSheet.flatten(visual.props.style({ pressed: false })),
+        ).toMatchObject({ minHeight: minimumTarget, alignItems: 'center' });
+        const chevron = row
+          .findAllByType(Icon)
+          .find((icon) => icon.props.name === 'chevron.right')!;
+        expect(visual.findAllByType(Icon)).toContain(chevron);
+        const label = [
+          row.props.name,
+          row.props.party,
+          row.props.place,
+          row.props.detail,
+        ]
+          .filter(Boolean)
+          .join(', ');
+        const spoken = row.findAll(
+          (node) =>
+            typeof node.type === 'string' &&
+            node.props.accessible &&
+            node.props.accessibilityLabel === label,
+        );
+        expect(spoken).toHaveLength(1);
+        expect(spoken[0]!.props.accessibilityRole).toBe('link');
+        act(() => spoken[0]!.props.onAccessibilityTap());
+        expect(mockPush).toHaveBeenLastCalledWith(row.props.href);
+      }
+      act(() => r.unmount());
+    }
+  },
+);
+
 test('a linked sponsor is the standard people row with one spoken label, linking to the profile', async () => {
   const r = await render('au-federal-r6850');
   const sponsor = block(r.root);
@@ -296,7 +409,7 @@ test('an unreadable directory leaves every sponsor plain, never a guessed link',
 test('a bill without a sponsor says so once, in its source sheet, and never loads the directory', async () => {
   const r = await render('au-federal-r7501');
   expect(r.root.findAllByType(PersonRow)).toHaveLength(0);
-  // No sponsor row and no fake party chip: the head's source line says it.
+  // No sponsor row and no fake party chip: the page's source line says it.
   expect(
     r.root.findAll(
       (node) =>

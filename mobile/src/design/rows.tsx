@@ -1,11 +1,14 @@
-import { router, type Href } from 'expo-router';
+import { Pressable } from './pressable';
+import { type Href } from 'expo-router';
+import { useRecordLink } from '../navigation/record-link';
 import { useState, type ReactNode } from 'react';
-import { Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useOpenAsk } from '../features/ask/open';
 import { openSource } from '../navigation/external';
 import { useAccessibilitySize } from './accessibility';
 import { Hoverable, useHover } from './adaptive';
 import { ContextMenu } from './context-menu';
+import { showMenu } from './menu';
 import { Disclosure } from './disclosure';
 import { designFlags } from './flags';
 import {
@@ -19,6 +22,10 @@ import {
 import { EXTERNAL_GLYPH, Icon, type SFSymbol } from './icon';
 import { StatusCapsule } from './labels';
 import { PartyLabel, Portrait } from './people';
+import { isPartyLabel } from './party';
+import { partyRoute } from '../navigation/routes/people';
+import { router } from 'expo-router';
+import { partyFromCode } from '../features/bills/party-codes';
 import {
   RowLink,
   menuLeaves,
@@ -117,6 +124,7 @@ export function LinkRow({
   selected,
   highlighted,
 }: LinkRowProps) {
+  const recordLink = useRecordLink(href);
   const stacked = useAccessibilitySize();
   const { fontScale } = useWindowDimensions();
   const [firstLineHeight, setFirstLineHeight] = useState<number | undefined>();
@@ -124,8 +132,7 @@ export function LinkRow({
   const cellStyle = useRowCellStyle();
   const split = selected !== undefined && accessory !== 'checkmark';
   const [hovered, onHover] = useHover();
-  const onActivate =
-    select ?? onPress ?? (href ? () => router.push(href) : undefined);
+  const onActivate = select ?? onPress ?? (href ? recordLink.open : undefined);
   const plainTitle = typeof title === 'string' ? title : textContent(title);
   const glyph = symbol;
   const ink = symbolInk;
@@ -388,6 +395,8 @@ export interface BillRowProps {
   billKey?: string;
   title: string;
   status: string;
+  /** The API status for colour when `status` contains the display label. */
+  rawStatus?: string;
   date?: string | null;
   showStatus?: boolean;
   dateLabel?: string;
@@ -438,6 +447,7 @@ export function BillRow({
   billKey,
   title,
   status,
+  rawStatus,
   date,
   dateLabel,
   showStatus = true,
@@ -453,14 +463,14 @@ export function BillRow({
   selected,
   highlighted,
 }: BillRowProps) {
+  const recordLink = useRecordLink(href);
   const stacked = useAccessibilitySize();
   const highlight = useRowHighlight();
   const cellStyle = useRowCellStyle();
   useRowInset();
   const split = selected !== undefined;
   const [hovered, onHover] = useHover();
-  const onActivate =
-    select ?? onPress ?? (href ? () => router.push(href) : undefined);
+  const onActivate = select ?? onPress ?? (href ? recordLink.open : undefined);
   const formattedDate =
     date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? formatDate(date, 'short') : date;
   const dated = formattedDate
@@ -489,6 +499,20 @@ export function BillRow({
       }
       accessibilityHint={accessibilityHint}
       accessibilityState={selected !== undefined ? { selected } : undefined}
+      accessibilityActions={
+        affiliation && isPartyLabel(affiliation.party)
+          ? [
+              {
+                name: 'openParty',
+                label: `Open ${affiliation.party} party page`,
+              },
+            ]
+          : undefined
+      }
+      onAccessibilityAction={(event) => {
+        if (event.nativeEvent.actionName === 'openParty' && affiliation?.party)
+          router.push(partyRoute(partyFromCode(affiliation.party)));
+      }}
       testID={testID}
       onPress={select ?? onPress}
       style={({ pressed }) => [
@@ -505,7 +529,9 @@ export function BillRow({
       {selected ? <SelectedMark /> : null}
       <View style={styles.main}>
         <View style={[styles.line, stacked ? styles.stacked : null]}>
-          {showStatus ? <StatusCapsule status={status} /> : null}
+          {showStatus ? (
+            <StatusCapsule status={rawStatus ?? status} label={status} />
+          ) : null}
           {dated ? (
             <Text wordSafe variant="secondary">
               {dated}
@@ -523,7 +549,12 @@ export function BillRow({
               </Text>
             ) : null}
             {affiliation ? (
-              <PartyLabel {...affiliation} linked={false} nested />
+              <PartyLabel
+                {...affiliation}
+                linked
+                nested
+                testID={testID && `${testID}-party`}
+              />
             ) : null}
           </View>
         ) : null}
@@ -573,8 +604,18 @@ export interface RecordRowProps {
   showTitle?: boolean;
   compact?: boolean;
   excerpt?: { text: string; highlight?: string[] } | null;
-  speaker?: { name: string; party: string | null } | null;
+  speaker?: {
+    name: string;
+    party: string | null;
+    href?: Href;
+    portrait?: ReactNode;
+    linkedParty?: boolean;
+  } | null;
   href?: Href;
+  /** Selects a source or opens it in the reader's detail pane. */
+  onPress?: () => void;
+  selected?: boolean;
+  leading?: { content: ReactNode; label: string };
   external?: External;
   menu?: 'record' | RowMenuAction[];
   testID?: string;
@@ -617,6 +658,9 @@ export function RecordRow({
   excerpt,
   speaker,
   href,
+  onPress,
+  selected,
+  leading,
   external,
   menu = 'record',
   testID,
@@ -628,7 +672,11 @@ export function RecordRow({
     excerptLines.text === excerpt?.text && excerptLines.count > 3;
   const highlight = useRowHighlight();
   const cellStyle = useRowCellStyle();
-  useRowInset();
+  const recordLink = useRecordLink(href);
+  const speakerLink = useRecordLink(speaker?.href);
+  const separateSpeaker =
+    !!speaker?.href || (!!speaker?.linkedParty && isPartyLabel(speaker.party));
+  useRowInset(leading && !stacked ? 46 : 16);
   const clean = cleanRecordTitle(title);
   const stage = recordTitleStage(title);
   const datedKind =
@@ -636,90 +684,195 @@ export function RecordRow({
     !meta.toLocaleLowerCase('en-AU').includes(stage.toLocaleLowerCase('en-AU'))
       ? `${meta} · ${stage}`
       : meta;
+  const label = [
+    leading?.label,
+    datedKind,
+    showTitle ? clean : null,
+    excerpt?.text,
+    speaker?.name,
+    speaker?.party,
+  ]
+    .filter(Boolean)
+    .join(', ');
+  const path =
+    typeof href === 'string'
+      ? href
+      : href && 'params' in href && href.params && 'slug' in href.params
+        ? `/doc/${href.params.slug}`
+        : '';
+  const actions =
+    menu === 'record'
+      ? href
+        ? rowMenus.record({ title: clean || meta, path })
+        : undefined
+      : menu;
+  const open =
+    onPress ??
+    (href
+      ? recordLink.open
+      : external
+        ? () => void openSource(external.url, external.label)
+        : undefined);
+  const Content = separateSpeaker ? Pressable : View;
   const row = (
     <Pressable
-      accessible
-      accessibilityRole={href || external ? 'link' : undefined}
-      accessibilityLabel={[
-        datedKind,
-        showTitle ? clean : null,
-        excerpt?.text,
-        speaker?.name,
-        speaker?.party,
-      ]
-        .filter(Boolean)
-        .join(', ')}
-      testID={testID}
-      onPress={
-        external
-          ? () => void openSource(external.url, external.label)
+      accessible={!separateSpeaker}
+      accessibilityRole={
+        !separateSpeaker && (href || external || onPress) ? 'link' : undefined
+      }
+      accessibilityState={selected === undefined ? undefined : { selected }}
+      accessibilityLabel={separateSpeaker ? undefined : label}
+      testID={separateSpeaker && testID ? `${testID}-container` : testID}
+      onPress={separateSpeaker || external || onPress ? open : undefined}
+      onLongPress={
+        separateSpeaker && actions?.length
+          ? () => showMenu('', menuLeaves(actions))
           : undefined
       }
       style={({ pressed }) => [
         styles.row,
         cellStyle,
-        pressed && (href || external) ? { backgroundColor: highlight } : null,
+        (pressed && (href || external || onPress)) || selected
+          ? { backgroundColor: highlight }
+          : null,
       ]}
     >
+      {leading?.content}
       <View style={styles.main}>
-        <Text wordSafe variant="secondary">
-          {datedKind}
-        </Text>
-        {showTitle && clean ? (
-          <Text wordSafe variant="rowRecord">
-            {clean}
+        <Content
+          {...(separateSpeaker
+            ? {
+                accessible: true,
+                accessibilityRole:
+                  href || external || onPress ? ('link' as const) : undefined,
+                accessibilityLabel: label,
+                accessibilityState:
+                  selected === undefined ? undefined : { selected },
+                testID,
+                onPress: (
+                  event: import('react-native').GestureResponderEvent,
+                ) => {
+                  event.stopPropagation();
+                  open?.();
+                },
+                onLongPress: actions?.length
+                  ? () => showMenu('', menuLeaves(actions))
+                  : undefined,
+                accessibilityActions: rowAccessibilityActions(actions ?? []),
+                onAccessibilityAction: (
+                  event: import('react-native').AccessibilityActionEvent,
+                ) =>
+                  menuLeaves(actions ?? [])
+                    .find(
+                      (action) => action.title === event.nativeEvent.actionName,
+                    )
+                    ?.onPress(),
+              }
+            : {})}
+          style={[
+            styles.recordContent,
+            separateSpeaker ? styles.recordTarget : null,
+          ]}
+        >
+          <Text wordSafe variant="secondary">
+            {datedKind}
           </Text>
-        ) : null}
-        {excerpt ? (
-          <View>
-            {!expanded || compact ? (
-              <Text
-                variant="recordText"
-                numberOfLines={compact && stacked ? 2 : 3}
-              >
-                <Highlight text={excerpt.text} words={excerpt.highlight} />
-              </Text>
-            ) : null}
-            {!compact ? (
-              <Text
-                variant="recordText"
-                accessible={false}
-                accessibilityElementsHidden
-                importantForAccessibility="no-hide-descendants"
-                pointerEvents="none"
-                style={{ position: 'absolute', left: 0, right: 0, opacity: 0 }}
-                onTextLayout={({ nativeEvent }) => {
-                  const count = nativeEvent.lines.length;
-                  setExcerptLines((current) =>
-                    current.text === excerpt.text && current.count === count
-                      ? current
-                      : { text: excerpt.text, count },
-                  );
-                  if (nativeEvent.lines.length <= 3) setExpanded(false);
-                }}
-              >
-                <Highlight text={excerpt.text} words={excerpt.highlight} />
-              </Text>
-            ) : null}
-          </View>
-        ) : null}
-        {speaker ? (
-          <View style={[styles.line, stacked ? styles.stacked : null]}>
-            <Text wordSafe variant="secondary">
-              {speaker.name}
+          {showTitle && clean ? (
+            <Text wordSafe variant="rowRecord">
+              {clean}
             </Text>
-            {speaker.party ? (
-              <PartyLabel
-                party={speaker.party}
-                status="unknown"
-                nested
-                linked={false}
-              />
-            ) : null}
+          ) : null}
+          {excerpt ? (
+            <View>
+              {!expanded || compact ? (
+                <Text
+                  variant="recordText"
+                  numberOfLines={compact && stacked ? 2 : 3}
+                >
+                  <Highlight text={excerpt.text} words={excerpt.highlight} />
+                </Text>
+              ) : null}
+              {!compact ? (
+                <Text
+                  variant="recordText"
+                  accessible={false}
+                  accessibilityElementsHidden
+                  importantForAccessibility="no-hide-descendants"
+                  pointerEvents="none"
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    opacity: 0,
+                  }}
+                  onTextLayout={({ nativeEvent }) => {
+                    const count = nativeEvent.lines.length;
+                    setExcerptLines((current) =>
+                      current.text === excerpt.text && current.count === count
+                        ? current
+                        : { text: excerpt.text, count },
+                    );
+                    if (nativeEvent.lines.length <= 3) setExpanded(false);
+                  }}
+                >
+                  <Highlight text={excerpt.text} words={excerpt.highlight} />
+                </Text>
+              ) : null}
+            </View>
+          ) : null}
+        </Content>
+        {speaker ? (
+          <View style={styles.recordSpeakerSlot}>
+            {speaker.portrait}
+            <View style={styles.recordSpeakerWords}>
+              {speaker.href ? (
+                <Pressable
+                  accessibilityRole="link"
+                  accessibilityLabel={`Open ${speaker.name}`}
+                  testID={testID && `${testID}-speaker`}
+                  onPress={(event) => {
+                    event.stopPropagation();
+                    speakerLink.open();
+                  }}
+                  style={[
+                    styles.recordSpeaker,
+                    speaker.party ? styles.recordSpeakerNameEnd : null,
+                  ]}
+                >
+                  <Text wordSafe variant="secondary" tone="link">
+                    {speaker.name}
+                  </Text>
+                </Pressable>
+              ) : (
+                <View
+                  style={speaker.party ? styles.recordSpeakerNameEnd : null}
+                >
+                  <Text
+                    wordSafe
+                    variant="secondary"
+                    testID={testID && `${testID}-speaker`}
+                  >
+                    {speaker.name}
+                  </Text>
+                </View>
+              )}
+              {speaker.party ? (
+                <View style={styles.recordSpeakerParty}>
+                  <PartyLabel
+                    party={speaker.party}
+                    status="unknown"
+                    nested
+                    compact
+                    linked={speaker.linkedParty ?? false}
+                    testID={testID && `${testID}-speaker-party`}
+                  />
+                </View>
+              ) : null}
+            </View>
           </View>
         ) : null}
       </View>
-      {href || external ? (
+      {href || external || onPress ? (
         <Icon
           name={external ? EXTERNAL_GLYPH : chevron}
           size={13}
@@ -729,26 +882,16 @@ export function RecordRow({
       ) : null}
     </Pressable>
   );
-  const path =
-    typeof href === 'string'
-      ? href
-      : href && 'params' in href && href.params && 'slug' in href.params
-        ? `/doc/${href.params.slug}`
-        : '';
-  const linked = href ? (
-    <RowLink
-      href={href}
-      menu={
-        menu === 'record'
-          ? rowMenus.record({ title: clean || meta, path })
-          : menu
-      }
-    >
-      {row}
-    </RowLink>
-  ) : (
-    row
-  );
+  // A RowLink groups its descendants for VoiceOver. Keep the speaker beside
+  // the reader's accessible target, within an ungrouped touchable row.
+  const linked =
+    href && !separateSpeaker ? (
+      <RowLink href={href} menu={actions} select={onPress}>
+        {row}
+      </RowLink>
+    ) : (
+      row
+    );
   return (
     <>
       {linked}
@@ -1096,6 +1239,31 @@ const styles = StyleSheet.create({
   value: { flexShrink: 0, textAlign: 'right' },
   stackedValue: { flexShrink: 0 },
   main: { flexGrow: 1, flexShrink: 1, gap: rhythm.line },
+  recordContent: { gap: rhythm.line },
+  recordTarget: { minHeight: minimumTarget, minWidth: minimumTarget },
+  recordSpeakerSlot: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+  },
+  recordSpeakerWords: {
+    flex: 1,
+    minWidth: 0,
+    flexDirection: 'column',
+    gap: rhythm.line,
+  },
+  recordSpeaker: {
+    minHeight: minimumTarget,
+    minWidth: minimumTarget,
+    justifyContent: 'center',
+    flexShrink: 1,
+  },
+  // Keep the text close while the two links retain separate full-size targets.
+  recordSpeakerNameEnd: {
+    minHeight: minimumTarget,
+    justifyContent: 'flex-end',
+  },
+  recordSpeakerParty: { minHeight: minimumTarget },
   line: {
     flexDirection: 'row',
     flexWrap: 'wrap',

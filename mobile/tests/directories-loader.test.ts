@@ -8,6 +8,7 @@ import {
 } from '../src/api/cache';
 import * as runtime from '../src/api/runtime';
 import { loadDirectory } from '../src/features/directories/data';
+import { matchingPeople } from '../src/features/directories/model';
 import { readDivisionHistory } from '../src/features/directories/division-data';
 import { pinnedBytes, slugs } from './pinned';
 import { fixtureBytes } from './fixture-bytes';
@@ -73,11 +74,28 @@ test('opening all native directories and division history issues only static rea
   const source = new Catalogs(client);
   const replaced = jest.replaceProperty(runtime, 'catalogs', source);
   try {
-    const people = await loadDirectory('person');
     const parties = await loadDirectory('party');
+    const people = await loadDirectory('person');
     const electorates = await loadDirectory('electorate');
     expect(people.people).toHaveLength(1090);
     expect(parties.parties.length).toBeGreaterThan(10);
+    for (const [party, count] of [
+      ['Animal Justice Party', 1],
+      ['Legalise Cannabis Victoria', 2],
+      ['Libertarian Party', 1],
+    ] as const) {
+      expect(parties.parties.find((p) => p.name === party)?.members).toBe(
+        count,
+      );
+      expect(
+        matchingPeople(people.people, { party, sitting: '1' }, ''),
+      ).toHaveLength(count);
+    }
+    expect(parties.sources).toContainEqual(
+      expect.objectContaining({
+        label: 'Dated parliamentary seats',
+      }),
+    );
     expect(electorates.electorates).toHaveLength(625);
     const beforeReturn = paths.length;
     await loadDirectory('person');

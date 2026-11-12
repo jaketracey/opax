@@ -24,7 +24,13 @@ export const jurisdictions = [
   { value: 'nt', label: 'NT' },
   { value: 'act', label: 'ACT' },
 ] as const;
-export const moreCatalogKinds = ['party', 'agency', 'grant', 'bill'] as const;
+export const moreCatalogKinds = [
+  'party',
+  'agency',
+  'grant',
+  'bill',
+  'report',
+] as const;
 export type MoreCatalogKind = (typeof moreCatalogKinds)[number];
 export const excludedKinds: Readonly<Record<string, string>> = {
   donor: 'Donor rows have no organisation discriminator.',

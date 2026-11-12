@@ -277,7 +277,6 @@ export function FilterFacet<S extends object>({
       <RouteOptions
         options={{
           title: row?.title ?? 'Filters',
-          headerBackTitle: 'Filters',
           ...filterBar(onDone),
           ...(row?.searchPlaceholder ? { headerSearchBarOptions: search } : {}),
         }}

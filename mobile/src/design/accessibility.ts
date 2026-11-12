@@ -27,8 +27,19 @@ function setting(
       listeners.add(listener);
       if (!subscribed) {
         subscribed = true;
-        read().then(notify, () => undefined);
-        AccessibilityInfo.addEventListener(event, notify);
+        let changed = false;
+        AccessibilityInfo.addEventListener(event, (next) => {
+          changed = true;
+          notify(next);
+        });
+        read().then(
+          (next) => {
+            // A native read may have started before the user changed the
+            // setting. Events are newer than that initial snapshot.
+            if (!changed) notify(next);
+          },
+          () => undefined,
+        );
       }
       return () => listeners.delete(listener);
     },

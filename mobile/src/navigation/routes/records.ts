@@ -45,3 +45,7 @@ export const recentRecordsRoute = {
   pathname: '/recent-records' as const,
   params: {},
 };
+export const reportRoute = (slug: string, name?: string) => ({
+  pathname: '/report/[slug]' as const,
+  params: { slug, ...(name ? { name } : {}) },
+});

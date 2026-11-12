@@ -1,4 +1,5 @@
 import { RouteOptions } from '../../navigation/preview';
+import { useScreenReady } from '../../analytics/timing';
 import { Host, Menu, Button as SwiftButton } from '@expo/ui/swift-ui';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
@@ -115,8 +116,10 @@ import {
 } from './parts';
 import { sponsorRows, type SponsorDirectory } from './sponsors';
 import { statusEvent, statusEventText } from './status-event';
+import { useSpeechSpeakers } from '../records/speaker';
 import { useCatalogRecord } from './useCatalogRecord';
 import { memberPosition, useMyMemberVotes } from './your-mp-vote';
+import { sydneyDay } from '../today/rules';
 
 type BillRecord = Awaited<ReturnType<typeof catalogs.billFor>>;
 type BillView = BillRecord['data'];
@@ -192,10 +195,12 @@ export default function BillDetail({
   }>();
   const key = String(recordKey ?? params.key);
   const load = useCallback(
-    (refresh: boolean) => catalogs.billFor(key, refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      catalogs.billFor(key, refresh, signal),
     [key],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
+  useScreenReady('/bill/[key]', !!record || !!error, !embedded);
   const [directory, setDirectory] = useState<SponsorDirectory | null>();
   const view = record?.data;
   const identity = view?.identity.data ?? null;
@@ -316,10 +321,11 @@ export default function BillDetail({
     <>
       {embedded ? null : (
         <RouteOptions
+          stableItems
           options={{
             // The back label for the next screen; the bar title appears by
             // scroll once the H1 passes under the bar.
-            title: title || 'Bill',
+            title,
             // ⋯ is drawn from the start, and works once the bill loads.
             ...headerItems(
               failed
@@ -513,7 +519,13 @@ function BillToolbar({
   canShare: boolean;
 }) {
   return (
-    <SafeAreaView edges={['bottom']} style={styles.toolbar}>
+    <SafeAreaView
+      edges={['bottom']}
+      style={[
+        styles.toolbar,
+        Platform.OS === 'android' ? styles.androidToolbar : null,
+      ]}
+    >
       <Button
         label="Ask about this bill"
         onPress={onAsk}
@@ -663,7 +675,6 @@ function BillPage({
           titleRef={titleRef}
           onTitleLayout={onTitleLayout}
           directory={directory}
-          savedAt={savedAt}
         />
         {follow.group ? (
           <View ref={changesRef} collapsable={false} style={styles.added}>
@@ -715,13 +726,14 @@ function BillPage({
       />
       <Acts view={view} savedAt={savedAt} />
       <Related view={view} savedAt={savedAt} />
+      <BillSource view={view} identity={identity} savedAt={savedAt} />
     </>
   );
 }
 
 /**
  * The bill's identity, said once: status and its dated event, the title,
- * the meta line, who brought it, Follow, and the header's source line.
+ * the meta line, who brought it, and Follow.
  */
 function BillHead({
   view,
@@ -730,7 +742,6 @@ function BillHead({
   titleRef,
   onTitleLayout,
   directory,
-  savedAt,
 }: {
   view: BillView;
   identity: Identity;
@@ -738,9 +749,7 @@ function BillHead({
   titleRef?: RefObject<View | null>;
   onTitleLayout?: (event: LayoutChangeEvent) => void;
   directory: SponsorDirectory | null | undefined;
-  savedAt: number | null;
 }) {
-  const draft = identity.status === 'exposure_draft';
   const event = statusEvent({
     status: identity.status,
     status_as_of: identity.statusAsOf,
@@ -748,17 +757,13 @@ function BillHead({
     key_dates: view.keyDates.data ?? [],
   });
   const meta = metaLine(identity);
-  const sources = view.identity.sources;
-  const originals: SourceOriginal[] = sources.map((s) =>
-    s.label === billSourceLabel('billhome')
-      ? { label: 'Parliament of Australia', url: s.url, record: 'bill home' }
-      : { label: s.label, url: s.url },
-  );
-  const unsponsored = !identity.sponsorMembers.length && !identity.sponsorParty;
   return (
     <View style={styles.headBlock}>
       <View style={styles.titleBlock}>
-        <StatusLine status={identity.statusLabel} event={event} />
+        <StatusLine
+          status={identity.statusLabel}
+          event={headerEvent(event, identity)}
+        />
         <View ref={titleRef} collapsable={false} onLayout={onTitleLayout}>
           <Heading level={1} testID="bill-title">
             {identity.title}
@@ -782,25 +787,60 @@ function BillHead({
         title={name}
         testID="bill-follow"
       />
-      <View style={styles.source}>
-        <SourceLine
-          asOf={view.identity.asAt}
-          citation={draft ? unique(sources.map((s) => s.label)) : 'ParlInfo'}
-          savedAt={savedAt}
-          originals={originals}
-          licence={
-            unique(sources.map((s) => s.licence).filter(Boolean)).join(', ') ||
-            null
-          }
-          notes={[
-            unsponsored && !draft ? 'Sponsor not recorded.' : null,
-            event && !event.resolved ? notes.status : null,
-          ]}
-          testID="bill-source"
-        />
-      </View>
     </View>
   );
+}
+
+/** Page provenance follows the last content section, including related bills. */
+function BillSource({
+  view,
+  identity,
+  savedAt,
+}: {
+  view: BillView;
+  identity: Identity;
+  savedAt: number | null;
+}) {
+  const draft = identity.status === 'exposure_draft';
+  const event = statusEvent({
+    status: identity.status,
+    status_as_of: identity.statusAsOf,
+    originating_house: identity.house,
+    key_dates: view.keyDates.data ?? [],
+  });
+  const sources = view.identity.sources;
+  const originals: SourceOriginal[] = sources.map((s) =>
+    s.label === billSourceLabel('billhome')
+      ? { label: 'Parliament of Australia', url: s.url, record: 'bill home' }
+      : { label: s.label, url: s.url },
+  );
+  const unsponsored = !identity.sponsorMembers.length && !identity.sponsorParty;
+  return (
+    <SourceLine
+      asOf={view.identity.asAt}
+      citation={draft ? unique(sources.map((s) => s.label)) : 'ParlInfo'}
+      savedAt={savedAt}
+      originals={originals}
+      licence={
+        unique(sources.map((s) => s.licence).filter(Boolean)).join(', ') || null
+      }
+      notes={[
+        unsponsored && !draft ? 'Sponsor not recorded.' : null,
+        event && !event.resolved ? notes.status : null,
+      ]}
+      testID="bill-source"
+    />
+  );
+}
+
+/** The meta line already dates introduction; later status events still show. */
+function headerEvent(
+  event: ReturnType<typeof statusEvent>,
+  bill: { introduced: string | null; introducedLabel: string },
+) {
+  return event?.label === bill.introducedLabel && event.date === bill.introduced
+    ? null
+    : event;
 }
 
 /**
@@ -904,7 +944,10 @@ function SeededHead({ row }: { row: IndexRow }) {
       <View style={styles.titleBlock}>
         <StatusLine
           status={status}
-          event={event}
+          event={headerEvent(event, {
+            introduced: row.introduced,
+            introducedLabel: display.introducedLabel,
+          })}
           pending={!event && !!row.status_as_of}
         />
         <TitleAnchor>
@@ -1094,9 +1137,9 @@ function Consultation({ view }: { view: BillView }) {
   const consultation = view.consultation.data;
   if (view.identity.data?.status !== 'exposure_draft' || !consultation)
     return null;
-  const closed =
-    !!consultation.closes &&
-    consultation.closes < new Date().toISOString().slice(0, 10);
+  // Closing dates are Australian calendar days; the UTC date lags a day
+  // every Australian morning.
+  const closed = !!consultation.closes && consultation.closes < sydneyDay();
   return (
     <Section title="Consultation" testID="bill-consultation">
       <Text variant="body">
@@ -1138,7 +1181,7 @@ function Summary({
   const more = changes.slice(shown.length);
   const sources = view.summary.sources;
   return (
-    <Section title="In short" testID="bill-summary">
+    <Section testID="bill-summary">
       <MachineSummary
         attribution={summary.attribution}
         sentences={sentences}
@@ -1259,7 +1302,8 @@ function DateRows({
         <View
           key={`${entry.from}-${entry.to}-${index}`}
           accessible
-          accessibilityLabel={`${dateSpan(entry.from, entry.to, 'long')}: ${entry.stages.map(stageText).join('; ')}`}
+          // The row's label replaces its children's: the dot's "New" is said here.
+          accessibilityLabel={`${dateSpan(entry.from, entry.to, 'long')}: ${entry.stages.map(stageText).join('; ')}${entryHas(entry, freshStages) ? '. New' : ''}`}
           testID={`bill-date-${index}`}
           style={styles.date}
         >
@@ -1333,7 +1377,8 @@ function KeyDates({
         ) : null}
         {entries.length === 1 ? (
           <DateRows entries={entries} freshStages={freshStages} />
-        ) : entries.length > points.length ? (
+        ) : timeline.runs > points.length ||
+          entries.some((entry) => entry.to) ? (
           <Disclosure
             label={`All ${formatCount(timeline.runs)} stages`}
             open={open}
@@ -1457,6 +1502,7 @@ function Votes({
   const reduceMotion = useReduceMotion();
   const headerBottom = useHeaderBottom();
   const member = useMyMemberVotes(votes.has);
+  const [rowWidth, setRowWidth] = useState<number>();
   const headerRef = useRef<View>(null);
   useEffect(() => {
     if (votes.sectionFocus) targets.scrollTo(headerRef, true);
@@ -1471,6 +1517,7 @@ function Votes({
     <BillVoteRow
       key={division.key}
       division={division}
+      width={rowWidth}
       index={ordered.indexOf(division)}
       bill={identity}
       expanded={votes.expanded.has(division.key)}
@@ -1508,7 +1555,14 @@ function Votes({
     });
   };
   return (
-    <View ref={headerRef} collapsable={false}>
+    <View
+      ref={headerRef}
+      collapsable={false}
+      testID="bill-divisions-layout"
+      onLayout={({ nativeEvent: { layout } }) => {
+        if (layout.width > 0) setRowWidth(layout.width);
+      }}
+    >
       <Section
         title="How parliament voted"
         testID="bill-divisions"
@@ -1566,6 +1620,7 @@ function Votes({
  */
 function BillVoteRow({
   division,
+  width,
   index,
   bill,
   expanded,
@@ -1576,6 +1631,8 @@ function BillVoteRow({
   memberVote,
 }: {
   division: Division;
+  /** The list's width also constrains the intrinsically sized iOS menu trigger. */
+  width: number | undefined;
   index: number;
   bill: Identity;
   expanded: boolean;
@@ -1672,6 +1729,7 @@ function BillVoteRow({
           testID={`${id}-more`}
           style={({ pressed }) => [
             styles.voteRow,
+            { width },
             pressed ? styles.pressed : null,
           ]}
         >
@@ -1735,6 +1793,8 @@ function BillVoteRow({
           <PartyVotes
             splits={[...division.splits.drawn, ...division.splits.folded]}
             paired={division.paired}
+            // Pairs have their own line.
+            notes={parties.notes.filter((note) => !/ paired$/.test(note))}
             recorded={parties.recorded}
             testID={`${id}-parties`}
           />
@@ -1762,6 +1822,7 @@ function Speeches({
   anchor: RefObject<View | null>;
   fresh: ReadonlySet<string>;
 }) {
+  const speakerFor = useSpeechSpeakers();
   const [all, setAll] = useState(false);
   const speeches = useMemo(
     () =>
@@ -1788,7 +1849,7 @@ function Speeches({
                   meta={`${speech.stage_hint ? billStage(speech.stage_hint) : 'Speech'} · ${short(speech.date)}`}
                   showTitle={false}
                   compact
-                  speaker={{ name: speech.speaker, party: speech.party }}
+                  speaker={speakerFor(speech)}
                   excerpt={speech.brief ? { text: speech.brief } : null}
                   href={docRoute(speech.slug, speech.speaker)}
                   testID={`bill-speech-${index}`}
@@ -1960,7 +2021,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   capsule: { alignSelf: 'flex-start', maxWidth: '100%' },
-  source: { marginTop: rhythm.tight },
   added: { marginTop: rhythm.tight },
   bone: {
     backgroundColor: colors.sunken,
@@ -2026,4 +2086,5 @@ const styles = StyleSheet.create({
     paddingTop: rhythm.tight,
     backgroundColor: colors.paper,
   },
+  androidToolbar: { flexWrap: 'wrap', gap: rhythm.tight },
 });

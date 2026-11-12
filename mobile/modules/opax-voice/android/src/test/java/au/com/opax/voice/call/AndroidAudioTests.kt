@@ -118,6 +118,28 @@ class AndroidAudioTests : SafeVoiceTest() {
     }
   }
 
+  @Test fun duckingNotificationsLeaveTheCallRunningInProductionAndSyntheticCalls() = test {
+    VoiceTestSafety.withIsolated(VoiceTestSafety.Monitor(loopbackOnly = false)) {
+      for (synthetic in listOf(false, true)) {
+        val lifecycle = AndroidVoiceLifecycle()
+        val session: VoiceAudioSession = if (synthetic) DebugSilentAudioSession(context, lifecycle)
+          else AndroidVoiceAudioSession(context, lifecycle) { null }
+        session.activate()
+        val request = shadowOf(audioManager).lastAudioFocusRequest
+        assertFalse(request.audioFocusRequest.willPauseWhenDucked())
+        // A notification sound asks to duck: the call must not end.
+        request.listener.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK)
+        // An alarm takes transient focus: that does end it.
+        request.listener.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS_TRANSIENT)
+        shadowOf(Looper.getMainLooper()).idle()
+        assertEquals(LifecycleEvent.interruptionBegan, withTimeout(1000) { lifecycle.events.first() })
+        session.deactivate()
+        assertNotNull(shadowOf(audioManager).lastAbandonedAudioFocusRequest)
+        assertEquals(AudioManager.MODE_NORMAL, audioManager.mode)
+      }
+    }
+  }
+
   @Test fun keepAwakeFollowsCallOrderOnTheMainThread() = test {
     val activity = Robolectric.buildActivity(Activity::class.java).setup().get()
     val session = AndroidVoiceAudioSession(context, AndroidVoiceLifecycle()) { activity }

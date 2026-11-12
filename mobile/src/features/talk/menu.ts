@@ -24,7 +24,8 @@ export function timeLeft(
       : remaining >= 60
         ? `${minutesLeft(remaining)} left in this call`
         : 'Under a minute left in this call';
-  if (!status) return undefined;
+  // Signed out there is no allowance to name: the screen offers Sign in.
+  if (!status?.signedIn) return undefined;
   return voiceTime(status);
 }
 /** Whole minutes, never rounded up: "9 min", or seconds under a minute. */

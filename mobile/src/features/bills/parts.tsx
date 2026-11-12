@@ -7,6 +7,7 @@ import { Button } from '../../design/controls';
 import { counted, formatCount, formatDate } from '../../design/format';
 import { haptic } from '../../design/haptics';
 import { MACHINE_LABEL, MachinePill } from '../../design/labels';
+import { SectionHeader } from '../../design/layout';
 import { isPartyLabel, partyDot, partyIdentity } from '../../design/party';
 import { PartyLabel } from '../../design/people';
 import {
@@ -67,6 +68,7 @@ export function BillIndexRow({
       billKey={bill.key}
       title={text.name}
       status={text.status}
+      rawStatus={bill.status}
       date={text.date}
       showStatus={showStatus}
       meta={text.meta}
@@ -393,8 +395,8 @@ export const BRIEF_EXPLANATION =
   'An automated summary written by a model; not the record.';
 
 /**
- * A bill's stored machine summary: one `MachinePill` (it opens how this was
- * written) before the sentences. `testID` prefixes the pill and the text.
+ * A bill's stored machine summary: its heading and provenance pill share a
+ * wrapping row before the sentences. `testID` prefixes the pill and the text.
  */
 export function MachineSummary({
   attribution,
@@ -407,15 +409,20 @@ export function MachineSummary({
 }) {
   return (
     <>
-      <MachinePill
-        note={{
-          title: MACHINE_LABEL,
-          body: [
-            'Written by a machine from the explanatory memorandum. Check the original before relying on it.',
-            attribution,
-          ].filter(Boolean),
-        }}
-        testID={`${testID}-label`}
+      <SectionHeader
+        title="In short"
+        accessory={
+          <MachinePill
+            note={{
+              title: MACHINE_LABEL,
+              body: [
+                'Written by a machine from the explanatory memorandum. Check the original before relying on it.',
+                attribution,
+              ].filter(Boolean),
+            }}
+            testID={`${testID}-label`}
+          />
+        }
       />
       <View style={styles.machineText} testID={`${testID}-text`}>
         {sentences.filter(Boolean).map((sentence, index) => (
@@ -695,17 +702,20 @@ const slugOf = (label: string) =>
 /**
  * A vote's party rows in the fixed groups Labor, the Coalition and the
  * crossbench: each group's summed counts in words, then each party as a
- * row with its own bar (one ink for every party) and counts, opening the
- * party. Zero sides are left out on screen and said by VoiceOver.
+ * row with its own bar (one ink for every party, all on one scale) and
+ * counts, opening the party. Zero sides are left out on screen and said by VoiceOver.
  */
 export function PartyVotes({
   splits,
   paired,
+  notes = [],
   recorded,
   testID,
 }: {
   splits: readonly BillSplit[];
   paired?: number;
+  /** What the attribution rests on: "2 not placed with a party". */
+  notes?: readonly string[];
   recorded: boolean;
   testID: string;
 }) {
@@ -715,6 +725,9 @@ export function PartyVotes({
         Party votes not recorded for this vote.
       </Text>
     );
+  // One scale for every row, so a small party's bar is not drawn as long as
+  // a large one's just because it heads its own group.
+  const max = Math.max(...splits.map((r) => r.ayes + r.noes), 1);
   const groups = new Map<PartyBloc, BillSplit[]>();
   for (const split of splits) {
     const bloc = partyBloc(split.party);
@@ -728,7 +741,6 @@ export function PartyVotes({
           const rows = groups.get(bloc)!;
           const ayes = rows.reduce((n, r) => n + r.ayes, 0);
           const noes = rows.reduce((n, r) => n + r.noes, 0);
-          const max = Math.max(...rows.map((r) => r.ayes + r.noes), 1);
           return (
             <View key={bloc} style={styles.bloc} testID={`${testID}-${bloc}`}>
               <Text
@@ -749,6 +761,12 @@ export function PartyVotes({
             </View>
           );
         })}
+      {notes.length ? (
+        // Without these the party rows need not add up to the vote's count.
+        <Text variant="footnote" tone="inkSoft" testID={`${testID}-notes`}>
+          {`${notes.join('. ')}.`}
+        </Text>
+      ) : null}
       {paired ? (
         <Text variant="footnote" tone="inkSoft">
           {`${counted(paired, 'pair', 'pairs')}`}
@@ -773,7 +791,8 @@ function PartyVoteRow({
     <View
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
-      style={[styles.voteTrack, stacked ? null : styles.trackInline]}
+      testID={`${testID}-bar`}
+      style={[styles.voteTrack, stacked ? styles.full : styles.trackInline]}
     >
       <View
         style={{

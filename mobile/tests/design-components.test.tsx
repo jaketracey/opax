@@ -445,42 +445,43 @@ describe('ChoiceChip on Android', () => {
     root.find(
       (n) => n.props.testID === 'c' && typeof n.props.style === 'function',
     );
-  test('a pill, 36pt drawn and 44pt to touch, said with its state and place', () => {
+  test('a Material filter chip has a checked state and a 48dp target', () => {
     const node = pressable(chip());
     expect(node.props.accessibilityState).toEqual({
       selected: false,
+      checked: false,
       disabled: false,
     });
     expect(node.props.accessibilityValue).toEqual({ text: '2 of 4' });
     const style = pressedStyle(node, false);
-    expect(style.borderRadius).toBe(radii.capsule);
-    expect(style.minHeight).toBe(36);
+    expect(style.borderRadius).toBe(8);
+    expect(style.minHeight).toBe(48);
     expect(node.props.hitSlop).toBe(Platform.OS === 'android' ? 6 : 4);
   });
   test('rest, pressed, selected and disabled are opaque listed pairs', () => {
     const cases = [
-      [{}, false, 'navyWash', 'navy'],
-      [{}, true, 'sunken', 'navy'],
-      [{ selected: true }, false, 'navy', 'onNavy'],
-      [{ selected: true }, true, 'navyRaised', 'onNavy'],
+      [{}, false, null, 'navy'],
+      [{}, true, null, 'navy'],
+      [{ selected: true }, false, 'navyWash', 'navy'],
+      [{ selected: true }, true, 'navyWash', 'navy'],
       [{ disabled: true }, false, 'sunken', 'inkSoft'],
     ] as const;
     for (const [props, pressed, fill, ink] of cases) {
       const root = chip(props);
       expect(hex(pressedStyle(pressable(root), pressed).backgroundColor)).toBe(
-        light[fill],
+        fill ? light[fill] : 'transparent',
       );
       const colour = hex(flat(nativeTexts(root)[0]!.props.style).color)!;
       expect(colour).toBe(light[ink]);
-      expect(listedPair(colour, light[fill], 'text')).toBeTruthy();
+      expect(listedPair(colour, light[fill ?? 'paper'], 'text')).toBeTruthy();
     }
   });
-  test('at AX5 it takes the full width with 12pt corners, word-safe', () => {
+  test('at AX5 it takes the full width with Material chip corners, word-safe', () => {
     atSize(AX5, () => {
       const root = chip();
       const style = pressedStyle(pressable(root), false);
       expect(style.alignSelf).toBe('stretch');
-      expect(style.borderRadius).toBe(radii.container);
+      expect(style.borderRadius).toBe(8);
     });
   });
 });

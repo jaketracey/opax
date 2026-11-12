@@ -1,15 +1,29 @@
 import { RouteOptions } from '../../navigation/preview';
 import type { ReactNode } from 'react';
 import { type NativeStackNavigationOptions } from 'expo-router';
-import { Platform, ScrollView, View, StyleSheet } from 'react-native';
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  View,
+  StyleSheet,
+  ToastAndroid,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { useScreenMargin } from '../../design/adaptive';
 import { useKeyCommand } from '../../design/keyboard';
 import { SurfaceContext } from '../../design/row-padding';
 import { ContentUnavailable } from '../../design/states';
+import { Icon } from '../../design/icon';
+import { symbols } from '../../design/symbols';
+import { Text } from '../../design/text';
 import { colors, rhythm, textStyles } from '../../design/tokens';
-import { closeSheetItem, headerItems } from '../../navigation/chrome';
+import {
+  androidHeaderBar,
+  closeSheetItem,
+  headerItems,
+} from '../../navigation/chrome';
 import { sheetOptions } from '../../navigation/stack/screen';
 
 export function routeSheetOptions({
@@ -34,6 +48,18 @@ export function routeSheetOptions({
     sheetExpandsWhenScrolledToEdge: true,
     ...(citation ? { sheetLargestUndimmedDetentIndex: 0 } : {}),
     ...headerItems(() => [closeSheetItem()]),
+    ...(Platform.OS === 'android'
+      ? {
+          presentation: 'formSheet' as const,
+          headerShown: false,
+          sheetAllowedDetents: accessible ? [1] : [0.5, 1],
+          sheetInitialDetentIndex: 0,
+          sheetLargestUndimmedDetentIndex: -1,
+          sheetGrabberVisible: true,
+          sheetCornerRadius: 28,
+          sheetElevation: 3,
+        }
+      : {}),
   };
 }
 export function SheetFrame({
@@ -62,10 +88,90 @@ export function SheetFrame({
     if (done.type === 'button') done.onPress?.();
   });
   const fitted = short && !accessible;
+  if (Platform.OS === 'android') {
+    const close = () => {
+      if (done.type === 'button') done.onPress?.();
+    };
+    // Native Android form sheets have no toolbar. Put the dialog title and
+    // actions inside their content, below the native, draggable grabber.
+    const trailing =
+      options?.unstable_headerRightItems?.({ canGoBack: false }) ?? [];
+    const leading =
+      options?.unstable_headerLeftItems?.({ canGoBack: false }) ?? [];
+    const heading = (
+      <Text
+        wordSafe
+        variant="sectionTitle"
+        accessibilityRole="header"
+        style={[styles.androidTitle, accessible ? { flex: 0 } : null]}
+      >
+        {title}
+      </Text>
+    );
+    return (
+      <>
+        <RouteOptions
+          options={{
+            ...routeSheetOptions({ short, citation, accessible }),
+            title,
+          }}
+        />
+        <View
+          role="dialog"
+          accessibilityLabel={title}
+          accessibilityViewIsModal
+          style={styles.androidDialog}
+        >
+          {accessible ? heading : null}
+          <View style={styles.androidHeading}>
+            {androidHeaderBar(leading)}
+            {accessible ? <View style={{ flex: 1 }} /> : heading}
+            {androidHeaderBar(
+              trailing.filter(
+                (item) => !('label' in item && item.label === 'Done'),
+              ),
+            )}
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Done"
+              accessibilityHint="Closes this sheet"
+              testID="header-done"
+              onPress={close}
+              onLongPress={() => ToastAndroid.show('Close', ToastAndroid.SHORT)}
+              android_ripple={{ color: colors.navyWash, borderless: true }}
+              style={styles.androidClose}
+            >
+              <Icon name={symbols.close} size={24} maxScale={1} />
+            </Pressable>
+          </View>
+          <SurfaceContext.Provider value="sunken">
+            <ScrollView
+              testID={testID}
+              style={styles.androidScroll}
+              contentContainerStyle={[
+                styles.content,
+                {
+                  paddingHorizontal: margin,
+                  paddingBottom: rhythm.section + insets.bottom,
+                },
+              ]}
+              keyboardDismissMode="on-drag"
+              keyboardShouldPersistTaps="handled"
+            >
+              {children}
+            </ScrollView>
+          </SurfaceContext.Provider>
+        </View>
+      </>
+    );
+  }
   const contentStyle = [
     styles.content,
     {
       paddingHorizontal: margin,
+      // A fitted View has no scroll view to apply UIKit's horizontal insets.
+      paddingLeft: margin + (fitted ? insets.left : 0),
+      paddingRight: margin + (fitted ? insets.right : 0),
       paddingTop: fitted && compact ? rhythm.tight : rhythm.group,
       paddingBottom: fitted
         ? compact && Platform.OS === 'ios'
@@ -131,6 +237,24 @@ export function MissingPayload() {
   );
 }
 const styles = StyleSheet.create({
+  androidDialog: { flex: 1, backgroundColor: colors.sunken },
+  androidScroll: { flex: 1 },
+  androidHeading: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: rhythm.tight,
+  },
+  androidTitle: {
+    flex: 1,
+    paddingVertical: rhythm.tight,
+    paddingHorizontal: rhythm.tight,
+  },
+  androidClose: {
+    width: 48,
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   screen: { backgroundColor: colors.sunken },
   content: {
     paddingTop: rhythm.group,

@@ -12,9 +12,11 @@ import Welcome, {
   WELCOME_COLUMN,
 } from '../src/features/welcome/Welcome';
 import { releaseSplash } from '../src/launch/splash';
+import { track } from '../src/analytics';
 import { closeWelcome, markWelcomeSeen } from '../src/onboarding/state';
 
 const mockStack: { screenOptions?: unknown } = {};
+const mockFocusListeners = new Set<() => void>();
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
   Stack: Object.assign(
@@ -33,7 +35,10 @@ jest.mock('expo-router', () => ({
   router: { push: jest.fn(), back: jest.fn() },
   useNavigation: () => ({
     getParent: () => undefined,
-    addListener: () => () => {},
+    addListener: (event: string, callback: () => void) => {
+      if (event === 'focus') mockFocusListeners.add(callback);
+      return () => mockFocusListeners.delete(callback);
+    },
   }),
   useFocusEffect: () => {},
 }));
@@ -44,6 +49,7 @@ jest.mock('../src/onboarding/state', () => ({
   closeWelcome: jest.fn(),
   markWelcomeSeen: jest.fn(async () => undefined),
 }));
+jest.mock('../src/analytics', () => ({ track: jest.fn() }));
 jest.mock('../src/launch/splash', () => ({ releaseSplash: jest.fn() }));
 jest.mock('../src/launch/LaunchHandoff', () => ({
   LaunchHandoff: () => null,
@@ -140,14 +146,39 @@ describe('the full welcome', () => {
     expect(columns.length).toBeGreaterThan(0);
     await act(async () => r.unmount());
   });
-  test('Continue pushes the seat step', async () => {
+  test('Continue pushes the seat step and counts the welcome as seen, declining nothing', async () => {
     const r = await render(<Welcome />);
     await act(async () => component(r, 'welcome-continue').props.onPress());
     expect(router.push).toHaveBeenCalledWith({
       pathname: '/welcome/seat',
       params: {},
     });
-    expect(markWelcomeSeen).not.toHaveBeenCalled();
+    // Seen from here: leaving the app on the electorate step never brings
+    // this page back. No decline, so Today's invitation keeps its own slot.
+    expect(markWelcomeSeen).toHaveBeenCalledTimes(1);
+    expect(markWelcomeSeen).toHaveBeenCalledWith();
+    expect(closeWelcome).not.toHaveBeenCalled();
+    expect(track).not.toHaveBeenCalled();
+    await act(async () => r.unmount());
+  });
+  test('a failed write of the seen flag never stops Continue', async () => {
+    (markWelcomeSeen as jest.Mock).mockRejectedValueOnce(new Error('disk'));
+    const r = await render(<Welcome />);
+    await act(async () => component(r, 'welcome-continue').props.onPress());
+    expect(router.push).toHaveBeenCalledTimes(1);
+    await act(async () => r.unmount());
+  });
+  test('repeated Continue presses push one seat step, and returning allows Continue again', async () => {
+    const r = await render(<Welcome />);
+    const next = () => component(r, 'welcome-continue').props.onPress();
+    act(() => {
+      next();
+      next();
+    });
+    expect(router.push).toHaveBeenCalledTimes(1);
+    act(() => mockFocusListeners.forEach((focused) => focused()));
+    act(() => next());
+    expect(router.push).toHaveBeenCalledTimes(2);
     await act(async () => r.unmount());
   });
   test('two-finger Z is "Not now": it records the decline and closes', async () => {
@@ -158,6 +189,17 @@ describe('the full welcome', () => {
     // Once only.
     act(() => host(r, 'welcome-screen').props.onAccessibilityEscape());
     expect(closeWelcome).toHaveBeenCalledTimes(1);
+    // The funnel hears one skip, as categories only.
+    expect((track as jest.Mock).mock.calls).toEqual([
+      ['opax_first_run', { step: 'welcome', outcome: 'skipped' }],
+    ]);
+    await act(async () => r.unmount());
+  });
+  test('"Not now" before the seat read answers still records the decline', async () => {
+    mockSeat.current = { status: 'loading' };
+    const r = await render(<Welcome />);
+    act(() => host(r, 'welcome-screen').props.onAccessibilityEscape());
+    expect(markWelcomeSeen).toHaveBeenCalledWith({ declined: true });
     await act(async () => r.unmount());
   });
   test('a replay with a seat saved declines nothing', async () => {
@@ -165,6 +207,7 @@ describe('the full welcome', () => {
     const r = await render(<Welcome />);
     act(() => host(r, 'welcome-screen').props.onAccessibilityEscape());
     expect(markWelcomeSeen).toHaveBeenCalledWith({ declined: false });
+    expect(track).not.toHaveBeenCalled();
     await act(async () => r.unmount());
   });
   test('the first layout releases the splash, once', async () => {
@@ -294,6 +337,7 @@ describe('the short welcome', () => {
     const r = await render(<ShortWelcome />);
     act(() => host(r, 'welcome-short').props.onAccessibilityEscape());
     expect(markWelcomeSeen).toHaveBeenCalledWith({ declined: false });
+    expect(track).not.toHaveBeenCalled();
     await act(async () => r.unmount());
   });
 });

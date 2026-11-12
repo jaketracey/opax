@@ -1,10 +1,44 @@
 // How a search result reads: its own title, a kind · date · place line and
 // a count that agrees with its number. The web's search page (app.js,
 // pass 3F) draws the same anatomy.
+import { decodeEntities, passageText } from '../../api/passage-text';
+import { isRecordSlug } from '../../api/record-policy';
 import { formatCount, formatDate } from '../../design/format';
 import { jurisdictionName } from '../../design/parliament';
 import { titleSubject } from '../records/citations';
 import { typeLabel } from './contracts';
+import type { SearchRecord } from './decoders';
+
+/** Resource IDs are opaque; only public record slugs can open the reader. */
+export function speechSlug(row: SearchRecord): string | null {
+  for (const candidate of [row.href, row.slug, row.resource]) {
+    if (!candidate) continue;
+    let slug = candidate;
+    try {
+      if (/^https?:\/\//.test(candidate)) {
+        const url = new URL(candidate);
+        if (
+          url.protocol !== 'https:' ||
+          !['opax.com.au', 'www.opax.com.au'].includes(url.host) ||
+          url.username ||
+          url.password
+        )
+          continue;
+        slug = url.pathname;
+      }
+      const path = /^\/(?:doc|api\/resource)\/([^/?#]+)\/?(?:[?#].*)?$/.exec(
+        slug,
+      );
+      slug = decodeURIComponent(path?.[1] ?? slug);
+      if (isRecordSlug(slug)) return slug;
+    } catch {
+      // A malformed link can still have a usable record slug beside it.
+    }
+  }
+  return null;
+}
+
+export { speechSpeaker } from '../records/speech-speaker';
 
 /** One result's kind, said in the singular ("Speech", not "Speeches and hearings"). */
 const singular: Record<string, string> = {
@@ -36,6 +70,43 @@ const singular: Record<string, string> = {
 export const resultKindLabel = (kind: string) =>
   singular[kind] ?? typeLabel(kind);
 
+/** Register result titles name the declaring member before the category. */
+export function interestName(title: string) {
+  return decodeEntities(title)
+    .split(/\s+[\u2014–-]\s+|:\s+/)[0]!
+    .trim();
+}
+
+/** Remove only the export's trailing holder and action cells. */
+export function interestDetail(row: { title: string; snippet: string }) {
+  const snippet = passageText(row.snippet);
+  const cells =
+    /^(.*)\.\s*(unspecified|self|spouse|children)?\.\s*(statement|addition|deletion|amendment)?\.\s*$/is.exec(
+      snippet,
+    );
+  const holders: Record<string, string> = {
+    self: 'Member',
+    spouse: 'Spouse or partner',
+    children: 'Dependent children',
+  };
+  const actions: Record<string, string> = {
+    addition: 'Added',
+    deletion: 'Removed',
+    amendment: 'Amended',
+  };
+  const titleAction =
+    /(?:\s+[\u2014–-]\s+|:\s+)(statement|addition|deletion|amendment)$/i.exec(
+      row.title,
+    )?.[1];
+  return [
+    (cells ? cells[1]! : snippet).trim().slice(0, 140),
+    holders[cells?.[2]?.toLowerCase() ?? ''],
+    actions[(cells?.[3] ?? titleAction ?? '').toLowerCase()],
+  ]
+    .filter(Boolean)
+    .join(' · ');
+}
+
 /**
  * The record's own title. Search titles are built as "Speaker \u2014 Debate \u2014
  * 2023-03-06"; the debate is the title, and the speaker and the date have
@@ -48,11 +119,12 @@ export function resultTitle(record: {
   date?: string | null;
   kind?: string;
 }) {
-  const subject = titleSubject(record);
+  const title = decodeEntities(record.title);
+  const speaker = record.speaker ? decodeEntities(record.speaker) : null;
+  const subject = titleSubject({ ...record, title, speaker });
   if (subject) return subject;
-  if (record.speaker && record.kind === 'speech')
-    return `Speech by ${record.speaker}`;
-  return record.title;
+  if (speaker && record.kind === 'speech') return `Speech by ${speaker}`;
+  return title;
 }
 
 /** "Speech · 6 Mar 2023 · Federal": what the record is, when, and where. */

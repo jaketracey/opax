@@ -1,15 +1,20 @@
 import { withNavigationOptions } from './navigation-options';
 import { act, type ReactElement } from 'react';
-import TestRenderer from 'react-test-renderer';
+import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { catalogs as runtime } from '../src/api/runtime';
 import * as c from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
 import { index, manifest, people, roster, slugs, pinned } from './pinned';
-import Electorate, { identityLine } from '../src/features/Electorate';
+import Electorate, {
+  ElectorateScreen,
+  identityLine,
+} from '../src/features/Electorate';
 import { router } from 'expo-router';
 import { ContentUnavailable } from '../src/design/states';
 import { PartyLabel, PersonRow } from '../src/design/people';
-import { Heading } from '../src/design/text';
+import { Heading, Text } from '../src/design/text';
+import { Screen } from '../src/design/layout';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import Members from '../src/features/your-mp/Members';
 import Election from '../src/features/your-mp/Election';
 import { chooseElectorateDate } from '../src/features/directories/ElectorateDateSheet';
@@ -21,6 +26,10 @@ import {
 } from '../src/features/directories/ElectorateHistory';
 import { CachedPortrait } from '../src/features/CachedPortrait';
 import { personRoute } from '../src/navigation/routes';
+import { grantsRoute } from '../src/navigation/routes/public-money';
+import { LinkRow } from '../src/design/rows';
+import { RecordNameLink } from '../src/design/record';
+import { minimumTarget } from '../src/design/tokens';
 import {
   RepresentativeRows,
   sinceLine,
@@ -130,6 +139,12 @@ const unavailable = (r: TestRenderer.ReactTestRenderer, id: string) =>
     .title as string | undefined;
 const has = (r: TestRenderer.ReactTestRenderer, id: string) =>
   r.root.findAll((n) => n.props.testID === id).length > 0;
+function parentView(node: ReactTestInstance): ReactTestInstance {
+  let parent = node.parent;
+  while (parent && parent.type !== View) parent = parent.parent;
+  if (!parent) throw new Error('Expected a containing View');
+  return parent;
+}
 const order = (r: TestRenderer.ReactTestRenderer, ids: string[]) => {
   const seen: string[] = [];
   r.root.findAll((n) => {
@@ -161,6 +176,124 @@ beforeEach(() => {
   mockFollow.states = new Map();
   for (const key of Object.keys(mockParams)) delete mockParams[key];
   mock.directory.mockResolvedValue(directory as never);
+});
+
+test('the pending electorate reserves the map, title and member layout with one loading label', async () => {
+  const dimensions = jest
+    .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
+    .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
+  load('Boothby');
+  mock.electorateFor.mockReturnValue(new Promise(() => {}));
+  const r = await render(<Electorate />);
+  const host = (id: string) =>
+    r.root.find(
+      (node) => typeof node.type === 'string' && node.props.testID === id,
+    );
+  expect(host('electorate-loading').props.accessibilityLabel).toBe(
+    'Loading the electorate',
+  );
+  expect(
+    r.root.findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        node.props.accessibilityRole === 'progressbar',
+    ),
+  ).toHaveLength(1);
+  expect(
+    order(r, [
+      'electorate-loading-map',
+      'electorate-loading-source',
+      'electorate-loading-title',
+      'electorate-loading-chamber',
+      'electorate-loading-follow',
+      'electorate-loading-members-heading',
+      'electorate-loading-member',
+      'electorate-loading-past-heading',
+      'electorate-loading-past-0',
+      'electorate-loading-past-1',
+    ]),
+  ).toEqual([
+    'electorate-loading-map',
+    'electorate-loading-source',
+    'electorate-loading-title',
+    'electorate-loading-chamber',
+    'electorate-loading-follow',
+    'electorate-loading-members-heading',
+    'electorate-loading-member',
+    'electorate-loading-past-heading',
+    'electorate-loading-past-0',
+    'electorate-loading-past-1',
+  ]);
+  expect(
+    StyleSheet.flatten(host('electorate-loading-map').props.style).height,
+  ).toBe(200);
+  expect(
+    host('electorate-loading').findAll(
+      (node) =>
+        node.props.accessibilityElementsHidden &&
+        node.props.importantForAccessibility === 'no-hide-descendants',
+    ).length,
+  ).toBeGreaterThan(0);
+  const member = host('electorate-loading-member');
+  let card = member.parent!;
+  while (!StyleSheet.flatten(card.props.style)?.backgroundColor)
+    card = card.parent!;
+  expect(
+    StyleSheet.flatten(host('electorate-loading-member-portrait').props.style)
+      .backgroundColor,
+  ).not.toEqual(StyleSheet.flatten(card.props.style).backgroundColor);
+  dimensions.mockRestore();
+});
+
+test('the electorate nav centre stays blank through loading, data arrival and scrolling, with its accessible content heading intact', async () => {
+  load('Grayndler');
+  // Hold the actual seat read so loading is observed separately from completion.
+  const seatResult = result(
+    c.electorateFor(c.decodeElectorate(pinned(seat('Grayndler').detail_url))),
+  );
+  let resolve!: (value: typeof seatResult) => void;
+  mock.electorateFor.mockImplementation(
+    () =>
+      new Promise((done) => {
+        resolve = done as typeof resolve;
+      }),
+  );
+  const r = await render(<Electorate />);
+  expect(has(r, 'electorate-loading')).toBe(true);
+  expect(mockOptions.some((options) => options.title === 'Electorate')).toBe(
+    false,
+  );
+  await act(async () => resolve(seatResult));
+  expect(r.root.findAllByType(Screen)[0]!.props.barTitle).toBeUndefined();
+  expect(r.root.findByProps({ testID: 'electorate-name' }).props.children).toBe(
+    'Grayndler',
+  );
+  expect(
+    r.root.findAll(
+      (node) =>
+        node.type === 'Text' &&
+        node.props.accessibilityRole === 'header' &&
+        node.props.children === 'Grayndler',
+    ),
+  ).not.toHaveLength(0);
+  act(() =>
+    r.root
+      .findAllByType(ScrollView)[0]!
+      .props.onScroll({ nativeEvent: { contentOffset: { y: 2000 } } }),
+  );
+  for (const options of mockOptions) {
+    expect(options.title).not.toBe('Electorate');
+    const title = (
+      options.headerTitle as () => ReactElement<{ children?: unknown }>
+    )();
+    expect(title.props).toMatchObject({
+      accessibilityElementsHidden: true,
+      importantForAccessibility: 'no-hide-descendants',
+    });
+    expect(title.props.children).toBeUndefined();
+  }
+  expect(mockOptions.at(-1)!.title).toBe('Grayndler');
+  act(() => r.unmount());
 });
 
 test('Grayndler reads in the stated order with no pipeline words', async () => {
@@ -232,6 +365,25 @@ test('election rows push the election screen, newest first', async () => {
   const parties = firstRow.findAllByType(PartyLabel);
   expect(parties[0]!.props.party).toBe('Labor');
   expect(parties[0]!.props.dense).toBeUndefined();
+  expect(parties[0]!.props.compact).toBe(true);
+  const partyFrame = parentView(parties[0]!);
+  expect(StyleSheet.flatten(partyFrame.props.style).minHeight).toBe(
+    minimumTarget,
+  );
+  expect(StyleSheet.flatten(parentView(partyFrame).props.style).gap).toBe(4);
+  // VoiceOver hears the party's name, as drawn, never the file's code.
+  expect(firstRow.props.accessibilityLabel).toMatch(/, Labor\./);
+  expect(firstRow.props.accessibilityLabel).not.toMatch(/\bALP\b/);
+  const winner = firstRow.findByType(RecordNameLink);
+  expect(winner.props.href).toEqual(
+    personRoute('anthony-albanese', 'Anthony Albanese'),
+  );
+  const stopPropagation = jest.fn();
+  jest.mocked(router.push).mockClear();
+  act(() => winner.findByType(Text).props.onPress({ stopPropagation }));
+  expect(stopPropagation).toHaveBeenCalledTimes(1);
+  expect(router.push).toHaveBeenCalledTimes(1);
+  expect(router.push).toHaveBeenCalledWith(winner.props.href);
 
   expect(has(r, 'election-expand-0')).toBe(false);
   await act(async () => r.unmount());
@@ -295,6 +447,64 @@ test('a chosen date shows the members on that date and Back to today', async () 
       typeof n.props.onPress === 'function',
   )[0]!;
   await act(async () => back.props.onPress());
+  expect(text(r)).not.toContain('Member on');
+  await act(async () => r.unmount());
+});
+
+test('an abolished electorate still shows its recorded members on a chosen historical date', async () => {
+  load('Higgins');
+  const r = await render(<Electorate />);
+  await act(async () =>
+    chooseElectorateDate(seat('Higgins').electorate_id, '2015-06-01'),
+  );
+  expect(r.root.findAllByType(DatedMembers)).toHaveLength(1);
+  expect(text(r)).toContain('Member on 1 June 2015');
+  expect(has(r, 'electorate-date-latest')).toBe(true);
+  const back = r.root.findAll(
+    (node) =>
+      node.props.testID === 'electorate-date-latest' &&
+      typeof node.props.onPress === 'function',
+  )[0]!;
+  await act(async () => back.props.onPress());
+  expect(r.root.findAllByType(DatedMembers)).toHaveLength(0);
+  expect(text(r)).toContain('Past members');
+  await act(async () => r.unmount());
+});
+
+test('changing an embedded electorate clears the old seat and its chosen date while the new record loads', async () => {
+  load('Grayndler');
+  const r = await render(
+    <ElectorateScreen id={seat('Grayndler').electorate_id} embedded />,
+  );
+  await act(async () =>
+    chooseElectorateDate(seat('Grayndler').electorate_id, '1994-06-01'),
+  );
+  expect(text(r)).toContain('Member on 1 June 1994');
+  const sydney = seat('Sydney');
+  const next = result(
+    c.electorateFor(c.decodeElectorate(pinned(sydney.detail_url))),
+  );
+  let finish!: (value: typeof next) => void;
+  mock.electorateFor.mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  await act(async () =>
+    r.update(
+      withNavigationOptions(
+        <ElectorateScreen id={sydney.electorate_id} embedded />,
+        (options) => mockOptions.push(options),
+      ),
+    ),
+  );
+  expect(has(r, 'electorate-loading')).toBe(true);
+  expect(has(r, 'electorate-name')).toBe(false);
+  await act(async () => finish(next));
+  expect(r.root.findByProps({ testID: 'electorate-name' }).props.children).toBe(
+    'Sydney',
+  );
   expect(text(r)).not.toContain('Member on');
   await act(async () => r.unmount());
 });
@@ -584,6 +794,36 @@ test('a followed electorate with no change draws no Added since group', async ()
   await act(async () => r.unmount());
 });
 
+test.each(['Grayndler', 'Ballarat'])(
+  'the electorate page links to grants in %s',
+  async (name) => {
+    load(name);
+    const r = await render(<Electorate />);
+    const link = r.root
+      .findAllByType(LinkRow)
+      .find((n) => n.props.testID === 'seat-grants-all');
+    expect(link?.props.title).toBe(`Grants in ${name}`);
+    expect(link?.props.href).toEqual(
+      grantsRoute({ jur: 'federal', seat: name, state: seat(name).state_code }),
+    );
+    await act(async () => r.unmount());
+  },
+);
+
+test.each([
+  ['Richmond', 'vic'],
+  ['New South Wales', 'federal'],
+  ['Higgins', 'federal'],
+])(
+  'the electorate page has no seat grants link for %s',
+  async (name, jurisdiction) => {
+    load(name, jurisdiction);
+    const r = await render(<Electorate />);
+    expect(has(r, 'seat-grants-all')).toBe(false);
+    await act(async () => r.unmount());
+  },
+);
+
 test('a Victorian district shows its region row and the authorisation foot, and no grants', async () => {
   load('Richmond', 'vic');
   const r = await render(<Electorate />);
@@ -707,5 +947,15 @@ test('the Members page uses the system page-heading role', async () => {
     .find((node) => node.props.testID === 'members-title')!;
   expect(heading.props.kind).toBe('page');
   expect(heading.props.children).toBe('Senators for New South Wales');
+  await act(async () => r.unmount());
+});
+
+test('a Members link to a seat not in the release says so, never loads for good', async () => {
+  load('New South Wales');
+  mockParams.seat = 'fixture-removed-seat';
+  const r = await render(<Members />);
+  expect(unavailable(r, 'members-missing')).toBe(
+    "These members couldn't be found.",
+  );
   await act(async () => r.unmount());
 });

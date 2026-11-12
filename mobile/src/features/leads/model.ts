@@ -1,5 +1,12 @@
 import type { Discovery, DiscoverySignal } from '../../api/catalog-decoders';
 import {
+  array,
+  invalid,
+  nonempty,
+  object,
+  optional,
+} from '../../api/validation';
+import {
   counted,
   formatCount,
   formatDate,
@@ -8,8 +15,13 @@ import {
   moneyAccessibilityLabel,
 } from '../../design/format';
 import type { LeadEvidence } from '../../design/lead';
+import {
+  agencyListRoute,
+  moneyRecordRoute,
+} from '../../navigation/routes/public-money';
 import { sourceUrl } from '../../navigation/external';
 import { samePartyLabel } from '../../design/party';
+import type { decodeAgency } from '../money-public/data';
 import { normaliseOrganisation } from '../money/lookup';
 
 // The leads on the web's /discover page (portal/public/app.js, "discovery"):
@@ -86,6 +98,9 @@ export function categoryFrom(value: unknown): LeadCategory | null {
 }
 export const categorySeeAll = (category: LeadCategory, count: number) =>
   `See all ${formatCount(count)} ${categoryWords[category].seeAll}`;
+/** "No company leads yet": a kind the export has none of. */
+export const categoryNone = (category: LeadCategory) =>
+  `No ${categoryWords[category].seeAll} yet`;
 export const categorySearch = (category: LeadCategory) =>
   categoryWords[category].search;
 export const categorySource = (category: LeadCategory) =>
@@ -226,6 +241,83 @@ export interface ChartRow {
   /** A supplier's profile on opax.com.au, as the web's chart links it. */
   supplierPath: string | null;
 }
+
+/** The directory entry is enough for the list; named rows need its profile. */
+export type LeadAgency = Pick<ReturnType<typeof decodeAgency>, 'id' | 'name'> &
+  Partial<Pick<ReturnType<typeof decodeAgency>, 'suppliers'>> & {
+    aliases?: Record<string, string[]>;
+  };
+
+const supplierNameKey = (name: string) =>
+  name.trim().replace(/\s+/g, ' ').toLocaleLowerCase('en-AU');
+
+/** Only supplier records actually held by this agency can be opened. */
+export function leadSupplierRoute(row: ChartRow, agency: LeadAgency | null) {
+  if (!agency) return null;
+  if (row.other) return agencyListRoute(agency.id, 'suppliers', agency.name);
+  if (!row.supplierPath) return null;
+  // Preserve legal-name distinctions, while allowing the exports' casing
+  // and whitespace to differ. An ambiguous name cannot identify a record.
+  const matches = agency.suppliers?.filter((supplier) =>
+    [supplier.name, ...(agency.aliases?.[supplier.id] ?? [])].some(
+      (name) => supplierNameKey(name) === supplierNameKey(row.name),
+    ),
+  );
+  const supplier = matches?.length === 1 ? matches[0] : null;
+  return supplier?.organisation
+    ? moneyRecordRoute({ rid: supplier.id, agency: agency.id }, supplier.name)
+    : null;
+}
+
+/** Recorded aliases, keyed by the stable ids also held in the agency file. */
+export function decodeLeadSupplierAliases(value: unknown) {
+  const profiles = object(object(value).profiles);
+  return Object.fromEntries(
+    Object.entries(profiles).map(([id, value]) => {
+      const profile = object(value);
+      if (!/^s-[a-f0-9]{20}$/.test(id) || profile.id !== id) invalid();
+      return [
+        id,
+        [
+          ...array(nonempty)(profile.aliases),
+          ...(optional(array(nonempty))(profile.lookup_names) ?? []),
+        ],
+      ];
+    }),
+  );
+}
+
+/**
+ * Agency files omit source aliases. For an unresolved name, check a small
+ * set of same-word candidates in the already allowed supplier shards.
+ * This only chooses files to read; a recorded alias must still match in
+ * full before a row gets a destination. Avoid a broad directory download.
+ */
+export function leadSupplierAliasPaths(lead: LeadView, agency: LeadAgency) {
+  if (
+    lead.category !== 'procurement_concentration' ||
+    lead.comparison.type !== 'concentration'
+  )
+    return [];
+  const paths = new Set<string>();
+  for (const row of lead.comparison.rows) {
+    if (row.other || !row.supplierPath || leadSupplierRoute(row, agency))
+      continue;
+    const firstWord = supplierNameKey(row.name).split(' ')[0];
+    const candidates =
+      agency.suppliers?.filter(
+        (supplier) =>
+          supplier.organisation &&
+          supplierNameKey(supplier.name).split(' ')[0] === firstWord &&
+          /^s-[a-f0-9]{20}$/.test(supplier.id),
+      ) ?? [];
+    if (candidates.length > 4) continue;
+    for (const supplier of candidates)
+      paths.add(`/suppliers/${supplier.id.slice(2, 4)}.json`);
+  }
+  return [...paths];
+}
+
 export type LeadComparison =
   | {
       type: 'concentration';

@@ -69,12 +69,14 @@ export default function Connection() {
     name?: string;
   }>();
   const loadIndex = useCallback(
-    (refresh: boolean) => money.connections(refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      money.connections(refresh, signal),
     [],
   );
   const index = useCatalogRecord(loadIndex);
   const loadExcerpts = useCallback(
-    (refresh: boolean) => money.evidence(id, refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      money.evidence(id, refresh, signal),
     [id],
   );
   const excerpts = useCatalogRecord(loadExcerpts);
@@ -97,7 +99,7 @@ export default function Connection() {
     ['offline', 'timeout'].includes(excerpts.error.code);
   const saved = recordSource(excerpts.record);
   const refreshing = index.refreshing || excerpts.refreshing;
-  const title = name || 'Programs and places';
+  const title = name;
   const path = `/connections?entity=${encodeURIComponent(id)}`;
   // The bar title fades in by scroll with no width at rest, so the back
   // button keeps its label (money-03), and truncates inside the bar items.
@@ -106,6 +108,7 @@ export default function Connection() {
   return (
     <>
       <RouteOptions
+        stableItems
         options={{
           title,
           ...(missing ? {} : moneyBar({ name: title, path })),
@@ -182,7 +185,7 @@ export default function Connection() {
               <SectionHeader title="Excerpts" testID="connection-excerpts" />
               {entry ? (
                 <>
-                  {excerpts.record?.stale ? (
+                  {excerpts.record?.stale && !excerpts.record.staleReason ? (
                     <OfflineLine savedAt={excerpts.record.savedAt} />
                   ) : null}
                   {entry.excerpts.map((x, i) => (

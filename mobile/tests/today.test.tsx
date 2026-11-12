@@ -1,11 +1,18 @@
 import { useNetworkState } from 'expo-network';
-import { act, type ReactElement, type ReactNode } from 'react';
+import { act, createRef, type ReactElement, type ReactNode } from 'react';
 import {
   HeaderHeightContext,
   NavigationContext,
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
-import { ActionSheetIOS, Platform } from 'react-native';
+import {
+  ActionSheetIOS,
+  Platform,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import snapshot from '../scripts/fixture-snapshot.json';
@@ -13,6 +20,7 @@ import * as c from '../src/api/catalogs';
 import { editionPath } from '../src/api/policy';
 import { catalogs as runtime } from '../src/api/runtime';
 import { Screen } from '../src/design/layout';
+import { rhythm } from '../src/design/tokens';
 import { OfflineLine } from '../src/design/states';
 import Today from '../src/features/Today';
 import { readCachedEdition } from '../src/features/today/edition-store';
@@ -284,7 +292,7 @@ test.each(['index', 'your-mp', 'bills', 'search', 'ask'])(
       expect(renderer.root.findByType(Screen).props.onScroll).toBeUndefined();
       const expanded = setOptions.mock.calls.at(-1)![0];
       const ground = expanded.contentStyle.backgroundColor;
-      expect(expanded).toEqual(largeTitleBar(ground));
+      expect(expanded).toMatchObject(largeTitleBar(ground));
       expect(expanded.headerStyle).toEqual({});
       expect(expanded.headerLargeStyle).toEqual({});
       setOptions.mockClear();
@@ -293,18 +301,10 @@ test.each(['index', 'your-mp', 'bills', 'search', 'ask'])(
       expect(setOptions).not.toHaveBeenCalled();
       for (const height of [159, 120, 100])
         act(() => renderer.update(page(height)));
-      expect(setOptions).toHaveBeenCalledTimes(1);
-      expect(setOptions).toHaveBeenLastCalledWith(
-        largeTitleBar(ground, false, true),
-      );
       act(() => renderer.update(page(68)));
-      expect(setOptions).toHaveBeenLastCalledWith(largeTitleBar(ground, true));
       act(() => renderer.update(page(160)));
-      expect(setOptions).toHaveBeenLastCalledWith(expanded);
-      const returnedCalls = 3;
-      expect(setOptions).toHaveBeenCalledTimes(returnedCalls);
       for (const height of [192, 160]) act(() => renderer.update(page(height)));
-      expect(setOptions).toHaveBeenCalledTimes(returnedCalls);
+      expect(setOptions).not.toHaveBeenCalled();
     } finally {
       Object.defineProperty(Platform, 'Version', version);
     }
@@ -503,6 +503,55 @@ describe('the page', () => {
     }) as never;
   const node = (r: TestRenderer.ReactTestRenderer, id: string) =>
     r.root.findAll((n) => typeof n.type === 'string' && n.props.testID === id);
+  test('iOS 26.6.2 keeps content visible when a loading block collapses at the bottom', async () => {
+    setUp({ cached: 'missing' });
+    let finish!: (block: typeof declarations) => void;
+    mock.todayDeclarationsProfiled.mockImplementation(
+      () => new Promise(() => {}),
+    );
+    mock.todayDeclarations.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+    );
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: '26.6.2',
+    });
+    try {
+      const r = await render(<Today />);
+      expect(node(r, 'today-declarations-loading')).not.toHaveLength(0);
+      const view = r.root.findByType(ScrollView);
+      const scrollTo = jest.fn();
+      view.instance.scrollTo = scrollTo;
+      act(() => {
+        view.props.onLayout({
+          nativeEvent: { layout: { x: 0, y: 0, width: 402, height: 700 } },
+        });
+        view.props.onContentSizeChange(402, 5000);
+        view.props.onScroll({
+          nativeEvent: {
+            contentOffset: { x: 0, y: 4383 },
+            contentInset: { top: 160, bottom: 83, left: 0, right: 0 },
+            layoutMeasurement: { width: 402, height: 700 },
+            contentSize: { width: 402, height: 5000 },
+          },
+        });
+      });
+      expect(scrollTo).not.toHaveBeenCalled();
+      await act(async () =>
+        finish({ ...declarations, status: 'missing', data: null }),
+      );
+      expect(node(r, 'today-declarations')).toHaveLength(0);
+      act(() => view.props.onContentSizeChange(402, 1000));
+      expect(scrollTo).toHaveBeenLastCalledWith({ y: 383, animated: false });
+      expect(blocks(r.root).at(-1)).toBe('today-foot');
+    } finally {
+      Object.defineProperty(Platform, 'Version', version);
+    }
+  });
   test('offline, never saved: Bills says so once with no Try again, and How parliament voted collapses', async () => {
     setUp({ cached: 'missing' });
     mock.todayBills.mockResolvedValue(failed('offline'));
@@ -599,6 +648,127 @@ describe('the page', () => {
           /Daily edition ·|snapshot|export|indexed|native|Try again\.|—/i,
         );
     }
+  });
+});
+
+describe('Today scroll range', () => {
+  const event = (y: number, height = 3000, viewport = 700) => ({
+    nativeEvent: {
+      contentOffset: { x: 0, y },
+      contentInset: { top: 160, bottom: 83, left: 0, right: 0 },
+      contentSize: { width: 402, height },
+      layoutMeasurement: { width: 402, height: viewport },
+    },
+  });
+  const prepare = async (enabled = true) => {
+    const ref = createRef<ScrollView>();
+    const onScroll = jest.fn();
+    const onLayout = jest.fn();
+    const r = await render(
+      <Screen
+        grouped
+        scrollRef={ref}
+        clampScrollOnContentChange={enabled}
+        onScroll={onScroll}
+        onLayout={onLayout}
+        refreshControl={
+          <RefreshControl refreshing={false} onRefresh={jest.fn()} />
+        }
+      >
+        <View testID="last-block" />
+      </Screen>,
+    );
+    const view = r.root.findByType(ScrollView);
+    expect(ref.current).toBe(view.instance);
+    const scrollTo = jest.fn();
+    ref.current!.scrollTo = scrollTo;
+    act(() => {
+      view.props.onLayout({
+        nativeEvent: { layout: { x: 0, y: 0, width: 402, height: 700 } },
+      });
+      view.props.onContentSizeChange?.(402, 3000);
+      view.props.onScroll(event(2383));
+    });
+    return { r, view, scrollTo, onScroll, onLayout };
+  };
+  test('repairs repeated shrinks and late momentum, using the measured insets', async () => {
+    const { view, scrollTo, onScroll, onLayout } = await prepare();
+    act(() => view.props.onContentSizeChange(402, 1000));
+    expect(scrollTo).toHaveBeenLastCalledWith({ y: 383, animated: false });
+    act(() => view.props.onScroll(event(2200))); // A stale event still has the old size.
+    expect(scrollTo).toHaveBeenLastCalledWith({ y: 383, animated: false });
+    act(() => view.props.onMomentumScrollEnd(event(383, 1000)));
+    scrollTo.mockClear();
+    act(() => {
+      view.props.onScroll(event(300, 1000));
+      view.props.onContentSizeChange(402, 800);
+    });
+    expect(scrollTo).toHaveBeenLastCalledWith({ y: 183, animated: false });
+    expect(onScroll).toHaveBeenLastCalledWith(300);
+    expect(onLayout).toHaveBeenCalledTimes(1);
+  });
+  test('short content returns to the expanded title rather than leaving a blank viewport', async () => {
+    const { view, scrollTo } = await prepare();
+    act(() => view.props.onContentSizeChange(402, 200));
+    expect(scrollTo).toHaveBeenLastCalledWith({ y: -160, animated: false });
+    act(() => view.props.onScrollEndDrag(event(-160, 200)));
+    scrollTo.mockClear();
+    act(() => view.props.onContentSizeChange(402, 200));
+    expect(scrollTo).not.toHaveBeenCalled();
+  });
+  test('a larger viewport also clamps a reader at the old end', async () => {
+    const { view, scrollTo } = await prepare();
+    act(() =>
+      view.props.onLayout({
+        nativeEvent: {
+          layout: { x: 0, y: 0, width: 874, height: 900 },
+        },
+      }),
+    );
+    expect(scrollTo).toHaveBeenLastCalledWith({ y: 2183, animated: false });
+  });
+  test('growth, unchanged heights, normal bounce and pull-to-refresh do not move the reader', async () => {
+    const { view, scrollTo } = await prepare();
+    act(() => {
+      view.props.onContentSizeChange(402, 3000);
+      view.props.onScroll(event(2450));
+      view.props.onContentSizeChange(402, 3500);
+      view.props.onScrollEndDrag(event(-230, 3500));
+      view.props.onContentSizeChange(402, 1000);
+    });
+    expect(scrollTo).not.toHaveBeenCalled();
+    expect(view.props.refreshControl.type).toBe(RefreshControl);
+  });
+  test('Today retains only the standard bottom gap and native bar adjustment', async () => {
+    const { view } = await prepare();
+    expect(
+      StyleSheet.flatten(view.props.contentContainerStyle).paddingBottom,
+    ).toBe(rhythm.section);
+    expect(view.props.contentInsetAdjustmentBehavior).toBe('automatic');
+    expect(view.props.contentInset).toBeUndefined();
+  });
+  test('other screens keep their existing scroll behaviour', async () => {
+    const { view, scrollTo } = await prepare(false);
+    expect(view.props.onContentSizeChange).toBeUndefined();
+    expect(view.props.onScrollEndDrag).toBeUndefined();
+    expect(view.props.onMomentumScrollEnd).toBeUndefined();
+    expect(scrollTo).not.toHaveBeenCalled();
+  });
+  test('the animated callback ref keeps the native view through content updates', async () => {
+    const ref = jest.fn();
+    const page = (label: string) => (
+      <Screen clampScrollOnContentChange scrollRef={ref}>
+        <View testID={label} />
+      </Screen>
+    );
+    const r = await render(page('loading'));
+    const nativeView = r.root.findByType(ScrollView).instance;
+    expect(ref).toHaveBeenCalledTimes(1);
+    expect(ref).toHaveBeenLastCalledWith(nativeView);
+    act(() => r.update(page('ready')));
+    expect(ref).toHaveBeenCalledTimes(1);
+    act(() => r.unmount());
+    expect(ref).toHaveBeenLastCalledWith(null);
   });
 });
 

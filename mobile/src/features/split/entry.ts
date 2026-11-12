@@ -1,7 +1,19 @@
-import { router } from 'expo-router';
+import { router, type Href } from 'expo-router';
+import { NavigationContext } from 'expo-router/react-navigation';
+import { useCallback, useContext } from 'react';
+import type { SplitRoute } from '../../design/split';
+import { useRecordPush } from '../../navigation/record-link';
 import { webOrigin } from '../../design/environment';
 import { useSplitPane } from '../../design/primitives';
-import { fromWebPath, partyRoute } from '../../navigation/routes';
+import {
+  billRoute,
+  billTextRoute,
+  docRoute,
+  electorateRoute,
+  fromWebPath,
+  partyRoute,
+  personRoute,
+} from '../../navigation/routes';
 
 /**
  * A record drawn in an iPad split's detail pane (Search, the directories and
@@ -55,7 +67,7 @@ export function decodeEntry(value: string | undefined): RecordEntry | null {
   return at > 0 && key && kinds.includes(kind) ? { kind, key } : null;
 }
 
-type Route = { pathname: string; params?: Record<string, unknown> };
+type Route = SplitRoute;
 const param = (route: Route, name: string) => {
   const value = route.params?.[name];
   return typeof value === 'string' && value ? value : null;
@@ -103,6 +115,65 @@ export function entryForRoute(
     default:
       return null;
   }
+}
+
+/** Route labels survive a handoff; a party's name is already its identity. */
+export function entryFromRoute(route: SplitRoute): RecordEntry | null {
+  // These routes carry reader state the pane entry cannot represent.
+  if (
+    ['q', 'match', 'cite', 'section', 'division', 'asof', 'version'].some(
+      (name) => param(route, name),
+    )
+  )
+    return null;
+  return entryForRoute(
+    route,
+    route.pathname === '/party/[slug]'
+      ? undefined
+      : (param(route, 'name') ?? undefined),
+  );
+}
+
+/** Native routes for already identified records. Resolution stays in the pane. */
+export function entryRoute(entry: RecordEntry): SplitRoute | null {
+  switch (entry.kind) {
+    case 'person':
+      return personRoute(entry.key, entry.title);
+    case 'party':
+      return partyRoute(entry.key);
+    case 'electorate':
+      return electorateRoute(entry.key, undefined, entry.title);
+    case 'bill':
+      return billRoute(entry.key, entry.title);
+    case 'text':
+      return billTextRoute(entry.key, undefined, entry.title);
+    case 'doc':
+      return docRoute(entry.key, entry.title, { passage: entry.passage });
+    default:
+      return null;
+  }
+}
+
+/** Bills only absorbs its own bill and bill-text routes on expansion. */
+export function billEntryFromRoute(
+  route: SplitRoute,
+): { kind: 'bill' | 'text'; key: string; title?: string } | null {
+  const entry = entryFromRoute(route);
+  return entry?.kind === 'bill' || entry?.kind === 'text'
+    ? { ...entry, kind: entry.kind }
+    : null;
+}
+
+/** Selection parameters belong to the list, even with a detail above it. */
+export function useSplitSelectionParams() {
+  const navigation = useContext(NavigationContext);
+  return useCallback(
+    (params: Record<string, string>) => {
+      if (navigation) navigation.setParams(params);
+      else router.setParams(params);
+    },
+    [navigation],
+  );
 }
 
 /** The pane entry for an opax.com.au path (an answer's source), or null. */
@@ -165,13 +236,14 @@ export function entryLabel(entry: RecordEntry): string {
  * routes a pane does not draw, it pushes the route as before.
  */
 export function useRecordNavigation() {
+  const push = useRecordPush();
   const pane = useSplitPane<RecordEntry>();
   return {
     inPane: pane !== null,
     open(route: Route, title?: string) {
       const entry = pane ? entryForRoute(route, title) : null;
       if (pane && entry) pane.push(entry);
-      else router.push(route as Parameters<typeof router.push>[0]);
+      else push(route as Href);
     },
   };
 }

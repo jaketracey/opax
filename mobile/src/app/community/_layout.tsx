@@ -6,6 +6,8 @@ import {
 } from '../../navigation/chrome';
 import { openSource } from '../../navigation/external';
 import { webOrigin } from '../../design/environment';
+
+export { RouteErrorBoundary as ErrorBoundary } from '../../navigation/RouteErrorBoundary';
 export default function CommunityStack() {
   const chrome = useStackChrome();
   return (

@@ -31,6 +31,7 @@ export function useResultsControls({
   q,
   target,
   initialFilters,
+  initialSort = 'relevance',
   roster,
   onQuery,
   onScope,
@@ -39,12 +40,13 @@ export function useResultsControls({
   q: string;
   target: ResultsTarget;
   initialFilters: SpeechFilters;
+  initialSort?: SpeechSort;
   roster: Roster | null;
   onQuery: (q: string) => void;
   onScope: (scope: Scope) => void;
 }) {
   const [filters, setFilters] = useState(initialFilters);
-  const [sort, setSort] = useState<SpeechSort>('relevance');
+  const [sort, setSort] = useState<SpeechSort>(initialSort);
   const openAsk = useOpenAsk();
   // The sheet reads and writes this owner's filters; the Person row lists
   // the roster once it has loaded.
@@ -54,14 +56,14 @@ export function useResultsControls({
   const recover: RecoveryHandlers = {
     onAsk: () => openAsk({ question: askDraft(q) }),
     onAll: () => onScope('all'),
-    onClearFilters: () => setFilters(clearedFilters(filters)),
+    onClearFilters: () => setFilters(clearedFilters()),
     onUnquote: () => onQuery(withoutQuotes(q)),
     onSpeeches: () => onScope('speeches'),
   };
   const openFilters = () => router.push(filtersRoute('search', owner));
   const share = () =>
     void shareRecord({
-      path: webSearchPath(q, target, filtersToParams(filters)),
+      path: webSearchPath(q, target, filtersToParams(filters), sort),
       title: SHARE_TITLE,
     });
   /** Speeches: Filters and ⋯ (Sort ›, Share); elsewhere Share alone. */
@@ -70,7 +72,7 @@ export function useResultsControls({
     if (target.scope !== 'speeches')
       return [
         shareHeaderItem({
-          path: webSearchPath(q, target, filtersToParams(filters)),
+          path: webSearchPath(q, target, filtersToParams(filters), sort),
           title: SHARE_TITLE,
         }),
       ];

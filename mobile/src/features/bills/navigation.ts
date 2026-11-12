@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { useRecordPush } from '../../navigation/record-link';
 import { useSplitPane } from '../../design/primitives';
 import { billRoute, billTextRoute } from '../../navigation/routes';
 
@@ -17,15 +17,16 @@ export interface BillEntry {
  * Everywhere else it pushes the route, exactly as before.
  */
 export function useBillNavigation() {
+  const push = useRecordPush();
   const pane = useSplitPane<BillEntry>();
   return {
     inPane: pane !== null,
     openText(key: string, title?: string) {
       if (pane) pane.push({ kind: 'text', key, title });
-      else router.push(billTextRoute(key));
+      else push(billTextRoute(key));
     },
     openBill(key: string, title?: string) {
-      if (!pane) return router.push(billRoute(key));
+      if (!pane) return push(billRoute(key));
       // From the bill's own text, Back is the way to its page.
       const below = pane.entries.at(-2);
       if (below?.kind === 'bill' && below.key === key) pane.back();

@@ -36,6 +36,19 @@ export const seatCopy = {
   browse: 'Browse by state',
   aec: 'Check your address with the AEC',
   noMatch: 'No matching electorate or member.',
+  /** A typed postcode: say so plainly, never "no match" for a real place. */
+  noPostcode: 'OPAX can’t look up postcodes yet.',
+  /** Under a miss by name: suburbs and postcodes are not in the search. */
+  noPlaces: 'Suburbs and postcodes can’t be looked up yet.',
+  /** The ways on from a miss: the rows drawn straight after it. */
+  noMatchNext:
+    'Use your location, or check your address with the AEC to find your electorate’s name.',
+  noMatchAec: 'Check your address with the AEC to find your electorate’s name.',
+  /** Why the welcome asks (the words of Today’s invitation). */
+  why: 'Add your electorate to see your MP, how they vote and the grants in your area.',
+  /** The welcome’s way on without a seat, in the list itself. */
+  later: 'Choose later',
+  laterNote: 'You can add your electorate any time from Today or Your MP.',
   finding: 'Finding your electorate…',
   stillFinding: 'Still finding your electorate…',
   fromLocation: 'From your location',
@@ -55,6 +68,27 @@ export const seatCopy = {
   partial: 'Some electorates couldn’t be read.',
   chooseHint: 'Chooses this electorate.',
 } as const;
+
+/** Digits only, as a postcode is typed: no electorate or member has any. */
+export function looksLikePostcode(query: string): boolean {
+  return /^\d{1,4}$/.test(query.trim());
+}
+/**
+ * What a miss says (first-run drop-off, 12 Nov): a postcode gets its own
+ * plain line, a name gets "No matching electorate or member." and the note
+ * that places are not searched. Both end with the ways on, which are drawn
+ * as rows straight after: the location row (the chooser only; Browse by
+ * state has none) and the AEC's finder.
+ */
+export function noMatchCopy(
+  query: string,
+  { location = true }: { location?: boolean } = {},
+): { title: string; help: string } {
+  const next = location ? seatCopy.noMatchNext : seatCopy.noMatchAec;
+  return looksLikePostcode(query)
+    ? { title: seatCopy.noPostcode, help: next }
+    : { title: seatCopy.noMatch, help: `${seatCopy.noPlaces} ${next}` };
+}
 
 /** "Based on the 2025 boundaries. Check it’s right." from the outlines' vintage. */
 export function boundariesLine(vintage: string): string {
@@ -155,6 +189,8 @@ export const vicCopy = {
   placeholder: 'District, region or member’s name',
   districts: 'Legislative Assembly districts',
   regions: 'Legislative Council regions',
+  outside:
+    'Your location isn’t inside a Victorian district. Search by name instead.',
 } as const;
 const victorian = (chamber: string) => (electorates: readonly Electorate[]) =>
   electorates
@@ -285,6 +321,7 @@ export type LocationAnswer =
 export function locationAnswer(
   result: Suggestion | StateSuggestion,
   cancelled: boolean,
+  scope: 'federal' | 'vic' = 'federal',
 ): LocationAnswer {
   if (cancelled) return { kind: 'idle' };
   switch (result.kind) {
@@ -313,7 +350,12 @@ export function locationAnswer(
     case 'denied':
       return { kind: 'message', text: seatCopy.denied, settings: true };
     case 'no-match':
-      return { kind: 'message', text: seatCopy.outside, settings: false };
+      return {
+        kind: 'message',
+        // The Victorian chooser looks for a district, not a federal seat.
+        text: scope === 'vic' ? vicCopy.outside : seatCopy.outside,
+        settings: false,
+      };
     default:
       return { kind: 'message', text: seatCopy.unavailable, settings: false };
   }

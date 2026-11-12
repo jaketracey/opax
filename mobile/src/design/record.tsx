@@ -1,4 +1,7 @@
-import { Linking, Pressable, View } from 'react-native';
+import { Linking, View, type TextProps } from 'react-native';
+import { Pressable } from './pressable';
+import type { Href } from 'expo-router';
+import { useRecordLink } from '../navigation/record-link';
 import { copyText } from '../features/records/actions';
 import { useAccessibilitySize } from './accessibility';
 import { AUTHORISATION_LINE, CORRECTION_CONTACT } from './authorisation';
@@ -17,7 +20,50 @@ import {
   minimumTarget,
   rhythm,
   type Accent,
+  type TextVariant,
 } from './tokens';
+
+/** A named record inside another target keeps its own destination. */
+export function RecordNameLink({
+  name,
+  href,
+  variant = 'body',
+  testID,
+  style,
+  accessibilityLabel,
+}: {
+  name: string;
+  href?: Href;
+  variant?: TextVariant;
+  testID?: string;
+  style?: TextProps['style'];
+  accessibilityLabel?: string;
+}) {
+  const link = useRecordLink(href);
+  return (
+    <Text
+      wordSafe
+      variant={variant}
+      tone={href ? 'link' : undefined}
+      accessibilityRole={href ? 'link' : undefined}
+      accessibilityLabel={
+        href ? (accessibilityLabel ?? `Open ${name}`) : undefined
+      }
+      onPress={
+        href
+          ? (event) => {
+              event.stopPropagation();
+              link.open();
+            }
+          : undefined
+      }
+      testID={testID}
+      style={style}
+    >
+      {name}
+    </Text>
+  );
+}
 
 export type FigureSource = SourceDetails & {
   asOf: DateInput | null;

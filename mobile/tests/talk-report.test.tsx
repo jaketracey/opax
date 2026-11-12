@@ -62,9 +62,10 @@ test('captions carry no report control and name their speaker', () => {
   });
   expect(renderer.root.findAllByType(Button)).toHaveLength(0);
   expect(
-    renderer.root.findByProps({ testID: 'talk-turn-agent' }).props
-      .accessibilityLabel,
-  ).toBe('OPAX said First synthetic answer');
+    renderer.root.findByProps({
+      accessibilityLabel: 'OPAX said First synthetic answer',
+    }).props.children,
+  ).toBe('First synthetic answer');
   act(() => renderer.unmount());
 });
 
@@ -116,6 +117,20 @@ test('during a call the menu title changes only at five minutes and each minute 
     '5 min left in this call',
     'Over 5 min left in this call',
   ]);
+});
+
+test('signed out, the menu title names no allowance', () => {
+  const status = {
+    enabled: true,
+    signedIn: false,
+    unlimited: false,
+    totalSeconds: 600,
+    remainingSeconds: 480,
+    activeSession: null,
+    budgetOpen: null,
+  };
+  expect(timeLeft(false, 0, status)).toBeUndefined();
+  expect(timeLeft(false, 0, { ...status, signedIn: true })).toBe('8 min left');
 });
 
 test('the menu keeps web pages out of a call and offers withdrawal only after consent', () => {

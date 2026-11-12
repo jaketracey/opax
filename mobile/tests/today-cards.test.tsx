@@ -1,5 +1,11 @@
 import { act, type ReactElement, type ReactNode } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
+import * as Native from 'react-native';
 import {
   fireEvent,
   render as renderNative,
@@ -7,11 +13,13 @@ import {
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { decodeRoster, decodeSlugs } from '../src/api/catalog-decoders';
 import type { Block, EditionView } from '../src/api/selectors';
-import { catalogs } from '../src/api/runtime';
+import { catalogs, yearPictures } from '../src/api/runtime';
+import { yearPictureKey } from '../src/api/year-picture-policy';
 import { useReduceMotionSetting } from '../src/design/accessibility';
 import { Card } from '../src/design/card';
 import { SourceLine } from '../src/design/source';
 import { Text } from '../src/design/text';
+import { colors, radii } from '../src/design/tokens';
 import { EditionCard } from '../src/features/edition/EditionCard';
 import { Plate } from '../src/features/edition/Plate';
 import { Picture } from '../src/features/explore/Picture';
@@ -24,6 +32,7 @@ import {
 } from '../src/features/today/DailyPair';
 import {
   FeaturedPeopleCarousel,
+  featuredLabel,
   TodayEditionCard,
 } from '../src/features/today/FeaturedPeopleCard';
 import {
@@ -191,7 +200,92 @@ afterEach(() => {
 });
 
 describe('full-width daily cards', () => {
-  test.each([1, 3.12])(
+  describe.each(['landscape', 'portrait'] as const)(
+    '%s archive media',
+    (shape) => {
+      test.each([
+        ['light', 1],
+        ['dark', 1],
+        ['light', 3.571],
+        ['dark', 3.571],
+      ] as const)(
+        'fills the card in %s at font scale %s',
+        async (scheme, fontScale) => {
+          jest.spyOn(Native, 'useColorScheme').mockReturnValue(scheme);
+          jest.mocked(useWindowDimensions).mockReturnValue({
+            width: 320,
+            height: 874,
+            scale: 3,
+            fontScale,
+          });
+          jest.mocked(useReduceMotionSetting).mockReturnValue(true);
+          jest
+            .mocked(yearPictures.get)
+            .mockResolvedValueOnce('file:///cache/archive.webp');
+          const photo = {
+            ...picture,
+            ...(shape === 'portrait' ? { width: 1000, height: 1600 } : {}),
+          };
+          const { root } = await render(
+            <ArchiveCard year={2021} picture={photo} />,
+          );
+          const image = root.findByType(Image);
+          expect(image.props.resizeMode).toBe('cover');
+          expect(StyleSheet.flatten(image.props.style)).toMatchObject({
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+          });
+          const key = yearPictureKey('/' + photo.file);
+          const frame = host(root, `tm-photo-${key}-placeholder`);
+          const mediaStyle = StyleSheet.flatten(frame.props.style);
+          expect(mediaStyle).toMatchObject({
+            width: '100%',
+            aspectRatio: 4 / 3,
+            borderRadius: 0,
+          });
+          const card = root.findByType(Card);
+          expect(card.props.padded).toBe(false);
+          expect(card.props.children[0].type).toBe(Picture);
+          // RowLink's outer accessibility host only carries flex layout.
+          const surfaceNode = card
+            .findAll(
+              (node) =>
+                typeof node.type === 'string' &&
+                node.props.accessibilityRole === 'link',
+            )
+            .at(-1)!;
+          const surface = StyleSheet.flatten(surfaceNode.props.style);
+          expect(surface).toMatchObject({
+            backgroundColor: colors.raised,
+            borderRadius: radii.container,
+            overflow: 'hidden',
+          });
+          expect(surface.padding).toBeUndefined();
+          expect(surface.height).toBeUndefined();
+          act(() => image.props.onLoad());
+          expect(
+            StyleSheet.flatten(
+              host(root, `tm-photo-${key}-loaded`).props.style,
+            ),
+          ).toEqual(mediaStyle);
+          const lines = root.findAllByType(Text);
+          expect(
+            lines.find((node) => node.props.children === photo.caption)!.props
+              .numberOfLines,
+          ).toBe(fontScale === 1 ? 3 : undefined);
+          expect(
+            lines.find(
+              (node) => node.props.children === `Photo: ${photo.credit}`,
+            )!.props.numberOfLines,
+          ).toBeUndefined();
+        },
+      );
+    },
+  );
+  test.each([1, 3.571])(
     'archive and question each own a full row at font scale %s',
     async (fontScale) => {
       jest
@@ -216,7 +310,7 @@ describe('full-width daily cards', () => {
         ).toBeUndefined();
       }
       expect(archive.findByType(Picture).props).toMatchObject({
-        ratio: 16 / 10,
+        ratio: 4 / 3,
         rounded: false,
       });
       const caption = archive
@@ -237,6 +331,14 @@ describe('full-width daily cards', () => {
     jest.mocked(explore.pictures).mockRejectedValue(new Error('offline'));
     const { root } = await render(<DailyPair today={today} attempt={1} />);
     expect(root.findAllByType(ArchiveCard)).toHaveLength(0);
+    expect(root.findAllByType(QuestionCard)).toHaveLength(1);
+  });
+  test('a failed archive read on the first launch ends its skeleton', async () => {
+    jest.mocked(explore.pictures).mockRejectedValue(new Error('offline'));
+    const { root } = await render(<DailyPair today={today} attempt={0} />);
+    expect(
+      root.findAll((node) => node.props.testID === 'today-archive-loading'),
+    ).toHaveLength(0);
     expect(root.findAllByType(QuestionCard)).toHaveLength(1);
   });
 });
@@ -334,6 +436,22 @@ describe('neutral daily featured selection', () => {
 });
 
 describe('featured carousel', () => {
+  test('the VoiceOver label says Machine-written and skips empty parts', () => {
+    const person = people[0]!;
+    const machine = {
+      ...person,
+      edition: {
+        ...person.edition,
+        title: 'Fixture Member',
+        machineWritten: { attribution: 'Fixture model' },
+        facts: { ...person.edition.facts, line: null },
+        paragraphs: ['A fixture paragraph.'],
+      },
+    };
+    expect(featuredLabel(machine, 0, 3)).toBe(
+      'Featured parliamentarian, 1 of 3. Fixture Member. Machine-written. A fixture paragraph.',
+    );
+  });
   test('snaps with a 16 pt peek, opens each person and exposes positions to VoiceOver', async () => {
     const { root } = await render(<FeaturedPeopleCarousel people={people} />);
     act(() =>

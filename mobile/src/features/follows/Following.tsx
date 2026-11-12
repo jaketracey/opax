@@ -130,7 +130,7 @@ function useOwnMemberIds(): ReadonlySet<string> {
 export default function Following() {
   const params = useLocalSearchParams<{ edit?: string }>();
   const [refresh, setRefresh] = useState(0);
-  const { follows, states, sources } = useFollowStates(refresh);
+  const { follows, states, sources, refreshing } = useFollowStates(refresh);
   const own = useOwnMemberIds();
   const reduceMotion = useReduceMotion();
   const [editing, setEditing] = useState(params.edit === '1');
@@ -212,7 +212,7 @@ export default function Following() {
       testID="follows-screen"
       refreshControl={
         <RefreshControl
-          refreshing={false}
+          refreshing={refreshing}
           onRefresh={() => setRefresh((n) => n + 1)}
         />
       }

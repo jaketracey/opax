@@ -57,24 +57,85 @@ import {
   categorySource,
   discoverPath,
   discoveryAsOf,
+  decodeLeadSupplierAliases,
   leadFor,
+  leadSupplierAliasPaths,
+  leadSupplierRoute,
   leadsHiddenNotes,
   plainCaveat,
+  type LeadAgency,
   type LeadView,
 } from './model';
 
 export { evidenceRow } from './evidence';
 
+/** Resolve agency and supplier ids before offering their native records. */
+function useLeadAgency(lead: LeadView | null): LeadAgency | null {
+  const subject =
+    lead?.category === 'procurement_concentration'
+      ? lead.comparison.heading
+      : null;
+  const [loaded, setLoaded] = useState<{
+    subject: string;
+    agency: LeadAgency;
+  } | null>(null);
+  useEffect(() => {
+    if (!subject || !lead) return;
+    let active = true;
+    const controller = new AbortController();
+    async function load(subject: string, lead: LeadView) {
+      try {
+        const directory = await money.agencies(false, controller.signal);
+        const wanted = normaliseOrganisation(subject);
+        const found = directory.data.agencies.find(
+          (entry) => normaliseOrganisation(entry.name) === wanted,
+        );
+        if (!active || !found) return;
+        setLoaded({ subject, agency: { id: found.id, name: found.name } });
+        const record = await money.agency(found.id, false, controller.signal);
+        if (!active) return;
+        const agency = record.data.profile;
+        setLoaded({ subject, agency });
+        const aliases = await Promise.all(
+          leadSupplierAliasPaths(lead, agency).map((path) =>
+            apiClient
+              .get(path, decodeLeadSupplierAliases, false, {
+                signal: controller.signal,
+              })
+              .then(
+                (record) => record.data,
+                () => ({}),
+              ),
+          ),
+        );
+        if (active && aliases.length)
+          setLoaded({
+            subject,
+            agency: { ...agency, aliases: Object.assign({}, ...aliases) },
+          });
+      } catch {
+        // Unavailable records stay static; a resolved agency still has its list.
+      }
+    }
+    void load(subject, lead);
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [subject, lead]);
+  return loaded?.subject === subject ? loaded.agency : null;
+}
+
 /** The subject's own page in the app, when it has one. */
-function useSubject(lead: LeadView | null): {
+function useSubject(
+  lead: LeadView | null,
+  agency: LeadAgency | null,
+): {
   title: string;
   detail?: string;
   href: Href;
   party?: boolean;
 } | null {
-  const [agency, setAgency] = useState<{ id: string; name: string } | null>(
-    null,
-  );
   const subject = lead?.comparison.heading ?? null;
   const contracts = lead?.category === 'procurement_concentration';
   const overlap = lead?.category === 'donor_contract_overlap';
@@ -85,10 +146,16 @@ function useSubject(lead: LeadView | null): {
   useEffect(() => {
     if (!overlap || graph) return;
     let active = true;
+    const controller = new AbortController();
     Promise.resolve()
-      .then(() => apiClient.get(moneyCatalogs.federal.path, decodeMoneyGraph))
+      .then(() =>
+        apiClient.get(moneyCatalogs.federal.path, decodeMoneyGraph, false, {
+          signal: controller.signal,
+        }),
+      )
       .then(
         (record) => {
+          if (!active || controller.signal.aborted) return;
           rememberMoneyGraph('federal', record.data);
           if (active) setGraph(record.data);
         },
@@ -96,25 +163,9 @@ function useSubject(lead: LeadView | null): {
       );
     return () => {
       active = false;
+      controller.abort();
     };
   }, [overlap, graph]);
-  useEffect(() => {
-    if (!contracts || !subject) return;
-    let active = true;
-    const wanted = normaliseOrganisation(subject);
-    money.agencies().then(
-      (record) => {
-        const found = record.data.agencies.find(
-          (a) => normaliseOrganisation(a.name) === wanted,
-        );
-        if (active && found) setAgency({ id: found.id, name: found.name });
-      },
-      () => undefined,
-    );
-    return () => {
-      active = false;
-    };
-  }, [contracts, subject]);
   if (!lead || !subject) return null;
   if (contracts)
     return agency
@@ -143,7 +194,8 @@ export default function LeadDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const load = useCallback(
-    (refresh: boolean) => catalogs.discovery(refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      catalogs.discovery(refresh, signal),
     [],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
@@ -152,7 +204,8 @@ export default function LeadDetail() {
     const signal = discovery?.signals.find((s) => s.id === id);
     return signal ? leadFor(signal) : null;
   }, [discovery, id]);
-  const subject = useSubject(lead);
+  const agency = useLeadAgency(lead);
+  const subject = useSubject(lead, agency);
   const comparison = lead?.comparison;
   const offline =
     error instanceof ApiError &&
@@ -179,14 +232,15 @@ export default function LeadDetail() {
   // The bar title fades in by scroll with no width at rest, so the back
   // button keeps its label (money-03), and truncates inside the bar items.
   const barTitleRef = useRef<View>(null);
-  const barTitle = useTitleOnScroll(barTitleRef, lead ? 'Lead' : undefined, {
+  const barTitle = useTitleOnScroll(barTitleRef, lead?.comparison.heading, {
     trailing: 1,
   });
   return (
     <>
       <RouteOptions
+        stableItems
         options={{
-          title: 'Lead',
+          title: lead?.comparison.heading ?? '',
           ...headerItems(
             lead
               ? pageItems({
@@ -298,6 +352,7 @@ export default function LeadDetail() {
                 />
                 <ConcentrationChart
                   comparison={comparison}
+                  rowHref={(row) => leadSupplierRoute(row, agency)}
                   testID="lead-chart"
                 />
               </View>

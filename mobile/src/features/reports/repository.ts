@@ -1,4 +1,5 @@
-import type { ApiClient } from '../../api/client';
+import { ReadSession } from '../../api/read-session';
+import type { ApiClient, RecordResult } from '../../api/client';
 import { decodeCorpus } from '../../api/catalog-decoders';
 import {
   arcPath,
@@ -19,46 +20,50 @@ import {
 // retried only by a new explicit Try again action; pull to refresh (`fresh`)
 // is the reader's explicit action to read again.
 export class ReportsRepository {
-  private session = new Map<string, Promise<unknown>>();
+  private session = new ReadSession<RecordResult<unknown>>();
   constructor(private client: Pick<ApiClient, 'get' | 'getForAction'>) {}
   private read<T>(
     path: string,
     decoder: (v: unknown) => T,
     paid = false,
     fresh = false,
+    signal?: AbortSignal,
   ) {
-    if (fresh) this.session.delete(path);
-    const existing = this.session.get(path);
-    if (existing)
-      return existing as ReturnType<ApiClient['get']> as Promise<
-        import('../../api/client').RecordResult<T>
-      >;
-    const request = paid
-      ? this.client.getForAction(path, decoder)
-      : this.client.get(path, decoder);
-    this.session.set(path, request);
-    void request
-      .then((result) => {
-        if (result.stale && this.session.get(path) === request)
-          this.session.delete(path);
-      })
-      .catch(() => {});
-    void request.catch(() => {
-      if (this.session.get(path) === request) this.session.delete(path);
-    });
-    return request;
+    return this.session.read(
+      path,
+      (requestSignal) =>
+        paid
+          ? this.client.getForAction(path, decoder, { signal: requestSignal })
+          : this.client.get(path, decoder, false, { signal: requestSignal }),
+      { fresh, signal, retain: (result) => !result.stale },
+    ) as Promise<RecordResult<T>>;
   }
-  corpus = () => this.read('/corpus.json', decodeCorpus);
-  money = () => this.read('/graph/money.json', decodeIndustryMoney);
-  topics = (fresh = false) =>
-    this.read('/api/topics', decodeTopics, true, fresh);
-  tide = (fresh = false) => this.read('/api/tide', decodeTide, true, fresh);
-  topic = (slug: string, fresh = false) => {
+  corpus = (signal?: AbortSignal) =>
+    this.read('/corpus.json', decodeCorpus, undefined, undefined, signal);
+  money = (signal?: AbortSignal) =>
+    this.read(
+      '/graph/money.json',
+      decodeIndustryMoney,
+      undefined,
+      undefined,
+      signal,
+    );
+  topics = (fresh = false, signal?: AbortSignal) =>
+    this.read('/api/topics', decodeTopics, true, fresh, signal);
+  tide = (fresh = false, signal?: AbortSignal) =>
+    this.read('/api/tide', decodeTide, true, fresh, signal);
+  topic = (slug: string, fresh = false, signal?: AbortSignal) => {
     if (!topicNames[slug]) return Promise.reject(new Error('Unknown topic'));
-    return this.read(`/api/topic/${slug}`, decodeTopic, true, fresh);
+    return this.read(`/api/topic/${slug}`, decodeTopic, true, fresh, signal);
   };
-  speeches = (slug: string, filters: SpeechFilters = {}, fresh = false) =>
-    this.read(arcPath(slug, filters), decodeSpeeches, true, fresh);
-  stats = () => this.read('/api/stats', decodeStats, true);
-  matrix = () => this.read('/api/matrix', decodeMatrix, true);
+  speeches = (
+    slug: string,
+    filters: SpeechFilters = {},
+    fresh = false,
+    signal?: AbortSignal,
+  ) => this.read(arcPath(slug, filters), decodeSpeeches, true, fresh, signal);
+  stats = (signal?: AbortSignal) =>
+    this.read('/api/stats', decodeStats, true, undefined, signal);
+  matrix = (signal?: AbortSignal) =>
+    this.read('/api/matrix', decodeMatrix, true, undefined, signal);
 }

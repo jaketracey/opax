@@ -5,14 +5,7 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import React, { act } from 'react';
-import {
-  Animated,
-  Dimensions,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Animated, Dimensions, Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import TestRenderer from 'react-test-renderer';
 import AskRoute from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/ask';
@@ -33,6 +26,8 @@ import {
   useStackChrome,
 } from '../src/navigation/chrome';
 import { RouteOptions } from '../src/navigation/preview';
+import { RootBar } from '../modules/opax-root-bar';
+
 import {
   ExternalURLProbe,
   recordExternalURL,
@@ -59,6 +54,10 @@ import {
 
 const { colors } = tokens;
 
+jest.mock('../modules/opax-root-bar', () => ({
+  RootBar: { update: jest.fn(), remove: jest.fn() },
+  useVerticalBarEdge: () => 'unspecified',
+}));
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
   Stack: { Screen: () => null },
@@ -393,6 +392,121 @@ test('tab roots are translucent on iOS 26 and opaque on iOS 18.4 to 25', () => {
     if (version) Object.defineProperty(Platform, 'Version', version);
   }
 });
+
+test.each([
+  [26, true],
+  [26, false],
+  [27, true],
+  [27, false],
+] as const)(
+  'iOS %s edition owns an opaque bar on its grouped=%s ground during overscroll',
+  (version, grouped) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: version,
+    });
+    const previousGrouped = mockFlags.groupedSurfaces;
+    mockFlags.groupedSurfaces = grouped;
+    const route = { key: 'edition-detail', name: 'edition', params: {} };
+    const navigation = {
+      isFocused: () => true,
+      addListener: () => () => {},
+      getState: () => ({
+        index: 1,
+        routes: [{ key: 'today-root', name: 'index' }, route],
+        routeNames: sharedScreens('(today)', false).map(
+          (entry) => entry.props.name,
+        ),
+      }),
+      setOptions: jest.fn(),
+    };
+    const entry = editionScreens()[0]!;
+    const options = entry.props.options({ route, navigation });
+    const ground = grouped ? colors.sunken : colors.paper;
+    let title!: ReturnType<typeof useTitleOnScroll>;
+    let headingY = 120;
+    const heading = {
+      current: {
+        measure: (callback: (...values: number[]) => void) =>
+          callback(0, 0, 300, 80, 0, headingY),
+      },
+    };
+    function Page() {
+      title = useTitleOnScroll(heading as never, 'Daily edition');
+      return (
+        <Screen grouped>
+          <View />
+        </Screen>
+      );
+    }
+    let renderer: TestRenderer.ReactTestRenderer | undefined;
+    let background: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      expect(options).toMatchObject({
+        title: 'Daily edition',
+        headerBackTitle: 'Today',
+        headerBackButtonDisplayMode: 'default',
+        headerBackButtonMenuEnabled: true,
+        headerLargeTitleEnabled: false,
+        headerTransparent: false,
+        ...opaqueBar(ground),
+        contentStyle: { backgroundColor: ground },
+        scrollEdgeEffects: { top: 'hard', bottom: 'soft' },
+      });
+      expect(options).not.toHaveProperty('headerBlurEffect');
+      background = tree(options.headerBackground!());
+      const backing = background.root.findByType(View);
+      expect(backing.props.pointerEvents).toBe('none');
+      expect(StyleSheet.flatten(backing.props.style)).toMatchObject({
+        flex: 1,
+        backgroundColor: ground,
+      });
+      renderer = tree(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route}>
+            <HeaderHeightContext.Provider value={100}>
+              <Page />
+            </HeaderHeightContext.Provider>
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+      jest.mocked(RootBar!.update).mockClear();
+      navigation.setOptions.mockClear();
+      for (const [offset, y] of [
+        [0, 120],
+        [240, 40],
+        [-96, 216],
+        [0, 120],
+      ]) {
+        headingY = y!;
+        act(() => title.onScroll(offset!));
+        const resolved = Object.assign(
+          {},
+          options,
+          ...navigation.setOptions.mock.calls.map(([value]) => value),
+        );
+        expect(resolved).toMatchObject({
+          headerTransparent: false,
+          headerStyle: { backgroundColor: ground },
+          headerLargeStyle: { backgroundColor: ground },
+          contentStyle: { backgroundColor: ground },
+          headerBackground: options.headerBackground,
+        });
+      }
+      expect(navigation.setOptions).toHaveBeenCalledTimes(2);
+      for (const [update] of navigation.setOptions.mock.calls)
+        expect(Object.keys(update)).toEqual(['headerTitle']);
+      expect(RootBar!.update).not.toHaveBeenCalled();
+      expect(largeTitleBar(ground).headerTransparent).toBe(true);
+    } finally {
+      if (renderer) act(() => renderer!.unmount());
+      if (background) act(() => background!.unmount());
+      mockFlags.groupedSurfaces = previousGrouped;
+      Object.defineProperty(Platform, 'Version', descriptor);
+    }
+  },
+);
 test('40 scroll events past the title anchor set options only once, then once on return', () => {
   const setOptions = jest.fn();
   let hook!: ReturnType<typeof useTitleOnScroll>;
@@ -634,18 +748,26 @@ describe('bar titles keep their initial layout clear of the bar items', () => {
     act(() => view.unmount());
     timing.mockRestore();
   });
-  test('reader and edition routes keep their title for the next back button', () => {
+  test('readers start unnamed while fixed record and edition titles stay named', () => {
     expect(untitled.headerTitle).toBe(emptyBarTitle);
     const options = (screen: React.ReactElement) =>
       (
         screen.props as {
+          name: string;
           options: (p: object) => { title: string; headerTitle?: unknown };
         }
       ).options({ route: { params: {} }, navigation: undefined });
     for (const screen of [...recordsScreens(), ...editionScreens()]) {
       const resolved = options(screen);
       expect(resolved.headerTitle).not.toBe('');
-      expect(resolved.title).not.toBe('');
+      const name = (screen.props as { name: string }).name;
+      if (
+        name === 'doc/[slug]' ||
+        name === 'bill-text/[key]' ||
+        name === 'report/[slug]'
+      )
+        expect(resolved.title).toBe('');
+      else expect(resolved.title).not.toBe('');
     }
     const empty = tree(emptyBarTitle());
     expect(StyleSheet.flatten(empty.root.findByType(View).props.style)).toEqual(
@@ -669,10 +791,10 @@ describe('a screen pushed onto a tab root names its back button', () => {
     expect(rootBackTitle(stack('bills', 'bill/[key]'), 'k1')).toBe('Bills');
     expect(rootBackTitle(stack('your-mp', 'members'), 'k1')).toBe('Your MP');
   });
-  test("deeper screens keep UIKit's reading of the previous title", () => {
+  test('a deeper push from an unnamed detail falls back to Back', () => {
     expect(
       rootBackTitle(stack('index', 'bill/[key]', 'bill-text/[key]'), 'k2'),
-    ).toBeUndefined();
+    ).toBe('Back');
     expect(rootBackTitle(stack('index'), 'k0')).toBeUndefined();
   });
   test('the screen helper passes it as headerBackTitle on iOS', () => {
@@ -701,7 +823,7 @@ test('Reduce Motion cuts the bar title instead of animating it', () => {
 });
 
 test.each([colors.paper, colors.sunken])(
-  'iOS 26 roots put ground %p beneath transparent appearances and colour the standard bar only when collapsed',
+  'iOS 26 roots keep ground %p beneath stable transparent appearances',
   (ground) => {
     const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
     Object.defineProperty(Platform, 'Version', {
@@ -714,13 +836,11 @@ test.each([colors.paper, colors.sunken])(
         headerStyle: {},
         headerLargeStyle: {},
         contentStyle: { backgroundColor: ground },
-        headerShadowVisible: true,
+        headerShadowVisible: false,
       });
       expect(options).not.toHaveProperty('headerBackground');
       expect(options).not.toHaveProperty('headerBlurEffect');
-      expect(largeTitleBar(ground, true).headerStyle).toEqual({
-        backgroundColor: ground,
-      });
+      expect(largeTitleBar(ground)).toEqual(options);
     } finally {
       Object.defineProperty(Platform, 'Version', descriptor);
     }
@@ -748,7 +868,7 @@ test('quiz and division history keep named native Back buttons and centred inlin
   )!;
   expect(resolve(quiz, 'explore/index', { tool: 'quiz' })).toMatchObject({
     title: 'The record quiz',
-    headerBackTitle: 'Quizzes and tools',
+    headerBackTitle: 'Tools',
     headerBackButtonDisplayMode: 'default',
     headerTitleAlign: 'center',
   });
@@ -763,33 +883,19 @@ test('quiz and division history keep named native Back buttons and centred inlin
   });
 });
 
-test('large-title roots use the protective edge only under content, preserving expanded appearances', () => {
+test('large-title roots leave both native shadows off and the soft edge stable', () => {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
   try {
-    for (const [collapsed, scrolled] of [
-      [false, false],
-      [false, true],
-      [true, false],
-      [true, true],
-    ]) {
-      const options = largeTitleBar(colors.sunken, collapsed, scrolled);
-      expect(options).toMatchObject({
-        headerLargeTitleShadowVisible: false,
-        scrollEdgeEffects: {
-          top: collapsed || scrolled ? 'hard' : 'soft',
-          bottom: 'soft',
-        },
-      });
-      expect(options.headerShadowVisible).toBe(true);
-      expect(options.headerLargeStyle).toEqual({});
-      expect(options).not.toHaveProperty('headerLargeTitleEnabled', false);
-      expect(options.headerStyle).toEqual(
-        collapsed ? { backgroundColor: colors.sunken } : {},
-      );
-      expect(options).not.toHaveProperty('headerBackground');
-      expect(options).not.toHaveProperty('headerBlurEffect');
-    }
+    expect(largeTitleBar(colors.sunken)).toEqual({
+      headerStyle: {},
+      headerLargeStyle: {},
+      contentStyle: { backgroundColor: colors.sunken },
+      headerTransparent: true,
+      headerShadowVisible: false,
+      headerLargeTitleShadowVisible: false,
+      scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
+    });
   } finally {
     Object.defineProperty(Platform, 'Version', version);
   }
@@ -807,14 +913,7 @@ test.each([
     value: version,
   });
   try {
-    for (const [collapsed, scrolled] of [
-      [false, false],
-      [false, true],
-      [true, true],
-    ])
-      expect(largeTitleBar(colors.sunken, collapsed, scrolled)).toEqual(
-        opaqueBar(colors.sunken),
-      );
+    expect(largeTitleBar(colors.sunken)).toEqual(opaqueBar(colors.sunken));
   } finally {
     Object.defineProperty(Platform, 'Version', descriptor);
   }
@@ -828,482 +927,230 @@ const tabCases = [
   ['(ask)', 'ask', 'Ask'],
 ] as const;
 
-test.each(
-  tabCases.flatMap((tab) => [[...tab, 1] as const, [...tab, 3.571] as const]),
-)(
-  '%s (%s, %s) keeps its large title on mount and return at fontScale %s',
-  (segment, name, title, fontScale) => {
-    const window = Dimensions.get('window');
-    const display = Dimensions.get('screen');
-    Dimensions.set({
-      window: { ...window, fontScale },
-      screen: { ...display, fontScale },
-    });
-    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
-    Object.defineProperty(Platform, 'Version', {
-      configurable: true,
-      value: 26,
-    });
-    const route = { key: 'root', name };
-    const ground = tabRootGround(name);
-    const entry =
-      name === 'ask'
-        ? askScreens(segment).find((entry) => entry.props.name === name)!
-        : tabRootScreen(segment, segment, name, title, false)[0]!;
-    const navigation = {
-      isFocused: () => true,
-      addListener: () => () => {},
-      getState: () => ({
-        index: 0,
-        routes: [route],
-        routeNames: sharedScreens(segment, false).map(
-          (entry) => entry.props.name,
-        ),
-      }),
-      setOptions: jest.fn((next: object) => {
-        current = { ...current, ...next };
-      }),
-    };
-    let current = {
-      ...opaqueBar(),
-      ...entry.props.options({ route, navigation }),
-    };
-    const page = (height: number) => (
-      <NavigationContext.Provider value={navigation as never}>
-        <NavigationRouteContext.Provider value={route}>
-          <SafeAreaInsetsContext.Provider
-            value={{ top: 24, bottom: 0, left: 0, right: 0 }}
-          >
-            <HeaderHeightContext.Provider value={height}>
+// Exercise Screen and RouteOptions owners, including pushed large-title lists.
+const fadeCases = [
+  ...tabCases.map(([segment, name]) => [segment, name, false, false] as const),
+  ['(today)', 'grants', true, false],
+  ['(today)', 'leads', true, true],
+  ['(today)', 'money-donors', true, false],
+] as const;
+function fadePage(
+  name: string,
+  segment: (typeof tabCases)[number][0],
+  explicit = false,
+  screenOwner = false,
+  pinned = false,
+) {
+  const route = { key: `${name}-root`, name };
+  const listeners = new Map<string, Set<() => void>>();
+  const navigation = {
+    isFocused: jest.fn(() => true),
+    addListener: (event: string, listener: () => void) => {
+      const handlers = listeners.get(event) ?? new Set();
+      handlers.add(listener);
+      listeners.set(event, handlers);
+      return () => {
+        handlers.delete(listener);
+      };
+    },
+    getState: () => ({
+      index: explicit ? 1 : 0,
+      routes: explicit ? [{ key: 'tab-root', name: 'index' }, route] : [route],
+      routeNames: sharedScreens(segment, false).map(
+        (entry) => entry.props.name,
+      ),
+    }),
+    setOptions: jest.fn(),
+  };
+  const usesScreen =
+    screenOwner || (!explicit && name !== 'bills' && name !== 'ask');
+  const options = {
+    ...(explicit ? { headerLargeTitle: true } : { title: name }),
+    ...(pinned
+      ? {
+          headerSearchBarOptions: {
+            hideWhenScrolling: false,
+            placement: 'stacked' as const,
+          },
+        }
+      : {}),
+  };
+  const ground = explicit
+    ? screenOwner
+      ? colors.sunken
+      : colors.paper
+    : tabRootGround(name);
+  const page = (height: number) => (
+    <NavigationContext.Provider value={navigation as never}>
+      <NavigationRouteContext.Provider value={route}>
+        <SafeAreaInsetsContext.Provider
+          value={{ top: 24, bottom: 0, left: 0, right: 0 }}
+        >
+          <HeaderHeightContext.Provider value={height}>
+            {(!usesScreen || explicit || pinned) && (
+              <RouteOptions options={options} />
+            )}
+            {usesScreen && (
               <Screen grouped={name !== 'bills'}>
                 <View />
               </Screen>
-            </HeaderHeightContext.Provider>
-          </SafeAreaInsetsContext.Provider>
-        </NavigationRouteContext.Provider>
-      </NavigationContext.Provider>
-    );
-    const expanded = () => {
-      expect(current.headerStyle).not.toHaveProperty('backgroundColor');
-      expect(current).not.toHaveProperty('headerBlurEffect');
-      expect(current).not.toHaveProperty('headerBackground');
-      expect(current.headerLargeStyle).toEqual({});
-      expect(current.contentStyle).toEqual({ backgroundColor: ground });
-      expect(current.headerTransparent).toBe(true);
-      expect(current.title).toBe(title);
-      expect(current.headerLargeTitleEnabled).toBe(true);
-      expect(current.headerTitle).toBeUndefined();
-    };
-    let renderer: TestRenderer.ReactTestRenderer | undefined;
-    try {
-      expanded(); // Static options must replace the navigator's opaque default.
-      renderer = tree(page(68)); // NativeStack's first estimated inline height.
-      expanded();
-      expect(current).toMatchObject({
-        headerLargeTitleShadowVisible: false,
-        scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
-      });
-      expect(
-        renderer.root.findByType(ScrollView).props
-          .contentInsetAdjustmentBehavior,
-      ).toBe('automatic');
-      navigation.setOptions.mockClear();
-      for (const height of [120, 119.75, 119.5, 120])
-        act(() => renderer!.update(page(height)));
-      expanded();
-      expect(navigation.setOptions).not.toHaveBeenCalled();
-      expect(current.scrollEdgeEffects).toEqual({
-        top: 'soft',
-        bottom: 'soft',
-      });
-      act(() => renderer!.update(page(119.4)));
-      expanded(); // A shrinking large title still needs both backgrounds clear.
-      expect(current.scrollEdgeEffects).toEqual({
-        top: 'hard',
-        bottom: 'soft',
-      });
-      expect(navigation.setOptions).toHaveBeenCalledTimes(1);
-      for (const height of [115, 100, 80])
-        act(() => renderer!.update(page(height)));
-      expanded();
-      expect(navigation.setOptions).toHaveBeenCalledTimes(1);
-      act(() => renderer!.update(page(68)));
-      expect(current.headerStyle).toEqual({ backgroundColor: ground });
-      expect(current.headerLargeStyle).toEqual({});
-      expect(current.headerLargeTitleEnabled).toBe(true);
-      expect(current.scrollEdgeEffects).toEqual({
-        top: 'hard',
-        bottom: 'soft',
-      });
-      const collapsedCalls = 2;
-      expect(navigation.setOptions).toHaveBeenCalledTimes(collapsedCalls);
-      for (let i = 0; i < 40; i++)
-        act(() => renderer!.update(page(68 + (i % 2) / 2)));
-      expect(navigation.setOptions).toHaveBeenCalledTimes(collapsedCalls);
-      act(() => renderer!.update(page(120)));
-      expanded();
-      expect(navigation.setOptions).toHaveBeenCalledTimes(collapsedCalls + 1);
-      // Stretching above the rest height must neither select hard nor raise
-      // the reference height, including after a slow return from collapse.
-      for (const height of [132, 144, 120, 119.75, 120]) {
-        act(() => renderer!.update(page(height)));
-        expanded();
-        expect(current.scrollEdgeEffects).toEqual({
-          top: 'soft',
-          bottom: 'soft',
-        });
-      }
-      expect(navigation.setOptions).toHaveBeenCalledTimes(collapsedCalls + 1);
-    } finally {
-      if (renderer) act(() => renderer!.unmount());
-      Object.defineProperty(Platform, 'Version', version);
-      Dimensions.set({ window, screen: display });
-    }
-  },
-);
+            )}
+          </HeaderHeightContext.Provider>
+        </SafeAreaInsetsContext.Provider>
+      </NavigationRouteContext.Provider>
+    </NavigationContext.Provider>
+  );
+  return {
+    navigation,
+    listeners,
+    ground,
+    page,
+    identifier: `opax-root-bar-${route.key}`,
+  };
+}
+const fadeProgress = () => jest.mocked(RootBar!.update).mock.calls.at(-1)![1];
+function withGlass(test: () => void) {
+  const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+  Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
+  jest.mocked(RootBar!.update).mockClear();
+  jest.mocked(RootBar!.remove).mockClear();
+  try {
+    test();
+  } finally {
+    Object.defineProperty(Platform, 'Version', version);
+  }
+}
 
-test.each(
-  tabCases.flatMap(([segment, name, title]) =>
-    (
-      [
-        ['font scale', { fontScale: 1 }],
-        ['window width', { width: 380 }],
-        ['window height', { height: 820 }],
-      ] as const
-    ).map(([input, change]) => [segment, name, title, input, change] as const),
-  ),
-)(
-  '%s (%s, %s) resets its expanded reference when %s changes',
-  (segment, name, title, _input, change) => {
-    const window = Dimensions.get('window');
-    const display = Dimensions.get('screen');
-    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
-    Object.defineProperty(Platform, 'Version', {
-      configurable: true,
-      value: 26,
-    });
-    Dimensions.set({
-      window: { ...window, width: 390, height: 844, fontScale: 1.353 },
-      screen: { ...display, width: 390, height: 844, fontScale: 1.353 },
-    });
-    const route = { key: `${name}-root`, name };
-    const entry =
-      name === 'ask'
-        ? askScreens(segment).find((entry) => entry.props.name === name)!
-        : tabRootScreen(segment, segment, name, title, false)[0]!;
-    const navigation = {
-      isFocused: () => true,
-      addListener: () => () => {},
-      getState: () => ({
-        index: 0,
-        routes: [route],
-        routeNames: sharedScreens(segment, false).map(
-          (entry) => entry.props.name,
-        ),
-      }),
-      setOptions: jest.fn((next: object) => {
-        current = { ...current, ...next };
-      }),
-    };
-    let current = {
-      ...opaqueBar(),
-      ...entry.props.options({ route, navigation }),
-    };
-    const page = (height: number) => (
-      <NavigationContext.Provider value={navigation as never}>
-        <NavigationRouteContext.Provider value={route}>
-          <SafeAreaInsetsContext.Provider
-            value={{ top: 24, bottom: 0, left: 0, right: 0 }}
-          >
-            <HeaderHeightContext.Provider value={height}>
-              <Screen grouped={name !== 'bills'}>
-                <View />
-              </Screen>
-            </HeaderHeightContext.Provider>
-          </SafeAreaInsetsContext.Provider>
-        </NavigationRouteContext.Provider>
-      </NavigationContext.Provider>
-    );
-    const soft = () => {
-      expect(current).toMatchObject({
-        headerLargeTitleEnabled: true,
-        headerLargeTitleShadowVisible: false,
-        scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
-      });
-      expect(current.headerStyle).toEqual({});
-      expect(current.headerLargeStyle).toEqual({});
-    };
-    let renderer: TestRenderer.ReactTestRenderer | undefined;
-    const resize = (change: Partial<typeof window>, height: number) =>
-      act(() => {
-        Dimensions.set({
-          window: { ...Dimensions.get('window'), ...change },
-          screen: { ...Dimensions.get('screen'), ...change },
+test.each(fadeCases)(
+  '%s %s fades continuously in both directions without changing route appearances',
+  (segment, name, explicit, screenOwner) =>
+    withGlass(() => {
+      const { navigation, listeners, ground, page, identifier } = fadePage(
+        name,
+        segment,
+        explicit,
+        screenOwner,
+      );
+      const renderer = tree(page(68));
+      try {
+        expect(fadeProgress()).toBe(0); // Initial inline estimate is not collapse.
+        expect(navigation.setOptions).toHaveBeenCalledWith({
+          ...largeTitleBar(ground),
+          headerLargeTitleEnabled: true,
+          unstable_nativeProps: { testID: identifier },
         });
-        renderer!.update(page(height));
-      });
-    try {
-      renderer = tree(page(120));
-      soft();
-      navigation.setOptions.mockClear();
-      resize(change, 112);
-      soft();
-      expect(navigation.setOptions).not.toHaveBeenCalled();
-      act(() => renderer!.update(page(111.4)));
-      expect(current.scrollEdgeEffects).toEqual({
-        top: 'hard',
-        bottom: 'soft',
-      });
-      expect(navigation.setOptions).toHaveBeenCalledTimes(1);
-      act(() => renderer!.update(page(112)));
-      soft();
-      expect(navigation.setOptions).toHaveBeenCalledTimes(2);
-      resize({ fontScale: 1.786 }, 130);
-      soft();
-      expect(navigation.setOptions).toHaveBeenCalledTimes(2);
-      act(() => renderer!.update(page(129.4)));
-      expect(current.scrollEdgeEffects).toEqual({
-        top: 'hard',
-        bottom: 'soft',
-      });
-      expect(navigation.setOptions).toHaveBeenCalledTimes(3);
-      act(() => renderer!.update(page(130)));
-      soft();
-      for (const height of [144, 130]) {
-        act(() => renderer!.update(page(height)));
-        soft();
+        act(() => renderer.update(page(120)));
+        navigation.setOptions.mockClear();
+        for (const height of [119.75, 119.5, 120, 144, 120]) {
+          act(() => renderer.update(page(height)));
+          expect(fadeProgress()).toBe(0);
+        }
+        const values: number[] = [];
+        for (const height of [119, 110, 100, 85, 68]) {
+          act(() => renderer.update(page(height)));
+          values.push(fadeProgress());
+        }
+        expect(values).toEqual([...values].sort((a, b) => a - b));
+        expect(values[0]).toBeGreaterThan(0);
+        expect(values[2]).toBeGreaterThan(0.2);
+        expect(values[2]).toBeLessThan(0.8);
+        expect(values.at(-1)).toBe(1);
+        for (const height of [85, 100, 110, 119, 120]) {
+          const previous = fadeProgress();
+          act(() => renderer.update(page(height)));
+          expect(fadeProgress()).toBeLessThan(previous);
+        }
+        expect(fadeProgress()).toBe(0);
+        expect(navigation.setOptions).not.toHaveBeenCalled();
+        expect(RootBar!.update).toHaveBeenLastCalledWith(
+          identifier,
+          0,
+          ground,
+          colors.dividerSubtle,
+        );
+        act(() => listeners.get('blur')!.forEach((listener) => listener()));
+        expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
+        navigation.isFocused.mockReturnValue(false);
+        jest.mocked(RootBar!.update).mockClear();
+        act(() => renderer.update(page(100)));
+        expect(RootBar!.update).not.toHaveBeenCalled();
+        navigation.isFocused.mockReturnValue(true);
+        act(() => listeners.get('focus')!.forEach((listener) => listener()));
+        expect(fadeProgress()).toBeGreaterThan(0);
+      } finally {
+        act(() => renderer.unmount());
       }
-      expect(navigation.setOptions).toHaveBeenCalledTimes(4);
-    } finally {
-      if (renderer) act(() => renderer!.unmount());
-      Object.defineProperty(Platform, 'Version', version);
-      Dimensions.set({ window, screen: display });
-    }
-  },
+      expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
+    }),
 );
 
 test.each([
-  ['(search)', 'search', false, 56, 52],
-  ['(search)', 'search', true, 56, 52],
-  ['(search)', 'search', true, 60, 52],
-  ['(search)', 'search', true, 64, 52],
-  ['(search)', 'search', true, 52, 41],
-  ['(bills)', 'bills', false, 56, 52],
-  ['(bills)', 'bills', false, 64, 52],
-  ['(bills)', 'bills', false, 52, 41],
-] as const)(
-  '%s with a pinned stacked field switches edge before collapse, route = %s, grouped = %s, search row = %s pt, title = %s pt',
-  (segment, name, grouped, searchHeight, titleHeight) => {
-    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
-    Object.defineProperty(Platform, 'Version', {
-      configurable: true,
-      value: 26,
+  ['font scale', { fontScale: 2 }],
+  ['window width', { width: 380 }],
+  ['window height', { height: 820 }],
+] as const)('the fade resets after a change in %s', (_input, change) =>
+  withGlass(() => {
+    const window = Dimensions.get('window'),
+      display = Dimensions.get('screen');
+    Dimensions.set({
+      window: { ...window, width: 390, height: 844, fontScale: 1 },
+      screen: { ...display, width: 390, height: 844, fontScale: 1 },
     });
-    const route = { key: `${name}-root`, name };
-    const ground = grouped ? colors.sunken : colors.paper;
-    let current = largeTitleBar(ground);
-    const navigation = {
-      isFocused: () => true,
-      addListener: () => () => {},
-      getState: () => ({
-        index: 0,
-        routes: [route],
-        routeNames: sharedScreens(segment, false).map(
-          (entry) => entry.props.name,
-        ),
-      }),
-      setOptions: jest.fn((next: object) => {
-        current = { ...current, ...next };
-      }),
-    };
-    const options = {
-      headerSearchBarOptions: {
-        hideWhenScrolling: false,
-        placement: 'stacked' as const,
-      },
-    };
-    const page = (height: number) => (
-      <NavigationContext.Provider value={navigation as never}>
-        <NavigationRouteContext.Provider value={route}>
-          <SafeAreaInsetsContext.Provider
-            value={{ top: 24, bottom: 0, left: 0, right: 0 }}
-          >
-            <HeaderHeightContext.Provider value={height}>
-              <RouteOptions options={options} />
-              {name === 'search' && (
-                <Screen grouped={grouped}>
-                  <View />
-                </Screen>
-              )}
-            </HeaderHeightContext.Provider>
-          </SafeAreaInsetsContext.Provider>
-        </NavigationRouteContext.Provider>
-      </NavigationContext.Provider>
-    );
-    const expanded = () => {
-      expect(current.headerStyle).not.toHaveProperty('backgroundColor');
-      expect(current.headerLargeStyle).toEqual({});
-      expect(current.contentStyle).toEqual({ backgroundColor: ground });
-      expect(current).not.toHaveProperty('headerBlurEffect');
-      expect(current).not.toHaveProperty('headerBackground');
-      expect(current.headerLargeTitleShadowVisible).toBe(false);
-    };
-    let renderer: TestRenderer.ReactTestRenderer | undefined;
+    const { page } = fadePage('index', '(today)');
+    const renderer = tree(page(120));
     try {
-      renderer = tree(page(68)); // NativeStack's initial bare inline estimate.
-      expanded();
-      expect(current.scrollEdgeEffects?.top).toBe('soft');
-      navigation.setOptions.mockClear();
-      const inlineHeight = 24 + 44;
-      const collapsedHeight = inlineHeight + searchHeight;
-      const expandedHeight = collapsedHeight + titleHeight;
-      // Even the smallest title must stay soft at rest above a pinned row.
-      for (const height of [
-        expandedHeight,
-        expandedHeight - 0.5,
-        expandedHeight,
-      ])
-        act(() => renderer!.update(page(height)));
-      expanded();
-      expect(current.scrollEdgeEffects?.top).toBe('soft');
-      expect(navigation.setOptions).not.toHaveBeenCalled();
-      act(() => renderer!.update(page(expandedHeight - 1)));
-      expanded();
-      expect(current.scrollEdgeEffects?.top).toBe('hard');
-      expect(navigation.setOptions).toHaveBeenCalledTimes(1);
-      act(() => renderer!.update(page(collapsedHeight)));
-      expect(current.headerStyle).toEqual({ backgroundColor: ground });
-      expect(current.scrollEdgeEffects?.top).toBe('hard');
-      expect(navigation.setOptions).toHaveBeenCalledTimes(2);
-      for (const height of [
-        collapsedHeight,
-        collapsedHeight + 0.5,
-        120,
-        collapsedHeight,
-        120.5,
-      ])
-        act(() => renderer!.update(page(height)));
-      expect(navigation.setOptions).toHaveBeenCalledTimes(2);
-      act(() => renderer!.update(page(expandedHeight - 2)));
-      expanded();
-      expect(current.scrollEdgeEffects?.top).toBe('hard');
-      expect(navigation.setOptions).toHaveBeenCalledTimes(3);
-      act(() => renderer!.update(page(expandedHeight)));
-      expanded();
-      expect(current.scrollEdgeEffects?.top).toBe('soft');
-      expect(navigation.setOptions).toHaveBeenCalledTimes(4);
-      for (const height of [
-        expandedHeight + 12,
-        expandedHeight + 24,
-        expandedHeight,
-        expandedHeight - 0.5,
-      ])
-        act(() => renderer!.update(page(height)));
-      expanded();
-      expect(current.scrollEdgeEffects?.top).toBe('soft');
-      expect(navigation.setOptions).toHaveBeenCalledTimes(4);
+      act(() => renderer.update(page(90)));
+      expect(fadeProgress()).toBeGreaterThan(0);
+      act(() => {
+        Dimensions.set({
+          window: { ...window, ...change },
+          screen: { ...display, ...change },
+        });
+        renderer.update(page(112));
+      });
+      expect(fadeProgress()).toBe(0);
+      act(() => renderer.update(page(90)));
+      expect(fadeProgress()).toBeGreaterThan(0);
+      act(() => renderer.update(page(112)));
+      expect(fadeProgress()).toBe(0);
+      // Resizing while already collapsed must retain its protective backing.
+      act(() => renderer.update(page(68)));
+      expect(fadeProgress()).toBe(1);
+      act(() => {
+        Dimensions.set({
+          window: { ...Dimensions.get('window'), fontScale: 3 },
+          screen: { ...Dimensions.get('screen'), fontScale: 3 },
+        });
+        renderer.update(page(68));
+      });
+      expect(fadeProgress()).toBe(1);
     } finally {
-      if (renderer) act(() => renderer!.unmount());
-      Object.defineProperty(Platform, 'Version', version);
+      act(() => renderer.unmount());
+      Dimensions.set({ window, screen: display });
     }
-  },
+  }),
 );
 
-test.each(['bills', 'ask'])(
-  '%s observes native collapse without a shared Screen',
-  (name) => {
-    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
-    Object.defineProperty(Platform, 'Version', {
-      configurable: true,
-      value: 26,
-    });
-    const route = { key: 'root', name };
-    const setOptions = jest.fn();
-    const navigation = {
-      isFocused: () => true,
-      addListener: () => () => {},
-      setOptions,
-      getState: () => ({
-        index: 0,
-        routes: [route],
-        routeNames: sharedScreens(
-          name === 'bills' ? '(bills)' : '(ask)',
-          false,
-        ).map((entry) => entry.props.name),
-      }),
-    };
-    const options = {
-      title: name,
-      ...(name === 'bills'
-        ? {
-            headerSearchBarOptions: {
-              hideWhenScrolling: true,
-              placement: 'stacked' as const,
-            },
-          }
-        : {}),
-    };
-    const page = (height: number) => (
-      <NavigationContext.Provider value={navigation as never}>
-        <NavigationRouteContext.Provider value={route}>
-          <HeaderHeightContext.Provider value={height}>
-            <RouteOptions options={options} />
-          </HeaderHeightContext.Provider>
-        </NavigationRouteContext.Provider>
-      </NavigationContext.Provider>
-    );
-    let renderer: TestRenderer.ReactTestRenderer | undefined;
-    try {
-      renderer = tree(page(152)); // Inline + large title + search field.
-      expect(setOptions).toHaveBeenCalledWith(
-        expect.objectContaining({
-          headerStyle: {},
-          headerLargeTitleShadowVisible: false,
-          scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
-        }),
-      );
-      setOptions.mockClear();
-      // Bills hides its field first. Protect content while keeping the
-      // remaining large title's appearances background-free.
-      for (const height of [100, 99, 100.5])
-        act(() => renderer!.update(page(height)));
-      expect(setOptions).toHaveBeenCalledTimes(1);
-      expect(setOptions).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          headerStyle: {},
-          headerLargeStyle: {},
-          scrollEdgeEffects: { top: 'hard', bottom: 'soft' },
-        }),
-      );
-      act(() => renderer!.update(page(44)));
-      expect(setOptions).toHaveBeenCalledTimes(2);
-      expect(setOptions).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          headerStyle: { backgroundColor: tabRootGround(name) },
-          scrollEdgeEffects: { top: 'hard', bottom: 'soft' },
-        }),
-      );
-      act(() => renderer!.update(page(100)));
-      expect(setOptions).toHaveBeenCalledTimes(3);
-      expect(setOptions).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          headerStyle: {},
-          scrollEdgeEffects: { top: 'hard', bottom: 'soft' },
-        }),
-      );
-      act(() => renderer!.update(page(152)));
-      expect(setOptions).toHaveBeenCalledTimes(4);
-      expect(setOptions).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          headerStyle: {},
-          scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
-        }),
-      );
-    } finally {
-      if (renderer) act(() => renderer!.unmount());
-      Object.defineProperty(Platform, 'Version', version);
-    }
-  },
+test.each([41, 52, 85])(
+  'a pinned search field leaves its %s pt large title clear at rest',
+  (titleHeight) =>
+    withGlass(() => {
+      const { page } = fadePage('bills', '(bills)', false, false, true);
+      const expanded = 68 + 56 + titleHeight;
+      const renderer = tree(page(expanded));
+      try {
+        expect(fadeProgress()).toBe(0);
+        act(() => renderer.update(page(expanded - 15)));
+        expect(fadeProgress()).toBeGreaterThan(0);
+        expect(fadeProgress()).toBeLessThan(1);
+        act(() => renderer.update(page(124)));
+        expect(fadeProgress()).toBe(1);
+        act(() => renderer.update(page(expanded)));
+        expect(fadeProgress()).toBe(0);
+      } finally {
+        act(() => renderer.unmount());
+      }
+    }),
 );
 
 test.each(['pushed screen', 'sheet'])(

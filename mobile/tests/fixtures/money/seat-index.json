@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "generated": "2026-11-10",
+    "jurisdiction": "federal",
+    "source": "GrantConnect",
+    "source_url": "https://www.grants.gov.au/",
+    "licence": "CC BY 4.0",
+    "years": [
+      "2020-21",
+      "2021-22"
+    ],
+    "caveats": [
+      "An award is not a payment."
+    ],
+    "counts": {
+      "programs_total": 1,
+      "grants": 28,
+      "dollars": 25799562.46,
+      "recipients": 28,
+      "donor_recipients": 0,
+      "donor_dollars": 0,
+      "donor_share": 0,
+      "electorate_known_share": 0.5
+    }
+  },
+  "programs": [
+    {
+      "id": "GO6809",
+      "key": "go6809",
+      "n": "Fixture support program",
+      "t": 25799562.46,
+      "c": 28,
+      "r": 28,
+      "dt": 0
+    }
+  ],
+  "electorates": [
+    {
+      "key": "maribyrnong",
+      "n": "Maribyrnong",
+      "st": "vic",
+      "t": 25799562.46,
+      "c": 28,
+      "r": 28,
+      "dt": 0
+    }
+  ],
+  "recipients": [
+    {
+      "id": "abn:50203962931",
+      "sh": 1,
+      "n": "Fixture Association 1",
+      "k": "association",
+      "t": 15918362.46,
+      "c": 1
+    }
+  ]
+}

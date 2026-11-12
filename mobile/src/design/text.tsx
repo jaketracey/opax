@@ -346,6 +346,7 @@ export function Text({
       : bold
         ? (boldStep[role.fontFamily] ?? role.fontFamily)
         : role.fontFamily;
+  const drawnFamily = monospace && Platform.OS === 'ios' ? 'Menlo' : family;
   const weight =
     family !== role.fontFamily
       ? family?.endsWith('SemiBold')
@@ -358,7 +359,7 @@ export function Text({
   // (nested text included, such as a field's "(required)"): any change starts
   // again from full size, and so does a wider column (wordSafeOnFrame).
   const content = textContent(props.children);
-  const key = `${fontScale}|${width}|${variant}|${bold}|${content}`;
+  const key = `${fontScale}|${width}|${variant}|${bold}|${drawnFamily}|${content}`;
   // The state machine runs at event time in a ref, so frames and lines that
   // change nothing drawn never render; `shown` re-renders on a new generation.
   const [shown, setShown] = useState(() => wordSafeStart(key));
@@ -535,17 +536,24 @@ export function Text({
       allowFontScaling
       maxFontSizeMultiplier={given.maxFontSizeMultiplier ?? 0}
       dynamicTypeRamp={role.dynamicTypeRamp}
+      {...(Platform.OS === 'android'
+        ? {
+            android_hyphenationFrequency: 'none' as const,
+            textBreakStrategy: 'highQuality' as const,
+          }
+        : {})}
       {...(Platform.OS === 'ios' && titleRole
         ? { lineBreakStrategyIOS: 'push-out' }
         : {})}
       style={[
         {
           color: roleColour(tone ?? role.color, highContrast),
-          ...(family !== undefined ? { fontFamily: family } : {}),
+          ...(drawnFamily !== undefined ? { fontFamily: drawnFamily } : {}),
           fontWeight: weight,
           fontSize: role.fontSize * capScale,
           lineHeight: (role.lineHeight + LINE_HEIGHT_NUDGE) * capScale,
           flexShrink: 1,
+          ...(Platform.OS === 'android' ? { includeFontPadding: false } : {}),
         },
         tabular ? { fontVariant: ['tabular-nums'] } : null,
         heightGuard.key === heightKey && heightGuard.minimum > 0

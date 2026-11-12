@@ -1,7 +1,7 @@
 import { useContext, type ReactNode } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
-import { isPad } from '../../design/adaptive';
+import { currentRule, useLayout } from '../../design/adaptive';
 import { designFlags } from '../../design/flags';
 import { colors, rhythm } from '../../design/tokens';
 
@@ -11,22 +11,27 @@ export const BOTTOM_FIELD_HEIGHT = 48;
 /**
  * The space the chooser's list leaves for the bottom search field, or 0.
  * The list ends above the field at every text size, so the last row can
- * be read and tapped without the field covering it. iPad keeps search in
- * the bar and Android has no bottom field.
+ * be read and tapped without the field covering it. Regular layouts keep
+ * search in the bar and Android has no bottom field.
  */
 export function bottomFieldClearance(
   safeBottom: number,
   os: string = Platform.OS,
-  pad: boolean = isPad,
+  regular: boolean = currentRule() !== 'phone',
 ): number {
-  if (os !== 'ios' || pad) return 0;
+  if (os !== 'ios' || regular) return 0;
   return safeBottom + BOTTOM_FIELD_HEIGHT + rhythm.tight;
 }
 
 /** The chooser's list, ended above the bottom search field (see above). */
 export function FieldClearance({ children }: { children: ReactNode }) {
   const safeBottom = useContext(SafeAreaInsetsContext)?.bottom ?? 0;
-  const clearance = bottomFieldClearance(safeBottom);
+  const { regular, rule } = useLayout();
+  const clearance = bottomFieldClearance(
+    safeBottom,
+    Platform.OS,
+    rule === 'pad' || regular,
+  );
   const ground = designFlags.groupedSurfaces ? colors.sunken : colors.paper;
   return (
     <View

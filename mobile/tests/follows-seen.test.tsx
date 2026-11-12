@@ -525,3 +525,44 @@ test('LatestRow keeps its year and caps both glyphs with the standard row gaps',
     .find((node) => StyleSheet.flatten(node.props.style)?.flex === 1)!;
   expect(StyleSheet.flatten(words.props.style)?.gap).toBe(rhythm.line);
 });
+
+test('a last look in an earlier year keeps its year in the Added since header', async () => {
+  jest.setSystemTime(new Date('2027-03-01T12:00:00'));
+  await act(async () => {
+    renderer = TestRenderer.create(
+      <AddedSinceGroup
+        follow={f}
+        changes={[change]}
+        testID="bill-added-since"
+      />,
+    );
+  });
+  const strings = renderer!.root
+    .findAllByType(Text)
+    .map((node) => node.props.children)
+    .filter((text) => typeof text === 'string');
+  expect(strings).toContain('Added since 1 Sep 2026');
+});
+
+test('a followed own MP row points to Today without counting more changes', () => {
+  mount(
+    <FollowRow
+      follow={f}
+      ownMP
+      state={{
+        status: 'ready',
+        title: f.title,
+        current: {},
+        keys: ['vote:late', 'vote:other'],
+        changes: [change, { ...change, key: 'vote:other' }],
+      }}
+    />,
+  );
+  const row = renderer!.root.findAll(
+    (node) =>
+      typeof node.props.accessibilityLabel === 'string' &&
+      node.props.detail !== undefined,
+  )[0]!;
+  expect(row.props.detail).toBe('Shown in Your MP on Today');
+  expect(row.props.accessibilityLabel).not.toMatch(/more/i);
+});

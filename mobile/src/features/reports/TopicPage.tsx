@@ -88,7 +88,7 @@ export default function TopicPage() {
 function UnknownTopic() {
   return (
     <>
-      <RouteOptions options={{ title: 'Topic' }} />
+      <RouteOptions stableItems options={{ title: '' }} />
       <Screen testID="topic-screen">
         <ContentUnavailable
           symbol={symbols.topic}
@@ -172,22 +172,35 @@ function TopicContent({ slug, params }: { slug: string; params: Params }) {
   };
   const [fresh, setFresh] = useState(0);
   const topic = useRead(
-    useCallback(() => reports.topic(slug, fresh > 0), [slug, fresh]),
+    useCallback(
+      (signal?: AbortSignal) => reports.topic(slug, fresh > 0, signal),
+      [slug, fresh],
+    ),
   );
-  const tide = useRead(useCallback(() => reports.tide(fresh > 0), [fresh]));
+  const tide = useRead(
+    useCallback(
+      (signal?: AbortSignal) => reports.tide(fresh > 0, signal),
+      [fresh],
+    ),
+  );
   const { party, state, from, to, debate } = filters;
   const speeches = useRead(
     useCallback(
-      () =>
-        reports.speeches(slug, { party, state, from, to, debate }, fresh > 0),
+      (signal?: AbortSignal) =>
+        reports.speeches(
+          slug,
+          { party, state, from, to, debate },
+          fresh > 0,
+          signal,
+        ),
       [slug, party, state, from, to, debate, fresh],
     ),
   );
   const money = useRead(
     useCallback(
-      () =>
+      (signal?: AbortSignal) =>
         hasTopicMoney(slug)
-          ? reports.money()
+          ? reports.money(signal)
           : Promise.reject(new Error('No paired industry')),
       [slug],
     ),
@@ -272,6 +285,7 @@ function TopicContent({ slug, params }: { slug: string; params: Params }) {
   return (
     <>
       <RouteOptions
+        stableItems
         options={{
           title,
           ...headerItems(

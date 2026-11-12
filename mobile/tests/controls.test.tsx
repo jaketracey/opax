@@ -261,7 +261,8 @@ test('Android pop-up uses the shared menu and custom selection feedback', () => 
     );
     act(() => press(r, 'month').props.onPress());
     const actions = jest.mocked(showMenu).mock.calls[0]![1];
-    expect(actions[0]!.title).toContain('✓');
+    expect(actions[0]!.title).toBe('All jurisdictions');
+    expect(actions[0]!.selected).toBe(true);
     act(() => actions[1]!.onPress());
     expect(changed).toHaveBeenCalledWith('federal');
     expect(haptic).toHaveBeenCalledWith('selection');

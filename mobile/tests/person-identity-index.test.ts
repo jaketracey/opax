@@ -7,7 +7,7 @@ import {
   indexedPersonSlugForId,
   scannedPersonSlugForId,
 } from '../src/api/person-identity';
-import { partyLabels, partyMembers } from '../src/api/party-page';
+import { partyLabels, partyMembers, partyName } from '../src/api/party-page';
 import {
   joinPerson as before,
   personSlugForResult as resultBefore,
@@ -80,7 +80,14 @@ test.each(
 )(
   '%s native lists retain unfiltered pre-index identities, order and provenance',
   (label) => {
-    const original = membersBefore(label, roster, people, slugs, manifest);
+    // Membership comparisons now expand the same roster codes as the directory.
+    const original = membersBefore(
+      partyName(label),
+      roster,
+      people,
+      slugs,
+      manifest,
+    );
     const current = original.current.filter((p) => nativeSlugs.has(p.slug));
     const recorded = original.recorded.filter((p) => nativeSlugs.has(p.slug));
     expect(partyMembers(label, roster, people, slugs, manifest)).toEqual({

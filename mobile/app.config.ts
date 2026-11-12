@@ -22,8 +22,8 @@ if (!['0', '1'].includes(e2eMicrophone))
   throw new Error('OPAX_E2E_MICROPHONE must be 0 or 1');
 const microphonePrompt =
   androidBuild && variant === 'e2e' && e2eMicrophone === '1';
-// Anonymous product analytics (docs/ANALYTICS.md): iOS production always, an
-// iOS development build only with OPAX_ANALYTICS=1, e2e never. Android stays
+// Anonymous product analytics (docs/ANALYTICS.md): iOS production only.
+// Development and e2e never carry analytics, even with OPAX_ANALYTICS=1. Android stays
 // off until its Google Play Data safety answers include analytics (the code is
 // shared; drop the androidBuild condition then). Events go through
 // the opax.com.au Worker proxy to PostHog project 507367 (Opax). The token is
@@ -33,8 +33,7 @@ if (!['0', '1'].includes(analyticsSwitch))
   throw new Error('OPAX_ANALYTICS must be 0 or 1');
 const analytics =
   !androidBuild &&
-  (variant === 'production' ||
-    (variant === 'development' && analyticsSwitch === '1'))
+  variant === 'production'
     ? {
         host: 'https://opax.com.au/ingest',
         projectToken: 'phc_AsHnQM2UrGBubA5HU9sagkGbg8vqQLNXu3WjEhPRDejr',
@@ -131,7 +130,7 @@ const webOrigin = variant === 'e2e' ? 'https://opax.invalid' : origin;
 // The one app version: the store version, the API User-Agent
 // (extra.appVersion) and analytics' app_version all read it, so they cannot
 // drift apart again (extra.appVersion was a stale '1.0.0' until 1.1.0).
-const appVersion = '1.1.0';
+const appVersion = '1.1.4';
 const config: ExpoConfig = {
   name: 'OPAX',
   slug: 'opax',
@@ -217,6 +216,10 @@ const config: ExpoConfig = {
     },
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
+      // Light status bar text over the navy launch screen. React Native's
+      // StatusBar takes over once the app draws (the root layout sets
+      // `auto`; the launch cover keeps `light` while it is up).
+      UIStatusBarStyle: 'UIStatusBarStyleLightContent',
       NSLocationWhenInUseUsageDescription:
         'OPAX uses your location once, on this iPhone, to find your electorate. It is not sent anywhere.',
       'NSLocationWhenInUseUsageDescription~ipad':
@@ -239,6 +242,14 @@ const config: ExpoConfig = {
     },
   },
   plugins: [
+    ...(androidBuild
+      ? [
+          ['./plugins/withAndroidRelease.js', { variant }] as [
+            string,
+            { variant: Variant },
+          ],
+        ]
+      : []),
     './plugins/withAndroidPolicy.js',
     ...(androidBuild
       ? [
@@ -267,18 +278,20 @@ const config: ExpoConfig = {
     [
       'expo-splash-screen',
       {
-        // The star mark and the "OPAX" wordmark, centred on paper, with no
-        // other text. Rendered from assets/splash/*.svg by
+        // The gold star and the paper "OPAX" wordmark, centred on the brand
+        // navy, with no other text. Rendered from assets/splash/*.svg by
         // scripts/render-splash.swift. The lockup is 200pt wide;
-        // src/launch/LaunchHandoff.tsx draws the same image.
+        // src/launch/LaunchHandoff.tsx draws the same layers in the same
+        // place and then unfolds the name from them.
         //
-        // Only automatic-appearance captures get a dark launch background.
-        // A dark splash makes the plugin switch iOS to Automatic, so release
-        // and light-only builds must leave it unset.
-        backgroundColor: '#FAF9F6',
+        // The field is navy in both appearances, so one colour serves both.
+        // Setting a `dark` block makes the plugin switch iOS to Automatic,
+        // so release and light-only builds leave it unset; only
+        // automatic-appearance captures carry it, with the same navy.
+        backgroundColor: '#142A43',
         dark:
           variant !== 'production' && appearance === 'automatic'
-            ? { backgroundColor: '#161915' }
+            ? { backgroundColor: '#142A43' }
             : undefined,
         image: './assets/splash/splash@3x.png',
         imageWidth: 200,

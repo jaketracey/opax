@@ -1,3 +1,4 @@
+import { Pressable } from './pressable';
 import { type Href } from 'expo-router';
 import {
   Children,
@@ -6,6 +7,7 @@ import {
   isValidElement,
   useCallback,
   useContext,
+  useImperativeHandle,
   useLayoutEffect,
   useRef,
   useState,
@@ -16,14 +18,18 @@ import {
 } from 'react';
 import {
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   View,
+  type LayoutChangeEvent,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
   type RefreshControlProps,
   type ViewProps,
 } from 'react-native';
 import { opaqueBar } from '../navigation/chrome';
+import { useAndroidRootScroll } from '../navigation/useAndroidRootScroll';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { useSafeSetOptions } from '../navigation/preview';
 import { useRootBarAppearance } from '../navigation/useRootBarAppearance';
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
@@ -31,10 +37,11 @@ import { useAccessibilitySize } from './accessibility';
 import {
   columnBreakout,
   columns,
-  isPad,
+  sizeClassFor,
   RegionProvider,
   SidebarSafe,
   useColumnChoice,
+  useAdaptiveDevice,
   useLayout,
   useMeasuredRegion,
 } from './adaptive';
@@ -77,22 +84,46 @@ import { useStableKeyboard } from './useStableKeyboard';
  * `breakout` is how far a figure in a readable column may reach past each
  * side to fill the wide one (the money map's scene); 0 on compact.
  */
-export function useScreenColumn(own: keyof typeof columns = 'readable') {
+export function useScreenColumn(
+  own: keyof typeof columns = 'readable',
+  automaticInsets = true,
+) {
   const column = useColumnChoice(own);
   const [onLayout, region] = useMeasuredRegion();
   const outer = useLayout();
-  const width = region?.width ?? outer.width;
-  const regular = isPad && width >= columns.readable;
+  const insets = useContext(SafeAreaInsetsContext);
+  const inPane = useSplitPane() !== null;
+  const adaptive = useAdaptiveDevice();
+  // SidebarSafe and split panes already own their horizontal safe area.
+  // UIKit adjusts a phone scroll view on each side, including a vertical bar.
+  // On an adaptive iPhone (Duo) Screen's SidebarSafe already pads each side
+  // by the screen's own insets, vertical bars included (the window-level
+  // insets here do not see them), so this applies only to other phones.
+  const nativeSides =
+    Platform.OS === 'ios' &&
+    outer.rule !== 'pad' &&
+    !inPane &&
+    !adaptive &&
+    insets?.left !== insets?.right;
+  const left = nativeSides ? (insets?.left ?? 0) : 0;
+  const right = nativeSides ? (insets?.right ?? 0) : 0;
+  const width = Math.max(0, (region?.width ?? outer.width) - left - right);
+  const regular = sizeClassFor(width, outer.rule) === 'regular';
   const inset = regular
     ? Math.max(rhythmRegular.screen, Math.round((width - columns[column]) / 2))
     : width < 414
       ? 16
       : 20;
-  const content = { paddingHorizontal: inset };
+  const content = {
+    paddingHorizontal: inset,
+    ...(!automaticInsets
+      ? { paddingLeft: inset + left, paddingRight: inset + right }
+      : {}),
+  };
   const inner = region
-    ? { width: region.width - inset * 2, height: region.height }
+    ? { width: Math.max(0, width - inset * 2), height: region.height }
     : null;
-  const breakout = columnBreakout(width, column);
+  const breakout = columnBreakout(width, column, outer.rule);
   // Inside a split pane: its Back and actions, first in the content.
   const bar = usePaneBar();
   return { onLayout, content, inner, bar, breakout, regular };
@@ -115,16 +146,22 @@ export function Screen({
   barTitle,
   offline,
   onLayout: onPageLayout,
+  onContentLayout,
   maintainVisibleContentPosition,
   contentInsetAdjustmentBehavior = 'automatic',
+  clampScrollOnContentChange = false,
 }: {
   onLayout?: ViewProps['onLayout'];
+  /** The rendered content, rather than the surrounding scroll viewport. */
+  onContentLayout?: ViewProps['onLayout'];
   maintainVisibleContentPosition?: React.ComponentProps<
     typeof ScrollView
   >['maintainVisibleContentPosition'];
   contentInsetAdjustmentBehavior?: React.ComponentProps<
     typeof ScrollView
   >['contentInsetAdjustmentBehavior'];
+  /** Async front pages may lose blocks while the reader is at the end. */
+  clampScrollOnContentChange?: boolean;
   testID?: string;
   grouped?: boolean;
   barTitle?: string;
@@ -136,8 +173,13 @@ export function Screen({
   /** The content column on regular width: `readable` (700pt) or `wide`. */
   column?: keyof typeof columns;
 }) {
-  const { onLayout, content, inner, bar, regular } = useScreenColumn(column);
+  const { onLayout, content, inner, bar, regular } = useScreenColumn(
+    column,
+    contentInsetAdjustmentBehavior !== 'never',
+  );
   const ground = grouped && designFlags.groupedSurfaces ? 'sunken' : 'paper';
+  const androidScroll = useRef<ScrollView>(null);
+  const androidRoot = useAndroidRootScroll(androidScroll, colors[ground]);
   const setOptions = useSafeSetOptions();
   const inPane = useSplitPane() !== null;
   const nativeRoot = useRootBarAppearance(setOptions, {
@@ -176,34 +218,63 @@ export function Screen({
     refreshControl?.props.onRefresh,
     !!refreshControl?.props.refreshing,
   );
+  const bounds = useScrollBounds(
+    clampScrollOnContentChange,
+    Platform.OS === 'android' ? androidScroll : scrollRef,
+  );
+  useImperativeHandle(
+    Platform.OS === 'android' ? scrollRef : undefined,
+    () => androidScroll.current!,
+    [],
+  );
+  const targetRef = clampScrollOnContentChange
+    ? bounds.ref
+    : Platform.OS === 'android'
+      ? androidScroll
+      : scrollRef;
   return (
     <StatePageProvider refreshing={!!refreshControl?.props.refreshing}>
       <SidebarSafe style={[styles.screen, { backgroundColor: colors[ground] }]}>
         <ScrollView
-          ref={scrollRef}
+          ref={targetRef}
           testID={testID}
           style={[styles.screen, { backgroundColor: colors[ground] }]}
           contentInsetAdjustmentBehavior={contentInsetAdjustmentBehavior}
+          alwaysBounceVertical={Platform.OS === 'ios'}
           keyboardShouldPersistTaps="handled"
           automaticallyAdjustKeyboardInsets
           keyboardDismissMode="on-drag"
           refreshControl={refreshControl}
           contentContainerStyle={[
             styles.content,
+            // Blank space on short pages must accept drags and refresh pulls.
+            { flexGrow: 1 },
             content,
             regular ? { gap: rhythmRegular.section } : null,
           ]}
           maintainVisibleContentPosition={maintainVisibleContentPosition}
+          onContentSizeChange={
+            clampScrollOnContentChange ? bounds.onContentSizeChange : undefined
+          }
           onLayout={(event) => {
             onLayout(event);
             onPageLayout?.(event);
+            if (clampScrollOnContentChange) bounds.onLayout(event);
           }}
           onScroll={(event) => {
+            if (clampScrollOnContentChange) bounds.onScroll(event);
             const y = event.nativeEvent.contentOffset.y;
+            if (Platform.OS === 'android') androidRoot.onScroll(y);
             if (titleScroll.current) titleScroll.current(y, anchorBottom);
             else if (!inPane && barTitle) nativeTitle.onScroll(y);
             onScroll?.(y);
           }}
+          onScrollEndDrag={
+            clampScrollOnContentChange ? bounds.onScroll : undefined
+          }
+          onMomentumScrollEnd={
+            clampScrollOnContentChange ? bounds.onScroll : undefined
+          }
           scrollEventThrottle={16}
         >
           <RegionProvider value={inner}>
@@ -221,11 +292,13 @@ export function Screen({
                   <TitleContentContext.Provider value={contentRoot}>
                     <View
                       ref={contentRoot}
+                      onLayout={onContentLayout}
                       style={{
                         gap: regular ? rhythmRegular.section : rhythm.section,
                       }}
                     >
                       {bar}
+                      {androidRoot.title}
                       {anchorHeadings(withOffline(children, offline))}
                     </View>
                   </TitleContentContext.Provider>
@@ -237,6 +310,69 @@ export function Screen({
       </SidebarSafe>
     </StatePageProvider>
   );
+}
+
+/**
+ * Fabric preserves the offset during a gesture, even when content collapses.
+ * Repair only a changed scroll range, leaving pull-to-refresh and ordinary
+ * rubber-banding to UIKit. Keep repairing late momentum events until the
+ * native view acknowledges an offset inside the new range.
+ */
+function useScrollBounds(
+  enabled: boolean,
+  forwardedRef: Ref<ScrollView> | undefined,
+) {
+  const scroll = useRef<ScrollView | null>(null);
+  const metrics = useRef({
+    height: null as number | null,
+    viewport: 0,
+    y: 0,
+    top: 0,
+    bottom: 0,
+    changed: false,
+  });
+  useImperativeHandle(
+    enabled ? forwardedRef : undefined,
+    () => scroll.current!,
+    [],
+  );
+  const clamp = () => {
+    const m = metrics.current;
+    if (!enabled || !m.changed || m.height === null || m.viewport <= 0) return;
+    const end = Math.max(-m.top, m.height - m.viewport + m.bottom);
+    // Never cancel a pull or force a reader further down the page.
+    if (m.y > end) scroll.current?.scrollTo({ y: end, animated: false });
+  };
+  return {
+    ref: scroll,
+    onContentSizeChange: (_width: number, height: number) => {
+      const m = metrics.current;
+      if (m.height === null || height < m.height) m.changed = true;
+      m.height = height;
+      clamp();
+    },
+    onLayout: (event: LayoutChangeEvent) => {
+      const m = metrics.current;
+      if (event.nativeEvent.layout.height > m.viewport) m.changed = true;
+      m.viewport = event.nativeEvent.layout.height;
+      clamp();
+    },
+    onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const m = metrics.current;
+      const { contentOffset, contentInset, layoutMeasurement } =
+        event.nativeEvent;
+      m.y = contentOffset.y;
+      m.top = contentInset.top;
+      m.bottom = contentInset.bottom;
+      m.viewport = layoutMeasurement.height;
+      if (
+        m.height !== null &&
+        m.y <= Math.max(-m.top, m.height - m.viewport + m.bottom)
+      )
+        m.changed = false;
+      clamp();
+    },
+  };
 }
 
 /** The form owns keyboard space; UIKit retains navigation/tab insets. */
@@ -320,17 +456,26 @@ export type SectionAction = {
   onPress?: () => void;
   testID?: string;
 };
+/** A section jump measures the heading text, including its inset within the row. */
+export const SectionHeadingLayoutContext = createContext<
+  ((testID: string, event: LayoutChangeEvent) => void) | null
+>(null);
+
 export function SectionHeader({
   title,
   action,
+  accessory,
   testID,
   level = 2,
 }: {
   title: string;
   action?: SectionAction;
+  /** Independent control beside the heading, wrapping only when it cannot fit. */
+  accessory?: ReactNode;
   testID?: string;
   level?: 2 | 3;
 }) {
+  const headingLayout = useContext(SectionHeadingLayoutContext);
   const stacked = useAccessibilitySize();
   const button = action ? (
     <Pressable
@@ -349,8 +494,25 @@ export function SectionHeader({
     </Pressable>
   ) : null;
   return (
-    <View style={stacked ? styles.sectionHeadStacked : styles.sectionHead}>
-      <Heading level={level} style={styles.grow} testID={testID}>
+    <View
+      style={
+        accessory
+          ? styles.sectionHeadWrapping
+          : stacked
+            ? styles.sectionHeadStacked
+            : styles.sectionHead
+      }
+    >
+      <Heading
+        level={level}
+        style={accessory ? styles.sectionHeadTitle : styles.grow}
+        testID={testID}
+        onLayout={
+          headingLayout && testID
+            ? (event) => headingLayout(testID, event)
+            : undefined
+        }
+      >
         {title}
       </Heading>
       {action?.href && button ? (
@@ -358,6 +520,9 @@ export function SectionHeader({
       ) : (
         button
       )}
+      {accessory ? (
+        <View style={styles.sectionAccessory}>{accessory}</View>
+      ) : null}
     </View>
   );
 }
@@ -635,6 +800,19 @@ const styles = StyleSheet.create({
   sectionHeadStacked: {
     gap: rhythm.line,
     marginBottom: rhythm.heading - rhythm.block,
+  },
+  sectionHeadWrapping: {
+    minHeight: minimumTarget,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: rhythm.tight,
+  },
+  sectionHeadTitle: { flexGrow: 1, flexShrink: 0, maxWidth: '100%' },
+  sectionAccessory: {
+    marginLeft: 'auto',
+    maxWidth: '100%',
+    paddingVertical: rhythm.tight,
   },
   grow: { flexGrow: 1, flexShrink: 1 },
 });

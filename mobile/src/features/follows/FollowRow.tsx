@@ -1,5 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { StatusCapsule } from '../../design/labels';
+import { billStatus as billStatusLabel } from '../../design/parliament';
 import { Text } from '../../design/text';
 import { LinkRow } from '../../design/rows';
 import { Portrait } from '../../design/people';
@@ -80,8 +81,11 @@ export function FollowRow({
         : changes[0]
           ? changeText(changes[0])
           : undefined;
+  // Your own MP's changes are on Today, not counted under a pointer to them.
   const more =
-    changes.length > 1 ? moreChangesText(changes.length - 1) : undefined;
+    !ownMP && changes.length > 1
+      ? moreChangesText(changes.length - 1)
+      : undefined;
   const detail = [line, more].filter(Boolean).join('\n');
   const route = followRoute(follow, state);
   const path =
@@ -97,7 +101,8 @@ export function FollowRow({
   const metadata = billStatus ? (
     <>
       <StatusCapsule
-        status={billStatus.words ?? String(billStatus.value)}
+        status={String(billStatus.value)}
+        label={billStatusLabel(String(billStatus.value))}
         hidden
       />
       {billStatus.asAt ? (

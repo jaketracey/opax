@@ -3,7 +3,9 @@ import {
   NavigationContext,
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
-import { useCallback, useContext, useLayoutEffect } from 'react';
+import { useCallback, useContext, useLayoutEffect, useMemo } from 'react';
+import { useDetailRouteOptions } from './useDetailRouteOptions';
+import { headerItems, pendingHeaderItems } from './chrome';
 import {
   useRootBarAppearance,
   useRootBarSearchOptions,
@@ -48,20 +50,42 @@ export function useSafeSetOptions() {
 /** Dynamic destination options only. Stack registrations keep Stack.Screen. */
 export function RouteOptions({
   options,
+  stableItems = false,
 }: {
   options?: NativeStackNavigationOptions;
+  /** A detail's bar items retain their identity as data and title arrive. */
+  stableItems?: boolean;
 }) {
   const setOptions = useSafeSetOptions();
+  const route = useContext(NavigationRouteContext);
+  const pending = useMemo(
+    () => pendingHeaderItems(route?.name, route?.params),
+    [route?.name, route?.params],
+  );
+  const resolvedOptions = useMemo(
+    () =>
+      options &&
+      pending &&
+      'unstable_headerRightItems' in options &&
+      !options.unstable_headerRightItems &&
+      !options.headerRight
+        ? { ...options, ...headerItems(() => pending) }
+        : options,
+    [options, pending],
+  );
+  const keepItems = stableItems || !!pending;
+  useDetailRouteOptions(setOptions, keepItems ? resolvedOptions : undefined);
   useRootBarSearchOptions(options);
   useRootBarAppearance(setOptions, {
     names: ['bills', 'ask'],
-    largeTitleEnabled: options?.headerLargeTitleEnabled,
+    owner: 'options',
   });
   // Stack.Screen installs options in its own effect, outside our guard.
   // Install before paint so native items start in their final positions.
   useLayoutEffect(() => {
     // Match Expo Screen's empty-options guard (expo/router#452).
-    if (options && Object.keys(options).length) setOptions(options);
-  }, [setOptions, options]);
+    if (!keepItems && resolvedOptions && Object.keys(resolvedOptions).length)
+      setOptions(resolvedOptions);
+  }, [setOptions, resolvedOptions, keepItems]);
   return null;
 }

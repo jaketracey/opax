@@ -2,8 +2,74 @@ import { router } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import { nameKey } from '../../api/ids';
 import { ApiError, PersonIdentityError } from '../../api/errors';
+import { personSlugForResult } from '../../api/person-identity';
 import { personRoute, fromWebPath, partyRoute } from '../../navigation/routes';
 import { openOnWeb, openSource, webPageUrl } from '../../navigation/external';
+import type { SearchRecord } from './decoders';
+import { interestName } from './present';
+
+export type InterestResult = Pick<
+  SearchRecord,
+  'kind' | 'title' | 'snippet'
+> & {
+  href?: string;
+  slug?: string;
+  resource?: string;
+  speaker?: string;
+  personSlug?: string;
+  date?: string | null;
+  dateLabel?: string | null;
+  state?: string | null;
+};
+
+/** Use the register's identity bridge, then the same native identity as Search. */
+export async function searchInterestRoute(row: InterestResult) {
+  if (row.kind !== 'interest') return null;
+  let slug = row.personSlug;
+  if (!slug) {
+    const [slugs, interests, manifest] = await Promise.all([
+      catalogs.slugs(),
+      catalogs.interestIndex(),
+      catalogs.manifest(),
+    ]);
+    const people = await catalogs.people(manifest.data);
+    if (people.data.meta.release_id !== manifest.data.release_id)
+      throw new ApiError('invalid-data', 'The people records are out of step.');
+    const personHref = /^\/(?:subject\/person\/|declared\?)/.test(
+      row.href ?? '',
+    );
+    const href = personHref
+      ? row.href!
+      : `/subject/person/${encodeURIComponent(row.speaker || interestName(row.title))}`;
+    slug = personSlugForResult(
+      {
+        kind: row.kind,
+        title: row.title,
+        snippet: row.snippet,
+        href,
+        slug: row.slug ?? '',
+        resource: row.resource ?? '',
+      },
+      slugs.data,
+      interests.data,
+      people.data,
+    );
+  }
+  if (!slug) return null;
+  try {
+    const destination = await resolveSearchPerson(slug);
+    return 'route' in destination
+      ? personRoute(destination.route.params.slug, undefined, 'interests')
+      : null;
+  } catch (error) {
+    if (
+      error instanceof PersonIdentityError ||
+      (error instanceof ApiError && error.code === 'not-found')
+    )
+      return null;
+    throw error;
+  }
+}
 
 /** Where a person resolves to: their native profile, or their web page. */
 export type PersonDestination =

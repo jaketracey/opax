@@ -14,20 +14,31 @@ import {
 // record rows grouped by the day they were added.
 import { NavigationContext } from 'expo-router/react-navigation';
 import { act } from 'react';
-import { Text as NativeText, Platform, type View } from 'react-native';
+import {
+  Text as NativeText,
+  Platform,
+  RefreshControl,
+  type View,
+} from 'react-native';
 import TestRenderer from 'react-test-renderer';
+import { ApiError } from '../src/api/errors';
 import fixtures from '../scripts/fixtures/records/contracts.json';
 import { catalogs } from '../src/api/runtime';
 import {
+  BillRow,
   ContentUnavailable,
   Heading,
   InsetGroup,
   MachinePill,
   PersonRow,
+  RegionProvider,
   RecordRow,
   SourceLine,
+  StatusCapsule,
+  VoteSplit,
 } from '../src/design/primitives';
 import BillTextReader from '../src/features/records/BillTextReader';
+import BillTextContents from '../src/features/records/BillTextContents';
 import { useBillTextPane } from '../src/features/records/billTextPane';
 import { ReaderList } from '../src/features/records/ReaderList';
 import DocumentReader from '../src/features/records/DocumentReader';
@@ -43,7 +54,7 @@ import { records } from '../src/features/records/runtime';
 import { recordSource } from '../src/features/records/source';
 import { barTitleWidth } from '../src/navigation/useTitleOnScroll';
 import { billTextContentsRoute } from '../src/navigation/routes';
-import { index, manifest, people, roster, slugs } from './pinned';
+import { bills, index, manifest, people, roster, slugs } from './pinned';
 
 const responses: Record<string, unknown> = fixtures.responses;
 const doc = (path: string) => decodeDocument(responses[path]);
@@ -133,6 +144,7 @@ const barLabels = () => {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  jest.mocked(records.recent).mockReset();
   mockOptions = {};
   jest.mocked(catalogs.directory).mockResolvedValue({
     roster: record(roster),
@@ -146,6 +158,36 @@ beforeEach(() => {
   jest.mocked(records.document).mockResolvedValue(record(speech));
   jest.mocked(records.similar).mockResolvedValue(record([]) as never);
 });
+
+test.each([
+  ['before_parliament', 'Before parliament'],
+  ['assented', 'Assented'],
+  ['awaiting_review', 'Awaiting review'],
+])(
+  'a linked bill renders %s as readable status words',
+  async (status, label) => {
+    const bill = { ...bills.bills[0]!, status };
+    jest
+      .mocked(catalogs.bills)
+      .mockResolvedValue(record({ bills: [bill] }) as never);
+    jest.mocked(records.document).mockResolvedValue(
+      record({
+        ...speech,
+        metadata: { ...speech.metadata, bill_ref: bill.title },
+      }),
+    );
+    const view = await mount(<DocumentReader />);
+    const row = view.root
+      .findAllByType(BillRow)
+      .find((node) => node.props.testID === 'doc-bill-open')!;
+    expect(row.props.status).toBe(label);
+    expect(row.findByType(StatusCapsule).props).toMatchObject({
+      status,
+      label,
+    });
+    expect(textOfId(view, 'doc-bill-open')).toContain(label);
+  },
+);
 
 test('one meta line says the kind and the chamber; the date is in the source line', async () => {
   expect(metaLine(speech, { date: false })).toBe(
@@ -176,22 +218,84 @@ test('the speaker is a person row with their party, opening their profile', asyn
   await act(async () => view.unmount());
 });
 
-test('the record has one source line, holding the original, notes and licence', async () => {
-  const view = await mount(<DocumentReader />);
-  const line = view.root
-    .findAllByType(SourceLine)
-    .find((node) => node.props.testID === 'doc-source')!;
-  expect(line.props).toMatchObject({
-    dateRole: 'recorded',
-    citation: [{ label: 'Hansard', title: 'Hansard' }],
-    licence: 'CC BY-NC-ND',
-    licenceDataset: 'hansard',
-    originals: [expect.objectContaining({ url: speech.url })],
-  });
-  await act(async () => view.unmount());
-});
+test.each([
+  [false, false],
+  [true, false],
+  [false, true],
+  [true, true],
+])(
+  'the record has one source line at the end, holding the original, notes and licence (embedded %s, long text %s)',
+  async (embedded, longText) => {
+    if (longText)
+      jest
+        .mocked(records.document)
+        .mockResolvedValue(record({ ...speech, text: speech.text.repeat(20) }));
+    const view = await mount(<DocumentReader embedded={embedded} />);
+    const line = view.root
+      .findAllByType(SourceLine)
+      .find((node) => node.props.testID === 'doc-source')!;
+    expect(line.props).toMatchObject({
+      dateRole: 'recorded',
+      citation: [{ label: 'Hansard', title: 'Hansard' }],
+      licence: 'CC BY-NC-ND',
+      licenceDataset: 'hansard',
+      originals: [expect.objectContaining({ url: speech.url })],
+    });
+    expect(
+      view.root
+        .findAllByType(SourceLine)
+        .filter((node) => node.props.testID === 'doc-source'),
+    ).toHaveLength(1);
+    expect(view.root.findAllByType(SourceLine).at(-1)).toBe(line);
+    const ids = view.root
+      .findAll((node) => typeof node.type === 'string' && node.props.testID)
+      .map((node) => node.props.testID);
+    expect(ids.indexOf('doc-source')).toBeGreaterThan(
+      ids.indexOf('reader-text-0'),
+    );
+    const target = view.root.find(
+      (node) =>
+        node.props.testID === 'doc-source' &&
+        typeof node.props.onPress === 'function',
+    );
+    expect(target.props.accessibilityLabel).toContain('Hansard');
+    expect(target.props.accessibilityHint).toBe('Opens the sources');
+    await act(async () => target.props.onPress());
+    expect(jest.mocked(router.push).mock.calls.at(-1)![0]).toMatchObject({
+      pathname: '/source',
+    });
+    await act(async () => view.unmount());
+  },
+);
 
-test('an embedded reader draws Ask about this as a row under the source line', async () => {
+test.each([false, true])(
+  'division provenance stays after the vote and text in a narrow pane (embedded %s)',
+  async (embedded) => {
+    const division = doc('/api/resource/division-federal-senate-10701');
+    jest.mocked(records.document).mockResolvedValue(record(division));
+    const view = await mount(
+      <RegionProvider value={{ width: 540, height: 800 }}>
+        <DocumentReader embedded={embedded} />
+      </RegionProvider>,
+    );
+    const lines = view.root.findAllByType(SourceLine);
+    expect(
+      lines.filter((node) => node.props.testID === 'doc-source'),
+    ).toHaveLength(1);
+    expect(lines.at(-1)!.props).toMatchObject({
+      testID: 'doc-source',
+      citation: [expect.objectContaining({ label: 'They Vote For You' })],
+    });
+    const ids = view.root
+      .findAll((node) => typeof node.type === 'string' && node.props.testID)
+      .map((node) => node.props.testID);
+    expect(ids.indexOf('doc-source')).toBeGreaterThan(ids.indexOf('doc-votes'));
+    expect(ids.indexOf('doc-source')).toBeGreaterThan(ids.indexOf('doc-title'));
+    await act(async () => view.unmount());
+  },
+);
+
+test('an embedded reader draws Ask about this in the header', async () => {
   const view = await mount(<DocumentReader embedded />);
   expect(
     view.root.findAllByProps({ testID: 'doc-ask' }).length,
@@ -226,6 +330,41 @@ test('each record kind names its own source and only a verified licence', () => 
   });
   expect(state.licence).toBeUndefined();
 });
+
+test.each(['', '  ', false, -1, 1.5, 'unavailable', null, undefined])(
+  'a division with an invalid count (%j) does not draw a vote split',
+  async (ayes) => {
+    const division = doc('/api/resource/division-federal-senate-10701');
+    jest.mocked(records.document).mockResolvedValue(
+      record({
+        ...division,
+        metadata: { ...division.metadata, ayes_count: ayes, noes_count: 20 },
+      }),
+    );
+    const view = await mount(<DocumentReader />);
+    expect(view.root.findAllByType(VoteSplit).length).toBe(0);
+    await act(async () => view.unmount());
+  },
+);
+
+test.each([0, '0', 42, '42'])(
+  'a division keeps a recorded integer count (%j), including zero',
+  async (ayes) => {
+    const division = doc('/api/resource/division-federal-senate-10701');
+    jest.mocked(records.document).mockResolvedValue(
+      record({
+        ...division,
+        metadata: { ...division.metadata, ayes_count: ayes, noes_count: '20' },
+      }),
+    );
+    const view = await mount(<DocumentReader />);
+    expect(view.root.findByType(VoteSplit).props).toMatchObject({
+      ayes: Number(ayes),
+      noes: 20,
+    });
+    await act(async () => view.unmount());
+  },
+);
 
 const textOfId = (view: TestRenderer.ReactTestRenderer, testID: string) =>
   view.root
@@ -276,6 +415,7 @@ test('bill text opens on its text with the stage, one source line and the bar it
   expect(records.billVersion).toHaveBeenCalledWith(
     'au-federal-r7534',
     'r7534-aspassed',
+    expect.any(AbortSignal),
   );
   expect(view.root.findAllByProps({ testID: 'bill-text-read' })).toHaveLength(
     0,
@@ -295,6 +435,18 @@ test('bill text opens on its text with the stage, one source line and the bar it
     licenceDataset: 'bills',
   });
   expect(source.props.originals).toHaveLength(1);
+  expect(
+    view.root
+      .findAllByType(SourceLine)
+      .filter((node) => node.props.testID === 'bill-text-source'),
+  ).toHaveLength(1);
+  expect(view.root.findAllByType(SourceLine).at(-1)).toBe(source);
+  const ids = view.root
+    .findAll((node) => typeof node.type === 'string' && node.props.testID)
+    .map((node) => node.props.testID);
+  expect(ids.indexOf('bill-text-source')).toBeGreaterThan(
+    ids.indexOf('reader-text-0'),
+  );
   expect(barLabels()).toEqual(['As passed', 'More']);
   expect(
     (mockOptions.unstable_headerRightItems as () => object[])()[0],
@@ -341,10 +493,61 @@ test('bill text opens on its text with the stage, one source line and the bar it
   await act(async () => view.unmount());
 });
 
-test('bill text keeps a named route title before its text loads', async () => {
+test('bill text retains its source at the foot when the version cannot load', async () => {
+  mockBillText();
+  jest.mocked(records.billVersion).mockRejectedValue(new Error('unavailable'));
+  const view = await mount(<BillTextReader embedded />);
+  expect(
+    view.root.findAllByProps({ testID: 'bill-text-version-error' }).length,
+  ).toBeGreaterThan(0);
+  const lines = view.root.findAllByType(SourceLine);
+  expect(
+    lines.filter((line) => line.props.testID === 'bill-text-source'),
+  ).toHaveLength(1);
+  expect(lines.at(-1)!.props).toMatchObject({
+    testID: 'bill-text-source',
+    originals: [expect.objectContaining({ label: 'Original bill document' })],
+  });
+  await act(async () => view.unmount());
+});
+
+test('bill text has no generic title before its text loads', async () => {
   jest.mocked(records.billManifest).mockReturnValue(new Promise(() => {}));
   const view = await mount(<BillTextReader />);
-  expect(mockOptions.title).toBe('Bill text');
+  expect(mockOptions.title).toBe('');
+  await act(async () => view.unmount());
+});
+
+test('Contents announces its pending read and replaces it with the loaded section list', async () => {
+  mockBillText();
+  let finish!: (
+    value: Awaited<ReturnType<typeof records.billManifest>>,
+  ) => void;
+  jest.mocked(records.billManifest).mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  const view = await mount(<BillTextContents />);
+  expect(
+    view.root.findAllByProps({ testID: 'bill-text-contents-loading' }).length,
+  ).toBeGreaterThan(0);
+  await act(async () =>
+    finish(
+      record(
+        decodeBillTextManifest(
+          responses['/bill-texts/au-federal-r7534/index.json'],
+        ),
+      ),
+    ),
+  );
+  expect(
+    view.root.findAllByProps({ testID: 'bill-text-contents-loading' }).length,
+  ).toBe(0);
+  expect(
+    view.root.findAllByProps({ testID: 'bill-text-section-0' }).length,
+  ).toBeGreaterThan(0);
   await act(async () => view.unmount());
 });
 
@@ -411,7 +614,7 @@ test('the reader reveals the short bill name after most of its heading leaves, w
 });
 
 test.each(['Synthetic short bill name', ''])(
-  'bill text shares one non-empty route and inline title when the short title is %j',
+  'bill text uses the actual short title, including an empty one, when it is %j',
   async (shortTitle) => {
     mockBillText();
     jest.mocked(catalogs.billFor).mockResolvedValue(
@@ -421,15 +624,18 @@ test.each(['Synthetic short bill name', ''])(
       }) as never,
     );
     const view = await mount(<BillTextReader />);
-    const expected = shortTitle || 'Bill text';
+    const expected = shortTitle;
     expect(view.root.findByType(RouteOptions).props.options.title).toBe(
       expected,
     );
     expect(mockOptions.title).toBe(expected);
-    expect(
-      (mockOptions.headerTitle as () => React.ReactElement<{ title: string }>)()
-        .props.title,
-    ).toBe(expected);
+    if (expected) {
+      expect(
+        (
+          mockOptions.headerTitle as () => React.ReactElement<{ title: string }>
+        )().props.title,
+      ).toBe(expected);
+    } else expect(mockOptions.headerTitle).toBeUndefined();
     await act(async () => view.unmount());
   },
 );
@@ -452,10 +658,45 @@ test('choosing another version from the bar menu loads it in place', async () =>
   expect(records.billVersion).toHaveBeenLastCalledWith(
     'au-federal-r7534',
     'r7534-first-reps',
+    expect.any(AbortSignal),
   );
   expect(textOfId(view, 'bill-text-stage')).toBe(
     'First reading: synthetic fixture',
   );
+  await act(async () => view.unmount());
+});
+
+test('In short retains the recorded version caveat when the reader changes bill text versions', async () => {
+  mockBillText();
+  const summary = Object.freeze({
+    sentences: Object.freeze(['Fixture summary sentence.']),
+    changes: Object.freeze(['Fixture change.']),
+    attribution: 'Fixture attribution.',
+    describes_version: 'as introduced',
+  });
+  jest.mocked(catalogs.billFor).mockResolvedValue(
+    record({
+      identity: { data: { shortTitle: 'Fixture bill' } },
+      summary: { data: summary },
+    }) as never,
+  );
+  const view = await mount(<BillTextReader />);
+  expect(textOfId(view, 'bill-text-summary-version')).toBe(
+    'Describes the bill as introduced.',
+  );
+  const version = (
+    mockOptions.unstable_headerRightItems as () => {
+      menu: { items: { onPress: () => void }[] };
+    }[]
+  )()[0]!;
+  await act(async () => version.menu.items[1]!.onPress());
+  expect(textOfId(view, 'bill-text-summary-version')).toBe(
+    'Describes the bill as introduced.',
+  );
+  expect(textOfId(view, 'bill-text-summary-text')).toBe(
+    'Fixture summary sentence.',
+  );
+  expect(summary.sentences).toEqual(['Fixture summary sentence.']);
   await act(async () => view.unmount());
 });
 
@@ -640,6 +881,69 @@ test('Just added: a failed first read offers Try again', async () => {
   });
   await act(async () => failure.props.action.onPress());
   expect(records.recent).toHaveBeenCalledTimes(2);
+  await act(async () => view.unmount());
+});
+
+// Repeated pulls each start a read and only the newest answer is kept
+// (recent-record-races.test.tsx owns the race rules); the spinner ends with it.
+test('Just added keeps the newest refresh when pull events repeat before the next render', async () => {
+  let finish!: (value: Awaited<ReturnType<typeof records.recent>>) => void;
+  jest
+    .mocked(records.recent)
+    .mockResolvedValueOnce(record([]))
+    .mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+    );
+  const view = await mount(<RecentRecords />);
+  await act(async () => {
+    const refresh = view.root.findByType(RefreshControl).props.onRefresh;
+    refresh();
+    refresh();
+  });
+  expect(records.recent).toHaveBeenCalledTimes(3);
+  await act(async () => finish(record(decodeRecent(responses['/api/recent']))));
+  expect(view.root.findByType(RefreshControl).props.refreshing).toBe(false);
+  expect(view.root.findAllByType(RecordRow)).toHaveLength(3);
+  await act(async () => view.unmount());
+});
+
+test('Just added explains a failed refresh of an empty feed and lets the reader retry', async () => {
+  jest
+    .mocked(records.recent)
+    .mockResolvedValueOnce(record([]))
+    .mockRejectedValueOnce(new Error('Unavailable'))
+    .mockResolvedValueOnce(record(decodeRecent(responses['/api/recent'])));
+  const view = await mount(<RecentRecords />);
+  await act(async () => view.root.findByType(RefreshControl).props.onRefresh());
+  const error = view.root.find(
+    (node) =>
+      node.props.testID === 'recent-refresh-error' && !!node.props.onRetry,
+  );
+  expect(
+    view.root.findAllByProps({ testID: 'recent-empty' }).length,
+  ).toBeGreaterThan(0);
+  await act(async () => error.props.onRetry());
+  expect(
+    view.root.findAllByProps({ testID: 'recent-refresh-error' }).length,
+  ).toBe(0);
+  expect(view.root.findAllByType(RecordRow)).toHaveLength(3);
+  await act(async () => view.unmount());
+});
+
+test('Just added offline: the saved-copy banner speaks once, with no second refresh error', async () => {
+  jest
+    .mocked(records.recent)
+    .mockResolvedValueOnce(record(decodeRecent(responses['/api/recent'])))
+    .mockRejectedValueOnce(new ApiError('offline', 'Offline'));
+  const view = await mount(<RecentRecords />);
+  await act(async () => view.root.findByType(RefreshControl).props.onRefresh());
+  expect(
+    view.root.findAllByProps({ testID: 'recent-refresh-error' }).length,
+  ).toBe(0);
+  expect(view.root.findAllByType(RecordRow)).toHaveLength(3);
   await act(async () => view.unmount());
 });
 

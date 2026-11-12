@@ -17,6 +17,9 @@ import {
 } from './EmptyResults';
 import { SearchInRows } from './GroupResults';
 import { ResultsHeader } from './ResultsHeader';
+import { useReportSearch } from './ReportResults';
+import type { GroupPage, Read } from './requests';
+import { reportRoute } from '../../navigation/routes/records';
 import { ScopeBar } from './ScopeBar';
 import { SpeechResults, speechRoute } from './SpeechResults';
 import { filtersLine, hasFilters, type SpeechFilters } from './filters';
@@ -112,19 +115,20 @@ export function ResultsView({
   const allList = useSpeechList(q, filters, 'relevance', roster, ALL_RULE);
   const scopeList = useSpeechList(q, filters, sort, roster, SPEECH_RULE);
   const speeches = scope === 'all' ? allList : scopeList;
+  const reports = useReportSearch(q, false, scope === 'all');
   // Each scope loads only when chosen, and only when not already cached.
   const load = speeches.load;
   useEffect(() => {
     if (scope === 'all' || scope === 'speeches') load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scope, q, filtersKeyOf(filters), sort]);
-  const rows = onRows ? paneRows(q, scope, sources, speeches) : [];
+  const rows = onRows ? paneRows(q, scope, sources, speeches, reports) : [];
   const rowsKey = JSON.stringify(rows);
   useEffect(() => {
     onRows?.(rows);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowsKey, onRows]);
-  const header = useHeader(q, scope, sources, speeches);
+  const header = useHeader(q, scope, sources, speeches, reports);
   useAnnounce(scope, q, header.count, header.settled);
   return (
     <Group gap={rhythm.block} testID={`search-results-${scope}`}>
@@ -149,6 +153,7 @@ export function ResultsView({
           roster={roster}
           filters={filters}
           speeches={allList}
+          reports={reports}
           onScope={onScope}
           recover={recover}
           onOpenFilters={onOpenFilters}
@@ -191,6 +196,7 @@ function paneRows(
   scope: Scope,
   sources: SearchSources | null,
   speeches: SpeechList,
+  reports: Read<GroupPage> | null,
 ): PaneRow[] {
   const local: Match[] = !sources
     ? []
@@ -210,6 +216,11 @@ function paneRows(
         : [];
   return [
     ...local.map((match) => (sources ? matchRoute(match, sources) : null)),
+    ...(scope === 'all' && reports?.status === 'ready'
+      ? reports.result.data.results
+          .slice(0, 3)
+          .map((r) => reportRoute(r.slug, r.title))
+      : []),
     ...speechRows.map((row) => speechRoute(row, q)),
   ].flatMap((route) => (route ? [{ route }] : []));
 }
@@ -290,6 +301,7 @@ function useHeader(
   scope: Scope,
   sources: SearchSources | null,
   speeches: SpeechList,
+  reports: Read<GroupPage> | null,
 ) {
   if (scope === 'people' || scope === 'bills') {
     const n = scopeMatches(q, sources, scope).length;
@@ -313,11 +325,17 @@ function useHeader(
   const local = allLocal(q, sources).total;
   const remote = speeches.first?.status === 'ready' ? speeches.total : 0;
   const capped = !!speeches.count?.includes('+');
-  const n = local + remote;
+  const n =
+    local +
+    remote +
+    (reports?.status === 'ready' ? reports.result.data.total : 0);
   const local_ = localSource(sources, ['people', 'electorates', 'bills']);
   const remoteSource = speeches.source;
   return {
-    settled: settled && !!sources,
+    settled:
+      settled &&
+      !!sources &&
+      (!q.trim() || reports?.status === 'ready' || reports?.status === 'error'),
     count: `${formatCount(n)}${capped ? '+' : ''} ${n === 1 && !capped ? 'result' : 'results'}`,
     source:
       remoteSource || local_
@@ -325,11 +343,26 @@ function useHeader(
             ...(local_ ?? {}),
             ...(remoteSource ?? {}),
             citation: [
+              ...(reports?.status === 'ready'
+                ? [
+                    ...new Set(
+                      reports.result.data.results
+                        .map((r) => r.body)
+                        .filter((body): body is string => !!body),
+                    ),
+                  ]
+                : []),
               ...asList(remoteSource?.citation),
               ...asList(local_?.citation),
             ],
             rule: ALL_RULE,
-            notes: remoteSource?.notes ?? [],
+            notes: [
+              ...(remoteSource?.notes ?? []),
+              'Reports retain the order returned by the report catalogue.',
+              reports?.status === 'error'
+                ? 'Reports could not be loaded; the result count is incomplete.'
+                : null,
+            ],
           }
         : null,
   };

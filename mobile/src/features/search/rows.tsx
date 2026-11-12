@@ -338,7 +338,8 @@ function BillMatch({
     <BillRow
       billKey={bill.key}
       title={title}
-      status={bill.status}
+      status={billStatus(bill.status)}
+      rawStatus={bill.status}
       date={bill.introduced}
       meta={bill.portfolio ? { portfolio: bill.portfolio } : undefined}
       href={href}

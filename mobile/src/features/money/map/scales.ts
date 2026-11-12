@@ -24,13 +24,35 @@ export function edgeWidth(amount: number) {
     Math.max(EDGE_FLOOR, EDGE_SCALE * Math.sqrt(Math.max(0, amount))),
   );
 }
+/**
+ * Public money lines are their own, lighter register: the same square-root
+ * law, but a $1bn contract line is six units wide, where $1bn of donations
+ * would be at the cap. Contracts run a hundred times the size of donations,
+ * so on one scale they would bury the donations they sit beside. The legend
+ * states both scales; neither is ever added to the other.
+ */
+export const PUBLIC_EDGE_SCALE = 6 / Math.sqrt(1e9);
+export const PUBLIC_EDGE_CAP = 8;
+export function publicEdgeWidth(amount: number) {
+  return Math.min(
+    PUBLIC_EDGE_CAP,
+    Math.max(EDGE_FLOOR, PUBLIC_EDGE_SCALE * Math.sqrt(Math.max(0, amount))),
+  );
+}
 /** The amount at which a disc leaves the floor. */
 export const nodeFloorAmount = () => (NODE_FLOOR / NODE_SCALE) ** 2;
 /** The amount at which a line reaches the cap. */
 export const edgeCapAmount = () => (EDGE_CAP / EDGE_SCALE) ** 2;
+/** The amount at which a public money line reaches its cap. */
+export const publicEdgeCapAmount = () =>
+  (PUBLIC_EDGE_CAP / PUBLIC_EDGE_SCALE) ** 2;
+/** The donation flow drawn as wide as a public money flow of `amount`. */
+export const publicEdgeEquivalent = (amount: number) =>
+  (publicEdgeWidth(amount) / EDGE_SCALE) ** 2;
 /** Reference amounts the legend draws. */
 export const LEGEND_NODES = [1e6, 1e8, 1e9] as const;
 export const LEGEND_EDGES = [1e6, 1e7, 1e8] as const;
+export const LEGEND_PUBLIC_EDGES = [1e8, 1e9, 1e10] as const;
 
 /** Parties sit at the centre; the public-money hubs share one cluster. */
 export const PARTIES = 'parties';

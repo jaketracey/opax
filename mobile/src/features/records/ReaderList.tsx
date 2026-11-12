@@ -31,19 +31,43 @@ export interface ReaderFind {
 // slices still join to the exact original text; iOS keeps its existing target.
 export const readerChunkTarget = Platform.OS === 'android' ? 600 : 1200;
 
+/** Lowercase matches mapped back to UTF-16 ranges in the untouched source. */
+function textMatches(text: string, needle: string) {
+  const hay = text.toLocaleLowerCase('en-AU');
+  const matches: { start: number; end: number }[] = [];
+  for (
+    let at = hay.indexOf(needle);
+    at >= 0;
+    at = hay.indexOf(needle, at + needle.length)
+  )
+    matches.push({ start: at, end: at + needle.length });
+  if (!matches.length || hay.length === text.length) return matches;
+
+  // For example, İ becomes i + combining dot. Both folded units belong to
+  // the same original character; query length cannot slice the source text.
+  // Lowercase the whole string above to retain contextual forms such as ς.
+  const source: { start: number; end: number }[] = [];
+  let offset = 0;
+  for (const character of text) {
+    const range = { start: offset, end: offset + character.length };
+    const length = character.toLocaleLowerCase('en-AU').length;
+    for (let i = 0; i < length; i++) source.push(range);
+    offset = range.end;
+  }
+  return matches.map(({ start, end }) => ({
+    start: source[start]!.start,
+    end: source[end - 1]!.end,
+  }));
+}
+
 /** Every match of `query` in the parts, in reading order. */
 export function findMatches(parts: readonly ReaderPart[], query: string) {
   const needle = query.trim().toLocaleLowerCase('en-AU');
   const found: { part: number; start: number }[] = [];
   if (!needle) return found;
   parts.forEach((part, index) => {
-    const hay = part.text.toLocaleLowerCase('en-AU');
-    for (
-      let at = hay.indexOf(needle);
-      at >= 0;
-      at = hay.indexOf(needle, at + needle.length)
-    )
-      found.push({ part: index, start: at });
+    for (const match of textMatches(part.text, needle))
+      found.push({ part: index, start: match.start });
   });
   return found;
 }
@@ -57,12 +81,11 @@ function Marked({
   index: number;
   find?: ReaderFind | null;
 }) {
-  const query = find?.query.trim();
+  const query = find?.query.trim().toLocaleLowerCase('en-AU');
   if (!query) return <>{text}</>;
-  const length = query.length;
   const spans: ReactNode[] = [];
   let from = 0;
-  for (const match of findMatches([{ id: '', text }], query)) {
+  for (const match of textMatches(text, query)) {
     const current =
       find?.current?.part === index && find.current.start === match.start;
     spans.push(
@@ -75,10 +98,10 @@ function Marked({
         variant="recordText"
         style={[styles.match, current ? styles.current : null]}
       >
-        {text.slice(match.start, match.start + length)}
+        {text.slice(match.start, match.end)}
       </Text>,
     );
-    from = match.start + length;
+    from = match.end;
   }
   spans.push(<Fragment key="end">{text.slice(from)}</Fragment>);
   return <>{spans}</>;
@@ -107,10 +130,22 @@ export function ReaderList({
   const pending = useRef<number | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reduced = useReduceMotion();
+  const lastJump = useRef<typeof jumpTo>(null);
   // A readable column on iPad, with a split pane's Back first.
   const column = useScreenColumn();
   useEffect(() => {
-    if (!jumpTo) return;
+    if (!jumpTo) {
+      lastJump.current = null;
+      return;
+    }
+    // A motion setting change affects future jumps, never replays the last.
+    if (
+      lastJump.current?.index === jumpTo.index &&
+      lastJump.current.attempt === jumpTo.attempt &&
+      lastJump.current.position === jumpTo.position
+    )
+      return;
+    lastJump.current = jumpTo;
     pending.current = jumpTo.index;
     list.current?.scrollToIndex({
       index: jumpTo.index,

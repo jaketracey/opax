@@ -22,6 +22,7 @@ import {
 import { ApiError } from '../src/api/errors';
 import { catalogs, yearPictures } from '../src/api/runtime';
 import { Card } from '../src/design/card';
+import { copy } from '../src/design/copy';
 import { FigureBlock } from '../src/design/record';
 import { SourceLine, SourceSheet } from '../src/design/source';
 import { bills, pinned, roster, slugs } from './pinned';
@@ -459,6 +460,31 @@ describe('money edition Ask drafts', () => {
 });
 
 describe('the replacement edition card', () => {
+  test('the Sources accessibility action opens the displayed edition with its original documents and saved-copy note', async () => {
+    const { root } = await render(
+      <EditionCard
+        edition={{ ...ready, stale: true, savedAt: 1794000000000 }}
+        today="2026-10-05"
+      />,
+    );
+    const action = root
+      .findByType(Card)
+      .props.accessibilityActions.find(
+        (item: { name: string }) => item.name === 'Sources',
+      );
+    act(() => action.onAction());
+    const route = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+      pathname: string;
+      params?: { key?: string };
+    };
+    expect(route.pathname).toBe('/source');
+    const payload = sheetPayload(route.params?.key, 'source');
+    expect(payload?.details.asOf).toBe(edition.date);
+    expect(payload?.details.originals).toContainEqual(
+      expect.objectContaining({ label: 'Explanatory memorandum' }),
+    );
+    expect(payload?.details.notes).toContain(copy.savedCopyNote(1794000000000));
+  });
   test('one zoom link into the reader, first paragraph only, with a separate source target', async () => {
     const { root } = await render(
       <EditionCard edition={ready} today="2026-10-05" />,
@@ -704,6 +730,12 @@ describe('the native edition reader', () => {
       }),
     );
     expect(mockOnScroll).toHaveBeenCalledWith(240);
+    act(() =>
+      host(root, 'edition-screen')[0]!.props.onScroll({
+        nativeEvent: { contentOffset: { y: -96 } },
+      }),
+    );
+    expect(mockOnScroll).toHaveBeenLastCalledWith(-96);
     expect(root.findByType(Plate).props.onTitleLayout).toBe(mockOnTitleLayout);
   });
   test.each(['ios', 'android'] as const)(

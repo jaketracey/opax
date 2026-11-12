@@ -22,9 +22,18 @@ for n in icon icon-dark icon-tinted; do rsvg-convert -w 1024 -h 1024 $n.svg -o $
 magick icon.png -background '#142A43' -alpha remove -alpha off icon.png
 ```
 
-Android uses separate adaptive layers: `android-foreground` retains the same
-Australia paths in gold, `android-background` is opaque navy, and
-`android-monochrome` supplies an alpha mask for Android 13+ themed icons. The
-foreground is inset to stay inside the adaptive icon's central safe circle;
-the launcher supplies the outer mask. Render their SVGs with the same command.
-These assets affect only Android and still carry the land alone.
+Android uses separate 1024px adaptive layers. `android-foreground` takes the
+Australia and seven refined-ring stars from `icon-dark.svg`, all in gold.
+`android-background` is opaque navy, and `android-monochrome` is the same
+foreground in white for Android 13+ themed icons. The mark is scaled to 75%
+about the centre, keeping every painted pixel inside the central 66/108 safe
+circle (radius 312.89px). The launcher supplies the round or squircle mask.
+Render these three SVGs with the same `rsvg-convert` command above. These
+layers affect only Android; the iOS source art and PNGs are unchanged.
+
+`play-icon-512.png` is the full default star-ring art on opaque navy, without
+a baked-in launcher mask or shadow: 512 × 512, 32-bit RGBA PNG, alpha 255
+everywhere. Re-render it with `rsvg-convert -w 512 -h 512 icon.svg`, then
+encode with `pngjs` (`PNG.sync.write(image, { colorType: 6 })`) to retain
+32-bit colour even though the artwork is opaque. The asset test checks its
+dimensions, colour type and opacity, and the adaptive layers' safe circle.

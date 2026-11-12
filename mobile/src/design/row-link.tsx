@@ -1,3 +1,4 @@
+import { Pressable } from './pressable';
 import {
   cloneElement,
   useEffect,
@@ -8,12 +9,12 @@ import {
 import {
   Alert,
   Platform,
-  Pressable,
   StyleSheet,
   View,
   type PressableProps,
 } from 'react-native';
-import { Link, router, type Href } from 'expo-router';
+import { Link, type Href } from 'expo-router';
+import { useRecordLink } from '../navigation/record-link';
 import { canonicalUrl, openOnWeb } from '../navigation/external';
 import { shareRecord } from '../navigation/share';
 import { copyText } from '../features/records/actions';
@@ -183,6 +184,11 @@ export function RowLink({
   select?: () => void;
 }) {
   const child = children as ReactElement<PressableProps>;
+  const recordLink = useRecordLink(href);
+  const currentRecord = recordLink.isCurrent();
+  // A preview commit navigates independently of Link.onPress. There is no
+  // destination to preview when this very record is already on top.
+  const showPreview = preview && !select && !currentRecord;
   const items = menuSections(menu);
   const leaves = menuLeaves(items);
   const actions = rowAccessibilityActions(items);
@@ -190,7 +196,7 @@ export function RowLink({
     if (child.props.disabled || child.props.accessibilityState?.disabled)
       return;
     if (select) select();
-    else router.push(href);
+    else recordLink.open();
   };
   const accessibility: Pick<
     PressableProps,
@@ -225,10 +231,22 @@ export function RowLink({
         {...child.props}
         {...accessibility}
         onPress={open}
-        onLongPress={leaves.length ? () => showMenu('', leaves) : undefined}
+        onLongPress={
+          leaves.length
+            ? Platform.OS === 'android'
+              ? (event) =>
+                  showMenu('', leaves, {
+                    x: event.nativeEvent.pageX,
+                    y: event.nativeEvent.pageY,
+                    width: 0,
+                    height: 0,
+                  })
+              : () => showMenu('', leaves)
+            : undefined
+        }
       />
     );
-  const hasNativeHost = (preview && !select) || items.length > 0;
+  const hasNativeHost = showPreview || items.length > 0;
   // expo-router 57.0.24 LinkWithPreview hardcodes a zero-frame native host
   // (`display: contents`, disableForceFlatten). iOS omits its whole subtree
   // from accessibility, even with accessible/importantForAccessibility on the
@@ -266,12 +284,15 @@ export function RowLink({
   const link = (
     <Link
       href={href}
+      push={recordLink.push}
       asChild
       onPress={
-        select
+        select || currentRecord
           ? (event) => {
-              event.preventDefault();
-              select();
+              if (select) {
+                event.preventDefault();
+                select();
+              } else if (recordLink.isCurrent()) event.preventDefault();
             }
           : undefined
       }
@@ -279,7 +300,7 @@ export function RowLink({
       <Link.Trigger withAppleZoom={zoom && !select}>
         <RowTrigger row={trigger} />
       </Link.Trigger>
-      {preview && !select ? <Link.Preview /> : null}
+      {showPreview ? <Link.Preview /> : null}
       {items.length ? <Link.Menu>{nativeItems(items)}</Link.Menu> : null}
     </Link>
   );

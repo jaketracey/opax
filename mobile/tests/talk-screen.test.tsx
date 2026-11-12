@@ -1,16 +1,24 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { BackHandler } from 'react-native';
+import { useFocusEffect } from 'expo-router';
+import { usePreventRemove } from 'expo-router/react-navigation';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Button, IconButton, Text } from '../src/design/primitives';
 import TalkScreen from '../src/features/talk/TalkScreen';
 import { emptySnapshot } from '../src/features/talk/model';
-import type { VoiceSnapshot, VoiceStatus } from '../src/voice';
+import type { VoiceFailure, VoiceSnapshot, VoiceStatus } from '../src/voice';
 
 // Design pass 4D: Talk stays minimal and calm. The orb is the only motion
 // (the native canvas is left out here), one plain status line sits under it,
 // the call controls are the shared round IconButton, and nothing starts a
 // call but Start.
 jest.mock('../src/features/talk/VoiceOrb', () => ({ VoiceOrb: () => null }));
+jest.mock('expo-router/react-navigation', () => ({
+  ...jest.requireActual('expo-router/react-navigation'),
+  usePreventRemove: jest.fn(),
+  useNavigation: jest.fn(() => ({ dispatch: jest.fn() })),
+}));
 jest.mock('../src/features/talk/useVoiceLevels', () => ({
   useVoiceLevels: () => ({}),
 }));
@@ -50,7 +58,7 @@ function call(snapshot: Partial<VoiceSnapshot>, active = false) {
     snapshot: { ...emptySnapshot, ...snapshot },
     consent: true,
     consentLoaded: true,
-    error: null,
+    error: null as VoiceFailure | null,
     terminal: null,
     busy: false,
     active,
@@ -104,6 +112,23 @@ test('idle and signed in: Start is the one primary action, and nothing starts by
   expect(mockCall.agreeAndStart).not.toHaveBeenCalled();
   // Ready needs no line: Start says it.
   expect(line(renderer, 'talk-state')).toBeUndefined();
+});
+
+test('iOS keeps native Back handling while Talk is focused during a call', () => {
+  mockCall = call({ state: 'live', mode: 'listening', status: status() }, true);
+  const back = jest.spyOn(BackHandler, 'addEventListener');
+  try {
+    render();
+    let blur: void | (() => void);
+    act(() => {
+      blur = jest.mocked(useFocusEffect).mock.lastCall![0]();
+    });
+    expect(blur).toBeUndefined();
+    expect(back).not.toHaveBeenCalled();
+    expect(usePreventRemove).not.toHaveBeenCalled();
+  } finally {
+    back.mockRestore();
+  }
 });
 
 test('while voice is checked, the status says so and Start waits with a spinner', () => {
@@ -187,6 +212,25 @@ test('signed out, the free minutes line sits under its one action', () => {
       .filter((node) => node.props.variant === 'primary')
       .map((node) => node.props.testID),
   ).toEqual(['talk-sign-in']);
+});
+
+test('an expired session without a status payload still offers Sign in', () => {
+  mockCall = { ...call({ state: 'failed', status: null }), error: 'signedOut' };
+  const renderer = render();
+  expect(
+    renderer.root.findAllByType(Button).map((node) => node.props.testID),
+  ).toContain('talk-sign-in');
+  expect(
+    renderer.root.findAllByType(Button).map((node) => node.props.testID),
+  ).not.toContain('talk-start');
+  expect(line(renderer, 'talk-free-minutes')?.props.children).toBe(
+    'Talk needs a free OPAX account.',
+  );
+  expect(
+    renderer.root.findByProps({ testID: 'talk-status' }).props
+      .accessibilityLabel,
+  ).toBe('Talk needs a free OPAX account.');
+  expect(mockCall.start).not.toHaveBeenCalled();
 });
 
 // A sign-in that started from Talk (specs/account.md 1.5, 5.8 item 6): once
