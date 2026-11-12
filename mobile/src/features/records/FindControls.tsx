@@ -26,7 +26,9 @@ export function FindControls({
         accessibilityLiveRegion="polite"
         testID="doc-find-status"
       >
-        {`Match ${total ? current + 1 : 0} of ${total} for ${query}`}
+        {total
+          ? `Match ${current + 1} of ${total} for ${query}`
+          : `No matches for ${query}`}
       </Text>
       <View style={styles.actions}>
         {[
