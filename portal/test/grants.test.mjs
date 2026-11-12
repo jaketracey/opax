@@ -300,3 +300,13 @@ test('vacant-seat dollars leave the government share, and no held-seat dollars m
   const rows = bucketRows({ gov: [100, 1], opp: [0, 0], cross: [300, 1], vacant: [900, 1], unknown: [0, 0] }, SEAT_BLOCS)
   assert.equal(rows.find(r => r.key === 'vacant').label, 'Vacant seat')
 })
+
+test('the recipient file panel reads no variable from the program view (renderDetail scope)', () => {
+  const source = readFileSync(new URL('../public/grants.js', import.meta.url), 'utf8')
+  const start = source.indexOf('  function renderDetail (')
+  assert.ok(start > 0)
+  const body = source.slice(start, source.indexOf('\n  function ', start + 1))
+  // coreActive belongs to renderProgramDetail; using it here throws when a recipient file opens.
+  if (/\bcoreActive\b/.test(body)) assert.match(body, /\b(?:const|let|var)\s+coreActive\b/)
+  assert.match(body, /td\.appendChild\(tiles\)/)
+})

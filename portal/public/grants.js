@@ -1383,7 +1383,7 @@ export function mountGrants (container, opts = {}) {
       const top = Object.entries(d.sel).sort((a, b) => b[1] - a[1])[0]
       if (top) tiles.append(tile(`${Math.round(top[1] / d.t * 100)}%`, `${top[0].toLowerCase()} (selection process where recorded)`))
     }
-    if (!coreActive) td.appendChild(tiles)
+    td.appendChild(tiles)
 
     const cols = el('div', 'gr-cols')
     // left: grants
