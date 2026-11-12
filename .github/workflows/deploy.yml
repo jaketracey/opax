@@ -1,13 +1,15 @@
 # Deploy the portal Worker to production.
 #
 # Starts when:
-#   * a push to main changes anything the Worker is built from: portal/, scripts/ (hub data
-#     and build scripts), or the locked Python dependencies. That covers the nightly refresh
-#     (it always changes portal/public/corpus.json) and every merged portal or data PR, so a
-#     merge no longer waits for someone to remember a hand-started run (12 Nov 2026: merges
-#     #293 and #296 both needed one); or
+#   * a push to main changes what the Worker is built from: portal/ (except its tests and
+#     markdown), scripts/ (hub data and build scripts), the Python version and lock, the ACT
+#     invoice release, the ingest user agent and the design tokens (the list under `paths`).
+#     That covers the nightly refresh (it always changes portal/public/corpus.json) and every
+#     merged portal or data PR, so a merge no longer waits for someone to remember a
+#     hand-started run (12 Nov 2026: merges #293 and #296 both needed one); or
 #   * someone runs it by hand (Actions > Deploy > Run workflow, or `gh workflow run deploy.yml`).
-# Pushes that only touch the apps (mobile/), docs or tooling do not deploy. Never triggered by
+# Pushes that only touch docs, tests, tooling or the Python ingest code (parli/, enrich/, tools/)
+# do not deploy. Never triggered by
 # pull_request: this repository is public and the job holds the Cloudflare deploy token.
 # Several merges close together queue in the deploy-production group below; the first step
 # skips a run when main's head is already deployed or deploying, so they collapse to one deploy.
@@ -36,6 +38,13 @@ on:
       - scripts/**
       - pyproject.toml
       - uv.lock
+      - .python-version
+      - data/promoted/act-invoices/**
+      - data/staged/act-invoices/review.json
+      - parli/ingest/user-agent.json
+      - docs/design/design-tokens.json
+      - '!portal/test/**'
+      - '!**/*.md'
   workflow_dispatch:
     inputs:
       skip_tests:

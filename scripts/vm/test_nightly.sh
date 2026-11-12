@@ -622,13 +622,13 @@ check "origin untouched" test "$(git --git-dir="$ORIGIN" log --format=%s main | 
 check "local commit made" bash -c "git -C '$REPO' log --format=%s | head -1 | grep -q '^Nightly refresh'"
 check "no status branch" bash -c "! git --git-dir='$ORIGIN' rev-parse --verify -q nightly-status"
 
-echo "== 9. the manifest step fails: bills still pushed, but with no corpus.json change the deploy would not start, so it says so"
+echo "== 9. the manifest step fails: bills still pushed without a corpus.json change, and the portal/ change still starts the deploy"
 new_sandbox s9
 OPAX_KB_SNAPSHOT=/nonexistent/kb.json FAKE_MODE=ok nightly
 check "exit 1" test "$NRC" -eq 1
 check "bills and votes pushed" bash -c "git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q 'New Member'"
 check "corpus.json untouched" bash -c "! git --git-dir='$ORIGIN' diff --name-only main~1 main | grep -q corpus.json"
-check "status lists both problems" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'update_corpus_manifest.py failed' && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'deploy workflow did not start'"
+check "status lists the manifest failure only" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'update_corpus_manifest.py failed' && ! git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'deploy workflow did not start'"
 
 echo "== 10. the push is refused, then works: the local commit survives and goes out on the next run"
 new_sandbox s10
