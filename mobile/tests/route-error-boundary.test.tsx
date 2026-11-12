@@ -2,9 +2,12 @@ import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Try } from 'expo-router/build/views/Try';
-import { RouteErrorBoundary, routeErrorCopy } from '../src/design/route-error';
+import { routeErrorCopy } from '../src/design/route-error';
+import { RouteErrorBoundary } from '../src/navigation/RouteErrorBoundary';
 import * as rootLayout from '../src/app/_layout';
 import * as tabLayout from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/_layout';
+
+jest.mock('../src/analytics', () => ({ useRouteErrorReporting: jest.fn() }));
 
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
 jest.mock('../src/navigation/KeyboardShortcuts', () => ({

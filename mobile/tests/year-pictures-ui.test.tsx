@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- jest.mock factories build inert host elements. */
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Image, Text as NativeText } from 'react-native';
+import { Image, Platform, StyleSheet, Text as NativeText } from 'react-native';
+import { colors } from '../src/design/tokens';
 import { router } from 'expo-router';
 import { Button, InlineError } from '../src/design/primitives';
 import { Picture } from '../src/features/explore/Picture';
@@ -361,3 +362,46 @@ test('a failed archive image keeps its caption and credit without an error overl
   expect(frame.props.style.aspectRatio).toBe(4 / 3);
   act(() => renderer.unmount());
 });
+
+test.each(['ios', 'android'])(
+  'a failed full-screen photo is readable on %s and retries locally',
+  async (os) => {
+    const original = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
+    Object.defineProperty(Platform, 'OS', { configurable: true, value: os });
+    let renderer: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      await act(async () => {
+        renderer = TestRenderer.create(
+          <Picture
+            file={manifest['2025']![0]!.file}
+            ground="black"
+            failure="inline"
+          />,
+        );
+      });
+      act(() => renderer!.root.findByType(Image).props.onError());
+      if (os === 'ios') {
+        expect(renderer!.root.findAllByType(InlineError)).toHaveLength(1);
+      } else {
+        expect(renderer!.root.findAllByType(InlineError)).toHaveLength(0);
+        const retry = renderer!.root.findAll(
+          (n) =>
+            n.props.accessibilityLabel === 'Try again' &&
+            typeof n.props.onPress === 'function',
+        )[0]!;
+        expect(StyleSheet.flatten(retry.props.style).minHeight).toBe(48);
+        expect(
+          StyleSheet.flatten(retry.findByType(NativeText).props.style).color,
+        ).toBe(colors.onBand);
+        await act(async () => retry.props.onPress());
+        expect(yearPictures.get).toHaveBeenLastCalledWith(
+          '2025-cooper-polling-place',
+          true,
+        );
+      }
+    } finally {
+      if (renderer) act(() => renderer!.unmount());
+      Object.defineProperty(Platform, 'OS', original);
+    }
+  },
+);

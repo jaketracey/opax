@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { AppState } from 'react-native';
+import { AppState, Platform } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import * as voice from '../../voice';
 import type { EndReason, VoiceFailure } from '../../voice';
@@ -43,6 +43,7 @@ export function useTalk() {
   const askingMicrophone = useRef(false);
   const mounted = useRef(false);
   const focusGeneration = useRef(0);
+  const focusRead = useRef<Promise<void>>(Promise.resolve());
   const sequence = useRef(0);
   const revisions = useRef<Partial<Record<keyof TalkSnapshot, number>>>({});
   const set = useCallback((value: TalkSnapshot) => {
@@ -115,7 +116,7 @@ export function useTalk() {
       const generation = ++focusGeneration.current;
       const calling = isCallActive(current.current.state);
       if (!calling) setMicrophone(null);
-      void (async () => {
+      focusRead.current = (async () => {
         if (!calling) {
           await refresh();
           if (!mounted.current || generation !== focusGeneration.current)
@@ -147,10 +148,23 @@ export function useTalk() {
       if (state === 'background') void uiBridge.background();
       if (returning)
         void (async () => {
+          // Settings can revoke access while this screen remains mounted.
+          // Stop before recovering a live snapshot; returning never restarts it.
+          const checkMicrophone = asksForMicrophone();
+          let revoked = false;
+          if (checkMicrophone) {
+            revoked = !(await microphoneGranted());
+            if (!mounted.current) return;
+            if (revoked && isCallActive(current.current.state)) {
+              await voice.end();
+              if (!mounted.current) return;
+              setMicrophone(microphoneBlocked() ? 'blocked' : 'denied');
+            }
+          }
           await refresh();
           await recover();
           // Back from Settings: access turned on clears the refusal.
-          if (asksForMicrophone() && (await microphoneGranted()))
+          if (checkMicrophone && !revoked && mounted.current)
             setMicrophone((step) => (step === 'rationale' ? step : null));
         })();
       // A brief inactive state (Control Centre) leaves the call alone.
@@ -197,6 +211,11 @@ export function useTalk() {
   /** The rationale's Continue: the system dialog, then the call if allowed. */
   async function allowMicrophone() {
     if (askingMicrophone.current || dispatching.current) return;
+    if (asksForMicrophone() && (!consent || !consentLoaded)) {
+      setMicrophone(null);
+      setError('consentRequired');
+      return;
+    }
     const generation = focusGeneration.current;
     askingMicrophone.current = true;
     setBusy(true);
@@ -220,6 +239,7 @@ export function useTalk() {
     const stored = await uiBridge.setConsent(granted);
     if (mounted.current) {
       showConsent(stored && granted);
+      if (stored && !granted && asksForMicrophone()) setMicrophone(null);
       if (!stored) setError('unavailable');
       setBusy(false);
     }
@@ -229,6 +249,9 @@ export function useTalk() {
   async function startConsented() {
     showConsent(true);
     setConsentLoaded(true);
+    // Refocusing from Android's consent route also starts a status read.
+    // Kotlin refuses Start while that read is in flight.
+    if (Platform.OS === 'android') await focusRead.current;
     if (!mounted.current || AppState.currentState === 'background') return;
     await begin();
   }

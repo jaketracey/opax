@@ -1,4 +1,5 @@
 import { RouteOptions } from '../../navigation/preview';
+import { useScreenReady } from '../../analytics/timing';
 import { Host, Menu, Button as SwiftButton } from '@expo/ui/swift-ui';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
@@ -199,6 +200,7 @@ export default function BillDetail({
     [key],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
+  useScreenReady('/bill/[key]', !!record || !!error, !embedded);
   const [directory, setDirectory] = useState<SponsorDirectory | null>();
   const view = record?.data;
   const identity = view?.identity.data ?? null;
@@ -517,7 +519,13 @@ function BillToolbar({
   canShare: boolean;
 }) {
   return (
-    <SafeAreaView edges={['bottom']} style={styles.toolbar}>
+    <SafeAreaView
+      edges={['bottom']}
+      style={[
+        styles.toolbar,
+        Platform.OS === 'android' ? styles.androidToolbar : null,
+      ]}
+    >
       <Button
         label="Ask about this bill"
         onPress={onAsk}
@@ -2078,4 +2086,5 @@ const styles = StyleSheet.create({
     paddingTop: rhythm.tight,
     backgroundColor: colors.paper,
   },
+  androidToolbar: { flexWrap: 'wrap', gap: rhythm.tight },
 });

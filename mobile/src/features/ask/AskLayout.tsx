@@ -31,6 +31,7 @@ export function AskColumns({
   dock,
   sources,
   keyboard,
+  keyboardVisible = keyboard > 0,
   ground,
 }: {
   docked: boolean;
@@ -38,6 +39,7 @@ export function AskColumns({
   dock: ReactNode;
   sources: ReactNode;
   keyboard: number;
+  keyboardVisible?: boolean;
   ground: Role;
 }) {
   const region = useLayout();
@@ -61,7 +63,7 @@ export function AskColumns({
           edges={
             docked
               ? []
-              : keyboard
+              : keyboardVisible
                 ? ['left', 'right']
                 : ['left', 'right', 'bottom']
           }
@@ -76,6 +78,7 @@ export function AskColumns({
             <ComposerPosition
               docked={docked}
               keyboard={keyboard}
+              keyboardVisible={keyboardVisible}
               ground={ground}
             >
               {dock}
@@ -100,11 +103,13 @@ export function AskColumns({
 function ComposerPosition({
   docked,
   keyboard,
+  keyboardVisible,
   ground,
   children,
 }: {
   docked: boolean;
   keyboard: number;
+  keyboardVisible: boolean;
   ground: Role;
   children: ReactNode;
 }) {
@@ -147,6 +152,7 @@ function ComposerPosition({
       >
         <PhoneDock
           keyboard={keyboard}
+          keyboardVisible={keyboardVisible}
           ground={ground}
           docked={docked}
           positioned
@@ -161,12 +167,14 @@ function ComposerPosition({
 /** The same dock band changes its placement without replacing the input. */
 export function PhoneDock({
   keyboard,
+  keyboardVisible = keyboard > 0,
   ground,
   children,
   docked = false,
   positioned = false,
 }: {
   keyboard: number;
+  keyboardVisible?: boolean;
   ground: Role;
   children: ReactNode;
   docked?: boolean;
@@ -175,7 +183,7 @@ export function PhoneDock({
   const margin = useScreenMargin();
   return (
     <SafeAreaView
-      edges={positioned || keyboard ? [] : ['bottom']}
+      edges={positioned || keyboardVisible ? [] : ['bottom']}
       mode="padding"
       pointerEvents="box-none"
       style={[
@@ -183,7 +191,7 @@ export function PhoneDock({
         docked
           ? { borderTopWidth: hairline, borderTopColor: colors.dividerDefault }
           : null,
-        keyboard || docked
+        keyboardVisible || docked
           ? {
               paddingBottom: positioned ? 0 : keyboard,
               paddingTop: rhythm.tight,

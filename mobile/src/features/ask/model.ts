@@ -71,6 +71,8 @@ export type Answer = {
   pay_answer?: boolean;
   pay_next?: { label: string; href: string }[];
   suggested_question?: string;
+  /** The actual scope used by the Worker, including inferred filters. */
+  scope?: Partial<AskOptions>;
   /** Calculated answers: the date the data was current (ISO date or "2024-25"). */
   data_as_at?: string;
   /** The Worker's flag for model-written text in a calculated answer. */
@@ -89,6 +91,10 @@ export type AnswerFigure = {
   source?: string;
   path?: string;
 };
+/** Status describes the answer's limits; only blank text means no answer. */
+export function isNoAnswer(data: Pick<Answer, 'answer' | 'answer_status'>) {
+  return !data.answer.trim();
+}
 export type Turn = {
   role: 'user' | 'answer';
   text: string;
@@ -171,6 +177,17 @@ export function decodeAnswer(raw: unknown): Answer {
     citations,
     sources,
   };
+  if (v.scope && typeof v.scope === 'object' && !Array.isArray(v.scope)) {
+    const scope = object(v.scope);
+    const decoded = decodeOptions(scope);
+    out.scope = Object.fromEntries(
+      Object.entries(decoded).filter(([key]) =>
+        key === 'kind'
+          ? ['all', 'speech'].includes(str(scope.kind))
+          : typeof scope[key] === 'string',
+      ),
+    );
+  }
   for (const k of [
     'asked_as',
     'answer_status',
@@ -532,6 +549,8 @@ export function syncBody(c: Chat) {
         ...(result
           ? {
               answer_status: result.answer_status,
+              scope: result.scope,
+              suggested_question: result.suggested_question,
               money_ranking: result.money_ranking,
               money_context: result.money_context,
               money_overview: result.money_overview,

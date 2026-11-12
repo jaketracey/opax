@@ -11,6 +11,8 @@ export type AskStep = {
   state: 'running' | 'done' | 'failed' | 'error';
 };
 export type StreamHandlers = {
+  /** A parsed stage/step or answer token, never a raw chunk or keep-alive. */
+  progress?: () => void;
   stage: (stage: AskStage) => void;
   step?: (step: AskStep) => void;
   delta: (text: string) => void;
@@ -39,6 +41,12 @@ function parseStep(value: unknown): AskStep | null {
     state: state as AskStep['state'],
   };
 }
+export type AskReason =
+  | 'stall'
+  | 'deadline'
+  | 'network'
+  | 'server'
+  | 'no_answer';
 export class AskFailure extends Error {
   constructor(
     public code:
@@ -51,6 +59,15 @@ export class AskFailure extends Error {
       | 'cancelled'
       | 'invalid',
     message: string,
+    public reason: AskReason | undefined = code === 'cancelled'
+      ? undefined
+      : code === 'offline'
+        ? 'network'
+        : code === 'timeout'
+          ? 'stall'
+          : code === 'empty'
+            ? 'no_answer'
+            : 'server',
   ) {
     super(message);
   }
@@ -104,7 +121,10 @@ export class AskStream {
         'The answer stream failed.',
       );
     else if (event === 'delta' && typeof v.text === 'string') {
-      if (v.text) this.shown = true;
+      if (v.text.trim()) {
+        this.shown = true;
+        this.on.progress?.();
+      }
       this.on.delta(v.text);
     } else if (event === 'retry') {
       this.shown = false;
@@ -113,14 +133,21 @@ export class AskStream {
     } else if (event === 'status') {
       if (v.phase === 'step') {
         const step = parseStep(v.step);
-        if (step) this.on.step?.(step);
-      } else if (v.phase === 'searching') this.on.stage('Searching the record');
-      else if (
+        if (step) {
+          this.on.progress?.();
+          this.on.step?.(step);
+        }
+      } else if (v.phase === 'searching') {
+        this.on.progress?.();
+        this.on.stage('Searching the record');
+      } else if (
         v.phase === 'retrieved' ||
         v.phase === 'writing' ||
         v.phase === 'reading'
-      )
+      ) {
+        this.on.progress?.();
         this.on.stage('Writing the answer');
+      }
       if (v.phase === 'retrieved' && Array.isArray(v.sources))
         this.on.reading?.(v.sources.length);
     }

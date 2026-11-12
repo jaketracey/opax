@@ -1,0 +1,7 @@
+appId: au.com.opax.app
+name: Android Search key exposes results
+---
+- extendedWaitUntil:
+    visible:
+      id: search-count
+    timeout: 30000

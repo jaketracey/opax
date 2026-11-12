@@ -53,6 +53,7 @@ import { leadEvidenceFor } from '../features/leads/model';
 import { canonicalUrl } from '../navigation/external';
 import { shareRecord } from '../navigation/share';
 import { voiceLinked } from '../voice/linked';
+import { AndroidControls } from './AndroidControls';
 import { TalkOrbs } from './TalkOrbs';
 
 // Searched for by the release bundle scan: it must never appear in production.
@@ -342,6 +343,12 @@ export default function Workbench() {
           ) : null}
         </View>
       </Block>
+
+      {Platform.OS === 'android' ? (
+        <Block id="android-controls" title="Android controls">
+          <AndroidControls />
+        </Block>
+      ) : null}
 
       <Block id="segmented" title="Segmented control">
         <SegmentedControl
