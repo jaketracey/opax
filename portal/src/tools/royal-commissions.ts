@@ -54,7 +54,7 @@ function summaryOut(c: RecordRow): RecordRow {
 function summaryCite(env: ToolEnv, c: RecordRow): ToolCitation {
   const counts = object(c.counts)
   const parts = [dated('established', c.established), dated('interim report', c.interim_report_date), dated('final report', c.final_report_date)].filter(Boolean)
-  const loaded = counts.recommendations ? `${counts.recommendations} numbered recommendations loaded${counts.with_status ? `, ${counts.with_status} with a government-published status` : ''}` : c.recommendations_status === 'no_report' ? 'No report published or loaded' : 'Recommendations not loaded'
+  const loaded = counts.recommendations ? `${counts.recommendations} recommendations loaded${counts.with_status ? `, ${counts.with_status} with a government-published status` : ''}` : c.recommendations_status === 'no_report' ? 'No report published or loaded' : 'Recommendations not loaded'
   return { kind: 'record', url: siteUrl(env, String(c.file)), text: clip(`${c.name} (${TYPES[String(c.inquiry_type)] ?? 'inquiry'}, ${c.jurisdiction_name})${parts.length ? ': ' + parts.join(', ') : ''}. ${loaded}; ${counts.responses ?? 0} government response or implementation documents listed${counts.transcripts ? `; ${counts.transcripts} hearing transcripts listed as documents (evidence, not findings)` : ''}${counts.court_context ? '; a court has ruled on parts of a report (see the profile\'s court_context)' : ''}.`, 600) }
 }
 
@@ -101,22 +101,22 @@ function transcriptCite(t: RecordRow): ToolCitation {
 function recOut(c: RecordRow, r: RecordRow, reports: Map<string, RecordRow>): RecordRow {
   const report = reports.get(String(r.report)) ?? {}, cite = object(r.cite), status = r.status ? object(r.status) : null
   const court = courtFor(c, r.report)
-  return { commission: c.name, commission_id: c.id, number: r.number, report: report.title ?? r.report, report_kind: report.kind ?? null, report_date: report.date ?? null,
+  return { commission: c.name, commission_id: c.id, number: r.number ?? null, ...(r.number == null && r.label ? { label: r.label } : {}), report: report.title ?? r.report, report_kind: report.kind ?? null, report_date: report.date ?? null,
     ...(court.length ? { court_context: court } : {}),
     text: r.text, source_url: sourceUrl(cite.url), page: cite.page ?? null,
     status: status ? { as_published: status.as_published, lead: status.lead ?? null, updated: status.updated ?? null, source_url: sourceUrl(object(status.cite).url) } : null,
-    follow_up: { view: 'recommendations', commission: c.id, number: r.number, report: r.report } }
+    follow_up: { view: 'recommendations', commission: c.id, ...(r.number != null ? { number: r.number } : {}), report: r.report } }
 }
 
 function recCite(r: RecordRow): ToolCitation {
   const status = object(r.status)
   const court = records(r.court_context).map(x => x.text).join(' ')
-  return { kind: 'record', url: String(r.source_url), text: clip(`${r.commission}, ${r.report}, recommendation ${r.number} (page ${r.page}): "${r.text}"${r.status ? ` Government-published status: ${status.as_published}${status.updated ? ' (updated ' + status.updated + ')' : ''}.` : ''}${court ? ` Court context: ${court}` : ''}`, court ? 1600 : 900) }
+  return { kind: 'record', url: String(r.source_url), text: clip(`${r.commission}, ${r.report}, ${r.number != null ? `recommendation ${r.number}` : `unnumbered recommendation "${r.label}"`} (page ${r.page}): "${r.text}"${r.status ? ` Government-published status: ${status.as_published}${status.updated ? ' (updated ' + status.updated + ')' : ''}.` : ''}${court ? ` Court context: ${court}` : ''}`, court ? 1600 : 900) }
 }
 
 export const tool: ToolDefinition = {
   name: 'royal_commissions',
-  description: 'Royal commissions and similar public inquiries in every jurisdiction: establishment date, commissioners, report dates and links, numbered recommendations in the commission\'s own words with the report page, official implementation status where a government publishes one (Victoria\'s Family Violence tracker), government responses, hearing transcripts (evidence, not findings), and court rulings on parts of a report. view=list lists commissions (jurisdiction or name words); view=profile gives one commission\'s reports, responses, transcript count, court context and facts; view=transcripts pages one commission\'s transcripts newest first (words match title, date or text for Robodebt, Antisemitism, NSW Healthcare); view=recommendations searches recommendation text (words, number, status, report) in one commission or all. Status is unknown unless a government publishes it.',
+  description: 'Royal commissions and similar public inquiries in every jurisdiction: establishment date, commissioners, report dates and links, recommendations in the commission\'s own words with the report page (numbered as the report numbers them), official implementation status where a government publishes one (Victoria\'s Family Violence tracker), government responses, hearing transcripts (evidence, not findings), and court rulings on parts of a report. view=list lists commissions (jurisdiction or name words); view=profile gives one commission\'s reports, responses, transcript count, court context and facts; view=transcripts pages one commission\'s transcripts newest first (words match title, date or text for Robodebt, Antisemitism, NSW Healthcare); view=recommendations searches recommendation text (words, number, status, report) in one commission or all. Status is unknown unless a government publishes it.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     view: { type: 'string', enum: [...VIEWS] },
     commission: { type: 'string', minLength: 2, maxLength: 160, description: 'Commission id from a row or words in its name, e.g. "family violence", "disability".' },
@@ -217,9 +217,10 @@ export const tool: ToolDefinition = {
     // For one commission the count states its loaded total, so "how many recommendations" is answered by the
     // commission's own numbering, not by the number of rows a filter matched.
     const loaded = single ? records(single.recommendations).length : 0
+    const unnumbered = single ? records(single.recommendations).filter(r => r.number == null).length : 0
     const filtered = ['words', 'number', 'report', 'status'].some(k => args[k] !== undefined)
     const countText = single
-      ? `${single.name}: ${loaded} numbered recommendations loaded from its published report${records(single.reports).length > 1 ? 's' : ''}${filtered ? `; ${hits.length} match ${scope}` : ''} (OPAX projection, snapshot ${snapshot}).`
+      ? `${single.name}: ${unnumbered ? `${loaded} recommendations (${loaded - unnumbered} numbered, ${unnumbered} printed without a number)` : `${loaded} numbered recommendations`} loaded from its published report${records(single.reports).length > 1 ? 's' : ''}${filtered ? `; ${hits.length} match ${scope}` : ''} (OPAX projection, snapshot ${snapshot}).`
       : `${hits.length} recommendations match ${scope} in the published royal commissions projection (snapshot ${snapshot}).`
     const countNotes = single && Array.isArray(single.notes) ? (single.notes as unknown[]).map(String).filter(n => /\brecommendations?\b/i.test(String(n))).slice(0, 2) : []
     return publishedResult(picked, [{ kind: 'count', url: single ? siteUrl(env, String(pool[0].file)) : ix.url, text: countText },

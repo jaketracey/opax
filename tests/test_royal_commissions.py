@@ -232,3 +232,26 @@ def test_registry_transcripts_are_manual_dated_and_carry_rights():
         assert d["source"] == "manual" and len(d["sha256"]) == 64
         assert d["date_quote"] and d["date_page"] == 1 and d["rights"]
         assert "(PDF" not in d["title"] and not d["title"].lower().startswith("download")
+
+
+def test_unnumbered_recommendation_is_verbatim_labelled_and_counted(tmp_path):
+    pdf_url = rc.PV + "/abc123/globalassets/tabled-paper-documents/tabled-paper-100/final.pdf"
+    detail = f'<main><h1>Final report</h1><a href="{pdf_url}">PDF</a></main>'
+    run = write_run(tmp_path, pdf_url, detail)
+    extra = {"heading": "Chapter 2 Background", "section": "Closing observations", "page": 2,
+             "text": "The commission heard from many witnesses."}
+    entry = {**registry_entry(3), "tracker": None}
+    entry["documents"][0]["recommendations"].update({"unnumbered": [extra], "stated_total": 4})
+    out = rc.build_commission(entry, run, rc.Texts(tmp_path), {})
+    assert [r["number"] for r in out["recommendations"]] == ["1", "2", "3", None]
+    last = out["recommendations"][-1]
+    assert last["label"] == "Chapter 2 Background" and last["text"] == extra["text"]
+    assert last["cite"] == {"url": pdf_url, "document": "Final report", "page": 2, "section": "Closing observations"}
+    assert out["reports"][0]["recommendations"] == 4
+    # Text that is not on the cited page, or a total that does not match the report's own, holds the build.
+    for change in ({"unnumbered": [{**extra, "text": "Words the report does not print."}]}, {"stated_total": 5}):
+        held = {**registry_entry(3), "tracker": None}
+        held["documents"][0]["recommendations"].update({"unnumbered": [extra], "stated_total": 4, **change})
+        with pytest.raises(SystemExit) as e:
+            rc.build_commission(held, run, rc.Texts(tmp_path), {})
+        assert e.value.code == 3

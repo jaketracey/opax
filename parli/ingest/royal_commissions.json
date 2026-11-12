@@ -1038,7 +1038,16 @@
       "first_page": 19,
       "last_page": 32,
       "title_size": 11.2,
-      "heading_size": 11.2
+      "heading_size": 11.2,
+      "stated_total": 57,
+      "unnumbered": [
+       {
+        "heading": "Section 34 of the Cth FOI Act should be repealed",
+        "section": "Closing observations",
+        "page": 27,
+        "text": "The Commonwealth Cabinet Handbook should be amended so that the description of a document as a Cabinet document is no longer itself justification for maintaining the confidentiality of the document. The amendment should make clear that confidentiality should only be maintained over any Cabinet documents or parts of Cabinet documents where it is reasonably justified for an identifiable public interest reason."
+       }
+      ]
      }
     },
     {
@@ -1860,7 +1869,7 @@
     }
    ],
    "notes": [
-    "The report's list of recommendations (page 19) refers to 57 recommendations; 56 are numbered there. The other, in the report's closing observations, reads \"Section 34 of the Cth FOI Act should be repealed\" and has no number, so it is not loaded as a numbered recommendation."
+    "The report's list of recommendations (page 19) refers to 57 recommendations; 56 are numbered there. The other, in the list's closing observations (page 27), is headed \"Section 34 of the Cth FOI Act should be repealed\" and has no number; it is loaded under that heading. The Australian Government's response refers to 56 recommendations."
    ],
    "gaps": [
     "royalcommission.gov.au and the other Commonwealth royal commission hosts refuse OPAXBot, so the weekly refresh cannot re-read this document; it is a manual supplement and its record is carried forward unchanged where the PDF is absent."

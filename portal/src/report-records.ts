@@ -167,10 +167,12 @@ function items(part: 'findings' | 'recommendations', r: ReportDetail, mainDocume
   }).join('')}</ol>` : text(empty)
   // Recommendation numbers as a quiet index; a very long index starts folded so the
   // first recommendation is not a phone-screen of numbers away.
-  const numbers = part === 'recommendations' && held.length > 12 && held.every(x => x.number != null)
-    ? `<ul role="list">${held.map(x => `<li><a href="#recommendation-${esc(anchor(x.number))}">${esc(x.number)}</a></li>`).join('')}</ul>` : ''
-  const jump = !numbers ? '' : held.length > 60
-    ? `<nav class="rr-jump" aria-label="Recommendation numbers"><details class="ui-disclosure rr-jump-fold"><summary>Go to a recommendation (${esc(held[0].number)} to ${esc(held[held.length - 1].number)})</summary>${numbers}</details></nav>`
+  // An item the report prints without a number (its own heading is the label) is not in the index.
+  const numbered = held.filter(x => x.number != null)
+  const numbers = part === 'recommendations' && numbered.length > 12 && held.every(x => x.number != null || x.label)
+    ? `<ul role="list">${numbered.map(x => `<li><a href="#recommendation-${esc(anchor(x.number))}">${esc(x.number)}</a></li>`).join('')}</ul>` : ''
+  const jump = !numbers ? '' : numbered.length > 60
+    ? `<nav class="rr-jump" aria-label="Recommendation numbers"><details class="ui-disclosure rr-jump-fold"><summary>Go to a recommendation (${esc(numbered[0].number)} to ${esc(numbered[numbered.length - 1].number)})</summary>${numbers}</details></nav>`
     : `<nav class="rr-jump" aria-label="Recommendation numbers">${numbers}</nav>`
   // How many carry each status, counted in the government's own words, in the order
   // they first appear: a count of labels, not a judgement of them.
