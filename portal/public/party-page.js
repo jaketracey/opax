@@ -56,7 +56,8 @@ function personPartyLabels(p) {
 }
 
 /** Members of a party, current and former. A roster person is a member when any of their party
- *  fields names the party; the division records add those who voted under it. One row per person:
+ *  fields names the party, or, with none, when a verified seat roster does (the index's
+ *  seat_rosters); the division records add those who voted under it. One row per person:
  *  the roster's pid joins its prints, and person-paths joins division slugs to those identities.
  *  Only division rows without a slug fall back to their printed name. */
 export function partyMembers(label, {roster = null, divisions = null, same = (a, b) => identity(a) === identity(b)} = {}) {
@@ -95,6 +96,19 @@ export function partyMembers(label, {roster = null, divisions = null, same = (a,
     if (!memberPartyLabels(p).some(l => same(l, label))) continue;
     const r = row(idOf(p));
     if (p.current && same(p.party_now || p.party, label)) r.current = true;
+  }
+  // A roster person with no party of their own, filed under the party a verified seat roster records
+  // for them (scripts/build_party_index.mjs seat_rosters, roster-party.js). The index named them by
+  // their roster row, so only that row's pid or exact name joins; the roster said they held the seat
+  // on its date, so they sit unless their own record says they left.
+  for (const [party, members] of Object.entries(divisions?.seat_rosters || {})) {
+    if (!same(party, label)) continue;
+    for (const m of members) {
+      const id = m.pid && best.has(`pid:${m.pid}`) ? `pid:${m.pid}` : byName.get(fold(m.name));
+      if (!id) continue;
+      const r = row(id);
+      if (r.roster?.current !== false) r.current = true;
+    }
   }
   for (const [party, members] of Object.entries(divisions?.parties || {})) {
     if (!same(party, label)) continue;
@@ -172,7 +186,7 @@ export function partyMembersHTML(label, members, h, {speechesHref = '', director
     ${members.current.length ? group(independent ? 'Sitting parliamentarians' : 'Sitting members', members.current) + group(independent ? 'Former parliamentarians' : 'Former members', members.former) : group('', members.former)}
     ${directoryHref ? `<p class="entry-more"><a href="${h.esc(directoryHref)}">${h.esc(label)} in the parliamentarians directory</a></p>` : ''}
     ${h.sourceLineHTML({
-      updated, source: 'Parliamentary roster and recorded divisions',
+      updated, source: 'Parliamentary roster, verified electorate rosters and recorded divisions',
       notes: [PARTY_MEMBER_SCOPE, 'Division records use the latest recorded affiliation, so they do not establish when it began.'],
     })}
   </section>`;
@@ -209,7 +223,7 @@ export function partyStateMoneyHTML(label, files, h) {
 const identity = label => PARTY_MAP[fold(label)]?.[1] || fold(label);
 export const isIndependent = label => identity(label) === 'IND';
 export const INDEPENDENTS_DESCRIPTION = 'Parliamentarians who sat without a party. Not a party organisation.';
-export const PARTY_MEMBER_SCOPE = 'Parliamentarian counts include current and former people recorded under the affiliation in the roster or divisions. Each person is counted once per affiliation, using their person ID where held.';
+export const PARTY_MEMBER_SCOPE = 'Parliamentarian counts include current and former people recorded under the affiliation in the roster, a verified electorate roster or the divisions. Each person is counted once per affiliation, using their person ID where held.';
 export const partyDisplayName = label => isIndependent(label) ? 'Independents' : identity(label) === 'DLP' ? PARTY_NAMES.DLP[1] : label;
 export const PARTY_MONEY_PATHS = ['/graph/money.json', '/graph/money.qld.json', '/graph/money.vic.json', '/graph/money.tas.json'];
 
