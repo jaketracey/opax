@@ -25,7 +25,8 @@ export const readPassage: ToolDefinition = {
     record_id: corpus.inputSchema.properties!.record_id,
     text_offset: { type: 'integer', minimum: 0, maximum: 500000 },
   }, required: ['record_id'], examples: [{ record_id: 'speech-123' }] },
-  stepLabel: args => ({ label: 'Reading a passage', arg: clip(args.record_id, 40) }),
+  // Ask's own read_passage passes a citation id as id; the public tool passes record_id.
+  stepLabel: args => ({ label: 'Reading a passage', arg: clip(args.record_id ?? args.id, 40) }),
   handler: (env, args) => corpus.handler(env, { ...args, kind: String(args.record_id).startsWith('press-') ? 'press_release' : 'speech' }),
 }
 export const personOverview: ToolDefinition = {

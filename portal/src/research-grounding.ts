@@ -1,6 +1,6 @@
 import {auditPayload,sentenceParts,moneySentenceEdits} from './research-claim-audit.mjs'
 import {plainAnswerPayload,rewriteAnswerPayload} from './research-language'
-import {leadWithAuthority,leadWithFinding} from './research-answer-shape'
+import {attributeSpokenFindings,leadWithAuthority,leadWithFinding} from './research-answer-shape'
 import {citationHasSentence,protectedDecision} from './research-coherence.mjs'
 import type {WritingInput} from './research-writing'
 import type {QualitativeAnswer} from './research-types'
@@ -104,6 +104,8 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
   out=withCheckedQuotes(out)
   // A typed limitation, refusal or clarification (a lookup correction, a scope decline) keeps its own order.
   // An accountability question opens on a finding or an official record, not a member's claim in debate.
+  // A body's finding cited only to one member's speech is that member's claim, and says so (ASK_ATTRIBUTION_RULE).
+  out=attributeSpokenFindings(out)
   out=distinctSummary(cleanAnswerShape(protectedDecision(out)?out:leadWithAuthority(leadWithFinding(leadWithFinding(out),question),question)))
   out=completePersonOverview(payload,out,question)
   const research=out.research&&typeof out.research==='object'?out.research as Record<string,unknown>:undefined

@@ -59,10 +59,19 @@
 /interests/index.json
   ! Cache-Control
   Cache-Control: public, max-age=0, must-revalidate
-# Bill dates and progress should reflect each publication for returning readers.
-/bills/*.json
+# The bill index (1.8 MB) is read on every app profile open (src/app-manifest.ts
+# catalog "bills"); the app's client takes max-age as its only freshness, so
+# max-age=0 put a network round trip in front of every repeat open. It changes
+# only when a deploy publishes it (the nightly export, after sitting days), so
+# 15 minutes fresh, then up to an hour of stale-while-revalidate: a reader sees
+# a new publication within 15 minutes, or at worst one view later inside 75.
+# The site's bill pages (app.js) fetch it with cache: "no-cache"; only the Ask
+# builder's bill-title suggestions may use a copy up to 15 minutes old.
+# Each bill's own file (/bills/<key>.json) is read once per bill view and keeps
+# the /*.json revalidation above, so a bill page shows each publication's dates.
+/bills/index.json
   ! Cache-Control
-  Cache-Control: public, max-age=0, must-revalidate
+  Cache-Control: public, max-age=900, stale-while-revalidate=3600
 # The grants research data is read by the apps' money screen and (with the reports
 # published) the grants-allocation explorer; no web page needs it in search results.
 /research/*.json

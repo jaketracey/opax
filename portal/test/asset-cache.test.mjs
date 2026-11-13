@@ -42,6 +42,30 @@ test('grant seat pages use the existing grants JSON cache policy and assets rout
   }
 });
 
+/** The Cache-Control a path ends with: rules apply in file order, "! Cache-Control" drops what came before. */
+const cacheFor = (path) => rules.filter((rule) => matches(rule.pattern, path)).reduce((out, rule) => {
+  for (const line of rule.lines) {
+    if (/^! Cache-Control$/i.test(line)) out = [];
+    else if (/^Cache-Control:/i.test(line)) out.push(line.replace(/^Cache-Control:\s*/i, ''));
+  }
+  return out;
+}, []).join(', ');
+
+test('the bill index the app reads on every profile open is fresh for 15 minutes; bill files still revalidate', async () => {
+  const config = await readFile(new URL('../wrangler.jsonc', import.meta.url), 'utf8');
+  const runFirst = JSON.parse(config.match(/"run_worker_first": (\[[^\]]*\])/)[1]);
+  for (const path of ['/bills/index.json', '/bills/au-federal-r7537.json', '/bills/au-federal-alrc-2326.json'])
+    assert.ok(!runFirst.some((pattern) => matches(pattern, path)), `${path} is served by the assets binding, not the Worker`);
+  assert.equal(cacheFor('/bills/index.json'), 'public, max-age=900, stale-while-revalidate=3600');
+  for (const path of ['/bills/au-federal-r7537.json', '/bills/au-federal-s1234.json', '/bills/au-federal-alrc-2326.json'])
+    assert.equal(cacheFor(path), 'public, max-age=0, must-revalidate', path);
+  // The other catalogs the app reads keep their revalidation.
+  for (const path of ['/parliamentarians.json', '/votes.json', '/photos/people.json', '/pay.json', '/expenses.json',
+    '/interests/index.json', '/corpus.json', '/reports/index.json'])
+    assert.equal(cacheFor(path), 'public, max-age=0, must-revalidate', path);
+  assert.equal(cacheFor('/electorates/manifest.json'), 'public, max-age=300, must-revalidate');
+});
+
 test('no path collects Cache-Control from two rules without detaching one', () => {
   for (const rule of rules.filter((r) => setsCache(r) && !r.pattern.includes('*'))) {
     const others = rules.filter((r) => r !== rule && setsCache(r) && matches(r.pattern, rule.pattern));

@@ -1,0 +1,154 @@
+{
+ "id": "spoken-finding",
+ "question": "Who was held accountable for the Harbourline contracts?",
+ "input": {
+  "kind": "speech"
+ },
+ "model": [
+  {
+   "tool_calls": [
+    {
+     "name": "search",
+     "args": {
+      "query": "Harbourline contracts accountability"
+     }
+    }
+   ]
+  },
+  {
+   "tool_calls": [
+    {
+     "name": "read_passage",
+     "args": {}
+    },
+    {
+     "name": "read_passage",
+     "args": {
+      "id": "speech-910021"
+     }
+    }
+   ]
+  },
+  {
+   "tool_calls": [
+    {
+     "name": "answer",
+     "args": {
+      "points": [
+       {
+        "claim": "The National Anti-Corruption Commission found two Harbourline officials engaged in corrupt conduct and cleared four others, including the former minister.",
+        "id": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee/t/body/0-193",
+        "quote": "found two Harbourline officials engaged in corrupt conduct"
+       },
+       {
+        "claim": "The Harbourline contracts were for ferry wharf upgrades."
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "services": [
+  {
+   "path": "/find",
+   "match": [
+    "Harbourline"
+   ],
+   "response": {
+    "resources": {
+     "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": {
+      "slug": "speech-910021",
+      "title": "Harbourline",
+      "origin": {
+       "created": "2026-03-11T00:00:00Z",
+       "collaborators": [
+        "Avery Quinlan"
+       ]
+      },
+      "extra": {
+       "metadata": {
+        "kind": "speech"
+       }
+      },
+      "fields": {
+       "body": {
+        "paragraphs": {
+         "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee/t/body/0-193": {
+          "text": "Today I want to put on the record that the National Anti-Corruption Commission found two Harbourline officials engaged in corrupt conduct and cleared four others, including the former minister."
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "path": "/slug/speech-910021",
+   "response": {
+    "id": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "title": "Harbourline",
+    "origin": {
+     "created": "2026-03-11T00:00:00Z",
+     "collaborators": [
+      "Avery Quinlan"
+     ]
+    },
+    "extra": {
+     "metadata": {
+      "date": "2026-03-11",
+      "speaker": "Avery Quinlan"
+     }
+    },
+    "data": {
+     "texts": {
+      "body": {
+       "value": {
+        "body": "Today I want to put on the record that the National Anti-Corruption Commission found two Harbourline officials engaged in corrupt conduct and cleared four others, including the former minister."
+       }
+      }
+     }
+    },
+    "usermetadata": {
+     "classifications": [
+      {
+       "labelset": "kind",
+       "label": "speech"
+      },
+      {
+       "labelset": "chamber",
+       "label": "representatives"
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "assets": {},
+ "expect": {
+  "answered": true,
+  "lead": "^Avery Quinlan told the House on 11 March 2026 that the National Anti-Corruption Commission found two Harbourline officials",
+  "excludes": [
+   "^The National Anti-Corruption Commission found"
+  ],
+  "citations": 1,
+  "cited": [
+   "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  ],
+  "trail": [
+   {
+    "tool": "read_passage",
+    "ok": false
+   },
+   {
+    "tool": "read_passage",
+    "arg": "speech-910021",
+    "ok": true
+   }
+  ],
+  "tool_errors": [
+   "no passage id given; pass id exactly as shown in data.passages \\(for example \"eeee"
+  ]
+ }
+}
