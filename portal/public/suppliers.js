@@ -1,5 +1,5 @@
-import {mountSuppliersTable} from './suppliers-table.js?v=58a703dfe8';
-import {mountContractsTable} from './contracts-table.js?v=bd2b252bf0';
+import {mountSuppliersTable} from './suppliers-table.js?v=55478b6352';
+import {mountContractsTable} from './contracts-table.js?v=019010cca9';
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
@@ -360,7 +360,7 @@ async function mountFunding(root, links, life, register = "") {
       slot.hidden = false;
       slot.innerHTML = '<p role="status">Opening the money map…</p>';
       try {
-        const { mountMoneyMap } = await import("/money-map.js?v=7ca6ed22e2");
+        const { mountMoneyMap } = await import("/money-map.js?v=7e56b48a6e");
         if (!life.alive()) return;
         slot.textContent = "";
         const handle = await mountMoneyMap(slot, "/graph/money.json", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });

@@ -5,3 +5,5 @@ export function firstAgencySuppliers(suppliers: AgencyDetail['suppliers']): Agen
 export function agencyCoreBody(profile: AgencyDetail, canonical: string, meta?: {source?: string; source_url?: string}): string;
 export function topicSummary(name: string, counts: TopicCounts): string;
 export function topicCoreBody(slug: string, counts: TopicCounts, speeches: TopicSpeech[], dataPath?: string): string;
+export function kindLabel(k?: string): string;
+export function recipientMetaLine(jur: string, k?: string): string;

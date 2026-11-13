@@ -133,7 +133,8 @@ test('banner is ordinary content with a named link and a keyboard button, withou
   const page = boot();
   assert.equal(page.banner.tagName, 'DIV');
   assert.equal(page.banner.querySelector('[role], [aria-live], [autofocus], [tabindex]'), null);
-  assert.equal(page.banner.querySelector('a').textContent, 'Get the app on the App Store');
+  assert.equal(page.banner.querySelector('a').textContent, 'Get the app');
+  assert.match(page.banner.querySelector('a').getAttribute('href'), /^https:\/\/apps\.apple\.com\//);
   const button = page.banner.querySelector('button');
   assert.equal(button.getAttribute('aria-label'), 'Dismiss');
   assert.equal(button.tabIndex, 0);
@@ -141,6 +142,17 @@ test('banner is ordinary content with a named link and a keyboard button, withou
   assert.match(css, /min-height: var\(--size-target, 44px\)/);
   assert.match(css, /:focus-visible\s*\{[^}]*outline:/);
   page.dom.window.close();
+});
+
+test('the banner is one 44px line at the default text size and wraps, never clips, with larger text', () => {
+  const row = css.match(/\.opax-app-banner-row\s*\{([^}]*)\}/)[1];
+  assert.match(row, /min-height: var\(--size-target, 44px\)/);
+  assert.doesNotMatch(row, /(^|[^-])height:/, 'no fixed height: at 200% text the row grows (WCAG 1.4.4)');
+  const line = css.match(/\.opax-app-banner p\s*\{([^}]*)\}/)[1];
+  assert.doesNotMatch(line, /white-space: nowrap|text-overflow|overflow: hidden/, 'the line wraps rather than clipping the link');
+  assert.match(css, /\.opax-app-banner a \{ white-space: nowrap;/, 'the link itself stays whole');
+  assert.doesNotMatch(css, /\.opax-app-banner\s*\{[^}]*border-bottom/, 'the rule is drawn inside the 44px');
+  assert.match(css, /@media \(width < 420px\)\s*\{\s*\.opax-app-banner-ipad\s*\{\s*display: none/);
 });
 
 test('shared chrome strips raw asset validators and lengths, preserves Worker version validators, and skips non-pages', async () => {

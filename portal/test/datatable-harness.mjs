@@ -20,7 +20,8 @@ export function tableHarness(initialURL = 'http://localhost/table') {
       const template = {content:{}};
       Object.defineProperty(template,'innerHTML',{set(html) {
         const node = {html,remove() { root.childNodes = root.childNodes.filter(n=>n !== node); }};
-        template.content.firstElementChild = {childNodes:[node]};
+        const opening = /^<section\b[^>]*>/.exec(html)?.[0] || '';
+        template.content.firstElementChild = {childNodes:[node],getAttribute:name => new RegExp(` ${name}="([^"]*)"`).exec(opening)?.[1] ?? null};
       }});
       return template;
     }
