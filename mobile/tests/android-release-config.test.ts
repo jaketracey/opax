@@ -130,13 +130,15 @@ test('keep rules cover native entry points without disabling R8 globally', () =>
 // then independently matched against the merged config. Only the checkout's absolute path is replaced
 // for portability. The only inventory exception is the Android-only text
 // conversion module; all runtime config, including iOS, extra and plugin order,
-// remains pinned to the original hashes.
+// remains pinned to the original hashes. Re-pinned for crash reports
+// (docs/ANALYTICS.md): every variant adds the PostHog push opt-out Info.plist
+// key; nothing else changed.
 const iosPrebuildHashes = {
   development:
-    'b59463dd4eae775abedf56d47cca0816886b6fc733ee123e460b22fe980ad5de',
-  e2e: 'ded6a318abba423bcf8162d2dfbcfbbbdb9054b095b81204303a5f9e84dfaf7d',
+    'cbc9aebadf377a24a00dae46ca14237af2103a43d2ff1a3e5580948d15e9adff',
+  e2e: '96f06fbaf5a51c6c5cd9dc540e9057342af4bf674a9c4f96fae839e89b157291',
   production:
-    'b274384108634d2f5490fd728e131add648841ee37461e65fced98990f374579',
+    'f783f6c86656a2ef73c5c178ebc723982b76ddf1e21dcb3df06eb702722fa603',
 };
 test.each(variants)(
   'iOS %s prebuild output stays byte-identical to the baseline',

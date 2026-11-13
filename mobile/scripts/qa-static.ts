@@ -216,18 +216,20 @@ for (const version of Object.values({
     'All direct dependencies must be pinned',
   );
 const lock = JSON.parse(readFileSync('package-lock.json', 'utf8'));
-// PostHog is the one reviewed analytics SDK (docs/ANALYTICS.md): the JS SDK
-// and its two JS dependencies, never replay, the native plugin or another SDK.
+// PostHog is the one reviewed analytics SDK (docs/ANALYTICS.md): the JS SDK,
+// its two JS dependencies and the native crash plugin (scrubbed by its pinned
+// privacy patch), never replay or another SDK.
 assert.deepEqual(
   Object.keys(lock.packages)
     .filter((path) => /posthog/i.test(path))
     .sort(),
   [
     'node_modules/@posthog/core',
+    'node_modules/@posthog/react-native-plugin',
     'node_modules/@posthog/types',
     'node_modules/posthog-react-native',
   ],
-  'Only the reviewed PostHog JS SDK',
+  'Only the reviewed PostHog JS SDK and native crash plugin',
 );
 for (const path of Object.keys(lock.packages))
   assert(

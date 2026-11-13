@@ -220,6 +220,9 @@ const config: ExpoConfig = {
       // StatusBar takes over once the app draws (the root layout sets
       // `auto`; the launch cover keeps `light` while it is up).
       UIStatusBarStyle: 'UIStatusBarStyleLightContent',
+      // The PostHog crash plugin hooks notification opens at launch, before
+      // any JS runs; only this key skips it. The app sends no push events.
+      'com.posthog.posthog.CAPTURE_PUSH_NOTIFICATION_OPENED': false,
       NSLocationWhenInUseUsageDescription:
         'OPAX uses your location once, on this iPhone, to find your electorate. It is not sent anywhere.',
       'NSLocationWhenInUseUsageDescription~ipad':

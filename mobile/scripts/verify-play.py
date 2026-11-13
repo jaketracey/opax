@@ -21,9 +21,10 @@ import importlib.util
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).parent))
 # The iOS release verifier owns the analytics policy (docs/ANALYTICS.md):
-# PostHog is the one reviewed SDK, JS only, sending to opax.com.au/ingest;
-# every other analytics or advertising SDK and host is refused. Android
-# reuses its Hermes string scan so both stores enforce one list.
+# PostHog is the one reviewed SDK: the JS SDK and its native crash plugin
+# (com.posthog, scrubbed by its pinned privacy patch), sending to
+# opax.com.au/ingest; every other analytics or advertising SDK and host is
+# refused. Android reuses its Hermes string scan so both stores enforce one list.
 _spec = importlib.util.spec_from_file_location(
     "release_policy", Path(__file__).with_name("verify-ios-release.py")
 )
@@ -184,7 +185,6 @@ with zipfile.ZipFile(args.aab) as archive:
         "com/adjust/sdk",
         "com/bugsnag",
         "com/datadog/android",
-        "com/posthog",
         "expo/modules/insights",
     ]
     blobs = {name: archive.read(name) for name in dex_names}

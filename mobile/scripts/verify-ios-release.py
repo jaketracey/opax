@@ -27,8 +27,9 @@ GUARDS = (
     "Cross-origin API requests are forbidden",
     "Redirects are not allowed for catalog data",
 )
-# PostHog is the one reviewed analytics SDK (docs/ANALYTICS.md): JS only, sending
-# to the embedded opax.com.au/ingest proxy. Every other SDK stays refused.
+# PostHog is the one reviewed analytics SDK (docs/ANALYTICS.md): the JS SDK and
+# its native crash plugin (scrubbed by its pinned privacy patch), sending to the
+# embedded opax.com.au/ingest proxy. Every other SDK stays refused.
 SDK_PATTERN = re.compile(rb"mixpanel|amplitude|segment\.com|(?-i:(?<![a-z]))sentry|appsflyer|"
                          rb"firebaseanalytics|appcenter|bugsnag|datadog|fbSDK|crashlytics|heapanalytics", re.I)
 SHIPPED_FRAMEWORKS = {"ExpoModulesJSI.framework", "hermesvm.framework", "ExpoFont.framework",
@@ -48,12 +49,15 @@ POSTHOG_SDK_HOSTS = {"us.i.posthog.com", "eu.i.posthog.com", "us-assets.i.postho
 # react-native-svg's feFunc "amplitude" attribute (SVG filter spec). The
 # Amplitude SDK is still refused by its hosts and any longer marker string.
 SDK_PATTERN_EXEMPT = {b"sentryuptimebot", b"amplitude"}
-POSTHOG_PACKAGES = {"node_modules/posthog-react-native", "node_modules/@posthog/core", "node_modules/@posthog/types"}
+POSTHOG_PACKAGES = {"node_modules/posthog-react-native", "node_modules/@posthog/core", "node_modules/@posthog/types",
+                    "node_modules/@posthog/react-native-plugin"}
 ANALYTICS_CONFIG = {"host": "https://opax.com.au/ingest",
                     "projectToken": "phc_AsHnQM2UrGBubA5HU9sagkGbg8vqQLNXu3WjEhPRDejr",
                     "environment": "production"}
 # What analytics adds to the privacy manifest: not linked, not tracking, Analytics.
 ANALYTICS_DATA_TYPES = ("ProductInteraction", "DeviceID")
+# Anonymous crash and error reports: not linked, not tracking, App Functionality.
+CRASH_DATA_TYPES = ("CrashData", "OtherDiagnosticData")
 ROUTE_KEY = re.compile(r"\./[A-Za-z0-9_(),@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
 # Skia 2.6.2 reads Reanimated's package.json version, so Metro includes its
 # pinned 4.5.1 sideEffects metadata. These eight exact dependency references
@@ -781,7 +785,7 @@ def verify_app(app, args):
               "bundled font licence notices")
     lock = json.loads(Path("package-lock.json").read_bytes())
     check({p for p in lock["packages"] if re.search(r"posthog", p, re.I)} == POSTHOG_PACKAGES,
-          "PostHog is the reviewed JS SDK only: no replay, native plugin or other PostHog package")
+          "PostHog is the reviewed JS SDK and native crash plugin only: no replay or other PostHog package")
     check(not re.search(r"node_modules/(?:@sentry/|@amplitude/|@segment/|@react-native-firebase/|"
                         r"firebase(?:/|$)|mixpanel|appcenter|react-native-appsflyer|"
                         r"react-native-adjust|expo-tracking-transparency|expo-insights|@bugsnag/|"
