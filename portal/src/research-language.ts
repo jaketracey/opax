@@ -1,6 +1,6 @@
 import {quotationSpans,unclosedQuoteOffset} from './research-claim-audit.mjs'
 /** Visitor answers describe the public record, never OPAX's internal machinery. */
-export const ANSWER_INTERNAL_LANGUAGE = /\b(?:coverage (?:tools?|lookups?)|(?:tool|lookup|calculator) results?|unknown[- ]range|(?:the|this|our|available) (?:available )?(?:tool|lookup|calculator)(?=\s+(?:covers?|returns?|provides?|contains?|uses?|shows?|reports?|cannot|has|data))|data (?:from|returned by) (?:the|this) (?:tool|lookup|calculator)|data pipeline|(?:our|the) pipeline|pipeline|not yet (?:been )?(?:imported|ingested|indexed|loaded|fetched)|(?:been|being|was|were|are|is) (?:imported|ingested|backfilled)|imported for|ingest(?:ed|ion|ing)?|backfill(?:ed|ing|s)?|still being fetched|being fetched|fixture data|seed data|normali[sz]ed (?:title|name|text)|while indexing|currently indexing|indexing runs|coming soon|record type|indexed speech(?:es)?|speeches indexed|passages indexed|documents indexed|not yet indexed|indexed contests?|labelling pass|the labeller|pending exact export|in this release|(?:PDF )?body held|held PDF bod(?:y|ies)|held with the PDF|uncleared copyright)\b/i
+export const ANSWER_INTERNAL_LANGUAGE = /\b(?:coverage (?:tools?|lookups?)|(?:tool|lookup|calculator) results?|unknown[- ]range|(?:the|this|our|available) (?:available )?(?:tool|lookup|calculator)(?=\s+(?:covers?|returns?|provides?|contains?|uses?|shows?|reports?|cannot|has|data))|data (?:from|returned by) (?:the|this) (?:tool|lookup|calculator)|data pipeline|our pipeline|not yet (?:been )?(?:imported|ingested|indexed|loaded|fetched)|(?:been|being|was|were|are|is) (?:imported|ingested|backfilled)|imported for|ingest(?:ed|ion|ing)?|backfill(?:ed|ing|s)?|still being fetched|being fetched|fixture data|seed data|normali[sz]ed (?:title|name|text)|while indexing|currently indexing|indexing runs|coming soon|record type|indexed speech(?:es)?|speeches indexed|passages indexed|documents indexed|not yet indexed|indexed contests?|labelling pass|the labeller|pending exact export|in this release|(?:PDF )?body held|held PDF bod(?:y|ies)|held with the PDF|uncleared copyright)\b/i
 
 /** Titles and quotations are source content, even when they contain an internal-sounding word. */
 function protectedAnswerSpans(text:string,payload:Record<string,unknown>):[number,number][] {
@@ -36,7 +36,6 @@ export function rewriteAnswerPayload<T extends Record<string, unknown>>(payload:
   transform(replace)
   const answer=chars.join('')
   if(answer===original)return payload
-  if(!answer)return {...payload,answer:'The available records do not establish an answer to this question.',citations:{},sources:[],answer_status:'coverage_only'}
   const citations:Record<string,[number,number][]>={}
   const entries=payload.citations&&typeof payload.citations==='object'?Object.entries(payload.citations):[]
   for(const [id,ranges]of entries)if(Array.isArray(ranges))for(const range of ranges){
@@ -54,10 +53,6 @@ export function rewriteAnswerPayload<T extends Record<string, unknown>>(payload:
 }
 
 export function plainAnswerPayload<T extends Record<string, unknown>>(payload:T):T {
-  const unbalanced=(s:string)=>unclosedQuoteOffset(s)>=0
-  if(typeof payload.answer==='string'&&unbalanced(payload.answer))payload=rewriteAnswerPayload(payload,replace=>{
-    replace(/[^\n]+/g,paragraph=>unbalanced(paragraph)?paragraph.split(/(?<=[.!?])\s+/).filter(sentence=>!unbalanced(sentence)).join(' '):paragraph)
-  })
   return rewriteAnswerPayload(payload,replace=>{
   replace(/^[ \t]*[-*•—–]+[ \t]+/gm,'')
   // Match internal references in context; public titles and literal source language are protected.
@@ -65,7 +60,7 @@ export function plainAnswerPayload<T extends Record<string, unknown>>(payload:T)
   replace(/\bcatalog(?:ue)? hits\b/gi,'matching records')
   replace(/\b(?:coverage tools?|coverage lookups?)\b/gi,'coverage information')
   replace(/\bunknown[- ]range\b/gi,'unverified period')
-  replace(/\b(?:data pipeline|our pipeline|the pipeline)\b/gi,'the records')
+  replace(/\b(?:data pipeline|our pipeline)\b/gi,'the records')
   replace(/\b(?:tool|lookup|calculator) results?\b/gi,'the selected records')
   replace(/\b(?:the|this|our|available) (?:available )?(?:tool|lookup|calculator)(?=\s+(?:covers?|returns?|provides?|contains?|uses?|shows?|reports?|cannot|has|data))\b/gi,'the available records')
   replace(/\bnot yet (?:been )?(?:imported|ingested|indexed|loaded|fetched)\b/gi,'not available')
@@ -82,7 +77,6 @@ export function plainAnswerPayload<T extends Record<string, unknown>>(payload:T)
   replace(/(?:^|\n\n)[^\n]+(?=\n\n|$)/g,m=>{
     const text=m.trim()
     if(!/^(?:[,;.]|and\b|but\b|while\b|because\b)/i.test(text))return m
-    if(!/\d|\b(?:is|are|was|were|has|have|had|said|says|received|recorded|earned|gave|gives|cited|cannot|do|does|will|would|could|should|limits|compares)\b/i.test(text))return ''
     return m.replace(/^(\n\n)?[,;. ]+/,'$1').replace(/^(\n\n)?(?:and|but|while)\s+([a-z])/,(_,gap='',letter:string)=>gap+letter.toUpperCase())
   })
   replace(/^\s+|\s+$/g,'')

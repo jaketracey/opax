@@ -18,11 +18,12 @@ function run(points, q = question, named = scope) {
   return { out, why, tally, lines: out?.answer.split('\n').map(l => l.slice(2)) ?? [] };
 }
 
-test('quote: a near-verbatim citation quote is re-spanned to the passage words; a missing one is re-selected from the best sentence', () => {
+test('quote: the citation quote is not checked; a point citing a retrieved passage stays cited as written', () => {
+  // Minimum checks: no re-spanning or re-selection of citation quotes.
   const a = run([{ claim: 'In 2012, Robin Example said mandatory precommitment would protect families.', id, quote: 'mandatory pre-commitment will protect FAMILIES from gambling' }]);
-  assert.equal(a.tally.points_kept, 1); assert.equal(a.tally.repairs.quote_respanned, 1); assert.ok(a.out);
+  assert.equal(a.tally.points_kept, 1); assert.deepEqual(a.tally.repairs, {}); assert.ok(a.out.citations[id]); assert.equal(a.lines[0], 'In 2012, Robin Example said mandatory precommitment would protect families.');
   const b = run([{ claim: 'In 2012, Robin Example said the industry had fought every reform of poker machines.', id, quote: 'the industry resisted all change' }]);
-  assert.equal(b.tally.points_kept, 1); assert.equal(b.tally.repairs.quote_reselected, 1);
+  assert.equal(b.tally.points_kept, 1); assert.deepEqual(b.tally.repairs, {}); assert.ok(b.out.citations[id]);
 });
 
 test('quote marks: verbatim words stay quoted (re-cased); anything else loses its marks, never stays quoted', () => {
@@ -34,69 +35,37 @@ test('quote marks: verbatim words stay quoted (re-cased); anything else loses it
   assert.equal(tally.repairs.quote_recased, 1); assert.equal(tally.repairs.unquoted, 1);
 });
 
-test('speaker: unquoted words put to another member are rewritten to the cited speaker; quoted words in another mouth are dropped', () => {
-  const a = run([{ claim: 'In 2012, Labor\'s Casey Sample argued the industry has fought every reform.', id, quote: 'The industry has fought every reform.' }]);
-  assert.equal(a.lines[0], 'In 2012, Robin Example argued the industry has fought every reform.'); assert.equal(a.tally.repairs.speaker_rewritten, 1);
+test('speaker, party, causal, topic and figure checks no longer rewrite or drop a point', () => {
+  // Minimum checks: each point stands as written, cited to its retrieved passage; only unsupported quote marks come off.
+  const asWritten = [
+    'In 2012, Labor\'s Casey Sample argued the industry has fought every reform.',
+    'Robin Example rejected Casey Sample\'s view and said the industry has fought every reform.',
+    'A Greens senator said the industry has fought every reform of poker machines.',
+    'Greens senators said the industry has fought every reform of poker machines.',
+    'In 2012, industry donations influenced the poker machine reform vote.',
+    'Robin Example spoke about wind farm planning approvals in rural districts.',
+    'Robin Example said 40 per cent of poker machine losses come from problem gamblers.',
+  ];
+  for (const claim of asWritten) {
+    const v = run([{ claim, id, quote: 'The industry has fought every reform.' }], /wind farm/.test(claim) ? 'What has been said about wind farms?' : question);
+    assert.deepEqual(v.lines, [claim], claim); assert.ok(v.out.citations[id], claim); assert.equal(v.out.answer_status, undefined, claim);
+    assert.deepEqual(v.tally.drops, {}, claim); assert.deepEqual(v.tally.repairs, {}, claim);
+  }
+  // Quoted words in another member's mouth keep their marks when the passage holds them verbatim.
   const b = run([{ claim: 'Casey Sample said “The industry has fought every reform.”', id, quote: 'The industry has fought every reform.' }]);
-  assert.equal(b.out, null); assert.equal(b.tally.drops.claim_speaker_mismatch, 1);
-  // Another member as the subject matter, not the speaker, is fine as written.
-  const c = run([{ claim: 'Robin Example rejected Casey Sample\'s view and said the industry has fought every reform.', id, quote: 'The industry has fought every reform.' }]);
-  assert.equal(c.tally.points_kept, 1); assert.deepEqual(c.tally.repairs, {});
-  const e = run([{ claim: 'Casey Sample\'s words were “The industry has fought every reform.”', id, quote: 'The industry has fought every reform.' }]);
-  assert.equal(e.out, null, 'a possessive with quoted words puts them in that member\'s mouth');
-  // The cited speaker's own fuller name holds a surname another roster entry shares: still the cited speaker.
-  assert.equal(api.claimAttributionOk('In 1994, Louis Stuart Example said the industry has fought every reform.', 'Louis Stuart Example', { people: [{ name: 'Lou Example' }] }), true);
-  assert.equal(api.claimAttributionOk('In 1994, Lou Example said the industry has fought every reform.', 'Louis Stuart Example', { people: [{ name: 'Lou Example' }] }), false);
-  // An unknown speaker is never named.
-  const d = run([{ claim: 'Casey Sample said the industry has fought every reform.', id: other, quote: 'The industry has fought every reform.' }]);
-  assert.equal(d.lines[0], 'A speaker said the industry has fought every reform.');
+  assert.equal(b.lines[0], 'Casey Sample said “The industry has fought every reform.”'); assert.ok(b.out.citations[id]);
+  // A passage with no speaker: the point is not renamed and stands, cited.
+  const d = run([{ claim: 'Industry donations influenced the poker machine reform vote.', id: other, quote: 'The industry has fought every reform.' }]);
+  assert.equal(d.lines[0], 'Industry donations influenced the poker machine reform vote.'); assert.ok(d.out.citations[other]);
 });
 
-test('party: a wrong singular party descriptor becomes the speaker\'s name; a wrong plural one leaves the point uncited', () => {
-  const a = run([{ claim: 'A Greens senator said the industry has fought every reform of poker machines.', id, quote: 'The industry has fought every reform.' }]);
-  assert.equal(a.lines[0], 'Robin Example said the industry has fought every reform of poker machines.'); assert.equal(a.tally.repairs.party_rewritten, 1);
-  assert.equal(run([{ claim: 'A Labor member said the industry has fought every reform of poker machines.', id, quote: 'The industry has fought every reform.' }]).tally.repairs.party_rewritten, undefined);
-  const b = run([{ claim: 'Greens senators said the industry has fought every reform of poker machines.', id, quote: 'The industry has fought every reform.' }]);
-  // Loosened 16 Oct: a soft check, so the point stays, without a citation.
-  assert.equal(b.out.answer_status, 'uncited'); assert.deepEqual(b.out.citations, {}); assert.equal(b.tally.uncited.claim_party_mismatch, 1); assert.deepEqual(b.tally.drops, {});
-});
-
-test('causal: an unattributed causal claim becomes what the cited speaker said; with no speaker it is dropped', () => {
-  const a = run([{ claim: 'In 2012, industry donations influenced the poker machine reform vote.', id, quote: 'The industry has fought every reform.' }]);
-  assert.equal(a.lines[0], 'In 2012, Robin Example said industry donations influenced the poker machine reform vote.'); assert.equal(a.tally.repairs.causal_attributed, 1);
-  const b = run([{ claim: 'Industry donations influenced the poker machine reform vote.', id: other, quote: 'The industry has fought every reform.' }]);
-  assert.equal(b.out, null); assert.equal(b.tally.drops.causal_claim, 1);
-});
-
-test('topic and figures: on-topic points survive loose wording; off-topic points stand uncited; figures not in the passage come out or drop the point', () => {
-  const a = run([{ claim: 'Robin Example backed precommitment on poker machines to protect families.', id, quote: 'Mandatory precommitment will protect families' }]);
-  assert.equal(a.tally.points_kept, 1);
-  const b = run([{ claim: 'Robin Example spoke about wind farm planning approvals in rural districts.', id, quote: 'The industry has fought every reform.' }], 'What has been said about wind farms?');
-  // Loosened 16 Oct: weak support keeps the point, uncited.
-  assert.equal(b.lines[0], 'Robin Example spoke about wind farm planning approvals in rural districts.'); assert.equal(b.out.answer_status, 'uncited'); assert.equal(b.tally.uncited.point_unsupported, 1);
-  const c = run([{ claim: 'Robin Example said 40 per cent of poker machine losses come from problem gamblers.', id, quote: 'cap poker machine losses' }]);
-  assert.equal(c.out, null); assert.equal(c.tally.drops.figure_unsupported, 1);
-  const d = run([{ claim: 'Robin Example said losses should be capped at one dollar a spin on poker machines.', id, quote: 'cap poker machine losses at one dollar a spin' }]);
-  assert.equal(d.tally.points_kept, 1);
-});
-
-test('floor: a citation to an unretrieved passage is dropped; one surviving point answers', () => {
-  const { out, tally } = run([
-    { claim: 'Robin Example said the industry has fought every reform.', id: 'e'.repeat(32) + '/t/body/0-10', quote: 'The industry has fought every reform.' },
-    { claim: 'Robin Example said the industry has fought every reform.', id, quote: 'The industry has fought every reform.' }]);
-  assert.ok(out); assert.equal(tally.points_in, 2); assert.equal(tally.points_kept, 1); assert.equal(tally.drops.unknown_passage, 1);
-});
-
-test('nothing survives but verified passages exist: two or three passages answer in their own words with speaker and date', () => {
-  const out = api.recordPassagesAnswer(passages, question, scope);
-  const lines = out.answer.split('\n');
-  assert.equal(lines[0], 'What the record says:');
-  assert.match(lines[1], /^- In 2012, Robin Example \(Australian Labor Party\) said: “[^”]+”$/);
-  for (const line of lines.slice(1)) { const quoted = /“([^”]+)”/.exec(line)[1]; assert.ok(speech.includes(quoted), quoted); }
-  assert.ok(out.citations[id]);
-  // A named person's question answers only from that person's passages, never another speaker's.
-  assert.equal(api.recordPassagesAnswer(passages, 'What has Casey Sample said about poker machines?', { ...scope, people: ['Casey Sample'] }), null);
-  assert.equal(api.recordPassagesAnswer(passages, 'What has been said about wind farms?', scope), null);
+test('floor: a point citing an unretrieved passage stands uncited beside the cited one', () => {
+  const unknown = 'e'.repeat(32) + '/t/body/0-10';
+  const { out, tally, lines } = run([
+    { claim: 'Robin Example said the industry has fought every reform.', id: unknown, quote: 'The industry has fought every reform.' },
+    { claim: 'Robin Example said losses should be capped at one dollar a spin.', id, quote: 'cap poker machine losses at one dollar a spin' }]);
+  assert.equal(lines.length, 2); assert.equal(tally.points_in, 2); assert.equal(tally.points_kept, 1); assert.equal(tally.points_uncited, 1);
+  assert.equal(out.answer_status, 'partly_cited'); assert.deepEqual(Object.keys(out.citations), [id]);
 });
 
 test('telemetry: one compact answer record and fallback counts, labels and counts only, never text', async () => {

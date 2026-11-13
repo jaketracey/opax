@@ -20,7 +20,9 @@ test('CI retains duplicate-deploy skipping, cache modes, receipts and nonfatal r
  assert.match(workflow,/OPAX_TABLE_METADATA_ONLY: '1'/);assert.match(workflow,/OPAX_RELEASE_CACHE_DIR: \.\.\/\.cache\/release-build/);
  assert.match(workflow,/run: npm run build:release/);assert.match(workflow,/run: npm run deploy:built/);
  assert.match(workflow,/createDeployment\(/);assert.match(workflow,/steps\.duplicate\.outputs\.skip != 'true'/);
- assert.match(workflow,/::warning::could not push the restamp commit/);assert.match(workflow,/production is already deployed"\n          exit 0/);
+ const restamp=readFileSync(new URL('../../scripts/restamp_commit.sh',import.meta.url),'utf8');
+ assert.match(workflow,/run: bash scripts\/restamp_commit\.sh\n/);
+ assert.match(restamp,/::warning::could not push the restamp commit/);assert.match(restamp,/production is already deployed"\nexit 0\n$/);
  assert.doesNotMatch(workflow,/build:privacy|test:privacy|privacy before Wrangler/);
  assert.ok(existsSync(new URL('../../scripts/deploy-duplicate.cjs',import.meta.url)));
 });
