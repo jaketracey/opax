@@ -6,6 +6,7 @@ import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
 import {sponsoredBills} from '../../scripts/build_party_index.mjs';
 import {partyBills, partyBillsHTML, partyMembers, partyMembersHTML, PARTY_NO_MEMBERS} from '../public/party-page.js';
+import {billSponsorProjection} from './helpers/bill-sponsor-projection.mjs';
 
 const read = path => JSON.parse(readFileSync(new URL(`../public${path}`, import.meta.url), 'utf8'));
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[c]);
@@ -38,14 +39,19 @@ test('"Bills sponsored" links each bill, says when it was introduced and its sta
   assert.doesNotMatch(partyBillsHTML('Fixture Team', bills, h), /—/);
 });
 
-test('the shipped index: the three sponsor-only parties and their newest bills', () => {
-  const divisions = read('/graph/party-members.json');
+test('the next dated export: the three sponsor-only parties and their newest bills', () => {
+  const published = read('/graph/party-members.json');
+  const accepted = read('/facts/sponsor-parties.json');
+  const current = {bills:sponsoredBills(read('/bills/index.json').bills, accepted)};
+  const divisions = {...published, bills:sponsoredBills(billSponsorProjection().bills, accepted)};
   const expected = {
-    'Nick Xenophon Team': [7, 'Defence Amendment (Sovereign Naval Shipbuilding) Bill 2018'],
-    'Palmer United Party': [4, 'Commonwealth Grants Commission Amendment (GST Distribution) Bill 2015'],
+    // 7 + 15 dated corrections - s1127's reviewed Centre Alliance rename.
+    'Nick Xenophon Team': [21, 'Banking Amendment (Rural Finance Reform) Bill 2018'],
+    'Palmer United Party': [3, 'Commonwealth Grants Commission Amendment (GST Distribution) Bill 2015'],
     'Rex Patrick Team': [4, 'Australian Federal Integrity Commission Bill 2021'],
   };
   for (const [label, [count, title]] of Object.entries(expected)) {
+    assert.deepEqual(partyBills(label, published), partyBills(label, current), label);
     const bills = partyBills(label, divisions);
     assert.equal(bills.length, count, label);
     assert.equal(bills[0].title, title, label);

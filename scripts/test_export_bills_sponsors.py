@@ -97,25 +97,60 @@ class FillSponsorIds(unittest.TestCase):
 
 
 class DatedSponsorParties(unittest.TestCase):
-    def published_bill(self, key):
+    def published_bill(self, key, source_party):
         path = Path(__file__).resolve().parents[1] / f"portal/public/bills/{key}.json"
         b = json.loads(path.read_text())
+        # The registry's stale source label must survive a published refresh
+        # in the test input, so reverting the check still fails afterwards.
+        b["sponsor_party"] = source_party
         # Exercise both fields written by a fresh registry export.
         b["sponsors"] = [{"name": b["sponsor"], "person_id": b["sponsor_person_id"],
                           "party": b["sponsor_party"]}]
         return b
 
     def test_gee_r7202_uses_independent_on_introduction(self):
-        b = self.published_bill("au-federal-r7202")
+        b = self.published_bill("au-federal-r7202", "Nationals")
         eb.fill_sponsor_parties([b], eb.PartyTimeline({}, {}))
         self.assertEqual(b["sponsor_party"], "Independent")
         self.assertEqual(b["sponsors"][0]["party"], "Independent")
 
     def test_van_s1415_uses_independent_on_introduction(self):
-        b = self.published_bill("au-federal-s1415")
+        b = self.published_bill("au-federal-s1415", "Liberal")
         eb.fill_sponsor_parties([b], eb.PartyTimeline({}, {}))
         self.assertEqual(b["sponsor_party"], "Independent")
         self.assertEqual(b["sponsors"][0]["party"], "Independent")
+
+    def test_source_fixtures_survive_an_already_refreshed_publication(self):
+        for key, source in [("au-federal-r7202", "Nationals"), ("au-federal-s1415", "Liberal")]:
+            refreshed = self.published_bill(key, "Independent")
+            refreshed["sponsor_party"] = "Independent"
+            refreshed["sponsors"][0]["party"] = "Independent"
+            with patch.object(Path, "read_text", return_value=json.dumps(refreshed)):
+                b = self.published_bill(key, source)
+            self.assertEqual(b["sponsor_party"], source)
+            self.assertEqual(b["sponsors"][0]["party"], source)
+
+    def test_mcmahon_uses_registered_country_liberal_party(self):
+        b = self.published_bill("au-federal-s1309", "Liberal")
+        eb.fill_sponsor_parties([b], eb.PartyTimeline({}, {}))
+        self.assertEqual(b["sponsor_party"], "Country Liberal Party")
+        self.assertEqual(b["sponsors"][0]["party"], "Country Liberal Party")
+
+    def test_s1127_uses_reviewed_centre_alliance_rename(self):
+        b = self.published_bill("au-federal-s1127", "Nick Xenophon Team")
+        eb.fill_sponsor_parties([b], eb.PartyTimeline({}, {}))
+        self.assertEqual(b["sponsor_party"], "Centre Alliance")
+        self.assertEqual(b["sponsors"][0]["party"], "Centre Alliance")
+
+    def test_patrick_keeps_own_registered_team_without_an_invented_start(self):
+        b = self.published_bill("au-federal-s1297", "Rex Patrick Team")
+        eb.fill_sponsor_parties([b], eb.PartyTimeline({}, {}))
+        self.assertEqual(b["sponsor_party"], "Rex Patrick Team")
+
+    def test_anning_does_not_own_katters_party(self):
+        b = self.published_bill("au-federal-s1153", "Katter's Australian Party")
+        eb.fill_sponsor_parties([b], eb.PartyTimeline({}, {}))
+        self.assertEqual(b["sponsor_party"], "Independent")
 
 
 class SponsorPartyPeriods(unittest.TestCase):
@@ -192,27 +227,60 @@ class SponsorPartyPeriods(unittest.TestCase):
         records = self.records(("Independent", "2020-01-01", "2025-01-01", None))
         self.assertEqual(self.apply(self.bill(None), records), "Independent")
 
-    def test_contextual_conventions_do_not_become_global_aliases(self):
-        for source, dated in [("Rex Patrick Team", "Independent"), ("Liberal", "Nationals")]:
-            with self.subTest(source=source):
-                records = self.records((dated, "2020-01-01", "2025-01-01", None))
-                convention = (("99001", "senate", "2020-01-01", "2024-06-01", source, dated),)
-                with patch.object(eb, "SPONSOR_PARTY_CONVENTIONS", convention):
-                    self.assertEqual(self.apply(self.bill(source), records), source)
-                    by_name = self.bill(source)
-                    by_name["sponsor_person_id"] = None
-                    self.assertEqual(self.apply(by_name, records), source)
-                    self.assertEqual(self.apply(self.bill(source, "2024-07-01"), records), dated)
-                self.assertEqual(self.apply(self.bill(source), records), dated)
-                self.assertFalse(eb.vote_parties.same_party(source, dated))
+    def test_own_registered_party_beats_independent_on_either_side(self):
+        for personal in ("Rex Patrick Team", "Nick Xenophon Team", "Jacqui Lambie Network",
+                         "Australian Conservatives", "Katter's Australian Party"):
+            for source, dated in [(personal, "Independent"), ("Independent", personal)]:
+                with self.subTest(source=source, dated=dated), patch.object(
+                        eb, "PERSONAL_SPONSOR_PARTIES", {personal: "99001"}):
+                    records = self.records((dated, "2000-01-01", "2025-01-01", None))
+                    self.assertEqual(self.apply(self.bill(source, "2001-01-01"), records), personal)
+                    self.assertFalse(eb.vote_parties.same_party(personal, "Independent"))
 
-    def test_missing_records_freeze_source_labels(self):
+    def test_someone_elses_registered_party_does_not_override_independent(self):
+        records = self.records(("Independent", "2020-01-01", "2025-01-01", None))
+        self.assertEqual(self.apply(self.bill("Katter's Australian Party"), records), "Independent")
+
+    def test_liberal_and_nationals_are_not_an_independent_naming_convention(self):
+        records = self.records(("Independent", "2020-01-01", "2025-01-01", None))
+        for source in ("Liberal", "Nationals"):
+            self.assertEqual(self.apply(self.bill(source), records), "Independent")
+
+    def test_missing_records_abort_instead_of_reverting_publications(self):
         records = self.records(("Independent", "2020-01-01", "2025-01-01", None))
         records.evidence.frozen = frozenset({("federal", "senate")})
-        self.assertEqual(self.apply(self.bill(), records), "Liberal")
+        with self.assertRaisesRegex(RuntimeError, "Bill export aborted: Senate Handbook unavailable"):
+            self.apply(self.bill(), records)
         records.evidence.frozen = frozenset()
         records.evidence.check_labels = False
-        self.assertEqual(self.apply(self.bill(), records), "Liberal")
+        with self.assertRaisesRegex(RuntimeError, "Bill export aborted: electorate release unavailable"):
+            self.apply(self.bill(), records)
+
+    def test_loader_outages_abort_build_before_publication(self):
+        for loader, message in [("release_evidence", "electorate release"),
+                                ("handbook_evidence", "Senate Handbook")]:
+            with self.subTest(loader=loader), patch.object(eb.vote_parties, loader, side_effect=OSError("fixture outage")), \
+                    patch.object(eb.PartyTimeline, "load", return_value=eb.PartyTimeline({}, {})), \
+                    patch.object(eb, "load_v2_bills", return_value=[self.bill()]), \
+                    patch.object(eb, "load_suppressed", return_value=[]), \
+                    patch.object(eb, "has_table", return_value=False):
+                with sqlite3.connect(":memory:") as db:
+                    with self.assertRaisesRegex(RuntimeError, "Bill export aborted: " + message):
+                        eb.build(db, False)
+
+    def test_pid_cannot_correct_a_different_printed_surname(self):
+        records = self.records(("Independent", "2020-01-01", "2025-01-01", None))
+        b = self.bill()
+        b["sponsor"] = "OTHER, Sen Morgan"
+        self.assertEqual(self.apply(b, records), "Liberal")
+        b["sponsor_party"] = None
+        self.assertEqual(self.apply(b, records), "Independent")
+
+    def test_reviewed_rename_boundary_is_inclusive(self):
+        records = self.records(("Centre Alliance", "2010-01-01", "2025-01-01", None))
+        records.evidence.renames = [[(None, "Nick Xenophon Team"), ("2018-04-10", "Centre Alliance")]]
+        for day, expected in [("2018-04-09", "Nick Xenophon Team"), ("2018-04-10", "Centre Alliance")]:
+            self.assertEqual(self.apply(self.bill("Nick Xenophon Team", day), records), expected)
 
     def test_new_dated_party_is_an_allowed_published_token(self):
         records = self.records(("Australian Conservatives", "2020-01-01", "2025-01-01", None))

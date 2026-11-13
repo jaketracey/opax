@@ -18,10 +18,16 @@ class PublishedBillFacts(unittest.TestCase):
         self.assertEqual(len(AUDIT['parties']), 585)
         index = json.loads((ROOT / 'portal/public/bills/index.json').read_text())
         parties = {row['key']: row['sponsor_party'] for row in index['bills']}
+        records = export.SponsorPartyRecords()
         for row in AUDIT['parties']:
             with self.subTest(key=row['key'], raw=row['raw']):
-                self.assertEqual(export.sponsor_party_token(row['raw']), row['canonical'])
-                self.assertEqual(parties[row['key']], row['canonical'])
+                source = row.get('source_canonical', row['canonical'])
+                self.assertEqual(export.sponsor_party_token(row['raw']), source)
+                self.assertIn(parties[row['key']], (source, row['canonical']))
+                bill = json.loads((ROOT / 'portal/public/bills' / (row['key'] + '.json')).read_text())
+                self.assertEqual(records.check(bill)['party'], row['canonical'])
+                refreshed = {**bill, 'sponsor_party': row['canonical']}
+                self.assertEqual(records.check(refreshed)['party'], row['canonical'])
 
     def test_retained_label_repair_never_infers_missing_affiliations(self):
         with tempfile.TemporaryDirectory() as scratch:

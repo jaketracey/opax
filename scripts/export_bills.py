@@ -795,15 +795,22 @@ def fill_sponsor_ids(bills: list[dict], members: dict[str, dict]) -> int:
     return filled
 
 
-# Narrow naming conventions found in the published-bill audit. These are not
-# global aliases: Independent is not interchangeable with a registered party,
-# and Liberal and Nationals remain distinct. The periods and identities are
-# held in handbook_party_service.json and roster_accept.json; the latter's
-# accepted Sam McMahon row also records her Country Liberal Party affiliation.
-SPONSOR_PARTY_CONVENTIONS = (
-    ("10903", "senate", "2020-08-09", "2022-07-01", "Rex Patrick Team", "Independent"),
-    ("10948", "senate", "2019-05-18", "2022-04-07", "Liberal", "Nationals"),
-)
+# Naming rule: a person's own registered party beats the parliamentary label
+# Independent, whichever side holds it. These are the personal parties in the
+# reviewed sponsor audit, not aliases for Independent. This rule supplies no
+# party's foundation date and does not preserve a former Liberal/Nationals
+# affiliation over a dated move to Independent.
+# Ownership, not membership: another person's membership of one of these
+# parties cannot override their later dated move to Independent (e.g. Anning).
+PERSONAL_SPONSOR_PARTIES = {
+    "Rex Patrick Team": "10903", "Nick Xenophon Team": "10717",
+    "Jacqui Lambie Network": "10830", "Australian Conservatives": "10038",
+    "Katter's Australian Party": "10352",
+}
+# The accepted roster's Sam McMahon row records Country Liberal Party. Only
+# when both source and dated labels are its parliamentary naming variants may
+# this registered label bridge Liberal/Nationals; it supplies no service dates.
+SPONSOR_REGIONAL_PARTIES = {("senate", "10948"): "Country Liberal Party"}
 
 
 class SponsorPartyRecords:
@@ -815,9 +822,17 @@ class SponsorPartyRecords:
 
     def __init__(self, evidence=None):
         self.evidence = vote_parties.load_evidence() if evidence is None else evidence
+        self.require_available()
         self.resolver = vote_parties.Resolver(self.evidence)
 
+    def require_available(self) -> None:
+        if not getattr(self.evidence, "check_labels", True):
+            raise RuntimeError("Bill export aborted: electorate release unavailable; published bills must be kept")
+        if ("federal", "senate") in getattr(self.evidence, "frozen", ()):
+            raise RuntimeError("Bill export aborted: Senate Handbook unavailable; published bills must be kept")
+
     def check(self, bill: dict, sponsor: dict | None = None) -> dict:
+        self.require_available()
         member = sponsor if sponsor is not None else {
             "name": bill.get("sponsor"), "person_id": bill.get("sponsor_person_id"),
             "party": bill.get("sponsor_party")}
@@ -826,12 +841,11 @@ class SponsorPartyRecords:
         day, house = vote_parties.iso(bill.get("introduced")), bill.get("originating_house")
         if not day:
             return {**kept, "reason": "no-date"}
-        if not getattr(self.evidence, "check_labels", True) or (
-                getattr(self.evidence, "is_frozen", None) and self.evidence.is_frozen(
-                    {"jurisdiction": bill.get("jurisdiction", "federal"), "house": house})):
-            return {**kept, "reason": "record-unavailable"}
         name = sponsor_print({"sponsor": member.get("name")})
         rule, hits = self.resolver.match(house, day, name, member.get("person_id"), set())
+        if source and rule == "pid" and hits and (not vote_parties.surname(name) or not any(
+                vote_parties.surname(name) in hit["surnames"] for hit in hits)):
+            return {**kept, "reason": "pid-surname-mismatch"}
         party, basis, url = self.resolver.party_on(hits, day, same=vote_parties.same_party) if hits else (
             None, rule, None)
         if not party:
@@ -841,19 +855,31 @@ class SponsorPartyRecords:
             return {**kept, "reason": "unrecognised-dated-party", "record_party": party}
         result = {**kept, "dated_party": dated, "record_party": party,
                   "basis": basis, "url": url, "rule": rule}
-        if not source:
-            return {**result, "party": dated, "reason": "filled"}
-        if vote_parties.same_party(source, dated):
-            return {**result, "reason": "agrees" if source == dated else "alias"}
         pid = str(member.get("person_id") or "").removeprefix("tvfy_")
         if not pid:
             matched_pids = {p.removeprefix("tvfy_") for hit in hits for p in hit["pids"]}
             if len(matched_pids) == 1:
                 pid = matched_pids.pop()
-        if any(pid == p and house == h and start <= day < end and source == a and dated == b
-               for p, h, start, end, a, b in SPONSOR_PARTY_CONVENTIONS):
-            return {**result, "reason": "convention"}
-        return {**result, "party": dated, "reason": "corrected"}
+        regional = SPONSOR_REGIONAL_PARTIES.get((house, pid))
+        if not source:
+            chosen, reason = dated, "filled"
+        elif "Independent" in (source, dated) and any(
+                PERSONAL_SPONSOR_PARTIES.get(p) == pid for p in (source, dated)):
+            chosen = source if PERSONAL_SPONSOR_PARTIES.get(source) == pid else dated
+            reason = "convention" if chosen == source else "corrected"
+        elif regional and all(vote_parties.same_party(p, regional) for p in (source, dated)):
+            chosen, reason = regional, "convention"
+        elif vote_parties.same_party(source, dated):
+            chosen, reason = source, "agrees" if source == dated else "alias"
+        else:
+            chosen, reason = dated, "corrected"
+        renamed = vote_parties.dated_name(getattr(self.evidence, "renames", ()), chosen, day)
+        if renamed and renamed != chosen:
+            result["rename_from"] = chosen
+            chosen = renamed
+            if reason != "corrected":
+                reason = "renamed"
+        return {**result, "party": chosen, "reason": reason}
 
 
 def fill_sponsor_parties(bills: list[dict], timeline: PartyTimeline,

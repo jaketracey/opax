@@ -11,7 +11,7 @@ from collections import Counter
 import json
 from pathlib import Path
 
-from export_bills import SponsorPartyRecords
+from export_bills import PartyTimeline, SponsorPartyRecords, fill_sponsor_parties
 from vote_parties import same_party
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -34,7 +34,7 @@ def audit(root: Path = ROOT) -> dict:
         row.update(outcome)
         if outcome["reason"] == "corrected":
             category = "a"
-        elif outcome["reason"] == "convention":
+        elif outcome["reason"] in ("convention", "renamed"):
             category = "b"
         elif not outcome.get("dated_party"):
             category = "c"
@@ -43,8 +43,7 @@ def audit(root: Path = ROOT) -> dict:
         else:
             category = "agrees"
         counts[category] += 1
-        # Reproduce the original 52: substantive comparisons before the two
-        # person/period-specific naming conventions were reviewed.
+        # Reproduce the original 52 before the reviewed naming rules.
         review = bool(outcome.get("record_party") and not same_party(
             bill["sponsor_party"], outcome["record_party"]))
         counts["review_bills"] += review
@@ -52,11 +51,30 @@ def audit(root: Path = ROOT) -> dict:
     return {"published_bills": len(index["bills"]), "counts": dict(counts), "rows": rows}
 
 
+def project(root: Path = ROOT) -> dict:
+    """The next sponsor projection in memory, without a database or bill writes.
+
+    Published labels stand in for registry source labels. Empty labels get
+    bounded service fills only: the database's speech fallback is unavailable.
+    """
+    from vote_parties import load_evidence
+    public = root / "portal/public"
+    records = SponsorPartyRecords(load_evidence(root=root, public=public))
+    index = json.loads((public / "bills/index.json").read_text())
+    bills = [json.loads((public / "bills" / f"{row['key']}.json").read_text()) for row in index["bills"]]
+    fill_sponsor_parties(bills, PartyTimeline({}, {}), records)
+    sponsors = {b["key"]: {"sponsor_party": b["sponsor_party"], "sponsors": b.get("sponsors", [])}
+                for b in bills}
+    return {"bills": [{**row, "sponsor_party": sponsors[row["key"]]["sponsor_party"]}
+                      for row in index["bills"]], "sponsors": sponsors}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=ROOT)
+    parser.add_argument("--project", action="store_true", help="project sponsor fields in memory for refresh tests")
     args = parser.parse_args()
-    print(json.dumps(audit(args.root), ensure_ascii=False, indent=2))
+    print(json.dumps(project(args.root) if args.project else audit(args.root), ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":
