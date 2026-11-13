@@ -1,10 +1,12 @@
 """
 parli.ingest.speaker_hygiene -- who a speech is attributed to, made honest.
 
-Five loops over `speeches`, each idempotent, each logged to
+Six loops over `speeches`, each idempotent, each logged to
 `ext_committee_relinks` (the same audit table the committee resolver writes)
 and queued for the knowledge box in `ext_kb_patch_queue`:
 
+  identity      reviewed House namesakes, resolved from original prints, seat
+                and sourced service dates before any surname expansion.
   jurisdiction  a speech may only link to a member of its own parliament.
                 Surname matching had tied federal speeches to state stubs
                 ("Mark Latham" the NSW MLC for 1998-2004 House speeches; Senator
@@ -361,7 +363,7 @@ CREATE TABLE IF NOT EXISTS ext_ingest_log (
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0], formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--db", default=os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db"))
-    ap.add_argument("--loops", default="jurisdiction,fullname,junk,committee_party,role_stub")
+    ap.add_argument("--loops", default="identity,jurisdiction,fullname,junk,committee_party,role_stub")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
     loops = [l.strip() for l in args.loops.split(",") if l.strip()]
@@ -377,9 +379,19 @@ def main() -> None:
         else:
             db.execute("ALTER TABLE speeches ADD COLUMN speaker_type TEXT")
             db.commit()
+    if 'identity' in loops and not args.dry_run:
+        from parli.ingest.speaker_identity import ensure_members
+        ensure_members(db)
+        db.commit()
     members = Members(db)
     stats: Counter = Counter()
     changes: dict[int, tuple] = {}     # speech_id -> (pid, clean, reason, old_pid, old_clean, type|None)
+
+    if 'identity' in loops:
+        from parli.ingest.speaker_identity import identity_changes
+        for sid, pid, clean, reason, old_pid, old_clean in identity_changes(db):
+            changes[sid] = (pid, clean, reason, old_pid, old_clean, None)
+            stats['identity_repaired'] += 1
 
     if "jurisdiction" in loops:
         for sid, pid, clean, reason, old_pid, old_clean in loop_jurisdiction(db, members, stats):

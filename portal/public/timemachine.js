@@ -1,4 +1,4 @@
-import { personUrl, partyUrl } from './canonical-urls.js?v=bcc9a57bab';
+import { personUrl, partyUrl } from './canonical-urls.js?v=9ce13e7ba5';
 import {isMultiSpeaker, speakerLabel, isUnattributed, resolvedParticipants, groupAvatarHTML} from './speech-attribution.js?v=7280d96f90';
 /**
  * OPAX Time Machine — an Encarta-style year explorer for the Australian
