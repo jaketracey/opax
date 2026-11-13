@@ -32,5 +32,5 @@ test('every donor on main\'s published index is still reachable by its name', ()
   assert.deepEqual(lost, []);
   assert.ok(pinned.includes('federal\tLinc Energy'), 'Linc Energy, rank 251 since the Libertarian Party\'s donors were counted');
   const linc = index.get(foldDonorName('Linc Energy'));
-  assert.deepEqual([linc.jurisdiction, linc.total, linc.count], ['federal', 671498, 18], 'its own returns, summed from the database');
+  assert.deepEqual([linc.jurisdiction, linc.total, linc.count], ['federal', 357799, 9], 'selected recipient receipts; donor declarations are never added');
 });

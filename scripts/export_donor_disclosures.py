@@ -74,6 +74,75 @@ def published_references(public):
 MONEY_GRAPHS = ["graph/money.json", "graph/money.qld.json", "graph/money.vic.json", "graph/money.tas.json"]
 
 
+def attach_selected_federal_receipts(db, nodes):
+    """Retained donor pages use the map's receipt selection without its drawing cap.
+
+    The legacy donations table also contains donor-side declarations. Identity and
+    source references still come from that table, but its sum is never a receipt
+    figure. Equal recipient rows are genuine disclosed lines and remain separate.
+    """
+    from collections import defaultdict
+    from parli.ingest.aec_receipts import FILES
+    from scripts.aec_receipt_selection import load_selection
+    from scripts.aec_receipt_types import add_receipt, receipt_cells, receipt_fields
+    from scripts.export_money_graph import year_of
+
+    tables = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+    expected = {(archive, name) for archive, names in FILES.items() for name in names}
+    if not {'aec_receipt_records', 'aec_receipt_files'} <= tables or {
+            tuple(r) for r in db.execute('SELECT archive,source_file FROM aec_receipt_files')} != expected:
+        raise ValueError('Complete cached AEC receipt backfill required for retained donor figures')
+    selection = load_selection(db)
+    cells = defaultdict(receipt_cells)
+    for donor, recipient, amount, period, kind, recipient_kind in db.execute(
+            "SELECT donor_name,recipient,amount,financial_year,receipt_type,recipient_kind "
+            "FROM aec_receipt_records WHERE record_side='recipient'"):
+        if selection.exclusion(donor, recipient, amount, period, recipient_kind, receipt_type=kind):
+            continue
+        eid = selection.entity(donor)
+        add_receipt(cells[('entity', eid) if eid else ('name', donor)], kind, period, amount)
+    for node in nodes:
+        eid = (node.get('match') or {}).get('entity_id') or selection.entity(node['label'])
+        keys = {('entity', eid)} if eid else set()
+        # Keep the published exact spellings too, as the map's name lookup does.
+        # A resolved alias is already in its entity cell, never added twice.
+        for name in [node['label'], node.get('source_name'), *node.get('aliases', []), *node.get('lookup_names', [])]:
+            if not name:
+                continue
+            resolved = selection.entity(name)
+            if not resolved:
+                keys.add(('name', name))
+            elif not eid:
+                keys.add(('entity', resolved))
+        selected = receipt_cells()
+        for key in keys:
+            for kind, amount in cells[key]['by_type'].items():
+                selected['by_type'][kind] += amount
+            for period, types in cells[key]['by_type_year'].items():
+                for kind, (amount, count) in types.items():
+                    selected['by_type_year'][period][kind][0] += amount
+                    selected['by_type_year'][period][kind][1] += count
+        typed = receipt_fields(selected)
+        for field in ('total', 'count', 'byYear', 'firstYear', 'lastYear'):
+            node.pop(field, None)
+        node.update(typed)
+        if not typed['by_type']:
+            continue
+        years = defaultdict(lambda: [0, 0])
+        for period, types in typed['by_type_year'].items():
+            year = year_of(period)
+            if year:
+                for amount, count in types.values():
+                    years[str(year)][0] += amount
+                    years[str(year)][1] += count
+        node.update(total=round(sum(typed['by_type'].values()), 2),
+                    count=sum(c[1] for t in typed['by_type_year'].values() for c in t.values()),
+                    byYear={y: [round(c[0], 2), c[1]] for y, c in sorted(years.items())},
+                    firstYear=min(map(int, years)) if years else None,
+                    lastYear=max(map(int, years)) if years else None)
+    return nodes
+
+
 def indexed_off_map(public):
     """Donors the published index holds that the current money maps no longer draw.
 
@@ -110,6 +179,8 @@ def disclosure_catalog(db, candidates):
         graph = {"meta": {"sourceShort": jurisdiction.upper() + " disclosure returns"},
                  "nodes": [{**n, "aliases": list(n["aliases"]), "_summarise_disclosures": True} for n in candidates]}
         attach_donor_disclosures(db, graph, jurisdiction)
+        if jurisdiction == 'federal':
+            attach_selected_federal_receipts(db, graph['nodes'])
         # Candidates are keyed by spelling, so two spellings of one resolved entity
         # come back as two identical records; publish one (money-donations-009).
         by_entity = {}
@@ -145,7 +216,7 @@ def disclosure_catalog(db, candidates):
                            "match": {"confidence": 0, "method": "unresolved", "href": None},
                            "returnReferences": refs,
                            "source_note": "Source reference only; no matching electoral return established."})
-    return {"version": 1, "donors": donors, "references": references}
+    return {"version": 2, "receiptSelection": "aec_receipt_selection.ReceiptSelection; uncapped recipient receipts only; donor declarations and public funding excluded", "donors": donors, "references": references}
 
 
 def main():
