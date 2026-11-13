@@ -13,6 +13,7 @@ import {
   type AnalyticsEvent,
   type EventProperties,
 } from './events';
+import { windowClass } from '../design/adaptive';
 import { routeErrorPattern } from './route-patterns';
 
 /**
@@ -66,6 +67,7 @@ export function analyticsContext(
       (config?.extra as { appBuild?: unknown } | undefined)?.appBuild ?? '',
     ),
     environment,
+    window: windowClass,
   };
 }
 

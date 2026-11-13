@@ -114,3 +114,42 @@ export function routeErrorPattern(value: unknown): string | undefined {
     ? value
     : undefined;
 }
+
+const compiled = [...routePatterns].map((pattern) => ({
+  pattern,
+  parts: pattern === '/' ? [] : pattern.slice(1).split('/'),
+}));
+const parameter = /^\[[A-Za-z]{1,24}\]$/;
+const rest = /^\[\.\.\.[A-Za-z]{1,24}\]$/;
+
+/**
+ * The fixed pattern a concrete app path lands on: "/person/[slug]" for
+ * "/(tabs)/(today)/person/jane-citizen?from=widget", else "/other". Groups,
+ * "index", the query and the fragment are dropped, and a literal segment
+ * beats a parameter. Only a pattern from the list above is ever returned,
+ * never a segment of the path.
+ */
+export function routePatternFor(path: string): string {
+  const pathname = path.split(/[?#]/)[0] ?? '';
+  const segments = pathname
+    .split('/')
+    .filter((s) => s && s !== 'index' && !/^\(.*\)$/.test(s));
+  let best: { pattern: string; literal: number } | null = null;
+  for (const { pattern, parts } of compiled) {
+    const open = parts.length > 0 && rest.test(parts[parts.length - 1]!);
+    if (
+      open ? segments.length < parts.length : segments.length !== parts.length
+    )
+      continue;
+    let literal = 0;
+    const matches = parts.every((part, i) => {
+      if (rest.test(part) || parameter.test(part)) return true;
+      if (part !== segments[i]) return false;
+      literal += 1;
+      return true;
+    });
+    if (matches && (!best || literal > best.literal))
+      best = { pattern, literal };
+  }
+  return best?.pattern ?? '/other';
+}
