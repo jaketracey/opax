@@ -152,3 +152,135 @@ def test_gap_counts_cover_each_domain_without_turning_idless_recipients_into_peo
     after = audit(roster, bundle, local, public)
     assert after['total_unresolved_name_variants'] < before['total_unresolved_name_variants']
     assert after['categories']['speeches']['missing_profile_ids'] == 1
+
+
+# Official-list members with no Hansard row (scripts/roster_source_profiles.py LIST_RULE). Invented people only.
+LIST_URL = 'https://example.org/council/members'
+
+
+def list_fixture(tmp_path):
+    snap = dict(source_url=LIST_URL, sha256='ab' * 32, as_of='2026-11-13', jurisdiction='sa', chamber='sa_lc',
+                members=[
+                    dict(name='Ada Example', aliases=['Ada Jane Example'], electorate='South Australia', party='Labor'),
+                    dict(name='Cory Sample', aliases=[], electorate='South Australia', party='One Nation'),
+                    dict(name='Pat Printed', aliases=['Pat Quinn Printed'], electorate='South Australia', party='Greens',
+                         prints=['P.Q. Printed']),
+                ])
+    (tmp_path / 'scripts').mkdir(parents=True, exist_ok=True)
+    (tmp_path / 'scripts/roster_state_evidence.json').write_text(json.dumps(dict(reviewed='2026-11-13', snapshots=[snap])))
+    senate = dict(jurisdiction='federal', chamber='senate', electorate='South Australia', state='SA',
+                  basis='Recorded parliamentary roster; exact name and chamber match')
+    people = [
+        dict(name='Cory Sample', speeches=40, party='Liberal', states=['federal'], chambers=['senate'], first=2006,
+             last=2019, pid='19998', representation=[senate]),
+        dict(name='P.Q. Printed', speeches=12, states=['sa'], chambers=['sa_lc'], first=2021, last=2023, representation=[]),
+    ]
+    evidence = {'sa-list': dict(kind='identity', rule='official-list-member', checked='2026-11-13', url=LIST_URL,
+                                reason='fixture')}
+    return snap, dict(meta=dict(people=len(people)), people=people), evidence
+
+
+def list_accept(doc, snap, evidence):
+    from scripts.roster_source_profiles import propose_list
+    new, links, held = propose_list(doc, snap, 'sa-list', '2026-11-13', LIST_URL)
+    return dict(evidence=evidence, new=new, records={n: [g] for n, g in links.items()}, drop={}), held
+
+
+def test_a_list_member_without_hansard_gets_one_stub_and_a_federal_namesake_is_linked(tmp_path):
+    from scripts.roster_source_profiles import enrich_lists, state_evidence
+    snap, doc, evidence = list_fixture(tmp_path)
+    acc, held = list_accept(doc, snap, evidence)
+    assert held == []
+    # Pat Printed already sits in the chamber under a reviewed print: neither a stub nor a link.
+    assert set(acc['new']) == {'Ada Example'} and set(acc['records']) == {'Cory Sample'}
+    stub = acc['new']['Ada Example']['row']
+    assert stub == dict(name='Ada Example', speeches=0, states=['sa'], chambers=['sa_lc'], first=2026, last=2026,
+                        roster_only=True, aliases=['Ada Jane Example'], party='Labor', current=True, party_now='Labor',
+                        representation=[dict(jurisdiction='sa', chamber='sa_lc', electorate='South Australia', state='SA',
+                                             basis='Official member list as at 2026-11-13; list-only service, no speech attribution')])
+    assert 'pid' not in stub
+    state = state_evidence(tmp_path)
+    out = enrich_lists(copy.deepcopy(doc), acc, state)
+    names = [p['name'] for p in out['people']]
+    assert names.count('Ada Example') == 1 and names.count('Cory Sample') == 1 and len(names) == 3
+    cory = next(p for p in out['people'] if p['name'] == 'Cory Sample')
+    # Linked: same id, speeches, party and years; only the Council chamber, state and seat are added.
+    assert cory['pid'] == '19998' and cory['speeches'] == 40 and cory['party'] == 'Liberal' and cory['last'] == 2019
+    assert cory['states'] == ['federal', 'sa'] and cory['chambers'] == ['senate', 'sa_lc']
+    assert cory['representation'][0]['chamber'] == 'senate' and cory['representation'][1]['chamber'] == 'sa_lc'
+    assert not {k for k in cory} - {*doc['people'][0], 'states', 'chambers', 'representation'}
+    # Idempotent: a second pass, and a pass over a roster that already holds them, change nothing.
+    assert enrich_lists(copy.deepcopy(out), acc, state) == out
+    again, held = list_accept(out, snap, evidence)
+    assert held == [] and again['new'] == {} and again['records'] == {}
+    # The accept list's own gate passes both, and the overlay installs exactly them onto the shipped roster.
+    assert roster_accept.validate(acc, doc['people'], curated={}, root=tmp_path) == []
+    blocked, groups, new = roster_accept.judge(acc, doc['people'], root=tmp_path, curated={})
+    assert blocked is None and all(why is None for *_, why in groups) and all(why is None for *_, why in new)
+
+
+def test_list_rows_hold_when_the_list_moves_or_the_name_is_ambiguous(tmp_path):
+    from scripts.roster_source_profiles import enrich_lists, propose_list, state_evidence, list_problem
+    snap, doc, evidence = list_fixture(tmp_path)
+    acc, _ = list_accept(doc, snap, evidence)
+    entry = acc['new']['Ada Example']
+    # The row must be what the list gives: an id, speeches or another party is held.
+    for field, value in (('pid', '19997'), ('speeches', 3), ('party', 'Liberal')):
+        bad = copy.deepcopy(entry)
+        bad['row'][field] = value
+        assert roster_accept.new_row_problem('Ada Example', bad, evidence, root=tmp_path)
+    assert roster_accept.new_row_problem('Ada Example', entry, evidence, root=tmp_path) is None
+    # A list whose body changed (another digest) no longer vouches for the row, and a re-export refuses it.
+    moved = json.loads((tmp_path / 'scripts/roster_state_evidence.json').read_text())
+    moved['snapshots'][0]['sha256'] = 'cd' * 32
+    (tmp_path / 'scripts/roster_state_evidence.json').write_text(json.dumps(moved))
+    assert 'official list' in list_problem('Ada Example', entry, root=tmp_path)
+    with pytest.raises(ValueError):
+        enrich_lists(copy.deepcopy(doc), acc, state_evidence(tmp_path))
+    # Two roster people with the list name, or one in another state, are held for a person, never linked.
+    twin = dict(doc['people'][0], pid='19996')
+    _, links, held = propose_list(dict(people=[*doc['people'], twin]), snap, 'sa-list', '2026-11-13', LIST_URL)
+    assert links == {} and [n for n, _ in held] == ['Cory Sample']
+    elsewhere = copy.deepcopy(doc)
+    elsewhere['people'][0]['representation'][0]['state'] = 'NSW'
+    _, links, held = propose_list(elsewhere, snap, 'sa-list', '2026-11-13', LIST_URL)
+    assert links == {} and held == [('Cory Sample', 'The linked person holds no seat in the list state')]
+
+
+def test_shipped_sa_council_list_members_are_seven_and_bernardi_is_one_person():
+    root = Path(__file__).resolve().parents[1]
+    doc = json.loads((root / 'portal/public/parliamentarians.json').read_text())
+    acc = roster_accept.load()
+    listed = {n for n, e in acc['new'].items() if e['evidence'] == 'sa-council-list'}
+    assert listed == {'Mira El Dannawi', 'Hilton Gumbys', 'Rebecca Hewett', 'Benjamin Hood', 'Carlos Quaremba',
+                      'Melanie Selwood'}
+    by = {p['name']: p for p in doc['people']}
+    for name in listed:
+        p = by[name]
+        assert p['roster_only'] and p['speeches'] == 0 and 'pid' not in p and p['chambers'] == ['sa_lc'] and p['current']
+    assert [p['name'] for p in doc['people'] if 'bernardi' in p['name'].lower()] == ['Cory Bernardi']
+    cory = by['Cory Bernardi']
+    assert cory['pid'] == '10038' and 'sa_lc' in cory['chambers'] and not cory.get('roster_only')
+    identity = json.loads((root / 'scripts/person_identity.json').read_text())['same_person']
+    assert identity['cory bernardi']['key'] == '10038'
+    # D.G.E. Hood and the surname print "Hood" are not Benjamin Hood and keep their rows.
+    assert by['D.G.E. Hood'].get('pid') is None and 'sa_lc' not in by['Hood']['chambers']
+
+
+def test_an_export_row_that_differs_keeps_the_stubs_and_leaves_the_link_to_the_overlay(tmp_path):
+    """The box export's row for a linked person can differ from the reviewed one (no seat yet, another basis):
+    the link is not laid on it, nothing raises, and the list-only rows are still rebuilt."""
+    from scripts.roster_source_profiles import enrich_lists, state_evidence
+    snap, doc, evidence = list_fixture(tmp_path)
+    acc, _ = list_accept(doc, snap, evidence)
+    export = copy.deepcopy(doc)
+    export['people'][0]['representation'] = []
+    out = enrich_lists(copy.deepcopy(export), acc, state_evidence(tmp_path))
+    assert out['people'][0] == export['people'][0]
+    assert [p['name'] for p in out['people']].count('Ada Example') == 1
+    shipped = enrich_lists(copy.deepcopy(doc), acc, state_evidence(tmp_path))
+    real = Path(__file__).resolve().parents[1]
+    for rel in roster_accept.CURATED_FILES:  # the repo's curated pins name none of these invented people
+        (tmp_path / rel).write_text((real / rel).read_text())
+    people, report = roster_accept.apply(shipped['people'], out['people'], acc, tmp_path)
+    assert people == shipped['people'] and report['blocked'] is None

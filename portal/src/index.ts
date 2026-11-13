@@ -6,7 +6,7 @@ import {suppliersTableHTML} from '../public/suppliers-table.js'
 import {partyMoneyResponse} from './party-money-table'
 import {interestRegisterResponse} from './interest-register'
 import {loadDonorIndex} from './donor-index'
-import {donorDisclosure,donorLabelHTML,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
+import {donorDisclosure,donorLabelHTML,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
@@ -91,6 +91,7 @@ import { operatorAuthorized } from './operator-auth'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/party-page.js'
 import { referenceOnlyPeople } from '../public/roster-party.js'
+import { NO_HANSARD_HELD } from '../public/held-back-transcripts.js'
 import {foldDonorName} from '../public/donor-entity.js'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
@@ -144,7 +145,7 @@ import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { navGates, pageTrail, trail } from './nav-model.mjs'
 import { EMPTY_REPORTS_INDEX, REPORTS_INDEX, appUserAgent, reportDataPath, reportsAppData, reportsEnabled, reportsPath } from './reports-gate'
-import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, personHeadPrerender, homeMapFallbackHTML, mapDonorsPhrase, mapSpanPhrase, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, agencyTopSuppliers, type AgencyTopSuppliers, type Division, type ReadAsset } from './seo-content'
+import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, personHeadPrerender, homeMapFallbackHTML, homeMapSpan, mapDonorsPhrase, mapSpanPhrase, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, agencyTopSuppliers, type AgencyTopSuppliers, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { AGENCY_TOP_SUPPLIERS_PATH, type AgencyTopRow } from '../public/agency-top-suppliers.js'
 import { SUPPLIER_ID_RE, supplierRowsPath } from '../public/supplier-row-buckets.js'
@@ -4001,6 +4002,8 @@ interface Person {
   /** Surname prints folded into this person ("Shoebridge"; scripts/roster_fold.py): their speeches are this person's. */
   prints?: string[]
   speech_count_basis?: string
+  /** A list-only profile (scripts/roster_source_profiles.py): no speeches attributed, `speeches` is 0. */
+  roster_only?: boolean
   name: string
   speeches: number | null
   party: string | null
@@ -5262,8 +5265,8 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const role = p.speech_scope ? null : personRole(p, new Date().getUTCFullYear())
   const interests = await hasInterestsRegister(env, display, p.pid)
   title = personTitle(display, role, federal ? (interests ? 'Speeches, votes & interests' : 'Speeches & votes') : 'Speeches')
-  const count = p.speech_count_basis ? `No exact speech count yet; it will count only speeches they gave in the ${where} while in office.` : `${num(p.speeches ?? 0)} speeches in Hansard.`
-  const period = p.speech_scope ? '' : p.speech_count_basis ? `Transcript aggregate: ${years(p.first, p.last)}.` : `${years(p.first, p.last)}.`
+  const count = p.roster_only ? NO_HANSARD_HELD : p.speech_count_basis ? `No exact speech count yet; it will count only speeches they gave in the ${where} while in office.` : `${num(p.speeches ?? 0)} speeches in Hansard.`
+  const period = p.speech_scope ? '' : p.speech_count_basis ? `Transcript aggregate: ${years(p.first, p.last)}.` : p.roster_only ? `Recorded service: ${years(p.first, p.last)}.` : `${years(p.first, p.last)}.`
   const facts = `${display}${role ? `, ${roleLine(role)}` : who ? ` (${who})` : ''}: ${count}${period ? ` ${period}` : ''}`
   const holds = andList([federal ? 'votes' : '', interests ? 'register of interests' : '', p.party ? 'who funds their party' : ''].filter(Boolean))
   const tail = holds ? `Their ${holds}.` : 'Every speech cites the official record.'
@@ -5645,15 +5648,27 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     // The page's own measure (receiptFigures): the parties' returns, each gift once.
     const own = receiptFigures(node as Parameters<typeof receiptFigures>[0])
     const span = years(own.firstYear ?? node.firstYear, own.lastYear ?? node.lastYear)
-    facts = `${display}: disclosed political ${what}, ${money(own.total)} across ${num(own.count)} receipts, ${span} (${node.sourceShort}).`
+    // A donor no party return lists (hasPartyReceipts: empty typed cells) has no figure in
+    // this measure: never "$0 across 0 receipts". Its record figures are its own donor
+    // returns' declarations alone (no party listed any), said as that, as the map card says them.
+    const reported = hasPartyReceipts(node as Parameters<typeof hasPartyReceipts>[0])
+    // Public Funding only (NSW Efa): listed on the party's return as public funding, never a donor declaration (A35).
+    const funding = !reported && publicFundingOnly(node as Parameters<typeof publicFundingOnly>[0])
+    const declared = !reported && !funding && node.total > 0
+      ? `its own donor return${node.count === 1 ? ' declares' : 's declare'} $${Math.round(node.total).toLocaleString('en-AU')} across ${num(node.count)} record${node.count === 1 ? '' : 's'}, ${span} (${node.sourceShort})`
+      : ''
+    const figure = reported ? `${money(own.total)} across ${num(own.count)} receipts, ${span} (${node.sourceShort})` : ''
+    facts = reported ? `${display}: disclosed political ${what}, ${figure}.`
+      : funding ? `${display}: ${PUBLIC_FUNDING_ONLY}.`
+      : `${display}: disclosed political ${what}. No party return lists a receipt from it${declared ? `; ${declared}` : ''}.`
     // An AEC associated entity says so with its figures, the same way for every party (export rule 9).
     const associated = donorDisclosure(node as DonorDisclosureRecord).associated
     if (associated) facts += ` ${associated.charAt(0).toUpperCase()}${associated.slice(1)}.`
-    tail = 'Which parties disclosed receipts from it.'
+    tail = reported ? 'Which parties disclosed receipts from it.' : ''
     card = {
       kicker: `Donor · ${industryLabel(node.industry)}`,
       title: display,
-      lines: [`${money(own.total)} across ${num(own.count)} receipts, ${span} (${node.sourceShort})`,
+      lines: [...(reported ? [figure] : funding ? [PUBLIC_FUNDING_ONLY] : ['No party return lists a receipt from it', ...(declared ? [`${declared.charAt(0).toUpperCase()}${declared.slice(1)}`] : [])]),
         ...(associated ? [`${associated.charAt(0).toUpperCase()}${associated.slice(1)}`] : [])],
     }
   } else {
@@ -7354,14 +7369,15 @@ export default {
         const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/`,title:SITE_TITLE,description:SITE_DESCRIPTION})).replace(/</g,'\\u003c')
         // The map card's fallback: the /money answer's federal figures and a link to
         // /money, which carries the full answer (seo-content.ts homeMapFallbackHTML).
-        const moneyHtml=await assetJson<unknown>(env,'/graph/money.json').then(homeMapFallbackHTML).catch(()=>null)
+        // The lede above the card states the span by the same rule (seo-content.ts homeMapSpan).
+        const [moneyHtml,span]=await assetJson<unknown>(env,'/graph/money.json').then(graph=>[homeMapFallbackHTML(graph),homeMapSpan(graph)] as const).catch(()=>[null,null] as const)
         // The menus read the published optional sections off the page (navigation.js).
         const gates=navGates(env)
         // The home page's Reports block goes with the reports (src/reports-gate.ts).
         const reports=reportsEnabled(env.REPORTS_ENABLED)
-        const out=new HTMLRewriter().on('html',{element(el){if(gates)el.setAttribute('data-nav-gates',gates)}}).on('div#hp-money-map',{element(el){if(moneyHtml)el.setInnerContent(moneyHtml,{html:true})}}).on('[data-reports-only]',{element(el){if(!reports)el.remove()}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry)
+        const out=new HTMLRewriter().on('html',{element(el){if(gates)el.setAttribute('data-nav-gates',gates)}}).on('div#hp-money-map',{element(el){if(moneyHtml)el.setInnerContent(moneyHtml,{html:true})}}).on('span#hp-map-span',{element(el){if(span)el.setInnerContent(span)}}).on('[data-reports-only]',{element(el){if(!reports)el.remove()}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry)
         const headers=new Headers(out.headers);headers.delete('content-length')
-        const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',entry.headers.get('etag'),moneyHtml,schema,gates]);headers.set('etag',etag)
+        const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',entry.headers.get('etag'),moneyHtml,span,schema,gates]);headers.set('etag',etag)
         const unchanged=notModified(request,etag,headers)
         return communityResponse(unchanged || new Response(request.method==='HEAD' ? null : out.body,{status:out.status,headers}))
       }

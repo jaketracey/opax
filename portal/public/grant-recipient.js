@@ -3,8 +3,8 @@ import {recipientMetaLine} from './record-core-content.js';
 import {renderNotFound} from './not-found.js';
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=dffa19bbff';
 import {loadDonorViewIndex} from './donor-views.js?v=9770cf1299';
-import {partyUrl} from './canonical-urls.js?v=c40e3d805e';
-import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=f46cf4aa20';
+import {partyUrl} from './canonical-urls.js?v=bcc9a57bab';
+import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=0edf1c4dc7';
 
 const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const NUMBER = new Intl.NumberFormat('en-AU');

@@ -10,7 +10,7 @@ import {PUBLIC_FUNDING_ONLY, DONOR_DECLARED_ONLY, hasPartyReceipts, notListedLin
 
 const root = new URL('../', import.meta.url).pathname
 const built = await build({
-  stdin: {contents: "export {factSheet, periodPlan} from './src/agentic-ask'; export {partyDonations, TOOL_SPECS} from './src/agentic-tools'; export {callTool} from './src/tools/index'; export {writingFacts, proseFallback} from './src/research-writing'; export {receiptMeasureIntent} from './src/ask-money-family'; export {receiptAnswer, lendingQuestion} from './src/voice-money'; export {LENDING_NOTE, declaredDebtsLine} from './src/tools/declared-debts'; export {extractAskConstraints, constrainStep} from './src/ask-constraints'; export {donorRanking} from './src/research-coherence.mjs';", resolveDir: root},
+  stdin: {contents: "export {factSheet, periodPlan} from './src/agentic-ask'; export {partyDonations, TOOL_SPECS} from './src/agentic-tools'; export {callTool} from './src/tools/index'; export {writingFacts, proseFallback} from './src/research-writing'; export {receiptMeasureIntent} from './src/ask-money-family'; export {receiptAnswer, lendingQuestion, voiceReceiptData} from './src/voice-money'; export {LENDING_NOTE, declaredDebtsLine} from './src/tools/declared-debts'; export {extractAskConstraints, constrainStep} from './src/ask-constraints'; export {donorRanking} from './src/research-coherence.mjs';", resolveDir: root},
   bundle: true, write: false, platform: 'node', format: 'esm', external: ['node:*'],
 })
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'))
@@ -312,4 +312,24 @@ test('an industry donations ranking gives each party its industry\'s other recei
   const facts = api.factSheet([unions]).facts
   assert.equal(facts.filter(f => f.receipt?.aside).length, 1)
   assert.equal((await api.partyDonations(deps, {industry: 'unions', measure: 'all_types'})).data.other_receipts, undefined, 'all types: no lines')
+})
+
+test('voice never gives a Public Funding payer as a donor\'s own declaration; a donor-declared flow keeps that line', () => {
+  // A flow only the donor's own return declares: typed, no receipt on the party's return, no Public Funding.
+  const DECL = 'donor:declared only'
+  const graph = structuredClone(GRAPH)
+  graph.nodes.push({id: DECL, label: 'Declared Only Ltd', kind: 'donor', industry: 'other', total: 4000, count: 1, by_type: {}, by_type_year: {}})
+  graph.edges.push({source: DECL, target: 'party:Example', total: 4000, count: 1, byYear: {2020: [4000, 1]}, by_type: {}, by_type_year: {}})
+  const found = (donorId, donor) => ({type_breakdown: {}, total_aud: 4000, receipts: 1, period: '2020-21', subject: donor, period_reading: '', scope_reading: '',
+    flows: [{donor, donor_id: donorId, donor_href: null, return_reference: 'AEC donor return', party: 'Example', party_id: 'party:Example', total_aud: 4000}],
+    selected_donors: [donor], selected_parties: ['Example'], selected_industries: [], requested_years: [2020, 2020], jurisdiction: 'federal', period_options: [], scope_options: [],
+    period_coverage: {since: '2020-07-01', until: '2021-06-30', as_of: null, basis: 'financial_year'}, generated: '2026-11-13', sources: [{title: 'map', url: 'https://opax.test/money'}]})
+  const fund = found(FUND, 'Zed Funding Body')
+  assert.equal(api.voiceReceiptData(graph, fund), fund, 'Public Funding: left as found, never a declaration')
+  const declared = api.voiceReceiptData(graph, found(DECL, 'Declared Only Ltd'))
+  assert.equal(declared.donor_declared_only, true, 'the donor-declared line still renders')
+  assert.match(declared.answer, /^Declared Only Ltd declared \$4,000 to Example on its own donor return/)
+  // End to end: the deterministic route holds no receipt from the payer to name.
+  const asked = api.receiptAnswer(GRAPH, 'How much did Zed Funding Body give to Example?', 'federal', 'https://opax.test', {measure: 'receipts_all'})
+  assert.doesNotMatch(asked.answer, /declared|900,000/)
 })
