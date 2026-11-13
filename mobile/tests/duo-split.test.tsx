@@ -86,6 +86,8 @@ const compact: WindowTraits = {
   vertical: 'regular',
   foldable: true,
 };
+// The unfolded Duo in landscape beside its vertical tab bar: two panes.
+const SPLIT = 880;
 const bill: RecordEntry = {
   kind: 'bill',
   key: 'au-federal-r7534',
@@ -117,7 +119,7 @@ beforeEach(() => {
     setWindowTraitsOverride(null);
     resetAdaptiveDeviceForTests();
   });
-  windowSize(626);
+  windowSize(SPLIT);
   jest
     .mocked(catalogs.bills)
     .mockReset()
@@ -282,7 +284,7 @@ it('keeps the list mounted and its scroll state across a regular/compact/regular
   await settle();
   expect(hosts(tree, 'reader-split-detail')).toHaveLength(0);
   expect(host(tree, 'list-state').props.children).toBe('418:false:phone');
-  windowSize(626);
+  windowSize(SPLIT);
   await settle();
   expect(host(tree, 'list-state').props.children).toBe(
     '418:true:phone-regular',
@@ -303,7 +305,7 @@ it('collapses the open record to its route, then pops and selects it on expansio
     'bill/[key]',
   ]);
   expect(readerStack().routes[0]!.key).toBe(ownerKey);
-  windowSize(626);
+  windowSize(SPLIT);
   await settle();
   expect(route().pathname).toBe('/library');
   expect(route().params.open).toBe(encodeEntry(bill));
@@ -326,7 +328,7 @@ it('hands off the whole mapped pane stack and restores Back below its open recor
     'bill/[key]',
     'bill-text/[key]',
   ]);
-  windowSize(626);
+  windowSize(SPLIT);
   await settle();
   expect(pane?.entries).toEqual([bill, text]);
   act(() => {
@@ -342,7 +344,7 @@ it('honours Back taken on compact and does not resurrect a dismissed pane entry'
   windowSize(390, compact);
   await settle();
   await act(async () => router.back());
-  windowSize(626);
+  windowSize(SPLIT);
   await settle();
   expect(pane?.entries).toEqual([bill]);
 });
@@ -354,7 +356,7 @@ it('discards deeper pane entries after Back all the way to the compact list', as
   await settle();
   await act(async () => router.back());
   await act(async () => router.back());
-  windowSize(626);
+  windowSize(SPLIT);
   await settle();
   expect(pane?.entries).toEqual([bill]);
 });
@@ -367,7 +369,7 @@ it('restores the latest cited passage changed on a compact document route', asyn
   windowSize(390, compact);
   await settle();
   await act(async () => router.setParams({ passage: 'Second passage' }));
-  windowSize(626);
+  windowSize(SPLIT);
   await settle();
   expect(pane?.entries.at(-1)).toEqual({
     kind: 'doc',
@@ -383,7 +385,7 @@ it('expands a record opened on compact into this split and updates the list rout
     router.push(entryRoute(bill) as Parameters<typeof router.push>[0]),
   );
   await settle();
-  windowSize(626);
+  windowSize(SPLIT);
   await settle();
   expect(route().pathname).toBe('/library');
   expect(route().params.open).toBe(encodeEntry(bill));
@@ -395,7 +397,7 @@ it('leaves unrelated routes on top and does not mutate an inactive tab during co
   await renderApp(app, `/library?open=${encodeEntry(bill)}`);
   await act(async () => router.push('/unrelated'));
   windowSize(390, compact);
-  windowSize(626);
+  windowSize(SPLIT);
   await settle();
   expect(route().pathname).toBe('/unrelated');
   await act(async () => router.back());
@@ -432,7 +434,7 @@ it('waits for the owning tab to focus before expanding its compact detail route'
       payload: { name: '(other)/index' },
     }),
   );
-  windowSize(626);
+  windowSize(SPLIT);
   await settle();
   expect(readerStack().routes).toHaveLength(2);
   await act(async () =>
@@ -447,7 +449,7 @@ it('waits for the owning tab to focus before expanding its compact detail route'
   expect(pane?.entries).toEqual([bill]);
 });
 
-const vertical = { x: 301, y: 0, width: 24, height: 800, active: true };
+const vertical = { x: 428, y: 0, width: 24, height: 800, active: true };
 it('snaps to an active vertical fold, leaves its frame empty and pauses resizing without overwriting the saved width', async () => {
   const responder = jest.spyOn(PanResponder, 'create');
   const tree = await renderApp();
@@ -459,14 +461,14 @@ it('snaps to an active vertical fold, leaves its frame empty and pauses resizing
       nativeEvent: { actionName: 'increment' },
     }),
   );
-  expect(width()).toBe(303);
+  expect(width()).toBe(410);
   act(() => drag.onPanResponderGrant?.({} as never, {} as never));
   act(() => setRegions({ divisions: [vertical], occlusions: [] }));
   expect(drag.onStartShouldSetPanResponder?.({} as never, {} as never)).toBe(
     false,
   );
   act(() => drag.onPanResponderMove?.({} as never, { dx: 100 } as never));
-  expect(width()).toBe(301);
+  expect(width()).toBe(428);
   const divider = host(tree, 'split-divider');
   expect(StyleSheet.flatten(divider.props.style).width).toBe(24);
   expect(divider.props.children).toBeUndefined();
@@ -475,28 +477,28 @@ it('snaps to an active vertical fold, leaves its frame empty and pauses resizing
   expect(divider.props.accessibilityHint).toContain('Unfold to resize');
   expect(divider.props.onAccessibilityAction).toBeUndefined();
   expect(divider.props.onStartShouldSetResponder).toBeUndefined();
-  // The row layout puts the detail at the fold's trailing edge: 301 + 24.
-  expect(301 + StyleSheet.flatten(divider.props.style).width).toBe(325);
+  // The row layout puts the detail at the fold's trailing edge: 428 + 24.
+  expect(428 + StyleSheet.flatten(divider.props.style).width).toBe(452);
   act(() => setRegions(emptyReservedRegions));
-  expect(width()).toBe(303);
+  expect(width()).toBe(410);
   expect(listMounts).toBe(1);
   responder.mockRestore();
 });
 it.each([
   { ...vertical, active: false },
-  { x: 0, y: 390, width: 626, height: 20, active: true },
+  { x: 0, y: 390, width: SPLIT, height: 20, active: true },
 ])('ignores an inactive or horizontal fold: %j', async (fold) => {
   const tree = await renderApp();
   act(() => setRegions({ divisions: [fold], occlusions: [] }));
   expect(
     StyleSheet.flatten(host(tree, 'reader-split-list').props.style).width,
-  ).toBe(263);
+  ).toBe(370);
   expect(host(tree, 'split-divider').props.accessibilityState).toBeUndefined();
 });
 it.each([
-  [560, 260, 280],
-  [626, 263, 313],
-  [890, 374, 445],
+  [700, 294, 350],
+  [SPLIT, 370, 440],
+  [951, 399, 476],
 ])(
   'phone-regular width %ipt starts at %ipt and resizes within 260 to %ipt',
   async (window, initial, maximum) => {
@@ -534,12 +536,41 @@ it('keeps the phone rule list-only even for a wide regular/compact iPhone window
   expect(route().pathname).toBe('/library');
 });
 
-it('uses the foundation accessibility width on a 560pt regular phone', async () => {
-  windowSize(560, regular, 3.571);
+it.each([560, 626, 669, 699])(
+  'draws one pane below the 700pt split breakpoint on a %ipt regular phone',
+  async (width) => {
+    windowSize(width);
+    const tree = await renderApp();
+    expect(hosts(tree, 'reader-split-detail')).toHaveLength(0);
+    expect(hosts(tree, 'split-divider')).toHaveLength(0);
+    expect(host(tree, 'list-state').props.children).toBe(
+      '0:false:phone-regular',
+    );
+  },
+);
+
+it('uses the foundation accessibility width on a 720pt regular phone', async () => {
+  windowSize(720, regular, 3.571);
   const tree = await renderApp();
   expect(
     StyleSheet.flatten(host(tree, 'reader-split-list').props.style).width,
-  ).toBe(252);
+  ).toBe(324);
+});
+
+it('draws the divider line between the panes off iPad, not at the leading edge', async () => {
+  const tree = await renderApp();
+  const split = host(tree, 'reader-split');
+  const children = (split.props.children as unknown[]).filter(Boolean);
+  // list, divider slot, detail: the 1pt slot holds the line in the row.
+  expect(children).toHaveLength(3);
+  const slot = host(tree, 'split-divider-slot');
+  expect(StyleSheet.flatten(slot.props.style)).toMatchObject({ width: 1 });
+  expect(
+    slot.findAll(
+      (node) =>
+        typeof node.type === 'string' && node.props.testID === 'split-divider',
+    ),
+  ).toHaveLength(1);
 });
 
 it.each<RecordEntry>([
@@ -606,7 +637,7 @@ it('expands a compact directory choice before the default first-row selection', 
       >[0],
     ),
   );
-  windowSize(626);
+  windowSize(SPLIT);
   await settle();
   expect(route().pathname).toBe('/directory');
   expect(route().params.open).toBe('party:Labor');
@@ -642,9 +673,9 @@ it.each([
     const billsLoads = jest.mocked(catalogs.bills).mock.calls.length;
     const directoryLoads = jest.mocked(loadDirectory).mock.calls.length;
     const searchMounts = mockSearchMounts;
-    windowSize(626);
+    windowSize(SPLIT);
     windowSize(390, compact);
-    windowSize(626);
+    windowSize(SPLIT);
     await settle();
     if (list) expect(duo.root.findAllByType(ScrollView).at(-1)).toBe(list);
     expect(jest.mocked(catalogs.bills)).toHaveBeenCalledTimes(billsLoads);

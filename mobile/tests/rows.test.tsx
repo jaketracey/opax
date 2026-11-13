@@ -810,7 +810,16 @@ test.each([2, 3] as const)(
       />,
     ).root;
     const headerStyle = flat(withoutAction.findByType(View).props.style);
-    expect(headerStyle).toEqual(flat(withAction.findByType(View).props.style));
+    // With a link the band also wraps, so the link moves under a heading it
+    // cannot sit beside (labels never break inside a word). A lone heading
+    // keeps a single-line band: a wrapping band puts its one line at the
+    // top, off the centre of the 44 pt row.
+    const { flexWrap, ...actionBand } = flat(
+      withAction.findByType(View).props.style,
+    );
+    expect(flexWrap).toBe('wrap');
+    expect(headerStyle.flexWrap).toBeUndefined();
+    expect(headerStyle).toEqual(actionBand);
     // Centring the heading in the action's existing height reserves the
     // same space below it, without adding padding or a margin to either row.
     expect(headerStyle).toEqual({

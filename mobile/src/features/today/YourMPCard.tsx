@@ -342,7 +342,6 @@ function YourMPGroup({
         ) : null}
         {lately.status === 'ready' ? (
           <LatestRows
-            compact
             records={lately.records}
             limit={CARD_LATEST}
             testID="today-your-mp-latest"
@@ -445,6 +444,28 @@ export function stateSeatShown(
 }
 
 /**
+ * The state seat Today draws for the reader's saved state seats, or null:
+ * the first district (never a region) the directory knows, while
+ * `stateSeatShown` allows it. Callers lay out by it, so a card that draws
+ * nothing never holds an empty grid cell.
+ */
+export function stateSeatFor(
+  directory: Directory,
+  stateSeatIds: readonly string[],
+  today: SydneyDate,
+): Electorate | null {
+  const seat =
+    stateSeatIds
+      .map((id) =>
+        directory.electorates.data.electorates.find(
+          (s) => s.electorate_id === id,
+        ),
+      )
+      .find((s): s is Electorate => !!s && !isRegion(s)) ?? null;
+  return seat && stateSeatShown(seat, today) ? seat : null;
+}
+
+/**
  * The state seat (today.md 5.4): its header, one inset group with the
  * district member's row (no Latest) and the state roster's line. No
  * authorisation line and no campaign content on Today.
@@ -459,17 +480,10 @@ export function StateSeatCard({
   today: SydneyDate;
 }) {
   const seat = useMemo(
-    () =>
-      stateSeatIds
-        .map((id) =>
-          directory.electorates.data.electorates.find(
-            (s) => s.electorate_id === id,
-          ),
-        )
-        .find((s): s is Electorate => !!s && !isRegion(s)) ?? null,
-    [directory, stateSeatIds],
+    () => stateSeatFor(directory, stateSeatIds, today),
+    [directory, stateSeatIds, today],
   );
-  if (!seat || !stateSeatShown(seat, today)) return null;
+  if (!seat) return null;
   const state = stateInRunningCopy(seat.state_code);
   const member =
     seat.representatives.length === 1 &&

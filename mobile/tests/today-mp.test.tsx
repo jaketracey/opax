@@ -9,6 +9,7 @@ import {
 } from '../src/api/catalogs';
 import { PersonRow } from '../src/design/people';
 import { YourMPCard, yourMPSources } from '../src/features/today/YourMPCard';
+import type { LatelyState } from '../src/features/your-mp/latest';
 import { RepresentativesGroup } from '../src/features/your-mp/RepresentativesGroup';
 import {
   catalogs as fixtureCatalogs,
@@ -36,6 +37,18 @@ jest.mock('../src/design/row-link', () => ({
   ...jest.requireActual('../src/design/row-link'),
   RowLink: ({ children }: { children: React.ReactNode }) => children,
 }));
+let mockLately: LatelyState | null = null;
+jest.mock('../src/features/your-mp/latest', () => {
+  const actual = jest.requireActual('../src/features/your-mp/latest');
+  return {
+    ...actual,
+    latelyFor: (...args: Parameters<typeof actual.latelyFor>) =>
+      mockLately ?? actual.latelyFor(...args),
+  };
+});
+afterEach(() => {
+  mockLately = null;
+});
 
 const result = <T,>(data: T) => ({
   data,
@@ -175,4 +188,53 @@ test('Today labels saved vote, register and bill records even when the roster is
   );
   expect(source.state).toBe('saved');
   expect(source.savedAt).toBe(456);
+});
+
+test('Today shows a long gift title in full words, never cut at 79 characters', async () => {
+  // Build 61 on an iPhone Duo: "…provided by Endeavou…" on the Today card.
+  const title =
+    'Fixture Cup Final: hospitality and a ticket to the match on 26/09/26 provided by Fixture Hospitality Group';
+  expect(title.length).toBeGreaterThan(80);
+  mockLately = {
+    status: 'ready',
+    records: [
+      {
+        key: 'register-fixture',
+        kind: 'register',
+        date: '2026-09-28',
+        action: 'Declared a gift',
+        title,
+        detail: '',
+        url: 'https://example.invalid/register',
+      } as never,
+    ],
+  };
+  const profile = profileFor(view.members.data![0]!.person_id, fixtureCatalogs);
+  jest.mocked(catalogs.profileFor).mockResolvedValue(profile as never);
+  // Default text size: at accessibility sizes the title runs in full.
+  const dimensions = jest
+    .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
+    .mockReturnValue({ width: 951, height: 669, scale: 3, fontScale: 1 });
+  let renderer!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(
+      <YourMPCard
+        seat={seat}
+        directory={directory}
+        stateSeatIds={[]}
+        attempt={0}
+        onRetry={jest.fn()}
+      />,
+    );
+  });
+  const node = renderer.root.findAll(
+    (n) =>
+      typeof n.type === 'string' &&
+      n.props.testID === 'today-your-mp-latest-0-title',
+  )[0];
+  expect(node).toBeDefined();
+  expect(node!.props.children).toBe(title);
+  expect(node!.props.numberOfLines).toBeGreaterThanOrEqual(3);
+  await act(async () => renderer.unmount());
+  dimensions.mockRestore();
 });

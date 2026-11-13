@@ -78,7 +78,7 @@ name: Submission reviewer reading walkthrough
     id: tab-bills
 - assertVisible:
     id: bills-count
-- tapOn: Bills, sponsors and portfolios
+- tapOn: Search bills
 - inputText: Interactive Gambling
 - pressKey: Enter
 - scrollUntilVisible:
