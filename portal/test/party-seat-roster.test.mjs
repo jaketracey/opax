@@ -100,7 +100,7 @@ test('seat-roster members are dated, and after the next recorded election they n
     const members = partyMembers('Animal Justice Party', {roster: {people}, divisions, today});
     return {members, doc: new JSDOM(partyMembersHTML('Animal Justice Party', members, helpers)).window.document};
   };
-  const heads = doc => [...doc.querySelectorAll('h4')].map(h => h.textContent.trim());
+  const heads = doc => [...doc.querySelectorAll('h3.entry-subhead')].map(h => h.textContent.trim());
   // Before (and on) election day: sitting, as at the roster's date.
   for (const today of ['2026-11-13', '2026-11-28']) {
     const {members, doc} = render(today);
@@ -125,7 +125,7 @@ test('a mixed sitting group dates each seat-roster row instead of the heading', 
     {name: 'Ida Marsh', party: 'Animal Justice Party', party_now: 'Animal Justice Party', current: true, states: ['nsw'], first: 2019, last: 2026}];
   const members = partyMembers('Animal Justice Party', {roster: {people}, divisions: {seat_rosters: seatRosterMembers(people, [seat()], {})}});
   const doc = new JSDOM(partyMembersHTML('Animal Justice Party', members, helpers)).window.document;
-  assert.deepEqual([...doc.querySelectorAll('h4')].map(h => h.textContent.trim()), ['Sitting members (2)']);
+  assert.deepEqual([...doc.querySelectorAll('h3.entry-subhead')].map(h => h.textContent.trim()), ['Sitting members (2)']);
   const rows = Object.fromEntries([...doc.querySelectorAll('li.dir-row')].map(li => [li.querySelector('.dir-name').textContent, li.textContent]));
   assert.match(rows['Wren Talbot'], /Parliamentary roster as at 9 Sep 2026/);
   assert.doesNotMatch(rows['Ida Marsh'], /as at/);

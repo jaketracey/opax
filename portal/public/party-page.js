@@ -254,7 +254,7 @@ export const PARTY_NO_MEMBERS = "No members recorded in OPAX's roster for this p
 export function partyMembersHTML(label, members, h, {speechesHref = '', speechSummary = '', directoryHref = '', updated = ''} = {}) {
   const independent = isIndependent(label);
   const total = members.current.length + members.former.length;
-  if (!total) return `<section class="party-members" id="party-members"><h3 class="subject-section-title">Members</h3><p>${h.esc(PARTY_NO_MEMBERS)}</p></section>`;
+  if (!total) return `<section class="party-members" id="party-members"><h2 class="subject-section-title">Members</h2><p>${h.esc(PARTY_NO_MEMBERS)}</p></section>`;
   // Seat-roster members after a later election: not known to sit, not known to have left.
   const rostered = members.former.filter(m => m.seat_roster?.stale);
   const former = members.former.filter(m => !m.seat_roster?.stale);
@@ -291,7 +291,7 @@ export function partyMembersHTML(label, members, h, {speechesHref = '', speechSu
     if (datedGroup && !/as at/.test(title)) title = `${title}, as at ${dayMonthYear([...dates][0])}`;
     const shown = list.slice(0, SHOWN), rest = list.slice(SHOWN);
     // With nobody sitting, the block's own heading says it all: no subheading.
-    return `${title ? `<h4 class="entry-subhead">${h.esc(title)} (${list.length.toLocaleString()})</h4>` : ''}
+    return `${title ? `<h3 class="entry-subhead">${h.esc(title)} (${list.length.toLocaleString()})</h3>` : ''}
       <ul class="subject-list dir-list party-member-list" role="list">${shown.map(row).join('')}</ul>
       ${rest.length ? `<details class="party-members-more"><summary>${rest.length.toLocaleString()} more ${h.esc((title || 'members').toLowerCase())}</summary>
         <ul class="subject-list dir-list party-member-list" role="list">${rest.map(row).join('')}</ul></details>` : ''}`;
@@ -299,7 +299,7 @@ export function partyMembersHTML(label, members, h, {speechesHref = '', speechSu
   const rosteredGroups = [...new Set(rostered.map(m => m.seat_roster.as_of))].sort().reverse()
     .map(day => group(`On the parliamentary roster as at ${dayMonthYear(day)}`, rostered.filter(m => m.seat_roster.as_of === day))).join('');
   return `<section class="party-members" id="party-members">
-    <div class="entry-section-head"><h3 class="subject-section-title">${independent ? 'Parliamentarians' : 'Members'}</h3>${speechesHref ? `<a href="${h.esc(speechesHref)}">Their speeches</a>` : ''}</div>
+    <div class="entry-section-head"><h2 class="subject-section-title">${independent ? 'Parliamentarians' : 'Members'}</h2>${speechesHref ? `<a href="${h.esc(speechesHref)}">Their speeches</a>` : ''}</div>
     ${speechSummary ? `<p class="ui-section-note">${h.esc(speechSummary)}</p>` : ''}
     ${members.current.length || rostered.length
       ? group(independent ? 'Sitting parliamentarians' : 'Sitting members', members.current) + rosteredGroups + group(independent ? 'Former parliamentarians' : 'Former members', former)
@@ -341,7 +341,7 @@ export function partyStateMoneyHTML(label, files, h) {
   const commissions = [...new Set(hits.map(x => x.meta.commission).filter(Boolean))];
   const total = hits.reduce((a, x) => Math.max(a, x.node.total || 0), 0);
   return `<section class="state-money party-state-money" id="party-state-money" data-accent="money" data-rail-figure="${h.esc(h.fmtMoney(total))}">
-    <h3 class="subject-section-title">Disclosed to state commissions</h3>
+    <h2 class="subject-section-title">Disclosed to state commissions</h2>
     <ul class="subject-list" role="list">${items}</ul>
     ${h.sourceLineHTML({source: commissions.join('; ') || 'State electoral commissions', state: 'totals are a floor',
       notes: ["Gifts under each state's disclosure threshold are not reported, so these totals are a floor, not a ceiling.", h.esc(h.notSummed)]})}
@@ -372,7 +372,7 @@ export function partyBillsHTML(label, bills, h, {updated = ''} = {}) {
   };
   const shown = bills.slice(0, SHOWN), rest = bills.slice(SHOWN);
   return `<section class="party-sponsored-bills" id="party-sponsored-bills">
-    <h3 class="subject-section-title">Bills sponsored (${bills.length.toLocaleString()})</h3>
+    <h2 class="subject-section-title">Bills sponsored (${bills.length.toLocaleString()})</h2>
     <ul class="subject-list" role="list">${shown.map(row).join('')}</ul>
     ${rest.length ? `<details class="party-members-more"><summary>${rest.length.toLocaleString()} more bills</summary>
       <ul class="subject-list" role="list">${rest.map(row).join('')}</ul></details>` : ''}

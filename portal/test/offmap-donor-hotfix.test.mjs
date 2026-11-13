@@ -23,6 +23,16 @@ const browser=runInNewContext(fn('donorRecordHTML')+';donorRecordHTML',{
   tile:(value,label)=>`<p>${value} ${label}</p>`,sourceLineHTML:()=>'',
   AEC_NOTE:'',AEC_LICENCE:'',MONEY_JURISDICTIONS:{},
 });
+test('retained donor h2 headings distinguish receipt totals from source records',()=>{
+  const source={kind:'donor',jurisdiction:'federal',total:100,count:1};
+  const typed={...source,by_type:{donation_received:100},by_type_year:{'2024-25':{donation_received:[100,1]}}};
+  for(const [record,title] of [[source,'Source records'],[typed,'Disclosed receipts']]){
+    const dom=new JSDOM(browser(record,{}));
+    assert.equal(dom.window.document.querySelector('#donor-record > h2.subject-section-title').textContent,title);
+    assert.doesNotMatch(dom.window.document.body.textContent,/disclosed gifts/i);
+    dom.window.close();
+  }
+});
 test('retained exports count Linc and Nimrod recipient receipts once after they leave the drawing cap',()=>{
   for(const pin of pins){
     assert.equal(drawing.nodes.some(n=>n.label===pin.label),false);
