@@ -10,7 +10,7 @@ import { exploreQuizRoute, exploreToolRoute } from '../../navigation/routes';
 import { shareRecord } from '../../navigation/share';
 import { presentSheet } from '../../navigation/sheets';
 import { Picture } from '../explore/Picture';
-import { creditShown } from '../explore/photo-credit';
+import { archiveAttribution } from '../explore/photo-credit';
 import type { YearPicture } from '../explore/pictures';
 import type { FrontPageQuestion } from '../explore/quiz-model';
 import { frontPageDeck } from '../explore/quiz/data';
@@ -85,7 +85,7 @@ function Kicker({
 /**
  * From the archive: the day's photograph fills a 4:3 frame, then the year,
  * the caption up to three lines, expanding at accessibility text sizes,
- * and "Photo: {credit}", never clamped. One element; it opens
+ * and "Photo: {author} · {licence}", never clamped. One element; it opens
  * the Time machine on that year with that photograph first.
  */
 export function ArchiveCard({
@@ -96,6 +96,7 @@ export function ArchiveCard({
   picture: YearPicture;
 }) {
   const large = useAccessibilitySize();
+  const attribution = archiveAttribution(picture);
   return (
     <Card
       testID="today-archive"
@@ -105,7 +106,7 @@ export function ArchiveCard({
         photo: picture.file,
       })}
       accessibilityRole="link"
-      accessibilityLabel={`From the archive, ${year}. ${picture.caption}.${picture.credit ? ` Photo: ${creditShown(picture.credit)}.` : ''}`}
+      accessibilityLabel={`From the archive, ${year}. ${picture.caption}.${attribution ? ` Photo: ${attribution}.` : ''}`}
       accessibilityHint="Opens the Time machine"
       menu={[
         howChosen(rules.archive),
@@ -140,13 +141,13 @@ export function ArchiveCard({
         >
           {picture.caption}
         </Text>
-        {picture.credit ? (
+        {attribution ? (
           <Text
             wordSafe
             variant="footnote"
             tone="inkSoft"
             testID="today-archive-credit"
-          >{`Photo: ${creditShown(picture.credit)}`}</Text>
+          >{`Photo: ${attribution}`}</Text>
         ) : null}
       </View>
     </Card>

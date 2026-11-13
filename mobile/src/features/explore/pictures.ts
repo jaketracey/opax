@@ -9,6 +9,18 @@ import {
   url,
 } from '../../api/validation';
 import { isYearPicturePath } from '../../api/year-picture-policy';
+import { ApiError } from '../../api/errors';
+
+/** An optional attribution link cannot make the photograph unavailable. */
+function optionalCreditURL(value: unknown): string | undefined {
+  try {
+    return optional(url)(value);
+  } catch (error) {
+    if (error instanceof ApiError && error.code === 'invalid-data')
+      return undefined;
+    throw error;
+  }
+}
 export interface YearPicture {
   file: string;
   width: number;
@@ -34,7 +46,7 @@ export function decodePictures(value: unknown): Record<string, YearPicture[]> {
           file = nonempty(p.file);
         const width = count(p.width),
           height = count(p.height);
-        const creditURL = optional(url)(p.credit_url);
+        const creditURL = optionalCreditURL(p.credit_url);
         if (
           !isYearPicturePath('/' + file) ||
           !file.startsWith(`years/pictures/${year}/`) ||

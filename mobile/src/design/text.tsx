@@ -56,6 +56,7 @@ export interface OpaxTextProps extends TextProps {
    * Keep words whole. React Native has no hyphenation on iOS, so this text
    * steps its own scale down only after a measured mid-word break, as far as
    * its longest word needs, with an 11pt floor.
+   * URLs and email addresses wrap at full size instead of stepping down.
    * Headings, control labels and field labels use it.
    */
   wordSafe?: boolean;
@@ -301,7 +302,6 @@ export function wordSafeOnLines(
   lines: readonly { text: string; width: number; height: number }[],
   content: string,
   baseLineHeight: number,
-  _fontScale: number,
   validateScale = true,
   floor = 1,
 ): WordSafeState {
@@ -388,7 +388,7 @@ export function Text({
   variant = 'body',
   tone,
   style,
-  wordSafe = false,
+  wordSafe: wantsWordSafe = false,
   tabular: tabularProp = false,
   monospace = false,
   onTextLayout,
@@ -432,6 +432,12 @@ export function Text({
   // (nested text included, such as a field's "(required)"): any change starts
   // again from full size, and so does a wider column (wordSafeOnFrame).
   const content = textContent(props.children);
+  // Addresses need character wrapping, including inside generic row text.
+  const wordSafe =
+    wantsWordSafe &&
+    !/(?:\b[a-z][a-z\d+.-]*:\/\/|\bwww\.|[^\s@]+@[^\s@]+|\b[a-z\d-]+\.[a-z]{2,}(?:[/?#]\S*)?(?=\s|$))/i.test(
+      content,
+    );
   const baseLineHeight = role.lineHeight + LINE_HEIGHT_NUDGE;
   const androidCap = androidSizeCap(
     baseLineHeight,
@@ -559,7 +565,6 @@ export function Text({
         lines,
         content,
         role.lineHeight + LINE_HEIGHT_NUDGE,
-        fontScale,
         expectedFull !== undefined,
         wordSafeFloor(role.fontSize),
       ),

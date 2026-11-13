@@ -222,3 +222,91 @@ test.each([110, 120])(
     expect(drawnPoints).toBe(textStyles.rowRecord.fontSize);
   },
 );
+
+test('word-safe numberOfLines treats a truncated tail as the last line, with no step-down', () => {
+  act(() =>
+    Dimensions.set({
+      window: { ...window, fontScale: 1 },
+      screen: { ...screen, fontScale: 1 },
+    }),
+  );
+  const content = 'Online Safety Amendment (Strengthening Enforcement)';
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(
+      <Text wordSafe numberOfLines={2}>
+        {content}
+      </Text>,
+    );
+  });
+  const text = () => renderer.root.findByType(NativeText);
+  const style = StyleSheet.flatten(text().props.style);
+  const height = style.lineHeight as number;
+  // TextKit keeps the undrawn tail in the last reported line. There is no
+  // next line, so truncating that tail cannot count as a mid-word wrap.
+  const lines = [
+    { text: 'Online Safety ', width: 100, height },
+    { text: 'Amendment (Strengthening Enforcement)', width: 110, height },
+  ];
+  expect(breaksMidWord(lines)).toBe(false);
+  act(() =>
+    text().props.onLayout({
+      nativeEvent: { layout: { x: 0, y: 0, width: 110, height: 2 * height } },
+    }),
+  );
+  act(() => text().props.onTextLayout({ nativeEvent: { lines } }));
+  expect(text().props.numberOfLines).toBe(2);
+  expect(StyleSheet.flatten(text().props.style).fontSize).toBe(style.fontSize);
+  // A platform reporting hidden lines must not trigger fitting either.
+  act(() =>
+    text().props.onTextLayout({
+      nativeEvent: { lines: wrap(content, 110, style.fontSize, height) },
+    }),
+  );
+  expect(StyleSheet.flatten(text().props.style).fontSize).toBe(style.fontSize);
+  act(() => renderer.unmount());
+});
+
+test.each([
+  'averylongexampleperson@archive.example.invalid',
+  'https://archive.example.org/photos/long-path',
+  'www.archive.example.org/photos/long-path',
+  'archive.example.org',
+])(
+  'a row text containing address %j keeps full size despite character wrapping',
+  (content) => {
+    act(() =>
+      Dimensions.set({
+        window: { ...window, fontScale: 1 },
+        screen: { ...screen, fontScale: 1 },
+      }),
+    );
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <Text wordSafe onTextLayout={() => {}}>
+          {content}
+        </Text>,
+      );
+    });
+    const text = () => renderer.root.findByType(NativeText);
+    const style = StyleSheet.flatten(text().props.style);
+    const height = style.lineHeight as number;
+    const split = content.indexOf('example') + 3;
+    const lines = [
+      { text: content.slice(0, split), width: 99, height },
+      { text: content.slice(split), width: 99, height },
+    ];
+    expect(breaksMidWord(lines)).toBe(true);
+    act(() =>
+      text().props.onLayout({
+        nativeEvent: { layout: { x: 0, y: 0, width: 100, height: 2 * height } },
+      }),
+    );
+    act(() => text().props.onTextLayout({ nativeEvent: { lines } }));
+    expect(StyleSheet.flatten(text().props.style).fontSize).toBe(
+      style.fontSize,
+    );
+    act(() => renderer.unmount());
+  },
+);

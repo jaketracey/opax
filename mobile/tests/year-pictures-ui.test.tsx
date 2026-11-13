@@ -351,7 +351,7 @@ test('the Time machine opens on a year at once, with its menu, pager, voices and
   act(() => renderer.unmount());
 });
 
-test('an archive credit stored as an address prints its host, not the address (sweep 2, 11)', async () => {
+test('the archive card uses author and licence instead of an address credit', async () => {
   const picture = manifest['2024']!.find((p) =>
     p.credit.startsWith('https://pco.gov.ph/'),
   )!;
@@ -365,7 +365,9 @@ test('an archive credit stored as an address prints its host, not the address (s
   const credit = renderer.root.find(
     (n) => n.type === NativeText && n.props.testID === 'today-archive-credit',
   );
-  expect(credit.props.children).toBe('Photo: pco.gov.ph');
+  expect(credit.props.children).toBe(
+    `Photo: ${picture.author} · ${picture.licence}`,
+  );
   expect(texts(renderer).join(' ')).not.toContain('https://');
   expect(texts(renderer).join(' ')).not.toContain('post_id');
   const card = renderer.root.find(
@@ -373,13 +375,59 @@ test('an archive credit stored as an address prints its host, not the address (s
       typeof n.props.accessibilityLabel === 'string' &&
       n.props.accessibilityLabel.startsWith('From the archive, 2024.'),
   );
-  expect(card.props.accessibilityLabel).toContain('Photo: pco.gov.ph.');
+  expect(card.props.accessibilityLabel).toContain(
+    `Photo: ${picture.author} · ${picture.licence}.`,
+  );
   act(() => renderer.unmount());
   // Named credits are printed as stored; only an address is shortened.
   expect(creditShown('Jane Example')).toBe('Jane Example');
   expect(creditShown('http://www.Example.org:8080/a/b')).toBe('example.org');
   expect(creditShown(' https://pco.gov.ph ')).toBe('pco.gov.ph');
 });
+
+const longTemplateCredit =
+  'This invented image was supplied by Example Archive. Template instructions and translations follow. '.repeat(
+    7,
+  );
+test.each([
+  ['Alex Example', longTemplateCredit, 'Alex Example · CC BY 4.0'],
+  ['', longTemplateCredit, 'CC BY 4.0'],
+  ['  ', 'Example Archive', 'Example Archive · CC BY 4.0'],
+  ['', 'Photo: Example Archive', 'Photo: Example Archive · CC BY 4.0'],
+  ['', 'A'.repeat(60), `${'A'.repeat(60)} · CC BY 4.0`],
+  ['', 'A'.repeat(61), 'CC BY 4.0'],
+  ['', 'https://archive.example.org/photo', 'CC BY 4.0'],
+  ['', 'archive.example.org', 'CC BY 4.0'],
+  ['', 'photo@example.org', 'CC BY 4.0'],
+])(
+  'archive attribution for author %j and credit %j is %j',
+  async (author, credit, attribution) => {
+    expect(longTemplateCredit.length).toBeGreaterThan(622);
+    const picture = {
+      ...manifest['2025']![0]!,
+      author,
+      credit,
+      licence: 'CC BY 4.0',
+    };
+    let renderer!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      renderer = TestRenderer.create(
+        <ArchiveCard year={2025} picture={picture} />,
+      );
+    });
+    expect(texts(renderer)).toContain(`Photo: ${attribution}`);
+    expect(texts(renderer).join(' ')).not.toContain('Template instructions');
+    const card = renderer.root.find(
+      (n) =>
+        typeof n.props.accessibilityLabel === 'string' &&
+        n.props.accessibilityLabel.startsWith('From the archive, 2025.'),
+    );
+    expect(card.props.accessibilityLabel).toBe(
+      `From the archive, 2025. ${picture.caption}. Photo: ${attribution}.`,
+    );
+    act(() => renderer.unmount());
+  },
+);
 
 test('a failed archive image collapses its empty frame and keeps its caption and credit', async () => {
   const picture = manifest['2014']!.find((p) =>
@@ -406,7 +454,9 @@ test('a failed archive image collapses its empty frame and keeps its caption and
   expect(heights).not.toHaveBeenCalled();
   heights.mockRestore();
   expect(texts(renderer)).toContain(picture.caption);
-  expect(texts(renderer)).toContain(`Photo: ${picture.credit}`);
+  expect(texts(renderer)).toContain(
+    `Photo: ${picture.author} · ${picture.licence}`,
+  );
   expect(texts(renderer)).not.toContain('Try again');
   expect(renderer.root.findAllByType(InlineError)).toHaveLength(0);
   expect(renderer.root.findAllByType(Image)).toHaveLength(0);

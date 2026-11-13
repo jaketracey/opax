@@ -251,7 +251,11 @@ function IdentityRow({ email }: { email: string | null }) {
       style={[styles.identity, stacked ? styles.stacked : null, cellStyle]}
     >
       <Icon name={symbols.accountOn} size={SYMBOL} maxScale={1} tone="navy" />
-      <Text wordSafe variant="name" style={stacked ? null : styles.grow}>
+      <Text
+        wordSafe={email === null}
+        variant="name"
+        style={stacked ? null : styles.grow}
+      >
         {email ?? accountCopy.signedInHere}
       </Text>
     </View>
