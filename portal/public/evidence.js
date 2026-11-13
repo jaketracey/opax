@@ -1,7 +1,15 @@
 import { personUrl, partyUrl } from './canonical-urls.js?v=6c889d487d';
 /* Source-backed connections. Only unambiguous identities are displayed. */
 import {shortDate} from './format.js';
+import { evidenceDateHTML } from './evidence-date.js';
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+// The export's own metadata dates each panel: one small read a page, shared by
+// the panels on it. A failed read leaves the panel undated and is tried again.
+let datedMeta=null;
+function evidenceMeta() {
+  datedMeta ??= read('/evidence/stats.json').catch(() => { datedMeta=null; return null; });
+  return datedMeta;
+}
 export const nameKey = value => (String(value || '').toLocaleLowerCase().match(/[\p{L}\p{N}]+/gu) || []).join(' ');
 const safeURL = value => /^https?:\/\//i.test(String(value || '')) ? value : null;
 async function hash(value) {
@@ -24,7 +32,9 @@ function sourceContent(row) {
   const values=[['Recipient',fields.recipient,'recipient'],['Recorded amount',fields.amount==null?null:Number(fields.amount).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0})],['Program',fields.program,'program'],['Agency',fields.agency],['Recorded place',[fields.suburb,fields.state?.toUpperCase(),fields.postcode].filter(Boolean).join(', '),'place']];
   return `<dl class="evidence-fields">${values.filter(([,value])=>value).map(([label,value,field])=>`<div><dt>${esc(label)}</dt><dd>${/^[a-f0-9]{24}$/.test(row.links?.[field] || '')?`<a href="/connections?entity=${row.links[field]}">${esc(value)}</a>`:esc(value)}</dd></div>`).join('')}</dl>`;
 }
-export function evidenceHTML(entry) {
+/** One connection's panel. `options.meta` (the export's stats) dates it at its foot;
+ *  `options.plain` dates it as a note line instead (see evidenceDateHTML). */
+export function evidenceHTML(entry, options={}) {
   const years=Object.entries(entry.years || {}).filter(([year])=>/^\d{4}$/.test(year)).sort(([a],[b])=>a.localeCompare(b));
   const max=Math.max(1,...years.map(([,n])=>n));
   const recent=years.slice(-12);
@@ -37,7 +47,7 @@ export function evidenceHTML(entry) {
     ${(entry.representatives || []).length?`<details class="evidence-locations"><summary>Speakers recorded for this electorate</summary><ul>${entry.representatives.slice(0,15).map(person=>`<li><a href="${personUrl(person.name)}">${esc(person.name)}</a><small>${Number(person.records).toLocaleString('en-AU')} speeches carrying this electorate in their source fields · ${esc(person.first_date)} to ${esc(person.last_date)}</small></li>`).join('')}</ul><p class="fineprint">Speech metadata, not a list of current officeholders or verified terms of office.</p></details>`:''}
     ${(entry.identity_links || []).length?`<details class="evidence-locations"><summary>How the identities connect</summary><ul>${entry.identity_links.map(link=>`<li>${esc(link.name)} · ABN ${esc(link.abn)}<small>Exact full name matched to a source identity with a validated ABN.</small><details><summary>Source records</summary><pre>${esc(JSON.stringify({source:link.source_records,matched:link.matching_records},null,2))}</pre></details></li>`).join('')}</ul></details>`:''}
     <p><a href="/connections?entity=${encodeURIComponent(entry.id || '')}">Explore connections, programs and places</a></p>
-    <p class="fineprint">Connections come from recorded names and locations. They do not establish influence. Some of these records are not searchable yet.</p>`;
+    <p class="fineprint">Connections come from recorded names and locations. They do not establish influence. Some of these records are not searchable yet.</p>${evidenceDateHTML(options.meta,{plain:options.plain})}`;
 }
 export async function mountEvidence(root, identity, options={}) {
   const lookup=identity.abn ? 'abn:'+String(identity.abn).replace(/\s/g,'') : nameKey(identity.name);
@@ -54,10 +64,13 @@ export async function mountEvidence(root, identity, options={}) {
       // A source profile with a mismatched name/ABN must not inherit evidence.
       if (!nameLookup?.[name]?.includes(ids[0])) return false;
     }
+    const dated=evidenceMeta();
     const data=await read(`/evidence/${ids[0].slice(0,2)}.json`,options.signal);
     const entry=data?.entries?.[ids[0]];
     if (!entry || options.alive && !options.alive()) return false;
-    root.innerHTML=evidenceHTML(options.compact ? {...entry, years:{},locations:[],excerpts:entry.excerpts.slice(0,2)} : entry);
+    const meta=await dated;
+    if (options.alive && !options.alive()) return false;
+    root.innerHTML=evidenceHTML(options.compact ? {...entry, years:{},locations:[],excerpts:entry.excerpts.slice(0,2)} : entry, {meta, plain:options.compact});
     root.hidden=false;
     return true;
   } catch(error) {

@@ -3,6 +3,7 @@
    app.js into #panel-connections when /connections opens (deep links carry
    ?entity=, ?q= and ?kind=), and destroyed when the route leaves. */
 import {evidenceHTML,nameKey} from './evidence.js';
+import {evidenceDateHTML} from './evidence-date.js';
 
 export function mountConnections(root, helpers = {}) {
  const list=root.querySelector('#connection-list'), detail=root.querySelector('#connection-detail');
@@ -10,7 +11,7 @@ export function mountConnections(root, helpers = {}) {
  const params=helpers.params || new URLSearchParams();
  const controller=new AbortController();
  // loaded: the index has answered. Until then a typed search must not count an empty list as "0 connections".
- let entries=[],loaded=false,selected=0,active=true,currentId='',loader=null;
+ let entries=[],loaded=false,selected=0,active=true,currentId='',loader=null,dateLine=null;
  const alive=()=>active && root.isConnected;
  function address(entity){
   const next=new URLSearchParams();
@@ -88,17 +89,24 @@ export function mountConnections(root, helpers = {}) {
  const slot=document.createElement('li');slot.className='connection-loader';slot.setAttribute('aria-hidden','true');list.append(slot);
  wombat.then(mod=>{if(mod && alive() && !loaded && slot.isConnected)loader=mod.mountWombat(slot,{label:'',phase:-5.5});});
  const settle=()=>{loader?.destroy();loader=null;slot.remove();};
+ // The page says once, at the foot of its head, the day the connections run to,
+ // from the index's own metadata; an opened connection does not repeat it.
+ function dated(meta){
+  const html=evidenceDateHTML(meta),head=root.querySelector('.connections-head');
+  if(!html || !head)return;
+  head.insertAdjacentHTML('beforeend',html);dateLine=head.lastElementChild;
+ }
  (async()=>{
   try{
    const response=await fetch('/evidence/index.json',{signal:controller.signal});if(!response.ok)throw new Error();
    const data=await response.json();if(!alive())return;
    entries=(data.entities||[]).sort((a,b)=>b.records-a.records || a.name.localeCompare(b.name));
-   loaded=true;settle();render();const initial=entries.find(e=>e.id===params.get('entity'));if(initial)open(initial);
+   loaded=true;settle();dated(data.meta);render();const initial=entries.find(e=>e.id===params.get('entity'));if(initial)open(initial);
   }catch{if(alive()){settle();status.textContent='Connection records are unavailable. Please try again later.';detail.hidden=true;}}
  })();
  return {
   destroy(){
-   active=false;controller.abort();selected++;settle();
+   active=false;controller.abort();selected++;settle();dateLine?.remove();dateLine=null;
    query.removeEventListener('input',onInput);kind.removeEventListener('change',onKind);
    list.replaceChildren();detail.replaceChildren();detail.hidden=true;
   },
