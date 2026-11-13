@@ -65,7 +65,7 @@ import {
 } from '../../navigation/routes/public-money';
 import { resultsRoute } from '../../navigation/routes/search';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
-import { donorNotNamed, isOrganisationDonor } from '../../privacy/donorEntity';
+import { isOrganisationDonor } from '../../privacy/donorEntity';
 import { leadsAbout } from '../leads/model';
 import type {
   MoneyFigures,
@@ -520,7 +520,6 @@ function NodeRecord({ params, id }: { params: MoneyParams; id: string }) {
     return <LoadState name={name} error={error} retry={retry} />;
   if (!node) {
     const narrowed = !isAllYears(graph, filters) || !!filters.industry;
-    const donor = id.startsWith('donor:');
     return (
       <Page title={name}>
         <ContentUnavailable
@@ -530,7 +529,6 @@ function NodeRecord({ params, id }: { params: MoneyParams; id: string }) {
               ? `${name} isn’t on the map in this view`
               : 'This donor isn’t on the map'
           }
-          body={donor && !name ? donorNotNamed : undefined}
           action={
             narrowed
               ? {
@@ -854,7 +852,7 @@ function NodeBody({
       </Page>
     );
   }
-  // ---- a donor (or the "Individual donors" aggregate)
+  // ---- a donor
   const parties = moneyPartyGroups(
     flows.filter(({ other }) => other.kind === 'party'),
     ({ other }) => other.label,
@@ -866,38 +864,36 @@ function NodeBody({
   const sections = [filters.donations, !!grants, !!contracts].filter(
     Boolean,
   ).length;
-  const originals: SourceOriginal[] = node.withheld
-    ? []
-    : [
-        {
-          label: `AEC Transparency Register · returns for ${node.label}`,
-          url: graph.meta.source_url ?? AEC_REGISTER,
-        },
-        ...(associated
-          ? [
-              {
-                label: 'AEC register of associated entities',
-                url: associated.url,
-              },
-            ]
-          : []),
-        ...(grants
-          ? [
-              {
-                label: `GrantConnect · awards to ${node.label}`,
-                url: GRANTCONNECT,
-              },
-            ]
-          : []),
-        ...(contracts
-          ? [
-              {
-                label: `AusTender · contracts with ${node.label}`,
-                url: AUSTENDER,
-              },
-            ]
-          : []),
-      ];
+  const originals: SourceOriginal[] = [
+    {
+      label: `AEC Transparency Register · returns for ${node.label}`,
+      url: graph.meta.source_url ?? AEC_REGISTER,
+    },
+    ...(associated
+      ? [
+          {
+            label: 'AEC register of associated entities',
+            url: associated.url,
+          },
+        ]
+      : []),
+    ...(grants
+      ? [
+          {
+            label: `GrantConnect · awards to ${node.label}`,
+            url: GRANTCONNECT,
+          },
+        ]
+      : []),
+    ...(contracts
+      ? [
+          {
+            label: `AusTender · contracts with ${node.label}`,
+            url: AUSTENDER,
+          },
+        ]
+      : []),
+  ];
   const partyRow = ({ edge, other }: (typeof flows)[number], index: number) => (
     <PartyMoneyRow
       key={other.id}
@@ -962,7 +958,7 @@ function NodeBody({
   return (
     <Page
       title={node.label}
-      share={node.withheld ? null : share}
+      share={share}
       refreshing={refreshing}
       onRefresh={refresh}
     >
@@ -1020,28 +1016,22 @@ function NodeBody({
       {grants ? publicSection('grants', grants, full.grants) : null}
       {contracts ? publicSection('contracts', contracts, full.contracts) : null}
       <Originals rows={originals} />
-      {node.withheld ? (
-        <Text wordSafe variant="footnote" testID="money-withheld-note">
-          {individualsNote}
-        </Text>
-      ) : (
-        <More>
-          {node.kind === 'donor' && isOrganisationDonor(node) ? (
-            <LinkRow
-              title="Find on Wikipedia"
-              external={{
-                url: `https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(node.label)}`,
-                label: `Find ${node.label} on Wikipedia`,
-              }}
-              accessibilityLabel={`Find ${node.label} on Wikipedia`}
-              accessibilityHint="Opens in the browser"
-              testID="money-record-wikipedia"
-            />
-          ) : null}
-          <LeadRows name={node.label} />
-          {!fromMap ? <MapRow node={node} jurisdiction={jurisdiction} /> : null}
-        </More>
-      )}
+      <More>
+        {node.kind === 'donor' && isOrganisationDonor(node) ? (
+          <LinkRow
+            title="Find on Wikipedia"
+            external={{
+              url: `https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(node.label)}`,
+              label: `Find ${node.label} on Wikipedia`,
+            }}
+            accessibilityLabel={`Find ${node.label} on Wikipedia`}
+            accessibilityHint="Opens in the browser"
+            testID="money-record-wikipedia"
+          />
+        ) : null}
+        <LeadRows name={node.label} />
+        {!fromMap ? <MapRow node={node} jurisdiction={jurisdiction} /> : null}
+      </More>
     </Page>
   );
 }

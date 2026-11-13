@@ -33,14 +33,13 @@ export const normaliseOrganisation = (name: string) =>
  * The named donor on the map for an organisation, matched on identity first
  * (a grant recipient or supplier id the node's register blocks carry, such
  * as "abn:33007457141"), then on its name or one of its recorded spellings.
- * Never a withheld donor or the "Individual donors" aggregate.
  */
 export function donorNodeFor(
   subject: { rid?: string | null; abn?: string | null; name?: string | null },
   graph: MoneyGraph | null = loadedMoneyGraph(),
 ): MoneyNode | null {
   if (!graph) return null;
-  const donors = graph.nodes.filter((n) => n.kind === 'donor' && !n.withheld);
+  const donors = graph.nodes.filter((n) => n.kind === 'donor');
   const ids = [
     subject.rid,
     subject.abn ? `abn:${subject.abn.replace(/\s+/g, '')}` : null,

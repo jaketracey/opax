@@ -68,10 +68,7 @@ export default function MoneyDonors() {
     () => (graph && filters ? moneyView(graph, filters) : null),
     [graph, filters],
   );
-  const donors = useMemo(
-    () => (view ? rankedDonors(view).filter((n) => !n.withheld) : []),
-    [view],
-  );
+  const donors = useMemo(() => (view ? rankedDonors(view) : []), [view]);
   const detail = useMemo(() => (view ? donorDetails(view) : null), [view]);
   const wanted = normaliseOrganisation(query);
   const shown = wanted

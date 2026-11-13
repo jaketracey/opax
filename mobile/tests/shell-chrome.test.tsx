@@ -65,6 +65,7 @@ import {
   inlineTitleScaleCap,
   useTitleOnScroll,
 } from '../src/navigation/useTitleOnScroll';
+import { menuTitle } from '../src/design/menu-title';
 
 const { colors } = tokens;
 
@@ -1983,9 +1984,13 @@ test('More keeps its page title out and ends in one public-site action', () => {
     const menu = pageMenu({ name: 'A full record title', items });
     if (menu.type !== 'menu') throw new Error('Expected a menu');
     expect(menu.menu).not.toHaveProperty('title');
-    expect(menu.menu.items.at(-1)?.label).toBe('Open on opax.com.au');
+    expect(menu.menu.items.at(-1)?.label).toBe(
+      menuTitle('Open on opax.com.au'),
+    );
     expect(
-      menu.menu.items.filter((row) => row.label === 'Open on opax.com.au'),
+      menu.menu.items.filter(
+        (row) => row.label === menuTitle('Open on opax.com.au'),
+      ),
     ).toHaveLength(1);
   }
 });

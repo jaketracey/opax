@@ -342,8 +342,7 @@ test.each([
   async (_label, kind, flow) => {
     const r = await render();
     const node = stage().model.nodes.find(
-      (n: MapNode) =>
-        n.kind === kind && !n.withheld && (!flow || n.flow === flow),
+      (n: MapNode) => n.kind === kind && (!flow || n.flow === flow),
     )!;
     await act(async () => stage().onFocus(node.id));
     await act(async () =>

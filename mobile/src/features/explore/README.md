@@ -40,8 +40,7 @@ the hub does no data reads.
   pushes its `money-record`; an industry opens the in-tab money map filtered
   to it; party and topic links open those pages; "How OPAX is built" opens
   Methods; a speaker's year in the record drafts in Ask through `useOpenAsk`
-  and never sends. `quizRecordPath` returns null for a donor withheld by the
-  organisation gate, and then the source sheet has no record row.
+  and never sends. Every donor's record opens, as on the web.
 - Best streaks use the device's two-slot store (`quiz-store.ts`).
 
 ### Data

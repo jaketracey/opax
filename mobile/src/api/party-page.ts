@@ -21,7 +21,6 @@ import {
 } from './bill-transforms';
 import { isPartyLabel, samePartyLabel } from '../design/party';
 import { nameKey } from './ids';
-import { individualDonorsLabel } from '../privacy/donorEntity';
 export { resolveParty } from '../design/party';
 
 // Codes in the parliamentary roster, expanded for membership comparisons.
@@ -296,33 +295,19 @@ export function partyMoney(label: string, graph: Money) {
         (sums.get(e.source) ?? 0) +
           (year ? (e.byYear[year]?.[0] ?? 0) : e.total),
       );
-    const given = [...sums].filter(([, amount]) => amount > 0);
-    // Withheld donors are one closing row with their amounts kept, never ranked or named.
-    const hidden = given.filter(([id]) => donors.get(id)!.withheld);
-    return [
-      ...given
-        .filter(([id]) => !donors.get(id)!.withheld)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 10)
-        .map(([id, amount]) => ({
-          id,
-          name: donors.get(id)!.label,
-          amount,
-          associated: associatedLine(
-            donorAssociatedTo(donors.get(id)!, node.label),
-          ),
-        })),
-      ...(hidden.length
-        ? [
-            {
-              id: 'donor:individual-donors',
-              name: individualDonorsLabel(hidden.length),
-              amount: hidden.reduce((n, [, amount]) => n + amount, 0),
-              associated: null,
-            },
-          ]
-        : []),
-    ];
+    // Every donor by the name its graph gives it, as the web's party page.
+    return [...sums]
+      .filter(([, amount]) => amount > 0)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([id, amount]) => ({
+        id,
+        name: donors.get(id)!.label,
+        amount,
+        associated: associatedLine(
+          donorAssociatedTo(donors.get(id)!, node.label),
+        ),
+      }));
   };
   return {
     node,

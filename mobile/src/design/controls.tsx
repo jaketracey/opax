@@ -14,7 +14,6 @@ import {
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { router } from 'expo-router';
 import {
-  useCallback,
   useEffect,
   useRef,
   useState,
@@ -39,7 +38,7 @@ import {
 } from 'react-native';
 import type { FollowKind } from '../features/follows/store';
 import { useAccessibilitySize, useReduceMotion } from './accessibility';
-import { animateResize } from './disclosure';
+import { HeightReveal } from './reveal';
 import { Hoverable, columns, useLayout } from './adaptive';
 import { haptic } from './haptics';
 import { Icon, type SFSymbol } from './icon';
@@ -395,20 +394,9 @@ export function FollowButton({
   const [bounce, setBounce] = useState(false);
   const [busy, setBusy] = useState(false);
   const [limitReached, setLimitReached] = useState(false);
-  const [message, setMessageNow] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
   const marked = useRef(false);
   const reduceMotion = useReduceMotion();
-  const shownMessage = useRef<string | null>(null);
-  // Every message (first follow, limit, save error) takes its own height
-  // only while shown; the content below slides rather than jumps.
-  const setMessage = useCallback(
-    (next: string | null) => {
-      if (next !== shownMessage.current) animateResize(reduceMotion);
-      shownMessage.current = next;
-      setMessageNow(next);
-    },
-    [reduceMotion],
-  );
   const opacity = useAnimatedValue(1);
   const [confirmation, setConfirmation] = useState(false);
   useEffect(() => {
@@ -434,7 +422,7 @@ export function FollowButton({
       }
     });
     return () => animation.stop();
-  }, [confirmation, opacity, reduceMotion, setMessage]);
+  }, [confirmation, opacity, reduceMotion]);
   useEffect(() => {
     if (!current) marked.current = false;
     else if (!marked.current) {
@@ -499,29 +487,36 @@ export function FollowButton({
     />
   );
   return (
-    <Group gap={rhythm.tight} style={centre ? styles.followCentred : undefined}>
+    <View style={centre ? styles.followCentred : undefined}>
       {centre ? <View style={styles.followCentred}>{button}</View> : button}
-      {message ? (
-        <Animated.View style={{ opacity: confirmation ? opacity : 1 }}>
-          <Text
-            wordSafe
-            variant="footnote"
-            testID={`${testID}-message`}
-            style={centre ? styles.followMessageCentred : undefined}
-          >
-            {message}
-          </Text>
-        </Animated.View>
-      ) : null}
-      {limitReached ? (
-        <Button
-          label="Edit Following"
-          variant="plain"
-          onPress={() => router.push('/follows?edit=1')}
-          testID={`${testID}-edit-following`}
-        />
-      ) : null}
-    </Group>
+      {/* Every message (first follow, limit, save error) takes its own
+          height only while shown, and the content below eases down and back
+          up rather than jumping. The limit's Edit Following arrives with it. */}
+      <HeightReveal reduceMotion={reduceMotion} testID={`${testID}-reveal`}>
+        {message ? (
+          <Group gap={rhythm.tight} style={styles.followMessage}>
+            <Animated.View style={{ opacity: confirmation ? opacity : 1 }}>
+              <Text
+                wordSafe
+                variant="footnote"
+                testID={`${testID}-message`}
+                style={centre ? styles.followMessageCentred : undefined}
+              >
+                {message}
+              </Text>
+            </Animated.View>
+            {limitReached ? (
+              <Button
+                label="Edit Following"
+                variant="plain"
+                onPress={() => router.push('/follows?edit=1')}
+                testID={`${testID}-edit-following`}
+              />
+            ) : null}
+          </Group>
+        ) : null}
+      </HeightReveal>
+    </View>
   );
 }
 
@@ -1924,6 +1919,9 @@ const segmentPadding = Math.max(
 const segmentInset = rhythm.line - segmentPadding;
 
 const styles = StyleSheet.create({
+  // The gap Follow's message had in its group, inside the reveal so it opens
+  // and closes with the line.
+  followMessage: { paddingTop: rhythm.tight },
   // Pills, as iOS draws text buttons (D1: things you press); a 12pt corner
   // once the label can wrap (accessibility sizes), so a two-line label is
   // not a lozenge.

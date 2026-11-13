@@ -187,7 +187,7 @@ describe('public-money privacy before presentation', () => {
     });
     expect(JSON.stringify(profile)).not.toContain('Fixture Trading');
   });
-  test('private donor names never survive Discover summaries, evidence and chart participants', () => {
+  test('donor names stay in Discover summaries, evidence and chart participants, as on the web', () => {
     const input = decodeDiscovery(raw('/discovery.json')).signals.find(
       (s) => s.category === 'recipient_concentration',
     )!;
@@ -196,7 +196,22 @@ describe('public-money privacy before presentation', () => {
     input.chart!.participants[0]!.name = 'Ada Example';
     input.chart!.leading_name = 'Ada Example';
     input.evidence[0]!.label = 'Ada Example → Party';
-    expect(JSON.stringify(publicSignal(input))).not.toContain('Ada Example');
+    const shown = publicSignal(input);
+    expect(shown.entity).toBe('Ada Example');
+    expect(shown.summary).toBe('Ada Example supplied the receipts');
+    expect(shown.chart!.participants[0]!.name).toBe('Ada Example');
+    expect(shown.evidence[0]!.label).toBe('Ada Example → Party');
+    expect(JSON.stringify(shown)).not.toContain('not named in the app');
+  });
+  test('a contracts lead still replaces a private supplier name', () => {
+    const input = decodeDiscovery(raw('/discovery.json')).signals.find(
+      (s) => s.category === 'procurement_concentration',
+    )!;
+    input.chart!.participants[0]!.name = 'Ada Example';
+    input.chart!.leading_name = 'Ada Example';
+    const shown = JSON.stringify(publicSignal(input));
+    expect(shown).not.toContain('Ada Example');
+    expect(shown).toContain('Individual supplier (not named in the app)');
   });
 });
 describe('static exports are validated, dated and retain their source caveats', () => {

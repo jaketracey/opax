@@ -3120,16 +3120,7 @@ exports[`iOS design at font scale 1 FilterChip retains its iOS output 1`] = `
 `;
 
 exports[`iOS design at font scale 1 FollowButton retains its iOS output 1`] = `
-<View
-  style={
-    [
-      {
-        "gap": 8,
-      },
-      undefined,
-    ]
-  }
->
+<View>
   <View
     accessibilityLabel="Follow A bill"
     accessibilityRole="button"
@@ -10601,16 +10592,7 @@ exports[`iOS design at font scale 2 FilterChip retains its iOS output 1`] = `
 `;
 
 exports[`iOS design at font scale 2 FollowButton retains its iOS output 1`] = `
-<View
-  style={
-    [
-      {
-        "gap": 8,
-      },
-      undefined,
-    ]
-  }
->
+<View>
   <View
     accessibilityLabel="Follow A bill"
     accessibilityRole="button"
