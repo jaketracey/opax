@@ -5,12 +5,12 @@
    (/graph/party-members.json, scripts/build_party_index.mjs).
    Pure functions; app.js passes in its helpers. */
 
-import { PARTY_MAP, PARTY_NAMES } from './labels.js?v=6a4764139d';
+import { PARTY_MAP, PARTY_NAMES } from './labels.js?v=75e6c65ff7';
 import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=6c889d487d';
 
 // Server consumers use these re-exports too, keeping the stamped browser
 // dependencies and their identity tables to one copy in the Worker bundle.
-export * from './labels.js?v=6a4764139d';
+export * from './labels.js?v=75e6c65ff7';
 export * from './canonical-urls.js?v=6c889d487d';
 
 const fold = value => String(value ?? '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();

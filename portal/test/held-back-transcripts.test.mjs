@@ -14,7 +14,7 @@ const readCounts = (counts, chairCounts) => async path => {
 test('an affected member with zero speeches gets the correct held-back count in server content', async () => {
   const counts = {[person.pid]: 1234, 'another-member': 42};
   const {html} = await renderPersonAnswer(person, readCounts(counts), new Map());
-  assert.match(html, /1,234 earlier transcripts include this member alongside others and aren't counted yet\./);
+  assert.match(html, /1,234 earlier transcripts also record this member, alongside other speakers\. They join these speeches once each speaker’s words are separated\./);
   assert.ok(html.includes(heldBackTranscriptsHTML(person.pid, counts)), 'browser and server use the same notice');
   assert.equal((html.match(/class="person-held-back fineprint"/g) || []).length, 1);
 });
@@ -22,21 +22,22 @@ test('an affected member with zero speeches gets the correct held-back count in 
 test('zero, missing and unverified person IDs have no notice', async () => {
   for (const counts of [{[person.pid]: 0}, {'another-member': 42}]) {
     const {html} = await renderPersonAnswer(person, readCounts(counts), new Map());
-    assert.doesNotMatch(html, /person-held-back|aren't counted yet/);
+    assert.doesNotMatch(html, /person-held-back|earlier transcript/);
   }
   assert.equal(heldBackTranscriptsHTML(undefined, {undefined: 42}), '');
   assert.equal(heldBackTranscriptsHTML(null, {null: 42}), '');
 });
 
 test('a single held-back transcript reads correctly and invalid counts stay absent', () => {
-  assert.match(heldBackTranscriptsHTML(person.pid, {[person.pid]: 1}), /1 earlier transcript includes this member alongside others and isn't counted yet\./);
+  assert.match(heldBackTranscriptsHTML(person.pid, {[person.pid]: 1}), /1 earlier transcript also records this member, alongside other speakers\. It joins these speeches once each speaker’s words are separated\./);
+  assert.doesNotMatch(heldBackTranscriptsHTML(person.pid, {[person.pid]: 2}), /counted yet|isn't|aren't/);
   for (const count of [-1, 1.5, '42', Infinity]) assert.equal(heldBackTranscriptsHTML(person.pid, {[person.pid]: count}), '');
 });
 
 test('a chair-only member gets the correct count before JavaScript', async () => {
   const counts = {[person.pid]: 1658};
   const {html} = await renderPersonAnswer(person, readCounts({}, counts), new Map());
-  assert.match(html, /1,658 transcripts record this member presiding in the chair and aren't counted as their own speeches\./);
+  assert.match(html, /1,658 transcripts record this member presiding in the chair\. They are kept apart from their own speeches\./);
   assert.ok(html.includes(chairRoleTranscriptsHTML(person.pid, counts)), 'browser and server use the same chair notice');
   assert.doesNotMatch(html, /person-held-back/);
 });
@@ -62,7 +63,7 @@ test('zero, missing and unverified chair counts have no chair notice', async () 
 });
 
 test('a single chair transcript reads correctly and invalid counts stay absent', () => {
-  assert.match(chairRoleTranscriptsHTML(person.pid, {[person.pid]: 1}), /1 transcript records this member presiding in the chair and isn't counted as their own speeches\./);
+  assert.match(chairRoleTranscriptsHTML(person.pid, {[person.pid]: 1}), /1 transcript records this member presiding in the chair\. It is kept apart from their own speeches\./);
   for (const count of [-1, 1.5, '42', Infinity]) assert.equal(chairRoleTranscriptsHTML(person.pid, {[person.pid]: count}), '');
 });
 

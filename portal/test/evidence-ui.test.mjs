@@ -42,3 +42,18 @@ test('incomplete enrichment is never shown as completed corpus coverage',async()
  assert.ok(html.includes('not searchable yet'));
  assert.ok(html.includes('One record can connect to several entries'));
 });
+
+test('a record page leaves out connections under three records, and the block no longer apologises',async()=>{
+ const id='c'.repeat(24);
+ const entry=(records)=>({records,kind:'organisation',years:{},excerpts:[]});
+ const prior=globalThis.fetch;
+ for (const [records,shown] of [[2,false],[3,true]]) {
+  globalThis.fetch=async(url)=>({ok:true,status:200,json:async()=>String(url).includes('/lookup/')?{'acme holdings':[id]}:{entries:{[id]:entry(records)}}});
+  try {
+   const root={hidden:true,innerHTML:''};
+   assert.equal(await mountEvidence(root,{name:'Acme Holdings'}),shown,`${records} records`);
+   assert.equal(root.hidden,!shown);
+   if (shown) assert.ok(!root.innerHTML.includes('not searchable yet'));
+  }finally{globalThis.fetch=prior;}
+ }
+});

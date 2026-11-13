@@ -2,7 +2,7 @@ import {subjectUrl} from './canonical-urls.js?v=6c889d487d';
 /* Homepage adapters: source exports, never editorial selections. Each block's
    figures carry the date of the export they came from, in its source line. */
 import {shortDate} from './format.js';
-import {partyLabelHTML, statusLabelHTML, sourceLineHTML} from './labels.js?v=6a4764139d';
+import {partyLabelHTML, statusLabelHTML, sourceLineHTML, coverageLineHTML} from './labels.js?v=75e6c65ff7';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const count = value => Number(value).toLocaleString('en-AU');
 const date = value => shortDate(String(value).slice(0,10));
@@ -100,18 +100,20 @@ export function sourceFreshness(refresh, sources = []) {
   for (const [name, access] of paused) {
     facts.push(['Source check', esc(`${access.host || name}: paused, ${access.reason || 'access refused'}. Entries shown are retained from the last successful read, not a current check.`)]);
   }
-  return { state: paused.length ? 'source paused' : '', facts };
+  // A paused source reads as the date of its last good read on the line ("Last checked 4 Oct 2026");
+  // the sheet keeps why it is paused.
+  return { state: '', dateLabel: paused.length ? 'Last checked' : 'Updated', facts };
 }
 export function billsSourceHTML(index, refresh = null) {
   const freshness = sourceFreshness(refresh, ['bills']);
-  return sourceLineHTML({ updated: index.generated_at, source: 'Parliament of Australia', state: freshness.state, facts: freshness.facts, notes: [
+  return sourceLineHTML({ updated: index.generated_at, dateLabel: freshness.dateLabel, source: 'Parliament of Australia', facts: freshness.facts, notes: [
     'Bills and their dates come from the parliamentary record; each bill page links the official source it was read from.',
     'A bill missing from this list is not evidence it does not exist: the register is still being built.',
   ] });
 }
 export function declarationsSourceHTML(meta, refresh = null) {
   const freshness = sourceFreshness(refresh, ['interests_federal', 'interests_qld']);
-  return sourceLineHTML({ updated: meta?.generated, source: 'Registers of interests', state: freshness.state, facts: freshness.facts, asAt: meta?.source ? `${meta.source}.` : '', notes: [
+  return sourceLineHTML({ updated: meta?.generated, dateLabel: freshness.dateLabel, source: 'Registers of interests', facts: freshness.facts, asAt: meta?.source ? `${meta.source}.` : '', notes: [
     'Entries as declared, not verified by OPAX.',
     'The date is when the register recorded the entry, which can differ from the date of the gift or event. Each entry links to its page in the register.',
   ] });
@@ -146,13 +148,8 @@ export function industryGroups(graph) {
   return [...counts].map(([key, n]) => ({ key, label: key[0].toUpperCase() + key.slice(1), count: n }))
     .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'en'));
 }
-/** The footer's coverage line: two dated figures and the full table. */
-export function coverageLineHTML(corpus) {
-  const link = '<a href="/stats">Sources and coverage</a>';
-  const aec = corpus?.sources?.find?.(s => String(s.name).startsWith('AEC donations'));
-  if (!corpus?.version || !Number.isFinite(corpus.collected_speeches) || !Number.isFinite(aec?.docs)) return link;
-  return `${count(corpus.collected_speeches)} speeches and ${count(aec.docs)} donations classified, as at ${esc(date(corpus.version))} · ${link}`;
-}
+/** The footer's coverage line (labels.js): one line on every page. */
+export { coverageLineHTML };
 
 // --- hydration -------------------------------------------------------------------
 

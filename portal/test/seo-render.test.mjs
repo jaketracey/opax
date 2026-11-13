@@ -279,24 +279,27 @@ test('mobile voting asset retains schema 1 and the shipped per-person keys',asyn
 });
 test('affected person notice is served before JavaScript and its methods link resolves', async () => {
   const html = await get('/subject/person/anthony-albanese');
-  assert.match(html, /814 earlier transcripts include this member alongside others and aren't counted yet\./);
+  assert.match(html, /814 earlier transcripts also record this member, alongside other speakers\. They join these speeches once each speaker’s words are separated\./);
+  assert.doesNotMatch(html, /aren't counted yet/);
+  // The note sits with the speeches it qualifies, after the head's party and representation.
+  assert.ok(html.indexOf('person-held-back') > html.indexOf('Party and representation'));
   assert.match(html, /href="\/methods#speaker-attribution"/);
   const methods = await get('/methods');
   assert.match(methods, /id="speaker-attribution"/);
   assert.match(methods, /fuller split into individual\s+speaking turns is planned/);
   const unverified = await get('/subject/person/anthony-albanese?attribution=unattributed');
-  assert.doesNotMatch(unverified, /person-held-back|aren't counted yet/);
+  assert.doesNotMatch(unverified, /person-held-back|earlier transcripts/);
 });
 test('chair-only and overlapping notices are served before JavaScript', async () => {
   for (const [slug, count] of [['milton-dick', '1,658'], ['john-hogg', '2,418']]) {
     const html = await get(`/subject/person/${slug}`);
-    assert.ok(html.includes(`${count} transcripts record this member presiding in the chair and aren't counted as their own speeches.`));
+    assert.ok(html.includes(`${count} transcripts record this member presiding in the chair. They are kept apart from their own speeches.`));
     assert.doesNotMatch(html, /person-held-back/);
     assert.match(html, /href="\/methods#speaker-attribution"/);
   }
   const both = await get('/subject/person/sue-lines');
-  assert.match(both, /11 earlier transcripts include this member alongside others and aren't counted yet\./);
-  assert.match(both, /1,659 transcripts record this member presiding in the chair and aren't counted as their own speeches\./);
+  assert.match(both, /11 earlier transcripts also record this member, alongside other speakers\. They join these speeches once each speaker’s words are separated\./);
+  assert.match(both, /1,659 transcripts record this member presiding in the chair\. They are kept apart from their own speeches\./);
   const methods = await get('/methods');
   assert.match(methods, /Chair-role transcripts record a member\s+presiding over proceedings/);
   const unverified = await get('/subject/person/sue-lines?attribution=unattributed');
