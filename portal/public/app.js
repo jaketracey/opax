@@ -36,7 +36,7 @@ let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=5b92b4d653").then(module => { growthModules = module; });
+const growthModulesReady = import("/growth-modules.js?v=1e074743c9").then(module => { growthModules = module; });
 let registerTables;
 const registerTablesReady = import('/register-tables.js?v=a1bf34a557').then(module => { registerTables = module; });
 let askPerson;
@@ -1870,7 +1870,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=2f6c37bc2a");
+    const module = await import("/suppliers.js?v=5b5924af27");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -5494,7 +5494,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=1603273cc7'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=554ac92056'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -9976,7 +9976,7 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=55654982b0", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=e291622b79", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=1c29d72c36", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=bc3204d336", mount: "mountLedger" },
