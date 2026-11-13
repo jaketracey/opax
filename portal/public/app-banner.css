@@ -1,9 +1,11 @@
 /* The site intentionally uses light tokens, including in device dark mode. */
+/* One line at every width: the row is the dismiss button's 44px target and no
+   more, and the rule under it is drawn inside that height. */
 .opax-app-banner {
   flex: none;
   background: var(--paper-sunken);
   color: var(--ink);
-  border-bottom: var(--border-hairline, 1px) solid var(--divider-subtle);
+  box-shadow: inset 0 calc(-1 * var(--border-hairline, 1px)) 0 var(--divider-subtle);
   font: var(--type-metadata, 400 0.9375rem/1.45 sans-serif);
 }
 .opax-app-banner-hidden .opax-app-banner { display: none; }
@@ -14,6 +16,7 @@
   gap: var(--space-tight, 0.5rem);
   max-width: var(--layout-column-web-max, 1440px);
   width: 100%;
+  height: var(--size-target, 44px);
   margin-inline: auto;
   padding-inline: clamp(1.25rem, 4vw, 5rem);
 }
@@ -21,9 +24,14 @@
   flex: 1;
   min-width: 0;
   margin: 0;
-  padding-block: var(--space-tight, 0.5rem);
-  overflow-wrap: anywhere;
+  /* Room for the link's focus ring inside the clipped line. */
+  padding-block: var(--space-line, 0.25rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+/* A small phone keeps the line whole by naming the device it is. */
+@media (width < 420px) { .opax-app-banner-ipad { display: none; } }
 .opax-app-banner a { color: var(--bronze-ink); text-decoration: underline; text-underline-offset: 0.15em; }
 .opax-app-banner a:hover { color: var(--ink); }
 .opax-app-banner-dismiss {
