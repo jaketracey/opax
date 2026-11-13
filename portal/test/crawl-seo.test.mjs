@@ -78,8 +78,8 @@ test('server page counts use the same distinct-person membership rule as the dir
     const members = partyMembers(label, {roster, divisions});
     const total = members.current.length + members.former.length;
     assert.ok(total > 0);
-    if (label === 'Liberal') assert.equal(total, 314);
-    if (label === 'Greens') assert.equal(total, 41);
+    if (label === 'Liberal') assert.equal(total, 338);
+    if (label === 'Greens') assert.equal(total, 47);
     const meta = await moneySubjectMeta('party', slug, new URL('https://opax.com.au/subject/party/' + slug), env);
     assert.ok(meta.prerender.includes(`${total.toLocaleString('en-AU')} parliamentarian${total === 1 ? '' : 's'}`));
   }

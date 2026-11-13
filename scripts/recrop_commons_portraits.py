@@ -25,7 +25,7 @@ drop_names=set(json.load(open(WK/"wikidata_drop.json")))
 ONLY=None   # --new: only this run's matches (wikidata_matches_new.json); sources are fetched at 640px if missing
 if "--new" in sys.argv:
     ONLY={f"wd-{m['qid']}" for m in json.load(open(WK/"wikidata_matches_new.json")).values()}
-S=source_http.Session(); S.headers["User-Agent"]="OPAX research (opax.com.au; jake.tracey@noice.work)"
+S=source_http.Session(); S.headers["User-Agent"]=source_http.USER_AGENT
 def fetch_src(key):
     f=credits[key]["file"][5:]; SRC.mkdir(exist_ok=True)
     r=S.get("https://commons.wikimedia.org/wiki/Special:FilePath/"+urllib.parse.quote(f), params={"width":"640"}, timeout=60)

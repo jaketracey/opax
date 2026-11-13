@@ -53,7 +53,7 @@ def plan(people, pm, have, owner, identity):
 def main():
     import requests
     from PIL import Image
-    S = source_http.Session(); S.headers["User-Agent"] = "OPAX research (opax.com.au; jake.tracey@noice.work)"
+    S = source_http.Session(); S.headers["User-Agent"] = source_http.USER_AGENT
     people = json.load(open(W/"portal/public/parliamentarians.json"))["people"]
     pm = json.load(open(PH/"people.json"))
     identity = json.load(open(W/"scripts/person_identity.json"))
