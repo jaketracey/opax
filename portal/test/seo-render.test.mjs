@@ -709,3 +709,23 @@ test('server pages leave out empty sections, heading and all',async()=>{
   const person=(await renderPersonAnswer(p,readFixture,new Map(),undefined,undefined,{})).html;
   for(const gone of ['Declared interests','Bills sponsored','in this export'])assert.ok(!person.includes(gone),gone);
 });
+
+// A donor no party return lists (empty typed cells, #347): the server page said
+// "$0 across 0 receipts" in its description, prerender and share card. It now says
+// no party return lists a receipt from it, and what its own donor returns declare.
+test('server donor page: a donor no party return lists says so and what its own returns declare, never $0 across 0 receipts',async()=>{
+  for(const [label,declared] of [['Goldman Sachs Australia Pty Ltd','its own donor returns declare $847,340 across 65 records'],['Virgin Australia Airlines Pty Ltd','its own donor returns declare $81,000 across 6 records'],['Ventyx Pty Ltd','its own donor return declares $22,000 across 1 record']]){
+    const html=await get('/subject/donor/'+encodeURIComponent(label));
+    const description=html.match(/<meta name="description" content="([^"]*)"/)[1];
+    const main=stripTags(html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)[1]);
+    for(const text of [description,main]){
+      assert.doesNotMatch(text,/\$0(?![\d.,])|\b0 receipts\b/,label);
+      assert.ok(text.includes('No party return lists a receipt from it'),`${label}: ${text.slice(0,300)}`);
+    }
+    assert.ok(main.includes(declared),`${label}: ${main.slice(0,400)}`);
+  }
+  const pratt=await get('/subject/donor/'+encodeURIComponent('Pratt Holdings Pty Ltd'));
+  const description=pratt.match(/<meta name="description" content="([^"]*)"/)[1];
+  assert.match(description,/disclosed political .*donor, \$[\d.]+m across [\d,]+ receipts/);
+  assert.doesNotMatch(description,/No party return lists/);
+});

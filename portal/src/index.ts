@@ -6,7 +6,7 @@ import {suppliersTableHTML} from '../public/suppliers-table.js'
 import {partyMoneyResponse} from './party-money-table'
 import {interestRegisterResponse} from './interest-register'
 import {loadDonorIndex} from './donor-index'
-import {donorDisclosure,donorLabelHTML,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
+import {donorDisclosure,donorLabelHTML,hasPartyReceipts,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
@@ -5645,15 +5645,24 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     // The page's own measure (receiptFigures): the parties' returns, each gift once.
     const own = receiptFigures(node as Parameters<typeof receiptFigures>[0])
     const span = years(own.firstYear ?? node.firstYear, own.lastYear ?? node.lastYear)
-    facts = `${display}: disclosed political ${what}, ${money(own.total)} across ${num(own.count)} receipts, ${span} (${node.sourceShort}).`
+    // A donor no party return lists (hasPartyReceipts: empty typed cells) has no figure in
+    // this measure: never "$0 across 0 receipts". Its record figures are its own donor
+    // returns' declarations alone (no party listed any), said as that, as the map card says them.
+    const reported = hasPartyReceipts(node as Parameters<typeof hasPartyReceipts>[0])
+    const declared = !reported && node.total > 0
+      ? `its own donor return${node.count === 1 ? ' declares' : 's declare'} $${Math.round(node.total).toLocaleString('en-AU')} across ${num(node.count)} record${node.count === 1 ? '' : 's'}, ${span} (${node.sourceShort})`
+      : ''
+    const figure = reported ? `${money(own.total)} across ${num(own.count)} receipts, ${span} (${node.sourceShort})` : ''
+    facts = reported ? `${display}: disclosed political ${what}, ${figure}.`
+      : `${display}: disclosed political ${what}. No party return lists a receipt from it${declared ? `; ${declared}` : ''}.`
     // An AEC associated entity says so with its figures, the same way for every party (export rule 9).
     const associated = donorDisclosure(node as DonorDisclosureRecord).associated
     if (associated) facts += ` ${associated.charAt(0).toUpperCase()}${associated.slice(1)}.`
-    tail = 'Which parties disclosed receipts from it.'
+    tail = reported ? 'Which parties disclosed receipts from it.' : ''
     card = {
       kicker: `Donor · ${industryLabel(node.industry)}`,
       title: display,
-      lines: [`${money(own.total)} across ${num(own.count)} receipts, ${span} (${node.sourceShort})`,
+      lines: [...(reported ? [figure] : ['No party return lists a receipt from it', ...(declared ? [`${declared.charAt(0).toUpperCase()}${declared.slice(1)}`] : [])]),
         ...(associated ? [`${associated.charAt(0).toUpperCase()}${associated.slice(1)}`] : [])],
     }
   } else {
