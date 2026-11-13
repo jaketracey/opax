@@ -381,9 +381,13 @@ function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>,
   const listed=members.length || tallied+missing
   const labelled=listed-missing
   const plural=(n: number)=>`${count(n)} ${n===1 ? 'member' : 'members'}`
-  const origin=!fromRoster ? 'Party labels are those recorded for this division, rather than current affiliations.'
+  // Federal Senate labels are never checked against dated records (none are held yet), and the source can
+  // give a senator's later party on every date: say so rather than claim they are dated.
+  const senate=d.house==='senate' && (d.jurisdiction ?? 'federal')==='federal'
+  const senateNote=' These are the division source’s labels and can show a senator’s later party rather than the one held on this date, because no dated Senate party records are held yet.'
+  const origin=!fromRoster ? (senate ? `Party labels are those given in the division record.${senateNote}` : 'Party labels are those recorded for this division, rather than current affiliations.')
     : fromRoster>=labelled ? 'The division record gives no parties. Each label here is the one a dated parliamentary roster records for that member on this date.'
-    : `Party labels are those recorded for this division, except for ${plural(fromRoster)} the division record lists without a party: their labels are the ones a dated parliamentary roster records for them on this date.`
+    : `Party labels are those recorded for this division, except for ${plural(fromRoster)} the division record lists without a party: their labels are the ones a dated parliamentary roster records for them on this date.${senate ? senateNote.replace(' These are', ' The others are') : ''}`
   const correctedNote=corrected ? ` For ${plural(corrected)}, the division record gives a party not held on this date; the label shown is the party dated service records give for this date.` : ''
   const heldNote=withheld ? ` For ${count(withheld)} of them, the division record gives a party that dated records leave unclear for this date, so it is not shown.` : ''
   let html=`<h3>How each party voted</h3><p>${origin}${correctedNote}${ayes!==d.ayes || noes!==d.noes ? ` The member list is partial: ${ayes} recorded ayes and ${noes} recorded noes; the official tally above remains the source total.` : ''}</p>`

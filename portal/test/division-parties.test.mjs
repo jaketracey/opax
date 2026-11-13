@@ -97,3 +97,17 @@ test('party lines covering under half the members say so before the lines', () =
   assert.doesNotMatch(html, /not counted in any party line above/);
   assert.doesNotMatch(html, /Unknown/);
 });
+
+test('Senate pages say the labels are the source’s and can be a later party; House wording is unchanged', () => {
+  const members = [{ name: 'Morgan Fixture', vote: 'aye', party: 'Later Party' }, { name: 'Riley Sample', vote: 'no', party: 'Other Party' }];
+  const senate = text(renderDivisionAnswer(division(members, { key: 'federal-senate-1', slug: 'division-federal-senate-1', house: 'senate', jurisdiction: 'federal' }), [], new Map()).html);
+  assert.match(senate, /Party labels are those given in the division record\. These are the division source’s labels and can show a senator’s later party rather than the one held on this date, because no dated Senate party records are held yet\./);
+  assert.doesNotMatch(senate, /rather than current affiliations/);
+  const house = text(renderDivisionAnswer(division(members, { key: 'federal-representatives-1', slug: 'division-federal-representatives-1', house: 'representatives', jurisdiction: 'federal' }), [], new Map()).html);
+  assert.match(house, /Party labels are those recorded for this division, rather than current affiliations\./);
+  assert.doesNotMatch(house, /senator/);
+  // A Senate page with some roster-filled rows still flags the others.
+  const mixed = text(renderDivisionAnswer(division([...members, { name: 'Casey Instance', vote: 'aye', party: 'Example Party', party_source: roster }],
+    { key: 'federal-senate-2', slug: 'division-federal-senate-2', house: 'senate', jurisdiction: 'federal' }), [], new Map()).html);
+  assert.match(mixed, /The others are the division source’s labels and can show a senator’s later party/);
+});
