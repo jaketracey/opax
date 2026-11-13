@@ -1444,14 +1444,17 @@ test('AX5: a long first stage name wraps to a second line, never an ellipsis; de
 });
 
 describe('the edition facts with VoiceOver, at Large, AX3 and AX5', () => {
-  const facts = (bars: EditionView['facts']['bars']) => ({
+  const facts = (
+    bars: EditionView['facts']['bars'],
+    division: EditionView['facts']['division'] = { ayes: 80, noes: 60 },
+  ) => ({
     ...edition,
     kind: 'grant' as const,
     facts: {
       ...edition.facts,
       figures: [{ value: '$10.0m', label: 'to an invented council' }],
       bars,
-      division: { ayes: 80, noes: 60 },
+      division,
       order: [
         { type: 'figure' as const, index: 0 },
         { type: 'bars' as const, index: 0 },
@@ -1469,13 +1472,17 @@ describe('the edition facts with VoiceOver, at Large, AX3 and AX5', () => {
     note: null,
     whole: false,
   };
-  async function show(fontScale: number, bars = series) {
+  async function show(
+    fontScale: number,
+    bars: EditionView['facts']['bars'] = series,
+    division?: EditionView['facts']['division'],
+  ) {
     Platform.OS = 'ios';
     const window = { width: 390, height: 844, scale: 3, fontScale };
     Dimensions.set({ window, screen: window });
     jest
       .mocked(catalogs.todayEdition)
-      .mockResolvedValue({ ...ready, data: facts(bars) });
+      .mockResolvedValue({ ...ready, data: facts(bars, division) });
     const r = await render(<EditionStory />);
     // Native text layout, as the chart's hidden probes would report it.
     const line = textStyles.footnote.lineHeight * fontScale;
@@ -1509,9 +1516,6 @@ describe('the edition facts with VoiceOver, at Large, AX3 and AX5', () => {
       // Compact money in words; the chart's title is a heading.
       expect(
         at('10.0 million dollars, to an invented council'),
-      ).toBeGreaterThan(-1);
-      expect(
-        at('10.0 million dollars, to an invented council, 4 October 2026'),
       ).toBeGreaterThan(-1);
       expect(read[at('Topic labels')]!.role).toBe('header');
       // Each bar once as its figure; the scale and the captions are drawn,
@@ -1582,15 +1586,19 @@ describe('the edition facts with VoiceOver, at Large, AX3 and AX5', () => {
   test.each([1, 3.571])(
     'at %s a share of a whole reads as one image of its parts and values',
     async (fontScale) => {
-      const { r } = await show(fontScale, {
-        title: 'Closed, non-competitive',
-        items: [
-          { label: 'Grants', pct: 42 },
-          { label: 'Everything else', pct: 58 },
-        ],
-        note: null,
-        whole: true,
-      });
+      const { r } = await show(
+        fontScale,
+        {
+          title: 'Closed, non-competitive',
+          items: [
+            { label: 'Grants', pct: 42 },
+            { label: 'Everything else', pct: 58 },
+          ],
+          note: null,
+          whole: true,
+        },
+        null,
+      );
       const read = readAloud(r.root);
       const title = read.indexOf('Closed, non-competitive (header)');
       expect(title).toBeGreaterThan(-1);
@@ -1598,6 +1606,10 @@ describe('the edition facts with VoiceOver, at Large, AX3 and AX5', () => {
         'Grants, 42%. Everything else, 58%. (image)',
       );
       expect(read.filter((label) => /42%/.test(label))).toHaveLength(1);
+      // The plate leads with the figure, its sum in words.
+      expect(read).toContain(
+        '10.0 million dollars, to an invented council, 4 October 2026',
+      );
     },
   );
 });
