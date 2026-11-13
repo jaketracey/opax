@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {build} from 'esbuild';
-import {receiptFigures, receiptGraph, receiptGraphScope, receiptScopeLabel} from '../public/donor-disclosure.js';
+import {DONOR_DECLARED_ONLY, donorLookup, hasPartyReceipts, receiptFigures, receiptGraph, receiptGraphScope, receiptScopeLabel} from '../public/donor-disclosure.js';
 import * as registerTables from '../public/register-tables.js';
 
 // Every money figure a reader or Ask sees counts each gift once: the money
@@ -178,20 +178,75 @@ test('search snippets: donor and flow records give the typed figure with the sco
   assert.match(state.snippet, /across 2 records\.$/, 'a state donor keeps its record figures and has no scope');
 });
 
-test('person page ties: the exporter\'s Python copy of the rule matches receiptFigures on every released edge and donor', () => {
-  const root = new URL('../../', import.meta.url).pathname;
-  const script = `import json,sys\nsys.path.insert(0,${JSON.stringify(root)})\nfrom scripts import export_interests as x\ng=json.load(open(${JSON.stringify(root + 'portal/public/graph/money.json')}))\nout=[[r.get('id') or r['source']+'>'+r['target'],f['total'],f['count'],f['firstYear'],f['lastYear'],f['typed']] for r in [*g['edges'],*[n for n in g['nodes'] if n.get('kind')=='donor']] for f in [x.receipt_figures(r)]]\nties=x.load_tie_registers(${JSON.stringify(root + 'portal/public/graph/money.json')},${JSON.stringify(root + 'portal/public/access.json')},${JSON.stringify(root + 'portal/public/fits.json')})[-1]\nprint(json.dumps({'figures':out,'pratt':ties.get('donor:pratt'),'westpac':ties.get('donor:westpac banking corporation')}))`;
-  const py = JSON.parse(execFileSync('python3', ['-I', '-c', script], {encoding: 'utf8', maxBuffer: 64 << 20}));
-  const rows = [...published.edges, ...published.nodes.filter(n => n.kind === 'donor')];
-  assert.equal(py.figures.length, rows.length);
+// The exporter's Python copy of the rule (scripts/export_interests.py) against the JS rule:
+// receiptFigures on every edge and donor, and the person-page ties load_tie_registers writes
+// against receiptGraph's donor-to-party edges, grouped by source as the exporter groups them.
+import {mkdtempSync, writeFileSync, rmSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+function pythonTies(graph) {
+  const dir = mkdtempSync(join(tmpdir(), 'opax-ties-'));
+  try {
+    const money = join(dir, 'money.json'), empty = join(dir, 'empty.json');
+    writeFileSync(money, JSON.stringify(graph)); writeFileSync(empty, '{}');
+    const script = `import json,sys\nsys.path.insert(0,${JSON.stringify(new URL('../../', import.meta.url).pathname)})\nfrom scripts import export_interests as x\n`
+      + `g=json.load(open(sys.argv[1]))\nrows=[*g['edges'],*[n for n in g['nodes'] if n.get('kind')=='donor']]\n`
+      + `figures=[[f['total'],f['count'],f['firstYear'],f['lastYear'],f['typed']] for f in map(x.receipt_figures,rows)]\n`
+      + `ties=x.load_tie_registers(sys.argv[1],sys.argv[2],sys.argv[2])[5]\nprint(json.dumps({'figures':figures,'ties':ties}))`;
+    return JSON.parse(execFileSync('python3', ['-I', '-c', script, money, empty], {encoding: 'utf8', maxBuffer: 64 << 20}));
+  } finally { rmSync(dir, {recursive: true, force: true}); }
+}
+function jsTies(graph) {
+  const ties = {};
+  for (const e of receiptGraph(graph).edges) {
+    if (!String(e.source).startsWith('donor:') || e.grant || e.flow) continue;
+    (ties[e.source] ||= []).push({party: String(e.target).replace(/^party:/, ''), total: Math.round(e.total), from: e.firstYear ?? null, to: e.lastYear ?? null, ...(e.typed ? {typed: true} : {})});
+  }
+  for (const rows of Object.values(ties)) rows.sort((a, b) => b.total - a.total || (a.party < b.party ? -1 : a.party > b.party ? 1 : 0));
+  return ties;
+}
+function assertSameRule(graph, label) {
+  const py = pythonTies(graph);
+  const rows = [...graph.edges, ...graph.nodes.filter(n => n.kind === 'donor')];
+  assert.equal(py.figures.length, rows.length, label);
   rows.forEach((row, i) => {
-    const f = receiptFigures(row), [, total, count, firstYear, lastYear, typed] = py.figures[i];
-    assert.deepEqual([Math.round(total), count, firstYear, lastYear, typed], [Math.round(f.total), f.count, f.firstYear, f.lastYear, f.typed], py.figures[i][0]);
+    const f = receiptFigures(row);
+    assert.deepEqual(py.figures[i].map((v, j) => j === 0 ? Math.round(v) : v), [Math.round(f.total), f.count, f.firstYear, f.lastYear, f.typed], `${label}: ${row.id || row.source + '>' + row.target}`);
   });
-  assert.deepEqual(py.pratt.find(f => f.party === 'Liberal'), {party: 'Liberal', total: PRATT_LIBERAL, from: 1998, to: 2024, typed: true});
-  assert.equal(py.westpac.find(f => f.party === 'Labor').total, WESTPAC_LABOR);
-  const onlyDonor = published.edges.filter(e => e.source.startsWith('donor:') && !e.flow && !e.grant && e.by_type && !Object.keys(e.by_type).length);
-  assert.ok(onlyDonor.length > 0);
+  assert.deepEqual(py.ties, jsTies(graph), `${label}: person-page ties`);
+  return py;
+}
+// Invented records, one for each branch the released graph never reaches.
+const TIE_FIXTURE = {meta: {}, nodes: [
+  {id: 'party:Labor', kind: 'party', label: 'Labor'}, {id: 'party:Liberal', kind: 'party', label: 'Liberal'},
+  {id: 'donor:alpha example', kind: 'donor', label: 'Alpha Example Pty Ltd', by_type: {donation_received: 3000, other_receipt: 500.4},
+    by_type_year: {'2017-18': {donation_received: [1000, 1]}, 'Eden-Monaro by-election': {donation_received: [2000, 2]}, 'unknown': {other_receipt: [500.4, 1]}, '2010-11': {donation_received: [0, 0]}}},
+  {id: 'donor:beta example', kind: 'donor', label: 'Beta Example Ltd', total: 9000, count: 1},
+  {id: 'donor:gamma example', kind: 'donor', label: 'Gamma Example Ltd', total: 700, count: 2, firstYear: 2001, lastYear: 2003},
+], edges: [
+  // A by-election period (polling year 2020), an undated cell and a zero-count cell (2010-11, no receipts).
+  {source: 'donor:alpha example', target: 'party:Labor', total: 9999, count: 9, firstYear: 2005, lastYear: 2021, byYear: {2005: [9999, 9]},
+    by_type: {donation_received: 3000, other_receipt: 500.4},
+    by_type_year: {'2017-18': {donation_received: [1000, 1]}, 'Eden-Monaro by-election': {donation_received: [2000, 2]}, 'unknown': {other_receipt: [500.4, 1]}, '2010-11': {donation_received: [0, 0]}}},
+  // Only the donor declared it: empty typed cells, so no tie.
+  {source: 'donor:alpha example', target: 'party:Liberal', total: 4000, count: 2, firstYear: 2012, lastYear: 2012, byYear: {2012: [4000, 2]}, by_type: {}, by_type_year: {}},
+  // A grant edge from a donor is not a receipt.
+  {source: 'donor:beta example', target: 'party:Labor', grant: true, total: 9000, count: 1, firstYear: 2019, lastYear: 2019},
+  // No typed cells (a state graph's shape): its record figures stand.
+  {source: 'donor:gamma example', target: 'party:Liberal', total: 700, count: 2, firstYear: 2001, lastYear: 2003, byYear: {2001: [300, 1], 2003: [400, 1]}},
+]};
+
+test('person page ties: the exporter\'s Python copy of the rule matches the JS rule on every released donor and on invented edge cases', () => {
+  const released = assertSameRule(published, 'released graph');
+  assert.deepEqual(released.ties[PRATT].find(f => f.party === 'Liberal'), {party: 'Liberal', total: PRATT_LIBERAL, from: 1998, to: 2024, typed: true});
+  assert.equal(released.ties[WESTPAC].find(f => f.party === 'Labor').total, WESTPAC_LABOR);
+  assert.ok(Object.keys(released.ties).length > 300, 'every released donor with a party-reported flow');
+  const fixture = assertSameRule(TIE_FIXTURE, 'invented fixture');
+  // Spelled out, so a change to both copies at once still shows here.
+  assert.deepEqual(fixture.ties, {
+    'donor:alpha example': [{party: 'Labor', total: 3500, from: 2017, to: 2020, typed: true}],
+    'donor:gamma example': [{party: 'Liberal', total: 700, from: 2001, to: 2003}],
+  });
 });
 
 // ---- app.js: the Ask industry panel, topic money and the donors directory -----
@@ -212,6 +267,7 @@ const appContext = extra => ({
   esc: v => String(v ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;'), fmtMoney: v => `$${Math.round(v)}`,
   donorRows: (rows, _index, limit = Infinity) => [...rows].sort((a, b) => b[1] - a[1]).slice(0, limit), donorViewIndex: new Map(),
   subjectHash: (kind, name) => `#/${kind}/${name}`, partyDotHTML: () => '', explainBtn: () => '', AEC_NOTE: 'AEC note.',
+  hasPartyReceipts, DONOR_DECLARED_ONLY, receiptScopeLabel,
   ...extra,
 });
 // Typed sums for one industry, worked out here from by_type (not through receiptGraph).
@@ -276,7 +332,7 @@ test('donors directory: Pratt Holdings at $19.6m across 120 receipts, Liberal an
 test('app.js keeps one projected graph beside moneyData, from donor-views.js', async () => {
   const source = await readFile(new URL('../public/app.js', import.meta.url), 'utf8');
   assert.ok(source.includes('moneyReceipts = module.receiptGraph(d);'));
-  assert.ok(source.includes('({donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope}=module);'));
+  assert.ok(source.includes('({donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY}=module);'));
 });
 
 // ---- Games: the ledger, the quiz's donor and industry questions, words per dollar ----
@@ -385,4 +441,122 @@ test('person page ties: the scope line shows once the exporter marks the flows t
   assert.ok(source.includes('${tieScope ? `<p class="entry-scope">Receipts: ${esc(tieScope)}.</p>` : ""}'));
   const py = await readFile(new URL('../../scripts/export_interests.py', import.meta.url), 'utf8');
   assert.ok(py.includes('**({"typed": True} if figures["typed"] else {}),'));
+});
+
+// ---- Donors and flows only their own donor return declares (round 3) ------------
+// receiptGraph drops 131 flows whose typed cells are empty: the parties' returns list no
+// receipt for them. Ten donors have no other flow, so their typed total is 0. No surface
+// may show such a donor at $0: each says what is true (DONOR_DECLARED_ONLY) instead.
+const DECLARED_ONLY = published.nodes.filter(n => n.kind === 'donor' && !hasPartyReceipts(n));
+const GOLDMAN = 'donor:goldman sachs australia';
+const ZERO = /\$0(?:\.00)?(?![\d.,])/;
+
+test('one predicate: hasPartyReceipts picks out the released donors and flows only their own returns declare', () => {
+  assert.equal(DECLARED_ONLY.length, 10);
+  assert.ok(DECLARED_ONLY.every(n => !Object.keys(n.by_type).length && n.total > 0), 'each holds a record figure from its own declarations');
+  assert.ok(DECLARED_ONLY.some(n => n.id === GOLDMAN));
+  const dropped = published.edges.filter(e => !e.grant && !e.flow && !hasPartyReceipts(e));
+  assert.equal(dropped.length, 131);
+  assert.equal(receiptGraph(published).edges.length, published.edges.length - dropped.length, 'receiptGraph drops exactly those flows');
+  assert.equal(hasPartyReceipts({total: 0, count: 0}), true, 'a record without typed cells (a state graph) keeps its figures');
+});
+
+test('Ask money_totals: never a $0 donor row; a flow only the donor declared is said as the donor\'s declaration', async () => {
+  for (const n of DECLARED_ONLY) {
+    const out = await api.callTool(env, 'money_totals', {donor: n.id});
+    assert.equal(out.rows.length, 0, n.label);
+    assert.ok(out.coverage_only && out.donor_declared.length && out.donor_declared.every(r => r.donor_declared_aud > 0), n.label);
+    assert.doesNotMatch(out.citations[0].text, ZERO, n.label);
+    assert.match(out.citations[0].text, /own donor returns? declares? \$[\d,]+ .*list no receipt from .*donor's declarations?, not (a receipt|receipts) a party reported\.$/, n.label);
+  }
+  const goldman = await api.callTool(env, 'money_totals', {donor: GOLDMAN});
+  assert.equal(goldman.citations[0].text, "Goldman Sachs Australia Pty Ltd's own donor returns declare $847,340 to federal parties across 65 records: Liberal $513,590 (2002-03 to 2010-11); Labor $330,450 (2002-03 to 2010-11); Nationals $3,300 (2006-07). The parties' own returns list no receipt from Goldman Sachs Australia Pty Ltd, so OPAX's figures, which count each gift once from the party's own return, do not include them. The amounts are the donor's declarations, not receipts a party reported.");
+  const flow = await api.callTool(env, 'money_totals', {donor: GOLDMAN, party: 'Labor'});
+  assert.deepEqual(flow.donor_declared, [{party: 'Labor', donor_declared_aud: 330450, records: 27, period: '2002-03 to 2010-11'}]);
+  assert.match(flow.citations[0].text, /^Goldman Sachs Australia Pty Ltd's own donor returns declare \$330,450 to Labor across 27 records \(2002-03 to 2010-11\)\. Labor's own returns list no receipt from/);
+  const byParty = await api.callTool(env, 'money_totals', {donor: GOLDMAN, group_by: 'party'});
+  assert.deepEqual(byParty.donor_declared.map(r => r.party), ['Liberal', 'Labor', 'Nationals']);
+  // A donor with both kinds: the counted flows as rows, the declared-only one as a note.
+  const allianz = await api.callTool(env, 'money_totals', {donor: 'donor:allianz australia', group_by: 'party'});
+  assert.deepEqual(allianz.rows.map(r => r.party), ['Labor', 'Liberal', 'Nationals']);
+  assert.ok(allianz.notes.some(n => n.startsWith("Not counted above: Allianz Australia Limited's own donor returns declare $67,798 to LNP across 18 records (2011-12 to 2022-23).")));
+  // A ranking holds only donors the parties' returns list.
+  const ranked = await api.callTool(env, 'money_totals', {group_by: 'donor', limit: 20});
+  assert.equal(ranked.matched, published.nodes.filter(n => n.kind === 'donor' && hasPartyReceipts(n)).length);
+  assert.ok(ranked.rows.every(r => r.total_aud > 0));
+});
+
+test('donors directory: no row at $0; declared-only donors carry the labelled line; off-map federal rows say they are record totals', async () => {
+  const index = await readPublic('/graph/donor-index.json');
+  const graphs = {federal: published, qld: await readPublic('/graph/money.qld.json'), vic: await readPublic('/graph/money.vic.json'), tas: await readPublic('/graph/money.tas.json')};
+  const context = appContext({
+    donorViewReady: Promise.resolve(), loadMoneyFile: async jur => graphs[jur], loadAccess: async () => ({}), loadFits: async () => ({}),
+    receiptGraph, receiptGraphScope, STATE_NOT_SUMMED: '', byNumDesc: () => () => 0, byName: () => 0, moneyFor: () => 0,
+    donorViewIndex: donorLookup(index.donors), donorGroupColour: () => '#000', donorNameHTML: name => name, entityHrefAttr: href => `href="${href}"`,
+    anyPartyDotHTML: () => '', yearSpan: (a, b) => `${a}-${b}`,
+  });
+  runInNewContext(`${await appFunctions(['buildDonorsDirectory', 'normName', 'industryLabel'])}\nthis.directory=buildDonorsDirectory;`, context);
+  const directory = await context.directory();
+  const html = directory.items.map(d => [d, directory.row(d)]);
+  for (const [d, row] of html) assert.doesNotMatch(row, /<b>\$0<\/b>/, d.label);
+  const declared = html.filter(([d]) => d.declaredOnly);
+  assert.equal(declared.length, DECLARED_ONLY.length);
+  for (const [d, row] of declared) {
+    assert.ok(row.includes(`AEC returns: ${DONOR_DECLARED_ONLY}`), d.label);
+    assert.doesNotMatch(row, /class="dir-fig"/, d.label);
+  }
+  assert.ok(directory.filters.find(f => f.key === 'jur').test(declared[0][0], 'federal'), 'still listed as disclosed to the AEC');
+  const offMap = html.filter(([d]) => d.recordMeasure && d.money.federal);
+  assert.ok(offMap.length > 100);
+  for (const [d, row] of offMap) assert.ok(row.includes('All federal disclosure records, as given by both donor and party, so a gift can appear twice') && row.includes('AEC records'), d.label);
+  const onMap = html.find(([d]) => d.label === 'Pratt Holdings Pty Ltd')[1];
+  assert.ok(onMap.includes('AEC returns') && !onMap.includes('AEC records'));
+});
+
+test('search: no donor or receipt record says $0.00; declared-only donors carry the labelled line; off-map federal donors say they are record totals', async () => {
+  for (const n of published.nodes.filter(n => n.kind === 'donor')) assert.doesNotMatch(donorSearchRecord('federal', n).snippet, ZERO, n.label);
+  assert.equal(donorSearchRecord('federal', published.nodes.find(n => n.id === GOLDMAN)).snippet, `Finance. ${DONOR_DECLARED_ONLY}.`);
+  const index = await readPublic('/graph/donor-index.json');
+  // The catalog adds each map donor from its graph first; an index entry with the same key is skipped.
+  const onMap = new Set();
+  for (const file of ['money.json', 'money.qld.json', 'money.vic.json', 'money.tas.json']) for (const n of (await readPublic('/graph/' + file)).nodes) onMap.add(n.id);
+  for (const n of index.donors) if (n.kind !== 'reference' && !onMap.has(n.id)) assert.doesNotMatch(donorSearchRecord(n.jurisdiction || 'federal', n).snippet, ZERO, n.label);
+  const offMap = index.donors.find(n => n.kind === 'donor' && (n.jurisdiction || 'federal') === 'federal' && !onMap.has(n.id) && n.total > 0);
+  assert.match(donorSearchRecord('federal', offMap).snippet, /records\. All federal disclosure records, as given by both donor and party, so a gift can appear twice\.$/);
+  const source = await readFile(new URL('../../scripts/build_search_catalog.mjs', import.meta.url), 'utf8');
+  assert.ok(source.includes('   if(!hasPartyReceipts(e))continue;'), 'receipt records use the same predicate');
+});
+
+import {Worker} from 'node:worker_threads';
+function renderEntry(path, selector) {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(new URL('./helpers/directory-shell.mjs', import.meta.url), {
+      execArgv: ['--experimental-vm-modules', '--disable-warning=ExperimentalWarning'], workerData: {kind: 'donor', path, selector, html: true, settleMs: 1500},
+    });
+    let result;
+    worker.once('message', message => { result = message; });
+    worker.once('error', reject);
+    worker.once('exit', () => result?.error ? reject(Error(result.error)) : resolve(result));
+  });
+}
+// jsdom has no canvas: the page's money map cannot draw there. Every other page error counts.
+const pageErrors = result => result.errors.filter(e => !e.includes("HTMLCanvasElement's getContext() method"));
+
+test('donor page (real app): a donor only its own return declares shows the labelled line, not $0, 0 receipts, a rank or $0 bars', {timeout: 120_000}, async () => {
+  const goldman = published.nodes.find(n => n.id === GOLDMAN);
+  const result = await renderEntry(`/subject/donor/${encodeURIComponent(goldman.label)}`, '.donor-flow-bars');
+  assert.deepEqual(pageErrors(result), []);
+  assert.equal(result.rows, 1, 'the page rendered its money section');
+  const doc = new JSDOM(result.html).window.document;
+  assert.equal(doc.querySelector('#subject-title').textContent, goldman.label);
+  const text = doc.body.textContent;
+  assert.ok(text.includes(DONOR_DECLARED_ONLY), 'the labelled line');
+  assert.doesNotMatch(text, /\$0(?![\d,.])|\b0 receipts\b|Receipts counted|Rank/);
+  assert.equal(doc.querySelectorAll('.donor-flow-bars .bar, .donor-flow-bars rect').length, 0, 'no bars');
+  // A donor the parties' returns list still gets its counted figure and the scope line.
+  const pratt = published.nodes.find(n => n.id === PRATT);
+  const counted = await renderEntry(`/subject/donor/${encodeURIComponent(pratt.label)}`, '.donor-flow-bars');
+  assert.deepEqual(pageErrors(counted), []);
+  const prattText = new JSDOM(counted.html).window.document.body.textContent;
+  assert.ok(prattText.includes('Receipts counted') && !prattText.includes(DONOR_DECLARED_ONLY));
 });
