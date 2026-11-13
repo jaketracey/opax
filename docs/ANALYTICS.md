@@ -119,7 +119,8 @@ false and `$geoip_disable` true. Every event also carries the window as two
 categories, read as it is sent: `layout` (`compact` or `regular`, the size
 class the app is laying out with) and `foldable` (true when the window spans a
 fold). Never the window's size, the device model or a measured region; if the
-window cannot be read, both are left off.
+window cannot be read, both are left off. Native crash reports, which the
+native SDK builds without passing through JS, do not carry them.
 
 | Event | Properties |
 | --- | --- |
@@ -424,7 +425,7 @@ ICU like NSRegularExpression, so the same pattern texts behave the same.
 | Stack frames | `platform`, `function`, `filename`, `abs_path`, `module`, `package` (paths cut at the first `?` or `#`), `lineno`, `colno`, `in_app`, `instruction_addr`, `image_addr`, `symbol_addr`, `chunk_id`, `map_id`, `method_synthetic`, `client_resolved`. Source context, local variables and any other field are dropped |
 | `$debug_images` | Up to 500 binary images native frames point into: `type`, `debug_id`, `code_id`, `code_file`, `image_addr`, `image_vmaddr`, `image_size`, `arch` |
 | `$exception_level`, `$exception_source`, `$exception_fingerprint` | A fixed level word and short tokens |
-| Common | `$lib`, `$lib_version`, `$session_id`, `$os_name`, `$device_type`, `$app_name`, `$app_namespace` (`au.com.opax.app`), `$app_version`, `$app_build`, `$screen_name` (the route template), `platform`, `app`, `app_version`, `app_build`, `environment`, `$process_person_profile` false, `$is_identified` false, `$geoip_disable` true |
+| Common | `$lib`, `$lib_version`, `$session_id`, `$os_name`, `$device_type`, `$app_name`, `$app_namespace` (`au.com.opax.app`), `$app_version`, `$app_build`, `$screen_name` (the route template), `platform`, `app`, `app_version`, `app_build`, `environment`, `$process_person_profile` false, `$is_identified` false, `$geoip_disable` true; on JS reports also `layout` and `foldable` |
 
 Messages keep their shape but lose anything that could be user text, in this
 order: spaces the engines disagree on (U+0085, U+FEFF and U+001C to U+001F)
