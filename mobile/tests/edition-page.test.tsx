@@ -1164,11 +1164,16 @@ test('AX5 plate detail stays below the title size and both stage ends share one 
     'today-edition-art-ends',
   ]) {
     const line = host(root, id)[0]!;
-    expect(line.props.maxFontSizeMultiplier).toBe(1.353);
-    expect(
-      Number(StyleSheet.flatten(line.props.style).fontSize) *
-        line.props.maxFontSizeMultiplier,
-    ).toBeLessThanOrEqual(titleSize);
+    // Android folds the 1.353 cap into the role's size and line height (RN
+    // would cap the size but not the leading), so the native cap is off and
+    // the drawn size is the folded size at the reader's scale.
+    expect(line.props.maxFontSizeMultiplier).toBe(0);
+    const style = StyleSheet.flatten(line.props.style);
+    const drawn = Number(style.fontSize) * window.fontScale;
+    expect(drawn).toBeLessThanOrEqual(titleSize);
+    expect(Number(style.lineHeight) * window.fontScale).toBeLessThan(
+      Number(style.fontSize) * window.fontScale * 2,
+    );
   }
   const ends = host(root, 'today-edition-art-ends')[0]!;
   expect(ends.props).toMatchObject({
