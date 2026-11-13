@@ -124,8 +124,8 @@ test('crawler /money text sums the typed flows and carries the scope line; state
   const legacy = published.edges.filter(e => !e.flow && !e.grant && published.nodes.find(n => n.id === e.source)?.kind === 'donor');
   assert.ok(typed.length < legacy.length);
   assert.ok(federal.includes(SCOPE), 'scope line under the heading');
-  assert.match(federal, new RegExp(`across ${typed.length.toLocaleString('en-AU')} donor-to-party totals`));
-  assert.doesNotMatch(federal, new RegExp(`across ${legacy.length.toLocaleString('en-AU')} donor-to-party totals`));
+  assert.match(federal, new RegExp(`across ${typed.length.toLocaleString('en-AU')} source-to-party totals`));
+  assert.doesNotMatch(federal, new RegExp(`across ${legacy.length.toLocaleString('en-AU')} source-to-party totals`));
   const qld = html.slice(html.indexOf('Queensland disclosed receipts'));
   assert.doesNotMatch(qld.slice(0, 400), /All receipt types/, 'a state graph has no typed scope');
 });

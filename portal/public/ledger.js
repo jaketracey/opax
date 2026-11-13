@@ -1,5 +1,5 @@
 import {donorDisclosure,donorLookup,donorDisplayText,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=8c73ceafd6';
-import {subjectUrl} from './canonical-urls.js?v=e32f13c6c8';
+import {subjectUrl} from './canonical-urls.js?v=c40e3d805e';
 import { filterMoneyEdges } from "./money-records.js?v=ia-ux-20260908-2";
 import { sourceLineHTML } from './labels.js?v=89dda4a520';
 /**
