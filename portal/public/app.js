@@ -6498,11 +6498,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const electorateLinks = electorateReference
     ? electorateReference.module.personElectorateLinksHTML(electorateReference.person, representation.representations, electorateReference.data.electorates)
     : representation.representations.map((r) => esc(r.electorate)).join(', ');
-  // "Member for Grayndler", "Senator for South Australia": said only of a
-  // sitting member in one house, where the roster says so; otherwise the seat.
+  // "Member for Grayndler", "Senator for South Australia", "MLC for South Australia":
+  // said only of a sitting member in one house, where the roster says so; otherwise the seat.
   const house = representation.chambers.length === 1 ? representation.chambers[0] : "";
   const seatWord = roster?.current && electorateLinks
-    ? (/senate|council/i.test(house) ? "Senator for " : /representatives|assembly/i.test(house) ? "Member for " : "") : "";
+    ? (house === "Senate" ? "Senator for " : /council/i.test(house) ? "MLC for " : /representatives|assembly/i.test(house) ? "Member for " : "") : "";
   // One meta line (principle 3): party, seat, house, parliament. The Quick
   // facts box said each of these again; its other facts are in the source
   // sheet under this line.

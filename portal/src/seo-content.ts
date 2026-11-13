@@ -333,7 +333,7 @@ export function personHeadPrerender(html: string, p: Pick<Person,'name'|'full'|'
     : '<span class="subject-portrait subject-portrait-blank" aria-hidden="true"></span>'
   const seats = [...new Set((p.representation || []).map(r => r.electorate).filter(Boolean))]
   const house = p.chambers.length === 1 ? chamberLabel(p.chambers[0]) : ''
-  const word = p.current && seats.length ? (/senate|council/i.test(house) ? 'Senator for ' : /representatives|assembly/i.test(house) ? 'Member for ' : '') : ''
+  const word = p.current && seats.length ? (house === 'Senate' ? 'Senator for ' : /council/i.test(house) ? 'MLC for ' : /representatives|assembly/i.test(house) ? 'Member for ' : '') : ''
   const parliament = p.states.map(s => PARLIAMENT_NAMES[s] || '').filter(Boolean)
   const parts = [
     opts.party ? partyLabelHTML(opts.party, {full: true}) : '',
