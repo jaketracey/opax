@@ -29,7 +29,12 @@ export const SITTING_PATH = '/parliament/sitting-days.json'
 
 export interface WidgetEdition {date: string; kind: DailyPost['kind']; kind_short: string; card_title: string; line: string | null; path: string}
 export interface WidgetVote {date: string; chamber: string | null; stage: string | null; title: string; outcome: 'Agreed to' | 'Not agreed to'; ayes: number; noes: number; path: string}
-export interface WidgetSitting {source: string | null; as_at: string | null; until: string; days: {date: string; house: boolean; senate: boolean}[]}
+export interface WidgetSitting {
+  until: string; until_reason: 'window' | 'coverage_end' | 'expired'
+  calendars: {year: number; source: string | null; as_at: string | null}[]
+  next_year: {year: number; status: string} | null
+  days: {date: string; house: boolean; senate: boolean}[]
+}
 export interface WidgetToday {version: 1; generated: string | null; edition: WidgetEdition | null; vote: WidgetVote | null; sitting: WidgetSitting | null}
 
 const isObject = (v: unknown): v is Json => !!v && typeof v === 'object' && !Array.isArray(v)
@@ -205,67 +210,77 @@ export function widgetVote(file: unknown): WidgetVote | null {
 
 // ---------------------------------------------------------------- sitting --
 
-const day = (v: unknown): string | null => typeof v === 'string' && validDate(v.slice(0,10)) && /^\d{4}-\d{2}-\d{2}(?:$|T)/.test(v) ? v.slice(0,10) : null
-const first = (o: Json | null | undefined, keys: string[]) => o ? keys.map(k => o[k]).find(v => v !== undefined && v !== null) : undefined
+const day = (v: unknown): string | null => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) && validDate(v) ? v : null
 export const addDays = (date: string, n: number) => new Date(Date.parse(date) + n * 86_400_000).toISOString().slice(0,10)
 export function sydneyDay(at: number): string {
   return new Intl.DateTimeFormat('en-CA', {timeZone:'Australia/Sydney', year:'numeric', month:'2-digit', day:'2-digit'}).format(at)
 }
+const yearOf = (date: string) => Number(date.slice(0,4))
 
 /**
- * The sitting calendar (portal/public/parliament/sitting-days.json, built by
- * im/sitting-days) reduced to the sitting days from today through `until`, in
- * order. Assumed shape, every other field ignored:
- *   published | publication_date            the file's publication date
- *   coverage.{from|start|first}, coverage.{to|end|last}   first and last day it covers
- *   expires | expiry | expires_on | valid_until            no claims after this day
- *   timezone                                  Australia/Sydney (days are Sydney days)
- *   source: string | {publisher|name|title (first found), url, published|publication_date}, or
- *     else years[{year, source}] for today's year (the shape im/sitting-days publishes)
- *   days: [{date, house, senate}] (or {"YYYY-MM-DD": {house, senate}}); a
- *     missing flag is false, and days with neither flag are left out
- * `until` is the last day the list speaks for: 59 days after today, or the
- * coverage end or expiry when sooner, so an empty list in a recess still
- * says "no sitting day before until". Null when the file is expired, does
- * not cover today, or any part of it cannot be read: never a guess.
+ * The sitting calendar (portal/public/parliament/sitting-days.json, written by
+ * scripts/build_sitting_days.py; docs/DATA-SITTING-DAYS.md) reduced to what the
+ * widget draws. The fields read, every other one ignored:
+ *   schema_version 1, timezone "Australia/Sydney" (each checked when present)
+ *   coverage.{first,last}   the days the calendar speaks for
+ *   expires                 no claim after this day (the builder sets it to coverage.last)
+ *   years[{year, status, source?: {publisher, published}}]
+ *   days[{date, house, senate}]   sitting days only; a missing flag is false
+ * The top-level `published` is the build date, never a publication date, so it is not read.
+ *
+ * Result:
+ *   days          sitting days from today through `until`, in order
+ *   until         the last day the list speaks for
+ *   until_reason  'window': 59 days after today, the calendar runs on
+ *                 'coverage_end': the calendar ends at `until`, inside the window
+ *                 'expired': today is past the calendar's end (`until`), so `days` is empty
+ *   calendars     one entry per year from today's through `until`'s: that year's
+ *                 publisher and publication date (null when the file has none)
+ *   next_year     the year after the calendar ends and its status from years[]
+ *                 ('published' or 'not_published'); null when years[] does not list it
+ * So "the 2027 calendar is not published" reaches the widget as data, before and
+ * after 1 January. Null only when the file is missing or cannot be read, or starts
+ * after today (the builder never writes one): never a guess.
  */
 export function widgetSitting(file: unknown, today: string): WidgetSitting | null {
-  if (!isObject(file)) return null
-  const coverage = isObject(file.coverage) ? file.coverage : null
-  const from = first(coverage, ['from','start','first','start_date'])
-  const to = first(coverage, ['to','end','last','until','end_date'])
-  const expires = first(file, ['expires','expiry','expires_on','expires_at','valid_until'])
-  // im/sitting-days keeps each calendar's source in years[] ({year, status, source}); a
-  // top-level source, when there is one, wins.
-  const yearSource = Array.isArray(file.years)
-    ? file.years.find((y): y is Record<string, unknown> => isObject(y) && String(y.year) === today.slice(0, 4) && isObject(y.source))?.source
-    : undefined
-  const source = typeof file.source === 'string' ? null : isObject(file.source) ? file.source : isObject(yearSource) ? yearSource : null
-  const published = first(source, ['published','publication_date','published_on']) ?? first(file, ['published','publication_date','published_on'])
-  // A field that is there must read; only an absent one is left to the defaults.
-  for (const v of [from, to, expires, published]) if (v !== undefined && !day(v)) return null
-  if (file.source !== undefined && file.source !== null && typeof file.source !== 'string' && !source) return null
-  const raw = first(file, ['days','sitting_days'])
-  if (!Array.isArray(raw) && !isObject(raw)) return null
-  const entries: [unknown, unknown][] = Array.isArray(raw) ? raw.map(r => [isObject(r) ? r.date : undefined, r]) : Object.entries(raw)
-  const flag = (v: unknown) => v === undefined || v === null ? false : typeof v === 'boolean' ? v : null
+  if (!isObject(file) || !isObject(file.coverage) || !Array.isArray(file.days)) return null
+  if ((file.schema_version !== undefined && file.schema_version !== 1)
+    || (file.timezone !== undefined && file.timezone !== 'Australia/Sydney')) return null
+  const firstDay = day(file.coverage.first), lastDay = day(file.coverage.last)
+  const expires = file.expires === undefined || file.expires === null ? null : day(file.expires)
+  if (!firstDay || !lastDay || firstDay > lastDay || (file.expires != null && !expires) || today < firstDay) return null
+  // Each listed year must read; its source is the year's own, and a null publication date stays null.
+  const years = new Map<number, {status: string; source: string | null; as_at: string | null}>()
+  if (file.years !== undefined) {
+    if (!Array.isArray(file.years)) return null
+    for (const y of file.years) {
+      if (!isObject(y) || !Number.isInteger(y.year) || !nonempty(y.status) || years.has(y.year as number)) return null
+      const source = y.source === undefined || y.source === null ? null : isObject(y.source) ? y.source : undefined
+      if (source === undefined) return null
+      const publisher = source?.publisher, published = source?.published
+      if ((publisher != null && typeof publisher !== 'string') || (published != null && !day(published))) return null
+      years.set(y.year as number, {status:y.status, source:nonempty(publisher) ? publisher.trim() : null, as_at:published == null ? null : day(published)})
+    }
+  }
   const seen = new Set<string>(), days: WidgetSitting['days'] = []
-  for (const [date, row] of entries) {
-    const d = typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) ? day(date) : null
-    if (!d || !isObject(row) || seen.has(d)) return null
-    const house = flag(first(row, ['house','representatives','house_of_representatives'])), senate = flag(row.senate)
-    if (house === null || senate === null) return null
+  const flag = (v: unknown) => v === undefined || v === null ? false : typeof v === 'boolean' ? v : null
+  for (const row of file.days) {
+    const d = isObject(row) ? day(row.date) : null
+    const house = isObject(row) ? flag(row.house) : null, senate = isObject(row) ? flag(row.senate) : null
+    if (!d || seen.has(d) || house === null || senate === null) return null
     seen.add(d)
     if (house || senate) days.push({date:d, house, senate})
   }
   days.sort((a, b) => a.date.localeCompare(b.date))
-  const last = [...seen].sort().at(-1)
-  const end = day(to) ?? last
-  if (!end) return null
-  if ((day(from) && today < day(from)!) || today > end || (day(expires) && today > day(expires)!)) return null
-  const until = [addDays(today, SITTING_WINDOW_DAYS - 1), end, day(expires)].filter((d): d is string => !!d).sort()[0]!
-  const name = typeof file.source === 'string' ? file.source : first(source, ['publisher','name','title'])
-  return {source:nonempty(name) ? name.trim() : null, as_at:day(published), until, days:days.filter(d => d.date >= today && d.date <= until)}
+  const end = expires && expires < lastDay ? expires : lastDay
+  const after = years.get(yearOf(end) + 1)
+  const next_year = after ? {year:yearOf(end) + 1, status:after.status} : null
+  if (today > end) return {until:end, until_reason:'expired', calendars:[], next_year, days:[]}
+  const window = addDays(today, SITTING_WINDOW_DAYS - 1)
+  const until = end <= window ? end : window
+  const calendars: WidgetSitting['calendars'] = []
+  for (let y = yearOf(today); y <= yearOf(until); y++) calendars.push({year:y, source:years.get(y)?.source ?? null, as_at:years.get(y)?.as_at ?? null})
+  return {until, until_reason:end <= window ? 'coverage_end' : 'window', calendars, next_year, days:days.filter(d => d.date >= today && d.date <= until)}
 }
 
 // ------------------------------------------------------------------ route --
@@ -308,7 +323,8 @@ export function fitBody(body: WidgetToday, max = WIDGET_MAX_BYTES): WidgetToday 
   while (days.length && bytes(out) > max) {
     days.pop()
     const until = addDays(body.sitting.days[days.length]!.date, -1)
-    out = {...body, sitting:{...body.sitting, until, days:[...days]}}
+    // The list now stops short of the calendar: a window, whatever stopped it before.
+    out = {...body, sitting:{...body.sitting, until, until_reason:'window', calendars:body.sitting.calendars.filter(c => c.year <= yearOf(until)), days:[...days]}}
   }
   return out
 }
@@ -330,7 +346,7 @@ export async function composeWidgetToday(env: WidgetEnv, at: number): Promise<Wi
   const vote = widgetVote(divisions)
   const sitting = widgetSitting(calendar, sydneyDay(at))
   return fitBody({version:1,
-    generated:generated([edition && row ? row.created_at : null, vote && isObject(divisions) ? divisions.generated_at as string : null, sitting?.as_at]),
+    generated:generated([edition && row ? row.created_at : null, vote && isObject(divisions) ? divisions.generated_at as string : null, ...(sitting?.calendars ?? []).map(c => c.as_at)]),
     edition, vote, sitting})
 }
 

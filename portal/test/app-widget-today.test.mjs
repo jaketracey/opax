@@ -11,7 +11,7 @@
 import test, {describe} from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
-import {readFileSync} from 'node:fs';
+import {existsSync,readFileSync} from 'node:fs';
 import {build} from 'esbuild';
 
 const compile=async file=>{
@@ -132,72 +132,92 @@ describe('the vote, as the first row of How parliament voted',()=>{
   });
 });
 
-describe('the sitting calendar (assumed im/sitting-days shape)',()=>{
-  const DAYS=[{date:'2026-11-23',house:true,senate:true},{date:'2026-11-24',house:true,senate:true},{date:'2026-11-25',house:true,senate:false},
-    {date:'2026-11-26',house:true,senate:true},{date:'2026-12-01',house:false,senate:true},{date:'2027-01-11',house:true,senate:true}];
-  test('sitting days from today through 59 days on, in order; non-sitting and past days out',()=>{
-    assert.deepEqual(W.widgetSitting(fixture('sitting-days.json'),TODAY),{source:'Parliament of Australia',as_at:'2026-11-01',until:'2027-01-11',days:DAYS});
+// sitting-days.json is the file im/sitting-days publishes (f8135b08b,
+// scripts/build_sitting_days.py), trimmed to the days from 1 October 2026.
+// Coverage ends 31 December 2026 and 2027 is listed as not published.
+describe('the sitting calendar (the im/sitting-days file)',()=>{
+  const real=()=>fixture('sitting-days.json');
+  const SENATE=d=>({date:d,house:false,senate:true}),BOTH=d=>({date:d,house:true,senate:true});
+  const Y2026={year:2026,source:'Parliament of Australia',as_at:'2026-09-14'};
+  const NOT_2027={year:2027,status:'not_published'};
+  // Sydney wall-clock time to an instant (AEDT, UTC+11, from 4 October to 5 April).
+  const sydney=(y,m,d,h=9,min=5)=>Date.UTC(y,m-1,d,h-11,min);
+  test('13 November: the rest of the 2026 calendar, which ends inside the window',()=>{
+    assert.deepEqual(W.widgetSitting(real(),TODAY),{until:'2026-12-31',until_reason:'coverage_end',calendars:[Y2026],next_year:NOT_2027,
+      days:[SENATE('2026-11-16'),SENATE('2026-11-17'),SENATE('2026-11-18'),SENATE('2026-11-19'),BOTH('2026-11-23'),BOTH('2026-11-24'),BOTH('2026-11-25'),BOTH('2026-11-26')]});
   });
-  test('the published calendar shape (im/sitting-days): source from years[] for this year',()=>{
-    const file=fixture('sitting-days.json');
-    const published={schema_version:1,published:'2026-11-13',timezone:'Australia/Sydney',coverage:{first:'2026-01-01',last:'2027-12-31'},expires:'2027-12-31',
-      years:[{year:2026,status:'published',source:{publisher:'Parliament of Australia',title:'Parliamentary Sittings 2026',url:'https://static.aph.gov.au/example-2026.ics',published:'2026-09-14'}},
-        {year:2027,status:'not_published'}],
-      days:file.days};
-    const sitting=W.widgetSitting(published,TODAY);
-    assert.equal(sitting.source,'Parliament of Australia');assert.equal(sitting.as_at,'2026-09-14');assert.deepEqual(sitting.days,DAYS);
-    assert.equal(W.widgetSitting({...published,years:[{year:2026,status:'published'}]},TODAY).source,null,'no source for this year: no name, still the days');
+  test('Sydney midnight: 23:59 on Sunday 15 November looks ahead to Monday; 00:00 makes Monday today',async()=>{
+    const w=world();
+    const before=(await W.composeWidgetToday(w.env,sydney(2026,11,15,23,59))).sitting;
+    const after=(await W.composeWidgetToday(w.env,sydney(2026,11,16,0,0))).sitting;
+    assert.equal(sydney(2026,11,16,0,0),Date.UTC(2026,10,15,13,0));
+    assert.deepEqual(before.days[0],SENATE('2026-11-16'));assert.equal(before.days.length,8);
+    assert.deepEqual(after.days[0],SENATE('2026-11-16'));assert.equal(after.days.length,8,'16 November is today and still listed');
+    const nextDay=(await W.composeWidgetToday(w.env,sydney(2026,11,17,0,0))).sitting;
+    assert.deepEqual(nextDay.days[0],SENATE('2026-11-17'));assert.equal(nextDay.days.length,7);
   });
-  test('the same calendar keyed by date reads the same',()=>{
-    const file=fixture('sitting-days.json');
-    const byDate=Object.fromEntries(file.days.map(({date,...flags})=>[date,flags]));
-    assert.deepEqual(W.widgetSitting({...file,days:byDate},TODAY).days,DAYS);
+  test('Sydney days across the daylight saving change (4 October 2026)',()=>{
+    assert.equal(W.sydneyDay(Date.UTC(2026,9,3,13,59)),'2026-10-03');assert.equal(W.sydneyDay(Date.UTC(2026,9,3,14,0)),'2026-10-04');
+    assert.equal(W.sydneyDay(Date.UTC(2026,9,4,12,59)),'2026-10-04');assert.equal(W.sydneyDay(Date.UTC(2026,9,4,13,0)),'2026-10-05');
   });
-  test('a 60-day window, whatever the calendar holds',()=>{
-    const days=Array.from({length:120},(_,i)=>({date:W.addDays('2026-11-01',i),house:true,senate:i%2===0}));
-    const sitting=W.widgetSitting({coverage:{from:'2026-01-01',to:'2027-12-31'},days},TODAY);
-    assert.equal(sitting.days.length,60);
-    assert.equal(sitting.days[0].date,TODAY);assert.equal(sitting.days.at(-1).date,sitting.until);assert.equal(sitting.until,'2027-01-11');
+  test('26 November, the last 2026 sitting day: one day left',()=>{
+    assert.deepEqual(W.widgetSitting(real(),'2026-11-26'),{until:'2026-12-31',until_reason:'coverage_end',calendars:[Y2026],next_year:NOT_2027,days:[BOTH('2026-11-26')]});
   });
-  test('the list ends where the calendar or its expiry ends',()=>{
-    const file=fixture('sitting-days.json');
-    const short=W.widgetSitting({...file,expires:'2026-11-30'},TODAY);
-    assert.equal(short.until,'2026-11-30');assert.deepEqual(short.days.map(d=>d.date),['2026-11-23','2026-11-24','2026-11-25','2026-11-26']);
-    const covered=W.widgetSitting({...file,expires:undefined,coverage:{from:'2026-01-01',to:'2026-12-01'}},TODAY);
-    assert.equal(covered.until,'2026-12-01');
-    const listOnly=W.widgetSitting({days:file.days.slice(0,8)},TODAY);
-    assert.equal(listOnly.until,'2026-12-01','with no coverage or expiry, the last listed day');
-    assert.equal(listOnly.source,null);assert.equal(listOnly.as_at,null);
-    assert.equal(W.widgetSitting({days:file.days.slice(0,2)},TODAY),null,'a list that ends before today has run out');
+  test('27 November: no sitting day before the calendar ends, and 2027 is not published',()=>{
+    assert.deepEqual(W.widgetSitting(real(),'2026-11-27'),{until:'2026-12-31',until_reason:'coverage_end',calendars:[Y2026],next_year:NOT_2027,days:[]});
+    assert.deepEqual(W.widgetSitting(real(),'2026-12-31'),{until:'2026-12-31',until_reason:'coverage_end',calendars:[Y2026],next_year:NOT_2027,days:[]});
   });
-  test('a recess inside the calendar is an empty list, not null',()=>{
-    const recess=W.widgetSitting({coverage:{from:'2026-01-01',to:'2027-12-31'},days:[{date:'2027-02-03',house:true,senate:true}]},'2026-12-05');
-    assert.deepEqual(recess,{source:null,as_at:null,until:'2027-02-02',days:[]});
+  test('1 January 2027 while 2027 is not published: the calendar has run out, said as data, not null',async()=>{
+    const expired={until:'2026-12-31',until_reason:'expired',calendars:[],next_year:NOT_2027,days:[]};
+    assert.deepEqual(W.widgetSitting(real(),'2027-01-01'),expired);
+    const w=world();
+    assert.equal((await W.composeWidgetToday(w.env,sydney(2026,12,31,23,59))).sitting.until_reason,'coverage_end');
+    const response=await W.appWidgetToday(new Request('https://opax.test/api/app/v1/widget/today'),w.env,sydney(2027,1,1,0,0));
+    assert.equal(response.status,200);assert.deepEqual((await response.json()).sitting,expired);
+    assert.deepEqual(W.widgetSitting(real(),'2027-06-30'),expired);
   });
-  test('expired, not yet covering today, or malformed: null, never a guess',()=>{
-    const file=fixture('sitting-days.json');
-    assert.equal(W.widgetSitting(file,'2028-01-01'),null);
-    assert.equal(W.widgetSitting({...file,expires:'2026-11-12'},TODAY),null);
-    assert.equal(W.widgetSitting({...file,coverage:{from:'2027-01-01',to:'2027-12-31'}},TODAY),null);
-    const malformed=[
-      null,[],'calendar',{...file,days:undefined},{...file,days:'soon'},
-      {...file,days:[...file.days,{date:'2026-02-30',house:true,senate:true}]},
-      {...file,days:[...file.days,{date:'2026-12-08',house:'yes',senate:false}]},
-      {...file,days:[...file.days,{date:'2026-11-23',house:false,senate:true}]},
-      {...file,days:[...file.days,{house:true,senate:true}]},
-      {...file,days:[...file.days,'2026-12-08']},
-      {...file,coverage:{from:'2026-01-01',to:'soon'}},
-      {...file,expires:'next year'},
-      {...file,source:3},
-      {...file,source:{...file.source,published:'November'}},
+  test('once the next year is published: a window across two years, each year with its own source',()=>{
+    // 2027 entries are invented, in the shape the builder writes when a second year is published.
+    const file=real();
+    file.coverage.last='2027-12-31';file.expires='2027-12-31';
+    file.years[1]={year:2027,status:'published',source:{...file.years[0].source,title:'Parliamentary Sittings 2027',published:'2026-12-10'}};
+    file.days.push(BOTH('2027-02-02'),BOTH('2027-02-03'));
+    assert.deepEqual(W.widgetSitting(file,'2026-12-05'),{until:'2027-02-02',until_reason:'window',
+      calendars:[Y2026,{year:2027,source:'Parliament of Australia',as_at:'2026-12-10'}],next_year:null,days:[BOTH('2027-02-02')]});
+    assert.deepEqual(W.widgetSitting(file,'2026-10-01').calendars,[Y2026],'a window inside one year (1 Oct to 29 Nov) names one calendar');
+  });
+  test("as_at is the year's own publication date, never the file's build date",()=>{
+    const file=real();file.years[0].source.published=null;
+    const sitting=W.widgetSitting(file,TODAY);
+    assert.deepEqual(sitting.calendars,[{year:2026,source:'Parliament of Australia',as_at:null}]);
+    assert.doesNotMatch(JSON.stringify(sitting),/2026-11-13/,'the top-level published (build) date never appears');
+    const noYears=real();delete noYears.years;
+    assert.deepEqual(W.widgetSitting(noYears,TODAY).calendars,[{year:2026,source:null,as_at:null}]);
+    assert.equal(W.widgetSitting(noYears,TODAY).next_year,null);
+  });
+  test('a missing chamber flag is not sitting; unknown fields are ignored',()=>{
+    const file=real();file.days=[{date:'2026-11-23',senate:true,note:'x'},{date:'2026-11-24'},{date:'2026-11-25',house:true,senate:null}];file.extra={a:1};
+    assert.deepEqual(W.widgetSitting(file,TODAY).days,[SENATE('2026-11-23'),{date:'2026-11-25',house:true,senate:false}]);
+  });
+  test('a missing or unreadable file, or one that starts after today, is null',()=>{
+    const bad=[
+      f=>null,f=>[],f=>'calendar',f=>{delete f.days},f=>{f.days='soon'},f=>{delete f.coverage},f=>{f.coverage.last='soon'},
+      f=>{f.coverage={first:'2026-12-31',last:'2026-01-01'}},f=>{f.expires='next year'},f=>{f.schema_version=2},f=>{f.timezone='UTC'},
+      f=>{f.years='2026'},f=>{delete f.years[1].status},f=>{f.years[1].year='2027'},f=>{f.years.push({year:2026,status:'published'})},
+      f=>{f.years[0].source='APH'},f=>{f.years[0].source.published='September'},f=>{f.years[0].source.publisher=3},
+      f=>{f.days.push(BOTH('2026-02-30'))},f=>{f.days.push({date:'2026-12-08',house:'yes',senate:false})},f=>{f.days.push(SENATE('2026-11-23'))},
+      f=>{f.days.push({house:true,senate:true})},f=>{f.days.push('2026-12-08')},f=>{f.days.push(BOTH('2026-12-08T00:00:00Z'))},
+      f=>{f.coverage={first:'2027-01-01',last:'2027-12-31'};f.expires='2027-12-31'},
     ];
-    for(const bad of malformed)assert.equal(W.widgetSitting(bad,TODAY),null,JSON.stringify(bad)?.slice(0,120));
+    for(const change of bad){const f=real();const out=change(f);assert.equal(W.widgetSitting(out===undefined?f:out,TODAY),null,String(change))}
   });
-  test('a missing chamber flag is not sitting; a source given as a string is its name',()=>{
-    const file={coverage:{from:'2026-01-01',to:'2027-12-31'},source:'Parliament of Australia sitting calendar',published:'2026-11-01',
-      days:[{date:'2026-11-23',senate:true},{date:'2026-11-24'},{date:'2026-11-25',representatives:true}]};
-    assert.deepEqual(W.widgetSitting(file,TODAY),{source:'Parliament of Australia sitting calendar',as_at:'2026-11-01',until:'2027-01-11',
-      days:[{date:'2026-11-23',house:false,senate:true},{date:'2026-11-25',house:true,senate:false}]});
+  const published=new URL('../public/parliament/sitting-days.json',import.meta.url);
+  test('the published calendar in this tree reads, in the shape this reader expects',{skip:!existsSync(published)&&'public/parliament/sitting-days.json is not in this tree yet (im/sitting-days)'},()=>{
+    const file=JSON.parse(readFileSync(published,'utf8'));
+    const sitting=W.widgetSitting(file,file.coverage.first);
+    assert.ok(sitting,'the published file reads');
+    assert.ok(sitting.calendars.every(c=>c.source),'every year in the window names its source');
+    assert.equal(W.widgetSitting(file,W.addDays(file.expires,1)).until_reason,'expired');
   });
 });
 
@@ -208,7 +228,7 @@ describe('the body stays under 4 KB',()=>{
     const body={version:1,generated:'2026-11-12T20:00:00Z',
       edition:{date:TODAY,kind:'grant',kind_short:'Grant program',card_title:'A'.repeat(80)+'…',line:long(10).trim(),path:'/money/grants/federal/recipient/abn%3A00000000000?award=GA000000'},
       vote:{date:TODAY,chamber:'House of Representatives',stage:'Second reading',title:long(14).trim(),outcome:'Not agreed to',ayes:150,noes:150,path:'/bill/au-federal-r9999?division=house-2026-11-13-99'},
-      sitting:{source:'Parliament of Australia sitting calendar',as_at:'2026-11-01',until:W.addDays(TODAY,59),days}};
+      sitting:{until:W.addDays(TODAY,59),until_reason:'window',calendars:[{year:2026,source:'Parliament of Australia',as_at:'2026-09-14'},{year:2027,source:'Parliament of Australia',as_at:'2026-12-10'}],next_year:{year:2028,status:'not_published'},days}};
     assert.ok(new TextEncoder().encode(JSON.stringify(body)).length<=W.WIDGET_MAX_BYTES);
     assert.equal(W.fitBody(body),body);
   });
@@ -216,12 +236,14 @@ describe('the body stays under 4 KB',()=>{
     const days=Array.from({length:60},(_,i)=>({date:W.addDays(TODAY,i),house:true,senate:true}));
     const body={version:1,generated:null,edition:{date:TODAY,kind:'bill',kind_short:'Bill',card_title:'A'.repeat(81),line:long(20),path:'/bill/x'},
       vote:{date:TODAY,chamber:'Senate',stage:'Third reading',title:long(20),outcome:'Agreed to',ayes:1,noes:0,path:'/bill/x?division=1'},
-      sitting:{source:'s',as_at:null,until:W.addDays(TODAY,59),days}};
+      sitting:{until:W.addDays(TODAY,59),until_reason:'coverage_end',calendars:[{year:2026,source:'s',as_at:null},{year:2027,source:'s',as_at:null}],next_year:null,days}};
     const fitted=W.fitBody(body);
     assert.ok(new TextEncoder().encode(JSON.stringify(fitted)).length<=W.WIDGET_MAX_BYTES);
     assert.ok(fitted.sitting.days.length<60&&fitted.sitting.days.length>0);
     assert.deepEqual(fitted.sitting.days,days.slice(0,fitted.sitting.days.length));
     assert.equal(fitted.sitting.until,W.addDays(fitted.sitting.days.at(-1).date,0),'the list is complete through until');
+    assert.equal(fitted.sitting.until_reason,'window','the calendar runs on past the shortened list');
+    assert.deepEqual(fitted.sitting.calendars.map(c=>c.year),[...new Set([2026,Number(fitted.sitting.until.slice(0,4))])]);
   });
 });
 
@@ -266,8 +288,9 @@ describe('GET /api/app/v1/widget/today',()=>{
     assert.deepEqual(JSON.parse(text),{version:1,generated:'2026-11-12T20:00:00Z',
       edition:{date:'2026-10-04',kind:'bill',kind_short:'Bill',card_title:'Wage Justice for Early Childhood Education and Care Workers…',line:'Education portfolio',path:'/bill/au-federal-r7529'},
       vote:{date:'2026-11-12',chamber:'Senate',stage:'Third reading',title:'Example Tax Bill 2026',outcome:'Agreed to',ayes:37,noes:30,path:'/bill/au-federal-r9001?division=senate-2026-11-12-10'},
-      sitting:{source:'Parliament of Australia',as_at:'2026-11-01',until:'2027-01-11',days:[{date:'2026-11-23',house:true,senate:true},{date:'2026-11-24',house:true,senate:true},
-        {date:'2026-11-25',house:true,senate:false},{date:'2026-11-26',house:true,senate:true},{date:'2026-12-01',house:false,senate:true},{date:'2027-01-11',house:true,senate:true}]}});
+      sitting:{until:'2026-12-31',until_reason:'coverage_end',calendars:[{year:2026,source:'Parliament of Australia',as_at:'2026-09-14'}],next_year:{year:2027,status:'not_published'},
+        days:[{date:'2026-11-16',house:false,senate:true},{date:'2026-11-17',house:false,senate:true},{date:'2026-11-18',house:false,senate:true},{date:'2026-11-19',house:false,senate:true},
+          {date:'2026-11-23',house:true,senate:true},{date:'2026-11-24',house:true,senate:true},{date:'2026-11-25',house:true,senate:true},{date:'2026-11-26',house:true,senate:true}]}});
     assert.deepEqual(w.reads.sort(),['/bills/au-federal-r7529.json','/divisions/recent.json','/parliament/sitting-days.json'],'fixed paths only');
   });
   test('304 on a matching If-None-Match, in any of its forms; 200 again when it does not match',async()=>{
@@ -280,12 +303,13 @@ describe('GET /api/app/v1/widget/today',()=>{
     }
     assert.equal((await w.call({'if-none-match':'W/"stale"'})).status,200);
   });
-  test('the same records give the same ETag; a new edition or a new day gives another',async()=>{
+  test('the same records give the same ETag; a day that drops a sitting day gives another',async()=>{
     const w=world();
     const first=(await w.call()).headers.get('etag');
     assert.equal((await w.call()).headers.get('etag'),first);
-    const nextDay=await W.appWidgetToday(new Request('https://opax.test/api/app/v1/widget/today'),w.env,at+86_400_000);
-    assert.notEqual(nextDay.headers.get('etag'),first,'the 60-day window moved');
+    const on=days=>W.appWidgetToday(new Request('https://opax.test/api/app/v1/widget/today'),w.env,at+days*86_400_000);
+    assert.equal((await on(1)).headers.get('etag'),first,'14 Nov: the same file as 13 Nov, so the same ETag');
+    assert.notEqual((await on(4)).headers.get('etag'),first,'17 Nov: 16 Nov has gone from the list');
   });
   test("the bill's own short title reaches the card title",async()=>{
     const w=world({assets:{'/bills/au-federal-r7529.json':{key:'au-federal-r7529',title:billEdition().title,short_title:'Early childhood pay'}}});
@@ -328,9 +352,9 @@ describe('GET /api/app/v1/widget/today',()=>{
       assert.equal(body.vote,null);assert.ok(body.edition);assert.ok(body.sitting);
     }
   });
-  test('no sitting calendar, or an expired or malformed one: sitting null and still 200',async()=>{
+  test('no sitting calendar, or a malformed one: sitting null and still 200',async()=>{
     const file=fixture('sitting-days.json');
-    for(const value of [undefined,{...file,expires:'2026-11-12'},{...file,days:'soon'},'{not json']){
+    for(const value of [undefined,{...file,coverage:{first:'2026-12-31',last:'2026-01-01'}},{...file,years:'2026'},{...file,days:'soon'},'{not json']){
       const response=await world({assets:{'/parliament/sitting-days.json':value}}).call();
       assert.equal(response.status,200);
       const body=await response.json();
