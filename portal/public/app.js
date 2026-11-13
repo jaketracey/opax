@@ -81,7 +81,7 @@ let saDisplayHelpers;
 let saFullTextFlag = 'false';
 const saDisplayReady = lazyReady(() => Promise.all([
   import('/sa-hansard.js?v=001257cb4a').then(module => { saDisplayHelpers = module; }),
-  fetch('/api/display-policy').then(response => response.json()).then(policy => { saFullTextFlag = policy.SA_HANSARD_FULL_TEXT === 'true' ? 'true' : 'false'; }).catch(() => {}),
+  fetch('/api/display-policy').then(response => response.json()).then(policy => { saFullTextFlag = saDisplayHelpers?.saDisplayPayload !== cappedChatPayload && policy.SA_HANSARD_FULL_TEXT === 'true' ? 'true' : 'false'; }).catch(() => {}),
 ]));
 
 const $ = (id) => document.getElementById(id);
@@ -11192,8 +11192,30 @@ function chatRestoreCurrent() {
   const route = routeRequest, surface = document.documentElement.dataset.chat;
   return () => route === routeRequest && surface === document.documentElement.dataset.chat && !$("panel-chat").hidden;
 }
+// An unavailable policy module must still leave a readable answer. Without its
+// source classification, conservatively bound all prose, including source views.
+function cappedChatPayload(value) {
+  if (typeof value === 'string') {
+    const words = value.match(/\S+/gu) || [];
+    return words.length > 120 ? words.slice(0, 120).join(' ') + '…' : value;
+  }
+  if (Array.isArray(value)) return value.map(cappedChatPayload);
+  if (!value || typeof value !== 'object') return value;
+  const prose = ['answer', 'text', 'text_clean', 'body', 'snippet', 'passage', 'quote', 'quotes', 'evidence'];
+  const passage = prose.map(key => value[key]).find(v => typeof v === 'string' || Array.isArray(v) && v.every(item => typeof item === 'string'));
+  // Parallel fields and quote arrays are views of one bounded passage.
+  const excerpt = cappedChatPayload(Array.isArray(passage) ? passage.join(' ') : passage || '');
+  return Object.fromEntries(Object.entries(value).map(([key, val]) => [key,
+    key === 'citations' ? {} : ['answer_ranges', 'answerRanges'].includes(key) ? [] :
+    key === 'full_text_available' ? false :
+    prose.includes(key) && (typeof val === 'string' || Array.isArray(val) && val.every(item => typeof item === 'string'))
+      ? Array.isArray(val) ? [excerpt].filter(Boolean) : excerpt : cappedChatPayload(val)]));
+}
 async function chatPolicyReady(current = chatRestoreCurrent()) {
-  try { await saDisplayReady; } catch { return false; }
+  try { await saDisplayReady; } catch {
+    saFullTextFlag = 'false';
+    saDisplayHelpers = { saDisplayPayload: cappedChatPayload };
+  }
   return current();
 }
 
@@ -12057,6 +12079,8 @@ async function sendChat(question, carry) {
       },
       delta(text) {
         if (!alive()) return;
+        // Without the policy helper, show only the bounded complete answer.
+        if (saDisplayHelpers?.saDisplayPayload === cappedChatPayload) return;
         if (!live) {
           liveWrap = document.createElement("div");
           liveWrap.className = "chat-turn chat-turn-answer answer-in";
