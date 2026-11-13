@@ -18,7 +18,7 @@ import * as Reanimated from 'react-native-reanimated';
 import * as c from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
 import { Button, FollowButton } from '../src/design/controls';
-import { revealMotion } from '../src/design/reveal';
+import { HeightReveal, revealMotion } from '../src/design/reveal';
 import { Card, Text } from '../src/design/primitives';
 import { LinkRow } from '../src/design/rows';
 import { StatusCapsule } from '../src/design/labels';
@@ -1054,6 +1054,78 @@ describe('Following', () => {
     expect(has(r, 'follows-editing')).toBe(false);
     sheet.mockRestore();
     await act(async () => r.unmount());
+  });
+
+  test('Edit: a removed row closes its height in place as the follow goes', async () => {
+    mock.followSources.mockResolvedValue(sources());
+    await follow({ kind: 'bill', id: BILL, title: 'Ending Financial Abuse' });
+    await follow({ kind: 'electorate', id: GRAYNDLER, title: 'Grayndler' });
+    mockParams = { edit: '1' };
+    const r = await render();
+    const minus = `follows-remove-electorate-${GRAYNDLER}`;
+    // Every row sits in its own reveal; laid out, as on a device.
+    const reveal = r.root
+      .findAllByType(HeightReveal)
+      .find((n) => n.findAll((m) => m.props.testID === minus).length > 0)!;
+    act(() =>
+      reveal
+        .find(
+          (n) =>
+            typeof n.type === 'string' &&
+            typeof n.props.onLayout === 'function',
+        )
+        .props.onLayout({
+          nativeEvent: { layout: { x: 0, y: 0, width: 320, height: 44 } },
+        }),
+    );
+    const heights: [number, boolean][] = [];
+    const timing = jest
+      .spyOn(Reanimated, 'withTiming')
+      .mockImplementation((to) => {
+        heights.push([to as number, has(r, minus)]);
+        return to;
+      });
+    try {
+      await act(async () => press(r, minus));
+      // Unfollowed at once; the row stays drawn while its height closes to
+      // 0. (Reanimated's Jest mock makes a new shared value each render, so
+      // each re-render here restarts the close; on a device it runs once.)
+      expect((await loadFollows()).map((f) => f.kind)).toEqual(['bill']);
+      expect(heights.length).toBeGreaterThan(0);
+      expect(heights.every(([to, drawn]) => to === 0 && drawn)).toBe(true);
+      expect(has(r, minus)).toBe(true);
+      await act(
+        () =>
+          new Promise((done) => setTimeout(done, revealMotion.duration + 20)),
+      );
+      expect(has(r, minus)).toBe(false);
+      expect(has(r, `follows-remove-bill-${BILL}`)).toBe(true);
+    } finally {
+      timing.mockRestore();
+      await act(async () => r.unmount());
+    }
+  });
+
+  test('Edit with Reduce Motion: a removed row goes with its follow, no height animation', async () => {
+    const reduce = jest
+      .spyOn(accessibility, 'useReduceMotion')
+      .mockReturnValue(true);
+    const timing = jest.spyOn(Reanimated, 'withTiming');
+    mock.followSources.mockResolvedValue(sources());
+    await follow({ kind: 'bill', id: BILL, title: 'Ending Financial Abuse' });
+    await follow({ kind: 'electorate', id: GRAYNDLER, title: 'Grayndler' });
+    mockParams = { edit: '1' };
+    const r = await render();
+    try {
+      await act(async () => press(r, `follows-remove-electorate-${GRAYNDLER}`));
+      expect(has(r, `follows-remove-electorate-${GRAYNDLER}`)).toBe(false);
+      expect(has(r, `follows-remove-bill-${BILL}`)).toBe(true);
+      expect(timing).not.toHaveBeenCalled();
+    } finally {
+      reduce.mockRestore();
+      timing.mockRestore();
+      await act(async () => r.unmount());
+    }
   });
 
   test('?edit=1 opens in Edit mode', async () => {

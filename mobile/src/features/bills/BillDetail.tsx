@@ -40,7 +40,6 @@ import { catalogs } from '../../api/runtime';
 import { useReduceMotion } from '../../design/accessibility';
 import { ContextMenu } from '../../design/context-menu';
 import { copy as words } from '../../design/copy';
-import { animateLayout } from '../../design/disclosure';
 import { formatCount, formatDate } from '../../design/format';
 import { haptic } from '../../design/haptics';
 import { MachinePill } from '../../design/labels';
@@ -74,6 +73,7 @@ import {
   type SkeletonCrossfadeState,
   type SourceOriginal,
 } from '../../design/primitives';
+import { HeightReveal } from '../../design/reveal';
 import { useRowFollow } from '../../design/row-link';
 import { symbols } from '../../design/symbols';
 import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
@@ -1623,7 +1623,6 @@ function Votes({
   }, [votes.sectionFocus, targets]);
   if (!votes.has) return null;
   const { main, procedural } = votes.order;
-  const shown = votes.showAll ? main : main.slice(0, VOTES_SHOWN);
   const hidden = main.length - VOTES_SHOWN;
   const ordered = [...main, ...procedural];
   const all = view.divisions.data!.rows;
@@ -1635,10 +1634,7 @@ function Votes({
       index={ordered.indexOf(division)}
       bill={identity}
       expanded={votes.expanded.has(division.key)}
-      onToggle={() => {
-        animateLayout(reduceMotion);
-        votes.toggle(division.key);
-      }}
+      onToggle={() => votes.toggle(division.key)}
       focus={votes.focus?.key === division.key ? votes.focus.n : 0}
       targets={targets}
       isNew={votes.fresh.has(division.key)}
@@ -1662,7 +1658,6 @@ function Votes({
   // Collapsing keeps the reader in the section: a header already above the
   // bar lands just under it.
   const collapse = () => {
-    animateLayout(reduceMotion);
     votes.setShowAll(false);
     headerRef.current?.measureInWindow((_x, y) => {
       if (y < headerBottom) targets.scrollTo(headerRef);
@@ -1682,7 +1677,17 @@ function Votes({
         testID="bill-divisions"
         headingTestID="bill-divisions-title"
       >
-        {shown.length ? <View>{shown.map(row)}</View> : null}
+        {main.length ? (
+          <View>
+            {main.slice(0, VOTES_SHOWN).map(row)}
+            {/* The further votes ease open and closed below the first. */}
+            <HeightReveal reduceMotion={reduceMotion}>
+              {votes.showAll && hidden > 0 ? (
+                <View>{main.slice(VOTES_SHOWN).map(row)}</View>
+              ) : null}
+            </HeightReveal>
+          </View>
+        ) : null}
         {hidden > 0 ? (
           <ShowMoreButton
             hidden={hidden}
@@ -1690,10 +1695,7 @@ function Votes({
             open={votes.showAll}
             onToggle={() => {
               if (votes.showAll) collapse();
-              else {
-                animateLayout(reduceMotion);
-                votes.setShowAll(true);
-              }
+              else votes.setShowAll(true);
             }}
             testID="bill-divisions-more"
           />
@@ -1763,6 +1765,7 @@ function BillVoteRow({
 }) {
   const id = `bill-division-${index}`;
   const stacked = useAccessibilitySize();
+  const reduceMotion = useReduceMotion();
   const anchor = useRef<View>(null);
   useEffect(() => {
     if (focus) targets.scrollTo(anchor, true);
@@ -1898,27 +1901,29 @@ function BillVoteRow({
           testID={`${id}-your-mp`}
         />
       ) : null}
-      {expanded ? (
-        <View style={styles.voteBody} testID={`${id}-body`}>
-          <View
-            collapsable={false}
-            testID={`bill-division-${division.key}-expanded`}
-          />
-          <PartyVotes
-            splits={[...division.splits.drawn, ...division.splits.folded]}
-            paired={division.paired}
-            // Pairs have their own line.
-            notes={parties.notes.filter((note) => !/ paired$/.test(note))}
-            recorded={parties.recorded}
-            testID={`${id}-parties`}
-          />
-          {question ? (
-            <Section title="The question">
-              <DivisionQuestion text={question} testID={`${id}-question`} />
-            </Section>
-          ) : null}
-        </View>
-      ) : null}
+      <HeightReveal reduceMotion={reduceMotion}>
+        {expanded ? (
+          <View style={styles.voteBody} testID={`${id}-body`}>
+            <View
+              collapsable={false}
+              testID={`bill-division-${division.key}-expanded`}
+            />
+            <PartyVotes
+              splits={[...division.splits.drawn, ...division.splits.folded]}
+              paired={division.paired}
+              // Pairs have their own line.
+              notes={parties.notes.filter((note) => !/ paired$/.test(note))}
+              recorded={parties.recorded}
+              testID={`${id}-parties`}
+            />
+            {question ? (
+              <Section title="The question">
+                <DivisionQuestion text={question} testID={`${id}-question`} />
+              </Section>
+            ) : null}
+          </View>
+        ) : null}
+      </HeightReveal>
     </View>
   );
 }

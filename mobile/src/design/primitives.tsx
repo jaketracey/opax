@@ -96,7 +96,7 @@ export type {
 } from './controls';
 export { copy } from './copy';
 export { thisDevice } from './device';
-export { Disclosure, animateLayout } from './disclosure';
+export { Disclosure } from './disclosure';
 export {
   FilterFacet,
   FilterSheet,

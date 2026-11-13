@@ -4,11 +4,15 @@
  * Reanimated 4.5 owns Fabric's layout-animation delegate, so the height is
  * animated by Reanimated.
  */
-import { act } from 'react';
+import { act, useState } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import * as Reanimated from 'react-native-reanimated';
-import { HeightReveal, revealMotion } from '../src/design/reveal';
+import {
+  HeightReveal,
+  REVEAL_UNLIMITED,
+  revealMotion,
+} from '../src/design/reveal';
 
 let calls: number[] = [];
 beforeEach(() => {
@@ -24,13 +28,26 @@ afterEach(() => {
   jest.useRealTimers();
 });
 
-function Line({ on, reduce = false }: { on: boolean; reduce?: boolean }) {
+function Line({
+  on,
+  reduce = false,
+  gap,
+}: {
+  on: boolean;
+  reduce?: boolean;
+  gap?: number;
+}) {
   return (
-    <HeightReveal reduceMotion={reduce} testID="line">
+    <HeightReveal reduceMotion={reduce} gap={gap} testID="line">
       {on ? <Text testID="line-text">Changes will show on Today.</Text> : null}
     </HeightReveal>
   );
 }
+/** The drawn clip: its style as first committed, and its other props. */
+const clip = (r: TestRenderer.ReactTestRenderer) =>
+  r.root.find((n) => typeof n.type === 'string' && n.props.testID === 'line');
+const clipStyle = (r: TestRenderer.ReactTestRenderer) =>
+  StyleSheet.flatten(clip(r).props.style);
 const drawn = (r: TestRenderer.ReactTestRenderer) =>
   r.root.findAll((n) => n.props.testID === 'line-text').length > 0;
 function layOut(r: TestRenderer.ReactTestRenderer, height: number) {
@@ -108,16 +125,96 @@ test('content open at mount shows at once', () => {
   expect(calls).toEqual([]);
 });
 
-test('the clip lets its content take its own height, so it can be measured', () => {
+test('while its height moves the clip lets its content take its own height, so it can be measured', () => {
   // Jest runs no layout. On a device, Yoga fits a column's children to the
   // column's height unless its overflow is 'scroll', so under 'hidden' the
   // content of a 0-high reveal measured 0 and the line never opened.
+  const r = mount(<Line on={false} />);
+  act(() => r.update(<Line on />));
+  // Content about to open starts at no height, clipped, in its first frame.
+  expect(clipStyle(r)).toMatchObject({ overflow: 'scroll', maxHeight: 0 });
+  layOut(r, 18);
+  expect(clipStyle(r).overflow).toBe('scroll');
+  act(() => jest.advanceTimersByTime(revealMotion.duration));
+  // At rest nothing is clipped: rows inside keep their bleeding highlight.
+  expect(clipStyle(r).overflow).toBeUndefined();
+  act(() => r.update(<Line on={false} />));
+  expect(clipStyle(r).overflow).toBe('scroll');
+});
+
+test('content open at mount draws at its own height from the first frame, unclipped', () => {
+  // A height that started at 0 drew open-at-mount content (a disclosure open
+  // by default, a Today photo) collapsed until it had measured, then jumped.
   const r = mount(<Line on />);
-  const clip = r.root.find(
-    (n) => n.props.testID === 'line' && n.props.style !== undefined,
+  const style = clipStyle(r);
+  expect(style.maxHeight).toBe(REVEAL_UNLIMITED);
+  expect(style.overflow).toBeUndefined();
+  expect(style.marginBottom).toBeUndefined();
+  expect(clip(r).props.accessibilityElementsHidden).toBeUndefined();
+});
+
+test('closing from rest starts at the content’s own height, not the unlimited cap', () => {
+  const values: number[] = [];
+  jest.spyOn(Reanimated, 'useSharedValue').mockImplementation((initial) => {
+    // A stand-in that logs each value the reveal sets.
+    const [value] = useState(() => {
+      let current = initial as number;
+      return {
+        get value() {
+          return current;
+        },
+        set value(next: number) {
+          current = next;
+          values.push(next);
+        },
+      };
+    });
+    return value as never;
+  });
+  jest.spyOn(Reanimated, 'cancelAnimation').mockImplementation(() => {});
+  const r = mount(<Line on />);
+  layOut(r, 18);
+  values.length = 0;
+  act(() => r.update(<Line on={false} />));
+  expect(values).toEqual([18, 0]);
+  expect(calls).toEqual([0]);
+  // Reopened mid-close, it opens from where it is, then rests unlimited.
+  act(() => r.update(<Line on />));
+  act(() => jest.advanceTimersByTime(revealMotion.duration));
+  expect(values).toEqual([18, 0, 18, REVEAL_UNLIMITED]);
+});
+
+test('a gap after the reveal folds into it, so the content below moves by both together', () => {
+  const r = mount(<Line on={false} gap={12} />);
+  act(() => r.update(<Line on gap={12} />));
+  expect(clipStyle(r)).toMatchObject({ marginBottom: -12, maxHeight: 0 });
+  const content = r.root.find(
+    (n) => typeof n.type === 'string' && n.props.testID === 'line-content',
   );
-  const style = Object.assign({}, ...[clip.props.style].flat(Infinity));
-  expect(style.overflow).toBe('scroll');
+  expect(StyleSheet.flatten(content.props.style).paddingBottom).toBe(12);
+  // It opens to the content and the gap together.
+  layOut(r, 30);
+  expect(calls).toEqual([30]);
+});
+
+test('closing content is no longer read or tapped', () => {
+  const r = mount(<Line on />);
+  layOut(r, 18);
+  act(() => r.update(<Line on={false} />));
+  expect(drawn(r)).toBe(true);
+  expect(clip(r).props.accessibilityElementsHidden).toBe(true);
+  expect(clip(r).props.importantForAccessibility).toBe('no-hide-descendants');
+  expect(clipStyle(r).pointerEvents).toBe('none');
+});
+
+test('Reduce Motion turned on mid-opening settles it open at once', () => {
+  const r = mount(<Line on={false} />);
+  act(() => r.update(<Line on />));
+  layOut(r, 18);
+  act(() => r.update(<Line on reduce />));
+  expect(clipStyle(r).overflow).toBeUndefined();
+  act(() => r.update(<Line on={false} reduce />));
+  expect(drawn(r)).toBe(false);
 });
 
 test('content that closes before it was measured goes at once', () => {
