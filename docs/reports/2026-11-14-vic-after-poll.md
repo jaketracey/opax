@@ -179,3 +179,27 @@ Tests used the Mac slot wrapper at concurrency 4 and `nice -n 10`. Focused
 checks waited 120 seconds for an existing slot; the slot limit was unchanged.
 The Victorian suites import the UTC clock setup even when invoked separately.
 No live 2026 result acquisition, production write or native/device action ran.
+
+## Review note 2 gates
+
+Election share-card cache keys now include the SHA-256 hash of the validated
+current results in both partial and final results states. The regression test
+replaces a partial file with a later file carrying the same fetched date and
+checks fresh keys and cards, followed by cache hits, for hub, district and
+region routes in PNG and portrait JPEG. This covers multiple updates within
+one election night, despite the source stamp having day precision.
+
+Election HTML 503 responses now send `Retry-After: 60`, matching the API. The
+HTTP regression covers GET and HEAD on hub, district and region routes, keeps
+`no-store` and `noindex`, and checks that a healthy response has no retry header.
+Per-request election data validation is unchanged.
+
+- Focused election and existing grant-card checks: **42 passed**.
+- Full portal suite: **4,955 passed, 0 failed, 0 skipped**, 240.8 seconds.
+- `cd portal && nice -n 10 npx tsc --noEmit`: passed.
+- Asset stamping and `--check`: passed; SPA shell output remains byte-identical.
+- `git diff --check`: passed; no added em dashes or design changes.
+
+All portal tests used the prescribed Mac slot wrapper at concurrency 4 and
+`nice -n 10`. No live result acquisition, production write or native/device
+action ran.

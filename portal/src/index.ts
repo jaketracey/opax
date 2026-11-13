@@ -6134,7 +6134,10 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   headers.delete('content-length')
   headers.set('content-type', 'text/html; charset=utf-8')
   headers.set('x-robots-tag', noindex ? 'noindex' : 'all')
-  if (route.kind === 'hub' && route.hub === 'vic-election') headers.set('cache-control',meta.status === 200 ? VIC_ELECTION_CACHE : 'no-store')
+  if (route.kind === 'hub' && route.hub === 'vic-election') {
+    headers.set('cache-control',meta.status === 200 ? VIC_ELECTION_CACHE : 'no-store')
+    if (meta.status === 503) headers.set('retry-after','60')
+  }
   if (meta.status === 200) {
     const etag = await htmlValidator([env.CF_VERSION_METADATA?.id ?? '', shell.headers.get('etag'), route.kind, noindex, image, imageAlt, meta])
     headers.set('etag', etag)
@@ -6317,7 +6320,10 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
     const data = await readVicElection(<T>(path: string) => assetJson<T>(env,path)).catch(()=>null)
     if (!data) return jpeg ? new Response('Card unavailable', {status:503}) : ogFallback(env,request)
     // Ignore a supplied state: even an old image URL must use today's cache entry.
-    variants.set('state',vicElectionState(data))
+    const state = vicElectionState(data)
+    variants.set('state',state)
+    // Fetched dates have day precision; content changes during the count need their own key.
+    if (state === 'results' || state === 'results_final') variants.set('results',await sha256Hex(JSON.stringify(data.current_results)))
   }
   const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/sa-full-${saFullText(env.SA_HANSARD_FULL_TEXT)}/${OG_VERSION}/${m[2]}${pagePath}?${variants}`)
   if (!cacheBypass(request, url)) {

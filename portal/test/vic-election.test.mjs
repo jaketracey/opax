@@ -122,6 +122,18 @@ test('election HTML revalidates and changes its validator at the AEDT close of p
     assert.equal(head.headers.get('cache-control'),'public, max-age=0, must-revalidate');
   }
 });
+test('unavailable election HTML tells GET and HEAD clients to retry after 60 seconds',async()=>{
+  const ASSETS={fetch:req=>new URL(req.url).pathname===VIC_ELECTION_ASSET
+    ? Promise.resolve(new Response(JSON.stringify({...data,election_day:'invalid'}),{headers:{'content-type':'application/json'}})) : env.ASSETS.fetch(req)};
+  for(const path of ['/vic-election-2026','/vic-election-2026/albert-park','/vic-election-2026/southern-metropolitan'])for(const method of ['GET','HEAD']) {
+    const response=await fetchPage(path,'true',{ASSETS},{method});
+    assert.equal(response.status,503);assert.equal(response.headers.get('retry-after'),'60');
+    assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(response.headers.get('x-robots-tag'),'noindex');
+    if(method==='HEAD')assert.equal(await response.text(),'');
+  }
+  const healthy=await fetchPage('/vic-election-2026','true');
+  assert.equal(healthy.status,200);assert.equal(healthy.headers.get('retry-after'),null);
+});
 test('every election page and download carries Jake’s exact 13 October authorisation and corrections contact',()=>{
   assert.equal(VIC_ELECTION_AUTHORISATION_LINE,EXACT_AUTHORISATION);
   assert.equal(data.authorisation,VIC_ELECTION_AUTHORISATION_LINE);
