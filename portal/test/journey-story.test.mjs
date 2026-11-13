@@ -5,9 +5,10 @@ import {runInNewContext} from 'node:vm';
 import ts from 'typescript';
 import {buildMoneyJourneys} from '../public/money-journeys-data.js';
 import {shortMoney} from '../public/format.js';
+import {receiptGraph,receiptGraphScope} from '../public/donor-disclosure.js';
 const source=readFileSync(new URL('../src/journey-story.ts',import.meta.url),'utf8').replace(/^import .*$/gm,'').replace(/export /g,'');
 const code=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
-const {journeyStoryContext,parseJourneyStory}=runInNewContext(`${code}; ({journeyStoryContext,parseJourneyStory})`,{buildMoneyJourneys,compact:shortMoney,Intl});
+const {journeyStoryContext,parseJourneyStory}=runInNewContext(`${code}; ({journeyStoryContext,parseJourneyStory})`,{buildMoneyJourneys,compact:shortMoney,Intl,receiptGraph,receiptGraphScope});
 const graph=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url),'utf8'));
 const context=()=>journeyStoryContext(graph,'multiple-parties','donor:allianz australia');
 const answer=c=>({steps:c.steps.map(s=>({title:`A closer look at ${s.focus}`,body:`The disclosed link from ${s.facts[0].from} to ${s.facts[0].to} records ${s.facts[0].amount}.`,evidence:[s.facts[0].id]}))});
@@ -15,7 +16,8 @@ test('story facts are server-derived and keep shares consistent across close-up 
  const c=context();assert.ok(c);
  assert.equal(c.steps[0].facts[0].amount,c.steps[1].facts[0].amount);
  assert.equal(c.steps[0].facts[0].shareOfThisSourcesShownReceipts,c.steps[1].facts[0].shareOfThisSourcesShownReceipts);
- assert.equal(c.steps[1].facts[0].shareOfThisSourcesShownReceipts,'49.4%');
+ // Allianz to Labor over its typed flows ($683,528 of $1,188,447); the record figures gave 49.4%.
+ assert.equal(c.steps[1].facts[0].shareOfThisSourcesShownReceipts,'57.5%');
  assert.equal(journeyStoryContext(graph,'multiple-parties','invented'),null);
 });
 test('narration accepts exact scene evidence, rejects invented figures and cross-scene references',()=>{

@@ -1,4 +1,5 @@
 import { buildMoneyJourneys } from '../public/money-journeys-data.js'
+import { receiptGraph, receiptGraphScope } from '../public/donor-disclosure.js'
 import { shortMoney as compact } from '../public/format.js'
 
 interface GraphNode { id: string; label: string; kind: string }
@@ -9,7 +10,10 @@ export const STORY_VERSION = 'journey-story-6'
 
 const dollars = (amount: number) => new Intl.NumberFormat('en-AU', {style:'currency',currency:'AUD',maximumFractionDigits:0}).format(amount)
 
-export function journeyStoryContext(graph: StoryGraph, lens: string, focus: string) {
+export function journeyStoryContext(raw: StoryGraph, lens: string, focus: string) {
+  // The figures the map's journey shows: each receipt flow through its typed cells (receiptGraph).
+  const graph = receiptGraph(raw)
+  const measure = receiptGraphScope(graph)
   const journey = buildMoneyJourneys(graph, {[lens]:focus}).find(j => j.id === lens && j.selection === focus)
   if (!journey?.steps.length) return null
   const nodes = new Map(graph.nodes.map(n => [n.id,n]))
@@ -46,7 +50,7 @@ export function journeyStoryContext(graph: StoryGraph, lens: string, focus: stri
   })
   const earlier=journey.steps[0].metric?.value, later=journey.steps[1].metric?.value
   const timeComparison = lens==='over-time' && earlier && later !== undefined ? {earlier:dollars(earlier),later:dollars(later),change:dollars(later-earlier),compactChange:compact(later-earlier),percentageChange:`${((later-earlier)/earlier*100).toFixed(1)}%`} : undefined
-  return {timeComparison,lens:journey.title, selection:journey.choices.find(c=>c.value===focus)?.label, coverage:graph.meta, steps}
+  return {timeComparison,lens:journey.title, selection:journey.choices.find(c=>c.value===focus)?.label, coverage:graph.meta, ...(measure ? {receiptMeasure:measure} : {}), steps}
 }
 
 export function parseJourneyStory(answer: string, context: NonNullable<ReturnType<typeof journeyStoryContext>>): StoryStep[] | null {

@@ -171,3 +171,39 @@ test('accountability lead: who is to blame and who decided read the same way; ot
   const own=at('Example Minister approved the scheme in 2015.\nThe inquiry found the scheme unlawful.',{})
   assert.equal(api.leadWithAuthority(own,'Who was responsible for the Example scheme?'),own)
 })
+
+// Round 2 (13 Nov 2026, live after #344): the answer opened on the Commission's establishment and report dates, then
+// its commissioner and counts; its conclusion came at line 6, in Mark Dreyfus's words. A finding beats a metadata line.
+test('robodebt, live r100: a metadata line about the Commission gives way to its conclusion; nothing else moves',()=>{
+  const fixture=stored['event-01-live-r100'],payload={answer:fixture.answer,citations:fixture.citations,sources:fixture.sources}
+  assert.match(fixture.answer,/^The Royal Commission into the Robodebt Scheme was established by Letters Patent/)
+  const out=api.leadWithAuthority(payload,fixture.question),[first]=out.answer.split('\n')
+  assert.match(first,/^Mark Dreyfus told the House the royal commission concluded the former Liberal government's robodebt scheme was a crude and cruel mechanism/)
+  for(const metadata of [/established by Letters Patent/,/names Catherine Holmes/,/make 57 recommendations/])assert.doesNotMatch(first,metadata)
+  const lines=s=>s.split(/\n+/).sort()
+  assert.deepEqual(lines(out.answer),lines(fixture.answer),'no line is added, dropped or reworded')
+  for(const [id,ranges] of Object.entries(fixture.citations))
+    assert.deepEqual(cited(out,id).sort(),ranges.map(([a,b])=>Array.from(fixture.answer).slice(a,b).join('')).sort(),id)
+})
+
+test('a finding beats a metadata line; the body as subject beats a member reporting it; the asked subject comes first',()=>{
+  const q='Who was responsible for the Example scheme?'
+  const sources=[{resource:'fact-1',kind:'record',title:'Royal Commission into the Example Scheme'},{resource:'fact-2',kind:'record',title:'Sample Integrity Commission report'},{resource:'speech-1',kind:'speech',speaker:'Pat Example'}]
+  const at=(text,cites)=>{const lines=text.split('\n'),citations={};let offset=0;lines.forEach((l,i)=>{if(cites[i])(citations[cites[i]]??=[]).push([offset,offset+Array.from(l).length]);offset+=Array.from(l).length+1});return {answer:text,citations,sources}}
+  const meta='The Royal Commission into the Example Scheme was established on 1 March 2022 and its final report is dated 7 July 2023.'
+  const relayed='Pat Example told the House the royal commission concluded the scheme was unlawful.'
+  const other='The Sample Integrity Commission found two officials engaged in corrupt conduct.'
+  const own='The Royal Commission found the Example scheme was approved by Cabinet without the change in law it needed.'
+  const lead=(text,cites)=>api.leadWithAuthority(at(text,cites),q).answer.split('\n')[0]
+  assert.equal(lead([meta,relayed,own].join('\n'),['fact-1/t/body/0','speech-1/t/body/0','fact-1/t/body/0']),own)
+  assert.equal(lead([meta,relayed].join('\n'),['fact-1/t/body/0','speech-1/t/body/0']),relayed,'no finding with the body as subject: the member reporting it')
+  assert.equal(lead([meta,other,own].join('\n'),['fact-1/t/body/0','fact-2/t/body/0','fact-1/t/body/0']),own,'the finding about what was asked')
+  assert.equal(lead([meta,other].join('\n'),['fact-1/t/body/0','fact-2/t/body/0']),other,'another body\'s finding still beats metadata')
+  // An uncited restatement of the inquiry's dates is metadata too.
+  assert.equal(lead(['The commission was established by Letters Patent on 1 March 2022.',own].join('\n'),[undefined,'fact-1/t/body/0']),own)
+  // With no finding, a metadata line stays first; a direct uncited answer is never displaced.
+  const plain=at([meta,'Sam Sample said the scheme was cruel.'].join('\n'),['fact-1/t/body/0'])
+  assert.equal(api.leadWithAuthority(plain,q),plain)
+  const direct=at(['Example Minister approved the scheme in 2015.',own].join('\n'),[undefined,'fact-1/t/body/0'])
+  assert.equal(api.leadWithAuthority(direct,q),direct)
+})

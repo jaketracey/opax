@@ -792,5 +792,231 @@
     "speaker": "Zali Steggall"
    }
   ]
+ },
+ "event-01-live-r100": {
+  "question": "Who was responsible for robodebt?",
+  "answer": "The Royal Commission into the Robodebt Scheme was established by Letters Patent on 18 August 2022, and its final report is dated 7 July 2023.\n\nBill Shorten moved in the House that it accept the royal commission's findings regarding the former ministers involved in the design and implementation of robodebt.\n\nThe report names Catherine Holmes AC SC as the Royal Commissioner.\n\nThe Royal Commission's reports make 57 recommendations, and 47 hearing transcripts are held, which are evidence rather than findings.\n\nOn 10 August 2023, the House of Representatives voted on a motion to accept the Royal Commission into the Robodebt Scheme's findings, introduced by Maribyrnong MP Bill Shorten, and the majority voted in favour.\n\nMark Dreyfus told the House the royal commission concluded the former Liberal government's robodebt scheme was a crude and cruel mechanism, neither fair nor legal.\n\nDon Farrell told the Senate the report set out findings on the Liberal and Nationals' robodebt scheme, which unlawfully raised $1.8 billion of debt against about 435,000 people.\n\nStephen Bates told the House that the member for Cook's statements on robodebt had been shown to be false by the royal commission.\n\nBrian Mitchell told the House that former Liberal ministers including the member for Cook had offered the defence that they didn't know and nobody told them.\n\nBill Shorten told the House that the member for Cook claimed he stopped robodebt, and that Stuart Robert had also claimed credit.",
+  "citations": {
+   "fact-6/t/body/0": [
+    [
+     0,
+     141
+    ]
+   ],
+   "fact-8/t/body/0": [
+    [
+     0,
+     141
+    ]
+   ],
+   "speech-1554704/t/body/0-647": [
+    [
+     143,
+     307
+    ]
+   ],
+   "fact-7/t/body/0": [
+    [
+     309,
+     375
+    ]
+   ],
+   "fact-4/t/body/0": [
+    [
+     377,
+     510
+    ]
+   ],
+   "fact-14/t/body/0": [
+    [
+     512,
+     722
+    ]
+   ],
+   "speech-1594111/t/body/0-648": [
+    [
+     724,
+     887
+    ]
+   ],
+   "speech-1551933/t/body/0-644": [
+    [
+     889,
+     1066
+    ]
+   ],
+   "speech-1553591/t/body/165-815": [
+    [
+     1068,
+     1198
+    ]
+   ],
+   "speech-1552125/t/body/0-646": [
+    [
+     1200,
+     1357
+    ]
+   ],
+   "speech-1553102/t/body/0-649": [
+    [
+     1359,
+     1488
+    ]
+   ]
+  },
+  "sources": [
+   {
+    "resource": "fact-6",
+    "slug": "",
+    "title": "Royal Commission into the Robodebt Scheme: \"established by Letters Patent on 18 August 2022\" (Report of the Royal Commission into the Robodebt Scheme, page 11).",
+    "href": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+    "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+    "snippet": "Royal Commission into the Robodebt Scheme: \"established by Letters Patent on 18 August 2022\" (Report of the Royal Commission into the Robodebt Scheme, page 11).",
+    "cited": true,
+    "kind": "record"
+   },
+   {
+    "resource": "fact-8",
+    "slug": "",
+    "title": "Report of the Royal Commission into the Robodebt Scheme (dated 7 July 2023).",
+    "href": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+    "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+    "snippet": "Report of the Royal Commission into the Robodebt Scheme (dated 7 July 2023).",
+    "cited": true,
+    "kind": "record"
+   },
+   {
+    "resource": "fact-7",
+    "slug": "",
+    "title": "Royal Commission into the Robodebt Scheme commissioners as Report of the Royal Commission into the Robodebt Scheme names them: Catherine Holmes AC SC (Royal Commissioner).",
+    "href": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+    "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+    "snippet": "Royal Commission into the Robodebt Scheme commissioners as Report of the Royal Commission into the Robodebt Scheme names them: Catherine Holmes AC SC (Royal Commissioner).",
+    "cited": true,
+    "kind": "record"
+   },
+   {
+    "resource": "fact-4",
+    "slug": "",
+    "title": "Royal Commission into the Robodebt Scheme (royal commission, Commonwealth): established 18 August 2022, final report 7 July 2023. Its reports make 57 recommendations; no government response or implementation document is held; 47 hearing transcripts are held (evidence, not findings).",
+    "href": "https://opax.com.au/royal-commissions/commission-cth-robodebt.json",
+    "url": "https://opax.com.au/royal-commissions/commission-cth-robodebt.json",
+    "snippet": "Royal Commission into the Robodebt Scheme (royal commission, Commonwealth): established 18 August 2022, final report 7 July 2023. Its reports make 57 recommendations; no government response or implementation document is held; 47 hearing transcripts are held (evidence, not findings).",
+    "cited": true,
+    "kind": "record"
+   },
+   {
+    "resource": "fact-14",
+    "slug": "",
+    "title": "Division: Motions - Royal Commission into the Robodebt Scheme - Accept findings — House of Representatives. The majority voted in favour of a [motion]() introduced by Maribyrnong MP [Bill Shorten](",
+    "href": "https://opax.com.au/doc/division-federal-representatives-8290",
+    "url": "https://opax.com.au/doc/division-federal-representatives-8290",
+    "snippet": "Division: Motions - Royal Commission into the Robodebt Scheme - Accept findings — House of Representatives. The majority voted in favour of a [motion]() introduced by Maribyrnong MP [Bill Shorten](",
+    "cited": true,
+    "kind": "record"
+   },
+   {
+    "resource": "coverage",
+    "slug": "",
+    "title": "Coverage of the selected records",
+    "href": "https://opax.com.au/report/royal-commission-cth-robodebt",
+    "url": "https://opax.com.au/report/royal-commission-cth-robodebt",
+    "snippet": "Catalog hits are ranked matches, not complete totals; open the matching tool for figures. Recommendations are the commission's own words with the report page each was read from. A status appears only where a government publishes one for that recommendation, in its own words; otherwise the status is unknown, not unimplemented. Findings and recommendations of a royal commission or inquiry are not findings of criminal or civil liability. Hearing transcripts are evidence, not findings. view=transcripts lists the hearing transcripts, newest first.",
+    "cited": false,
+    "kind": "record",
+    "coverage": true
+   },
+   {
+    "resource": "speech-1553201",
+    "slug": "speech-1553201",
+    "title": "Kate Thwaites — PRIVATE MEMBERS' BUSINESS — 2023-08-07",
+    "href": "https://opax.com.au/doc/speech-1553201",
+    "url": "https://opax.com.au/doc/speech-1553201",
+    "snippet": "I move: That this House: (1) acknowledges the release of the report of the Royal Commission into the Robodebt Scheme, a 990-page report that examined the establishment of the scheme and who was responsible for it, and made 57 recommendations; (2) recognises that the Robodebt Scheme, which was put forward as a budget measure in 2015 and was found to be unlawful by the Federal Court in late 2019, caused great harm to vulnerable members of the Australian community; (3) notes that despite the mounting warnings and criticism of the scheme, in the words of the report the Government of the time 'continued to illegally raise debts against some of",
+    "cited": false,
+    "kind": "speech",
+    "date": "2023-08-07",
+    "speaker": "Kate Thwaites",
+    "chamber": "representatives"
+   },
+   {
+    "resource": "speech-1554704",
+    "slug": "speech-1554704",
+    "title": "Bill Shorten — MOTIONS — 2023-08-10",
+    "href": "https://opax.com.au/doc/speech-1554704",
+    "url": "https://opax.com.au/doc/speech-1554704",
+    "snippet": "I move: That this House: (1) accepts the findings of the report of the Royal Commission into the Robodebt Scheme regarding the former ministers involved in the design and implementation of the scheme; (2) expresses its deep regret and apologises to the victims of the unlawful robodebt scheme, and to front-line Centrelink staff; and (3) commits to ensuring this cruel, unlawful chapter in the history of Australian public administration is never repeated. The reason why I'm moving this resolution and the government is supporting it is that we believe that the nation and the parliament cannot move on without accepting a genuine account of what",
+    "cited": true,
+    "kind": "speech",
+    "date": "2023-08-10",
+    "speaker": "Bill Shorten",
+    "chamber": "representatives"
+   },
+   {
+    "resource": "speech-1594111",
+    "slug": "speech-1594111",
+    "title": "Mark Dreyfus — QUESTIONS WITHOUT NOTICE — 2024-10-10",
+    "href": "https://opax.com.au/doc/speech-1594111",
+    "url": "https://opax.com.au/doc/speech-1594111",
+    "snippet": "I thank the member for Lalor for her question. The robodebt royal commission concluded that the former Liberal government's robodebt scheme was a 'crude and cruel mechanism, neither fair nor legal'. This illegal scheme resulted in hundreds of thousands of Australians being served with wrongful debt notices. The royal commissioner, Catherine Holmes AC SC, stated: … made many people feel like criminals. In essence, people were traumatised on the off-chance they might owe money. It was a costly failure of public administration, in both human and economic terms. And with those words, the royal commission summed up the human tragedy that was the",
+    "cited": true,
+    "kind": "speech",
+    "date": "2024-10-10",
+    "speaker": "Mark Dreyfus",
+    "chamber": "representatives"
+   },
+   {
+    "resource": "speech-1551933",
+    "slug": "speech-1551933",
+    "title": "Don Farrell — QUESTIONS WITHOUT NOTICE — 2023-08-01",
+    "href": "https://opax.com.au/doc/speech-1551933",
+    "url": "https://opax.com.au/doc/speech-1551933",
+    "snippet": "I thank Senator Sheldon for his question and for his deep concern for the impact of robodebt on so many Australians. Yes, I can answer that question because Labor committed to establishing a royal commission into robodebt, and just over 12 months after the government being elected, on the morning of 7 July 2023, Commissioner Holmes delivered her final report for all to see. The report set out its findings on the Liberal and Nationals' cruel robodebt scheme. The report highlighted how the scheme unlawfully raised $1.8 billion of debt against approximately 435,000 vulnerable Australians. The report told the personal stories of tragedy and",
+    "cited": true,
+    "kind": "speech",
+    "date": "2023-08-01",
+    "speaker": "Don Farrell",
+    "chamber": "senate"
+   },
+   {
+    "resource": "speech-1553591",
+    "slug": "speech-1553591",
+    "title": "Stephen Bates — PRIVILEGE — 2023-08-08",
+    "href": "https://opax.com.au/doc/speech-1553591",
+    "url": "https://opax.com.au/doc/speech-1553591",
+    "snippet": "made by the member for Cook constitute a possible breach of privilege or contempt of the parliament. The member for Cook made statements in the House in relation to the robodebt scheme that have subsequently been shown to be false by the Royal Commission into the Robodebt Scheme. Just last week, the member for Cook made statements that clearly contradict the findings of the royal commission. This is the first sitting week since these statements were made and the earliest opportunity I have had to present this matter to the House in the manner required. In response to a question without notice on 11 June 2020, the member for Cook stated: Where",
+    "cited": true,
+    "kind": "speech",
+    "date": "2023-08-08",
+    "speaker": "Stephen Bates",
+    "chamber": "representatives"
+   },
+   {
+    "resource": "speech-1552125",
+    "slug": "speech-1552125",
+    "title": "Brian Mitchell — STATEMENTS BY MEMBERS — 2023-08-02",
+    "href": "https://opax.com.au/doc/speech-1552125",
+    "url": "https://opax.com.au/doc/speech-1552125",
+    "snippet": "'I didn't know. It wasn't my fault. Nobody told me.' That is the defence that former Liberal ministers, including the member for Cook, have been rolling out in the wake of the damning findings of the robodebt royal commission. But they did know, it was their fault and they were told. In January 2017 the then Labor opposition formally requested that the then Prime Minister, Malcolm Turnbull, halt robodebt. The scheme didn't end until November 2019, nearly three years later. When the member for Cook got up on Monday to dismiss the royal commission's findings and complain about his treatment I could not believe my ears. The government he was",
+    "cited": true,
+    "kind": "speech",
+    "date": "2023-08-02",
+    "speaker": "Brian Mitchell",
+    "chamber": "representatives"
+   },
+   {
+    "resource": "speech-1553102",
+    "slug": "speech-1553102",
+    "title": "Bill Shorten — QUESTIONS WITHOUT NOTICE — 2023-08-07",
+    "href": "https://opax.com.au/doc/speech-1553102",
+    "url": "https://opax.com.au/doc/speech-1553102",
+    "snippet": "In recent days there have many who've claimed to have stopped robodebt. Last week, the member for Cook claimed he stopped robodebt. He said: … I closed the scheme down during the operational phases of the scheme when the issues and unintended consequences first arose. But he's not the first former coalition Liberal minister to now claim credit for stopping robodebt. Stuart Robert, the former member for Fadden, also famously claimed credit in this place. He curiously didn't credit the member for Cook for it! Whilst the commission doesn't deal with the member for Cook's claim that he stopped robodebt—presumably because no-one except the member",
+    "cited": true,
+    "kind": "speech",
+    "date": "2023-08-07",
+    "speaker": "Bill Shorten",
+    "chamber": "representatives"
+   }
+  ]
  }
 }

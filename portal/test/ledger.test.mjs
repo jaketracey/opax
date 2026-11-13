@@ -62,7 +62,10 @@ test('every published jurisdiction matches independently summed year cells, incl
   const nodes=new Map(data.nodes.map(n=>[n.id,n]));
   const receipts=data.edges.filter(e=>nodes.get(e.source)?.kind==='donor'&&nodes.get(e.target)?.kind==='party'&&!e.grant&&!e.flow);
   for(const [from,to] of [[1998,2026],[2020,2020],[2020,2022],[null,2010],[2025,null]]) {
-   const expected=receipts.flatMap(e=>Object.entries(e.byYear||{})).filter(([y])=>(from==null||+y>=from)&&(to==null||+y<=to));
+   // A typed edge counts its typed cells (each receipt once, from the party's own return), keyed by the
+   // financial year's first year; an edge without typed cells (the state files) counts its record cells.
+   const cells=e=>e.by_type?Object.entries(e.by_type_year||{}).flatMap(([period,types])=>Object.values(types).map(cell=>[String(period).slice(0,4),cell])):Object.entries(e.byYear||{});
+   const expected=receipts.flatMap(cells).filter(([y])=>(from==null||+y>=from)&&(to==null||+y<=to));
    const rows=filterFlows(buildFlows(data),{yearFrom:from,yearTo:to});
    assert.equal(rows.reduce((s,r)=>s+r.total,0),expected.reduce((s,[,v])=>s+v[0],0),`${file}: amount ${from}-${to}`);
    assert.equal(rows.reduce((s,r)=>s+r.count,0),expected.reduce((s,[,v])=>s+v[1],0),`${file}: count ${from}-${to}`);
