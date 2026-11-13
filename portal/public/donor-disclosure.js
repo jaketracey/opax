@@ -228,6 +228,19 @@ export function receiptScopeLabel(figures, measure = 'all_types') {
   return `${measure === 'donation_only' ? 'Donations only' : 'All receipt types'}${span}, as the parties reported them in federal returns`;
 }
 
+/** Name every included receipt type, so an all-receipt total is never called donations. */
+export function receiptTypeLine(record) {
+  const figures = receiptFigures(record);
+  if (!figures.typed) return '';
+  const names = {donation_received:'Donation Received',other_receipt:'Other Receipt',subscription:'Subscription',
+    loan:'Loan',unknown:'Unknown receipt type',unspecified:'Unspecified'};
+  return Object.entries(figures.byType).filter(([,amount]) => amount).map(([type,amount]) => {
+    const count = figures.typeCounts[type] || 0;
+    return `${names[type] || type.replaceAll('_',' ')}: ${aud(amount)} (${count.toLocaleString('en-AU')} receipt${count === 1 ? '' : 's'})`;
+  }).join('; ');
+}
+
+
 /**
  * The graph with every donor-to-party edge and every donor node read the way
  * the map card, the donor page and the party table read them (receiptFigures):
