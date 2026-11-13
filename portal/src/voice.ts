@@ -13,6 +13,13 @@ export const VOICE_WATCH_SECONDS = 15
 export const VOICE_LIVENESS_SECONDS = 45
 /** A relay that cannot confirm its row this long closes itself, inside the liveness window. */
 const RELAY_SELF_STOP_SECONDS = 35
+/**
+ * Start is refused this long after the member's last call connected. Each
+ * Start that replaces a connected call leaves its relay up for at most
+ * VOICE_WATCH_SECONDS, so this caps how many provider sockets one member can
+ * pile up by pressing Start again and again.
+ */
+export const VOICE_START_COOLDOWN_SECONDS = 5
 
 type Session = {
   id: string; member_id: string | null; state: string; reserved_seconds: number; charged_seconds: number
@@ -104,6 +111,19 @@ export async function takeOverVoiceSession(env: VoiceEnv, memberId: string, time
     WHERE member_id=? AND (state='reserved' OR (state IN ('connecting','active') AND last_seen_at IS NOT NULL))`).bind(timestamp + VOICE_WATCH_SECONDS, timestamp, memberId)
   const [ended, reserved] = await env.COMMUNITY_DB.batch<Session>([end, reserveStatement(env, memberId, timestamp)])
   return {session: reserved.results?.[0] ?? null, replaced: Number(ended.meta?.changes ?? 0) > 0}
+}
+
+/**
+ * True while the member's last call connected under VOICE_START_COOLDOWN_SECONDS
+ * ago. Only a call that connected can hold a provider socket, so a Start that
+ * replaces a reservation never claimed is not held back. Cancelled rows hold
+ * none either: never claimed, released before a socket opened, or taken over
+ * while connecting. Two Starts racing past this check are still safe: the
+ * takeover batch runs them in turn, so the first reservation is cancelled
+ * free, before its connect() can activate it.
+ */
+export async function voiceStartCoolingDown(env: VoiceEnv, memberId: string, timestamp = now()): Promise<boolean> {
+  return Boolean(await env.COMMUNITY_DB.prepare("SELECT 1 FROM voice_sessions WHERE member_id=? AND state<>'cancelled' AND started_at>? LIMIT 1").bind(memberId, timestamp - VOICE_START_COOLDOWN_SECONDS).first())
 }
 
 /** The relay's heartbeat and watch in one write: false once the row was ended elsewhere. */
@@ -355,6 +375,8 @@ export async function voiceRoute(req: Request, env: VoiceEnv, ctx: ExecutionCont
       await limit(env, 'voice-start-member:' + current.id, 6, 60)
       await limit(env, 'voice-start-ip:' + (req.headers.get('cf-connecting-ip') ?? 'unknown'), 20, 60)
       await expireVoiceSessions(env)
+      // The same 409 shape as a call still ending, so clients need no new case.
+      if (await voiceStartCoolingDown(env, current.id)) throw new CommunityError(409, 'You started a voice conversation a moment ago. Please try again in a few seconds.')
       // Pressing Start ends the member's earlier conversation (any device) and
       // reserves the new one. Its relay closes within VOICE_WATCH_SECONDS.
       const {session, replaced} = await takeOverVoiceSession(env, current.id)

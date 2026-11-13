@@ -12,7 +12,7 @@ import {build} from 'esbuild';
 crypto.subtle.timingSafeEqual ??= timingSafeEqual;
 const folder=mkdtempSync(join(tmpdir(),'opax-voice-test-'));
 await build({entryPoints:[new URL('../src/voice.ts',import.meta.url).pathname,new URL('../src/voice-tools.ts',import.meta.url).pathname],outdir:folder,bundle:true,platform:'node',format:'esm'});
-const {voiceRoute,reserveVoiceSession,claimVoiceSession,reconcileVoiceSession,expireVoiceSessions,voiceClientEvent,relayVoiceSockets,takeOverVoiceSession,heartbeatVoiceSession}=await import(pathToFileURL(join(folder,'voice.js')));
+const {voiceRoute,reserveVoiceSession,claimVoiceSession,reconcileVoiceSession,expireVoiceSessions,voiceClientEvent,relayVoiceSockets,takeOverVoiceSession,heartbeatVoiceSession,voiceStartCoolingDown,VOICE_START_COOLDOWN_SECONDS}=await import(pathToFileURL(join(folder,'voice.js')));
 const {runVoiceTool}=await import(pathToFileURL(join(folder,'voice-tools.js')));
 const hash=async value=>Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value))).toString('hex');
 
@@ -200,7 +200,9 @@ test('only a confirmed provider closure returns unused time and never returns it
   assert.equal(await reserveVoiceSession(f.env,a.id),null);assert.equal(f.db.prepare('SELECT SUM(charged_seconds) n FROM voice_sessions').get().n,600);f.db.close();
 });
 
-test('operator voice access allows repeated calls without changing other accounts or spending limits',async()=>{
+test('operator voice access allows repeated calls without changing other accounts or spending limits',async t=>{
+  // Each refusal below is checked past the 5-second start cool-down of the call before it.
+  const base=Date.now();let clock=base;t.mock.method(Date,'now',()=>clock);
   const f=fixture(),a=await f.login('operator@example.com'),b=await f.login('reader@example.com');
   f.db.prepare('INSERT INTO voice_access(member_id,unlimited,updated_at) VALUES(?,1,?)').run(a.id,Math.floor(Date.now()/1000));
   for(const account of [a,b]){
@@ -211,6 +213,7 @@ test('operator voice access allows repeated calls without changing other account
   assert.equal(status.unlimited,true);assert.equal(status.total_seconds,null);assert.equal(status.remaining_seconds,600);
   const ordinary=await (await f.call('status','GET',undefined,b.cookie)).json();
   assert.equal(ordinary.unlimited,false);assert.equal(ordinary.remaining_seconds,0);
+  clock=base+10_000;
   assert.equal((await f.call('start','POST',{unlimited:true},b.cookie)).status,403,'Client fields cannot grant access');
   const second=await reserveVoiceSession(f.env,a.id);assert.equal(second.reserved_seconds,600);
   assert.equal(await reserveVoiceSession(f.env,a.id),null,'Unlimited access still has one active call per account');
@@ -219,6 +222,7 @@ test('operator voice access allows repeated calls without changing other account
   const last=await reserveVoiceSession(f.env,a.id);assert.equal(last.reserved_seconds,100,'Global budget also caps unlimited accounts');
   await claimVoiceSession(f.env,a.id,last.id);await reconcileVoiceSession(f.env,last.id,100);
   assert.equal(await reserveVoiceSession(f.env,a.id),null);
+  clock=base+20_000;
   assert.equal((await f.call('start','POST',{},a.cookie)).status,429);
   assert.equal(f.db.prepare('SELECT SUM(charged_seconds) n FROM voice_sessions').get().n,1900,'Keep the usage history');
   f.db.exec('UPDATE members SET disabled=1');assert.equal((await f.call('start','POST',{},a.cookie)).status,401);
@@ -525,6 +529,7 @@ test('takeover keeps the global cap, monthly budget and lifetime allowance',asyn
     const first=await liveSession(f,a,T);await liveSession(f,b,T);
     let response=await f.call('start','POST',{},c.cookie);
     assert.equal(response.status,429);assert.equal((await response.json()).reason,'capacity','two live calls fill the global cap');
+    clock=T+10; // Past the start cool-down.
     response=await f.call('start','POST',{},a.cookie);assert.equal(response.status,201,'a member replacing its own call does not need a third slot');
     assert.equal(f.db.prepare("SELECT COUNT(*) n FROM voice_sessions WHERE state IN ('reserved','connecting','active')").get().n,2);
     assert.equal(row(f,first).state,'closed');
@@ -617,4 +622,41 @@ test('takeover still charges an active call and the liveness sweep still charges
     clock=T+70;await expireVoiceSessions(f.env);
     assert.deepEqual(row(f,body.session_id),{state:'expired',charged_seconds:45,reserved_seconds:600,closed_at:T+70});
   } finally {f.db.close()}
+});
+
+test('a member cannot Start again within the cool-down after a call connects; the refusal is the existing 409 shape',async t=>{
+  const T=Date.UTC(2026,10,13,6,20,0)/1000;let clock=T;t.mock.method(Date,'now',()=>clock*1000);
+  const f=fixture(),a=await f.login('cooldown@example.test'),b=await f.login('cooldown-other@example.test');
+  try {
+    assert.equal(VOICE_START_COOLDOWN_SECONDS,5);
+    const call=await liveSession(f,a,T);
+    for(const at of [T+1,T+4]){
+      clock=at;const refused=await f.call('start','POST',{},a.cookie);
+      assert.equal(refused.status,409);assert.equal(refused.headers.get('cache-control'),'no-store');
+      assert.deepEqual(await refused.json(),{error:'You started a voice conversation a moment ago. Please try again in a few seconds.'},'only an error, like the 409 for a call still ending');
+      assert.equal(row(f,call).state,'active','the connected call is left alone, so no second relay starts draining');
+      assert.equal(f.db.prepare('SELECT COUNT(*) n FROM voice_sessions WHERE member_id=?').get(a.id).n,1,'and no reservation is written');
+    }
+    // The cool-down is per member.
+    assert.equal((await f.call('start','POST',{},b.cookie)).status,201);
+    clock=T+5;
+    const after=await f.call('start','POST',{},a.cookie),fresh=await after.json();
+    assert.equal(after.status,201);assert.equal(fresh.replaced,true);assert.equal(row(f,call).state,'closed');
+    // Replacing a reservation that never connected holds no provider socket, so it is not held back.
+    const again=await f.call('start','POST',{},a.cookie);assert.equal(again.status,201);assert.equal((await again.json()).replaced,true);
+    assert.equal(row(f,fresh.session_id).state,'cancelled');
+    assert.equal(await voiceStartCoolingDown(f.env,a.id,T+5),false);assert.equal(await voiceStartCoolingDown(f.env,a.id,T+4),true);
+  } finally {f.db.close()}
+});
+
+test('a connect released before any provider socket does not start the cool-down',async t=>{
+  const T=Date.UTC(2026,10,13,6,30,0)/1000;let clock=T;t.mock.method(Date,'now',()=>clock*1000);
+  const f=fixture(),a=await f.login('released@example.test'),original=globalThis.fetch;
+  try {
+    const body=await (await f.call('start','POST',{},a.cookie)).json();
+    globalThis.fetch=async()=>new Response('Unavailable',{status:503});
+    const connect=await f.call('connect?session_id='+body.session_id,'GET',undefined,a.cookie,{upgrade:'websocket'});assert.equal(connect.status,503);
+    assert.equal(row(f,body.session_id).state,'cancelled');
+    clock=T+1;const retry=await f.call('start','POST',{},a.cookie);assert.equal(retry.status,201,'a retry after a failed connect goes straight through');
+  } finally {globalThis.fetch=original;f.db.close()}
 });
