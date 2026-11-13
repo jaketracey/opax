@@ -47,7 +47,7 @@ import { governmentFinancePage, governmentFinanceReader } from './government-fin
 import { govAdvertisingPage, govAdvertisingReader, govAdvertisingReady } from './gov-advertising'
 import { taxExpendituresPage, taxExpendituresReader, taxExpendituresReady } from './tax-expenditures'
 import {parseQuery,serializeQuery,type Page} from '../public/datatable.js'
-import {partyMoneyData,partyMoneyTableConfig,receiptFigures,registerTableHTML} from '../public/register-tables.js'
+import {partyMoneyData,partyMoneyTableConfig,partyReturnFigures,receiptFigures,receiptScopeLabel,registerTableHTML} from '../public/register-tables.js'
 import {grantsHTML} from './grants-table'
 import {saGrantsPage,saGrantsReader} from './sa-grants'
 import {actInvoicesPage} from './act-invoices'
@@ -5574,7 +5574,13 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     const count = memberNames.length
     if (count) parts.push(`${num(count)} parliamentarian${count === 1 ? '' : 's'}${speeches ? ` and ${num(speeches)} speeches` : ''} in the record`)
     if (sponsored.length) parts.push(`${num(sponsored.length)} bill${sponsored.length === 1 ? '' : 's'} sponsored`)
-    if (node) parts.push(`${money(node.total)} in disclosed receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort})`)
+    if (node) {
+      // The party's own returns, each receipt line once (partyReturnFigures), as the browser page heads it.
+      const own = partyReturnFigures(node as Parameters<typeof partyReturnFigures>[0])
+      parts.push(own.typed
+        ? `${money(own.total)} in disclosed receipts (${receiptScopeLabel(own).replace(/^A/,'a')})`
+        : `${money(node.total)} in disclosed receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort})`)
+    }
     if (parts.length) {
       facts = independent ? `${heading}: ${INDEPENDENTS_DESCRIPTION} ${parts.join('; ')}.` : `${heading}: ${parts.join('; ')}.`
       tail = independent ? (speeches ? 'Their recorded speeches.' : '') : speeches && node ? 'What its members said, and who paid.' : speeches ? 'What its members said.' : node ? 'Who paid.' : ''

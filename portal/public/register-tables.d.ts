@@ -7,6 +7,7 @@ export interface ReceiptCells {total?:number;count?:number;firstYear?:number|nul
 export interface ReceiptFigures {total:number;count:number;firstYear:number|null;lastYear:number|null;byYear:Record<string,number>;cells:Record<string,[number,number]>;undated:[number,number];byType:Record<string,number>|null;typed:boolean}
 export function receiptFigures(x: ReceiptCells | null | undefined): ReceiptFigures;
 export function receiptScopeLabel(figures: ReceiptFigures): string;
+export function partyReturnFigures(node: (ReceiptCells & {return_by_type?:Record<string,number>;return_by_type_year?:Record<string,Record<string,[number,number]>>}) | null | undefined): ReceiptFigures;
 export function instrumentTableConfig(): DataTableConfig;
 export function auditTableConfig(records: AuditRow[]): DataTableConfig;
 export function interestTableData(register: InterestRegister): {rows:Row[];omitted:number};

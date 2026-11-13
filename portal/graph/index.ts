@@ -106,6 +106,11 @@ export type MoneyNode = DonorDisclosureRecord & TypedReceipts & {
   associatedWith?: { party: string; registerParties: string[]; firstYear: string | null; lastYear: string | null; source: string; url: string }[]
   /** The one line shown with the donor's name wherever it appears ("associated entity of …, per AEC register"). */
   associatedTag?: string
+  /** Party nodes: the party's own federal returns, each receipt line once (meta.receipt_types.party_return_note). */
+  return_by_type?: Record<string, number>
+  return_by_type_year?: Record<string, Record<string, YearCell>>
+  /** Party nodes in a view: those return cells inside the view's window and measure (receiptGraphView). */
+  partyReturn?: { total: number; count: number; firstYear: number | null; lastYear: number | null }
 }
 
 export type MoneyEdge = TypedReceipts & {
@@ -336,13 +341,27 @@ function typedReceiptFigures<T extends YearFigures>(x: T, lo: number, hi: number
   return { ...x, total, count, firstYear, lastYear, byYear, undated: undefined }
 }
 
+/** A party's own-return figures in a window, or null for a node or file without them. */
+export function partyReturnWindow(n: MoneyNode, lo = -Infinity, hi = Infinity, cpi = false, measure: ReceiptMeasure = 'all_types') {
+  if (n.kind !== 'party' || !n.return_by_type) return null
+  const { total, count, firstYear, lastYear } = typedReceiptFigures({ total: 0, count: 0, firstYear: null, lastYear: null,
+    by_type: n.return_by_type, by_type_year: n.return_by_type_year ?? {} }, lo, hi, cpi, measure)
+  return { total, count, firstYear, lastYear }
+}
+
 export function receiptMeasureLabel(measure: ReceiptMeasure): string {
   return measure === 'donation_only' ? 'Donation-only' : 'All receipt types'
 }
 
 /** One projection for map geometry, industry rankings, cards and the 2D fallback. */
 export function receiptGraphView(raw: MoneyGraph, measure: ReceiptMeasure = 'all_types', from = -Infinity, to = Infinity, cpi = false): MoneyGraph {
-  return { ...raw, nodes: raw.nodes.map(n => windowFigures(n, from, to, cpi, measure)),
+  return { ...raw, nodes: raw.nodes.map(n => {
+    const shown = windowFigures(n, from, to, cpi, measure)
+    // A party's headline is its whole return; its by_type cells (and so its
+    // geometry) only sum the donors drawn on the map.
+    const own = partyReturnWindow(n, from, to, cpi, measure)
+    return own ? { ...shown, partyReturn: own } : shown
+  }),
     edges: raw.edges.map(e => windowFigures(e, from, to, cpi, measure)) }
 }
 
@@ -1885,22 +1904,25 @@ export async function mountMoneyMap(
     associatedLine(node)
     if (hasReceiptTypes && (node.kind === 'donor' || node.kind === 'party')) el('p', 'mm-card-fine', card).textContent = receiptMeasureLabel(receiptMeasure)
 
+    // A party heads its card with its whole return when the file has it (partyReturnWindow).
+    const headline = node.kind === 'party' && node.partyReturn ? node.partyReturn : node
     const total = el('div', 'mm-card-total', card)
-    total.textContent = formatMoney(node.total)
+    total.textContent = formatMoney(headline.total)
     const sub = el('div', 'mm-card-sub', card)
-    const span = yearSpan(node.firstYear, node.lastYear)
+    const span = yearSpan(headline.firstYear, headline.lastYear)
     // Inside a year window the figures are the window's, and the span is
     // the years within it that carry anything; a subject with nothing there
     // says so rather than showing an empty zero.
-    sub.textContent = node.count === 0 && view.span
+    sub.textContent = headline.count === 0 && view.span
       ? (node.kind === 'grantor' ? `Nothing awarded in ${view.span}` : `Nothing disclosed in ${view.span}`)
       : node.kind === 'party'
-        ? `Received across ${node.count.toLocaleString()} receipts · ${span}`
+        ? `Received across ${headline.count.toLocaleString()} receipts · ${span}`
         : node.kind === 'grantor'
           ? (node.flow === 'contracts'
             ? `Held by receipt sources on this map across ${node.count.toLocaleString()} contracts · ${span}`
             : `Awarded to receipt sources on this map across ${node.count.toLocaleString()} grants · ${span}`)
           : `Disclosed across ${node.count.toLocaleString()} receipt records · ${span}`
+    if (node.partyReturn) el('p', 'mm-card-fine', card).textContent = 'As the party reported them in its federal returns, each receipt once, without public funding or transfers between its branches'
     inflationFineprint(card)
 
     const listTitle = el('div', 'mm-card-section', card)
