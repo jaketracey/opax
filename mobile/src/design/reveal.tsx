@@ -90,4 +90,10 @@ export function HeightReveal({
   );
 }
 
-const styles = StyleSheet.create({ clip: { overflow: 'hidden' } });
+const styles = StyleSheet.create({
+  // 'scroll' clips exactly as 'hidden' does (iOS clipsToBounds, Android's
+  // clip bounds), but Yoga then lays the content out at its own height. Under
+  // 'hidden' a column fits its children to its own height, so content in a
+  // 0-high reveal measured 0 and the reveal never opened (b62 device check).
+  clip: { overflow: 'scroll' },
+});

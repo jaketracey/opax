@@ -108,6 +108,18 @@ test('content open at mount shows at once', () => {
   expect(calls).toEqual([]);
 });
 
+test('the clip lets its content take its own height, so it can be measured', () => {
+  // Jest runs no layout. On a device, Yoga fits a column's children to the
+  // column's height unless its overflow is 'scroll', so under 'hidden' the
+  // content of a 0-high reveal measured 0 and the line never opened.
+  const r = mount(<Line on />);
+  const clip = r.root.find(
+    (n) => n.props.testID === 'line' && n.props.style !== undefined,
+  );
+  const style = Object.assign({}, ...[clip.props.style].flat(Infinity));
+  expect(style.overflow).toBe('scroll');
+});
+
 test('content that closes before it was measured goes at once', () => {
   const r = mount(<Line on={false} />);
   act(() => r.update(<Line on />));
