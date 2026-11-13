@@ -25,7 +25,8 @@ name: 30 Ask about drafts from records; each starts a new conversation, sends no
     file: support/open-more.yaml
     env:
       NAME: 'Anthony Albanese'
-- tapOn: Ask about their speeches
+# The person's More menu says "Ask about <name>" (native menu items take no id).
+- tapOn: Ask about Anthony Albanese
 - extendedWaitUntil:
     visible:
       id: ask-question
