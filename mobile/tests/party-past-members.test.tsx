@@ -9,13 +9,17 @@ import {
   decodeVotes,
 } from '../src/api/catalog-decoders';
 import { Catalogs } from '../src/api/catalogs';
+import { catalogs as runtime } from '../src/api/runtime';
+import { isPartialCatalog } from '../src/api/validation';
 import {
   partyLabels,
   partyMembers,
   partyPastMembers,
 } from '../src/api/party-page';
 import { PersonRow } from '../src/design/people';
-import { PastMembers } from '../src/features/Party';
+import { PartyPage, PastMembers } from '../src/features/Party';
+import { ProfileScreen } from '../src/features/Person';
+import { forgetProfiles } from '../src/features/people/profile-memo';
 import { accessibilityElements } from './a11y-tree';
 
 jest.mock('expo-router', () => ({
@@ -27,14 +31,36 @@ jest.mock('expo-router', () => ({
     MenuAction: () => null,
   }),
   router: { push: jest.fn() },
+  useSegments: () => [],
+  Stack: { Screen: () => null },
 }));
 jest.mock('../src/features/CachedPortrait', () => ({
   CachedPortrait: () => null,
 }));
 jest.mock('../src/api/runtime', () => ({
-  catalogs: {},
-  apiClient: {},
-  peopleDepth: {},
+  catalogs: {
+    person: jest.fn(),
+    profileFor: jest.fn(),
+    directory: jest.fn(),
+    partyPage: jest.fn(),
+  },
+  apiClient: { get: jest.fn() },
+  peopleDepth: {
+    funding: jest.fn(async () => {
+      throw new Error('Fixture unavailable');
+    }),
+    access: jest.fn(async () => {
+      throw new Error('Fixture unavailable');
+    }),
+    topics: jest.fn(async () => {
+      throw new Error('Fixture unavailable');
+    }),
+  },
+}));
+jest.mock('../src/features/your-mp/useSeat', () => ({
+  ...jest.requireActual('../src/features/your-mp/useSeat'),
+  useSeat: () => ({ status: 'none' }),
+  savedSeatDirectory: () => null,
 }));
 
 const generated = '2026-11-01';
@@ -301,26 +327,163 @@ test('a party recorded only in dated history can resolve without becoming curren
   ).toBe(true);
 });
 
-const api = (failVotes = false) =>
+const api = (failVotes = false, rosterInput: unknown = rawRoster) =>
   new Catalogs({
     get: async (path, decode) => {
       const data: Record<string, unknown> = {
-        '/parliamentarians.json': rawRoster,
+        '/parliamentarians.json': rosterInput,
         '/api/person-slugs': slugs,
         '/electorates/manifest.json': manifest,
         [manifest.people_url]: people,
+        [manifest.index_url]: { meta: people.meta, electorates: [] },
         '/votes.json': rawVotes,
       };
       if (!(path in data) || (failVotes && path === '/votes.json'))
         throw new Error('Fixture unavailable');
+      const decoded = decode(data[path]);
       return {
-        data: decode(data[path]),
+        data: decoded,
+        partial: isPartialCatalog(decoded),
         stale: false,
         savedAt: 1,
         asOf: generated,
       };
     },
   });
+
+const goodAffiliation = service('Harbour Party', '2012-07-01', '2016-06-30');
+const mixedAffiliations = [
+  goodAffiliation,
+  { ...goodAffiliation, party: '' },
+  { ...goodAffiliation, start: 'not-a-date' },
+  { ...goodAffiliation, end: '2026-02-30' },
+  { ...goodAffiliation, source_url: 'not-a-url' },
+  null,
+  { ...service('Bay Party', '2016-07-01', null), source_url: '' },
+  { ...service('Bay Party', '2016-07-01', null), source_url: null },
+];
+const withAffiliations = (affiliations: unknown) => ({
+  ...rawRoster,
+  people: rawRoster.people.map((p, i) =>
+    i === 0 ? { ...p, affiliations } : p,
+  ),
+});
+
+test('bad optional affiliations drop only themselves, blank URLs are absent, and the roster stays whole', () => {
+  const warning = jest
+    .spyOn(console, 'warn')
+    .mockImplementation(() => undefined);
+  try {
+    const decoded = decodeRoster(withAffiliations(mixedAffiliations));
+    const expected = decodeRoster(
+      withAffiliations([
+        goodAffiliation,
+        service('Bay Party', '2016-07-01', null),
+        service('Bay Party', '2016-07-01', null),
+      ]),
+    );
+    expect(decoded.people).toHaveLength(rawRoster.people.length);
+    expect(decoded.people[0]).toEqual({
+      ...expected.people[0],
+      affiliations: [
+        expected.people[0]!.affiliations![0],
+        ...expected.people[0]!.affiliations!.slice(1).map(
+          ({ source_url: _url, ...a }) => a,
+        ),
+      ],
+    });
+    expect(isPartialCatalog(decoded)).toBe(false);
+    expect(warning.mock.calls.map(([message]) => message)).toEqual(
+      [1, 2, 3, 4, 5].map(
+        (index) =>
+          `Dropped malformed catalog row: roster.affiliation [${index}]`,
+      ),
+    );
+  } finally {
+    warning.mockRestore();
+  }
+});
+
+test('even entirely bad optional service leaves the person and roster usable', () => {
+  const warning = jest
+    .spyOn(console, 'warn')
+    .mockImplementation(() => undefined);
+  try {
+    const decoded = decodeRoster(
+      withAffiliations(mixedAffiliations.slice(1, 6)),
+    );
+    expect(decoded.people[0]).toEqual({
+      ...roster.people[0],
+      affiliations: [],
+    });
+    expect(isPartialCatalog(decoded)).toBe(false);
+  } finally {
+    warning.mockRestore();
+  }
+});
+
+test.each([null, {}, 'bad', false, 42])(
+  'non-array affiliations %j mean none',
+  (value) => {
+    const decoded = decodeRoster(withAffiliations(value));
+    expect(decoded.people[0]).toEqual({
+      ...roster.people[0],
+      affiliations: undefined,
+    });
+    expect(isPartialCatalog(decoded)).toBe(false);
+  },
+);
+
+test.each(['ios', 'android'] as const)(
+  '%s still renders the party and person with malformed optional service',
+  async (platform) => {
+    const original = Platform.OS;
+    Platform.OS = platform;
+    const warning = jest
+      .spyOn(console, 'warn')
+      .mockImplementation(() => undefined);
+    const fixture = api(false, withAffiliations(mixedAffiliations));
+    const mock = jest.mocked(runtime);
+    mock.partyPage.mockImplementation(fixture.partyPage.bind(fixture));
+    mock.person.mockImplementation(fixture.person.bind(fixture));
+    mock.profileFor.mockImplementation(fixture.profileFor.bind(fixture));
+    mock.directory.mockImplementation(fixture.directory.bind(fixture));
+    const renderers: TestRenderer.ReactTestRenderer[] = [];
+    forgetProfiles();
+    try {
+      const page = (await fixture.partyPage('Harbour Party')).data!;
+      expect(page.members.status).toBe('ready');
+      expect(
+        page.past?.data?.find((p) => p.name === 'Ellery Vance')?.periods,
+      ).toEqual([goodAffiliation]);
+      await act(async () => {
+        renderers.push(
+          TestRenderer.create(<PartyPage input="Harbour Party" />),
+        );
+      });
+      expect(
+        renderers[0]!.root.findAllByProps({ testID: 'party-screen' }).length,
+      ).toBeGreaterThan(0);
+      await act(async () => {
+        renderers.push(
+          TestRenderer.create(<ProfileScreen slug="ellery-vance" />),
+        );
+      });
+      expect(
+        renderers[1]!.root.findAllByProps({ testID: 'person-screen' }).length,
+      ).toBeGreaterThan(0);
+      expect(
+        renderers[1]!.root.findAllByProps({ testID: 'person-pending-screen' }),
+      ).toHaveLength(0);
+    } finally {
+      for (const renderer of renderers) act(() => renderer.unmount());
+      forgetProfiles();
+      for (const method of Object.values(mock)) method.mockReset();
+      warning.mockRestore();
+      Platform.OS = original;
+    }
+  },
+);
 
 test('the party page passes fetched roster history to past members', async () => {
   const page = (await api().partyPage('Harbour Party')).data!;

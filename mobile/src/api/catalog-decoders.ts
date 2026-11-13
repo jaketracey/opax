@@ -100,14 +100,17 @@ const affiliation = shape({
   jurisdiction: optional(nonempty),
   chamber: optional(nonempty),
   electorate: maybeText,
-  source_url: optional(url),
+  source_url: (v: unknown) => (v === '' ? undefined : optional(url)(v)),
 });
 const rosterPerson = shape({
   name: nonempty,
   pid: optional(rosterId),
   party: maybeText,
   parties: optional(strings),
-  affiliations: optional(array(affiliation)),
+  affiliations: (v: unknown) =>
+    Array.isArray(v)
+      ? rows(affiliation, 'roster.affiliation', 'optional')(v)
+      : undefined,
   roster_only: optional(boolean),
   party_now: optional(text),
   current: optional(boolean),

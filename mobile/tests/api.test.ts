@@ -1,4 +1,7 @@
 import { Platform } from 'react-native';
+import { performance } from 'node:perf_hooks';
+import { Catalogs } from '../src/api/catalogs';
+import * as decoders from '../src/api/catalog-decoders';
 import {
   CatalogCache,
   isFresh,
@@ -1124,6 +1127,56 @@ test('one decoded snapshot per decoder and body, including 304; a new body valid
   expect(refreshed.data).not.toBe(first.data);
   expect(validate).toHaveBeenCalledTimes(2);
   expect(transport).toHaveBeenCalledTimes(3);
+});
+
+test('past-member votes reads reuse the fresh HTTP cache and the decoded snapshot', async () => {
+  const body = pinnedBytes('/votes.json').toString();
+  const transport = jest.fn().mockImplementation(
+    async () =>
+      new Response(body, {
+        headers: { 'cache-control': 'max-age=3600', etag: 'fixture-votes' },
+      }),
+  );
+  const { client, store } = setup(transport);
+  const diskReads = jest.spyOn(store, 'read');
+  const validate = jest.spyOn(decoders, 'decodeVotes');
+  try {
+    const catalogs = new Catalogs(client);
+    const first = await catalogs.votes();
+    diskReads.mockClear();
+    expect((await catalogs.votes()).data).toBe(first.data);
+    expect(transport).toHaveBeenCalledTimes(1);
+    expect(validate).toHaveBeenCalledTimes(1);
+    expect(diskReads).not.toHaveBeenCalled();
+    // Pull to refresh is deliberately allowed to reach the origin again.
+    await catalogs.votes(undefined, true);
+    expect(transport).toHaveBeenCalledTimes(2);
+    expect(validate).toHaveBeenCalledTimes(2);
+  } finally {
+    validate.mockRestore();
+  }
+});
+
+test('pinned votes decode timing', () => {
+  const bytes = pinnedBytes('/votes.json').toString();
+  const decodeTimes: number[] = [];
+  const totalTimes: number[] = [];
+  for (let sample = 0; sample < 7; sample++) {
+    const started = performance.now();
+    const raw: unknown = JSON.parse(bytes);
+    const parsed = performance.now();
+    const decoded = decoders.decodeVotes(raw);
+    const finished = performance.now();
+    expect(Object.keys(decoded.records).length).toBeGreaterThan(0);
+    decodeTimes.push(finished - parsed);
+    totalTimes.push(finished - started);
+  }
+  const median = (values: number[]) =>
+    [...values].sort((a, b) => a - b)[3]!.toFixed(1);
+  // Report rather than assert wall-clock timing on a shared Mac.
+  console.info(
+    `votes.json (7 samples): decode median ${median(decodeTimes)} ms, max ${Math.max(...decodeTimes).toFixed(1)} ms; parse + decode median ${median(totalTimes)} ms`,
+  );
 });
 
 test('memoized decoding still checks expiry and returns source/save dates on offline fallback', async () => {

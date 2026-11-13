@@ -123,8 +123,9 @@ test('a renamed party with no record under any name does not resolve', () => {
 test('past members under the former name come from the voting record', () => {
   const votes = decodeVotes(pinned('/votes.json'));
   const past = partyPastMembers('Libertarian Party', votes, slugs);
-  expect(past).toMatchObject([
+  expect(past).toEqual([
     {
+      personId: 'vote:10832',
       name: 'David Leyonhjelm',
       slug: null,
       jurisdiction: 'federal',
@@ -133,6 +134,7 @@ test('past members under the former name come from the voting record', () => {
       recordedAs: 'Liberal Democratic Party',
     },
     {
+      personId: 'vote:10916',
       name: 'Duncan Spender',
       slug: null,
       jurisdiction: 'federal',
