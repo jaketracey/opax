@@ -162,6 +162,14 @@ test.each([
   ['an OPAX host without a scheme', `Load opax.com.au/ask/${encodeURIComponent(secrets.talk)} failed`],
   ['a bare fragment', `Load /ask#${encodeURIComponent(secrets.question)} failed`],
   ['URL credentials', `fetch https://${encodeURIComponent(secrets.field)}:${secrets.code}@example.org/a failed`],
+  ['a quote across lines', `Bad input "first line\n${secrets.question}\nlast line" end`],
+  ['a single quote across lines', `Bad '\n${secrets.search}\n' end`],
+  ['an unclosed quote across lines', `Bad "first line\n${secrets.talk}\nlast line`],
+  ['an OPAX host with a trailing dot', `GET https://opax.com.au./ask/${encodeURIComponent(secrets.question)} failed`],
+  ['an API path with no host', `GET /api/search/${encodeURIComponent(secrets.search)} failed`],
+  ['an app route with no host', `Route /ask/${encodeURIComponent(secrets.question)} missing`],
+  ['a left single quote after a letter', `No match for x‘${secrets.field}’`],
+  ['a low single quote after a letter', `No match for x‚${secrets.talk}‘`],
 ])('a message with %s keeps no private text', (_name, message) => {
   const scrubbed = scrubEvent(exceptionEvent(message), context)!;
   expect(leaks(scrubbed)).toEqual([]);
@@ -184,6 +192,19 @@ test('messages keep their shape and are cut to a short length', () => {
   expect(scrubExceptionMessage('Route /ask#top missing')).toBe(
     'Route /ask missing',
   );
+  // A path with no host keeps its first segment ("/api/<endpoint>" for the
+  // API); file paths under a filesystem root stay whole.
+  expect(scrubExceptionMessage(`Route /ask/${secrets.code} missing`)).toBe(
+    'Route /ask missing',
+  );
+  expect(scrubExceptionMessage('GET /api/search/x%20y failed')).toBe(
+    'GET /api/search failed',
+  );
+  expect(scrubExceptionMessage('at /src/analytics/exceptions.ts:12:3')).toBe(
+    'at /src/analytics/exceptions.ts:12:3',
+  );
+  // Spaces JavaScript and ICU disagree on become plain spaces.
+  expect(scrubExceptionMessage('a\u0085b\ufeffc\u001fd')).toBe('a b c d');
   expect(scrubExceptionMessage("Can't find variable: Fixture")).toBe(
     "Can't find variable: Fixture",
   );

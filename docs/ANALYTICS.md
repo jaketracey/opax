@@ -299,18 +299,26 @@ NSRegularExpression, so the same pattern texts behave the same.
 | Common | `$lib`, `$lib_version`, `$session_id`, `$os_name`, `$device_type`, `$app_name`, `$app_namespace` (`au.com.opax.app`), `$app_version`, `$app_build`, `$screen_name` (the route template), `platform`, `app`, `app_version`, `app_build`, `environment`, `$process_person_profile` false, `$is_identified` false, `$geoip_disable` true |
 
 Messages keep their shape but lose anything that could be user text, in this
-order: a URL loses its user name and password; an OPAX URL (`opax.com.au` or a
-subdomain, with or without a scheme) keeps only its host, since its paths can
-carry a search or question; any other URL or path keeps its path, losing its
-query string and fragment (`/ask#top` becomes `/ask`); any other `?key=value`
-query goes; email addresses become `[email]`; quoted text becomes `[redacted]`:
-double quotes, curly, German and fullwidth quotes, guillemets, corner brackets,
-double primes and backticks wherever they open (`x"text"` included), and single
-quotes and primes after a space or punctuation, where an apostrophe followed by
-a letter (`O'Brien`, `it's`) does not close the quote; a quote that never
-closes hides the rest of its line; runs of four or more digits (codes,
-postcodes, phone numbers) become `#`; the result is cut to 120 characters. So `Cannot read property 'wombat crossing' of
-undefined` is sent as `Cannot read property [redacted] of undefined`. Unquoted
+order: spaces the engines disagree on (U+0085, U+FEFF and U+001C to U+001F)
+become plain spaces, so all three copies cut the same text; a URL loses its
+user name and password; an OPAX URL (`opax.com.au` or a subdomain, with or
+without a scheme or a trailing dot) keeps only its host, since its paths can
+carry a search or question; a path with no host in front keeps only its first
+segment, or `/api/<endpoint>` for the API (`/ask/why-is-rent-late?x=1` becomes
+`/ask`, `/api/search/rent` becomes `/api/search`), except a file path under a
+filesystem root such as `/src`, `/node_modules`, `/Users`, `/private`, `/var`
+or `/data`, which stays whole so stack locations stay readable; any other URL
+or path keeps its path, losing its query string and fragment; any other
+`?key=value` query goes; email addresses become `[email]`; quoted text becomes
+`[redacted]`, across lines: double quotes, curly, German and fullwidth quotes,
+guillemets, corner brackets, double primes, backticks and the opening single
+quotes ‘ ‚ ‛ wherever they open (`x"text"` included), and ' ’ ＇ and primes
+after a space or punctuation, where an apostrophe followed by a letter
+(`O'Brien`, `it's`) does not close the quote; a quote that never closes hides
+the rest of the message; runs of four or more digits (codes, postcodes, phone
+numbers) become `#`; the result is cut to 120 characters. So `Cannot read
+property 'wombat crossing' of undefined` is sent as `Cannot read property
+[redacted] of undefined`. Unquoted
 free text cannot be recognised in general, which is why the cap is short.
 `$exception_steps`, app state, screen sizes, locale, device model, `$set` and
 any property a caller adds are dropped. `tests/analytics-exceptions.test.ts`

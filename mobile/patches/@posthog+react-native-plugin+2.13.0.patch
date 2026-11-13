@@ -1,6 +1,6 @@
 --- a/node_modules/@posthog/react-native-plugin/ios/PosthogReactNativePlugin.swift
 +++ b/node_modules/@posthog/react-native-plugin/ios/PosthogReactNativePlugin.swift
-@@ -29,6 +29,246 @@
+@@ -29,6 +29,248 @@
  
  private let fatalCaptureErrorCode = "PosthogReactNativePluginFatalCaptureError"
  
@@ -20,13 +20,15 @@
 +
 +// The same pattern texts as MESSAGE_RULES in exceptions.ts, in the same order.
 +private let opaxMessageRules: [(NSRegularExpression?, String)] = [
++    (opaxRegex(#"[\u001C-\u001F\u0085\uFEFF]"#), " "),
 +    (opaxRegex(#"([a-z][a-z0-9+.-]*://)[^\s/?#@"'\x60<>]*@"#, .caseInsensitive), "$1"),
-+    (opaxRegex(#"((?:[a-z][a-z0-9+.-]*://)?(?<![\p{L}\p{N}_.-])(?:[a-z0-9-]+\.)*opax\.com\.au)(?![\p{L}\p{N}_-]|\.[\p{L}\p{N}_-])(?::[0-9]+)?[/?#][^\s"'\x60<>]*"#, .caseInsensitive), "$1"),
++    (opaxRegex(#"((?:[a-z][a-z0-9+.-]*://)?(?<![\p{L}\p{N}_.-])(?:[a-z0-9-]+\.)*opax\.com\.au)\.?(?![\p{L}\p{N}_-]|\.[\p{L}\p{N}_-])(?::[0-9]+)?[/?#][^\s"'\x60<>]*"#, .caseInsensitive), "$1"),
++    (opaxRegex(#"(?<![\p{L}\p{N}_.~:/-])(/(?!(?:Users|Applications|Library|System|Volumes|Developer|private|var|tmp|usr|opt|etc|home|root|mnt|data|storage|sdcard|apex|vendor|product|proc|dev|src|node_modules)(?![\p{L}\p{N}_.-]))(?:api/)?[^\s/?#"'\x60<>]+)[/?#][^\s"'\x60<>]*"#, .caseInsensitive), "$1"),
 +    (opaxRegex(#"(/[^\s?#"'\x60<>]*)[?#][^\s"'\x60<>]*"#), "$1"),
 +    (opaxRegex(#"\?[^\s"'\x60<>]*=[^\s"'\x60<>]*"#), ""),
 +    (opaxRegex(#"[\p{L}\p{N}._%+-]+@[\p{L}\p{N}-]+(?:\.[\p{L}\p{N}-]+)+"#), "[email]"),
-+    (opaxRegex(#"(?:"[^"\n]*"|“[^”\n]*”|„[^“”\n]*[“”]|”[^”\n]*”|‟[^”\n]*”|«[^»\n]*»|»[^«»\n]*[«»]|‹[^›\n]*›|›[^‹›\n]*[‹›]|「[^」\n]*」|『[^』\n]*』|〝[^〞〟\n]*[〞〟]|＂[^＂\n]*＂|″[^″\n]*″|\x60[^\x60\n]*\x60)|(?<![\p{L}\p{N}_])(?:'(?:[^'\n]|'(?=[\p{L}\p{N}_]))*'|‘(?:[^’\n]|’(?=[\p{L}\p{N}_]))*’|‚(?:[^‘’\n]|[‘’](?=[\p{L}\p{N}_]))*[‘’]|’(?:[^’\n]|’(?=[\p{L}\p{N}_]))*’|‛(?:[^’‛\n]|[’‛](?=[\p{L}\p{N}_]))*[’‛]|＇(?:[^＇\n]|＇(?=[\p{L}\p{N}_]))*＇|′(?:[^′\n]|′(?=[\p{L}\p{N}_]))*′)(?![\p{L}\p{N}_])"#), "[redacted]"),
-+    (opaxRegex(#"["“„”‟«»‹›「『〝＂″\x60][^\n]*|(?<![\p{L}\p{N}_])['‘‚’‛＇′][^\n]*"#), "[redacted]"),
++    (opaxRegex(#"(?:"[^"]*"|“[^”]*”|„[^“”]*[“”]|”[^”]*”|‟[^”]*”|«[^»]*»|»[^«»]*[«»]|‹[^›]*›|›[^‹›]*[‹›]|「[^」]*」|『[^』]*』|〝[^〞〟]*[〞〟]|＂[^＂]*＂|″[^″]*″|\x60[^\x60]*\x60)|(?:‘(?:[^’]|’(?=[\p{L}\p{N}_]))*’|‚(?:[^‘’]|[‘’](?=[\p{L}\p{N}_]))*[‘’]|‛(?:[^’‛]|[’‛](?=[\p{L}\p{N}_]))*[’‛])(?![\p{L}\p{N}_])|(?<![\p{L}\p{N}_])(?:'(?:[^']|'(?=[\p{L}\p{N}_]))*'|’(?:[^’]|’(?=[\p{L}\p{N}_]))*’|＇(?:[^＇]|＇(?=[\p{L}\p{N}_]))*＇|′(?:[^′]|′(?=[\p{L}\p{N}_]))*′)(?![\p{L}\p{N}_])"#), "[redacted]"),
++    (opaxRegex(#"["“„”‟«»‹›「『〝＂″\x60‘‚‛][\s\S]*|(?<![\p{L}\p{N}_])['’＇′][\s\S]*"#), "[redacted]"),
 +    (opaxRegex(#"\p{N}{4,}"#), "#"),
 +    (opaxRegex(#"\s+"#), " "),
 +]
@@ -247,7 +249,7 @@
  /// Holds the JS-approved properties for the thread on which the JS layer's own fatal capture
  /// is running, so `beforeSend` can tell that capture apart from a native re-report of the same
  /// crash — and can put back the values native's own enrichment would otherwise win.
-@@ -368,7 +608,8 @@
+@@ -368,7 +610,8 @@
                  hedgeLog("Failed to record the fatal JS marker state: \(error.localizedDescription)")
              }
          }
@@ -257,7 +259,7 @@
              // The JS layer's own fatal capture is the event we want; only native re-reports
              // of a crash JS already captured are duplicates. Matching the event name as well
              // as the thread-local keeps anything else posthog-ios emits on this thread during
-@@ -394,7 +635,7 @@
+@@ -394,7 +637,7 @@
                  event.distinctId = distinctId
              }
              return event
@@ -266,7 +268,7 @@
  
          // Surveys and session replay are iOS-only in posthog-ios, so the APIs below
          // don't exist on macOS. macOS gets error tracking only.
-@@ -457,6 +698,14 @@
+@@ -457,6 +700,14 @@
          // JS owns flags; it tells us when the native preload would be a duplicate. posthog-ios
          // has no remoteConfig switch to mirror — it deprecated the option and always loads.
          config.preloadFeatureFlags = sdkOptions["preloadFeatureFlags"] as? Bool ?? true
@@ -306,7 +308,7 @@
  
                // Always apply the session replay configuration so that recording started later
                // (e.g. startRecording or a linked feature flag) uses the right mode and masking;
-@@ -917,5 +926,242 @@
+@@ -917,5 +926,244 @@
    when (getString(map, "screenshotColorMode", "")) {
      "ARGB_8888" -> config.screenshotColorMode = PostHogScreenshotColorMode.ARGB_8888
      "RGB_565" -> config.screenshotColorMode = PostHogScreenshotColorMode.RGB_565
@@ -333,13 +335,15 @@
 +// The same pattern texts as MESSAGE_RULES in exceptions.ts, in the same order.
 +private val opaxMessageRules: List<Pair<Regex, String>> =
 +  listOf(
++    opaxRegex("""[\u001C-\u001F\u0085\uFEFF]""") to " ",
 +    opaxRegex("""([a-z][a-z0-9+.-]*://)[^\s/?#@"'\x60<>]*@""", ignoreCase = true) to "\$1",
-+    opaxRegex("""((?:[a-z][a-z0-9+.-]*://)?(?<![\p{L}\p{N}_.-])(?:[a-z0-9-]+\.)*opax\.com\.au)(?![\p{L}\p{N}_-]|\.[\p{L}\p{N}_-])(?::[0-9]+)?[/?#][^\s"'\x60<>]*""", ignoreCase = true) to "\$1",
++    opaxRegex("""((?:[a-z][a-z0-9+.-]*://)?(?<![\p{L}\p{N}_.-])(?:[a-z0-9-]+\.)*opax\.com\.au)\.?(?![\p{L}\p{N}_-]|\.[\p{L}\p{N}_-])(?::[0-9]+)?[/?#][^\s"'\x60<>]*""", ignoreCase = true) to "\$1",
++    opaxRegex("""(?<![\p{L}\p{N}_.~:/-])(/(?!(?:Users|Applications|Library|System|Volumes|Developer|private|var|tmp|usr|opt|etc|home|root|mnt|data|storage|sdcard|apex|vendor|product|proc|dev|src|node_modules)(?![\p{L}\p{N}_.-]))(?:api/)?[^\s/?#"'\x60<>]+)[/?#][^\s"'\x60<>]*""", ignoreCase = true) to "\$1",
 +    opaxRegex("""(/[^\s?#"'\x60<>]*)[?#][^\s"'\x60<>]*""") to "\$1",
 +    opaxRegex("""\?[^\s"'\x60<>]*=[^\s"'\x60<>]*""") to "",
 +    opaxRegex("""[\p{L}\p{N}._%+-]+@[\p{L}\p{N}-]+(?:\.[\p{L}\p{N}-]+)+""") to "[email]",
-+    opaxRegex("""(?:"[^"\n]*"|“[^”\n]*”|„[^“”\n]*[“”]|”[^”\n]*”|‟[^”\n]*”|«[^»\n]*»|»[^«»\n]*[«»]|‹[^›\n]*›|›[^‹›\n]*[‹›]|「[^」\n]*」|『[^』\n]*』|〝[^〞〟\n]*[〞〟]|＂[^＂\n]*＂|″[^″\n]*″|\x60[^\x60\n]*\x60)|(?<![\p{L}\p{N}_])(?:'(?:[^'\n]|'(?=[\p{L}\p{N}_]))*'|‘(?:[^’\n]|’(?=[\p{L}\p{N}_]))*’|‚(?:[^‘’\n]|[‘’](?=[\p{L}\p{N}_]))*[‘’]|’(?:[^’\n]|’(?=[\p{L}\p{N}_]))*’|‛(?:[^’‛\n]|[’‛](?=[\p{L}\p{N}_]))*[’‛]|＇(?:[^＇\n]|＇(?=[\p{L}\p{N}_]))*＇|′(?:[^′\n]|′(?=[\p{L}\p{N}_]))*′)(?![\p{L}\p{N}_])""") to "[redacted]",
-+    opaxRegex("""["“„”‟«»‹›「『〝＂″\x60][^\n]*|(?<![\p{L}\p{N}_])['‘‚’‛＇′][^\n]*""") to "[redacted]",
++    opaxRegex("""(?:"[^"]*"|“[^”]*”|„[^“”]*[“”]|”[^”]*”|‟[^”]*”|«[^»]*»|»[^«»]*[«»]|‹[^›]*›|›[^‹›]*[‹›]|「[^」]*」|『[^』]*』|〝[^〞〟]*[〞〟]|＂[^＂]*＂|″[^″]*″|\x60[^\x60]*\x60)|(?:‘(?:[^’]|’(?=[\p{L}\p{N}_]))*’|‚(?:[^‘’]|[‘’](?=[\p{L}\p{N}_]))*[‘’]|‛(?:[^’‛]|[’‛](?=[\p{L}\p{N}_]))*[’‛])(?![\p{L}\p{N}_])|(?<![\p{L}\p{N}_])(?:'(?:[^']|'(?=[\p{L}\p{N}_]))*'|’(?:[^’]|’(?=[\p{L}\p{N}_]))*’|＇(?:[^＇]|＇(?=[\p{L}\p{N}_]))*＇|′(?:[^′]|′(?=[\p{L}\p{N}_]))*′)(?![\p{L}\p{N}_])""") to "[redacted]",
++    opaxRegex("""["“„”‟«»‹›「『〝＂″\x60‘‚‛][\s\S]*|(?<![\p{L}\p{N}_])['’＇′][\s\S]*""") to "[redacted]",
 +    opaxRegex("""\p{N}{4,}""") to "#",
 +    opaxRegex("""\s+""") to " ",
 +  )

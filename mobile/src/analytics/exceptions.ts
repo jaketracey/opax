@@ -28,15 +28,30 @@ const MAX_IMAGES = 500;
  * The Swift and Kotlin copies in the plugin patch use these exact pattern
  * texts (tests/analytics-exceptions.test.ts compares them), so they are
  * written for JavaScript's `u` flag and for ICU, which runs NSRegularExpression
- * and Android's java.util.regex: `\x60` is a backtick.
+ * and Android's java.util.regex: `\x60` is a backtick, and characters are
+ * written `\uFEFF`, which all three read the same way.
  */
 export const MESSAGE_RULES: readonly (readonly [string, boolean, string])[] = [
+  // Spaces the three engines disagree on: JavaScript's \s takes U+FEFF and
+  // not U+0085, ICU's the reverse, and Kotlin's trim() also strips U+001C to
+  // U+001F. All become a plain space first, so every copy cuts the same text.
+  [String.raw`[\u001C-\u001F\u0085\uFEFF]`, false, ' '],
   // A URL's user name and password.
   [String.raw`([a-z][a-z0-9+.-]*://)[^\s/?#@"'\x60<>]*@`, true, '$1'],
-  // An OPAX URL keeps its host only: its paths can carry what a reader
-  // searched or asked.
+  // An OPAX URL keeps its host only (without a trailing dot): its paths can
+  // carry what a reader searched or asked.
   [
-    String.raw`((?:[a-z][a-z0-9+.-]*://)?(?<![\p{L}\p{N}_.-])(?:[a-z0-9-]+\.)*opax\.com\.au)(?![\p{L}\p{N}_-]|\.[\p{L}\p{N}_-])(?::[0-9]+)?[/?#][^\s"'\x60<>]*`,
+    String.raw`((?:[a-z][a-z0-9+.-]*://)?(?<![\p{L}\p{N}_.-])(?:[a-z0-9-]+\.)*opax\.com\.au)\.?(?![\p{L}\p{N}_-]|\.[\p{L}\p{N}_-])(?::[0-9]+)?[/?#][^\s"'\x60<>]*`,
+    true,
+    '$1',
+  ],
+  // A path with no host in front ("/ask/…", "/api/search/…") keeps its first
+  // segment, or "/api/<endpoint>": app routes and API paths carry record
+  // keys and typed text after that. File paths under a filesystem root
+  // ("/src/…", "/Users/…", "/private/var/…", "/data/…") stay whole, so stack
+  // locations stay readable.
+  [
+    String.raw`(?<![\p{L}\p{N}_.~:/-])(/(?!(?:Users|Applications|Library|System|Volumes|Developer|private|var|tmp|usr|opt|etc|home|root|mnt|data|storage|sdcard|apex|vendor|product|proc|dev|src|node_modules)(?![\p{L}\p{N}_.-]))(?:api/)?[^\s/?#"'\x60<>]+)[/?#][^\s"'\x60<>]*`,
     true,
     '$1',
   ],
@@ -49,18 +64,19 @@ export const MESSAGE_RULES: readonly (readonly [string, boolean, string])[] = [
     false,
     '[email]',
   ],
-  // Quoted strings. Double quotes, guillemets, corner brackets and backticks
-  // open anywhere (x"text"); single quotes and primes only after a space or
-  // punctuation, and an apostrophe followed by a letter (O'Brien, it's) does
-  // not close them.
+  // Quoted strings, across lines. Double quotes, guillemets, corner
+  // brackets, backticks and the opening single quotes ‘ ‚ ‛ open anywhere
+  // (x"text", x‘text’); ' ’ ＇ and primes only after a space or punctuation.
+  // A single quote followed by a letter is an apostrophe (O'Brien, it’s) and
+  // does not close the quote.
   [
-    String.raw`(?:"[^"\n]*"|“[^”\n]*”|„[^“”\n]*[“”]|”[^”\n]*”|‟[^”\n]*”|«[^»\n]*»|»[^«»\n]*[«»]|‹[^›\n]*›|›[^‹›\n]*[‹›]|「[^」\n]*」|『[^』\n]*』|〝[^〞〟\n]*[〞〟]|＂[^＂\n]*＂|″[^″\n]*″|\x60[^\x60\n]*\x60)|(?<![\p{L}\p{N}_])(?:'(?:[^'\n]|'(?=[\p{L}\p{N}_]))*'|‘(?:[^’\n]|’(?=[\p{L}\p{N}_]))*’|‚(?:[^‘’\n]|[‘’](?=[\p{L}\p{N}_]))*[‘’]|’(?:[^’\n]|’(?=[\p{L}\p{N}_]))*’|‛(?:[^’‛\n]|[’‛](?=[\p{L}\p{N}_]))*[’‛]|＇(?:[^＇\n]|＇(?=[\p{L}\p{N}_]))*＇|′(?:[^′\n]|′(?=[\p{L}\p{N}_]))*′)(?![\p{L}\p{N}_])`,
+    String.raw`(?:"[^"]*"|“[^”]*”|„[^“”]*[“”]|”[^”]*”|‟[^”]*”|«[^»]*»|»[^«»]*[«»]|‹[^›]*›|›[^‹›]*[‹›]|「[^」]*」|『[^』]*』|〝[^〞〟]*[〞〟]|＂[^＂]*＂|″[^″]*″|\x60[^\x60]*\x60)|(?:‘(?:[^’]|’(?=[\p{L}\p{N}_]))*’|‚(?:[^‘’]|[‘’](?=[\p{L}\p{N}_]))*[‘’]|‛(?:[^’‛]|[’‛](?=[\p{L}\p{N}_]))*[’‛])(?![\p{L}\p{N}_])|(?<![\p{L}\p{N}_])(?:'(?:[^']|'(?=[\p{L}\p{N}_]))*'|’(?:[^’]|’(?=[\p{L}\p{N}_]))*’|＇(?:[^＇]|＇(?=[\p{L}\p{N}_]))*＇|′(?:[^′]|′(?=[\p{L}\p{N}_]))*′)(?![\p{L}\p{N}_])`,
     false,
     '[redacted]',
   ],
-  // A quote that never closes hides the rest of its line.
+  // A quote that never closes hides the rest of the message.
   [
-    String.raw`["“„”‟«»‹›「『〝＂″\x60][^\n]*|(?<![\p{L}\p{N}_])['‘‚’‛＇′][^\n]*`,
+    String.raw`["“„”‟«»‹›「『〝＂″\x60‘‚‛][\s\S]*|(?<![\p{L}\p{N}_])['’＇′][\s\S]*`,
     false,
     '[redacted]',
   ],

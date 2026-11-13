@@ -12,7 +12,7 @@ its builds carry no analytics config, so the plugin never starts.
    `node_modules/@posthog/react-native-plugin/android/src/main/java/com/posthogreactnativeplugin/PosthogReactNativePluginModule.kt`
    compiled on the desktop at e67abf027; round 3 rewrote its scrub rules and
    added `preloadFeatureFlags = false` and `setDefaultPersonProperties = false`
-   to the SDK setup. Watch `opaxScrubNativeEvent`, its
+   to the SDK setup, and round 4 changed the rule texts again. Watch `opaxScrubNativeEvent`, its
    `event.copy(properties = clean, set = null)` call and the two config
    properties against posthog-android 3.74.2 (core 6.47.8). A compile error
    there fails `:app:bundleRelease`.
