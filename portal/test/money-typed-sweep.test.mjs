@@ -188,7 +188,7 @@ test('person page ties: the exporter\'s Python copy of the rule matches receiptF
     const f = receiptFigures(row), [, total, count, firstYear, lastYear, typed] = py.figures[i];
     assert.deepEqual([Math.round(total), count, firstYear, lastYear, typed], [Math.round(f.total), f.count, f.firstYear, f.lastYear, f.typed], py.figures[i][0]);
   });
-  assert.deepEqual(py.pratt.find(f => f.party === 'Liberal'), {party: 'Liberal', total: PRATT_LIBERAL, from: 1998, to: 2024});
+  assert.deepEqual(py.pratt.find(f => f.party === 'Liberal'), {party: 'Liberal', total: PRATT_LIBERAL, from: 1998, to: 2024, typed: true});
   assert.equal(py.westpac.find(f => f.party === 'Labor').total, WESTPAC_LABOR);
   const onlyDonor = published.edges.filter(e => e.source.startsWith('donor:') && !e.flow && !e.grant && e.by_type && !Object.keys(e.by_type).length);
   assert.ok(onlyDonor.length > 0);
@@ -321,4 +321,68 @@ test('words per dollar: each industry panel sums the typed flows by party, with 
   runInNewContext(`${source.slice(fn.getStart(ast), fn.end)}\nthis.buildPanel=buildPanel;`, context);
   const panel = context.buildPanel({topic: 'banking', industries: ['finance']}, {parties: [], cells: {}, totals: {}}, receiptGraph(published));
   assert.equal(Math.round(panel.rows.find(r => r.party === 'Labor').money), Math.round(industrySums('finance').toLabor));
+});
+
+// ---- Scope lines where the figure is shown (round 2) ---------------------------
+import {researchReceiptScope} from '../public/map-research.js';
+import {TEMPLATES, createRng} from '../public/quiz.js';
+
+test('the shared scope label names the map\'s Donation-only measure, and register-tables keeps financialYear in scope', async () => {
+  assert.equal(receiptScopeLabel({typed: true, firstYear: 2020, lastYear: 2022}), 'All receipt types, 2020-21 to 2022-23, as the parties reported them in federal returns');
+  assert.equal(receiptScopeLabel({typed: true, firstYear: 2020, lastYear: 2022}, 'donation_only'), 'Donations only, 2020-21 to 2022-23, as the parties reported them in federal returns');
+  const source = await readFile(new URL('../public/register-tables.js', import.meta.url), 'utf8');
+  assert.match(source, /^import \{donorDisclosure, financialYear, receiptFigures, receiptScopeLabel\} from '\.\/donor-disclosure\.js\?v=/m);
+});
+
+test('journeys: each step with a receipt figure carries the scope line; a dated window names its own years; state graphs get none', async () => {
+  const allianz = buildMoneyJourneys(published, {'multiple-parties': 'donor:allianz australia'}).find(j => j.id === 'multiple-parties');
+  assert.equal(allianz.selection, 'donor:allianz australia');
+  const [count, largest, next, side] = allianz.steps;
+  assert.equal(count.scope, undefined, 'a count of parties is not a receipt figure');
+  const labor = receiptGraph(published).edges.find(e => e.source === 'donor:allianz australia' && e.target === 'party:Labor' && !e.flow && !e.grant);
+  assert.equal(largest.scope, receiptScopeLabel({typed: true, firstYear: labor.firstYear, lastYear: labor.lastYear}));
+  assert.ok(next.scope && side.scope && side.breakdown.length, 'the next link and the side-by-side chart say what they count');
+  const time = buildMoneyJourneys(published).find(j => j.id === 'over-time');
+  const pickedTime = buildMoneyJourneys(published, {'over-time': time.choices[0].value}).find(j => j.id === 'over-time');
+  const [earlier, later, change] = pickedTime.steps;
+  assert.equal(earlier.scope, receiptScopeLabel({typed: true, firstYear: earlier.scene.from, lastYear: earlier.scene.to}));
+  assert.equal(later.scope, receiptScopeLabel({typed: true, firstYear: later.scene.from, lastYear: later.scene.to}));
+  assert.equal(change.scope, receiptScopeLabel({typed: true, firstYear: earlier.scene.from, lastYear: later.scene.to}));
+  const qld = await readPublic('/graph/money.qld.json');
+  assert.ok(buildMoneyJourneys(qld).every(j => j.steps.every(s => s.scope === undefined)));
+  const ui = await readFile(new URL('../public/money-journeys.js', import.meta.url), 'utf8');
+  assert.ok(ui.includes('${current.scope ? `<p class="journey-scope">${esc(current.scope)}</p>` : \'\'}'));
+});
+
+test('map research: the records table says what its receipt figures count, for the window and measure the map hands over', () => {
+  // The map's own reading of the file (graph/index.ts receiptGraphView): typed edges keep
+  // by_type, and their years are the selected window's.
+  const view = {nodes: published.nodes, edges: published.edges.filter(e => e.source === PRATT).map(e => e.flow || e.grant ? e : {...e, firstYear: 2019, lastYear: 2022})};
+  assert.equal(researchReceiptScope(view, 'https://opax.com.au/money?from=2019&to=2022'), 'Receipts: All receipt types, 2019-20 to 2022-23, as the parties reported them in federal returns.');
+  assert.equal(researchReceiptScope(view, 'https://opax.com.au/money?receipt=donations'), 'Receipts: Donations only, 2019-20 to 2022-23, as the parties reported them in federal returns.');
+  assert.equal(researchReceiptScope({nodes: [], edges: [{source: 'donor:x', target: 'party:y', total: 5, count: 1, byYear: {2020: [5, 1]}}]}, 'https://opax.com.au/money'), '', 'a state graph has no typed cells');
+});
+
+test('quiz: donor and industry answers carry the scope line in the reveal; party questions do not', async () => {
+  const ctx = makeQuizContext({money: published});
+  assert.equal(ctx.receiptScope, SCOPE);
+  const typed = ['money-industry-most', 'money-industry-magnitude', 'money-party-from-industry', 'money-donor-higher-lower', 'money-donor-order', 'money-donor-figure'];
+  for (const id of typed) {
+    const q = TEMPLATES.find(t => t.id === id).build(ctx, createRng(7));
+    assert.ok(q, id);
+    assert.equal(q.scope, SCOPE, id);
+  }
+  const party = TEMPLATES.find(t => t.id === 'money-party-peak-year').build(ctx, createRng(7));
+  assert.ok(party && party.scope === undefined, 'party totals are a different measure');
+  assert.equal(makeQuizContext({money: await readPublic('/graph/money.qld.json')}).receiptScope, '');
+  const source = await readFile(new URL('../public/quiz.js', import.meta.url), 'utf8');
+  assert.ok(source.includes('"Source: " + q.source + ". " + (q.scope ? q.scope + ". " : "")'));
+});
+
+test('person page ties: the scope line shows once the exporter marks the flows typed, and the note follows it', async () => {
+  const source = await readFile(new URL('../public/app.js', import.meta.url), 'utf8');
+  assert.ok(source.includes('const tieScope = tieFlows.length && tieFlows.every((f) => f.typed) ? registerTables.receiptScopeLabel({'));
+  assert.ok(source.includes('${tieScope ? `<p class="entry-scope">Receipts: ${esc(tieScope)}.</p>` : ""}'));
+  const py = await readFile(new URL('../../scripts/export_interests.py', import.meta.url), 'utf8');
+  assert.ok(py.includes('**({"typed": True} if figures["typed"] else {}),'));
 });

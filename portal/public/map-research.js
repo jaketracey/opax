@@ -1,7 +1,26 @@
 import { readMoneyFilters } from './money-records.js?v=ia-ux-20260908-2';
 import {mountDataTable, guardTableURL} from './datatable.js?v=893767f2bd';
-import {prepareMoneyConnectionsConfig} from './money-connections.js?v=16d5568577';
+import {prepareMoneyConnectionsConfig} from './money-connections.js?v=cf2704a34e';
+import {receiptScopeLabel} from './donor-disclosure.js?v=b601705758';
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/**
+ * What the table's receipt figures count, in the party page's words (receiptScopeLabel).
+ * The map hands over its own reading of the file: typed edges keep by_type, their years
+ * are the selected window's, and the Donation-only measure is in the URL (receipt=donations).
+ * A graph without typed cells (the state graphs) gets no line.
+ */
+export function researchReceiptScope(graph, url = location.href) {
+  let typed = false, firstYear = null, lastYear = null;
+  for (const e of graph?.edges || []) {
+    if (e.grant || e.flow || !e.by_type || !(e.total > 0 || e.count > 0)) continue;
+    typed = true;
+    if (Number.isFinite(e.firstYear)) firstYear = firstYear === null ? e.firstYear : Math.min(firstYear, e.firstYear);
+    if (Number.isFinite(e.lastYear)) lastYear = lastYear === null ? e.lastYear : Math.max(lastYear, e.lastYear);
+  }
+  if (!typed) return '';
+  const measure = new URL(url).searchParams.get('receipt') === 'donations' ? 'donation_only' : 'all_types';
+  return `Receipts: ${receiptScopeLabel({typed, firstYear, lastYear}, measure)}.`;
+}
 export async function mountMapResearch(container, data, options = {}) {
   const cancelled=()=>options.signal?.aborted || options.isCurrent?.() === false;
   if(cancelled())return null;
@@ -14,10 +33,10 @@ export async function mountMapResearch(container, data, options = {}) {
   const partyOptions = data.nodes.filter(n=>n.kind==='party').sort((a,b)=>a.label.localeCompare(b.label));
   const industries = [...new Set(data.nodes.filter(n=>n.kind==='donor').map(n=>n.group).filter(Boolean))].sort();
   const resultsHost = options.resultsContainer || container;
-  container.innerHTML=`<details class="research-filters" name="money-tools"><summary>Filters</summary><div class="research-filter-panel"><form class="research-controls" aria-label="Map research filters" data-ui-size="compact"><label>Name<input class="ui-input" name="query" type="search" placeholder="Find an organisation or party" maxlength="200"></label><label>Type<select class="ui-input" name="type"><option value="all">All types</option><option value="receipts">Political receipts</option><option value="contracts">Government contracts</option><option value="grants">Grants</option></select></label><label>Industry<select class="ui-input" name="industry"><option value="">All industries</option>${industries.map(g=>`<option value="${esc(g)}">${esc(g[0].toUpperCase()+g.slice(1))}</option>`).join('')}</select></label><label>Recipient party<select class="ui-input" name="party"><option value="">All parties</option>${partyOptions.map(n=>`<option value="${esc(n.id)}">${esc(n.label)}</option>`).join('')}</select></label><label>Minimum connection<select class="ui-input" name="min"><option value="0">Any value</option><option value="100000">$100,000</option><option value="1000000">$1 million</option><option value="10000000">$10 million</option></select></label><button class="ui-button" data-variant="quiet" type="reset">Reset</button><button class="ui-button" data-variant="primary" type="submit">Apply</button></form><p class="fineprint">Use the year controls inside the map to compare periods. A party filter selects political receipts. Values stay separate for each kind of record; undated amounts remain included. Entity cards show their full totals for the selected years.</p></div></details><button class="ui-button" data-ui-size="compact" type="button" data-records aria-expanded="false">List</button><section class="research-records" aria-labelledby="money-connections-heading" hidden><h2 id="money-connections-heading">Connections matching the map filters</h2><p class="fineprint mc-explainer">Aggregated connections for the map’s selected years; open an entity for its records.</p><p class="research-period fineprint" role="status"></p><div class="money-connections-table"></div></section>`;
+  container.innerHTML=`<details class="research-filters" name="money-tools"><summary>Filters</summary><div class="research-filter-panel"><form class="research-controls" aria-label="Map research filters" data-ui-size="compact"><label>Name<input class="ui-input" name="query" type="search" placeholder="Find an organisation or party" maxlength="200"></label><label>Type<select class="ui-input" name="type"><option value="all">All types</option><option value="receipts">Political receipts</option><option value="contracts">Government contracts</option><option value="grants">Grants</option></select></label><label>Industry<select class="ui-input" name="industry"><option value="">All industries</option>${industries.map(g=>`<option value="${esc(g)}">${esc(g[0].toUpperCase()+g.slice(1))}</option>`).join('')}</select></label><label>Recipient party<select class="ui-input" name="party"><option value="">All parties</option>${partyOptions.map(n=>`<option value="${esc(n.id)}">${esc(n.label)}</option>`).join('')}</select></label><label>Minimum connection<select class="ui-input" name="min"><option value="0">Any value</option><option value="100000">$100,000</option><option value="1000000">$1 million</option><option value="10000000">$10 million</option></select></label><button class="ui-button" data-variant="quiet" type="reset">Reset</button><button class="ui-button" data-variant="primary" type="submit">Apply</button></form><p class="fineprint">Use the year controls inside the map to compare periods. A party filter selects political receipts. Values stay separate for each kind of record; undated amounts remain included. Entity cards show their full totals for the selected years.</p></div></details><button class="ui-button" data-ui-size="compact" type="button" data-records aria-expanded="false">List</button><section class="research-records" aria-labelledby="money-connections-heading" hidden><h2 id="money-connections-heading">Connections matching the map filters</h2><p class="fineprint mc-explainer">Aggregated connections for the map’s selected years; open an entity for its records.</p><p class="research-scope fineprint" hidden></p><p class="research-period fineprint" role="status"></p><div class="money-connections-table"></div></section>`;
   const records=container.querySelector('.research-records');
   if (resultsHost !== container) resultsHost.replaceChildren(records);
-  const form=container.querySelector('form'), period=records.querySelector('.research-period'), tableHost=records.querySelector('.money-connections-table');
+  const form=container.querySelector('form'), period=records.querySelector('.research-period'), scopeLine=records.querySelector('.research-scope'), tableHost=records.querySelector('.money-connections-table');
   for(const href of ['/money-connections.css?v=dt-money-2','/datatable.css']) {
     if(!document.querySelector(`link[href="${href}"]`)){const link=document.createElement('link');link.rel='stylesheet';link.href=href;document.head.append(link);}
   }
@@ -46,6 +65,7 @@ export async function mountMapResearch(container, data, options = {}) {
     if(destroyed)return;
     current=graph; filters={...nextFilters};controls();
     period.textContent=years?`${years.from}–${years.to}${years.cpi?' · Inflation adjusted':' · Nominal values'}`:'Available years';
+    scopeLine.textContent=researchReceiptScope(graph);scopeLine.hidden=!scopeLine.textContent;
     renderRows();
   }
   async function apply(){

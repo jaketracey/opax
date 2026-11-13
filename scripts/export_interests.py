@@ -283,6 +283,8 @@ def load_tie_registers(money_path, access_path, fits_path):
             "total": round(figures["total"]),
             "from": figures["firstYear"],
             "to": figures["lastYear"],
+            # The person page prints the party page's scope line only for typed flows.
+            **({"typed": True} if figures["typed"] else {}),
         })
     for source in edges:
         edges[source].sort(key=lambda x: (-x["total"], x["party"]))

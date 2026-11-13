@@ -1,5 +1,5 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph} from './donor-disclosure.js?v=2e8209b6ec';
-import {loadDonorViewIndex} from './donor-views.js?v=a3bd4b7d12';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptScopeLabel} from './donor-disclosure.js?v=b601705758';
+import {loadDonorViewIndex} from './donor-views.js?v=914db51bc1';
 /** Guided views derived only from exported graph relationships and year cells. */
 const EXCLUDED_INDUSTRIES = new Set(['individual', 'individuals', 'unions', 'party_internal', 'government', 'other', 'unidentified']);
 const COMPANY_WORD = /\b(?:pty|ltd|limited|corporation|corp|bank|banking|group|holdings|plc)\b/i;
@@ -18,6 +18,16 @@ const companyLike = node => node.kind === 'donor' && typeof node.industry === 's
 const donorLink = node => ({ label: `Open ${node.label}`, href: `/subject/donor/${encodeURIComponent(node.label)}` });
 const scene = (focusId, nodes, edges, dates = {}) => ({ focusId, withIds: unique(nodes), edges: pairs(edges), ...dates });
 const rankedEdges = edges => [...edges].sort((a, b) => b.total - a.total || a.target.localeCompare(b.target, 'en'));
+// What a step's receipt figures count (receiptScopeLabel, the party page's line), shown
+// under the figure. A dated window names its own years; a graph without typed cells
+// (the state graphs) gets none.
+function receiptScope(edges, window) {
+  const receipts = edges.filter(e => !e.grant && !e.flow);
+  if (!receipts.length || !receipts.every(e => e.typed)) return {};
+  const firsts = receipts.map(e => e.firstYear).filter(finite), lasts = receipts.map(e => e.lastYear).filter(finite);
+  const [firstYear, lastYear] = window ? [window.from, window.to] : [firsts.length ? Math.min(...firsts) : null, lasts.length ? Math.max(...lasts) : null];
+  return { scope: receiptScopeLabel({ typed: true, firstYear, lastYear }) };
+}
 
 function dataView(data) {
   const nodes = new Map();
@@ -76,7 +86,7 @@ function publicMoneyJourney(view, requested) {
     steps: [
       { title: `Start at ${hub.label}`, body: `Follow the line to ${donor.label}. It shows recorded ${noun}, not payments.`, metric: metric(`Recorded ${noun}`, edge.total), scene: scene(hub.id, [donor.id], [edge]) },
       { title: `Meet ${donor.label}`, body: 'This organisation also appears in the disclosed receipts record. Open its profile to inspect the connection and supporting records.', scene: scene(donor.id, [hub.id], [edge]), links },
-      { title: 'Now follow the party receipts', body: `Now follow its ${giving.length} party connections. These receipts cover a different set of records and years from the awards.`, metric: metric('Receipts on the links shown', recorded), scene: scene(donor.id, parties, giving) },
+      { title: 'Now follow the party receipts', body: `Now follow its ${giving.length} party connections. These receipts cover a different set of records and years from the awards.`, metric: metric('Receipts on the links shown', recorded), ...receiptScope(giving), scene: scene(donor.id, parties, giving) },
       { title: 'Keep the two directions separate', body: 'Awards come in; party receipts go out. These are separate flows. A connection does not establish that one funded the other or bought influence.', scene: scene(donor.id, [hub.id, ...parties], [edge, ...giving]), links },
     ],
   };
@@ -97,9 +107,9 @@ function multiplePartiesJourney(view, requested) {
     ...base,
     steps: [
       { title: `Start with ${donor.label}`, body: `Several parties disclosed receipts from it. Start with the ${shown.length} largest connections shown here.`, metric: metric('Parties linked in this record', all.length, 'number'), scene: scene(donor.id, shown.map(e => e.target), shown), links: [donorLink(donor)] },
-      { title: `Its largest link: ${view.nodes.get(first.target).label}`, body: 'This is its largest recorded party connection across the years covered by the map.', metric: metric('Recorded receipts', first.total), scene: scene(first.target, [donor.id], [first]) },
-      { title: `There is also ${view.nodes.get(second.target).label}`, body: 'The next-largest connection leads somewhere else. A single headline total would miss this part of the picture.', metric: metric('Recorded receipts', second.total), scene: scene(second.target, [donor.id], [second]) },
-      { title: 'Put the destinations side by side', body: `Compare the ${shown.length} largest connections. Smaller or undisclosed receipts may be missing from the map.`, breakdown: shown.map(edge => ({ label: view.nodes.get(edge.target).label, value: edge.total, colour: view.nodes.get(edge.target).colour || "var(--party-oth)" })), scene: scene(donor.id, shown.map(e => e.target), shown), links: [donorLink(donor)] },
+      { title: `Its largest link: ${view.nodes.get(first.target).label}`, body: 'This is its largest recorded party connection across the years covered by the map.', metric: metric('Recorded receipts', first.total), ...receiptScope([first]), scene: scene(first.target, [donor.id], [first]) },
+      { title: `There is also ${view.nodes.get(second.target).label}`, body: 'The next-largest connection leads somewhere else. A single headline total would miss this part of the picture.', metric: metric('Recorded receipts', second.total), ...receiptScope([second]), scene: scene(second.target, [donor.id], [second]) },
+      { title: 'Put the destinations side by side', body: `Compare the ${shown.length} largest connections. Smaller or undisclosed receipts may be missing from the map.`, breakdown: shown.map(edge => ({ label: view.nodes.get(edge.target).label, value: edge.total, colour: view.nodes.get(edge.target).colour || "var(--party-oth)" })), ...receiptScope(shown), scene: scene(donor.id, shown.map(e => e.target), shown), links: [donorLink(donor)] },
     ],
   };
 }
@@ -172,9 +182,9 @@ function timeJourney(view, requested) {
   return {
     ...base,
     steps: [
-      { title: `Earlier: ${label(earlier)}`, body: `${node.label}, in the earlier window. Years mark the start of a financial year, or the year of an election return.`, metric: metric('Receipts in this window', item.before), scene: scene(node.id, beforeEdges.map(e => e.target), beforeEdges, earlier) },
-      { title: `Later: ${label(later)}`, body: 'Watch the same organisation in a later window of equal length. Only receipts dated within this window count.', metric: metric('Receipts in this window', item.after), scene: scene(node.id, afterEdges.map(e => e.target), afterEdges, later) },
-      { title: 'What changed in the disclosed record?', body: `The later window records ${item.after >= item.before ? "more" : "less"}. This is a change in disclosed receipts; reporting coverage can also change between years.`, metric: metric('Difference between the windows', Math.abs(item.after - item.before)), scene: scene(node.id, all.map(e => e.target), all, { from: earlier.from, to: later.to }), links: [donorLink(node)] },
+      { title: `Earlier: ${label(earlier)}`, body: `${node.label}, in the earlier window. Years mark the start of a financial year, or the year of an election return.`, metric: metric('Receipts in this window', item.before), ...receiptScope(beforeEdges, earlier), scene: scene(node.id, beforeEdges.map(e => e.target), beforeEdges, earlier) },
+      { title: `Later: ${label(later)}`, body: 'Watch the same organisation in a later window of equal length. Only receipts dated within this window count.', metric: metric('Receipts in this window', item.after), ...receiptScope(afterEdges, later), scene: scene(node.id, afterEdges.map(e => e.target), afterEdges, later) },
+      { title: 'What changed in the disclosed record?', body: `The later window records ${item.after >= item.before ? "more" : "less"}. This is a change in disclosed receipts; reporting coverage can also change between years.`, metric: metric('Difference between the windows', Math.abs(item.after - item.before)), ...receiptScope(all, { from: earlier.from, to: later.to }), scene: scene(node.id, all.map(e => e.target), all, { from: earlier.from, to: later.to }), links: [donorLink(node)] },
     ],
   };
 }
