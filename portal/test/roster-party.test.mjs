@@ -114,6 +114,8 @@ test('the person page reads the same fallback, only for a record with no party o
   // The dated official-list fallback: a full name only, never a single-name print, dated on the page.
   assert.match(app, /const listFallback = !partyNow && !roster\?\.party && \/\\S\\s\+\\S\/\.test\(String\(roster\?\.name \|\| ""\)\);/);
   assert.match(app, /electorateReference\.module\.rosterListParty\?\.\(roster, rosterLists\.observations\)/);
+  // The chip in the meta line is dated too, not only the source-details panel.
+  assert.match(app, /seatParty \? `<span>parliamentary roster as at \$\{esc\(fmtDate\(seatParty\.as_of\)\)\}<\/span>` : "",/);
   assert.match(app, /\["Party", esc\(`\$\{seatParty\.party\} \(parliamentary roster as at \$\{fmtDate\(seatParty\.as_of\)\}\)`\)\]/);
 });
 

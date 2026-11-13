@@ -6288,6 +6288,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // sheet under this line.
   subjectTag(body).innerHTML = [
     party ? partyChipHTML(party, { full: true }) : "",
+    // A roster party is dated beside the chip, as the server's person answer dates it.
+    seatParty ? `<span>parliamentary roster as at ${esc(fmtDate(seatParty.as_of))}</span>` : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
     electorateLinks ? `<span>${seatWord}${electorateLinks}</span>` : "",
     representation.chambers.length ? `<span>${esc(representation.chambers.join(" · "))}</span>` : "",
