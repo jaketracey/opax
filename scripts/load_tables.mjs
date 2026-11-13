@@ -7,7 +7,7 @@ import {TABLE_DATASETS} from '../portal/src/table-datasets.mjs';
 import {tableSchema,tableName,quote,arrayColumns} from './table-schema.mjs';
 import {moneyFlowType} from '../portal/public/money-records.js';
 import {instrumentTableRows} from '../portal/public/instruments.js';
-import {categoryMembers} from '../portal/public/register-tables.js';
+import {categoryMembers,receiptFigures} from '../portal/public/register-tables.js';
 import {interestHolder} from '../portal/public/interest-holder.js';
 import {donorDisclosure} from '../portal/public/donor-disclosure.js';
 import {contractTitle, placeholderContract, ausTenderURL} from '../portal/public/contracts-table.js';
@@ -40,10 +40,17 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
     const jurisdiction = ['federal','qld','vic','tas'][g], nodes = new Map(graph.nodes.map(n=>[n.id,n]));
     for (const [i,edge] of graph.edges.entries()) {
       const type = moneyFlowType(edge,nodes);if (!type) continue;
+      // A receipt counts once, from the party's own return (receiptFigures), as the party page,
+      // /api/register/party-money and the map card count it: the legacy total/count/byYear also
+      // hold the donor's own declaration of the same gift. A typed edge with no receipts on the
+      // party's returns is left out, as the page leaves it out. Graphs without typed cells (the
+      // state graphs) and contract or grant edges keep their figures.
+      const figures = type==='receipts' ? receiptFigures(edge) : null;
+      if (figures?.typed && figures.count <= 0 && figures.total === 0) continue;
       const from = nodes.get(edge.source),to = nodes.get(edge.target);
       const donors = [from,to].filter(n=>n.kind==='donor');
       const identity=donors[0] ? donorDisclosure(donors[0]) : null;
-      const row = {return_reference:identity?.reference || '',from_href:from.kind==='donor' ? donorDisclosure(from).href : from.profileUrl || '',to_href:to.kind==='donor' ? donorDisclosure(to).href : to.profileUrl || '',id:`${jurisdiction}:${i}`,from:from.label,to:to.label,type,jurisdiction,industry:donors[0]?.industry || '',amount:edge.total,count:edge.count ?? 0,firstYear:edge.firstYear ?? null,lastYear:edge.lastYear ?? null};
+      const row = {return_reference:identity?.reference || '',from_href:from.kind==='donor' ? donorDisclosure(from).href : from.profileUrl || '',to_href:to.kind==='donor' ? donorDisclosure(to).href : to.profileUrl || '',id:`${jurisdiction}:${i}`,from:from.label,to:to.label,type,jurisdiction,industry:donors[0]?.industry || '',amount:figures ? figures.total : edge.total,count:figures ? figures.count : edge.count ?? 0,firstYear:(figures ? figures.firstYear : edge.firstYear) ?? null,lastYear:(figures ? figures.lastYear : edge.lastYear) ?? null};
       add('money-connections',row);
       if (type==='receipts') add('party-money',row);
     }
