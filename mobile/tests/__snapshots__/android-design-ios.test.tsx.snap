@@ -5231,6 +5231,7 @@ exports[`iOS design at font scale 1 SectionHeader retains its iOS output 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
+      "flexWrap": "wrap",
       "gap": 8,
       "minHeight": 44,
     }
@@ -5264,7 +5265,8 @@ exports[`iOS design at font scale 1 SectionHeader retains its iOS output 1`] = `
         null,
         {
           "flexGrow": 1,
-          "flexShrink": 1,
+          "flexShrink": 0,
+          "maxWidth": "100%",
         },
       ]
     }
@@ -5310,6 +5312,10 @@ exports[`iOS design at font scale 1 SectionHeader retains its iOS output 1`] = `
           "borderRadius": 10,
           "justifyContent": "center",
           "minHeight": 44,
+        },
+        {
+          "flexShrink": 1,
+          "maxWidth": "100%",
         },
         null,
       ]
@@ -9261,13 +9267,15 @@ exports[`iOS design at font scale 2 ChoiceChips retains its iOS output 1`] = `
         {
           "alignItems": "center",
           "alignSelf": "stretch",
+          "columnGap": 8,
           "flexDirection": "row",
-          "gap": 8,
+          "flexWrap": "wrap",
           "minHeight": 44,
         },
         {
           "alignItems": "stretch",
           "flexDirection": "column",
+          "flexWrap": "nowrap",
           "gap": 4,
         },
       ]
@@ -12793,6 +12801,7 @@ exports[`iOS design at font scale 2 SectionHeader retains its iOS output 1`] = `
           "minHeight": 44,
         },
         null,
+        null,
       ]
     }
   >
@@ -13082,13 +13091,15 @@ exports[`iOS design at font scale 2 SegmentedPicker retains its iOS output 1`] =
       {
         "alignItems": "center",
         "alignSelf": "stretch",
+        "columnGap": 8,
         "flexDirection": "row",
-        "gap": 8,
+        "flexWrap": "wrap",
         "minHeight": 44,
       },
       {
         "alignItems": "stretch",
         "flexDirection": "column",
+        "flexWrap": "nowrap",
         "gap": 4,
       },
     ]

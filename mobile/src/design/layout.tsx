@@ -506,6 +506,7 @@ export function SectionHeader({
       testID={action.testID}
       style={({ pressed }) => [
         styles.sectionAction,
+        stacked ? null : styles.sectionActionWrapping,
         ...(compact && !stacked
           ? [{ marginVertical: -Math.max(0, minimumTarget - titleHeight) / 2 }]
           : []),
@@ -517,11 +518,18 @@ export function SectionHeader({
       </Text>
     </Pressable>
   ) : null;
+  // A heading never gives up width to its link or accessory: it keeps its
+  // own width (up to the whole line, wrapping only between words), and
+  // whatever is beside it moves under it when the two do not fit (a 300pt
+  // pane: "Conversations" with "See all conversations").
+  const wraps = !!accessory || (!!action && !stacked);
   const bandStyle = accessory
     ? styles.sectionHeadWrapping
     : stacked
       ? styles.sectionHeadStacked
-      : styles.sectionHead;
+      : wraps
+        ? styles.sectionHeadWrapping
+        : styles.sectionHead;
   return (
     <View
       style={
@@ -533,7 +541,7 @@ export function SectionHeader({
     >
       <Heading
         level={level}
-        style={accessory ? styles.sectionHeadTitle : styles.grow}
+        style={wraps ? styles.sectionHeadTitle : styles.grow}
         testID={testID}
         onLayout={
           compact || (headingLayout && testID)
@@ -816,6 +824,8 @@ const styles = StyleSheet.create({
     borderRadius: radii.thumb,
     borderCurve: 'continuous',
   },
+  // On its own line, a long link wraps between words inside the column.
+  sectionActionWrapping: { maxWidth: '100%', flexShrink: 1 },
   insetGroup: {
     backgroundColor: colors.raised,
     borderRadius: radii.container,
