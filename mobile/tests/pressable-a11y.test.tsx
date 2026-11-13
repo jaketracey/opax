@@ -102,3 +102,30 @@ test('Android detaches the old forwarded ref when the owner changes it', () => {
   expect(first).toHaveBeenLastCalledWith(null);
   expect(second.mock.lastCall![0] === node).toBe(true);
 });
+
+test('Android keyboard focus turns the ripple focus fill off under the ring', () => {
+  Platform.OS = 'android';
+  const r = render(
+    <Pressable testID="trigger" android_ripple={{ borderless: true }} />,
+  );
+  expect(native(r).props.android_ripple).toMatchObject({ borderless: true });
+  expect(native(r).props.android_ripple.color).not.toBe('transparent');
+  fireEvent(r.getByTestId('trigger'), 'focus', { nativeEvent: {} });
+  // One ring: the navy outline, over a ripple that draws nothing when focused.
+  expect(native(r).props.android_ripple).toEqual({
+    color: 'transparent',
+    foreground: true,
+    borderless: false,
+  });
+  fireEvent(r.getByTestId('trigger'), 'blur', { nativeEvent: {} });
+  expect(native(r).props.android_ripple.color).not.toBe('transparent');
+  expect(native(r).props.android_ripple).toMatchObject({ borderless: true });
+});
+
+test('iOS receives no ripple or ring prop from focus', () => {
+  Platform.OS = 'ios';
+  const r = render(<Pressable testID="trigger" />);
+  fireEvent(r.getByTestId('trigger'), 'focus', { nativeEvent: {} });
+  expect(native(r).props.ringed).toBeUndefined();
+  expect(native(r).props.android_ripple).toBeUndefined();
+});

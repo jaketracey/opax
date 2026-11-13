@@ -1,6 +1,9 @@
 import { Tabs, useSegments } from 'expo-router';
 import type { Ref } from 'react';
-import { Pressable, StyleSheet, Text, ToastAndroid, View } from 'react-native';
+import { StyleSheet, Text, ToastAndroid, View } from 'react-native';
+// The shared surface: keyboard focus draws OPAX's navy ring and turns the
+// ripple's grey focus fill off, so a tab shows one ring, not two.
+import { Pressable } from '../design/pressable';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useHighTextContrast } from '../design/accessibility';
 import { AndroidTabIcon } from './AndroidTabIcon';
