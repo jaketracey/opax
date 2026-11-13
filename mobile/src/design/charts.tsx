@@ -26,6 +26,7 @@ import { Text } from './text';
 import {
   accents,
   colors,
+  hairline,
   interfaceFonts as fonts,
   radii,
   rhythm,
@@ -932,8 +933,15 @@ export function isPartOfWhole(values: readonly number[]): boolean {
   return Math.abs(sum - 100) <= Math.max(1, values.length / 2);
 }
 
-/** The first part takes the full ink; each later part is a lighter tint. */
-const shareInk = [1, 0.5, 0.3, 0.18, 0.1];
+/**
+ * The first part takes the full ink; each later part is a lighter tint of it.
+ * The fifth part (the election-timing slide has five) still measures about
+ * 1.35:1 or more against paper in light and dark; Increase Contrast steps
+ * less, to about 1.6:1. The legend names every part and its value as well.
+ */
+export function shareRamp(contrast: boolean): readonly number[] {
+  return contrast ? [1, 0.75, 0.55, 0.4, 0.3] : [1, 0.65, 0.45, 0.3, 0.2];
+}
 
 /** `colour` mixed toward `ground`: weight 1 is the colour, 0 the ground. */
 export function shareTint(colour: string, ground: string, weight: number) {
@@ -982,12 +990,9 @@ export function ShareBar({
     ...(contrast ? (darkMode ? darkHighContrast : lightHighContrast) : {}),
   };
   const colour = palette[ink === 'ink' ? 'ink' : accents[ink].ink];
+  const ramp = shareRamp(contrast);
   const tint = (index: number) =>
-    shareTint(
-      colour,
-      palette.paper,
-      shareInk[Math.min(index, shareInk.length - 1)]!,
-    );
+    shareTint(colour, palette.paper, ramp[Math.min(index, ramp.length - 1)]!);
   const spoken = parts
     .map((part) => `${part.label}, ${format(part.value)}`)
     .join('. ');
@@ -1003,7 +1008,12 @@ export function ShareBar({
         <View
           style={[
             styles.shareTrack,
-            { backgroundColor: palette.dividerSubtle },
+            // An outline on paper, not a filled track: a pale last part
+            // would sink into a divider-coloured fill.
+            {
+              backgroundColor: palette.paper,
+              borderColor: palette.dividerSubtle,
+            },
           ]}
           testID={`${testID}-track`}
         >
@@ -1123,6 +1133,7 @@ const styles = StyleSheet.create({
   shareParts: { gap: rhythm.heading },
   shareTrack: {
     height: 12,
+    borderWidth: hairline,
     borderRadius: radii.bar,
     borderCurve: 'continuous',
     overflow: 'hidden',

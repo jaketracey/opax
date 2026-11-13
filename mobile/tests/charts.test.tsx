@@ -8,11 +8,18 @@ import {
   isPartOfWhole,
   latestBarCaption,
   ShareBar,
+  shareRamp,
+  shareTint,
   StageTimeline,
   VoteSplit,
 } from '../src/design/charts';
 import { Button } from '../src/design/controls';
-import { light } from '../src/design/palette';
+import {
+  dark,
+  darkHighContrast,
+  light,
+  lightHighContrast,
+} from '../src/design/palette';
 import { SourceLine } from '../src/design/source';
 import { Text } from '../src/design/text';
 
@@ -795,4 +802,77 @@ test('BarSeries share runs its scale from 0 to 100%, in the gutter, with every b
           .children,
     ),
   ).toEqual(['Closed non-competitive: 50%', 'Everything else: 50%']);
+});
+
+function contrastRatio(a: string, b: string) {
+  const lum = (hex: string) => {
+    const [r, g, bl] = [1, 3, 5].map((at) => {
+      const c = parseInt(hex.slice(at, at + 2), 16) / 255;
+      return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r! + 0.7152 * g! + 0.0722 * bl!;
+  };
+  const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+  return (hi! + 0.05) / (lo! + 0.05);
+}
+
+test.each([
+  ['light', light, false],
+  ['dark', dark, false],
+  ['light, Increase Contrast', { ...light, ...lightHighContrast }, true],
+  ['dark, Increase Contrast', { ...dark, ...darkHighContrast }, true],
+] as const)(
+  'every part of a five-part share stays visible against paper (%s)',
+  (_, palette, contrast) => {
+    const ramp = shareRamp(contrast);
+    expect(ramp).toHaveLength(5);
+    for (const ink of ['moneyInk', 'votesInk', 'billsInk', 'ink'] as const) {
+      const ratios = ramp.map((weight) =>
+        contrastRatio(
+          shareTint(palette[ink]!, palette.paper, weight),
+          palette.paper,
+        ),
+      );
+      // Each part lighter than the one before, and the last still drawn.
+      ratios
+        .slice(1)
+        .forEach((ratio, index) => expect(ratio).toBeLessThan(ratios[index]!));
+      expect(ratios.at(-1)!).toBeGreaterThanOrEqual(contrast ? 1.6 : 1.33);
+    }
+  },
+);
+
+test('Increase Contrast steps the share tints less', () => {
+  const normal = shareRamp(false);
+  const strong = shareRamp(true);
+  strong
+    .slice(1)
+    .forEach((weight, index) =>
+      expect(weight).toBeGreaterThan(normal[index + 1]!),
+    );
+});
+
+test('the share track is an outline on paper, so a pale part never sinks into it', () => {
+  const r = render(
+    <ShareBar
+      {...proof}
+      parts={[20, 20, 20, 20, 20].map((value, index) => ({
+        label: `Part ${index + 1}`,
+        value,
+      }))}
+      ink="money"
+      format={percent}
+    />,
+  );
+  const track = RN.StyleSheet.flatten(
+    r.root.findByProps({ testID: 'share-bar-track' }).props.style,
+  );
+  expect(track.backgroundColor).toBe(light.paper);
+  expect(track.borderWidth).toBeGreaterThan(0);
+  const last = RN.StyleSheet.flatten(
+    r.root.findByProps({ testID: 'share-bar-segment-4' }).props.style,
+  );
+  expect(last.backgroundColor).toBe(
+    shareTint(light.moneyInk, light.paper, shareRamp(false).at(-1)!),
+  );
 });
