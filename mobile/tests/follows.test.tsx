@@ -241,7 +241,7 @@ describe('change markers', () => {
     ).toMatchObject([
       {
         marker: 'status',
-        text: 'Passed',
+        text: 'Now passed; was before parliament',
         citation: 'ParlInfo bill records',
         asAt: '2026-10-01',
       },
@@ -1174,9 +1174,9 @@ describe('Following', () => {
     const control = () =>
       r.root.findByType(ScrollView).props.refreshControl.props;
     await act(async () => control().onRefresh());
-    expect(row(r, `follows-row-bill-${BILL}`).props.detail).not.toMatch(
-      /^Nothing new/,
-    );
+    const changedRow = row(r, `follows-row-bill-${BILL}`);
+    expect(changedRow.props.detail ?? '').not.toMatch(/^Nothing new/);
+    expect(changedRow.props.secondary).toBeTruthy();
     await act(async () => r.unmount());
   });
 });

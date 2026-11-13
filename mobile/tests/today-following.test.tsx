@@ -1,5 +1,5 @@
 import { act, type ReactNode } from 'react';
-import { Animated } from 'react-native';
+import { Animated, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import type { Change } from '../src/features/follows/changes';
 import { FollowRow } from '../src/features/follows/FollowRow';
@@ -13,7 +13,17 @@ import {
   changedFollows,
 } from '../src/features/today/FollowingBlock';
 import { followsRoute } from '../src/navigation/routes';
+import { StatusCapsule } from '../src/design/labels';
+import { LinkRow } from '../src/design/rows';
+import { Text } from '../src/design/text';
+import { NewDot } from '../src/features/follows/NewDot';
 
+jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => {
+  const actual = jest.requireActual(
+    'react-native/Libraries/Utilities/useWindowDimensions',
+  );
+  return { __esModule: true, default: jest.fn(actual.default) };
+});
 jest.mock('../src/features/follows/useFollowStates', () => ({
   useFollowStates: jest.fn(),
 }));
@@ -274,5 +284,95 @@ describe('Following on Today', () => {
     });
     mounted.push(r);
     expect(r.root.findAllByType(FollowingBlock)).toHaveLength(1);
+  });
+});
+
+describe('the changed row says what changed, once (sweep 2 item 4)', () => {
+  const passed = (changes: Change[]): FollowState => ({
+    status: 'ready',
+    title: 'Ending Financial Abuse',
+    current: {
+      status: { value: 'passed', words: 'passed', asAt: '2026-10-01' },
+    },
+    keys: [],
+    changes,
+  });
+  const sentence = change('Now passed; was before parliament', '2026-10-01');
+  const textSize = (fontScale: number) =>
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale });
+  beforeEach(() => textSize(1));
+  function renderRow(state: FollowState, surface: 'today' | 'following') {
+    let r!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      r = TestRenderer.create(
+        <FollowRow follow={bill} state={state} surface={surface} />,
+      );
+    });
+    mounted.push(r);
+    return r;
+  }
+  const linkRow = (r: TestRenderer.ReactTestRenderer) =>
+    r.root.findByType(LinkRow);
+  test.each(['following', 'today'] as const)(
+    '%s: the sentence in ink led by the new dot; no pill or date above the title',
+    (surface) => {
+      const r = renderRow(passed([sentence]), surface);
+      const text = strings(r.root);
+      expect(text).toContain('Now passed; was before parliament · 1 Oct');
+      // "Passed" once: the change line, not also a status pill.
+      expect(text.match(/passed/gi)).toHaveLength(1);
+      expect(r.root.findAllByType(StatusCapsule)).toHaveLength(0);
+      expect(r.root.findAllByType(NewDot)).toHaveLength(1);
+      const line = r.root.find(
+        (n) =>
+          n.type === Text &&
+          n.props.children === 'Now passed; was before parliament · 1 Oct',
+      );
+      expect(line.props.tone).toBe('ink');
+      const props = linkRow(r).props;
+      // One layout on both surfaces: never a leading column.
+      expect(props.leading).toBeUndefined();
+      expect(props.aboveTitle).toBeUndefined();
+      // A followed bill's title is serif, clamped to three lines at Large.
+      expect(props.titleRole).toBe('rowRecord');
+      expect(props.titleLines).toBe(3);
+      expect(props.accessibilityLabel).toMatch(
+        /Changed: Now passed; was before parliament, 1 October/,
+      );
+    },
+  );
+  test('from AX1 the title holds six lines, as Today’s bill previews', () => {
+    textSize(2.35);
+    const r = renderRow(passed([sentence]), 'today');
+    expect(linkRow(r).props.titleLines).toBe(6);
+  });
+  test('once seen, the pill and date return above the title and the dot goes', () => {
+    const r = renderRow(passed([]), 'following');
+    expect(r.root.findAllByType(NewDot)).toHaveLength(0);
+    expect(r.root.findAllByType(StatusCapsule)).toHaveLength(1);
+    const props = linkRow(r).props;
+    expect(props.aboveTitle).toBeTruthy();
+    expect(props.leading).toBeUndefined();
+    expect(props.secondary).toBeUndefined();
+    expect(props.detail).toMatch(/^Nothing new since /);
+  });
+  test('a person row keeps its portrait beside the title on Today too', () => {
+    let r!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      r = TestRenderer.create(
+        <FollowRow
+          follow={person}
+          state={ready('Anthony Albanese', [change('Voted', '2026-10-05')])}
+          surface="today"
+        />,
+      );
+    });
+    mounted.push(r);
+    const props = linkRow(r).props;
+    expect(props.leading).toBeUndefined();
+    expect(props.leadingAccessory).toBeTruthy();
+    expect(props.titleRole).toBeUndefined();
   });
 });
