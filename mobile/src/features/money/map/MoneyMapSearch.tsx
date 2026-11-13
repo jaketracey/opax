@@ -20,11 +20,7 @@ export function searchModel(model: MapModel, query: string): MapNode[] {
   const wanted = normaliseOrganisation(query);
   if (!wanted) return [];
   return model.nodes
-    .filter(
-      (n) =>
-        !n.withheld &&
-        [n.label].some((name) => normaliseOrganisation(name).includes(wanted)),
-    )
+    .filter((n) => normaliseOrganisation(n.label).includes(wanted))
     .sort(
       (a, b) => b.amount - a.amount || a.label.localeCompare(b.label, 'en-AU'),
     )

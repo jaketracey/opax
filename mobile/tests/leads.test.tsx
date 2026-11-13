@@ -182,7 +182,7 @@ jest.mock('expo-router', () => {
 
 const discovery = decodeDiscovery(pinned('/discovery.json'));
 const signals = discovery.signals;
-// What the screens read: a "companies in both" lead about a withheld donor is left out.
+// What the screens read: every lead, donors named as the web names them.
 const shown = publicDiscovery(discovery);
 const companies = shown.signals.filter(
   (s) => s.category === 'donor_contract_overlap',
@@ -987,13 +987,10 @@ describe('leads', () => {
       leadsFor(shown, 'procurement_concentration', 'share').map((l) => l.id),
     );
   });
-  test('withheld and unreadable counts, for the source sheet’s notes', () => {
-    expect(shown.withheld).toBe(14);
-    expect(leadsHiddenNotes(shown)).toEqual([
-      '14 leads about a donor not named in OPAX are not shown.',
-    ]);
-    expect(leadsHiddenNotes({ ...shown, withheld: 1, unreadable: 1 })).toEqual([
-      '1 lead about a donor not named in OPAX is not shown.',
+  test('every lead is shown, with only the unreadable count in the source sheet’s notes', () => {
+    expect(shown.signals).toHaveLength(signals.length);
+    expect(leadsHiddenNotes(shown)).toEqual([]);
+    expect(leadsHiddenNotes({ ...shown, unreadable: 1 })).toEqual([
       '1 lead could not be read and is not shown.',
     ]);
     expect(leadsHiddenNotes(discovery)).toEqual([]);
@@ -1189,7 +1186,7 @@ describe('the Leads screen', () => {
     ).toBe(false);
     act(() => renderer.unmount());
   });
-  test('each section’s source line holds the methodology and the withheld count', async () => {
+  test('each section’s source line holds the methodology, and no withheld count', async () => {
     const renderer = await render(<Leads />);
     const root = renderer.root;
     expect(labels(root)).toEqual(
@@ -1207,10 +1204,7 @@ describe('the Leads screen', () => {
       expect(details.notes).toContain(aboutLede(discovery));
       for (const method of discovery.methodology)
         expect(details.notes).toContain(method);
-      // Word for word, in the sheet and not on the screen (specs 2.9).
-      expect(details.notes).toContain(
-        `${shown.withheld} leads about a donor not named in OPAX are not shown.`,
-      );
+      expect(details.notes.join('\n')).not.toMatch(/not named in OPAX/);
     }
     expect(aboutLede(discovery)).toMatch(/not proof of wrongdoing/);
     expectNoWeb();
@@ -1344,10 +1338,6 @@ describe('the Leads screen', () => {
       `${companies} leads, largest first`,
     );
     expect(cardIDs(root)).toHaveLength(companies);
-    await press(root, 'leads-source-donor_contract_overlap');
-    expect(lastSource().notes).toContain(
-      `${shown.withheld} leads about a donor not named in OPAX are not shown.`,
-    );
     act(() => renderer.unmount());
   });
   test('a plain kind name opens its list; an unknown kind opens the root', async () => {

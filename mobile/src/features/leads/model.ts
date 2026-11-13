@@ -682,20 +682,15 @@ export function searchLeads(
   });
 }
 
-/** The withheld and unreadable counts, for a source sheet's notes. */
-export function leadsHiddenNotes(
-  discovery: Discovery & { withheld?: number },
-): string[] {
+/** The unreadable count, for a source sheet's notes. */
+export function leadsHiddenNotes(discovery: Discovery): string[] {
   const unreadable =
     discovery.unreadable +
     discovery.signals.length -
     leadsFor(discovery).length;
-  return [
-    discovery.withheld
-      ? `${leadCount(discovery.withheld, 'all')} about a donor not named in OPAX ${discovery.withheld === 1 ? 'is' : 'are'} not shown.`
-      : null,
-    unreadable
-      ? `${leadCount(unreadable, 'all')} could not be read and ${unreadable === 1 ? 'is' : 'are'} not shown.`
-      : null,
-  ].filter((note): note is string => !!note);
+  return unreadable
+    ? [
+        `${leadCount(unreadable, 'all')} could not be read and ${unreadable === 1 ? 'is' : 'are'} not shown.`,
+      ]
+    : [];
 }

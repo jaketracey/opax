@@ -303,16 +303,15 @@ name: 23 Native money map, held figures, original source and ranked list
 - assertVisible:
     id: money-donor-caption
     text: The 250 largest donors since 1998–99, largest first
-# Individual donors are one footnote under the list, never a row.
+# Every donor is a row under its own name, down to the last of the 20.
 - runFlow:
     file: support/money-screen-scroll.yaml
     env:
-      TARGET_ID: money-individual-donors
+      TARGET_ID: money-donor-19
 - assertVisible:
-    id: money-individual-donors
-    text: '100 individual donors, \$147\.4m, not named\.'
+    id: money-donor-19
 - takeScreenshot: ${EVIDENCE}/23-list-all-years
-# See all is above the footnote. Centre it on the way back up so its
+# See all is above the last row. Centre it on the way back up so its
 # 44-point action does not stop under the navigation bar.
 - scrollUntilVisible:
     element:

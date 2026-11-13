@@ -33,8 +33,10 @@ export const moreCatalogKinds = [
 ] as const;
 export type MoreCatalogKind = (typeof moreCatalogKinds)[number];
 export const excludedKinds: Readonly<Record<string, string>> = {
-  donor: 'Donor rows have no organisation discriminator.',
-  receipt: 'Receipt rows have no organisation discriminator for the donor.',
+  // Donors are named (12 Oct); the app has no donor list in search yet, and
+  // a donor's record opens from the money map and its donor list.
+  donor: 'No donor list in app search yet.',
+  receipt: 'No receipt list in app search yet.',
   supplier:
     'An ABN does not distinguish a company from an individual or sole trader.',
   contract:

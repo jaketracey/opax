@@ -167,15 +167,6 @@ export function donorCaption(graph: MoneyGraph, filters: MoneyFilters) {
   return `Largest in ${moneyYears(filters.from, filters.to)} among ${cohort}`;
 }
 
-/** "Individual donors": one footnote under the donor list, never a row. */
-export function individualDonorsLine(nodes: readonly MoneyNode[]) {
-  const withheld = nodes.filter((n) => n.kind === 'donor' && n.withheld);
-  if (!withheld.length) return null;
-  const count = withheld.reduce((n, d) => n + (d.withheldCount ?? 1), 0);
-  const total = withheld.reduce((n, d) => n + d.total, 0);
-  return `${formatCount(count)} individual ${count === 1 ? 'donor' : 'donors'}, ${formatMoneyCompact(total)}, not named.`;
-}
-
 /** The stage's one VoiceOver label: what is drawn, and what is focused. */
 export function moneyMapLabel(
   model: Pick<MapModel, 'nodes' | 'edges'>,
@@ -1034,7 +1025,7 @@ function ListBody({
       testID="money-donations"
     />
   ) : null;
-  const named = rankedDonors(view).filter((n) => !n.withheld);
+  const named = rankedDonors(view);
   const top = named
     .filter((n) => n.via !== 'public_money')
     .slice(0, TOP_DONORS);
@@ -1043,7 +1034,6 @@ function ListBody({
     view.nodes.filter((n) => n.kind === 'party'),
     (n) => n.label,
   );
-  const individuals = individualDonorsLine(view.nodes);
   const record_ = (node: MoneyNode) =>
     moneyFocusRoute(node.id, jurisdiction, filters, node.label, 'map');
   const partyRow = (node: MoneyNode, index: number) => (
@@ -1096,11 +1086,6 @@ function ListBody({
               />
             ))}
           </View>
-          {individuals ? (
-            <Text wordSafe variant="footnote" testID="money-individual-donors">
-              {individuals}
-            </Text>
-          ) : null}
         </View>
       ) : null}
       {partyNodes.main.length || partyNodes.other.length ? (

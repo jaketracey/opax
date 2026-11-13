@@ -40,7 +40,6 @@ export interface MapNode extends Pick<
   radius: number;
   colour: string;
   ink: string;
-  withheld: boolean;
   flow?: 'grants' | 'contracts';
 }
 export interface MapEdge {
@@ -149,8 +148,7 @@ export function buildModel(view: MoneyGraph): MapModel {
       radius: kind === 'hub' ? HUB_RADIUS : nodeRadius(n.total),
       colour,
       ink,
-      withheld: !!n.withheld,
-      ...(kind === 'donor' && !n.withheld
+      ...(kind === 'donor'
         ? {
             ...(n.associatedTag ? { associatedTag: n.associatedTag } : {}),
             ...(n.associatedWith ? { associatedWith: n.associatedWith } : {}),

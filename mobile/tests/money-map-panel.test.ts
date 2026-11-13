@@ -33,7 +33,6 @@ const base: MapNode = {
   radius: 2,
   colour: '#000',
   ink: '#000',
-  withheld: false,
 };
 const span = `${formatFinancialYear(2019)} to ${formatFinancialYear(2023)}`;
 
@@ -122,7 +121,7 @@ describe('searchModel', () => {
 
   test('matches on the normalised organisation name, ignoring case, punctuation and company suffixes', () => {
     const target = model.nodes.find(
-      (n) => n.kind === 'donor' && !n.withheld && n.label.length > 6,
+      (n) => n.kind === 'donor' && n.label.length > 6,
     )!;
     const words = normaliseOrganisation(target.label);
     const results = searchModel(model, `  ${words.toUpperCase()} Pty. Ltd.`);
@@ -136,22 +135,10 @@ describe('searchModel', () => {
     expect(searchModel(model, 'labor').map((n) => n.id)).toContain(labor.id);
   });
 
-  test('never returns a withheld donor, even when its placeholder name matches', () => {
-    const withheld = model.nodes.filter((n) => n.withheld);
-    expect(withheld.length).toBeGreaterThan(0);
-    const query = normaliseOrganisation(withheld[0]!.label).split(' ')[0]!;
-    expect(
-      model.nodes.some(
-        (n) => n.withheld && normaliseOrganisation(n.label).includes(query),
-      ),
-    ).toBe(true);
-    for (const n of searchModel(model, query)) expect(n.withheld).toBe(false);
-  });
-
   test('returns at most 8, largest first', () => {
     const results = searchModel(model, 'a');
-    const all = model.nodes.filter(
-      (n) => !n.withheld && normaliseOrganisation(n.label).includes('a'),
+    const all = model.nodes.filter((n) =>
+      normaliseOrganisation(n.label).includes('a'),
     );
     expect(all.length).toBeGreaterThan(8);
     expect(results).toHaveLength(8);

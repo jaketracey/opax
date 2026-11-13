@@ -58,9 +58,7 @@ name: 27 Leads and the declared-interests feed
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/27-lead-card
-# Leads about a donor not named in OPAX are withheld (donor privacy,
-# 10 Oct): the count is not on the screen but in each section's source
-# sheet Notes, word for word.
+# Each section's source sheet holds the export's date in its Notes.
 - scrollUntilVisible:
     element:
       id: leads-source-donor_contract_overlap
@@ -93,14 +91,6 @@ name: 27 Leads and the declared-interests feed
       text: .*21 September 2026.*
     direction: DOWN
     timeout: 60000
-    centerElement: true
-    speed: 20
-- scrollUntilVisible:
-    element:
-      text: (?s).*14 leads about a donor not named in OPAX are not shown\..*
-    direction: DOWN
-    timeout: 60000
-    visibilityPercentage: 10
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/27-leads-notes

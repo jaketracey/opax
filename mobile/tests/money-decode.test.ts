@@ -4,25 +4,20 @@ import {
   type MoneyNode,
 } from '../src/features/money/data';
 import { pinned } from './pinned';
-import { isOrganisationDonor } from '../src/privacy/donorEntity';
 
 test('a malformed or duplicated row is counted without blanking the valid jurisdiction', () => {
   const graph = decodeMoneyGraph(pinned('/graph/money.json'));
-  // 413 nodes and 1,159 edges, with the withheld donors folded into one node
-  // per cluster (privacy/donorEntity) and their flows summed per party.
+  // 413 nodes and 1,159 edges, every donor kept under its own name.
   const raw = pinned('/graph/money.json') as {
     nodes: (MoneyNode & { aliases?: string[] })[];
     edges: { total: number }[];
   };
-  const hidden = raw.nodes.filter(
-    (n) => n.kind === 'donor' && !isOrganisationDonor(n),
-  );
-  const clusters = new Set(
-    hidden.map((n) => [n.group, n.industry, n.via ?? ''].join('|')),
-  ).size;
   expect(raw.nodes).toHaveLength(413);
   expect(raw.edges).toHaveLength(1159);
-  expect(graph.nodes).toHaveLength(413 - hidden.length + clusters);
+  expect(graph.nodes).toHaveLength(413);
+  expect(graph.nodes.map((n) => n.label)).toEqual(
+    raw.nodes.map((n) => n.label),
+  );
   const sum = (edges: { total: number }[]) =>
     edges.reduce((n, e) => n + e.total, 0);
   expect(sum(graph.edges)).toBe(sum(raw.edges));
