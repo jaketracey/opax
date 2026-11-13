@@ -14335,9 +14335,13 @@ function renderStats(container, stats, topic, { speakers = true } = {}) {
   const don = stats.donations;
   let htmlOut = "";
   htmlOut += moneyWordsCharts(stats, { topic });
-  if (don?.top_donors?.length) htmlOut += barList(donorRows(don.top_donors,donorViewIndex), {
-    heading: "Largest receipt sources", fmt: fmtMoney,
-    linkTo: (nm) => subjectHash("donor", nm) });
+  // Ranked by each donor's record figure (scripts/build_report_sources.mjs): each
+  // receipt once, from the party's own return, linked to the record the map opens.
+  const sources = Array.isArray(don?.top_sources) && don.top_sources.length
+    ? don.top_sources.map((s) => [s.label, s.total, s.href]) : don?.top_donors;
+  if (sources?.length) htmlOut += barList(donorRows(sources,donorViewIndex), {
+    heading: "Largest receipt sources", fmt: fmtMoney, scope: don.top_sources_scope || "",
+    linkTo: (nm, _v, row) => row?.[2] || subjectHash("donor", nm) });
   if (speakers && stats.top_speakers?.length) htmlOut += barList(stats.top_speakers, {
     heading: "Most speeches on this topic", fmt: (v) => v.toLocaleString(),
     linkTo: (nm) => subjectHash("person", nm) });
