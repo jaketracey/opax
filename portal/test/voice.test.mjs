@@ -338,7 +338,7 @@ test('disconnect keeps the invocation alive for the provider close acknowledgeme
   const lost=relayFixture(600);lost.client.dispatch('close');lost.advance(20000);await lost.holds[0];assert.deepEqual(lost.charges,[]);
 });
 
-test('an unclean upstream network failure conservatively keeps the whole reservation',()=>{
+test('an unclean upstream network failure closes the browser socket without reconciling a charge',()=>{
   const r=relayFixture(600);r.client.dispatch('message','{"type":"conversation_initiation_client_data"}');r.advance(1000);r.upstream.dispatch('close',{code:1006,wasClean:false});assert.deepEqual(r.charges,[]);assert.equal(r.client.closed.length,1);
 });
 

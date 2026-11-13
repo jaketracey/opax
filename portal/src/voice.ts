@@ -242,8 +242,10 @@ export function relayVoiceSockets(client: WebSocket, upstream: WebSocket, sessio
   upstream.addEventListener('error', () => stop(1011, 'Voice provider connection interrupted'))
   upstream.addEventListener('close', event => {
     stop()
-    // A network loss (1006 / unclean close) cannot prove the remote call ended.
-    // Keep the reservation in that case until its provider-enforced deadline.
+    // A network loss (1006 / unclean close) cannot prove the remote call ended,
+    // so it is not reconciled here. The row stays open until the liveness sweep
+    // ends it, charged up to its last heartbeat plus VOICE_LIVENESS_SECONDS
+    // (or its full reservation at expires_at if it never heartbeated).
     if (!reconciled && event.wasClean && event.code !== 1006) {reconciled = true; onClosed(Math.max(0, (clock.time() - started) / 1000))}
     transportClosed()
   })
