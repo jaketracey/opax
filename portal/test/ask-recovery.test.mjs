@@ -76,7 +76,7 @@ for (const stream of [false, true]) {
     const result = await h.run(stream);
     assert.equal(h.calls.length, 2);
     assert.equal(h.calls[1].citations, 'llm_footnotes');
-    assert.match(h.calls[1].prompt.user, /Do not use direct quotations/);
+    assert.match(h.calls[1].prompt.user, /Use unquoted prose/);
     assert.equal(result.answer, good().answer);
     assert.equal(result.answer_status, undefined);
     assert.ok(result.citations[id]);

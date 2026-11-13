@@ -61,7 +61,7 @@ for(const confident of [false,true]){
   const question='Who are the largest donors to Labor in the 2024-25 financial year?';
   const assets={fetch:async request=>Response.json(new URL(request.url).pathname==='/graph/money.json'?data:{nodes:[],edges:[],meta:{}})};
   const result=receiptAnswer(data,question,'federal','https://opax.test');assert.equal(result.by_donor[0].name,record.source_name);assert.equal(result.by_donor[0].href,href);assert.match(result.by_donor[0].return_reference,/RETURN-FIXTURE-7/);
-  const ask=await rankedMoneyAnswer({question},assets);assert.doesNotMatch(ask.answer,INLINE_REFERENCE);assert.ok(ask.answer.includes(']('+href+')'));
+  const ask=await rankedMoneyAnswer({question},assets);assert.doesNotMatch(ask.answer,INLINE_REFERENCE);assert.ok(ask.answer.includes(']('+new URL(href,'https://opax.com.au').href+')'));
   const tool=await partyDonations({asset:async()=>data,origin:'https://opax.test'},{party:'Labor',from_year:2024,to_year:2024});const row=tool.data.rows[0];assert.equal(row.donor,record.source_name);assert.equal(row.href,href);assert.match(row.return_reference,/RETURN-FIXTURE-7/);assert.ok(tool.cite.some(c=>c.url.includes('/subject/donor/')));assert.match(factSheet([tool]).facts[0].text,/RETURN-FIXTURE-7/);
   let reads=0;const voice=await runVoiceTool('search_records',{query:question,kind:'receipt'},{ASSETS:assets,COMMUNITY_ORIGIN:'https://opax.test'},async()=>{reads++;throw Error('No speech retrieval')});assert.equal(reads,0);assert.match(JSON.stringify(voice),/RETURN-FIXTURE-7/);
  });

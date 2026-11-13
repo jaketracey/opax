@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import {readFile} from 'node:fs/promises'
 import {build} from 'esbuild'
+import {typedMoney,moneyAssets} from './money-graph-data.mjs'
 import {donorAssociated,donorAssociatedTo,donorDisplayText,donorLabelHTML} from '../public/donor-disclosure.js'
 import {gradeFollowUp} from '../../scripts/research_followups.mjs'
 
@@ -11,12 +12,13 @@ import {gradeFollowUp} from '../../scripts/research_followups.mjs'
 // Vapold (Liberal, Victorian Division) and the SDA (Labor branches) are the two pinned cases.
 const built=await build({stdin:{contents:"export {partyDonations} from './src/agentic-tools';export {factSheet,inferPeriod} from './src/agentic-ask';export {writingFacts,proseFallback} from './src/research-writing';export {groundAnswerPayload} from './src/research-grounding';export {rankedMoneyAnswer} from './src/ask-money';export * from './src/tools/index'",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'node',format:'esm',external:['node:*']})
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
-const graph=JSON.parse(await readFile(new URL('../public/graph/money.json',import.meta.url),'utf8'))
+// The published (typed) export; the ranking test below also checks the untyped fallback.
+const graph=typedMoney()
 const realFetch=globalThis.fetch
 globalThis.fetch=async()=>{throw Error('Associated-entity tests must never call a public service.')}
 test.after(()=>{globalThis.fetch=realFetch})
 const deps={kb:async()=>{throw new Error('no KB')},asset:async path=>path==='/graph/money.json'?structuredClone(graph):null,origin:'https://opax.com.au'}
-const assets={fetch:async req=>new Response(await readFile(new URL('../public'+new URL(req.url).pathname,import.meta.url)))}
+const assets=moneyAssets('typed'),untypedAssets=moneyAssets('untyped')
 const env={origin:'https://offline.test',asset:async path=>path==='/graph/money.json'?structuredClone(graph):null,ASSETS:assets}
 const node=id=>graph.nodes.find(n=>n.id===id)
 const VAPOLD=/^associated entity of Liberal Party of Australia \(Victorian Division\), per AEC register \(returns \d{4}-\d{2} to \d{4}-\d{2}\)$/
@@ -88,16 +90,30 @@ test('the written Ask answer names the top associated entity with its tag, for b
 })
 
 test('the calculated money ranking names the associated entity with its tag in the lead and the table',async()=>{
- for(const c of cases){
-  // This path names the map node (its label), the tool path the disclosure's own spelling.
-  const out=await api.rankedMoneyAnswer({question:c.question},assets),name=node(c.id).label.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
-  assert.equal(out?.answer_status,'calculated',c.question)
-  const tag=c.tag.source.slice(1,-1)
-  assert.match(out.answer,new RegExp(`are from \\*\\*${name}: \\$[\\d,]+\\*\\* \\(${tag}\\) across`),c.question)
-  assert.match(out.answer,new RegExp(`\\| \\[${name}\\]\\([^)]*\\) \\(${tag}\\) \\|`),c.question)
+ const escape=text=>text.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
+ const row=(answer,c,amount)=>assert.match(answer,new RegExp(`\\| \\[${escape(node(c.id).label)}\\]\\([^)]*\\) \\(${c.tag.source.slice(1,-1)}\\) \\| ${escape(amount)} \\|`),c.question)
+ const lead=(answer,c,amount)=>assert.match(answer.split('\n')[0],new RegExp(`is \\*\\*${escape(node(c.id).label)}: ${escape(amount)}\\*\\* \\(associated entity of .+?, per AEC register\\)`),c.question)
+ const [vapold,sda]=cases
+ // Typed (published): donations lead. The SDA leads Labor in 2019–20 and carries its tag in the lead and its row;
+ // Vapold ranks third for the Liberal Party on donations and carries its tag in its row.
+ const labor=await api.rankedMoneyAnswer({question:sda.question},assets)
+ assert.equal(labor?.answer_status,'calculated');assert.equal(labor.measure,'donations')
+ lead(labor.answer,sda,'$403,761');row(labor.answer,sda,'$403,761')
+ const liberal=await api.rankedMoneyAnswer({question:vapold.question},assets)
+ assert.equal(liberal?.answer_status,'calculated');assert.equal(liberal.measure,'donations')
+ assert.match(liberal.answer.split('\n')[0],/^The largest source to Liberal is \*\*Pratt Holdings Pty Ltd: \$10,034,400\*\*, donations received/)
+ row(liberal.answer,vapold,'$6,969,513')
+ assert.match(liberal.answer,/\| \[Vapold Pty Ltd\]\([^)]*\) \([^|]+\) \| \$6,969,513 \| 7% \| \$27,790,108 \(includes loans\) \|/)
+ // Untyped fallback: all receipt types lead, so Vapold leads the Liberal Party and the SDA leads Labor in 2019–20.
+ for(const [c,amount] of [[vapold,'$27,790,108'],[sda,'$960,208']]){
+  const out=await api.rankedMoneyAnswer({question:c.question},untypedAssets)
+  assert.equal(out?.answer_status,'calculated',c.question);assert.equal(out.measure,'receipts_all')
+  lead(out.answer,c,amount);row(out.answer,c,amount)
  }
- const westpac=await api.rankedMoneyAnswer({question:'Who gives the most money to One Nation?'},assets)
- assert.doesNotMatch(westpac.answer,/associated entity of/)
+ for(const store of [assets,untypedAssets]){
+  const westpac=await api.rankedMoneyAnswer({question:'Who gives the most money to One Nation?'},store)
+  assert.equal(westpac.answer_status,'calculated');assert.doesNotMatch(westpac.answer,/associated entity of/)
+ }
 })
 
 test('money_totals donor rows to the named party carry the tag',async()=>{

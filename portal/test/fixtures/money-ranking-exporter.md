@@ -1,0 +1,3 @@
+This fixture is a field and edge subset of the public receipt-types export at commit `a51f2d872` (`money-typed-a51f2d872.json`). It keeps the gambling, mining, property, unions, tobacco and finance donor-to-party edges, their endpoints, the availability contract, original legacy totals and original numeric `by_type` and short-financial-year `by_type_year` cells. Amounts and counts are unchanged. Unused node fields, metadata and legacy `byYear` cells are omitted.
+
+The independent eval reads the typed fields directly. Unit tests separately poison legacy totals and year cells, exercise every exported receipt type, check missing donation cells and keep event labels distinct from financial years. The full export stays outside the repository.

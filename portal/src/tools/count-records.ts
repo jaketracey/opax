@@ -100,7 +100,7 @@ function groups(rows: Row[], field: string, by: string, window: Window, range: R
 
 export const tool: ToolDefinition = {
   name: 'count_records',
-  description: 'Exact counts of all published divisions or bills, filtered by jurisdiction, chamber and period. Use for any "how many", "number of", "more or fewer than", bill pass rate, division or bill trend question. Never count find_records hits or retrieved passages. group_by year/month returns every period including zero counts. Bills use introduction date and originating chamber; status is the snapshot status of that introduction cohort, not the date a bill passed. term uses the bill parliament field. bill counts all divisions linked on that bill page. include_records lists the matching bill titles. Returns snapshot/build date, latest record date and coverage limits. State the number first, with the requested chamber and period. For exact speech counts use count_speeches, or speech_trend for periods; the bill page speech list is capped.',
+  description: 'Exact counts of all published divisions or bills, filtered by jurisdiction, chamber and period. Use for any "how many", "number of", "more or fewer than", bill pass rate, division or bill trend question. Use the complete scoped index for counts. group_by year/month returns every period including zero counts. Bills use introduction date and originating chamber; status is the snapshot status of that introduction cohort, not the date a bill passed. term uses the bill parliament field. bill counts all divisions linked on that bill page. include_records lists the matching bill titles. Returns snapshot/build date, latest record date and coverage limits. State the number first, with the requested chamber and period. For exact speech counts use count_speeches, or speech_trend for periods; the bill page speech list is capped.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     record_type: { type: 'string', enum: ['divisions', 'bills'] },
     jurisdiction: { type: 'string', enum: ['federal', 'nsw', 'vic', 'qld'], description: 'Default federal; inferred from a named state chamber when omitted. Bills cover federal parliament only.' },
@@ -114,7 +114,7 @@ export const tool: ToolDefinition = {
     until: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$', description: 'Inclusive end, YYYY-MM-DD. Omit for counts through the published snapshot.' },
     group_by: { type: 'string', enum: ['year', 'month'] },
     status: { type: 'string', enum: ['before_parliament', 'passed', 'lapsed', 'negatived', 'exposure_draft'], description: 'Bills only. negatived: defeated on its final recorded question; lapsed excludes those. Returns count, denominator and share_percent within the same cohort.' },
-    bill: { type: 'string', minLength: 2, maxLength: 500, description: 'Divisions only: exact published bill key or full title. Count the bill page links, never a keyword sample.' },
+    bill: { type: 'string', minLength: 2, maxLength: 500, description: 'Divisions only: exact published bill key or full title. Count the exact bill page links.' },
     include_records: { type: 'boolean', description: 'Bills only: include up to 50 matching bill titles/links; total always counts every matching record.' },
   }, required: ['record_type'], examples: [
     { record_type: 'divisions', chamber: 'senate', date: '2025-07-31' },
