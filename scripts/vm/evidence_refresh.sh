@@ -14,6 +14,20 @@ EVIDENCE_BUNDLE_ACTIVE="$PIPE/evidence-bundle-active.json"
 EVIDENCE_PENDING="$PIPE/evidence-refresh-v1.pending"
 EVIDENCE_INITIALIZED="$PIPE/evidence-refresh-v1.initialized"
 
+# The shipped export's build day ("8 Sep 2026"): generated_at in its stats.json, in Sydney time.
+evidence_snapshot_day() {
+  "$PY" - portal/public/evidence/stats.json 2>/dev/null <<'PYEOF' || echo "date unknown"
+import json, sys
+from datetime import datetime
+from zoneinfo import ZoneInfo
+with open(sys.argv[1], encoding="utf-8") as stream:
+    stamp = json.load(stream)["generated_at"]
+day = datetime.fromisoformat(stamp.replace("Z", "+00:00")).astimezone(ZoneInfo("Australia/Sydney"))
+months = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
+print(f"{day.day} {months[day.month - 1]} {day.year}")
+PYEOF
+}
+
 evidence_build_candidate() (
   # A separately invoked daily/weekly writer shares these locks. This subshell
   # releases both automatically before export from the frozen bundle starts.
@@ -117,6 +131,14 @@ evidence_refresh() {
       EVIDENCE_WAITING="evidence: built bundle readiness failed ($readiness)"
       fail "$EVIDENCE_WAITING; old public evidence and active bundle retained; catch-up retained; export skipped"
       return 1
+    fi
+    if [[ $readiness == missing:* ]]; then
+      # No sidecars on this box: the shipped export stands until the rebuild-or-freeze
+      # decision (docs/reports/2026-11-13-evidence-layers.md). One info line, not a
+      # warning; catch-up is retained as before.
+      EVIDENCE_WAITING="evidence layers: snapshot $(evidence_snapshot_day); rebuild pending a decision"
+      log "$EVIDENCE_WAITING ($readiness)"
+      return 0
     fi
     warn "$EVIDENCE_WAITING; catch-up retained; export skipped"
     return 0

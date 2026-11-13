@@ -2,8 +2,10 @@
 
 This is a **written procedure for the orchestrator**, not a record of work performed.
 None of these provisioning commands was run in the evidence lane. Provisioning is
-undecided; it is valid to leave evidence waiting indefinitely. The nightly emits one
-warning and `evidence: waiting for inputs (missing: …)` or `(mismatch: …)`, preserves
+undecided; it is valid to leave evidence waiting indefinitely. With no sidecars on the
+box, the nightly logs one info line, `evidence layers: snapshot 8 Sep 2026; rebuild
+pending a decision` (the day read from the shipped `stats.json`), and with mismatched
+inputs one warning, `evidence: waiting for inputs (mismatch: …)`. Either way it preserves
 catch-up and skips export without failing the night.
 
 ## Required inventory and disk space
