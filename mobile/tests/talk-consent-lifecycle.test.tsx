@@ -4,12 +4,17 @@ import { router } from 'expo-router';
 import { ConsentSheet } from '../src/features/talk/Consent';
 import { setConsent } from '../src/features/talk/bridge';
 import { takeStartAfterConsent } from '../src/features/talk/consent-store';
+import { track } from '../src/analytics';
 
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
   router: { back: jest.fn() },
 }));
 jest.mock('../src/features/talk/bridge', () => ({ setConsent: jest.fn() }));
+jest.mock('../src/analytics', () => ({
+  ...jest.requireActual('../src/analytics'),
+  track: jest.fn(),
+}));
 const metrics = {
   frame: { x: 0, y: 0, width: 390, height: 844 },
   insets: { top: 47, left: 0, right: 0, bottom: 34 },
@@ -73,4 +78,43 @@ test('agreement dispatches once, then queues one call after the save succeeds', 
   expect(router.back).toHaveBeenCalledTimes(1);
   expect(takeStartAfterConsent()).toBe(true);
   expect(takeStartAfterConsent()).toBe(false);
+});
+
+describe('consent analytics', () => {
+  const sent = () =>
+    jest
+      .mocked(track)
+      .mock.calls.filter(([event]) => event === 'opax_talk')
+      .map(([, properties]) => properties);
+
+  test('shown, then accepted once the agreement is saved, and never declined after', async () => {
+    expect(sent()).toEqual([{ action: 'consent_shown' }]);
+    act(() => press('talk-agree'));
+    expect(sent()).toHaveLength(1);
+    await act(async () => resolve(true));
+    act(() => renderer.unmount());
+    expect(sent()).toEqual([
+      { action: 'consent_shown' },
+      { action: 'consent_accepted' },
+    ]);
+  });
+
+  test('Not now is one decline as the sheet closes', () => {
+    act(() => press('talk-not-now'));
+    act(() => renderer.unmount());
+    expect(sent()).toEqual([
+      { action: 'consent_shown' },
+      { action: 'consent_declined' },
+    ]);
+  });
+
+  test('a failed save is no agreement: closing then is a decline', async () => {
+    act(() => press('talk-agree'));
+    await act(async () => resolve(false));
+    act(() => renderer.unmount());
+    expect(sent()).toEqual([
+      { action: 'consent_shown' },
+      { action: 'consent_declined' },
+    ]);
+  });
 });

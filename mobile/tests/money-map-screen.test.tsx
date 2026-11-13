@@ -28,8 +28,13 @@ import { partyRoute } from '../src/navigation/routes';
 import { defaultMoneyFilters, moneyView } from '../src/features/money/view';
 import { IconButton, SegmentedPicker } from '../src/design/primitives';
 import { pinned } from './pinned';
+import { track } from '../src/analytics';
 
 jest.mock('../src/api/runtime', () => ({ apiClient: { get: jest.fn() } }));
+jest.mock('../src/analytics', () => ({
+  ...jest.requireActual('../src/analytics'),
+  track: jest.fn(),
+}));
 jest.mock('../src/features/money/map/MoneyMap', () => ({
   MoneyMap: jest.fn(() => null),
 }));
@@ -565,3 +570,74 @@ test.each(['android', 'ios'] as const)(
     }
   },
 );
+
+test('map actions send the action and how many filters are set, never the record', async () => {
+  // One filter set: the grants layer is off.
+  mockParams.layers = 'donations,contracts';
+  const r = await render();
+  const sent = () =>
+    jest
+      .mocked(track)
+      .mock.calls.filter(([event]) => event === 'opax_map_action')
+      .map(([, properties]) => properties);
+  const refresh = () =>
+    act(async () =>
+      r.update(withNavigationOptions(<MoneyScreen />, () => undefined)),
+    );
+  expect(sent()).toEqual([{ action: 'open', filter_count: 1 }]);
+  const press = (id: string) =>
+    act(() =>
+      r.root
+        .findAllByType(IconButton)
+        .find((b) => b.props.testID === id)!
+        .props.onPress(),
+    );
+  press('money-map-zoom-in');
+  press('money-map-zoom-out');
+  press('money-fit');
+  expect(sent().slice(1)).toEqual(
+    Array(3).fill({ action: 'zoom', filter_count: 1 }),
+  );
+  // Opening search sends nothing; choosing a result is the search.
+  press('money-map-search');
+  expect(sent()).toHaveLength(4);
+  await act(async () =>
+    r.root.findByType(MoneyMapSearch).props.onChoose('donor:mineralogy'),
+  );
+  await refresh();
+  expect(sent()[4]).toEqual({ action: 'search', filter_count: 1 });
+  // A focus is no filter, and the record opens three ways.
+  await act(async () => stage().onFocus('party:Labor'));
+  await refresh();
+  expect(sent()).toHaveLength(5);
+  const header = r.root.findAll(
+    (n) =>
+      n.props.testID === 'money-map-focus-link' &&
+      typeof n.props.onPress === 'function',
+  )[0]!;
+  await act(async () => header.props.onPress());
+  const openRecord = stage().actions.find(
+    (a: { name: string }) => a.name === 'openRecord',
+  );
+  await act(async () => openRecord.onAction());
+  await act(async () =>
+    r.root.findByType(MoneyMapPanel).props.onExpanded(true),
+  );
+  await refresh();
+  const record = r.root.findByType(MoneyMapPanel).props.focus.record;
+  const row = r.root.findAll(
+    (n) => n.props.href === record && typeof n.props.onPress === 'function',
+  )[0]!;
+  await act(async () => row.props.onPress({ preventDefault: jest.fn() }));
+  expect(sent().slice(5)).toEqual(
+    Array(3).fill({ action: 'open_record', filter_count: 1 }),
+  );
+  // A changed filter is one more `filter`, with the new count.
+  mockParams.min = '1000';
+  await refresh();
+  expect(sent().slice(8)).toEqual([{ action: 'filter', filter_count: 2 }]);
+  expect(JSON.stringify(jest.mocked(track).mock.calls)).not.toMatch(
+    /Labor|mineralogy|1000|donor:|party:/i,
+  );
+  act(() => r.unmount());
+});

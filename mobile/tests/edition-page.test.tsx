@@ -73,7 +73,13 @@ import { shareRecord } from '../src/navigation/share';
 import RuleSheet from '../src/features/sheets/RuleSheet';
 import { sheetPayload } from '../src/navigation/sheets';
 import { menuTitle } from '../src/design/menu-title';
+import { track } from '../src/analytics';
+import { Screen } from '../src/design/layout';
 
+jest.mock('../src/analytics', () => ({
+  ...jest.requireActual('../src/analytics'),
+  track: jest.fn(),
+}));
 jest.mock('../src/api/runtime', () => ({
   catalogs: {
     todayEdition: jest.fn(),
@@ -1387,4 +1393,62 @@ test('AX5: a long first stage name wraps to a second line, never an ellipsis; de
         ),
     );
   expect(row).toBeDefined();
+});
+
+describe('edition analytics', () => {
+  const sent = () =>
+    jest
+      .mocked(track)
+      .mock.calls.filter(([event]) => event === 'opax_edition')
+      .map(([, properties]) => properties);
+  const layout = (values: object) => ({
+    nativeEvent: { layout: { x: 0, y: 0, width: 390, height: 0, ...values } },
+  });
+
+  test('the story shown, its subject opened and its end reached, each as the action alone', async () => {
+    const r = await render(<EditionStory />);
+    expect(sent()).toEqual([{ action: 'open' }]);
+    // The subject row opens its page through RowLink (Android: its Pressable).
+    const subject = r.root.findAll(
+      (node) =>
+        node.props.testID === 'edition-subject' &&
+        typeof node.props.onPress === 'function',
+    )[0]!;
+    await act(async () => subject.props.onPress());
+    expect(sent()).toEqual([{ action: 'open' }, { action: 'story_open' }]);
+    // The end: an 800 pt viewport and a marker 2,000 pt down.
+    const screen = r.root.findByType(Screen);
+    act(() => screen.props.onLayout(layout({ height: 800 })));
+    act(() =>
+      host(r.root, 'edition-end')[0]!.props.onLayout(layout({ y: 2000 })),
+    );
+    act(() => screen.props.onScroll(1100));
+    expect(sent()).toHaveLength(2);
+    act(() => screen.props.onScroll(1250));
+    act(() => screen.props.onScroll(1600));
+    expect(sent()).toEqual([
+      { action: 'open' },
+      { action: 'story_open' },
+      { action: 'reached_end' },
+    ]);
+    // Nothing names the story or its subject.
+    expect(JSON.stringify(jest.mocked(track).mock.calls)).not.toContain(
+      edition.title,
+    );
+  });
+
+  test('a story that fits counts as read once laid out, and a missing edition sends nothing', async () => {
+    const r = await render(<EditionStory />);
+    const screen = r.root.findByType(Screen);
+    act(() =>
+      host(r.root, 'edition-end')[0]!.props.onLayout(layout({ y: 600 })),
+    );
+    act(() => screen.props.onLayout(layout({ height: 800 })));
+    expect(sent()).toEqual([{ action: 'open' }, { action: 'reached_end' }]);
+    jest.mocked(track).mockClear();
+    jest.mocked(catalogs.todayEdition).mockResolvedValue(missing);
+    const gone = await render(<EditionStory />);
+    expect(host(gone.root, 'edition-end')).toHaveLength(0);
+    expect(sent()).toEqual([]);
+  });
 });
