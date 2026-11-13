@@ -625,7 +625,12 @@ function PartyContent({
                 .join(', ')}
             </Text>
           </View>
-          {data.recordedAs ? (
+          {data.node.lodgedAs ? (
+            // Both names' returns, summed: which name each part was lodged as.
+            <Text wordSafe variant="footnote" testID="party-receipts-lodged">
+              {data.node.lodgedAs}
+            </Text>
+          ) : data.recordedAs ? (
             <Text wordSafe variant="footnote" testID="party-receipts-recorded">
               {recordedAs(data.recordedAs)}
             </Text>

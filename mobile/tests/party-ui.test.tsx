@@ -16,6 +16,7 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { Catalogs } from '../src/api/catalogs';
+import { combinedPartyNode } from '../src/api/party-page';
 import { apiClient, catalogs as runtime } from '../src/api/runtime';
 import { moneyAccessibilityLabel } from '../src/design/format';
 import { partyColors } from '../src/design/palette';
@@ -1223,6 +1224,69 @@ describe('the Libertarian Party, formerly the Liberal Democratic Party', () => {
     } finally {
       Platform.OS = original;
     }
+  });
+
+  test('money lodged under two names draws one total and its “Lodged as” line', async () => {
+    // An invented pair; the page only draws what the record holds.
+    const base = view.data!;
+    const node = combinedPartyNode([
+      {
+        ...base.receipts.data!.node,
+        id: 'party:hrp',
+        label: 'Harbourside Reform Party',
+        total: 1000,
+        count: 4,
+        firstYear: 2016,
+        lastYear: 2019,
+        byYear: {},
+      },
+      {
+        ...base.receipts.data!.node,
+        id: 'party:hbp',
+        label: 'Harbourside Party',
+        total: 2000,
+        count: 2,
+        firstYear: 2019,
+        lastYear: 2020,
+        byYear: {},
+      },
+    ]);
+    jest.mocked(runtime.partyPage).mockResolvedValue({
+      stale: false,
+      data: {
+        ...base,
+        label: 'Harbourside Party',
+        members: {
+          ...base.members,
+          data: { current: [], recorded: [], currentCount: 0, sources: [] },
+        },
+        receipts: {
+          ...base.receipts,
+          data: {
+            node,
+            recordedAs: null,
+            rank: 1,
+            parties: 2,
+            donors: [],
+            byYear: [],
+          },
+        },
+        associated: { ...base.associated, data: null },
+        divisions: { ...base.divisions, data: null },
+      },
+    });
+    const r = await render('Harbourside Party');
+    expect(host(r, 'party-receipts-total').props.accessibilityLabel).toBe(
+      `${moneyAccessibilityLabel(3000)}, disclosed`,
+    );
+    expect(drawn(r)).toContain(
+      'disclosed, from 6 donations and receipts, 2016 to 2020',
+    );
+    expect(strings(host(r, 'party-receipts-lodged'))).toBe(
+      'Lodged as Harbourside Reform Party $1,000; as Harbourside Party $2,000',
+    );
+    expect(has(r, 'party-receipts-recorded')).toBe(false);
+    act(() => r.unmount());
   });
 
   test('other parties draw no history line and no past members', async () => {

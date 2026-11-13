@@ -355,16 +355,145 @@ describe('an invented renamed party', () => {
         federal: file([
           { label: 'Harbourside Reform Party', total: 900 },
           { label: 'Harbourside Party', total: 400 },
+          { label: 'Fixture Other Party', total: 1000 },
         ]),
+        vic: file([{ label: 'Harbourside Party', total: 50 }]),
       },
     );
     const named = rows.filter((r) => /harbourside/i.test(r.name));
     expect(named.map((r) => r.name)).toEqual(['Harbourside Party']);
     expect(named[0]).toMatchObject({
       members: 2,
-      // The larger node, as the party page reads it; never a sum.
-      money: { federal: expect.objectContaining({ total: 900 }) },
+      // Both names' returns, summed per file, as the web does.
+      money: {
+        federal: expect.objectContaining({ total: 1300 }),
+        vic: expect.objectContaining({ total: 50 }),
+      },
+      total: 1300,
     });
+    expect(
+      rows.find((r) => r.name === 'Fixture Other Party')?.money.federal?.total,
+    ).toBe(1000);
+  });
+
+  test('money under both names is one figure: summed, spanned, and lodged as each name', () => {
+    const years = (from: number, to: number, amount: number) =>
+      Object.fromEntries(
+        Array.from({ length: to - from + 1 }, (_, i) => [
+          String(from + i),
+          [amount, 1],
+        ]),
+      );
+    const graph = decodeMoney({
+      meta: {
+        generated: '2026-09-02',
+        source: 'Fixture returns',
+        coverage: 'Annual returns',
+        methodology: 'Published returns',
+        exclusions: [],
+        party_totals_note: 'Annual returns',
+      },
+      nodes: [
+        {
+          id: 'party:hrp',
+          label: 'Harbourside Reform Party',
+          kind: 'party',
+          total: 1000,
+          count: 4,
+          firstYear: 2016,
+          lastYear: 2019,
+          byYear: years(2016, 2019, 250),
+        },
+        {
+          id: 'party:hbp',
+          label: 'Harbourside Party',
+          kind: 'party',
+          total: 2000,
+          count: 2,
+          firstYear: 2019,
+          lastYear: 2020,
+          byYear: years(2019, 2020, 1000),
+        },
+        {
+          id: 'party:other',
+          label: 'Fixture Other Party',
+          kind: 'party',
+          total: 2500,
+          count: 1,
+          firstYear: 2018,
+          lastYear: 2018,
+          byYear: years(2018, 2018, 2500),
+        },
+        {
+          id: 'donor:fixture-co',
+          label: 'Fixture Holdings Pty Ltd',
+          kind: 'donor',
+          total: 1500,
+          count: 2,
+          byYear: {},
+        },
+      ],
+      edges: [
+        {
+          source: 'donor:fixture-co',
+          target: 'party:hrp',
+          total: 500,
+          count: 1,
+          byYear: { '2018': [500, 1] },
+        },
+        {
+          source: 'donor:fixture-co',
+          target: 'party:hbp',
+          total: 1000,
+          count: 1,
+          byYear: { '2020': [1000, 1] },
+        },
+      ],
+    });
+    for (const label of ['Harbourside Party', 'harbourside-reform-party']) {
+      const money = mods.page.partyMoney(
+        mods.party.resolveParty(label, ['Harbourside Party'])!,
+        graph,
+      )!;
+      expect(money.node).toMatchObject({
+        total: 3000,
+        count: 6,
+        firstYear: 2016,
+        lastYear: 2020,
+        // The web's words (party-page.js combinedNode), oldest name first.
+        lodgedAs:
+          'Lodged as Harbourside Reform Party $1,000; as Harbourside Party $2,000',
+      });
+      expect(money.node.byYear['2019']).toEqual([1250, 2]);
+      expect(money.recordedAs).toBeNull();
+      // Ranked once among the file's parties, above the $2,500 party.
+      expect(money).toMatchObject({ rank: 1, parties: 2 });
+      // A donor to both names is one row, its gifts summed.
+      expect(money.donors).toEqual([
+        expect.objectContaining({
+          name: 'Fixture Holdings Pty Ltd',
+          amount: 1500,
+        }),
+      ]);
+      expect(money.byYear.map((y) => y.year)).toEqual([
+        '2020',
+        '2019',
+        '2018',
+        '2017',
+        '2016',
+      ]);
+    }
+    // One name alone: no "Lodged as" line, its own label kept.
+    const only = mods.page.partyMoney('Harbourside Party', {
+      ...graph,
+      nodes: graph.nodes.filter((n) => n.id !== 'party:hbp'),
+    })!;
+    expect(only.node).toMatchObject({ total: 1000, lodgedAs: null });
+    expect(only.recordedAs).toBe('Harbourside Reform Party');
+    // A party without a rename reads its own node, unchanged.
+    expect(
+      mods.page.partyMoney('Fixture Other Party', graph)?.node,
+    ).toMatchObject({ total: 2500, lodgedAs: null });
   });
 
   test('a division under the former name keeps its label', () => {

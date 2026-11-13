@@ -27,6 +27,7 @@ import {
   samePartyLabel,
 } from '../design/party';
 import { nameKey } from './ids';
+import { formatMoney } from '../design/format';
 export { resolveParty } from '../design/party';
 
 // Codes in the parliamentary roster, expanded for membership comparisons.
@@ -339,21 +340,63 @@ export function partyPastMembers(
       a.name.localeCompare(b.name, 'en-AU'),
   );
 }
+type MoneyNode = Money['nodes'][number];
+/**
+ * Several nodes of one renamed party in one money file, as one (the web's
+ * party-page.js combinedNode): totals and counts summed, the years spanned,
+ * and `lodgedAs` naming each name's part ("Lodged as Liberal Democrats
+ * $1,000; as Libertarian $2,000"). Returns lodged under each name are
+ * separate filings, so the sum never counts a receipt twice.
+ */
+export function combinedPartyNode(
+  nodes: readonly MoneyNode[],
+): MoneyNode & { lodgedAs: string | null } {
+  if (nodes.length === 1) return { ...nodes[0]!, lodgedAs: null };
+  const years = nodes
+    .flatMap((n) => [n.firstYear, n.lastYear])
+    .filter((y): y is number => !!y)
+    .sort((a, b) => a - b);
+  const parts = [...nodes]
+    .sort((a, b) =>
+      String(a.firstYear || '').localeCompare(String(b.firstYear || '')),
+    )
+    .map((n) => `${n.label} ${formatMoney(n.total || 0)}`);
+  const byYear: MoneyNode['byYear'] = {};
+  for (const n of nodes)
+    for (const [year, [amount, count]] of Object.entries(n.byYear)) {
+      const was = byYear[year] ?? [0, 0];
+      byYear[year] = [was[0] + amount, was[1] + count];
+    }
+  return {
+    ...nodes[0]!,
+    total: nodes.reduce((a, n) => a + (n.total || 0), 0),
+    count: nodes.reduce((a, n) => a + (n.count || 0), 0),
+    firstYear: years[0],
+    lastYear: years.at(-1),
+    byYear,
+    lodgedAs: `Lodged as ${parts.join('; as ')}`,
+  };
+}
 export function partyMoney(label: string, graph: Money) {
   const parties = graph.nodes
     .filter((n) => n.kind === 'party' && !n.via)
     .sort((a, b) => b.total - a.total);
-  const node = parties.find(
-    (n) =>
-      samePartyLabel(n.label, label) ||
-      n.aliases?.some((a) => samePartyLabel(a, label)),
-  );
-  if (!node) return null;
+  const matches = (n: MoneyNode) =>
+    samePartyLabel(n.label, label) ||
+    !!n.aliases?.some((a) => samePartyLabel(a, label));
+  // A renamed party can hold a node under each name it lodged returns as:
+  // all of them, as one. Any other party reads its largest matching node.
+  const own = partyRename(label)
+    ? parties.filter(matches)
+    : parties.filter(matches).slice(0, 1);
+  if (!own.length) return null;
+  const node = combinedPartyNode(own);
+  const ids = new Set(own.map((n) => n.id));
   const donors = new Map(
     graph.nodes.filter((n) => n.kind === 'donor').map((n) => [n.id, n]),
   );
   const flows = graph.edges.filter(
-    (e) => e.target === node.id && donors.has(e.source),
+    (e) => ids.has(e.target) && donors.has(e.source),
   );
   const donorRows = (year?: string) => {
     const sums = new Map<string, number>();
@@ -373,16 +416,23 @@ export function partyMoney(label: string, graph: Money) {
         name: donors.get(id)!.label,
         amount,
         associated: associatedLine(
-          donorAssociatedTo(donors.get(id)!, node.label),
+          own
+            .map((n) => donorAssociatedTo(donors.get(id)!, n.label))
+            .find(Boolean) ?? null,
         ),
       }));
   };
+  // The party's place among the file's parties, its names counted once.
+  const others = parties.filter((n) => !ids.has(n.id));
   return {
     node,
-    /** The register's own label, when it is a former name of the party. */
-    recordedAs: formerPartyName(node.label),
-    rank: parties.findIndex((n) => n.id === node.id) + 1,
-    parties: parties.length,
+    /** The register's own label, when its one node carries a former name. */
+    recordedAs: own.length === 1 ? formerPartyName(node.label) : null,
+    rank:
+      own.length === 1
+        ? parties.indexOf(own[0]!) + 1
+        : others.filter((n) => n.total > node.total).length + 1,
+    parties: others.length + 1,
     donors: donorRows(),
     byYear: Object.keys(node.byYear)
       .sort((a, b) => b.localeCompare(a))

@@ -483,11 +483,10 @@ export function partyRows(
   for (const [jur, file] of Object.entries(files))
     for (const n of file.parties) {
       const row = get(n.label);
-      // Two names in one file: the larger node, as the party page's
-      // receipts read it (partyMoney). Totals are never added together.
-      if ((row.money[jur]?.total ?? -1) >= n.total) continue;
+      // A renamed party's names in one file are summed, as the party page
+      // and the web do: returns lodged under each name are separate filings.
       row.money[jur] = {
-        total: n.total,
+        total: (row.money[jur]?.total ?? 0) + n.total,
         source:
           file.meta.sourceShort ??
           (jur === 'federal' ? 'AEC returns' : jur.toUpperCase()),
