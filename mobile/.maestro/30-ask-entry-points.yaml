@@ -115,10 +115,10 @@ name: 30 Ask about drafts from records; each starts a new conversation, sends no
       id: ask-draft-new-conversation
     timeout: 15000
 - assertVisible: Starts a new conversation.*
+# Stop is the running answer. Its stage line (ask-status) gives way to the
+# text 24 s in, which this arrival can outlast, so it is not checked here.
 - assertVisible:
     id: ask-stop
-- assertVisible:
-    id: ask-status
 - takeScreenshot: ${EVIDENCE}/30-bill-draft-while-running
 - extendedWaitUntil:
     visible:
