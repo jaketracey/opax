@@ -203,12 +203,13 @@ export function partySpeechLabel(label, {indexed = null, roster = null, same = (
 }
 
 const SHOWN = 12;
+export const PARTY_NO_MEMBERS = "No members recorded in OPAX's roster for this party.";
 /** The Members block: portrait rows as the people directory draws them, sitting members first.
  *  `h` carries app.js's esc, photoUrlFor, personUrl, partyChipHTML, yearSpan, stateName, sourceLineHTML. */
-export function partyMembersHTML(label, members, h, {speechesHref = '', directoryHref = '', updated = ''} = {}) {
+export function partyMembersHTML(label, members, h, {speechesHref = '', speechSummary = '', directoryHref = '', updated = ''} = {}) {
   const independent = isIndependent(label);
   const total = members.current.length + members.former.length;
-  if (!total) return '';
+  if (!total) return `<section class="party-members" id="party-members"><h3 class="subject-section-title">Members</h3><p>${h.esc(PARTY_NO_MEMBERS)}</p></section>`;
   // Seat-roster members after a later election: not known to sit, not known to have left.
   const rostered = members.former.filter(m => m.seat_roster?.stale);
   const former = members.former.filter(m => !m.seat_roster?.stale);
@@ -254,6 +255,7 @@ export function partyMembersHTML(label, members, h, {speechesHref = '', director
     .map(day => group(`On the parliamentary roster as at ${dayMonthYear(day)}`, rostered.filter(m => m.seat_roster.as_of === day))).join('');
   return `<section class="party-members" id="party-members">
     <div class="entry-section-head"><h3 class="subject-section-title">${independent ? 'Parliamentarians' : 'Members'}</h3>${speechesHref ? `<a href="${h.esc(speechesHref)}">Their speeches</a>` : ''}</div>
+    ${speechSummary ? `<p class="ui-section-note">${h.esc(speechSummary)}</p>` : ''}
     ${members.current.length || rostered.length
       ? group(independent ? 'Sitting parliamentarians' : 'Sitting members', members.current) + rosteredGroups + group(independent ? 'Former parliamentarians' : 'Former members', former)
       : group('', former)}

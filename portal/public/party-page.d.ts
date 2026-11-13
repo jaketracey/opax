@@ -19,6 +19,7 @@ export function isIndependent(label: string): boolean;
 export function partyDisplayName(label: string): string;
 export const INDEPENDENTS_DESCRIPTION: string;
 export const PARTY_MEMBER_SCOPE: string;
+export const PARTY_NO_MEMBERS: string;
 export const PARTY_MONEY_PATHS: string[];
 export function canonicalPartyPages(sources?: {
   money?: { meta?: { generated?: string }; nodes?: {kind: string; label: string}[] }[];

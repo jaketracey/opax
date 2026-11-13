@@ -72,6 +72,26 @@ test('warm searches read catalogue assets only, with no report detail or dataset
 // Visible text for assertions: strip tags until none remain (a single pass can leave a rebuilt tag).
 const stripTags = html => { let prev; do { prev = html; html = html.replace(/<[^<>]*>/g, ''); } while (html !== prev); return html; };
 const visible = html => stripTags(html);
+test('integrity report periods retain their date precision and source basis', () => {
+  const periods = projected.filter(r => r.detail.report_type === 'integrity_report' && typeof r.detail.record.period === 'object' && r.detail.record.period);
+  assert.equal(periods.length, 72);
+  for (const {detail} of periods) {
+    const html = renderReport(detail);
+    assert.doesNotMatch(html, /\[object Object\]/, detail.slug);
+    assert.ok(html.includes(escapeHtml(detail.record.period.basis)), detail.slug);
+  }
+  const sample = structuredClone(periods[0].detail);
+  for (const [period, expected] of [
+    [{value:'2004', precision:'year', basis:'Listed under this year.'}, '2004. Listed under this year.'],
+    [{value:'1999-06', precision:'month', basis:'Published in this month.'}, 'June 1999. Published in this month.'],
+    [{value:'2026-09-04', precision:'day', basis:'Dated by the publisher.'}, '4 September 2026. Dated by the publisher.'],
+    [{value:'2020-21', precision:'financial_year', basis:'Reporting period.'}, '2020-21. Reporting period.'],
+    [{value:'<script>', precision:'year', basis:'<img src=x>'}, '&lt;script&gt;. &lt;img src=x&gt;'],
+  ]) {
+    sample.record.period = period;
+    assert.ok(renderReport(sample).includes(expected), expected);
+  }
+});
 test('record pages retain full numbered recommendations, findings labels, court context and source pages', () => {
   const royal = projected.find(r => r.detail.slug === 'royal-commission-cth-robodebt').detail;
   let html = renderReport(royal);
