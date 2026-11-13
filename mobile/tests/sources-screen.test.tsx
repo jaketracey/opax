@@ -526,6 +526,35 @@ describe('credits', () => {
     );
   });
 
+  test.each([
+    'Alex Example',
+    'Example National Archive',
+    'https://archive.example.org/photo',
+    'This image was supplied by Example Archive. Template instructions. '.repeat(
+      10,
+    ),
+  ])(
+    'the photo list keeps only caption, author and licence for credit %j',
+    async (credit) => {
+      explore.pictures.mockResolvedValue(
+        saved(
+          { '2025': [{ ...picture, author: 'Alex Example', credit }] },
+          null,
+        ),
+      );
+      const list = await render(<PhotoCreditsList />);
+      expect(texts(list)).toContain('Photo: Alex Example · Public domain');
+      const source = pressable(list, 'explore-photo-source-Federation.jpg');
+      expect(source.findAllByType(Text).map((n) => n.props.children)).toEqual([
+        picture.caption,
+        'Photo: Alex Example · Public domain',
+      ]);
+      expect(source.props.accessibilityLabel).toBe(
+        `${picture.caption}, Photo: Alex Example · Public domain`,
+      );
+    },
+  );
+
   test('each font names its licence and keeps the notice behind one disclosure', async () => {
     const fonts = await render(<FontsList />);
     expect(texts(fonts)).not.toContain('Copyright Merriweather.');

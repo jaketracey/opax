@@ -208,6 +208,46 @@ test('the List view: donors first with the cut stated, parties in the money orde
   await act(async () => r.unmount());
 });
 
+test.each([
+  [1, '1 disclosure record'],
+  [60551, '60,551 disclosure records'],
+])(
+  'a party list row calls its %i records the same thing as the party record',
+  async (count, label) => {
+    const party = graph.nodes.find((node) => node.kind === 'party')!;
+    const data = {
+      ...graph,
+      nodes: graph.nodes.map((node) =>
+        node.id === party.id
+          ? {
+              ...node,
+              count,
+              firstYear: 2024,
+              lastYear: 2024,
+              byYear: { '2024': [node.total, count] },
+            }
+          : node,
+      ),
+    };
+    jest.mocked(apiClient.get).mockImplementation(async (_path, decode) => ({
+      data: decode(data),
+      stale: false,
+      asOf: '2026-11-10',
+      savedAt: 1,
+    }));
+    const r = await render();
+    const row = r.root
+      .findAllByType(LinkRow)
+      .find(
+        (node) =>
+          /^money-party-\d+$/.test(node.props.testID) &&
+          node.props.title === party.label,
+      )!;
+    expect(row.props.detail).toBe(`${label} · 2024–25`);
+    await act(async () => r.unmount());
+  },
+);
+
 test('Filters open /filters/money and apply live through the params', async () => {
   const r = await render();
   const items = (
@@ -408,7 +448,7 @@ test('the donors page states an industry window in plain words', async () => {
   await act(async () => r.unmount());
 });
 
-test('the List view counts one receipt and one donor in the singular', async () => {
+test('the List view counts one disclosure record and one donor in the singular', async () => {
   const raw = structuredClone(pinned('/graph/money.json')) as {
     nodes: { id: string; kind: string; count: number }[];
     edges: { source: string; target: string }[];
@@ -434,7 +474,7 @@ test('the List view counts one receipt and one donor in the singular', async () 
   const party = r.root.findAll(
     (x) => x.props.testID === 'money-party-0' && 'detail' in x.props,
   )[0]!;
-  expect(party.props.detail).toMatch(/^1 receipt · /);
+  expect(party.props.detail).toMatch(/^1 disclosure record · /);
   const all = r.root.findAll(
     (x) => x.props.action?.testID === 'money-donors-all',
   )[0]!;

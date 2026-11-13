@@ -96,7 +96,9 @@ if [ -f "$SCRIPTS/qa-flows.sh" ]; then /bin/cp "$SCRIPTS/qa-flows.sh" "$MOBILE/s
 touch "$SCRATCH/app/main.jsbundle" "$MOBILE/.maestro/01-start.yaml" "$MOBILE/.maestro/04-offline.yaml"
 export SCRATCH MOBILE OPAX_PASTE_LOCK="$LOCK" OPAX_BUILD_GATE="$SCRATCH/gate.sh" OPAX_SIM_GATE="$SCRATCH/sim-gate.sh"
 export HOME="$SCRATCH/home"
-mkdir -p "$HOME"
+# The preflight reads these fake device directories and crash reports only.
+REPORTS="$HOME/Library/Logs/DiagnosticReports"
+mkdir -p "$HOME/Library/Developer/CoreSimulator/Devices/lane-a" "$HOME/Library/Developer/CoreSimulator/Devices/lane-b" "$REPORTS"
 export OPAX_FIXTURE_PORT=8973
 export OPAX_ALLOWED_UDIDS='lane-a lane-b' OPAX_QA_APP="$SCRATCH/app" OPAX_CONTENT_SIZE=large
 export OPAX_CAPACITY_CMD= OPAX_LOAD_PROBE='echo 0' OPAX_PASTE_WAIT_SECONDS=10 OPAX_LOAD_LIMIT=140
@@ -266,6 +268,8 @@ grep -q 'success ui content_size extra-large lock=held' "$SCRATCH/trace" && grep
 grep -q 'success fixture-stop lock=free' "$SCRATCH/trace" || fail 'fixture teardown before release'
 [ -f "$MOBILE/private/qa/success/device-timing.txt" ] || fail 'no boot/install timing'
 grep -qx -- '--driver-host-port' "$SCRATCH/success.online.maestro-args" && grep -qx '9073' "$SCRATCH/success.online.maestro-args" || fail 'driver port is not fixture + 100'
+grep -q 'Simulator looks healthy' "$MOBILE/private/qa/success/sim-health.log" || fail 'preflight did not check a clean device'
+grep -q '^success spawn launchctl disable system/com.apple.PosterBoard lock=held gate=1' "$SCRATCH/trace" || fail 'PosterBoard not disabled under the lock'
 pass 'boot/install/Maestro/restore/shutdown inside lock and gate; teardown after release; timings saved'
 
 # Kept devices persist in the shared lock state after release. A different
@@ -289,15 +293,77 @@ check_rc keep-reuse 0
 [ ! -e "$LOCK.opax/kept-simulator" ] || fail 'shutdown left kept-device state'
 pass 'kept UDID survives lock release; another UDID is refused; same device reuses and clears state on shutdown'
 
-# Opt-in healing is exercised only against fake reports and stub simctl.
-mkdir -p "$HOME/Library/Developer/CoreSimulator/Devices/lane-a"
-export OPAX_SIM_HEAL=1
-run_lane heal-healthy 01
-check_rc heal-healthy 0
-[ -f "$MOBILE/private/qa/heal-healthy/sim-health.log" ] || fail 'healing did not run'
-! grep -q 'erase' "$MOBILE/private/qa/heal-healthy/sim-health.log" || fail 'healthy device erased'
-unset OPAX_SIM_HEAL
-pass 'opt-in simulator healing checks health under the lock with fake HOME'
+# Simulator preflight, against fake reports in the scratch HOME and stub simctl
+# (which fails any call made outside the lock and gate). Limits: 5 or more crash
+# reports from one process in the last hour, or a poster store over 500 MB.
+erased_before_boot() {
+  local erase boot
+  erase=$(awk -v lane="$1" '$1 == lane && $2 == "erase" {print NR; exit}' "$SCRATCH/trace")
+  boot=$(awk -v lane="$1" '$1 == lane && $2 == "boot" {print NR; exit}' "$SCRATCH/trace")
+  [ -n "$erase" ] && [ -n "$boot" ] && [ "$erase" -lt "$boot" ] &&
+    grep -q "^$1 erase .*lock=held gate=1" "$SCRATCH/trace" && [ -f "$MOBILE/private/qa/$1/device-erased" ]
+}
+not_erased() { ! grep -q "^$1 erase " "$SCRATCH/trace" && [ ! -e "$MOBILE/private/qa/$1/device-erased" ]; }
+# Normal traffic: about one report per run from assorted daemons. Seven reports,
+# four of them from one process, stay under the per-process limit.
+for i in 1 2 3 4; do echo '"coalitionName":"SimDevice.lane-a"' > "$REPORTS/PosterBoard-2026-11-13-21000$i.ips"; done
+for name in chronod swcd Family; do echo '"coalitionName":"SimDevice.lane-a"' > "$REPORTS/$name-2026-11-13-210010.ips"; done
+# macOS refreshes the modification time of old reports; their birth time stays.
+if [ "$(uname -s)" = Darwin ]; then
+  echo '"coalitionName":"SimDevice.lane-a"' > "$REPORTS/PosterBoard-2026-11-08-193606.ips"
+  touch -t 202611080000 "$REPORTS/PosterBoard-2026-11-08-193606.ips"; touch "$REPORTS/PosterBoard-2026-11-08-193606.ips"
+fi
+run_lane preflight-under 01
+check_rc preflight-under 0
+grep -q '7 crash report(s) in the last 1 h.*most from one process: PosterBoard x4' "$MOBILE/private/qa/preflight-under/sim-health.log" && not_erased preflight-under || fail 'preflight erased a device under its limits'
+pass 'preflight under the limits leaves the device alone (7 reports, 4 from one process; a re-touched old report does not count)'
+echo '"coalitionName":"SimDevice.lane-a"' > "$REPORTS/PosterBoard-2026-11-13-210005.ips"
+run_lane preflight-crashes 01
+check_rc preflight-crashes 0
+erased_before_boot preflight-crashes || fail 'preflight over the crash limit did not erase under the lock before boot'
+[ -e "$SCRATCH/preflight-crashes.install" ] && [ -e "$SCRATCH/preflight-crashes.maestro" ] || fail 'run did not install and test after the erase'
+run_lane preflight-erased 01
+check_rc preflight-erased 0
+not_erased preflight-erased || fail 'reports from before the erase triggered another erase'
+pass 'preflight at 5 reports from one process erases under the lock before boot, then installs and tests; older reports stop counting'
+POSTER="$HOME/Library/Developer/CoreSimulator/Devices/lane-a/data/Library/Application Support/PRBPosterExtensionDataStore"
+mkdir -p "$POSTER"; dd if=/dev/zero of="$POSTER/snapshot.atx" bs=1024 count=2048 2>/dev/null
+export OPAX_SIM_PREFLIGHT_POSTER_MB=1
+run_lane preflight-poster 01
+check_rc preflight-poster 0
+erased_before_boot preflight-poster || fail 'preflight over the poster limit did not erase'
+unset OPAX_SIM_PREFLIGHT_POSTER_MB
+/bin/rm -rf "$POSTER"
+pass 'preflight over the poster store limit erases'
+export OPAX_SIM_POSTERBOARD=1
+run_lane posterboard-on 01
+check_rc posterboard-on 0
+grep -q '^posterboard-on spawn launchctl enable system/com.apple.PosterBoard lock=held gate=1' "$SCRATCH/trace" || fail 'OPAX_SIM_POSTERBOARD=1 did not re-enable PosterBoard'
+unset OPAX_SIM_POSTERBOARD
+pass 'every run disables PosterBoard under the lock after boot; OPAX_SIM_POSTERBOARD=1 re-enables it'
+for i in 1 2 3 4 5; do echo '"coalitionName":"SimDevice.lane-a"' > "$REPORTS/swcd-2026-11-13-21100$i.ips"; done
+export OPAX_SIM_PREFLIGHT=0
+run_lane preflight-off 01
+check_rc preflight-off 0
+not_erased preflight-off && grep -q 'skipped' "$MOBILE/private/qa/preflight-off/sim-health.log" || fail 'OPAX_SIM_PREFLIGHT=0 still ran the preflight'
+unset OPAX_SIM_PREFLIGHT
+export OPAX_PASTE_LOCK= MOCK_NO_LOCK=1
+run_lane preflight-unlocked 01
+check_rc preflight-unlocked 0
+not_erased preflight-unlocked && grep -q 'no shared lock' "$MOBILE/private/qa/preflight-unlocked/sim-health.log" || fail 'preflight ran without a shared lock'
+export OPAX_PASTE_LOCK="$LOCK"
+unset MOCK_NO_LOCK
+# The device command itself refuses a lock owned by another process group
+# before the preflight; any simctl call here would be a violation.
+mkdir "$LOCK"; printf 'pid=1\npgid=1\nscript=other\n' > "$LOCK/owner"
+mkdir -p "$MOBILE/private/qa/preflight-foreign"
+rc=0
+(cd "$MOBILE" && MOCK_LANE=preflight-foreign bash scripts/e2e-device.sh lane-a "$MOBILE/private/qa/preflight-foreign" "$SCRATCH/app" large light 0 0 0 0 > "$SCRATCH/preflight-foreign.log" 2>&1) || rc=$?
+[ "$rc" = 1 ] && grep -q 'outside its shared pasteboard lock' "$SCRATCH/preflight-foreign.log" || fail 'device command accepted a foreign lock'
+! grep -q '^preflight-foreign ' "$SCRATCH/trace" && [ ! -e "$MOBILE/private/qa/preflight-foreign/sim-health.log" ] && [ ! -s "$SCRATCH/violations" ] || fail 'preflight ran under a foreign lock'
+/bin/rm -f "$LOCK/owner"; rmdir "$LOCK"
+/bin/rm -f "$REPORTS"/*.ips
+pass 'preflight never runs without the lock: skipped when off or unconfigured, refused under a foreign lock'
 
 for phase in online offline install boot restore; do
   export MOCK_FAIL=$phase

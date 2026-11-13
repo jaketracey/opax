@@ -209,11 +209,11 @@ test.each(measuredWords)(
       { text: word.slice(0, -1), width: axWidth - 2, height: base * at },
       { text: word.slice(-1), width: 2, height: base * at },
     ];
-    expect(wordSafeOnLines(state, state, broken(1), word, base, 1)).toBe(state);
+    expect(wordSafeOnLines(state, state, broken(1), word, base)).toBe(state);
     let at = full;
     while ((axWidth * at) / full > axWidth - 1 && at > 1) {
       const next = nextWordSafeCap(base * at, base)!;
-      state = wordSafeOnLines(state, state, broken(at), word, base, 3.571);
+      state = wordSafeOnLines(state, state, broken(at), word, base);
       expect(state.cap).toBe(next);
       expect(state.cap).toBeGreaterThanOrEqual(1);
       at = state.cap;

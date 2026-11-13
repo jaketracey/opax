@@ -32,7 +32,10 @@ const BAR_HEIGHT = 80;
 
 /** Full-screen viewer routes own their bottom inset and closing controls. */
 export function androidTabsHidden(segments: readonly string[]) {
-  return segments.includes('explore') && segments.at(-1) === 'photo';
+  return (
+    segments.includes('filters') ||
+    (segments.includes('explore') && segments.at(-1) === 'photo')
+  );
 }
 
 /** Use the stable Android navigator for focus-driven catalogs and Back.

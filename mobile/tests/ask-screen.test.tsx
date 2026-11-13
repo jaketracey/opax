@@ -2216,6 +2216,44 @@ describe('the idle page at accessibility sizes', () => {
     }
   });
 
+  test('Android at 200%: the idle inset drops to zero on IME show and returns on hide', async () => {
+    const platform = jest.replaceProperty(Platform, 'OS', 'android');
+    const window = Dimensions.get('window');
+    const handlers = new Map<string, (event: unknown) => void>();
+    const listener = jest
+      .spyOn(Keyboard, 'addListener')
+      .mockImplementation((name, handler) => {
+        handlers.set(name, handler as (event: unknown) => void);
+        return { remove: jest.fn() };
+      });
+    const visible = jest.spyOn(Keyboard, 'isVisible').mockReturnValue(false);
+    try {
+      act(() =>
+        Dimensions.set({
+          window: { ...window, width: 402, height: COLUMN, fontScale: 2 },
+        }),
+      );
+      await mount();
+      await layOut();
+      const inset = COLUMN - (COLUMN - 34 - COMPOSER);
+      expect(scrollStyle().marginBottom).toBe(inset);
+      visible.mockReturnValue(true);
+      act(() =>
+        handlers.get('keyboardDidShow')!({ endCoordinates: { screenY: 400 } }),
+      );
+      expect(scrollStyle().marginBottom ?? 0).toBe(0);
+      expect(view!.root.findByType(PhoneDock).props.keyboardVisible).toBe(true);
+      visible.mockReturnValue(false);
+      act(() => handlers.get('keyboardDidHide')!({}));
+      expect(scrollStyle().marginBottom).toBe(inset);
+    } finally {
+      listener.mockRestore();
+      visible.mockRestore();
+      act(() => Dimensions.set({ window }));
+      platform.restore();
+    }
+  });
+
   test('a conversation keeps the full-height page with room for the composer', async () => {
     const restore = await at(3.571);
     try {

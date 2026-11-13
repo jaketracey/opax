@@ -231,11 +231,9 @@ describe('full-width daily cards', () => {
     jest
       .spyOn(frontPageSkip, 'has')
       .mockImplementation((id) => id === skipped.file);
-    jest
-      .mocked(explore.pictures)
-      .mockResolvedValue({
-        data: { [archiveYear(today)]: [skipped] },
-      } as never);
+    jest.mocked(explore.pictures).mockResolvedValue({
+      data: { [archiveYear(today)]: [skipped] },
+    } as never);
     const { root } = await render(<DailyPair today={today} attempt={0} />);
     expect(root.findAllByType(ArchiveCard)).toHaveLength(0);
     expect(root.findAllByType(QuestionCard)).toHaveLength(1);
@@ -321,7 +319,9 @@ describe('full-width daily cards', () => {
           ).toBe(fontScale === 1 ? 3 : undefined);
           expect(
             lines.find(
-              (node) => node.props.children === `Photo: ${photo.credit}`,
+              (node) =>
+                node.props.children ===
+                `Photo: ${photo.author} · ${photo.licence}`,
             )!.props.numberOfLines,
           ).toBeUndefined();
         },
@@ -362,7 +362,11 @@ describe('full-width daily cards', () => {
       expect(caption.props.numberOfLines).toBe(fontScale === 1 ? 3 : undefined);
       const credit = archive
         .findAllByType(Text)
-        .find((node) => node.props.children === `Photo: ${picture.credit}`)!;
+        .find(
+          (node) =>
+            node.props.children ===
+            `Photo: ${picture.author} · ${picture.licence}`,
+        )!;
       expect(credit.props.numberOfLines).toBeUndefined();
       expect(archive.findByType(Card).props.href.params).toMatchObject({
         year: String(archiveYear(today)),

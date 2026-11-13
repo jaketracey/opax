@@ -9,6 +9,10 @@ appId: au.com.opax.app
         id: seat-sheet
     commands:
       - openLink: opax://seat
+      # Match the other scheme-link flows on a fresh install.
+      - tapOn:
+          text: Open
+          optional: true
 - extendedWaitUntil:
     visible:
       id: seat-sheet

@@ -50,7 +50,9 @@ name: 30 Ask idle, a starter, the answer with its records, a follow-up, a clarif
     direction: DOWN
     centerElement: true
     timeout: 90000
-- assertVisible: Answered .* · OPAX
+- assertVisible:
+    id: ask-answer-sources
+    text: 'Answered .*Source: OPAX'
 - tapOn:
     id: ask-answer-sources
 - extendedWaitUntil:

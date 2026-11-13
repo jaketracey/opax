@@ -159,8 +159,10 @@ export default function AskScreen() {
   const hiddenBand =
     Platform.OS === 'ios' ? Math.max(0, fullHeader - headerBottom) : 0;
   const column = useScreenColumn('readable');
-  const { overlap: keyboard, visible: keyboardVisible } =
-    useKeyboardOverlap(root);
+  const { overlap: keyboard, visible: keyboardVisible } = useKeyboardOverlap(
+    root,
+    `${room?.width}x${room?.height}`,
+  );
   const anchor = useConversationAnchor(
     scroll,
     `${outer.rule}:${outer.width}:${outer.height}:${room?.width}:${docked}`,

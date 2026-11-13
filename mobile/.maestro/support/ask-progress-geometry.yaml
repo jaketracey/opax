@@ -1,24 +1,23 @@
 appId: au.com.opax.app
 ---
-# iOS hierarchy visibility includes views underneath the native bars (build 14
-# drew the stages behind the navigation bar and still "passed"). Read the real
-# frames: the current question and its status line, or its error, sit between
-# the navigation bar and the tab bar. Re-read while the reveal scroll settles.
-# The probe still reads the retired `ask-stages` (Probe.swift follow-up), so
-# the question alone stands in until it reads `ask-progress`.
+# Hierarchy visibility includes views underneath native controls. Measure the
+# whole question and progress/error against the inline bar's visible controls,
+# scroll viewport, composer, tab bar and keyboard. UIKit's retained large-title
+# frame and keyboard-controller scroll insets are not visible occlusion edges.
+# Re-read while the reveal scroll settles; missing measurements fail closed.
 - copyTextFrom:
     id: search-geometry
-- evalScript: ${output.ask = JSON.parse(maestro.copiedText); output.askBlock = (output.ask.askStages.height && output.ask.askStages) || (output.ask.askError.height && output.ask.askError) || output.ask.askQuestion}
+- runScript: ask-progress-visible.js
 - repeat:
     while:
-      true: ${!(output.ask.askQuestion.height && output.askBlock.height && output.ask.askQuestion.y >= output.ask.nav.y + output.ask.nav.height && output.askBlock.y + output.askBlock.height <= output.ask.windowHeight - output.ask.adjustedInset.bottom)}
+      true: ${!output.askVisible}
     times: 8
     commands:
       - waitForAnimationToEnd:
           timeout: 1000
       - copyTextFrom:
           id: search-geometry
-      - evalScript: ${output.ask = JSON.parse(maestro.copiedText); output.askBlock = (output.ask.askStages.height && output.ask.askStages) || (output.ask.askError.height && output.ask.askError) || output.ask.askQuestion}
+      - runScript: ask-progress-visible.js
 - assertTrue:
-    condition: ${output.ask.askQuestion.height > 0 && output.askBlock.height > 0 && output.ask.askQuestion.y >= output.ask.nav.y + output.ask.nav.height && output.askBlock.y + output.askBlock.height <= output.ask.windowHeight - output.ask.adjustedInset.bottom}
-    label: The question and its status line (or error) are on screen, clear of the navigation and tab bars
+    condition: ${output.askVisible}
+    label: The whole question and progress or error are readable between the visible bar controls and composer
