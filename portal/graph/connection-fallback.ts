@@ -1,6 +1,6 @@
 import {donorDisclosure,donorDisplayText} from '../public/donor-disclosure.js'
 import type { MoneyGraph, MoneyMapHandle, MoneyMapOptions, MoneyScene, ReceiptMeasure } from './index.ts'
-import { receiptGraphView, receiptMeasureLabel } from './index.ts'
+import { receiptGraphView, receiptMeasureLabel } from './receipt-view.ts'
 import { filterMoneyEdges, readMoneyFilters, type MoneyFilters } from '../public/money-records.js'
 import { formatMoney } from './map-types.ts'
 

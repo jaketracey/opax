@@ -1,3 +1,4 @@
+import {industryName, fy} from '../public/money-scope.js'
 import {ASK_EVIDENCE_RULES} from './ask-writing-rules'
 import {federalPartyMoneyAnswer,federalPartyMoneyResponse} from './ask-money-routing'
 import { withAppBanner } from './app-banner'
@@ -4457,12 +4458,12 @@ function longDate(iso: string | null | undefined): string {
   if (!m) return iso ?? ''
   return `${Number(m[3])} ${MONTHS[Number(m[2]) - 1]} ${m[1]}`
 }
-const industryLabel = (ind: string): string => ind.replace(/_/g, ' ')
+const industryLabel = industryName
 /** "Labor", then "Labor and LNP", then "Labor, LNP and the Greens". */
 const andList = (xs: string[]): string =>
   xs.length <= 1 ? (xs[0] ?? '') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`
 /** "2024-25" on its own when an entity filed only once. */
-const yearSpan = (a: string, b: string): string => (a && b && a !== b ? `${a} to ${b}` : b || a)
+const yearSpan = (a: string, b: string): string => fy(a && b && a !== b ? `${a} to ${b}` : b || a)
 
 const indexLinks = (): string =>
   `<p><a href="/subject/person">Parliamentarians</a> · <a href="/subject/party">Parties</a> · ` +
@@ -5585,8 +5586,8 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     node = moneyData?.donors.get(foldName(name)) ?? null
     // The index is keyed by its own fold (donorLookup: foldDonorName), so it is read with that fold.
     const index = node ? null : await loadDonorIndex(env.ASSETS).catch(()=>null)
-    disclosureRecord = node ?? index?.get(foldDonorName(name)) ?? null
-    // A name the index holds nowhere is a 404; an index that could not be read is a 503, never "No donor by this name".
+    disclosureRecord = node ?? index?.get('federal:' + foldDonorName(name)) ?? index?.get(foldDonorName(name)) ?? null
+    // A name the index holds nowhere is a 404; an index that could not be read is a 503, never a missing-donor page.
     if (!disclosureRecord) return unknownSubjectMeta('donor', Boolean(index))
     display = disclosureRecord ? donorDisclosure(disclosureRecord).name : name
   }

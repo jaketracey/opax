@@ -100,10 +100,10 @@ test('a phone row is its title, then one line: the parts joined by bound dots an
   // What a sighted reader sees: the parts joined by bound dots, the figure at the end.
   const seen = el => { const copy = el.cloneNode(true); for (const sr of copy.querySelectorAll('.dt-sr')) sr.remove(); return copy.textContent; };
   assert.equal(seen(cell.querySelector('.dt-phone-meta')),'Mining ·\u00a01998 to 2024 ·\u00a01 receipt');
-  assert.match(seen(cell.querySelector('.dt-phone-figure')),/^\$125k$/);
+  assert.match(seen(cell.querySelector('.dt-phone-figure')),/^\$125\.0k$/);
   // What a screen reader hears: each part after its column's name, as the hidden grid would have said it.
   assert.equal(cell.querySelector('.dt-phone-meta').textContent,'Industry: Mining ·\u00a0From to To: 1998 to 2024 ·\u00a0Receipts: 1 receipt');
-  assert.equal(cell.querySelector('.dt-phone-figure').textContent,'Received: $125k');
+  assert.equal(cell.querySelector('.dt-phone-figure').textContent,'Received: $125.0k');
   for (const sr of cell.querySelectorAll('.dt-phone .dt-sr')) assert.match(sr.textContent,/^[A-Z][^:]*: $/);
   assert.equal(document.querySelectorAll('td[data-phone-title]').length,1);
   // The grid and its cells are unchanged: the phone line is extra markup inside the title cell.

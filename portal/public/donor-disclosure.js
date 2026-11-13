@@ -5,6 +5,10 @@
 // no record holds stays plain text: its page would be a 404.
 import {foldDonorName} from './donor-entity.js?v=3fd3e51b56';
 
+import {displayName} from './display-name.js';
+import {financialYear, fy} from './money-scope.js';
+export {financialYear, fy, moneyScope, industryName} from './money-scope.js';
+
 const safeHref = value => typeof value === 'string' && /^(?:\/(?!\/)|https?:\/\/)/i.test(value) ? value : null;
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
 export function confidentDonorMatch(record) {
@@ -50,8 +54,9 @@ export function donorPageHref(record, name = record?.source_name ?? record?.labe
 // An AEC associated entity also carries its register line, linked to the register.
 export function donorLabelHTML(record, fallback) {
   const {name,href,associated,associatedUrl} = donorDisclosure(record,fallback);
-  const label = href ? `<a href="${escape(href)}">${escape(name)}</a>` : escape(name);
-  return associated ? `${label} <span class="donor-assoc"><a href="${escape(associatedUrl)}" rel="external noopener" target="_blank">${escape(sentenceCase(associated))}</a></span>` : label;
+  const shown = displayName(name).replace(/\bLTD\b/g, 'Ltd');
+  const label = href ? `<a href="${escape(href)}" title="${escape(name)}">${escape(shown)}</a>` : `<span title="${escape(name)}">${escape(shown)}</span>`;
+  return associated ? `${label} <span class="donor-assoc"><a href="${escape(associatedUrl)}" rel="external noopener" target="_blank">${escape(sentenceCase(fy(associated)))}</a></span>` : label;
 }
 export function donorDisplayText(record, fallback) {
   const {name,associated} = donorDisclosure(record,fallback);
@@ -59,13 +64,16 @@ export function donorDisplayText(record, fallback) {
 }
 export function donorLookup(records) {
   const index=new Map();
-  for(const record of records || [])for(const name of [record.source_name,record.label,record.name,...record.aliases || [],...record.lookup_names || []].filter(Boolean)){
+  for(const record of records || [])for(const name of new Set([record.source_name,record.label,record.name,...record.aliases || [],...record.lookup_names || []].filter(Boolean))){
     const folded=foldDonorName(name);
     for(const key of [folded,...(record.jurisdiction?[record.jurisdiction+':'+folded]:[])]){
       const prior=index.get(key);
       const sameConfirmedEntity=prior?.match?.entity_id && prior.match.entity_id===record.match?.entity_id && confidentDonorMatch(prior) && confidentDonorMatch(record);
-      if(sameConfirmedEntity)index.set(key,prior);
-      else if(prior && (prior.id!==record.id || prior.source_name!==record.source_name))index.set(key,{label:name,returnReferences:[...prior.returnReferences || [],...record.returnReferences || []]});
+      if(sameConfirmedEntity && prior.jurisdiction===record.jurisdiction)index.set(key,prior);
+      else if(prior && (prior.id!==record.id || prior.source_name!==record.source_name)) {
+        const records = [...(prior.records || [prior]), record];
+        index.set(key,{label:name,records,...(sameConfirmedEntity ? {match:prior.match} : {}),returnReferences:records.flatMap(r=>r.returnReferences || [])});
+      }
       else index.set(key,record);
     }
   }
@@ -217,7 +225,7 @@ export function publicFundingOnly(x) {
   return f.count === 0 && f.total === 0 && f.publicFunding[1] > 0;
 }
 
-export const financialYear = year => `${year}-${String((year + 1) % 100).padStart(2, '0')}`;
+
 
 /** The scope of a receiptFigures result, in a reader's words, for its own line under the figure. */
 export function receiptScopeLabel(figures, measure = 'all_types') {

@@ -1,3 +1,4 @@
+import {fy} from './money-scope.js';
 /* Party pages for every party the record names, not only the money map's
    (Jake, 16 Oct). A party outside the map, such as one senator's own party, has
    no node to hang an entry on, so the page is built from who sat for it: the
@@ -202,6 +203,12 @@ export function partySpeechLabel(label, {indexed = null, roster = null, same = (
   return best;
 }
 
+export function recordedEnd(person) {
+  if (!person) return false;
+  if (person.end || person.end_date) return true;
+  const service = [...(person.affiliations || []), ...(person.representation || []), ...(person.service || [])];
+  return service.length > 0 && service.every(row => Boolean(row.end || row.end_date));
+}
 const SHOWN = 12;
 /** The Members block: portrait rows as the people directory draws them, sitting members first.
  *  `h` carries app.js's esc, photoUrlFor, personUrl, partyChipHTML, yearSpan, stateName, sourceLineHTML. */
@@ -211,7 +218,8 @@ export function partyMembersHTML(label, members, h, {speechesHref = '', director
   if (!total) return '';
   // Seat-roster members after a later election: not known to sit, not known to have left.
   const rostered = members.former.filter(m => m.seat_roster?.stale);
-  const former = members.former.filter(m => !m.seat_roster?.stale);
+  const former = members.former.filter(m => !m.seat_roster?.stale && !m.roster?.current && recordedEnd(m.roster));
+  const undated = members.former.filter(m => !m.seat_roster?.stale && (m.roster?.current || !recordedEnd(m.roster)));
   const row = m => {
     const photo = h.photoUrlFor(m.name);
     const portrait = photo
@@ -255,8 +263,9 @@ export function partyMembersHTML(label, members, h, {speechesHref = '', director
   return `<section class="party-members" id="party-members">
     <div class="entry-section-head"><h3 class="subject-section-title">${independent ? 'Parliamentarians' : 'Members'}</h3>${speechesHref ? `<a href="${h.esc(speechesHref)}">Their speeches</a>` : ''}</div>
     ${members.current.length || rostered.length
-      ? group(independent ? 'Sitting parliamentarians' : 'Sitting members', members.current) + rosteredGroups + group(independent ? 'Former parliamentarians' : 'Former members', former)
-      : group('', former)}
+      ? group(independent ? 'Sitting parliamentarians' : 'Sitting members across all parliaments', members.current) + rosteredGroups + group(independent ? 'Former parliamentarians' : 'Former members', former)
+      : group('Former members', former)}
+    ${group('Other members in the record; service end not recorded', undated)}
     ${directoryHref ? `<p class="entry-more"><a href="${h.esc(directoryHref)}">${h.esc(label)} in the parliamentarians directory</a></p>` : ''}
     ${h.sourceLineHTML({
       updated, source: 'Parliamentary roster, verified electorate rosters and recorded divisions',
@@ -394,11 +403,11 @@ export function partyReturns(label, parties, same = (a, b) => identity(a) === id
   }
   lodged.sort((a, b) => a.from.localeCompare(b.from));
   const note = lodged.length > 1 ? `Returns lodged as ${lodged.map(l => `${l.name} (${l.from === l.to ? l.from : `${l.from} to ${l.to}`})`).join(' and as ')}, combined here.` : '';
-  return {rows: [...byYear.values()], names: lodged.map(l => l.name), note, entry: names.length === 1 ? parties[names[0]] : null};
+  return {rows: [...byYear.values()], names: lodged.map(l => l.name), note: fy(note), entry: names.length === 1 ? parties[names[0]] : null};
 }
 export const isIndependent = label => identity(label) === 'IND';
 export const INDEPENDENTS_DESCRIPTION = 'Parliamentarians who sat without a party. Not a party organisation.';
-export const PARTY_MEMBER_SCOPE = 'Parliamentarian counts include current and former people recorded under the affiliation in the roster, a verified electorate roster or the divisions. Each person is counted once per affiliation, using their person ID where held.';
+export const PARTY_MEMBER_SCOPE = 'Parliamentarian counts include current and other people recorded under the affiliation in the roster, a verified electorate roster or the divisions. Each person is counted once per affiliation, using their person ID where held.';
 export const partyDisplayName = label => isIndependent(label) ? 'Independents' : identity(label) === 'DLP' ? PARTY_NAMES.DLP[1] : label;
 export const PARTY_MONEY_PATHS = ['/graph/money.json', '/graph/money.qld.json', '/graph/money.vic.json', '/graph/money.tas.json'];
 

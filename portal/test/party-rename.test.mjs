@@ -141,7 +141,7 @@ test('money on the page: both names combined, saying which name each part was lo
   });
   assert.deepEqual(returns.names, ['Liberal Democrats', 'Libertarian Party']);
   assert.deepEqual(returns.rows.map(r => [r[0], r[1]]), [['2020-21', 100], ['2021-22', 200], ['2023-24', 300]]);
-  assert.equal(returns.note, 'Returns lodged as Liberal Democrats (2020-21 to 2021-22) and as Libertarian Party (2023-24), combined here.');
+  assert.equal(returns.note, 'Returns lodged as Liberal Democrats (2020–21 to 2021–22) and as Libertarian Party (2023–24), combined here.');
   assert.equal(partyReturns('Labor', {Labor: {returns: [['2023-24', 1]]}}).note, '', 'one name, no note');
   const state = partyStateMoneyHTML('Libertarian Party', [['vic', {meta: {jurisdictionLabel: 'Victoria'}, nodes: [
     {id: 'p1', kind: 'party', label: 'Liberal Democrats', total: 1000, count: 2, firstYear: 2019, lastYear: 2021},

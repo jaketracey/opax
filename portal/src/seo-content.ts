@@ -1,3 +1,4 @@
+import {financialYear, fy} from '../public/money-scope.js'
 import {supplierContractsHTML} from '../public/contracts-table.js'
 import {decodeHTMLStrict} from 'entities'
 import {donorDisclosure,donorLabelHTML,receiptGraph,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
@@ -309,7 +310,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     if (!found) continue
     const {meta, label, rows, scope} = found
     const config = partyMoneyTableConfig(rows,`person-party-money-${source.toLowerCase()}`,`partyMoney${source}`,'person',{party:label,jurisdiction:({AEC:'federal',ECQ:'qld',VEC:'vic'} as Record<string,string>)[source]})
-    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(meta.coverage || '')}</p>${scope ? `<p>${escapeHtml(scope)}</p>` : ''}${registerHTML(config)}`
+    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(fy(meta.coverage || ''))}</p>${scope ? `<p>${escapeHtml(scope)}</p>` : ''}${registerHTML(config)}`
     body += `<p>Source: ${escapeHtml(meta.sourceShort || meta.source || source)}. Federal and state returns are shown separately and never summed.</p>${original(meta.source_url || (source==='AEC' ? 'https://transparency.aec.gov.au/' : source==='ECQ' ? 'https://disclosures.ecq.qld.gov.au/' : 'https://disclosures.vec.vic.gov.au/'))}`
   }
   const owned = sponsored?.sponsored[p.pid || p.name] || []
@@ -369,7 +370,7 @@ export function homeMapFallbackHTML(graph: unknown): string {
  */
 export function mapSpanPhrase(graph: unknown): string {
   const {firstYear, lastYear} = receiptHeadline(graph)
-  const fy = (year: number) => `${year}-${String((year + 1) % 100).padStart(2, '0')}`
+  const fy = financialYear
   if (firstYear == null || lastYear == null) return 'AEC returns'
   return firstYear === lastYear ? `AEC returns, ${fy(firstYear)}` : `AEC returns, ${fy(firstYear)} to ${fy(lastYear)}`
 }
@@ -383,7 +384,7 @@ export function mapSpanPhrase(graph: unknown): string {
 export function homeMapSpan(graph: unknown): string | null {
   const {firstYear, lastYear} = receiptHeadline(graph)
   if (firstYear == null || lastYear == null) return null
-  const fy = (year: number) => `${year}–${String((year + 1) % 100).padStart(2, '0')}`
+  const fy = financialYear
   return firstYear === lastYear ? fy(firstYear) : `${fy(firstYear)} to ${fy(lastYear)}`
 }
 
@@ -619,7 +620,7 @@ export async function renderMoneyAnswer(title: string, read: ReadAsset): Promise
     // receiptGraph): each receipt once, from the party's own return, every type;
     // no contracts, grants or other flows. The homepage card states the same line.
     const head=receiptHeadline(graph)
-    body+=`<h2>${label} disclosed receipts</h2><p>${currency(head.total)} from ${count(head.sources)} receipt sources, across ${count(head.pairs)} source-to-party totals on this map. ${parties.length} parties.${head.scope ? ` ${escapeHtml(head.scope)}.` : ''} Updated ${escapeHtml(graph.meta.generated)}. Coverage: ${escapeHtml(graph.meta.coverage || 'See the source')}. Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || label)}.</p><ul>${parties.map(p=>`<li>${link(partyUrl(p.label),p.label)}</li>`).join('')}</ul><p>${link(path,`${label} map data export`)}</p>`
+    body+=`<h2>${label} disclosed receipts</h2><p>${currency(head.total)} from ${count(head.sources)} receipt sources, across ${count(head.pairs)} source-to-party totals on this map. ${parties.length} parties.${head.scope ? ` ${escapeHtml(head.scope)}.` : ''} Updated ${escapeHtml(graph.meta.generated)}. Coverage: ${escapeHtml(fy(graph.meta.coverage || 'See the source'))}. Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || label)}.</p><ul>${parties.map(p=>`<li>${link(partyUrl(p.label),p.label)}</li>`).join('')}</ul><p>${link(path,`${label} map data export`)}</p>`
   }
   // The index's meta from its own small file (public/supplier-row-buckets.js), else the 7.6 MB index.
   type SuppliersMeta = {meta:{generated_at:string;total:number;contract_count:number;source:string;published_from:string;published_to:string}}

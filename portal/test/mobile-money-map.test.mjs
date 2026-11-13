@@ -1,3 +1,4 @@
+import {receiptGraphView,receiptMeasureLabel} from '../graph/receipt-view.ts';
 import {donorDisclosure,donorDisplayText} from '../public/donor-disclosure.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -74,9 +75,8 @@ test('desktop selection keeps the quiet focus nudge',()=>{
   assert.deepEqual(selectedFocus(1200,false),[['focusOn','a',null]]);
 });
 
-const windowBlock=adapter.slice(adapter.indexOf('export function windowFigures'),adapter.indexOf('export function buildGraph',adapter.indexOf('export function windowFigures')));
 const fallback=read('connection-fallback').replace(/^import .*\n/gm,'').replaceAll('export function','function');
-const {connectionRows,mountConnectionFallback}=runInNewContext(`${transpile(windowBlock.replaceAll('export ',''))}\n${transpile(fallback)}; ({connectionRows,mountConnectionFallback})`,{donorDisclosure,donorDisplayText,URLSearchParams,filterMoneyEdges,readMoneyFilters,formatMoney:n=>`$${n}`,document:{createElement:tag=>element(tag)}});
+const {connectionRows,mountConnectionFallback}=runInNewContext(`${transpile(fallback)}; ({connectionRows,mountConnectionFallback})`,{receiptGraphView,receiptMeasureLabel,donorDisclosure,donorDisplayText,URLSearchParams,filterMoneyEdges,readMoneyFilters,formatMoney:n=>`$${n}`,document:{createElement:tag=>element(tag)}});
 function element(tag='div') { return {tagName:tag,children:[],style:{},classList:{remove(){}},append(...items){this.children.push(...items)},replaceChildren(){this.children=[]},setAttribute(){},addEventListener(name,fn){this[name]=fn},remove(){this.removed=true}}; }
 const data={nodes:[{id:'hub',kind:'grantor',flow:'contracts',label:'Contracts'},{id:'a',kind:'donor',label:'Recipient A Pty Ltd'},{id:'p',kind:'party',label:'Party'}],edges:[
   {source:'hub',target:'a',total:100,count:2,byYear:{2022:[40,1],2023:[60,1]}},

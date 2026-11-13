@@ -155,8 +155,8 @@ test('a minor party outside the money map: its one member, under the full name, 
   assert.equal(doc.querySelector('li.dir-row a').getAttribute('href'), '/subject/person/alex-fixture');
   assert.ok(doc.querySelector('.dir-mono'), 'no portrait: the blank circle, never initials');
   assert.ok([...doc.querySelectorAll('a')].some(a => a.textContent === 'Their speeches'));
-  assert.equal(doc.querySelectorAll('h4').length, 0, 'nobody sitting: no subheadings, and no "Sitting members (0)"');
-  assert.doesNotMatch(doc.body.textContent, /\(0\)|Not available|not recorded/i);
+  assert.equal(doc.querySelector('h4').textContent, 'Other members in the record; service end not recorded (1)');
+  assert.doesNotMatch(doc.body.textContent, /\(0\)|Not available/i);
   // A party with nobody in the record draws no Members block at all, and no state money draws nothing.
   assert.equal(partyMembersHTML('Nobody Party', partyMembers('Nobody Party', {roster, divisions}), helpers), '');
   assert.equal(partyStateMoneyHTML('Fixture First Party', [['qld', {nodes: [], edges: []}]], helpers), '');
@@ -237,7 +237,7 @@ test('the app presents independents as parliamentarians outside a party organisa
   assert.equal(doc.querySelector('#subject-title').textContent, 'Independents');
   assert.ok(doc.body.textContent.includes('Parliamentarians who sat without a party. Not a party organisation.'));
   assert.equal(doc.querySelector('#party-members h3').textContent, 'Parliamentarians');
-  assert.match(doc.querySelector('.subject-tag').textContent, /\d+ sitting parliamentarians/);
+  assert.match(doc.querySelector('.subject-tag').textContent, /\d+ marked current in the directory/);
   assert.doesNotMatch(doc.querySelector('.subject-tag').textContent, /sitting members/);
   assert.doesNotMatch(doc.body.textContent, /What its members said/);
 });

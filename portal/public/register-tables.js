@@ -1,22 +1,12 @@
-import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=f055b6abe2';
-import {donorDisclosure, financialYear, receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=dffa19bbff';
+import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=766cd2970b';
+import {donorDisclosure, financialYear, receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=3a0ec5c387';
 import {interestHolder} from './interest-holder.js';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const date = value => /^\d{4}-\d{2}-\d{2}/.test(String(value || '')) ? String(value).slice(0, 10) : null;
 const href = value => { try { const url = new URL(value); return /^https?:$/.test(url.protocol) ? url.href : null; } catch { return null; } };
-/** An industry key as a name, for the party table and Explain (money-explain.js):
- *  'finance' is 'Finance', 'mining_&_energy' 'Mining & energy'. 'individual' is
- *  the pipeline's tag for a private person (export_money_graph.py rule 8), so it
- *  reads 'Individual'; a missing tag (and the old 'Not supplied') reads
- *  'Industry not recorded'. A name passes through unchanged, so a label maps to
- *  itself and old links carrying raw codes still filter. */
-export const industryName = value => {
-  const text = String(value ?? '').replace(/_/g,' ').trim();
-  if (!text || /^(?:not supplied|industry not recorded)$/i.test(text)) return 'Industry not recorded';
-  if (/^individuals?$/i.test(text)) return 'Individual';
-  return text[0].toUpperCase() + text.slice(1);
-};
+import {industryName} from './money-scope.js';
+export {industryName} from './money-scope.js';
 /** A party money table: its industry filter takes the raw code an old link
  *  carries ("finance") or the label the rows show ("Finance"). */
 const isPartyMoney = config => String(config?.urlKey || '').startsWith('partyMoney');
@@ -242,7 +232,7 @@ export function governmentFunctionTableConfig(rows) {
 // for every money figure, light enough for the games and the Worker's tools);
 // they are re-exported here for the pages and tables that already import them.
 // financialYear ("2020-21") comes from there too, for any scope line written here.
-export {receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=dffa19bbff';
+export {receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=3a0ec5c387';
 
 /**
  * A party's headline: its own federal returns, every receipt line once and all
@@ -314,7 +304,7 @@ export function partyMoneyTableConfig(rows, id = 'party-money-table', urlKey = '
   const exportEndpoint = scope?.party ? '/api/table/party-money?' + new URLSearchParams({'f.to':JSON.stringify([scope.party]),...(scope.jurisdiction ? {'f.jurisdiction':JSON.stringify([scope.jurisdiction])} : {})}) : null;
   return {id,caption:'Disclosed receipts',pageType,urlKey,pageSize:50,rows:rows.map(({return_reference,...row})=>({...row,industry:industryName(row.industry)})),
     defaultSort:{key:'total',dir:'desc'},export:{filename:'party-receipts.csv',...(exportEndpoint ? {endpoint:exportEndpoint} : {})},
-    columns:[{key:'label',label:'Source',type:'text',primary:true},{key:'industry',label:'Industry',type:'category',facet:'multi'},
+    columns:[{key:'label',label:'Source',type:'text',primary:true,sourceName:true},{key:'industry',label:'Industry',type:'category',facet:'multi'},
       {key:'total',label:'Received',type:'money',bar:true,format:'compact',facet:'range'},
       {key:'count',label:'Receipts',type:'count',facet:'range'},{key:'firstYear',label:'First year',type:'year'},
       {key:'lastYear',label:'Last year',type:'year'}],primaryLink:row=>row.href || null,

@@ -1,6 +1,6 @@
 import {MONEY_GRAPHS} from './donor-entity.js?v=3fd3e51b56';
-import {donorLookup} from './donor-disclosure.js?v=dffa19bbff';
-export {donorDisclosure,donorLabelHTML,donorDisplayText,donorLookup,receiptFigures,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine} from './donor-disclosure.js?v=dffa19bbff';
+import {donorLookup} from './donor-disclosure.js?v=3a0ec5c387';
+export {donorDisclosure,donorLabelHTML,donorDisplayText,donorLookup,receiptFigures,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine} from './donor-disclosure.js?v=3a0ec5c387';
 let memo;
 const graphs=new Map();
 export function loadMoneyGraph(path){
@@ -15,3 +15,7 @@ export function loadDonorViewIndex(){
     .catch(()=>new Map());
 }
 export function donorRows(rows,_index,limit=Infinity){return [...(rows || [])].sort((a,b)=>b[1]-a[1]).slice(0,limit)}
+
+export {fy, moneyScope, industryName} from './money-scope.js';
+
+export {displayName} from './display-name.js';

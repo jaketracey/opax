@@ -11,6 +11,7 @@ const number = value => value == null || value === '' || !Number.isFinite(Number
 const collator = new Intl.Collator('en-AU', {numeric:true, sensitivity:'base'});
 const decimal = new Intl.NumberFormat('en-AU', {maximumFractionDigits:20});
 const money = new Intl.NumberFormat('en-AU', {style:'currency', currency:'AUD', minimumFractionDigits:2, maximumFractionDigits:2});
+import {displayName} from './display-name.js';
 const text = value => Array.isArray(value) ? value.join('; ') : String(value ?? '');
 const members = value => [...new Set((Array.isArray(value) ? value : [value]).filter(v=>v != null && v !== '').map(text))];
 const pageQueries = new WeakMap();
@@ -28,7 +29,7 @@ const recognised = (key,config) => {
 
 function compact(value, currency) {
   for (const [scale, suffix] of [[1e12,'tn'], [1e9,'bn'], [1e6,'m'], [1e3,'k']]) {
-    if (Math.abs(value) >= scale) return `${value < 0 ? '−' : ''}${currency ? '$' : ''}${(Math.round(Math.abs(value) / (scale / 10)) / 10).toFixed(1).replace(/\.0$/, '')}${suffix}`;
+    if (Math.abs(value) >= scale) return `${value < 0 ? '−' : ''}${currency ? '$' : ''}${(Math.round(Math.abs(value) / (scale / 10)) / 10).toFixed(1).replace(/\.0$/, currency && Math.abs(value) < 100e6 ? '.0' : '')}${suffix}`;
   }
   return currency ? money.format(value) : decimal.format(value);
 }
@@ -47,7 +48,7 @@ export function formatCell(value, column) {
     const date = new Date(value);
     return Number.isNaN(date.getTime()) ? '' : shortDate(date.toISOString());
   }
-  return text(value);
+  return column.sourceName ? displayName(text(value)).replace(/\bLTD\b/g, 'Ltd') : text(value);
 }
 
 const candidateRows = rows => rows.filter(row=>row && typeof row==='object' && !Array.isArray(row));
@@ -387,7 +388,7 @@ function render(config, page, query = {}, view = {}, error = '') {
   const phone = stack ? phoneLayout(config, columns, phoneTitle, prominence) : null;
   const body = page.rows.map(row => `<tr role="row">${columns.map(column => {
     const value = row[column.key], display = formatCell(value,column), n = number(value);
-    const exact = numeric(column) && n != null ? column.type === 'money' ? money.format(n) : decimal.format(n) : display;
+    const exact = numeric(column) && n != null ? column.type === 'money' ? money.format(n) : decimal.format(n) : column.sourceName ? text(value) : display;
     const link = column.href ? href(column.href(row),config) : column.primary && config.primaryLink ? href(config.primaryLink(row),config) : null;
     const bar = column.bar && n != null && maxima[column.key] ? `<span class="dt-bar-track" aria-hidden="true"><span class="dt-bar" style="--dt-bar:${Math.min(100,Math.round(Math.abs(n) / maxima[column.key] * 100))}%"></span></span>` : '';
     return `<td role="cell" data-label="${esc(column.label)}" data-align="${esc(column.align || (numeric(column) ? 'end' : 'start'))}"${column.primary ? ' data-primary' : ''}${column === prominence ? ' data-prominent' : ''}${numeric(column) ? ' class="dt-number"' : column.type === 'date' ? ' class="dt-date"' : longToken.test(display) ? ' class="dt-long"' : ''} title="${esc(exact)}"${column === phoneTitle ? ' data-phone-title' : ''}><span class="dt-value">${link ? `<a href="${esc(link)}">${esc(display)}</a>` : esc(display) || '—'}</span>${bar}${column === phoneTitle ? phoneLineHTML(phone, row, config) : ''}</td>`;
