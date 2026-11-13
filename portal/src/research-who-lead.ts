@@ -1,3 +1,4 @@
+import {sharedCitationSpan} from './research-dedupe'
 import {ACCOUNTABILITY_QUESTION} from './research-answer-shape'
 import {sentenceParts} from './research-claim-audit.mjs'
 import {recordedChamber} from './ask-chamber-phrases'
@@ -14,9 +15,10 @@ function actors(text:string):string[] {
   if(!action.test(text))return []
   const match=namedRole.exec(text)
   const before=match?text.slice(0,match.index):'',after=match?text.slice(match.index+match[0].length):''
-  const role=match&&(action.test(after)||/\b(?:findings|conduct)\b[^.;]{0,60}\b(?:of|about|regarding|on|against)\s*$|\b(?:approved|authorised|authorized|ordered) by\s*$|\bcriticis(?:ed|es)\s*$/i.test(before))&&!/\b(?:cleared|exonerated|acquitted|not)\b[^.;]{0,65}$/i.test(before)?match[1]:undefined
+  const role=match&&(action.test(after)||/\b(?:findings|conduct)\b[^.;]{0,60}\b(?:of|about|regarding|on|against)\s*$|\b(?:approved|authorised|authorized|ordered) by\s*$|\bcriticis(?:ed|es)\s*$/i.test(before))&&!/\b(?:cleared|exonerated|acquitted|no|not)\b[^.;]{0,65}$/i.test(before)&&!/^\s+(?:(?:was|were)\s+not|no)\b/i.test(after)?match[1]:undefined
   const subject=new RegExp(String.raw`(?:^|\b(?:that|found|concluded)\s+)(${name})\s+(?:approved|authorised|authorized|decided|ordered|misled|ignored|failed|breached)\b`,'u').exec(text)?.[1]
-  const conduct=new RegExp(String.raw`\b[Ff]indings (?:about|regarding|on|against) (?:the conduct of )?(${name}(?:\s+and\s+${name})?)`,'u').exec(text)?.[1]
+  const conductMatch=new RegExp(String.raw`\b[Ff]indings (?:about|regarding|on|against) (?:the conduct of )?(${name}(?:\s+and\s+${name})?)`,'u').exec(text)
+  const conduct=conductMatch&&!/\b(?:no|not|cleared|exonerated|acquitted)\b[^.;]{0,65}$/i.test(text.slice(0,conductMatch.index))&&!/^\s+(?:(?:was|were)\s+not|no)\b/i.test(text.slice(conductMatch.index+conductMatch[0].length))?conductMatch[1]:undefined
   if(role||subject||conduct)return (role??subject??conduct!).split(/\s+and\s+/)
   if(/\b(?:approved|authorised|authorized) by Cabinet\b|\bCabinet (?:approved|authorised|authorized)\b/.test(text))return ['Cabinet']
   const office=/\b(?:the )?((?:(?:Department|Ministry) of|(?:Minister|Secretary) for) [A-Z][\p{L} ]+?(?:['’]s office)?) (?:(?:had |has )?(?:approved|authorised|ignored|failed|ran)|was responsible)\b/u.exec(text)?.[1]
@@ -54,7 +56,7 @@ export function leadWithWho<T extends Record<string,unknown>>(payload:T,question
   const held=selected.flatMap(s=>sentenceParts(evidence(s)).filter(p=>actors(p.text).length).map(p=>({s,text:p.text})))
     .sort((a,b)=>score(b.text,[b.s])-score(a.text,[a.s]))[0]
   if(held){
-    let text=held.text
+    let text=held.text.replace(/,\s*the member said[.!]?$/i,'.')
     if(held.s.kind==='speech'){
       if(!held.s.speaker)return payload
       const chamber=recordedChamber(held.s.chamber??''),date=held.s.date?` on ${readableDate(held.s.date)}`:''
@@ -65,7 +67,7 @@ export function leadWithWho<T extends Record<string,unknown>>(payload:T,question
   const missing='The cited sources do not name a person or office as responsible.'
   const existing=parts.find(p=>p.text===missing)
   if(existing)return moveFirst(payload,existing.a,existing.b,missing)
-  return prepend(payload,missing,ids)
+  return prepend(payload,missing,[])
 }
 
 function prepend<T extends Record<string,unknown>>(payload:T,text:string,ids:string[]):T {
@@ -93,8 +95,9 @@ function moveFirst<T extends Record<string,unknown>>(payload:T,a:number,b:number
     const from=Math.max(x,a),until=Math.min(y,b)
     if(from<until){
       const literal=chars.slice(from,until).join(''),at=replacement.indexOf(literal)
-      if(at<0&&(from!==a||until!==b)&&replacement!==original)return payload
-      ;(citations[id]??=[]).push(from===a&&until===b?[0,cp(replacement)]:[cp(replacement.slice(0,at)),cp(replacement.slice(0,at))+cp(literal)])
+      const shared=at<0?sharedCitationSpan(literal,replacement):null
+      if(at<0&&!shared&&(from!==a||until!==b)&&replacement!==original)return payload
+      ;(citations[id]??=[]).push(from===a&&until===b?[0,cp(replacement)]:at>=0?[cp(replacement.slice(0,at)),cp(replacement.slice(0,at))+cp(literal)]:[shared!.start,shared!.end])
     }
     for(const segment of offsets){const left=Math.max(x,segment.a),right=Math.min(y,segment.b);if(left<right)(citations[id]??=[]).push([segment.offset+left-segment.a,segment.offset+right-segment.a])}
   }

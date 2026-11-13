@@ -13,53 +13,81 @@ const qualifications = (text:string) => (normal(text).match(/\b(?:no|not|never|o
 const stem=(word:string)=>({gave:'give',giving:'give',given:'give'}[word]??word.replace(/ies$/,'y').replace(/(\w{4})ing$/,'$1').replace(/(\w{4})ed$/,'$1').replace(/(\w{3})s$/,'$1'))
 const MONTHS='january|february|march|april|may|june|july|august|september|october|november|december'
 const nonPerson=new RegExp('^(?:the|in|on|it|its|this|that|a|an|royal|commission|commissioner|scheme|cabinet|government|ombudsman|'+MONTHS+')$')
-function names(text:string):string {
-  const found:string[]=[]
-  const rest=text.replace(/\b\p{Lu}[\p{L}’'-]+(?:\s+(?:of|the|into|and))?(?:\s+\p{Lu}[\p{L}’'-]+)+\b/gu,m=>{
-    if(!/\b(?:commission|scheme|department|services|government|patent|report)\b/.test(normal(m)))found.push(normal(m))
-    return ' '
-  })
-  // A surname alone can still change the subject. Exempt sentence openers, body labels and date words.
-  for(const m of rest.matchAll(/\b\p{Lu}[\p{Ll}’'-]+\b/gu))if(!nonPerson.test(normal(m[0])))found.push(normal(m[0]))
-  // Preserve mention order too: swapping people can reassign the same ordered figures.
-  return found.join('|')
-}
-const dates=(text:string)=>(normal(text).match(/\b(?:january|february|march|april|may|june|july|august|september|october|november|december)\b/g)??[]).join('|')
-function claimWords(text:string,context:string):Set<string> {
+function expandNames(text:string,context:string):string {
   // Expand only an acronym actually defined by a capitalised name in these statements.
   for(const m of context.matchAll(/\b(?:[A-Z][a-z]+(?:\s+(?:of|the|and))?\s+){1,5}[A-Z][a-z]+\b/g)){
     const acronym=m[0].split(/\s+/).filter(w=>/^[A-Z]/.test(w)).map(w=>w[0]).join('')
     if(acronym.length>=2)text=text.replace(new RegExp('\\b'+acronym+'\\b','g'),m[0])
   }
-  return new Set([...words(text)].filter(w=>! /^(?:royal|found|concluded|described|report|words|own|both|further|thus|that|said|had|its|his|which)$/.test(w)).map(stem))
+  return text
 }
+function names(text:string,context=text,offices=true):string {
+  text=expandNames(text,context)
+  const found:{at:number;value:string}[]=[]
+  const rest=text.replace(/\b\p{Lu}[\p{L}’'-]+(?:\s+(?:of|the|into|and))?(?:\s+\p{Lu}[\p{L}’'-]+)+\b/gu,(m,at)=>{
+    // Reporting bodies and scheme titles may be abbreviated in the repeated finding.
+    if(!/\b(?:commission|scheme|government|patent|report)\b/.test(normal(m))&&(offices||!/\b(?:department|services|ministry)\b/.test(normal(m))))found.push({at,value:normal(m)})
+    return ' '.repeat(m.length)
+  })
+  for(const m of rest.matchAll(/\b\p{Lu}[\p{Ll}’'-]+\b/gu))if(!nonPerson.test(normal(m[0])))found.push({at:m.index!,value:normal(m[0])})
+  if(offices)for(const m of rest.matchAll(/\b(?:ombudsman|cabinet|government|ministers?|secretar(?:y|ies)|officials?|directors?|commissioners?)\b/gi))found.push({at:m.index!,value:normal(m[0])})
+  return found.sort((a,b)=>a.at-b.at).map(n=>n.value).join('|')
+}
+const dates=(text:string)=>(normal(text).match(/\b(?:january|february|march|april|may|june|july|august|september|october|november|december)\b/g)??[]).join('|')
+function claimWords(text:string,context:string):Set<string> {
+  return new Set([...words(expandNames(text,context))].filter(w=>! /^(?:royal|found|concluded|described|report|words|own|both|further|thus|that|said|had|its|his|which)$/.test(w)).map(stem))
+}
+const sameOrder=(a:Set<string>,b:Set<string>)=>[...a].filter(w=>b.has(w)).join('|')===[...b].filter(w=>a.has(w)).join('|')
 /** Require containment as well as overlap. High overlap alone merges changed categories in long templates. */
 function nearStatement(a:string,b:string):boolean {
-  if(figures(a)!==figures(b)||dates(a)!==dates(b)||qualifications(a)!==qualifications(b)||names(a)!==names(b))return false
+  if(figures(a)!==figures(b)||dates(a)!==dates(b)||qualifications(a)!==qualifications(b)||names(a,a+' '+b)!==names(b,a+' '+b))return false
   const left=claimWords(a,a+' '+b),right=claimWords(b,a+' '+b),shared=[...left].filter(w=>right.has(w)).length
   const shorter=Math.min(left.size,right.size),union=left.size+right.size-shared
-  return shared>=6&&shared===shorter&&(shared/union>=0.72||shared>=10)
+  return sameOrder(left,right)&&shared>=6&&shared===shorter&&(shared/union>=0.72||shared>=10)
 }
 /** A short quotation repeating a longer narrative's core claim gives way to that narrative.
  * Its citation anchors only the shared words, never the narrative's additional findings. */
 function repeatedQuote(quote:string,narrative:string):{start:number;end:number}|null {
   const qs=quotationSpans(quote)
-  if(qs.length!==1||quotationSpans(narrative).length||quote.length>=narrative.length||figures(quote)!==figures(narrative)||dates(quote)!==dates(narrative)||names(quote)!==names(narrative)||qualifications(quote)!==qualifications(narrative))return null
+  if(qs.length!==1||quotationSpans(narrative).length||quote.length>=narrative.length||figures(quote)!==figures(narrative)||dates(quote)!==dates(narrative)||names(quote,quote+' '+narrative,false)!==names(narrative,quote+' '+narrative,false)||qualifications(quote)!==qualifications(narrative))return null
   const core=qs[0].value.split(',')[0].replace(/[.!?]+$/,'').trim()
   if(words(core).size<4)return null
   const at=narrative.toLowerCase().indexOf(core.toLowerCase())
   return at<0?null:{start:Array.from(narrative.slice(0,at)).length,end:Array.from(narrative.slice(0,at+core.length)).length}
 }
 export function sameStatement(earlier:string,later:string):boolean {
-  if(figures(earlier)!==figures(later)||qualifications(earlier)!==qualifications(later))return false
+  if(figures(earlier)!==figures(later)||dates(earlier)!==dates(later)||qualifications(earlier)!==qualifications(later))return false
   if(normal(earlier)===normal(later))return true
-  if(normal(later).length>=20&&(' '+normal(earlier)+' ').includes(' '+normal(later)+' '))return true
+  if(normal(later).length>=20&&(' '+normal(earlier)+' ').includes(' '+normal(later)+' ')){
+    // Contained programme/category fragments need not name every entity in the full statement.
+    // A newly attributed statement still belongs to its named speaker.
+    const attribution=(s:string)=>normal(s).match(/(?:^| )([\p{L} ]+?) (?:said|told|stated|reported)(?: |$)/u)?.[1]??''
+    return attribution(earlier)===attribution(later)
+  }
   const a=words(earlier),b=words(later),shared=[...b].filter(w=>a.has(w)).length
   // Even one additional name can change who the finding is about.
-  if(a.size!==b.size)return false
+  if(a.size!==b.size||names(earlier,earlier+' '+later)!==names(later,earlier+' '+later))return false
   // Substituting a category, name or claim word is new content even in a long shared template.
-  return shared>=6&&shared===Math.min(a.size,b.size)&&shared/Math.max(a.size,b.size)>=0.9
+  return sameOrder(a,b)&&shared>=6&&shared===Math.min(a.size,b.size)&&shared/Math.max(a.size,b.size)>=0.9
 }
+// Find the longest shared run of content words. Extra names or findings break the run,
+// so a transferred citation never gains the fuller sentence's additional subjects.
+export function sharedCitationSpan(from:string,to:string):{start:number;end:number}|null {
+  if(normal(from)===normal(to))return {start:0,end:Array.from(to).length}
+  const tokens=(text:string)=>[...text.matchAll(/[\p{L}\p{N}’'-]+/gu)].filter(m=>!stop.has(normal(m[0]))).map(m=>({word:stem(normal(m[0])),at:m.index!,end:m.index!+m[0].length}))
+  const a=tokens(from),b=tokens(to)
+  let best=0,left=0,right=0
+  for(let i=0;i<a.length;i++)for(let j=0;j<b.length;j++){
+    let n=0
+    while(i+n<a.length&&j+n<b.length&&a[i+n].word===b[j+n].word)n++
+    if(n>best){best=n;left=b[j].at;right=b[j+n-1].end}
+  }
+  if(!best)return null
+  // The whole wording is shared apart from function words and punctuation.
+  if(best===b.length)return {start:0,end:Array.from(to).length}
+  return {start:Array.from(to.slice(0,left)).length,end:Array.from(to.slice(0,right)).length}
+}
+
 /** Different passages from one document are one source; different speakers remain separate claims. */
 export const statementSource = (source:Source):string => [(source.url||source.href||source.resource.replace(/\/t\/.*$/,'')).split('#')[0],source.speaker??'',source.date??''].join('|')
 
@@ -86,11 +114,11 @@ export function dedupeAnswer<T extends Record<string,unknown>>(payload:T):T {
   const removed:Part[]=[],kept:Part[]=[]
   const transfers=(from:Part,to:Part)=>{
     const ranges:{id:string;start:number;end:number}[]=[]
-    const quote=repeatedQuote(from.text,to.text)
+    const shared=repeatedQuote(from.text,to.text)??sharedCitationSpan(from.text,to.text)
     for(const id of from.ids)for(const [a,b] of citations[id]){
       const start=Math.max(a,from.start),end=Math.min(b,from.end)
       if(start>=end)continue
-      if(start===from.start&&end===from.end){ranges.push({id,start:to.start+(quote?.start??0),end:quote?to.start+quote.end:to.end});continue}
+      if(start===from.start&&end===from.end){if(!shared)return null;ranges.push({id,start:to.start+shared.start,end:to.start+shared.end});continue}
       // A partial citation must stay partial. If its exact text cannot be located in the earlier wording,
       // retain both sentences rather than widening the citation to the whole sentence.
       const text=chars.slice(start,end).join(''),at=to.text.indexOf(text)
@@ -104,7 +132,6 @@ export function dedupeAnswer<T extends Record<string,unknown>>(payload:T):T {
     if(removed.some(r=>p.start>=r.start&&p.end<=r.end))return
     const prior=kept.find(k=>{
       const exact=normal(k.text)===normal(p.text)
-      if(!exact&&(names(k.text)!==names(p.text)||dates(k.text)!==dates(p.text)))return false
       if(!exact&&!sameSource(k,p)&&!(recordsOnly(k)&&recordsOnly(p)))return false
       return sameStatement(k.text,p.text)||nearStatement(k.text,p.text)||repeatedQuote(k.text,p.text)||repeatedQuote(p.text,k.text)
     })

@@ -180,3 +180,63 @@ for(const finding of ["The report made findings about the conduct of former Mini
   assert.equal(cited(out,'fact-0')[0],finding)
   valid(out)
 })
+
+for(const [first,second] of [
+  ['The Department of Human Services deliberately misled the Ombudsman about the recovery scheme and its legal authority.','The Ombudsman deliberately misled the Department of Human Services about the recovery scheme and its legal authority.'],
+  ['The minister told the secretary about repeated legal warnings during development of the recovery scheme.','The secretary told the minister about repeated legal warnings during development of the recovery scheme.'],
+  ['The commission found the minister ignored the secretary during development of the recovery scheme.','The commission found the secretary ignored the minister during development of the recovery scheme.'],
+  ['The minister and secretary attended the meeting, where the minister told the secretary about repeated legal warnings.','The minister and secretary attended the meeting, where the secretary told the minister about repeated legal warnings.']
+])test('reversed actors retain separate claims and their own citations: '+first,()=>{
+  for(const lines of [[first,second],[second,first]]){
+    const p=payload(lines),out=api.distinctSummary(p)
+    assert.equal(out.answer,p.answer)
+    for(const id of Object.keys(p.citations))assert.deepEqual(cited(out,id),cited(p,id))
+    valid(out)
+  }
+})
+
+for(const cleared of [
+  'The commission made no adverse findings against Minister Avery Quinlan.',
+  'The commission found Minister Avery Quinlan was not responsible for the recovery scheme.',
+  'The commission found Ministers Avery Quinlan and Rowan Ellery were not responsible for the recovery scheme.',
+  'The commission found Minister Avery Quinlan no longer responsible for the recovery scheme.',
+  'The commission did not make findings against Minister Avery Quinlan.'
+])test('a negative finding never becomes the who-lead: '+cleared,()=>{
+  const own='The royal commission found that Cabinet approved the recovery scheme without legislative authority.'
+  for(const lines of [[own,cleared],[cleared,own]]){
+    const out=api.leadWithWho(payload(lines),question)
+    assert.equal(out.answer.split('\n\n')[0],own)
+    valid(out)
+  }
+  // Recovery from a source sentence must apply the same exclusion as moving answer text.
+  const p=payload(['The commission reported on the recovery scheme.']);p.sources[0].snippet=cleared
+  const out=api.leadWithWho(p,question)
+  assert.match(out.answer,/^The cited sources do not name a person or office as responsible\./)
+})
+
+test('a contained finding transfers its citation only to the shared words, excluding the added person',()=>{
+  const shorter='The minister ignored repeated legal warnings about the recovery scheme.'
+  const fuller=shorter.slice(0,-1)+'; Avery Quinlan confirmed the timetable.'
+  const p=payload([fuller,shorter]),out=api.distinctSummary(p)
+  assert.equal(out.answer,fuller)
+  assert.deepEqual(cited(out,'fact-1'),[shorter.slice(4,-1)])
+  assert.doesNotMatch(cited(out,'fact-1').join(' '),/Avery Quinlan/)
+  assert.deepEqual(cited(out,'fact-0'),[fuller]);valid(out)
+})
+
+test('the no-named-subject lead is uncited and leaves each source on its recorded claim',()=>{
+  const p=payload(['The commission reported on the recovery scheme.','The report was released in July.'])
+  const out=api.leadWithWho(p,question)
+  assert.match(out.answer,/^The cited sources do not name a person or office as responsible\./)
+  for(const id of Object.keys(p.citations))assert.deepEqual(cited(out,id),cited(p,id))
+  assert.ok(Object.values(out.citations).flat().every(([a])=>a>out.answer.indexOf('\n\n')))
+  valid(out)
+})
+
+test('a recovered speech finding removes trailing member attribution before its speaker wrapper',()=>{
+  const p=payload(['The commission reported on the recovery scheme.'])
+  Object.assign(p.sources[0],{kind:'speech',speaker:'Morgan Sample',chamber:'senate',date:'2023-07-10',snippet:'The report made findings about the conduct of former minister Avery Quinlan, the member said.'})
+  const out=api.leadWithWho(p,question)
+  assert.equal(out.answer.split('\n\n')[0],'Morgan Sample told the Senate on 10 July 2023 that the report made findings about the conduct of former minister Avery Quinlan.')
+  assert.doesNotMatch(out.answer,/the member said/);valid(out)
+})
