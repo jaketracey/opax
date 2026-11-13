@@ -40,6 +40,8 @@
        server's facts. On a phone the sheet opens in place. */
     .map-facts { padding: var(--space-tight) var(--space-block); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
     .map-facts .ui-sheet { max-height: 60vh; overflow: auto; }
+    /* The page's one main landmark: the totals drawer and the map, in the same column as before. */
+    .map-main { flex: 1; display: flex; flex-direction: column; min-height: 0; }
     #map { flex: 1; min-height: 0; }
     #status {
       display: flex; align-items: center; justify-content: center;
@@ -62,8 +64,10 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
     </a>
   </header>
+  <main class="map-main">
   <div class="map-facts"><details class="ui-pop ui-source"><summary><svg class="ui-source-glyph" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25h-8.5z"/><path d="M9 1.75V5.25h3.5M6.25 8.5h4M6.25 11h4"/></svg><span class="ui-source-text"><span class="ui-source-name">Map totals and sources</span></span></summary><div class="ui-sheet"><div id="crawl-facts"><p>Commonwealth and state disclosure records are separate. Source: AEC, ECQ and VEC returns; AusTender contract notices. An association does not prove influence.</p></div></div></details></div>
   <div id="map" tabindex="-1"><div id="status" role="status"></div></div>
-  <script type="module" src="/map-page.js?v=8b4f8ec9ed"></script>
+  </main>
+  <script type="module" src="/map-page.js?v=96e7054717"></script>
 </body>
 </html>

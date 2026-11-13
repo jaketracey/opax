@@ -54,6 +54,8 @@ export interface Division {
   recorded_ayes?: number; recorded_noes?: number; unknown_party_count?: number;
   members?: { name: string; person_id?: string; person_slug?: string; party?: string; vote: string; party_source?: { basis: string; url?: string | null; source_party?: string }; party_withheld?: { source_party: string; reason?: string } }[];
   bills?: { key: string; title: string; url?: string }[];
+  /** Set by the division export when the chamber's own dated party record covers this date (scripts/vote_parties.py). */
+  _meta?: { party_dated?: { record: string; from: string; through: string } };
 }
 interface Vote { question?: string; name?: string; title?: string; stage?: string; date?: string; vote?: string; division_slug?: string; source_url?: string }
 interface Votes { name: string; jurisdiction: string; for?: Vote[]; against?: Vote[] }
@@ -456,10 +458,12 @@ function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>,
   const listed=members.length || tallied+missing
   const labelled=listed-missing
   const plural=(n: number)=>`${count(n)} ${n===1 ? 'member' : 'members'}`
-  // Federal Senate labels are never checked against dated records (none are held yet), and the source can
-  // give a senator's later party on every date: say so rather than claim they are dated.
-  const senate=d.house==='senate' && (d.jurisdiction ?? 'federal')==='federal'
-  const senateNote=' These are the division source’s labels and can show a senator’s later party rather than the one held on this date, because no dated Senate party records are held yet.'
+  // The division source can give a senator's later party on every date. Federal Senate labels are checked
+  // against the Parliamentary Handbook's dated party records inside their dated range (_meta.party_dated). A
+  // Senate page without that mark (outside the range, or with a label no dated record checks: a senator whose
+  // only record is undated and names another party, or a reviewed hold) says its labels are the source's.
+  const senate=d.house==='senate' && (d.jurisdiction ?? 'federal')==='federal' && !d._meta?.party_dated
+  const senateNote=' These are the division source’s labels and can show a senator’s later party rather than the one held on this date, because the dated Senate party records held do not cover this date.'
   const origin=!fromRoster ? (senate ? `Party labels are those given in the division record.${senateNote}` : 'Party labels are those recorded for this division, rather than current affiliations.')
     : fromRoster>=labelled ? 'The division record gives no parties. Each label here is the one a dated parliamentary roster records for that member on this date.'
     : `Party labels are those recorded for this division, except for ${plural(fromRoster)} the division record lists without a party: their labels are the ones a dated parliamentary roster records for them on this date.${senate ? senateNote.replace(' These are', ' The others are') : ''}`

@@ -169,14 +169,18 @@ void main() {
 .mm-chip:hover { background: var(--navy-wash); }
 .mm-chip:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
 .mm-chip[aria-pressed='true'] { background: var(--navy); color: var(--on-navy); }
-.mm-chip[data-dimmed] { opacity: 0.4; }
+/* A dimmed or switched-off chip is still a control a reader can press, so its
+   words keep text contrast (--ink-soft: 6.5:1 on paper, 5.5:1 on the hover wash);
+   the faded dot carries the dimming. */
+.mm-chip[data-dimmed] { color: var(--ink-soft); }
+.mm-chip[data-dimmed] .mm-dot { opacity: 0.4; }
 .mm-chip-count { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .mm-chip[aria-pressed='true'] .mm-chip-count { color: inherit; }
 .mm-chip.mm-grants-toggle { margin-top: var(--space-tight); }
 .mm-chip.mm-grants-toggle[aria-pressed='true'] { background: none; color: var(--ink); } /* the pressed-chip rule paints navy; this one keeps the legend's ink */
 .mm-chip.mm-grants-toggle[aria-pressed='true']:hover { background: var(--navy-wash); }
 .mm-chip.mm-grants-toggle[aria-pressed='true'] .mm-chip-count { color: var(--ink-soft); }
-.mm-chip.mm-grants-toggle[aria-pressed='false'] { opacity: 0.5; }
+.mm-chip.mm-grants-toggle[aria-pressed='false'] { color: var(--ink-soft); }
 .mm-chip.mm-grants-toggle[aria-pressed='false'] .mm-dot { background: var(--divider-default) !important; }
 .mm-row-note { padding: var(--space-line) 0 var(--space-tight); font: var(--type-fine); color: var(--ink-soft); }
 .mm-dot { width: var(--size-party-dot); height: var(--size-party-dot); border-radius: var(--radius-round); flex: none; }

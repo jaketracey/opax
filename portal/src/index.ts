@@ -4751,6 +4751,9 @@ async function topicMeta(slug: string, name: string, url: URL, request: Request,
  * kilobytes of HTML, so an isolate renders each title once. A failed render is not kept.
  */
 const moneyAnswerMemo = new Map<string, ReturnType<typeof renderMoneyAnswer>>()
+/** Server HTML placed under another page's h1: every heading one level down (h6 stays h6). */
+const demoteHeadings = (html: string): string =>
+  html.replace(/<(\/?)h([1-6])\b/gi, (_m, close: string, level: string) => `<${close}h${Math.min(6, Number(level) + 1)}`)
 function sharedMoneyAnswer(title: string, read: ReadAsset): ReturnType<typeof renderMoneyAnswer> {
   const kept = moneyAnswerMemo.get(title)
   if (kept) return kept
@@ -7338,7 +7341,8 @@ export default {
       // Its span by the figures' own rule (seo-content.ts mapSpanPhrase).
       const span=federal ? mapSpanPhrase(federal) : null
       const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/map`,title:'Money map · OPAX'})).replace(/</g,'\\u003c')
-      const out=new HTMLRewriter().on('div#crawl-facts',{element(el){el.setInnerContent(facts.html,{html:true})}}).on('span#map-donors',{element(el){if(donors)el.setInnerContent(donors)}}).on('span#map-span',{element(el){if(span)el.setInnerContent(span)}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(shell)
+      // The drawer sits under the page's own h1: its headings step down a level.
+      const out=new HTMLRewriter().on('div#crawl-facts',{element(el){el.setInnerContent(demoteHeadings(facts.html),{html:true})}}).on('span#map-donors',{element(el){if(donors)el.setInnerContent(donors)}}).on('span#map-span',{element(el){if(span)el.setInnerContent(span)}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(shell)
       const headers=new Headers(out.headers);headers.delete('content-length')
       if(shell.ok){const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',shell.headers.get('etag'),facts.html,schema,donors,span]);headers.set('etag',etag);const unchanged=notModified(request,etag,headers);if(unchanged)return communityResponse(unchanged)}
       return communityResponse(new Response(request.method==='HEAD' ? null : out.body,{status:out.status,headers}))
