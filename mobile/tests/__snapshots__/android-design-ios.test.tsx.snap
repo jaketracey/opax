@@ -4485,12 +4485,9 @@ exports[`iOS design at font scale 1 PageFoot retains its iOS output 1`] = `
     </Text>
     <Text
       accessibilityLanguage="en-AU"
-      adjustsFontSizeToFit={true}
       allowFontScaling={true}
       dynamicTypeRamp="footnote"
       maxFontSizeMultiplier={0}
-      minimumFontScale={0.5}
-      numberOfLines={1}
       onLayout={[Function]}
       style={
         [
@@ -12087,12 +12084,9 @@ exports[`iOS design at font scale 2 PageFoot retains its iOS output 1`] = `
     </Text>
     <Text
       accessibilityLanguage="en-AU"
-      adjustsFontSizeToFit={true}
       allowFontScaling={true}
       dynamicTypeRamp="footnote"
       maxFontSizeMultiplier={0}
-      minimumFontScale={0.5}
-      numberOfLines={1}
       onLayout={[Function]}
       style={
         [

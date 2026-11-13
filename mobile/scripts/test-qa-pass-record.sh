@@ -378,6 +378,30 @@ for i in range(3):
     os.utime(report, (timestamp, timestamp))
 command(['bash', 'scripts/sim-health.sh', udid], mobile, expect=3)
 ok('new system crashes after the erase marker still fail health')
+command(['bash', 'scripts/sim-health.sh', udid, '--max-crashes', '3'], mobile)
+for bad in (['--max-crashes', 'x'], ['--max-poster-mb', '-1'], ['--hours', '1x']):
+    command(['bash', 'scripts/sim-health.sh', udid, *bad], mobile, expect=2)
+poster = device/'data/Library/Application Support/PRBPosterExtensionDataStore/61/snapshot.atx'
+poster.parent.mkdir(parents=True); poster.write_bytes(os.urandom(2 << 20))
+command(['bash', 'scripts/sim-health.sh', udid, '--max-crashes', '9'], mobile)
+assert 'poster store 2 MB' in command(['bash', 'scripts/sim-health.sh', udid, '--max-crashes', '9', '--max-poster-mb', '1'], mobile, expect=3)
+shutil.rmtree(device/'data')
+ok('crash and poster store limits are flags; defaults keep 3 crashes and 2 GB')
+# Three reports from three processes: over a total of 2, under 2 from one process.
+assert 'x1' in command(['bash', 'scripts/sim-health.sh', udid, '--per-process', '--max-crashes', '2'], mobile)
+loop = [reports/f'PosterBoard-2026-11-13-21000{i}.ips' for i in range(3)]
+for report in loop: write(report, 'SimDevice.12345678\n')
+assert 'most from one process: PosterBoard x3' in command(['bash', 'scripts/sim-health.sh', udid, '--per-process', '--max-crashes', '2'], mobile, expect=3)
+for report in loop: report.unlink()
+ok('--per-process limits the reports from any one process, not the total')
+if sys.platform == 'darwin':
+    # macOS refreshes the modification time of old reports; birth time dates them.
+    report = reports/'siriactionsd-old.ips'; write(report, 'SimDevice.12345678\n')
+    old = time.time()-3*86400; os.utime(report, (old, old)); os.utime(report, None)
+    assert report.stat().st_mtime > time.time()-60 and report.stat().st_birthtime < old+1
+    command(['bash', 'scripts/sim-health.sh', udid, '--max-crashes', '3'], mobile)
+    report.unlink()
+    ok('an old report with a refreshed modification time is not a new crash')
 old_marker = (device/'.opax-qa-erased').stat().st_mtime_ns
 command(['bash', 'scripts/sim-health.sh', udid, '--erase'], mobile, {'QA_TEST_ERASE_FAIL': '1'}, expect=19)
 assert (device/'.opax-qa-erased').stat().st_mtime_ns == old_marker

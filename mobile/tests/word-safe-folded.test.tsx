@@ -24,7 +24,7 @@ import { textWidth } from './row-layout';
  * governmen…". The step-down ran, then stopped at the reader's default size
  * (cap 1), where these words are still wider than the text column. These
  * tests drive the real Text through a model of TextKit's greedy wrap until
- * it settles, at the folded widths, AX3 and AX5.
+ * it settles, at the folded widths, xSmall, Large, AX3 and AX5.
  */
 
 const window = Dimensions.get('window');
@@ -137,6 +137,8 @@ const cases: [string, TextVariant, string][] = [
 const columns = [110, 120, 200, 330];
 
 describe.each([
+  ['xSmall', 0.824],
+  ['Large', 1],
   ['AX3', AX3],
   ['AX5', AX5],
 ])('%s on the folded display', (_, fontScale) => {
@@ -195,7 +197,116 @@ test('the floor is 11pt below the default size, never above it', () => {
   expect(nextWordSafeCap(30 * 0.65, 30, 0.65)).toBeNull();
 });
 
-test('at the default text size nothing steps down, as before', () => {
-  const { drawnPoints } = settle('body', 'Community', 60, 1);
-  expect(drawnPoints).toBe(textStyles.body.fontSize);
+test.each([110, 120])(
+  'at Large a long title fits whole words above the floor in a %spt column',
+  (column) => {
+    const content = cases[0]![2];
+    const { lines, drawnPoints } = settle('rowRecord', content, column, 1);
+    expect(lines.map((line) => line.text).join('')).toBe(content);
+    expect(breaksMidWord(lines)).toBe(false);
+    expect(drawnPoints).toBeGreaterThan(WORD_SAFE_MIN_POINTS);
+    expect(drawnPoints).toBeLessThanOrEqual(textStyles.rowRecord.fontSize);
+  },
+);
+
+test.each([110, 120])(
+  'at Large a short title keeps its full size in a %spt column',
+  (column) => {
+    const { lines, drawnPoints } = settle(
+      'rowRecord',
+      'A short bill',
+      column,
+      1,
+    );
+    expect(breaksMidWord(lines)).toBe(false);
+    expect(drawnPoints).toBe(textStyles.rowRecord.fontSize);
+  },
+);
+
+test('word-safe numberOfLines treats a truncated tail as the last line, with no step-down', () => {
+  act(() =>
+    Dimensions.set({
+      window: { ...window, fontScale: 1 },
+      screen: { ...screen, fontScale: 1 },
+    }),
+  );
+  const content = 'Online Safety Amendment (Strengthening Enforcement)';
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(
+      <Text wordSafe numberOfLines={2}>
+        {content}
+      </Text>,
+    );
+  });
+  const text = () => renderer.root.findByType(NativeText);
+  const style = StyleSheet.flatten(text().props.style);
+  const height = style.lineHeight as number;
+  // TextKit keeps the undrawn tail in the last reported line. There is no
+  // next line, so truncating that tail cannot count as a mid-word wrap.
+  const lines = [
+    { text: 'Online Safety ', width: 100, height },
+    { text: 'Amendment (Strengthening Enforcement)', width: 110, height },
+  ];
+  expect(breaksMidWord(lines)).toBe(false);
+  act(() =>
+    text().props.onLayout({
+      nativeEvent: { layout: { x: 0, y: 0, width: 110, height: 2 * height } },
+    }),
+  );
+  act(() => text().props.onTextLayout({ nativeEvent: { lines } }));
+  expect(text().props.numberOfLines).toBe(2);
+  expect(StyleSheet.flatten(text().props.style).fontSize).toBe(style.fontSize);
+  // A platform reporting hidden lines must not trigger fitting either.
+  act(() =>
+    text().props.onTextLayout({
+      nativeEvent: { lines: wrap(content, 110, style.fontSize, height) },
+    }),
+  );
+  expect(StyleSheet.flatten(text().props.style).fontSize).toBe(style.fontSize);
+  act(() => renderer.unmount());
 });
+
+test.each([
+  'averylongexampleperson@archive.example.invalid',
+  'https://archive.example.org/photos/long-path',
+  'www.archive.example.org/photos/long-path',
+  'archive.example.org',
+])(
+  'a row text containing address %j keeps full size despite character wrapping',
+  (content) => {
+    act(() =>
+      Dimensions.set({
+        window: { ...window, fontScale: 1 },
+        screen: { ...screen, fontScale: 1 },
+      }),
+    );
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <Text wordSafe onTextLayout={() => {}}>
+          {content}
+        </Text>,
+      );
+    });
+    const text = () => renderer.root.findByType(NativeText);
+    const style = StyleSheet.flatten(text().props.style);
+    const height = style.lineHeight as number;
+    const split = content.indexOf('example') + 3;
+    const lines = [
+      { text: content.slice(0, split), width: 99, height },
+      { text: content.slice(split), width: 99, height },
+    ];
+    expect(breaksMidWord(lines)).toBe(true);
+    act(() =>
+      text().props.onLayout({
+        nativeEvent: { layout: { x: 0, y: 0, width: 100, height: 2 * height } },
+      }),
+    );
+    act(() => text().props.onTextLayout({ nativeEvent: { lines } }));
+    expect(StyleSheet.flatten(text().props.style).fontSize).toBe(
+      style.fontSize,
+    );
+    act(() => renderer.unmount());
+  },
+);

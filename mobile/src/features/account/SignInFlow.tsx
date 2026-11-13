@@ -243,7 +243,6 @@ export function CodeStep({
           selectTextOnFocus
         />
         <Text
-          wordSafe
           variant="footnote"
           tone="inkSoft"
           testID={resent ? 'account-code-notice' : 'account-code-sent'}

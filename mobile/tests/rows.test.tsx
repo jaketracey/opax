@@ -1063,7 +1063,7 @@ test('MachinePill is a named button on a navy wash and standalone choices stay c
   expect(choice.findAllByType(Pressable)).toHaveLength(0);
 });
 test.each([1, 3.571])(
-  'PageFoot keeps the address whole at fontScale %s',
+  'PageFoot lets the address wrap at full size at fontScale %s',
   (scale) => {
     size(scale);
     expect(strings(render(<PageFoot variant="today" />).root)).toContain(
@@ -1089,11 +1089,9 @@ test.each([1, 3.571])(
     const address = root
       .findAllByType(Text)
       .find((node) => node.props.children === 'corrections@opax.com.au')!;
-    expect(address.props).toMatchObject({
-      numberOfLines: 1,
-      adjustsFontSizeToFit: true,
-      minimumFontScale: 0.5,
-    });
+    expect(address.props.numberOfLines).toBeUndefined();
+    expect(address.props.adjustsFontSizeToFit).toBeUndefined();
+    expect(address.props.wordSafe).toBeUndefined();
     expect(
       root.find((node) => node.props.accessibilityRole === 'link').props
         .accessibilityLabel,

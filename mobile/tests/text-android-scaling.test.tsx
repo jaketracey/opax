@@ -26,7 +26,7 @@ jest.mock('../modules/opax-text-metrics', () => ({
   },
 }));
 
-test.each([1.3, 1.5, 2])(
+test.each([1, 1.3, 1.5, 2])(
   'Android nonlinear %s fits fresh lines and rejects stale steps through current props',
   (fontScale) => {
     const descriptor = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
@@ -93,6 +93,13 @@ test.each([1.3, 1.5, 2])(
       if (cappedHeight / base > floor + 0.01)
         expect(size()).toBeLessThan(firstCap);
       else expect(size()).toBe(firstCap);
+      if (fontScale === 1) {
+        // Two 10% steps below 1 still use Android's inverse SP conversion.
+        expect(size()).toBeCloseTo(textStyles.sectionTitle.fontSize * 0.81, 5);
+        expect(
+          spToDp(StyleSheet.flatten(text().props.style).lineHeight, fontScale),
+        ).toBeCloseTo(base * 0.81, 5);
+      }
       layout(
         spToDp(StyleSheet.flatten(text().props.style).lineHeight, fontScale),
         false,

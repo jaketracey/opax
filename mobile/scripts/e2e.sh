@@ -46,7 +46,7 @@ mkdir -p "$OUT/screenshots" "$OUT/maestro"
 # Pollers follow a detached run by this PID and the status file, which holds the
 # exit code once cleanup (lock, fixture, simulator) has finished.
 STATUS_FILE="$OUT/exit-status"
-/bin/rm -f "$STATUS_FILE" "$OUT/fixture-stopped" "$OUT/cancelled" "$OUT/device-owner" "$OUT/device-wrapper" "$OUT/device-started" "$OUT/device-shutdown" "$OUT/device-kept"
+/bin/rm -f "$STATUS_FILE" "$OUT/fixture-stopped" "$OUT/cancelled" "$OUT/device-owner" "$OUT/device-wrapper" "$OUT/device-started" "$OUT/device-shutdown" "$OUT/device-kept" "$OUT/device-erased"
 echo "$$" > "$OUT/pid"
 echo "E2E pid=$$ status=$STATUS_FILE"
 export QA_LOCK_LOG="$OUT/lock.log" QA_LOCK_SCRIPT=e2e.sh

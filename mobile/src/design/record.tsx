@@ -309,13 +309,7 @@ export function PageFoot({
             <Text wordSafe variant="footnote" tone="navy">
               Report a correction:
             </Text>
-            <Text
-              variant="footnote"
-              tone="navy"
-              numberOfLines={1}
-              adjustsFontSizeToFit
-              minimumFontScale={0.5}
-            >
+            <Text variant="footnote" tone="navy">
               {corrections?.email ?? copy.correctionsEmail}
             </Text>
           </>
