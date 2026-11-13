@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
-import { APP_BANNER_HTML, withAppBanner } from '../src/app-banner.ts';
+import { APP_BANNER_HTML, SKIP_LINK_HTML, withAppBanner } from '../src/app-banner.ts';
 import { HTMLRewriter, workerFetch } from './helpers/worker-fetch.mjs';
 
 const read = file => readFileSync(new URL(file, import.meta.url), 'utf8');
@@ -36,7 +36,11 @@ test('the real Worker injects one banner above static and Worker-rendered page c
     const dom = new JSDOM(await response.text());
     const doc = dom.window.document;
     assert.equal(doc.querySelectorAll('#opax-app-banner').length, 1, path);
-    assert.equal(doc.body.firstElementChild.id, 'opax-app-banner', path);
+    // Skip to content is the first tab stop, ahead of the banner; the page's own copy gives way to it.
+    assert.equal(doc.body.firstElementChild.matches('a.opax-skip-link[data-skip-link]'), true, path);
+    assert.equal(doc.body.firstElementChild.textContent, 'Skip to content', path);
+    assert.equal(doc.body.firstElementChild.nextElementSibling.id, 'opax-app-banner', path);
+    assert.equal(doc.querySelectorAll('a[data-skip], a[data-skip-link]').length, 1, path);
     assert.equal(doc.querySelector('#opax-app-banner a').href, 'https://apps.apple.com/au/app/opax/id6818756305');
     const entry = doc.querySelector('head script[src^="/app-banner.js?v="]');
     assert.ok(entry, path);
@@ -180,5 +184,35 @@ test('every published static HTML page reaches the Worker through its file and c
       if (path === '/index' || path === '/index/') continue;
       assert.ok(matches(path), path);
     }
+  }
+});
+
+test('Skip to content moves focus to the title showing in main, ahead of the banner', () => {
+  const dom = new JSDOM(`<!doctype html><html><body>${SKIP_LINK_HTML}${APP_BANNER_HTML}<header><a href="/">Home</a></header><main id="main"><section hidden><h1>Hidden panel</h1></section><h1 id="t">The page</h1></main></body></html>`, { url: 'https://opax.com.au/', runScripts: 'outside-only' });
+  const { window } = dom;
+  // jsdom lays nothing out: a shown element is one that is not inside [hidden].
+  window.Element.prototype.getClientRects = function () { return this.closest('[hidden]') ? [] : [{}]; };
+  window.HTMLElement.prototype.scrollIntoView = () => {};
+  window.eval(script);
+  const link = window.document.querySelector('a[data-skip-link]');
+  const event = new window.MouseEvent('click', { bubbles: true, cancelable: true });
+  link.dispatchEvent(event);
+  assert.equal(event.defaultPrevented, true);
+  assert.equal(window.document.activeElement.id, 't');
+  assert.equal(window.document.getElementById('t').getAttribute('tabindex'), '-1');
+  dom.window.close();
+});
+
+test('every page has exactly one skip link, first, pointing at an element the page has', async () => {
+  for (const [path, target] of [['/', 'hp-main'], ['/press', 'press-main'], ['/map', 'map'], ['/subject/person/anthony-albanese', 'main'], ['/privacy', 'main']]) {
+    const response = await workerFetch(path);
+    assert.equal(response.status, 200, path);
+    const doc = new JSDOM(await response.text()).window.document;
+    const links = [...doc.querySelectorAll('a')].filter(a => /^Skip to content$/.test(a.textContent.trim()));
+    assert.equal(links.length, 1, path);
+    assert.equal(links[0].getAttribute('href'), `#${target}`, path);
+    assert.ok(doc.getElementById(target), `${path}: #${target} exists, so the link works without scripts`);
+    // The first tab stop: before the banner where there is one (privacy has none, for App Review).
+    assert.equal(doc.body.querySelector('a[href], button, input, select, textarea, summary'), links[0], path);
   }
 });
