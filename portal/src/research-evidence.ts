@@ -2,6 +2,7 @@ import type {NamedScope} from './agentic-ask'
 import type {Passage,QualitativeAnswer} from './research-types'
 import {isPlaceNameMention} from './ask-person-slot'
 import {readableDate} from './tools/record-common'
+import {sentenceSpans} from './sentence-bounds.mjs'
 export interface AnswerCitation { id:string; quote:string; start:number; end:number }
 export interface AnswerDraft { text:string; citations:AnswerCitation[] }
 export interface AnswerPoint { claim:string; id?:string; quote?:string }
@@ -32,8 +33,9 @@ export function passageSpan(text: string, needle: string, min = 5): string | nul
 export function passageExcerpt(text: string, about: string, max = 25): { text: string; score: number } | null {
   const target = contentWords(about)
   let best: { text: string; score: number } | null = null
-  for (const m of text.matchAll(/[^.!?]+[.!?]?/g)) {
-    const sentence = m[0].trim(), list = words(sentence)
+  // A decimal point, "s. 44", "Mr." or an initial is not a sentence end ("would build 1.2 million homes" stays whole).
+  for (const part of sentenceSpans(text)) {
+    const sentence = part.text, list = words(sentence)
     if (list.length < 4) continue
     let from = 0, score = -1
     for (let i = 0; i <= Math.max(0, list.length - max); i++) {
