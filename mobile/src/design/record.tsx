@@ -6,7 +6,7 @@ import { copyText } from '../features/records/actions';
 import { useAccessibilitySize } from './accessibility';
 import { AUTHORISATION_LINE, CORRECTION_CONTACT } from './authorisation';
 import { copy } from './copy';
-import { type DateInput } from './format';
+import { spokenFigures, type DateInput } from './format';
 import { haptic } from './haptics';
 import { Icon } from './icon';
 import { confirmAction } from './menu';
@@ -92,7 +92,9 @@ export function FigureBlock({
     <View testID={testID} style={{ gap: rhythm.line }}>
       <View
         accessible
-        accessibilityLabel={accessibilityLabel ?? `${value}, ${label}`}
+        accessibilityLabel={
+          accessibilityLabel ?? spokenFigures(`${value}, ${label}`)
+        }
       >
         <Text
           wordSafe
@@ -152,7 +154,7 @@ export function StatTile({
   );
   const props = {
     accessible: true,
-    accessibilityLabel: `${value}, ${label}`,
+    accessibilityLabel: spokenFigures(`${value}, ${label}`),
     testID,
   };
   return onPress ? (
