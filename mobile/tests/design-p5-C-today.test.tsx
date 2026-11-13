@@ -281,7 +281,7 @@ describe('declaration identities in Today and the full feed', () => {
   });
   const run = personRuns(all).find((r) => r.entries.length > 1)!;
   test.each([standard, ax5])(
-    'Today: one accessible link per entry, never clamped',
+    'Today: one accessible link per entry; only the words clamp, at Large',
     (size) => {
       jest.mocked(useWindowDimensions).mockReturnValue(size);
       const { root } = render(<DeclarationGroup entries={run.entries} />);
@@ -289,9 +289,16 @@ describe('declaration identities in Today and the full feed', () => {
       expect(root.findAllByType(DeclarationEntry)).toHaveLength(
         run.entries.length,
       );
-      expect(
-        root.findAll((n) => n.props.numberOfLines !== undefined),
-      ).toHaveLength(0);
+      // Names, party and meta are never clamped; an entry's words show three
+      // lines at Large and in full at accessibility sizes.
+      for (const node of root.findAll(
+        (n) =>
+          typeof n.type === 'string' && n.props.numberOfLines !== undefined,
+      )) {
+        expect(node.props.testID).toMatch(/^today-declaration-text-\d+$/);
+        expect(node.props.numberOfLines).toBe(3);
+        expect(size.fontScale).toBe(1);
+      }
       for (const { item, index } of run.entries) {
         const entry = host(root, `today-declaration-${index}`)[0]!;
         expect(entry.props.accessibilityLabel).toContain(item.name);
@@ -364,7 +371,7 @@ describe('declaration identities in Today and the full feed', () => {
       );
       expect(dividers).toHaveLength(1);
       expect(StyleSheet.flatten(dividers[0]!.props.style).marginLeft).toBe(
-        size.fontScale === 1 ? 16 + 44 + rhythm.heading : 16,
+        size.fontScale === 1 ? 16 + 40 + rhythm.heading : 16,
       );
       for (let index = 0; index < data.length; index++) {
         const row = host(group, `today-declaration-${index}`)[0]!;
