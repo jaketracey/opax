@@ -27,7 +27,12 @@ import {
   StatusCapsule,
 } from '../src/design/primitives';
 import { bindRecordTitle } from '../src/design/record-title';
-import BillDetail from '../src/features/bills/BillDetail';
+import BillDetail, {
+  footSection,
+  sameSourceLine,
+  shareSourceLine,
+} from '../src/features/bills/BillDetail';
+import { sourceLineParts } from '../src/design/source';
 import {
   countWords,
   isProcedural,
@@ -988,12 +993,22 @@ describe('the bill page', () => {
     if (last > 0) expect(spoken(0)).not.toMatch(/New/);
   });
 
-  const relatedLine = (root: ReactTestInstance) =>
-    root.find(
-      (node) =>
-        node.type === SourceLine && node.props.testID === 'bill-related-source',
-    ).props;
-  test("Related bills' source line names this bill's ParlInfo record", async () => {
+  // Related bills is the last section, and its own line would say what the
+  // page's line says just below it, so it carries the page's one line
+  // (build 61, bug 5).
+  const relatedLine = (root: ReactTestInstance) => {
+    const lines = host(root, 'bill-related')[0]!.findAllByType(SourceLine);
+    expect(lines.map((line) => line.props.testID)).toEqual(['bill-source']);
+    expect(
+      root
+        .findAllByType(SourceLine)
+        .filter((line) =>
+          ['bill-source', 'bill-related-source'].includes(line.props.testID),
+        ),
+    ).toHaveLength(1);
+    return lines[0]!.props;
+  };
+  test("Related bills carry the page's one ParlInfo line, with the related note", async () => {
     // r7534 with the draft's related link, as a bill in parliament carries it.
     const draft = view('au-federal-ed-online-safety-digital-duty-of-care-2026');
     mockParams.key = 'au-federal-r7534';
@@ -1002,17 +1017,114 @@ describe('the bill page', () => {
       return { ...record, data: { ...record.data, related: draft.related } };
     });
     const root = await render();
-    const asAt = view('au-federal-r7534').identity.asAt!;
-    expect(relatedLine(root)).toMatchObject({
+    const line = relatedLine(root);
+    expect(line).toMatchObject({
+      asOf: view('au-federal-r7534').identity.asAt,
+      citation: 'ParlInfo',
+    });
+    // The page's originals, bill home included; the related section's own
+    // link to the same record is not listed twice.
+    expect(line.originals).toContainEqual(
+      expect.objectContaining({
+        label: 'Parliament of Australia',
+        record: 'bill home',
+      }),
+    );
+    const urls = (line.originals as { url: string }[]).map((o) => o.url);
+    expect(new Set(urls).size).toBe(urls.length);
+    expect(line.notes).toContain(
+      'Relations between bills are as ParlInfo records them.',
+    );
+  });
+
+  test('How it moved, last on the page, carries the page line once', async () => {
+    mockParams.key = 'au-federal-r7534';
+    jest.mocked(runtime.billFor).mockImplementation(async (key, refresh) => {
+      const record = await fixture.billFor(key, refresh);
+      const data = record.data;
+      return {
+        ...record,
+        data: {
+          ...data,
+          related: [],
+          became: null,
+          acts: { ...data.acts, data: [] },
+          speeches: { ...data.speeches, data: [] },
+          divisions: {
+            ...data.divisions,
+            data: { ...data.divisions.data!, rows: [], rawRows: [] },
+          },
+        },
+      };
+    });
+    const root = await render();
+    const lines = root.findAllByType(SourceLine);
+    const ids = lines.map((line) => line.props.testID);
+    expect(ids).not.toContain('bill-dates-source');
+    expect(ids.filter((id) => id === 'bill-source')).toHaveLength(1);
+    const dates = host(root, 'bill-key-dates')[0]!.findAllByType(SourceLine);
+    expect(dates.map((line) => line.props.testID)).toEqual(['bill-source']);
+    // One line, at the foot of How it moved, and the last on the page.
+    expect(ids.at(-1)).toBe('bill-source');
+    const line = dates[0]!.props;
+    expect(line.originals).toContainEqual(
+      expect.objectContaining({ record: 'bill home' }),
+    );
+    expect(line.notes).toContain(
+      'Most questions are decided on the voices, without a recorded vote.',
+    );
+    // The drawn words appear once on the page.
+    const drawn = lines.map((l) => JSON.stringify(sourceLineParts(l.props)));
+    expect(new Set(drawn).size).toBe(drawn.length);
+  });
+
+  test('a section line that reads differently keeps its own line', () => {
+    const page = {
+      asOf: '2026-09-17',
+      citation: 'ParlInfo',
+      originals: [{ label: 'Parliament of Australia', url: 'https://a' }],
+      notes: ['Page note.'],
+      licence: 'CC BY-NC-ND 4.0',
+    };
+    const dates = {
+      asOf: '2026-09-17',
       citation: 'ParlInfo',
       originals: [
-        {
-          label: 'ParlInfo',
-          url: expect.stringMatching(/^https:/),
-          record: `bill record, ${formatDate(asAt, 'short')}`,
-        },
+        { label: 'ParlInfo', url: 'https://a' },
+        { label: 'ParlInfo', url: 'https://b' },
       ],
+      notes: ['Section note.'],
+    };
+    expect(sameSourceLine(page, dates)).toBe(true);
+    expect(sameSourceLine(page, { ...dates, asOf: '2026-09-18' })).toBe(false);
+    expect(sameSourceLine(page, { ...dates, citation: 'Hansard' })).toBe(false);
+    expect(shareSourceLine(page, dates)).toEqual({
+      ...page,
+      originals: [
+        { label: 'Parliament of Australia', url: 'https://a' },
+        { label: 'ParlInfo', url: 'https://b' },
+      ],
+      notes: ['Page note.', 'Section note.'],
     });
+  });
+
+  test('the foot section is the last one the page draws', () => {
+    const base = view('au-federal-r7534');
+    const bare = {
+      ...base,
+      related: [],
+      became: null,
+      acts: { ...base.acts, data: [] },
+      speeches: { ...base.speeches, data: [] },
+    };
+    expect(footSection(bare, false)).toBe('dates');
+    expect(footSection(bare, true)).toBe('votes');
+    expect(
+      footSection({ ...bare, keyDates: { ...bare.keyDates, data: [] } }, false),
+    ).toBeNull();
+    expect(footSection({ ...bare, became: 'au-federal-r1' }, true)).toBe(
+      'related',
+    );
   });
 
   test("an exposure draft's related bills cite the draft's own pages", async () => {

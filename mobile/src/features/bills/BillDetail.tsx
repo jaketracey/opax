@@ -77,6 +77,7 @@ import {
 import { useRowFollow } from '../../design/row-link';
 import { symbols } from '../../design/symbols';
 import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
+import { sourceLineParts, type SourceDetails } from '../../design/source';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { headerItems, pageMenu, shareItem } from '../../navigation/chrome';
 import { canonicalUrl, openSource } from '../../navigation/external';
@@ -630,6 +631,22 @@ function BillPage({
   const speechesRef = useRef<View>(null);
   const votes = useVotes(view, follow.fresh, arrival);
   const [allStages, setAllStages] = useState(false);
+  // The page's own source line, and the last section's when it would say
+  // the same words just above it ("Updated 17 Sep 2026 · ParlInfo" twice,
+  // build 61 bug 5): that section then carries the page's line, with both
+  // sheets' originals and notes, and the page draws no second one.
+  const pageSource = billSourceDetails(view, identity, savedAt);
+  const foot = footSection(view, votes.has);
+  const footSource =
+    foot === 'related'
+      ? relatedSource(view, savedAt)
+      : foot === 'dates'
+        ? keyDatesSource(view, savedAt)
+        : null;
+  const sharedSource =
+    footSource && sameSourceLine(footSource, pageSource)
+      ? shareSourceLine(pageSource, footSource)
+      : null;
   // "?section=changes" scrolls once the followed bill's changes are in.
   const arrived = useRef(false);
   const hasChanges = !!follow.group;
@@ -714,6 +731,7 @@ function BillPage({
         open={allStages}
         onToggle={setAllStages}
         freshStages={follow.freshStages}
+        pageSource={foot === 'dates' ? sharedSource : null}
       />
       <Votes view={view} votes={votes} savedAt={savedAt} targets={targets} />
       <Speeches
@@ -724,8 +742,14 @@ function BillPage({
         fresh={follow.fresh}
       />
       <Acts view={view} savedAt={savedAt} />
-      <Related view={view} savedAt={savedAt} />
-      <BillSource view={view} identity={identity} savedAt={savedAt} />
+      <Related
+        view={view}
+        savedAt={savedAt}
+        pageSource={foot === 'related' ? sharedSource : null}
+      />
+      {sharedSource ? null : (
+        <SourceLine {...pageSource} testID="bill-source" />
+      )}
     </>
   );
   // The header seeded from the tapped row is real data: it stays still, in
@@ -809,15 +833,12 @@ function BillHead({
 }
 
 /** Page provenance follows the last content section, including related bills. */
-function BillSource({
-  view,
-  identity,
-  savedAt,
-}: {
-  view: BillView;
-  identity: Identity;
-  savedAt: number | null;
-}) {
+/** The page's own source line: the bill's identity record (testID bill-source). */
+function billSourceDetails(
+  view: BillView,
+  identity: Identity,
+  savedAt: number | null,
+): SourceDetails {
   const draft = identity.status === 'exposure_draft';
   const event = statusEvent({
     status: identity.status,
@@ -832,22 +853,61 @@ function BillSource({
       : { label: s.label, url: s.url },
   );
   const unsponsored = !identity.sponsorMembers.length && !identity.sponsorParty;
+  return {
+    asOf: view.identity.asAt,
+    citation: draft ? unique(sources.map((s) => s.label)) : 'ParlInfo',
+    savedAt,
+    originals,
+    licence:
+      unique(sources.map((s) => s.licence).filter(Boolean)).join(', ') || null,
+    notes: [
+      unsponsored && !draft ? 'Sponsor not recorded.' : null,
+      event && !event.resolved ? notes.status : null,
+    ],
+  };
+}
+
+/** The sections after Bill text, in page order, as each decides to draw. */
+const hasKeyDates = (view: BillView) =>
+  billTimeline(view.keyDates.data ?? []).entries.length > 0;
+const shownSpeeches = (view: BillView) =>
+  (view.speeches.data ?? []).filter((s) => s.slug);
+const shownActs = (view: BillView) =>
+  (view.acts.data ?? []).filter((a) => a.title);
+const hasRelated = (view: BillView) => view.related.length > 0 || !!view.became;
+/** The last section drawn above the page's own source line. */
+export function footSection(view: BillView, hasVotes: boolean) {
+  if (hasRelated(view)) return 'related' as const;
+  if (shownActs(view).length) return 'acts' as const;
+  if (shownSpeeches(view).length) return 'speeches' as const;
+  if (hasVotes) return 'votes' as const;
+  if (hasKeyDates(view)) return 'dates' as const;
+  return null;
+}
+/** True when two source lines draw the same words. */
+export function sameSourceLine(a: SourceDetails, b: SourceDetails) {
   return (
-    <SourceLine
-      asOf={view.identity.asAt}
-      citation={draft ? unique(sources.map((s) => s.label)) : 'ParlInfo'}
-      savedAt={savedAt}
-      originals={originals}
-      licence={
-        unique(sources.map((s) => s.licence).filter(Boolean)).join(', ') || null
-      }
-      notes={[
-        unsponsored && !draft ? 'Sponsor not recorded.' : null,
-        event && !event.resolved ? notes.status : null,
-      ]}
-      testID="bill-source"
-    />
+    JSON.stringify(sourceLineParts(a)) === JSON.stringify(sourceLineParts(b))
   );
+}
+/**
+ * The page's line carrying a section's sheet as well: the page's originals
+ * in their order, then the section's that are not already there, and both
+ * sets of notes.
+ */
+export function shareSourceLine(
+  page: SourceDetails,
+  section: SourceDetails,
+): SourceDetails {
+  const originals = [...(page.originals ?? [])];
+  for (const original of section.originals ?? [])
+    if (!originals.some((o) => o.url === original.url))
+      originals.push(original);
+  return {
+    ...page,
+    originals,
+    notes: [...(page.notes ?? []), ...(section.notes ?? [])],
+  };
 }
 
 /** The meta line already dates introduction; later status events still show. */
@@ -1359,6 +1419,20 @@ function DateRows({
   );
 }
 
+/** How it moved's own source line: ParlInfo's key dates. */
+function keyDatesSource(view: BillView, savedAt: number | null): SourceDetails {
+  const originals: SourceOriginal[] = unique(
+    view.keyDates.sources.map((s) => s.url),
+  ).map((url) => ({ label: 'ParlInfo', url, record: 'bill record' }));
+  return {
+    asOf: view.keyDates.asAt,
+    citation: 'ParlInfo',
+    savedAt,
+    originals,
+    notes: [notes.voices],
+  };
+}
+
 function KeyDates({
   view,
   savedAt,
@@ -1366,6 +1440,7 @@ function KeyDates({
   open,
   onToggle,
   freshStages,
+  pageSource,
 }: {
   view: BillView;
   savedAt: number | null;
@@ -1374,15 +1449,14 @@ function KeyDates({
   onToggle: (open: boolean) => void;
   /** Dates of the follow's stage changes. */
   freshStages: ReadonlySet<string>;
+  /** The page's own line, drawn here in place of this section's. */
+  pageSource?: SourceDetails | null;
 }) {
   const timeline = billTimeline(view.keyDates.data ?? []);
   const entries = timeline.entries;
   if (!entries.length) return null;
   const points =
     entries.length > 1 ? rulerPoints(entries, view.identity.data?.status) : [];
-  const originals: SourceOriginal[] = unique(
-    view.keyDates.sources.map((s) => s.url),
-  ).map((url) => ({ label: 'ParlInfo', url, record: 'bill record' }));
   return (
     <View ref={anchor} collapsable={false}>
       <Section title="How it moved" testID="bill-key-dates">
@@ -1420,14 +1494,14 @@ function KeyDates({
             <DateRows entries={entries} freshStages={freshStages} />
           </Disclosure>
         ) : null}
-        <SourceLine
-          asOf={view.keyDates.asAt}
-          citation="ParlInfo"
-          savedAt={savedAt}
-          originals={originals}
-          notes={[notes.voices]}
-          testID="bill-dates-source"
-        />
+        {pageSource ? (
+          <SourceLine {...pageSource} testID="bill-source" />
+        ) : (
+          <SourceLine
+            {...keyDatesSource(view, savedAt)}
+            testID="bill-dates-source"
+          />
+        )}
       </Section>
     </View>
   );
@@ -1857,10 +1931,7 @@ function Speeches({
   const speakerFor = useSpeechSpeakers();
   const [all, setAll] = useState(false);
   const speeches = useMemo(
-    () =>
-      (view.speeches.data ?? [])
-        .filter((s) => s.slug)
-        .sort((a, b) => b.date.localeCompare(a.date)),
+    () => shownSpeeches(view).sort((a, b) => b.date.localeCompare(a.date)),
     [view],
   );
   if (!speeches.length) return null;
@@ -1944,7 +2015,7 @@ function MachineNotePill() {
 }
 
 function Acts({ view, savedAt }: { view: BillView; savedAt: number | null }) {
-  const acts = (view.acts.data ?? []).filter((a) => a.title);
+  const acts = shownActs(view);
   if (!acts.length) return null;
   return (
     <Section title="What became law" testID="bill-acts">
@@ -1977,17 +2048,12 @@ function Acts({ view, savedAt }: { view: BillView; savedAt: number | null }) {
   );
 }
 
-function Related({
-  view,
-  savedAt,
-}: {
-  view: BillView;
-  savedAt: number | null;
-}) {
-  const bills = useBillNavigation();
-  if (!view.related.length && !view.became) return null;
-  // The links come from this bill's own record: ParlInfo's for a bill in
-  // parliament, the draft's own pages for an exposure draft.
+/**
+ * Related bills' own source line. The links come from this bill's own
+ * record: ParlInfo's for a bill in parliament, the draft's own pages for an
+ * exposure draft.
+ */
+function relatedSource(view: BillView, savedAt: number | null): SourceDetails {
   const asAt = view.identity.asAt;
   const sources = view.identity.sources;
   const home = sources.filter((s) => s.label === billSourceLabel('billhome'));
@@ -1998,6 +2064,27 @@ function Related({
         record: asAt ? `bill record, ${short(asAt)}` : 'bill record',
       }))
     : sources.map((s) => ({ label: s.label, url: s.url, asOf: asAt }));
+  return {
+    asOf: asAt,
+    citation: home.length ? 'ParlInfo' : unique(sources.map((s) => s.label)),
+    savedAt,
+    originals,
+    notes: [notes.related],
+  };
+}
+
+function Related({
+  view,
+  savedAt,
+  pageSource,
+}: {
+  view: BillView;
+  savedAt: number | null;
+  /** The page's own line, drawn here in place of this section's. */
+  pageSource?: SourceDetails | null;
+}) {
+  const bills = useBillNavigation();
+  if (!hasRelated(view)) return null;
   return (
     <Section title="Related bills" testID="bill-related">
       <View>
@@ -2022,16 +2109,14 @@ function Related({
           />
         ) : null}
       </View>
-      <SourceLine
-        asOf={view.identity.asAt}
-        citation={
-          home.length ? 'ParlInfo' : unique(sources.map((s) => s.label))
-        }
-        savedAt={savedAt}
-        originals={originals}
-        notes={[notes.related]}
-        testID="bill-related-source"
-      />
+      {pageSource ? (
+        <SourceLine {...pageSource} testID="bill-source" />
+      ) : (
+        <SourceLine
+          {...relatedSource(view, savedAt)}
+          testID="bill-related-source"
+        />
+      )}
     </Section>
   );
 }
