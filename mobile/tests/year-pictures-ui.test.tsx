@@ -8,7 +8,7 @@ import { colors } from '../src/design/tokens';
 import { router } from 'expo-router';
 import { Button, InlineError } from '../src/design/primitives';
 import { Picture } from '../src/features/explore/Picture';
-import { ArchiveCard } from '../src/features/today/DailyPair';
+import { ArchiveCard, creditShown } from '../src/features/today/DailyPair';
 import { exploreFixture } from '../scripts/explore-fixture';
 import {
   assertYearPictureBytes,
@@ -349,6 +349,36 @@ test('the Time machine opens on a year at once, with its menu, pager, voices and
     /knowledge box|so far|static|manifest|register|\d{4}-\d{2}-\d{2}|—/,
   );
   act(() => renderer.unmount());
+});
+
+test('an archive credit stored as an address prints its host, not the address (sweep 2, 11)', async () => {
+  const picture = manifest['2024']!.find((p) =>
+    p.credit.startsWith('https://pco.gov.ph/'),
+  )!;
+  expect(picture.credit).toBe('https://pco.gov.ph/photos/?post_id=185409');
+  let renderer!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(
+      <ArchiveCard year={2024} picture={picture} />,
+    );
+  });
+  const credit = renderer.root.find(
+    (n) => n.type === NativeText && n.props.testID === 'today-archive-credit',
+  );
+  expect(credit.props.children).toBe('Photo: pco.gov.ph');
+  expect(texts(renderer).join(' ')).not.toContain('https://');
+  expect(texts(renderer).join(' ')).not.toContain('post_id');
+  const card = renderer.root.find(
+    (n) =>
+      typeof n.props.accessibilityLabel === 'string' &&
+      n.props.accessibilityLabel.startsWith('From the archive, 2024.'),
+  );
+  expect(card.props.accessibilityLabel).toContain('Photo: pco.gov.ph.');
+  act(() => renderer.unmount());
+  // Named credits are printed as stored; only an address is shortened.
+  expect(creditShown('Jane Example')).toBe('Jane Example');
+  expect(creditShown('http://www.Example.org:8080/a/b')).toBe('example.org');
+  expect(creditShown(' https://pco.gov.ph ')).toBe('pco.gov.ph');
 });
 
 test('a failed archive image collapses its empty frame and keeps its caption and credit', async () => {

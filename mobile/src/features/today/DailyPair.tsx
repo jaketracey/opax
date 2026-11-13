@@ -80,6 +80,22 @@ function Kicker({
 }
 
 /**
+ * The credit as the card prints it. The portal stores some credits as a
+ * bare address ("https://pco.gov.ph/photos/?post_id=185409"); the card
+ * names the host ("pco.gov.ph") and the full address stays on the photo's
+ * sheet in the Time machine.
+ */
+export function creditShown(credit: string): string {
+  const trimmed = credit.trim();
+  const match = /^https?:\/\/([^/?#\s]+)/i.exec(trimmed);
+  if (!match) return trimmed;
+  return match[1]!
+    .replace(/:\d+$/, '')
+    .replace(/^www\./i, '')
+    .toLowerCase();
+}
+
+/**
  * From the archive: the day's photograph fills a 4:3 frame, then the year,
  * the caption up to three lines, expanding at accessibility text sizes,
  * and "Photo: {credit}", never clamped. One element; it opens
@@ -102,7 +118,7 @@ export function ArchiveCard({
         photo: picture.file,
       })}
       accessibilityRole="link"
-      accessibilityLabel={`From the archive, ${year}. ${picture.caption}.${picture.credit ? ` Photo: ${picture.credit}.` : ''}`}
+      accessibilityLabel={`From the archive, ${year}. ${picture.caption}.${picture.credit ? ` Photo: ${creditShown(picture.credit)}.` : ''}`}
       accessibilityHint="Opens the Time machine"
       menu={[
         howChosen(rules.archive),
@@ -142,7 +158,8 @@ export function ArchiveCard({
             wordSafe
             variant="footnote"
             tone="inkSoft"
-          >{`Photo: ${picture.credit}`}</Text>
+            testID="today-archive-credit"
+          >{`Photo: ${creditShown(picture.credit)}`}</Text>
         ) : null}
       </View>
     </Card>

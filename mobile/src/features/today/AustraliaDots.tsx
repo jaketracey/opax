@@ -9,6 +9,7 @@ import {
   useEffect,
   useLayoutEffect,
   useMemo,
+  type ReactNode,
 } from 'react';
 import {
   AppState,
@@ -264,7 +265,7 @@ function DotField({
       ...(android ? [{ scale: androidDotScale }] : []),
     ],
   }));
-  return (
+  const art = (
     <Animated.View
       testID="today-australia-dots"
       accessible={false}
@@ -294,6 +295,55 @@ function DotField({
         ))}
       </SizedCanvas>
     </Animated.View>
+  );
+  if (android) return art;
+  return <DateClearance expandedHeader={expandedHeader}>{art}</DateClearance>;
+}
+
+/** The gap kept between the art's lower edge (Tasmania) and the date line. */
+export const DATE_CLEARANCE = 8;
+
+/**
+ * iOS: the art hangs from the large title and its lowest dots, Tasmania,
+ * reached the date line ("Friday 13 November:", sweep 2, 11). This box sits
+ * in the masthead's flow ahead of the date, as tall as the art reaches below
+ * the masthead's top plus 8 pt, so the date starts clear of every dot. Its
+ * negative margin cancels the masthead's gap, so a box of no height leaves
+ * the date where it was. The art inside keeps its own position and motion.
+ * Android sets its date beside the art instead (Masthead `androidDate`).
+ */
+function DateClearance({
+  expandedHeader,
+  children,
+}: {
+  expandedHeader: SharedValue<number>;
+  children: ReactNode;
+}) {
+  const clearance = useAnimatedStyle(() => ({
+    height: dateClearance(expandedHeader.value),
+  }));
+  return (
+    <Animated.View
+      testID="today-australia-dots-clearance"
+      accessible={false}
+      importantForAccessibility="no-hide-descendants"
+      pointerEvents="none"
+      style={[styles.clearance, clearance]}
+    >
+      {children}
+    </Animated.View>
+  );
+}
+
+/**
+ * How far the iOS art reaches below the masthead's top, plus the clearance:
+ * the art's top is `30 - expandedHeader - rhythm.block` (DotField).
+ */
+export function dateClearance(expandedHeader: number): number {
+  'worklet';
+  return Math.max(
+    0,
+    30 - expandedHeader - rhythm.block + height + DATE_CLEARANCE,
   );
 }
 
@@ -386,4 +436,5 @@ function StateDots({
 
 const styles = StyleSheet.create({
   art: { position: 'absolute', width: dotWidth, height },
+  clearance: { marginBottom: -rhythm.tight },
 });
