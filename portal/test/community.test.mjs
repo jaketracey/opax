@@ -181,3 +181,22 @@ test('saved conversations are private, owner controlled, and the newer write win
   assert.equal((await f.call('chats/conv-0001-aaaa','GET',undefined,a.cookie)).status,404);
  }finally{f.db.close()}
 });
+
+test('MCP find_connections says the day the connections run to, alongside the same hits',async()=>{
+ const f=fixture(),a=await f.login();const {token}=await (await f.call('keys','POST',{name:'Connection date check'},a.cookie)).json();
+ const entities=[{id:'ab'+'0'.repeat(22),name:'Example Harbour Program',kind:'program',records:12}];
+ let index={meta:{generated_at:'2026-09-08T09:21:53+00:00'},entities};
+ const fetchAsset=f.env.ASSETS.fetch;
+ f.env.ASSETS.fetch=async request=>new URL(request.url).pathname==='/evidence/index.json'?Response.json(index):fetchAsset(request);
+ const send=async args=>{const response=await communityMcp(new Request('https://opax.test/mcp',{method:'POST',headers:{authorization:'Bearer '+token,accept:'application/json, text/event-stream','content-type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:1,method:'tools/call',params:{name:'find_connections',arguments:args}})}),f.env,async()=>Response.json({}));assert.equal(response.status,200);return (await response.json()).result};
+ try{
+  let result=await send({query:'harbour'});assert.notEqual(result.isError,true);
+  let data=JSON.parse(result.content[0].text);
+  assert.equal(data.as_at,'2026-09-08');
+  assert.deepEqual(data.connections,[{...entities[0],url:'https://opax.test/connections?entity='+entities[0].id}]);
+  index={entities};
+  result=await send({query:'harbour'});data=JSON.parse(result.content[0].text);
+  assert.equal('as_at' in data,false,'an undated export claims no date');
+  assert.equal(data.connections.length,1);
+ }finally{f.env.ASSETS.fetch=fetchAsset;f.db.close();}
+});

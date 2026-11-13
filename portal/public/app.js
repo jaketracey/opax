@@ -1286,7 +1286,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=2e9dfab24a");
+    const { mountMoneyMap } = await import("/money-map.js?v=6494696c46");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -4517,7 +4517,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=2e9dfab24a");
+    const { mountMoneyMap } = await import("/money-map.js?v=6494696c46");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
@@ -5578,6 +5578,20 @@ async function renderPartyMemberList(label, sections, key, { speechesLink = true
   return members;
 }
 
+/** "Bills sponsored": the bills the register records a sponsor of this party for (party-page.js partyBills,
+ *  from the party index). Its slot is placed at once, like the Members block; a party with none has no block. */
+async function renderPartySponsoredBills(label, sections, key) {
+  const slot = document.createElement("section");
+  slot.id = "party-sponsored-bills";
+  sections.appendChild(slot);
+  const [divisions, partyPage] = await Promise.all([loadPartyMembers(), loadPartyPage()]);
+  if (currentSubjectKey !== key || !slot.isConnected) return;
+  const html = divisions ? partyPage.partyBillsHTML(label, partyPage.partyBills(label, divisions, samePartyLabel), partyPageHelpers(),
+    { updated: divisions.bills_generated_at || "" }) : "";
+  if (html) slot.insertAdjacentHTML("beforebegin", html);
+  slot.remove();
+}
+
 /** A party with no money-map node: one senator's own party, a party from before the
  *  disclosure files, a state-only party. Named from the roster, the division records,
  *  the state money files or the record's party labels; a name none of them holds is not
@@ -5639,6 +5653,7 @@ async function renderRosterParty(segment, key, body) {
   settle(renderPartyMembers(label, body, key));
   await settle(renderPartyMemberList(label, sections, key, { speechesLink: false })); // the head's button says it
   if (currentSubjectKey !== key) return;
+  settle(renderPartySponsoredBills(label, sections, key));
   const stateMoney = partyPage.partyStateMoneyHTML(label, states.map((jur, i) => [jur, stateFiles[i]]), partyPageHelpers());
   if (stateMoney) sections.insertAdjacentHTML("beforeend", stateMoney);
   settle(renderPartyDebts(label, sections));
@@ -6170,6 +6185,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     if (isParty) {
       settle(renderPartyMembers(node.label, body, key));
       settle(renderPartyMemberList(node.label, sections, key));
+      settle(renderPartySponsoredBills(node.label, sections, key));
       settle(renderPartyDebts(node.label, sections));
       settle(renderPartyBillDivisions(node.label, sections, key));
     }
@@ -6540,7 +6556,7 @@ const PERSON_RAIL = [
 ];
 /* The same rail on a party's and a donor's entry (it replaced their Quick facts). */
 const PARTY_RAIL = [
-  ["entry-flows", "Where it came from"], ["party-members", "Members"], ["party-state-money", "State commissions"],
+  ["entry-flows", "Where it came from"], ["party-members", "Members"], ["party-sponsored-bills", "Bills sponsored"], ["party-state-money", "State commissions"],
   ["party-receipts", "Receipts on the return"], ["party-debts", "Debts"],
   ["party-entities", "Associated entities"], ["party-bills", "Bills they divided on"], ["entry-mentions", "In parliament"],
   ["entry-news", "In the news"],
@@ -14939,7 +14955,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=2e9dfab24a");
+    const { mountMoneyMap } = await import("/money-map.js?v=6494696c46");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",

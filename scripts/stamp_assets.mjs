@@ -172,7 +172,7 @@ export const MODULE_STAMPS = [
   ['electorates.js', 'canonical-urls.js'],
   // The electoral authorisation: a cached old vic-election.js would draw the old block.
   ['vic-election.js', 'authorisation.js'], ['electorates.js', 'vic-election.js'],
-  ['evidence.js', 'canonical-urls.js'],
+  ['evidence.js', 'canonical-urls.js'], ['evidence-date.js', 'labels.js'],
   ['grants.js', 'donor-views.js'], ['grant-recipient.js', 'donor-views.js'],
   ['grants.js', 'canonical-urls.js'], ['grants.js', 'labels.js'],
   ['grant-recipient.js', 'canonical-urls.js'],

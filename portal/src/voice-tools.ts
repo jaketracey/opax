@@ -4,6 +4,7 @@ import {isReceiptGraph, moneyQuestion, receiptAnswer, receiptGraphForQuestion} f
 import {reportsEnabled} from './reports-gate'
 import {federalPartyMoneyAnswer, federalPartyRankingIntent, publicPartyMoneyAnswer} from './ask-money-routing'
 import {askOpaxResult, voiceSources} from './voice-sources'
+import {evidenceAsAt} from '../public/evidence-date.js'
 
 type Data = Record<string, unknown>
 export type PublicReader = (path: string) => Promise<Response>
@@ -172,7 +173,9 @@ export async function runVoiceTool(name: string, args: Data, env: Env, readPubli
     if(found) return found
     const index = await asset('/evidence/index.json', 8_000_000)
     url = origin + '/connections'
-    data = {coverage: index.meta, connections: rows(index, 'entities').filter(e => typeof e.name === 'string' && e.name.toLowerCase().includes(query)).slice(0, 10).map(e => ({...e, opax_url: url + '?entity=' + encodeURIComponent(String(e.id))}))}
+    // as_at: the day the connections run to, as the pages say it ("as at 8 September 2026").
+    const asAt = evidenceAsAt(index.meta)
+    data = {coverage: index.meta, ...(asAt ? {as_at: asAt} : {}), connections: rows(index, 'entities').filter(e => typeof e.name === 'string' && e.name.toLowerCase().includes(query)).slice(0, 10).map(e => ({...e, opax_url: url + '?entity=' + encodeURIComponent(String(e.id))}))}
   } else if (name === 'corpus_coverage') {
     data = await asset('/corpus.json', 100_000)
     url = origin + (reportsEnabled(env.REPORTS_ENABLED) ? '/reports' : '/stats')

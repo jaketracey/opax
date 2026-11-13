@@ -3,6 +3,12 @@
 // 2. Apply setup.sql with the staging COMMUNITY_DB binding.
 // 3. node test/voice-staging-smoke.mjs run <directory> [--tool-secret-file <file>]
 // 4. Always apply cleanup.sql, then remove the private temporary directory.
+// Staging only: apply both SQL files with --env staging (database
+// opax-community-staging). Never point this at production.
+// Besides the call itself, it proves what only a real provider socket can:
+// a start takes over a live call (the old socket closes within the 15-second
+// watch, code 1000 "Voice conversation replaced"), and a start during the old
+// call's connecting phase makes that connect return 409.
 import assert from 'node:assert/strict';
 import {randomUUID,randomBytes,createHash} from 'node:crypto';
 import {mkdirSync,writeFileSync,readFileSync,chmodSync} from 'node:fs';
@@ -23,9 +29,10 @@ if(mode==='prepare'){
   const tokenHash=createHash('sha256').update(token).digest('hex');
   const setup=`INSERT INTO members(id,email,display_name,created_at) VALUES('${memberId}','voice-smoke-${memberId}@example.invalid','Voice staging check',${timestamp});
 INSERT INTO member_sessions(token_hash,member_id,expires_at,created_at) VALUES('${tokenHash}','${memberId}',${state.expiresAt},${timestamp});
-INSERT INTO voice_sessions(id,member_id,state,reserved_seconds,charged_seconds,created_at,expires_at,started_at,closed_at) VALUES('${balanceId}','${memberId}','closed',510,510,${old},${old+510},${old},${old+510});
+INSERT INTO voice_sessions(id,member_id,state,reserved_seconds,charged_seconds,created_at,expires_at,started_at,closed_at) VALUES('${balanceId}','${memberId}','closed',360,360,${old},${old+360},${old},${old+360});
 `;
-  // Old synthetic usage caps this live check at ninety seconds while avoiding
+  // Old synthetic usage caps this live check at four minutes (the call, its
+  // takeover charge and a few short connecting races) while avoiding
   // a reservation against the current monthly pool before the check begins.
   writeFileSync(join(directory,'setup.sql'),setup,{mode:0o600});
   writeFileSync(join(directory,'cleanup.sql'),`DELETE FROM voice_sessions WHERE member_id='${memberId}';
@@ -45,17 +52,27 @@ DELETE FROM members WHERE id='${memberId}' AND email='voice-smoke-${memberId}@ex
   if(secret!==null)assert.ok(secret.length>=32,'Tool secret file is incomplete.');
   const report={staging:true,checks:{},tool_checks:[],socket:{metadata:false,greeting:false,audio:false,provider_tool:false},clean_close:false,reconciled:false};
   let socket,session,stage='status',completed=false;
+  // The Worker allows six starts a minute per member; pace them.
+  const starts=[];
+  const startCall=async()=>{
+    if(starts.length>=6){const wait=starts[starts.length-6]+61000-Date.now();if(wait>0)await delay(wait)}
+    starts.push(Date.now());return api('start',{method:'POST',data:{}});
+  };
+  const adopt=data=>{session=data;state.sessionId=data.session_id;save(state)};
   const api=async(path,{method='GET',data,headers={}}={})=>{
     const response=await fetch(origin+'/api/voice/'+path,{method,headers:{cookie,origin,...(data?{'content-type':'application/json'}:{}),...headers},body:data?JSON.stringify(data):undefined,signal:AbortSignal.timeout(20000)});
     return {status:response.status,data:await response.json()};
   };
   try{
-    const status=await api('status');assert.equal(status.status,200);assert.equal(status.data.enabled,true);assert.equal(status.data.signed_in,true);assert.equal(status.data.remaining_seconds,90);report.checks.signed_in=true;
+    const status=await api('status');assert.equal(status.status,200);assert.equal(status.data.enabled,true);assert.equal(status.data.signed_in,true);assert.equal(status.data.remaining_seconds,240);report.checks.signed_in=true;
     const cross=await api('start',{method:'POST',data:{},headers:{origin:'https://invalid.example'}});assert.equal(cross.status,403);report.checks.cross_origin_refused=true;
-    stage='reservation';const start=await api('start',{method:'POST',data:{}});assert.equal(start.status,201);session=start.data;assert.equal(session.remaining_seconds,90);
+    stage='reservation';const first=await startCall();assert.equal(first.status,201);assert.equal(first.data.replaced,false);adopt(first.data);assert.equal(session.remaining_seconds,240);
+    // A second start takes over the unused reservation: 201, replaced, and the first can no longer connect.
+    const second=await startCall();assert.equal(second.status,201);assert.equal(second.data.replaced,true);assert.notEqual(second.data.session_id,first.data.session_id);adopt(second.data);
+    report.checks.second_start_replaces=true;
+    const stale=await fetch(origin+'/api/voice/connect?session_id='+first.data.session_id,{headers:{cookie,origin,upgrade:'websocket'},signal:AbortSignal.timeout(20000)});
+    assert.equal(stale.status,409);await stale.body?.cancel();report.checks.replaced_reservation_cannot_connect=true;
     const proxyUrl=new URL(session.signed_url);assert.equal(proxyUrl.origin,'wss://staging.opax.com.au');assert.equal(proxyUrl.pathname,'/api/voice/connect');
-    state.sessionId=session.session_id;save(state);
-    assert.equal((await api('start',{method:'POST',data:{}})).status,409);report.checks.duplicate_start_refused=true;
     assert.equal((await api('tools/corpus_coverage',{method:'POST',data:{session_id:session.session_id}})).status,401);report.checks.tool_without_secret_refused=true;
     stage='websocket';
     const directChecks=async()=>{
@@ -105,6 +122,44 @@ DELETE FROM members WHERE id='${memberId}' AND email='voice-smoke-${memberId}@ex
       socket.on('error',()=>{clearTimeout(timeout);reject(new Error('WebSocket connection failed.'))});
       socket.on('close',(code)=>{report.clean_close=code===1000;if(!completed){clearTimeout(timeout);reject(new Error('WebSocket closed before the smoke checks completed.'))}});
     });
+    // Live takeover: a new start while this call is open closes the old
+    // socket at the relay's next watch (every 15 s) with 1000 "replaced".
+    stage='live-takeover';
+    {
+      const closed=new Promise(resolveClose=>socket.once('close',(code,reason)=>resolveClose({code,reason:reason.toString(),at:Date.now()})));
+      const takeover=await startCall(),at=Date.now();assert.equal(takeover.status,201);assert.equal(takeover.data.replaced,true);adopt(takeover.data);
+      const result=await Promise.race([closed,delay(25000).then(()=>null)]);
+      assert.ok(result,'The old socket stayed open after a takeover.');
+      report.live_takeover={code:result.code,reason:result.reason,closed_after_ms:result.at-at};
+      assert.equal(result.code,1000);assert.equal(result.reason,'Voice conversation replaced');
+      assert.ok(result.at-at<=15000+2000,'The old socket must close within the 15-second watch (plus request latency).');
+      report.checks.live_takeover_closes_old_socket=true;
+    }
+    // Connecting takeover: open the reserved session's socket and start again
+    // while the Worker is still fetching the provider URL and handshaking. The
+    // window is short, so try a few offsets. Every attempt keeps one socket:
+    // too early, the connect finds its reservation cancelled (409 used or
+    // expired); too late, it is a live takeover (close 1000 replaced).
+    stage='connecting-takeover';
+    report.connecting_attempts=[];
+    for(const offset of [0,80,200,350,500]){
+      const target=session,outcome=new Promise(settle=>{
+        let guard=null;const resolveOutcome=value=>{clearTimeout(guard);settle(value)};
+        const ws=new WebSocket(target.signed_url,['convai'],{headers:{Origin:origin,Cookie:cookie},handshakeTimeout:25000});
+        ws.on('unexpected-response',(_request,response)=>{let body='';response.on('data',chunk=>{if(body.length<2000)body+=chunk.toString()});response.on('end',()=>{let message=null;try{message=JSON.parse(body).error}catch{}resolveOutcome({refused:response.statusCode,message})})});
+        ws.on('open',()=>ws.send(JSON.stringify({type:'conversation_initiation_client_data'})));
+        ws.on('message',raw=>{try{const message=JSON.parse(raw.toString());if(message.type==='ping')ws.send(JSON.stringify({type:'pong',event_id:message.ping_event.event_id}))}catch{}});
+        ws.on('close',(code,reason)=>resolveOutcome({closed:code,reason:reason.toString()}));
+        ws.on('error',()=>{});
+        guard=setTimeout(()=>{ws.terminate();resolveOutcome({timeout:true})},30000);
+      });
+      await delay(offset);
+      const next=await startCall();assert.equal(next.status,201);assert.equal(next.data.replaced,true);adopt(next.data);
+      const result=await outcome;report.connecting_attempts.push({offset,...result});
+      if(result.refused===409&&result.message==='This voice connection was replaced by a newer one.'){report.checks.connecting_takeover_409=true;break}
+      assert.ok(result.refused===409||(result.closed===1000&&result.reason==='Voice conversation replaced'),'Unexpected outcome: '+JSON.stringify(result));
+    }
+    assert.ok(report.checks.connecting_takeover_409,'No attempt landed in the connecting window; rerun or widen the offsets.');
     stage='close';
   }catch{
     report.failure_stage=stage;
@@ -123,7 +178,7 @@ DELETE FROM members WHERE id='${memberId}' AND email='voice-smoke-${memberId}@ex
         }
       }catch{report.reconciled=false}
     }
-    report.passed=completed&&report.clean_close&&report.reconciled&&report.checks.upgrade_101&&report.checks.protocol_convai;
+    report.passed=completed&&report.clean_close&&report.reconciled&&report.checks.upgrade_101&&report.checks.protocol_convai&&report.checks.live_takeover_closes_old_socket===true&&report.checks.connecting_takeover_409===true;
     writeFileSync(join(directory,'report.json'),JSON.stringify(report,null,2),{mode:0o600});
     console.log(JSON.stringify(report));
     console.log(JSON.stringify({cleanup_sql:join(directory,'cleanup.sql'),cleanup_required:true}));

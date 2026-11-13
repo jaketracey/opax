@@ -230,3 +230,17 @@ test('voice recognises plural, contracted, misspelled and uncertain family reque
   assert.equal(out.data.money_route,'federal-party-ranking-v1');assert.ok(['calculated','needs_scope'].includes(out.data.answer_status));
  }
 });
+test('voice find_connections says the day the connections run to, and claims none for an undated export',async()=>{
+ const entities=[{id:'ab'+'0'.repeat(22),name:'Example Harbour Program',kind:'program',records:12}];
+ let index={meta:{generated_at:'2026-09-08T09:21:53+00:00'},entities};
+ const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:{fetch:async request=>new URL(request.url).pathname==='/evidence/index.json'?Response.json(index):Response.json(graph)}};
+ const unrelated=async()=>{throw Error('Unrelated speech retrieval')};
+ let out=await runVoiceTool('find_connections',{query:'harbour'},env,unrelated);
+ assert.equal(out.data.as_at,'2026-09-08');
+ assert.deepEqual(out.data.coverage,index.meta,'the coverage block is unchanged');
+ assert.equal(out.data.connections[0].opax_url,'https://opax.test/connections?entity='+entities[0].id);
+ index={entities};
+ out=await runVoiceTool('find_connections',{query:'harbour'},env,unrelated);
+ assert.equal('as_at' in out.data,false);
+ assert.equal(out.data.connections.length,1);
+});
