@@ -215,6 +215,13 @@ export type MoneyMapHandle = {
 
 /** Dollars -> the engine's size weight: $10k ~ 1, so log sizing spans well. */
 const WEIGHT_SCALE = 10_000
+/** A host this wide or narrower is a phone's card: its fit centres the scene and fills the width. */
+export const NARROW_HOST = 540
+/** Whether an element is drawn: laid out and neither visibility:hidden nor faded to nothing. */
+const shown = (element: HTMLElement): boolean => {
+  const style = getComputedStyle(element)
+  return style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity) > 0.05
+}
 
 function yearSpan(first: number | null, last: number | null): string {
   if (!first) return ''
@@ -707,7 +714,7 @@ const CSS = `
   .mm-root[data-mm-chrome='full'] .mm-card { top: auto; max-height: 55%; }
   .mm-legend-note, .mm-find { display: none; }
   .mm-root[data-mm-chrome='full'] .mm-scrub { display: flex; align-items: center; gap: var(--space-tight);
-    top: 60px; right: var(--space-tight); bottom: auto; left: var(--space-tight); width: auto; padding: var(--space-line) var(--space-tight); overflow: visible; }
+    top: calc(var(--space-heading) + var(--mm-legend-h, 44px)); right: var(--space-tight); bottom: auto; left: var(--space-tight); width: auto; padding: var(--space-line) var(--space-tight); overflow: visible; }
   .mm-root[data-mm-chrome='full'] .mm-scrub-label { display: block; flex: none; margin: 0; }
   .mm-root[data-mm-chrome='full'] .mm-scrub-caption { display: none; }
   .mm-root[data-mm-chrome='full'] .mm-scrub-rail { flex: 1 1 88px; min-width: 60px; height: 44px; }
@@ -1365,7 +1372,20 @@ export async function mountMoneyMap(
   function reserveScrubRoom() {
     const docked = scrub && !compactScrub ? scrub.offsetHeight : 0
     container.style.setProperty('--mm-scrub-h', `${docked}px`)
+    // On a phone the full map's scrub sits under the legend's chip row, and
+    // the row is as tall as its tallest control (the party select stacks its
+    // label over its box), so the scrub's top is measured, not assumed: at a
+    // fixed 60px it covered the row's lower half. A closed key sheet (/money)
+    // keeps the stylesheet's default.
+    const host = container.getBoundingClientRect()
+    const row = legend && host.width <= 720 && shown(legend) && legend.getBoundingClientRect().width > host.width * 0.5
+      ? legend.offsetHeight : 0
+    if (row) container.style.setProperty('--mm-legend-h', `${row + 4}px`)
+    else container.style.removeProperty('--mm-legend-h')
   }
+  // The row's height is only final once its controls exist and the web fonts are in.
+  const legendObserver = legend ? new ResizeObserver(() => reserveScrubRoom()) : null
+  if (legend) legendObserver?.observe(legend)
 
   // --- Legend / filter -------------------------------------------------
   const chips = new Map<string, HTMLButtonElement>()
@@ -2169,10 +2189,15 @@ export async function mountMoneyMap(
     const host = container.getBoundingClientRect()
     if (host.width < 1 || host.height < 1) return insets
     const gap = 10
+    // A phone-width host (the /money card, the homepage card): see the end.
+    const narrow = host.width <= NARROW_HOST
     const cover = (element: HTMLElement | null, edge: keyof Insets) => {
       if (!element) return
       const rect = element.getBoundingClientRect()
       if (rect.width < 1 || rect.height < 1) return
+      // A panel that is laid out but not shown (the /money key sheet while
+      // closed) leaves the scene alone.
+      if (narrow && !shown(element)) return
       // A panel along the top or bottom that already sits inside the left
       // or right strip (the scrub under the legend's column) costs nothing
       // more; a full-width band for it would only squeeze the scene.
@@ -2194,7 +2219,11 @@ export async function mountMoneyMap(
     // Columns first, so the bands along the top and bottom can defer to them.
     const legendAsRow = legend !== null && legend.getBoundingClientRect().width > host.width * 0.5
     if (legend && !legendAsRow) cover(legend, 'left')
-    cover(zoom, 'right')
+    // On a phone the zoom buttons are a corner stack, and a strip the full
+    // height of a tall card for them squeezed the ring to three quarters of
+    // its width. The scene is wider than it is tall there, so the stack costs
+    // the bottom band instead.
+    cover(zoom, narrow ? 'bottom' : 'right')
     if (legend && legendAsRow) cover(legend, 'top')
     cover(find, 'top')
     // The scrub is normally the bottom-left plate, but the compact one moves
@@ -2203,6 +2232,13 @@ export async function mountMoneyMap(
       const rect = scrub.getBoundingClientRect()
       const onTop = rect.top + rect.height / 2 < host.top + host.height / 2
       cover(scrub, onTop ? 'top' : 'bottom')
+    }
+    // A phone frames the scene in the middle of its card: the insets on
+    // opposite sides match, so the ring sits centred rather than pushed away
+    // from the controls into the far corner.
+    if (narrow) {
+      insets.top = insets.bottom = Math.max(insets.top, insets.bottom)
+      insets.left = insets.right = Math.max(insets.left, insets.right)
     }
     return insets
   }
@@ -2518,6 +2554,7 @@ export async function mountMoneyMap(
       cancelReveal()
       container.removeEventListener('keydown', onKeyDown)
       resizeObserver.disconnect()
+      legendObserver?.disconnect()
       engine.dispose()
       recoveryNotice?.remove()
       for (const child of [canvas, labels, legend, card, zoom, hint, find, scrub]) {
