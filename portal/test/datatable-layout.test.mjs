@@ -156,3 +156,14 @@ test('row menus near the bottom open upward so they never grow the sideways scro
   assert.equal(up.getPropertyValue('top'),'auto');
   assert.equal(up.getPropertyValue('bottom'),'100%');
 });
+
+test('a filter option with a long name grows to its wrapped label instead of overprinting the next option',()=>{
+  // The panel is a height-capped flex column (max-height, overflow auto). Options that may shrink were held to
+  // their 44 px min-height, so a three-line agency or program name ran over the option below it at 390 px.
+  const panel = find('.dt-panel fieldset');
+  assert.equal(panel.getPropertyValue('flex-direction'),'column');
+  assert.ok(find('.dt-panel > :is(fieldset, div)').getPropertyValue('max-height'),'the panel caps its height');
+  const choice = find('.dt-choice');
+  assert.equal(choice.getPropertyValue('flex-shrink'),'0');
+  assert.equal(choice.getPropertyValue('min-height'),'var(--size-target)');
+});

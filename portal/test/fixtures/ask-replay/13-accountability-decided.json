@@ -110,7 +110,7 @@
  "assets": {},
  "expect": {
   "answered": true,
-  "lead": "^The Auditor-General found the department",
+  "lead": "^Casey Sample said on 30 September 2020 that the Auditor-General found the department",
   "includes": [
    "Taylor Sample"
   ],

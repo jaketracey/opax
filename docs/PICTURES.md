@@ -105,6 +105,17 @@ link to the Commons file page. Keep the manifest's `credit` value even when the
 shorter author string is used in the visible line: it records the source's own
 credit statement and is part of the audit trail.
 
+A credit always names a person or archive, never a bare web address. Commons'
+`Credit` field is sometimes only the address of the archive a file came from (a
+Flickr page, a DVIDS record, a government gallery); the app prints `credit` as
+"Photo: …", so an address there credits nobody. `scripts/year_pictures_credits.py`
+rewrites such a credit to the picture's `author` (HTML stripped, trimmed), or to the
+archive's name when no author is usable, and moves the address to `credit_url` beside
+it so the link and audit trail are kept. Run it after adding pictures;
+`--check` exits 1 while any credit is still an address. On 13 Nov 2026 it rewrote 48
+credits; `portal/test/pictures.test.mjs` and `tests/test_year_pictures_credits.py`
+fail if one returns.
+
 CC BY and CC BY-SA files require attribution. Retain the author, linked licence,
 Commons source link and an indication that OPAX resized and recompressed the image.
 WebP conversion and resizing may be an adaptation; derivatives of CC BY-SA work

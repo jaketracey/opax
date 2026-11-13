@@ -2,6 +2,8 @@ import {donorRanking} from './research-coherence.mjs'
 import {answerStyleChecks,styleRows} from './research-answer-style.mjs'
 import {sentenceParts} from './research-claim-audit.mjs'
 import {plainAnswerPayload,rewriteAnswerPayload} from './research-language'
+import {recordedChamber} from './ask-chamber-phrases'
+import {readableDate} from './tools/record-common'
 
 /** Lead with a checked answer; repair a supported ranking clause before moving it. */
 export function leadWithFinding<T extends Record<string,unknown>>(payload:T,question?:string):T {
@@ -161,7 +163,7 @@ export function leadWithModelAnswer<T extends Record<string,unknown>>(payload:T,
 }
 
 /** "Who was responsible for …", "who is to blame for …", "who decided …": questions answered by findings first. */
-export const ACCOUNTABILITY_QUESTION=/\bwho\b[^?]{0,40}?\b(?:(?:was|were|is|are)\s+(?:(?:most|ultimately|really|mainly|primarily|personally)\s+)?(?:responsible|accountable|culpable|at fault|to blame)|(?:to\s+)?blame[sd]?\b|decided|approved|authori[sz]ed|signed off|ordered|made the (?:decision|call))/i
+export const ACCOUNTABILITY_QUESTION=/\bwho\b[^?]{0,40}?\b(?:(?:was|were|is|are)\s+(?:(?:most|ultimately|really|mainly|primarily|personally|held)\s+)?(?:responsible|accountable|culpable|at fault|to blame)|(?:to\s+)?blame[sd]?\b|decided|approved|authori[sz]ed|signed off|ordered|made the (?:decision|call))/i
 // An official body as the subject of a finding: "The commission found …", "The NACC's Operation Myrtleford report
 // found …", "The Royal Commission into X, led by Y, concluded …". The words before the verb never report a speaker.
 const BODY=String.raw`(?:royal commission(?:er)?|commission(?:er)?|inquiry|committee|report|review|auditor-general|ANAO|ombudsman|court|NACC|IBAC|ICAC|CCC|tribunal|coroner|investigation)`
@@ -174,6 +176,42 @@ type SourceRow={resource?:string;kind?:string;title?:string;coverage?:boolean}
 // Facts about an inquiry rather than what it found: when it was set up, its dates, its commissioner, its counts.
 const ABOUT_BODY=new RegExp(String.raw`^[^.;:]{0,60}?\b${BODY}\b`,'i')
 const METADATA=/\b(?:established|Letters Patent|dated|final report|interim report|reported on|delivered|tabled|commissioners?|chaired|led by|recommendations|hearing transcripts?|hearings? (?:were|was) held)\b/i
+type SpokenSource=SourceRow&{speaker?:string;date?:string;chamber?:string}
+/** An official body's finding stated as fact ("The NACC found two officials corrupt …") whose only support is one
+ * member's speech is that member's claim: the line becomes "Avery Quinlan told the House on 4 March 2026 that the NACC
+ * found …", with the speaker, chamber and date the cited passage records. Findings cited to the body's own record
+ * (a royal commission report, a committee report, a court record) stay the body's findings. A line already naming the
+ * speaker, or resting on several speakers or on a passage with no recorded speaker, is left as written. Only the
+ * opening words change; every citation keeps its text. */
+export function attributeSpokenFindings<T extends Record<string,unknown>>(payload:T):T {
+  if(typeof payload.answer!=='string')return payload
+  const answer=payload.answer,sources=(Array.isArray(payload.sources)?payload.sources:[]) as SpokenSource[]
+  const entries=Object.entries(payload.citations??{}) as [string,unknown][]
+  const sourceOf=(id:string)=>sources.find(s=>s.resource&&(id===s.resource||id.startsWith(s.resource+'/')))
+  const edits:{at:number;word:string;replacement:string}[]=[]
+  for(const m of answer.matchAll(/[^\n]+/g)){
+    const lead=/^[ \t]*(?:[-*•][ \t]+)?/.exec(m[0])![0],text=m[0].slice(lead.length).trimEnd()
+    const found=FINDING.exec(text)
+    if(!text||!found||SPEAKER_VERB.test(found[0]))continue
+    const a=Array.from(answer.slice(0,m.index!+lead.length)).length,b=a+Array.from(text).length
+    const cited=entries.filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(r=>Array.isArray(r)&&r[0]<b&&r[1]>a)).map(([id])=>sourceOf(id))
+    if(!cited.length||cited.some(s=>!s||s.kind!=='speech'))continue
+    const speakers=[...new Set(cited.map(s=>s!.speaker?.trim()).filter(Boolean))]
+    if(speakers.length!==1||cited.some(s=>!s!.speaker?.trim()))continue
+    const speaker=speakers[0]!,surname=speaker.split(/\s+/).at(-1)!
+    if(new RegExp(`(?<![\\p{L}])${surname.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}(?![\\p{L}])`,'u').test(text))continue
+    const dates=[...new Set(cited.map(s=>readableDate(s!.date)).filter(Boolean))],chambers=[...new Set(cited.map(s=>s!.chamber?.trim()).filter(Boolean))]
+    const house=chambers.length===1?recordedChamber(chambers[0]!):undefined
+    const where=!house?'':house.kind==='representatives'?' the House':house.kind==='senate'?' the Senate':house.house==='committee'?` a ${house.label}`:` the ${house.label}`
+    const when=dates.length===1?` on ${dates[0]}`:''
+    const word=/^\S+/.exec(text)![0],opening=/^(?:The|A|An|In|On|At|After|Before|During|When|Its|Their|Both|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten)$/.test(word)?word.toLowerCase():word
+    edits.push({at:m.index!+lead.length,word,replacement:`${speaker} ${where?`told${where}`:'said'}${when} that ${opening}`})
+  }
+  if(!edits.length)return payload
+  return rewriteAnswerPayload(payload,replace=>{
+    for(const edit of edits.reverse())replace(new RegExp(`(?<=^[\\s\\S]{${edit.at}})${edit.word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}`,'g'),edit.replacement)
+  })
+}
 /** For an accountability question, an answer opens on what an inquiry, court or official body found. When the first
  * line is a member's claim in debate, or a fact about the inquiry itself (its establishment, dates, commissioner or
  * counts), the first line that reports a finding moves to the front: one with the body as its subject ("The commission

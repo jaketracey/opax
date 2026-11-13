@@ -116,13 +116,10 @@ def main() -> None:
             total, cnt = db.execute(
                 f"SELECT SUM(amount), COUNT(*) FROM donations WHERE industry IN ({marks_i})",
                 live).fetchone()
-            # Case-variant donor names ('Mineralogy Pty Ltd' / 'Mineralogy PTY
-            # LTD') are the same entity — aggregate case-insensitively and
-            # display the highest-value spelling.
-            top_donors = db.execute(
-                f"SELECT MAX(donor_name), SUM(amount) AS a FROM donations "
-                f"WHERE industry IN ({marks_i}) GROUP BY UPPER(donor_name) "
-                "ORDER BY a DESC LIMIT 6", live).fetchall()
+            # No top_donors here: a sum of receipt rows by donor spelling adds the
+            # donor's own declarations to the parties' returns, so one gift can
+            # count two or three times. scripts/build_report_sources.mjs ranks the
+            # money map's donors by their record figure at build time instead.
             by_year = db.execute(
                 f"SELECT financial_year, SUM(amount) FROM donations "
                 f"WHERE industry IN ({marks_i}) AND financial_year IS NOT NULL "
@@ -131,7 +128,6 @@ def main() -> None:
                 "industries": live,
                 "total": round(total or 0),
                 "count": cnt,
-                "top_donors": [[d, round(a)] for d, a in top_donors],
                 "by_year": [[y, round(a)] for y, a in by_year],
             }
         out[slug] = stats

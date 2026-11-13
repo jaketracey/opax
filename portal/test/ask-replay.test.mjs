@@ -133,6 +133,26 @@ for(const fixture of fixtures)test(`replay ${fixture.id}: ${fixture.question}`,a
     }
   }
   if(expect.mode)assert.equal(body.research?.mode,expect.mode,context())
+  // answer_status: null means fully cited (the field is absent).
+  if('answer_status' in expect)assert.equal(body.answer_status??null,expect.answer_status,`answer_status ${context()}`)
+  // A record the answer used is a cited source card whose title and link carry its page.
+  if(expect.source){
+    const cards=(body.sources??[]).filter(s=>s.cited&&new RegExp(expect.source.title).test(s.title)&&new RegExp(expect.source.url).test(s.url))
+    assert.ok(cards.length>=(expect.source.count??1),`cited source cards matching ${JSON.stringify(expect.source)}: ${JSON.stringify(body.sources?.map(s=>[s.title,s.url,s.cited]))}`)
+  }
+  // Trail steps in order (a subsequence): tool, ok, and the argument the trail shows.
+  if(expect.trail){
+    let at=0
+    for(const want of expect.trail){
+      const i=body.research.trail.findIndex((t,j)=>j>=at&&t.tool===want.tool&&t.ok===want.ok&&(want.arg===undefined||t.arg===want.arg))
+      assert.ok(i>=0,`trail has ${JSON.stringify(want)}: ${JSON.stringify(body.research.trail)}`);at=i+1
+    }
+  }
+  // Errors a tool returned reach the model's next turn, so it can recover.
+  for(const pattern of expect.tool_errors??[]){
+    const seen=run.model.doGenerateCalls.map(c=>JSON.stringify(c.prompt))
+    assert.ok(seen.some(p=>new RegExp(pattern).test(p.replace(/\\"/g,'"'))),`a later prompt carries the tool error ${pattern}`)
+  }
 
   // Citations: every range lands inside the answer, every cited resource is a listed source.
   const ranges=Object.entries(body.citations??{}),length=Array.from(body.answer).length

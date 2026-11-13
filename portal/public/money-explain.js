@@ -1,8 +1,8 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptScopeLabel} from './donor-disclosure.js?v=8c73ceafd6';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,hasPartyReceipts,receiptGraph,receiptScopeLabel} from './donor-disclosure.js?v=8c73ceafd6';
 // receiptGraph is shared with every money page (donor-disclosure.js); re-exported for the tests that read it here.
 export {receiptGraph};
 import {loadDonorViewIndex} from './donor-views.js?v=c475b569bf';
-import {partyReturnFigures, industryName} from './register-tables.js?v=6fe318ff05';
+import {partyReturnFigures, industryName} from './register-tables.js?v=c8a69402d5';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph
@@ -537,7 +537,9 @@ export function narrative(flow, { partyName = (l) => l } = {}) {
   const to = party ? partyName(party.label) : 'political parties';
   const when = span(flow);
   const yearsWithMoney = flow.dated.length;
-  if (!count && !total) return ['No disclosed money matches this flow.'];
+  if (!count && !total) return [kind === 'donor' && hasPartyReceipts(donor) === false
+    ? 'No party return lists a receipt from this donor. What its own donor returns declare is not counted here: OPAX counts each gift once, from the party’s own return.'
+    : 'No disclosed money matches this flow.'];
   if (kind === 'pair' || kind === 'donor') {
     out.push(`${recordedIn(flow)} ${money(total)} from ${donor.label} to ${to} across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}, with money in ${plural(yearsWithMoney, 'financial year')}.`);
   } else if (kind === 'party') {
@@ -842,7 +844,9 @@ export function pageHTML(flow, { index, partyName = (l) => l, access = null, fit
     esc(flow.jur === 'federal' ? 'AEC returns' : (flow.meta.sourceShort || flow.meta.commission || '')),
     span(flow) ? esc(span(flow)) : '',
   ].filter(Boolean);
-  const figures = [
+  // A flow no party return lists a receipt for (a donor only its own returns declare,
+  // hasPartyReceipts) has no figures: the story says so, never "$0" and "0 Receipts".
+  const figures = !flow.count && !flow.total ? '' : [
     figureHTML(money(flow.total), 'Disclosed'),
     figureHTML(flow.count.toLocaleString('en-AU'), flow.count === 1 ? 'Receipt' : 'Receipts'),
     flow.dated.length ? figureHTML(String(flow.dated.length), flow.dated.length === 1 ? 'Year with money' : 'Years with money') : '',

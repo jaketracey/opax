@@ -553,12 +553,14 @@ test('donor page (real app): a donor only its own return declares shows the labe
   assert.ok(text.includes(DONOR_DECLARED_ONLY), 'the labelled line');
   assert.doesNotMatch(text, /\$0(?![\d,.])|\b0 receipts\b|Receipts counted|Rank/);
   assert.equal(doc.querySelectorAll('.donor-flow-bars .bar, .donor-flow-bars rect').length, 0, 'no bars');
+  assert.equal(doc.querySelector('[data-explain-link]'), null, 'no Explain button: nothing a party listed to explain');
   // A donor the parties' returns list still gets its counted figure and the scope line.
   const pratt = published.nodes.find(n => n.id === PRATT);
   const counted = await renderEntry(`/subject/donor/${encodeURIComponent(pratt.label)}`, '.donor-flow-bars');
   assert.deepEqual(pageErrors(counted), []);
   const prattText = new JSDOM(counted.html).window.document.body.textContent;
   assert.ok(prattText.includes('Receipts counted') && !prattText.includes(DONOR_DECLARED_ONLY));
+  assert.ok(new JSDOM(counted.html).window.document.querySelector('[data-explain-link]'), 'Explain this money stays for a donor the parties list');
 });
 
 // ---- One pair, every surface -------------------------------------------------
@@ -588,4 +590,19 @@ test('Westpac to One Nation: /money, the party page, its API, receiptGraph and p
   const html = await renderMoneyConnectionsTable(new URL('https://opax.test/money?jur=federal&c.q=Westpac'), readPublic);
   const row = JSON.parse(html.match(/<script type="application\/json" data-dt-page>([\s\S]*?)<\/script>/)[1]).rows.find(r => r.from === 'Westpac Banking Corporation' && r.to === 'One Nation');
   assert.deepEqual([row.value, row.records], TYPED, '/money Connections table');
+});
+
+// The Explain page for a donor no party return lists (reachable by a link only once the
+// donor page and the map card stop offering it): no "$0 Disclosed" and "0 Receipts".
+import * as moneyExplain from '../public/money-explain.js';
+test('Explain page: a donor only its own returns declare has no $0 figures; its story says no party return lists a receipt', () => {
+  for (const n of DECLARED_ONLY) {
+    const parsed = moneyExplain.parseExplainParams(new URLSearchParams({from: n.id}), published, null);
+    const flow = moneyExplain.resolveFlow(parsed.state, published, null);
+    const text = moneyExplain.pageHTML(flow, {index: null}).replace(/<[^>]+>/g, ' ');
+    assert.doesNotMatch(text, /\$0(?![\d,.])|\b0 Receipts?\b/, n.label);
+    assert.ok(text.includes('No party return lists a receipt from this donor.'), n.label);
+  }
+  const pratt = moneyExplain.resolveFlow(moneyExplain.parseExplainParams(new URLSearchParams({from: PRATT}), published, null).state, published, null);
+  assert.match(moneyExplain.pageHTML(pratt, {index: null}), /class="mx-figure/);
 });
