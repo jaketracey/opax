@@ -111,3 +111,13 @@ test('the homepage is five blocks with one primary action and no in-site arrows'
  assert.match(home,/<link rel="stylesheet" href="\/ui-source\.css\?v=[\w]+"/);
  assert.match(home,/<script src="\/ui-source\.js\?v=[\w]+" defer><\/script>/);
 });
+
+test('the home page ships its declaration rows in the same shape the script redraws, each dot inside the part after it',()=>{
+ const home=readFileSync(new URL('../public/home.html',import.meta.url),'utf8');
+ const details=[...home.matchAll(/<p class="hp-row-detail">(.*?)<\/p>/g)].map(m=>m[1]).filter(d=>/recorded/.test(d));
+ assert.ok(details.length,'the home page carries declaration rows');
+ for (const detail of details) {
+  assert.doesNotMatch(detail,/ · </,'no dot stands outside a part, where a wrapped line could end in it');
+  assert.match(detail,/ <span>· recorded <time /);
+ }
+});
