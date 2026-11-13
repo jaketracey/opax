@@ -191,7 +191,120 @@ Picton, Malinauskas, Miles, Hildyard, Kealy, Britnell, Tak, Szakacs, Hodgett, Mi
 
 - The 270 prints with committee-witness rows include sitting senators ("Wong", 15 witness rows). Folding them needs
   the witness rows kept off the person (the export already partitions them for majority-witness prints); not done here.
-- Prints with no party (Victorian Assembly stubs such as "Allan") and same-person name variants the registry check
-  cannot prove (Joe/Joseph Hockey, Bernie/Bernard Ripoll, Jenny/Jennifer Macklin, Dave/David Tollner) need reviewed
-  evidence, for example entries in `scripts/person_identity.json`.
+- Prints with no party (Victorian Assembly stubs such as "Allan") need reviewed evidence, for example entries in
+  `scripts/person_identity.json`. The same-person name variants the registry check could not prove here (Joe/Joseph
+  Hockey, Bernie/Bernard Ripoll, Jenny/Jennifer Macklin, Dave/David Tollner) carry their person's verified id and fold
+  by it since 13 November 2026 (below).
 - Kernot folds by every test but has its own published roster-profile record; folding it retires that KB record.
+
+# One verified id, one person (13 November 2026)
+
+Portal audit F2 (backlog A2): 118 roster rows shared 58 verified person ids, and every one of those people had more
+than one profile. Id 10086 printed as "Mark Butler" (828 speeches) and "Mark Christopher Butler" (25); Bob Katter had
+a second profile under the Hansard print "Katter Bob Jnr". The exporter (`scripts/export_parliamentarians.py`) keys a
+row by its printed name and the slug index (`portal/src/person-slug.ts`) gives every row an address, so one person
+printed two ways shipped as two people.
+
+`fold_ids` in `scripts/roster_fold.py` now folds the rows that share a verified id (`scripts/roster_identity.py`
+verify) into one person, after the surname folds. Every test must hold, else the group is left for review:
+
+- every row carries the same id, and none is a reviewed record of its own (a witness split, committee-witness rows,
+  a pending speech count, a source-only row; `ID_HOLD_FIELDS`), and each has a speech count;
+- each other row's name agrees with the person's name, full name, aliases or members-register names for that id
+  (`roster_identity.same_name`: surname plus a first name, nickname or initials), or `scripts/person_identity.json`
+  lists it as that person;
+- the rows share a parliament;
+- a row printed only in the federal House falls inside the dated House service of that id (one year either way);
+- no two rows hold different seats in one house in the same years.
+
+The person's row is the one printed under the electorate release's primary name for the id, where a row carries
+it: Bob Baldwin, Tony Windsor and Katie Allen keep their public names and slugs although the formal "Robert",
+"Antony" and "Katrina" rows have more speeches (review of 13 November 2026). Where no row carries the release's
+name, and among spelling twins of it, the row with the most speeches holds (on a tie, the sitting member's); never a
+surname or tail print. Two holders differ from the release's name: David Tollner, whose release name "Dave Tollner"
+no row prints (main's row is David Tollner; the fold gives it `full` "Dave Tollner" from the surname print), and
+Yvette D’Ath, whose straight-apostrophe twin is the release's spelling (one slug, `yvette-dath`, either way). The
+holder keeps its name, slug, id, party and status; speeches sum; houses, years and seats join; the other names go into
+`prints` and, where they are full names, `aliases`; a print's members-register name fills an empty `full`. The
+Worker reads `prints` as it does for surname folds (speech searches, Ask scope, brief and topic counts), and
+`formerSlugs` in `portal/src/person-slug.ts` keeps every folded row's old address, its own slug or the suffixed slug
+a spelling twin held, as a 301 to the person (`docs/SEO.md`). Sitemaps, `person-paths.js` and the slug map hold the
+person's slug only.
+
+`scripts/vm/export_people.sh` runs the fold every night (it is part of `fold()`), so the next export stays merged.
+`scripts/audit_roster_changes.py` accepts an id fold only when the rule makes it on the baseline too and the row is
+the exact merge ("id folded"). `roster_fold.py --ids-only --rebase-accept scripts/roster_accept.json` applied it to the
+committed roster and re-based the reviewed accept records of each person onto the merged row, so the overlay keeps
+them. `scripts/roster_source_profiles.py` matches a folded person's source aliases through their prints.
+
+Applied to the committed roster: **60 rows folded into 58 people**, none held. Every group is the same person; no row
+carried another member's id (the ids came from speech ids and the members register, and dates of service, seat and
+house agree in each group). The two prints whose names alone do not agree are reviewed entries in
+`scripts/person_identity.json`: "Katter Bob Jnr" (1998-1999) is Bob Katter, who has held Kennedy since 1993 (his
+father left the House in 1990), and "Kevin Drum" (2016-2021) is Damian Drum, Member for Murray then Nicholls from
+2016 to 2022.
+
+At the next manual knowledge-base publish of roster profiles (`scripts/publish_grants_research.py`), the 6 folded
+spelling twins that held a seat retire their roster-profile records; no record is added or rewritten. Nothing was
+published by this change.
+
+| ID | Rows before (speeches, houses, years) | Retired slugs (301) | Class | Canonical (combined) | Moved |
+|---|---|---|---|---|---|
+| 10306 | Joe Hockey (3,557, House, 1998-2015); Hockey (5, House, 2002-2007) | `hockey` | same person (surname print) | Joe Hockey `joe-hockey` (3,562) | 5 speeches |
+| 10524 | Christopher Pyne (2,528, House, 2011-2019); Chris Pyne (1,206, House, 1998-2011) | `chris-pyne` | same person (another given name or nickname) | Christopher Pyne `christopher-pyne` (3,734) | 1,206 speeches + aliases |
+| 10188 | Peter Dutton (2,333, House, 2002-2025); Peter Craig Dutton (62, House, 2021-2022) | `peter-craig-dutton` | same person (middle names printed) | Peter Dutton `peter-dutton` (2,395) | 62 speeches |
+| 10513 | Tanya Plibersek (1,969, House, 1998-2026); Tanya Joan Plibersek (19, House, 2021-2022) | `tanya-joan-plibersek` | same person (middle names printed) | Tanya Plibersek `tanya-plibersek` (1,988) | 19 speeches |
+| 10409 | Jenny Macklin (1,907, House, 1998-2019); Macklin (13, House, 2000-2004) | `macklin` | same person (surname print) | Jenny Macklin `jenny-macklin` (1,920) | 13 speeches |
+| 10512 | Graham Perrett (1,813, House, 2008-2025); Graham Douglas Perrett (47, House, 2021-2022) | `graham-douglas-perrett` | same person (middle names printed) | Graham Perrett `graham-perrett` (1,860) | 47 speeches |
+| 10485 | Shayne Neumann (1,707, House, Joint cttee, House cttee, 2008-2026); Shayne Kenneth Neumann (30, House, 2021-2022) | `shayne-kenneth-neumann` | same person (middle names printed) | Shayne Neumann `shayne-neumann` (1,737) | 30 speeches |
+| 10352 | Bob Katter (1,539, House, 2000-2026); Katter Bob Jnr (42, House, 1998-1999) | `katter-bob-jnr` | same person (Hansard print, surname first) | Bob Katter `bob-katter` (1,581) | 42 speeches + aliases |
+| 10387 | Sussan Ley (1,505, House, 2002-2026); Sussan Penelope Ley (32, House, 2021-2022) | `sussan-penelope-ley` | same person (middle names printed) | Sussan Ley `sussan-ley` (1,537) | 32 speeches |
+| 10599 | Warren Snowdon (1,487, House, 1998-2022); Warren Edward Snowdon (17, House, 2021-2022) | `warren-edward-snowdon` | same person (middle names printed) | Warren Snowdon `warren-snowdon` (1,504) | 17 speeches |
+| 10319 | Greg Hunt (1,436, House, 2011-2022); Gregory Hunt (675, House, 2002-2011) | `gregory-hunt` | same person (another given name or nickname) | Greg Hunt `greg-hunt` (2,111) | 675 speeches + aliases |
+| 10734 | Adam Bandt (1,366, House, 2010-2025); Adam Paul Bandt (56, House, 2021-2022) | `adam-paul-bandt` | same person (middle names printed) | Adam Bandt `adam-bandt` (1,422) | 56 speeches + aliases |
+| 10746 | Andrew Leigh (1,293, House, 2010-2026); Andrew Keith Leigh (42, House, 2021-2022) | `andrew-keith-leigh` | same person (middle names printed) | Andrew Leigh `andrew-leigh` (1,335) | 42 speeches + aliases |
+| 10368 | Catherine King (1,268, House, 2002-2026); Catherine Fiona King (24, House, 2022-2022) | `catherine-fiona-king` | same person (middle names printed) | Catherine King `catherine-king` (1,292) | 24 speeches |
+| 10545 | Stuart Robert (1,196, House, 2008-2023); Stuart Rowland Robert (22, House, 2021-2022) | `stuart-rowland-robert` | same person (middle names printed) | Stuart Robert `stuart-robert` (1,218) | 22 speeches |
+| 10542 | Bernie Ripoll (1,168, House, 1998-2016); Ripoll (5, House, 2000-2002) | `ripoll` | same person (surname print) | Bernie Ripoll `bernie-ripoll` (1,173) | 5 speeches |
+| 10503 | Julie Owens (1,018, House, 2004-2022); Julie Ann Owens (9, House, 2021-2022) | `julie-ann-owens` | same person (middle names printed) | Julie Owens `julie-owens` (1,027) | 9 speeches |
+| 10416 | Nola Marino (960, House, 2008-2025); Nola Bethwyn Marino (13, House, 2021-2022) | `nola-bethwyn-marino` | same person (middle names printed) | Nola Marino `nola-marino` (973) | 13 speeches |
+| 10496 | Brendan O'Connor (954, House, 2002-2024); Brendan O’Connor (598, House, 2005-2011); Brendan Patrick John O'Connor (31, House, 2021-2022) | `brendan-oconnor-4272656e64616e204f2019436f6e6e6f72`, `brendan-patrick-john-oconnor` | same person (middle names printed, spelling twin) | Brendan O'Connor `brendan-oconnor` (1,583) | 629 speeches + aliases |
+| 10543 | Amanda Rishworth (938, House, 2008-2026); Amanda Louise Rishworth (29, House, 2021-2022) | `amanda-louise-rishworth` | same person (middle names printed) | Amanda Rishworth `amanda-rishworth` (967) | 29 speeches |
+| 10122 | Steven Ciobo (907, House, 2002-2019); Steve Ciobo (114, House, 2011-2019) | `steve-ciobo` | same person (another given name or nickname) | Steven Ciobo `steven-ciobo` (1,021) | 114 speeches + aliases |
+| 10529 | Rowan Ramsey (877, House, 2008-2025); Rowan Eric Ramsey (49, House, 2021-2022) | `rowan-eric-ramsey` | same person (middle names printed) | Rowan Ramsey `rowan-ramsey` (926) | 49 speeches |
+| 10086 | Mark Butler (828, House, 2008-2026); Mark Christopher Butler (25, House, 2021-2022) | `mark-christopher-butler` | same person (middle names printed) | Mark Butler `mark-butler` (853) | 25 speeches |
+| 10123 | Jason Clare (802, House, 2008-2026); Jason Dean Clare (10, House, 2021-2022) | `jason-dean-clare` | same person (middle names printed) | Jason Clare `jason-clare` (812) | 10 speeches |
+| 10377 | Andrew Laming (795, House, 2004-2022); Andrew Charles Laming (26, House, 2021-2022) | `andrew-charles-laming` | same person (middle names printed) | Andrew Laming `andrew-laming` (821) | 26 speeches |
+| 10418 | Richard Marles (793, House, 2008-2026); Richard Donald Marles (23, House, 2021-2022) | `richard-donald-marles` | same person (middle names printed) | Richard Marles `richard-marles` (816) | 23 speeches |
+| 10583 | Sid Sidebottom (730, House, 2000-2013); Peter Sidebottom (54, House, 1998-1999) | `peter-sidebottom` | same person (another given name or nickname) | Sid Sidebottom `sid-sidebottom` (784) | 54 speeches + aliases |
+| 10136 | Julie Collins (723, House, 2008-2026); Julie Maree Collins (15, House, 2021-2022) | `julie-maree-collins` | same person (middle names printed) | Julie Collins `julie-collins` (738) | 15 speeches |
+| 10724 | Kelly O'Dwyer (691, House, 2011-2019); Kelly O’Dwyer (54, House, 2010-2011) | `kelly-odwyer-4b656c6c79204f20194477796572` | same person (spelling twin) | Kelly O'Dwyer `kelly-odwyer` (745) | 54 speeches |
+| 10747 | Deborah O'Neill (690, Senate, 2013-2026); Deb O'Neill (229, House, 2011-2013); Deborah O’Neill (45, House, 2010-2011) | `deb-oneill`, `deborah-oneill-4465626f726168204f20194e65696c6c` | same person (another given name or nickname, spelling twin) | Deborah O'Neill `deborah-oneill` (964) | 274 speeches + chamber, aliases |
+| 10729 | Bert Van Manen (641, House, 2010-2025); Bert van Manen (327, House, 2011-2022) | `bert-van-manen-426572742076616e204d616e656e` | same person (spelling twin) | Bert Van Manen `bert-van-manen` (968) | 327 speeches |
+| 10026 | Robert Baldwin (622, House, 2002-2011); Bob Baldwin (401, House, 1998-2016) | `robert-baldwin` | same person (another given name or nickname) | Bob Baldwin `bob-baldwin` (1,023), the release's name | 622 speeches + aliases |
+| 10152 | Mark Coulton (616, House, 2008-2025); Mark Maclean Coulton (31, House, 2021-2022) | `mark-maclean-coulton` | same person (middle names printed) | Mark Coulton `mark-coulton` (647) | 31 speeches |
+| 10676 | Antony Windsor (609, House, 2002-2011); Tony Windsor (120, House, 2011-2013) | `antony-windsor` | same person (another given name or nickname) | Tony Windsor `tony-windsor` (729), the release's name | 609 speeches + years, aliases |
+| 10818 | Melissa Price (602, House, 2013-2026); Melissa Lee Price (13, House, 2021-2022) | `melissa-lee-price` | same person (middle names printed) | Melissa Price `melissa-price` (615) | 13 speeches + aliases |
+| 10728 | Ken O'Dowd (558, House, 2011-2022); Ken O’Dowd (13, House, 2010-2011) | `ken-odowd-4b656e204f2019446f7764` | same person (spelling twin) | Ken O'Dowd `ken-odowd` (571) | 13 speeches |
+| 10811 | Lucy Wicks (547, House, 2013-2021); Lucy Elizabeth Wicks (43, House, 2021-2022) | `lucy-elizabeth-wicks` | same person (middle names printed) | Lucy Wicks `lucy-wicks` (590) | 43 speeches + aliases |
+| 10814 | Clare O'Neil (526, House, 2013-2026); Clare Ellen O'Neil (21, House, 2021-2022) | `clare-ellen-oneil` | same person (middle names printed) | Clare O'Neil `clare-oneil` (547) | 21 speeches + aliases |
+| 10497 | Gavan O'Connor (524, House, 1998-2005); Gavan O’Connor (203, House, 2005-2007) | `gavan-oconnor-476176616e204f2019436f6e6e6f72` | same person (spelling twin) | Gavan O'Connor `gavan-oconnor` (727) | 203 speeches |
+| 10935 | Anne Webster (464, House, 2019-2026); Elizabeth Webster (21, House, 2019-2019) | `elizabeth-webster` | same person (another given name or nickname) | Anne Webster `anne-webster` (485) | 21 speeches + aliases |
+| 10876 | Meryl Swanson (453, House, 2016-2026); Meryl Jane Swanson (32, House, 2021-2022) | `meryl-jane-swanson` | same person (middle names printed) | Meryl Swanson `meryl-swanson` (485) | 32 speeches + aliases |
+| 10952 | Gerard Rennick (428, Senate, 2019-2025); Rennick (73, Senate cttee, 2025-2025) | `rennick` | same person (surname print) | Gerard Rennick `gerard-rennick` (501) | 73 speeches + chamber |
+| 10858 | Linda Burney (420, House, nsw_la, 2015-2025); Linda Jean Burney (21, House, 2021-2022) | `linda-jean-burney` | same person (middle names printed) | Linda Burney `linda-burney` (441) | 21 speeches + aliases |
+| 10882 | Nicolle Flint (418, House, 2016-2021); Nicolle Jane Flint (15, House, 2021-2022) | `nicolle-jane-flint` | same person (middle names printed) | Nicolle Flint `nicolle-flint` (433) | 15 speeches + aliases |
+| 10875 | Damian Drum (357, House, 2016-2022); Kevin Drum (35, House, 2016-2021) | `kevin-drum` | same person (another given name or nickname) | Damian Drum `damian-drum` (392) | 35 speeches + aliases |
+| 11007 | Fatima Payman (356, Senate, 2022-2026); Payman (287, Senate cttee, 2025-2026) | `payman` | same person (surname print) | Fatima Payman `fatima-payman` (643) | 287 speeches + chamber |
+| 10720 | Robert Oakeshott (344, House, 2011-2013); Rob Oakeshott (249, House, 2008-2011) | `rob-oakeshott` | same person (another given name or nickname) | Robert Oakeshott `robert-oakeshott` (593) | 249 speeches + aliases |
+| 11001 | Allegra Spender (340, House, 2022-2026); Spender (44, House cttee, Joint cttee, 2025-2026) | `spender` | same person (surname print) | Allegra Spender `allegra-spender` (384) | 44 speeches + chamber |
+| 11006 | Nampijinpa Price (336, Senate cttee, Joint cttee, 2025-2026); Jacinta Nampijinpa Price (208, Senate, 2022-2026) | `nampijinpa-price` | same person (surname print) | Jacinta Nampijinpa Price `jacinta-nampijinpa-price` (544) | 336 speeches + chamber |
+| 10028 | Phillip Barresi (320, House, 2000-2007); Phil Barresi (70, House, 1998-1999) | `phil-barresi` | same person (another given name or nickname) | Phillip Barresi `phillip-barresi` (390) | 70 speeches + aliases |
+| 10928 | Katrina Allen (318, House, 2019-2021); Katie Allen (75, House, 2019-2022) | `katrina-allen` | same person (another given name or nickname) | Katie Allen `katie-allen` (393), the release's name | 318 speeches + aliases |
+| 10921 | Libby Coker (280, House, House cttee, 2020-2026); Elizabeth Coker (121, House, 2019-2021) | `elizabeth-coker` | same person (another given name or nickname) | Libby Coker `libby-coker` (401) | 121 speeches + aliases |
+| 10922 | Pat Conaghan (268, House, House cttee, Joint cttee, 2019-2026); Patrick Conaghan (167, House, 2019-2021) | `patrick-conaghan` | same person (another given name or nickname) | Pat Conaghan `pat-conaghan` (435) | 167 speeches + aliases |
+| 10600 | Alex Somlyay (205, House, 1998-2011); Alexander Somlyay (11, House, 2011-2013) | `alexander-somlyay` | same person (another given name or nickname) | Alex Somlyay `alex-somlyay` (216) | 11 speeches + aliases |
+| 10636 | David Tollner (194, House, 2002-2007); Tollner (6, House, 2002-2004) | `tollner` | same person (surname print) | David Tollner `david-tollner` (200) | 6 speeches |
+| 10977 | Colin Boyce (168, House, 2022-2026); Boyce (15, Joint cttee, House cttee, House, 2022-2026) | `boyce` | same person (surname print) | Colin Boyce `colin-boyce` (183) | 15 speeches + chamber |
+| 10164 | Yvette D’Ath (146, House, 2008-2011); Yvette D'Ath (134, House, 2011-2013) | `yvette-dath-597665747465204427417468` | same person (spelling twin) | Yvette D’Ath `yvette-dath` (280) | 134 speeches |
+| 10957 | Van (34, Senate cttee, 2025-2025); David Van (10, Senate, 2023-2025) | `van` | same person (surname print) | David Van `david-van` (44) | 34 speeches + chamber |

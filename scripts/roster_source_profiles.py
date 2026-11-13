@@ -54,14 +54,16 @@ def _read_reference(path, digest, _mtime, _size):
 
 
 def source_aliases(row, bundle):
-    """Explicit source names of one person with the same verified legacy id and name."""
+    """Explicit source names of one person with the same verified legacy id and name. A person whose rows were
+    folded by their verified id (scripts/roster_fold.py fold_ids) is matched through their prints as well: the
+    roster may keep a printed spelling the source does not list, where the source has another of them."""
     pid = str(row.get('pid') or '')
     matches = [p for p in bundle['people'] if pid and str(p.get('legacy_person_id') or '') == pid]
     if len(matches) != 1:
         return None
     p = matches[0]
     names = [p['name'], *p.get('aliases', [])]
-    if name_key(row['name']) not in {name_key(n) for n in names}:
+    if not {name_key(n) for n in [row['name'], *(row.get('prints') or [])]} & {name_key(n) for n in names}:
         return None
     # Source alternate-name columns can include a parsed byline or a glued title.
     # Keep explicit personal names, including initials and postnominals.
@@ -72,8 +74,8 @@ def source_aliases(row, bundle):
 
 
 @lru_cache(maxsize=4096)
-def _verified_aliases(path, digest, mtime, size, pid, name):
-    aliases = source_aliases({'pid': pid, 'name': name}, _read_reference(path, digest, mtime, size))
+def _verified_aliases(path, digest, mtime, size, pid, name, prints=()):
+    aliases = source_aliases({'pid': pid, 'name': name, 'prints': list(prints)}, _read_reference(path, digest, mtime, size))
     return tuple(aliases) if aliases is not None else None
 
 
@@ -86,7 +88,7 @@ def alias_problem(name, group, row, root=ROOT):
     if not set(before or []) <= set(after):
         return 'source aliases cannot remove a reviewed name'
     try:
-        expected = _verified_aliases(*reference_spec(root), str(row.get('pid') or ''), row['name'])
+        expected = _verified_aliases(*reference_spec(root), str(row.get('pid') or ''), row['name'], tuple(row.get('prints') or ()))
     except (OSError, ValueError, KeyError, TypeError):
         return 'the published name evidence cannot be verified'
     if expected is None or after != list(dict.fromkeys([*(before or []), *expected])):

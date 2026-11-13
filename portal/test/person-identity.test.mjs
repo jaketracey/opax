@@ -32,7 +32,10 @@ test('the prints that carried another member\'s id show only their own record', 
     assert.equal(divisions(p), 0, `${name} borrows no divisions`);
     assert.equal(ctx.votesFor(name, p.pid), null, name);
   }
-  const patrick = row.get('Patrick Conaghan');
+  // Patrick Conaghan is a print of Pat Conaghan, the row holding their verified id (scripts/roster_fold.py fold_ids).
+  assert.equal(row.has('Patrick Conaghan'), false);
+  const patrick = row.get('Pat Conaghan');
+  assert.ok(patrick.prints.includes('Patrick Conaghan'));
   assert.equal(patrick.pid, '10922');
   assert.equal(divisions(patrick), votes['10922'].divisions_total, 'Pat Conaghan\'s own divisions');
   assert.equal(ctx.votesFor('Patrick Conaghan', patrick.pid).name, 'Pat Conaghan');

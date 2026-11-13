@@ -1,11 +1,11 @@
 import { vicElectionFooterHTML } from './vic-election.js?v=6642b187d4';
-import { personUrl, partyUrl } from './canonical-urls.js?v=6c889d487d';
+import { personUrl, partyUrl } from './canonical-urls.js?v=e32f13c6c8';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
-import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=6a4764139d';
+import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=75e6c65ff7';
 import { pageMenuHTML as moreMenuHTML } from './page-actions-menu.js?v=8640c3d1ca';
-// The person page reads its verified-roster party fallback through this module (roster-party.js).
-export { rosterSeatParty } from './roster-party.js';
+// The person page reads its verified-roster and dated official-list party fallbacks through this module (roster-party.js).
+export { rosterSeatParty, rosterListParty } from './roster-party.js';
 export const JURISDICTIONS = { federal: 'Federal', nsw: 'New South Wales', vic: 'Victoria', qld: 'Queensland', sa: 'South Australia', wa: 'Western Australia', tas: 'Tasmania', nt: 'Northern Territory', act: 'Australian Capital Territory' };
 export const CHAMBERS = { representatives: 'House of Representatives', senate: 'Senate', nsw_la: 'NSW Legislative Assembly', nsw_lc: 'NSW Legislative Council', vic_la: 'Victorian Legislative Assembly', vic_lc: 'Victorian Legislative Council', qld_la: 'Queensland Legislative Assembly', sa_ha: 'SA House of Assembly', sa_lc: 'SA Legislative Council', wa_la: 'WA Legislative Assembly', wa_lc: 'WA Legislative Council', tas_ha: 'Tasmanian House of Assembly', tas_lc: 'Tasmanian Legislative Council', nt_la: 'NT Legislative Assembly', act_la: 'ACT Legislative Assembly' };
 export const escapeHTML = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -139,7 +139,6 @@ function memberHTML(m, people, photoUrlFor) {
 }
 /** A relation's vintage in words: the year it was recorded for, never the
  *  pipeline's own label ("2026 source configuration"). */
-const relatedAsAt = (vintage) => { const year = /^\d{4}\b/.exec(String(vintage || ''))?.[0]; return year ? ` · as at ${year}` : ''; };
 /** A block's own sources, by the record keys it is drawn from: each opens in its source sheet. */
 function sourcesOf(detail, keys) {
   const ids = new Set();
@@ -165,7 +164,7 @@ const INDICATORS = {
   population: ['Population', 'people'], median_age: ['Median age', 'years'], median_household_income_weekly: ['Median household income', '$/week'], median_rent_weekly: ['Median rent', '$/week'], median_mortgage_monthly: ['Median mortgage', '$/month'], homeownership_pct: ['Home ownership', '%'], rental_pct: ['Renting', '%'], unemployment_rate: ['Unemployment', '%'], university_pct: ['University qualification', '%'], born_overseas_pct: ['Born overseas', '%'], indigenous_pct: ['Aboriginal and Torres Strait Islander', '%'], average_household_size: ['Average household size', 'people'],
 };
 const unitOf = (value, unit) => unit === '%' ? `${number(value)}%` : unit.startsWith('$') ? `$${number(value)}${unit.slice(1)}` : `${number(value)} ${unit}`;
-/** Census context: population is the block's one figure; the rest is a key/value list. */
+/** Who lives here (the Census): population is the block's one figure; the rest is a key/value list. */
 function censusHTML(d) {
   const rows = Object.entries(INDICATORS).filter(([key]) => key !== 'population' && d.indicators[key] != null);
   return `${d.indicators.population != null ? `<div class="ui-stats"><p class="ui-stat"><b class="ui-stat-value">${number(d.indicators.population)}</b><span class="ui-stat-label">people, ${esc(d.vintage)}</span></p></div>` : ''}
@@ -179,7 +178,10 @@ function censusHTML(d) {
    reference ID sit under ⋯ and in the representation sheet. */
 export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) {
   const selected = on ? representationAt(detail, on) : { status: detail.representation_status, members: detail.representatives, as_of: detail.representation_as_of };
-  const title = on ? `Representation on ${date(on)}` : 'Latest verified representation';
+  const plural = Math.max(detail.capacity || 1, selected.members.length) > 1;
+  const title = on ? `Representation on ${date(on)}` : `${detail.status === 'historical' ? 'Last recorded member' : 'Current member'}${plural ? 's' : ''}`;
+  // The upper house a seat sits within represents its people too; any other relation is named as such.
+  const upperOnly = detail.relations.every((r) => r.kind === 'within_upper_house');
   const boundary = [...detail.boundaries].filter((b) => b.geometry).sort((a, b) => Number(b.geometry_kind === 'official') - Number(a.geometry_kind === 'official') || String(b.applicable_election_date || b.effective_from || b.vintage || '').localeCompare(String(a.applicable_election_date || a.effective_from || a.vintage || '')))[0];
   const terms = [...detail.terms].sort((a, b) => (b.start || '').localeCompare(a.start || ''));
   const people = detail.people;
@@ -188,7 +190,7 @@ export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) 
   const contests = sourcesOf(detail, ['elections']);
   const service = sourcesOf(detail, ['terms']);
   const census = sourcesOf(detail, ['demographics']);
-  const line = (list, opts) => sourceLineHTML({ updated: retrieved(list), dateLabel: 'Retrieved', originals: originalsOf(list), licence: licences(list), ...opts });
+  const line = (list, opts) => sourceLineHTML({ updated: retrieved(list), dateLabel: 'As at', originals: originalsOf(list), licence: licences(list), ...opts });
   return `<div class="ui-page-head el-head"><h1 id="subject-title" tabindex="-1">${esc(detail.name)}</h1><p class="ui-page-meta">${esc(CHAMBERS[detail.chamber] || detail.chamber)} · ${esc(detail.state_code.toUpperCase())}${detail.capacity > 1 ? ` · ${detail.capacity} seats` : ''}${detail.status === 'historical' ? ' · Historical electorate' : ''}</p>
     <div class="page-actions">${moreMenuHTML([
       { href: detail.detail_url, label: 'Download this electorate', detail: 'JSON, every record on this page with its sources' },
@@ -207,11 +209,11 @@ export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) 
     <section id="el-history" class="ui-section el-section"><div class="ui-section-head"><h2>Representation history</h2>
       <form id="el-asof-form" class="el-asof"><label for="el-asof">On a date</label><input id="el-asof" class="ui-input" name="asof" type="date" value="${esc(on)}" required><button type="submit" class="ui-button">Show</button></form></div>
       ${terms.length ? `<ol class="ui-list el-service">${terms.map((t) => bylineHTML(people[t.person_id], (t.party_periods || []).map((p) => partyLabelHTML(p.party) || esc(p.party || '')).filter(Boolean).join(' → '),
-        `<time>${esc(date(t.start))}</time> – ${t.end ? `<time>${esc(date(t.end))}</time> (exclusive)` : `end not recorded${t.observed_through ? `; observed ${esc(date(t.observed_through))}` : ''}`}`, photoUrlFor)).join('')}</ol>
-      ${line(service, { source: 'Service records', notes: ['Dated service records, newest first. Party changes may create a new period. Open-ended records are not proof of current membership.'] })}` : '<p class="ui-empty">No earlier service records for this electorate yet.</p>'}</section>
-    ${detail.demographics.length ? `<section id="el-context" class="ui-section el-section"><h2 class="ui-section-title">Census context</h2>${detail.demographics.map(censusHTML).join('')}
+        t.end ? `<time>${esc(date(t.start))}</time> to <time>${esc(date(t.end))}</time>` : `Since <time>${esc(date(t.start))}</time>`, photoUrlFor)).join('')}</ol>
+      ${line(service, { source: 'Service records', notes: ['Dated service records, newest first. Party changes may create a new period. A period’s end date is the day its service ended. Open-ended records are not proof of current membership.'] })}` : '<p class="ui-empty">No earlier service records for this electorate yet.</p>'}</section>
+    ${detail.demographics.length ? `<section id="el-context" class="ui-section el-section"><h2 class="ui-section-title">Who lives here</h2>${detail.demographics.map(censusHTML).join('')}
       ${line(census, { source: detail.demographics.map((d) => d.vintage).join('; '), notes: detail.demographics.map((d) => esc(d.note)) })}</section>` : ''}
-    ${detail.relations.length ? `<section class="ui-section el-section"><h2 class="ui-section-title">Related constituencies</h2><ul class="ui-list el-related" data-rule="none">${detail.relations.map((r) => `<li><a href="/subject/electorate/${esc(r.related.slug)}">${esc(r.related.name)}</a> · ${esc(CHAMBERS[r.related.chamber] || r.related.chamber)}${relatedAsAt(r.vintage)}</li>`).join('')}</ul></section>` : ''}${detail.jurisdiction === 'vic' ? vicElectionFooterHTML() : ''}`;
+    ${detail.relations.length ? `<section class="ui-section el-section"><h2 class="ui-section-title">${upperOnly ? 'Also represents you' : 'Related electorates'}</h2><ul class="ui-list el-related" data-rule="none">${detail.relations.map((r) => `<li><a href="/subject/electorate/${esc(r.related.slug)}">${esc(r.related.name)}</a> · ${esc(CHAMBERS[r.related.chamber] || r.related.chamber)}</li>`).join('')}</ul></section>` : ''}${detail.jurisdiction === 'vic' ? vicElectionFooterHTML() : ''}`;
 }
 export async function renderProfile({ body, slug, on, isActive, setCrumbs, goRoute, manageFocus, loadPhotos = null }) {
   try {

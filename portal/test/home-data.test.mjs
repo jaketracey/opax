@@ -67,31 +67,33 @@ test('the map chips come from the export: industries by donors in the map, large
  assert.match(line,/AEC annual returns/);
  assert.match(line,/href="https:\/\/transparency.aec.gov.au\/"/);
 });
-// "Updated" is an export date. The line says when the site was last refreshed and when a block's source is
-// paused, so a date that stops moving reads as a refused source, not a site nobody runs.
-test('source lines say when the site was refreshed and which of their sources are paused',()=>{
+// "Updated" is an export date. A paused source's line reads "Last checked <date>", the date of its last good
+// read, and its sheet says why it is paused and when the site was last refreshed (Jake, 13 Nov).
+test('a paused source reads as "Last checked" on the line and keeps its reason in the sheet',()=>{
  const money=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url),'utf8'));
  const refresh={checked_at:'2026-11-09T19:10:54+00:00',source_access:{bills:{status:'paused',host:'parlinfo.aph.gov.au',reason:'HTTP 403 verified 2026-10-10; permission requested'},interests_federal:{status:'paused',host:'www.aph.gov.au',reason:'HTTP 403'}}};
- assert.deepEqual(sourceFreshness(null,['bills']),{state:'',facts:[]});
- assert.deepEqual(sourceFreshness(refresh,['nsw']),{state:'',facts:[['Site refreshed','9 Nov 2026']]});
+ assert.deepEqual(sourceFreshness(null,['bills']),{state:'',dateLabel:'Updated',facts:[]});
+ assert.deepEqual(sourceFreshness(refresh,['nsw']),{state:'',dateLabel:'Updated',facts:[['Site refreshed','9 Nov 2026']]});
+ assert.equal(sourceFreshness(refresh,['bills']).dateLabel,'Last checked');
  const bills=billsSourceHTML({generated_at:'2026-10-04T16:27:54+00:00',bills:[]},refresh);
- assert.match(bills,/Updated 4 Oct 2026 · <span class="ui-source-name">Parliament of Australia<\/span>/);
- assert.match(bills,/ui-source-state">· source paused</);
+ assert.match(bills,/Last checked 4 Oct 2026 · <span class="ui-source-name">Parliament of Australia<\/span>/);
+ assert.doesNotMatch(bills,/source paused|ui-source-state|data-state/);
  assert.match(bills,/<dt>Site refreshed<\/dt><dd>9 Nov 2026<\/dd>/);
- assert.match(bills,/<dt>Source check<\/dt><dd>parlinfo.aph.gov.au: paused, HTTP 403 verified 2026-10-10; permission requested\. Entries shown are retained from the last successful read, not a current check\.<\/dd>/);
- assert.doesNotMatch(billsSourceHTML({generated_at:'2026-10-04',bills:[]}),/source paused|Site refreshed/);
+ assert.match(bills,/<dt>Source check<\/dt><dd>parlinfo\.aph\.gov\.au: paused, HTTP 403 verified 2026-10-10; permission requested\. Entries shown are retained from the last successful read, not a current check\.<\/dd>/);
+ assert.doesNotMatch(billsSourceHTML({generated_at:'2026-10-04',bills:[]}),/Last checked|Site refreshed/);
+ assert.match(billsSourceHTML({generated_at:'2026-10-04',bills:[]}),/Updated 4 Oct 2026/);
  const declared=declarationsSourceHTML({generated:'2026-10-18',source:'Registers'},refresh);
- assert.match(declared,/source paused/);assert.match(declared,/www.aph.gov.au: paused, HTTP 403\./);
- assert.doesNotMatch(declarationsSourceHTML({generated:'2026-10-18'},{checked_at:'2026-11-09T19:10:54+00:00',source_access:{}}),/source paused/);
+ assert.match(declared,/Last checked 18 Oct 2026/);assert.doesNotMatch(declared,/source paused/);assert.match(declared,/www\.aph\.gov\.au: paused, HTTP 403\./);
+ assert.match(declarationsSourceHTML({generated:'2026-10-18'},{checked_at:'2026-11-09T19:10:54+00:00',source_access:{}}),/Updated 18 Oct 2026/);
  const map=mapSourceHTML(money.meta,refresh);
- assert.match(map,/totals are a floor/);assert.match(map,/<dt>Site refreshed<\/dt><dd>9 Nov 2026<\/dd>/);assert.doesNotMatch(map,/source paused/);
+ assert.match(map,/totals are a floor/);assert.match(map,/<dt>Site refreshed<\/dt><dd>9 Nov 2026<\/dd>/);assert.doesNotMatch(map,/source paused|Last checked/);
  const hostile=billsSourceHTML({generated_at:'2026-10-04',bills:[]},{source_access:{bills:{status:'paused',host:'<b>x</b>',reason:'<script>'}}});
  assert.doesNotMatch(hostile,/<b>|<script>/);
 });
 test('the footer coverage line is dated, and only the link survives a failed read',()=>{
  const corpus=JSON.parse(readFileSync(new URL('../public/corpus.json',import.meta.url),'utf8'));
  const line=coverageLineHTML(corpus);
- assert.match(line,new RegExp(`^${corpus.collected_speeches.toLocaleString('en-AU')} speeches and [\\d,]+ donations classified, as at \\d{1,2} [A-Z][a-z]{2} \\d{4} · <a href="/stats">Sources and coverage</a>$`));
+ assert.match(line,new RegExp(`^${corpus.collected_speeches.toLocaleString('en-AU')} speeches and [\\d,]+ donation records, as at \\d{1,2} [A-Z][a-z]{2} \\d{4} · <a href="/stats">Sources and coverage</a>$`));
  assert.equal(coverageLineHTML(null),'<a href="/stats">Sources and coverage</a>');
  assert.equal(coverageLineHTML({version:'2026-10-09',collected_speeches:1,sources:[]}),'<a href="/stats">Sources and coverage</a>');
 });

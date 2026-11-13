@@ -1,4 +1,4 @@
-import {trimQuestionEnd, questionSpaces} from './question-text.mjs'
+import {trimQuestionEnd, questionSpaces, shortTrailingMarks} from './question-text.mjs'
 import {federalPartyRankingQuestion,federalPartyRankingIntent,federalPartyRankingClarification,federalPartyRankingReading} from './ask-money-family'
 import {receiptMeasureLabel,receiptMeasureHeading,receiptMeasurePhrase,receiptDollars,UNTYPED_RECEIPTS_LABEL,industryModifier} from './receipt-copy'
 import type { RecordQuestion } from './ask-records'
@@ -25,7 +25,7 @@ export function isMoneyRanking(input: RecordQuestion): boolean {
   if(/\b(?:bills?|polic(?:y|ies)|advice|name)\b/i.test(q))return false
   // Ordinary recipient questions often omit "money". Admit a known industry
   // after "from"; the calculator still validates every remaining scope word.
-  const normal=trimQuestionEnd(questionSpaces(q))
+  const normal=trimQuestionEnd(questionSpaces(shortTrailingMarks(q)))
   let from=-1
   for(const match of normal.matchAll(/ from /gi))from=match.index
   const recipientIndustry=from>=0&&/^(?:who|which (?:party|parties)) (?:takes?|gets?|receives?)\b[^?!.]*$/i.test(normal.slice(0,from)) ? normal.slice(from+6).trim() : ''

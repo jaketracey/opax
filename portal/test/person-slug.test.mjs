@@ -1,9 +1,11 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';import {build} from 'esbuild';
 const b=await build({entryPoints:[new URL('../src/person-slug.ts',import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm'});
-const {personSlug,slugIndex,personIndex,fullNameMatches}=await import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'));
+const {personSlug,slugIndex,personIndex,fullNameMatches,formerSlugs,twinSlug}=await import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'));
 const app=await readFile(new URL('../public/app.js',import.meta.url),'utf8');
 const source=/\nfunction personSlug\(name\) \{[\s\S]*?\n\}\n/.exec(app)?.[0];
 const clientSlug=new Function(`${source}; return personSlug`)();
+const twinSource=/\nfunction twinPersonSlug\(name\) \{[\s\S]*?\n\}\n/.exec(app)?.[0];
+const clientTwinSlug=new Function(`${source}${twinSource}; return twinPersonSlug`)();
 const roster=JSON.parse(await readFile(new URL('../public/parliamentarians.json',import.meta.url),'utf8')).people;
 
 test('a name becomes a lowercase hyphenated address',()=>{
@@ -58,4 +60,49 @@ test('the published roster: every QLD minister the diary names in full and the r
   assert.ok(idx.addresses.has(name.toLowerCase())||idx.byFold.has(name.toLowerCase()),name);
  // No full-name alias overrides a name or print the roster already resolves.
  for(const [key,p] of idx.byFold)assert.equal(idx.addresses.get(key),p,key);
+});
+
+test('a row folded into its person keeps its old address as a forward to the person, never over a live slug',()=>{
+ // Invented names: one verified person printed three ways, a spelling twin, and an unrelated row holding a print's slug.
+ const kim={name:'Kim Darrowby',speeches:40,pid:'19001',prints:['Darrowby','Kim Anne Darrowby']};
+ const dell={name:"Kim O'Dell",speeches:12,pid:'19002',prints:['Kim O’Dell']};
+ const tarrant={name:'Robin Tarrant',speeches:9,pid:'19003',prints:['Bob Tarrant']};
+ const other={name:'Bob Tarrant',speeches:2};
+ const people=[kim,dell,tarrant,other];
+ const index=personIndex(people);
+ assert.equal(index.formerSlugs.get('kim-anne-darrowby'),kim);
+ assert.equal(index.formerSlugs.get('darrowby'),kim);
+ // The twin's plain slug is the person's own live slug; its suffixed one (slugIndex's twin form) forwards.
+ assert.equal(index.bySlug.get('kim-odell'),dell);
+ assert.equal(index.formerSlugs.has('kim-odell'),false);
+ assert.equal(twinSlug('Kim O’Dell'),'kim-odell-'+Array.from('Kim O’Dell').map(c=>c.codePointAt(0).toString(16)).join(''));
+ assert.equal(index.formerSlugs.get(twinSlug('Kim O’Dell')),dell);
+ // A slug a row holds today stays that row's.
+ assert.equal(index.bySlug.get('bob-tarrant'),other);
+ assert.equal(index.formerSlugs.has('bob-tarrant'),false);
+ // Live slugs are untouched by the forwards.
+ assert.deepEqual(formerSlugs(people,index.bySlug),index.formerSlugs);
+ for(const slug of index.formerSlugs.keys())assert.equal(index.bySlug.has(slug),false,slug);
+});
+
+test('app.js writes the same twin slug the Worker forwards',()=>{
+ assert.ok(twinSource,'app.js carries twinPersonSlug()');
+ for(const name of ['Kim O’Dell',"Yvette D'Ath",'Zoë Müller','Brendan O’Connor'])assert.equal(clientTwinSlug(name),twinSlug(name),name);
+});
+
+test('the shipped roster: the old address of every folded print forwards to its person',()=>{
+ const index=personIndex(roster);
+ for(const [slug,name] of [['mark-christopher-butler','Mark Butler'],['katter-bob-jnr','Bob Katter'],['robert-baldwin','Bob Baldwin'],
+  ['deb-oneill',"Deborah O'Neill"],[twinSlug('Brendan O’Connor'),"Brendan O'Connor"],[twinSlug("Yvette D'Ath"),'Yvette D’Ath'],['tollner','David Tollner']])
+  assert.equal(index.formerSlugs.get(slug)?.name,name,slug);
+ // The release's public name keeps the address; the formal print with more speeches forwards to it (roster_fold.py id_holder).
+ for(const [pub,formal] of [['bob-baldwin','robert-baldwin'],['tony-windsor','antony-windsor'],['katie-allen','katrina-allen']]){
+  assert.ok(index.bySlug.get(pub)?.prints?.length,pub);
+  assert.equal(index.formerSlugs.get(formal),index.bySlug.get(pub),formal);
+ }
+ // Every print reads as its person: by a forward, or (a twin) by the person's own slug.
+ for(const p of roster)for(const print of p.prints||[]){
+  const slug=personSlug(print);
+  assert.equal(index.formerSlugs.get(slug)??index.bySlug.get(slug),p,print);
+ }
 });
