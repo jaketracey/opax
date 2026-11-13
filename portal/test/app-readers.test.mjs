@@ -52,6 +52,18 @@ test('latest, today and date return the exact published journal copy with attrib
   }finally{f.db.close()}
 });
 
+test('a bars slide keeps its whole flag through the edition route, and an older slide without one gains none',async()=>{
+  const f=journal();try{
+    const whole={type:'bars',kicker:'Whose seats',title:'By the party holding the seat',alt:'Placed dollars.',lines:[],items:[{label:'Labor-held',pct:60},{label:'Coalition-held',pct:30},{label:'Crossbench-held',pct:10}],note:null,whole:true};
+    const overlap={type:'bars',kicker:'What they talk about',title:'Most common topic labels',alt:'Labels overlap.',lines:[],items:[{label:'Health',pct:60},{label:'Tax',pct:40}],note:null};
+    f.store({...post,slides:[slides[0],whole,overlap,slides[2]]});
+    for(const path of ['edition/latest','edition/today','edition/2026-10-03']){
+      const [, first, second]=(await (await f.call(path)).json()).edition.slides;
+      assert.equal(first.whole,true,path);assert.equal(Object.hasOwn(second,'whole'),false,path);
+    }
+  }finally{f.db.close()}
+});
+
 test('legacy editions without slides remain readable without manufacturing a story',async()=>{
   const f=journal();try{f.store();assert.deepEqual((await (await f.call()).json()).edition,post)}finally{f.db.close()}
 });

@@ -501,5 +501,155 @@
     "url": "string"
    }
   ]
+ },
+ "accountability-robodebt": {
+  "agentic": {
+   "steps": "array"
+  },
+  "answer": "string",
+  "answer_decision": "string",
+  "answer_scope": {
+   "actUnfiltered": "boolean",
+   "dated": "boolean",
+   "people": [],
+   "period": {
+    "kind": "string",
+    "label": "string"
+   },
+   "stateGovernment": "boolean",
+   "trend": "boolean"
+  },
+  "answer_status": "string",
+  "answered": "boolean",
+  "citations": {
+   "<passage id>": [
+    [
+     "number"
+    ]
+   ]
+  },
+  "followups": [],
+  "research": {
+   "answer_stats": "object",
+   "claim_audit": "object",
+   "mode": "string",
+   "rounds": "number",
+   "sources": "array",
+   "trail": "array"
+  },
+  "sources": [
+   {
+    "cited": "boolean",
+    "date": "string",
+    "href": "string",
+    "kind": "string",
+    "resource": "string",
+    "slug": "string",
+    "snippet": "string",
+    "speaker": "string",
+    "title": "string",
+    "url": "string"
+   }
+  ]
+ },
+ "accountability-blame": {
+  "agentic": {
+   "steps": "array"
+  },
+  "answer": "string",
+  "answer_decision": "string",
+  "answer_scope": {
+   "actUnfiltered": "boolean",
+   "dated": "boolean",
+   "people": [],
+   "period": {
+    "kind": "string",
+    "label": "string"
+   },
+   "stateGovernment": "boolean",
+   "trend": "boolean"
+  },
+  "answer_status": "string",
+  "answered": "boolean",
+  "citations": {
+   "<passage id>": [
+    [
+     "number"
+    ]
+   ]
+  },
+  "followups": [],
+  "research": {
+   "answer_stats": "object",
+   "claim_audit": "object",
+   "mode": "string",
+   "rounds": "number",
+   "sources": "array",
+   "trail": "array"
+  },
+  "sources": [
+   {
+    "cited": "boolean",
+    "date": "string",
+    "href": "string",
+    "kind": "string",
+    "resource": "string",
+    "slug": "string",
+    "snippet": "string",
+    "speaker": "string",
+    "title": "string",
+    "url": "string"
+   }
+  ]
+ },
+ "accountability-decided": {
+  "agentic": {
+   "steps": "array"
+  },
+  "answer": "string",
+  "answer_decision": "string",
+  "answer_scope": {
+   "actUnfiltered": "boolean",
+   "dated": "boolean",
+   "people": [],
+   "period": {
+    "kind": "string",
+    "label": "string"
+   },
+   "stateGovernment": "boolean",
+   "trend": "boolean"
+  },
+  "answer_status": "string",
+  "answered": "boolean",
+  "citations": {
+   "<passage id>": [
+    [
+     "number"
+    ]
+   ]
+  },
+  "followups": [],
+  "research": {
+   "answer_stats": "object",
+   "claim_audit": "object",
+   "mode": "string",
+   "rounds": "number",
+   "sources": "array",
+   "trail": "array"
+  },
+  "sources": [
+   {
+    "cited": "boolean",
+    "date": "string",
+    "href": "string",
+    "kind": "string",
+    "resource": "string",
+    "slug": "string",
+    "snippet": "string",
+    "speaker": "string",
+    "title": "string",
+    "url": "string"
+   }
+  ]
  }
 }
