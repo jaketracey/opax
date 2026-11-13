@@ -4,6 +4,7 @@ import type { RecordQuestion } from './ask-records'
 import type { CatalogRecord } from './catalog-search'
 import { payPersonRecord, payGeneralRecords } from './pay-records.mjs'
 import { personUrl } from '../public/party-page.js'
+import { loadOffices, officePayAnswer, officeEvidence, generalOfficeQuestion, PARLIAMENTARY_SECRETARY, type ParliamentSide } from './ask-pay-offices'
 
 /**
  * "Who is the highest paid politician?" has an answer, and it is not in any
@@ -403,13 +404,62 @@ const asRecord = (row: ReturnType<typeof payGeneralRecords>[number]): CatalogRec
 /** Pay records for the model to read: the closest people, then the scheme itself. */
 export async function payEvidence(input: RecordQuestion, assets: Fetcher): Promise<CatalogRecord[]> {
   const question = input.question || ''
-  if (!mentionsPay(question) || (input.kind && input.kind !== 'all') || (input.state && input.state !== 'federal')) return []
+  if ((input.kind && input.kind !== 'all') || (input.state && input.state !== 'federal')) return []
+  // Secretaries' and agency heads' rates, from the Tribunal's determinations, lead when the question names them.
+  const offices = PAY_WORDS.test(question) && !input.speaker ? officeEvidence(question, await loadOffices(assets).catch(() => null)) : []
+  if (!mentionsPay(question)) return offices
   const data = await loadPay(assets)
   const named = input.speaker ? data.names[fold(input.speaker)] : undefined
   const people = named ? [named] : input.speaker ? [] : closestPeople(question, data)
   const rows = people.map(id => payPersonRecord(data, id)).filter((row): row is NonNullable<typeof row> => !!row)
-  const general = !people.length || WHO.test(question) || RANKING.test(question) || /\b(?:base\s+salary|pay\s+rise|over\s+time|history)\b/i.test(question) ? payGeneralRecords(data) : []
-  return [...rows, ...general].map(asRecord)
+  const aboutParliament = WHO.test(question) || !offices.length
+  const general = aboutParliament && (!people.length || WHO.test(question) || RANKING.test(question) || /\b(?:base\s+salary|pay\s+rise|over\s+time|history)\b/i.test(question)) ? payGeneralRecords(data) : []
+  return [...offices, ...(aboutParliament || people.length ? rows.map(asRecord) : []), ...general.map(asRecord)]
+}
+
+/** Pay words about a Commonwealth office the Tribunal pays: a cache-key salt and a cheap gate. */
+export function mentionsOfficePay(question: string | undefined): boolean {
+  const q = question || ''
+  return PAY_WORDS.test(q) && (generalOfficeQuestion(q) || !PARLIAMENTARY_SECRETARY.test(q) && /\b(?:secretar(?:y|ies)|commissioner|ombudsman|chief\s+executive|CEO|director|chair(?:person)?|regulator|statistician|auditor|solicitor)\b/i.test(q))
+}
+
+/** The parliamentary side of "compare the Prime Minister's pay with the Treasury Secretary's":
+ *  a named person, or a post priced by its rule, read from what is left of the question. */
+function parliamentSide(rest: string, data: PayData): ParliamentSide | null {
+  // "albaneses salary": the possessive is folded into the name, so try without it.
+  const people = peopleNamed(rest, data).length ? peopleNamed(rest, data) : peopleNamed(rest.replace(/(\w{3,})s\b/g, '$1'), data)
+  const step = base(data)
+  const source = (ministerial: boolean) => data.meta.sources.find(s => s.id === (ministerial ? 'ministerial-report' : 'mp-determination')) ?? data.meta.sources[0]
+  if (people.length === 1 && people[0].now) {
+    const p = people[0]
+    return { label: plain(p.now!.post), phrase: plain(p.name), holder: p.name, salary: p.now!.salary, source: source(p.now!.pct === data.offices.pm?.pct) }
+  }
+  // "prime ministers pay": the possessive is folded into the word.
+  const words = rest.replace(/\b(minister|treasurer|speaker|president|leader|senator|politician|parliamentarian|backbencher)s\b/g, '$1')
+  const post = POSTS.find(p => p.pattern.test(words))
+  if (!post) return null
+  if (!post.office || !data.offices[post.office]) return { label: 'Senator or member with no other post', phrase: 'a federal parliamentarian', salary: step.amount, source: source(false) }
+  const office = data.offices[post.office]
+  const ministerial = office.kind === 'ministerial'
+  const salary = ministerial ? Math.round(step.amount * (1 + office.pct / 100)) : step.amount + Math.ceil((step.amount * office.pct) / 1000) * 10
+  const holders = data.current.filter(row => row.pct === office.pct && post.pattern.test(row.post))
+  const label = /^[A-Z]/.test(post.label) ? post.label : post.label[0].toUpperCase() + post.label.slice(1)
+  return { label, phrase: /^[A-Z]/.test(post.label) ? `the ${post.label}` : `a ${post.label}`, holder: holders.length === 1 ? holders[0].name : undefined, salary, source: source(ministerial) }
+}
+
+/** What a departmental secretary or statutory office holder is paid, from pay-offices.json. */
+async function officeAnswerFor(input: RecordQuestion, assets: Fetcher) {
+  const question = input.question || ''
+  if (input.kind && input.kind !== 'all' || input.speaker || input.topic || input.state && input.state !== 'federal') return null
+  if (!PAY_WORDS.test(question)) return null
+  // The determinations are current rates; a dated question goes to the record.
+  const period = inferPeriod(question)
+  if (period.kind === 'window' || input.from || input.to || input.since || input.until) return null
+  const offices = await loadOffices(assets)
+  let pay: PayData | null = null
+  try { pay = await loadPay(assets) } catch { /* A comparison needs pay.json; an office alone does not. */ }
+  return officePayAnswer(question, offices, { payWords: true, ranking: RANKING.test(question), amount: AMOUNT.test(question), compared: COMPARED.test(question) },
+    rest => pay ? parliamentSide(rest, pay) : null)
 }
 
 let memo: Promise<PayData> | null = null
@@ -425,6 +475,11 @@ function loadPay(assets: Fetcher): Promise<PayData> {
 
 /** A calculated answer, or null when the question is not about what a federal parliamentarian is paid. */
 export async function paidAnswer(input: RecordQuestion, assets: Fetcher) {
+  const office = await officeAnswerFor(input, assets).catch(() => null)
+  if (office) return office
+  // An office the Tribunal pays, asked in a way the rates cannot answer (a past year,
+  // say), goes to the record: never a parliamentarian's salary in its place.
+  if (mentionsOfficePay(input.question) && !WHO.test(input.question || '')) return null
   if (!isPayQuestion(input)) return null
   if (input.state && input.state !== 'federal') return null
   const question = input.question || ''

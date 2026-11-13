@@ -107,7 +107,16 @@ npm run voice:agent -- --agent <agent_id> --apply    # back up, then apply, then
    re-run after a half-finished apply reuses the tool it created.
 4. One agent update sets the prompt and attaches the tools. If that update
    fails, the script lists the tools it created (not attached) and updated, and
-   the agent is unchanged.
+   the agent is unchanged. The update carries `tool_ids` and never the
+   deprecated inline `prompt.tools`: ElevenLabs refuses a body with both
+   (`400 both_tools_and_tool_ids_provided`, staging 13 November 2026) and its
+   [agent tools deprecation guide](https://elevenlabs.io/docs/eleven-agents/customization/tools/agent-tools-deprecation)
+   says POST and PATCH reject any request carrying `prompt.tools`, so the key
+   is left out rather than sent as an empty list. Inline
+   entries the agent also has as tool ids or built-in tools are left alone; a
+   configured name is replaced by its tool id; any other inline entry would be
+   dropped, so the plan raises a PROBLEM and `--apply` is refused until it is
+   attached in the dashboard.
 5. It reads the agent back (prompt compared with whitespace normalised), then
    runs the dry run again and exits non-zero unless every tool is `same` and
    attached and the prompt is unchanged.
@@ -127,7 +136,7 @@ npm run voice:agent -- --agent <agent_id> --restore ~/.cache/opax/voice-agent-ba
 ```
 
 Restore puts back the agent's prompt and `tool_ids` and each saved tool's
-config. Tools the apply created are detached, not deleted; delete them in the
+config. A backup's `prompt.tools` is not sent, for the same reason. Tools the apply created are detached, not deleted; delete them in the
 ElevenLabs dashboard if unwanted.
 
 ### Provider fields used, and where they are defined
