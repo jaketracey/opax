@@ -65,6 +65,10 @@ test('the slot stays hidden when the file cannot be read, and fills when it can'
     await hydrateSitting(slot, sample(d => d.house && d.senate));
     assert.equal(slot.hidden, false);
     assert.equal(slot.innerHTML, '<a href="/sitting">Parliament is sitting today</a>');
+    globalThis.fetch = async () => ({ok: false});
+    await hydrateSitting(slot, '2026-11-14');
+    assert.equal(slot.hidden, true);
+    assert.equal(slot.innerHTML, '', 'a line that can no longer be said is cleared, not just hidden');
   } finally { globalThis.fetch = prior; }
 });
 

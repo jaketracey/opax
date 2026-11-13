@@ -183,7 +183,7 @@ export function sittingLine(calendar, today) {
 export async function hydrateSitting(slot = document.querySelector('#hp-sitting'), today = sydneyToday()) {
   if (!slot) return;
   const line = sittingLine(await read('/parliament/sitting-days.json').catch(() => null), today);
-  if (!line) { slot.hidden = true; return; }
+  if (!line) { slot.hidden = true; slot.innerHTML = ''; return; }
   slot.innerHTML = `<a href="${esc(line.href)}">${esc(line.text)}</a>`;
   slot.hidden = false;
 }
