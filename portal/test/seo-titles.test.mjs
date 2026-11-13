@@ -46,6 +46,27 @@ test('dated current service chooses the chamber and party for a career spanning 
   assert.equal(personRole(latham, 2026).federal, true);
 });
 
+test('a current state seat after an earlier Senate seat reads as the sitting member, not a former senator', () => {
+  // Invented: Senator for South Australia 2006 to 2020, then elected to the SA Legislative Council in 2026.
+  const sa = (chamber, jurisdiction) => seat('South Australia', chamber, jurisdiction, 'SA');
+  const hartigan = { name: 'Rowan Hartigan', party: 'Liberal', party_now: 'One Nation', current: true,
+    states: ['federal', 'sa'], last: 2019,
+    representation: [sa('senate', 'federal'), sa('sa_lc', 'sa')],
+    affiliations: [
+      { ...sa('senate', 'federal'), start: '2006-05-04', end: '2017-02-07', party: 'Liberal' },
+      { ...sa('senate', 'federal'), start: '2019-06-25', end: '2020-01-20', party: 'Independent' },
+      { ...sa('sa_lc', 'sa'), start: '2026-03-21', end: null, party: 'One Nation' },
+    ] };
+  const r = personRole(hartigan, 2026);
+  assert.equal(r.former, '');
+  assert.equal(r.federal, false);
+  assert.equal(roleLine(r), 'One Nation MLC (SA)');
+  assert.equal(personTitle(hartigan.name, r, 'Speeches'), 'Rowan Hartigan, One Nation MLC (SA) · Speeches · OPAX');
+  // Without the dated Council service the same row falls back to the former Senate seat.
+  const before = { ...hartigan, current: undefined, party_now: undefined, affiliations: undefined };
+  assert.equal(roleLine(personRole(before, 2026)), 'former Liberal Senator for South Australia');
+});
+
 test('a long title drops the suffix, then the state, then the party', () => {
   const r = { name: 'Concetta Fierravanti-Wells', former: 'former ', party: 'Liberal', role: 'Senator for New South Wales', tag: '', federal: true };
   const t = personTitle(r.name, r, 'Speeches, votes & interests');
