@@ -5,6 +5,8 @@ import { fromWebPath } from '../navigation/external';
 import { inLinkTab } from '../navigation/link-tab';
 import { webOrigin } from '../design/environment';
 import { perfHeap, perfMark } from '../perf/probe';
+import { Platform } from 'react-native';
+import { waitForLinkNavigation } from '../navigation/link-readiness';
 
 /**
  * One `opax_link_open` for each link that opens the app: a universal link,
@@ -33,6 +35,21 @@ export function redirectSystemPath({
 }) {
   perfMark('intent', path);
   perfHeap('intent-heap');
+  if (Platform.OS === 'android' && !initial) {
+    const waiting = waitForLinkNavigation();
+    if (waiting)
+      return waiting.then(() => resolveSystemPath({ path, initial }));
+  }
+  return resolveSystemPath({ path, initial });
+}
+
+function resolveSystemPath({
+  path,
+  initial,
+}: {
+  path: string;
+  initial: boolean;
+}) {
   try {
     const url = new URL(path, 'opax://');
     if (

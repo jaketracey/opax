@@ -32,6 +32,7 @@ import {
   holdSplashForWelcome,
 } from '../launch/splash';
 import { useStackChrome } from '../navigation/chrome';
+import { useLinkReadiness } from '../navigation/useLinkReadiness';
 import { KeyboardShortcuts } from '../navigation/KeyboardShortcuts';
 import { welcomeRoute } from '../navigation/routes';
 import { navigationTheme } from '../navigation/theme';
@@ -67,6 +68,7 @@ export default function Layout() {
   const scheme = useColorScheme();
   const tour = useTourState();
   const navigationReady = !!useRootNavigationState()?.key;
+  useLinkReadiness(navigationReady && (loaded || !!error));
   const [handedOver, setHandedOver] = useState(false);
   const endHandoff = useCallback(() => setHandedOver(true), []);
   const launch = useLaunchWelcome(tour);

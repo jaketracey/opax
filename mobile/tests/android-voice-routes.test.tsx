@@ -74,7 +74,10 @@ jest.mock('expo-router', () => {
     router: { push: jest.fn(), back: jest.fn(), navigate: jest.fn() },
     useFocusEffect: jest.fn(),
     useRootNavigationState: () => ({ key: 'root' }),
-    useNavigationContainerRef: () => ({ isReady: () => false }),
+    useNavigationContainerRef: () => ({
+      isReady: () => false,
+      addListener: () => () => {},
+    }),
     useSegments: () => [],
     // Screens load inside the tests, after the shared preview patch runs.
     useIsPreview: () => false,
