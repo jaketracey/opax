@@ -32,7 +32,7 @@ import { useSavedMember } from '../your-mp/useIsMyMember';
 import { savedSeatDirectory, useSeat } from '../your-mp/useSeat';
 import { FollowRow } from './FollowRow';
 import type { FollowState } from './markers';
-import { sortChanges } from './changes';
+import { checkedText, sortChanges } from './changes';
 import { useFollowStates, markAllSeen } from './useFollowStates';
 import {
   clearFollows,
@@ -221,6 +221,12 @@ export default function Following() {
       ? (sources?.savedAt ?? null)
       : undefined;
 
+  // The quiet state reads as watched: when the record was last checked.
+  const checked =
+    !inEdit && !failedAll && sources?.savedAt && !sources.error
+      ? checkedText(sources.savedAt)
+      : '';
+
   return (
     <Screen
       grouped
@@ -310,30 +316,48 @@ export default function Following() {
         />
       ) : (
         <>
-          {groups.map((group) => (
-            <InsetGroup
-              key={group.key}
-              header={group.title}
-              testID={`follows-${group.key}`}
-            >
-              {group.rows.map((entry) =>
-                inEdit ? (
-                  <EditRow
-                    key={followKey(entry.follow)}
-                    entry={entry}
-                    disabled={busy}
-                    onRemove={() => remove(entry.follow)}
-                  />
-                ) : (
-                  <ListRow
-                    key={followKey(entry.follow)}
-                    entry={entry}
-                    onUnfollow={() => remove(entry.follow)}
-                  />
-                ),
-              )}
-            </InsetGroup>
-          ))}
+          {groups.map((group, index) => {
+            const list = (
+              <InsetGroup
+                key={group.key}
+                header={group.title}
+                testID={`follows-${group.key}`}
+              >
+                {group.rows.map((entry) =>
+                  inEdit ? (
+                    <EditRow
+                      key={followKey(entry.follow)}
+                      entry={entry}
+                      disabled={busy}
+                      onRemove={() => remove(entry.follow)}
+                    />
+                  ) : (
+                    <ListRow
+                      key={followKey(entry.follow)}
+                      entry={entry}
+                      onUnfollow={() => remove(entry.follow)}
+                    />
+                  ),
+                )}
+              </InsetGroup>
+            );
+            // The check time leads the first group, in the source line's
+            // type, so a quiet list reads as watched rather than empty.
+            return index === 0 && checked ? (
+              <View key={group.key} style={styles.checkedGroup}>
+                <Text
+                  variant="footnote"
+                  style={styles.checked}
+                  testID="follows-checked"
+                >
+                  {checked}
+                </Text>
+                {list}
+              </View>
+            ) : (
+              list
+            );
+          })}
           {inEdit ? (
             <InsetGroup testID="follows-unfollow-all-group">
               <Pressable
@@ -445,4 +469,6 @@ const styles = StyleSheet.create({
     paddingVertical: rhythm.row,
   },
   centred: { textAlign: 'center' },
+  checkedGroup: { gap: rhythm.tight },
+  checked: { paddingHorizontal: 4 },
 });
