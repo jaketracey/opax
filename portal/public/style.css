@@ -2035,6 +2035,11 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
   .subject-head:has(.subject-portrait) .subject-tag { align-self: start; margin: var(--sp-8) 0 0; }
 }
 .subject-tag { color: var(--ink-soft); font-size: var(--text-15); margin: 0 0 var(--sp-16); display: flex; align-items: center; gap: var(--sp-8); flex-wrap: wrap; }
+/* The party header's one money line, under the meta line it qualifies (party-page.js latestReturnLine). */
+.party-return-line { margin: calc(-1 * var(--sp-8)) 0 var(--sp-16); font: var(--type-metadata); color: var(--ink-soft); }
+.party-return-line a { color: inherit; text-decoration-color: var(--line-control); text-underline-offset: 0.2em; }
+/* Person page: where the speeches in the record stop, and why a register table holds fewer rows than its count. */
+.person-speech-span, .interests-shown { margin: 0 0 var(--space-tight); font: var(--type-metadata); color: var(--ink-soft); }
 /* The dot before a part travels with it (app.js tagLineHTML). */
 .subject-tag-next::before { content: "·"; margin-inline-end: var(--sp-8); }
 .subject-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--sp-24) var(--sp-40); align-items: start; }
@@ -5234,14 +5239,15 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 .growth-ask-form { display: flex; align-items: start; gap: var(--space-tight); }
 .growth-ask-form .ui-input { flex: 1; min-width: 0; font: var(--type-body); resize: vertical; white-space: pre-wrap; overflow-wrap: normal; word-break: normal; }
 .growth-ask-form .ui-button { flex-shrink: 0; }
-/* Suggested questions are the home page's list of links: one line each, the
-   whole line the target. Ask receives the full question from the href. */
+/* Suggested questions are the home page's list of links, the whole question
+   the target. A long one wraps to a second line rather than stopping
+   mid-word under an ellipsis. Ask receives the full question from the href. */
 .growth-questions { display: grid; list-style: none; margin: var(--space-tight) 0 0; padding: 0; }
 .growth-questions:empty { display: none; }
 .growth-questions li { min-width: 0; }
 .growth-questions a {
   display: block; width: fit-content; max-width: 100%; padding-block: calc((var(--size-target) - 1.55em) / 2);
-  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  white-space: normal; overflow-wrap: normal; word-break: normal; text-wrap: pretty;
   color: var(--bronze-ink); text-decoration-color: var(--bronze-rule); text-underline-offset: 0.2em;
 }
 .growth-ask :is(input, textarea, button), .growth-records summary { min-height: var(--size-target); }
@@ -5259,8 +5265,6 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
   .growth-ask { margin-bottom: var(--space-group); }
   .growth-ask-form { flex-wrap: wrap; }
   .growth-ask-form textarea { flex-basis: calc(100% - 6rem); }
-  /* On a phone a suggestion wraps to a second line rather than stopping mid-word. */
-  .growth-questions a { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; white-space: normal; text-overflow: clip; }
 }
 /* A phone's first screen keeps the composer and one suggestion; the record follows. */
 @media (max-width: 600px) {

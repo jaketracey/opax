@@ -412,6 +412,21 @@ export function partyReturns(label, parties, same = (a, b) => identity(a) === id
   const note = lodged.length > 1 ? `Returns lodged as ${lodged.map(l => `${l.name} (${l.from === l.to ? l.from : `${l.from} to ${l.to}`})`).join(' and as ')}, combined here.` : '';
   return {rows: [...byYear.values()], names: lodged.map(l => l.name), note, entry: names.length === 1 ? parties[names[0]] : null};
 }
+/**
+ * The header's money line, from the party's newest annual return with a receipts figure: "On its
+ * 2024–25 annual return: $161.8m in receipts, 9 branches summed." The scope is the return, never the
+ * money map's named donors. `rows` are partyReturns' [year, receipts, ..., branches] tuples; null when
+ * no year carries receipts. Annual returns cover completed financial years, so this is the latest
+ * complete year, never a year to date.
+ */
+export function latestReturnLine(rows, money = n => `$${Math.round(n).toLocaleString('en-AU')}`) {
+  const latest = (rows || []).map(r => ({year: String(r?.[0] || ''), receipts: Number(r?.[1]) || 0, branches: Number(r?.[4]) || 0}))
+    .filter(r => /^\d{4}-\d{2}$/.test(r.year) && r.receipts > 0).sort((a, b) => b.year.localeCompare(a.year))[0];
+  if (!latest) return null;
+  const year = latest.year.replace('-', '–');
+  return {year: latest.year, receipts: latest.receipts,
+    text: `On its ${year} annual return: ${money(latest.receipts)} in receipts${latest.branches > 1 ? `, ${latest.branches} branches summed` : ''}.`};
+}
 export const isIndependent = label => identity(label) === 'IND';
 export const INDEPENDENTS_DESCRIPTION = 'Parliamentarians who sat without a party. Not a party organisation.';
 export const PARTY_MEMBER_SCOPE = 'Parliamentarian counts include current and former people recorded under the affiliation in the roster, a verified electorate roster or the divisions. Each person is counted once per affiliation, using their person ID where held.';
