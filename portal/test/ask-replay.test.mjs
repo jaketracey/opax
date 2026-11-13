@@ -125,6 +125,12 @@ for(const fixture of fixtures)test(`replay ${fixture.id}: ${fixture.question}`,a
     for(const name of expect.excludes??[])assert.doesNotMatch(body.answer,new RegExp(name,'i'),name)
     // An accountability answer opens on the finding, not on a member's claim in debate.
     if(expect.lead)assert.match(lines(body.answer)[0],new RegExp(expect.lead),`the answer leads with ${expect.lead} ${context()}`)
+    // ... cited to the record that holds that finding (a fact as the tool wrote it), not only worded like one.
+    if(expect.lead_source){
+      const end=Array.from(lines(body.answer)[0]).length,ids=Object.entries(body.citations??{}).filter(([,r])=>r.some(([a])=>a<end)).map(([id])=>id)
+      const snippets=ids.flatMap(id=>body.sources.filter(s=>id.startsWith(s.resource)).map(s=>s.snippet))
+      assert.ok(snippets.some(t=>new RegExp(expect.lead_source).test(t)),`the lead cites ${expect.lead_source}: ${JSON.stringify(snippets).slice(0,400)}`)
+    }
   }
   if(expect.mode)assert.equal(body.research?.mode,expect.mode,context())
 

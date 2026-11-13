@@ -9,7 +9,11 @@ const savedFetch = globalThis.fetch;
 globalThis.fetch = async () => { throw Error('Royal commissions tool tests must not make network requests'); };
 test.after(() => { globalThis.fetch = savedFetch; });
 const cache = new Map();
+// Report records are built from data/report-summaries (gitignored output); the test builds the robodebt one the same way.
+const { projectSummary } = await import(new URL('../../scripts/build_report_catalog.mjs', import.meta.url));
+const reportRecord = { summary: projectSummary(JSON.parse(await readFile(new URL('../../data/report-summaries/royal-commission-cth-robodebt.json', import.meta.url), 'utf8'))) };
 async function asset(path) {
+  if (path.startsWith('/report-records/')) { if (path === '/report-records/royal-commission-cth-robodebt.json') return reportRecord; throw Error('Not built: ' + path); }
   assert.match(path, /^\/(royal-commissions\/[a-z0-9-]+|transcripts\/(index|terms\/\d{2}|[a-z0-9-]+\/transcript-[a-z0-9-]+))\.json$/);
   if (!cache.has(path)) cache.set(path, JSON.parse(await readFile(new URL('../public' + path, import.meta.url), 'utf8')));
   return cache.get(path);
@@ -64,6 +68,22 @@ test('list citations read as the public record, not as OPAX stored it (a writer 
   assert.match(line, /Its reports make \d+ recommendations/, line);
   assert.doesNotMatch(line, /\bloaded\b|\blisted\b|\b0 government response/, line);
   assert.match(line, /hearing transcripts are held \(evidence, not findings\)/, line);
+});
+
+test('robodebt: the report\'s own findings come with the profile and a one-commission list, cited to their pages', async () => {
+  for (const args of [{ view: 'profile', commission: 'robodebt' }, { view: 'list', commission: 'robodebt' }]) {
+    const out = await call(args); cited(out);
+    const findings = out.citations.filter(c => /in the commission's own words/.test(c.text));
+    assert.equal(findings.length, reportRecord.summary.quotes.items.length, args.view);
+    const cabinet = findings.find(c => /approved by Cabinet/.test(c.text));
+    assert.match(cabinet.text, /^Royal Commission into the Robodebt Scheme, Report of the Royal Commission into the Robodebt Scheme, page 31 \[finding\], in the commission's own words: "The Scheme was approved by Cabinet/);
+    assert.match(cabinet.url, /^https:\/\/www\.royalcommission\.gov\.au\/.+\.PDF#page=31$/);
+  }
+  // A commission without a built report record, or a list of several, carries no findings line.
+  const fv = await call({ view: 'profile', commission: 'family violence' }); cited(fv);
+  assert.ok(!fv.citations.some(c => /in the commission's own words/.test(c.text)));
+  const many = await call({ view: 'list', jurisdiction: 'Cth', limit: 8 }); cited(many);
+  assert.ok(!many.citations.some(c => /in the commission's own words/.test(c.text)));
 });
 
 test('house jurisdiction codes ("vic", "federal") are accepted as the dataset codes', async () => {
