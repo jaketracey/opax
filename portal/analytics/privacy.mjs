@@ -44,8 +44,32 @@ export function safePath(value) {
     const path = url.hash.startsWith('#/') ? url.hash.slice(1).split('?')[0] : url.pathname;
     // Unknown paths can contain arbitrary reader input; never collect them.
     if (!KNOWN_PATH.test(path)) return '/other';
-    return path;
+    return recordTemplate(path);
   } catch { return '/other'; }
+}
+// Record pages are counted by their template, never by which MP, party,
+// donor, bill or record was read (telemetry scan 1.5): a page view sits
+// against a browser's cookie ID, so a full path is a history of who someone
+// looked up. The app does the same with $screen_name ("/person/[slug]").
+const SUBJECT_KINDS = new Set(['person', 'party', 'donor', 'supplier', 'agency', 'campaigner', 'electorate', 'topic', 'recipient']);
+const MONEY_VIEW = /^[a-z][a-z-]{0,23}$/;
+function recordTemplate(path) {
+  const [first, second, third, fourth] = path.split('/').filter(Boolean);
+  if (first === 'subject') {
+    if (second === undefined) return '/subject';
+    if (!SUBJECT_KINDS.has(second)) return '/other';
+    return third === undefined ? `/subject/${second}` : `/subject/${second}/[slug]`;
+  }
+  if (first === 'bill' || first === 'bills') return second === undefined ? `/${first}` : `/${first}/[id]`;
+  if (first === 'doc') return second === undefined ? '/doc' : '/doc/[slug]';
+  if (first === 'money') {
+    if (second === undefined) return '/money';
+    if (!MONEY_VIEW.test(second)) return '/other';
+    if (third === undefined) return `/money/${second}`;
+    if (second === 'grants' && fourth === 'recipient') return '/money/grants/[jurisdiction]/recipient/[id]';
+    return `/money/${second}/[id]`;
+  }
+  return path;
 }
 export function cleanEvent(event, props = {}) {
   if (!Object.hasOwn(fields, event)) return null;

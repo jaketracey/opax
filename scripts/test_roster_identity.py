@@ -40,6 +40,22 @@ class VerifyTests(unittest.TestCase):
         self.assertEqual(self.verify(row("Robert Baldwin", 2002, 2011), {"10545": 9}, {"robert baldwin": "10026"}),
                          ("10026", "listed as the same person"))
 
+    def test_the_listed_sa_council_print_is_the_former_senator_and_nothing_wider(self):
+        # scripts/person_identity.json (#308): SA Hansard prints Robert Simms MLC (from 2021) as 'R.A. Simms'.
+        # 10842 is Robert Simms, Senate 2015-2016 (votes.json / pay.json via pinned_members). The entry is
+        # the exact print, so a bare or single-initial Simms in the same Council years takes no id from it.
+        same = ri.same_person()
+        self.assertEqual(same.get("r.a. simms"), "10842")
+        self.assertEqual([k for k in same if "simms" in k], ["r.a. simms"])
+        pinned = ri.pinned_members()["10842"]
+        self.assertEqual((pinned["names"], pinned["chamber"], pinned["start"], pinned["end"]),
+                         (["Robert Simms"], "senate", 2015, 2016))
+        members = {**MEMBERS, "10842": ri.member("10842", ["Robert Simms"], "senate", 2015, 2016)}
+        council = lambda name: row(name, 2021, 2023, ("sa_lc",), ("sa",))  # noqa: E731
+        self.assertEqual(ri.verify(council("R.A. Simms"), Counter(), members, same, 2026), ("10842", "listed as the same person"))
+        for name in ("Simms", "R. Simms", "R.B. Simms"):
+            self.assertIsNone(ri.verify(council(name), Counter(), members, same, 2026)[0], name)
+
     def test_a_print_of_one_person_keeps_the_id(self):
         self.assertEqual(self.verify(row("Albanese", 2000, 2004), {"10007": 12}), ("10007", "speech id"))
 
