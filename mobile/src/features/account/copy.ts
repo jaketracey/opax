@@ -30,7 +30,7 @@ export const accountCopy = {
   deleteAccount: 'Delete account',
 
   // Groups 4 to 6.
-  ask: 'Ask',
+  ask: 'Ask settings',
   about: 'About OPAX',
   sources: 'Sources and licences',
   methods: 'Methods',
