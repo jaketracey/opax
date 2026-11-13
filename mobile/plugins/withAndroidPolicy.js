@@ -30,6 +30,20 @@ module.exports = function withAndroidPolicy(config) {
     app['android:allowBackup'] = 'false';
     app['android:enableOnBackInvokedCallback'] = 'true';
     app['android:networkSecurityConfig'] = '@xml/opax_network_security';
+    const activity = mod.modResults.manifest.application[0].activity.find(
+      (entry) => entry.$['android:name'] === '.MainActivity',
+    );
+    if (!activity)
+      throw new Error('Android font scale: MainActivity is missing');
+    // Keep the navigator alive while Android applies the new font metrics.
+    activity.$['android:configChanges'] = [
+      ...new Set([
+        ...(activity.$['android:configChanges'] ?? '')
+          .split('|')
+          .filter(Boolean),
+        'fontScale',
+      ]),
+    ].join('|');
     return mod;
   });
   config = withAppBuildGradle(config, (mod) => {
@@ -53,6 +67,30 @@ android.buildTypes {
     return mod;
   });
   config = withMainActivity(config, (mod) => {
+    const fontMarker = '// OPAX live font scale';
+    if (!mod.modResults.contents.includes(fontMarker)) {
+      const anchor = 'class MainActivity : ReactActivity() {';
+      if (
+        !mod.modResults.contents.includes(anchor) ||
+        /override fun onConfigurationChanged/.test(mod.modResults.contents)
+      )
+        throw new Error(
+          'Android font scale: review the MainActivity class anchor or configuration hook',
+        );
+      mod.modResults.contents = mod.modResults.contents.replace(
+        anchor,
+        `${anchor}
+  ${fontMarker}
+  override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+    super.onConfigurationChanged(newConfig)
+    // RN refreshes native text metrics in super. DeviceInfo caches fontScale
+    // until resume; refresh it here too so useWindowDimensions updates now.
+    (reactHost?.currentReactContext?.getNativeModule("DeviceInfo") as?
+      com.facebook.react.bridge.LifecycleEventListener)?.onHostResume()
+  }
+`,
+      );
+    }
     const intentMarker = '// OPAX durable link deliveries';
     // Migrate worktrees that have already generated the previous retention hook.
     mod.modResults.contents = mod.modResults.contents.replace(
