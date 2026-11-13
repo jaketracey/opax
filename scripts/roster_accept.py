@@ -30,7 +30,10 @@ A field absent from a record is written null (the roster never holds a JSON null
     holds neither `from` nor `to` was curated after the review, so its group is held.
   - A new row applies only when it is a complete parliamentary identity (new_row_problem: full name, pid or Handbook
     id, a house chamber, jurisdiction, and service dates from the evidence that cover its years; no witness rows),
-    the export's row is exactly the reviewed row, and the shipped roster lacks the name.
+    the export's row is exactly the reviewed row, and the shipped roster lacks the name. A member of a reviewed
+    dated official list (official-list-member evidence) has no federal id: the row is list-only, with no speeches,
+    and must be exactly what the list gives (scripts/roster_source_profiles.py list_row). The same evidence may link
+    an existing person with a verified id to the list's chamber (list_link), adding only the chamber and seat.
   - A dropped row is a shipped record that is not a person (parli.ingest.speaker_names.non_person_name: a group
     label such as 'Government members', a bare title, a parse fragment), carries no identity value, still is exactly
     the reviewed row, and is absent from the export (drop_problem). Nothing else is ever removed: the overlay keeps
@@ -336,6 +339,11 @@ def group_problem(name, group, evidence, row, curated, roster=True, root=ROOT):
         why = alias_problem(name, group, row, root)
         if why:
             return why
+    if ev.get("rule") == "official-list-member":
+        from scripts.roster_source_profiles import list_problem
+        why = list_problem(name, group, row, root, link=True)
+        if why:
+            return why
     if ev.get("rule") == "state-party-snapshot":
         from scripts.roster_state_parties import group_problem as state_party_problem
         why = state_party_problem(name, group, row, root)
@@ -365,16 +373,16 @@ def _year(value):
     return int(str(value)[:4]) if value else None
 
 
-def new_row_problem(name, entry, evidence, shipped_names=()):
+def new_row_problem(name, entry, evidence, shipped_names=(), root=ROOT):
     """None when a new row is a complete parliamentary identity the evidence vouches for, else why it is held.
     Every value read is type-checked first; a wrongly typed entry is held, never raised."""
     try:
-        return _new_row_problem(name, entry, evidence, shipped_names)
+        return _new_row_problem(name, entry, evidence, shipped_names, root)
     except (TypeError, ValueError, KeyError, AttributeError) as err:
         return f"malformed entry values ({type(err).__name__})"
 
 
-def _new_row_problem(name, entry, evidence, shipped_names):
+def _new_row_problem(name, entry, evidence, shipped_names, root=ROOT):
     if not isinstance(entry, dict) or not isinstance(entry.get("row"), dict):
         return "malformed entry"
     row, service = entry["row"], entry.get("service")
@@ -403,7 +411,16 @@ def _new_row_problem(name, entry, evidence, shipped_names):
         return "a new row needs its service (chamber, jurisdiction, start, end) from the evidence"
     if name in shipped_names:
         return "the name is already a shipped record"
-    if not (str(row.get("pid") or "").isdigit() or entry.get("phid")):
+    if ev.get("rule") == "official-list-member":
+        # A member on a reviewed dated official list, with no Hansard OPAX holds: no federal id, so the list
+        # itself is the identity, and the row must be exactly what it gives (list-only, no speeches, no id).
+        from scripts.roster_source_profiles import list_problem
+        if row.get("pid") or not row.get("roster_only"):
+            return "a list-only profile carries no id and is marked roster_only"
+        why = list_problem(name, entry, root=root)
+        if why:
+            return why
+    elif not (str(row.get("pid") or "").isdigit() or entry.get("phid")):
         return "a new row needs a pid or a Handbook id"
     houses = [c for c in row["chambers"] if not _committee(c)]
     if not houses:
@@ -489,8 +506,8 @@ def judge(accept, shipped_people=None, root=ROOT, curated=False):
         try:
             installed = have is not None and name in have
             why = (None if installed and isinstance(entry, dict) and have[name] == entry.get("row") and
-                   new_row_problem(name, entry, evidence) is None else
-                   "the name is already a shipped record" if installed else new_row_problem(name, entry, evidence))
+                   new_row_problem(name, entry, evidence, root=root) is None else
+                   "the name is already a shipped record" if installed else new_row_problem(name, entry, evidence, root=root))
         except Exception as err:  # noqa: BLE001
             why = f"malformed entry ({type(err).__name__})"
         new.append((name, entry, why))

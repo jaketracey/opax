@@ -1,9 +1,9 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=8c73ceafd6';
-import {loadDonorViewIndex} from './donor-views.js?v=c475b569bf';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=dffa19bbff';
+import {loadDonorViewIndex} from './donor-views.js?v=9770cf1299';
 let donorIndex=new Map();
 loadDonorViewIndex().then(index=>{donorIndex=index});
-import { personUrl, partyUrl } from './canonical-urls.js?v=c40e3d805e';
-import { hydrateCollections, hydrateLatest, hydrateSitting, industryGroups, mapSourceHTML, mapSpan, refreshInfo } from '/home-data.js?v=eeb3d6c8e6';
+import { personUrl, partyUrl } from './canonical-urls.js?v=bcc9a57bab';
+import { hydrateCollections, hydrateLatest, hydrateSitting, industryGroups, mapSourceHTML, refreshInfo } from '/home-data.js?v=74c5cf27eb';
 
 // The homepage and research workspace have separate document lifecycles.
 const legacyRoute = location.href.split('#')[1] || '';
@@ -424,10 +424,9 @@ async function mount() {
     });
     renderIndustries(industryGroups(graph));
     $("hp-map-source").innerHTML = mapSourceHTML(graph.meta, await refreshInfo());
-    const span = mapSpan(graph.meta);
-    if (span) $("hp-map-span").textContent = span;
+    // The lede's span is the Worker's (seo-content.ts homeMapSpan): the receipt headline's years, not the file's coverage.
     const { mountMoneyMap } = await import(
-      "/money-map.js?v=4f184e5f20"
+      "/money-map.js?v=716454ddbb"
     );
     if (disposed) return;
     root.replaceChildren();

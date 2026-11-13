@@ -15,3 +15,11 @@ export function chairRoleTranscriptsHTML(personId, counts) {
   const text = `${count.toLocaleString('en-AU')} transcript${one ? '' : 's'} record${one ? 's' : ''} this member presiding in the chair. ${one ? 'It is' : 'They are'} kept apart from their own speeches.`;
   return `<p class="person-chair-role fineprint"><a href="/methods#speaker-attribution">${text}</a></p>`;
 }
+
+/** A list-only profile (roster_only: a member on a parliament's official list whose time in that chamber
+ *  OPAX holds no Hansard for) says so where the speeches would be, instead of showing nothing or a zero. */
+export const NO_HANSARD_HELD = 'No Hansard held for this period.';
+export function noHansardHeldHTML(person) {
+  if (!person?.roster_only) return '';
+  return `<p class="person-no-hansard fineprint">${NO_HANSARD_HELD} This profile comes from the parliament’s member list; no speeches in the record are attributed to them.</p>`;
+}

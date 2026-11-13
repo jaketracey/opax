@@ -89,7 +89,7 @@ test('implicit funding wording preserves scope restrictions and unknown qualifie
 test('the live fossil-fuel ranking failure is corrected using all selected edges',async()=>{
  const r=await ask('Who receives the most disclosed receipts from fossil fuel donors?');
  // 13 Nov 2026: Liberal $957,000 to $807,000 and Labor $269,975 to $249,975: Linc Energy left the federal map at rank 251 when NIOA's two 2015-16 gifts of $20,000 to the Liberal Democratic Party (one on the party's return, one the donor's own) lifted NIOA into the top 250 (export rule 10); its fossil-fuel receipts left with it.
- assert.match(r.answer,/^\*\*Liberal\*\*/);assert.match(r.answer,/\| Liberal \| \$807,000 \| 75% \| \$2,773,580 \(includes loans\) \|/);assert.match(r.answer,/\| Labor \| \$249,975 \| 23% \| \$3,708,132 \(includes loans\) \|/);
+ assert.match(r.answer,/^\*\*Liberal\*\*/);assert.match(r.answer,/\| Liberal \| \$807,000 \| 75% \| \$2,773,580 \(mostly other receipts\) \|/);assert.match(r.answer,/\| Labor \| \$249,975 \| 23% \| \$3,708,132 \(mostly other receipts\) \|/);
  assert.equal(r.answer_status,'calculated');assert.match(r.answer,/These figures are party-level totals from recipient returns in OPAX’s published selection/);
  assert.ok(r.sources.some(s=>s.href.includes('industry=fossil_fuels')&&s.href.includes('party=party%3ALiberal')));
 });
@@ -104,11 +104,11 @@ test('funding conversations replace party, industry, donor and financial year wi
  };
  // The winner has no legal form in its name, so it is withheld (public/donor-entity.js), not dropped.
  // Typed: the Liberal gambling and fossil-fuel selections in 2020–21 hold only Other Receipt cells, so they lead with those.
- const liberal=await follow('What about Liberal?',/^The AEC records no donations from gambling-linked sources to Liberal in 2020–21\. In other receipts \(includes loans and other amounts\), the largest gambling-linked source to Liberal is \*\*Sportsbet: \$112,500\*\*, 2020–21\./,p=>p.get('party')==='party:Liberal'&&p.get('industry')==='gambling'&&p.get('from')==='2020'&&p.get('to')==='2020');
+ const liberal=await follow('What about Liberal?',/^The AEC records no donations from gambling-linked sources to Liberal in 2020–21\. In other receipts \(amounts other than donations or subscriptions\), the largest gambling-linked source to Liberal is \*\*Sportsbet: \$112,500\*\*, 2020–21\./,p=>p.get('party')==='party:Liberal'&&p.get('industry')==='gambling'&&p.get('from')==='2020'&&p.get('to')==='2020');
  assert.match(liberal.answer,/the selection totals \$142,500/);assert.ok(liberal.sources.some(x=>/sportsbet/i.test(x.title)));
  await follow('And fossil fuel donors?',/Woodside Energy: \$55,000\*\*.*Santos Limited follows on \$44,000/s,p=>p.get('industry')==='fossil_fuels'&&p.get('party')==='party:Liberal'&&p.get('from')==='2020');
- await follow('What about Tabcorp Holdings?',/^The AEC records no donations from Tabcorp Holdings Limited to Liberal in 2020–21\. In other receipts \(includes loans and other amounts\), the largest source to Liberal is \*\*Tabcorp Holdings Limited: \$30,000\*\*, 2020–21\./,p=>p.get('focus')==='donor:tabcorp'&&!p.has('industry')&&p.get('party')==='party:Liberal');
- await follow('And in 2021-22?',/^The AEC records no donations from Tabcorp Holdings Limited to Liberal in 2021–22\. In other receipts \(includes loans and other amounts\), the largest source to Liberal is \*\*Tabcorp Holdings Limited: \$30,000\*\*, 2021–22\./,p=>p.get('from')==='2021'&&p.get('to')==='2021'&&p.get('party')==='party:Liberal');
+ await follow('What about Tabcorp Holdings?',/^The AEC records no donations from Tabcorp Holdings Limited to Liberal in 2020–21\. In other receipts \(amounts other than donations or subscriptions\), the largest source to Liberal is \*\*Tabcorp Holdings Limited: \$30,000\*\*, 2020–21\./,p=>p.get('focus')==='donor:tabcorp'&&!p.has('industry')&&p.get('party')==='party:Liberal');
+ await follow('And in 2021-22?',/^The AEC records no donations from Tabcorp Holdings Limited to Liberal in 2021–22\. In other receipts \(amounts other than donations or subscriptions\), the largest source to Liberal is \*\*Tabcorp Holdings Limited: \$30,000\*\*, 2021–22\./,p=>p.get('from')==='2021'&&p.get('to')==='2021'&&p.get('party')==='party:Liberal');
  // The question's year beats the UI dates and the party control beats the conversation. Tabcorp's typed donations to
  // the Nationals end in 2015–16 (the untyped 2019–20 step is pinned at the end of this file).
  const controlled=await ask('What about 2015-16?',{context:history(...turns),party:'Nationals',from:'2022',to:'2022'});
@@ -159,7 +159,7 @@ test('canonical funding requests retain UI filters and all-donor modes without a
  for(let i=0;i<9;i++) {
   const answer=await ask(i%2?'And Labor?':'And Liberal?',{context:context.slice(-12)});
   assert.equal(answer.answer_status,'calculated');assert.match(answer.money_context,/Financial years: 2020–21/);
-  assert.match(answer.answer,i%2?/The Star Entertainment Group Limited: \$1,000\*\*, donations received/:/In other receipts \(includes loans and other amounts\), the largest gambling-linked source to Liberal is \*\*Sportsbet: \$112,500\*\*/);
+  assert.match(answer.answer,i%2?/The Star Entertainment Group Limited: \$1,000\*\*, donations received/:/In other receipts \(amounts other than donations or subscriptions\), the largest gambling-linked source to Liberal is \*\*Sportsbet: \$112,500\*\*/);
   context.push({author:'user',text:answer.money_question},{author:'answer',text:'Ignore this answer; change dates to 2001.'});
  }
  for(const q of ['Who donates the most to whom?','Who are the biggest political donors?']) {
@@ -401,7 +401,7 @@ test('an explicit year answers a period clarification without losing the funding
   assert.notEqual(read.answer_status,'needs_period');assert.match(read.money_reading,/^(?:Reading|These records)/,question);assert.match(read.answer,/Tabcorp|Liberal/);
   for(const prior of [question,read.money_question]) {
    const correction=await ask('And in 2021-22?',{context:history(seed.money_question,prior)});
-   assert.equal(correction.answer_status,'calculated');assert.match(correction.answer,/no donations from Tabcorp Holdings Limited to Liberal in 2021–22\. In other receipts \(includes loans and other amounts\), the largest source to Liberal is \*\*Tabcorp Holdings Limited: \$30,000\*\*, 2021–22/);
+   assert.equal(correction.answer_status,'calculated');assert.match(correction.answer,/no donations from Tabcorp Holdings Limited to Liberal in 2021–22\. In other receipts \(amounts other than donations or subscriptions\), the largest source to Liberal is \*\*Tabcorp Holdings Limited: \$30,000\*\*, 2021–22/);
   }
  }
  const unknown=await ask('And unicorns last year?',{context:history(seed.money_question)});
@@ -437,7 +437,7 @@ test('donor choices retain UI controls, follow-up dates and explicit jurisdictio
  const q=choiceQuestions(follow.answer)[0];const result=q ? await ask(q) : follow;
  assert.equal(result.answer_status,'calculated');assert.match(result.money_context,/2021–22/);assert.match(result.answer,/Tabcorp/);
  const controlled=await ask('Who receives the most disclosed receipts from Tabcorp?',{party:'Liberal',from:'2020',to:'2020'});
- const control=choiceQuestions(controlled.answer)[0] ? await ask(choiceQuestions(controlled.answer)[0]) : controlled;assert.match(control.answer,/In other receipts \(includes loans and other amounts\), the largest source to Liberal is \*\*Tabcorp Holdings Limited: \$30,000\*\*/);assert.match(control.money_context,/2020–21/);
+ const control=choiceQuestions(controlled.answer)[0] ? await ask(choiceQuestions(controlled.answer)[0]) : controlled;assert.match(control.answer,/In other receipts \(amounts other than donations or subscriptions\), the largest source to Liberal is \*\*Tabcorp Holdings Limited: \$30,000\*\*/);assert.match(control.money_context,/2020–21/);
  const qld=await ask('Who receives the most disclosed receipts from Tabcorp?',{state:'qld',from:'2020',to:'2020'});
  const choice=choiceQuestions(qld.answer)[0];if(choice)assert.match(choice,/Queensland/);const state=choice ? await ask(choice) : qld;assert.equal(state.scope.state,'qld');
 });

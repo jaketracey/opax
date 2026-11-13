@@ -125,8 +125,34 @@ for(const fixture of fixtures)test(`replay ${fixture.id}: ${fixture.question}`,a
     for(const name of expect.excludes??[])assert.doesNotMatch(body.answer,new RegExp(name,'i'),name)
     // An accountability answer opens on the finding, not on a member's claim in debate.
     if(expect.lead)assert.match(lines(body.answer)[0],new RegExp(expect.lead),`the answer leads with ${expect.lead} ${context()}`)
+    // ... cited to the record that holds that finding (a fact as the tool wrote it), not only worded like one.
+    if(expect.lead_source){
+      const end=Array.from(lines(body.answer)[0]).length,ids=Object.entries(body.citations??{}).filter(([,r])=>r.some(([a])=>a<end)).map(([id])=>id)
+      const snippets=ids.flatMap(id=>body.sources.filter(s=>id.startsWith(s.resource)).map(s=>s.snippet))
+      assert.ok(snippets.some(t=>new RegExp(expect.lead_source).test(t)),`the lead cites ${expect.lead_source}: ${JSON.stringify(snippets).slice(0,400)}`)
+    }
   }
   if(expect.mode)assert.equal(body.research?.mode,expect.mode,context())
+  // answer_status: null means fully cited (the field is absent).
+  if('answer_status' in expect)assert.equal(body.answer_status??null,expect.answer_status,`answer_status ${context()}`)
+  // A record the answer used is a cited source card whose title and link carry its page.
+  if(expect.source){
+    const cards=(body.sources??[]).filter(s=>s.cited&&new RegExp(expect.source.title).test(s.title)&&new RegExp(expect.source.url).test(s.url))
+    assert.ok(cards.length>=(expect.source.count??1),`cited source cards matching ${JSON.stringify(expect.source)}: ${JSON.stringify(body.sources?.map(s=>[s.title,s.url,s.cited]))}`)
+  }
+  // Trail steps in order (a subsequence): tool, ok, and the argument the trail shows.
+  if(expect.trail){
+    let at=0
+    for(const want of expect.trail){
+      const i=body.research.trail.findIndex((t,j)=>j>=at&&t.tool===want.tool&&t.ok===want.ok&&(want.arg===undefined||t.arg===want.arg))
+      assert.ok(i>=0,`trail has ${JSON.stringify(want)}: ${JSON.stringify(body.research.trail)}`);at=i+1
+    }
+  }
+  // Errors a tool returned reach the model's next turn, so it can recover.
+  for(const pattern of expect.tool_errors??[]){
+    const seen=run.model.doGenerateCalls.map(c=>JSON.stringify(c.prompt))
+    assert.ok(seen.some(p=>new RegExp(pattern).test(p.replace(/\\"/g,'"'))),`a later prompt carries the tool error ${pattern}`)
+  }
 
   // Citations: every range lands inside the answer, every cited resource is a listed source.
   const ranges=Object.entries(body.citations??{}),length=Array.from(body.answer).length

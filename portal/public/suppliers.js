@@ -1,12 +1,12 @@
-import {mountSuppliersTable} from './suppliers-table.js?v=55478b6352';
-import {mountContractsTable} from './contracts-table.js?v=019010cca9';
+import {mountSuppliersTable} from './suppliers-table.js?v=23c79063b0';
+import {mountContractsTable} from './contracts-table.js?v=e8d40dcf06';
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
-import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=e3516549bf";
-import { sourceLineHTML } from "./labels.js?v=9dc97707be";
-import { partyUrl } from "./canonical-urls.js?v=c40e3d805e";
-import { receiptGraph, receiptGraphScope } from "./donor-disclosure.js?v=8c73ceafd6";
+import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=9e60f9cb38";
+import { sourceLineHTML } from "./labels.js?v=6d2e2e9cd8";
+import { partyUrl } from "./canonical-urls.js?v=bcc9a57bab";
+import { receiptGraph, receiptGraphScope } from "./donor-disclosure.js?v=dffa19bbff";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const number = (value) => (Number(value) || 0).toLocaleString("en-AU");
 const currency = (value) => (Number(value) || 0).toLocaleString("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 });
@@ -364,7 +364,7 @@ async function mountFunding(root, links, life, register = "") {
       slot.hidden = false;
       slot.innerHTML = '<p role="status">Opening the money map…</p>';
       try {
-        const { mountMoneyMap } = await import("/money-map.js?v=4f184e5f20");
+        const { mountMoneyMap } = await import("/money-map.js?v=716454ddbb");
         if (!life.alive()) return;
         slot.textContent = "";
         const handle = await mountMoneyMap(slot, "/graph/money.json", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });

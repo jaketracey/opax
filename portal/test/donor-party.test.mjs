@@ -5,7 +5,7 @@ import {runInNewContext} from 'node:vm';
 import {Worker} from 'node:worker_threads';
 import ts from 'typescript';
 import {JSDOM} from 'jsdom';
-import {donorLabelHTML,donorLookup,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY} from '../public/donor-disclosure.js';
+import {donorLabelHTML,donorLookup,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine} from '../public/donor-disclosure.js';
 import {foldDonorName,MONEY_GRAPHS} from '../public/donor-entity.js';
 import {partyLabels,partyMembers,partyMembersHTML,partySlug,partyStateMoneyHTML,resolvePartyLabel} from '../public/party-page.js';
 
@@ -23,7 +23,7 @@ async function donorsDirectory(files, indexRecords) {
   const index = donorLookup(indexRecords);
   const disclosed = name => index.get(foldDonorName(name)) || {label: name};
   const context = {
-    donorViewReady: Promise.resolve(), donorViewIndex: index, receiptGraph, receiptGraphScope, receiptScopeLabel, hasPartyReceipts, DONOR_DECLARED_ONLY,
+    donorViewReady: Promise.resolve(), donorViewIndex: index, receiptGraph, receiptGraphScope, receiptScopeLabel, hasPartyReceipts, DONOR_DECLARED_ONLY, notListedLine,
     loadMoneyFile: async jur => files[jur] || null, loadAccess: async () => ({donors: {}}), loadFits: async () => ({}),
     normName: new Function('x', fnSource('normName').replace(/^function normName\(x\) \{|\}$/g, '')),
     byNumDesc: () => () => 0, byName: () => 0, moneyFor: () => 0, STATE_NOT_SUMMED: '', AEC_NOTE: '', esc,
@@ -256,7 +256,8 @@ test('real Liberal and Greens page lists count each person once and agree with t
   assert.deepEqual(directory.errors, []);
   const doc = new JSDOM(directory.html).window.document;
   // Council members from the dated official lists: Liberal +5 NSW (A17), +2 SA (A22); Greens +3 NSW (A17).
-  for (const [slug, expected] of [['liberal', 345], ['greens', 50]]) {
+  // SA Council list-only profiles (A27): Liberal +1 (Benjamin Hood), Greens +1 (Melanie Selwood).
+  for (const [slug, expected] of [['liberal', 346], ['greens', 51]]) {
     const row = doc.querySelector(`a[href="/subject/party/${slug}"]`).closest('li');
     const figure = [...row.querySelectorAll('.dir-fig')].find(n => n.textContent.includes('parliamentarians in the record'));
     assert.equal(figure.querySelector('b').textContent, String(expected));

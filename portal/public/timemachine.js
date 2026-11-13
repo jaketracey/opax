@@ -1,4 +1,4 @@
-import { personUrl, partyUrl } from './canonical-urls.js?v=c40e3d805e';
+import { personUrl, partyUrl } from './canonical-urls.js?v=bcc9a57bab';
 import {isMultiSpeaker, speakerLabel, isUnattributed, resolvedParticipants, groupAvatarHTML} from './speech-attribution.js?v=7280d96f90';
 /**
  * OPAX Time Machine — an Encarta-style year explorer for the Australian
@@ -38,7 +38,7 @@ import {isMultiSpeaker, speakerLabel, isUnattributed, resolvedParticipants, grou
  */
 
 import { shortMoney as fmtMoney } from './format.js'
-import { machineLabelHTML } from './labels.js?v=9dc97707be'
+import { machineLabelHTML } from './labels.js?v=6d2e2e9cd8'
 
 const YEAR_MIN = 1998
 const YEAR_MAX = 2026

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {build} from 'esbuild';
-import {DONOR_DECLARED_ONLY, donorLookup, hasPartyReceipts, receiptFigures, receiptGraph, receiptGraphScope, receiptScopeLabel} from '../public/donor-disclosure.js';
+import {DONOR_DECLARED_ONLY, PUBLIC_FUNDING_ONLY, donorLookup, hasPartyReceipts, notListedLine, publicFundingOnly, receiptFigures, receiptGraph, receiptGraphScope, receiptScopeLabel} from '../public/donor-disclosure.js';
 import * as registerTables from '../public/register-tables.js';
 
 // Every money figure a reader or Ask sees counts each gift once: the money
@@ -63,8 +63,11 @@ test('receiptGraph reads donor-to-party edges and donor nodes through the typed 
   assert.equal(labor, released, 'party nodes keep their own received totals');
   assert.equal(graph.edges.filter(e => e.grant || e.flow).length, published.edges.filter(e => e.grant || e.flow).length);
   const empty = published.edges.filter(e => !e.flow && !e.grant && e.by_type && !Object.keys(e.by_type).length).length;
+  // Public Funding is never a donor flow (NSW Efa to the Greens, 2010-11, is its only receipt).
+  const publicOnly = published.edges.filter(e => !e.flow && !e.grant && publicFundingOnly(e)).length;
   assert.ok(empty > 0);
-  assert.equal(graph.edges.length, published.edges.length - empty, 'an edge only the donor declared is left out');
+  assert.equal(publicOnly, 1);
+  assert.equal(graph.edges.length, published.edges.length - empty - publicOnly, 'an edge only the donor declared, or only public funding, is left out');
   assert.equal(receiptGraphScope(graph), SCOPE);
   assert.equal(receiptGraphScope({nodes: [], edges: [{source: 'a', target: 'b', total: 5, count: 1, byYear: {2020: [5, 1]}}]}), '', 'a state graph has no typed scope');
 });
@@ -87,13 +90,22 @@ test('Ask money_totals gives the donor-page figure for a flow and a donor', asyn
 });
 
 test('Ask party_receipts ranks a party\'s sources by the typed figures', async () => {
-  const out = await api.partyDonations({asset, kb: async () => { throw Error('no retrieval'); }, origin: 'https://opax.com.au'}, {party: 'Liberal', limit: 15});
+  // All receipt types (measure=all_types: money from, receipts, paid); the donations measure is pinned below.
+  const out = await api.partyDonations({asset, kb: async () => { throw Error('no retrieval'); }, origin: 'https://opax.com.au'}, {party: 'Liberal', limit: 15, measure: 'all_types'});
   const pratt = out.data.rows.find(r => /^Pratt Holdings/.test(r.donor));
   assert.deepEqual([pratt.total_aud, pratt.receipts], [PRATT_LIBERAL, 70]);
+  assert.deepEqual(pratt.by_type, {donations_aud: 10034400, other_receipts_aud: 410000, subscriptions_aud: 0, untyped_aud: 10000}, 'each row gives its type breakdown');
   assert.ok(out.notes.some(n => n.includes(SCOPE)));
-  const labor = await api.partyDonations({asset, kb: async () => ({}), origin: 'https://opax.com.au'}, {party: 'Labor', limit: 15});
+  const labor = await api.partyDonations({asset, kb: async () => ({}), origin: 'https://opax.com.au'}, {party: 'Labor', limit: 15, measure: 'all_types'});
   assert.equal(Math.round(labor.data.rows.find(r => r.donor === 'Westpac Banking Corporation').total_aud), WESTPAC_LABOR);
-  const window = await api.partyDonations({asset, kb: async () => ({}), origin: 'https://opax.com.au'}, {party: 'Liberal', from_year: 2020, to_year: 2020, limit: 15});
+  // Donations (who gives, A34): Pratt's 60 Donation Received rows, and Westpac's $46.4m of other receipts as its own line.
+  const given = await api.partyDonations({asset, kb: async () => ({}), origin: 'https://opax.com.au'}, {party: 'Liberal', limit: 15});
+  assert.equal(given.data.measure, 'donations');
+  assert.deepEqual([given.data.rows.find(r => /^Pratt Holdings/.test(r.donor)).total_aud, given.data.rows.find(r => /^Pratt Holdings/.test(r.donor)).receipts], [10034400, 60]);
+  const laborGiven = await api.partyDonations({asset, kb: async () => ({}), origin: 'https://opax.com.au'}, {party: 'Labor', limit: 15});
+  assert.ok(!laborGiven.data.rows.some(r => r.donor === 'Westpac Banking Corporation'), "Westpac's $875,018 in donations ranks below the top 15");
+  assert.equal(laborGiven.data.other_receipts.find(r => r.donor === 'Westpac Banking Corporation').other_receipts_aud, 46358124);
+  const window = await api.partyDonations({asset, kb: async () => ({}), origin: 'https://opax.com.au'}, {party: 'Liberal', from_year: 2020, to_year: 2020, limit: 15, measure: 'all_types'});
   const typed2020 = Object.values(edge(published, PRATT, 'party:Liberal').by_type_year['2020-21']).reduce((s, c) => s + c[0], 0);
   assert.equal(window.data.rows.find(r => /^Pratt Holdings/.test(r.donor)).total_aud, typed2020, 'a year window sums the typed year cells');
 });
@@ -267,7 +279,7 @@ const appContext = extra => ({
   esc: v => String(v ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;'), fmtMoney: v => `$${Math.round(v)}`,
   donorRows: (rows, _index, limit = Infinity) => [...rows].sort((a, b) => b[1] - a[1]).slice(0, limit), donorViewIndex: new Map(),
   subjectHash: (kind, name) => `#/${kind}/${name}`, partyDotHTML: () => '', explainBtn: () => '', AEC_NOTE: 'AEC note.',
-  hasPartyReceipts, DONOR_DECLARED_ONLY, receiptScopeLabel,
+  hasPartyReceipts, DONOR_DECLARED_ONLY, notListedLine, receiptScopeLabel,
   ...extra,
 });
 // Typed sums for one industry, worked out here from by_type (not through receiptGraph).
@@ -332,7 +344,7 @@ test('donors directory: Pratt Holdings at $19.6m across 120 receipts, Liberal an
 test('app.js keeps one projected graph beside moneyData, from donor-views.js', async () => {
   const source = await readFile(new URL('../public/app.js', import.meta.url), 'utf8');
   assert.ok(source.includes('moneyReceipts = module.receiptGraph(d);'));
-  assert.ok(source.includes('({donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY}=module);'));
+  assert.ok(source.includes('({donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);'));
 });
 
 // ---- Games: the ledger, the quiz's donor and industry questions, words per dollar ----
@@ -347,8 +359,8 @@ test('ledger: Pratt to Liberal and Westpac to Labor at their typed figures, in t
   assert.match(buildCSV('flows', [pratt], []), new RegExp(`,Liberal,${PRATT_LIBERAL},70,1998,2024,`));
   const donor = aggregateDonors(flows).find(d => d.donorId === PRATT);
   assert.equal(Math.round(donor.total), 19572876, 'the donor row sums its typed flows: the donor page head figure');
-  assert.equal(flows.length, published.edges.filter(e => !e.flow && !e.grant && e.by_type && Object.keys(e.by_type).length && published.nodes.find(n => n.id === e.source)?.kind === 'donor').length,
-    'a flow only the donor declared is left out');
+  assert.equal(flows.length, published.edges.filter(e => !e.flow && !e.grant && e.by_type && Object.keys(e.by_type).length && !publicFundingOnly(e) && published.nodes.find(n => n.id === e.source)?.kind === 'donor').length,
+    'a flow only the donor declared, or only public funding, is left out');
 });
 
 test('ledger source line says what its figures count', async () => {
@@ -447,7 +459,9 @@ test('person page ties: the scope line shows once the exporter marks the flows t
 // receiptGraph drops 140 flows whose typed cells are empty: the parties' returns list no
 // receipt for them. Eleven donors have no other flow, so their typed total is 0. No surface
 // may show such a donor at $0: each says what is true (DONOR_DECLARED_ONLY) instead.
-const DECLARED_ONLY = published.nodes.filter(n => n.kind === 'donor' && !hasPartyReceipts(n));
+// A donor whose only receipt is Public Funding (NSW Efa) is also left out, with its own line (PUBLIC_FUNDING_ONLY).
+const DECLARED_ONLY = published.nodes.filter(n => n.kind === 'donor' && !hasPartyReceipts(n) && !publicFundingOnly(n));
+const PUBLIC_ONLY = published.nodes.filter(n => n.kind === 'donor' && publicFundingOnly(n));
 const GOLDMAN = 'donor:goldman sachs australia';
 const ZERO = /\$0(?:\.00)?(?![\d.,])/;
 
@@ -458,9 +472,10 @@ test('one predicate: hasPartyReceipts picks out the released donors and flows on
   assert.ok(DECLARED_ONLY.every(n => !Object.keys(n.by_type).length && n.total > 0), 'each holds a record figure from its own declarations');
   assert.ok(DECLARED_ONLY.some(n => n.id === GOLDMAN));
   const dropped = published.edges.filter(e => !e.grant && !e.flow && !hasPartyReceipts(e));
-  // 13 Nov 2026: 131 to 140, the nine flows to the Libertarian Party that only the donor's own return declares
+  // 13 Nov 2026: 131 to 140 donor-declared flows, the nine to the Libertarian Party that only the donor's own return declares
   // (Ancora, Australian Energy Producers, Chevron, Australian Hotels Association, IAG, IT Alliance, Deloitte, Allianz, Sanofi).
-  assert.equal(dropped.length, 140);
+  assert.equal(dropped.length, 141, '140 only the donor declared and 1 only public funding');
+  assert.deepEqual(PUBLIC_ONLY.map(n => n.id), ['donor:nsw efa']);
   assert.equal(receiptGraph(published).edges.length, published.edges.length - dropped.length, 'receiptGraph drops exactly those flows');
   assert.equal(hasPartyReceipts({total: 0, count: 0}), true, 'a record without typed cells (a state graph) keeps its figures');
 });
@@ -524,8 +539,11 @@ test('donors directory: no row at $0; declared-only donors carry the labelled li
   const directory = await context.directory();
   const html = directory.items.map(d => [d, directory.row(d)]);
   for (const [d, row] of html) assert.doesNotMatch(row, /<b>\$0<\/b>/, d.label);
-  const declared = html.filter(([d]) => d.declaredOnly);
+  const declared = html.filter(([d]) => d.declaredOnly === DONOR_DECLARED_ONLY);
   assert.equal(declared.length, DECLARED_ONLY.length);
+  const publicOnly = html.filter(([d]) => d.declaredOnly === PUBLIC_FUNDING_ONLY);
+  assert.deepEqual(Array.from(publicOnly, ([d]) => String(d.label)), PUBLIC_ONLY.map(n => n.label));
+  for (const [d, row] of publicOnly) assert.ok(row.includes(`AEC returns: ${PUBLIC_FUNDING_ONLY}`), d.label);
   for (const [d, row] of declared) {
     assert.ok(row.includes(`AEC returns: ${DONOR_DECLARED_ONLY}`), d.label);
     assert.doesNotMatch(row, /class="dir-fig"/, d.label);
@@ -541,6 +559,7 @@ test('donors directory: no row at $0; declared-only donors carry the labelled li
 test('search: no donor or receipt record says $0.00; declared-only donors carry the labelled line; off-map federal donors say they are record totals', async () => {
   for (const n of published.nodes.filter(n => n.kind === 'donor')) assert.doesNotMatch(donorSearchRecord('federal', n).snippet, ZERO, n.label);
   assert.equal(donorSearchRecord('federal', published.nodes.find(n => n.id === GOLDMAN)).snippet, `Finance. ${DONOR_DECLARED_ONLY}.`);
+  assert.equal(donorSearchRecord('federal', PUBLIC_ONLY[0]).snippet, `Individual. ${PUBLIC_FUNDING_ONLY}.`);
   const index = await readPublic('/graph/donor-index.json');
   // The catalog adds each map donor from its graph first; an index entry with the same key is skipped.
   const onMap = new Set();
@@ -578,12 +597,14 @@ test('donor page (real app): a donor only its own return declares shows the labe
   assert.ok(text.includes(DONOR_DECLARED_ONLY), 'the labelled line');
   assert.doesNotMatch(text, /\$0(?![\d,.])|\b0 receipts\b|Receipts counted|Rank/);
   assert.equal(doc.querySelectorAll('.donor-flow-bars .bar, .donor-flow-bars rect').length, 0, 'no bars');
+  assert.equal(doc.querySelector('[data-explain-link]'), null, 'no Explain button: nothing a party listed to explain');
   // A donor the parties' returns list still gets its counted figure and the scope line.
   const pratt = published.nodes.find(n => n.id === PRATT);
   const counted = await renderEntry(`/subject/donor/${encodeURIComponent(pratt.label)}`, '.donor-flow-bars');
   assert.deepEqual(pageErrors(counted), []);
   const prattText = new JSDOM(counted.html).window.document.body.textContent;
   assert.ok(prattText.includes('Receipts counted') && !prattText.includes(DONOR_DECLARED_ONLY));
+  assert.ok(new JSDOM(counted.html).window.document.querySelector('[data-explain-link]'), 'Explain this money stays for a donor the parties list');
 });
 
 // ---- One pair, every surface -------------------------------------------------
@@ -602,9 +623,15 @@ test('Westpac to One Nation: /money, the party page, its API, receiptGraph and p
   assert.ok(hasPartyReceipts(raw), 'One Nation\'s returns list these receipts');
   const projected = edge(receiptGraph(published), WESTPAC, ONE_NATION);
   assert.deepEqual([projected.total, projected.count], TYPED, 'receiptGraph');
-  const tool = await api.partyDonations({asset, kb: async () => { throw Error('no retrieval'); }, origin: 'https://opax.com.au'}, {party: 'One Nation', limit: 15});
-  assert.equal(tool.data.rows[0].donor, 'Westpac Banking Corporation', 'party_receipts ranks Westpac first');
+  const tool = await api.partyDonations({asset, kb: async () => { throw Error('no retrieval'); }, origin: 'https://opax.com.au'}, {party: 'One Nation', limit: 15, measure: 'all_types'});
+  assert.equal(tool.data.rows[0].donor, 'Westpac Banking Corporation', 'party_receipts ranks Westpac first by all receipt types');
   assert.deepEqual([tool.data.rows[0].total_aud, tool.data.rows[0].receipts], TYPED, 'party_receipts');
+  // Who gives (A34): every one of the four is an Other Receipt, so Westpac is no donor here, only a labelled line.
+  const given = await api.partyDonations({asset, kb: async () => { throw Error('no retrieval'); }, origin: 'https://opax.com.au'}, {party: 'One Nation', limit: 15});
+  assert.ok(!given.data.rows.some(r => r.donor === 'Westpac Banking Corporation'), 'party_receipts by donations');
+  const line = given.data.other_receipts.find(r => r.donor === 'Westpac Banking Corporation');
+  assert.deepEqual([line.other_receipts_aud, line.receipts], TYPED, 'party_receipts other-receipts line');
+  assert.equal(line.line, "Westpac Banking Corporation recorded $204,604 in other receipts (amounts other than donations or subscriptions) to One Nation in financial years 2022-23 to 2024-25.");
   const page = registerTables.partyMoneyData(published, ONE_NATION).rows.find(r => r.label === 'Westpac Banking Corporation');
   assert.deepEqual([page.total, page.count], TYPED, 'One Nation party page donor table');
   const response = await partyMoneyResponse(new Request(`https://opax.test/api/register/party-money?partyId=${encodeURIComponent(ONE_NATION)}`), {fetch: async () => Response.json(published)});
@@ -613,4 +640,19 @@ test('Westpac to One Nation: /money, the party page, its API, receiptGraph and p
   const html = await renderMoneyConnectionsTable(new URL('https://opax.test/money?jur=federal&c.q=Westpac'), readPublic);
   const row = JSON.parse(html.match(/<script type="application\/json" data-dt-page>([\s\S]*?)<\/script>/)[1]).rows.find(r => r.from === 'Westpac Banking Corporation' && r.to === 'One Nation');
   assert.deepEqual([row.value, row.records], TYPED, '/money Connections table');
+});
+
+// The Explain page for a donor no party return lists (reachable by a link only once the
+// donor page and the map card stop offering it): no "$0 Disclosed" and "0 Receipts".
+import * as moneyExplain from '../public/money-explain.js';
+test('Explain page: a donor only its own returns declare has no $0 figures; its story says no party return lists a receipt', () => {
+  for (const n of DECLARED_ONLY) {
+    const parsed = moneyExplain.parseExplainParams(new URLSearchParams({from: n.id}), published, null);
+    const flow = moneyExplain.resolveFlow(parsed.state, published, null);
+    const text = moneyExplain.pageHTML(flow, {index: null}).replace(/<[^>]+>/g, ' ');
+    assert.doesNotMatch(text, /\$0(?![\d,.])|\b0 Receipts?\b/, n.label);
+    assert.ok(text.includes('No party return lists a receipt from this donor.'), n.label);
+  }
+  const pratt = moneyExplain.resolveFlow(moneyExplain.parseExplainParams(new URLSearchParams({from: PRATT}), published, null).state, published, null);
+  assert.match(moneyExplain.pageHTML(pratt, {index: null}), /class="mx-figure/);
 });

@@ -83,6 +83,8 @@ def attach_receipt_types(db, graph):
     for donor, recipient, amount, period, kind, recipient_kind in db.execute(
         "SELECT donor_name,recipient,amount,financial_year,receipt_type,recipient_kind FROM aec_receipt_records WHERE record_side='recipient'"):
         counts["recipient_rows"] += 1
+        # No receipt_type: a Public Funding row stays as its own typed cell, so a payer whose only
+        # receipt is Public Funding keeps that label instead of an empty by_type and a stale legacy total.
         reason = selection.exclusion(donor, recipient, amount, period, recipient_kind)
         if reason:
             counts["excluded_" + reason] += 1
@@ -114,7 +116,7 @@ def attach_receipt_types(db, graph):
         "fields": "by_type contains AUD amounts; by_type_year maps financial year (short form) or election/referendum event to type: [AUD, row count]. Node cells sum visible receipt edges only, unlike legacy party node totals.",
         "normalisation": "AEC labels lowercased, punctuation/whitespace replaced with underscores. Donation Received = donation_received. Blank = unknown. Unspecified remains unspecified. No inference of loans from Other Receipt.",
         "scope": "Political Party Return recipients with an exact unambiguous existing party mapping, and donor-party edges on this map. Other recipient kinds remain in aec_receipt_records. This is a capped donor map, not all AEC receipts.",
-        "selection": "aec_receipt_selection.ReceiptSelection.exclusion is shared with the uncapped report: recipient-side positive itemised party receipts, exact recipient mapping, no reviewed outliers, government/party-unit entities or public-funding/party-name donor spellings. Map edge membership is the additional cap.",
+        "selection": "aec_receipt_selection.ReceiptSelection.exclusion is shared with the uncapped report: recipient-side positive itemised party receipts, exact recipient mapping, no reviewed outliers, government/party-unit entities or public-funding/party-name donor spellings. Map edge membership is the additional cap. A Public Funding receipt under any other spelling stays as its own public_funding cell, which no portal figure counts; the uncapped report leaves it out.",
         "donation_type": "donation_received",
         "counts": dict(counts),
     }

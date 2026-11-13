@@ -17,10 +17,13 @@ export const BULK_PREFIX = new RegExp(`^/(?:${BULK_FOLDERS.join('|')})/`);
 export const isBulkAssetPath = pathname => BULK_PREFIX.test(pathname) && /^(?:\/[a-zA-Z0-9_-][a-zA-Z0-9_.-]*)+\.json$/.test(pathname);
 
 // Top-level public/ folders left out of the asset folder wrangler sees: the bulk folders above,
-// plus ones Ask's research path never reads through env.ASSETS. report-records is read only by the
-// official-report pages (src/report-records.ts, src/official-reports.ts); growth and photos are
-// page and OG assets. Checked against src/tools, src/ask-*.ts and src/research*.
-export const SKIPPED_FOLDERS = Object.freeze([...BULK_FOLDERS, 'growth', 'photos', 'report-records']);
+// plus ones Ask's research path never reads through env.ASSETS. growth and photos are page and OG
+// assets. Checked against src/tools, src/ask-*.ts and src/research*.
+export const SKIPPED_FOLDERS = Object.freeze([...BULK_FOLDERS, 'growth', 'photos']);
+
+// Folders Ask reads only a few files of: report-records (about 2,400 files, read by the official-report
+// pages) is linked only for the royal commissions, whose findings tools/royal-commissions.ts reads.
+export const PARTIAL_FOLDERS = Object.freeze({'report-records': /^royal-commission-[a-z0-9-]+\.json$/});
 
 // electorates/ is read by Ask (tools/electorates.ts, tools/grants.ts, ask-identity.ts), but only
 // through manifest.json and the release it names; older releases stay behind.
@@ -51,6 +54,13 @@ export function buildSlimAssets(publicDir, slimDir, {max = MAX_ASSET_FILES} = {}
   for (const name of readdirSync(publicDir).sort()) {
     const source = join(publicDir, name);
     if (SKIPPED_FOLDERS.includes(name)) { if (existsSync(source)) skipped.push(name); continue; }
+    const only = PARTIAL_FOLDERS[name];
+    if (only && lstatSync(source).isDirectory()) {
+      mkdirSync(join(slimDir, name), {recursive: true});
+      for (const entry of readdirSync(source).filter(e => only.test(e))) symlinkSync(join(source, entry), join(slimDir, name, entry));
+      trimmed.push(`${name} (${only.source} only)`);
+      continue;
+    }
     const release = CURRENT_RELEASE_ONLY.includes(name) && lstatSync(source).isDirectory() ? currentRelease(source) : null;
     if (!release) { symlinkSync(source, join(slimDir, name)); continue; }
     mkdirSync(join(slimDir, name, 'releases'), {recursive: true});

@@ -1,9 +1,9 @@
 // Division and voting-record rollout using the shared server-mode core.
-import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=5fe413541f';
+import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=f055b6abe2';
 // Guard and render must share the core module's rejection-state registry.
 export {guardTableURL};
 import {shortDate} from './format.js';
-import {statusLabelHTML} from './labels.js?v=9dc97707be';
+import {statusLabelHTML} from './labels.js?v=6d2e2e9cd8';
 import {divisionPlain} from './division-markdown.js?v=5991511166';
 
 const sentence = value => { const text = String(value || '').replace(/_/g, ' ').trim(); return text ? text[0].toUpperCase() + text.slice(1).toLowerCase() : ''; };

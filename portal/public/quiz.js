@@ -1,6 +1,6 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=8c73ceafd6';
-import {loadDonorViewIndex} from './donor-views.js?v=c475b569bf';
-import {subjectUrl} from './canonical-urls.js?v=c40e3d805e';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=dffa19bbff';
+import {loadDonorViewIndex} from './donor-views.js?v=9770cf1299';
+import {subjectUrl} from './canonical-urls.js?v=bcc9a57bab';
 /*
  * The record quiz — a MindMaze-spirited quiz over OPAX's real data.
  *
@@ -83,12 +83,18 @@ const INDUSTRY_LABELS = {
   individual: "Individuals",
 };
 
-const DONOR_PHRASES = {
-  unions: "union-linked donors", mining: "mining donors",
-  gambling: "gambling-industry donors", property: "property-industry donors",
-  finance: "finance-industry donors", media: "media-company donors",
-  hospitality: "hospitality donors",
+// Every donor and industry figure in the quiz is what the parties reported
+// receiving, all receipt types (receiptGraph), the donor record's headline. So
+// the questions say "receipts" and "reported": "gave", "donated" and "donors"
+// would mean AEC Donation Received only, a smaller figure.
+const SOURCE_PHRASES = {
+  unions: "unions", mining: "the mining industry",
+  gambling: "the gambling industry", property: "the property industry",
+  finance: "the finance industry", media: "media companies",
+  hospitality: "the hospitality industry",
 };
+const industrySource = (key) =>
+  SOURCE_PHRASES[key] || "the " + industryLabel(key).toLowerCase() + " industry";
 
 function industryLabel(key) {
   return INDUSTRY_LABELS[key] || (key.charAt(0).toUpperCase() + key.slice(1)).replace(/_/g, " ");
@@ -117,7 +123,7 @@ export function makeQuizContext(data) {
   }
 
   const reports = Object.entries(data.reports || {})
-    .map(([slug, r]) => ({ slug, title: r.title || slug, stats: {...r.stats,donations:r.stats?.donations?{...r.stats.donations,top_donors:(r.stats.donations.top_donors||[])}:undefined} }))
+    .map(([slug, r]) => ({ slug, title: r.title || slug, stats: r.stats || {} }))
     .filter((r) => r.stats.speech_count > 0);
 
   // Faces come from the portrait map (photos/people.json), never from a roster pid:
@@ -216,13 +222,11 @@ const TEMPLATES = [
         ...peers.map(([, row]) => ({ label: fmtMoney(row.total), value: row.total, correct: false })),
       ], rng);
       if (new Set(options.map((o) => o.label)).size !== options.length) return null;
-      const subject = key === "unions"
-        ? "have unions" : "has the " + industryLabel(key).toLowerCase() + " industry";
       return {
         template: this.id, deck: this.deck, kind: "mc",
         prompt:
-          "Roughly how much " + subject +
-          " disclosed in political receipts between " + s.first + " and " + s.last + "?",
+          "Roughly how much did parties report in receipts from " + industrySource(key) +
+          " between " + s.first + " and " + s.last + "?",
         options,
         fact: factLine(industryLabel(key), fmtMoney(s.total)),
         explanation:
@@ -271,7 +275,7 @@ const TEMPLATES = [
   {
     id: "money-party-from-industry", deck: "money",
     build(ctx, rng) {
-      const candidates = shuffled(Object.keys(DONOR_PHRASES), rng);
+      const candidates = shuffled(Object.keys(SOURCE_PHRASES), rng);
       for (const ind of candidates) {
         const byParty = new Map();
         for (const e of ctx.money.edges || []) {
@@ -291,11 +295,11 @@ const TEMPLATES = [
         ], rng);
         return {
           template: this.id, deck: this.deck, kind: "mc",
-          prompt: "Which party has received the most disclosed money from " + DONOR_PHRASES[ind] + "?",
+          prompt: "Which party has reported the most receipts from " + SOURCE_PHRASES[ind] + "?",
           options,
           fact: factLine(sorted[0][0], fmtMoney(sorted[0][1])),
           explanation:
-            "That is the largest disclosed total from " + DONOR_PHRASES[ind] + "; " +
+            "That is the largest total in receipts from " + SOURCE_PHRASES[ind] + "; " +
             sorted[1][0] + " follows on " + fmtMoney(sorted[1][1]) + ".",
           source: "AEC disclosures via OPAX's money data",
           ...(ctx.receiptScope ? { scope: ctx.receiptScope } : {}),
@@ -438,7 +442,7 @@ const TEMPLATES = [
         const isHigher = hidden.total > shown.total;
         return {
           template: this.id, deck: this.deck, kind: "higher-lower",
-          prompt: "Did " + hidden.label + " disclose a higher or lower lifetime total?",
+          prompt: "Did parties report a higher or lower total in receipts from " + hidden.label + "?",
           comparison: {
             shownLabel: shown.label, shownValue: shown.total, shownDisplay: fmtMoney(shown.total),
             hiddenLabel: hidden.label, hiddenValue: hidden.total, hiddenDisplay: fmtMoney(hidden.total),
@@ -449,7 +453,7 @@ const TEMPLATES = [
           ],
           fact: factLine(donorDisplayText(hidden),fmtMoney(hidden.total)),
           explanation:
-            shown.label + " disclosed " + fmtMoney(shown.total) + ", so the second figure is " +
+            "Parties reported " + fmtMoney(shown.total) + " in receipts from " + shown.label + ", so the second figure is " +
             (isHigher ? "higher" : "lower") + ".",
           source: "AEC disclosures via OPAX's money data",
           ...(ctx.receiptScope ? { scope: ctx.receiptScope } : {}),
@@ -470,12 +474,13 @@ const TEMPLATES = [
         if (trio.length < 3 || trio[0].total < 1.2 * trio[1].total || trio[1].total < 1.15 * trio[2].total) continue;
         return {
           template: this.id, deck: this.deck, kind: "order",
-          prompt: "Put these " + industryLabel(key).toLowerCase() + " donors in order, largest disclosed total first.",
+          prompt: "Order these " + industryLabel(key).toLowerCase() +
+            " receipt sources by what parties reported from each, largest first.",
           options: shuffled(trio.map((d) => ({ label: d.label, value: d.total })), rng),
           answer: trio.map((d) => d.label),
           fact: trio.map((d) => d.label + " " + fmtMoney(d.total)).join("; "),
           explanation:
-            "The ranking uses each donor's full disclosed total across the years covered by the money map.",
+            "The ranking counts every receipt type the parties reported from each source, across the years covered by the money map.",
           source: "AEC disclosures via OPAX's money data",
           ...(ctx.receiptScope ? { scope: ctx.receiptScope } : {}),
           link: donorProof(trio[0]),
@@ -498,11 +503,11 @@ const TEMPLATES = [
         if (min === max || donor.total < min || donor.total > max) continue;
         return {
           template: this.id, deck: this.deck, kind: "slider",
-          prompt: "How much has " + donor.label + " disclosed in total?",
+          prompt: "In total, how much have parties reported in receipts from " + donor.label + "?",
           answer: donor.total, min, max, scale: "log", format: "money",
           fact: factLine(donorDisplayText(donor), fmtMoney(donor.total)),
           explanation: "The range is set by real " + industryLabel(donor.industry).toLowerCase() +
-            " donor totals, and this is the donor's lifetime disclosed figure.",
+            " receipt sources, and the answer counts every receipt type the parties reported from this one.",
           source: "AEC disclosures via OPAX's money data",
           ...(ctx.receiptScope ? { scope: ctx.receiptScope } : {}),
           link: donorProof(donor),
@@ -514,34 +519,41 @@ const TEMPLATES = [
 
   {
     id: "money-top-donor-in-report", deck: "money",
+    // The report names its industries; the figures are the money map's donor
+    // figures (receiptGraph), as in every donor question, and never the report's
+    // own top_donors list: that sums every row by spelling, the donor's own
+    // declarations and other returns included, so it can run to several times
+    // the figure on the donor's record.
     build(ctx, rng) {
-      const cands = ctx.reports.filter((r) => {
-        const d = r.stats.donations;
-        return d && Array.isArray(d.top_donors) && d.top_donors.length >= 3;
-      });
+      const cands = ctx.reports.map((r) => {
+        const industries = new Set(r.stats.donations?.industries || []);
+        const list = ctx.donors.filter((d) => industries.has(d.industry) && d.total > 0)
+          .sort((a, b) => b.total - a.total);
+        return { r, list };
+      }).filter((c) => c.list.length >= 3);
       if (!cands.length) return null;
       for (let t = 0; t < 40; t++) {
-        const r = pick(cands, rng);
-        const list = r.stats.donations.top_donors;
+        const { r, list } = pick(cands, rng);
         const top = list[0];
         const distractors = shuffled(list.slice(1, 6), rng).slice(0, 2);
         if (distractors.length < 2) continue;
-        if (top[1] < 1.2 * distractors[0][1] || top[1] < 1.2 * distractors[1][1]) continue;
+        if (top.total < 1.2 * distractors[0].total || top.total < 1.2 * distractors[1].total) continue;
         const options = shuffled([
-          { label: top[0], correct: true },
-          ...distractors.map(([name]) => ({ label: name, correct: false })),
+          { label: top.label, correct: true },
+          ...distractors.map((d) => ({ label: d.label, correct: false })),
         ], rng);
         return {
           template: this.id, deck: this.deck, kind: "mc",
-          prompt: "These three are among the biggest donors tracked in the " + r.title +
-            " report. Which one has disclosed the most?",
+          prompt: "These three are among the largest receipt sources in the industries the " + r.title +
+            " report covers. Which one did parties report the most receipts from?",
           options,
-          fact: factLine(top[0], fmtMoney(top[1])),
+          fact: factLine(donorDisplayText(top), fmtMoney(top.total)),
           explanation:
-            distractors[0][0] + " disclosed " + fmtMoney(distractors[0][1]) + " and " +
-            distractors[1][0] + " disclosed " + fmtMoney(distractors[1][1]) + ".",
-          source: "AEC disclosures via OPAX's " + r.title + " report",
-          link: reportLink(r),
+            "Parties reported " + fmtMoney(distractors[0].total) + " from " + distractors[0].label + " and " +
+            fmtMoney(distractors[1].total) + " from " + distractors[1].label + ".",
+          source: "AEC disclosures via OPAX's money data",
+          ...(ctx.receiptScope ? { scope: ctx.receiptScope } : {}),
+          link: donorProof(top),
         };
       }
       return null;

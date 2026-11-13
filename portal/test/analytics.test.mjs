@@ -32,7 +32,7 @@ test('the three campaign tags on Opax links survive when they are plain slugs; e
   const event = beforeSend({ properties: { $current_url: 'https://opax.com.au/bill/x?utm_source=bluesky&utm_medium=social&utm_campaign=daily_record&utm_content=2026-09-26', utm_source: 'bluesky', utm_medium: 'social', utm_campaign: 'daily_record', utm_content: '2026-09-26', utm_term: 'private', gclid: 'private', fbclid: 'private', $client_session_initial_utm_source: 'private', $set_once: { $initial_utm_source: 'private' } } });
   assert.deepEqual([event.properties.utm_source, event.properties.utm_medium, event.properties.utm_campaign], ['bluesky', 'social', 'daily_record']);
   assert.equal(event.properties.utm_content, undefined);
-  assert.equal(event.properties.$current_url, 'https://opax.com.au/bill/x');
+  assert.equal(event.properties.$current_url, 'https://opax.com.au/bill/[id]');
   assert.ok(!JSON.stringify(event).includes('private'));
   const free = beforeSend({ properties: { $current_url: 'https://opax.com.au/', utm_source: 'my name is private', utm_campaign: 'x'.repeat(41), utm_medium: 7 } });
   assert.equal(free.properties.utm_source, undefined);
@@ -427,4 +427,76 @@ test('the press kit loads the shared event emitter and PostHog, and marks its as
   assert.ok(press.indexOf('/analytics.js?v=') > press.indexOf('/events.js?v='));
   assert.equal(press.match(/data-press-copy/g)?.length, 2);
   assert.ok((press.match(/<a data-press-asset href="\/(?:social|og)[^"]*\.png"/g) || []).length >= 3);
+});
+
+// --- Record paths are templates (telemetry scan 1.5, item 1) ---
+
+const RECORD_PATHS = {
+  '/subject/person/jane-private': '/subject/person/[slug]',
+  '/subject/party/private-party-of-australia': '/subject/party/[slug]',
+  '/subject/donor/private-donor-pty-ltd': '/subject/donor/[slug]',
+  '/subject/supplier/private-supplier': '/subject/supplier/[slug]',
+  '/subject/topic/private-topic': '/subject/topic/[slug]',
+  '/bill/r7777private': '/bill/[id]',
+  '/doc/2026-10-14-private-speech': '/doc/[slug]',
+  '/money/grants/federal/recipient/private-recipient': '/money/grants/[jurisdiction]/recipient/[id]',
+  '/money/receipts/private-receipt': '/money/receipts/[id]',
+};
+
+test('record paths become templates; directories, money views and templates themselves are unchanged', () => {
+  for (const [path, template] of Object.entries(RECORD_PATHS)) {
+    assert.equal(safePath(path), template);
+    assert.equal(safePath(`https://opax.com.au${path}?q=private#private`), template);
+    assert.equal(safePath(`https://opax.com.au/#${path}`), template, 'a route-shaped hash from older links');
+    assert.equal(safePath(template), template, 'a template passes through unchanged');
+  }
+  for (const path of ['/subject', '/subject/person', '/subject/party', '/bill', '/bills', '/doc', '/money', '/money/receipts', '/money/grants', '/money/contracts'])
+    assert.equal(safePath(path), path);
+  // Anything not a known kind or view is reader input, not a page.
+  assert.equal(safePath('/subject/private-name'), '/other');
+  assert.equal(safePath('/money/Private%20Name'), '/other');
+  assert.deepEqual(cleanEvent('opax_view', { page_path: '/subject/person/jane-private', page_section: 'subject:person' }), { page_path: '/subject/person/[slug]', page_section: 'subject:person' });
+});
+
+test('no record path survives in page_path, $pathname, $current_url or any referrer or entry field', () => {
+  for (const path of Object.keys(RECORD_PATHS)) {
+    const url = `https://opax.com.au${path}`;
+    const event = beforeSend({ event: '$pageview', properties: {
+      page_path: cleanEvent('opax_view', { page_path: path }).page_path,
+      $pathname: path, $current_url: url, $referrer: url, $referring_domain: 'opax.com.au',
+      $initial_referrer: url, $initial_current_url: url, $initial_pathname: path,
+      $session_entry_url: url, $session_entry_pathname: path, $session_entry_referrer: url,
+      $prev_pageview_pathname: path, $set_once: { $initial_pathname: path },
+    } });
+    const p = event.properties;
+    assert.equal(p.$pathname, RECORD_PATHS[path]);
+    assert.equal(p.$current_url, `https://opax.com.au${RECORD_PATHS[path]}`);
+    assert.equal(p.page_path, RECORD_PATHS[path]);
+    assert.ok(!/private/.test(JSON.stringify(event)), JSON.stringify(event));
+  }
+});
+
+test('a record page view reaches GA and PostHog as its template only', async () => {
+  const { runInNewContext } = await import('node:vm');
+  const { context, location, emit } = browserHarness();
+  const captured = [];
+  Object.assign(context, { cleanEvent, beforeSend, automationReason, likelyBot, whenMeasurable });
+  let options;
+  context.posthog = { init(_t, o) { options = o; }, capture: (event, properties) => captured.push({ event, properties }) };
+  Object.assign(location, { href: 'https://opax.com.au/subject/person/jane-private', pathname: '/subject/person/jane-private', search: '' });
+  for (const file of ['events', 'ga']) runInNewContext(readFileSync(new URL(`../public/${file}.js`, import.meta.url), 'utf8'), context);
+  runInNewContext(readFileSync(new URL('../analytics/index.js', import.meta.url), 'utf8').replace(/^import .*;\n/gm, ''), context);
+  emit('DOMContentLoaded');
+  Object.assign(location, { href: 'https://opax.com.au/doc/2026-10-14-private-speech', pathname: '/doc/2026-10-14-private-speech' });
+  emit('opax:route');
+  emit('opax:analytics', { event: 'opax_share', properties: { kind: 'copy_link', record_type: 'doc' } });
+  // The SDK's own events go through before_send.
+  const sdk = captured.map((c) => options.before_send({ event: c.event, properties: { ...c.properties } }));
+  assert.deepEqual(captured.map((c) => [c.event, c.properties.$pathname ?? c.properties.page_path]),
+    [['$pageview', '/subject/person/[slug]'], ['$pageview', '/doc/[slug]'], ['opax_share', '/doc/[slug]']]);
+  assert.deepEqual(captured.map((c) => c.properties.page_section), ['subject:person', 'doc', 'doc']);
+  const ga = Array.from(context.window.opaxGaLayer.filter((e) => e[0] === 'event'), (e) => e[2]);
+  assert.deepEqual(Array.from(ga, (e) => e.page_location), ['https://opax.com.au/subject/person/[slug]', 'https://opax.com.au/doc/[slug]', 'https://opax.com.au/doc/[slug]']);
+  assert.equal(ga[1].page_referrer, 'https://opax.com.au/subject/person/[slug]');
+  assert.ok(!/private/.test(JSON.stringify([captured, sdk, context.window.dataLayer, ga])));
 });

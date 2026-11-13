@@ -1,5 +1,5 @@
 import {receiptMeasureLabel,receiptDollars,UNTYPED_RECEIPTS_LABEL} from './receipt-copy'
-import {donorAssociatedTo,donorDisclosure,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
+import {donorAssociatedTo,donorDisclosure,hasPartyReceipts,publicFundingOnly,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {financialYear, receiptPeriodQuery} from './receipt-period'
 import {latestReceiptYear, readReceiptPeriod, type PeriodOption} from './receipt-reading'
 
@@ -180,7 +180,8 @@ const typedFinancialYear=(period:string):number|undefined=>{
 function receiptEdges(graph:ReceiptGraph):CalculationEdge[] {
   if(!hasReceiptTypes(graph))return graph.edges
   return graph.edges.flatMap((edge):CalculationEdge[]=>!Object.values(edge.by_type??{}).some(Number.isFinite)?[{...edge,untyped:true as const}]:Object.entries(edge.by_type??{}).flatMap(([type,total])=>{
-    if(!Number.isFinite(total))return []
+    // Public Funding is election funding, never a donor's receipt (A35): no total, ranking or line counts it.
+    if(!Number.isFinite(total)||type==='public_funding')return []
     const periods=Object.entries(edge.by_type_year??{}).flatMap(([period,types])=>{
       const cell=types[type]
       return cell&&Number.isFinite(cell[0])&&Number.isInteger(cell[1])&&cell[1]>=0?[{period,cell}]:[]
@@ -377,5 +378,51 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
     period_note:'Years use the first year of a financial year; election returns may use the polling year. Undated receipts are excluded when a year filter is requested. Dollar amounts are nominal, not inflation-adjusted.',
     coverage:graph.meta.coverage,methodology:graph.meta.methodology,generated:graph.meta.generated,
     sources:[{title:`${subject}: disclosed party receipts`,url},...(donationsUrl&&matching?[{title:`${subject}: donations received`,url:donationsUrl}]:[])],
+  }
+}
+
+/** The measure line for an amount only the donor's own return declares. */
+export const DONOR_DECLARED_LABEL="declared by the donor; the party's returns show no matching receipt"
+type ReceiptResult=Exclude<ReturnType<typeof receiptAnswer>,null|{needs_scope:boolean}>
+/**
+ * What voice is given for a receiptAnswer. When every matching donor-to-party flow
+ * has typed cells but no receipt on the party's own returns (hasPartyReceipts is
+ * false: only the donor's own return declares it), receiptAnswer falls back to the
+ * flows' record totals under the "no type breakdown" label. Those are the donor's
+ * declarations, not receipts, so voice gets them as that, worded as Ask's
+ * money_totals words them, with no receipt figures to read out. Any other answer
+ * is returned as it is.
+ */
+export function voiceReceiptData(graph:ReceiptGraph,found:NonNullable<ReturnType<typeof receiptAnswer>>) {
+  if(!('type_breakdown' in found)||!found.flows.length)return found
+  const result=found as ReceiptResult
+  const edges=result.flows.flatMap(flow=>graph.edges.filter(e=>e.source===flow.donor_id&&e.target===flow.party_id&&!e.flow&&!e.grant))
+  // Public Funding on a party's return is never a donor's declaration (A35): NSW Efa is not "declared on its own donor return".
+  if(!edges.length||edges.some(e=>publicFundingOnly(e))||!edges.every(e=>e.by_type&&!hasPartyReceipts(e)))return found
+  const donors=new Set(result.flows.map(f=>f.donor_id)),parties=new Set(result.flows.map(f=>f.party_id))
+  const records=(n:number)=>`${n.toLocaleString('en-AU')} record${n===1?'':'s'}`
+  const declared=donors.size===1?'declared by the donor':'declared by the donors'
+  const returns=parties.size===1?`${result.flows[0].party}'s returns show no matching receipt`:"the parties' returns show no matching receipt"
+  const measure_label=donors.size===1&&parties.size===1?DONOR_DECLARED_LABEL:`${declared}; ${returns}`
+  const period=result.period?` (financial year${/ to |;/.test(result.period)?'s':''} ${result.period})`:''
+  const one=donors.size===1?result.flows[0].donor:null
+  const who=one??(result.selected_donors.length||result.selected_industries.length?`Donors in ${result.subject}`:'Donors')
+  const recipient=parties.size===1?result.flows[0].party:'federal parties'
+  const answer=[result.period_reading,result.scope_reading].filter(Boolean).map(r=>r+' ').join('')
+    +`${who} declared ${receiptDollars(result.total_aud)} to ${recipient} on ${one?'its':'their'} own donor return${result.receipts===1?'':'s'}${period}, across ${records(result.receipts)}. `
+    +`${returns[0].toUpperCase()+returns.slice(1)}, so OPAX's money figures, which count each gift once from the party's own return, do not include ${result.receipts===1?'this amount':'these amounts'}.`
+  const {since,until,as_of,requested_since,requested_until,basis}=result.period_coverage
+  return {
+    answer,donor_declared_only:true as const,measure:'donor_declared' as const,measure_label,
+    donor_declared_aud:result.total_aud,records:result.receipts,period:result.period,
+    period_coverage:{since,until,as_of,requested_since,requested_until,matched:true,basis,note:'Years identify financial years by starting year. The amounts are the donors\' own declarations.'},
+    requested_years:result.requested_years,jurisdiction:result.jurisdiction,subject:result.subject,
+    flows:result.flows.map(f=>({donor:f.donor,donor_href:f.donor_href,return_reference:f.return_reference,party:f.party,donor_declared_aud:f.total_aud})),
+    selected_donors:result.selected_donors,selected_parties:result.selected_parties,selected_industries:result.selected_industries,
+    ...(result.period_reading?{period_reading:result.period_reading}:{}),period_options:result.period_options,
+    ...(result.scope_reading?{scope_reading:result.scope_reading}:{}),scope_options:result.scope_options,
+    scope:"Amounts the donors declared on their own federal donor returns. The parties' own returns list no matching receipt, so these amounts are not in OPAX's money figures.",
+    generated:result.generated,
+    sources:result.sources.map(s=>({title:`${result.subject}: ${declared}`,url:s.url})),
   }
 }

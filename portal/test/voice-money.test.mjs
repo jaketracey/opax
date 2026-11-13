@@ -205,10 +205,10 @@ test('voice lending questions cannot reuse mixed receipt totals',async()=>{
  const receipt=await runVoiceTool('search_records',{query:'How much money from Westpac Banking Corporation to Labor?'},env,async()=>{throw Error('Unexpected network retrieval')});
  assert.equal(receipt.data.measure,'donations');assert.equal(receipt.data.total_aud,875018);assert.equal(receipt.data.all_types_aud,47331887);
  assert.match(receipt.data.answer,/^Westpac Banking Corporation: \$875,018 in donations received \(AEC receipt type: Donation Received\), financial years 1998–99 to 2024–25, across 35 records\./);
- // Untyped fallback: without receipt types the same question shows the mixed total, labelled as including loans.
+ // Untyped fallback: without receipt types the same question shows the mixed total, labelled by its types, never as loans (A34 review).
  const legacy=await runVoiceTool('search_records',{query:'How much money from Westpac Banking Corporation to Labor?'},{...env,ASSETS:moneyAssets('untyped')},async()=>{throw Error('Unexpected network retrieval')});
  assert.equal(legacy.data.measure,'receipts_all');assert.equal(legacy.data.total_aud,42540985);
- assert.match(legacy.data.answer,/disclosed receipts, all types, including bank loans to the party/);
+ assert.match(legacy.data.answer,/disclosed receipts, all types \(donations, subscriptions and other receipts\)/);
 });
 
 test('voice uses the shared family calculator, with its entire table and citations',async()=>{
@@ -291,4 +291,41 @@ test('voice find_connections says the day the connections run to, and claims non
  out=await runVoiceTool('find_connections',{query:'harbour'},env,unrelated);
  assert.equal('as_at' in out.data,false);
  assert.equal(out.data.connections.length,1);
+});
+
+// A donor whose flows only its own donor return declares (typed cells, no receipt on the
+// party's returns: hasPartyReceipts is false) is given to voice as that declaration, worded
+// as Ask's money_totals words it, never as receipts or "no type breakdown".
+test('voice gives a donor-declared-only donor as its declaration, never as receipts',async()=>{
+ const meta={receipt_types:{available:true,schema:1,donation_type:'donation_received'},generated:'2026-11-13'};
+ const declared={meta,nodes:[
+  {id:'donor:quill',kind:'donor',label:'Example Quill Holdings Pty Ltd',industry:'finance',total:64250,count:3,by_type:{},by_type_year:{}},
+  {id:'donor:ferry',kind:'donor',label:'Example Ferry Co',industry:'transport',total:900,count:1,by_type:{donation_received:900},by_type_year:{'2021-22':{donation_received:[900,1]}}},
+  {id:'party:Labor',kind:'party',label:'Labor'},{id:'party:Liberal',kind:'party',label:'Liberal'}],edges:[
+  {source:'donor:quill',target:'party:Labor',total:64250,count:3,firstYear:2018,lastYear:2019,byYear:{2018:[40000,2],2019:[24250,1]},by_type:{},by_type_year:{}},
+  {source:'donor:ferry',target:'party:Liberal',total:900,count:1,firstYear:2021,lastYear:2021,byYear:{2021:[900,1]},by_type:{donation_received:900},by_type_year:{'2021-22':{donation_received:[900,1]}}}]};
+ const {voiceReceiptData,DONOR_DECLARED_LABEL}=await import(pathToFileURL(join(dir,'voice-money.js')));
+ assert.equal(DONOR_DECLARED_LABEL,"declared by the donor; the party's returns show no matching receipt");
+ const question='How much has Example Quill Holdings given to Labor?';
+ const found=receiptAnswer(declared,question,'federal','https://opax.test');
+ assert.equal(found.type_breakdown,false,'the shared calculator still falls back (Ask reads it unchanged)');
+ const data=voiceReceiptData(declared,found);
+ assert.equal(data.donor_declared_only,true);assert.equal(data.measure_label,DONOR_DECLARED_LABEL);
+ assert.equal(data.donor_declared_aud,64250);assert.equal(data.records,3);
+ assert.equal(data.answer,"Example Quill Holdings Pty Ltd declared $64,250 to Labor on its own donor returns (financial years 2018–19 to 2019–20), across 3 records. Labor's returns show no matching receipt, so OPAX's money figures, which count each gift once from the party's own return, do not include these amounts.");
+ for(const key of ['total_aud','receipts','all_types_aud','other_receipts_aud','type_breakdown','by_party','by_donor'])assert.equal(key in data,false,key);
+ // Through the voice tool: every word voice can read, links aside, says declaration and never receipts.
+ const assets={fetch:async request=>Response.json(new URL(request.url).pathname==='/graph/money.json'?declared:{meta:{},nodes:[],edges:[]})};
+ const voice=await runVoiceTool('search_records',{query:question,kind:'receipt'},{ASSETS:assets,COMMUNITY_ORIGIN:'https://opax.test'},async()=>{throw Error('No speech retrieval')});
+ assert.equal(voice.data.answer,data.answer);assert.equal(voice.data.measure_label,DONOR_DECLARED_LABEL);
+ const words=JSON.stringify(voice,(key,value)=>typeof value==='string'&&/^https?:/.test(value)?undefined:value);
+ assert.doesNotMatch(words,/receipts|no type breakdown|receipt types/i);
+ assert.match(words,/declared/);
+ // A donor with receipts on the party's returns is unchanged.
+ const typed=receiptAnswer(declared,'How much has Example Ferry Co given to Liberal?','federal','https://opax.test');
+ assert.equal(voiceReceiptData(declared,typed),typed);assert.equal(typed.total_aud,900);
+ // A pair the export holds with no typed cells at all keeps the older fallback label: it is not a declaration.
+ const untyped={...declared,edges:declared.edges.map(({by_type,by_type_year,...e})=>e)};
+ const old=receiptAnswer(untyped,question,'federal','https://opax.test');
+ assert.equal(voiceReceiptData(untyped,old),old);
 });

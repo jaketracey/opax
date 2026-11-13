@@ -12,7 +12,7 @@ import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, b
 import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../public/datatable.js'
 import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import {chamberLabel, machineLabelHTML, partyLabelHTML} from '../public/party-page.js'
-import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML} from '../public/held-back-transcripts.js'
+import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML, noHansardHeldHTML} from '../public/held-back-transcripts.js'
 import {divisionTableConfig, voteTableConfig, personVoteKeys, personVoteRecords, divisionRows, votingRows, voteTablePage, voteTableHTML} from '../public/vote-tables.js'
 import type {Query} from '../public/datatable.js'
 import {personVideos, videoSectionHTML, type VideoRow} from '../public/video-card.js'
@@ -30,6 +30,8 @@ interface Person {
   name: string; full?: string; pid?: string; party?: string | null; party_now?: string | null;
   current?: boolean; states: string[]; chambers: string[]; speeches?: number | null;
   speech_scope?: unknown;
+  /** A list-only profile: no speeches attributed (public/held-back-transcripts.js noHansardHeldHTML). */
+  roster_only?: boolean;
   representation?: { electorate: string; jurisdiction: string; chamber: string }[];
 }
 interface Seat {
@@ -54,6 +56,8 @@ export interface Division {
   recorded_ayes?: number; recorded_noes?: number; unknown_party_count?: number;
   members?: { name: string; person_id?: string; person_slug?: string; party?: string; vote: string; party_source?: { basis: string; url?: string | null; source_party?: string }; party_withheld?: { source_party: string; reason?: string } }[];
   bills?: { key: string; title: string; url?: string }[];
+  /** Set by the division export when the chamber's own dated party record covers this date (scripts/vote_parties.py). */
+  _meta?: { party_dated?: { record: string; from: string; through: string } };
 }
 interface Vote { question?: string; name?: string; title?: string; stage?: string; date?: string; vote?: string; division_slug?: string; source_url?: string }
 interface Votes { name: string; jurisdiction: string; for?: Vote[]; against?: Vote[] }
@@ -268,7 +272,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   }
   body += `</ul>${original(profileUrl)}<p>${link('/parliamentarians.json','Parliamentarian data (JSON)')}. Recorded representation can include historical seats; affiliation with no current-roster flag is not verified as current or former.</p>`
   // The notes on what the speech count leaves out sit with the speeches, never in the head.
-  body += heldBackTranscriptsHTML(p.pid, heldBackCounts) + chairRoleTranscriptsHTML(p.pid, chairRoleCounts)
+  body += noHansardHeldHTML(p) + heldBackTranscriptsHTML(p.pid, heldBackCounts) + chairRoleTranscriptsHTML(p.pid, chairRoleCounts)
   // The Senate's own video of a first speech, matched to this roster row by the fetcher; nothing when there is none.
   body += videoSectionHTML('First speech',personVideos(video?.videos,slugs.get(p.name),p),{id:'ssr-first-speech',note:'Video published by the Senate Public Information Office on YouTube.',after:`<p class="video-more">${link('/video/senate?kind=first-speech','All first speeches')}</p>`})
   if (!p.speech_scope) {
@@ -371,6 +375,19 @@ export function mapSpanPhrase(graph: unknown): string {
 }
 
 /**
+ * The span in the homepage map card's lede ("Disclosed funding between donors
+ * and parties, 1998–99 to 2024–25"), by the rule the card's headline and scope
+ * line use (receiptHeadline), not the file's wider coverage. Null when the file
+ * has no typed cells; the page then keeps its own "from federal returns".
+ */
+export function homeMapSpan(graph: unknown): string | null {
+  const {firstYear, lastYear} = receiptHeadline(graph)
+  if (firstYear == null || lastYear == null) return null
+  const fy = (year: number) => `${year}–${String((year + 1) % 100).padStart(2, '0')}`
+  return firstYear === lastYear ? fy(firstYear) : `${fy(firstYear)} to ${fy(lastYear)}`
+}
+
+/**
  * Who the federal map draws, counted from the file itself: every donor node,
  * and, where the export says how it chose them (meta.donor_nodes_by_total,
  * meta.donors_via_public_money, meta.public_money_floor), the two groups.
@@ -456,10 +473,12 @@ function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>,
   const listed=members.length || tallied+missing
   const labelled=listed-missing
   const plural=(n: number)=>`${count(n)} ${n===1 ? 'member' : 'members'}`
-  // Federal Senate labels are never checked against dated records (none are held yet), and the source can
-  // give a senator's later party on every date: say so rather than claim they are dated.
-  const senate=d.house==='senate' && (d.jurisdiction ?? 'federal')==='federal'
-  const senateNote=' These are the division source’s labels and can show a senator’s later party rather than the one held on this date, because no dated Senate party records are held yet.'
+  // The division source can give a senator's later party on every date. Federal Senate labels are checked
+  // against the Parliamentary Handbook's dated party records inside their dated range (_meta.party_dated). A
+  // Senate page without that mark (outside the range, or with a label no dated record checks: a senator whose
+  // only record is undated and names another party, or a reviewed hold) says its labels are the source's.
+  const senate=d.house==='senate' && (d.jurisdiction ?? 'federal')==='federal' && !d._meta?.party_dated
+  const senateNote=' These are the division source’s labels and can show a senator’s later party rather than the one held on this date, because the dated Senate party records held do not cover this date.'
   const origin=!fromRoster ? (senate ? `Party labels are those given in the division record.${senateNote}` : 'Party labels are those recorded for this division, rather than current affiliations.')
     : fromRoster>=labelled ? 'The division record gives no parties. Each label here is the one a dated parliamentary roster records for that member on this date.'
     : `Party labels are those recorded for this division, except for ${plural(fromRoster)} the division record lists without a party: their labels are the ones a dated parliamentary roster records for them on this date.${senate ? senateNote.replace(' These are', ' The others are') : ''}`

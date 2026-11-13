@@ -1,5 +1,5 @@
-import {donorDisclosure} from './donor-disclosure.js?v=8c73ceafd6';
-import {subjectUrl} from './canonical-urls.js?v=c40e3d805e';
+import {donorDisclosure} from './donor-disclosure.js?v=dffa19bbff';
+import {subjectUrl} from './canonical-urls.js?v=bcc9a57bab';
 import {moneyFlowType, filterMoneyEdges, readMoneyFilters} from './money-records.js';
 
 const labels={receipts:'Political receipts',contracts:'Contract values',grants:'Grant awards'};
@@ -9,7 +9,7 @@ export function filterMoneyConnectionView(graph,params) {
 }
 
 /** Source names and amounts are preserved; only confident donor matches link.
- * @returns {import('./datatable.js?v=5fe413541f').DataTableConfig} */
+ * @returns {import('./datatable.js?v=f055b6abe2').DataTableConfig} */
 export function moneyConnectionsConfig(graph) {
   const nodes=new Map(graph.nodes.map(n=>[n.id,n]));
   const rows=[],types=new Set();

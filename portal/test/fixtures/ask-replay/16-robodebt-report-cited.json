@@ -1,0 +1,413 @@
+{
+ "id": "robodebt-report-cited",
+ "question": "Who was held accountable for robodebt?",
+ "input": {
+  "kind": "speech"
+ },
+ "model": [
+  {
+   "tool_calls": [
+    {
+     "name": "royal_commissions",
+     "args": {
+      "view": "profile",
+      "commission": "robodebt"
+     }
+    }
+   ]
+  },
+  {
+   "tool_calls": [
+    {
+     "name": "answer",
+     "args": {
+      "points": [
+       {
+        "claim": "The Royal Commission found that the Scheme was approved by Cabinet and went ahead without the legislative change DSS had said averaging needed.",
+        "id": "fact-3",
+        "quote": "The Scheme was approved by Cabinet"
+       },
+       {
+        "claim": "The Royal Commission concluded the scheme was a costly failure of public administration, in both human and economic terms.",
+        "quote": "It was a costly failure of public administration, in both human and economic terms."
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "text": {
+    "sentences": [
+     {
+      "text": "The Royal Commission found that the Scheme was approved by Cabinet and went ahead without the legislative change DSS had said averaging needed.",
+      "facts": [
+       1
+      ]
+     },
+     {
+      "text": "The Royal Commission concluded the scheme was a costly failure of public administration, in both human and economic terms.",
+      "facts": [
+       2
+      ]
+     }
+    ]
+   }
+  }
+ ],
+ "services": [],
+ "assets": {
+  "/royal-commissions/index.json": {
+   "meta": {
+    "schema": 1,
+    "built_at": "2026-11-12T10:32:18+00:00",
+    "snapshot_at": "2026-11-12T10:32:17+00:00",
+    "fetched_at": "2026-11-11T02:56:46+00:00",
+    "caveats": [
+     "Recommendations are the commission's own words, cut at the report's own numbered headings, with the PDF and page each was read from.",
+     "A commission's findings and recommendations are not findings of criminal or civil liability.",
+     "Status appears only where a government publishes an official status for that recommendation, in the government's own words. Where none is published the status is unknown, not unimplemented.",
+     "A government response or implementation report is listed as a document; OPAX does not grade whether a recommendation was accepted or implemented.",
+     "Commissions listed with recommendations not_extracted may still have made recommendations; OPAX could not read them reliably from an official copy it can reach.",
+     "Hearing transcripts are evidence given to a commission, not its findings. OPAX lists them as documents; where the publisher licenses them under CC BY 4.0 (Robodebt, Antisemitism and Social Cohesion, NSW Healthcare Funding) their text is searchable under /transcripts/, except that a transcript recording a non-publication order or a pseudonymous witness is pointed to by page and not quoted.",
+     "Where a court has ruled on parts of a report, the ruling is recorded in court_context exactly as the cited official page states it, and travels with the report.",
+     "Documents marked as a manual publisher download were supplied by the OPAX maintainer from the publisher's own site, where that host refuses OPAX's automated agent. Each is cited to the publisher's URL and checked against its recorded SHA-256.",
+     "Boards and commissions of inquiry are listed with royal commissions as comparable public inquiries; inquiry_type gives each body's actual type."
+    ],
+    "counts": {
+     "commissions": 23,
+     "recommendations": 1432,
+     "with_status": 227,
+     "responses": 13,
+     "commissions_with_recommendations": 13,
+     "commissions_with_status": 1,
+     "commissions_with_responses": 4,
+     "transcripts": 218,
+     "manual_documents": 225,
+     "by_inquiry_type": {
+      "board_of_inquiry": 1,
+      "commission_of_inquiry": 5,
+      "royal_commission": 17
+     },
+     "by_jurisdiction": {
+      "Cth": {
+       "commissions": 8,
+       "recommendations": 684
+      },
+      "NSW": {
+       "commissions": 1,
+       "recommendations": 0
+      },
+      "Vic": {
+       "commissions": 7,
+       "recommendations": 612
+      },
+      "Qld": {
+       "commissions": 2,
+       "recommendations": 0
+      },
+      "WA": {
+       "commissions": 1,
+       "recommendations": 0
+      },
+      "SA": {
+       "commissions": 1,
+       "recommendations": 136
+      },
+      "Tas": {
+       "commissions": 1,
+       "recommendations": 0
+      },
+      "ACT": {
+       "commissions": 1,
+       "recommendations": 0
+      },
+      "NT": {
+       "commissions": 1,
+       "recommendations": 0
+      }
+     }
+    },
+    "gaps": [
+     "Commonwealth royal commission sites (royalcommission.gov.au and the per-commission hosts), the Attorney-General's Department, other Commonwealth department hosts and pmc.gov.au refused OPAXBot (connection reset, tarpit or bot challenge). Commonwealth reports load only where the Parliament of Victoria, the Treasury or a maintainer-supplied publisher copy serves them. Remaining Commonwealth royal commission volumes and releases are open: https://www.royalcommission.gov.au/reports",
+     "NSW Parliament refused OPAXBot (HTTP 403); no New South Wales commission is loaded. The NSW healthcare funding Special Commission of Inquiry is open: https://www.health.nsw.gov.au/Reports/Pages/special-commission-inquiry-funding.aspx",
+     "South Australia's Royal Commission into Domestic, Family and Sexual Violence and its implementation plan are not loaded: https://dhs.sa.gov.au/how-we-help/domestic-family-and-sexual-violence/royal-commission-into-domestic-family-and-sexual-violence",
+     "The full volumes of Tasmania's Commission of Inquiry into the Tasmanian Government's Responses to Child Sexual Abuse in Institutional Settings are not loaded: https://www.commissionofinquiry.tas.gov.au/report",
+     "The Victorian royal commission sites (rcfv.com.au, royalcommission.vic.gov.au) reset OPAXBot connections; Victorian reports load from the Parliament of Victoria's tabled copies.",
+     "Only Victoria's Royal Commission into Family Violence has a government-published, per-recommendation implementation status that OPAX reads. Other trackers (for example the Commonwealth's) are on hosts that refuse OPAXBot."
+    ]
+   },
+   "commissions": [
+    {
+     "id": "cth-robodebt",
+     "name": "Royal Commission into the Robodebt Scheme",
+     "inquiry_type": "royal_commission",
+     "jurisdiction": "Cth",
+     "jurisdiction_name": "Commonwealth",
+     "established": "2022-08-18",
+     "commissioners": [
+      {
+       "name": "Catherine Holmes AC SC",
+       "role": "Royal Commissioner"
+      }
+     ],
+     "interim_report_date": null,
+     "final_report_date": "2023-07-07",
+     "reports": [
+      {
+       "key": "final",
+       "kind": "final_report",
+       "title": "Report of the Royal Commission into the Robodebt Scheme",
+       "date": "2023-07-07",
+       "date_basis": "stated",
+       "page_url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+       "recommendations": 57,
+       "recommendations_status": "extracted",
+       "acquisition": "manual publisher download supplied by the OPAX maintainer, 11 Nov 2026"
+      }
+     ],
+     "counts": {
+      "reports": 1,
+      "recommendations": 57,
+      "with_status": 0,
+      "responses": 0,
+      "transcripts": 47,
+      "court_context": 0
+     },
+     "status_as_published": {},
+     "recommendations_status": "extracted",
+     "status_source": null,
+     "file": "/royal-commissions/commission-cth-robodebt.json"
+    }
+   ]
+  },
+  "/royal-commissions/commission-cth-robodebt.json": {
+   "schema": 1,
+   "snapshot_at": "2026-11-12T10:32:17+00:00",
+   "commission": {
+    "id": "cth-robodebt",
+    "name": "Royal Commission into the Robodebt Scheme",
+    "inquiry_type": "royal_commission",
+    "jurisdiction": "Cth",
+    "jurisdiction_name": "Commonwealth",
+    "site": null,
+    "established": {
+     "date": "2022-08-18",
+     "instrument": "Letters Patent",
+     "quote": "established by Letters Patent on 18 August 2022",
+     "cite": {
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "document": "Report of the Royal Commission into the Robodebt Scheme",
+      "page": 11
+     }
+    },
+    "commissioners": [
+     {
+      "name": "Catherine Holmes AC SC",
+      "role": "Royal Commissioner",
+      "quote": "Catherine Holmes AC SC Royal Commissioner",
+      "cite": {
+       "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+       "document": "Report of the Royal Commission into the Robodebt Scheme",
+       "page": 3
+      }
+     }
+    ],
+    "interim_report_date": null,
+    "final_report_date": "2023-07-07",
+    "reports": [
+     {
+      "key": "final",
+      "kind": "final_report",
+      "title": "Report of the Royal Commission into the Robodebt Scheme",
+      "date": "2023-07-07",
+      "date_basis": "stated",
+      "page_url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "files": [
+       {
+        "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+        "name": "robodebt-accessible-full-report.PDF",
+        "pages": 1052,
+        "bytes": 21219578,
+        "sha256": "9837ca00ecf7022694abb9eae1be57f49a8a791d4df8951339be282a2c76cf42"
+       }
+      ],
+      "cite": {
+       "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+       "document": "Report of the Royal Commission into the Robodebt Scheme"
+      },
+      "acquisition": "manual publisher download supplied by the OPAX maintainer, 11 Nov 2026",
+      "document_kind": "full final report",
+      "rights": "© Commonwealth of Australia 2023. With the exception of the Coat of Arms and where otherwise stated, all material presented in this publication is provided under a Creative Commons Attribution 4.0 International licence (imprint, page 2).",
+      "date_cite": {
+       "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+       "document": "Report of the Royal Commission into the Robodebt Scheme",
+       "page": 3
+      },
+      "date_quote": "7 July 2023 His Excellency General the Honourable David Hurley",
+      "recommendations": 57,
+      "recommendations_status": "extracted"
+     }
+    ],
+    "responses": [],
+    "transcripts": [
+     {
+      "key": "transcript-2022-09-27-7119697ec0ba",
+      "kind": "hearing_transcript",
+      "title": "Transcript Initial Hearing 27 September 2022",
+      "date": "2022-09-27",
+      "date_basis": "stated",
+      "page_url": "https://robodebt.royalcommission.gov.au/publications/transcript-initial-hearing-27-september-2022",
+      "files": [
+       {
+        "url": "https://robodebt.royalcommission.gov.au/system/files/2022-11/transcript-initial-hearing-27-september-2022.pdf",
+        "name": "transcript-initial-hearing-27-september-2022.pdf",
+        "pages": 15,
+        "bytes": 418273,
+        "sha256": "7119697ec0bacedb2598541db4ff9fb2268e2b934247791e4ccb9b184e5c39a3"
+       }
+      ],
+      "cite": {
+       "url": "https://robodebt.royalcommission.gov.au/publications/transcript-initial-hearing-27-september-2022",
+       "document": "Transcript Initial Hearing 27 September 2022"
+      },
+      "acquisition": "manual publisher download supplied by the OPAX maintainer, 12 Nov 2026",
+      "document_kind": "public hearing transcript",
+      "rights": "The commission's website licenses Commonwealth-owned material under CC BY 4.0, excluding third-party content and logos. Notices and redactions on individual transcripts still apply.",
+      "date_cite": {
+       "url": "https://robodebt.royalcommission.gov.au/system/files/2022-11/transcript-initial-hearing-27-september-2022.pdf",
+       "document": "Transcript Initial Hearing 27 September 2022",
+       "page": 1
+      },
+      "date_quote": "27 SEPTEMBER 2022",
+      "hearing": "2022-09-27 · day 1 initial hearing",
+      "full_text": {
+       "url": "/transcripts/cth-robodebt/transcript-2022-09-27-7119697ec0ba.json",
+       "quote_policy": "quote"
+      }
+     },
+     {
+      "key": "transcript-2022-10-13-4f3860779840",
+      "kind": "hearing_transcript",
+      "title": "Transcript Directions Hearing 13 October 2022",
+      "date": "2022-10-13",
+      "date_basis": "stated",
+      "page_url": "https://robodebt.royalcommission.gov.au/publications/transcript-directions-hearing-13-october-2022",
+      "files": [
+       {
+        "url": "https://robodebt.royalcommission.gov.au/system/files/2022-11/transcript-directions-hearing-13-october-2022.pdf",
+        "name": "transcript-directions-hearing-13-october-2022.pdf",
+        "pages": 15,
+        "bytes": 271491,
+        "sha256": "4f38607798400f16402a54e0721a476276aada42111b0ae5b93b5854fb5c0291"
+       }
+      ],
+      "cite": {
+       "url": "https://robodebt.royalcommission.gov.au/publications/transcript-directions-hearing-13-october-2022",
+       "document": "Transcript Directions Hearing 13 October 2022"
+      },
+      "acquisition": "manual publisher download supplied by the OPAX maintainer, 12 Nov 2026",
+      "document_kind": "public hearing transcript",
+      "rights": "The commission's website licenses Commonwealth-owned material under CC BY 4.0, excluding third-party content and logos. Notices and redactions on individual transcripts still apply.",
+      "date_cite": {
+       "url": "https://robodebt.royalcommission.gov.au/system/files/2022-11/transcript-directions-hearing-13-october-2022.pdf",
+       "document": "Transcript Directions Hearing 13 October 2022",
+       "page": 1
+      },
+      "date_quote": "13 OCTOBER 2022",
+      "hearing": "2022-10-13 · day 2 directions hearing",
+      "full_text": {
+       "url": "/transcripts/cth-robodebt/transcript-2022-10-13-4f3860779840.json",
+       "quote_policy": "quote"
+      }
+     }
+    ],
+    "court_context": [],
+    "reference_pages": [],
+    "recommendations": [
+     {
+      "number": "10.1",
+      "report": "final",
+      "text": "Services Australia design its policies and processes with a primary emphasis on the recipients it is meant to serve. That should entail: • avoiding language and conduct which reinforces feelings of stigma and shame associated with the receipt of government support when it is needed • facilitating easy and efficient engagement with options of online, in person and telephone communication which is sensitive to the particular circumstances of the customer cohort, including itinerant lifestyles, lack of access to technology, lack of digital literacy and the particular difficulties rural and remote living • explaining processes in clear terms and plain language in communication to customers, and acting with sensitivity to financial and other forms of stress experienced by the customer cohort and taking all practicable steps to avoid the possibility that interactions with the government might exacerbate those stresses or introduce new ones.",
+      "cite": {
+       "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+       "document": "Report of the Royal Commission into the Robodebt Scheme",
+       "page": 19
+      },
+      "status": null
+     },
+     {
+      "number": "11.1",
+      "report": "final",
+      "text": "Services Australia should ensure that for any cohort of recipients that is intended to be excluded from a compliance process or activity, there is clear documentation of the exclusion criteria, and, unless there is a technical reason it cannot be, the mechanism by which that is to occur should be reflected in the relevant technical specification documents.",
+      "cite": {
+       "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+       "document": "Report of the Royal Commission into the Robodebt Scheme",
+       "page": 19
+      },
+      "status": null
+     }
+    ],
+    "recommendations_status": "extracted",
+    "status_source": null,
+    "notes": [
+     "The report's list of recommendations (page 19) refers to 57 recommendations; 56 are numbered there. The other, in the list's closing observations (page 27), is headed \"Section 34 of the Cth FOI Act should be repealed\" and has no number; it is loaded under that heading. The Australian Government's response refers to 56 recommendations."
+    ],
+    "gaps": [
+     "royalcommission.gov.au and the other Commonwealth royal commission hosts refuse OPAXBot, so the weekly refresh cannot re-read this document; it is a manual supplement and its record is carried forward unchanged where the PDF is absent."
+    ]
+   }
+  },
+  "/report-records/royal-commission-cth-robodebt.json": {
+   "summary": {
+    "quotes": {
+     "label": "In the body's own words",
+     "items": [
+      {
+       "quote": "It was a costly failure of public administration, in both human and economic terms.",
+       "kind": "conclusion",
+       "cite": {
+        "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+        "document": "Report of the Royal Commission into the Robodebt Scheme",
+        "page": 35
+       }
+      },
+      {
+       "quote": "The Scheme was approved by Cabinet and proceeded without the legislative change to support averaging which DSS had said was needed.",
+       "kind": "finding",
+       "cite": {
+        "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+        "document": "Report of the Royal Commission into the Robodebt Scheme",
+        "page": 31
+       }
+      },
+      {
+       "quote": "The Ombudsman was deliberately misled, thus providing further opportunity for the Government to resist scrutiny by using his report as a shield.",
+       "kind": "conclusion",
+       "cite": {
+        "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+        "document": "Report of the Royal Commission into the Robodebt Scheme",
+        "page": 702
+       }
+      }
+     ]
+    }
+   }
+  }
+ },
+ "expect": {
+  "answered": true,
+  "lead": "^The Royal Commission found that the Scheme was approved by Cabinet",
+  "citations": 2,
+  "cited": [
+   "fact-3"
+  ],
+  "answer_status": null,
+  "lead_source": "page 31 \\[finding\\], in the commission's own words",
+  "source": {
+   "title": "Royal Commission into the Robodebt Scheme, .*page \\d+",
+   "url": "#page=\\d+$",
+   "count": 2
+  }
+ }
+}

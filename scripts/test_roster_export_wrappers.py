@@ -108,9 +108,16 @@ class RealWrapperTests(unittest.TestCase):
         code, err, shipped = self.export(box, accept=True)
         self.assertEqual(code, 0, err)
         rows = json.loads(shipped)["people"]
-        self.assertEqual({r["name"] for r in rows}, {n for n, _ in SITTING} | {'Alan Griffiths'})
+        # The reviewed source-only rows are rebuilt offline from their evidence, never from speeches, so they are
+        # in any export: Alan Griffiths (OpenAustralia service) and the six SA Council members on the official list
+        # dated 2026-11-13 whom OPAX's SA Hansard (to 2023) never prints (roster_accept.json "sa-council-list").
+        sa_list = {'Mira El Dannawi', 'Hilton Gumbys', 'Rebecca Hewett', 'Benjamin Hood', 'Carlos Quaremba', 'Melanie Selwood'}
+        self.assertEqual({r["name"] for r in rows}, {n for n, _ in SITTING} | {'Alan Griffiths'} | sa_list)
         self.assertFalse(any(r.get("pid") for r in rows if r['name'] != 'Alan Griffiths'),
                          "the override cannot supply missing speech-derived identities")
+        for r in rows:
+            if r['name'] in sa_list:
+                self.assertEqual((r['speeches'], r['roster_only'], r['chambers']), (0, True, ['sa_lc']), r['name'])
         alan = next(r for r in rows if r['name'] == 'Alan Griffiths')
         self.assertEqual(alan['pid'], '10268')
         self.assertEqual(alan['speeches'], 0)
@@ -255,7 +262,13 @@ class ShippedIdentityReplayTests(unittest.TestCase):
                 # read under that row and is no longer a separate identity change.
                 # Explicit catalog aliases reconcile the Dave/David source
                 # spellings, so the reviewed Tollner identity remains supported.
-                self.assertEqual(set(changes),{'Blandthorn','McDermott','Robinson','Crawford'})
+                # 'R.A. Simms' (SA Council from 2021) is Robert Simms, senator 2015-2016, pid 10842: listed in
+                # scripts/person_identity.json by #308. The export gives the id; it is a difference only until
+                # a weekly export ships it into parliamentarians.json, after which the four remain.
+                self.assertEqual(by['R.A. Simms'].get('pid'), '10842')
+                simms = next(p for p in shipped if p['name'] == 'R.A. Simms')
+                pending = {'R.A. Simms'} if simms.get('pid') != '10842' else set()
+                self.assertEqual(set(changes),{'Blandthorn','McDermott','Robinson','Crawford'} | pending)
                 # 'Tollner' now ships as a print of the person holding its verified id (fold_ids), on both sides.
                 holder = next(p for p in shipped if 'Tollner' in (p.get('prints') or []))
                 self.assertIs(by['Tollner'], by[holder['name']])
