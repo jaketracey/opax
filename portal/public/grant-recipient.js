@@ -115,8 +115,9 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     const qld = jurisdiction === 'qld', recordNoun = qld ? 'expenditure rows' : 'award records';
     // The shared record header: the title, then one meta line under it.
     const header = node('div', null, 'grant-recipient-header');
-    const title = node('h1', data.n); title.tabIndex = -1; if (!coreActive) header.append(title);
-    header.append(node('p', `${JURISDICTIONS[jurisdiction]} · ${kindLabel(data.k)}`, 'grant-recipient-meta'));
+    // When the server's record core leads the page, it is the header; the meta line belongs under the client's own title.
+    const title = node('h1', data.n); title.tabIndex = -1;
+    if (!coreActive) header.append(title, node('p', `${JURISDICTIONS[jurisdiction]} · ${kindLabel(data.k)}`, 'grant-recipient-meta'));
     header.append(node('p', qld
       ? 'Published annual expenditure, including grants, service agreements and other assistance.'
       : 'Published Commonwealth grant awards. Award values do not establish payments received.', 'grant-recipient-intro'));
