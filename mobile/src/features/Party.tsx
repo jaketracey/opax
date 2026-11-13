@@ -629,11 +629,7 @@ function PartyContent({
                 detail={donor.associated ?? undefined}
                 amount={donor.amount}
                 compact
-                href={
-                  donor.id.startsWith('donor:individual')
-                    ? undefined
-                    : moneyRecordRoute({ node: donor.id }, donor.name)
-                }
+                href={moneyRecordRoute({ node: donor.id }, donor.name)}
                 testID={`party-donor-${i}`}
               />
             ))}

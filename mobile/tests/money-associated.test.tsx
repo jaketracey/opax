@@ -341,7 +341,6 @@ test.each(['Labor', 'Liberal', 'Nationals', 'LNP'])(
       url: REGISTER,
     });
     expect(donorAssociatedTo(record, 'Greens')).toBeNull();
-    expect(donorAssociated({ ...record, withheld: true })).toBeNull();
   },
 );
 

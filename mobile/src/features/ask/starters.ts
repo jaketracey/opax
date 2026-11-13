@@ -6,7 +6,7 @@
  */
 export const starterList = [
   'What has parliament said about housing affordability this year?',
-  'Which organisations disclosed the largest donations in the latest financial year?',
+  'Which donors disclosed the largest donations in the latest financial year?',
   'How much is a federal backbencher paid?',
   'What has parliament said about the NDIS?',
   'What has parliament said about aged care?',

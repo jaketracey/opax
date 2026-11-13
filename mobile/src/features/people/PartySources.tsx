@@ -122,11 +122,7 @@ export default function PartySources() {
                 name={item.name}
                 detail={item.associated ?? undefined}
                 amount={item.amount}
-                href={
-                  item.id.startsWith('donor:individual')
-                    ? undefined
-                    : moneyRecordRoute({ node: item.id }, item.name)
-                }
+                href={moneyRecordRoute({ node: item.id }, item.name)}
                 testID={`party-sources-${section.title}-${index}`}
               />
             )}

@@ -73,24 +73,21 @@ accessibility sizes. Reduce Motion: the layout settles before it is drawn, a
 fly is a cut, a flick stops where the finger lifts, the panel does not
 animate.
 
-## Donor privacy (October 2026)
+## Donor names (12 Oct 2026)
 
-`decodeMoneyGraph` passes every graph through `src/privacy/donorEntity.ts`, a
-port of the web's fail-closed `isOrganisationDonor`: a donor without a legal
-form or organisation word in its label or aliases, or a 3-7 capital acronym
-label, is not named. Those donors are folded into one "Individual donors (N)"
-node per industry cluster with every flow and amount kept; the aggregate has
-no rank and no profile link. A link to any donor id the map does not hold
-opens the neutral "This donor is not named in OPAX." record. Party pages,
-reports, register ties, leads and the bundled quiz use the same gate;
-`tests/donor-privacy.test.tsx` checks every screen against the names derived
-from the pinned exports.
+Individual donors are public record. As on the web, every donor is named as
+its graph names it: on the map and its search, the donor list, party pages and
+each donor's own record, and a donor row opens that donor's record. Nothing
+groups or renames donors. `src/privacy/donorEntity.ts` keeps the web's
+`isOrganisationDonor` as a data-quality check only (a Wikipedia search from an
+organisation's record). `tests/donor-names.test.tsx` renders named donors from
+invented fixtures.
 
 ## Verification
 
 Jest: `money-map-layout`, `money-map-camera`, `money-map-hit`,
 `money-map-scene`, `money-map-labels`, `money-map-model`, `money-map-panel`,
-`money-min-filter`, plus the screen, navigation and privacy suites.
+`money-min-filter`, plus the screen, navigation and donor-name suites.
 
 Journey 23 opens the map, verifies the native raster (the stage's testID
 carries the drawn pixel count in e2e builds), pans, changes the year and

@@ -112,7 +112,7 @@ export function labelSlots(
     .slice(0, PARTY_LABELS);
   for (const party of parties) slots.push(nodeSlot(party.index, 'party'));
   const others = model.nodes
-    .filter((n) => n.kind !== 'party' && !n.withheld && !named.has(n.index))
+    .filter((n) => n.kind !== 'party' && !named.has(n.index))
     .sort((a, b) => b.amount - a.amount)
     .slice(0, NAME_LABELS);
   for (const node of others) slots.push(nodeSlot(node.index, 'name'));

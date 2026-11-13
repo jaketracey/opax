@@ -19,7 +19,7 @@ const decks = [
 
 /** What each deck holds that its label does not say. */
 export function deckLine(deck: Deck): string | null {
-  if (deck === 'money') return 'Donations to parties, and who gives them';
+  if (deck === 'money') return 'Money to parties, and who gives it';
   if (deck === 'words') return 'What parliament talks about, and who speaks';
   // Dropped, not reworded, if a regenerated file breaks the four and four.
   return quizRounds.mixed.every(

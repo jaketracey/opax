@@ -1,23 +1,18 @@
 import type { DiscoverySignal } from '../../api/catalog-decoders';
 import { isOrganisation } from './privacy';
-import { isOrganisationDonor } from '../../privacy/donorEntity';
 import { isPartialCatalog, markPartial } from '../../api/validation';
 export function publicSignal(signal: DiscoverySignal) {
   const names = [
     signal.entity,
     ...(signal.chart?.participants.map((p) => p.name) ?? []),
   ];
-  // Party funding names donors and "companies in both" a donor: those pass
-  // the donor gate (privacy/donorEntity); suppliers keep the recipient gate.
-  const donorNames = signal.category !== 'procurement_concentration';
+  // Donors are named as the web names them: party funding contributors and
+  // "companies in both" keep their names. Suppliers in a contracts lead keep
+  // the recipient gate (./privacy).
   const named = (n: string) =>
-    (signal.category === 'recipient_concentration' || isOrganisation(n)) &&
-    (!donorNames || isOrganisationDonor({ label: n }));
+    signal.category !== 'procurement_concentration' || isOrganisation(n);
   const privateNames = [...new Set(names.filter((n) => !named(n)))];
-  const unnamed =
-    signal.category === 'recipient_concentration'
-      ? 'Individual donor (not named in the app)'
-      : 'Individual supplier (not named in the app)';
+  const unnamed = 'Individual supplier (not named in the app)';
   const redact = (s: string) =>
     privateNames.reduce(
       (text, n) =>
@@ -48,24 +43,13 @@ export function publicSignal(signal: DiscoverySignal) {
 
 /**
  * The discovery export as every screen reads it (Leads, a lead, Discover):
- * a "companies in both" lead is about its entity, so one whose entity is not
- * named is left out and counted in `withheld`; every other signal has its
- * private names replaced (publicSignal).
+ * every signal is kept, with private supplier names replaced (publicSignal).
  */
 export function publicDiscovery<D extends { signals: DiscoverySignal[] }>(
   discovery: D,
-): D & { withheld: number } {
-  const shown = discovery.signals.filter(
-    (s) =>
-      s.category !== 'donor_contract_overlap' ||
-      (isOrganisation(s.entity) && isOrganisationDonor({ label: s.entity })),
-  );
+): D {
   return markPartial(
-    {
-      ...discovery,
-      signals: shown.map(publicSignal),
-      withheld: discovery.signals.length - shown.length,
-    },
+    { ...discovery, signals: discovery.signals.map(publicSignal) },
     isPartialCatalog(discovery),
   );
 }
