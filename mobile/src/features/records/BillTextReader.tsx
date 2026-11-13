@@ -235,7 +235,10 @@ export default function BillTextReader({
       title: shortTitle,
     });
   const ask = () =>
-    openAsk({ question: `What did parliament say about the ${shortTitle}?` });
+    openAsk(
+      { question: `What did parliament say about the ${shortTitle}?` },
+      shortTitle,
+    );
   const menu: RowMenuLeaf[] = [
     {
       title: 'Bill page',

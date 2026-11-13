@@ -259,7 +259,7 @@ function ProgramRecord({ params }: { params: ProgramParams }) {
                 ]
               : [],
             ask: program
-              ? () => openAsk({ question: askAbout(program.name) })
+              ? () => openAsk({ question: askAbout(program.name) }, name)
               : null,
           }),
         }}

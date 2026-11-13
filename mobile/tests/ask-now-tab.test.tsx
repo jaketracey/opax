@@ -1,8 +1,9 @@
 /**
  * A tapped question switches to the Ask tab (build 61, bug 3): Today's
  * starters opened Ask inside the Today tab, with Today still selected, no
- * back button and two taps to get back. A generic "Ask about …" keeps
- * opening Ask in the browsing tab (tests/ask-entry-navigation.test.tsx).
+ * back button and two taps to get back. A generic "Ask about …" switches
+ * the same way (tests/ask-entry-navigation.test.tsx), and both leave Ask's
+ * bar a way back to the page they came from.
  */
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
@@ -12,7 +13,13 @@ import { store } from 'expo-router/build/global-state/router-store';
 import { inMemoryContext } from 'expo-router/build/testing-library/context-stubs';
 import { Pressable, Text } from 'react-native';
 import { client } from '../src/api/runtime';
-import { askTabStack, useAskNow, useOpenAsk } from '../src/features/ask/open';
+import {
+  askTabStack,
+  tabsState,
+  useAskNow,
+  useOpenAsk,
+} from '../src/features/ask/open';
+import { askReturnSnapshot, setAskReturn } from '../src/features/ask/return';
 import { askSession } from '../src/features/ask/session';
 
 jest.mock('expo-network', () => ({
@@ -147,6 +154,7 @@ afterEach(async () => {
   mounted = null;
   askSession.start();
   askSession.setDraft('');
+  setAskReturn(null);
 });
 
 test('a Today starter switches to the Ask tab and asks there', async () => {
@@ -165,6 +173,8 @@ test('a Today starter switches to the Ask tab and asks there', async () => {
     role: 'user',
     text: question,
   });
+  // Ask's bar leads back to Today (ask-entry-navigation.test.tsx).
+  expect(askReturnSnapshot()).toEqual({ tab: '(today)', name: 'Today' });
   await act(async () => router.navigate('/(tabs)/(today)'));
   expect(route().segments).toEqual(['(tabs)', '(today)']);
   expect(names('(today)')).toEqual(['index']);
@@ -191,12 +201,17 @@ test('Search’s question row switches to the Ask tab too', async () => {
   expect(names('(search)')).toEqual(['search']);
 });
 
-test('a generic Ask about … still opens Ask in the browsing tab', async () => {
+test('a generic Ask about … switches to the Ask tab too, keeping the page', async () => {
   await render();
   await act(async () => router.push('/bill/fixture'));
+  jest.mocked(client.askPost).mockClear();
   await press('bill-ask');
-  expect(route().segments).toEqual(['(tabs)', '(today)', 'ask']);
-  expect(names('(today)')).toEqual(['index', 'bill/[key]', 'ask']);
+  expect(route().segments).toEqual(['(tabs)', '(ask)', 'ask']);
+  expect(names('(today)')).toEqual(['index', 'bill/[key]']);
+  expect(names('(ask)')).toEqual(['ask']);
+  // Drafted, never sent.
+  expect(client.askPost).not.toHaveBeenCalled();
+  expect(askSession.snapshot().draft).toBe('What did parliament say?');
 });
 
 test('askTabStack finds the Ask tab’s stack at any depth, or nothing', () => {
@@ -222,4 +237,23 @@ test('askTabStack finds the Ask tab’s stack at any depth, or nothing', () => {
   ).toBe(ask);
   expect(askTabStack({ routes: [{ name: '(today)' }] })).toBeUndefined();
   expect(askTabStack(undefined)).toBeUndefined();
+});
+
+test('tabsState finds the tab navigator that holds Ask, or nothing', () => {
+  const tabs = {
+    key: 'tabs',
+    routes: [{ name: '(today)' }, { name: '(ask)' }],
+  };
+  expect(
+    tabsState({
+      routes: [
+        {
+          name: '__root',
+          state: { routes: [{ name: '(tabs)', state: tabs }] },
+        },
+      ],
+    }),
+  ).toBe(tabs);
+  expect(tabsState({ routes: [{ name: '(today)' }] })).toBeUndefined();
+  expect(tabsState(undefined)).toBeUndefined();
 });

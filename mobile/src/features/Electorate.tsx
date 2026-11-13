@@ -397,7 +397,10 @@ export function useElectorateMenu(
       title: `Ask about ${seat.name}`,
       symbol: 'text.bubble',
       onPress: () =>
-        openAsk({ question: `What has parliament said about ${seat.name}?` }),
+        openAsk(
+          { question: `What has parliament said about ${seat.name}?` },
+          seat.name,
+        ),
     },
     {
       title: copy.copyLink,

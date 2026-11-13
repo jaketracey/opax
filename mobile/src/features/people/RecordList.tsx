@@ -213,7 +213,7 @@ export default function RecordList({
           {
             title: `Ask about ${name}’s speeches`,
             symbol: 'text.bubble' as const,
-            onPress: () => openAsk(askDraft('speeches', name)),
+            onPress: () => openAsk(askDraft('speeches', name), title),
           },
           ...menu,
         ]

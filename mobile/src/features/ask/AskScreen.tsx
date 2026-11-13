@@ -1,3 +1,4 @@
+import { AndroidFocusBack } from '../../navigation/AndroidFocusBack';
 import { RouteOptions } from '../../navigation/preview';
 import { useAndroidRootScroll } from '../../navigation/useAndroidRootScroll';
 import { useScreenReady } from '../../analytics/timing';
@@ -56,6 +57,7 @@ import { AskThread } from './AskThread';
 import { useAskStageAnnouncement } from './AskStatus';
 import { askGround } from './ground';
 import type { Followup } from './model';
+import { useReturnFromAsk } from './open';
 import { openAskOptions, topics } from './Options';
 import { rosterProfiles, type AskPerson } from './people';
 import {
@@ -67,6 +69,7 @@ import {
   useAskScreenFocus,
   type AskScope,
 } from './session';
+import { useAskReturn } from './return';
 import { AskPaneProvider, useAskSources } from './SourcesPane';
 import { chatsSnapshot, loadChats, subscribeChats } from './store';
 import { useConversationAnchor } from './scroll-anchor';
@@ -104,6 +107,10 @@ export default function AskScreen() {
   );
   const account = useAccount();
   const signedIn = !!account.status?.signedIn;
+  // An arrival from another tab's page leaves a way back to it (4.2).
+  const askReturn = useAskReturn();
+  const returnFromAsk = useReturnFromAsk();
+  const goBack = useCallback(() => void returnFromAsk(), [returnFromAsk]);
   const params =
     useLocalSearchParams<Partial<Record<keyof AskScope | 'entry', string>>>();
   const reduceMotion = useReduceMotion();
@@ -405,6 +412,9 @@ export default function AskScreen() {
               signedIn,
               onNew: newConversation,
               onHistory: () => router.push(conversationsRoute),
+              back: askReturn
+                ? { name: askReturn.name, onPress: goBack }
+                : null,
             }),
             // Only the idle list keeps a large title. Two panes stay inline.
             ...(Platform.OS === 'ios'
@@ -412,6 +422,10 @@ export default function AskScreen() {
               : null),
           }}
         />
+        {/* Android: system Back on Ask goes back to that page as well. */}
+        {Platform.OS === 'android' && askReturn ? (
+          <AndroidFocusBack active onBack={goBack} />
+        ) : null}
         <AskRevealContext.Provider value={revealClaim}>
           <SidebarSafe style={[styles.fill, groundStyle]}>
             {/* Keep the first-child chain intact for UIKit's large-title tracking.
