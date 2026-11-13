@@ -8,6 +8,15 @@ evidence the repo or the database already holds, and only for its own date:
   release-term     the electorate release's term party periods (federal House,
                    OpenAustralia service records): start <= date < end, or an
                    open period up to the release's observed_through date.
+  accepted-record  a reviewed per-record correction in scripts/roster_accept.json
+                   ("vote_party_periods"), each citing its primary source. It
+                   replaces the release periods it names, and only while the
+                   release still holds exactly those periods.
+  handbook-term    the Parliamentary Handbook's dated party periods for
+                   senators (scripts/handbook_party_service.json, built by
+                   scripts/build_handbook_parties.py): start <= date < end, or
+                   an open period up to the end of service. The federal Senate
+                   only: it is the dated record for Senate source labels.
   release-roster   a verified seat roster in the release, on its as_of date.
   official-list    an official chamber list in scripts/roster_state_evidence.json,
                    on its as_of date.
@@ -49,6 +58,12 @@ back (party_withheld) rather than shown from the wrong period. Where no dated
 evidence covers the date, or the identity is ambiguous, the source label stays.
 Corrections and holds are recomputed from the source label on every run.
 
+A dated record that does not load on a night (the electorate release for the
+House, the Handbook file for the Senate) recomputes nothing for its chamber:
+the export keeps that chamber's published fills and corrections
+(keep_published_parties) and logs one WARNING line. Without the release
+nothing is recomputed at all, as before.
+
 The nightly applies this inside scripts/export_division_pages.py, which reads
 ext_state_roster from the same read-only snapshot as the votes. Dry run against
 the committed pages:
@@ -76,8 +91,11 @@ from parli.ingest.tvfy_refresh import PARTY_CANONICAL  # noqa: E402
 NAMESAKE_DAYS = 1461  # how near a dated list must be for its member to count as a possible namesake
 ELECTIONS = ROOT / "scripts/general_elections.json"
 RULES = ("pid", "full-name", "surname")
-SOURCES = ("release-term", "release-roster", "official-list", "service", "wikidata-term", "bracket")
+SOURCES = ("accepted-record", "release-term", "handbook-term", "release-roster", "official-list", "service", "wikidata-term", "bracket")
 ISO = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+HANDBOOK = ROOT / "scripts/handbook_party_service.json"
+ACCEPT = ROOT / "scripts/roster_accept.json"
+SENATE = ("federal", "senate")
 
 
 def fold(value) -> str:
@@ -217,6 +235,81 @@ def service_evidence(root: Path) -> list[dict]:
     return out
 
 
+def handbook_range(path: Path) -> dict:
+    """The dated range of the Handbook file: Senate divisions from `from` to `fetched`."""
+    doc = json.loads(Path(path).read_text(encoding="utf-8"))
+    start, through = iso(doc.get("from")), iso(doc.get("fetched"))
+    if not start or not through:
+        raise ValueError("no dated range")
+    return {"record": "handbook", "from": start, "through": through, "url": doc.get("url")}
+
+
+def handbook_evidence(path: Path) -> list[dict]:
+    """The Handbook's dated Senate party periods (scripts/handbook_party_service.json)."""
+    doc = json.loads(Path(path).read_text(encoding="utf-8"))
+    if doc.get("chamber") != "senate" or not isinstance(doc.get("people"), list):
+        raise ValueError("not a Senate party service file")
+    handbook_range(path)
+    out = []
+    for person in doc["people"]:
+        for period in person.get("periods") or []:
+            start, end, through = iso(period.get("start")), iso(period.get("end")), iso(period.get("through"))
+            if not start or not (end or through) or not label(period.get("party")):
+                continue
+            out.append(entry("handbook-term", "senate", ("handbook", str(person["phid"])),
+                             [person.get("name"), *(person.get("names") or [])], period["party"], start, end,
+                             None if end else through, pids=[person.get("pid")],
+                             url=f"https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq "
+                                 f"'{person['phid']}' and ROSTypeID eq 11"))
+    return out
+
+
+def accepted_periods(path: Path) -> list[dict]:
+    """Reviewed per-record party periods (scripts/roster_accept.json, "vote_party_periods")."""
+    doc = json.loads(Path(path).read_text(encoding="utf-8")).get("vote_party_periods") or {}
+    people = doc.get("people") or []
+    if not isinstance(people, list):
+        raise ValueError('"vote_party_periods.people" is not a list')
+    return people
+
+
+def apply_accepts(evidence: list[dict], accepts: list[dict]) -> list[dict]:
+    """Install each reviewed record: drop the release periods it replaces, add its periods.
+
+    A record applies only while every period it `replaces` is still in the
+    evidence exactly (same person, chamber, party, start and end); otherwise the
+    evidence has moved since the review and the record is held, with a log
+    line. A record that is not well formed is held too."""
+    out = list(evidence)
+    for acc in accepts:
+        try:
+            chamber, pid, name = acc["chamber"], str(acc["pid"]), acc["name"]
+            url, replaces, periods = acc["url"], acc.get("replaces") or [], acc["periods"]
+            wanted = [(label(r["party"]), iso(r["start"]), iso(r["end"])) for r in replaces]
+            new = [(p["party"], iso(p["start"]), iso(p["end"])) for p in periods]
+            if not url or not new or any(not (p and a and b and a < b) for p, a, b in new) \
+                    or any(not (p and a and b) for p, a, b in wanted):
+                raise ValueError("a period without a party, a start before its end, or a source")
+        except (KeyError, TypeError, ValueError, AttributeError) as e:
+            log(f"accepted party record held ({type(e).__name__}: {e})")
+            continue
+        mine = [e for e in out if e["chamber"] == chamber and pid in e["pids"] and not e["point"]]
+        drop = []
+        for party, start, end in wanted:
+            hit = [e for e in mine if e["party"] == party and e["start"] == start and e["end"] == end]
+            if not hit:
+                break
+            drop.extend(hit)
+        else:
+            ids = {id(e) for e in drop}
+            out = [e for e in out if id(e) not in ids]
+            out.extend(entry("accepted-record", chamber, ("accepted", pid), [name, *(acc.get("aliases") or [])],
+                             party, start, end, pids=[pid], url=url) for party, start, end in new)
+            continue
+        log(f"accepted party record for {name} held: the periods it replaces have changed since the review")
+    return out
+
+
 def wikidata_evidence(db: sqlite3.Connection | None) -> list[dict]:
     if db is None or not db.execute(
             "SELECT 1 FROM sqlite_master WHERE type='table' AND name='ext_state_roster'").fetchone():
@@ -255,33 +348,65 @@ class Evidence(list):
     """Dated observations, plus the general elections that bound them.
 
     `check_labels` is False when the electorate release did not load. The
-    release is the dated record for federal source labels, so the division
-    export then recomputes nothing and keeps the previous run's fills and
-    corrections as published (keep_published_parties)."""
-    def __init__(self, items=(), elections=None, check_labels=True):
+    release is the dated record for federal House source labels, so the
+    division export then recomputes nothing and keeps the previous run's fills
+    and corrections as published (keep_published_parties). `frozen` holds the
+    (jurisdiction, house) pairs whose own dated record did not load (the
+    federal Senate without the Handbook file): only those records keep what was
+    published, and the rest are recomputed. `dated` maps a (jurisdiction,
+    house) to the dated range of its own party record: a record inside it is
+    marked _meta.party_dated, so its page can say its labels were checked."""
+    def __init__(self, items=(), elections=None, check_labels=True, frozen=(), dated=None):
         super().__init__(items)
         self.elections = load_elections() if elections is None else elections
         self.check_labels = check_labels
+        self.frozen = frozenset(frozen)
+        self.dated = dict(dated or {})
+
+    def dated_range(self, record: dict) -> dict | None:
+        rng = self.dated.get((record.get("jurisdiction"), record.get("house")))
+        day = iso(record.get("date"))
+        return rng if rng and day and rng["from"] <= day <= rng["through"] else None
+
+    def is_frozen(self, record: dict) -> bool:
+        return (record.get("jurisdiction"), record.get("house")) in self.frozen
 
 
 def load_evidence(root: Path = ROOT, db: sqlite3.Connection | None = None, public: Path | None = None) -> Evidence:
     """Every source is optional: a missing or unreadable one is logged and gives
-    nothing, so the division export never fails for want of evidence."""
+    nothing, so the division export never fails for want of evidence. A dated
+    record that does not load freezes its chamber (Evidence.frozen)."""
     public = public or root / "portal/public"
-    out, release_loaded = [], False
+    out, loaded = [], set()
     for name, load in (("electorate release", lambda: release_evidence(public)),
+                       ("Senate party records", lambda: handbook_evidence(root / "scripts/handbook_party_service.json")),
                        ("official lists", lambda: official_evidence(root)),
                        ("service records", lambda: service_evidence(root)),
                        ("Wikidata terms", lambda: wikidata_evidence(db))):
         try:
             out.extend(load())
-            release_loaded = release_loaded or name == "electorate release"
+            loaded.add(name)
         except (OSError, ValueError, KeyError, TypeError, AttributeError, ImportError, sqlite3.Error) as e:
             log(f"{name} skipped ({type(e).__name__}: {e}); no party is filled from it")
+    release_loaded = "electorate release" in loaded
+    frozen = set()
+    dated = {}
+    if "Senate party records" in loaded:
+        dated[SENATE] = handbook_range(root / "scripts/handbook_party_service.json")
     if not release_loaded:
         log("WARNING: the electorate release (the dated party record) did not load; "
             "no party is recomputed this run: the previous fills and corrections are kept as published")
-    return Evidence(out, load_elections(root / "scripts/general_elections.json"), check_labels=release_loaded)
+    elif "Senate party records" not in loaded:
+        frozen.add(SENATE)
+        log("WARNING: the Senate party records (scripts/handbook_party_service.json) did not load; "
+            "no federal Senate party is recomputed this run: the previous Senate fills and corrections are kept "
+            "as published")
+    try:
+        out = apply_accepts(out, accepted_periods(root / "scripts/roster_accept.json"))
+    except (OSError, ValueError, TypeError, AttributeError) as e:
+        log(f"accepted party records skipped ({type(e).__name__}: {e}); none is applied")
+    return Evidence(out, load_elections(root / "scripts/general_elections.json"), check_labels=release_loaded,
+                    frozen=frozen, dated=dated)
 
 
 def same_parliament(elections: dict, chamber: str, a: str, b: str) -> bool:
@@ -337,7 +462,7 @@ def people_of(entries) -> list[set[str]]:
     """Group records into people: shared names join them, distinct ids keep them apart."""
     groups: list[tuple[set[str], set]] = []
     for e in entries:
-        ids = {e["ident"]} if e["ident"][0] in ("wikidata", "release") else set()
+        ids = {e["ident"]} if e["ident"][0] in ("wikidata", "release", "handbook") else set()
         joined = [g for g in groups if g[0] & e["names"]]
         names, idents = set(e["names"]), set(ids)
         for g in joined:
@@ -347,8 +472,8 @@ def people_of(entries) -> list[set[str]]:
         groups.append((names, idents))
     out = []
     for names, idents in groups:
-        # One name shared by two Wikidata people (or two release people) is two people.
-        for scheme in ("wikidata", "release"):
+        # One name shared by two Wikidata people (or two release or Handbook people) is two people.
+        for scheme in ("wikidata", "release", "handbook"):
             if len({i for i in idents if i[0] == scheme}) > 1:
                 out.extend([names, names])
                 break
@@ -413,7 +538,7 @@ class Resolver:
     @staticmethod
     def _one(hits, day, rule):
         # Two distinct people in one identity scheme, both able to sit that day: ambiguous.
-        for scheme in ("wikidata", "release"):
+        for scheme in ("wikidata", "release", "handbook"):
             if len({e["ident"] for e in hits if e["ident"][0] == scheme and may_sit(e, day)}) > 1:
                 return "ambiguous-identity", None
         return rule, hits
@@ -480,6 +605,7 @@ def clear_fills(records) -> None:
         meta = record.get("_meta", {})
         meta.pop("party_fill", None)
         meta.pop("party_check", None)
+        meta.pop("party_dated", None)
         for member in record.get("members", []):
             fill = member.pop("party_source", None)
             if fill:
@@ -527,6 +653,9 @@ def keep_published_parties(record: dict, published: dict) -> None:
     meta, old_meta = record.setdefault("_meta", {}), published.get("_meta", {})
     meta.pop("party_fill", None)
     meta.pop("party_check", None)
+    meta.pop("party_dated", None)
+    if isinstance(old_meta.get("party_dated"), dict):
+        meta["party_dated"] = dict(old_meta["party_dated"])
     if counts["filled"] and old_meta.get("party_fill"):
         meta["party_fill"] = {**old_meta["party_fill"], "filled": counts["filled"]}
     if (counts["corrected"] or counts["withheld"]) and old_meta.get("party_check"):
@@ -563,7 +692,9 @@ def resolve_records(records, evidence, apply=False, check_labels=True):
     Rows without a source party are filled from dated evidence. Rows with one
     are checked against it (check_label) when `check_labels`."""
     resolver = Resolver(evidence)
-    records = list(records)
+    # A chamber whose dated record did not load is left as it is (Evidence.frozen).
+    frozen = getattr(evidence, "is_frozen", None)
+    records = [r for r in records if not (frozen and frozen(r))]
     # Without the dated release no label is checked: keep the source labels.
     check_labels = check_labels and getattr(evidence, "check_labels", True)
     if apply:
@@ -614,6 +745,10 @@ def resolve_records(records, evidence, apply=False, check_labels=True):
                 member["party_source"] = {"basis": source, "url": url}
                 filled += 1
             yield outcome
+        rng = apply and check_labels and getattr(evidence, "dated_range", None) and evidence.dated_range(record)
+        if rng:
+            record.setdefault("_meta", {})["party_dated"] = {
+                **rng, "note": "Party labels were checked against dated party records for this chamber and date."}
         if apply and filled:
             record.setdefault("_meta", {})["party_fill"] = {
                 "rule": "dated-roster", "filled": filled,

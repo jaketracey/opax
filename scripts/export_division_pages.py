@@ -402,7 +402,9 @@ def write_projection(records, output, carry=False, strict=False, party_evidence=
     for rows the source leaves without one and checks source labels against
     them, from the source labels each run. None (--from-bills), or evidence
     without the dated release (check_labels False), recomputes nothing and
-    keeps the previous fills and corrections as published.
+    keeps the previous fills and corrections as published; evidence with a
+    frozen chamber (the Senate without its Handbook records) does that for that
+    chamber only.
     """
     output = Path(output)
     previous = read_previous_projection(output)
@@ -410,18 +412,21 @@ def write_projection(records, output, carry=False, strict=False, party_evidence=
     if party_evidence is not None and not getattr(party_evidence, "check_labels", True):
         # vote_parties.load_evidence has logged the missing release once.
         party_evidence = None
-    if party_evidence is None:
-        # Nothing is recomputed: a fresh record takes last run's fills and
-        # corrections where its source label is unchanged (retained records
-        # already carry them).
-        for key, record in guarded.items():
-            if key in previous and not record["_meta"]["refresh_retained"]:
-                vote_parties.keep_published_parties(record, previous[key])
-    else:
+    # A chamber whose own dated record did not load (the federal Senate without
+    # the Handbook file) is frozen the same way, and only that chamber.
+    frozen = party_evidence.is_frozen if party_evidence is not None and hasattr(party_evidence, "is_frozen") \
+        else (lambda record: party_evidence is None)
+    # Nothing is recomputed for a frozen record: a fresh one takes last run's
+    # fills and corrections where its source label is unchanged (retained
+    # records already carry them).
+    for key, record in guarded.items():
+        if frozen(record) and key in previous and not record["_meta"]["refresh_retained"]:
+            vote_parties.keep_published_parties(record, previous[key])
+    if party_evidence is not None:
         # Before source parties are copied in: a party the source now publishes
         # must win over last run's roster fill, and a corrected or withheld
         # label goes back to its source label before it is checked again.
-        vote_parties.clear_fills(guarded.values())
+        vote_parties.clear_fills([r for r in guarded.values() if not frozen(r)])
     # Enrich a retained snapshot only from matching dated source facts and votes.
     # Never substitute current-roster affiliations or discard its extra members.
     for key, record in guarded.items():
