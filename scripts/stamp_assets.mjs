@@ -414,7 +414,7 @@ const PAGES = [
   { page: 'home.html', chrome: true, bare: false, files: ['style.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'home.css', 'nav.css', 'home.js', 'navigation.js', 'quick-search.js', 'analytics.js', 'events.js', 'gtm.js'] },
   // /map is served from map.html. ui-controls.css is immutable, so a bare link
   // there would keep a returning reader on an old stylesheet for a year.
-  { page: 'map.html', chrome: false, bare: true, files: ['tokens.css', 'ui-controls.css', 'map-page.js'] },
+  { page: 'map.html', chrome: false, bare: true, files: ['tokens.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'map-page.js'] },
 ]
 
 const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
