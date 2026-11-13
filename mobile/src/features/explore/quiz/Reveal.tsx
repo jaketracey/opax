@@ -8,6 +8,7 @@ import { Text } from '../../../design/text';
 import { rhythm } from '../../../design/tokens';
 import { useOpenAsk } from '../../ask/open';
 import { quizDestination } from '../quiz-links';
+import { useQuizMoneyGraph } from './money-graph';
 import { pointsLine, type Question, type QuizResponse } from '../quiz-model';
 import { quizSourceDetails } from '../quiz-source';
 import { quizAsOf } from './data';
@@ -19,7 +20,8 @@ import { quizAsOf } from './data';
  */
 export function QuizSourceLine({ q, testID }: { q: Question; testID: string }) {
   const openAsk = useOpenAsk();
-  const destination = quizDestination(q);
+  const graph = useQuizMoneyGraph(q);
+  const destination = quizDestination(q, graph);
   const extra =
     destination?.kind === 'ask' ? (
       <InsetGroup>
@@ -36,7 +38,7 @@ export function QuizSourceLine({ q, testID }: { q: Question; testID: string }) {
     ) : undefined;
   return (
     <SourceLine
-      {...quizSourceDetails(q, quizAsOf)}
+      {...quizSourceDetails(q, quizAsOf, graph)}
       {...(extra ? { extra } : {})}
       testID={testID}
     />
