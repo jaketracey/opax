@@ -947,3 +947,39 @@ test('a wrapped primary button keeps its label centred at AX3 (sweep 1, 2.7)', (
   expect(quiet.text.textAlign).toBeUndefined();
   expect(quiet.button.alignItems).toBe('flex-start');
 });
+
+test('a wrapped hugging button keeps its label centred at AX3 (sweep 2 lane A)', () => {
+  // A not-found page's action hugs, centred under the title. At AX3
+  // "Search parliamentarians" wrapped to the column's width and read from
+  // the leading edge, so its label hung left of the centred text above.
+  size(2.643);
+  const label = (hug: boolean) => {
+    const text = 'Search parliamentarians';
+    const r = render(
+      <Button
+        label={text}
+        variant="secondary"
+        hug={hug}
+        onPress={noop}
+        testID={text}
+      />,
+    );
+    return {
+      text: flat(
+        r.root.findAll(
+          (node) => node.type === Text && node.props.children === text,
+        )[0]!,
+      ),
+      button: RN.StyleSheet.flatten(
+        press(r, text).props.style({ pressed: false }),
+      ),
+    };
+  };
+  const hugging = label(true);
+  expect(hugging.text).toMatchObject({ textAlign: 'center' });
+  expect(hugging.button.alignItems).not.toBe('flex-start');
+  // A stretched secondary button still reads from the leading edge.
+  const stretched = label(false);
+  expect(stretched.text.textAlign).toBeUndefined();
+  expect(stretched.button.alignItems).toBe('flex-start');
+});

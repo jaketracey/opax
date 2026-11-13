@@ -833,6 +833,7 @@ export function ContentUnavailable({
    * does. SwiftUI's view pads itself, so its action sat about 60 pt under
    * the body; inline, its capsule sits 12 pt under it. For a state
    * inside a page (Search's No results, sweep 2 item 8.4), not a whole one.
+   * Accessibility sizes draw this way on every page.
    */
   inline?: boolean;
   action?: {
@@ -844,6 +845,12 @@ export function ContentUnavailable({
   testID?: string;
 }) {
   const layout = useLayout();
+  // At accessibility sizes SwiftUI's view came out a line short on three of
+  // the seven not-found pages and cut the title to one line ("This
+  // electorate…", sweep 2 lane A, AX3). React Native's word-safe text wraps
+  // the title in full there, as it does on Android.
+  const accessibilitySize = useAccessibilitySize();
+  const system = Platform.OS === 'ios' && !inline && !accessibilitySize;
   const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
   const columnWidth =
     measuredWidth ??
@@ -861,9 +868,9 @@ export function ContentUnavailable({
       style={styles.unavailable}
       onLayout={(event) => setMeasuredWidth(event.nativeEvent.layout.width)}
     >
-      {Platform.OS === 'ios' && !inline ? (
+      {system ? (
         // Verified in @expo/ui 57.0.21 HostProps: boolean | { vertical?, horizontal? }.
-        // Propose the column width; only height follows SwiftUI, including AX5.
+        // Propose the column width; only height follows SwiftUI.
         <Host
           style={{ width: columnWidth, maxWidth: '100%' }}
           matchContents={{ vertical: true }}

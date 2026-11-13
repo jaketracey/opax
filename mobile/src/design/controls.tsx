@@ -211,6 +211,7 @@ export function Button({
   // fixed frame for word-safe text, which could otherwise chase a width that
   // follows its own size. The capsule becomes a rounded rectangle there.
   const stacked = useAccessibilitySize();
+  const centredLabel = variant === 'primary' || hug;
   const inert = disabled || loading;
   // Loading keeps the resting look; only a disabled button changes colour.
   const resting = disabled && !loading ? states.disabled : states.rest;
@@ -284,7 +285,11 @@ export function Button({
               ? styles.quiet
               : null,
             // A filled primary button keeps its label centred, wrapped or not.
-            stacked && variant !== 'primary' ? styles.leading : null,
+            // So does a hugging one: it sits where its row puts it (centred
+            // under a not-found title), so a wrapped label read from the
+            // leading edge hung left (sweep 2 lane A, AX3). Android centres
+            // every label.
+            stacked && !centredLabel ? styles.leading : null,
             {
               backgroundColor:
                 variant === 'primary' || (toggle && variant === 'default')
@@ -332,7 +337,7 @@ export function Button({
                   wordSafe
                   style={
                     stacked
-                      ? variant === 'primary'
+                      ? centredLabel
                         ? [styles.shrink, styles.center]
                         : styles.shrink
                       : styles.center

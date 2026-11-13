@@ -1122,10 +1122,10 @@ describe('shared state kit', () => {
     const r = mount(<OfflineLine savedAt={null} />);
     expect(r.root.findByType(Text).props.children).toBe("You're offline.");
   });
-  test('ContentUnavailable at AX5 proposes the column width and never fixes its height', () => {
+  test('ContentUnavailable proposes the column width and never fixes its height', () => {
     act(() =>
       Dimensions.set({
-        window: { ...window, width: 375, fontScale: 3.571 },
+        window: { ...window, width: 375, fontScale: 1 },
         screen,
       }),
     );
@@ -1161,6 +1161,45 @@ describe('shared state kit', () => {
     act(() => r.root.findByType(Button).props.onPress());
     expect(retry).toHaveBeenCalledTimes(1);
   });
+  // Sweep 2 lane A: at AX3 SwiftUI's view came out a line short on three of
+  // seven not-found pages and cut the title to "This electorate…". At
+  // accessibility sizes the title is React Native's word-safe text.
+  test.each([2.353, 3.571])(
+    'ContentUnavailable wraps its title in full at font scale %s',
+    (fontScale) => {
+      act(() =>
+        Dimensions.set({
+          window: { ...window, width: 402, fontScale },
+          screen,
+        }),
+      );
+      const r = mount(
+        <ContentUnavailable
+          symbol="map"
+          title="This electorate isn’t in OPAX"
+          body="It may have been renamed or abolished."
+          action={{ label: 'Search electorates', onPress: noop }}
+          testID="electorate-error"
+        />,
+      );
+      expect(r.root.findAllByType(Host)).toHaveLength(0);
+      const text = (children: string) =>
+        r.root.findAll(
+          (node) => node.type === Text && node.props.children === children,
+        );
+      expect(text('This electorate isn’t in OPAX')).toHaveLength(1);
+      const title = text('This electorate isn’t in OPAX')[0]!;
+      expect(title.props).toMatchObject({
+        variant: 'sectionTitle',
+        wordSafe: true,
+      });
+      expect(StyleSheet.flatten(title.props.style).textAlign).toBe('center');
+      expect(title.props.numberOfLines).toBeUndefined();
+      expect(
+        text('It may have been renamed or abolished.')[0]!.props.variant,
+      ).toBe('body');
+    },
+  );
   // Sweep 2, item 2: at AX3 a stretched secondary button read from the
   // leading edge and hung left under the centred title. The action hugs
   // and a row centres it at every size.
