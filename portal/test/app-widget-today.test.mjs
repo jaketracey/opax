@@ -379,3 +379,28 @@ test('the module stays pure: only the journal, app-http and app-edition, and no 
   const route=index.indexOf("if (url.pathname === '/api/app/v1/widget/today') return communityResponse(await appWidgetToday(request, env))");
   assert.ok(route>0);assert.ok(route<index.indexOf("if (url.pathname.startsWith('/api/app/')) return communityResponse(appJson(request, {error:'not_found'}, 404))"));
 });
+
+test('through the real Worker: dispatched before the generic app 404, security headers on, no cookie, network block kept',async()=>{
+  const compiled=await build({entryPoints:[new URL('../src/index.ts',import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'forbid-image-rendering',setup(b){
+    b.onResolve({filter:/^\.\/og-render$/},()=>({path:'forbidden-renderer',namespace:'widget-proof'}));
+    b.onLoad({filter:/.*/,namespace:'widget-proof'},()=>({contents:'export function renderOgPng(){throw Error("Forbidden OG call")}; export const renderOgJpeg=renderOgPng; export const renderStoryJpeg=renderOgPng;',loader:'js'}));
+  }}]});
+  const {default:worker}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
+  const w=world();
+  const fail=()=>{throw Error('Forbidden provider/model/social/email/proxy call')};
+  const env={...w.env,COMMUNITY_ORIGIN:'https://opax.test',COMMUNITY_ENABLED:'false',VOICE_ENABLED:'false',STAGING_API:{fetch:fail},GENERATION_CACHE:{get:fail,put:fail},COMMUNITY_EMAIL:{send:fail}};
+  const original=globalThis.fetch;globalThis.fetch=fail;
+  try{
+    const call=(init={},cf)=>{const req=new Request('https://opax.test/api/app/v1/widget/today',init);if(cf)Object.defineProperty(req,'cf',{value:cf});return worker.fetch(req,env,{waitUntil:fail})};
+    const response=await call({headers:{cookie:'session=abc'}});
+    assert.equal(response.status,200);
+    assert.equal(response.headers.get('cache-control'),'public, max-age=900');
+    assert.equal(response.headers.get('set-cookie'),null);
+    assert.ok(response.headers.get('content-security-policy'));assert.equal(response.headers.get('x-content-type-options'),'nosniff');
+    const body=await response.json();
+    assert.equal(body.version,1);assert.equal(body.edition.card_title,'Wage Justice for Early Childhood Education and Care Workers…');assert.ok(body.vote);assert.ok(body.sitting);
+    assert.equal((await call({headers:{'if-none-match':response.headers.get('etag')}})).status,304);
+    const blocked=await call({},{asn:45102});
+    assert.equal(blocked.status,403);assert.deepEqual(await blocked.json(),{error:'forbidden',reason:'network'});
+  }finally{globalThis.fetch=original}
+});
