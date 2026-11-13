@@ -1,5 +1,5 @@
 import {donorDisclosure} from './donor-disclosure.js?v=18e84bb744';
-import {subjectUrl} from './canonical-urls.js?v=6c889d487d';
+import {subjectUrl} from './canonical-urls.js?v=8b5bbcba0f';
 import {moneyFlowType, filterMoneyEdges, readMoneyFilters} from './money-records.js';
 
 const labels={receipts:'Political receipts',contracts:'Contract values',grants:'Grant awards'};

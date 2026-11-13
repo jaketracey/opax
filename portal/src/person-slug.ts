@@ -32,7 +32,27 @@ export function personIndex<T extends { name: string; speeches: number | null; f
   // byFold stays the speech identity (a speaker filter reads it); addresses also take the full names.
   const fullNames = fullNameAliases(people, byFold)
   const addresses = new Map([...byFold, ...fullNames])
-  return { byName, byFold, fullNames, addresses, ...slugIndex(people) }
+  const slugs = slugIndex(people)
+  return { byName, byFold, fullNames, addresses, ...slugs, formerSlugs: formerSlugs(people, slugs.bySlug) }
+}
+
+/** The slug a roster row had when its name was a twin of a fuller row's (slugIndex's suffix). */
+export function twinSlug(name: string): string {
+  return `${personSlug(name)}-${Array.from(name).map(c => c.codePointAt(0)!.toString(16)).join('')}`
+}
+
+/**
+ * The addresses rows used to have before they were folded into their person (scripts/roster_fold.py):
+ * a print's own slug, and the suffixed slug a spelling twin held ("Brendan O’Connor" beside "Brendan
+ * O'Connor"). Each forwards to the person, so an old link answers a 301 to the one profile. A slug a
+ * row holds today is never taken over.
+ */
+export function formerSlugs<T extends { name: string; prints?: string[] }>(people: readonly T[], live: ReadonlyMap<string, T>): Map<string, T> {
+  const out = new Map<string, T>()
+  for (const p of people) for (const print of p.prints ?? []) {
+    for (const slug of [personSlug(print), twinSlug(print)]) if (slug && !live.has(slug) && !out.has(slug)) out.set(slug, p)
+  }
+  return out
 }
 
 /**
@@ -88,8 +108,7 @@ export function slugIndex<T extends { name: string; speeches: number | null }>(p
     const base=personSlug(p.name)
     if(!base || slugOf.has(p.name)) continue
     // Distinct exported rows keep distinct addresses. No ambiguous name URL.
-    const suffix=Array.from(p.name).map(c=>c.codePointAt(0)!.toString(16)).join('')
-    const slug=`${base}-${suffix}`
+    const slug=twinSlug(p.name)
     bySlug.set(slug,p)
     slugOf.set(p.name,slug)
   }
