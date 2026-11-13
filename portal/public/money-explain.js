@@ -1,6 +1,6 @@
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
 import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
-import {receiptFigures, receiptScopeLabel} from './register-tables.js?v=3beb5b4ebc';
+import {receiptFigures, receiptScopeLabel, partyReturnFigures} from './register-tables.js?v=8ae6339861';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph
@@ -339,10 +339,12 @@ export function resolveFlow(state, graph, index, { aec = null, electionYears = [
         branches, branchesYear: latestReturn?.[0] ?? null, donations, other, publicFunding,
       };
     } else {
-      const partySums = sumEdges([{ byYear: party.byYear || {} }]);
+      // The party's own return lines, each once (partyReturnFigures); an older file keeps its record totals.
+      const own = partyReturnFigures(party);
+      const partySums = sumEdges([{ byYear: own.typed ? own.cells : party.byYear || {} }]);
       let whole = 0;
       for (const [y, c] of partySums.years) if (inSpan(y)) whole += c[0];
-      if (whole > 0 && flowInSpan <= whole) recipientShare = { basis: 'file', amount: flowInSpan, whole, first, last: lastYear, years: lastYear - first + 1 };
+      if (whole > 0 && flowInSpan <= whole) recipientShare = { basis: own.typed ? 'return_lines' : 'file', amount: flowInSpan, whole, first, last: lastYear, years: lastYear - first + 1 };
     }
   }
   // The flow as a share of a named organisation's disclosed receipts.
@@ -648,7 +650,9 @@ function scaleHTML(flow, comparisons, partyName, matches = null) {
     const years = r.years === 1 ? fyLabel(r.first) : `${fyLabel(r.first)} to ${fyLabel(r.last)}`;
     shares.push(shareHTML(pctText(r.amount, r.whole), r.amount, r.whole, r.basis === 'returns'
       ? `of ${possessive(partyName(flow.party.label))} total receipts on its own AEC returns for ${years} (${money(r.whole)}${r.held < r.years ? `, returns held for ${r.held} of ${r.years} years` : ''}).`
-      : `of all money disclosed to ${partyName(flow.party.label)} in these records for ${years} (${money(r.whole)}).`));
+      : r.basis === 'return_lines'
+        ? `of the receipts ${partyName(flow.party.label)} itemised on its own federal returns for ${years}, each counted once (${money(r.whole)}).`
+        : `of all money disclosed to ${partyName(flow.party.label)} in these records for ${years} (${money(r.whole)}).`));
   }
   const d = flow.donorShare;
   if (d) shares.push(shareHTML(pctText(d.amount, d.whole), d.amount, d.whole,
