@@ -655,21 +655,28 @@ else: print(json.dumps(report))
             evidence_bundle_state.activate(candidate, self.pipe / 'evidence-bundles', self.active, 'not-a-commit')
         self.assertEqual(self.active.read_bytes(), saved)
 
-    def test_prebuild_prunes_previous_verified_bundle_but_preserves_active_on_failure(self):
+    def test_one_bundle_between_builds_and_none_beside_a_new_build(self):
+        root = self.pipe / 'evidence-bundles'
+        history = self.pipe / 'evidence-bundle-history'
         for _ in range(2):
             self.run_refresh(OPAX_EVIDENCE_BUILD='1', OPAX_TODAY='2026-10-11')
-        root = self.pipe / 'evidence-bundles'
-        self.assertEqual(len(list(root.glob('*/READY.json'))), 2)
-        active = self.active.read_bytes()
-        active_dir = Path(json.loads(active)['bundle_dir'])
-        self.run_refresh(OPAX_EVIDENCE_BUILD='1', EVIDENCE_BUILD_MODE='fail', OPAX_TODAY='2026-10-11')
-        self.assertEqual(self.active.read_bytes(), active)
+            # Activation keeps only the published bundle.
+            self.assertEqual(len(list(root.glob('*/READY.json'))), 1)
+        active_dir = Path(json.loads(self.active.read_text())['bundle_dir'])
         self.assertTrue(active_dir.is_dir())
-        self.assertEqual(len(list(root.glob('*/READY.json'))), 1)
-        self.assertTrue(list((self.pipe / 'evidence-bundle-history').glob('*.receipt.json')))
+        self.assertEqual(len(list(history.glob('*.receipt.json'))), 1)
+        # Before allocating, the build drops the published bundle and its pointer; a failed
+        # build then leaves no bundle, and the public tree and catch-up stay as they were.
+        before = guard.read_tree(self.repo / guard.EVIDENCE)
+        self.run_refresh(OPAX_EVIDENCE_BUILD='1', EVIDENCE_BUILD_MODE='fail', OPAX_TODAY='2026-10-11')
+        self.assertFalse(active_dir.exists())
+        self.assertFalse(self.active.exists())
+        self.assertEqual(list(root.glob('*/READY.json')), [])
+        self.assertEqual(len(list(history.glob('*.receipt.json'))), 2)
+        self.assertEqual(guard.read_tree(self.repo / guard.EVIDENCE), before)
         self.assertTrue(self.pending.exists())
 
-    def test_retention_never_deletes_foreign_unknown_symlink_or_active_data(self):
+    def test_retention_never_deletes_foreign_unknown_or_symlinked_data(self):
         self.run_refresh(OPAX_EVIDENCE_BUILD='1')
         active = json.loads(self.active.read_text())
         root = self.pipe / 'evidence-bundles'
@@ -687,7 +694,9 @@ else: print(json.dumps(report))
                        if path.is_dir() and path != foreign and path.resolve() != Path(active['bundle_dir']))
         (unknown / 'do-not-delete.txt').write_text('unknown')
         evidence_bundle_state.prepare(root, self.active)
-        self.assertTrue(Path(active['source']).is_file())
+        # The published bundle is managed and verified, so the pre-build drop removes it.
+        self.assertFalse(Path(active['bundle_dir']).exists())
+        self.assertFalse(self.active.exists())
         self.assertTrue((foreign / 'foreign.db').is_file())
         self.assertTrue((unknown / 'do-not-delete.txt').is_file())
         self.assertTrue(linked.is_symlink())

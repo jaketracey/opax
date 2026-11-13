@@ -115,11 +115,11 @@ evidence_refresh() {
       rm -f -- "$EVIDENCE_BUNDLE_CANDIDATE"; EVIDENCE_BUNDLE_CANDIDATE=""
       if [ "$build_stage" = build ] && [ "$rc" = 75 ]; then
         EVIDENCE_WAITING="evidence: bundle build deferred (rc=75; see evidence-build.log)"
-        warn "$EVIDENCE_WAITING; old public evidence and active bundle retained; catch-up retained"
+        warn "$EVIDENCE_WAITING; old public evidence retained; catch-up retained"
         return 0
       fi
       EVIDENCE_WAITING="evidence: bundle $build_stage failed (rc=$rc; see evidence-build.log)"
-      fail "$EVIDENCE_WAITING; old public evidence and active bundle retained; catch-up retained"
+      fail "$EVIDENCE_WAITING; old public evidence retained; catch-up retained"
       return 1
     fi
     while IFS= read -r path; do paths+=("$path"); done <<<"$bundle_paths"
@@ -140,7 +140,7 @@ evidence_refresh() {
     EVIDENCE_WAITING="evidence: waiting for inputs ($readiness)"
     if [ "${OPAX_EVIDENCE_BUILD:-0}" = 1 ]; then
       EVIDENCE_WAITING="evidence: built bundle readiness failed ($readiness)"
-      fail "$EVIDENCE_WAITING; old public evidence and active bundle retained; catch-up retained; export skipped"
+      fail "$EVIDENCE_WAITING; old public evidence retained; catch-up retained; export skipped"
       return 1
     fi
     if [[ $readiness == missing:* ]]; then
