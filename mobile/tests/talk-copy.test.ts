@@ -199,8 +199,17 @@ test('an Ask pay row opens an unsent Ask draft; other Ask links do not', () => {
     params: { question: 'How much is the example office paid?' },
   });
   expect(canOpenSource(pay.path)).toBe(true);
-  for (const path of ['/ask', '/ask?q=%20', '/ask?view=search&q=x'])
+  for (const path of [
+    '/ask',
+    '/ask?q=%20',
+    '/ask?q=+',
+    '/ask?q=&q=Example',
+    '/ask?view=search&q=x',
+    '/ask/?q=Example',
+  ]) {
     expect([path, askDraftDestination(path)]).toEqual([path, null]);
+    expect([path, canOpenSource(path)]).toEqual([path, false]);
+  }
   expect(askDraftDestination('/doc/speech-1')).toBeNull();
   expect(canOpenSource('/doc/speech-1')).toBe(true);
 });

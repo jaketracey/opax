@@ -10,6 +10,20 @@ final class EvidenceTests: SafeVoiceTestCase {
             XCTAssertNil(EvidenceModel.sourcePath(path), path)
         }
     }
+    func testAskLinksAreOnlyQuestionDraftsNotGenericFallbacksOrSearch() throws {
+        for path in ["/ask?q=Example+pay", "/ask?q=%2B", "/ask?q=Example#sources"] {
+            XCTAssertEqual(EvidenceModel.sourcePath(path), path)
+        }
+        var model = EvidenceModel()
+        for path in ["/ask", "/ask#sources", "/ask?q=", "/ask?q=%20", "/ask?q=+", "/ask?q=&q=Example", "/ask?q=Example&view=search", "/ask?q=Example&view=", "/ask/?q=Example"] {
+            XCTAssertNil(EvidenceModel.sourcePath(path), path)
+            model.collect(try JSONDecoder().decode(JSONValue.self, from: json(["title": "Example pay", "url": path])))
+        }
+        XCTAssertTrue(model.sources.isEmpty)
+        // ask_opax's no-record fallback uses source_url, never a source row.
+        model.collect(try JSONDecoder().decode(JSONValue.self, from: json(["source_url": "https://opax.com.au/ask", "sources": []])))
+        XCTAssertTrue(model.sources.isEmpty)
+    }
     func testMarkdownCorrectionsAndAllCaps() {
         var model = EvidenceModel()
         for index in 0..<81 {
@@ -44,6 +58,12 @@ final class EvidenceTests: SafeVoiceTestCase {
                         recordTitle: "Example office pay: every step since 1999", speaker: nil, date: "1999–2026", type: "Pay record"),
             VoiceSource(title: "Example Office Determination 2025", path: "/doc/legal-700001", recordTitle: "Example Office Determination 2025", speaker: "Remuneration Tribunal", date: "2025-07-01", type: "Pay determination"),
         ])
+        let projected = VoiceBridgeValue.source(model.sources[0])
+        XCTAssertEqual(Set(projected.keys), ["title", "path", "recordTitle", "speaker", "date", "type"])
+        XCTAssertEqual(projected["recordTitle"] as? String, "Committees")
+        XCTAssertEqual(projected["speaker"] as? String, "Alex Example")
+        XCTAssertEqual(projected["date"] as? String, "2001-06-21")
+        XCTAssertEqual(projected["type"] as? String, "Speech")
     }
     func testShippedTitleOnlySourcesDecodeAsBefore() throws {
         var model = EvidenceModel()

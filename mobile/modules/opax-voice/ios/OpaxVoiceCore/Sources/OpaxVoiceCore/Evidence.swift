@@ -16,6 +16,15 @@ struct EvidenceModel: Sendable {
         let parts = URLComponents(url: url, resolvingAgainstBaseURL: false)!
         guard parts.percentEncodedPath.range(of: pattern, options: .regularExpression) != nil,
               url.absoluteString.range(of: "%[01][0-9a-f]|%7f", options: [.regularExpression, .caseInsensitive]) == nil else { return nil }
+        if parts.percentEncodedPath == "/ask" || parts.percentEncodedPath == "/ask/" {
+            // Ask's calculated records carry a question. Its generic fallback and Search are not records.
+            var query = URLComponents()
+            query.percentEncodedQuery = parts.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%20")
+            let items = query.queryItems ?? []
+            guard parts.percentEncodedPath == "/ask", !items.contains(where: { $0.name == "view" }),
+                  let question = items.first(where: { $0.name == "q" })?.value,
+                  !question.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return nil }
+        }
         return parts.percentEncodedPath + (parts.percentEncodedQuery.map { "?" + $0 } ?? "") + (parts.percentEncodedFragment.map { "#" + $0 } ?? "")
     }
     mutating func add(_ turn: TranscriptTurn, correction: Bool) {

@@ -751,9 +751,11 @@ export interface RecordRowProps {
   href?: Href;
   /** Selects a source or opens it in the reader's detail pane. */
   onPress?: () => void;
+  accessibilityHint?: string;
   selected?: boolean;
   leading?: { content: ReactNode; label: string };
-  external?: External;
+  /** A URL to open, or just the glyph when onPress owns deferred navigation. */
+  external?: External | boolean;
   menu?: 'record' | RowMenuAction[];
   testID?: string;
 }
@@ -796,6 +798,7 @@ export function RecordRow({
   speaker,
   href,
   onPress,
+  accessibilityHint,
   selected,
   leading,
   external,
@@ -851,7 +854,7 @@ export function RecordRow({
     onPress ??
     (href
       ? recordLink.open
-      : external
+      : typeof external === 'object'
         ? () => void openSource(external.url, external.label)
         : undefined);
   const Content = separateSpeaker ? Pressable : View;
@@ -863,6 +866,7 @@ export function RecordRow({
       }
       accessibilityState={selected === undefined ? undefined : { selected }}
       accessibilityLabel={separateSpeaker ? undefined : label}
+      accessibilityHint={separateSpeaker ? undefined : accessibilityHint}
       testID={separateSpeaker && testID ? `${testID}-container` : testID}
       onPress={separateSpeaker || external || onPress ? open : undefined}
       onLongPress={
@@ -887,6 +891,7 @@ export function RecordRow({
                 accessibilityRole:
                   href || external || onPress ? ('link' as const) : undefined,
                 accessibilityLabel: label,
+                accessibilityHint,
                 accessibilityState:
                   selected === undefined ? undefined : { selected },
                 testID,

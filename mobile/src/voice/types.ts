@@ -83,7 +83,8 @@ export type TranscriptTurn = {
  * Ask's labels when the voice tool sends them (im/voice-ask): the plain
  * record title, the speaker or body, the date (a day, month, year or short
  * label such as "1999–2026") and the record type ("Speech", "Pay record").
- * Older native builds and the shipped server send title and path only.
+ * The Worker sends `record_title` and `url`; native projects these as
+ * `recordTitle` and a validated `path`. Older payloads have title and path only.
  */
 export type VoiceSource = {
   title: string;

@@ -97,6 +97,10 @@ internal class EvidenceModel {
         return null
       }
       if (!record.matches(url.encodedPath) || control.containsMatchIn(url.toString())) return null
+      // Ask's calculated records carry a question. Its generic fallback and Search are not records.
+      if (url.encodedPath == "/ask" || url.encodedPath == "/ask/") {
+        if (url.encodedPath != "/ask" || "view" in url.queryParameterNames || url.queryParameter("q").isNullOrBlank()) return null
+      }
       return url.encodedPath + (url.encodedQuery?.let { "?$it" } ?: "") + (url.encodedFragment?.let { "#$it" } ?: "")
     }
 

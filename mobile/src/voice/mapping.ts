@@ -11,6 +11,7 @@ import {
   type VoiceSource,
   type VoiceStatus,
 } from './types';
+import { isAskRecordPath } from './source-path';
 const invalid = () => {
   throw new Error('Invalid native voice value');
 };
@@ -150,7 +151,8 @@ export function mapEvent(value: unknown): VoiceEvent | null {
               !/^\/(?:doc\/[^/?#]+|bill\/[^/?#]+|subject\/(?:person|party|supplier|donor|recipient|topic|campaigner|agency)\/[^/?#]+|money(?:\/(?:contracts|grants|donations|receipts|expenses|interests))?|declared|search|connections|topics|parties|reports(?:\/[^/?#]+)?|journey\/[^/?#]+|ask)\/?(?:[?#].*)?$/.test(
                 path,
               ) ||
-              /%[01][0-9a-f]|%7f/i.test(path)
+              /%[01][0-9a-f]|%7f/i.test(path) ||
+              (/^\/ask(?:[/?#]|$)/.test(path) && !isAskRecordPath(path))
             )
               return invalid();
             // Ask's labels when the tool sent them; a bad one is left out.
