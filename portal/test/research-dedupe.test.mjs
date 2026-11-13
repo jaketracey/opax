@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
 import {build} from 'esbuild';
 import {MockLanguageModelV4} from 'ai/test';
 
@@ -47,13 +48,34 @@ test('two sources with different figures both survive fact selection, writing an
   assert.match(out.answer,/17 households/);assert.match(out.answer,/19 households/);validRanges(out);
 });
 
-test('even identical wording from different sources remains a separate source claim',()=>{
+test('identical wording from different sources becomes one sentence carrying both citations',()=>{
   const text='The recovery scheme affected 17 households in the district.';
   const facts=[fact(1,text,'https://example.test/first'),fact(2,text,'https://example.test/second')];
   const out=api.verifyWrittenAnswer({sentences:facts.map(f=>({text,facts:[f.id]}))},input('Who was affected?',facts));
-  assert.equal(out.answer.split('\n\n').length,2);assert.equal(out.sources.length,2);
+  assert.equal(out.answer,text);assert.equal(out.sources.length,2);
+  for(const f of facts)assert.deepEqual(out.citations[f.source.resource+'/t/body/0'],[[0,text.length]]);
+  assert.ok(out.sources.every(s=>s.cited));validRanges(out);
   const appended=api.appendWrittenPoints(answer([text],[facts[0].source]),answer([text],[facts[1].source]));
-  assert.equal(appended.answer.split('\n\n').length,2);
+  assert.equal(appended.answer,text);assert.equal(Object.keys(appended.citations).length,2);
+  assert.ok(appended.sources.every(s=>s.cited));validRanges(appended);
+});
+
+test('normalised exact wording merges different sources while retaining the earlier spelling',()=>{
+  const first='The recovery scheme affected 17 households in the district.';
+  const second=first.toUpperCase();
+  const out=api.distinctSummary(answer([first,second],[source('first',first,'https://example.test/first'),source('second',second,'https://example.test/second')]));
+  assert.equal(out.answer,first);assert.equal(Object.keys(out.citations).length,2);
+  assert.ok(out.sources.every(s=>s.cited));validRanges(out);
+});
+
+test('r143 pre-writer record labels and selected points produce seven facts',async()=>{
+  const fixture=JSON.parse(await readFile(new URL('./fixtures/ask-dedupe/01-robodebt.json',import.meta.url),'utf8'));
+  const sources=fixture.pre_writer_sources.map(s=>({slug:'',href:s.url,...s}));
+  assert.equal(sources.length,10);
+  const facts=api.writingFacts({answer:'',citations:{},sources});
+  assert.equal(facts.length,7);
+  for(const resource of ['fact-23','fact-24','fact-26'])assert.equal(facts.filter(f=>f.source.resource===resource).length,1);
+  assert.match(facts.find(f=>f.source.resource==='fact-26').text,/990-page.*57 recommendations/);
 });
 
 test('near-identical sentences keep the earlier wording and merge same-source citations with Unicode offsets',()=>{
@@ -98,6 +120,17 @@ test('long shared templates preserve different categories and their equal figure
   assert.equal(api.distinctSummary(payload).answer,text+'\n\n'+second);
 });
 
+for(const reverse of [false,true])test('a sentence under thirty words retains an added name, '+(reverse?'named wording first':'unnamed wording first'),()=>{
+  const first='The Example Commission found that officials ignored repeated legal warnings from senior departmental advisers during the development and implementation of the recovery scheme.';
+  const named=first.replace('found that officials','found that Avery Sample and officials');
+  const lines=reverse?[named,first]:[first,named];
+  assert.ok(named.split(' ').length<30);
+  const payload=answer(lines,lines.map((text,i)=>source('record-'+i,text)));
+  assert.equal(api.distinctSummary(payload).answer,lines.join('\n\n'));
+  const facts=api.dedupeWritingFacts(lines.map((text,i)=>fact(i+1,text)));
+  assert.equal(facts.length,2);assert.ok(facts.some(f=>f.text.includes('Avery Sample')));
+});
+
 test('punctuation folding cannot merge different decimal figures before writing',()=>{
   const a='The Example Commission reported 1.5 million claims for the recovery scheme.';
   const b='The Example Commission reported 1,5 million claims for the recovery scheme.';
@@ -124,6 +157,13 @@ for(const method of ['verifyWrittenAnswer','proseFallback']){
   test(method+': a count question retains the historical-total note',()=>{
     const out=write('How many recommendations were implemented?');
     assert.match(out.coverage.note,/complete historical total/);
+  });
+  test(method+': money rankings retain the historical-total note without scope constraints',()=>{
+    for(const question of ['Who gave Labor the most money?', 'Which donors gave the most to Labor?', 'Who are Labor\'s top donors?', 'Who gave Labor the biggest donations?', 'Who gave Labor the largest gifts?', 'Who gave Labor so much money?']){
+      const out=write(question);
+      assert.match(out.coverage.note,/complete historical total/,question);
+    }
+    assert.doesNotMatch(write('Who was most responsible for the recovery scheme?').coverage?.note??'',/complete historical total/);
   });
 }
 

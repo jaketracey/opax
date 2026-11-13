@@ -1,0 +1,87 @@
+{
+ "id": "robodebt-r143-facts",
+ "question": "Who was responsible for robodebt?",
+ "pre_writer_sources": [
+  {
+   "resource": "fact-23",
+   "title": "Royal Commission into the Robodebt Scheme, Report of the Royal Commission into the Robodebt Scheme, page 31 [finding], in the commission's own words: \"The Scheme was approved by Cabinet and proceeded without the legislative change to support averaging which DSS had said was needed.\"",
+   "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF#page=31",
+   "snippet": "Royal Commission into the Robodebt Scheme, Report of the Royal Commission into the Robodebt Scheme, page 31 [finding], in the commission's own words: \"The Scheme was approved by Cabinet and proceeded without the legislative change to support averaging which DSS had said was needed.\"",
+   "cited": true,
+   "kind": "record"
+  },
+  {
+   "resource": "fact-23",
+   "title": "Royal Commission into the Robodebt Scheme, Report of the Royal Commission into the Robodebt Scheme, page 31 [finding], in the commission's own words: \"The Scheme was approved by Cabinet and proceeded without the legislative change to support averaging which DSS had said was needed.\"",
+   "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF#page=31",
+   "snippet": "The commission found \"The Scheme was approved by Cabinet and proceeded without the legislative change to support averaging which DSS had said was needed\", and concluded that It was a costly failure of public administration, in both human and economic terms.",
+   "cited": true,
+   "kind": "record"
+  },
+  {
+   "resource": "fact-24",
+   "title": "Royal Commission into the Robodebt Scheme, Report of the Royal Commission into the Robodebt Scheme, page 702 [conclusion], in the commission's own words: \"The Ombudsman was deliberately misled, thus providing further opportunity for the Government to resist scrutiny by using his report as a shield.\"",
+   "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF#page=702",
+   "snippet": "Royal Commission into the Robodebt Scheme, Report of the Royal Commission into the Robodebt Scheme, page 702 [conclusion], in the commission's own words: \"The Ombudsman was deliberately misled, thus providing further opportunity for the Government to resist scrutiny by using his report as a shield.\"",
+   "cited": true,
+   "kind": "record"
+  },
+  {
+   "resource": "fact-24",
+   "title": "Royal Commission into the Robodebt Scheme, Report of the Royal Commission into the Robodebt Scheme, page 702 [conclusion], in the commission's own words: \"The Ombudsman was deliberately misled, thus providing further opportunity for the Government to resist scrutiny by using his report as a shield.\"",
+   "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF#page=702",
+   "snippet": "The commission also found that \"The Ombudsman was deliberately misled, thus providing further opportunity for the Government to resist scrutiny by using his report as a shield.\"",
+   "cited": true,
+   "kind": "record"
+  },
+  {
+   "resource": "fact-26",
+   "title": "Royal Commission into the Robodebt Scheme: \"established by Letters Patent on 18 August 2022\" (Report of the Royal Commission into the Robodebt Scheme, page 11).",
+   "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+   "snippet": "Royal Commission into the Robodebt Scheme: \"established by Letters Patent on 18 August 2022\" (Report of the Royal Commission into the Robodebt Scheme, page 11).",
+   "cited": true,
+   "kind": "record"
+  },
+  {
+   "resource": "fact-26",
+   "title": "Royal Commission into the Robodebt Scheme: \"established by Letters Patent on 18 August 2022\" (Report of the Royal Commission into the Robodebt Scheme, page 11).",
+   "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+   "snippet": "The Royal Commission into the Robodebt Scheme was established by Letters Patent on 18 August 2022 and reported on 7 July 2023, with Catherine Holmes AC SC as Royal Commissioner; its 990-page report examined the establishment of the scheme and who was responsible for it, and made 57 recommendations.",
+   "cited": true,
+   "kind": "record"
+  },
+  {
+   "resource": "fact-27",
+   "title": "Royal Commission into the Robodebt Scheme commissioners as Report of the Royal Commission into the Robodebt Scheme names them: Catherine Holmes AC SC (Royal Commissioner).",
+   "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+   "snippet": "Royal Commission into the Robodebt Scheme commissioners as Report of the Royal Commission into the Robodebt Scheme names them: Catherine Holmes AC SC (Royal Commissioner).",
+   "cited": true,
+   "kind": "record"
+  },
+  {
+   "resource": "fact-28",
+   "title": "Report of the Royal Commission into the Robodebt Scheme (dated 7 July 2023).",
+   "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+   "snippet": "Report of the Royal Commission into the Robodebt Scheme (dated 7 July 2023).",
+   "cited": true,
+   "kind": "record"
+  },
+  {
+   "resource": "fact-21",
+   "title": "Royal Commission into the Robodebt Scheme (royal commission, Commonwealth): established 18 August 2022, final report 7 July 2023. Its reports make 57 recommendations; no government response or implementation document is held; 47 hearing transcripts are held (evidence, not findings).",
+   "url": "https://opax.com.au/royal-commissions/commission-cth-robodebt.json",
+   "snippet": "Royal Commission into the Robodebt Scheme (royal commission, Commonwealth): established 18 August 2022, final report 7 July 2023. Its reports make 57 recommendations; no government response or implementation document is held; 47 hearing transcripts are held (evidence, not findings).",
+   "cited": true,
+   "kind": "record"
+  },
+  {
+   "resource": "coverage",
+   "title": "Coverage of the selected records",
+   "url": "https://opax.com.au/royal-commissions/commission-cth-robodebt.json",
+   "snippet": "Recommendations are the commission's own words with the report page each was read from. A status appears only where a government publishes one for that recommendation, in its own words; otherwise the status is unknown, not unimplemented. Findings and recommendations of a royal commission or inquiry are not findings of criminal or civil liability. Hearing transcripts are evidence, not findings. view=transcripts lists the hearing transcripts, newest first. No loaded recommendation matches. Try fewer words, or view=profile for the commission's reports.",
+   "cited": true,
+   "kind": "record",
+   "coverage": true
+  }
+ ]
+}

@@ -14,6 +14,8 @@ export function sameStatement(earlier:string,later:string):boolean {
   if(normal(earlier)===normal(later))return true
   if(normal(later).length>=20&&(' '+normal(earlier)+' ').includes(' '+normal(later)+' '))return true
   const a=words(earlier),b=words(later),shared=[...b].filter(w=>a.has(w)).length
+  // In a short sentence, even one additional name can change who the finding is about.
+  if(Math.min(normal(earlier).split(' ').length,normal(later).split(' ').length)<30&&a.size!==b.size)return false
   // Substituting a category, name or claim word is new content even in a long shared template.
   return shared>=6&&shared===Math.min(a.size,b.size)&&shared/Math.max(a.size,b.size)>=0.9
 }
@@ -57,7 +59,7 @@ export function dedupeAnswer<T extends Record<string,unknown>>(payload:T):T {
   }
   const consider=(p:Part)=>{
     if(removed.some(r=>p.start>=r.start&&p.end<=r.end))return
-    const prior=kept.find(k=>sameSource(k,p)&&sameStatement(k.text,p.text)&&transfers(p,k)!==null)
+    const prior=kept.find(k=>(normal(k.text)===normal(p.text)||sameSource(k,p))&&sameStatement(k.text,p.text)&&transfers(p,k)!==null)
     if(!prior){kept.push(p);return}
     for(const {id,start,end} of transfers(p,prior)!){const ranges=citations[id]??=[];if(!ranges.some(([a,b])=>a===start&&b===end))ranges.push([start,end]);if(!prior.ids.includes(id))prior.ids.push(id)}
     removed.push(p)

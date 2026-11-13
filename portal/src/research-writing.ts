@@ -197,7 +197,8 @@ function coverageApplies(text:string,input:WritingInput):boolean {
   if(/ranked (?:sample|matching)|topic|Hansard|committee|labelled speeches/i.test(text))return speechCount
   return true
 }
-const totalsAsked=(input:WritingInput)=>isRecordCountQuestion(input.question)||!!input.constraints?.recordCountKind||!!input.constraints?.speechRankingGrain||!!input.constraints?.industryRanking||!!input.constraints?.grantRecipient||/\b(?:how many|how much|number of|count|total|totals)\b/i.test(input.question)
+const totalsAsked=(input:WritingInput)=>isRecordCountQuestion(input.question)||!!input.constraints?.recordCountKind||!!input.constraints?.speechRankingGrain||!!input.constraints?.industryRanking||!!input.constraints?.grantRecipient||/\b(?:how many|how much|number of|count|total|totals)\b/i.test(input.question)||
+  /\b(?:most|top|biggest|largest|so much)\b/i.test(input.question)&&(/\b(?:money|donations?|donors?|receipts?|funding|gifts?|payments?|dollars?)\b/i.test(input.question)||input.facts.some(f=>f.source.receipt))
 function coverageSentence(input: WritingInput): WrittenSentence | undefined {
   const all = input.facts.filter(f => f.coverage && !/^(?:Period|Financial years):/i.test(f.text)&&coverageApplies(f.text,input))
   const basis=basisSentence(all,totalsAsked(input)),unconfirmed=all.filter(f=>f.text.includes(UNCONFIRMED_PERIOD))
