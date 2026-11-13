@@ -161,14 +161,14 @@ HPEOF
 import importlib.util, json, pathlib, sys
 seed = sys.argv[1]
 def bill(n, briefs):
-    return {"key": f"au-federal-t{n}", "title": f"Test Bill {n}", "status": "introduced", "status_as_of": "2026-09-01",
+    return {"key": f"au-federal-t{n}", "title": f"Test Bill {n}", "status": "before_parliament", "status_as_of": "2026-09-01",
             "divisions": [{'key':'federal-senate-1','date':'2026-09-01','house':'senate',
                            'question':'Fixture question','ayes':1,'noes':0,'outcome':'affirmative',
                            'url':'https://example.test/division'}] if n == 1 else [],
             "speeches": [{"slug": f"s{n}-{i}", "speaker": "A", "date": "2026-09-01", "state": "NSW", "brief": b}
                          for i, b in enumerate(briefs)]}
 docs = [bill(1, ["Brief 1-0", "Brief 1-1"]), bill(2, ["Brief 2-0"]), bill(3, [])]
-rows = [{"key": d["key"], "title": d["title"], "parliament": 48, "introduced": "2026-08-01", "status": "introduced",
+rows = [{"key": d["key"], "title": d["title"], "parliament": 48, "introduced": "2026-08-01", "status": "before_parliament",
          "status_as_of": d["status_as_of"], "speeches": len(d["speeches"]), "divisions": len(d["divisions"])} for d in docs]
 for d in docs:
     open(f"{seed}/portal/public/bills/{d['key']}.json", "w").write(json.dumps(d, ensure_ascii=False, indent=1) + "\n")
