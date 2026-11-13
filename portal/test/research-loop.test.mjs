@@ -24,7 +24,7 @@ test('loop answer instructions require a direct first point, unique facts and se
  assert.match(instructions,/first point directly answers the question with the requested name, date or outcome/);
  assert.match(instructions,/never restating the question/);
  assert.match(instructions,/pasting raw tool rows/);
- assert.match(instructions,/for who, name the people and their roles; for why, give the reason; for what happened, give the outcome/);
+ assert.match(instructions,/For a who question, name the people and their roles first, then what the inquiry or record found about each/);assert.match(instructions,/never how OPAX loaded or stored them/);
  assert.match(instructions,/say who said it/);assert.match(instructions,/by the name on the record/);
  assert.match(instructions,/Select each fact once/);
  assert.match(instructions,/Each figure comes from one selected fact with its supporting citation/);
