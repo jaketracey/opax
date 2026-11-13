@@ -13,6 +13,7 @@ from pathlib import Path
 import re
 import sqlite3
 import xml.etree.ElementTree as ET
+from division_held_speeches import held_speech_tables
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -21,6 +22,7 @@ def measure(db, directory, archive=None):
     index = json.loads((directory / 'index.json').read_text())
     records = [json.loads((directory / (r['slug'] + '.json')).read_text())
                for r in index['divisions'] if r['member_coverage'] == 'partial']
+    speech_tables = held_speech_tables(db, {r['key']: r for r in records})
     ext = {r['id']: dict(r) for r in db.execute('SELECT * FROM ext_divisions')}
     legacy = {r['division_id']: dict(r) for r in db.execute('SELECT * FROM divisions')}
     legacy_votes = defaultdict(set)
@@ -97,7 +99,8 @@ def measure(db, directory, archive=None):
                 printed = [int(count.get(v)) for v in ('ayes', 'noes')]
                 row['xml'] = dict(url='https://data.openaustralia.org.au/scrapedxml/' + str(path.relative_to(archive / 'raw')),
                                   sha256=digest, gid=node.get('id'), counts=printed, tellers=tellers,
-                                  same_votes=xml_set == held and len(xml_set) == len(xml_votes),
+                                  same_votes=xml_set == held and len(xml_set) == len(xml_votes)
+                                  and len({pid for pid, _, _ in xml_votes}) == len(xml_votes),
                                   additional=sorted(xml_set - held, key=str))
                 if row['xml']['same_votes'] and printed == named and tellers == delta and any(tellers):
                     row.update(classification='a', reason='published totals exclude explicitly marked XML tellers')
@@ -105,6 +108,9 @@ def measure(db, directory, archive=None):
             row.update(classification='b', reason='additional named votes held in legacy votes (identity review required)')
         if any(d < 0 for d in delta) and row['classification'] == 'd':
             row['reason'] = 'named shortfall; no additional legacy votes; source convention or omitted name unproved'
+        if row['classification'] == 'd' and key in speech_tables:
+            row.update(classification='b', reason='unique held Hansard list matches topic, totals and every held vote',
+                       held_speech=speech_tables[key])
         output.append(row)
     return dict(schema=1, baseline_divisions=index['count'], baseline_partial=len(records),
                 classes=dict(Counter(r['classification'] for r in output)),

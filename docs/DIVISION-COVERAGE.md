@@ -2,21 +2,26 @@
 
 Baseline: branch `im/division-coverage`, parent `b65d87783`, 14 November 2026. All **3,706 partial pages out of 11,075** were measured before exporter changes. Deltas below are **named minus published official**; paired and absent rows do not contribute to aye/no counts. This is a classification of evidence, not an assumption that every mismatch means a missing person.
 
-| Class and gap shape | Pages | Partial before | Examples (three per non-empty class) |
-| --- | ---: | ---: | --- |
-| a: House, two tellers each side | 688 | 688 | `federal-representatives-2439`, `federal-representatives-2440`, `federal-representatives-2442` |
-| a: Senate, one teller each side | 975 | 975 | `federal-senate-1131`, `federal-senate-1132`, `federal-senate-1133` |
-| a: one-sided teller counts | 38 | 38 | `federal-representatives-396`, `federal-representatives-502`, `federal-representatives-804` |
-| a: unequal teller counts | 18 | 18 | `federal-representatives-2447`, `federal-representatives-2457`, `federal-representatives-3490` |
-| b: held NSW name table and dated roster | 16 | 16 | `nsw-lc-2025-11-27-2`, `nsw-lc-2025-11-27-3`, `nsw-lc-2025-11-27-5` |
-| d: NSW source absent from DB | 25 | 25 | `nsw-lc-2026-09-23-5`, `nsw-lc-2026-09-24-13`, `nsw-lc-2026-09-24-14` |
-| d: NSW table conflicts | 4 | 4 | `nsw-lc-2025-12-23-20`, `nsw-lc-2025-12-23-21`, `nsw-lc-2025-12-23-22` |
-| d: federal one name short | 1,498 | 1,498 | `federal-representatives-4520`, `federal-representatives-4521`, `federal-representatives-4588` |
-| d: federal two names short | 439 | 439 | `federal-representatives-4259`, `federal-representatives-4260`, `federal-representatives-4261` |
-| d: larger or mixed gap | 5 | 5 | `federal-representatives-2496`, `federal-representatives-2549`, `federal-representatives-2694` |
-| c: proven to need a new network fetch | 0 | 0 | None established |
+| Class and gap shape | Pages | Examples (three per non-empty class) |
+| --- | ---: | --- |
+| a: House, two tellers each side | 688 | `federal-representatives-2439`, `federal-representatives-2440`, `federal-representatives-2442` |
+| a: Senate, one teller each side | 975 | `federal-senate-1131`, `federal-senate-1132`, `federal-senate-1133` |
+| a: one-sided teller counts | 38 | `federal-representatives-396`, `federal-representatives-502`, `federal-representatives-804` |
+| a: unequal teller counts | 18 | `federal-representatives-2447`, `federal-representatives-2457`, `federal-representatives-3490` |
+| b: held Hansard list for a division absent from ext_ | 12 | `nsw-lc-2026-09-23-5`, `nsw-lc-2026-09-24-13`, `nsw-lc-2026-09-24-14` |
+| b: held Hansard list replaces conflicting extract | 4 | `nsw-lc-2025-12-23-20`, `nsw-lc-2025-12-23-21`, `nsw-lc-2025-12-23-22` |
+| b: held NSW name table and dated roster | 16 | `nsw-lc-2025-11-27-2`, `nsw-lc-2025-11-27-3`, `nsw-lc-2025-11-27-5` |
+| d: NSW source absent from DB | 13 | `nsw-lc-2026-10-13-2`, `nsw-lc-2026-10-20-1`, `nsw-lc-2026-10-20-2` |
+| d: federal one name short | 1,498 | `federal-representatives-4520`, `federal-representatives-4521`, `federal-representatives-4588` |
+| d: federal two names short | 439 | `federal-representatives-4259`, `federal-representatives-4260`, `federal-representatives-4261` |
+| d: larger or mixed gap | 5 | `federal-representatives-2496`, `federal-representatives-2549`, `federal-representatives-2694` |
+| c: proved to require a new network fetch | 0 | None established |
 
-Class totals: **a = 1,719; b = 16; c = 0; d = 1,971**. Class c is deliberately empty: absence of a name in the held database does not prove a new fetch will supply it. The remaining mismatches stay unknown until a source establishes whether the count or the list differs. No casting vote or pair has been presumed from a numerical gap.
+**Revised class totals: a = 1,719; b = 32; c = 0; d = 1,955.** The first measurement commit, `275d5852b`, found 16 held-name-table recoveries. A broader audit of `speeches.text` found 16 further recoveries before that recovery path was implemented: four conflicting extracted tables and 12 newer divisions absent from ext_. The revision preserves the original 3,706-page baseline and its named-vote fingerprints. Class c remains empty because absence of a held name does not prove a new fetch will supply it. No casting vote or pair is presumed from a numerical gap.
+
+`docs/evidence/division-held-speech-lists.json` freezes 30 unique held speech-list matches, including corroboration of 14 of the original 16 name-table cases. Each match has the same chamber, date, topic, official side counts and every existing named vote. The full printed list must contain unique surnames, and exactly one held list may match. Additional names must independently pass the dated chamber and seat checks. For the 12 September 23 to 24 cases, the open roster service observed on 21 September is corroborated by the held official Council list on 25 September, bounding the same service through 25 September. Nothing is projected into the October sittings.
+
+An FTS audit of all partial chamber-days found 52 matching federal speech candidates, all procedural text rather than named roll calls, and 76 NSW Council candidates on six dates. There are no held October lists for the remaining 13 NSW pages. This resolves the four conflicting extracts from full held text and supplies the original lists for 12 of the 25 pages absent from ext_.
 
 ## Evidence and scope
 
@@ -26,7 +31,7 @@ An already cached OpenAustralia archive at `/home/jake/opax-staging/oa-feed` was
 
 For example, [Senate 2858, 6 September 2006](https://data.openaustralia.org.au/scrapedxml/senate_debates/2006-09-06.xml) explicitly lists 34 ayes and 37 noes, including one teller on each side. The published TVFY totals are 33 and 36. The named voters are all held; no name or source total needs changing. House XML can mark two tellers on each side, only one side, or unequal numbers. The 18 unequal cases are accepted only because the individual XML records explicitly mark those numbers.
 
-Class b contains 16 NSW Council pages whose held `ext_divisions.extra.table_names` retains Franklin and agrees with all other named votes. The held `ext_state_roster` uniquely identifies Ben Franklin, Q19873536, in `nsw_lc` from 8 May 2019, observed through 21 September 2026. The reviewed NSW Council list No. 320 (25 September 2026), held in `scripts/roster_state_evidence.json`, independently records his statewide New South Wales seat. No party is inferred from the coalition label in Wikidata. Four other NSW rows have held tables that disagree with the published vote lists; those are class d and must be retained without a guessed repair. Twenty-five later partial NSW pages have no corresponding source row in this database.
+Class b contains 32 NSW Council pages. Sixteen have Franklin in held `ext_divisions.extra.table_names`; 16 further pages have a matching complete list in `speeches.text`. The held `ext_state_roster` uniquely identifies Ben Franklin, Q19873536, in `nsw_lc` from 8 May 2019, observed on 21 September 2026. The reviewed official Council list No. 320, 25 September 2026, held in `scripts/roster_state_evidence.json`, independently records his statewide New South Wales seat and corroborates that open service through 25 September. No later vote date is inferred and no party is inferred from Wikidata's coalition label. Each speech-list match records its speech ID, text SHA-256, full printed side lists, topic, counts and the additional name's dated identity.
 
 ## What another acquisition could add
 
@@ -34,7 +39,7 @@ For the 1,937 small federal shortfalls, a TVFY public division page and the corr
 
 The five larger gaps are House 2496, 2549 and 2694, and Senate 3166 and 3310. The separate cached XML has respectively 15, 6, 6, 15 and 7 additional identities (49 member-votes); these are not in the held database vote tables. The cached evidence also reveals a remaining no-vote discrepancy for Senate 3310. Name recovery was requested from sources already in parli.db, so importing this separate archive is an optional scope extension, not counted in class b here. Four other XML records (House 5752 to 5755) contradict existing named votes; House 7968 has an extra aye when the published gap is a no. They require source review, not unioning vote sets.
 
-For the 25 later NSW pages absent from the DB, reacquiring their NSW Hansard API daily fragments could supply the original name tables, potentially the same unresolved Franklin row. For the four conflicting held NSW tables, reacquiring the exact fragment and selecting the correct numbered division could resolve the conflict. No new fetch is needed to implement classes a and b. No evidence supports silently changing a total, inventing an identity, treating an unrecorded row as absent, or counting a pair as an aye/no.
+For the 13 October NSW pages without held lists, reacquiring their NSW Hansard API daily fragments and a dated membership observation could supply the original tables and identity evidence. The four conflicting extracts and 12 September pages can already be closed from held speech text, without reacquisition. No new fetch is needed to implement classes a and b. No evidence supports silently changing a total, inventing an identity, treating an unrecorded row as absent, or counting a pair as an aye/no.
 
 ## Gap shape by chamber
 
@@ -97,10 +102,10 @@ For the 25 later NSW pages absent from the DB, reacquiring their NSW Hansard API
 | 2022 | representatives | theyvoteforyou | 0 | 0 | 109 | 109 |
 | 2023 | representatives | theyvoteforyou | 0 | 0 | 117 | 117 |
 | 2024 | representatives | theyvoteforyou | 0 | 0 | 150 | 150 |
-| 2025 | nsw_lc | nsw_hansard_api | 0 | 8 | 4 | 12 |
+| 2025 | nsw_lc | nsw_hansard_api | 0 | 12 | 0 | 12 |
 | 2025 | representatives | theyvoteforyou | 0 | 0 | 26 | 26 |
 | 2026 | nsw_lc | nsw_hansard_api | 0 | 8 | 0 | 8 |
-| 2026 | nsw_lc | published snapshot (absent from DB) | 0 | 0 | 25 | 25 |
+| 2026 | nsw_lc | published snapshot (absent from DB) | 0 | 12 | 13 | 25 |
 
 ## Reproduce
 
@@ -112,3 +117,10 @@ nice -n 10 python3 scripts/audit_division_coverage.py \
 ```
 
 Run against the baseline published exports. `docs/evidence/division-coverage-baseline.json` freezes the 3,706 classifications, all deltas, source evidence and named-vote fingerprints for review independently of a subsequent rebuild. Phase 2 results and gates will be appended after the measurement commit.
+
+The held speech-list measurement is independently reproducible against the original committed records:
+
+```sh
+nice -n 10 python3 scripts/division_held_speeches.py \
+  --baseline 275d5852b --out /tmp/division-held-speech-lists.json
+```

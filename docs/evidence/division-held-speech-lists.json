@@ -1,0 +1,2034 @@
+{
+  "baseline": "275d5852b",
+  "count": 30,
+  "records": {
+    "nsw-lc-2025-11-27-2": {
+      "id": "nsw-lc-2025-11-27-2",
+      "speech_id": 1303897,
+      "date": "2025-11-27",
+      "chamber": "nsw_lc",
+      "topic": "Children (Criminal Proceedings) and Young Offenders Legislation Amendment Bill 2025",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102504",
+      "sha256": "2da5eb0813d78ea59990db3773f2435a9f36bd814772c9c51b5ed220f06b92d9",
+      "counts": [
+        3,
+        33
+      ],
+      "table_names": {
+        "aye": [
+          "Fang",
+          "Hurst",
+          "Latham"
+        ],
+        "no": [
+          "Barrett",
+          "Graham",
+          "Moriarty",
+          "Boyd",
+          "Higginson",
+          "Munro",
+          "Buckingham",
+          "Houssos",
+          "Murphy",
+          "Buttigieg",
+          "Jackson",
+          "Nanva",
+          "Carter",
+          "Kaine",
+          "Overall",
+          "Cohn",
+          "Lawrence",
+          "Primrose",
+          "D'Adam",
+          "Maclaren-Jones",
+          "Rath",
+          "Donnelly",
+          "Merton",
+          "Sharpe",
+          "Faehrmann",
+          "Mihailuk",
+          "Suvaal",
+          "Farlow",
+          "Mitchell",
+          "Tudehope",
+          "Franklin",
+          "Mookhey",
+          "Ward"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "no",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2025-11-27-3": {
+      "id": "nsw-lc-2025-11-27-3",
+      "speech_id": 1303899,
+      "date": "2025-11-27",
+      "chamber": "nsw_lc",
+      "topic": "Children (Criminal Proceedings) and Young Offenders Legislation Amendment Bill 2025",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102504",
+      "sha256": "f67f6082fe69f5ccfb3a4a1503696cbeaa961be6d14943c0cd965f8661126c99",
+      "counts": [
+        14,
+        21
+      ],
+      "table_names": {
+        "aye": [
+          "Barrett",
+          "Maclaren-Jones",
+          "Rath",
+          "Carter",
+          "Merton",
+          "Ruddick",
+          "Fang",
+          "Mitchell",
+          "Tudehope",
+          "Farlow",
+          "Munro",
+          "Ward",
+          "Franklin",
+          "Overall"
+        ],
+        "no": [
+          "Boyd",
+          "Graham",
+          "Lawrence",
+          "Buckingham",
+          "Higginson",
+          "Moriarty",
+          "Buttigieg",
+          "Houssos",
+          "Murphy",
+          "Cohn",
+          "Hurst",
+          "Nanva",
+          "D'Adam",
+          "Jackson",
+          "Primrose",
+          "Donnelly",
+          "Kaine",
+          "Sharpe",
+          "Faehrmann",
+          "Latham",
+          "Suvaal"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "aye",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2025-11-27-7": {
+      "id": "nsw-lc-2025-11-27-7",
+      "speech_id": 1303921,
+      "date": "2025-11-27",
+      "chamber": "nsw_lc",
+      "topic": "Law Enforcement (Powers and Responsibilities) Amendment (Places of Worship) Bill 2025",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102506",
+      "sha256": "7777c19701e35d48a7974f6ed6148d992c7252dab6e221c5ead9719e6b36c7ce",
+      "counts": [
+        6,
+        26
+      ],
+      "table_names": {
+        "aye": [
+          "Boyd",
+          "Cohn",
+          "Higginson",
+          "Buckingham",
+          "Faehrmann",
+          "Mihailuk"
+        ],
+        "no": [
+          "Barrett",
+          "Houssos",
+          "Murphy",
+          "Buttigieg",
+          "Jackson",
+          "Nanva",
+          "Carter",
+          "Kaine",
+          "Overall",
+          "D'Adam",
+          "Lawrence",
+          "Primrose",
+          "Donnelly",
+          "Maclaren-Jones",
+          "Rath",
+          "Fang",
+          "Merton",
+          "Sharpe",
+          "Farlow",
+          "Mitchell",
+          "Suvaal",
+          "Franklin",
+          "Mookhey",
+          "Ward",
+          "Graham",
+          "Moriarty"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "no",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2025-12-23-5": {
+      "id": "nsw-lc-2025-12-23-5",
+      "speech_id": 1304468,
+      "date": "2025-12-23",
+      "chamber": "nsw_lc",
+      "topic": "Terrorism and Other Legislation Amendment Bill 2025",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102591",
+      "sha256": "5c4f0c67c2a2096bf75a4876af020b941d63c1df66332267795c887b1715b6a4",
+      "counts": [
+        2,
+        35
+      ],
+      "table_names": {
+        "aye": [
+          "Latham",
+          "Ruddick"
+        ],
+        "no": [
+          "Banasiak",
+          "Franklin",
+          "Moriarty",
+          "Barrett",
+          "Graham",
+          "Munro",
+          "Borsak",
+          "Higginson",
+          "Murphy",
+          "Boyd",
+          "Houssos",
+          "Nanva",
+          "Buttigieg",
+          "Hurst",
+          "Overall",
+          "Carter",
+          "Jackson",
+          "Primrose",
+          "Cohn",
+          "Kaine",
+          "Rath",
+          "D'Adam",
+          "Lawrence",
+          "Sharpe",
+          "Donnelly",
+          "Maclaren-Jones",
+          "Suvaal",
+          "Faehrmann",
+          "Merton",
+          "Tudehope",
+          "Fang",
+          "Mitchell",
+          "Ward",
+          "Farlow",
+          "Mookhey"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "no",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2025-12-23-6": {
+      "id": "nsw-lc-2025-12-23-6",
+      "speech_id": 1304474,
+      "date": "2025-12-23",
+      "chamber": "nsw_lc",
+      "topic": "Terrorism and Other Legislation Amendment Bill 2025",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102591",
+      "sha256": "418a851b1f6df9394e8d9e6a391373d266e8b7da8b2d23f3dd8a720299a97073",
+      "counts": [
+        2,
+        31
+      ],
+      "table_names": {
+        "aye": [
+          "Latham",
+          "Ruddick"
+        ],
+        "no": [
+          "Banasiak",
+          "Graham",
+          "Moriarty",
+          "Barrett",
+          "Higginson",
+          "Munro",
+          "Borsak",
+          "Hurst",
+          "Nanva",
+          "Carter",
+          "Jackson",
+          "Overall",
+          "Cohn",
+          "Kaine",
+          "Primrose",
+          "D'Adam",
+          "Lawrence",
+          "Rath",
+          "Donnelly",
+          "Maclaren-Jones",
+          "Sharpe",
+          "Faehrmann",
+          "Merton",
+          "Suvaal",
+          "Fang",
+          "Mitchell",
+          "Tudehope",
+          "Farlow",
+          "Mookhey",
+          "Ward",
+          "Franklin"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "no",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2025-12-23-19": {
+      "id": "nsw-lc-2025-12-23-19",
+      "speech_id": 1304595,
+      "date": "2025-12-23",
+      "chamber": "nsw_lc",
+      "topic": "Terrorism and Other Legislation Amendment Bill 2025",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102591",
+      "sha256": "7c4cdac6e430b55c0cf751789ea57c8a84bd3a6fdd53845c2f5174be4c37ef1a",
+      "counts": [
+        6,
+        26
+      ],
+      "table_names": {
+        "aye": [
+          "Boyd",
+          "Faehrmann",
+          "Hurst",
+          "Cohn",
+          "Higginson",
+          "Ruddick"
+        ],
+        "no": [
+          "Banasiak",
+          "Graham",
+          "Murphy",
+          "Barrett",
+          "Houssos",
+          "Nanva",
+          "Borsak",
+          "Jackson",
+          "Overall",
+          "Buttigieg",
+          "Kaine",
+          "Primrose",
+          "Carter",
+          "Lawrence",
+          "Rath",
+          "D'Adam",
+          "Merton",
+          "Sharpe",
+          "Donnelly",
+          "Mitchell",
+          "Suvaal",
+          "Fang",
+          "Mookhey",
+          "Tudehope",
+          "Franklin",
+          "Moriarty"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "no",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2025-12-23-20": {
+      "id": "nsw-lc-2025-12-23-20",
+      "speech_id": 1304599,
+      "date": "2025-12-23",
+      "chamber": "nsw_lc",
+      "topic": "Terrorism and Other Legislation Amendment Bill 2025",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102591",
+      "sha256": "3b6425142063025820eb6708d3d03eb879cd9e771115d323405808f88208fa26",
+      "counts": [
+        6,
+        20
+      ],
+      "table_names": {
+        "aye": [
+          "Boyd",
+          "Faehrmann",
+          "Hurst",
+          "Cohn",
+          "Higginson",
+          "Ruddick"
+        ],
+        "no": [
+          "Banasiak",
+          "Franklin",
+          "Moriarty",
+          "Borsak",
+          "Graham",
+          "Nanva",
+          "Buttigieg",
+          "Houssos",
+          "Overall",
+          "Carter",
+          "Jackson",
+          "Primrose",
+          "D'Adam",
+          "Lawrence",
+          "Sharpe",
+          "Donnelly",
+          "Mitchell",
+          "Suvaal",
+          "Fang",
+          "Mookhey"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "no",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2025-12-23-21": {
+      "id": "nsw-lc-2025-12-23-21",
+      "speech_id": 1304602,
+      "date": "2025-12-23",
+      "chamber": "nsw_lc",
+      "topic": "Terrorism and Other Legislation Amendment Bill 2025",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102591",
+      "sha256": "370b59c43a7ea6fba6124b93292d08cf05bddde56a43dee2de18658b6534814e",
+      "counts": [
+        5,
+        23
+      ],
+      "table_names": {
+        "aye": [
+          "Boyd",
+          "Faehrmann",
+          "Ruddick",
+          "Cohn",
+          "Higginson"
+        ],
+        "no": [
+          "Barrett",
+          "Graham",
+          "Nanva",
+          "Borsak",
+          "Jackson",
+          "Overall",
+          "Buttigieg",
+          "Lawrence",
+          "Primrose",
+          "Carter",
+          "Merton",
+          "Rath",
+          "D'Adam",
+          "Mitchell",
+          "Sharpe",
+          "Donnelly",
+          "Mookhey",
+          "Suvaal",
+          "Fang",
+          "Moriarty",
+          "Tudehope",
+          "Franklin",
+          "Murphy"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "no",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2025-12-23-22": {
+      "id": "nsw-lc-2025-12-23-22",
+      "speech_id": 1304603,
+      "date": "2025-12-23",
+      "chamber": "nsw_lc",
+      "topic": "Terrorism and Other Legislation Amendment Bill 2025",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102591",
+      "sha256": "4fd9f333dabb7457eda51edf94c0e97824c03d3f031e7269357ea3cbaf1fe573",
+      "counts": [
+        5,
+        24
+      ],
+      "table_names": {
+        "aye": [
+          "Boyd",
+          "Faehrmann",
+          "Ruddick",
+          "Cohn",
+          "Higginson"
+        ],
+        "no": [
+          "Banasiak",
+          "Franklin",
+          "Murphy",
+          "Barrett",
+          "Graham",
+          "Nanva",
+          "Borsak",
+          "Jackson",
+          "Overall",
+          "Buttigieg",
+          "Lawrence",
+          "Primrose",
+          "Carter",
+          "Merton",
+          "Rath",
+          "D'Adam",
+          "Mitchell",
+          "Sharpe",
+          "Donnelly",
+          "Mookhey",
+          "Suvaal",
+          "Fang",
+          "Moriarty",
+          "Tudehope"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "no",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2025-12-23-23": {
+      "id": "nsw-lc-2025-12-23-23",
+      "speech_id": 1304605,
+      "date": "2025-12-23",
+      "chamber": "nsw_lc",
+      "topic": "Terrorism and Other Legislation Amendment Bill 2025",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102591",
+      "sha256": "68fd0ebb98c21a6ca350844d6881c140154175e1f5f9b85b711919dce73890c9",
+      "counts": [
+        5,
+        25
+      ],
+      "table_names": {
+        "aye": [
+          "Boyd",
+          "Faehrmann",
+          "Ruddick",
+          "Cohn",
+          "Higginson"
+        ],
+        "no": [
+          "Banasiak",
+          "Graham",
+          "Murphy",
+          "Barrett",
+          "Houssos",
+          "Nanva",
+          "Borsak",
+          "Jackson",
+          "Overall",
+          "Buttigieg",
+          "Lawrence",
+          "Primrose",
+          "Carter",
+          "Merton",
+          "Rath",
+          "D'Adam",
+          "Mitchell",
+          "Sharpe",
+          "Donnelly",
+          "Mookhey",
+          "Suvaal",
+          "Fang",
+          "Moriarty",
+          "Tudehope",
+          "Franklin"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "no",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-15-3": {
+      "id": "nsw-lc-2026-09-15-3",
+      "speech_id": 1320165,
+      "date": "2026-09-15",
+      "chamber": "nsw_lc",
+      "topic": "Crown Land Management Amendment (Statutory Review) Bill 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105203",
+      "sha256": "7b97222fc2941ac0fe758c1371ab0fc307a9aa69e9e7e99354fea782523f27ad",
+      "counts": [
+        8,
+        27
+      ],
+      "table_names": {
+        "aye": [
+          "Banasiak",
+          "Cohn",
+          "Hurst",
+          "Boyd",
+          "Faehrmann",
+          "Ruddick",
+          "Buckingham",
+          "Higginson"
+        ],
+        "no": [
+          "Barrett",
+          "Jackson",
+          "Munro",
+          "Buttigieg",
+          "Kaine",
+          "Murphy",
+          "Carter",
+          "Latham",
+          "Nanva",
+          "D'Adam",
+          "Lawrence",
+          "Overall",
+          "Fang",
+          "MacDonald",
+          "Primrose",
+          "Farlow",
+          "Maclaren-Jones",
+          "Rath",
+          "Franklin",
+          "Merton",
+          "Sharpe",
+          "Graham",
+          "Mitchell",
+          "Tudehope",
+          "Houssos",
+          "Moriarty",
+          "Ward"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "no",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-15-4": {
+      "id": "nsw-lc-2026-09-15-4",
+      "speech_id": 1320175,
+      "date": "2026-09-15",
+      "chamber": "nsw_lc",
+      "topic": "Crown Land Management Amendment (Statutory Review) Bill 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105203",
+      "sha256": "decc21211df34ac9a19ae9fa4b01e8b4c244d0704cb9aecf8bf80dcb74b37cc7",
+      "counts": [
+        5,
+        29
+      ],
+      "table_names": {
+        "aye": [
+          "Boyd",
+          "Faehrmann",
+          "Hurst",
+          "Cohn",
+          "Higginson"
+        ],
+        "no": [
+          "Barrett",
+          "Jackson",
+          "Murphy",
+          "Buckingham",
+          "Kaine",
+          "Nanva",
+          "Buttigieg",
+          "Latham",
+          "Overall",
+          "Carter",
+          "Lawrence",
+          "Primrose",
+          "D'Adam",
+          "MacDonald",
+          "Rath",
+          "Fang",
+          "Maclaren-Jones",
+          "Ruddick",
+          "Farlow",
+          "Merton",
+          "Sharpe",
+          "Franklin",
+          "Mitchell",
+          "Tudehope",
+          "Graham",
+          "Moriarty",
+          "Ward",
+          "Houssos",
+          "Munro"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "no",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-17-2": {
+      "id": "nsw-lc-2026-09-17-2",
+      "speech_id": 1321074,
+      "date": "2026-09-17",
+      "chamber": "nsw_lc",
+      "topic": "Road Transport Legislation Amendment (Medical Cannabis and Driving Offences) Bill 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105370",
+      "sha256": "d0225c9310b9f64699feb4c44f3fb9c0a2bbf935e5172c21901aa28a7457c5c8",
+      "counts": [
+        23,
+        12
+      ],
+      "table_names": {
+        "aye": [
+          "Banasiak",
+          "Higginson",
+          "Moriarty",
+          "Boyd",
+          "Houssos",
+          "Murphy",
+          "Buckingham",
+          "Hurst",
+          "Nanva",
+          "Buttigieg",
+          "Jackson",
+          "Primrose",
+          "Cohn",
+          "Kaine",
+          "Ruddick",
+          "D'Adam",
+          "Latham",
+          "Sharpe",
+          "Faehrmann",
+          "Lawrence",
+          "Suvaal",
+          "Graham",
+          "Martin"
+        ],
+        "no": [
+          "Barrett",
+          "Franklin",
+          "Overall",
+          "Carter",
+          "MacDonald",
+          "Rath",
+          "Fang",
+          "Mitchell",
+          "Tudehope",
+          "Farlow",
+          "Munro",
+          "Ward"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "no",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-17-4": {
+      "id": "nsw-lc-2026-09-17-4",
+      "speech_id": 1321091,
+      "date": "2026-09-17",
+      "chamber": "nsw_lc",
+      "topic": "Road Transport Amendment (Demerit Points Reduction) Bill 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105373",
+      "sha256": "9fdd34d4ec06e6b02345c31ba1fba967abfe6eb6621d57c41ba0279933cc5560",
+      "counts": [
+        20,
+        14
+      ],
+      "table_names": {
+        "aye": [
+          "Barrett",
+          "Franklin",
+          "Munro",
+          "Boyd",
+          "Higginson",
+          "Overall",
+          "Carter",
+          "Hurst",
+          "Rath",
+          "Cohn",
+          "MacDonald",
+          "Ruddick",
+          "Faehrmann",
+          "Maclaren-Jones",
+          "Tudehope",
+          "Fang",
+          "Martin",
+          "Ward",
+          "Farlow",
+          "Mitchell"
+        ],
+        "no": [
+          "Buttigieg",
+          "Jackson",
+          "Nanva",
+          "D'Adam",
+          "Kaine",
+          "Primrose",
+          "Donnelly",
+          "Lawrence",
+          "Sharpe",
+          "Graham",
+          "Moriarty",
+          "Suvaal",
+          "Houssos",
+          "Murphy"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "aye",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-17-5": {
+      "id": "nsw-lc-2026-09-17-5",
+      "speech_id": 1321094,
+      "date": "2026-09-17",
+      "chamber": "nsw_lc",
+      "topic": "Parliamentary Remuneration Amendment (Basic Salary and Additional Entitlements) Bill 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105374",
+      "sha256": "83a7af12219d6b01c5aba73878196b7c25c519b9b876314de651978a485143fd",
+      "counts": [
+        19,
+        13
+      ],
+      "table_names": {
+        "aye": [
+          "Barrett",
+          "Franklin",
+          "Mitchell",
+          "Boyd",
+          "Higginson",
+          "Munro",
+          "Carter",
+          "Hurst",
+          "Overall",
+          "Cohn",
+          "MacDonald",
+          "Rath",
+          "Faehrmann",
+          "Maclaren-Jones",
+          "Ruddick",
+          "Fang",
+          "Martin",
+          "Tudehope",
+          "Farlow"
+        ],
+        "no": [
+          "Buttigieg",
+          "Kaine",
+          "Nanva",
+          "D'Adam",
+          "Lawrence",
+          "Primrose",
+          "Donnelly",
+          "Moriarty",
+          "Sharpe",
+          "Houssos",
+          "Murphy",
+          "Suvaal",
+          "Jackson"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "aye",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-17-8": {
+      "id": "nsw-lc-2026-09-17-8",
+      "speech_id": 1321122,
+      "date": "2026-09-17",
+      "chamber": "nsw_lc",
+      "topic": "Greater Sydney Parklands Trust Amendment (Review) Bill 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105380",
+      "sha256": "08bdc0e46d2023ba280b5f1f361ccfeeb812561ef578b5a0cecf24b0799ff946",
+      "counts": [
+        12,
+        17
+      ],
+      "table_names": {
+        "aye": [
+          "Barrett",
+          "Franklin",
+          "Overall",
+          "Carter",
+          "MacDonald",
+          "Rath",
+          "Fang",
+          "Maclaren-Jones",
+          "Ruddick",
+          "Farlow",
+          "Mitchell",
+          "Tudehope"
+        ],
+        "no": [
+          "Boyd",
+          "Higginson",
+          "Murphy",
+          "Buttigieg",
+          "Houssos",
+          "Nanva",
+          "Cohn",
+          "Hurst",
+          "Primrose",
+          "D'Adam",
+          "Kaine",
+          "Sharpe",
+          "Donnelly",
+          "Lawrence",
+          "Suvaal",
+          "Faehrmann",
+          "Moriarty"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "aye",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-17-9": {
+      "id": "nsw-lc-2026-09-17-9",
+      "speech_id": 1321125,
+      "date": "2026-09-17",
+      "chamber": "nsw_lc",
+      "topic": "Greater Sydney Parklands Trust Amendment (Review) Bill 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105380",
+      "sha256": "01e736e85d55ff1f8e0dc1cc580ac0aaef8c95add39478afc2d3685d7a5fce59",
+      "counts": [
+        5,
+        24
+      ],
+      "table_names": {
+        "aye": [
+          "Boyd",
+          "Faehrmann",
+          "Hurst",
+          "Cohn",
+          "Higginson"
+        ],
+        "no": [
+          "Barrett",
+          "Houssos",
+          "Nanva",
+          "Buttigieg",
+          "Kaine",
+          "Overall",
+          "Carter",
+          "Lawrence",
+          "Primrose",
+          "D'Adam",
+          "MacDonald",
+          "Rath",
+          "Donnelly",
+          "Maclaren-Jones",
+          "Ruddick",
+          "Fang",
+          "Mitchell",
+          "Sharpe",
+          "Farlow",
+          "Moriarty",
+          "Suvaal",
+          "Franklin",
+          "Murphy",
+          "Tudehope"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "no",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-17-11": {
+      "id": "nsw-lc-2026-09-17-11",
+      "speech_id": 1321133,
+      "date": "2026-09-17",
+      "chamber": "nsw_lc",
+      "topic": "Law Enforcement (Powers and Responsibilities) Amendment (Knife Scanning) Bill 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105382",
+      "sha256": "93accb24eeb5db937e357ed1b2bc0f64b970944796b257fc176a3071bf6a9877",
+      "counts": [
+        11,
+        18
+      ],
+      "table_names": {
+        "aye": [
+          "Barrett",
+          "Franklin",
+          "Overall",
+          "Carter",
+          "MacDonald",
+          "Rath",
+          "Fang",
+          "Maclaren-Jones",
+          "Tudehope",
+          "Farlow",
+          "Mitchell"
+        ],
+        "no": [
+          "Boyd",
+          "Higginson",
+          "Murphy",
+          "Buttigieg",
+          "Houssos",
+          "Nanva",
+          "Cohn",
+          "Hurst",
+          "Primrose",
+          "D'Adam",
+          "Jackson",
+          "Ruddick",
+          "Donnelly",
+          "Kaine",
+          "Sharpe",
+          "Faehrmann",
+          "Lawrence",
+          "Suvaal"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "aye",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-23-5": {
+      "id": "nsw-lc-2026-09-23-5",
+      "speech_id": 1323123,
+      "date": "2026-09-23",
+      "chamber": "nsw_lc",
+      "topic": "NSW Director of Public Prosecutions",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105550",
+      "sha256": "87bff4de808be20b849ca3c827d595043bea74690fa1132f4110bbbcccc791d7",
+      "counts": [
+        14,
+        19
+      ],
+      "table_names": {
+        "aye": [
+          "Barrett",
+          "Latham",
+          "Munro",
+          "Carter",
+          "MacDonald",
+          "Overall",
+          "Fang",
+          "Maclaren-Jones",
+          "Roberts",
+          "Farlow",
+          "Merton",
+          "Ward",
+          "Franklin",
+          "Mitchell"
+        ],
+        "no": [
+          "Boyd",
+          "Graham",
+          "Mookhey",
+          "Buckingham",
+          "Higginson",
+          "Moriarty",
+          "Buttigieg",
+          "Hurst",
+          "Murphy",
+          "Cohn",
+          "Jackson",
+          "Nanva",
+          "D'Adam",
+          "Kaine",
+          "Primrose",
+          "Donnelly",
+          "Lawrence",
+          "Suvaal",
+          "Faehrmann"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "aye",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-24-3": {
+      "id": "nsw-lc-2026-09-24-3",
+      "speech_id": 1323506,
+      "date": "2026-09-24",
+      "chamber": "nsw_lc",
+      "topic": "Justice Legislation Amendment (Miscellaneous) Bill (No 2) 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105613",
+      "sha256": "b7c3b3ebc8dac0b143cf26c33ba460c5b6f6ca66a535ed6d073599c0b43e323f",
+      "counts": [
+        5,
+        29
+      ],
+      "table_names": {
+        "aye": [
+          "Boyd",
+          "Faehrmann",
+          "Hurst",
+          "Cohn",
+          "Higginson"
+        ],
+        "no": [
+          "Barrett",
+          "Kaine",
+          "Munro",
+          "Buckingham",
+          "Latham",
+          "Murphy",
+          "Buttigieg",
+          "Lawrence",
+          "Nanva",
+          "Carter",
+          "MacDonald",
+          "Overall",
+          "Donnelly",
+          "Maclaren-Jones",
+          "Primrose",
+          "Fang",
+          "Martin",
+          "Ruddick",
+          "Farlow",
+          "Merton",
+          "Sharpe",
+          "Franklin",
+          "Mitchell",
+          "Suvaal",
+          "Graham",
+          "Mookhey",
+          "Ward",
+          "Jackson",
+          "Moriarty"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "no",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-24-4": {
+      "id": "nsw-lc-2026-09-24-4",
+      "speech_id": 1323512,
+      "date": "2026-09-24",
+      "chamber": "nsw_lc",
+      "topic": "Justice Legislation Amendment (Miscellaneous) Bill (No 2) 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105613",
+      "sha256": "03f6d523c3f65603934d4f82973c15fa67251787befdf1db41a5cc161216c0e1",
+      "counts": [
+        5,
+        25
+      ],
+      "table_names": {
+        "aye": [
+          "Boyd",
+          "Faehrmann",
+          "Hurst",
+          "Cohn",
+          "Higginson"
+        ],
+        "no": [
+          "Barrett",
+          "Jackson",
+          "Munro",
+          "Buckingham",
+          "Kaine",
+          "Murphy",
+          "Buttigieg",
+          "Lawrence",
+          "Nanva",
+          "Carter",
+          "MacDonald",
+          "Overall",
+          "Donnelly",
+          "Maclaren-Jones",
+          "Primrose",
+          "Fang",
+          "Merton",
+          "Sharpe",
+          "Farlow",
+          "Mookhey",
+          "Suvaal",
+          "Franklin",
+          "Moriarty",
+          "Ward",
+          "Graham"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "no",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-24-6": {
+      "id": "nsw-lc-2026-09-24-6",
+      "speech_id": 1323527,
+      "date": "2026-09-24",
+      "chamber": "nsw_lc",
+      "topic": "Crimes and Other Legislation Amendment (Further Organised Crimes Reforms) Bill 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105617",
+      "sha256": "5e9b624f1ecbed77bdec26865f0f19a0f32da1ea662562900b1e4a5b15aa9f06",
+      "counts": [
+        6,
+        27
+      ],
+      "table_names": {
+        "aye": [
+          "Boyd",
+          "Cohn",
+          "Higginson",
+          "Buckingham",
+          "Faehrmann",
+          "Hurst"
+        ],
+        "no": [
+          "Banasiak",
+          "Houssos",
+          "Mookhey",
+          "Barrett",
+          "Jackson",
+          "Moriarty",
+          "Buttigieg",
+          "Kaine",
+          "Munro",
+          "Carter",
+          "Lawrence",
+          "Murphy",
+          "Donnelly",
+          "MacDonald",
+          "Overall",
+          "Fang",
+          "Maclaren-Jones",
+          "Primrose",
+          "Farlow",
+          "Martin",
+          "Sharpe",
+          "Franklin",
+          "Merton",
+          "Suvaal",
+          "Graham",
+          "Mihailuk",
+          "Ward"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "no",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-24-7": {
+      "id": "nsw-lc-2026-09-24-7",
+      "speech_id": 1323537,
+      "date": "2026-09-24",
+      "chamber": "nsw_lc",
+      "topic": "Crimes and Other Legislation Amendment (Further Organised Crimes Reforms) Bill 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105617",
+      "sha256": "cef7a32bac068536edd8f648208eddcd8ed51c76e0c7bec0e45c65c476b34497",
+      "counts": [
+        20,
+        12
+      ],
+      "table_names": {
+        "aye": [
+          "Banasiak",
+          "Fang",
+          "Martin",
+          "Barrett",
+          "Farlow",
+          "Merton",
+          "Boyd",
+          "Franklin",
+          "Munro",
+          "Buckingham",
+          "Higginson",
+          "Overall",
+          "Carter",
+          "Hurst",
+          "Ruddick",
+          "Cohn",
+          "MacDonald",
+          "Ward",
+          "Faehrmann",
+          "Maclaren-Jones"
+        ],
+        "no": [
+          "Buttigieg",
+          "Kaine",
+          "Murphy",
+          "Donnelly",
+          "Lawrence",
+          "Primrose",
+          "Houssos",
+          "Mookhey",
+          "Sharpe",
+          "Jackson",
+          "Moriarty",
+          "Suvaal"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "aye",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-24-8": {
+      "id": "nsw-lc-2026-09-24-8",
+      "speech_id": 1323543,
+      "date": "2026-09-24",
+      "chamber": "nsw_lc",
+      "topic": "Crimes and Other Legislation Amendment (Further Organised Crimes Reforms) Bill 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105617",
+      "sha256": "f83fc7adb2fbd003180421cfe82eaea79fe66754655cfcbd5b20635faeb20c77",
+      "counts": [
+        19,
+        11
+      ],
+      "table_names": {
+        "aye": [
+          "Banasiak",
+          "Franklin",
+          "Merton",
+          "Barrett",
+          "Higginson",
+          "Mihailuk",
+          "Boyd",
+          "Hurst",
+          "Munro",
+          "Cohn",
+          "MacDonald",
+          "Overall",
+          "Faehrmann",
+          "Maclaren-Jones",
+          "Ruddick",
+          "Fang",
+          "Martin",
+          "Ward",
+          "Farlow"
+        ],
+        "no": [
+          "Buttigieg",
+          "Lawrence",
+          "Primrose",
+          "Graham",
+          "Mookhey",
+          "Sharpe",
+          "Houssos",
+          "Moriarty",
+          "Suvaal",
+          "Kaine",
+          "Murphy"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "aye",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-24-13": {
+      "id": "nsw-lc-2026-09-24-13",
+      "speech_id": 1323563,
+      "date": "2026-09-24",
+      "chamber": "nsw_lc",
+      "topic": "Crimes and Other Legislation Amendment (Further Organised Crimes Reforms) Bill 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105617",
+      "sha256": "6b0de6c36ff459bb1f9c7880a9d5660a990910b57ec6e45bb5b7580e8e9a000c",
+      "counts": [
+        10,
+        19
+      ],
+      "table_names": {
+        "aye": [
+          "Barrett",
+          "MacDonald",
+          "Mitchell",
+          "Fang",
+          "Maclaren-Jones",
+          "Munro",
+          "Farlow",
+          "Merton",
+          "Overall",
+          "Franklin"
+        ],
+        "no": [
+          "Banasiak",
+          "Higginson",
+          "Moriarty",
+          "Boyd",
+          "Houssos",
+          "Murphy",
+          "Buckingham",
+          "Hurst",
+          "Primrose",
+          "Buttigieg",
+          "Jackson",
+          "Ruddick",
+          "Cohn",
+          "Kaine",
+          "Sharpe",
+          "Donnelly",
+          "Lawrence",
+          "Suvaal",
+          "Faehrmann"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "aye",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-24-14": {
+      "id": "nsw-lc-2026-09-24-14",
+      "speech_id": 1323567,
+      "date": "2026-09-24",
+      "chamber": "nsw_lc",
+      "topic": "Crimes and Other Legislation Amendment (Further Organised Crimes Reforms) Bill 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105617",
+      "sha256": "df2c28eefd55d06b521b46f139e21593109ce791bd10849b33478ebac0660581",
+      "counts": [
+        11,
+        18
+      ],
+      "table_names": {
+        "aye": [
+          "Barrett",
+          "MacDonald",
+          "Mitchell",
+          "Fang",
+          "Maclaren-Jones",
+          "Munro",
+          "Farlow",
+          "Merton",
+          "Overall",
+          "Franklin",
+          "Mihailuk"
+        ],
+        "no": [
+          "Banasiak",
+          "Faehrmann",
+          "Lawrence",
+          "Boyd",
+          "Higginson",
+          "Moriarty",
+          "Buckingham",
+          "Houssos",
+          "Murphy",
+          "Buttigieg",
+          "Hurst",
+          "Primrose",
+          "Cohn",
+          "Jackson",
+          "Sharpe",
+          "Donnelly",
+          "Kaine",
+          "Suvaal"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "aye",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-24-15": {
+      "id": "nsw-lc-2026-09-24-15",
+      "speech_id": 1323570,
+      "date": "2026-09-24",
+      "chamber": "nsw_lc",
+      "topic": "Crimes and Other Legislation Amendment (Further Organised Crimes Reforms) Bill 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105617",
+      "sha256": "64a07a76527b31f90630db5bc71970b75ce28d8fc954cd847a718d1f36371782",
+      "counts": [
+        17,
+        12
+      ],
+      "table_names": {
+        "aye": [
+          "Banasiak",
+          "Farlow",
+          "Merton",
+          "Barrett",
+          "Franklin",
+          "Mihailuk",
+          "Boyd",
+          "Higginson",
+          "Mitchell",
+          "Cohn",
+          "Hurst",
+          "Munro",
+          "Faehrmann",
+          "MacDonald",
+          "Overall",
+          "Fang",
+          "Maclaren-Jones"
+        ],
+        "no": [
+          "Buckingham",
+          "Jackson",
+          "Murphy",
+          "Buttigieg",
+          "Kaine",
+          "Primrose",
+          "Donnelly",
+          "Lawrence",
+          "Sharpe",
+          "Houssos",
+          "Moriarty",
+          "Suvaal"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "aye",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-24-16": {
+      "id": "nsw-lc-2026-09-24-16",
+      "speech_id": 1323580,
+      "date": "2026-09-24",
+      "chamber": "nsw_lc",
+      "topic": "Crimes and Other Legislation Amendment (Further Organised Crimes Reforms) Bill 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105617",
+      "sha256": "3ffad06f0860504c9f690c5129d18df354bfee5d35f9185b8cbfdb0a6987eeb8",
+      "counts": [
+        14,
+        18
+      ],
+      "table_names": {
+        "aye": [
+          "Banasiak",
+          "Franklin",
+          "Mitchell",
+          "Barrett",
+          "MacDonald",
+          "Munro",
+          "Carter",
+          "Maclaren-Jones",
+          "Overall",
+          "Fang",
+          "Merton",
+          "Ruddick",
+          "Farlow",
+          "Mihailuk"
+        ],
+        "no": [
+          "Boyd",
+          "Higginson",
+          "Mookhey",
+          "Buckingham",
+          "Houssos",
+          "Moriarty",
+          "Buttigieg",
+          "Hurst",
+          "Murphy",
+          "Cohn",
+          "Jackson",
+          "Primrose",
+          "Donnelly",
+          "Kaine",
+          "Sharpe",
+          "Faehrmann",
+          "Lawrence",
+          "Suvaal"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "aye",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-24-18": {
+      "id": "nsw-lc-2026-09-24-18",
+      "speech_id": 1323609,
+      "date": "2026-09-24",
+      "chamber": "nsw_lc",
+      "topic": "Local Jobs First Bill 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105625",
+      "sha256": "ee6d51893abaed64c0bb8bdd6fc52a2e621348a943d05598bee7038d60d0b0e4",
+      "counts": [
+        11,
+        20
+      ],
+      "table_names": {
+        "aye": [
+          "Barrett",
+          "Franklin",
+          "Mitchell",
+          "Carter",
+          "MacDonald",
+          "Munro",
+          "Fang",
+          "Maclaren-Jones",
+          "Overall",
+          "Farlow",
+          "Merton"
+        ],
+        "no": [
+          "Banasiak",
+          "Higginson",
+          "Mookhey",
+          "Boyd",
+          "Houssos",
+          "Moriarty",
+          "Buckingham",
+          "Hurst",
+          "Murphy",
+          "Buttigieg",
+          "Jackson",
+          "Primrose",
+          "Cohn",
+          "Kaine",
+          "Sharpe",
+          "Donnelly",
+          "Lawrence",
+          "Suvaal",
+          "Faehrmann",
+          "Mihailuk"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "aye",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    },
+    "nsw-lc-2026-09-24-19": {
+      "id": "nsw-lc-2026-09-24-19",
+      "speech_id": 1323622,
+      "date": "2026-09-24",
+      "chamber": "nsw_lc",
+      "topic": "Local Jobs First Bill 2026",
+      "source_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105625",
+      "sha256": "194de72111f6846b7e511ebcb7d143671e13ebbd574160dc918c01322d6d4779",
+      "counts": [
+        5,
+        26
+      ],
+      "table_names": {
+        "aye": [
+          "Boyd",
+          "Faehrmann",
+          "Hurst",
+          "Cohn",
+          "Higginson"
+        ],
+        "no": [
+          "Banasiak",
+          "Houssos",
+          "Mookhey",
+          "Barrett",
+          "Jackson",
+          "Moriarty",
+          "Buckingham",
+          "Kaine",
+          "Munro",
+          "Buttigieg",
+          "Lawrence",
+          "Murphy",
+          "Carter",
+          "MacDonald",
+          "Overall",
+          "Donnelly",
+          "Maclaren-Jones",
+          "Primrose",
+          "Fang",
+          "Merton",
+          "Sharpe",
+          "Farlow",
+          "Mihailuk",
+          "Suvaal",
+          "Franklin",
+          "Mitchell"
+        ],
+        "paired": []
+      },
+      "additions": [
+        {
+          "printed": "franklin",
+          "vote": "no",
+          "identity": {
+            "name": "Ben Franklin",
+            "qid": "Q19873536",
+            "chamber": "nsw_lc",
+            "seat": "New South Wales",
+            "service_from": "2019-05-08",
+            "service_through": "2026-09-25",
+            "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+            "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+          }
+        }
+      ]
+    }
+  }
+}
