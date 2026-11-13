@@ -19,7 +19,8 @@ from urllib.parse import unquote, urlsplit
 
 sys.dont_write_bytecode = True
 from privacy_scan import scan as scan_binary_privacy
-from release_support import PRIVATE_NAMES, ReleaseError, load_credentials, matches, private_values, redact, scan_tracked
+from release_support import (JS_CHUNK_ID, JS_SOURCE_MAP, PRIVATE_NAMES, ReleaseError, load_credentials, matches,
+                             private_values, redact, scan_tracked)
 
 GUARDS = (
     "Route is outside the public catalog allow-list",
@@ -520,6 +521,28 @@ def scene_delegate_linked(executable):
     return False
 
 
+def verify_source_map(app, evidence):
+    """Crash report symbols: the archive step's composed Hermes source map sits
+    beside the archive in the evidence folder, never in the app, and the
+    recorded chunk ID is the one the shipped bundle reports."""
+    shipped = sorted(str(p.relative_to(app)) for p in app.rglob("*") if p.is_file() and p.suffix.lower() == ".map")
+    require(not shipped, "No source map inside the app: " + ", ".join(shipped))
+    path = Path(evidence) / JS_SOURCE_MAP
+    require(path.is_file(), "Hermes source map written beside the archive (" + JS_SOURCE_MAP + ")")
+    try:
+        source_map = json.loads(path.read_bytes())
+    except ValueError:
+        source_map = None
+    require(isinstance(source_map, dict) and source_map.get("version") == 3 and bool(source_map.get("sources")) and
+            bool(source_map.get("mappings")) and "x_hermes_function_offsets" in source_map,
+            "Source map is React Native's composed Hermes map")
+    chunk_path = Path(evidence) / JS_CHUNK_ID
+    chunk_id = chunk_path.read_text().strip() if chunk_path.is_file() else ""
+    require(bool(re.fullmatch(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", chunk_id)) and
+            chunk_id.encode() in (app / "main.jsbundle").read_bytes(),
+            "Recorded chunk ID is the one in the shipped bundle")
+
+
 def framework_allowlist(app):
     frameworks = list(app.rglob("*.framework"))
     require({p.name for p in frameworks} == SHIPPED_FRAMEWORKS and
@@ -747,6 +770,8 @@ def verify_app(app, args):
     check(True, "every shipping Expo route key is present in shipped JS")
     check(True, "no unshipped, development or workbench route keys in shipped JS")
     verify_voice_bundle(bundle, voice_enabled)
+    verify_source_map(app, Path(args.output).parent)
+    check(True, "composed Hermes source map and chunk ID kept beside the archive; no source map in the app")
     verify_no_camera_native_code(app)
     check(True, "no AVCapture references in any production Mach-O")
     if voice_enabled:

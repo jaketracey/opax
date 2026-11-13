@@ -6,12 +6,16 @@
 # same reports arrive with unreadable frames, and the upload can be rerun
 # later against the kept release evidence.
 #
-#   scripts/upload-crash-symbols.sh ios <version> <build> <symbols dir> <OPAX.xcarchive>
+#   scripts/upload-crash-symbols.sh ios <version> <build> <evidence dir> <OPAX.xcarchive>
 #   scripts/upload-crash-symbols.sh android <version> <versionCode> <symbols dir> [mapping.txt]
 #
-# <symbols dir> holds the composed map (main.jsbundle.map on iOS,
-# index.android.bundle.map on Android) and <platform>.chunk-id, which
-# metro.config.js writes when the bundle is built with OPAX_SYMBOLS_DIR set.
+# On iOS <evidence dir> is the release evidence folder: the archive step
+# (scripts/release-step.py) writes the composed main.jsbundle.map and
+# ios.chunk-id there, beside the archive, and verify-ios-release.py checks
+# them before this runs. On Android <symbols dir> holds the composed
+# index.android.bundle.map (Gradle writes it to
+# android/app/build/generated/sourcemaps/react/release/) and android.chunk-id,
+# which metro.config.js writes when the bundle is built with OPAX_SYMBOLS_DIR set.
 #
 # Needs posthog-cli 0.20 or later (npm install -g @posthog/cli) and a personal
 # API key with the error_tracking:write scope in POSTHOG_CLI_API_KEY.
