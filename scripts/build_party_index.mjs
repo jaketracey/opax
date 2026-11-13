@@ -19,7 +19,7 @@
 import {readFileSync,readdirSync,writeFileSync} from 'node:fs';
 import {dirname,join,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {rosterFold,rosterSeatParty} from '../portal/public/roster-party.js';
+import {referenceOnlyPeople,rosterFold,rosterSeatParty} from '../portal/public/roster-party.js';
 const SCRIPTS=dirname(fileURLToPath(import.meta.url));
 const PUBLIC=join(SCRIPTS,'..','portal','public');
 export const PARTY_INDEX='/graph/party-members.json';
@@ -31,14 +31,24 @@ const ISO_DAY=/^\d{4}-\d{2}-\d{2}$/;
 /** Party -> roster people whose only party is a verified seat roster's, with the roster's seat and date, and
  *  the first recorded election in that jurisdiction after the date (null when none is recorded).
  *  `elections` maps a jurisdiction to its election days. */
-export function seatRosterMembers(people,electorates,elections={}) {
+export function seatRosterMembers(people,electorates,elections={},reference=[]) {
   const out={};
+  const nextElection=(jur,asOf)=>(elections[jur] || []).filter(d=>ISO_DAY.test(d) && d>asOf).sort()[0] || null;
+  // A sitting member with no roster row at all (referenceOnlyPeople): the Worker adds them to its roster, so
+  // the index lists them too, with `reference` set. The party is their first current seat's, as the Worker
+  // files them; no party, no entry.
+  for(const {person,seats} of referenceOnlyPeople(people,reference)){
+    const seat=seats[0],party=typeof seat.party==='string' ? seat.party.trim() : '';
+    if(!party || !ISO_DAY.test(String(seat.as_of || '')))continue;
+    (out[party] ||= []).push({name:person.name,pid:person.legacy_person_id || person.person_id || null,jurisdiction:seat.jurisdiction || null,
+      chamber:seat.chamber || null,electorate:seat.name,as_of:seat.as_of,next_election:nextElection(seat.jurisdiction,seat.as_of),reference:true});
+  }
   for(const p of people || []){
     if(p.party_now || p.party)continue;
     const r=rosterSeatParty(p,electorates);
     if(!r)continue;
     const seat=(p.representation || []).find(x=>rosterFold(x.electorate)===rosterFold(r.electorate)) || {};
-    const next=(elections[seat.jurisdiction] || []).filter(d=>ISO_DAY.test(d) && d>r.as_of).sort()[0] || null;
+    const next=nextElection(seat.jurisdiction,r.as_of);
     (out[r.party] ||= []).push({name:p.name,pid:p.pid || null,jurisdiction:seat.jurisdiction || null,chamber:seat.chamber || null,
       electorate:r.electorate,as_of:r.as_of,next_election:next});
   }
@@ -62,8 +72,8 @@ export function recordedElections(manifest,hubsDir=join(SCRIPTS,'hubs')) {
 function seatRosters(publicRoot) {
   const people=JSON.parse(readFileSync(join(publicRoot,'parliamentarians.json'),'utf8')).people;
   const manifest=JSON.parse(readFileSync(join(publicRoot,'electorates','manifest.json'),'utf8'));
-  const index=JSON.parse(readFileSync(join(publicRoot,...String(manifest.index_url).split('/').filter(Boolean)),'utf8'));
-  return seatRosterMembers(people,index.electorates,recordedElections(manifest));
+  const asset=url=>JSON.parse(readFileSync(join(publicRoot,...String(url).split('/').filter(Boolean)),'utf8'));
+  return seatRosterMembers(people,asset(manifest.index_url).electorates,recordedElections(manifest),asset(manifest.people_url).people);
 }
 
 export function partyIndexFile(publicRoot=PUBLIC) {

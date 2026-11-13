@@ -108,12 +108,16 @@ export function partyMembers(label, {roster = null, divisions = null, same = (a,
   for (const [party, members] of Object.entries(divisions?.seat_rosters || {})) {
     if (!same(party, label)) continue;
     for (const m of members) {
-      const id = m.pid && best.has(`pid:${m.pid}`) ? `pid:${m.pid}` : byName.get(fold(m.name));
+      // A `reference` member has no roster row of their own (roster-party.js referenceOnlyPeople); the Worker
+      // adds one under the same pid, the browser does not, so the entry stands in for it here.
+      const id = m.pid && best.has(`pid:${m.pid}`) ? `pid:${m.pid}` : byName.get(fold(m.name))
+        || (m.reference ? (m.pid ? `pid:${m.pid}` : `name:${fold(m.name)}`) : null);
       if (!id) continue;
-      const r = row(id);
+      const r = row(id, {name: m.name});
       const stale = Boolean(m.next_election && today > m.next_election);
       r.seat_roster = {as_of: m.as_of || null, next_election: m.next_election || null, stale};
       if (r.roster?.current !== false && !stale) r.current = true;
+      if (stale && m.reference) r.current = false;
       seatMembers.push({id, m});
     }
   }
@@ -121,13 +125,20 @@ export function partyMembers(label, {roster = null, divisions = null, same = (a,
   // separate roster row with no pid. On this page only, an initials row the party's seat roster explains
   // is hidden: same jurisdiction, chamber, party, surname and first initial, and exactly one such member.
   // Two candidates keep both rows; identities are not merged here.
+  // An initials row the seat rosters tie to one member of another party is also hidden: "T Bull" (Victorian
+  // Assembly, 2018 to 2022) carries the Labor label, but the only Assembly Bull with initial T is Tim Bull,
+  // whom the Victorian roster files as a National. The repository holds no dated party for him in those years,
+  // so the row is neither moved nor relabelled: it is only not listed as this party's member.
+  const fitsPrint = (p, print, m) => (p.states || []).includes(m.jurisdiction) && (p.chambers || []).includes(m.chamber) &&
+    initialsPrint(m.name, true)?.surname === print.surname && initialsPrint(m.name, true)?.initial === print.initial;
+  const everySeat = Object.entries(divisions?.seat_rosters || {}).flatMap(([party, members]) => members.map(m => ({party, m})));
   for (const [id, r] of [...rows]) {
     const p = r.roster, print = p && !p.pid ? initialsPrint(p.name) : null;
     if (!print || r.seat_roster || !memberPartyLabels(p).some(l => same(l, label))) continue;
-    const fits = seatMembers.filter(({id: other, m}) => other !== id && (p.states || []).includes(m.jurisdiction) &&
-      (p.chambers || []).includes(m.chamber) && initialsPrint(m.name, true)?.surname === print.surname &&
-      initialsPrint(m.name, true)?.initial === print.initial);
-    if (new Set(fits.map(f => f.id)).size === 1) rows.delete(id);
+    const fits = seatMembers.filter(({id: other, m}) => other !== id && fitsPrint(p, print, m));
+    if (new Set(fits.map(f => f.id)).size === 1) { rows.delete(id); continue; }
+    const elsewhere = everySeat.filter(({m}) => fitsPrint(p, print, m));
+    if (!fits.length && elsewhere.length === 1 && !same(elsewhere[0].party, label)) rows.delete(id);
   }
   for (const [party, members] of Object.entries(divisions?.parties || {})) {
     if (!same(party, label)) continue;

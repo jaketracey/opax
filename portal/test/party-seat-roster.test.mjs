@@ -63,20 +63,27 @@ const vicMember = (name, chamber, electorate, over = {}) => member({name, chambe
 const initials = (name, party, over = {}) => ({name, pid: null, party, states: ['vic'], chambers: ['vic_la'], first: 2018, last: 2022, ...over});
 const names = list => list.map(m => m.name).sort();
 
-test('an initials print the seat roster explains is shown once; an ambiguous one or another party keeps both', () => {
+test('an initials print the seat roster explains is shown once; an ambiguous one keeps both; one tied to another party is not listed', () => {
   const elections = {vic: ['2026-11-28']};
   const people = [
     vicMember('Tessa Quill', 'vic_la', 'Fixtureton'), initials('T Quill', 'Labor'),                       // one fit: folded
     vicMember('Rhys Marlow', 'vic_la', 'Northside'), vicMember('Ruth Marlow', 'vic_la', 'Southside'),
     initials('R Marlow', 'Labor'),                                                                         // two fits: both kept
-    vicMember('Owen Vance', 'vic_la', 'Eastvale'), initials('O Vance', 'Labor'),                           // Owen is Liberal: kept
+    vicMember('Owen Vance', 'vic_la', 'Eastvale'), initials('O Vance', 'Labor'),                           // Owen is Liberal: not Labor's
   ];
   const seats = [vicSeat('Fixtureton', 'vic_la', 'Labor', 'Tessa Quill'), vicSeat('Northside', 'vic_la', 'Labor', 'Rhys Marlow'),
     vicSeat('Southside', 'vic_la', 'Labor', 'Ruth Marlow'), vicSeat('Eastvale', 'vic_la', 'Liberal', 'Owen Vance')];
   const divisions = {seat_rosters: seatRosterMembers(people, seats, elections)};
   const labor = partyMembers('Labor', {roster: {people}, divisions, today: '2026-11-13'});
-  assert.deepEqual(names([...labor.current, ...labor.former]), ['O Vance', 'R Marlow', 'Rhys Marlow', 'Ruth Marlow', 'Tessa Quill']);
-  assert.deepEqual(names(partyMembers('Liberal', {roster: {people}, divisions, today: '2026-11-13'}).current), ['Owen Vance']);
+  assert.deepEqual(names([...labor.current, ...labor.former]), ['R Marlow', 'Rhys Marlow', 'Ruth Marlow', 'Tessa Quill']);
+  // Not merged either: the Liberal page lists Owen Vance alone, not the Labor-labelled print.
+  const liberal = partyMembers('Liberal', {roster: {people}, divisions, today: '2026-11-13'});
+  assert.deepEqual(names([...liberal.current, ...liberal.former]), ['Owen Vance']);
+  // Two Vances with initial O in the seat rosters (Liberal and Greens): it is not clear whose print it is, so it stays.
+  const twice = [...people, vicMember('Olive Vance', 'vic_la', 'Westvale')];
+  const both = {seat_rosters: seatRosterMembers(twice, [...seats, vicSeat('Westvale', 'vic_la', 'Greens', 'Olive Vance')], elections)};
+  const kept = partyMembers('Labor', {roster: {people: twice}, divisions: both, today: '2026-11-13'});
+  assert.ok(kept.former.some(m => m.name === 'O Vance'), 'two candidates: nothing hidden');
   // Another chamber is another print: a T Quill of the upper house stays.
   const upper = [people[0], initials('T Quill', 'Labor', {chambers: ['vic_lc']})];
   const other = partyMembers('Labor', {roster: {people: upper}, divisions: {seat_rosters: seatRosterMembers(upper, seats, elections)}, today: '2026-11-13'});
@@ -132,5 +139,51 @@ test('election days come from the repository: the electorate release and the com
   for (const list of Object.values(index.seat_rosters)) for (const m of list) {
     assert.ok(m.jurisdiction && m.chamber && m.as_of, m.name);
     assert.equal(m.next_election, (days[m.jurisdiction] || []).filter(d => d > m.as_of).sort()[0] || null, m.name);
+  }
+});
+
+test('A3c: the "T Bull" initials row (Victorian Assembly, 2018 to 2022) is not listed as a former Labor member', () => {
+  const read = path => JSON.parse(readFileSync(new URL(`../public${path}`, import.meta.url), 'utf8'));
+  const roster = read('/parliamentarians.json'), divisions = read('/graph/party-members.json');
+  // The shipped roster still files the print under Labor; the repository has no dated party for Tim Bull in those years.
+  assert.equal(roster.people.find(p => p.name === 'T Bull')?.party, 'Labor');
+  assert.equal(divisions.seat_rosters.Nationals.filter(m => m.name === 'Tim Bull' && m.chamber === 'vic_la').length, 1);
+  const all = label => {
+    const m = partyMembers(label, {roster, divisions, today: '2026-11-13'});
+    return [...m.current, ...m.former].map(r => r.name);
+  };
+  assert.ok(!all('Labor').includes('T Bull'));
+  assert.ok(all('Labor').includes('Josh Bull'), 'Josh Bull stays Labor');
+  assert.ok(all('Nationals').includes('Tim Bull') && !all('Nationals').includes('T Bull'), 'nothing moved to the Nationals page');
+  // The other Victorian initials prints with a same-party roster member are unchanged.
+  assert.ok(!all('Labor').includes('J Bull') && !all('Liberal').includes('M O’Brien'));
+});
+
+test('A3d: a sitting member with no roster row is counted from the party index, joining the Worker\'s added row', async () => {
+  const {referenceOnlyPeople} = await import('../public/roster-party.js');
+  const {splitSpeakers} = await import('../public/speech-attribution.js');
+  const reference = [
+    {name: 'Mara Quint', aliases: [], person_id: 'person_x', legacy_person_id: 'vic_quint',
+      electorates: [{current: true, name: 'Fixtureton', jurisdiction: 'vic', chamber: 'vic_la', party: 'Labor', as_of: '2026-09-09'}]},
+    {name: 'Tessa Quill', aliases: [], person_id: 'person_y', electorates: [{current: true, name: 'Northside', jurisdiction: 'vic', chamber: 'vic_la', party: 'Labor', as_of: '2026-09-09'}]},
+    {name: 'Former Person', aliases: [], person_id: 'person_z', electorates: [{current: false, name: 'Southside', jurisdiction: 'vic', chamber: 'vic_la', party: 'Labor'}]},
+    {name: 'Cal Scoped', aliases: [], person_id: 'person_w', electorates: [{current: true, name: 'Eastvale', jurisdiction: 'vic', chamber: 'vic_la', party: 'Labor', as_of: '2026-09-09'}]},
+  ];
+  const people = [vicMember('Tessa Quill', 'vic_la', 'Northside'), {name: 'Quill', full: 'Cal Scoped', speech_scope: {state: 'vic'}}];
+  assert.deepEqual(splitSpeakers(people[1]), ['Cal Scoped', 'Quill'], 'the names the rule treats as already in the roster');
+  assert.deepEqual(referenceOnlyPeople(people, reference).map(r => r.person.name), ['Mara Quint']);
+  const seat_rosters = seatRosterMembers(people, [], {vic: ['2026-11-28']}, reference);
+  assert.deepEqual(seat_rosters.Labor, [{name: 'Mara Quint', pid: 'vic_quint', jurisdiction: 'vic', chamber: 'vic_la', electorate: 'Fixtureton',
+    as_of: '2026-09-09', next_election: '2026-11-28', reference: true}]);
+  // The browser's roster has no row for her; the Worker's has one under the same pid. Both count her once.
+  const browser = partyMembers('Labor', {roster: {people}, divisions: {seat_rosters}, today: '2026-11-13'});
+  const worker = partyMembers('Labor', {roster: {people: [...people, {name: 'Mara Quint', pid: 'vic_quint', party: 'Labor', party_now: 'Labor', current: true}]},
+    divisions: {seat_rosters}, today: '2026-11-13'});
+  assert.deepEqual(browser.current.map(m => m.name), ['Mara Quint']);
+  assert.deepEqual(worker.current.map(m => m.name), ['Mara Quint']);
+  // After the next election the roster no longer says she sits, on either side.
+  for (const people2 of [people, [...people, {name: 'Mara Quint', pid: 'vic_quint', party: 'Labor', current: true}]]) {
+    const later = partyMembers('Labor', {roster: {people: people2}, divisions: {seat_rosters}, today: '2026-12-01'});
+    assert.deepEqual([later.current.length, later.former.map(m => m.name)], [0, ['Mara Quint']]);
   }
 });

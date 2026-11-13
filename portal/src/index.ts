@@ -89,6 +89,7 @@ import { reviewerLoginEnabled } from './community-auth'
 import { operatorAuthorized } from './operator-auth'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/party-page.js'
+import { referenceOnlyPeople } from '../public/roster-party.js'
 import {foldDonorName} from '../public/donor-entity.js'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
@@ -4168,17 +4169,13 @@ function loadPeople(env: Env): Promise<PeopleData> {
   peopleMemo ??= assetJson<{ meta?: { generated?: string }; people: Person[] }>(env, '/parliamentarians.json')
     .then(async (raw) => {
       const reference = await loadElectorates(env).catch(() => null)
-      const names = new Set(raw.people.flatMap((p) => [p.name, ...splitSpeakers(p)].map(foldName)))
-      for (const p of reference?.people || []) {
-        if ([p.name, ...p.aliases].some((n) => names.has(foldName(n)))) continue
-        const seats = p.electorates.filter((e) => e.current)
-        if (!seats.length) continue
+      // One rule with the party index (scripts/build_party_index.mjs), so party pages count them alike.
+      for (const { person: p, seats } of referenceOnlyPeople(raw.people, reference?.people)) {
         raw.people.push({ name: p.name, pid: p.legacy_person_id || p.person_id, speeches: 0,
           party: seats[0].party || null, party_now: seats[0].party || undefined, current: true,
           representation: seats.map(e=>({electorate:e.name,jurisdiction:e.jurisdiction,chamber:e.chamber})), states: [...new Set(seats.map((e) => e.jurisdiction))],
           chambers: [...new Set(seats.map((e) => e.chamber))], first: null, last: null,
           rosterOnly: { asOf: seats[0].as_of, seats: seats.map((e) => e.name) } })
-        names.add(foldName(p.name))
       }
       return { generated: raw.meta?.generated ?? '', people: raw.people, ...personIndex(raw.people) }
     })
