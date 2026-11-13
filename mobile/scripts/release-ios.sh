@@ -138,7 +138,15 @@ logged_public native-config ./node_modules/.bin/tsx scripts/native-config.ts
 [ -z "$(git status --porcelain --untracked-files=all)" ] || {
   echo 'Prebuild changed tracked inputs; review and commit before archiving.' >&2; exit 1;
 }
-printf 'export NODE_BINARY=%q\n' "$(command -v node)" > ios/.xcode.env.local
+# Crash report symbols (docs/ANALYTICS.md): Xcode's bundle phase keeps the
+# composed Hermes source map and Metro records the bundle's chunk ID here.
+SYMBOLS="$OUT/symbols"
+mkdir -p "$SYMBOLS"
+{
+  printf 'export NODE_BINARY=%q\n' "$(command -v node)"
+  printf 'export SOURCEMAP_FILE=%q\n' "$SYMBOLS/main.jsbundle.map"
+  printf 'export OPAX_SYMBOLS_DIR=%q\n' "$SYMBOLS"
+} > ios/.xcode.env.local
 scripts/capacity.sh
 START=$SECONDS
 echo 'Archiving through the configured build gate…'
@@ -190,6 +198,15 @@ v['production_voice_mode']='on' if v['production_voice_enabled'] else 'off'
 (p/'release.json').write_text(json.dumps(v,indent=2)+'\n')
 print(f"Archive: {v['archive_seconds']} seconds; IPA: {v['ipa_bytes']} bytes; SHA256: {v['ipa_sha256']}")
 PY
+# Upload this build's source map and dSYMs to PostHog. Without
+# POSTHOG_CLI_API_KEY it logs one skip line. A failed upload does not stop the
+# release: rerun the same script later against this kept archive.
+if python3 scripts/release_support.py --log "$OUT/crash-symbols.log" -- \
+  scripts/upload-crash-symbols.sh ios "$VERSION" "$BUILD_NUMBER" "$SYMBOLS" "$ARCHIVE"; then
+  tail -n 1 "$OUT/crash-symbols.log"
+else
+  echo "Crash symbols not uploaded; see $OUT/crash-symbols.log and rerun scripts/upload-crash-symbols.sh." >&2
+fi
 if [ "$UPLOAD" = 1 ]; then
   # Only the orchestrator uses this. It bypasses the gate and rechecks HEAD and
   # the verified IPA hash immediately before uploading those exact bytes.

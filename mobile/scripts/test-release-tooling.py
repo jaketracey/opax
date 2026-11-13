@@ -213,6 +213,8 @@ class SafetyTests(unittest.TestCase):
     def test_redaction_and_utf16_scan(self):
         with patch.dict(os.environ, {"APPLE_TEAM_ID": "TEST_VALUE_123", "ASC_KEY_PATH": "/dummy/key"}):
             self.assertNotIn("TEST_VALUE_123", redact("team=TEST_VALUE_123 /dummy/key"))
+        with patch.dict(os.environ, {"POSTHOG_CLI_API_KEY": "phx_SYNTHETIC_UPLOAD_KEY"}):
+            self.assertNotIn("phx_SYNTHETIC_UPLOAD_KEY", redact("key phx_SYNTHETIC_UPLOAD_KEY"))
         self.assertTrue(matches("sensitive".encode("utf-16-be"), "sensitive"))
 
     def test_private_key_multiline_command_output_is_redacted(self):
@@ -220,6 +222,16 @@ class SafetyTests(unittest.TestCase):
             log = Path(d) / "log"
             run_logged([sys.executable, "-c", "print('-----BEGIN ' + 'PRIVATE KEY-----'); print('keybytes'); print('-----END ' + 'PRIVATE KEY-----')"], log)
             self.assertNotIn("keybytes", log.read_text())
+
+    def test_build_steps_never_receive_the_symbol_upload_key(self):
+        with tempfile.TemporaryDirectory() as d, \
+             patch.dict(os.environ, {"POSTHOG_CLI_API_KEY": "phx_SYNTHETIC_UPLOAD_KEY"}):
+            log = Path(d) / "log"
+            show = [sys.executable, "-c", "import os; print(os.environ.get('POSTHOG_CLI_API_KEY', 'absent'))"]
+            run_logged(show, log, public_env=True)
+            self.assertEqual(log.read_text(), "absent\n")
+            run_logged(show, log)
+            self.assertEqual(log.read_text(), "[POSTHOG_CLI_API_KEY redacted]\n")
 
     def test_only_macho_signature_range_excluded(self):
         header = struct.pack("<8I", 0xfeedfacf, 0, 0, 0, 1, 16, 0, 0)
