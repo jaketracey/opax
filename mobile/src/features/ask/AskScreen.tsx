@@ -331,9 +331,16 @@ export default function AskScreen() {
   // title: at rest an open thread's question sat about 70 pt under the bar
   // (sweep 1, 7.1). A thread gets a fresh native scroll view, which takes
   // the inline bar's inset; a new conversation gets a fresh one at rest
-  // under the expanded title, as Search does.
-  const scrollKey =
-    Platform.OS === 'ios' && !docked ? (idle ? 'idle' : 'thread') : 'ask';
+  // under the expanded title, as Search does. Only opening or closing a
+  // thread on the phone layout renews it: a Duo fold between docked and
+  // phone layouts keeps the thread, its scroll anchor and focused input.
+  const [scrollEpoch, setScrollEpoch] = useState({ idle, key: 0 });
+  if (scrollEpoch.idle !== idle)
+    setScrollEpoch({
+      idle,
+      key: scrollEpoch.key + (Platform.OS === 'ios' && !docked ? 1 : 0),
+    });
+  const scrollKey = `ask-${scrollEpoch.key}`;
   const content = (
     <ScrollView
       key={scrollKey}
