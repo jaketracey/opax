@@ -440,9 +440,13 @@ def main() -> None:
             cur.execute("UPDATE speeches SET person_id = ?, speaker_name_clean = ? WHERE speech_id = ?", (pid, clean, sid))
         cur.execute("INSERT OR REPLACE INTO ext_committee_relinks VALUES (?,?,?,?,?,?,?,?)",
                     (sid, old_pid, old_clean, clean, new_type, None, reason, stamp))
-        cur.execute("INSERT INTO ext_kb_patch_queue (slug, reason, status, queued_at) VALUES (?, ?, 'pending', ?) "
-                    "ON CONFLICT(slug) DO UPDATE SET status = 'pending', reason = excluded.reason, queued_at = excluded.queued_at",
-                    (f"speech-{sid}", reason, stamp))
+        if reason == 'dated_house_identity':
+            from parli.ingest.speaker_identity import queue_identity_patch
+            queue_identity_patch(db, sid, reason, stamp)
+        else:
+            cur.execute("INSERT INTO ext_kb_patch_queue (slug, reason, status, queued_at) VALUES (?, ?, 'pending', ?) "
+                        "ON CONFLICT(slug) DO UPDATE SET status = 'pending', reason = excluded.reason, queued_at = excluded.queued_at",
+                        (f"speech-{sid}", reason, stamp))
     for sid, (pid, clean, party, reason, old_pid, old_clean) in party_changes.items():
         cur.execute("UPDATE speeches SET person_id = ?, speaker_name_clean = ?, party_canonical = ? WHERE speech_id = ?",
                     (pid, clean, party, sid))

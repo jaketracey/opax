@@ -16,8 +16,11 @@ IDENTITIES = EVIDENCE['identities']
 BY_ID = {p['person_id']: p for p in IDENTITIES}
 BY_NAME = {p['name']: p for p in IDENTITIES}
 HANDBOOK = {p['PHID']: p for p in EVIDENCE['handbook_people']}
-FIRST_DAY = min(p['start'] for p in IDENTITIES)
-LAST_DAY = max(p['end'] for p in IDENTITIES)
+RULES = [(p, dict(p, **rule)) for p in IDENTITIES
+         for rule in [{}, *p.get('additional_rules', [])]]
+FIRST_DAY = min(rule['start'] for _, rule in RULES)
+LAST_DAY = max(rule['end'] for _, rule in RULES)
+SOURCES = ('zenodo', 'openaustralia', 'wragge_xml')
 logger = logging.getLogger(__name__)
 
 
@@ -26,7 +29,7 @@ def identity_for(row):
     row = dict(row)
     if (row.get('state') not in (None, '', 'federal')
             or row.get('chamber') != 'representatives'
-            or row.get('source') not in ('zenodo', 'openaustralia')
+            or row.get('source') not in SOURCES
             or row.get('speaker_type') in ('chair', 'unknown', 'witness')
             or row.get('witness_name')):
         return None
@@ -34,13 +37,14 @@ def identity_for(row):
     if not FIRST_DAY <= day <= LAST_DAY:
         return None
     printed = normalize_speaker(row.get('speaker_name'))
-    for person in IDENTITIES:
+    for person, rule in RULES:
         pid = row.get('person_id')
-        if (printed not in person['prints'] or not person['start'] <= day <= person['end']
-                or pid not in (None, '', person['old_person_id'], person['person_id'])):
+        if (printed not in rule['prints'] or not rule['start'] <= day <= rule['end']
+                or pid not in (None, '', rule['old_person_id'], person['person_id'])):
             continue
         seat = (row.get('electorate') or '').strip()
-        if seat != person['seat'] and not (not seat and person['allow_missing_seat']):
+        seats = rule.get('seat_prints', [rule['seat']])
+        if seat not in seats and not (not seat and rule['allow_missing_seat']):
             continue
         return person
     return None
@@ -87,8 +91,14 @@ def identity_changes(db, *, skipped_person_ids=()):
     fields = [k for k in ('speech_id', 'person_id', 'speaker_name', 'speaker_name_clean',
                           'electorate', 'chamber', 'date', 'source', 'state',
                           'speaker_type', 'witness_name') if k in columns]
-    rows = db.execute('SELECT ' + ','.join(fields) + " FROM speeches WHERE chamber = 'representatives' "
-                      "AND source IN ('zenodo', 'openaustralia') AND date BETWEEN ? AND ?", (FIRST_DAY, LAST_DAY))
+    # Use the person-id index on the full database. This is the complete prior-id
+    # boundary accepted by identity_for, including fresh unlinked rows.
+    ids = sorted({'', *(rule['old_person_id'] for _, rule in RULES), *BY_ID})
+    rows = db.execute('SELECT ' + ','.join(fields)
+                      + " FROM speeches WHERE (person_id IS NULL OR person_id IN ("
+                      + ','.join('?' for _ in ids) + ")) AND chamber = 'representatives' "
+                      + "AND source IN (?,?,?) AND date BETWEEN ? AND ?",
+                      [*ids, *SOURCES, FIRST_DAY, LAST_DAY])
     for raw in rows:
         row = dict(zip(fields, raw))
         person = identity_for(row)
@@ -110,8 +120,15 @@ def apply_identities(db):
                    (pid, name, sid))
         db.execute('INSERT OR REPLACE INTO ext_committee_relinks VALUES (?,?,?,?,?,?,?,?)',
                    (sid, old_pid, old_name, name, 'member', name, reason, stamp))
-        db.execute("INSERT INTO ext_kb_patch_queue (slug, reason, status, queued_at) VALUES (?,?,'pending',?) "
-                   "ON CONFLICT(slug) DO UPDATE SET reason=excluded.reason, status='pending', queued_at=excluded.queued_at",
-                   (f'speech-{sid}', reason, stamp))
+        queue_identity_patch(db, sid, reason, stamp)
     db.commit()
     return len(changes)
+
+
+def queue_identity_patch(db, sid, reason, stamp):
+    """Wragge corrections get database receipts, but that source has no KB rows."""
+    if db.execute('SELECT source FROM speeches WHERE speech_id=?', (sid,)).fetchone()[0] == 'wragge_xml':
+        return
+    db.execute("INSERT INTO ext_kb_patch_queue (slug, reason, status, queued_at) VALUES (?,?,'pending',?) "
+               "ON CONFLICT(slug) DO UPDATE SET reason=excluded.reason, status='pending', queued_at=excluded.queued_at",
+               (f'speech-{sid}', reason, stamp))

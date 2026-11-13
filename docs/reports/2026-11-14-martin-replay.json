@@ -1,0 +1,4655 @@
+{
+  "base": "c4185f03b",
+  "scratch": "/home/jake/opax-work/evidence/im-martin-identities/replay.db",
+  "baseline_moved": 89,
+  "incremental_moved": 661,
+  "combined_moved": 750,
+  "second_pass": 0,
+  "additional_kb_slugs": 346,
+  "held": [
+    {
+      "speech_id": 615266,
+      "reason": "Surname-only print without a seat; no reviewed seat evidence"
+    },
+    {
+      "speech_id": 622652,
+      "reason": "Malformed presiding-officer print; no seat"
+    }
+  ],
+  "source_db_mtime_ns": 1794306224736217783,
+  "raw_columns_unchanged": true,
+  "delta_verified_by": "Temporary trigger records every speeches UPDATE over the complete scratch DB; ids and destinations equal the committed measurement exactly",
+  "updates": [
+    {
+      "speech_id": 91,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 217,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 219,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 220,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 222,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 223,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 224,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 767,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 768,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 787,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 788,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 789,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 792,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 794,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 796,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 797,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 995,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 996,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 1544,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 1629,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 1929,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 2295,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 2430,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 2523,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 2659,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 3389,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 3855,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 4180,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 5507,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 5509,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 5510,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 5511,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 5512,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 6101,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 6103,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 6401,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 6410,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 6799,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 7392,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 7397,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 7503,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 7505,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 7556,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 7723,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 7856,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 7861,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 7862,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8002,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8003,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8630,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8631,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8636,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8859,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8883,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8940,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8942,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8945,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8946,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8947,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8948,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8949,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8951,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8952,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8955,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8957,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8959,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 8986,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 9178,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 9202,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 9221,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 9943,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 9944,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 9945,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 9947,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 10119,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 10120,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 10137,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 10384,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 11279,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 11425,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 11486,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 11487,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 11491,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 11492,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 11493,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 11494,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 11657,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 11663,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 11754,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 11755,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 11757,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 11758,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 11759,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 11761,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 11762,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 13330,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 13331,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 13508,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 13509,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 13521,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 13523,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 14429,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 14855,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 14878,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 14880,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 14885,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 14889,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 14896,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 14899,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 14901,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 14984,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 15207,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 15211,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 15302,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 15879,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 16232,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 17061,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 17062,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 17063,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 17064,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 17065,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 17066,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 17086,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 17151,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 18408,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 18721,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 18926,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 19854,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 20727,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 20745,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 20826,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 21080,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 21114,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 22320,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 22348,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 22385,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 23604,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 23668,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 25720,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 25844,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 26401,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 27557,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 27781,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 27789,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 27793,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28064,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28069,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28073,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28078,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28098,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28099,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28100,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28157,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28158,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28159,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28246,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28377,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28384,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28386,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28416,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28691,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28705,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28913,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28914,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28921,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 28923,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 29031,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 29037,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 29038,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 29044,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 29298,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 29299,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 29301,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 29303,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 29305,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 29306,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 29307,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 29958,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 30545,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 30601,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 30846,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 30998,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 31255,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 31320,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 31321,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 31322,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 31323,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 31328,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 31475,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 31478,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 31650,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 31862,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 32215,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 32262,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 32286,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 32379,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 32911,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 32912,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 32914,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 32916,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 33403,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 34921,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 35185,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 35313,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 35463,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 35572,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 35698,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 37667,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 38408,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 39057,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 40362,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 40363,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 40679,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 40781,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 40809,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 41062,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 41064,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 41225,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 41979,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 42197,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 42360,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 42502,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 42642,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 42672,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 44236,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 44237,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 44238,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 44239,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 44240,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 44906,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 45343,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 45775,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 46569,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 47708,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 47713,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 47717,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 47749,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 47979,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 49370,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 49890,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 49959,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 51569,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 52854,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 52855,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 53429,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 53825,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 53827,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 54048,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 54049,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 54051,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 54053,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 54054,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 54111,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 55723,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 55777,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 56221,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 57169,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 57273,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 57274,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 58021,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 58164,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 59032,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 59179,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 59229,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 59231,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 59352,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 59353,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 59450,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 59452,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 59694,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 59999,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 60001,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 60176,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 60201,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 60642,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 60682,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 60728,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 61399,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 61405,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 61660,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 61782,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 62175,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 62177,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 62179,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 62224,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 62246,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 63477,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 63478,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 64040,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 64041,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 64042,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 64043,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 64863,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 65776,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 66019,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 66024,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 66054,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 66055,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 66086,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 66308,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 66309,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 67114,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 67559,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 68514,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 68923,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 69204,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 69303,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 69504,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 69505,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 69836,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 70013,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 71060,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 71479,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 71480,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 72093,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 72274,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 72275,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 72318,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 72319,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 72320,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 72685,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 73828,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 73829,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 73830,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 73831,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 74813,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 75777,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 76451,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 76453,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 76867,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 76868,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 76869,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 76871,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 76872,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 76873,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 76874,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 76875,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 77329,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 77780,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 77988,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 78051,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 78914,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 79047,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 79049,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 79366,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 79976,
+      "old_person_id": "10905",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Stephen Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 605436,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 605848,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 605911,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 606294,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 606403,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 606856,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 607079,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 607267,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 607477,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 608247,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 608728,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 608793,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 608964,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 609288,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 609375,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 609787,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 610604,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 610663,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 611311,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 611364,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 611491,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 611556,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 611740,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 611751,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 611755,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 612079,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 612088,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 612131,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 612878,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 613391,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 614557,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 614646,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 615012,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 615027,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 615260,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 615465,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 615473,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 615482,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 615490,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 615499,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 616409,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 616538,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 616734,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 616955,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 617040,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 617383,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 617458,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 617506,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 617509,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 618361,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 618822,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 619474,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 619911,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 620031,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 621730,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 622077,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 622278,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 622407,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 622421,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 623666,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 623703,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 624166,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 625322,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 625396,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 625705,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 626061,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 626433,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 627830,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 628645,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 629054,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 629807,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 630035,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 630337,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 631522,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 632002,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 634667,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 634799,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 635638,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 635820,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 635857,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 636068,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 636225,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 636268,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 636618,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 636625,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 637139,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 637208,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 637585,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 637806,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 637961,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 638551,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 639053,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 639091,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 639279,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 640287,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 640941,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 641319,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 641522,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 641716,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 641771,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 642091,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 642395,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 642663,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 642772,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 642863,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 643299,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 643310,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 643316,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 643321,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 643338,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 643514,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 643715,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 643723,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 643855,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 643873,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 644107,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 644207,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 645613,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 646413,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 646948,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 647431,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 647620,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 647670,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 647930,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 647952,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 648014,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 648020,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 648028,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 648108,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 648336,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 648402,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 648847,
+      "old_person_id": "10937",
+      "new_person_id": "person_e88df9ffb591568ea3b6ea51",
+      "old_clean": "Martin",
+      "new_clean": "Vincent Joseph Martin"
+    },
+    {
+      "speech_id": 651802,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 652258,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 652467,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 652745,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 652827,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 652968,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 653101,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 653137,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 653698,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 653750,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 653808,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 653818,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 653826,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 653853,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 653866,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 653922,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 654017,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 654025,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 654066,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 654079,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 654094,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 654133,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 654170,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 654177,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 654325,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 654344,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 654351,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 654415,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 654431,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 654549,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 654593,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 654658,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 654713,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 654715,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 654716,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 654815,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 654843,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 654871,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 654993,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 654998,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 655002,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655022,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655024,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655026,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655122,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 655166,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655243,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 655269,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 655280,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 655288,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655297,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 655306,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 655317,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 655347,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655417,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655442,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 655514,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 655526,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 655539,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 655598,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655603,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655613,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655637,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655642,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655721,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655756,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655789,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 655836,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 655840,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 655842,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655869,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655890,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655901,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 655912,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 655997,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 656101,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 656111,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 656199,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 656201,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 656224,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 656241,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 656245,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 656247,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 656266,
+      "old_person_id": "10592",
+      "new_person_id": "person_efb744ffb3a25d578e592281",
+      "old_clean": "Tony Smith",
+      "new_clean": "Anthony Charles Smith"
+    },
+    {
+      "speech_id": 656292,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 656319,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 656328,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 656553,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 656621,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 656639,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 656742,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 656874,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 657158,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 657166,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 657189,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 657463,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 657773,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 657985,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 658049,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 658069,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 658356,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 658374,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 659216,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 659344,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 659772,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 659775,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 659790,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 659807,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 659906,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 660082,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 660271,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 660419,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 660433,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 660531,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 660693,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 660995,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 661006,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 661725,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 661890,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 661942,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 662418,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 662691,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 663052,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 663141,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 663155,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 663333,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 663378,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 663552,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 663583,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 663651,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 663685,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 664134,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 664383,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 664504,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 664612,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 665098,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 665472,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 665618,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 665638,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 666293,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 666471,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 666544,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 666583,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 666951,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 666982,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 667091,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 667532,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 667561,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 667598,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 667733,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 667866,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 667880,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 667892,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 668063,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 668065,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 668240,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 668251,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 668265,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 668532,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 668704,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 669192,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 669200,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 669259,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 669438,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 669868,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 669953,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 669989,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 670097,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 670385,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 670469,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 670685,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 670798,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 670830,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 670853,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 671163,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 671220,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 671451,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 671765,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 671854,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 672103,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 672123,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 672367,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    },
+    {
+      "speech_id": 672567,
+      "old_person_id": "10937",
+      "new_person_id": "person_9c02d321caef54b2ba21a1f8",
+      "old_clean": "Martin",
+      "new_clean": "Stephen Martin"
+    }
+  ],
+  "source_size_bytes": 28851892224,
+  "scratch_size_bytes": 28851892224,
+  "speech_rows_before": 1316517,
+  "speech_rows_after": 1316517
+}

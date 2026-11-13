@@ -1,6 +1,6 @@
 {
   "reviewed": "2026-11-14",
-  "note": "Reuse these existing catalogue identities. Match House, service date, original print, seat and prior id; retain raw attribution as evidence. No surname-wide alias.",
+  "note": "Reuse existing catalogue identities where held. Enforce federal House, dated seat service, original print and prior id for main and Wragge sources. Vincent Joseph Martin uses a stable Handbook PHID identity because no full-person catalogue entry exists. No surname-wide alias; presiding officers and unseated surname-only prints stay unresolved.",
   "handbook_cache_sha256": "3754df31cdb3df2e7f08eb06a08e501f0cb26ca5d2f211bdb819f957eb3ed3b8",
   "handbook_people": [
     {
@@ -106,6 +106,56 @@
       "ServiceHistory_Start": "1996-03-02",
       "ServiceHistory_End": "1998-10-03",
       "Gender": "Male"
+    },
+    {
+      "PHID": "275266",
+      "GivenName": "Steven",
+      "MiddleNames": "Leigh",
+      "FamilyName": "MARTIN",
+      "PreferredName": "",
+      "DisplayName": "MARTIN, Steven Leigh OAM",
+      "Party": "The Nationals",
+      "Electorate": "",
+      "SenateState": "Tasmania",
+      "StateAbbrev": "Tas",
+      "State": "Tasmania",
+      "InCurrentParliament": "False",
+      "MPorSenator": [
+        "Senator"
+      ],
+      "RepresentedParliaments": [
+        45
+      ],
+      "ServiceHistory_Start": "2018-02-09",
+      "ServiceHistory_End": "2019-06-30",
+      "Gender": "Male"
+    },
+    {
+      "PHID": "KN9",
+      "GivenName": "Vincent",
+      "MiddleNames": "Joseph",
+      "FamilyName": "MARTIN",
+      "PreferredName": "",
+      "DisplayName": "MARTIN, Vincent Joseph",
+      "Party": "Australian Labor Party",
+      "Electorate": "Banks",
+      "SenateState": "",
+      "StateAbbrev": "NSW",
+      "State": "New South Wales",
+      "InCurrentParliament": "False",
+      "MPorSenator": [
+        "Member"
+      ],
+      "RepresentedParliaments": [
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "ServiceHistory_Start": "1969-10-25",
+      "ServiceHistory_End": "1980-09-19",
+      "Gender": "Male"
     }
   ],
   "identities": [
@@ -178,7 +228,60 @@
         }
       ],
       "handbook_url": "https://handbookapi.aph.gov.au/api/individuals?$filter=PHID%20eq%20%278I4%27",
-      "full_name": "Stephen Paul Martin"
+      "full_name": "Stephen Paul Martin",
+      "additional_rules": [
+        {
+          "old_person_id": "10905",
+          "prints": [
+            "Stephen Martin"
+          ],
+          "seat": "Cunningham",
+          "allow_missing_seat": true,
+          "start": "1993-03-13",
+          "end": "2002-08-16",
+          "catalog_term_ids": [
+            "term_d7d6f494cdfc5141a0d8dc70",
+            "term_0974c4ca99df5c88ac96c1b4",
+            "term_9c1dd8c325e95220a1499cbd"
+          ]
+        },
+        {
+          "old_person_id": "10937",
+          "prints": [
+            "Martin"
+          ],
+          "seat": "Macarthur",
+          "seat_prints": [
+            "Macarthur",
+            "MACARTHUR"
+          ],
+          "allow_missing_seat": false,
+          "start": "1984-12-01",
+          "end": "1993-03-13",
+          "catalog_term_id": "term_59774310ac7f5781829d8fe1"
+        }
+      ]
+    },
+    {
+      "person_id": "person_e88df9ffb591568ea3b6ea51",
+      "name": "Vincent Joseph Martin",
+      "phid": "KN9",
+      "old_person_id": "10937",
+      "prints": [
+        "Martin"
+      ],
+      "seat": "Banks",
+      "seat_prints": [
+        "Banks",
+        "BANKS, NEW SOUTH WALES"
+      ],
+      "allow_missing_seat": false,
+      "state": "NSW",
+      "house": "representatives",
+      "start": "1969-10-25",
+      "end": "1980-09-19",
+      "identity_basis": "parli.electorates.stable_id('person', 'handbook:KN9'); no existing full-person catalogue identity",
+      "handbook_url": "https://handbookapi.aph.gov.au/api/individuals?$filter=PHID%20eq%20%27KN9%27"
     }
   ]
 }

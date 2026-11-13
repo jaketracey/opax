@@ -16,20 +16,21 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from parli.ingest.arag_sync import map_speech  # noqa: E402
-from parli.ingest.speaker_identity import IDENTITIES, identity_for, resolve_attribution  # noqa: E402
+from parli.ingest.speaker_identity import BY_ID, RULES, resolve_attribution  # noqa: E402
 from scripts.export_speakers import eligible_where  # noqa: E402
 
 
-def rebuild(db, out):
+def rebuild(db, out, *, baseline=dict):
+    """Compare stored ids with the resolver, or a supplied earlier resolver."""
     out.mkdir(parents=True, exist_ok=True)
-    old_ids = [p['old_person_id'] for p in IDENTITIES]
-    ids = old_ids + [p['person_id'] for p in IDENTITIES]
-    # Stephen Martin already has an accurately named transcript profile. Reuse
-    # its existing cohort when recounting that profile; only the 89 reviewed
-    # rows are reassigned or exported as changed documents.
-    where = '(person_id IN (' + ','.join('?' for _ in ids) + ") OR speaker_name_clean='Stephen Martin')"
+    ids = sorted({rule['old_person_id'] for _, rule in RULES} | set(BY_ID))
+    where = 'person_id IN (' + ','.join('?' for _ in ids) + ')'
     all_rows = list(db.execute('SELECT * FROM speeches WHERE ' + where, ids))
-    changed = [r for r in all_rows if identity_for(r)]
+    prior = {r['speech_id']: baseline(r) for r in all_rows}
+    resolved = {r['speech_id']: resolve_attribution(r) for r in all_rows}
+    changed = [prior[r['speech_id']] for r in all_rows if
+               (prior[r['speech_id']]['person_id'], prior[r['speech_id']]['speaker_name_clean']) !=
+               (resolved[r['speech_id']]['person_id'], resolved[r['speech_id']]['speaker_name_clean'])]
     before, after = defaultdict(list), defaultdict(list)
     columns = {r[1] for r in db.execute('PRAGMA table_info(speeches)')}
     eligible = list(db.execute('SELECT * FROM speeches WHERE ' + where
@@ -41,11 +42,8 @@ def rebuild(db, out):
                                  'WHERE st.speech_id=?', (row['speech_id'],)):
             labels[row['speech_id']].add(label)
     for row in eligible:
-        owner = (IDENTITIES[1]['person_id'] if row['speaker_name_clean'] == 'Stephen Martin'
-                 else row['person_id'])
-        before[owner].append(row)
-        resolved = resolve_attribution(row)
-        after[owner if owner == IDENTITIES[1]['person_id'] else resolved['person_id']].append(resolved)
+        before[prior[row['speech_id']]['person_id']].append(row)
+        after[resolved[row['speech_id']]['person_id']].append(resolved[row['speech_id']])
 
     def stats(rows):
         counts = Counter(label for r in rows for label in labels[r['speech_id']])
@@ -56,17 +54,25 @@ def rebuild(db, out):
 
     profiles = {pid: dict(before=stats(before[pid]), after=stats(after[pid])) for pid in ids}
     manifest = []
+    document_count = 0
     with (out / 'speech-documents.jsonl').open('w') as stream:
         for raw in sorted(changed, key=lambda r: r['speech_id']):
             doc = map_speech(raw)
-            stream.write(json.dumps(doc, ensure_ascii=False, separators=(',', ':')) + '\n')
+            # Corrections to Wragge attribution do not publish that excluded source.
+            if raw['source'] != 'wragge_xml':
+                stream.write(json.dumps(doc, ensure_ascii=False, separators=(',', ':')) + '\n')
+                document_count += 1
             manifest.append(dict(speech_id=raw['speech_id'], before=raw['person_id'],
-                                 after=doc['extra']['metadata']['person_id'], date=raw['date'],
+                                 after=doc['extra']['metadata']['person_id'], date=raw['date'], source=raw['source'],
                                  raw_sha256=hashlib.sha256(json.dumps(dict(raw), sort_keys=True,
                                                                      ensure_ascii=False).encode()).hexdigest()))
-    report = dict(scope='Non-Wragge House speeches since 1993-03-13 under export_speakers eligibility',
+    report = dict(scope='Moves include Wragge; profile statistics use non-Wragge House speeches since 1993-03-13 under export_speakers eligibility',
                   topic_basis='Held legacy speech_topics labels; denominator is all eligible House speeches; multiple labels may overlap',
                   moved=dict(Counter(r['after'] for r in manifest)), profiles=profiles, speeches=manifest,
+                  stored_profiles={pid: dict(before=sum(r['person_id'] == pid for r in prior.values()),
+                                             after=sum(r['person_id'] == pid for r in resolved.values()))
+                                   for pid in ids},
+                  documents=document_count,
                   documents_sha256=hashlib.sha256((out / 'speech-documents.jsonl').read_bytes()).hexdigest())
     (out / 'rebuild.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
     return report

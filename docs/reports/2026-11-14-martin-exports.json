@@ -1,0 +1,71 @@
+{
+  "people-after-raw.json": {
+    "sha256": "3e8cffecc977749836dd02f96ec435a5b2c9393f9d2e0fd370d192ddcca45743",
+    "equals_row_179_raw": true
+  },
+  "speakers-after.json": {
+    "sha256": "2d55023b707bc048429abeab4183716ab4fffa9ff51e196cab05909054babbb1",
+    "equals_row_179_raw": true
+  },
+  "search_catalog": {
+    "version": "052c0ed6be0c6ee1",
+    "sha256": "37e2c913bcd99099e6f6182e986a9054590b2eb806b95cbf6513126a7660d505",
+    "equals_row_179": true
+  },
+  "profile_name_counts": {
+    "Stephen Martin": {
+      "parliamentarians": 299,
+      "speakers": 299
+    },
+    "Steve Martin": {
+      "parliamentarians": 0,
+      "speakers": 0
+    },
+    "Fiona Martin": {
+      "parliamentarians": 244,
+      "speakers": 244
+    },
+    "Tony Smith": {
+      "parliamentarians": 380,
+      "speakers": 401
+    },
+    "Anthony Charles Smith": {
+      "parliamentarians": 76,
+      "speakers": 76
+    },
+    "Vincent Joseph Martin": {
+      "parliamentarians": 0,
+      "speakers": 0
+    }
+  },
+  "identity_overlay": {
+    "accepted": 0,
+    "held": [],
+    "blocked": null,
+    "equals_shipped": true
+  },
+  "crawl_catalog": {
+    "sha256": "9448212056b3bccf62dc0850cc5dea56f499141616da959351c8969acbfca38c",
+    "counts": {
+      "people": 1568,
+      "parties": 28,
+      "electorates": 625,
+      "bills": 2989,
+      "divisions": 11075,
+      "grant-programs": 1000,
+      "grant-recipients": 9990,
+      "official-reports": 2368,
+      "topics-reports": 21,
+      "static": 36,
+      "suppliers": 22153,
+      "donors": 857,
+      "campaigners": 438,
+      "agencies": 164,
+      "hubs": 13,
+      "instruments": 24106,
+      "audit": 296
+    }
+  },
+  "tracked_public_delta": [],
+  "stamps": "Rebuilt; stamp_assets.mjs --check passed"
+}
