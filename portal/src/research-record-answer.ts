@@ -136,7 +136,7 @@ export function recordAnswerLines(input: WritingInput): WrittenSentence[] | null
   if (input.constraints?.industryRanking || /\b(?:which|what) industries\b/i.test(input.question)) {
     const industries = facts.filter(f => /\b(?:led the classified industry ranking|recorded the next ranked industry total)\b/.test(f.text))
     if (industries.length) return industries.map((f,i) => {
-      const row = /^(.+?) (?:led the classified industry ranking|recorded the next ranked industry total), with (\$[\d,.]+) in federal disclosed receipts(.*?) in financial years? (.+?) \((1 July \d{4} to 30 June \d{4})\), across ([\d,]+) receipts? in the published donor selection\.$/.exec(f.text)
+      const row = /^(.+?) (?:led the classified industry ranking|recorded the next ranked industry total), with (\$[\d,.]+) in federal disclosed (?:receipts|donations)(.*?) in financial years? (.+?) \((1 July \d{4} to 30 June \d{4})\), across ([\d,]+) receipts? in the published donor selection\.$/.exec(f.text)
       if (!row) return line(f.text,[f])
       return line(i ? `${row[1]} ${i===1?'was next, with':'recorded'} ${row[2]} across ${row[6]} receipt${row[6]==='1'?'':'s'}` : f.text,[f])
     })

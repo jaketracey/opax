@@ -110,7 +110,7 @@ test('party receipts cite the receipts map filtered to the party (and industry, 
   const one = await api.partyDonations(deps, {party: 'Labor', industry: 'gambling', from_year: 2019})
   const summary = new URL(one.cite[0].url)
   assert.equal(summary.pathname, '/money')
-  assert.deepEqual(Object.fromEntries(summary.searchParams), {jur: 'federal', type: 'receipts', party: 'party:Labor', industry: 'gambling', from: '2019'})
+  assert.deepEqual(Object.fromEntries(summary.searchParams), {jur: 'federal', type: 'receipts', party: 'party:Labor', industry: 'gambling', from: '2019', receipt: 'donations'}, 'a donations ranking opens the map\'s donations view')
   assert.equal(one.list, one.cite[0].url)
   const all = await allToolResults()
   assert.ok(!all.flatMap(r => r.cite).some(c => /\/money\/party\//.test(c.url)))

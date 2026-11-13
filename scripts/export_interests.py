@@ -228,12 +228,16 @@ def _receipt_number(value):
     return number if number == number and number not in (float("inf"), float("-inf")) else 0
 
 
+# AEC "Public Funding" (aec_receipt_types.normal_type): election funding, never a donor's money.
+PUBLIC_FUNDING_TYPE = "public_funding"
+
+
 def receipt_figures(x):
     """One donor-to-party flow's figures by the rule every OPAX money figure uses
     (receiptFigures in portal/public/donor-disclosure.js, which
     portal/test/money-typed-sweep.test.mjs pins this copy to): the typed cells
-    (by_type, by_type_year), each receipt once from the party's own return, all
-    receipt types. The older total/count/firstYear/lastYear also hold the donor's
+    (by_type, by_type_year), each receipt once from the party's own return, every
+    receipt type but Public Funding, which is never a donor's money. The older total/count/firstYear/lastYear also hold the donor's
     own declaration of the same gift and are used only for a graph without typed
     cells (the state graphs)."""
     by_type = x.get("by_type")
@@ -245,15 +249,16 @@ def receipt_figures(x):
         found = re.search(r"\b(?:19|20)\d{2}\b", str(period))
         year = int(found.group(0)) if found else RECEIPT_EVENT_YEARS.get(str(period).lower())
         receipts = sum(_receipt_number(cell[1]) if isinstance(cell, list) and len(cell) > 1 else 0
-                       for cell in (types or {}).values())
+                       for kind, cell in (types or {}).items() if kind != PUBLIC_FUNDING_TYPE)
         count += receipts
         if receipts <= 0 or not year:
             continue
         first = year if first is None else min(first, year)
         last = year if last is None else max(last, year)
     total = 0
-    for amount in by_type.values():
-        total += _receipt_number(amount)
+    for kind, amount in by_type.items():
+        if kind != PUBLIC_FUNDING_TYPE:
+            total += _receipt_number(amount)
     return {"total": total, "count": count, "firstYear": first, "lastYear": last, "typed": True}
 
 

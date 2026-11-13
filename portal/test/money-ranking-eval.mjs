@@ -64,9 +64,9 @@ export function scoreMoneyRanking(payload,expected,selection,graph){
  const check=(ok,message)=>{if(!ok)errors.push(message)}
  check(payload?.answer_status==='calculated','calculated status')
  check(payload?.measure===expected.measure,'measure matches graph')
- const labels={donations:'donations received (AEC receipt type: Donation Received)',other_receipts:'other receipts (AEC receipt type: Other Receipt, which includes loans)',subscriptions:'subscriptions (AEC receipt type: Subscription, such as membership and affiliation fees)'}
+ const labels={donations:'donations received (AEC receipt type: Donation Received)',other_receipts:'other receipts (AEC receipt type: Other Receipt, for amounts other than donations or subscriptions)',subscriptions:'subscriptions (AEC receipt type: Subscription, such as memberships, union affiliation fees and business-forum packages)'}
  const leadIndustry=selection.industry??graph.nodes.find(n=>n.id===expected.rows[0]?.id)?.industry
- const label=labels[expected.measure]??(leadIndustry==='finance'?'disclosed receipts, all types, including bank loans to the party':leadIndustry==='unions'?'disclosed receipts, all types (donations, affiliation fees and other receipts)':'disclosed receipts, all types (donations, loans and other receipts)')
+ const label=labels[expected.measure]??(leadIndustry==='unions'?'disclosed receipts, all types (donations, affiliation fees and other receipts)':'disclosed receipts, all types (donations, subscriptions and other receipts)')
  check(payload?.measure_label===label,'measure label matches graph')
  // A ranking in money that is not donations never takes the first sentence:
  // with no donations recorded, the first sentence says so and the ranking follows.
@@ -75,7 +75,7 @@ export function scoreMoneyRanking(payload,expected,selection,graph){
  const second=answer.slice(first.length).match(/^\s*.*?[.!?](?=\s|$)/s)?.[0]?.trim()??''
  if(noDonations)check(/^The AEC records no donations from \S/.test(first),'no-donations opening')
  const opening=noDonations?second:first
- const phrases={other_receipts:'other receipts (includes loans and other amounts)',subscriptions:'subscriptions (membership and affiliation fees)'}
+ const phrases={other_receipts:'other receipts (amounts other than donations or subscriptions)',subscriptions:'subscriptions (memberships, union affiliation fees and business-forum packages)'}
  check(opening.includes(selection.total?dollars(expected.cents):dollars(expected.rows[0].cents)),'opening amount')
  check(opening.includes(noDonations?phrases[expected.measure]??'disclosed receipts of all types':payload.measure_label),'opening measure label')
  check(opening.includes(expected.period),'opening period')
@@ -87,7 +87,7 @@ export function scoreMoneyRanking(payload,expected,selection,graph){
  check(caveats.length===1&&caveats[0].split(/\s+/).length<=35&&caveats[0].split(/[.!?](?:\s|$)/).filter(Boolean).length===1,'one short caveat')
  // A single recipient is a sentence ("the only party"), not a table.
  const tabled=expected.rows.length>1||!!selection.party||!!selection.total
- if(tabled)check(answer.includes(`| ${expected.measure==='donations'?'Donations':expected.measure==='other_receipts'?'Other receipts (includes loans and other amounts)':expected.measure==='subscriptions'?'Subscriptions':leadIndustry==='finance'?'Disclosed receipts (includes loans)':'Disclosed receipts'} |`),'measure table heading')
+ if(tabled)check(answer.includes(`| ${expected.measure==='donations'?'Donations':expected.measure==='other_receipts'?'Other receipts':expected.measure==='subscriptions'?'Subscriptions':'Disclosed receipts'} |`),'measure table heading')
  const rows=answer.split('\n').filter(line=>line.startsWith('| ')&&!/\| (?:---|Share)|^\| (?:Source|Recipient|Total|Other sources|Other parties)/.test(line))
  if(tabled)check(rows.length===expected.rows.length,'ranked row count')
  if(tabled)for(const [i,row]of expected.rows.entries()){
@@ -95,7 +95,7 @@ export function scoreMoneyRanking(payload,expected,selection,graph){
   check(actual.includes(row.name)&&actual.includes(dollars(row.cents)),`rank/amount ${row.name}`)
   if(expected.typed&&expected.measure!=='receipts_all'){
    const cell=actual.split('|')[4]?.trim()
-   check(cell===dollars(row.allCents)+(row.otherCents>=row.allCents/2&&row.otherCents>0?' (includes loans)':''),`all-types cell ${row.name}`)
+   check(cell===dollars(row.allCents)+(row.otherCents>=row.allCents/2&&row.otherCents>0?' (mostly other receipts)':''),`all-types cell ${row.name}`)
   }else check(actual.includes(row.records.toLocaleString('en-AU')),`records ${row.name}`)
   const share=row.cents/expected.cents*100
   check(actual.includes(share>0&&share<0.5?'<1%':Math.round(share)+'%'),`share ${row.name}`)
@@ -133,7 +133,7 @@ export function scoreMoneyRanking(payload,expected,selection,graph){
  const shares=answer.split('\n').filter(line=>line.startsWith('| ')&&!/^\| (?:---|Source|Recipient|Total)/.test(line)).map(line=>line.split('|')[3]?.trim()).filter(Boolean)
  const shareSum=shares.reduce((sum,s)=>sum+(s==='<1%'?0:Number.parseInt(s,10)),0)
  if(tabled)check(Math.abs(shareSum-100)<=1,'selection shares sum')
- const amountFirst=/\$\d/.test(opening),labelFirst=/disclosed receipts, all types|disclosed receipts of all types|donations received|other receipts \((?:AEC|includes)|subscriptions \((?:AEC|membership)/i.test(opening)
+ const amountFirst=/\$\d/.test(opening),labelFirst=/disclosed receipts, all types|disclosed receipts of all types|donations received|other receipts \((?:AEC|amounts)|subscriptions \((?:AEC|memberships)/i.test(opening)
  const periodFirst=/\b\d{4}[–-]\d{2}/.test(opening),mapFiltered=!!map&&new URL(map,'https://opax.test').searchParams.has(selection.industry?'industry':'party')
  const caveatWords=caveats.reduce((sum,c)=>sum+c.split(/\s+/).length,0),caveatSentences=caveats.join(' ').split(/[.!?](?:\s|$)/).filter(Boolean).length
  const defects=Number(negatives.length>0)+Number(!periodFirst)+Number(!mapFiltered)+Number(caveatSentences!==1||caveatWords>35)

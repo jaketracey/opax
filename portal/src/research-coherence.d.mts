@@ -1,6 +1,6 @@
 export const danglingOpener:RegExp
 export interface RankingSource {resource:string;snippet?:string;kind:string;[key:string]:unknown}
-export interface DonorRow {name:string;party:string;amount:string;value:number;period?:string;entity_type?:string;associated?:string;source:RankingSource}
+export interface DonorRow {name:string;party:string;amount:string;value:number;period?:string;entity_type?:string;associated?:string;measure?:string;source:RankingSource}
 export function repairDonorRanking(question:string,sources?:RankingSource[],constraints?:import('./research-types').QualitativeAnswer['answer_scope']):DonorRow[]
 export function donorRanking(question:string,sources?:RankingSource[],constraints?:import('./research-types').QualitativeAnswer['answer_scope']):DonorRow[]
 
