@@ -33,6 +33,7 @@ jest.mock('../src/navigation/external', () => ({
   openSource: jest.fn().mockResolvedValue(undefined),
 }));
 jest.mock('../src/navigation/share', () => ({
+  trackShare: jest.fn(),
   shareRecord: jest.fn().mockResolvedValue(undefined),
 }));
 
@@ -151,7 +152,8 @@ test('Ask route names, shares and long-press actions use the same decoded title'
       item.onPress();
   }
   expect(shareRecord).toHaveBeenCalledWith({ path: s.href, title });
-  expect(openSource).toHaveBeenCalledWith(s.url, title);
+  // An Ask row's original says where it was opened from (analytics).
+  expect(openSource).toHaveBeenCalledWith(s.url, title, 'inline');
   const turn: Turn = {
     role: 'answer',
     text: 'An answer.',

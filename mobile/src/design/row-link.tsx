@@ -1,6 +1,8 @@
 import { Pressable } from './pressable';
 import {
   cloneElement,
+  createContext,
+  useContext,
   useEffect,
   useState,
   type ReactElement,
@@ -17,7 +19,7 @@ import { Link, type Href } from 'expo-router';
 import { menuTitle } from './menu-title';
 import { useRecordLink } from '../navigation/record-link';
 import { canonicalUrl, openOnWeb } from '../navigation/external';
-import { shareRecord } from '../navigation/share';
+import { shareRecord, trackShare } from '../navigation/share';
 import { copyText } from '../features/records/actions';
 import {
   follow,
@@ -168,6 +170,13 @@ export function RowTrigger({
   } as Partial<PressableProps>);
 }
 
+/**
+ * Told when a row link below it opens its record by a tap, VoiceOver or
+ * TalkBack, without changing how it opens (analytics: the edition's story,
+ * the money map's records). Never told which record.
+ */
+export const RowOpenListener = createContext<(() => void) | null>(null);
+
 /** A native preview and menu, with every menu choice also directly accessible. */
 export function RowLink({
   href,
@@ -187,6 +196,7 @@ export function RowLink({
   const child = children as ReactElement<PressableProps>;
   const recordLink = useRecordLink(href);
   const currentRecord = recordLink.isCurrent();
+  const opened = useContext(RowOpenListener);
   // A preview commit navigates independently of Link.onPress. There is no
   // destination to preview when this very record is already on top.
   const showPreview = preview && !select && !currentRecord;
@@ -197,7 +207,10 @@ export function RowLink({
     if (child.props.disabled || child.props.accessibilityState?.disabled)
       return;
     if (select) select();
-    else recordLink.open();
+    else {
+      if (!recordLink.isCurrent()) opened?.();
+      recordLink.open();
+    }
   };
   const accessibility: Pick<
     PressableProps,
@@ -288,12 +301,13 @@ export function RowLink({
       push={recordLink.push}
       asChild
       onPress={
-        select || currentRecord
+        select || currentRecord || opened
           ? (event) => {
               if (select) {
                 event.preventDefault();
                 select();
               } else if (recordLink.isCurrent()) event.preventDefault();
+              else opened?.();
             }
           : undefined
       }
@@ -347,7 +361,9 @@ const copy = (target: Target): RowMenuLeaf => ({
   symbol: 'link',
   onPress: () => {
     void copyText(canonicalUrl(target.path)).then((copied) => {
-      if (copied) haptic('success');
+      if (!copied) return;
+      haptic('success');
+      trackShare('copy_link', target.path);
     });
   },
 });

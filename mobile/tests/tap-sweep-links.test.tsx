@@ -216,7 +216,8 @@ test('an Ask source with only an external href opens its published original', ()
   )[0]!;
   expect(row.props.accessibilityRole).toBe('link');
   act(() => row.props.onPress());
-  expect(openSource).toHaveBeenCalledWith(source.href);
+  // The answer's row says where the original was opened from (analytics).
+  expect(openSource).toHaveBeenCalledWith(source.href, undefined, 'inline');
 });
 
 test('a hash-only Ask source cannot accidentally open the home page', () => {

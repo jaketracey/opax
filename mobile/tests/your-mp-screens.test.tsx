@@ -13,8 +13,11 @@ import {
   Linking,
   Platform,
   RefreshControl,
+  Share,
   StyleSheet,
 } from 'react-native';
+import { track } from '../src/analytics';
+import * as recordActions from '../src/features/records/actions';
 import TestRenderer from 'react-test-renderer';
 import * as c from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
@@ -63,6 +66,10 @@ import {
   slugs,
 } from './pinned';
 import { menuTitle } from '../src/design/menu-title';
+jest.mock('../src/analytics', () => ({
+  ...jest.requireActual('../src/analytics'),
+  track: jest.fn(),
+}));
 jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn() },
   catalogs: {
@@ -1365,3 +1372,55 @@ test.each(['vote', 'division'] as const)(
     }
   },
 );
+
+test('sharing or copying a Lately original sends opax_share as an "other" record, never its link', async () => {
+  let r!: TestRenderer.ReactTestRenderer;
+  const record: LatestRecord = {
+    key: 'external-vote',
+    kind: 'vote',
+    title: 'Jane Citizen on the Example Bill 2031',
+    date: '2026-06-04',
+    action: 'Voted for',
+    detail: 'Second reading',
+    // Another site's /bill/ path is still not an OPAX bill.
+    url: 'https://example.test/bill/example-2031',
+  };
+  const share = jest.spyOn(Share, 'share').mockResolvedValue({
+    action: 'sharedAction',
+  });
+  const copy = jest.spyOn(recordActions, 'copyText').mockResolvedValue(true);
+  jest.mocked(track).mockClear();
+  await act(async () => {
+    r = TestRenderer.create(
+      <LatestVoteRow record={record} testID="latest-external" />,
+    );
+  });
+  try {
+    const item = (title: string) =>
+      (
+        r.root.findByType(RowLink).props.menu as {
+          title: string;
+          onPress: () => void;
+        }[]
+      ).find((m) => m.title === title)!;
+    await act(async () => item('Share').onPress());
+    expect(share).toHaveBeenCalledTimes(1);
+    await act(async () => item('Copy link').onPress());
+    expect(copy).toHaveBeenCalledWith(record.url);
+    expect(jest.mocked(track).mock.calls).toEqual([
+      ['opax_share', { kind: 'record', record_type: 'other' }],
+      ['opax_share', { kind: 'copy_link', record_type: 'other' }],
+    ]);
+    // A copy that fails sends nothing.
+    copy.mockResolvedValueOnce(false);
+    await act(async () => item('Copy link').onPress());
+    expect(track).toHaveBeenCalledTimes(2);
+    expect(JSON.stringify(jest.mocked(track).mock.calls)).not.toMatch(
+      /example|Jane|2031/,
+    );
+  } finally {
+    share.mockRestore();
+    copy.mockRestore();
+    await act(async () => r.unmount());
+  }
+});

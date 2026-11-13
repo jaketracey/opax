@@ -273,7 +273,21 @@ module.exports = defineConfig([
         tsconfigRootDir: __dirname,
       },
     },
-    rules: { 'opax/hermes-builtins': 'error' },
+    rules: {
+      'opax/hermes-builtins': 'error',
+      // Release builds do not freeze cached catalogs (api/client.ts), so an
+      // in-place sort of a decoded value would silently reorder the shared
+      // cache. A property receiver is the likely decoded value; copy first.
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "CallExpression[callee.property.name=/^(sort|reverse|splice|fill|copyWithin)$/][callee.object.type='MemberExpression']",
+          message:
+            'Copy before an in-place array change on a property ([...x.list].sort()): it may be a shared cached catalog value.',
+        },
+      ],
+    },
   },
   {
     files: [

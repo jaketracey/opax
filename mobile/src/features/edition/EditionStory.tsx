@@ -18,6 +18,7 @@ import { MachinePill } from '../../design/labels';
 import { InsetGroup, Screen } from '../../design/layout';
 import { PersonRow } from '../../design/people';
 import { FigureBlock } from '../../design/record';
+import { RowOpenListener } from '../../design/row-link';
 import { BillRow, LinkRow, ValueRow } from '../../design/rows';
 import { SourceLine, SourceSection } from '../../design/source';
 import { ContentUnavailable, OfflineLine } from '../../design/states';
@@ -31,6 +32,7 @@ import { CachedPortrait } from '../CachedPortrait';
 import { editionMenu, shareEdition } from './actions';
 import { useEdition, useEditionSubject } from './data';
 import { EditionSkeleton } from './EditionCard';
+import { trackEdition, useEditionEnd, useEditionOpen } from './measure';
 import {
   editionInk,
   editionPerson,
@@ -42,6 +44,9 @@ import {
   timelineProvenance,
 } from './model';
 import { Plate } from './Plate';
+
+/** The story's subject opened (`story_open`); the row opens it as usual. */
+const openStory = () => trackEdition('story_open');
 
 export function EditionStory() {
   const { block, refreshing, refresh } = useEdition();
@@ -74,6 +79,8 @@ export function EditionStory() {
       }
     : null;
   const destination = edition ? editionSubject(edition, subject.slug) : null;
+  useEditionOpen(edition ? `${edition.date}:${edition.title}` : null);
+  const end = useEditionEnd();
   const sourceRows = edition
     ? editionSourceRows(edition, subject.originals)
     : [];
@@ -114,7 +121,11 @@ export function EditionStory() {
       <Screen
         grouped
         testID="edition-screen"
-        onScroll={title.onScroll}
+        onScroll={(y) => {
+          title.onScroll(y);
+          end.onScroll(y);
+        }}
+        onLayout={end.onLayout}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={refresh} />
         }
@@ -178,54 +189,56 @@ export function EditionStory() {
             </View>
             <EditionFacts edition={edition} provenance={source} />
             {destination ? (
-              <InsetGroup testID="edition-subject-group">
-                {edition.kind === 'bill' ? (
-                  <BillRow
-                    billKey={/^\/bill\/([^/?]+)/.exec(edition.path)![1]!}
-                    title={edition.shortTitle ?? edition.title}
-                    href={destination}
-                    status=""
-                    showStatus={false}
-                    menu={[]}
-                    testID="edition-subject"
-                  />
-                ) : edition.kind === 'politician' ? (
-                  <PersonRow
-                    name={edition.title}
-                    {...editionPerson(edition)}
-                    href={destination}
-                    portrait={
-                      <CachedPortrait
-                        name={edition.title}
-                        slug={subject.slug}
-                      />
-                    }
-                    menu={[]}
-                    testID="edition-subject"
-                  />
-                ) : (
-                  <LinkRow
-                    title={
-                      edition.kind === 'largest'
-                        ? 'Largest grants'
-                        : edition.kind === 'topic'
-                          ? editionTopic(edition)!.name
-                          : edition.title
-                    }
-                    symbol={
-                      edition.kind === 'topic' ? symbols.topic : symbols.money
-                    }
-                    href={destination}
-                    value={
-                      edition.kind === 'grant'
-                        ? edition.facts.figures[0]?.value
-                        : undefined
-                    }
-                    valueEmphasis={edition.kind === 'grant'}
-                    testID="edition-subject"
-                  />
-                )}
-              </InsetGroup>
+              <RowOpenListener.Provider value={openStory}>
+                <InsetGroup testID="edition-subject-group">
+                  {edition.kind === 'bill' ? (
+                    <BillRow
+                      billKey={/^\/bill\/([^/?]+)/.exec(edition.path)![1]!}
+                      title={edition.shortTitle ?? edition.title}
+                      href={destination}
+                      status=""
+                      showStatus={false}
+                      menu={[]}
+                      testID="edition-subject"
+                    />
+                  ) : edition.kind === 'politician' ? (
+                    <PersonRow
+                      name={edition.title}
+                      {...editionPerson(edition)}
+                      href={destination}
+                      portrait={
+                        <CachedPortrait
+                          name={edition.title}
+                          slug={subject.slug}
+                        />
+                      }
+                      menu={[]}
+                      testID="edition-subject"
+                    />
+                  ) : (
+                    <LinkRow
+                      title={
+                        edition.kind === 'largest'
+                          ? 'Largest grants'
+                          : edition.kind === 'topic'
+                            ? editionTopic(edition)!.name
+                            : edition.title
+                      }
+                      symbol={
+                        edition.kind === 'topic' ? symbols.topic : symbols.money
+                      }
+                      href={destination}
+                      value={
+                        edition.kind === 'grant'
+                          ? edition.facts.figures[0]?.value
+                          : undefined
+                      }
+                      valueEmphasis={edition.kind === 'grant'}
+                      testID="edition-subject"
+                    />
+                  )}
+                </InsetGroup>
+              </RowOpenListener.Provider>
             ) : null}
             <InsetGroup testID="edition-ask-group">
               <LinkRow
@@ -266,6 +279,7 @@ export function EditionStory() {
             {figureLines ? null : (
               <SourceLine {...source} testID="edition-sources" />
             )}
+            <View onLayout={end.onEndLayout} testID="edition-end" />
           </>
         )}
       </Screen>

@@ -68,6 +68,7 @@ jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn(async () => null) },
 }));
 jest.mock('../src/navigation/share', () => ({
+  trackShare: jest.fn(),
   canShare: true,
   shareRecord: jest.fn(),
   copyRecordLink: jest.fn(),

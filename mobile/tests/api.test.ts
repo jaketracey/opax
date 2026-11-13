@@ -6,7 +6,7 @@ import {
   type CacheIndexEntry,
   type CacheStore,
 } from '../src/api/cache';
-import { ApiClient } from '../src/api/client';
+import { ApiClient, shouldFreezeSnapshots } from '../src/api/client';
 import { ApiError, httpError } from '../src/api/errors';
 import { assertAllowedPath } from '../src/api/policy';
 import { pinnedBytes } from './pinned';
@@ -1259,6 +1259,85 @@ test('pre-frozen parents still protect nested raw and decoded snapshot values', 
   );
   expect(validate).toHaveBeenCalledTimes(1);
   expect(transport).not.toHaveBeenCalled();
+});
+
+test('release builds skip the freeze but still reuse one decode per body', async () => {
+  const transport = jest
+    .fn()
+    .mockResolvedValue(response(200, { 'cache-control': 'max-age=60' }));
+  const { client, cache } = setup(transport, () => 1000, {
+    freezeSnapshots: false,
+  });
+  const validate = jest.fn((body: unknown) => ({
+    ...decode(body),
+    nested: { values: [1, 2] },
+  }));
+  const first = await client.get('/parliamentarians.json', validate);
+  expect(Object.isFrozen(first.data)).toBe(false);
+  expect(Object.isFrozen(first.data.nested.values)).toBe(false);
+  const raw = (await cache.get(`${origin}/parliamentarians.json`))!
+    .body as object;
+  expect(Object.isFrozen(raw)).toBe(false);
+  const second = await client.get('/parliamentarians.json', validate);
+  expect(second.data).toBe(first.data);
+  expect(validate).toHaveBeenCalledTimes(1);
+  expect(transport).toHaveBeenCalledTimes(1);
+});
+
+describe('snapshot freeze decision', () => {
+  test.each([
+    [{ dev: false, e2e: false, jest: false }, false],
+    [{ dev: true, e2e: false, jest: false }, true],
+    [{ dev: false, e2e: true, jest: false }, true],
+    [{ dev: false, e2e: false, jest: true }, true],
+  ])('%j freezes: %s', (build, expected) => {
+    expect(shouldFreezeSnapshots(build)).toBe(expected);
+  });
+
+  // The module reads the decision once at load. Load it as a release build
+  // and as an e2e build (no __DEV__, no Jest marker) and check the default.
+  const loadClient = (e2e: boolean) => {
+    const g = globalThis as { __DEV__?: boolean };
+    const dev = g.__DEV__;
+    const worker = process.env.JEST_WORKER_ID;
+    let Client!: typeof ApiClient;
+    try {
+      g.__DEV__ = false;
+      delete process.env.JEST_WORKER_ID;
+      jest.isolateModules(() => {
+        jest.doMock('../src/design/environment', () => ({ isE2E: e2e }));
+        Client = require('../src/api/client').ApiClient;
+      });
+    } finally {
+      g.__DEV__ = dev;
+      process.env.JEST_WORKER_ID = worker;
+      jest.dontMock('../src/design/environment');
+    }
+    return Client;
+  };
+  test.each([
+    [true, true],
+    [false, false],
+  ])('e2e build %s freezes by default: %s', async (e2e, frozen) => {
+    const Client = loadClient(e2e);
+    const transport = jest
+      .fn()
+      .mockResolvedValue(response(200, { 'cache-control': 'max-age=60' }));
+    const cache = new CatalogCache(new MemoryStore());
+    const client = new Client({
+      origin,
+      version: '1.0.0',
+      build: '1',
+      cache,
+      transport,
+      now: () => 1000,
+      retries: 0,
+    });
+    const first = await client.get('/parliamentarians.json', (body) => ({
+      ...decode(body),
+    }));
+    expect(Object.isFrozen(first.data)).toBe(frozen);
+  });
 });
 
 describe('reviewed portrait byte transport', () => {

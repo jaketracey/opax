@@ -53,6 +53,7 @@ jest.mock('../src/api/runtime', () => ({}));
 jest.mock('../src/features/ask/session', () => ({ answerTurn: jest.fn() }));
 jest.mock('../src/navigation/sheets', () => ({ presentSheet: jest.fn() }));
 jest.mock('../src/navigation/share', () => ({
+  trackShare: jest.fn(),
   canShare: true,
   shareRecord: jest.fn().mockResolvedValue(undefined),
 }));

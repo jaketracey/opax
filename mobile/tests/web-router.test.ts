@@ -34,6 +34,15 @@ const mobile = resolve(__dirname, '..');
 const portal = resolve(mobile, '../portal/public');
 const origin = 'https://opax.com.au';
 
+// The oracle runs in its own Node process so it models the browser with
+// Node's WHATWG URL and Fetch classes; the Jest environment swaps in its own
+// URL, the one the guard runs on here. It takes under a second for the whole
+// sweep and holds nothing open (stdin is the input and then closes; tsx's
+// parent socket is unref'd), so the two-minute limit only bounds a machine
+// stalled far past gate load. A timeout fails naming the command
+// (tests/child-timeout.js).
+const oracleTimeout = 120_000;
+
 function web(
   addresses: string[],
   sources: { app?: string; home?: string } = {},
@@ -48,6 +57,8 @@ function web(
         encoding: 'utf8',
         maxBuffer: 256 * 1024 * 1024,
         stdio: 'pipe',
+        timeout: oracleTimeout,
+        killSignal: 'SIGKILL',
       },
     ),
   ) as Outcome[];

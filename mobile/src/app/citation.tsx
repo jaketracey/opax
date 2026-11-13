@@ -23,9 +23,10 @@ import {
 } from '../features/ask/source-present';
 import { copyText } from '../features/records/actions';
 import { pageMenu } from '../navigation/chrome';
+import { trackSourceOpen } from '../navigation/external';
 import { askReportRoute } from '../navigation/routes/ask';
 import { citeRoute } from '../navigation/routes/records';
-import { shareRecord } from '../navigation/share';
+import { shareRecord, trackShare } from '../navigation/share';
 
 /**
  * `/citation` (DIRECTION 4.28, journeys/ask.md 4.6): one cited source at
@@ -100,6 +101,7 @@ export default function Citation() {
           void copyText(sourceLink(source)).then((ok) => {
             if (!ok) return;
             haptic('success');
+            trackShare('copy_link', source.href || '/doc');
             AccessibilityInfo.announceForAccessibility('Link copied');
           }),
       },
@@ -140,7 +142,13 @@ export default function Citation() {
         n={n}
         focusKey={`${selection.turn}:${n}`}
         onOpenRecord={
-          href ? () => leaveThen(() => router.push(href)) : undefined
+          href
+            ? () =>
+                leaveThen(() => {
+                  router.push(href);
+                  trackSourceOpen('app', 'inline');
+                })
+            : undefined
         }
       />
     </SheetFrame>

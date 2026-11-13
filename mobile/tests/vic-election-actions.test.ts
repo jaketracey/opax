@@ -3,6 +3,7 @@ import { openOnWeb } from '../src/navigation/external';
 import { shareRecord, copyRecordLink } from '../src/navigation/share';
 jest.mock('../src/navigation/external', () => ({ openOnWeb: jest.fn() }));
 jest.mock('../src/navigation/share', () => ({
+  trackShare: jest.fn(),
   shareRecord: jest.fn(),
   copyRecordLink: jest.fn(),
 }));

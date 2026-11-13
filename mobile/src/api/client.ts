@@ -1,6 +1,7 @@
 import { fetch as expoFetch } from 'expo/fetch';
 import { throwIfAborted } from './abort';
 import { ReadSession } from './read-session';
+import { isE2E } from '../design/environment';
 import { phoneCopy } from '../design/phone-copy';
 import type { StreamHandlers } from '../features/ask/stream';
 import { postAsk } from '../features/ask/transport';
@@ -45,7 +46,29 @@ interface ClientOptions {
   sleep?: (ms: number) => Promise<void>;
   timeoutMs?: number;
   retries?: number;
+  /** Test seam: defaults to the build's decision, read once at load. */
+  freezeSnapshots?: boolean;
 }
+/**
+ * Deep-freezing every decoded catalog costs tens of milliseconds on a first
+ * open. It exists to catch a screen changing a shared cached value in place,
+ * so it runs where that bug can be caught (dev, Jest and e2e builds) and is
+ * skipped in release, where nothing would report it.
+ */
+export function shouldFreezeSnapshots(build: {
+  dev: boolean;
+  e2e: boolean;
+  jest: boolean;
+}): boolean {
+  return build.dev || build.e2e || build.jest;
+}
+const freezeByDefault = shouldFreezeSnapshots({
+  dev: typeof __DEV__ !== 'undefined' && __DEV__ === true,
+  e2e: isE2E === true,
+  jest:
+    typeof process !== 'undefined' &&
+    typeof process.env?.JEST_WORKER_ID === 'string',
+});
 export function dataAsOf(value: unknown): string | null {
   if (!value || typeof value !== 'object') return null;
   const data = value as Record<string, unknown>;
@@ -65,7 +88,9 @@ export function dataAsOf(value: unknown): string | null {
 }
 // Cached JSON must remain the version that passed validation. Freezing once
 // prevents a screen from changing a reused result without another decode.
-function freezeSnapshot(...values: unknown[]) {
+// Release builds skip it (see shouldFreezeSnapshots); screens copy before
+// sorting or editing a decoded value either way.
+export function freezeSnapshot(...values: unknown[]) {
   const pending = [...values];
   const seen = new WeakSet<object>();
   while (pending.length) {
@@ -199,6 +224,7 @@ export class ApiClient {
   private transport: typeof fetch;
   private now: () => number;
   private sleep: (ms: number) => Promise<void>;
+  private freezeSnapshots: boolean;
   // Body identity is a catalog version, independent of dates or ETags. Each
   // decoder validates that version once; new bytes must validate again. Weak
   // keys release decoded snapshots when the bounded raw cache evicts them.
@@ -208,7 +234,7 @@ export class ApiClient {
     let versions = this.decoded.get(body);
     if (versions?.has(decode)) return versions.get(decode) as T;
     const value = decode(body); // Never retain a failed validation.
-    freezeSnapshot(body, value);
+    if (this.freezeSnapshots) freezeSnapshot(body, value);
     if (!versions) this.decoded.set(body, (versions = new Map()));
     versions.set(decode, value);
     return value;
@@ -216,6 +242,7 @@ export class ApiClient {
   constructor(private options: ClientOptions) {
     this.transport = options.transport ?? expoFetch;
     this.now = options.now ?? Date.now;
+    this.freezeSnapshots = options.freezeSnapshots ?? freezeByDefault;
     this.sleep =
       options.sleep ??
       ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));

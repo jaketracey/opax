@@ -105,6 +105,23 @@ test('failures share their sentences', () => {
   expect(endCopy.network).toBe('The call dropped.');
 });
 
+test('the three callOpen cases each have their own line', () => {
+  expect(failureCopy.callOpen).toBe(
+    'Your earlier call is still ending. Try again in a minute.',
+  );
+  expect(failureCopy.alreadyInCall).toBe('You’re already in a call.');
+  expect(failureCopy.notLive).toBe(
+    'The call ended before your message was sent.',
+  );
+  expect(
+    new Set([
+      failureCopy.callOpen,
+      failureCopy.alreadyInCall,
+      failureCopy.notLive,
+    ]).size,
+  ).toBe(3);
+});
+
 test('voice time: one formatter, whole minutes never rounded up', () => {
   const at = (remainingSeconds: number, unlimited = false) => ({
     remainingSeconds,

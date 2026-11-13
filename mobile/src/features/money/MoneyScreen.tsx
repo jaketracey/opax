@@ -108,11 +108,13 @@ import {
   moneySourceDetails,
 } from './sources';
 import {
+  moneyFilterCount,
   moneyView,
   moneyWindowNodes,
   rankedDonors,
   type MoneyFilters,
 } from './view';
+import { track } from '../../analytics';
 
 const TOP_DONORS = 20;
 type Mode = 'list' | 'map';
@@ -502,6 +504,21 @@ function MapMode({
     [],
   );
   const model = useMemo(() => buildModel(view), [view]);
+  // Map analytics: the action and how many filters are set, never which
+  // filters, records or search text.
+  const filterCount = moneyFilterCount(graph, filters);
+  const mapAction = (
+    action: 'open' | 'filter' | 'zoom' | 'open_record' | 'search',
+  ) => track('opax_map_action', { action, filter_count: filterCount });
+  const shown = useRef(false);
+  const filterKey = JSON.stringify(filters);
+  useEffect(() => {
+    // `open` once as the map is shown; `filter` on each change after that.
+    mapAction(shown.current ? 'filter' : 'open');
+    shown.current = true;
+    // filterKey stands for the filters; the count alone can stay the same.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterKey]);
   const focus = param(params.select) ?? null;
   const focusIndex = focus === null ? null : (model.byId.get(focus) ?? null);
   // The trail Next has walked, as node ids, so Previous retraces it.
@@ -647,6 +664,11 @@ function MapMode({
     setFocus(id, nextTrail);
   };
   const flyTo = (id: string) => go(id, [id]);
+  /** A search result chosen: the action only, never the text or the result. */
+  const chooseSearchResult = (id: string) => {
+    mapAction('search');
+    flyTo(id);
+  };
   const record_ = useCallback(
     (id: string, name?: string) =>
       moneyFocusRoute(id, jurisdiction, filters, name, 'map'),
@@ -709,7 +731,10 @@ function MapMode({
         {
           name: 'openRecord',
           label: `Open the record for ${panelFocus.node.label}`,
-          onAction: () => router.push(panelFocus.record),
+          onAction: () => {
+            mapAction('open_record');
+            router.push(panelFocus.record);
+          },
         },
         {
           name: 'clearFocus',
@@ -752,7 +777,7 @@ function MapMode({
       // a result moves it to the panel's new subject, Close back to Search.
       onChoose={(id) => {
         requestFocus('money-map-focus');
-        flyTo(id);
+        chooseSearchResult(id);
       }}
       onClose={() => {
         requestFocus('money-map-search');
@@ -878,9 +903,18 @@ function MapMode({
               <MoneyMapControls
                 horizontal={horizontalControls}
                 onSearch={() => setSearchOpen(true)}
-                onZoomIn={() => dispatch({ type: 'zoom', direction: 1 })}
-                onZoomOut={() => dispatch({ type: 'zoom', direction: -1 })}
-                onFit={() => dispatch({ type: 'fit' })}
+                onZoomIn={() => {
+                  mapAction('zoom');
+                  dispatch({ type: 'zoom', direction: 1 });
+                }}
+                onZoomOut={() => {
+                  mapAction('zoom');
+                  dispatch({ type: 'zoom', direction: -1 });
+                }}
+                onFit={() => {
+                  mapAction('zoom');
+                  dispatch({ type: 'fit' });
+                }}
               />
             </View>
           )}
@@ -910,6 +944,7 @@ function MapMode({
                 setFocus(null);
                 setExpanded(false);
               }}
+              onOpenRecord={() => mapAction('open_record')}
               onPeekHeight={setPeek}
             />
           </View>

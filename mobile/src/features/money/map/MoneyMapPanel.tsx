@@ -48,6 +48,7 @@ import {
   rhythm,
 } from '../../../design/tokens';
 import { useRecordLink } from '../../../navigation/record-link';
+import { RowOpenListener } from '../../../design/row-link';
 import { moneyMapEntityRoute } from '../record-routes';
 import { moneyYears } from '../records';
 import {
@@ -157,6 +158,7 @@ export function MoneyMapPanel({
   onExpanded,
   onClear,
   onPeekHeight,
+  onOpenRecord,
 }: {
   focus: PanelFocus | null;
   totals: { donations: number; publicMoney: number | null };
@@ -172,6 +174,8 @@ export function MoneyMapPanel({
   onClear: () => void;
   /** The panel's resting height, so the stage keeps its map above it. */
   onPeekHeight: (height: number) => void;
+  /** A record opened from the panel (analytics only; never which). */
+  onOpenRecord?: () => void;
 }) {
   const reduced = useReduceMotion();
   const entityRoute = focus
@@ -307,7 +311,10 @@ export function MoneyMapPanel({
                     ref={titleRef}
                     accessibilityRole="link"
                     accessibilityLabel={`${focusMetaLine(focus.node)}, ${focus.node.label}`}
-                    onPress={entityLink.open}
+                    onPress={() => {
+                      onOpenRecord?.();
+                      entityLink.open();
+                    }}
                     style={({ pressed }) => [
                       styles.entityLink,
                       pressed && styles.pressed,
@@ -400,64 +407,66 @@ export function MoneyMapPanel({
         </View>
         {expanded ? (
           focus ? (
-            <View style={styles.block} testID="money-map-focus-flows">
-              {entityRoute ? (
-                <LinkRow
-                  title="Open record"
-                  detail={`${formatMoney(focus.node.amount)} with every source`}
-                  symbol={symbols.money}
-                  symbolInk="money"
-                  href={focus.record}
-                  testID="money-map-open-record"
-                />
-              ) : null}
-              {focusFlowGroups(focus.node, focus.flows).map((group) => (
-                <View
-                  key={group.key}
-                  style={styles.block}
-                  testID={`money-map-flows-${group.key}`}
-                >
-                  <SectionHeader title={group.title} level={3} />
-                  <View>
-                    {group.rows.map(({ edge, other, index }) => (
-                      <MoneyRow
-                        key={`${edge.index}`}
-                        name={other.label}
-                        detail={[
-                          associatedLine(
-                            focus.node.kind === 'party'
-                              ? donorAssociatedTo(other, focus.node.label)
-                              : other.kind === 'donor'
-                                ? donorAssociated(other)
-                                : null,
-                          ),
-                          `${moneyYears(edge.firstYear, edge.lastYear)} · ${counted(
-                            edge.count,
-                            edge.type === 'donations'
-                              ? 'donation'
-                              : edge.type === 'grants'
-                                ? 'grant'
-                                : 'contract',
-                          )}`,
-                        ]
-                          .filter(Boolean)
-                          .join(' · ')}
-                        amount={edge.amount}
-                        compact
-                        href={focus.flowRecord(other)}
-                        testID={`money-map-flow-${index}`}
-                      />
-                    ))}
+            <RowOpenListener.Provider value={onOpenRecord ?? null}>
+              <View style={styles.block} testID="money-map-focus-flows">
+                {entityRoute ? (
+                  <LinkRow
+                    title="Open record"
+                    detail={`${formatMoney(focus.node.amount)} with every source`}
+                    symbol={symbols.money}
+                    symbolInk="money"
+                    href={focus.record}
+                    testID="money-map-open-record"
+                  />
+                ) : null}
+                {focusFlowGroups(focus.node, focus.flows).map((group) => (
+                  <View
+                    key={group.key}
+                    style={styles.block}
+                    testID={`money-map-flows-${group.key}`}
+                  >
+                    <SectionHeader title={group.title} level={3} />
+                    <View>
+                      {group.rows.map(({ edge, other, index }) => (
+                        <MoneyRow
+                          key={`${edge.index}`}
+                          name={other.label}
+                          detail={[
+                            associatedLine(
+                              focus.node.kind === 'party'
+                                ? donorAssociatedTo(other, focus.node.label)
+                                : other.kind === 'donor'
+                                  ? donorAssociated(other)
+                                  : null,
+                            ),
+                            `${moneyYears(edge.firstYear, edge.lastYear)} · ${counted(
+                              edge.count,
+                              edge.type === 'donations'
+                                ? 'donation'
+                                : edge.type === 'grants'
+                                  ? 'grant'
+                                  : 'contract',
+                            )}`,
+                          ]
+                            .filter(Boolean)
+                            .join(' · ')}
+                          amount={edge.amount}
+                          compact
+                          href={focus.flowRecord(other)}
+                          testID={`money-map-flow-${index}`}
+                        />
+                      ))}
+                    </View>
+                    {group.note ? (
+                      <Text variant="footnote" wordSafe>
+                        {group.note}
+                      </Text>
+                    ) : null}
                   </View>
-                  {group.note ? (
-                    <Text variant="footnote" wordSafe>
-                      {group.note}
-                    </Text>
-                  ) : null}
-                </View>
-              ))}
-              {sourceLine}
-            </View>
+                ))}
+                {sourceLine}
+              </View>
+            </RowOpenListener.Provider>
           ) : (
             <View style={styles.block}>
               <Text variant="footnote" wordSafe testID="money-map-caption">
