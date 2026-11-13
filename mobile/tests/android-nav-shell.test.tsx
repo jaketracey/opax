@@ -172,10 +172,16 @@ test.each([
   },
 );
 
-test('only the full-screen viewer hides the Android tab bar', () => {
+test('full-screen viewers and filter dialogs hide the Android tab bar', () => {
   expect(androidTabsHidden(['(tabs)', '(today)', 'explore', 'photo'])).toBe(
     true,
   );
+  expect(androidTabsHidden(['(tabs)', '(ask)', 'filters', '[list]'])).toBe(
+    true,
+  );
+  expect(
+    androidTabsHidden(['(tabs)', '(ask)', 'filters', '[list]', '[facet]']),
+  ).toBe(true);
   for (const route of ['index', 'bill/[key]', 'doc/[slug]', 'money'])
     expect(androidTabsHidden(['(tabs)', '(today)', route])).toBe(false);
 });
