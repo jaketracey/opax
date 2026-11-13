@@ -756,3 +756,110 @@ test('the follow limit comes from the store and Edit Following is driven by its 
       .filter((node) => node.props.testID === 'follow-edit-following'),
   ).toHaveLength(0);
 });
+
+function asAndroid(run: () => void | Promise<void>) {
+  const original = RN.Platform.OS;
+  Object.defineProperty(RN.Platform, 'OS', {
+    value: 'android',
+    configurable: true,
+  });
+  const restore = () =>
+    Object.defineProperty(RN.Platform, 'OS', {
+      value: original,
+      configurable: true,
+    });
+  try {
+    const done = run();
+    if (done) return done.finally(restore);
+  } catch (error) {
+    restore();
+    throw error;
+  }
+  restore();
+}
+const flat = (node: TestRenderer.ReactTestInstance) =>
+  RN.StyleSheet.flatten(node.props.style) ?? {};
+
+test('Android centred FollowButton keeps the button and its message on one centre line', () =>
+  asAndroid(async () => {
+    jest.mocked(useFollows).mockReturnValue([]);
+    jest
+      .mocked(followWithFeedback)
+      .mockResolvedValue({ status: 'followed', showMessage: true });
+    const r = render(
+      <FollowButton
+        kind="bill"
+        id="b"
+        title="A bill"
+        testID="follow"
+        centred
+      />,
+    );
+    await act(async () => {
+      await press(r, 'follow-off').props.onPress();
+    });
+    const button = press(r, 'follow-off');
+    // The hugging button sits in a centred wrapper, not at the group's
+    // leading edge where a wider message line would push it off centre.
+    let wrapper = button.parent;
+    while (wrapper && flat(wrapper).alignSelf !== 'center')
+      wrapper = wrapper.parent;
+    expect(wrapper).toBeTruthy();
+    expect(flat(wrapper!)).toMatchObject({ alignItems: 'center' });
+    const message = r.root.findAll(
+      (node) => node.type === Text && node.props.testID === 'follow-message',
+    )[0]!;
+    expect(message.props.children).toBe('Changes will show on Today.');
+    expect(flat(message)).toMatchObject({ textAlign: 'center' });
+  }));
+
+test('iOS FollowButton ignores centred: the tree is unchanged', () => {
+  const os = RN.Platform.OS;
+  RN.Platform.OS = 'ios';
+  try {
+    const plain = render(
+      <FollowButton kind="bill" id="b" title="A bill" testID="follow" />,
+    ).toJSON();
+    const centred = render(
+      <FollowButton
+        kind="bill"
+        id="b"
+        title="A bill"
+        testID="follow"
+        centred
+      />,
+    ).toJSON();
+    expect(JSON.stringify(centred)).toBe(JSON.stringify(plain));
+  } finally {
+    RN.Platform.OS = os;
+  }
+});
+
+test.each([
+  ['code variant', { variant: 'code' as const }],
+  ['oneTimeCode content', { textContentType: 'oneTimeCode' as const }],
+])('Android %s field never shows the clear button', (_, props) =>
+  asAndroid(() => {
+    const r = render(
+      <Field
+        label="8-digit code"
+        testID="code"
+        defaultValue="1234567"
+        {...props}
+      />,
+    );
+    act(() => r.root.findByType(RN.TextInput).props.onFocus?.({}));
+    expect(
+      r.root.findAll((node) => node.props.testID === 'code-clear'),
+    ).toHaveLength(0);
+  }),
+);
+
+test('Android text field still offers its clear button while focused', () =>
+  asAndroid(() => {
+    const r = render(<Field label="Email" testID="email" defaultValue="a@b" />);
+    act(() => r.root.findByType(RN.TextInput).props.onFocus?.({}));
+    expect(
+      r.root.findAll((node) => node.props.testID === 'email-clear').length,
+    ).toBeGreaterThan(0);
+  }));

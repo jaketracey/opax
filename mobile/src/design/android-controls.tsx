@@ -217,6 +217,11 @@ export function AndroidField({
   const disabled = input.editable === false;
   const value = input.value ?? draft;
   const search = input.returnKeyType === 'search';
+  const oneTimeCode =
+    variant === 'code' ||
+    input.textContentType === 'oneTimeCode' ||
+    input.autoComplete === 'sms-otp' ||
+    input.autoComplete === 'one-time-code';
   const outline = focused || error ? 2 : 1;
   const description = [error ? `Error: ${error}` : null, hint]
     .filter(Boolean)
@@ -297,7 +302,13 @@ export function AndroidField({
             ...(variant === 'code' ? { fontVariant: ['tabular-nums'] } : {}),
           }}
         />
-        {focused && value.length > 0 && !disabled && !input.secureTextEntry ? (
+        {focused &&
+        value.length > 0 &&
+        !disabled &&
+        !input.secureTextEntry &&
+        // A one-time code never shows the clear button, as on iOS: it takes
+        // the digits' room at large text. Backspace still deletes.
+        !oneTimeCode ? (
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={`Clear ${label.toLocaleLowerCase('en-AU')}`}
