@@ -216,36 +216,60 @@ export function governmentFunctionTableConfig(rows) {
       {key:'code_status',label:'Code availability',type:'text'}],primaryLink:()=>null};
 }
 
-// One figure for a donor-to-party flow, so the map card, the donor page and
-// the party table agree. The money graph's typed cells (by_type, by_type_year)
-// sum each receipt once, from the party's own return, across all receipt types.
-// The older total/count/byYear also add the donor's own declarations of the
-// same gifts, so one gift can appear twice there (docs/reports/2026-11-12-aec-receipt-types.md).
-// They are used only for a graph with no typed cells, and say so.
+// One figure for a donor-to-party flow, so the map card, the donor page, the
+// party table, /api/register/party-money and "Explain this money" agree.
+//
+// The money graph's typed cells (by_type, by_type_year) sum each receipt once,
+// from the party's own return, across all receipt types. The older
+// total/count/byYear also add the donor's own declarations of the same gifts,
+// so one gift can appear twice there (docs/reports/2026-11-12-aec-receipt-types.md).
+// They are used only for a graph with no typed cells (the state graphs), and
+// the scope line says so.
+
+// Event periods count at their polling year, as on the map (graph/index.ts).
 const RECEIPT_EVENT_YEARS = {'braddon by-election':2018,'wentworth by-election':2018,'eden-monaro by-election':2020,'fadden by-election':2023};
+
+/**
+ * A flow's figures: total, count, first and last year, dollars by year
+ * (`byYear`), [dollars, receipts] by year (`cells`), what carries no year
+ * (`undated`, [dollars, receipts]) and dollars by receipt type (`byType`, typed only).
+ */
 export function receiptFigures(x) {
   if (!x?.by_type) {
-    const byYear = {};
-    for (const [year, cell] of Object.entries(x?.byYear || {})) byYear[year] = Number(Array.isArray(cell) ? cell[0] : cell) || 0;
-    return {total:Number(x?.total) || 0, count:Number(x?.count) || 0, firstYear:x?.firstYear ?? null, lastYear:x?.lastYear ?? null, byYear, typed:false};
+    const byYear = {}, cells = {};
+    for (const [year, cell] of Object.entries(x?.byYear || {})) {
+      const dollars = Number(Array.isArray(cell) ? cell[0] : cell) || 0;
+      byYear[year] = dollars;
+      cells[year] = [dollars, Array.isArray(cell) ? Number(cell[1]) || 0 : 0];
+    }
+    const undated = [Number(x?.undated?.[0]) || 0, Number(x?.undated?.[1]) || 0];
+    return {total:Number(x?.total) || 0, count:Number(x?.count) || 0, firstYear:x?.firstYear ?? null, lastYear:x?.lastYear ?? null,
+      byYear, cells, undated, byType:null, typed:false};
   }
   let count = 0, firstYear = null, lastYear = null;
-  const byYear = {};
+  const byYear = {}, cells = {}, undated = [0, 0];
   for (const [period, types] of Object.entries(x.by_type_year || {})) {
     // Financial years count at their first year ("2020-21" is 2020), as on the map.
     const year = Number(String(period).match(/\b(?:19|20)\d{2}\b/)?.[0]) || RECEIPT_EVENT_YEARS[String(period).toLowerCase()];
     let dollars = 0, n = 0;
     for (const cell of Object.values(types || {})) { dollars += Number(cell?.[0]) || 0; n += Number(cell?.[1]) || 0; }
     count += n;
-    if (!year || n <= 0) continue;
+    if (n <= 0) continue;
+    if (!year) { undated[0] += dollars; undated[1] += n; continue; }
     byYear[year] = (byYear[year] || 0) + dollars;
+    const cell = cells[year] || (cells[year] = [0, 0]);
+    cell[0] += dollars; cell[1] += n;
     firstYear = firstYear === null ? year : Math.min(firstYear, year);
     lastYear = lastYear === null ? year : Math.max(lastYear, year);
   }
-  const total = Object.values(x.by_type).reduce((sum, amount) => sum + (Number(amount) || 0), 0);
-  return {total, count, firstYear, lastYear, byYear, typed:true};
+  const byType = {};
+  for (const [type, amount] of Object.entries(x.by_type)) byType[type] = Number(amount) || 0;
+  const total = Object.values(byType).reduce((sum, amount) => sum + amount, 0);
+  return {total, count, firstYear, lastYear, byYear, cells, undated, byType, typed:true};
 }
+
 const financialYear = year => `${year}-${String((year + 1) % 100).padStart(2, '0')}`;
+
 /** The scope of a receiptFigures result, in a reader's words, for its own line under the figure. */
 export function receiptScopeLabel(figures) {
   if (!figures?.typed) return 'All federal disclosure records, as given by both donor and party, so a gift can appear twice';
@@ -254,24 +278,37 @@ export function receiptScopeLabel(figures) {
   return `All receipt types${span}, as the parties reported them in federal returns`;
 }
 
-/** Keep every disclosed donor; party transfers and grants are excluded. */
+/**
+ * Keep every disclosed donor; party transfers and grants are excluded. Each row
+ * counts each receipt once, from the party's own return (receiptFigures), the
+ * measure the map card and the donor page use. `scope` says so in a reader's
+ * words; a graph without typed cells (the state graphs) keeps its record totals
+ * and gets no scope line.
+ */
 export function partyMoneyData(graph, partyId) {
   const donors = new Map(graph.nodes.filter(node=>node.kind === 'donor').map(node=>[node.id,node]));
   const rows = new Map();
+  let typed = true, firstYear = null, lastYear = null;
   for (const edge of graph.edges) {
     const donor = donors.get(edge.source);
     if (edge.target !== partyId || edge.flow || edge.grant || !donor) continue;
     const disclosure=donorDisclosure(donor,{return_type:graph.meta?.source || 'Electoral disclosure return',url:graph.meta?.source_url});
     const row = rows.get(donor.id) || {label:disclosure.name,href:disclosure.href,return_reference:disclosure.reference,
       industry:donor.industry || 'Not supplied',total:0,count:0,firstYear:null,lastYear:null};
-    // The released legacy cells: /api/register/party-money keeps them byte for byte
-    // (test/aec-receipt-types.test.mjs), so a party page says this scope beside the table.
-    row.total += Number(edge.total) || 0; row.count += Number(edge.count) || 0;
-    if (Number.isFinite(edge.firstYear)) row.firstYear = row.firstYear == null ? edge.firstYear : Math.min(row.firstYear,edge.firstYear);
-    if (Number.isFinite(edge.lastYear)) row.lastYear = row.lastYear == null ? edge.lastYear : Math.max(row.lastYear,edge.lastYear);
+    const figures = receiptFigures(edge);
+    typed &&= figures.typed;
+    row.total += figures.total; row.count += figures.count;
+    if (Number.isFinite(figures.firstYear)) row.firstYear = row.firstYear == null ? figures.firstYear : Math.min(row.firstYear,figures.firstYear);
+    if (Number.isFinite(figures.lastYear)) row.lastYear = row.lastYear == null ? figures.lastYear : Math.max(row.lastYear,figures.lastYear);
     rows.set(donor.id,row);
   }
-  return {rows:[...rows.values()]};
+  // A typed edge with no receipts (an empty by_type) is not a receipt source for this measure.
+  const kept = [...rows.values()].filter(row=>!typed || row.count > 0 || row.total !== 0);
+  for (const row of kept) {
+    if (row.firstYear != null) firstYear = firstYear == null ? row.firstYear : Math.min(firstYear,row.firstYear);
+    if (row.lastYear != null) lastYear = lastYear == null ? row.lastYear : Math.max(lastYear,row.lastYear);
+  }
+  return {rows:kept,...(typed && kept.length ? {scope:receiptScopeLabel({typed,firstYear,lastYear})} : {})};
 }
 
 // The table's rows (and so the page's hydration JSON) leave out return_reference;

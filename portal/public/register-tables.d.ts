@@ -3,8 +3,8 @@ import type {DataTableConfig, Query, Row} from './datatable.js';
 import type {AuditRow} from './audit.js';
 export interface InterestRegister {source_url?: string; as_at?: string; buckets: Record<string,{items:{description:string;holder?:string|null;kind?:string;url?:string;page?:number;date?:string}[]}>}
 export interface PartyGraph {meta?:{source?:string;source_url?:string};nodes:(DonorDisclosureRecord & {id:string;kind:string;label:string;industry?:string;aliases?:string[]})[];edges:(ReceiptCells & {source:string;target:string;flow?:string;grant?:boolean})[]}
-export interface ReceiptCells {total?:number;count?:number;firstYear?:number|null;lastYear?:number|null;byYear?:Record<string,unknown>;by_type?:Record<string,number>;by_type_year?:Record<string,Record<string,[number,number]>>}
-export interface ReceiptFigures {total:number;count:number;firstYear:number|null;lastYear:number|null;byYear:Record<string,number>;typed:boolean}
+export interface ReceiptCells {total?:number;count?:number;firstYear?:number|null;lastYear?:number|null;byYear?:Record<string,unknown>;undated?:[number,number];by_type?:Record<string,number>;by_type_year?:Record<string,Record<string,[number,number]>>}
+export interface ReceiptFigures {total:number;count:number;firstYear:number|null;lastYear:number|null;byYear:Record<string,number>;cells:Record<string,[number,number]>;undated:[number,number];byType:Record<string,number>|null;typed:boolean}
 export function receiptFigures(x: ReceiptCells | null | undefined): ReceiptFigures;
 export function receiptScopeLabel(figures: ReceiptFigures): string;
 export function instrumentTableConfig(): DataTableConfig;
@@ -18,7 +18,7 @@ export function governmentFinanceTableConfig(rows:Row[]): DataTableConfig;
 export function governmentFunctionTableConfig(rows:Row[]): DataTableConfig;
 export function taxExpendituresTableConfig(rows:Row[]): DataTableConfig;
 export function stateBillsTableQuery(params:URLSearchParams,config:DataTableConfig): Query;
-export function partyMoneyData(graph: PartyGraph, partyId: string): {rows:Row[]};
+export function partyMoneyData(graph: PartyGraph, partyId: string): {rows:Row[];scope?:string};
 export function partyMoneyTableConfig(rows:Row[],id?:string,urlKey?:string,pageType?:string,scope?:{party:string;jurisdiction?:string}|null): DataTableConfig;
 export function registerTableHTML(config:DataTableConfig,query?:Query,requestURL?:string|URL): string;
 export function mountRegisterTable(el:Element,config:DataTableConfig): {destroy():void};

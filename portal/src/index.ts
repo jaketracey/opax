@@ -5607,10 +5607,10 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     const graph = await read<Parameters<typeof partyMoneyData>[0]>('/graph/money.json').catch(()=>null)
     const party = graph?.nodes.find(n=>n.kind === 'party' && foldName(n.label) === foldName(display))
     if (graph && party) {
-      const {rows} = partyMoneyData(graph,party.id)
+      const {rows,scope} = partyMoneyData(graph,party.id)
       const config = partyMoneyTableConfig(rows,undefined,undefined,undefined,{party:party.label,jurisdiction:'federal'})
       config.id = 'ssr-party-money-table'
-      table = `<section class="wrap"><h2>Where it came from</h2><p>Every federal disclosure record for each source, from both its own returns and the party's, so one gift can be counted twice. The money map counts each receipt once.</p>${registerTableHTML(config,undefined,url)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
+      table = `<section class="wrap"><h2>Where it came from</h2>${scope ? `<p class="entry-scope">${escHtml(scope)}</p>` : ''}${registerTableHTML(config,undefined,url)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
     }
   }
   return {
