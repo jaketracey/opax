@@ -9,7 +9,7 @@ import {moneyFlowType} from '../portal/public/money-records.js';
 import {instrumentTableRows} from '../portal/public/instruments.js';
 import {categoryMembers,receiptFigures} from '../portal/public/register-tables.js';
 import {interestHolder} from '../portal/public/interest-holder.js';
-import {donorDisclosure} from '../portal/public/donor-disclosure.js';
+import {donorDisclosure,hasPartyReceipts} from '../portal/public/donor-disclosure.js';
 import {contractTitle, placeholderContract, ausTenderURL} from '../portal/public/contracts-table.js';
 import {divisionRows,votingRows,personVoteRecords} from '../portal/public/vote-tables.js';
 
@@ -43,10 +43,11 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
       // A receipt counts once, from the party's own return (receiptFigures), as the party page,
       // /api/register/party-money and the map card count it: the legacy total/count/byYear also
       // hold the donor's own declaration of the same gift. A typed edge with no receipts on the
-      // party's returns is left out, as the page leaves it out. Graphs without typed cells (the
-      // state graphs) and contract or grant edges keep their figures.
+      // party's returns (a flow only the donor's own return declares; hasPartyReceipts is false) is
+      // left out, as the party page, the map and the Connections table leave it out. Graphs without
+      // typed cells (the state graphs) and contract or grant edges keep their figures.
+      if (type==='receipts' && !hasPartyReceipts(edge)) continue;
       const figures = type==='receipts' ? receiptFigures(edge) : null;
-      if (figures?.typed && figures.count <= 0 && figures.total === 0) continue;
       const from = nodes.get(edge.source),to = nodes.get(edge.target);
       const donors = [from,to].filter(n=>n.kind==='donor');
       const identity=donors[0] ? donorDisclosure(donors[0]) : null;

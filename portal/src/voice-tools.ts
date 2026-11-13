@@ -1,6 +1,7 @@
 import {CommunityError, text} from './community-core'
 import {CATALOG_KINDS} from './catalog-search'
-import {isReceiptGraph, moneyQuestion, receiptAnswer, receiptGraphForQuestion} from './voice-money'
+import {isReceiptGraph, moneyQuestion, receiptAnswer, receiptGraphForQuestion, voiceReceiptData} from './voice-money'
+import {UNTYPED_RECEIPTS_LABEL} from './receipt-copy'
 import {reportsEnabled} from './reports-gate'
 import {federalPartyMoneyAnswer, federalPartyRankingIntent, publicPartyMoneyAnswer} from './ask-money-routing'
 import {askOpaxResult, voiceSources} from './voice-sources'
@@ -115,18 +116,28 @@ export async function runVoiceTool(name: string, args: Data, env: Env, readPubli
     return {...askOpaxResult(response.ok ? payload : {error: String(payload.error ?? 'unavailable')}, origin), question}
   }
   const asset = async (path: string, limit: number) => boundedJson(await env.ASSETS.fetch(new Request(origin + path)), limit)
-  const receipts = async (query:string,kind?:string) => {
-    const family=await federalPartyMoneyAnswer({question:query,kind},env.ASSETS)
-    if(family)return {source_notice:evidenceNotice,sources:family.sources,data:publicPartyMoneyAnswer(family)}
-    if(/\b(?:grants?|contracts?|expenditure|expenses?|government spending|public funding)\b/i.test(query)) return null
+  const receiptSelection = async (query:string) => {
     const selection=await receiptGraphForQuestion(query,async file=>{
       const graph=await asset(file,8_000_000)
       return isReceiptGraph(graph)?graph:null
     })
     if(!selection)return null
-    const {graph,jurisdiction}=selection
-    const found=receiptAnswer(graph,query,jurisdiction,origin)
-    return found ? {source_notice:evidenceNotice, sources:found.sources, data:compact(found)} : null
+    const found=receiptAnswer(selection.graph,query,selection.jurisdiction,origin)
+    // A donor only its own return declares is given as that declaration, never as receipts.
+    return found?voiceReceiptData(selection.graph,found):null
+  }
+  const receipts = async (query:string,kind?:string) => {
+    const family=await federalPartyMoneyAnswer({question:query,kind},env.ASSETS)
+    if(family){
+      // Ask's ranked answer gives flows the parties' returns never list under the older
+      // "no type breakdown" label. Voice gives those as the donor's declaration instead.
+      const declared=JSON.stringify(family).includes(UNTYPED_RECEIPTS_LABEL)?await receiptSelection(query):null
+      if(declared&&'donor_declared_only' in declared)return {source_notice:evidenceNotice,sources:declared.sources,data:compact(declared)}
+      return {source_notice:evidenceNotice,sources:family.sources,data:publicPartyMoneyAnswer(family)}
+    }
+    if(/\b(?:grants?|contracts?|expenditure|expenses?|government spending|public funding)\b/i.test(query)) return null
+    const data=await receiptSelection(query)
+    return data ? {source_notice:evidenceNotice, sources:data.sources, data:compact(data)} : null
   }
   let data: Data, url: string
   if (name === 'search_records') {
