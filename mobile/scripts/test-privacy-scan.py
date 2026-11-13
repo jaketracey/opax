@@ -64,6 +64,14 @@ class PrivacyScanTests(unittest.TestCase):
         self.assertTrue(privacy.check_purposes(found, {'NSMotionUsageDescription': 'Unused code'}))
         self.assertTrue(privacy.check_purposes({}, {'NSMotionUsageDescription': 'Unused code'}))
 
+    def test_a_bare_framework_name_string_is_not_motion_use(self):
+        # posthog-ios lists system framework names to tell in-app frames apart.
+        self.assertEqual(privacy.findings('strings -a\nFoundation\nCoreMotion\nCoreServices\n')[1], {})
+        for use in ('_OBJC_CLASS_$_CMMotionManager', '/System/Library/Frameworks/CoreMotion.framework/CoreMotion',
+                    'CoreMotionSensor', ' CoreMotion', 'import CoreMotion'):
+            with self.subTest(use=use):
+                self.assertIn('CoreMotion', privacy.findings('strings -a\n' + use + '\n')[1])
+
     def test_playback_and_internet_do_not_require_microphone_or_lan(self):
         _, found = privacy.findings('AVAudioSession AVPlayer CoreMedia CMTime Network.framework socket NSURLSession')
         self.assertEqual(found, {})

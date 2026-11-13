@@ -11,7 +11,7 @@ import sys
 
 sys.dont_write_bytecode = True
 from release_inputs import clean_commit, dependency_command, refuse_dotenv
-from release_support import ReleaseError, load_credentials, redact, run_logged
+from release_support import JS_SOURCE_MAP, ReleaseError, load_credentials, redact, run_logged
 
 
 # Xcode's export copies with whichever rsync PATH finds first and fails with
@@ -82,10 +82,16 @@ def run(step, mobile, out, expected_voice_mode=None):
             jobs = os.environ.get("OPAX_XCODE_JOBS", "4")
             if not re.fullmatch(r"[1-9][0-9]?", jobs):
                 raise ReleaseError("OPAX_XCODE_JOBS must be a small positive integer.")
+            # Every archive keeps its composed Hermes source map beside it, never
+            # in the app: React Native's bundle phase writes it to SOURCEMAP_FILE,
+            # and Metro records the bundle's chunk ID in OPAX_SYMBOLS_DIR. Build
+            # settings reach that phase as environment variables.
+            symbols = ["SOURCEMAP_FILE=" + str(out / JS_SOURCE_MAP), "OPAX_SYMBOLS_DIR=" + str(out)]
             cmd = ["nice", "-n", "10", "xcodebuild", "-jobs", jobs, "-workspace", "ios/OPAX.xcworkspace",
                    "-scheme", "OPAX", "-configuration", "Release", "-destination", "generic/platform=iOS",
                    "-archivePath", str(archive), "-derivedDataPath", str(out / "DerivedData"),
-                   "DEVELOPMENT_TEAM=" + os.environ["APPLE_TEAM_ID"], "CODE_SIGN_STYLE=Automatic", *auth, "archive"]
+                   "DEVELOPMENT_TEAM=" + os.environ["APPLE_TEAM_ID"], "CODE_SIGN_STYLE=Automatic", *symbols,
+                   *auth, "archive"]
         else:
             options = out / "ExportOptions.plist"
             options.write_bytes(plistlib.dumps({"method": "app-store-connect", "destination": "export",

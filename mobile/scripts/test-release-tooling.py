@@ -213,6 +213,8 @@ class SafetyTests(unittest.TestCase):
     def test_redaction_and_utf16_scan(self):
         with patch.dict(os.environ, {"APPLE_TEAM_ID": "TEST_VALUE_123", "ASC_KEY_PATH": "/dummy/key"}):
             self.assertNotIn("TEST_VALUE_123", redact("team=TEST_VALUE_123 /dummy/key"))
+        with patch.dict(os.environ, {"POSTHOG_CLI_API_KEY": "phx_SYNTHETIC_UPLOAD_KEY"}):
+            self.assertNotIn("phx_SYNTHETIC_UPLOAD_KEY", redact("key phx_SYNTHETIC_UPLOAD_KEY"))
         self.assertTrue(matches("sensitive".encode("utf-16-be"), "sensitive"))
 
     def test_private_key_multiline_command_output_is_redacted(self):
@@ -220,6 +222,16 @@ class SafetyTests(unittest.TestCase):
             log = Path(d) / "log"
             run_logged([sys.executable, "-c", "print('-----BEGIN ' + 'PRIVATE KEY-----'); print('keybytes'); print('-----END ' + 'PRIVATE KEY-----')"], log)
             self.assertNotIn("keybytes", log.read_text())
+
+    def test_build_steps_never_receive_the_symbol_upload_key(self):
+        with tempfile.TemporaryDirectory() as d, \
+             patch.dict(os.environ, {"POSTHOG_CLI_API_KEY": "phx_SYNTHETIC_UPLOAD_KEY"}):
+            log = Path(d) / "log"
+            show = [sys.executable, "-c", "import os; print(os.environ.get('POSTHOG_CLI_API_KEY', 'absent'))"]
+            run_logged(show, log, public_env=True)
+            self.assertEqual(log.read_text(), "absent\n")
+            run_logged(show, log)
+            self.assertEqual(log.read_text(), "[POSTHOG_CLI_API_KEY redacted]\n")
 
     def test_only_macho_signature_range_excluded(self):
         header = struct.pack("<8I", 0xfeedfacf, 0, 0, 0, 1, 16, 0, 0)
@@ -409,8 +421,12 @@ class ReleaseStepTests(unittest.TestCase):
                 for key in ("ASC_KEY_PATH", "ASC_KEY_ID", "ASC_ISSUER_ID"):
                     self.assertIn(self.values[key], cmd)
                 self.assertTrue(logged.call_args.kwargs["public_env"])
+                # Every archive writes its Hermes source map and chunk ID beside it.
+                self.assertIn("SOURCEMAP_FILE=" + str(out / "main.jsbundle.map"), cmd)
+                self.assertIn("OPAX_SYMBOLS_DIR=" + str(out), cmd)
                 step.run("export", mobile, out)
                 self.assertIn("-exportArchive", logged.call_args.args[0])
+                self.assertFalse(any(arg.startswith("SOURCEMAP_FILE=") for arg in logged.call_args.args[0]))
 
     def export_env(self, mobile, caller_path, tool_dirs=None):
         """Run the export step and return the environment handed to Popen."""
@@ -618,6 +634,60 @@ class ReleaseStepTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr.decode())
             self.assertIn("LOCKED", planted.read_text())
             self.assertNotIn("MUTATION", planted.read_text())
+
+
+class SourceMapTests(unittest.TestCase):
+    """The archive's composed Hermes map stays beside it, never in the app."""
+    chunk = "896a182b-d6a3-4253-bc6b-150f6ce96357"
+
+    def fixture(self, d):
+        root = Path(d)
+        app, evidence = root / "OPAX.xcarchive/Products/Applications/OPAX.app", root
+        app.mkdir(parents=True)
+        (app / "main.jsbundle").write_bytes(b"\xc6\x1f\xbc\x03 _posthogChunkIds " + self.chunk.encode())
+        (evidence / "main.jsbundle.map").write_text(json.dumps({
+            "version": 3, "sources": ["src/app/index.tsx"], "names": ["render"], "mappings": "AAAAA",
+            "x_hermes_function_offsets": {"0": [0]}}))
+        (evidence / "ios.chunk-id").write_text(self.chunk + "\n")
+        return app, evidence
+
+    def test_map_beside_the_archive_passes(self):
+        with tempfile.TemporaryDirectory() as d:
+            verify.verify_source_map(*self.fixture(d))
+
+    def test_missing_unreadable_or_packager_only_map_fails(self):
+        for change in ("missing", "not json", "no hermes offsets"):
+            with self.subTest(change=change), tempfile.TemporaryDirectory() as d:
+                app, evidence = self.fixture(d)
+                source_map = evidence / "main.jsbundle.map"
+                if change == "missing":
+                    source_map.unlink()
+                elif change == "not json":
+                    source_map.write_text("{")
+                else:
+                    source_map.write_text(json.dumps({"version": 3, "sources": ["a.js"], "mappings": "AAAA"}))
+                with self.assertRaises(ReleaseError):
+                    verify.verify_source_map(app, evidence)
+
+    def test_a_map_inside_the_app_fails(self):
+        for name in ("main.jsbundle.map", "assets/node_modules/lib/index.js.MAP"):
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as d:
+                app, evidence = self.fixture(d)
+                (app / name).parent.mkdir(parents=True, exist_ok=True)
+                (app / name).write_text("{}")
+                with self.assertRaises(ReleaseError):
+                    verify.verify_source_map(app, evidence)
+
+    def test_chunk_id_must_be_recorded_and_shipped(self):
+        for change in ("missing", "other bundle"):
+            with self.subTest(change=change), tempfile.TemporaryDirectory() as d:
+                app, evidence = self.fixture(d)
+                if change == "missing":
+                    (evidence / "ios.chunk-id").unlink()
+                else:
+                    (evidence / "ios.chunk-id").write_text("00000000-0000-4000-8000-000000000000\n")
+                with self.assertRaises(ReleaseError):
+                    verify.verify_source_map(app, evidence)
 
 
 class BundleAttackTests(unittest.TestCase):
@@ -1089,6 +1159,11 @@ class ProductionVoiceTests(unittest.TestCase):
         rows.append({"NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeDeviceID",
                      "NSPrivacyCollectedDataTypeLinked": False, "NSPrivacyCollectedDataTypeTracking": False,
                      "NSPrivacyCollectedDataTypePurposes": [analytics]})
+        # Crash reports add unlinked Crash Data; their Other Diagnostic Data is
+        # already in the label, linked, for App Functionality.
+        rows.append({"NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeCrashData",
+                     "NSPrivacyCollectedDataTypeLinked": False, "NSPrivacyCollectedDataTypeTracking": False,
+                     "NSPrivacyCollectedDataTypePurposes": [function]})
         return {"NSPrivacyTracking": False, "NSPrivacyCollectedDataTypes": rows,
             "NSPrivacyAccessedAPITypes": [{"NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
                                          "NSPrivacyAccessedAPITypeReasons": ["CA92.1"]}]}
@@ -1181,13 +1256,20 @@ class ProductionVoiceTests(unittest.TestCase):
 
     def test_analytics_types_alone_without_voice(self):
         analytics = "NSPrivacyCollectedDataTypePurposeAnalytics"
+        function = "NSPrivacyCollectedDataTypePurposeAppFunctionality"
         def manifest(**change):
             return {"NSPrivacyTracking": False, "NSPrivacyCollectedDataTypes": [
                 {"NSPrivacyCollectedDataType": "NSPrivacyCollectedDataType" + name,
                  "NSPrivacyCollectedDataTypeLinked": False, "NSPrivacyCollectedDataTypeTracking": False,
-                 "NSPrivacyCollectedDataTypePurposes": [analytics], **change}
-                for name in ("ProductInteraction", "DeviceID")]}
+                 "NSPrivacyCollectedDataTypePurposes": [purpose], **change}
+                for name, purpose in (("ProductInteraction", analytics), ("DeviceID", analytics),
+                                      ("CrashData", function), ("OtherDiagnosticData", function))]}
         verify.verify_collected_types(manifest(), False)
+        # Crash reports must be declared: the analytics types alone now fail.
+        without_crashes = manifest()
+        without_crashes["NSPrivacyCollectedDataTypes"] = without_crashes["NSPrivacyCollectedDataTypes"][:2]
+        with self.assertRaises(ReleaseError):
+            verify.verify_collected_types(without_crashes, False)
         for change in ({"NSPrivacyCollectedDataTypeLinked": True}, {"NSPrivacyCollectedDataTypeTracking": True},
                        {"NSPrivacyCollectedDataTypePurposes": [analytics, "NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising"]}):
             with self.subTest(change=change), self.assertRaises(ReleaseError):

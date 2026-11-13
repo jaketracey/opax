@@ -119,6 +119,21 @@ signing metadata until cleanup; they are not covered by that redaction claim.
 Evidence directories have mode 700 and new reports/logs have mode 600. Inspect
 failed logs locally; do not publish them.
 
+The archive step also writes `main.jsbundle.map`, React Native's composed Hermes
+source map (xcodebuild sets `SOURCEMAP_FILE`), and `ios.chunk-id`, the bundle's
+PostHog chunk ID, into the evidence folder beside the archive. Neither ships in
+the app: the verifier refuses an archive without them, a map that is not the
+composed Hermes map, a chunk ID the bundle does not carry, or any `.map` inside
+the app. The crash symbol upload (`docs/ANALYTICS.md`) reads that map. To read
+the JavaScript frames of an Apple or TestFlight crash report by hand:
+
+```sh
+scripts/symbolicate-js.sh 1.1.4-58 crash.txt   # or: pbpaste | scripts/symbolicate-js.sh 1.1.4-58 -
+```
+
+Each `line:column` becomes `source:line:function`. Archives made before this
+change kept no map (build 57's archive has none).
+
 Verification covers bundle/version/build, released Xcode, production config,
 loopback/fixture origins, catalog/origin/redirect guards, ATS, standard HTTPS
 encryption declaration, SDK dependencies and embedded markers, development and

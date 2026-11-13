@@ -9,8 +9,10 @@
  * `cleanEvent` guards what app code asks to send. `scrubEvent` runs on the
  * SDK's final payload (`before_send`) and rebuilds it from the same lists,
  * so SDK enrichment (deep link URLs, screen sizes, flags, person
- * properties) cannot slip through either.
+ * properties) cannot slip through either. Crash and error reports
+ * (`$exception`) are rebuilt the same way by ./exceptions.ts.
  */
+import { scrubExceptionProperties } from './exceptions';
 import { routeErrorPattern } from './route-patterns';
 
 type Value = string | number | boolean;
@@ -46,7 +48,13 @@ const sectionPattern = /^[a-z][a-z0-9-]{0,31}$/;
 export const section: Rule = (value) =>
   typeof value === 'string' && sectionPattern.test(value) ? value : 'other';
 const version = pattern(/^\d{1,4}(?:\.\d{1,4}){0,3}$/);
-const build = pattern(/^\d{1,10}$/);
+// The native SDKs report the build as a whole number; it is kept as digits.
+const build: Rule = (value) =>
+  pattern(/^\d{1,10}$/)(
+    typeof value === 'number' && Number.isSafeInteger(value)
+      ? String(value)
+      : value,
+  );
 
 // Constructor names are categories, never error.name/message/stack or a
 // caller-provided class name. Unknown constructors use the fixed "other".
@@ -234,6 +242,7 @@ const sdkProperties: Record<string, Rule> = {
   $device_type: oneOf('Mobile', 'Tablet', 'Desktop', 'TV'),
   $os_name: oneOf('iOS', 'iPadOS', 'Android'),
   $app_name: oneOf('OPAX'),
+  $app_namespace: oneOf('au.com.opax.app'),
   $app_version: version,
   $app_build: build,
   $screen_name: screenRule,
@@ -284,16 +293,20 @@ export function scrubEvent<T extends CaptureEvent>(
   context: AnalyticsContext,
 ): T | null {
   if (!captured || typeof captured.event !== 'string') return null;
+  const raw = captured.properties ?? {};
+  // Crash and error reports: their own fixed lists (./exceptions.ts).
+  const exception =
+    captured.event === '$exception' ? scrubExceptionProperties(raw) : null;
+  if (captured.event === '$exception' && !exception) return null;
   const rules = Object.hasOwn(eventFields, captured.event)
     ? (eventFields[captured.event as AnalyticsEvent] as Record<string, Rule>)
     : Object.hasOwn(sdkEventFields, captured.event)
       ? sdkEventFields[captured.event]!
       : null;
-  if (!rules) return null;
-  const raw = captured.properties ?? {};
-  const properties: Record<string, Value> = {
+  if (!rules && !exception) return null;
+  const properties: Record<string, unknown> = {
     ...pick(sdkProperties, raw),
-    ...pick(rules, raw),
+    ...(rules ? pick(rules, raw) : exception),
     $process_person_profile: false,
     $is_identified: false,
     $geoip_disable: true,
