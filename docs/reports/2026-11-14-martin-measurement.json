@@ -1,0 +1,3562 @@
+{
+  "base": "c4185f03b",
+  "source_db": "/home/jake/.cache/autoresearch/parli.db",
+  "source_db_mtime_ns": 1794306224736217783,
+  "handbook_cache_sha256": "3754df31cdb3df2e7f08eb06a08e501f0cb26ca5d2f211bdb819f957eb3ed3b8",
+  "fixture_sha256": "0f31a2114fb2d76c72cc92950ba630a568c1c9084f4e29a7ef5c0a18bd5f9e15",
+  "measured": [
+    {
+      "source": "zenodo",
+      "chamber": "representatives",
+      "seat": "Cunningham",
+      "current_id": "10905",
+      "target_id": "person_9c02d321caef54b2ba21a1f8",
+      "first": "1998-03-02",
+      "last": "2002-06-27",
+      "rows": 344
+    },
+    {
+      "source": "zenodo",
+      "chamber": "representatives",
+      "seat": "",
+      "current_id": "10905",
+      "target_id": "person_9c02d321caef54b2ba21a1f8",
+      "first": "2001-08-06",
+      "last": "2002-05-14",
+      "rows": 2
+    },
+    {
+      "source": "wragge_xml",
+      "chamber": "representatives",
+      "seat": "Banks",
+      "current_id": "10937",
+      "target_id": "person_e88df9ffb591568ea3b6ea51",
+      "first": "1970-03-18",
+      "last": "1980-05-15",
+      "rows": 131
+    },
+    {
+      "source": "wragge_xml",
+      "chamber": "representatives",
+      "seat": "BANKS, NEW SOUTH WALES",
+      "current_id": "10937",
+      "target_id": "person_e88df9ffb591568ea3b6ea51",
+      "first": "1971-03-09",
+      "last": "1971-03-09",
+      "rows": 1
+    },
+    {
+      "source": "wragge_xml",
+      "chamber": "representatives",
+      "seat": "",
+      "current_id": "10937",
+      "target_id": "held",
+      "first": "1972-03-23",
+      "last": "1973-11-29",
+      "rows": 2
+    },
+    {
+      "source": "wragge_xml",
+      "chamber": "representatives",
+      "seat": "MACARTHUR",
+      "current_id": "10937",
+      "target_id": "person_9c02d321caef54b2ba21a1f8",
+      "first": "1988-03-23",
+      "last": "1990-09-13",
+      "rows": 8
+    },
+    {
+      "source": "wragge_xml",
+      "chamber": "representatives",
+      "seat": "Dickson",
+      "current_id": "10592",
+      "target_id": "person_efb744ffb3a25d578e592281",
+      "first": "1998-03-02",
+      "last": "1998-07-03",
+      "rows": 44
+    },
+    {
+      "source": "wragge_xml",
+      "chamber": "representatives",
+      "seat": "Cunningham",
+      "current_id": "10937",
+      "target_id": "person_9c02d321caef54b2ba21a1f8",
+      "first": "1998-03-02",
+      "last": "2002-06-27",
+      "rows": 131
+    }
+  ],
+  "moves": [
+    {
+      "speech_id": 91,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 217,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 219,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 220,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 222,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 223,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 224,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 767,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 768,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 787,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 788,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 789,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 792,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 794,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 796,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 797,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 995,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 996,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 1544,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 1629,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 1929,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 2295,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 2430,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 2523,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 2659,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 3389,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 3855,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 4180,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 5507,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 5509,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 5510,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 5511,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 5512,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 6101,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 6103,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 6401,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 6410,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 6799,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 7392,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 7397,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 7503,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 7505,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 7556,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 7723,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 7856,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 7861,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 7862,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8002,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8003,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8630,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8631,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8636,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8859,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8883,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8940,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8942,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8945,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8946,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8947,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8948,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8949,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8951,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8952,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8955,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8957,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8959,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 8986,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 9178,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 9202,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 9221,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 9943,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 9944,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 9945,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 9947,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 10119,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 10120,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 10137,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 10384,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 11279,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 11425,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 11486,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 11487,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 11491,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 11492,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 11493,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 11494,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 11657,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 11663,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 11754,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 11755,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 11757,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 11758,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 11759,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 11761,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 11762,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 13330,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 13331,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 13508,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 13509,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 13521,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 13523,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 14429,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 14855,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 14878,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 14880,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 14885,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 14889,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 14896,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 14899,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 14901,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 14984,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 15207,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 15211,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 15302,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 15879,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 16232,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 17061,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 17062,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 17063,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 17064,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 17065,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 17066,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 17086,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 17151,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 18408,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 18721,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 18926,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 19854,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 20727,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 20745,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 20826,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 21080,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 21114,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 22320,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 22348,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 22385,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 23604,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 23668,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 25720,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 25844,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 26401,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 27557,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 27781,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 27789,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 27793,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28064,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28069,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28073,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28078,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28098,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28099,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28100,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28157,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28158,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28159,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28246,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28377,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28384,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28386,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28416,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28691,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28705,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28913,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28914,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28921,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 28923,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 29031,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 29037,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 29038,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 29044,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 29298,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 29299,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 29301,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 29303,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 29305,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 29306,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 29307,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 29958,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 30545,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 30601,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 30846,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 30998,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 31255,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 31320,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 31321,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 31322,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 31323,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 31328,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 31475,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 31478,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 31650,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 31862,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 32215,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 32262,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 32286,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 32379,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 32911,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 32912,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 32914,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 32916,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 33403,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 34921,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 35185,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 35313,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 35463,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 35572,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 35698,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 37667,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 38408,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 39057,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 40362,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 40363,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 40679,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 40781,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 40809,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 41062,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 41064,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 41225,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 41979,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 42197,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 42360,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 42502,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 42642,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 42672,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 44236,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 44237,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 44238,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 44239,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 44240,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 44906,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 45343,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 45775,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 46569,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 47708,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 47713,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 47717,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 47749,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 47979,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 49370,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 49890,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 49959,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 51569,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 52854,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 52855,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 53429,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 53825,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 53827,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 54048,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 54049,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 54051,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 54053,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 54054,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 54111,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 55723,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 55777,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 56221,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 57169,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 57273,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 57274,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 58021,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 58164,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 59032,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 59179,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 59229,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 59231,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 59352,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 59353,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 59450,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 59452,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 59694,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 59999,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 60001,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 60176,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 60201,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 60642,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 60682,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 60728,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 61399,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 61405,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 61660,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 61782,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 62175,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 62177,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 62179,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 62224,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 62246,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 63477,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 63478,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 64040,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 64041,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 64042,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 64043,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 64863,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 65776,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 66019,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 66024,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 66054,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 66055,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 66086,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 66308,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 66309,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 67114,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 67559,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 68514,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 68923,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 69204,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 69303,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 69504,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 69505,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 69836,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 70013,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 71060,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 71479,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 71480,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 72093,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 72274,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 72275,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 72318,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 72319,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 72320,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 72685,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 73828,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 73829,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 73830,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 73831,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 74813,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 75777,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 76451,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 76453,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 76867,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 76868,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 76869,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 76871,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 76872,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 76873,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 76874,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 76875,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 77329,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 77780,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 77988,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 78051,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 78914,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 79047,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 79049,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 79366,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 79976,
+      "before": "10905",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 605436,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 605848,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 605911,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 606294,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 606403,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 606856,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 607079,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 607267,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 607477,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 608247,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 608728,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 608793,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 608964,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 609288,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 609375,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 609787,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 610604,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 610663,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 611311,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 611364,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 611491,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 611556,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 611740,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 611751,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 611755,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 612079,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 612088,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 612131,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 612878,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 613391,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 614557,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 614646,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 615012,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 615027,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 615260,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 615465,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 615473,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 615482,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 615490,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 615499,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 616409,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 616538,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 616734,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 616955,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 617040,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 617383,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 617458,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 617506,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 617509,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 618361,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 618822,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 619474,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 619911,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 620031,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 621730,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 622077,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 622278,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 622407,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 622421,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 623666,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 623703,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 624166,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 625322,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 625396,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 625705,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 626061,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 626433,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 627830,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 628645,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 629054,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 629807,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 630035,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 630337,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 631522,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 632002,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 634667,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 634799,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 635638,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 635820,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 635857,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 636068,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 636225,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 636268,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 636618,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 636625,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 637139,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 637208,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 637585,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 637806,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 637961,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 638551,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 639053,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 639091,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 639279,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 640287,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 640941,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 641319,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 641522,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 641716,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 641771,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 642091,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 642395,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 642663,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 642772,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 642863,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 643299,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 643310,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 643316,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 643321,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 643338,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 643514,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 643715,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 643723,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 643855,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 643873,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 644107,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 644207,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 645613,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 646413,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 646948,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 647431,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 647620,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 647670,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 647930,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 647952,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 648014,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 648020,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 648028,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 648108,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 648336,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 648402,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 648847,
+      "before": "10937",
+      "after": "person_e88df9ffb591568ea3b6ea51"
+    },
+    {
+      "speech_id": 651802,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 652258,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 652467,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 652745,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 652827,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 652968,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 653101,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 653137,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 653698,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 653750,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 653808,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 653818,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 653826,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 653853,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 653866,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 653922,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 654017,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 654025,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 654066,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 654079,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 654094,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 654133,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 654170,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 654177,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 654325,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 654344,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 654351,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 654415,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 654431,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 654549,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 654593,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 654658,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 654713,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 654715,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 654716,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 654815,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 654843,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 654871,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 654993,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 654998,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 655002,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655022,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655024,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655026,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655122,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 655166,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655243,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 655269,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 655280,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 655288,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655297,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 655306,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 655317,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 655347,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655417,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655442,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 655514,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 655526,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 655539,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 655598,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655603,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655613,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655637,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655642,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655721,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655756,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655789,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 655836,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 655840,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 655842,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655869,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655890,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655901,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 655912,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 655997,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 656101,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 656111,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 656199,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 656201,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 656224,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 656241,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 656245,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 656247,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 656266,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281"
+    },
+    {
+      "speech_id": 656292,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 656319,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 656328,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 656553,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 656621,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 656639,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 656742,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 656874,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 657158,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 657166,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 657189,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 657463,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 657773,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 657985,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 658049,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 658069,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 658356,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 658374,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 659216,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 659344,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 659772,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 659775,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 659790,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 659807,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 659906,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 660082,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 660271,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 660419,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 660433,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 660531,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 660693,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 660995,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 661006,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 661725,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 661890,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 661942,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 662418,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 662691,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 663052,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 663141,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 663155,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 663333,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 663378,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 663552,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 663583,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 663651,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 663685,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 664134,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 664383,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 664504,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 664612,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 665098,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 665472,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 665618,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 665638,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 666293,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 666471,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 666544,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 666583,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 666951,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 666982,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 667091,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 667532,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 667561,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 667598,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 667733,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 667866,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 667880,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 667892,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 668063,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 668065,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 668240,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 668251,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 668265,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 668532,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 668704,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 669192,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 669200,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 669259,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 669438,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 669868,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 669953,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 669989,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 670097,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 670385,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 670469,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 670685,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 670798,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 670830,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 670853,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 671163,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 671220,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 671451,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 671765,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 671854,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 672103,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 672123,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 672367,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    },
+    {
+      "speech_id": 672567,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8"
+    }
+  ],
+  "held": [
+    {
+      "speech_id": 615266,
+      "reason": "Surname-only print without a seat; no reviewed seat evidence"
+    },
+    {
+      "speech_id": 622652,
+      "reason": "Malformed presiding-officer print; no seat"
+    }
+  ],
+  "handbook_people": [
+    {
+      "PHID": "282982",
+      "GivenName": "Fiona",
+      "MiddleNames": "Barbouttis",
+      "FamilyName": "MARTIN",
+      "PreferredName": "",
+      "DisplayName": "MARTIN, Dr. Fiona Barbouttis",
+      "Party": "Liberal Party of Australia",
+      "Electorate": "Reid",
+      "SenateState": "",
+      "StateAbbrev": "NSW",
+      "State": "New South Wales",
+      "InCurrentParliament": "False",
+      "MPorSenator": [
+        "Member"
+      ],
+      "RepresentedParliaments": [
+        46
+      ],
+      "ServiceHistory_Start": "2019-05-18",
+      "ServiceHistory_End": "2022-05-21",
+      "Gender": "Female"
+    },
+    {
+      "PHID": "8I4",
+      "GivenName": "Stephen",
+      "MiddleNames": "Paul",
+      "FamilyName": "MARTIN",
+      "PreferredName": "",
+      "DisplayName": "MARTIN, the Hon. Dr Stephen Paul, AO",
+      "Party": "Australian Labor Party",
+      "Electorate": "Cunningham",
+      "SenateState": "",
+      "StateAbbrev": "NSW",
+      "State": "New South Wales",
+      "InCurrentParliament": "False",
+      "MPorSenator": [
+        "Member"
+      ],
+      "RepresentedParliaments": [
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "ServiceHistory_Start": "1984-12-01",
+      "ServiceHistory_End": "2002-08-16",
+      "Gender": "Male"
+    },
+    {
+      "PHID": "275266",
+      "GivenName": "Steven",
+      "MiddleNames": "Leigh",
+      "FamilyName": "MARTIN",
+      "PreferredName": "",
+      "DisplayName": "MARTIN, Steven Leigh OAM",
+      "Party": "The Nationals",
+      "Electorate": "",
+      "SenateState": "Tasmania",
+      "StateAbbrev": "Tas",
+      "State": "Tasmania",
+      "InCurrentParliament": "False",
+      "MPorSenator": [
+        "Senator"
+      ],
+      "RepresentedParliaments": [
+        45
+      ],
+      "ServiceHistory_Start": "2018-02-09",
+      "ServiceHistory_End": "2019-06-30",
+      "Gender": "Male"
+    },
+    {
+      "PHID": "KN9",
+      "GivenName": "Vincent",
+      "MiddleNames": "Joseph",
+      "FamilyName": "MARTIN",
+      "PreferredName": "",
+      "DisplayName": "MARTIN, Vincent Joseph",
+      "Party": "Australian Labor Party",
+      "Electorate": "Banks",
+      "SenateState": "",
+      "StateAbbrev": "NSW",
+      "State": "New South Wales",
+      "InCurrentParliament": "False",
+      "MPorSenator": [
+        "Member"
+      ],
+      "RepresentedParliaments": [
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "ServiceHistory_Start": "1969-10-25",
+      "ServiceHistory_End": "1980-09-19",
+      "Gender": "Male"
+    },
+    {
+      "PHID": "00APG",
+      "GivenName": "Anthony ",
+      "MiddleNames": "David Hawthorn",
+      "FamilyName": "SMITH",
+      "PreferredName": "(Tony)",
+      "DisplayName": "SMITH, the Hon. Anthony (Tony) David Hawthorn",
+      "Party": "Liberal Party of Australia",
+      "Electorate": "Casey",
+      "SenateState": "",
+      "StateAbbrev": "Vic",
+      "State": "Victoria",
+      "InCurrentParliament": "False",
+      "MPorSenator": [
+        "Member"
+      ],
+      "RepresentedParliaments": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46
+      ],
+      "ServiceHistory_Start": "2001-11-10",
+      "ServiceHistory_End": "2022-04-11",
+      "Gender": "Male"
+    },
+    {
+      "PHID": "SK6",
+      "GivenName": "Anthony ",
+      "MiddleNames": "Charles",
+      "FamilyName": "SMITH",
+      "PreferredName": "(Tony)",
+      "DisplayName": "SMITH, Anthony (Tony) Charles",
+      "Party": "Independent",
+      "Electorate": "Dickson",
+      "SenateState": "",
+      "StateAbbrev": "Qld",
+      "State": "Queensland",
+      "InCurrentParliament": "False",
+      "MPorSenator": [
+        "Member"
+      ],
+      "RepresentedParliaments": [
+        38
+      ],
+      "ServiceHistory_Start": "1996-03-02",
+      "ServiceHistory_End": "1998-10-03",
+      "Gender": "Male"
+    }
+  ]
+}
