@@ -2006,6 +2006,8 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
   .subject-head:has(.subject-portrait) .subject-tag { align-self: start; margin: var(--sp-8) 0 0; }
 }
 .subject-tag { color: var(--ink-soft); font-size: var(--text-15); margin: 0 0 var(--sp-16); display: flex; align-items: center; gap: var(--sp-8); flex-wrap: wrap; }
+/* The dot before a part travels with it (app.js tagLineHTML). */
+.subject-tag-next::before { content: "·"; margin-inline-end: var(--sp-8); }
 .subject-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--sp-24) var(--sp-40); align-items: start; }
 .subject-main { min-width: 0; }
 .subject-map {
@@ -2215,12 +2217,13 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
 .receipts-value, .receipts-pct { text-align: right; color: var(--ink-soft); white-space: nowrap; }
 .receipts-pct { font-weight: var(--weight-strong); min-height: 1em; }
 .receipts-row a, .receipts-tiles a { font-variant-numeric: tabular-nums; }
-/* A figure that opens its AEC return: no underline, a small external mark in
-   bronze after it, the way the site's external actions are marked. */
+/* A figure's label that opens its AEC return: no underline, a small external
+   mark in bronze after the label's last word, the way the site's external
+   actions are marked. The mark never wraps away from that word. */
 .fig-src { text-decoration: none; color: inherit; }
 .fig-src::after {
-  content: "\2197"; display: inline-block; margin-left: 0.28em; vertical-align: 0.55em;
-  font: 600 0.5em/1 var(--sans); color: var(--bronze-ink);
+  content: "\2060\2197"; margin-left: 0.2em;
+  font: 600 1em/1 var(--sans); color: var(--bronze-ink);
 }
 .fig-src:hover, .fig-src:focus-visible { color: var(--bronze-ink); }
 .donor-balance { margin-top: var(--sp-24); max-width: 920px; position: relative; overflow: hidden; }
@@ -4842,8 +4845,8 @@ h3 {
    actions as the other public-record detail pages. */
 .grant-recipient-page { margin-top: var(--sp-32); min-width: 0; }
 .grant-recipient-header { max-width: 76ch; }
-.grant-recipient-header h1 { margin: 0 0 var(--sp-16); font: var(--type-title); color: var(--navy); overflow-wrap: anywhere; }
-.grant-recipient-kicker { margin: 0 0 var(--sp-12); color: var(--ink-soft); font: var(--type-label); }
+.grant-recipient-header h1 { margin: 0 0 var(--space-line); font: var(--type-title); color: var(--ink); overflow-wrap: anywhere; }
+.grant-recipient-meta { margin: 0 0 var(--sp-16); color: var(--ink-soft); font: var(--type-metadata); }
 .grant-recipient-intro { margin: 0; max-width: 68ch; font: var(--weight-regular) var(--text-16)/var(--leading-loose) var(--serif); }
 .grant-recipient-actions, .grant-recipient-jump { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--sp-24); }
 .grant-recipient-actions { margin-top: var(--sp-12); }
@@ -4851,13 +4854,13 @@ h3 {
 .grant-recipient-metrics { display: grid; grid-template-columns: 1.25fr .75fr 1fr; gap: var(--sp-24); margin: var(--sp-32) 0 0; padding: var(--sp-24) 0; border-block: var(--border-hairline) solid var(--divider-subtle); }
 .grant-recipient-metrics > div { display: flex; flex-direction: column-reverse; gap: var(--sp-8); }
 .grant-recipient-metrics dt { color: var(--ink-soft); font: var(--type-fine); }
-.grant-recipient-metrics dd { margin: 0; color: var(--navy); font: 600 clamp(1.25rem, 2.4vw, 1.8rem)/1.35 var(--serif); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.grant-recipient-metrics dd { margin: 0; color: var(--ink); font: 600 clamp(1.25rem, 2.4vw, 1.8rem)/1.35 var(--serif); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .grant-recipient-jump { padding: var(--sp-8) 0; margin: 0 0 var(--sp-16); }
 .grant-recipient-layout { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(16rem, 1fr); gap: var(--sp-48); align-items: start; }
 .grant-recipient-layout > * { min-width: 0; }
 .grant-recipient-layout aside { padding-left: var(--sp-32); border-left: var(--border-hairline) solid var(--divider-subtle); }
 .grant-recipient-section { margin: 0 0 var(--sp-40); scroll-margin-top: 110px; min-width: 0; }
-.grant-recipient-section h2 { margin: 0 0 var(--sp-16); font: var(--type-heading); color: var(--navy); }
+.grant-recipient-section h2 { margin: 0 0 var(--sp-16); font: var(--type-heading); color: var(--ink); }
 .grant-recipient-section h3 { margin: var(--sp-24) 0 var(--sp-8); font: var(--type-subheading); }
 .grant-recipient-section p, .grant-recipient-aliases { font: var(--type-metadata); overflow-wrap: anywhere; }
 .grant-recipient-section p { margin: var(--sp-8) 0 var(--sp-16); }
@@ -4871,11 +4874,13 @@ h3 {
 .grant-recipient-records > li { padding: var(--sp-20) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
 .grant-recipient-record-heading { display: flex; gap: var(--sp-8) var(--sp-16); justify-content: space-between; align-items: baseline; }
 .grant-recipient-record-heading h3 { margin: 0; overflow-wrap: anywhere; scroll-margin-top: 110px; }
-.grant-recipient-record-heading strong { flex: none; color: var(--navy); font: var(--type-strong); font-variant-numeric: tabular-nums; }
+.grant-recipient-record-heading strong { flex: none; color: var(--ink); font: var(--type-strong); font-variant-numeric: tabular-nums; }
 .grant-recipient-records .grant-recipient-description { font: var(--weight-regular) var(--text-15)/var(--leading-loose) var(--serif); }
 .grant-recipient-source-link { display: inline-flex; align-items: center; min-height: 44px; font: var(--type-label); }
 .grant-recipient-records .grant-recipient-source-note { margin: 0; color: var(--ink-soft); font: var(--type-fine); }
 .grant-recipient-program-options { display: flex; flex-direction: column; gap: var(--sp-4); }
+.grant-recipient-program-rounds > summary { display: inline-flex; align-items: center; min-height: var(--size-target); cursor: pointer; color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 0.2em; }
+.grant-recipient-program-rounds > span { display: flex; flex-wrap: wrap; gap: var(--sp-4) var(--sp-16); }
 .grant-recipient-pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-8); margin-top: var(--sp-16); font: var(--type-fine); }
 .grant-recipient-pagination button { min-height: 44px; padding: var(--sp-8) var(--sp-12); border: var(--border-hairline) solid var(--divider-subtle); background: transparent; color: var(--bronze-ink); cursor: pointer; font: inherit; }
 .grant-recipient-pagination button:disabled { color: var(--ink-faint); cursor: default; }

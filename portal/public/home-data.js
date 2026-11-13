@@ -75,8 +75,9 @@ export function declarationRowHTML(item, { photos = {}, parties = new Map() } = 
   return `<li class="hp-row hp-person-row">${portrait}<div class="hp-row-body">` +
     `<div class="hp-row-who"><h3 class="hp-row-name"><a href="${href('person', name)}">${esc(name)}</a></h3>${party}</div>` +
     `<p class="hp-row-text">“${esc(item.description)}”</p>` +
-    `<p class="hp-row-detail">${item.kind === 'deletion' ? `${statusLabelHTML('Removed')} ` : ''}${esc(kind)} · <span>recorded ${time(item.date)}</span>` +
-    `${source ? ` · <a href="${esc(source)}" rel="noopener" target="_blank" aria-label="Register entry for ${esc(name)}">Register</a>` : ''}</p>` +
+    // Each dot sits inside the unbroken part after it, so a wrapped line never ends in one.
+    `<p class="hp-row-detail">${item.kind === 'deletion' ? `${statusLabelHTML('Removed')} ` : ''}${esc(kind)} <span>· recorded ${time(item.date)}</span>` +
+    `${source ? ` <span>· <a href="${esc(source)}" rel="noopener" target="_blank" aria-label="Register entry for ${esc(name)}">Register</a></span>` : ''}</p>` +
     `</div></li>`;
 }
 export function reportCardHTML(r) {

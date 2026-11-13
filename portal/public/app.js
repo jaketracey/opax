@@ -260,7 +260,8 @@ function donorBalanceHTML(flows) {
   const scaleGroup = groups.reduce((best, group) => scaleRow[group] > scaleRow[best] ? group : best, groups[0]);
   const scale = Math.max(scaleRow[scaleGroup], 1);
   const groupLabel = { coalition: "Coalition", labor: "Labor", other: "other parties" };
-  const srcFigure = (value, label) => `<a class="fig-src" href="${source}" rel="noopener" target="_blank" aria-label="${esc(label)}">${esc(value)}</a>`;
+  // One pattern per figure: the number, then its label, and the label opens the AEC return (↗ after it).
+  const srcFigure = (value, text, label) => `<b>${esc(value)}</b><span><a class="fig-src" href="${source}" rel="noopener" target="_blank" aria-label="${esc(label)}">${esc(text)}</a></span>`;
   const width = (value) => Math.min(72, (value / scale) * 72).toFixed(1);
   const peakLabel = (row, group) => row === peak[group] && row[group]
     ? `<a class="balance-label" href="${source}" rel="noopener" target="_blank" aria-label="${esc(`${row.year}, ${groupLabel[group]} ${fmtMoney(row[group])}, AEC source`)}">${esc(fmtMoney(row[group]))}</a>`
@@ -290,9 +291,9 @@ function donorBalanceHTML(flows) {
   return `<section class="donor-balance" id="donor-balance" aria-labelledby="donor-balance-heading">
     <h3 class="subject-section-title" id="donor-balance-heading">The balance, year by year</h3>
     <div class="tiles balance-tiles">
-      <div class="tile"><b>${srcFigure(fmtMoney(totals.coalition), `Total to Coalition parties ${fmtMoney(totals.coalition)}, AEC source`)}</b><span>to Coalition parties</span></div>
-      <div class="tile"><b>${srcFigure(fmtMoney(totals.labor), `Total to Labor ${fmtMoney(totals.labor)}, AEC source`)}</b><span>to Labor</span></div>
-      <div class="tile"><b>${srcFigure(fmtMoney(totals.other), `Total to other parties ${fmtMoney(totals.other)}, AEC source`)}</b><span>to other parties</span></div>
+      <div class="tile">${srcFigure(fmtMoney(totals.coalition), "to Coalition parties", `Total to Coalition parties ${fmtMoney(totals.coalition)}, AEC source`)}</div>
+      <div class="tile">${srcFigure(fmtMoney(totals.labor), "to Labor", `Total to Labor ${fmtMoney(totals.labor)}, AEC source`)}</div>
+      <div class="tile">${srcFigure(fmtMoney(totals.other), "to other parties", `Total to other parties ${fmtMoney(totals.other)}, AEC source`)}</div>
     </div>
     <div class="balance-legend" aria-label="Party groupings">
       <span><i class="balance-swatch balance-coalition" aria-hidden="true"></i>Coalition parties ${partyDotHTML("Liberal")}${partyDotHTML("Nationals")}${partyDotHTML("LNP")}</span>
@@ -4473,6 +4474,12 @@ function subjectTag(body) {
   return body.querySelector(".subject-tag");
 }
 
+/** A tag line from its parts, each dot bound to the part after it (style.css
+ *  .subject-tag-next), so a line that wraps never ends in a dot. */
+function tagLineHTML(parts) {
+  return parts.filter(Boolean).map((part, i) => i ? `<span class="subject-tag-next">${part}</span>` : part).join("");
+}
+
 function infoboxHTML(rows, funfact, actions) {
   return `<p class="kicker" style="margin-top:0">Quick facts</p>
     <dl>${rows.filter(Boolean).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join("")}</dl>
@@ -6289,13 +6296,13 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // One meta line (principle 3): party, seat, house, parliament. The Quick
   // facts box said each of these again; its other facts are in the source
   // sheet under this line.
-  subjectTag(body).innerHTML = [
+  subjectTag(body).innerHTML = tagLineHTML([
     party ? partyChipHTML(party, { full: true }) : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
     electorateLinks ? `<span>${seatWord}${electorateLinks}</span>` : "",
-    representation.chambers.length ? `<span>${esc(representation.chambers.join(" · "))}</span>` : "",
-    representation.jurisdictions.length ? `<span>${esc(representation.jurisdictions.map(j=>j.label).join(" · "))}</span>` : "",
-  ].filter(Boolean).join(" · ") || "<span>From the parliamentary record</span>";
+    representation.chambers.length ? `<span>${esc(representation.chambers.join(" ·\u00a0"))}</span>` : "",
+    representation.jurisdictions.length ? `<span>${esc(representation.jurisdictions.map(j=>j.label).join(" ·\u00a0"))}</span>` : "",
+  ]) || "<span>From the parliamentary record</span>";
   const electorateRows = electorateReference
     ? electorateReference.module.personRepresentationRows(electorateReference.person, representation.representations, electorateReference.data.electorates)
     : representation.representations.length ? [["Recorded representation", representation.representations.map((r) =>

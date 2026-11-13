@@ -4,18 +4,29 @@
 const searchHref = q => '/ask?' + new URLSearchParams({ view: 'search', q });
 const typeLabels = { person: 'Parliamentarian', party: 'Party', donor: 'Receipt source', receipt: 'Political receipt', contract: 'Contract', grant: 'Grant', supplier: 'Supplier', agency: 'Agency', bill: 'Bill', bill_text: 'Bill text', interest: 'Declared interest', expense: 'Expenses', access: 'Access record', campaigner: 'Campaigner', pay: 'Pay', speech: 'Speech', division: 'Division', press_release: 'Media release', committee: 'Committee', written_answer: 'Written answer', report: 'Report', 'audit report': 'Audit report', electorate: 'Electorate', topic: 'Topic', instrument: 'Legislative instrument', sitting: 'Sitting week', estimates: 'Estimates', video: 'Video', register: 'Register record', page: 'Page' };
 const initialSuggestions = q => [{ label: `Search the record for “${q}”`, type: 'Search', href: searchHref(q) }];
+const fold = value => String(value || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+// A person whose surname (any name after the first) starts with the query outranks places and suppliers sharing the letters.
+const surnameMatch = (row, q) => row.kind === 'person' && q.length > 1 && fold(row.title).split(/[\s-]+/).slice(1).some(word => word.replace(/^[^a-z]+/, '').startsWith(q));
+// Contract titles arrive as "<CN id> — <supplier>"; the reader is looking for the supplier.
+const suggestionLabel = row => {
+  const title = row.title || row.speaker || 'Record';
+  const contract = row.kind === 'contract' && /^(\S*\d\S*)\s+[—–-]\s+(.+)$/.exec(title);
+  return contract ? `${contract[2]} ·\u00a0${contract[1]}` : title;
+};
 async function siteSuggestions(q, signal) {
   const out = initialSuggestions(q);
   try {
     const response = await fetch('/api/suggest?' + new URLSearchParams({ q }), { signal });
     if (!response.ok) return out;
     const data = await response.json();
-    const seen = new Set(out.map(row => row.href));
-    for (const row of data.results || []) {
+    const seen = new Set(out.map(row => row.href)), query = fold(q).trim();
+    const rows = [...(data.results || [])].map((row, index) => ({ row, index, first: surnameMatch(row, query) }))
+      .sort((a, b) => (b.first - a.first) || (a.index - b.index)).map(entry => entry.row);
+    for (const row of rows) {
       const href = row.href || (row.slug ? '/doc/' + encodeURIComponent(row.slug) : '');
       if (!href || seen.has(href) || !(href.startsWith('/') && !href.startsWith('//') || /^https?:\/\//i.test(href))) continue;
       seen.add(href);
-      out.push({ label: row.title || row.speaker || 'Record', type: typeLabels[row.kind] || row.kind || 'Record', href });
+      out.push({ label: suggestionLabel(row), type: typeLabels[row.kind] || row.kind || 'Record', href });
       if (out.length === 10) break;
     }
   } catch { /* The full-search link remains usable during a network failure. */ }
