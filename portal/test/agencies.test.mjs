@@ -19,7 +19,9 @@ function node() {
     querySelectorAll() { return []; }, focus() {} };
 }
 function harness(fetch) {
-  const context = { fetch, AbortController, URLSearchParams, setTimeout, clearTimeout, history: { replaceState() {} }, procurementGraph, shortDate, shortMoney, sourceLineHTML };
+  // This unit harness covers the ordinary SPA path. server-html.test.mjs runs
+  // the real imported adoption helper and DOM against server-rendered pages.
+  const context = { hydrateRecordCore: () => false, fetch, AbortController, URLSearchParams, setTimeout, clearTimeout, history: { replaceState() {} }, procurementGraph, shortDate, shortMoney, sourceLineHTML };
   runInNewContext(`Object.assign(this, (() => { ${shared}; return { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, plural, procurementSourceHTML, procurementRailHTML, slowNotice, statsHTML, withheldHTML }; })());`, context);
   runInNewContext(source, context); return context;
 }
