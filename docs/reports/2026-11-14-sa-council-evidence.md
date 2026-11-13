@@ -1,5 +1,7 @@
 # SA Legislative Council term-start evidence
 
+Follow-up: [orchestrator note 1](2026-11-14-roster-period-sweep.md) corrects Hood's placeholder start and records the all-house sweep. The findings below describe the initial review.
+
 Reviewed 14 November 2026 (Australia/Sydney), on `im/sa-council-evidence` from `im/roster-periods` (`a1a7fbc4d`). Row 162 was not yet on local `main`; the branch still needs rebasing when it lands.
 
 The base has **five**, rather than six, 2026 term starts supported only by Wikidata: Cory Bernardi, Hilton Gumbys, Rebecca Hewett, Carlos Quaremba and Melanie Selwood. Each member's SA Parliament page confirms 21 March 2026 in both its election date and current Legislative Council electoral-history row. Each now has their own primary evidence entry; the previously reviewed, agreeing Wikidata record is retained in `secondary_sources`. Bernardi's published Council affiliation also cites his own Parliament page. All held dates are unchanged.

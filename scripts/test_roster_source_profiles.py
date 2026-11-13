@@ -370,10 +370,10 @@ def test_shipped_sa_council_list_members_are_seven_and_bernardi_is_one_person():
     # His reviewed Council service makes him a sitting MLC who was a senator.
     assert cory['current'] and cory['party_now'] == 'One Nation'
     assert [(a['chamber'], a['start'], a['end']) for a in cory['affiliations']][-1] == ('sa_lc', '2026-03-21', None)
-    # Reviewed Parliament member-page starts; Benjamin Hood keeps the list date (see his note).
+    # Parliament member pages date service; a first-seen list date is not a term start.
     assert {n: (by[n]['first'], acc['new'][n]['service']['start']) for n in listed} == {
         'Mira El Dannawi': (2023, '2023-10-17'), 'Hilton Gumbys': (2026, '2026-03-21'),
-        'Rebecca Hewett': (2026, '2026-03-21'), 'Benjamin Hood': (2026, '2026-11-13'),
+        'Rebecca Hewett': (2026, '2026-03-21'), 'Benjamin Hood': (2023, '2023-03-07'),
         'Carlos Quaremba': (2026, '2026-03-21'), 'Melanie Selwood': (2026, '2026-03-21')}
     identity = json.loads((root / 'scripts/person_identity.json').read_text())['same_person']
     assert identity['cory bernardi']['key'] == '10038'

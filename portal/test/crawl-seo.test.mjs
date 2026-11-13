@@ -99,11 +99,11 @@ test('the server page shows the same parliamentarian count as the browser page',
   assert.equal(shown.Greens, 51);
 });
 
-test('an SA Council list-only profile is a sitting MLC with no Hansard held, not "0 speeches"', async () => {
+test('an SA Council list-only profile is a sitting MLC with no speeches attributed yet', async () => {
   // Hilton Gumbys: on the SA Legislative Council list dated 2026-11-13, no SA Hansard in OPAX after 2023 (A27).
   const meta = await personMeta('Hilton Gumbys', new URL('https://opax.com.au/subject/person/hilton-gumbys'), env);
   assert.equal(meta.status, 200);
-  assert.match(meta.description, /No Hansard held for this period\./);
+  assert.match(meta.description, /No speeches are attributed to this profile yet\./);
   assert.match(meta.description, /Recorded service: 2026\./);
   assert.match(meta.description, /MLC/);
   assert.doesNotMatch(meta.description, /former|0 speeches/);

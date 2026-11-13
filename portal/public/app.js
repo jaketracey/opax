@@ -61,7 +61,7 @@ const splitSpeakers = person => attributionHelpers?.splitSpeakers(person) || [];
 const personScope = person => attributionHelpers?.personScope(person) || person?.speech_scope || null;
 const datedAffiliationParty = (row, person) => attributionHelpers?.datedAffiliationParty(row, person) || null;
 let heldBackHelpers;
-const heldBackReady = import('/held-back-transcripts.js?v=cca9daf969').then(module => { heldBackHelpers = module; });
+const heldBackReady = import('/held-back-transcripts.js?v=a38e5f75b8').then(module => { heldBackHelpers = module; });
 
 let saDisplayHelpers;
 let saFullTextFlag = 'false';

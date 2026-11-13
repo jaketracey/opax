@@ -173,6 +173,22 @@
         }
       ]
     },
+    "sa-council-service-benjamin-hood": {
+      "kind": "identity",
+      "rule": "official-list-member",
+      "person": "Benjamin Hood",
+      "checked": "2026-11-14",
+      "url": "https://www.parliament.sa.gov.au/Search/Member?id=7056&type=member",
+      "reason": "SA Parliament member page id 7056: Date Elected 07 March 2023; Electoral History 07 Mar 2023 - Current, Member, Legislative Council. Replaces the 2026-11-13 first-seen list-date placeholder under orchestrator note 1. Archived member-7056.html SHA-256 207347d02bf44bb7552309ee0d233526397dacdaa1e8bfb781638e260e955bda. The earlier review of Wikidata Q116885607 agreed with 7 March 2023; retained as secondary without a new network request.",
+      "secondary_sources": [
+        {
+          "start": "2023-03-07",
+          "url": "https://www.wikidata.org/wiki/Q116885607",
+          "checked": "2026-11-13",
+          "note": "Previously reviewed position-held date in the accepted Benjamin Hood note; no new Wikidata request."
+        }
+      ]
+    },
     "sa-council-list": {
       "kind": "identity",
       "rule": "official-list-member",
@@ -1527,9 +1543,9 @@
       "note": "Parliament of South Australia Legislative Council list, 56th Parliament (contact-details API LCMembersDetails, sha256 da90f57e..., fetched 2026-11-13): pmId 7376, Hon Rebecca Jane Hewett, Pauline Hanson's One Nation. The list gives no term start. No roster row, alias or electorate-catalog person has this name."
     },
     "Benjamin Hood": {
-      "evidence": "sa-council-list",
-      "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members",
-      "checked": "2026-11-13",
+      "evidence": "sa-council-service-benjamin-hood",
+      "url": "https://www.parliament.sa.gov.au/Search/Member?id=7056&type=member",
+      "checked": "2026-11-14",
       "list": {
         "chamber": "sa_lc",
         "as_of": "2026-11-13",
@@ -1539,7 +1555,7 @@
       "service": {
         "jurisdiction": "sa",
         "chamber": "sa_lc",
-        "start": "2026-11-13",
+        "start": "2023-03-07",
         "end": null
       },
       "row": {
@@ -1551,7 +1567,7 @@
         "chambers": [
           "sa_lc"
         ],
-        "first": 2026,
+        "first": 2023,
         "last": 2026,
         "roster_only": true,
         "aliases": [
@@ -1570,7 +1586,13 @@
           }
         ]
       },
-      "note": "Parliament of South Australia Legislative Council list, 56th Parliament (contact-details API LCMembersDetails, sha256 da90f57e..., fetched 2026-11-13): pmId 7056, Hon Benjamin Robin Hood, Liberal. The list gives no term start. Not D.G.E. Hood (Dennis Garry Edward Hood, pmId 3126, also on the list) and not the surname print 'Hood' (no id; House of Assembly and committee rows). Term start left at the list date (13 Nov 2026 review, A48): Wikidata Q116885607 gives position held from 7 Mar 2023, but the OPAX corpus holds six SA Council speeches printed \"The Hon. B.R. HOOD\" (3 to 17 May 2023) filed under D.G.E. Hood's id, so a 2023 start would make this profile's \"No Hansard held\" line untrue until those speeches are reattributed."
+      "note": "SA Council official list (pmId 7056, Hon Benjamin Robin Hood, Liberal) establishes current membership; his own member page establishes service from 7 March 2023. Not Dennis Garry Edward Hood (pmId 3126) or the House surname print Hood. Six B.R. HOOD Council speeches (3 to 17 May 2023) are held under D.G.E. Hood's database id; this corrects the service date, while their attribution remains owed separately.",
+      "term_start": {
+        "start": "2023-03-07",
+        "url": "https://www.parliament.sa.gov.au/Search/Member?id=7056&type=member",
+        "checked": "2026-11-14",
+        "note": "SA Parliament member page id 7056: Date Elected 07 March 2023; Electoral History 07 Mar 2023 - Current, Member, Legislative Council. Replaces the 2026-11-13 first-seen list-date placeholder under orchestrator note 1. Archived member-7056.html SHA-256 207347d02bf44bb7552309ee0d233526397dacdaa1e8bfb781638e260e955bda. The earlier review of Wikidata Q116885607 agreed with 7 March 2023; retained as secondary without a new network request."
+      }
     },
     "Carlos Quaremba": {
       "evidence": "sa-council-service-carlos-quaremba",
