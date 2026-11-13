@@ -140,7 +140,7 @@ export async function refreshFonts({ publicRoot = PUBLIC, fetcher = honestFetch 
  *  agencies.js and suppliers.js import each other: stamp the agencies → suppliers
  *  edge only, then app.js. Keep the reverse edge hand-versioned to avoid a hash cycle. */
 export const MODULE_STAMPS = [
-  ...['agencies.js','donor-views.js','ledger.js','quiz.js','money-journeys-data.js','home.js','wordsdollars.js','money-explain.js','grant-recipient.js','grants.js','growth-modules.js','supplier-growth.js'].map(file=>[file,'donor-disclosure.js']),
+  ...['agencies.js','donor-views.js','ledger.js','quiz.js','money-journeys-data.js','home.js','wordsdollars.js','money-explain.js','grant-recipient.js','grants.js','growth-modules.js','supplier-growth.js','suppliers.js'].map(file=>[file,'donor-disclosure.js']),
   ['donor-disclosure.js','donor-entity.js'],
   ['money-journeys-data.js','donor-views.js'],
   ['canonical-urls.js', 'person-paths.js'],
@@ -150,7 +150,7 @@ export const MODULE_STAMPS = [
   ['datatable.js', 'server-csv.js'], ['datatable.js', 'wombat.js'], ['connections.js', 'wombat.js'],
 
   ['datatable-workbench.js', 'datatable.js'],
-  ['register-tables.js', 'donor-disclosure.js'], ['register-tables.js', 'datatable.js'], ['register-tables-entry.js', 'register-tables.js'], ['app.js', 'register-tables.js'], ['money-explain.js', 'register-tables.js'],
+  ['register-tables.js', 'donor-disclosure.js'], ['register-tables.js', 'datatable.js'], ['register-tables-entry.js', 'register-tables.js'], ['app.js', 'register-tables.js'],
   ['vote-tables.js', 'labels.js'], ['vote-tables.js', 'division-markdown.js'], ['vote-tables.js', 'datatable.js'],
   ['donor-views.js', 'donor-entity.js'], ['wordsdollars.js','donor-views.js'], ['quiz.js','donor-views.js'],  ['home.js', 'donor-views.js'],
 

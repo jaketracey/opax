@@ -1,5 +1,5 @@
 /** Receipt aggregates from the published money graph, preserving its distinct party and donor scopes. */
-import { donorAssociatedTo, donorDisclosure, type DonorDisclosureRecord } from '../../public/donor-disclosure.js'
+import { donorAssociatedTo, donorDisclosure, receiptGraph, receiptGraphScope, type DonorDisclosureRecord } from '../../public/donor-disclosure.js'
 import { receiptYearWindow } from '../receipt-period'
 import { aud, clip, fold, siteUrl } from './record-common'
 import { readToolAsset, type StructuredToolResult, type ToolArgs, type ToolDefinition, type ToolEnv } from './types'
@@ -74,8 +74,13 @@ export const tool: ToolDefinition = {
     typeof args[field] === 'string' && !!args[field].trim() && !/[<>{}\r\n]/.test(args[field])),
   stepLabel: args => ({ label: 'Adding disclosed receipts', arg: clip(args.party ?? args.donor ?? args.financial_year ?? '', 40) }),
   async handler(env, args) {
-    const graph = await readToolAsset(env, '/graph/money.json') as MoneyGraph | null
+    // Donor nodes and donor-to-party flows read the typed cells (each receipt once, from the
+    // party's own return), so a figure here matches the donor, party and Explain pages it links.
+    // Party nodes keep their own received totals, which include transfers.
+    const graph = receiptGraph(await readToolAsset(env, '/graph/money.json') as MoneyGraph | null)
     if (!graph?.nodes?.length || !Array.isArray(graph.edges)) throw new Error('Published money graph unavailable.')
+    const scope = receiptGraphScope(graph)
+    const scopeNote = scope ? [`Donor and flow figures: ${scope}. Each receipt is counted once.`] : []
     const allYears = graph.nodes.filter(node => node.kind === 'party' || node.kind === 'donor')
       .flatMap(node => Object.keys(node.byYear ?? {}).map(Number)).filter(year => Number.isInteger(year) && year >= 1900 && year <= 2099)
     if (!allYears.length) throw new Error('Published receipt years unavailable.')
@@ -110,7 +115,7 @@ export const tool: ToolDefinition = {
         .sort((a, b) => b.total_aud - a.total_aud || a.industry.localeCompare(b.industry))
       const rows = ranked.slice(0, Number(args.limit) || 5)
       const notes = ['Industry totals cover classified sources within the published donor selection, not every AEC receipt. They exclude individuals, unclassified sources and associated entities of the recipient party. Industry labels are OPAX classifications, not AEC categories.',
-        'These are mixed disclosed receipts, including more than gifts; they do not establish influence or personal payments to politicians.']
+        'These are mixed disclosed receipts, including more than gifts; they do not establish influence or personal payments to politicians.', ...scopeNote]
       if (!rows.length) return { ...limitations(env, `No classified industry receipts are available for ${party?.label ?? 'federal parties'} in ${period}.`, notes), coverage }
       const citations = rows.map((row, i) => {
         const label = row.industry.replaceAll('_', ' ').replace(/^./, c => c.toUpperCase())
@@ -126,7 +131,7 @@ export const tool: ToolDefinition = {
       'Financial-year keys are the starting year; election returns can be assigned to their polling or event year.']
     const edgeScope = !!(party && (donor || group === 'donor')) || !!(donor && group === 'party')
     if (!edgeScope && !donor && group !== 'donor') notes.push('Party aggregates cover all cleaned rows assigned to each party, including internal party transfers; identified public electoral funding is excluded.')
-    else notes.push('Donor aggregates and flows exclude internal party transfers and public funding. Rankings cover the published donor selection (250 largest lifetime donors plus qualifying public-money recipients), not every disclosed donor.')
+    else notes.push('Donor aggregates and flows exclude internal party transfers and public funding. Rankings cover the published donor selection (250 largest lifetime donors plus qualifying public-money recipients), not every disclosed donor.', ...scopeNote)
     const rows: TotalRow[] = [], links = new Map<TotalRow, MoneyNode | undefined>()
     const nodes = new Map(graph.nodes.map(node => [node.id, node]))
     const sources: { series: ReceiptSeries; party?: MoneyNode; donor?: MoneyNode }[] = edgeScope

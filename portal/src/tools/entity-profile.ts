@@ -1,4 +1,5 @@
 /** Published identities only: supplier funding links and ABNs are explicit joins. */
+import { receiptGraph, receiptScopeLabel } from '../../public/donor-disclosure.js'
 import { clip, siteUrl } from './record-common'
 import { boundedValue, object, publishedResult, records, sourceUrl, wordsMatch, type RecordRow } from './published-records'
 import { readToolAsset, type ToolDefinition, type ToolEnv } from './types'
@@ -51,7 +52,7 @@ async function taxRows(env: ToolEnv, abn: string): Promise<RecordRow[]> {
 function fact(row: RecordRow) {
   if (row.kind === 'corporate_tax') return `${row.name}, ABN ${row.abn}, ${row.year}: total income AUD ${row.total_income_aud ?? 'not published'}, taxable income AUD ${row.taxable_income_aud ?? 'not published'}, tax payable AUD ${row.tax_payable_aud ?? 'not published'}. Tax payable is not tax paid.`
   if (row.kind === 'charity_statement') return `${row.name}, ABN ${row.abn}, ${row.year}: charity revenue AUD ${row.revenue_aud ?? 'not published'}, government revenue AUD ${row.government_revenue_aud ?? 'not published'}, donations received AUD ${row.donations_received_aud ?? 'not published'}. These are charity finances, not political donations.`
-  if (row.kind === 'receipt') return `${row.donor} to ${row.party}: AUD ${row.amount_aud} across ${row.records} disclosed receipt records (${row.first_year ?? '?'} to ${row.last_year ?? '?'}). An aggregate connection, not an individual donation.`
+  if (row.kind === 'receipt') return `${row.donor} to ${row.party}: AUD ${row.amount_aud} across ${row.records} disclosed receipt records (${row.first_year ?? '?'} to ${row.last_year ?? '?'}).${row.measure ? ` ${row.measure}.` : ''} An aggregate connection, not an individual donation.`
   if (row.kind === 'contract' || row.kind === 'grant') return `${row.title ?? row.id}: ${row.kind} value AUD ${row.amount_aud ?? 'not published'}${row.agency ? ', ' + row.agency : ''}${row.financial_year ? ', ' + row.financial_year : ''}. ${row.source_scope ?? ''}${row.counted_in_totals === false ? ` Not counted in the profile totals: ${clip(row.caveat, 600)}` : ''}`
   if (row.kind === 'evidence') return `${row.name}: ${row.predicate} (${row.date ?? 'undated'}, ${row.source_kind}). ${clip(row.excerpt, 700)}`
   return clip(`${row.name ?? row.n ?? row.id}: ${row.kind}; ${row.total_aud != null ? 'published contract value AUD ' + row.total_aud + ', ' + row.records + ' contracts' : row.abn ? 'ABN ' + row.abn : 'published profile'}.`, 900)
@@ -105,7 +106,8 @@ export const tool: ToolDefinition = {
           source_url: sourceUrl(e.source_url) ?? (e.source_table === 'speeches' && /^\d+$/.test(String(e.source_id)) ? siteUrl(env, '/doc/speech-' + e.source_id) : full_record_url),
           source_scope: sourceUrl(e.source_url) ? 'original source' : 'OPAX evidence; original URL not recorded', full_record_url }))
         else if (section === 'receipts') {
-          const graph = object(await readToolAsset(env, '/graph/money.json'))
+          // Each flow read through its typed cells (each receipt once, from the party's own return), as on the donor page.
+          const graph = object(receiptGraph(object(await readToolAsset(env, '/graph/money.json')) as { edges: unknown[] }))
           if (!Array.isArray(graph.nodes) || !Array.isArray(graph.edges)) throw new Error('Funding graph unavailable')
           const nodes = new Map(records(graph.nodes).map(n => [String(n.id), n])), linked = new Set(records(data.donor_links).map(n => String(n.id)))
           // The receipt branch of the published graph grammar. Awards and grants cannot enter it.
@@ -113,6 +115,7 @@ export const tool: ToolDefinition = {
             nodes.get(String(e.target))?.kind === 'party' && !e.grant && !e.flow && typeof e.total === 'number' && Number.isFinite(e.total) && e.total > 0).map(e => {
             const donor = nodes.get(String(e.source))!, party = nodes.get(String(e.target))!
             return { kind: 'receipt', donor: donor.label, party: party.label, amount_aud: e.total, records: e.count, first_year: e.firstYear, last_year: e.lastYear,
+              ...(e.typed ? { measure: receiptScopeLabel({ typed: true, firstYear: e.firstYear as number | null, lastYear: e.lastYear as number | null } as Parameters<typeof receiptScopeLabel>[0]) } : {}),
               source_url: sourceUrl(records(donor.returnReferences)[0]?.url) ?? 'https://transparency.aec.gov.au/', source_scope: 'published receipt aggregate; source return register', full_record_url }
           })
         } else rows = [{ kind, record_id: id, name: data.name, abn: /^\d{11}$/.test(abn) ? abn : null, total_aud: data.total, records: data.count ?? data.records,

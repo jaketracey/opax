@@ -1,4 +1,4 @@
-export {donorDisclosure,donorLabelHTML,donorDisplayText,donorLookup} from './donor-disclosure.js';
+export {donorDisclosure,donorLabelHTML,donorDisplayText,donorLookup,receiptFigures,receiptGraph,receiptGraphScope,receiptScopeLabel} from './donor-disclosure.js';
 import type {DonorDisclosureRecord} from './donor-disclosure.js';
 export function loadMoneyGraph(path:string):Promise<unknown>;
 export function loadDonorViewIndex():Promise<Map<string,DonorDisclosureRecord>>;

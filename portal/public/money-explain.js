@@ -1,6 +1,7 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
-import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
-import {receiptFigures, receiptScopeLabel} from './register-tables.js?v=3beb5b4ebc';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptScopeLabel} from './donor-disclosure.js?v=2e8209b6ec';
+// receiptGraph is shared with every money page (donor-disclosure.js); re-exported for the tests that read it here.
+export {receiptGraph};
+import {loadDonorViewIndex} from './donor-views.js?v=a3bd4b7d12';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph
@@ -108,33 +109,6 @@ export function industryName(key) {
   if (['individual', 'individuals'].includes(k.toLowerCase())) return 'Industry not recorded';
   const words = k.replace(/_/g, ' ');
   return words.charAt(0).toUpperCase() + words.slice(1);
-}
-
-/**
- * The graph with every donation edge's figures read the way the map card,
- * the donor page and the party table read them (register-tables.js, receiptFigures): the typed
- * cells, each receipt once from the party's own return, all receipt types. The
- * older total/byYear cells also hold the donor's own declaration of the same
- * gift and stay only where a graph has no typed cells (the state graphs).
- * Each edge keeps its shape (total, count, byYear as [dollars, receipts],
- * firstYear, lastYear, undated), so every sum below reads it unchanged.
- * A typed edge with no receipts is left out: the party reported none.
- */
-const receiptGraphs = new WeakMap();
-export function receiptGraph(graph) {
-  if (!graph || graph.receiptMeasure) return graph;
-  if (receiptGraphs.has(graph)) return receiptGraphs.get(graph);
-  const edges = [];
-  for (const edge of graph.edges || []) {
-    if (!isDonation(edge)) { edges.push(edge); continue; }
-    const f = receiptFigures(edge);
-    if (f.typed && f.count <= 0 && f.total === 0) continue;
-    edges.push({ ...edge, total: f.total, count: f.count, byYear: f.cells, firstYear: f.firstYear, lastYear: f.lastYear,
-      undated: f.undated, byType: f.byType, typed: f.typed });
-  }
-  const out = { ...graph, edges, receiptMeasure: true };
-  receiptGraphs.set(graph, out);
-  return out;
 }
 
 /** What a flow's figures count, on its own line (receiptScopeLabel); empty for a state graph. */
