@@ -455,7 +455,6 @@ def test_aec_extras_selects_the_liberal_democrats_and_the_libertarian_party_unde
     # export_state_money is streamed alone, so it keeps a copy: the copy must agree.
     assert [(rx.pattern, c) for rx, c in state.OWN_PARTIES] == [(rx.pattern, c) for rx, c in extras._OWN_PARTIES]
     assert state.PARTY_RENAMED == extras.PARTY_RENAMED and state.PARTY_FORMER_NAMES == extras.PARTY_FORMER_NAMES
-    assert state.DONOR_SIDE_HELD == exporter.DONOR_SIDE_HELD
     for name in ("Liberal Democrats", "Libertarian Party of Queensland"):
         assert state.own_party(name) == "Libertarian Party"
     assert state.own_party("Liberal Party of Australia") is None
@@ -503,8 +502,7 @@ def renamed_party_rules(on=True):
             mock.patch.object(money_aec_extras, "PARTY_RENAMED", {"Fixture Liberty Party": "Fixture Freedom Party"}), \
             mock.patch.object(money_aec_extras, "PARTY_FORMER_NAMES", former), \
             mock.patch.object(exporter, "PARTY_FORMER_NAMES", former), \
-            mock.patch.object(aec_receipt_types, "PARTY_FORMER_NAMES", former), \
-            mock.patch.object(exporter, "DONOR_SIDE_HELD", {"Fixture Freedom Party"}):
+            mock.patch.object(aec_receipt_types, "PARTY_FORMER_NAMES", former):
         yield
 
 
@@ -526,22 +524,41 @@ def test_a_renamed_party_is_one_node_with_its_former_name_as_an_alias_and_each_r
     meta = graph["meta"]
     assert meta["receipt_types"]["party_return_transfers"][new] == [200, 1]
     assert "return_by_name" in meta["receipt_types"]["party_return_note"]
-    # The donor side is held: the party node holds the rows, no donor and no flow does.
     assert node["total"] > sum(node["return_by_type"].values())
-    assert not [e for e in graph["edges"] if e["target"] == "party:" + new]
-    assert meta["party_rows_donor_side_held"] > 0 and meta["donor_side_held"] == [new]
+    # Its donors count it like any other party's: one flow, typed from the party's own returns, each receipt
+    # once (the 2020-21 gift the donor also declared is not added twice in the typed cells).
+    flows = {e["source"]: e for e in graph["edges"] if e["target"] == "party:" + new}
+    assert sorted(flows) == ["donor:example farms", "donor:example mining"]
+    assert flows["donor:example mining"]["by_type"] == {"donation_received": 1300}
+    assert flows["donor:example mining"]["by_type_year"] == {"2020-21": {"donation_received": [1000, 1]}, "2023-24": {"donation_received": [300, 1]}}
+    assert flows["donor:example farms"]["by_type"] == {"donation_received": 50}, "a gift to a former-name branch joins the one node"
+    # A donor whose only rows are to the party still gets its spelling and its return references.
+    farms = next(n for n in graph["nodes"] if n["id"] == "donor:example farms")
+    assert farms["source_name"] == "Example Farms Ltd"
+    assert [(r["return_type"], r["year"]) for r in farms["returnReferences"]] == [("AEC annual return", "2020-2021")]
     assert all("aliases" not in n and "return_by_name" not in n for n in parties.values() if n["id"] != "party:" + new)
 
 
-def test_selecting_the_renamed_party_moves_no_other_node_or_edge(tmp_path):
+def test_selecting_the_renamed_party_moves_only_its_node_its_donors_and_their_flows_to_it(tmp_path):
     path, _, new = renamed_party_fixture(tmp_path)
     with renamed_party_rules(on=False):
         before = export(path)
     with renamed_party_rules():
         after = export(path)
     added = {n["id"] for n in after["nodes"]} - {n["id"] for n in before["nodes"]}
-    assert added == {"party:" + new}
-    assert [n for n in after["nodes"] if n["id"] not in added] == before["nodes"]
-    assert after["edges"] == before["edges"]
-    donor = next(n for n in after["nodes"] if n["kind"] == "donor")
-    assert donor["label"] == "Example Mining Ltd" and donor["total"] == 5000
+    # The party, and a donor that gave only to it (on this uncapped fixture map every donor is drawn).
+    assert added == {"party:" + new, "donor:example farms"}
+    assert {n["id"] for n in before["nodes"]} <= {n["id"] for n in after["nodes"]}, "no donor leaves the map"
+    old_edges = {(e["source"], e["target"]): e for e in before["edges"]}
+    new_edges = {(e["source"], e["target"]): e for e in after["edges"]}
+    assert set(new_edges) - set(old_edges) == {("donor:example mining", "party:" + new), ("donor:example farms", "party:" + new)}
+    assert all(new_edges[k] == v for k, v in old_edges.items()), "every existing flow is unchanged"
+    before_nodes = {n["id"]: n for n in before["nodes"]}
+    moved = [n["id"] for n in after["nodes"] if n["id"] not in added and n != before_nodes[n["id"]]]
+    assert moved == ["donor:example mining"], "only the party's donor moves"
+    donor_before, donor_after = before_nodes["donor:example mining"], next(n for n in after["nodes"] if n["id"] == "donor:example mining")
+    flow = new_edges[("donor:example mining", "party:" + new)]
+    # The donor gains exactly its flow to the party: legacy record cells and typed cells alike.
+    assert donor_after["total"] - donor_before["total"] == flow["total"]
+    assert donor_after["count"] - donor_before["count"] == flow["count"]
+    assert sum(donor_after["by_type"].values()) - sum(donor_before["by_type"].values()) == sum(flow["by_type"].values()) == 1300

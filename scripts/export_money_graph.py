@@ -81,11 +81,9 @@ Methodology / exclusion rules (all documented in the output's `meta` block):
    (money_aec_extras.own_party: the Liberal Democratic Party and the Libertarian
    Party, one party under two names) gets its node from the rows whose recipient
    name reads as it, under its current name (money_aec_extras.current_party), with
-   node.aliases holding the former names. Its donor side is held back
-   (DONOR_SIDE_HELD): those rows count in the party node's total, count and
-   byYear only, never in a donor's total or as a flow, because adding them would
-   move the totals of donors already on the map. meta.party_rows_donor_side_held
-   counts them.
+   node.aliases holding the former names. Those rows are counted like any other
+   party's: in the party node and, under rules 3 to 7, in each donor's total and
+   flow (aec_receipt_selection maps the same recipients for the typed cells).
 
 Node ids are 'donor:' + norm_key(label). Two donors whose labels share a key
 (an entity and an unresolved look-alike) get distinct ids: the second takes
@@ -108,9 +106,10 @@ instead of only testing whether a lifetime span overlaps it.
 
 try:
     from scripts.donor_disclosure import (AEC_SOURCE_SQL, attach_donor_disclosures, exact_alias_index,
-                                          resolve_alias)
+                                          own_party_recipients, resolve_alias)
 except ModuleNotFoundError:
-    from donor_disclosure import AEC_SOURCE_SQL, attach_donor_disclosures, exact_alias_index, resolve_alias
+    from donor_disclosure import (AEC_SOURCE_SQL, attach_donor_disclosures, exact_alias_index,
+                                  own_party_recipients, resolve_alias)
 
 from parli.ingest.money_aec_extras import PARTY_FORMER_NAMES
 
@@ -146,11 +145,6 @@ PARTY_WORD_RE = re.compile(
     r"\bnational party\b|\bdemocrats\b",
     re.I,
 )
-
-# Rule 10: parties whose donor side is held back. Their rows give the party node its
-# record total; donors' totals and flows leave them out until a review accepts the
-# donor moves (14 donors on the map gave to the Liberal Democratic Party).
-DONOR_SIDE_HELD = {"Libertarian Party"}
 
 # Rule 8: resolver kinds that are never a private person.
 NOT_A_PERSON = {"company", "association", "government", "party_unit", "union"}
@@ -308,22 +302,6 @@ def load_associated_register(db, alias_to_entity: dict, exact_index: dict) -> di
         for key in {resolve_alias(name.strip(), alias_to_entity, exact_index), norm_key(name)} - {None, ""}:
             reg[key][canon][party.strip()].add(fy or "")
     return reg
-
-
-def own_party_recipients(db) -> dict:
-    """Rule 10: recipient spelling -> money-map party, for AEC rows with no canonical
-    recipient whose name reads as a party selected in its own right."""
-    from parli.ingest.money_aec_extras import current_party, own_party
-    out = {}
-    if "recipient" not in {r[1] for r in db.execute("PRAGMA table_info(donations)")}:
-        return out
-    for (recipient,) in db.execute(
-            f"SELECT DISTINCT recipient FROM donations WHERE (recipient_canonical IS NULL OR recipient_canonical = '') "
-            f"AND {AEC_SOURCE_SQL}"):
-        party = current_party(own_party(recipient))
-        if party:
-            out[recipient] = party
-    return out
 
 
 def _fy(fy: str) -> str:
@@ -665,11 +643,7 @@ def main() -> None:
     excluded = {"public_funding": 0, "party_internal": 0, "government_entity": 0}
     unresolved = set()
     rows_without_year = 0
-    held_rows = 0
     for r in rows:
-        if r["party"] in DONOR_SIDE_HELD:
-            held_rows += 1  # rule 10: the party node counts it below; no donor does
-            continue
         name = (r["donor_name"] or "").strip()
         if not name:
             continue
@@ -928,8 +902,6 @@ def main() -> None:
             "node_id_collisions": collisions,
             "party_rows_excluded_public_funding": party_excluded["public_funding"],
             "party_rows_excluded_government_entity": party_excluded["government_entity"],
-            "party_rows_donor_side_held": held_rows,
-            "donor_side_held": sorted(DONOR_SIDE_HELD),
             "donor_nodes": len(picked),
             "donor_nodes_by_total": len(picked) - len(extras),
             "donors_via_public_money": len(extras),

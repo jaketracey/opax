@@ -57,8 +57,7 @@ recorded in each file's `meta` block:
    right (export_money_graph.py rule 10: the Liberal Democratic Party and the
    Libertarian Party, one party under two names) is read from the recipient name
    when no recipient_party is set, under its current name, with node.aliases for
-   the former names. Its donor side is held back as in money.json
-   (DONOR_SIDE_HELD): the rows count in the party node only.
+   the former names. Its rows count for the party and its donors like any other's.
 
 This script is streamed to the database host over ssh stdin, so it cannot import
 its sibling; the shared constants below are a deliberate copy of
@@ -84,14 +83,13 @@ DB_PATH = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch
 TOP_DONORS = 250
 
 # Rule 9: a copy of parli.ingest.money_aec_extras _OWN_PARTIES / PARTY_RENAMED /
-# PARTY_FORMER_NAMES and export_money_graph.DONOR_SIDE_HELD (this file is streamed alone).
+# PARTY_FORMER_NAMES (this file is streamed alone).
 OWN_PARTIES = [
     (re.compile(r"\blibertarian\b", re.I), "Libertarian Party"),
     (re.compile(r"\bliberal democrat(?:s|ic)?\b", re.I), "Liberal Democratic Party"),
 ]
 PARTY_RENAMED = {"Liberal Democratic Party": "Libertarian Party"}
 PARTY_FORMER_NAMES = {"Libertarian Party": ["Liberal Democratic Party", "Liberal Democrats"]}
-DONOR_SIDE_HELD = {"Libertarian Party"}
 
 
 def own_party(name: str | None) -> str | None:
@@ -725,11 +723,7 @@ def main() -> None:
     excluded = {"public_funding": 0, "party_internal": 0, "government_entity": 0}
     unresolved = set()
     rows_without_year = 0
-    held_rows = 0
     for r in rows:
-        if r["party"] in DONOR_SIDE_HELD:
-            held_rows += 1  # rule 9: the party node counts it below; no donor does
-            continue
         name = (r["donor_name"] or "").strip()
         if not name:
             continue
@@ -959,7 +953,6 @@ def main() -> None:
             "node_id_collisions": collisions,
             "party_rows_excluded_public_funding": party_excluded["public_funding"],
             "party_rows_excluded_government_entity": party_excluded["government_entity"],
-            "party_rows_donor_side_held": held_rows,
             "rows_dropped_by_disclosure_type": dict(dropped_types),
             "rows_dropped_election_duplicates": dropped_election or None,
             "political_donation_flag": flag_counts if jur == "qld" else None,
