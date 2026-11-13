@@ -1,4 +1,5 @@
 import {foldDonorName} from '../public/donor-entity.js'
+import {decodeHTMLStrict} from 'entities'
 import {donorDisclosure,donorLookup,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 /**
  * A daily source-based edition: politician statistics, bills, grants and topics.
@@ -182,10 +183,7 @@ export function joinList(items: string[]): string {
 }
 
 function decodeEntities(text: string): string {
-  return text
-    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
-    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
-    .replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&apos;/g, "'")
+  return decodeHTMLStrict(text)
 }
 
 function titleCase(word: string): string {

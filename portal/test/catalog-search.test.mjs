@@ -11,6 +11,15 @@ const assets={fetch:async request=>{
  try{return new Response(await readFile(new URL('../public'+path,import.meta.url)),{headers:{'content-type':'application/json'}})}catch{return new Response('missing',{status:404})}
 }};
 const find=(q,params={})=>searchCatalog(new URL('https://opax.com.au/api/search-all?'+new URLSearchParams({q,kind:'all',...params})),assets);
+test('public nicknames find their roster profile rather than only incidental mentions',async()=>{
+ for(const [q,name] of [['Albo','Anthony Albanese'],['ScoMo','Scott Morrison']]){
+  const found=await find(q,{kind:'person'});
+  assert.ok(found.results.some(r=>r.title===name),q);
+ }
+});
+test('the diagnosed question subjects find published records without relaxing ordinary search',async()=>{
+ for(const q of ['why is rent so high','how does the NDIS work','who funds political parties','why are energy prices rising'])assert.ok((await find(q)).total>0,q);
+});
 test('tokenization handles ABNs, contract IDs, punctuation and prototype words',()=>{
  assert.deepEqual(tokens('The WOODSIDE, grants and contracts'),['woodside','grant','contract']);
  assert.equal(normalize('86689561797'),'86689561797');

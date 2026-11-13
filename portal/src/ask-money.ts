@@ -1,3 +1,4 @@
+import {trimQuestionEnd, questionSpaces} from './question-text.mjs'
 import {federalPartyRankingQuestion,federalPartyRankingIntent,federalPartyRankingClarification,federalPartyRankingReading} from './ask-money-family'
 import {receiptMeasureLabel,receiptMeasureHeading,receiptDollars} from './receipt-copy'
 import type { RecordQuestion } from './ask-records'
@@ -24,8 +25,11 @@ export function isMoneyRanking(input: RecordQuestion): boolean {
   if(/\b(?:bills?|polic(?:y|ies)|advice|name)\b/i.test(q))return false
   // Ordinary recipient questions often omit "money". Admit a known industry
   // after "from"; the calculator still validates every remaining scope word.
-  const recipientIndustry=/^\s*(?:who|which\s+(?:party|parties))\s+(?:takes?|gets?|receives?)\b[^?!.]*\bfrom\s+(.+?)\s*[?!.]*$/i.exec(q)
-  const industries=recipientIndustry?mentionedReceiptIndustries(recipientIndustry[1]):[]
+  const normal=trimQuestionEnd(questionSpaces(q))
+  let from=-1
+  for(const match of normal.matchAll(/ from /gi))from=match.index
+  const recipientIndustry=from>=0&&/^(?:who|which (?:party|parties)) (?:takes?|gets?|receives?)\b[^?!.]*$/i.test(normal.slice(0,from)) ? normal.slice(from+6).trim() : ''
+  const industries=recipientIndustry?mentionedReceiptIndustries(recipientIndustry):[]
   // "From the media" can mean coverage. Require a financial or sector cue
   // rather than turning a question about attention into a receipt ranking.
   const ambiguousMedia=industries.includes('media')&&!/\b(?:industry|sector|lobby)\b/i.test(q)
@@ -228,7 +232,7 @@ export async function fundingResearchFollowUp(input:RecordQuestion,assets:Fetche
   // A new explicit year may follow a coverage refusal. Retain the validated
   // subject from the prior question; replace its period, never its identity.
   if(/^(?:and\s+)?(?:in|during|for)\s+(?:19|20)\d{2}(?:[–-]\d{2})?[?!.]*$/i.test(input.question??'')){
-    const context=input.context?.map(t=>t.author==='answer'?t:{...t,text:t.text?.replace(/\s+(?:in|during|for|since|from)\s+(?:19|20)\d{2}(?:[–-]\d{2})?(?:\s+to\s+(?:19|20)\d{2})?/gi,'')})
+    const context=input.context?.map(t=>t.author==='answer'?t:{...t,text:t.text===undefined?undefined:questionSpaces(t.text).replace(/ (?:in|during|for|since|from) (?:19|20)\d{2}(?:[–-]\d{2})?(?: to (?:19|20)\d{2})?/gi,'')})
     return fundingFollowUp({...input,context},graph,jurisdiction,isMoneyRanking)
   }
   return null

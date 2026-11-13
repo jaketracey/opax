@@ -1,3 +1,4 @@
+import {trimQuestionEnd, questionSpaces} from './question-text.mjs'
 import type {RecordQuestion} from './ask-records'
 import {rankedMoneyAnswer, fundingResearchFollowUp} from './ask-money'
 import {fundingContinuation, fundingUserTurns} from './ask-money-followup'
@@ -23,7 +24,7 @@ export async function federalPartyMoneyAnswer(input:RecordQuestion,assets:Fetche
  if(!intent&&fundingContinuation(input.question??'')&&prior.length){
   const unresolved=federalPartyRankingIntent(prior[prior.length-1])
   if(unresolved?.uncertain&&unresolved.parties.length>1){
-   const fragment=(input.question??'').trim().replace(/^(?:and\s+)?(?:(?:what|how)\s+about\s+)/i,'').replace(/^and\s+/i,'').replace(/[?!.]+$/,'')
+   const fragment=trimQuestionEnd(questionSpaces(input.question??'').replace(/^(?:and )?(?:(?:what|how) about )/i,'').replace(/^and /i,''))
    const party=federalPartyRankingIntent('Who funds '+fragment+'?')
    const period=/^(?:in|during|for|since|from|before|after|until|through|between)\s+(?:19|20)\d{2}(?:[–-]\d{2})?(?:\s+(?:to|and|through)\s+(?:19|20)\d{2}(?:[–-]\d{2})?)?$/i.test(fragment)
    if(party||period)return {...federalPartyRankingClarification(party??unresolved),money_route:'federal-party-ranking-v1'}

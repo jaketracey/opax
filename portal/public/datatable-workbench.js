@@ -1,4 +1,4 @@
-import {applyQuery, dataTableHTML, mountDataTable, parseQuery, serializeQuery, toCSV} from './datatable.js?v=a8472268da';
+import {applyQuery, dataTableHTML, mountDataTable, parseQuery, serializeQuery, toCSV} from './datatable.js?v=893767f2bd';
 import {workbenchConfig, workbenchRows} from './datatable-workbench-data.js';
 
 const nativeFetch = window.fetch.bind(window);

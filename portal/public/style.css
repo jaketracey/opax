@@ -3378,6 +3378,8 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search #search-empty .empty-title { font: var(--type-heading); overflow-wrap: anywhere; margin: 0 0 var(--sp-12); }
 #panel-search #search-empty .empty-lede { font: var(--weight-regular) var(--text-16)/var(--leading-loose) var(--serif); max-width: 60ch; margin: 0; }
 #panel-search #search-empty .empty-actions { justify-content: flex-start; gap: var(--sp-8); margin-top: var(--sp-20); }
+#panel-search #search-empty h3 { margin-top: var(--sp-24); color: var(--ink); }
+#panel-search #search-empty .ui-button { max-width: 100%; min-width: 0; }
 #panel-search .search-result-heading .result-title { display: flex; align-items: center; min-height: var(--size-target); }
 #panel-search .search-result-text.is-collapsed { display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
 /* Give the bronze reading action room beneath the faded passage. */

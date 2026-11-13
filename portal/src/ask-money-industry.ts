@@ -3,30 +3,36 @@ import type {RecordQuestion} from './ask-records'
 import {federalPartyRankingIntent} from './ask-money-family'
 import {isReceiptGraph, mentionedReceiptIndustries, receiptAnswer, receiptDonorChoices, receiptGraphForQuestion, unmatchedReceiptRankingScope} from './voice-money'
 import {calculatedMoneyAnswer,rankedMoneyAnswer,readingChoices,withReading} from './ask-money'
+import {trimQuestionEnd, questionSpaces} from './question-text.mjs'
 
 /** Financial recipient questions must resolve before topic retrieval or cached prose. */
 export function industryMoneyIntent(question:string):{subject:string;recipient?:string;total:boolean;period:string}|null {
- let q=question.normalize('NFKC').trim().replace(/[?!.]+$/,'')
+ let q=trimQuestionEnd(questionSpaces(question.normalize('NFKC')))
  if(/\b(?:say|said|talk\w*|speak\w*|spoke|speeches?|votes?|voted|mentions?|why|influence|grants?|contracts?)\b/i.test(q))return null
- const suffix=/\s+((?:in|during|for|since|from|before|after|until|through|between)\s+(?:(?:FY|financial years?)\s*)?(?:19|20)\d{2}.*)$/i.exec(q)
+ const suffix=/ ((?:in|during|for|since|from|before|after|until|through|between) (?:(?:FY|financial years?) ?)?(?:19|20)\d{2}.*)$/i.exec(q)
  const period=suffix?.[1]??''
  if(suffix)q=q.slice(0,suffix.index)
  const sourceRanking=/^which (?:banks?|finance companies) (?:give|gives|gave|donate|donates) (?:the )?most (?:money )?to (.+)$/i.exec(q)
  if(sourceRanking)return {subject:'banks',recipient:sourceRanking[1],total:false,period}
- let m=/^(?:who|which (?:political )?part(?:y|ies))\s+(?:takes?|receives?|received|gets?|got)\s+(?:the\s+)?(?:most\s+)?(?:money|donations?|funding|receipts?)?\s*from\s+(.+)$/i.exec(q)
+ let m=/^(?:who|which (?:political )?part(?:y|ies)) (?:takes?|receives?|received|gets?|got) (?:the )?(?:most )?(?:(?:money|donations?|funding|receipts?) )?from (.+)$/i.exec(q)
  if(m){
   const monetary=/\b(?:money|donations?|funding|receipts?)\b/i.test(q),known=mentionedReceiptIndustries(m[1])
   if(!monetary&&(!known.length&&!/^(?:the )?banks?(?:ing)?$/i.test(m[1])||known.includes('media')&&!/\b(?:industry|sector|lobby)\b/i.test(m[1])))return null
   return {subject:m[1],total:false,period}
  }
- m=/^who\s+(?:takes?|receives?|gets?)\s+(?:the\s+)?(?:most\s+)?(.+?)\s+money$/i.exec(q)
+ m=/^who (?:takes?|receives?|gets?) (?:the )?(?:most )?(.+) money$/i.exec(q)
  if(m)return {subject:m[1],total:false,period}
- m=/^how much\s+(?:has|have|did)\s+(.+?)\s+(?:received|receive|got|get|taken|take)\s+(?:(?:money|donations?|funding)\s+)?from\s+(.+)$/i.exec(q)
- if(m)return {subject:m[2],recipient:m[1],total:true,period}
- m=/^how much\s+(?:has|have|did)\s+(.+?)\s+(?:donated|donate|given|give)\s+to\s+(.+)$/i.exec(q)
- if(m)return {subject:m[1],recipient:m[2],total:true,period}
- m=/^(.+?)\s+donations(?:\s+to\s+(.+))?$/i.exec(q)
- return m?{subject:m[1],recipient:m[2],total:!!m[2],period}:null
+ const prefix=/^how much (?:has|have|did) /i.exec(q)
+ if(prefix){
+  const rest=q.slice(prefix[0].length)
+  const received=/ (?:received|receive|got|get|taken|take) (?:(?:money|donations?|funding) )?from /i.exec(rest)
+  if(received&&received.index>0&&received.index+received[0].length<rest.length)return {subject:rest.slice(received.index+received[0].length),recipient:rest.slice(0,received.index),total:true,period}
+  const given=/ (?:donated|donate|given|give) to /i.exec(rest)
+  if(given&&given.index>0&&given.index+given[0].length<rest.length)return {subject:rest.slice(0,given.index),recipient:rest.slice(given.index+given[0].length),total:true,period}
+ }
+ const to=/ donations to /i.exec(q)?.index??-1
+ if(to>0&&to+14<q.length)return {subject:q.slice(0,to),recipient:q.slice(to+14),total:true,period}
+ return / donations$/i.test(q)&&q.length>10?{subject:q.slice(0,-10),total:false,period}:null
 }
 
 const safe=(s:string)=>s.replace(/[|\n\r\[\]*<>]/g,' ').trim()

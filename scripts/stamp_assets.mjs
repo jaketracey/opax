@@ -317,7 +317,7 @@ export function moduleReferences(publicRoot = PUBLIC, srcRoot = SRC) {
   return new Map(files.map((file) => {
     // A path in quotes or parentheses: "/labels.js?v=…", './labels.js', url(/x.css).
     // Not an attribute selector such as script[src^="/app.js"], which loads nothing.
-    const pattern = new RegExp(`(?<=["'\`(])(?<!\\^=["'])(?:\\.{0,2}/)+${file.replace(/\./g, '\\.')}(?:\\?v=([A-Za-z0-9._-]*))?(?=["'\`)\\s#?])`, 'g')
+    const pattern = new RegExp(`(?<=["'\`(])(?<!\\^=["'])(?:\\.{0,2}/)+${file.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:\\?v=([A-Za-z0-9._-]*))?(?=["'\`)\\s#?])`, 'g')
     const refs = []
     for (const [from, text] of texts) {
       if (from === file) continue

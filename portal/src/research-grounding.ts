@@ -1,3 +1,4 @@
+import {comparisonParts} from './question-text.mjs'
 import {auditPayload,quotationSpans,sentenceParts} from './research-claim-audit.mjs'
 import {plainAnswerPayload,rewriteAnswerPayload} from './research-language'
 import {leadWithFinding,neutralAnonymousAttribution} from './research-answer-shape'
@@ -380,7 +381,7 @@ function checkedAnswer(payload:Record<string,unknown>,question:string):Record<st
   // If checked points cannot supply the requested comparison, keep them beside
   // an explicit limitation instead of replacing them with a quotation.
   const incomplete=coherenceCheck(question,out)
-  const comparison=/^How do (.+?) and (.+?) differ on (.+?)[?.!]*$/i.exec(question)
+  const comparison=comparisonParts(question)
   const missingSide=comparison&&[comparison[1],comparison[2]].some(side=>!String(out.answer??'').toLowerCase().includes(side.replace(/^the /i,'').toLowerCase()))
   if(comparison&&(missingSide||!incomplete.pass&&incomplete.reasons.includes('first sentence does not answer'))){
     const lead=`The selected excerpts do not establish how ${comparison[1]} and ${comparison[2]} differ on ${comparison[3]}.`,prefix=lead+'\n\n',offset=Array.from(prefix).length

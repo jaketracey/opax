@@ -1,4 +1,5 @@
 import {ASK_EVIDENCE_RULES} from './ask-writing-rules'
+import {trimQuestionEnd, questionSpaces} from './question-text.mjs'
 import type { RecordQuestion } from './ask-records'
 import { isMoneyRanking } from './ask-money'
 import { isPositionDurationQuestion } from './position-evidence'
@@ -42,21 +43,23 @@ const NAMED_SPEECH = /^(?:and\s+)?(?:what|how)\s+(?:has|have|did|does|would|migh
 // "what did X say". These capture a grammatical subject; only an exact roster
 // match may turn that subject into a person filter.
 const STANCE_REQUESTS = [
-  /^(?:and\s+)?(?:did|does|has|have|would|might)\s+(?:(?:Senator|MP|Mr|Mrs|Ms|Dr)\.?\s+)?(.{2,80}?)\s+(?:support(?:ed)?|oppose(?:d)?|back(?:ed)?|reject(?:ed)?|favou?r(?:ed)?|call(?:ed)?\s+for)\s+(.+?)\s*[?]*$/i,
-  /^(?:and\s+)?(?:is|was)\s+(?:(?:Senator|MP|Mr|Mrs|Ms|Dr)\.?\s+)?(.{2,80}?)\s+(?:in\s+favou?r\s+of|against)\s+(.+?)\s*[?]*$/i,
-  /^(?:and\s+)?what\s+(?:does|did|would|might)\s+(?:(?:Senator|MP|Mr|Mrs|Ms|Dr)\.?\s+)?(.{2,80}?)\s+(?:think|believe)\s+(?:about|on|of)\s+(.+?)\s*[?]*$/i,
-  /^(?:and\s+)?what\s+(?:is|was|are|were)\s+(?:(?:Senator|MP|Mr|Mrs|Ms|Dr)\.?\s+)?(.{3,80}?)['’]s\s+(?:position|stance|views?)\s+(?:on|about)\s+(.+?)\s*[?]*$/i,
-  /^(?:and\s+)?where\s+(?:does|did|would|might)\s+(?:(?:Senator|MP|Mr|Mrs|Ms|Dr)\.?\s+)?(.{2,80}?)\s+stand\s+(?:on|about)\s+(.+?)\s*[?]*$/i,
+  /^(?:and )?(?:did|does|has|have|would|might) (?:(?:Senator|MP|Mr|Mrs|Ms|Dr)\.? )?(.{2,80}?) (?:support(?:ed)?|oppose(?:d)?|back(?:ed)?|reject(?:ed)?|favou?r(?:ed)?|call(?:ed)? for) (.+)$/i,
+  /^(?:and )?(?:is|was) (?:(?:Senator|MP|Mr|Mrs|Ms|Dr)\.? )?(.{2,80}?) (?:in favou?r of|against) (.+)$/i,
+  /^(?:and )?what (?:does|did|would|might) (?:(?:Senator|MP|Mr|Mrs|Ms|Dr)\.? )?(.{2,80}?) (?:think|believe) (?:about|on|of) (.+)$/i,
+  /^(?:and )?what (?:is|was|are|were) (?:(?:Senator|MP|Mr|Mrs|Ms|Dr)\.? )?(.{3,80}?)['’]s (?:position|stance|views?) (?:on|about) (.+)$/i,
+  /^(?:and )?where (?:does|did|would|might) (?:(?:Senator|MP|Mr|Mrs|Ms|Dr)\.? )?(.{2,80}?) stand (?:on|about) (.+)$/i,
 ]
 function stanceRequest(question: string): {subject:string;topic:string} | undefined {
+  question = trimQuestionEnd(questionSpaces(question), '?')
   for (const pattern of STANCE_REQUESTS) {
     const match = pattern.exec(question.trim())
-    if (match) return {subject:match[1],topic:match[2].replace(/\?+$/, '').trim()}
+    if (match) return {subject:match[1],topic:trimQuestionEnd(match[2], '?').trim()}
   }
 }
 function namedPositionRequest(question: string): {subject:string;topic:string} | undefined {
+  question = questionSpaces(question)
   const speech = NAMED_SPEECH.exec(question.trim())
-  if (speech) return {subject:speech[1],topic:question.trim().slice(speech[0].length).replace(/^\s*(?:about|on)\s+/i, '').replace(/\?+$/, '').trim()}
+  if (speech) return {subject:speech[1],topic:trimQuestionEnd(question.trim().slice(speech[0].length).replace(/^\s*(?:about|on) /i, ''), '?').trim()}
   const stance = stanceRequest(question)
   return stance && !/^(?:he|she|they|his|her|their)$/i.test(stance.subject) ? stance : undefined
 }
@@ -186,9 +189,10 @@ function topicFromQuestion(question: string): string {
 // Dates belong in source filters, not in the topic a quoted sentence must
 // repeat. Keep bare event years; only remove an explicit period clause.
 function withoutTopicPeriod(topic: string): string {
-  return topic.replace(/(?:^|\s+)(?:(?:between|from)\s+(?:19|20)\d{2}\s+(?:and|to|through|until|[–-])\s+(?:19|20)\d{2}|(?:in|during|before|after|since)\s+(?:19|20)\d{2})(?=\s|[?!.]|$)/i, ' ').replace(/^\s*(?:about|on)\s+/i, '').replace(/\s+/g, ' ').replace(/[?!.]+$/, '').trim() || topic
+  return trimQuestionEnd(questionSpaces(topic).replace(/(?:^| )(?:(?:between|from) (?:19|20)\d{2} (?:and|to|through|until|[–-]) (?:19|20)\d{2}|(?:in|during|before|after|since) (?:19|20)\d{2})(?=\s|[?!.]|$)/i, ' ').replace(/^\s*(?:about|on) /i, '').replace(/ +/g, ' ')).trim() || topic
 }
 function nextTopic(question: string, previous: string): string {
+  question = questionSpaces(question)
   // A replacement period belongs to the structured date filters. Do not keep
   // searching for an obsolete year from the prior question as a topic term.
   // A detail follow-up may have appended words after the period, or the first
@@ -204,13 +208,13 @@ function nextTopic(question: string, previous: string): string {
   if (isPositionDurationQuestion(question) || ELIGIBILITY_FOLLOWUP.test(question.trim())) return previous
   const stance = stanceRequest(question)
   const stanceTopic = stance && /^(?:he|she|they)$/i.test(stance.subject) ? stance.topic :
-    /^(?:and\s+)?what\s+(?:is|was|are|were)\s+(?:his|her|their)\s+(?:position|stance|views?)\s+(?:on|about)\s+(.+?)\??$/i.exec(question.trim())?.[1]
+    /^(?:and )?what (?:is|was|are|were) (?:his|her|their) (?:position|stance|views?) (?:on|about) (.+)$/i.exec(trimQuestionEnd(question, '?'))?.[1]
   if (stanceTopic) {
     const reference = /^(?:it|that|this)(?:\s+(?:proposal|policy|plan|bill|measure))?(\s+(?:(?:in|during|before|after|since)\s+\d{4}|(?:between|from)\s+\d{4}\s+(?:and|to|through|until)\s+\d{4}))?\??$/i.exec(stanceTopic)
-    return reference ? (reference[1] ? withoutPriorPeriod() : previous) : stanceTopic.replace(/\?+$/, '').trim()
+    return reference ? (reference[1] ? withoutPriorPeriod() : previous) : trimQuestionEnd(stanceTopic, '?').trim()
   }
-  const changed = (/^(?:and\s+)?(?:what|how)\s+about\s+(.+?)\??$/i.exec(question.trim())?.[1] ||
-    /^(?:what|how)\s+(?:has|have|did|does|would|might)\s+(?:he|she|they)\s+(?:say|said|propos(?:e|ed)|recommend(?:ed)?)\s+(?:about|on)\s+(.+?)\??$/i.exec(question.trim())?.[1])?.replace(/\?$/, '').trim()
+  const changed = (/^(?:and )?(?:what|how) about (.+)$/i.exec(trimQuestionEnd(question, '?'))?.[1] ||
+    /^(?:what|how) (?:has|have|did|does|would|might) (?:he|she|they) (?:say|said|propos(?:e|ed)|recommend(?:ed)?) (?:about|on) (.+)$/i.exec(trimQuestionEnd(question, '?'))?.[1])?.replace(/\?$/, '').trim()
   // "What about immigration?" changes topic; "what about her cap?" needs
   // its prior subject. Date-only follow-ups retain the topic too.
   if (changed && !/\b(?:he|she|they|his|her|their|it|that|this)\b|^(?:in|during|before|after|since|between|from)\s+\d/i.test(changed)) return changed
