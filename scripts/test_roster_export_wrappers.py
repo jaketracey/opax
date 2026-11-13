@@ -255,7 +255,13 @@ class ShippedIdentityReplayTests(unittest.TestCase):
                 # read under that row and is no longer a separate identity change.
                 # Explicit catalog aliases reconcile the Dave/David source
                 # spellings, so the reviewed Tollner identity remains supported.
-                self.assertEqual(set(changes),{'Blandthorn','McDermott','Robinson','Crawford'})
+                # 'R.A. Simms' (SA Council from 2021) is Robert Simms, senator 2015-2016, pid 10842: listed in
+                # scripts/person_identity.json by #308. The export gives the id; it is a difference only until
+                # a weekly export ships it into parliamentarians.json, after which the four remain.
+                self.assertEqual(by['R.A. Simms'].get('pid'), '10842')
+                simms = next(p for p in shipped if p['name'] == 'R.A. Simms')
+                pending = {'R.A. Simms'} if simms.get('pid') != '10842' else set()
+                self.assertEqual(set(changes),{'Blandthorn','McDermott','Robinson','Crawford'} | pending)
                 # 'Tollner' now ships as a print of the person holding its verified id (fold_ids), on both sides.
                 holder = next(p for p in shipped if 'Tollner' in (p.get('prints') or []))
                 self.assertIs(by['Tollner'], by[holder['name']])
