@@ -1,6 +1,6 @@
 import {supplierContractsHTML} from '../public/contracts-table.js'
 import {decodeHTMLStrict} from 'entities'
-import {donorDisclosure,donorLabelHTML,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
+import {donorDisclosure,donorLabelHTML,receiptGraph,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import { shortDate, shortMoney } from '../public/format.js'
 import { receiptHeadline } from '../public/money-explain.js'
 import { personUrl, partyUrl } from '../public/party-page.js'
@@ -592,7 +592,9 @@ export async function renderSupplierAnswer(id: string, read: ReadAsset, params =
 export async function renderMoneyAnswer(title: string, read: ReadAsset): Promise<RenderedContent> {
   let body='<p>Published political receipts, Commonwealth contracts and grant awards are separate records. Award values are not verified expenditure, and an association does not prove influence.</p>'
   for(const [path,label] of [['/graph/money.json','Federal'],['/graph/money.qld.json','Queensland'],['/graph/money.vic.json','Victoria']]) {
-    const graph=await read<MoneyGraph & {meta:{generated:string}}>(path)
+    // Each flow read through its typed cells (each receipt once, from the party's own return),
+    // as on the donor and party pages; the state graphs have none and keep their record figures.
+    const graph=receiptGraph(await read<MoneyGraph & {meta:{generated:string}}>(path))
     const parties=graph.nodes.filter(n=>n.kind==='party')
     // The map's receipts by the shared rule (money-explain.js receiptHeadline over
     // receiptGraph): each receipt once, from the party's own return, every type;

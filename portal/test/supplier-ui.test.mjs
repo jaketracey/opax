@@ -5,6 +5,7 @@ import { runInNewContext } from 'node:vm';
 import { shortDate, shortMoney } from '../public/format.js';
 import { sourceLineHTML } from '../public/labels.js';
 import { partyUrl } from '../public/canonical-urls.js';
+import { receiptGraph, receiptGraphScope } from '../public/donor-disclosure.js';
 
 // Execute the actual module; only replace its dynamic WebGL import with a
 // controlled loader. The small DOM below models the nodes this module touches.
@@ -29,7 +30,7 @@ function node() {
 }
 function setup(fetch, mount = async () => ({ destroy() {}, setPaused() {} })) {
   const context = { document: {querySelector:()=>null}, mountSuppliersTable:async()=>({destroy(){}}), mountContractsTable:async()=>({destroy(){}}), fetch, AbortController, URLSearchParams, setTimeout, clearTimeout, history: { replaceState() {} }, shortDate, shortMoney, partyUrl,
-    mountSupplierGrowth: () => {}, supplierDonations: async () => ({html: "", links: []}), sourceLineHTML,
+    mountSupplierGrowth: () => {}, supplierDonations: async () => ({html: "", links: []}), sourceLineHTML, receiptGraph, receiptGraphScope,
     loadMapModule: async () => ({ mountMoneyMap: mount }) };
   runInNewContext(source, context);
   return context;

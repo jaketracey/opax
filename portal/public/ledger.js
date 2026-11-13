@@ -1,5 +1,5 @@
-import {donorDisclosure,donorLookup,donorDisplayText} from './donor-disclosure.js?v=18e84bb744';
-import {subjectUrl} from './canonical-urls.js?v=c40e3d805e';
+import {donorDisclosure,donorLookup,donorDisplayText,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=8c73ceafd6';
+import {subjectUrl} from './canonical-urls.js?v=e32f13c6c8';
 import { filterMoneyEdges } from "./money-records.js?v=ia-ux-20260908-2";
 import { sourceLineHTML } from './labels.js?v=89dda4a520';
 /**
@@ -98,7 +98,10 @@ export function partyColour (party) {
 // ---------------------------------------------------------------------------
 
 /** Join edges to their donor/party nodes → flat flow rows. */
-export function buildFlows (data) {
+export function buildFlows (raw) {
+  // Each flow read through its typed cells (receiptGraph): each receipt once, from the
+  // party's own return, as on the donor and party pages. State files keep their figures.
+  const data = receiptGraph(raw)
   const byId = new Map(data.nodes.map((n) => [n.id, n]))
   return filterMoneyEdges(data, { type: "receipts" }).map((e) => {
     const donor = byId.get(e.source) || {}
@@ -1019,6 +1022,7 @@ export function mountLedger (container, opts = {}) {
   function renderFineprint (data) {
     const m = data.meta || {}
     const donors = data.nodes.filter((n) => n.kind === 'donor').length
+    const measured = receiptGraphScope(data)
     const register = m.jurisdiction
       ? { label: m.commission, href: /^https?:\/\//i.test(m.source_url || '') ? m.source_url : '/methods' }
       : { label: 'AEC Transparency Register', href: 'https://transparency.aec.gov.au/' }
@@ -1030,6 +1034,7 @@ export function mountLedger (container, opts = {}) {
       facts: [
         ['Coverage', esc(m.jurisdiction ? `${m.commission} (${m.sourceShort}), ${m.coverage}` : `AEC disclosures ${YEAR_MIN}–${YEAR_MAX}`)],
         ['Shown', esc(`Top ${NUM.format(donors)} disclosed receipt sources`)],
+        ...(measured ? [['Measured as', esc(measured)]] : []),
       ],
       notes: [
         'Totals are a floor, not a ceiling.',

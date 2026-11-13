@@ -103,7 +103,9 @@ test('every gold turn is exactly what the party_receipts tool answers from the l
  const moved=structuredClone(graph);const first=fixture.conversations[0].turns[0]
  const edge=moved.edges.find(e=>e.target===`party:${first.tool_query.party}`&&moved.nodes.find(n=>n.id===e.source)?.label===first.rows[0].donor)
  assert.ok(edge,'the first gold row is a donation edge in the live graph')
- edge.total+=1;for(const year in edge.byYear){edge.byYear[year][0]+=1;break}
+ // party_receipts reads the typed cells (each receipt once, from the party's own return), so move one of those
+ assert.ok(edge.by_type_year,'the first gold row has typed receipt cells')
+ for(const year in edge.by_type_year){for(const kind in edge.by_type_year[year]){edge.by_type_year[year][kind][0]+=1;edge.by_type[kind]+=1;break}break}
  await assert.rejects(()=>assertGold(moved))
 })
 test('follow-up population has ten tool-derived two/three turn conversations',()=>{

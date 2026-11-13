@@ -1,6 +1,6 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
-import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
-import {subjectUrl} from './canonical-urls.js?v=c40e3d805e';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=8c73ceafd6';
+import {loadDonorViewIndex} from './donor-views.js?v=c475b569bf';
+import {subjectUrl} from './canonical-urls.js?v=e32f13c6c8';
 /*
  * The record quiz — a MindMaze-spirited quiz over OPAX's real data.
  *
@@ -97,7 +97,10 @@ function industryLabel(key) {
 /* ----- shared context computed once per round ----- */
 
 export function makeQuizContext(data) {
-  const money = data.money || { nodes: [], edges: [], meta: {} };
+  // Donor and industry questions read each donor and flow through its typed cells
+  // (receiptGraph): each receipt once, from the party's own return, as on the donor
+  // page. Party nodes, and so the party questions, keep their own received totals.
+  const money = receiptGraph(data.money || { nodes: [], edges: [], meta: {} });
   const donors = money.nodes.filter(n=>n.kind === 'donor');
   const donorsById = new Map(donors.map((d) => [d.id, d]));
   const parties = money.nodes.filter((n) => n.kind === "party");
@@ -125,6 +128,8 @@ export function makeQuizContext(data) {
   return {
     money, donors, donorsById, parties, industries, reports, photos, years,
     corpus: data.corpus || null,
+    // What the donor and industry figures count (the party page's line), for the answer reveal.
+    receiptScope: receiptGraphScope(money),
   };
 }
 
@@ -186,6 +191,7 @@ const TEMPLATES = [
             industryLabel(s2[0]) + " (" + fmtMoney(s2[1].total) + ") and " +
             industryLabel(s3[0]) + " (" + fmtMoney(s3[1].total) + ") trail it.",
           source: "AEC disclosures via OPAX's money data",
+          ...(ctx.receiptScope ? { scope: ctx.receiptScope } : {}),
           link: moneyLink(top[0]),
         };
       }
@@ -223,6 +229,7 @@ const TEMPLATES = [
           fmtCount(s.count) + " disclosed receipts from the industry's largest receipt sources make up that total; " +
           "amounts below the threshold are not visible.",
         source: "AEC disclosures via OPAX's money data",
+        ...(ctx.receiptScope ? { scope: ctx.receiptScope } : {}),
         link: moneyLink(key),
       };
     },
@@ -291,6 +298,7 @@ const TEMPLATES = [
             "That is the largest disclosed total from " + DONOR_PHRASES[ind] + "; " +
             sorted[1][0] + " follows on " + fmtMoney(sorted[1][1]) + ".",
           source: "AEC disclosures via OPAX's money data",
+          ...(ctx.receiptScope ? { scope: ctx.receiptScope } : {}),
           link: moneyLink(ind),
         };
       }
@@ -444,6 +452,7 @@ const TEMPLATES = [
             shown.label + " disclosed " + fmtMoney(shown.total) + ", so the second figure is " +
             (isHigher ? "higher" : "lower") + ".",
           source: "AEC disclosures via OPAX's money data",
+          ...(ctx.receiptScope ? { scope: ctx.receiptScope } : {}),
           link: donorProof(hidden),
         };
       }
@@ -468,6 +477,7 @@ const TEMPLATES = [
           explanation:
             "The ranking uses each donor's full disclosed total across the years covered by the money map.",
           source: "AEC disclosures via OPAX's money data",
+          ...(ctx.receiptScope ? { scope: ctx.receiptScope } : {}),
           link: donorProof(trio[0]),
         };
       }
@@ -494,6 +504,7 @@ const TEMPLATES = [
           explanation: "The range is set by real " + industryLabel(donor.industry).toLowerCase() +
             " donor totals, and this is the donor's lifetime disclosed figure.",
           source: "AEC disclosures via OPAX's money data",
+          ...(ctx.receiptScope ? { scope: ctx.receiptScope } : {}),
           link: donorProof(donor),
         };
       }
@@ -1644,7 +1655,7 @@ export function mountQuiz(container, helpers = {}) {
 
     const verdict = h(doc, "p", { class: "qz-verdict", text: result.detail + " +" + gained + " points" });
 
-    const provenance = h(doc, "p", { class: "qz-provenance" }, "Source: " + q.source + ". ");
+    const provenance = h(doc, "p", { class: "qz-provenance" }, "Source: " + q.source + ". " + (q.scope ? q.scope + ". " : ""));
     provenance.appendChild(proofAnchor(q.link));
 
     const isLast = state.i + 1 >= state.round.length;
