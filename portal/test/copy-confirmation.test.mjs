@@ -138,10 +138,28 @@ test('a copied link is counted as opax_share with a coarse record_type, never th
     'https://opax.com.au/money/grants/federal/recipient/private-recipient': 'money',
     'https://opax.com.au/ask?q=private+question': 'other',
     'https://opax.com.au/reports/private-report/s/2': 'other',
-    'not a url at all private': 'other',
+    '/subject/person/private-person-relative': 'person',
   };
   for (const link of Object.keys(links)) await window.copyText(link, label);
   assert.deepEqual(tracked.map((t) => t.event), Object.keys(links).map(() => 'opax_share'));
   assert.deepEqual(tracked.map((t) => ({ ...t.properties })), Object.values(links).map((record_type) => ({ kind: 'copy_link', record_type })));
   assert.ok(!/private|r7777/.test(JSON.stringify(tracked)), 'no part of any link is in the event');
+});
+
+test('copied text that is not an OPAX link sends no opax_share', async () => {
+  const { window, doc, tracked, copied } = page();
+  const label = doc.querySelector('#ask-copylink span');
+  const notLinks = [
+    'The member for private voted against the bill.',
+    'not a url at all private',
+    'https://example.com/subject/person/private-person',
+    'http://opax.com.au/subject/person/private-person',
+    '//evil.example/subject/person/private',
+    '',
+  ];
+  for (const text of notLinks) await window.copyText(text, label);
+  assert.equal(copied.length, notLinks.length, 'the text is still copied');
+  assert.deepEqual(tracked, [], 'no copy_link for answer or quote text');
+  await window.copyText('https://opax.com.au/subject/person/private-person', label);
+  assert.deepEqual(tracked.map((t) => ({ event: t.event, ...t.properties })), [{ event: 'opax_share', kind: 'copy_link', record_type: 'person' }]);
 });
