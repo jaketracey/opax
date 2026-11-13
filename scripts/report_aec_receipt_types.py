@@ -61,7 +61,7 @@ def report(db, cache, graph):
     for donor, recipient, amount, fy, kind in db.execute(
         "SELECT donor_name,recipient,amount,financial_year,receipt_type FROM aec_receipt_records "
         "WHERE record_side='recipient' AND recipient_kind='political_party'"):
-        reason = selection.exclusion(donor, recipient, amount, fy, "political_party")
+        reason = selection.exclusion(donor, recipient, amount, fy, "political_party", receipt_type=kind)
         if reason:
             excluded[reason] += 1
             continue

@@ -1,5 +1,5 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=8c73ceafd6';
-import {loadDonorViewIndex} from './donor-views.js?v=c475b569bf';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=6f3407d116';
+import {loadDonorViewIndex} from './donor-views.js?v=1cc1ecb232';
 import {subjectUrl} from './canonical-urls.js?v=e32f13c6c8';
 /*
  * The record quiz — a MindMaze-spirited quiz over OPAX's real data.
@@ -470,7 +470,8 @@ const TEMPLATES = [
         if (trio.length < 3 || trio[0].total < 1.2 * trio[1].total || trio[1].total < 1.15 * trio[2].total) continue;
         return {
           template: this.id, deck: this.deck, kind: "order",
-          prompt: "Put these " + industryLabel(key).toLowerCase() + " donors in order, largest disclosed total first.",
+          // All receipt types (the scope line says so), so "receipt sources", not "donors" (A34).
+          prompt: "Put these " + industryLabel(key).toLowerCase() + " receipt sources in order, largest disclosed total first.",
           options: shuffled(trio.map((d) => ({ label: d.label, value: d.total })), rng),
           answer: trio.map((d) => d.label),
           fact: trio.map((d) => d.label + " " + fmtMoney(d.total)).join("; "),

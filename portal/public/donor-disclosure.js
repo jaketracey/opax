@@ -85,10 +85,23 @@ export function donorLookup(records) {
 // Event periods count at their polling year, as on the map (graph/index.ts).
 const RECEIPT_EVENT_YEARS = {'braddon by-election':2018,'wentworth by-election':2018,'eden-monaro by-election':2020,'fadden by-election':2023};
 
+// The AEC receipt types a typed cell carries (aec_receipt_types.py normal_type): "Donation Received"
+// is the only type the AEC classes as a donation. Public Funding is election funding paid by an
+// electoral commission: never a donor's money, whatever the payer's name is spelled as.
+export const DONATION_TYPE = 'donation_received';
+export const PUBLIC_FUNDING_TYPE = 'public_funding';
+// Blank (unknown) and Unspecified both mean the return gave no receipt type.
+const UNTYPED_TYPES = new Set(['unknown', 'unspecified']);
+
 /**
  * A flow's figures: total, count, first and last year, dollars by year
  * (`byYear`), [dollars, receipts] by year (`cells`), what carries no year
  * (`undated`, [dollars, receipts]) and dollars by receipt type (`byType`, typed only).
+ * Typed figures also carry each cell's AEC receipt type: [dollars, receipts] by year
+ * and type (`typeCells`, keyed by the same year as `cells`, or "undated") and receipts
+ * by type (`typeCounts`). Public Funding is held apart (`publicFunding`, [dollars,
+ * receipts], and `publicFundingCells` by year) and counts in no other figure: it is
+ * never a donor's money. Every other type counts in total, count and byYear as published.
  */
 export function receiptFigures(x) {
   if (!x?.by_type) {
@@ -100,15 +113,29 @@ export function receiptFigures(x) {
     }
     const undated = [Number(x?.undated?.[0]) || 0, Number(x?.undated?.[1]) || 0];
     return {total:Number(x?.total) || 0, count:Number(x?.count) || 0, firstYear:x?.firstYear ?? null, lastYear:x?.lastYear ?? null,
-      byYear, cells, undated, byType:null, typed:false};
+      byYear, cells, undated, byType:null, typed:false, typeCells:null, typeCounts:null, publicFunding:[0, 0], publicFundingCells:{}};
   }
   let count = 0, firstYear = null, lastYear = null;
-  const byYear = {}, cells = {}, undated = [0, 0];
+  const byYear = {}, cells = {}, undated = [0, 0], typeCells = {}, typeCounts = {}, publicFunding = [0, 0], publicFundingCells = {};
   for (const [period, types] of Object.entries(x.by_type_year || {})) {
     // Financial years count at their first year ("2020-21" is 2020), as on the map.
     const year = Number(String(period).match(/\b(?:19|20)\d{2}\b/)?.[0]) || RECEIPT_EVENT_YEARS[String(period).toLowerCase()];
+    const slot = year || 'undated';
     let dollars = 0, n = 0;
-    for (const cell of Object.values(types || {})) { dollars += Number(cell?.[0]) || 0; n += Number(cell?.[1]) || 0; }
+    for (const [type, cell] of Object.entries(types || {})) {
+      const amount = Number(cell?.[0]) || 0, receipts = Number(cell?.[1]) || 0;
+      if (!amount && !receipts) continue;
+      const held = (typeCells[slot] ||= {})[type] ||= [0, 0];
+      held[0] += amount; held[1] += receipts;
+      typeCounts[type] = (typeCounts[type] || 0) + receipts;
+      if (type === PUBLIC_FUNDING_TYPE) {
+        publicFunding[0] += amount; publicFunding[1] += receipts;
+        const pf = publicFundingCells[slot] ||= [0, 0];
+        pf[0] += amount; pf[1] += receipts;
+        continue;
+      }
+      dollars += amount; n += receipts;
+    }
     count += n;
     if (n <= 0) continue;
     if (!year) { undated[0] += dollars; undated[1] += n; continue; }
@@ -119,9 +146,73 @@ export function receiptFigures(x) {
     lastYear = lastYear === null ? year : Math.max(lastYear, year);
   }
   const byType = {};
-  for (const [type, amount] of Object.entries(x.by_type)) byType[type] = Number(amount) || 0;
+  for (const [type, amount] of Object.entries(x.by_type)) if (type !== PUBLIC_FUNDING_TYPE) byType[type] = Number(amount) || 0;
   const total = Object.values(byType).reduce((sum, amount) => sum + amount, 0);
-  return {total, count, firstYear, lastYear, byYear, cells, undated, byType, typed:true};
+  return {total, count, firstYear, lastYear, byYear, cells, undated, byType, typed:true, typeCells, typeCounts, publicFunding, publicFundingCells};
+}
+
+/**
+ * A typed flow's receipts in a financial-year window (inclusive starting years; none for
+ * lifetime, which also counts undated cells), split the way a donor answer reports them:
+ * `donations` (AEC Donation Received), `other` (Other Receipt), `subscriptions`, `untyped`
+ * (no type given), `all` (every type but Public Funding) and `publicFunding`, each
+ * [dollars, receipts], and `otherYears`, the first and last dated year of the receipts
+ * that are neither donations nor Public Funding ([null, null] when none is dated). Takes a raw typed edge or node, or one receiptGraph has read.
+ * Null for a record with no typed cells (a state graph): its types are unknown.
+ */
+export function receiptSplit(x, from, to) {
+  const f = x?.typeCells ? x : x?.by_type ? receiptFigures(x) : null;
+  if (!f?.typeCells) return null;
+  const out = {donations:[0, 0], other:[0, 0], subscriptions:[0, 0], untyped:[0, 0], all:[0, 0], publicFunding:[0, 0], otherYears:[null, null]};
+  const lifetime = from == null && to == null;
+  for (const [slot, types] of Object.entries(f.typeCells)) {
+    const year = Number(slot);
+    if (!lifetime && (!Number.isFinite(year) || from != null && year < from || to != null && year > to)) continue;
+    for (const [type, [amount, receipts]] of Object.entries(types)) {
+      const key = type === DONATION_TYPE ? 'donations' : type === PUBLIC_FUNDING_TYPE ? 'publicFunding' : type === 'other_receipt' ? 'other'
+        : type === 'subscription' ? 'subscriptions' : UNTYPED_TYPES.has(type) ? 'untyped' : 'other';
+      out[key][0] += amount; out[key][1] += receipts;
+      if (key !== 'publicFunding') { out.all[0] += amount; out.all[1] += receipts; }
+      if (key !== 'publicFunding' && key !== 'donations' && Number.isFinite(year)) {
+        out.otherYears[0] = out.otherYears[0] == null ? year : Math.min(out.otherYears[0], year);
+        out.otherYears[1] = out.otherYears[1] == null ? year : Math.max(out.otherYears[1], year);
+      }
+    }
+  }
+  return out;
+}
+
+const aud = amount => '$' + Math.round(amount).toLocaleString('en-AU');
+/**
+ * The labelled line for what a source gave a party that the AEC does not class as a
+ * donation, for a receiptSplit. Other Receipt is never called a loan: OPAX holds no
+ * debt record matched to a receipt, so the line says what the type can include.
+ * Empty when there is nothing but donations. `also` when the source is in the ranking above;
+ * `period` ("financial years 2019-20 to 2020-21") when the line has one.
+ */
+export function otherReceiptsLine(name, party, split, {also = false, period = ''} = {}) {
+  if (!split) return '';
+  const parts = [];
+  if (split.other[0]) parts.push(`${aud(split.other[0])} in other receipts (such as loans or interest)`);
+  if (split.subscriptions[0]) parts.push(`${aud(split.subscriptions[0])} in subscriptions`);
+  if (split.untyped[0]) parts.push(`${aud(split.untyped[0])} in receipts the return gave no type for`);
+  if (!parts.length) return '';
+  const list = parts.length === 1 ? parts[0] : parts.slice(0, -1).join(', ') + ' and ' + parts.at(-1);
+  return `${name} ${also ? 'also ' : ''}recorded ${list} to ${party}${period ? ` in ${period}` : ''}, which the AEC doesn't class as donations.`;
+}
+
+/** "Labor's returns", "Greens' returns". */
+export const partyReturns = party => `${party}${/s$/.test(party) ? "'" : "'s"} returns`;
+/** The labelled line for Public Funding on a party's return: never a donor, never ranked. */
+export function publicFundingLine(source, party, amount, period) {
+  return `${partyReturns(party)} also list ${aud(amount)} in public funding from ${source}${period ? ` in ${period}` : ''}. Public funding is election funding, not a donation, so it is not ranked as a donor.`;
+}
+
+/** A typed record whose only receipts are Public Funding: no donor flow, and not a donor-declared one either. */
+export function publicFundingOnly(x) {
+  if (!x?.by_type) return false;
+  const f = receiptFigures(x);
+  return f.count === 0 && f.total === 0 && f.publicFunding[1] > 0;
 }
 
 export const financialYear = year => `${year}-${String((year + 1) % 100).padStart(2, '0')}`;
@@ -138,13 +229,15 @@ export function receiptScopeLabel(figures, measure = 'all_types') {
 /**
  * The graph with every donor-to-party edge and every donor node read the way
  * the map card, the donor page and the party table read them (receiptFigures):
- * the typed cells, each receipt once from the party's own return, all receipt
- * types. The older total/byYear cells also hold the donor's own declaration of
+ * the typed cells, each receipt once from the party's own return, every receipt
+ * type but Public Funding (held apart in publicFunding). The older total/byYear cells also hold the donor's own declaration of
  * the same gift and stay only where a graph has no typed cells (the state graphs).
  * Each typed edge and node keeps its shape (total, count, byYear as [dollars, receipts],
- * firstYear, lastYear, undated), so a sum written for the old cells reads it unchanged;
+ * firstYear, lastYear, undated), so a sum written for the old cells reads it unchanged,
+ * and gains its receipt types (byType, typeCells, typeCounts; see receiptSplit);
  * an edge or node without typed cells is returned as it is.
- * A typed edge with no receipts is left out: the party reported none. Party
+ * A typed edge with no receipts is left out: the party reported none, or only
+ * Public Funding, which is not a donor flow. Party
  * nodes keep their own received totals (they include transfers; a different
  * measure), and grants and public-money flows are untouched.
  */
@@ -164,12 +257,17 @@ export function hasPartyReceipts(x) {
 }
 /** The line for a donor or flow that hasPartyReceipts rules out, in a reader's words. */
 export const DONOR_DECLARED_ONLY = "Declared on its own donor return; the parties' returns list no receipt from it";
+/** The line for a record whose only receipts are Public Funding (publicFundingOnly). */
+export const PUBLIC_FUNDING_ONLY = "Listed on the party's return as public funding, which is election funding, not a donation";
+/** Which of the two lines a record hasPartyReceipts rules out takes. */
+export const notListedLine = x => publicFundingOnly(x) ? PUBLIC_FUNDING_ONLY : DONOR_DECLARED_ONLY;
 // Not cached: a few milliseconds for the federal graph, and a cache keyed on the
 // object would hand back a stale view of a graph changed after its first read.
 export function receiptGraph(graph) {
   if (!graph || graph.receiptMeasure || !Array.isArray(graph.edges)) return graph;
   const read = (x, f) => ({...x, total:f.total, count:f.count, byYear:f.cells, firstYear:f.firstYear, lastYear:f.lastYear,
-    undated:f.undated, byType:f.byType, typed:f.typed});
+    undated:f.undated, byType:f.byType, typed:f.typed, typeCells:f.typeCells, typeCounts:f.typeCounts,
+    publicFunding:f.publicFunding, publicFundingCells:f.publicFundingCells});
   const edges = [];
   for (const edge of graph.edges) {
     // An edge without typed cells (every edge of a state graph) keeps its record figures as they are.

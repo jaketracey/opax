@@ -311,7 +311,8 @@ export function windowFigures<T extends YearFigures>(
 const RECEIPT_EVENT_YEARS: Record<string, number> = { 'braddon by-election': 2018, 'wentworth by-election': 2018, 'eden-monaro by-election': 2020, 'fadden by-election': 2023 }
 
 function typedReceiptFigures<T extends YearFigures>(x: T, lo: number, hi: number, cpi: boolean, measure: ReceiptMeasure): T {
-  const wanted = (kind: string) => measure === 'all_types' || kind === 'donation_received'
+  // Public Funding is election funding, never a donor's money, under either measure (A35).
+  const wanted = (kind: string) => kind !== 'public_funding' && (measure === 'all_types' || kind === 'donation_received')
   const bounded = Number.isFinite(lo) || Number.isFinite(hi)
   let total = 0, count = 0
   let firstYear: number | null = null, lastYear: number | null = null

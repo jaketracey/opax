@@ -428,3 +428,22 @@ def test_the_pinned_associated_names_are_the_party_owned_entities_that_decide_a_
     for payer in ("Labor Resources Pty Ltd", "ALP Holdings", "Labor Services & Holdings Trust", "Labor Campaign Investment Pty Ltd",
                   "National Free Enterprise Foundation", "Pilliwinks as trustee for the National Party Foundation Trust"):
         assert entity_keys(payer)[1] in shorts, payer
+
+
+def test_public_funding_is_excluded_by_receipt_type_whatever_the_payer_is_called():
+    """A34/A35: Public Funding is never a donor, also under a spelling no name rule knows ("NSW Efa")."""
+    from scripts.aec_receipt_selection import ReceiptSelection
+    from scripts.export_interests import receipt_figures
+    selection = ReceiptSelection(aliases={}, exact={}, entity_kinds={}, recipient_party={"Example Party": "Example"}, flagged=set())
+    args = ("Zed Funding Body", "Example Party", 50000.0, "2010-11", "political_party")
+    # The name matches no public-funding or party pattern, so only the type can exclude it.
+    assert selection.exclusion(*args) is None
+    assert selection.exclusion(*args, receipt_type="Donation Received") is None
+    assert selection.exclusion(*args, receipt_type="Other Receipt") is None
+    assert selection.exclusion(*args, receipt_type="Public Funding") == "public_funding"
+    # The exporter's copy of the portal rule: a published Public Funding cell counts in no figure.
+    flow = {"by_type": {"donation_received": 100.0, "public_funding": 50000.0},
+            "by_type_year": {"2010-11": {"public_funding": [50000.0, 1]}, "2011-12": {"donation_received": [100.0, 1]}}}
+    assert receipt_figures(flow) == {"total": 100.0, "count": 1, "firstYear": 2011, "lastYear": 2011, "typed": True}
+    only = {"by_type": {"public_funding": 50000.0}, "by_type_year": {"2010-11": {"public_funding": [50000.0, 1]}}}
+    assert receipt_figures(only) == {"total": 0, "count": 0, "firstYear": None, "lastYear": None, "typed": True}

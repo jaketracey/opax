@@ -1,6 +1,6 @@
 import {MONEY_GRAPHS} from './donor-entity.js?v=3fd3e51b56';
-import {donorLookup} from './donor-disclosure.js?v=8c73ceafd6';
-export {donorDisclosure,donorLabelHTML,donorDisplayText,donorLookup,receiptFigures,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY} from './donor-disclosure.js?v=8c73ceafd6';
+import {donorLookup} from './donor-disclosure.js?v=6f3407d116';
+export {donorDisclosure,donorLabelHTML,donorDisplayText,donorLookup,receiptFigures,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine} from './donor-disclosure.js?v=6f3407d116';
 let memo;
 const graphs=new Map();
 export function loadMoneyGraph(path){
