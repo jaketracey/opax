@@ -8,11 +8,13 @@ name: 21c Talk a call that runs out of free minutes, then an exhausted allowance
     clearState: true
     permissions: {}
 - runFlow: support/talk-fixture-deadline.yaml
+# Talk's action is pinned at the foot of a screen that does not scroll (the
+# idle orb, 13 Nov), so these scrolls only wait for it. Centring it timed
+# out on the device whenever lines under it held it low (sweep 2 lane A).
 - scrollUntilVisible:
     timeout: 60000
     element:
       id: talk-start
-    centerElement: true
 # The allowance is the one voice-time formatter (specs/account.md 7.6).
 - assertVisible:
     id: talk-allowance
