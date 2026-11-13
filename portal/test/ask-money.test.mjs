@@ -88,7 +88,7 @@ test('implicit funding wording preserves scope restrictions and unknown qualifie
 
 test('the live fossil-fuel ranking failure is corrected using all selected edges',async()=>{
  const r=await ask('Who receives the most disclosed receipts from fossil fuel donors?');
- assert.match(r.answer,/^\*\*Liberal\*\*/);assert.match(r.answer,/\| Liberal \| \$957,000 \| 70% \| \$2,981,580 \(includes loans\) \|/);assert.match(r.answer,/\| Labor \| \$269,975 \| 20% \| \$3,732,932 \(includes loans\) \|/);
+ assert.match(r.answer,/^\*\*Liberal\*\*/);assert.match(r.answer,/\| Liberal \| \$957,000 \| 70% \| \$3,009,080 \(includes loans\) \|/);assert.match(r.answer,/\| Labor \| \$269,975 \| 20% \| \$3,735,682 \(includes loans\) \|/);
  assert.equal(r.answer_status,'calculated');assert.match(r.answer,/These figures are party-level totals from recipient returns in OPAX’s published selection/);
  assert.ok(r.sources.some(s=>s.href.includes('industry=fossil_fuels')&&s.href.includes('party=party%3ALiberal')));
 });
@@ -234,7 +234,7 @@ test('industry comparisons do not treat banks as every finance organisation',asy
  const r=await ask('Who gives more money to Labor, unions or finance?');
  assert.equal(r.answer_status,'calculated');assert.match(r.answer,/\| Source industry \|/);
  const unions=industryTotal('unions','Labor'),finance=industryTotal('finance','Labor');
- assert.ok(r.answer.includes(`Unions accounted for ${aud(unions-finance)} more to Labor than Finance`));assert.deepEqual([unions,finance].map(aud),['$67,541,836','$8,694,783']);
+ assert.ok(r.answer.includes(`Unions accounted for ${aud(unions-finance)} more to Labor than Finance`));assert.deepEqual([unions,finance].map(aud),['$68,031,075','$8,722,283']);
  assert.ok(r.answer.includes(aud(unions)));assert.ok(r.answer.includes(aud(finance)));
  assert.ok(r.sources.some(s=>s.href.includes('industry=unions')&&s.href.includes('party=party%3ALabor')));
  assert.ok(r.sources.some(s=>s.href.includes('industry=finance')&&s.href.includes('party=party%3ALabor')));
@@ -626,11 +626,11 @@ test('compound party names retain distinct federal identities and reject unsuppo
  assert.match(country.answer,/the selection totals \$107,300\./);assert.equal(aud(clpEdges.reduce((s,e)=>s+e.total,0)),'$107,300');
  assert.doesNotMatch(country.answer,/donations received|other financial years|See these donations/);
  assert.match(country.answer,/\[See these on the money map\]\([^)]*party=party%3ACountry\+Liberal\+Party\)/);
- const pair=await ask('Who gets more money, Liberal or LNP?');assert.equal(pair.answer_status,'calculated');assert.match(pair.answer,/Liberal received \$96,469,578 more than LNP/);
+ const pair=await ask('Who gets more money, Liberal or LNP?');assert.equal(pair.answer_status,'calculated');assert.match(pair.answer,/Liberal received \$96,656,150 more than LNP/);
  assert.equal(new Set(pair.sources.slice(1).map(s=>new URL(s.href,'https://opax.test').searchParams.get('party'))).size,2);
  // The comparison gives the CLP's all-types total under its own label, and says it is not like for like.
  const clp=await ask('Who gets more money, Country Liberal Party or Liberal?');
- assert.equal(clp.answer_status,'calculated');assert.equal(clp.comparison_complete,false);assert.match(clp.answer,/^Liberal recorded \$100,512,875 in donations received/);
+ assert.equal(clp.answer_status,'calculated');assert.equal(clp.comparison_complete,false);assert.match(clp.answer,/^Liberal recorded \$100,718,697 in donations received/);
  assert.match(clp.answer,/ Country Liberal Party recorded \$107,300 in all receipt types \(no type breakdown in the AEC data OPAX holds\), 1998–99 to 2004–05\. The AEC data OPAX holds for Country Liberal Party doesn't split receipts by type, so its total can't be set beside the donation figures as like for like\./);
  assert.doesNotMatch(clp.answer,/One comparison side has matching records|Country Liberal Party recorded \$[\d,]+ in donations/);
  const clpLinks=[...clp.answer.matchAll(/\[(See [^\]]+ on the money map)\]\(([^)]+)\)/g)].map(m=>[m[1],new URL(m[2]).searchParams.get('party'),new URL(m[2]).searchParams.get('receipt')]);

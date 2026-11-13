@@ -20,7 +20,7 @@ import unicodedata
 import zipfile
 
 
-def normal_name(name):
+def decoded_name(name):
     for _ in range(2):
         name = re.sub(r"&(?:#\d{1,7}|#[xX][0-9a-fA-F]{1,6}|[A-Za-z][A-Za-z0-9]{1,31});", lambda m: html.unescape(m[0]), name)
     if any(c in name for c in "ÂÃâ"):
@@ -28,9 +28,20 @@ def normal_name(name):
             name = name.encode('cp1252').decode('utf-8')
         except (UnicodeError, ValueError):
             pass
+    return name
+
+
+def normal_name(name):
+    name = decoded_name(name)
     name = unicodedata.normalize('NFKD', name).encode('ascii', 'ignore').decode().lower()
     name = name.replace('&', ' and ').replace('+', ' and ')
     return re.sub(r'[^a-z0-9]+', ' ', re.sub(r"['’`´]", '', name)).strip()
+
+
+def bracketless_name(name):
+    name = decoded_name(name)
+    stripped = re.sub(r'\([^()\[\]]*\)|\[[^()\[\]]*\]', ' ', name)
+    return normal_name(name if re.search(r'[()\[\]]', stripped) else stripped)
 
 
 def year_key(value):
@@ -64,14 +75,18 @@ def audit(db, archive, graph, comparison, legacy=None):
             industries[entity(donor) or donor][tag] += money(amount)
     recipients = {name: next(iter(parties)) for name, parties in recipients.items() if len(parties) == 1}
     tags = {eid: 'unions' if kinds.get(eid) == 'union' else max(values, key=values.get) for eid, values in industries.items()}
-    node_for_name, node_for_entity = {}, {}
+    node_for_name, node_for_entity, normalised, bracketless = (defaultdict(set) for _ in range(4))
     nodes = {n['id']: n for n in graph['nodes']}
     for node in nodes.values():
         if node['kind'] == 'donor':
             for name in [node['label'], *node.get('aliases', [])]:
-                node_for_name[name] = node['id']
+                node_for_name[name].add(node['id'])
                 if entity(name):
-                    node_for_entity[entity(name)] = node['id']
+                    node_for_entity[entity(name)].add(node['id'])
+                if normal_name(name):
+                    normalised[normal_name(name)].add(node['id'])
+                if bracketless_name(name):
+                    bracketless[bracketless_name(name)].add(node['id'])
     edges = {(e['source'], e['target']): e for e in graph['edges'] if nodes[e['source']]['kind'] == 'donor' and nodes[e['target']]['kind'] == 'party'}
     # Separate from production regex constants, to detect selection drift.
     government = re.compile(r'electoral comm?iss?ions?|election funding|electoral funding|electoral office|tax(ation)?\s+(office|authority)|\bato\b|\baec\b|\becq\b|department of|australian agency|commonwealth of australia|electoral comm\b', re.I)
@@ -99,7 +114,13 @@ def audit(db, archive, graph, comparison, legacy=None):
             typ = re.sub(r'[^a-z0-9]+', '_', row['Receipt Type'].strip().lower()).strip('_') or 'unknown'
             for measure in ['all_types', *(['donation_only'] if typ == 'donation_received' else [])]:
                 measured[('uncapped', tags.get(eid or donor), measure)][party] += amount
-            source = node_for_entity.get(eid) or node_for_name.get(donor)
+            source = None
+            for candidates in (node_for_entity.get(eid), node_for_name.get(donor),
+                               normalised.get(normal_name(donor)), bracketless.get(bracketless_name(donor))):
+                if candidates:
+                    if len(candidates) == 1:
+                        source = next(iter(candidates))
+                    break
             key = (source, 'party:' + party)
             if key not in edges:
                 continue

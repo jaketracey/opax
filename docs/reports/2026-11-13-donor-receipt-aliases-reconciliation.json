@@ -1,0 +1,205 @@
+{
+  "method": "Independent stdlib CSV/ZIP/Decimal calculation; no production receipt modules imported",
+  "archive_sha256": "96d035fe5165054b95150280c41b785fe5653b63fa6b3e822d5ba376b7788096",
+  "receipt_edges_checked": 866,
+  "exported_rows": 16212,
+  "legacy_fields_unchanged": true,
+  "industries": {
+    "gambling": {
+      "uncapped": {
+        "donation_only": {
+          "aud": "4152439",
+          "top5": [
+            {
+              "recipient": "Liberal",
+              "aud": "2044652"
+            },
+            {
+              "recipient": "Labor",
+              "aud": "1686287"
+            },
+            {
+              "recipient": "Nationals",
+              "aud": "371500"
+            },
+            {
+              "recipient": "LNP",
+              "aud": "50000"
+            }
+          ]
+        },
+        "all_types": {
+          "aud": "12343894",
+          "top5": [
+            {
+              "recipient": "Labor",
+              "aud": "6409548"
+            },
+            {
+              "recipient": "Liberal",
+              "aud": "5332306"
+            },
+            {
+              "recipient": "Nationals",
+              "aud": "493740"
+            },
+            {
+              "recipient": "LNP",
+              "aud": "108300"
+            }
+          ]
+        }
+      },
+      "map": {
+        "donation_only": {
+          "aud": "2468918",
+          "top5": [
+            {
+              "recipient": "Liberal",
+              "aud": "1093352"
+            },
+            {
+              "recipient": "Labor",
+              "aud": "1067066"
+            },
+            {
+              "recipient": "Nationals",
+              "aud": "258500"
+            },
+            {
+              "recipient": "LNP",
+              "aud": "50000"
+            }
+          ]
+        },
+        "all_types": {
+          "aud": "8675112",
+          "top5": [
+            {
+              "recipient": "Labor",
+              "aud": "4706193"
+            },
+            {
+              "recipient": "Liberal",
+              "aud": "3538879"
+            },
+            {
+              "recipient": "Nationals",
+              "aud": "343740"
+            },
+            {
+              "recipient": "LNP",
+              "aud": "86300"
+            }
+          ]
+        }
+      }
+    },
+    "finance": {
+      "uncapped": {
+        "donation_only": {
+          "aud": "39059336",
+          "top5": [
+            {
+              "recipient": "Liberal",
+              "aud": "21996436"
+            },
+            {
+              "recipient": "Labor",
+              "aud": "12962952"
+            },
+            {
+              "recipient": "Nationals",
+              "aud": "2176116"
+            },
+            {
+              "recipient": "LNP",
+              "aud": "1154491"
+            },
+            {
+              "recipient": "Greens",
+              "aud": "672341"
+            }
+          ]
+        },
+        "all_types": {
+          "aud": "203671178",
+          "top5": [
+            {
+              "recipient": "Labor",
+              "aud": "95791344"
+            },
+            {
+              "recipient": "Liberal",
+              "aud": "80315511"
+            },
+            {
+              "recipient": "Nationals",
+              "aud": "12130011"
+            },
+            {
+              "recipient": "LNP",
+              "aud": "11928169"
+            },
+            {
+              "recipient": "Greens",
+              "aud": "2122561"
+            }
+          ]
+        }
+      },
+      "map": {
+        "donation_only": {
+          "aud": "24789585",
+          "top5": [
+            {
+              "recipient": "Liberal",
+              "aud": "14414067"
+            },
+            {
+              "recipient": "Labor",
+              "aud": "8722283"
+            },
+            {
+              "recipient": "Nationals",
+              "aud": "1335985"
+            },
+            {
+              "recipient": "LNP",
+              "aud": "289250"
+            },
+            {
+              "recipient": "Greens",
+              "aud": "28000"
+            }
+          ]
+        },
+        "all_types": {
+          "aud": "169655725",
+          "top5": [
+            {
+              "recipient": "Labor",
+              "aud": "82305854"
+            },
+            {
+              "recipient": "Liberal",
+              "aud": "64113800"
+            },
+            {
+              "recipient": "Nationals",
+              "aud": "10982297"
+            },
+            {
+              "recipient": "LNP",
+              "aud": "10229071"
+            },
+            {
+              "recipient": "Katter's Australian Party",
+              "aud": "1017881"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

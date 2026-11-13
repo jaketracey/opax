@@ -104,10 +104,10 @@ test('built tables: every federal party\'s D1 rows equal its party page, and eve
   assert.ok(page.size > 700);
   assert.deepEqual(sorted(byPair(party)), sorted(page));
   assert.deepEqual(sorted(byPair(connections)), sorted(connectionPairs(graph)));
-  // The donor-declared-only flows (131 in this build) are in neither table.
+  // The donor-declared-only flows (130 in this build) are in neither table.
   const nodes = new Map(graph.nodes.map(n => [n.id, n]));
   const declaredOnly = graph.edges.filter(e => !e.flow && !e.grant && nodes.get(e.source)?.kind === 'donor' && nodes.get(e.target)?.kind === 'party' && !hasPartyReceipts(e));
-  assert.equal(declaredOnly.length, 131);
+  assert.equal(declaredOnly.length, 130);
   const ids = new Set(party.map(r => r.id));
   for (const e of declaredOnly) assert.equal(ids.has(`federal:${graph.edges.indexOf(e)}`), false);
 });
@@ -128,5 +128,5 @@ test('the deploy\'s D1 reload sees the typed money tables as changed (dataset ha
   const [before, after] = [await hashes(legacy), await hashes(graph)];
   assert.notEqual(after.connections, before.connections);
   assert.notEqual(after.party, before.party);
-  assert.equal(before.counts['party-money'] - after.counts['party-money'], 131, 'the donor-declared-only rows leave the table');
+  assert.equal(before.counts['party-money'] - after.counts['party-money'], 130, 'the donor-declared-only rows leave the table');
 });

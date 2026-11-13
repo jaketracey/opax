@@ -1,5 +1,6 @@
 """Add the recipient-side measure without changing the legacy graph contract."""
 import html
+import hashlib
 import json
 import re
 import sys
@@ -9,6 +10,7 @@ from pathlib import Path
 from parli.ingest.aec_receipts import FILES, normal_type, period_key
 from parli.ingest.money_aec_extras import canon_party
 from scripts.aec_receipt_selection import load_selection
+from scripts.receipt_donor_match import ReceiptDonorMatcher, bracketless_name
 from scripts.export_money_graph import PUBLIC_FUNDING_RE, load_associated_register, norm_key
 
 PARTY_RETURN_NOTE = (
@@ -65,18 +67,12 @@ def attach_receipt_types(db, graph):
         graph["meta"]["receipt_types"] = {"available": False, "reason": "Complete cached AEC receipt backfill required"}
         return graph
     selection = load_selection(db)
-    node_for_entity, node_for_name = {}, {}
-    for n in graph["nodes"]:
-        if n["kind"] != "donor":
-            continue
-        for name in [n["label"], *n.get("aliases", [])]:
-            node_for_name[name] = n["id"]
-            eid = selection.entity(name)
-            if eid:
-                node_for_entity[eid] = n["id"]
+    matcher = ReceiptDonorMatcher(graph["nodes"], selection)
     by_edge, by_node = defaultdict(receipt_cells), defaultdict(receipt_cells)
     edge_keys = {(e["source"], e["target"]) for e in graph["edges"] if not e.get("grant") and not e.get("flow")}
     counts = defaultdict(int)
+    matching = defaultdict(lambda: [0, 0.0])
+    exceptions = {}
     for donor, recipient, amount, period, kind, recipient_kind in db.execute(
         "SELECT donor_name,recipient,amount,financial_year,receipt_type,recipient_kind FROM aec_receipt_records WHERE record_side='recipient'"):
         counts["recipient_rows"] += 1
@@ -84,7 +80,18 @@ def attach_receipt_types(db, graph):
         if reason:
             counts["excluded_" + reason] += 1
             continue
-        source = node_for_entity.get(selection.entity(donor)) or node_for_name.get(donor)
+        match = matcher.match(donor)
+        source = match.node_id
+        bucket = "matched_" + match.method if source else "ambiguous" if match.candidates else "unmatched"
+        matching[bucket][0] += 1
+        matching[bucket][1] += amount
+        if not source and match.candidates:
+            # Stable exception keys expose no private disclosure names in metadata.
+            key = hashlib.sha256(bracketless_name(donor).encode()).hexdigest()
+            exception = exceptions.setdefault(key, {"key_sha256": key, "rows": 0, "aud": 0.0,
+                                                   "candidate_nodes": len(match.candidates), "method": match.method})
+            exception["rows"] += 1
+            exception["aud"] += amount
         key = (source, "party:" + selection.recipient_party[recipient])
         if key not in edge_keys:
             counts["excluded_donor_or_edge_outside_map"] += 1
@@ -114,6 +121,12 @@ def attach_receipt_types(db, graph):
         "selection": "aec_receipt_selection.ReceiptSelection.exclusion is shared with the uncapped report: recipient-side positive itemised party receipts, exact recipient mapping, no reviewed outliers, government/party-unit entities or public-funding/party-name donor spellings. Map edge membership is the additional cap.",
         "donation_type": "donation_received",
         "counts": dict(counts),
+        "donor_matching": {
+            "rule": "Existing entity or raw spelling first, then case/punctuation/spacing, then complete bracketed parts removed. Each fallback must identify exactly one existing node; node identities and map edges are never merged or created.",
+            "scope": "Eligible recipient-side rows before the map edge cap; [rows, AUD]. Ambiguous rows remain unmatched.",
+            "by_result": {k: [v[0], round(v[1], 2)] for k, v in sorted(matching.items())},
+            "exceptions": [{**v, "aud": round(v["aud"], 2)} for k, v in sorted(exceptions.items())],
+        },
     }
     return attach_party_return_fields(db, graph, selection)
 

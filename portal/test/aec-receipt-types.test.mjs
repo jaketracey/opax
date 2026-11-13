@@ -57,9 +57,9 @@ test('actual map conversion ranks typed gambling receipts in both measures, neve
   const donations=industryRanking('gambling','donation_only');
   const allTypes=industryRanking('gambling','all_types');
   assert.deepEqual(donations,[['Liberal',1093352],['Labor',1067066],['Nationals',258500],['LNP',50000]]);
-  assert.deepEqual(allTypes,[['Labor',4699593],['Liberal',3538879],['Nationals',343740],['LNP',86300]]);
+  assert.deepEqual(allTypes,[['Labor',4706193],['Liberal',3538879],['Nationals',343740],['LNP',86300]]);
   assert.equal(donations.reduce((sum,[,amount])=>sum+amount,0),2468918);
-  assert.equal(allTypes.reduce((sum,[,amount])=>sum+amount,0),8668512);
+  assert.equal(allTypes.reduce((sum,[,amount])=>sum+amount,0),8675112);
   assert.equal(receiptMeasureLabel('all_types'),'All receipt types');
   assert.equal(receiptMeasureLabel('donation_only'),'Donation-only');
 });
@@ -82,10 +82,10 @@ test('typed map year windows use financial-year cells and exclude undated receip
 test('typed map finance figures and leading recipients match the independent CSV reconciliation',()=>{
   const donations=industryRanking('finance','donation_only');
   const allTypes=industryRanking('finance','all_types');
-  assert.equal(donations.reduce((sum,[,amount])=>sum+amount,0),24731335);
-  assert.equal(allTypes.reduce((sum,[,amount])=>sum+amount,0),169586920);
-  assert.deepEqual(donations.slice(0,5),[['Liberal',14402567],['Labor',8694783],['Nationals',1335985],['LNP',270000],['Greens',28000]]);
-  assert.deepEqual(allTypes.slice(0,5),[['Labor',82267799],['Liberal',64102300],['Nationals',10982297],['LNP',10209821],["Katter's Australian Party",1017881]]);
+  assert.equal(donations.reduce((sum,[,amount])=>sum+amount,0),24789585);
+  assert.equal(allTypes.reduce((sum,[,amount])=>sum+amount,0),169655725);
+  assert.deepEqual(donations.slice(0,5),[['Liberal',14414067],['Labor',8722283],['Nationals',1335985],['LNP',289250],['Greens',28000]]);
+  assert.deepEqual(allTypes.slice(0,5),[['Labor',82305854],['Liberal',64113800],['Nationals',10982297],['LNP',10229071],["Katter's Australian Party",1017881]]);
 });
 
 test('typed receipt totals reconcile with their financial-year cells and exclude public awards',()=>{

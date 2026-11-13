@@ -444,7 +444,7 @@ test('person page ties: the scope line shows once the exporter marks the flows t
 });
 
 // ---- Donors and flows only their own donor return declares (round 3) ------------
-// receiptGraph drops 131 flows whose typed cells are empty: the parties' returns list no
+// receiptGraph drops 130 flows whose typed cells are empty: the parties' returns list no
 // receipt for them. Ten donors have no other flow, so their typed total is 0. No surface
 // may show such a donor at $0: each says what is true (DONOR_DECLARED_ONLY) instead.
 const DECLARED_ONLY = published.nodes.filter(n => n.kind === 'donor' && !hasPartyReceipts(n));
@@ -456,7 +456,7 @@ test('one predicate: hasPartyReceipts picks out the released donors and flows on
   assert.ok(DECLARED_ONLY.every(n => !Object.keys(n.by_type).length && n.total > 0), 'each holds a record figure from its own declarations');
   assert.ok(DECLARED_ONLY.some(n => n.id === GOLDMAN));
   const dropped = published.edges.filter(e => !e.grant && !e.flow && !hasPartyReceipts(e));
-  assert.equal(dropped.length, 131);
+  assert.equal(dropped.length, 130);
   assert.equal(receiptGraph(published).edges.length, published.edges.length - dropped.length, 'receiptGraph drops exactly those flows');
   assert.equal(hasPartyReceipts({total: 0, count: 0}), true, 'a record without typed cells (a state graph) keeps its figures');
 });
