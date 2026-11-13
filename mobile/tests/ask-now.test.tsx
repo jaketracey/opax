@@ -7,6 +7,7 @@ import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { AccessibilityInfo } from 'react-native';
 import { router } from 'expo-router';
 import { useNetworkState } from 'expo-network';
+import { NavigationContext } from 'expo-router/react-navigation';
 import { catalogs, client } from '../src/api/runtime';
 import { askConsentGiven } from '../src/features/ask/consent';
 import { track } from '../src/analytics';
@@ -22,9 +23,14 @@ import {
   useOpenAsk,
 } from '../src/features/ask/open';
 import { askDraft } from '../src/features/search/recovery';
-import { askSession, askNowCopy } from '../src/features/ask/session';
+import {
+  askScreenFocused,
+  askSession,
+  askNowCopy,
+  useAskScreenFocus,
+} from '../src/features/ask/session';
 import { AskFailure } from '../src/features/ask/stream';
-import { saveChats } from '../src/features/ask/store';
+import { chatsSnapshot, saveChats } from '../src/features/ask/store';
 import { AskBlock, todayStarters } from '../src/features/today/AskBlock';
 
 jest.mock('expo-router', () => ({
@@ -44,15 +50,23 @@ jest.mock('../src/features/account/store', () => ({
   useAccount: () => ({ status: null, checking: false }),
   accountSnapshot: () => ({ status: null }),
 }));
+// The device store keeps a copy of what it saves, as the disk does: a turn
+// changed after its save never reaches it, so a missing save shows.
 jest.mock('../src/features/ask/store', () => {
-  const saved = { v: 1, active: null, chats: [] };
+  const empty = () => ({ v: 1, active: null, chats: [] });
+  let saved = empty();
   return {
     chatsSnapshot: () => saved,
     subscribeChats: () => () => {},
     subscribeChatDeletion: () => () => {},
     loadChats: jest.fn().mockResolvedValue(undefined),
-    saveChats: jest.fn().mockResolvedValue(undefined),
+    saveChats: jest.fn(async (next: unknown) => {
+      saved = JSON.parse(JSON.stringify(next));
+    }),
     forgetActiveChat: jest.fn(),
+    resetChats: () => {
+      saved = empty();
+    },
   };
 });
 jest.mock('../src/features/ask/sync', () => ({
@@ -64,6 +78,9 @@ jest.mock('../src/analytics', () => ({
   currentSection: () => 'today',
 }));
 
+const { resetChats } = jest.requireMock<{ resetChats: () => void }>(
+  '../src/features/ask/store',
+);
 const post = jest.mocked(client.askPost);
 const today = '2026-11-13';
 const [first] = todayStarters(today);
@@ -109,6 +126,7 @@ async function render(element: React.ReactElement) {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  resetChats();
   online(true);
   post.mockResolvedValue(answer('An answer from the record.'));
   askSession.start();
@@ -372,9 +390,14 @@ it.each([
   },
 );
 
-it('the waiting question goes when the answer is written, before its Ask next rows, which still reach the saved conversation', async () => {
+/**
+ * A running answer with sources and a tapped question waiting behind it:
+ * the answer is written and saved, the waiting question goes, and the
+ * answer's Ask next request is left open for the test to settle.
+ */
+async function waitingBehindAnswer(scope: { speaker?: string } = {}) {
   let finish!: (value: unknown) => void;
-  let followups!: (value: unknown) => void;
+  let followups: ((value: unknown) => void) | undefined;
   post.mockImplementation((path: string) =>
     path === '/api/followups'
       ? new Promise((resolve) => (followups = resolve))
@@ -385,10 +408,10 @@ it('the waiting question goes when the answer is written, before its Ask next ro
   await act(async () => {
     void askSession.submit('A question already running?');
   });
-  const running = askSession.snapshot().id;
+  const running = askSession.snapshot().id!;
   askSession.arrive(
     'What has parliament said?',
-    { ...askSession.snapshot().options },
+    { ...askSession.snapshot().options, ...scope },
     { queue: true },
   );
   await act(async () =>
@@ -406,6 +429,13 @@ it('the waiting question goes when the answer is written, before its Ask next ro
     }),
   );
   await flush();
+  return { running, followups };
+}
+const storedChat = (id: string) =>
+  chatsSnapshot().chats.find((c) => c.id === id);
+
+it('the waiting question goes when the answer is written, before its Ask next rows, which still reach the saved conversation', async () => {
+  const { running, followups } = await waitingBehindAnswer();
   // Sent while the first answer's Ask next rows are still loading.
   expect(followups).toBeDefined();
   expect(asked()).toEqual([
@@ -413,21 +443,144 @@ it('the waiting question goes when the answer is written, before its Ask next ro
     'What has parliament said?',
   ]);
   expect(askSession.snapshot().id).not.toBe(running);
+  // The answer was saved before its rows arrived.
+  expect(storedChat(running)?.thread.at(-1)).toMatchObject({
+    role: 'answer',
+    text: 'The first answer.',
+  });
+  expect(storedChat(running)?.thread.at(-1)?.next).toBeUndefined();
   await act(async () =>
-    followups({ questions: ['What did the committee find?'] }),
+    followups!({ questions: ['What did the committee find?'] }),
   );
   await flush();
-  const saved = jest
-    .mocked(saveChats)
-    .mock.calls.map(([store]) => store.chats.find((c) => c.id === running))
-    .filter(Boolean)
-    .at(-1)!;
-  expect(saved.thread.at(-1)).toMatchObject({
+  // Only a save puts the rows in the store's own copy.
+  expect(storedChat(running)?.thread.at(-1)).toMatchObject({
     role: 'answer',
     next: [{ question: 'What did the committee find?' }],
   });
   // The open conversation is the new one, untouched by the old rows.
   expect(askSession.snapshot().thread.at(-1)?.next).toBeUndefined();
+});
+
+it('Ask next rows for a conversation deleted while they loaded are not saved', async () => {
+  const { running, followups } = await waitingBehindAnswer();
+  expect(storedChat(running)).toBeDefined();
+  // The reader deletes the first conversation in Conversations.
+  await saveChats({
+    ...chatsSnapshot(),
+    chats: chatsSnapshot().chats.filter((c) => c.id !== running),
+  });
+  jest.mocked(saveChats).mockClear();
+  await act(async () =>
+    followups!({ questions: ['What did the committee find?'] }),
+  );
+  await flush();
+  expect(saveChats).not.toHaveBeenCalled();
+  expect(storedChat(running)).toBeUndefined();
+});
+
+// Review: Ask next was written into the turn without an update, so rows for
+// a conversation still on screen did not show.
+it.each([
+  [
+    'the Person check refuses it',
+    () =>
+      jest
+        .mocked(catalogs.roster)
+        .mockResolvedValueOnce({ data: { people: [] } } as never),
+  ],
+  [
+    'the roster fails to load',
+    () =>
+      jest.mocked(catalogs.roster).mockRejectedValueOnce(new Error('Offline')),
+  ],
+])(
+  'Ask next rows show at once when the waiting question does not start (%s)',
+  async (_case, roster) => {
+    roster();
+    const { running, followups } = await waitingBehindAnswer({
+      speaker: 'Alex Example',
+    });
+    // The waiting question was refused: the answered conversation stays.
+    expect(asked()).toEqual(['A question already running?']);
+    let s = askSession.snapshot();
+    expect(s).toMatchObject({
+      id: running,
+      busy: false,
+      draft: 'What has parliament said?',
+    });
+    const written = s.thread.at(-1)!;
+    expect(written).toMatchObject({ role: 'answer' });
+    expect(written.next).toBeUndefined();
+    const updates = jest.fn();
+    const unsubscribe = askSession.subscribe(updates);
+    try {
+      await act(async () =>
+        followups!({ questions: ['What did the committee find?'] }),
+      );
+      await flush();
+    } finally {
+      unsubscribe();
+    }
+    expect(updates).toHaveBeenCalled();
+    s = askSession.snapshot();
+    expect(s.thread.at(-1)).toMatchObject({
+      role: 'answer',
+      text: 'The first answer.',
+      next: [{ question: 'What did the committee find?' }],
+    });
+    // A new turn, never a write into the one already on screen.
+    expect(s.thread.at(-1)).not.toBe(written);
+    expect(written.next).toBeUndefined();
+    expect(storedChat(running)?.thread.at(-1)?.next).toEqual([
+      { question: 'What did the committee find?' },
+    ]);
+  },
+);
+
+it('a running answer that asks for a full question keeps the waiting question unsent', async () => {
+  let finish!: (value: unknown) => void;
+  post.mockImplementationOnce(
+    () => new Promise((resolve) => (finish = resolve)),
+  );
+  await act(async () => {
+    void askSession.submit('ok');
+  });
+  askSession.arrive(
+    'What has parliament said?',
+    { ...askSession.snapshot().options },
+    { queue: true },
+  );
+  expect(askSession.snapshot().queued).toBe(true);
+  await act(async () =>
+    finish({
+      answer: '',
+      sources: [],
+      answer_status: 'needs_question',
+      suggested_question: 'What has parliament said about rivers?',
+    }),
+  );
+  await flush();
+  // The clarify request stays on screen, and nothing else is asked.
+  expect(asked()).toEqual(['ok']);
+  const s = askSession.snapshot();
+  expect(s.clarify).toEqual({
+    question: 'ok',
+    suggestion: 'What has parliament said about rivers?',
+  });
+  expect(s).toMatchObject({
+    id: null,
+    thread: [],
+    busy: false,
+    draft: 'What has parliament said?',
+    fresh: true,
+    queued: false,
+  });
+  // Nothing was searched or written: no Ask next request and no save.
+  expect(post.mock.calls.map(([path]) => path)).toEqual(['/api/ask?stream=1']);
+  expect(saveChats).not.toHaveBeenCalled();
+  await flush();
+  expect(asked()).toEqual(['ok']);
 });
 
 describe('VoiceOver focus for a tapped question', () => {
@@ -464,6 +617,94 @@ describe('VoiceOver focus for a tapped question', () => {
     expect(takeFocusRequest('ask')).toBe(true);
     expect(askSession.snapshot().draft).toBe('What did Alex Example say?');
     tree.unmount();
+  });
+
+  // Review: a queued send asked for the status's focus even when the reader
+  // had left Ask while the question waited.
+  /** An Ask screen in a navigator that the test can focus or blur. */
+  function askScreen(focused: boolean) {
+    const listeners = new Map<string, Set<() => void>>();
+    let isFocused = focused;
+    const navigation = {
+      isFocused: () => isFocused,
+      addListener: (type: string, listener: () => void) => {
+        const set = listeners.get(type) ?? new Set();
+        set.add(listener);
+        listeners.set(type, set);
+        return () => set.delete(listener);
+      },
+    };
+    function Screen() {
+      useAskScreenFocus();
+      return null;
+    }
+    return {
+      element: (
+        <NavigationContext.Provider value={navigation as never}>
+          <Screen />
+        </NavigationContext.Provider>
+      ),
+      emit: (type: 'focus' | 'blur') => {
+        isFocused = type === 'focus';
+        listeners.get(type)?.forEach((listener) => listener());
+      },
+    };
+  }
+  /** Ends a running answer with a question waiting; the queued answer stays open. */
+  async function queuedSend() {
+    let finish!: (value: unknown) => void;
+    let second!: (value: unknown) => void;
+    post
+      .mockImplementationOnce(() => new Promise((resolve) => (finish = resolve)))
+      .mockImplementationOnce(
+        () => new Promise((resolve) => (second = resolve)),
+      );
+    await act(async () => {
+      void askSession.submit('A question already running?');
+    });
+    askSession.arrive(
+      'What has parliament said?',
+      { ...askSession.snapshot().options },
+      { queue: true },
+    );
+    await act(async () => finish(answer('The first answer.')));
+    await flush();
+    expect(asked()).toEqual([
+      'A question already running?',
+      'What has parliament said?',
+    ]);
+    expect(askSession.snapshot().busy).toBe(true);
+    const status = takeFocusRequest('ask-status');
+    await act(async () => second(answer('The second answer.')));
+    await flush();
+    return status;
+  }
+
+  it('goes to the queued answer’s status while Ask is on screen', async () => {
+    const screen = askScreen(true);
+    const tree = await render(screen.element);
+    expect(askScreenFocused()).toBe(true);
+    expect(await queuedSend()).toBe(true);
+    act(() => tree.unmount());
+    expect(askScreenFocused()).toBe(false);
+  });
+
+  it('stays where the reader is when they left Ask while the question waited', async () => {
+    const screen = askScreen(true);
+    const tree = await render(screen.element);
+    act(() => screen.emit('blur'));
+    expect(askScreenFocused()).toBe(false);
+    // The question still goes; only VoiceOver stays put.
+    expect(await queuedSend()).toBe(false);
+    expect(askSession.snapshot().thread.at(-1)).toMatchObject({
+      role: 'answer',
+      text: 'The second answer.',
+    });
+    // Back on Ask, the next queued send moves focus again.
+    act(() => screen.emit('focus'));
+    expect(askScreenFocused()).toBe(true);
+    act(() => tree.unmount());
+    expect(askScreenFocused()).toBe(false);
   });
 
   it('goes to the waiting line, not the other answer’s status, while it waits', async () => {
