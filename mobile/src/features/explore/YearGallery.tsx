@@ -144,6 +144,9 @@ export function YearGallery({
           >
             {photos.map((p) => (
               <Pressable
+                // a11y-ok(pressable-role): the adjustable frame around the
+                // gallery is the one focus target: it names the photo, pages
+                // with swipes up and down, and opens it on activate.
                 key={p.file}
                 onPress={() =>
                   router.push(explorePhotoRoute(String(year), pictureKey(p)))

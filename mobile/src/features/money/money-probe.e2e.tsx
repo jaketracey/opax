@@ -167,6 +167,8 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     opacity: 0.01,
+    // a11y-ok(raw-font-size): an invisible e2e probe for the capture
+    // harness; .e2e files never reach a release bundle.
     fontSize: 8,
   },
 });

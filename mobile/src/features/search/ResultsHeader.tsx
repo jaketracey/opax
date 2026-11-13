@@ -6,7 +6,7 @@ import {
   symbols,
   type SourceDetails,
 } from '../../design/primitives';
-import { colors, rhythm } from '../../design/tokens';
+import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { presentSource } from '../../navigation/sheets';
 import { FiltersLine } from './FiltersLine';
 
@@ -113,7 +113,7 @@ function CountLine({
 const styles = StyleSheet.create({
   header: { gap: rhythm.line },
   line: {
-    minHeight: 44,
+    minHeight: minimumTarget,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,

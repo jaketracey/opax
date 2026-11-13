@@ -216,6 +216,7 @@ export function VersionFoot() {
   return (
     <Pressable
       accessible
+      accessibilityRole="text"
       accessibilityLabel={linksCopy.versionSpoken(version, build)}
       accessibilityActions={[{ name: 'copy', label: linksCopy.copyVersion }]}
       onAccessibilityAction={(event) => {
