@@ -26,7 +26,7 @@
 .dt-panel > :is(fieldset, div) { position: absolute; z-index: 3; top: 100%; right: 0; min-width: calc(var(--size-control) * 5); max-width: min(var(--size-readable), calc(100vw - var(--space-screen) * 2)); max-height: calc(var(--size-control) * 6); overflow: auto; margin: var(--space-line) 0 0; padding: var(--space-block); background: var(--paper-raised); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); box-shadow: var(--shadow-overlay); }
 .dt-panel fieldset { display: flex; flex-direction: column; gap: var(--space-tight); }
 .dt-panel fieldset > label:not(.dt-choice) { display: grid; gap: var(--space-line); font: var(--type-label); }
-.dt-choice { display: flex; align-items: center; gap: var(--space-tight); min-height: var(--size-target); font: var(--type-metadata); }
+.dt-choice { display: flex; flex-shrink: 0; align-items: center; gap: var(--space-tight); min-height: var(--size-target); font: var(--type-metadata); }
 .dt-choice input { accent-color: var(--money-ink); width: var(--size-icon-md); height: var(--size-icon-md); }
 .dt-muted { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .dt-chips:empty { display: none; }
