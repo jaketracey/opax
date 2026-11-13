@@ -57,6 +57,7 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import roster_identity  # noqa: E402
+import vote_parties  # noqa: E402
 from bills_registry.bills_stages import BILL_STAGE_ORDER  # noqa: E402,F401 -- shared export vocabulary
 from corrections.apply import apply as apply_corrections  # noqa: E402
 
@@ -404,6 +405,7 @@ SPONSOR_PARTY_TOKENS = {
     "australian motoring enthusiast party": "Australian Motoring Enthusiast Party",
     "family first": "Family First",
     "australian democrats": "Australian Democrats",
+    "australian conservatives": "Australian Conservatives",
     "gerard rennick people first": "Gerard Rennick People First",
 }
 SPONSOR_PARTY_TOKEN_SET = frozenset(SPONSOR_PARTY_TOKENS.values())
@@ -692,9 +694,8 @@ def load_v2_bills(db: sqlite3.Connection) -> list[dict]:
         lifecycle = lifecycle_fields(evs)
         # aliases_json is a list of alias titles per the contract, but the
         # registry currently writes an object of listing extras for ParlInfo
-        # rows. Read either, and take the source's own sponsor party when the
-        # object carries one -- that is the party as the bill page printed it,
-        # which beats anything derived here.
+        # rows. Read either, retaining the source party for the dated check in
+        # fill_sponsor_parties rather than treating it as current affiliation.
         extras: dict = {}
         aliases: list = []
         try:
@@ -734,7 +735,7 @@ def load_v2_bills(db: sqlite3.Connection) -> list[dict]:
             "sponsor": source_text(row.get("sponsor_name")) or (sponsors[0]["name"] if sponsors else None),
             "sponsors": sponsors,
             # The source's party label only when it names a known party; the
-            # dated party record fills the rest (fill_sponsor_parties).
+            # dated party record checks it at introduction (fill_sponsor_parties).
             "sponsor_party": sponsors[0]["party"] if sponsors else None,
             "sponsor_person_id": row.get("sponsor_person_id"),
             "portfolio": None if prints is not None else row.get("portfolio"),
@@ -794,11 +795,75 @@ def fill_sponsor_ids(bills: list[dict], members: dict[str, dict]) -> int:
     return filled
 
 
-def fill_sponsor_parties(bills: list[dict], timeline: PartyTimeline) -> None:
-    """The sponsor's party on the day they introduced the bill, for the
-    `sponsor_party/<party>` label: the source's label when it names a known
-    party, otherwise the party recorded for that person on the day, otherwise
-    nothing. The same for every co-sponsor."""
+# Narrow naming conventions found in the published-bill audit. These are not
+# global aliases: Independent is not interchangeable with a registered party,
+# and Liberal and Nationals remain distinct. The periods and identities are
+# held in handbook_party_service.json and roster_accept.json; the latter's
+# accepted Sam McMahon row also records her Country Liberal Party affiliation.
+SPONSOR_PARTY_CONVENTIONS = (
+    ("10903", "senate", "2020-08-09", "2022-07-01", "Rex Patrick Team", "Independent"),
+    ("10948", "senate", "2019-05-18", "2022-04-07", "Liberal", "Nationals"),
+)
+
+
+class SponsorPartyRecords:
+    """The division resolver's bounded roster periods, applied to bill sponsors.
+
+    A conflicting, missing or held period cannot replace a source label.
+    Speech observations and today's member row never override one either.
+    """
+
+    def __init__(self, evidence=None):
+        self.evidence = vote_parties.load_evidence() if evidence is None else evidence
+        self.resolver = vote_parties.Resolver(self.evidence)
+
+    def check(self, bill: dict, sponsor: dict | None = None) -> dict:
+        member = sponsor if sponsor is not None else {
+            "name": bill.get("sponsor"), "person_id": bill.get("sponsor_person_id"),
+            "party": bill.get("sponsor_party")}
+        source = member.get("party")
+        kept = {"party": source, "source_party": source}
+        day, house = vote_parties.iso(bill.get("introduced")), bill.get("originating_house")
+        if not day:
+            return {**kept, "reason": "no-date"}
+        if not getattr(self.evidence, "check_labels", True) or (
+                getattr(self.evidence, "is_frozen", None) and self.evidence.is_frozen(
+                    {"jurisdiction": bill.get("jurisdiction", "federal"), "house": house})):
+            return {**kept, "reason": "record-unavailable"}
+        name = sponsor_print({"sponsor": member.get("name")})
+        rule, hits = self.resolver.match(house, day, name, member.get("person_id"), set())
+        party, basis, url = self.resolver.party_on(hits, day, same=vote_parties.same_party) if hits else (
+            None, rule, None)
+        if not party:
+            return {**kept, "reason": basis}
+        dated = sponsor_party_token(party)
+        if not dated:
+            return {**kept, "reason": "unrecognised-dated-party", "record_party": party}
+        result = {**kept, "dated_party": dated, "record_party": party,
+                  "basis": basis, "url": url, "rule": rule}
+        if not source:
+            return {**result, "party": dated, "reason": "filled"}
+        if vote_parties.same_party(source, dated):
+            return {**result, "reason": "agrees" if source == dated else "alias"}
+        pid = str(member.get("person_id") or "").removeprefix("tvfy_")
+        if not pid:
+            matched_pids = {p.removeprefix("tvfy_") for hit in hits for p in hit["pids"]}
+            if len(matched_pids) == 1:
+                pid = matched_pids.pop()
+        if any(pid == p and house == h and start <= day < end and source == a and dated == b
+               for p, h, start, end, a, b in SPONSOR_PARTY_CONVENTIONS):
+            return {**result, "reason": "convention"}
+        return {**result, "party": dated, "reason": "corrected"}
+
+
+def fill_sponsor_parties(bills: list[dict], timeline: PartyTimeline,
+                         records: SponsorPartyRecords | None = None) -> None:
+    """Check every sponsor at introduction; retain source aliases and gaps.
+
+    A missing source party still uses the existing speech/member fallback
+    when no bounded roster period supplies it.
+    """
+    records = records if records is not None else SponsorPartyRecords()
     def dated(pid: str | None, day: str | None) -> str | None:
         if not pid:
             return None
@@ -806,9 +871,11 @@ def fill_sponsor_parties(bills: list[dict], timeline: PartyTimeline) -> None:
         return None if how == "unknown" else party
 
     for b in bills:
-        if not b.get("sponsor_party") and b.get("sponsor_person_id"):
-            b["sponsor_party"] = dated(b["sponsor_person_id"], b.get("introduced"))
+        b["sponsor_party"] = records.check(b)["party"]
+        if not b.get("sponsor_party"):
+            b["sponsor_party"] = dated(b.get("sponsor_person_id"), b.get("introduced"))
         for i, s in enumerate(b.get("sponsors") or []):
+            s["party"] = records.check(b, s)["party"]
             if not s.get("party"):
                 s["party"] = b.get("sponsor_party") if i == 0 else dated(s.get("person_id"), b.get("introduced"))
 

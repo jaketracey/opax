@@ -7,6 +7,7 @@ import sqlite3
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import export_bills as eb  # noqa: E402
@@ -93,6 +94,131 @@ class FillSponsorIds(unittest.TestCase):
 
     def test_non_numeric_ids_are_not_members(self):
         self.assertNotIn("aph_1", members())
+
+
+class DatedSponsorParties(unittest.TestCase):
+    def published_bill(self, key):
+        path = Path(__file__).resolve().parents[1] / f"portal/public/bills/{key}.json"
+        b = json.loads(path.read_text())
+        # Exercise both fields written by a fresh registry export.
+        b["sponsors"] = [{"name": b["sponsor"], "person_id": b["sponsor_person_id"],
+                          "party": b["sponsor_party"]}]
+        return b
+
+    def test_gee_r7202_uses_independent_on_introduction(self):
+        b = self.published_bill("au-federal-r7202")
+        eb.fill_sponsor_parties([b], eb.PartyTimeline({}, {}))
+        self.assertEqual(b["sponsor_party"], "Independent")
+        self.assertEqual(b["sponsors"][0]["party"], "Independent")
+
+    def test_van_s1415_uses_independent_on_introduction(self):
+        b = self.published_bill("au-federal-s1415")
+        eb.fill_sponsor_parties([b], eb.PartyTimeline({}, {}))
+        self.assertEqual(b["sponsor_party"], "Independent")
+        self.assertEqual(b["sponsors"][0]["party"], "Independent")
+
+
+class SponsorPartyPeriods(unittest.TestCase):
+    def records(self, *periods):
+        evidence = eb.vote_parties.Evidence([
+            eb.vote_parties.entry("release-term", "senate", ("release", "example"),
+                                  ["Taylor Example"], party, start, end, through,
+                                  pids=["99001"])
+            for party, start, end, through in periods], elections={})
+        return eb.SponsorPartyRecords(evidence)
+
+    def bill(self, party="Liberal", day="2024-05-15"):
+        return {"key": "fixture", "sponsor": "EXAMPLE, Sen Taylor", "sponsor_person_id": "99001",
+                "sponsor_party": party, "introduced": day, "originating_house": "senate"}
+
+    def apply(self, b, records):
+        # A current member or a later speech must not override a source label in a gap.
+        eb.fill_sponsor_parties([b], eb.PartyTimeline({"99001": (["2025-01-01"], ["Greens"])},
+                                                   {"99001": "Labor"}), records)
+        return b["sponsor_party"]
+
+    def test_lnp_alias_is_preserved(self):
+        records = self.records(("Nationals", "2020-01-01", "2025-01-01", None))
+        self.assertEqual(self.apply(self.bill("LNP"), records), "LNP")
+
+    def test_no_dated_record_keeps_source(self):
+        self.assertEqual(self.apply(self.bill(), self.records()), "Liberal")
+
+    def test_gap_and_period_boundaries(self):
+        records = self.records(("Liberal", "2020-01-01", "2023-06-19", None),
+                               ("Independent", "2023-06-19", "2025-01-01", None))
+        for day, expected in [("2019-12-31", "Liberal"), ("2023-06-18", "Liberal"),
+                              ("2023-06-19", "Independent"), ("2024-05-15", "Independent"),
+                              ("2025-01-01", "Liberal")]:
+            with self.subTest(day=day):
+                self.assertEqual(self.apply(self.bill(day=day), records), expected)
+
+    def test_open_period_stops_at_observed_through(self):
+        records = self.records(("Independent", "2023-06-19", None, "2024-05-15"))
+        self.assertEqual(self.apply(self.bill(), records), "Independent")
+        self.assertEqual(self.apply(self.bill(day="2024-05-16"), records), "Liberal")
+
+    def test_internal_gap_keeps_source(self):
+        records = self.records(("Greens", "2020-01-01", "2024-05-01", None),
+                               ("Independent", "2024-06-01", "2025-01-01", None))
+        self.assertEqual(self.apply(self.bill(), records), "Liberal")
+
+    def test_conflicting_periods_keep_source(self):
+        records = self.records(("Independent", "2020-01-01", "2025-01-01", None),
+                               ("Greens", "2020-01-01", "2025-01-01", None))
+        self.assertEqual(self.apply(self.bill(), records), "Liberal")
+
+    def test_no_date_and_wrong_house_keep_source(self):
+        records = self.records(("Independent", "2020-01-01", "2025-01-01", None))
+        self.assertEqual(self.apply(self.bill(day=None), records), "Liberal")
+        b = self.bill()
+        b["originating_house"] = "representatives"
+        self.assertEqual(self.apply(b, records), "Liberal")
+
+    def test_each_cosponsor_is_checked(self):
+        b = self.bill()
+        b["sponsors"] = [{"name": b["sponsor"], "person_id": "99001", "party": "Liberal"},
+                         {"name": "OTHER, Sen Morgan", "person_id": "99002", "party": "Liberal"}]
+        records = self.records(("Independent", "2020-01-01", "2025-01-01", None))
+        evidence = [*records.evidence, eb.vote_parties.entry(
+            "handbook-term", "senate", ("handbook", "other"), ["Morgan Other"], "Greens",
+            "2020-01-01", "2025-01-01", pids=["99002"])]
+        records = eb.SponsorPartyRecords(eb.vote_parties.Evidence(evidence, elections={}))
+        self.apply(b, records)
+        self.assertEqual(b["sponsor_party"], "Independent")
+        self.assertEqual([s["party"] for s in b["sponsors"]], ["Independent", "Greens"])
+
+    def test_missing_source_prefers_bounded_record_to_timeline(self):
+        records = self.records(("Independent", "2020-01-01", "2025-01-01", None))
+        self.assertEqual(self.apply(self.bill(None), records), "Independent")
+
+    def test_contextual_conventions_do_not_become_global_aliases(self):
+        for source, dated in [("Rex Patrick Team", "Independent"), ("Liberal", "Nationals")]:
+            with self.subTest(source=source):
+                records = self.records((dated, "2020-01-01", "2025-01-01", None))
+                convention = (("99001", "senate", "2020-01-01", "2024-06-01", source, dated),)
+                with patch.object(eb, "SPONSOR_PARTY_CONVENTIONS", convention):
+                    self.assertEqual(self.apply(self.bill(source), records), source)
+                    by_name = self.bill(source)
+                    by_name["sponsor_person_id"] = None
+                    self.assertEqual(self.apply(by_name, records), source)
+                    self.assertEqual(self.apply(self.bill(source, "2024-07-01"), records), dated)
+                self.assertEqual(self.apply(self.bill(source), records), dated)
+                self.assertFalse(eb.vote_parties.same_party(source, dated))
+
+    def test_missing_records_freeze_source_labels(self):
+        records = self.records(("Independent", "2020-01-01", "2025-01-01", None))
+        records.evidence.frozen = frozenset({("federal", "senate")})
+        self.assertEqual(self.apply(self.bill(), records), "Liberal")
+        records.evidence.frozen = frozenset()
+        records.evidence.check_labels = False
+        self.assertEqual(self.apply(self.bill(), records), "Liberal")
+
+    def test_new_dated_party_is_an_allowed_published_token(self):
+        records = self.records(("Australian Conservatives", "2020-01-01", "2025-01-01", None))
+        party = self.apply(self.bill("Independent"), records)
+        self.assertEqual(party, "Australian Conservatives")
+        self.assertIn(party, eb.PUBLISHED_PARTIES)
 
 
 if __name__ == "__main__":

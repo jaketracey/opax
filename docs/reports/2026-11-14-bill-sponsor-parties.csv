@@ -1,0 +1,688 @@
+key,introduced,sponsor,sponsor_person_id,originating_house,sponsor_party,record_party,dated_party,party,class,reason,basis,url,original_review
+au-federal-r5157,2013-12-09,"ALBANESE, Anthony, MP",10007,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-grayndler,False
+au-federal-r5160,2014-02-24,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r5162,2014-02-24,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r5167,2014-03-17,"PALMER, Clive, MP",10823,representatives,Palmer United Party,Palmer United Party,Palmer United Party,Palmer United Party,agrees,agrees,release-term,/subject/electorate/federal-representatives-qld-fairfax,False
+au-federal-r5228,2014-05-26,"SHORTEN, Bill, MP",10580,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-maribyrnong,False
+au-federal-r5229,2014-05-26,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r5322,2014-09-01,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r5351,2014-10-27,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r5373,2014-11-24,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r5374,2014-11-24,"LEIGH, Andrew, MP",10746,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-act-fraser,False
+au-federal-r5418,2015-03-02,"KATTER, Bob, Jnr, MP",10352,representatives,Independent,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,a,corrected,release-term,/subject/electorate/federal-representatives-qld-kennedy,True
+au-federal-r5423,2015-06-01,"PALMER, Clive, MP",10823,representatives,Palmer United Party,Palmer United Party,Palmer United Party,Palmer United Party,agrees,agrees,release-term,/subject/electorate/federal-representatives-qld-fairfax,False
+au-federal-r5431,2015-03-24,"MCGOWAN, Cathy, MP",10798,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r5470,2015-06-01,"SHORTEN, Bill, MP",10580,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-maribyrnong,False
+au-federal-r5471,2015-06-01,"KATTER, Bob, Jnr, MP",10352,representatives,Independent,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,a,corrected,release-term,/subject/electorate/federal-representatives-qld-kennedy,True
+au-federal-r5512,2015-08-17,"ENTSCH, Warren, MP",10203,representatives,LNP,Liberal,Liberal,LNP,alias,alias,release-term,/subject/electorate/federal-representatives-qld-leichhardt,False
+au-federal-r5521,2015-09-14,"KATTER, Bob, Jnr, MP",10352,representatives,Independent,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,a,corrected,release-term,/subject/electorate/federal-representatives-qld-kennedy,True
+au-federal-r5531,2015-10-12,"ALBANESE, Anthony, MP",10007,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-grayndler,False
+au-federal-r5552,2015-10-12,"WATTS, Tim, MP",10794,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-gellibrand,False
+au-federal-r5553,2015-10-12,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r5554,2015-10-12,"MARLES, Richard, MP",10418,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-corio,False
+au-federal-r5558,2015-10-19,"CHRISTENSEN, George, MP",10726,representatives,LNP,Nationals,Nationals,LNP,alias,alias,release-term,/subject/electorate/federal-representatives-qld-dawson,False
+au-federal-r5569,2015-11-23,"KATTER, Bob, Jnr, MP",10352,representatives,Independent,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,a,corrected,release-term,/subject/electorate/federal-representatives-qld-kennedy,True
+au-federal-r5570,2015-11-23,"KATTER, Bob, Jnr, MP",10352,representatives,Independent,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,a,corrected,release-term,/subject/electorate/federal-representatives-qld-kennedy,True
+au-federal-r5576,2015-11-30,"KATTER, Bob, Jnr, MP",10352,representatives,Independent,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,a,corrected,release-term,/subject/electorate/federal-representatives-qld-kennedy,True
+au-federal-r5600,2016-02-08,"KATTER, Bob, Jnr, MP",10352,representatives,Independent,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,a,corrected,release-term,/subject/electorate/federal-representatives-qld-kennedy,True
+au-federal-r5622,2016-02-22,"KATTER, Bob, Jnr, MP",10352,representatives,Independent,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,a,corrected,release-term,/subject/electorate/federal-representatives-qld-kennedy,True
+au-federal-r5625,2016-02-29,"O'NEIL, Clare, MP",10814,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-hotham,False
+au-federal-r5627,2016-02-29,"LEIGH, Andrew, MP",10746,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-act-fraser,False
+au-federal-r5628,2016-02-29,"CHRISTENSEN, George, MP",10726,representatives,LNP,Nationals,Nationals,LNP,alias,alias,release-term,/subject/electorate/federal-representatives-qld-dawson,False
+au-federal-r5636,2016-05-02,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r5658,2016-05-02,"ALBANESE, Anthony, MP",10007,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-grayndler,False
+au-federal-r5659,2016-05-02,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r5660,2016-05-02,"PLIBERSEK, Tanya, MP",10513,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-sydney,False
+au-federal-r5661,2016-05-02,"LEIGH, Andrew, MP",10746,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-act-fraser,False
+au-federal-r5708,2016-09-12,"SHORTEN, Bill, MP",10580,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-maribyrnong,False
+au-federal-r5709,2016-10-10,"KATTER, Bob, Jnr, MP",10352,representatives,Independent,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,a,corrected,release-term,/subject/electorate/federal-representatives-qld-kennedy,True
+au-federal-r5710,2016-10-10,"KATTER, Bob, Jnr, MP",10352,representatives,Independent,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,a,corrected,release-term,/subject/electorate/federal-representatives-qld-kennedy,True
+au-federal-r5711,2016-09-12,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r5725,2016-10-10,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r5726,2016-10-10,"COLLINS, Julie, MP",10136,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-franklin,False
+au-federal-r5742,2016-10-17,"WATTS, Tim, MP",10794,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-gellibrand,False
+au-federal-r5743,2016-10-17,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r5753,2016-11-21,"ALBANESE, Anthony, MP",10007,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-grayndler,False
+au-federal-r5763,2016-11-21,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r5764,2016-11-21,"KING, Catherine, MP",10368,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-ballarat,False
+au-federal-r5765,2016-11-21,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r5773,2016-11-28,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r5774,2016-11-28,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r5775,2016-11-28,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r5776,2016-11-28,"SHORTEN, Bill, MP",10580,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-maribyrnong,False
+au-federal-r5777,2016-11-28,"MCGOWAN, Cathy, MP",10798,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r5807,2017-02-13,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r5808,2017-02-13,"SHORTEN, Bill, MP",10580,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-maribyrnong,False
+au-federal-r5809,2017-02-13,"MCGOWAN, Cathy, MP",10798,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r5810,2017-02-13,"KATTER, Bob, Jnr, MP",10352,representatives,Independent,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,a,corrected,release-term,/subject/electorate/federal-representatives-qld-kennedy,True
+au-federal-r5820,2017-02-27,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r5824,2017-03-20,"SHORTEN, Bill, MP",10580,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-maribyrnong,False
+au-federal-r5825,2017-03-20,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r5828,2017-03-20,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r5829,2017-03-20,"MCGOWAN, Cathy, MP",10798,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r5834,2017-03-27,"KATTER, Bob, Jnr, MP",10352,representatives,Independent,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,a,corrected,release-term,/subject/electorate/federal-representatives-qld-kennedy,True
+au-federal-r5836,2017-03-27,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r5868,2017-05-22,"MCGOWAN, Cathy, MP",10798,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r5870,2017-05-29,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r5902,2017-06-19,"CHRISTENSEN, George, MP",10726,representatives,LNP,Nationals,Nationals,LNP,alias,alias,release-term,/subject/electorate/federal-representatives-qld-dawson,False
+au-federal-r5912,2017-06-19,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r5913,2017-06-19,"SHARKIE, Rebekha, MP",10874,representatives,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r5915,2017-09-04,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r5928,2017-09-04,"KATTER, Bob, Jnr, MP",10352,representatives,Independent,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,a,corrected,release-term,/subject/electorate/federal-representatives-qld-kennedy,True
+au-federal-r5937,2017-08-14,"KATTER, Bob, Jnr, MP",10352,representatives,Independent,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,a,corrected,release-term,/subject/electorate/federal-representatives-qld-kennedy,True
+au-federal-r5938,2017-08-14,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r5954,2017-09-04,"SHARKIE, Rebekha, MP",10874,representatives,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r5955,2017-10-16,"MCGOWAN, Cathy, MP",10798,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r5965,2017-09-11,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r5966,2017-09-11,"KATTER, Bob, Jnr, MP",10352,representatives,Independent,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,a,corrected,release-term,/subject/electorate/federal-representatives-qld-kennedy,True
+au-federal-r5967,2017-09-11,"KATTER, Bob, Jnr, MP",10352,representatives,Independent,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,a,corrected,release-term,/subject/electorate/federal-representatives-qld-kennedy,True
+au-federal-r5968,2017-09-11,"SHARKIE, Rebekha, MP",10874,representatives,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r5980,2017-10-23,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6002,2017-10-23,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6027,2018-02-05,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6040,2018-02-12,"SHARKIE, Rebekha, MP",10874,representatives,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6041,2018-05-21,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6056,2018-02-26,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r6057,2018-02-26,"HAMMOND, Tim, MP",10891,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-wa-perth,False
+au-federal-r6058,2018-02-26,"SHARKIE, Rebekha, MP",10874,representatives,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6059,2018-03-26,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6060,2018-03-26,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6066,2018-03-26,"MCGOWAN, Cathy, MP",10798,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r6099,2018-05-21,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6110,2018-05-21,"LEY, Sussan, MP",10387,representatives,Liberal,Liberal,Liberal,Liberal,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-farrer,False
+au-federal-r6131,2018-06-18,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r6132,2018-06-18,"FITZGIBBON, Joel, MP",10230,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-hunter,False
+au-federal-r6135,2018-06-25,"SHORTEN, Bill, MP",10580,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-maribyrnong,False
+au-federal-r6136,2018-06-25,"KATTER, Bob, Jnr, MP",10352,representatives,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,agrees,agrees,release-term,/subject/electorate/federal-representatives-qld-kennedy,False
+au-federal-r6137,2018-06-25,"MCGOWAN, Cathy, MP",10798,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r6138,2018-06-25,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6139,2018-06-25,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r6156,2018-08-20,"MCGOWAN, Cathy, MP",10798,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r6157,2018-08-20,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6158,2018-08-20,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r6159,2018-08-20,"LEIGH, Andrew, MP",10746,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-act-fenner,False
+au-federal-r6200,2018-10-15,"ALBANESE, Anthony, MP",10007,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-grayndler,False
+au-federal-r6201,2018-10-15,"CLARE, Jason, MP",10123,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-blaxland,False
+au-federal-r6207,2018-10-22,"MCGOWAN, Cathy, MP",10798,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r6210,2018-10-22,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r6211,2018-10-22,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6212,2018-10-22,"MCGOWAN, Cathy, MP",10798,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r6216,2018-11-26,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r6217,2018-11-26,"MCGOWAN, Cathy, MP",10798,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r6218,2018-12-03,"DANBY, Michael, MP",10165,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne-ports,False
+au-federal-r6226,2018-12-03,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6229,2018-12-03,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6232,2018-12-03,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6233,2018-12-03,"MCGOWAN, Cathy, MP",10798,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r6234,2018-12-03,"SHORTEN, Bill, MP",10580,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-maribyrnong,False
+au-federal-r6235,2018-12-03,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r6236,2018-12-03,"PHELPS, Kerryn, MP",10913,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-wentworth,False
+au-federal-r6257,2019-02-18,"KING, Madeleine, MP",10884,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-wa-brand,False
+au-federal-r6294,2019-02-18,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-denison,False
+au-federal-r6295,2019-02-18,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6296,2019-02-18,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6297,2019-02-18,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6299,2019-02-18,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6300,2019-02-18,"MCGOWAN, Cathy, MP",10798,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r6301,2019-02-18,"KATTER, Bob, Jnr, MP",10352,representatives,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,agrees,agrees,release-term,/subject/electorate/federal-representatives-qld-kennedy,False
+au-federal-r6355,2019-07-22,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6356,2019-07-22,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6357,2019-07-22,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6358,2019-07-22,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6359,2019-07-22,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6360,2019-07-22,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6379,2019-07-29,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6380,2019-07-29,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6389,2019-09-09,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6403,2019-09-16,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6404,2019-09-16,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6405,2019-09-16,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6406,2019-09-16,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6421,2019-10-14,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6422,2019-10-14,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6434,2019-10-21,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6435,2019-10-21,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6442,2019-11-25,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6443,2019-12-02,"KATTER, Bob, Jnr, MP",10352,representatives,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,agrees,agrees,release-term,/subject/electorate/federal-representatives-qld-kennedy,False
+au-federal-r6460,2019-12-02,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6461,2019-12-02,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6462,2019-12-02,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6484,2020-02-24,"LEIGH, Andrew, MP",10746,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-act-fenner,False
+au-federal-r6489,2020-02-24,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6490,2020-02-24,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6502,2020-02-24,"JOYCE, Barnaby, MP",10350,representatives,Nationals,Nationals,Nationals,Nationals,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-new-england,False
+au-federal-r6503,2020-02-24,"KATTER, Bob, Jnr, MP",10352,representatives,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,agrees,agrees,release-term,/subject/electorate/federal-representatives-qld-kennedy,False
+au-federal-r6506,2020-03-02,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6508,2020-06-15,"PERRETT, Graham, MP",10512,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-qld-moreton,False
+au-federal-r6512,2020-06-10,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6558,2020-06-10,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6563,2020-06-15,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6564,2020-06-15,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6585,2020-08-31,"KATTER, Bob, Jnr, MP",10352,representatives,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,agrees,agrees,release-term,/subject/electorate/federal-representatives-qld-kennedy,False
+au-federal-r6597,2020-10-26,"HAINES, Helen, MP",10929,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r6598,2020-10-26,"HAINES, Helen, MP",10929,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r6607,2020-10-19,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6616,2020-10-26,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6617,2020-11-09,"STEGGALL, Zali, MP",10941,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-warringah,False
+au-federal-r6618,2020-11-09,"STEGGALL, Zali, MP",10941,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-warringah,False
+au-federal-r6627,2020-11-30,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6628,2020-11-30,"HILL, Julian, MP",10885,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-bruce,False
+au-federal-r6644,2021-02-15,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6645,2020-12-07,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6646,2020-12-07,"BURNEY, Linda, MP",10858,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-barton,False
+au-federal-r6660,2021-02-15,"HILL, Julian, MP",10885,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-bruce,False
+au-federal-r6664,2021-02-15,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6673,2021-02-22,"HAINES, Helen, MP",10929,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r6675,2021-02-22,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6676,2021-02-22,"HAINES, Helen, MP",10929,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r6682,2021-03-15,"STEGGALL, Zali, MP",10941,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-warringah,False
+au-federal-r6690,2021-03-22,"HAINES, Helen, MP",10929,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r6691,2021-03-22,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6692,2021-03-22,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6700,2021-05-24,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6712,2021-05-24,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6724,2021-06-21,"KELLY, Craig, MP",10750,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-hughes,False
+au-federal-r6730,2021-06-21,"WATTS, Tim, MP",10794,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-gellibrand,False
+au-federal-r6731,2021-08-09,"CHRISTENSEN, George, MP",10726,representatives,LNP,Nationals,Nationals,LNP,alias,alias,release-term,/subject/electorate/federal-representatives-qld-dawson,False
+au-federal-r6732,2021-06-21,"KATTER, Bob, Jnr, MP",10352,representatives,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,agrees,agrees,release-term,/subject/electorate/federal-representatives-qld-kennedy,False
+au-federal-r6744,2021-10-18,"KELLY, Craig, MP",10750,representatives,Independent,United Australia Party,United Australia Party,United Australia Party,a,corrected,release-term,/subject/electorate/federal-representatives-nsw-hughes,True
+au-federal-r6770,2021-08-30,"KELLY, Craig, MP",10750,representatives,Independent,United Australia Party,United Australia Party,United Australia Party,a,corrected,release-term,/subject/electorate/federal-representatives-nsw-hughes,True
+au-federal-r6779,2021-10-18,"STEGGALL, Zali, MP",10941,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-warringah,False
+au-federal-r6780,2021-10-18,"STEGGALL, Zali, MP",10941,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-warringah,False
+au-federal-r6781,2021-10-18,"STEGGALL, Zali, MP",10941,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-warringah,False
+au-federal-r6787,2021-10-25,"HAINES, Helen, MP",10929,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r6788,2021-10-25,"HAINES, Helen, MP",10929,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r6791,2021-10-25,"WEBSTER, Anne, MP",10935,representatives,Nationals,Nationals,Nationals,Nationals,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-mallee,False
+au-federal-r6792,2021-10-25,"STEGGALL, Zali, MP",10941,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-warringah,False
+au-federal-r6793,2021-10-25,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6794,2021-10-25,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6795,2021-10-25,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6796,2021-10-25,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6797,2021-10-25,"HILL, Julian, MP",10885,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-bruce,False
+au-federal-r6808,2021-11-22,"ALBANESE, Anthony, MP",10007,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-grayndler,False
+au-federal-r6809,2021-11-22,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r6822,2021-11-29,"CHRISTENSEN, George, MP",10726,representatives,LNP,Nationals,Nationals,LNP,alias,alias,release-term,/subject/electorate/federal-representatives-qld-dawson,False
+au-federal-r6829,2022-02-14,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6845,2022-02-14,"HAINES, Helen, MP",10929,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r6846,2022-02-14,"HAINES, Helen, MP",10929,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r6848,2022-02-14,"CHRISTENSEN, George, MP",10726,representatives,LNP,Nationals,Nationals,LNP,alias,alias,release-term,/subject/electorate/federal-representatives-qld-dawson,False
+au-federal-r6849,2022-02-14,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6850,2022-02-14,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6888,2022-08-01,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6889,2022-08-01,"GOSLING, Luke, MP",10877,representatives,Labor,Labor,Labor,Labor,agrees,agrees,release-term,/subject/electorate/federal-representatives-nt-solomon,False
+au-federal-r6894,2022-09-05,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6895,2022-09-05,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r6910,2022-09-26,"ANDREWS, Karen, MP",10745,representatives,LNP,Liberal,Liberal,LNP,alias,alias,release-term,/subject/electorate/federal-representatives-qld-mcpherson,False
+au-federal-r6947,2022-11-28,"STEGGALL, Zali, MP",10941,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-warringah,False
+au-federal-r6948,2022-11-28,"TINK, Kylea, MP",10992,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-north-sydney,False
+au-federal-r6949,2022-11-28,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6966,2023-02-06,"BATES, Stephen, MP",10970,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-qld-brisbane,False
+au-federal-r6973,2023-02-13,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r6974,2023-02-13,"TEHAN, Dan, MP",10742,representatives,Liberal,Liberal,Liberal,Liberal,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-wannon,False
+au-federal-r6975,2023-02-13,"STEGGALL, Zali, MP",10941,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-warringah,False
+au-federal-r6981,2023-03-06,"SCAMPS, Sophie, MP",10989,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-mackellar,False
+au-federal-r6982,2023-03-20,"BANDT, Adam, MP",10734,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-melbourne,False
+au-federal-r7000,2023-03-27,"PIKE, Henry, MP",10969,representatives,Liberal,LNP,LNP,Liberal,alias,alias,release-term,/subject/electorate/federal-representatives-qld-bowman,False
+au-federal-r7001,2023-03-27,"HAMILTON, Garth, MP",10963,representatives,Liberal,LNP,LNP,Liberal,alias,alias,release-term,/subject/electorate/federal-representatives-qld-groom,False
+au-federal-r7003,2023-03-27,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r7005,2023-03-27,"HAINES, Helen, MP",10929,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r7015,2023-06-19,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r7016,2023-05-22,"DANIEL, Zoe, MP",10979,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-goldstein,False
+au-federal-r7017,2023-09-04,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r7018,2023-09-04,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r7047,2023-06-19,"SCAMPS, Sophie, MP",10989,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-mackellar,False
+au-federal-r7067,2023-08-07,"CHANEY, Kate, MP",10974,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-wa-curtin,False
+au-federal-r7077,2023-09-11,"HAINES, Helen, MP",10929,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r7078,2023-10-16,"WATSON-BROWN, Elizabeth, MP",10997,representatives,Greens,Greens,Greens,Greens,agrees,agrees,release-term,/subject/electorate/federal-representatives-qld-ryan,False
+au-federal-r7086,2023-10-16,"SCAMPS, Sophie, MP",10989,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-mackellar,False
+au-federal-r7100,2023-11-13,"RYAN, Monique, MP",10987,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-kooyong,False
+au-federal-r7101,2023-11-13,"STEGGALL, Zali, MP",10941,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-warringah,False
+au-federal-r7112,2023-11-27,"TINK, Kylea, MP",10992,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-north-sydney,False
+au-federal-r7113,2023-11-27,"COLEMAN, David, MP",10783,representatives,Liberal,Liberal,Liberal,Liberal,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-banks,False
+au-federal-r7146,2024-02-12,"CHANEY, Kate, MP",10974,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-wa-curtin,False
+au-federal-r7147,2024-02-12,"GEE, Andrew, MP",10883,representatives,Nationals,Independent,Independent,Independent,a,corrected,release-term,/subject/electorate/federal-representatives-nsw-calare,True
+au-federal-r7153,2024-02-26,"HAINES, Helen, MP",10929,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r7154,2024-02-26,"STEGGALL, Zali, MP",10941,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-warringah,False
+au-federal-r7166,2024-03-25,"COLEMAN, David, MP",10783,representatives,Liberal,Liberal,Liberal,Liberal,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-banks,False
+au-federal-r7167,2024-03-25,"KATTER, Bob, Jnr, MP",10352,representatives,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,Katter's Australian Party,agrees,agrees,release-term,/subject/electorate/federal-representatives-qld-kennedy,False
+au-federal-r7168,2024-03-25,"CHANEY, Kate, MP",10974,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-wa-curtin,False
+au-federal-r7202,2024-06-03,"GEE, Andrew, MP",10883,representatives,Nationals,Independent,Independent,Independent,a,corrected,release-term,/subject/electorate/federal-representatives-nsw-calare,True
+au-federal-r7207,2024-06-24,"TINK, Kylea, MP",10992,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-north-sydney,False
+au-federal-r7214,2024-07-01,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r7226,2024-08-19,"TINK, Kylea, MP",10992,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-north-sydney,False
+au-federal-r7228,2024-08-19,"DANIEL, Zoe, MP",10979,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-goldstein,False
+au-federal-r7229,2024-08-19,"DUTTON, Peter, MP",10188,representatives,Liberal,Liberal,Liberal,Liberal,agrees,agrees,release-term,/subject/electorate/federal-representatives-qld-dickson,False
+au-federal-r7230,2024-08-19,"DUTTON, Peter, MP",10188,representatives,Liberal,Liberal,Liberal,Liberal,agrees,agrees,release-term,/subject/electorate/federal-representatives-qld-dickson,False
+au-federal-r7260,2024-11-04,"HAINES, Helen, MP",10929,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r7261,2024-11-04,"VAN MANEN, Bert, MP",10729,representatives,LNP,Liberal,Liberal,LNP,alias,alias,release-term,/subject/electorate/federal-representatives-qld-forde,False
+au-federal-r7262,2024-11-04,"LITTLEPROUD, David, MP",10890,representatives,LNP,Nationals,Nationals,LNP,alias,alias,release-term,/subject/electorate/federal-representatives-qld-maranoa,False
+au-federal-r7263,2024-11-04,"TAYLOR, Angus, MP",10817,representatives,Liberal,Liberal,Liberal,Liberal,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-hume,False
+au-federal-r7264,2024-11-04,"LE, Dai, MP",10978,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-fowler,False
+au-federal-r7265,2024-11-18,"BIRRELL, Sam, MP",10991,representatives,Nationals,Nationals,Nationals,Nationals,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-nicholls,False
+au-federal-r7266,2024-11-18,"RYAN, Monique, MP",10987,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-kooyong,False
+au-federal-r7270,2024-11-18,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r7272,2024-11-18,"RYAN, Monique, MP",10987,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-kooyong,False
+au-federal-r7273,2024-11-18,"HAINES, Helen, MP",10929,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r7274,2024-11-18,"SCAMPS, Sophie, MP",10989,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-mackellar,False
+au-federal-r7285,2024-11-25,"GEE, Andrew, MP",10883,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-calare,False
+au-federal-r7286,2024-11-25,"DANIEL, Zoe, MP",10979,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-goldstein,False
+au-federal-r7301,2025-02-10,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r7313,2025-02-10,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r7314,2025-02-10,"SPENDER, Allegra, MP",11001,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-wentworth,False
+au-federal-r7315,2025-02-10,"SCAMPS, Sophie, MP",10989,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-mackellar,False
+au-federal-r7346,2025-07-28,"JOYCE, Barnaby, MP",10350,representatives,Nationals,Nationals,Nationals,Nationals,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-new-england,False
+au-federal-r7347,2025-07-28,"CHANEY, Kate, MP",10974,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-wa-curtin,False
+au-federal-r7348,2025-07-28,"STEGGALL, Zali, MP",10941,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-warringah,False
+au-federal-r7355,2025-08-25,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r7356,2025-08-25,"STEGGALL, Zali, MP",10941,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-warringah,False
+au-federal-r7357,2025-08-25,"LE, Dai, MP",10978,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-fowler,False
+au-federal-r7362,2025-09-01,"PIKE, Henry, MP",10969,representatives,Liberal,LNP,LNP,Liberal,alias,alias,release-term,/subject/electorate/federal-representatives-qld-bowman,False
+au-federal-r7364,2025-09-01,"SCAMPS, Sophie, MP",10989,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-mackellar,False
+au-federal-r7387,2025-10-27,"LEESER, Julian, MP",10888,representatives,Liberal,Liberal,Liberal,Liberal,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-berowra,False
+au-federal-r7388,2025-10-27,"RYAN, Monique, MP",10987,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-kooyong,False
+au-federal-r7399,2025-11-03,"GEE, Andrew, MP",10883,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-calare,False
+au-federal-r7403,2025-11-24,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r7431,2026-02-09,"CONAGHAN, Pat, MP",10922,representatives,Nationals,Nationals,Nationals,Nationals,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-cowper,False
+au-federal-r7432,2026-02-09,"SHARKIE, Rebekha, MP",10874,representatives,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,release-term,/subject/electorate/federal-representatives-sa-mayo,False
+au-federal-r7439,2026-03-02,"PENFOLD, Alison, MP",11046,representatives,Nationals,Nationals,Nationals,Nationals,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-lyne,False
+au-federal-r7440,2026-03-02,"SCAMPS, Sophie, MP",10989,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-mackellar,False
+au-federal-r7441,2026-03-02,"RYAN, Monique, MP",10987,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-kooyong,False
+au-federal-r7450,2026-03-23,"GEE, Andrew, MP",10883,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-calare,False
+au-federal-r7451,2026-05-25,"HAINES, Helen, MP",10929,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-indi,False
+au-federal-r7459,2026-03-30,"CHANEY, Kate, MP",10974,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-wa-curtin,False
+au-federal-r7460,2026-03-30,"JOYCE, Barnaby, MP",10350,representatives,One Nation,One Nation,One Nation,One Nation,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-new-england,False
+au-federal-r7476,2026-05-25,"PENFOLD, Alison, MP",11046,representatives,Nationals,Nationals,Nationals,Nationals,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-lyne,False
+au-federal-r7478,2026-06-22,"PENFOLD, Alison, MP",11046,representatives,Nationals,Nationals,Nationals,Nationals,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-lyne,False
+au-federal-r7479,2026-05-25,"PENFOLD, Alison, MP",11046,representatives,Nationals,Nationals,Nationals,Nationals,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-lyne,False
+au-federal-r7488,2026-05-25,"WILKIE, Andrew, MP",10727,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-tas-clark,False
+au-federal-r7495,2026-06-22,"SPENDER, Allegra, MP",11001,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-wentworth,False
+au-federal-r7496,2026-06-22,"STEGGALL, Zali, MP",10941,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-warringah,False
+au-federal-r7505,2026-06-29,"LE, Dai, MP",10978,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-fowler,False
+au-federal-r7506,2026-06-29,"RYAN, Monique, MP",10987,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-vic-kooyong,False
+au-federal-r7511,2026-08-17,"O'BRIEN, Llew, MP",10892,representatives,LNP,Nationals,Nationals,LNP,alias,alias,release-term,/subject/electorate/federal-representatives-qld-wide-bay,False
+au-federal-r7535,2026-09-07,"LITTLEPROUD, David, MP",,representatives,LNP,Nationals,Nationals,LNP,alias,alias,release-term,/subject/electorate/federal-representatives-qld-maranoa,False
+au-federal-r7536,2026-09-07,"CHANEY, Kate, MP",,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-wa-curtin,False
+au-federal-r7537,2026-09-07,"GEE, Andrew, MP",,representatives,Independent,Independent,Independent,Independent,agrees,agrees,release-term,/subject/electorate/federal-representatives-nsw-calare,False
+au-federal-r7543,2026-09-14,"BOELE, Nicolette, MP",,representatives,Independent,,,Independent,c,evidence-ends-before-date,,,False
+au-federal-r7545,2026-09-14,"SCAMPS, Sophie, MP",,representatives,Independent,,,Independent,c,evidence-ends-before-date,,,False
+au-federal-r7546,2026-09-14,"TEHAN, Dan, MP",,representatives,Liberal,,,Liberal,c,evidence-ends-before-date,,,False
+au-federal-s1000,2015-03-17,"MILNE, Sen Christine",10458,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1001,2015-11-10,"RICE, Sen Janet",10836,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1004,2015-03-26,"XENOPHON, Sen Nick",10717,senate,Independent,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,True
+au-federal-s1005,2015-05-13,"LUDWIG, Sen Joe",10397,senate,Labor,,,Labor,c,no-match,,,False
+au-federal-s1006,2015-06-23,"RHIANNON, Sen Lee",10760,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1008,2015-06-24,"CARR, Sen Kim",10103,senate,Labor,,,Labor,c,no-match,,,False
+au-federal-s1009,2015-06-24,"CAMERON, Sen Doug",10706,senate,Labor,,,Labor,c,no-match,,,False
+au-federal-s1010,2015-06-24,"XENOPHON, Sen Nick",10717,senate,Independent,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,True
+au-federal-s1011,2015-08-10,"WONG, Sen Penny",10678,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s1013,2015-08-13,"LEYONHJELM, Sen David",10832,senate,Liberal Democratic Party,,,Liberal Democratic Party,c,no-match,,,False
+au-federal-s1014,2015-08-13,"XENOPHON, Sen Nick",10717,senate,Independent,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,True
+au-federal-s1015,2015-08-19,"RICE, Sen Janet",10836,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1016,2015-09-17,"RHIANNON, Sen Lee",10760,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1017,2015-09-17,"WATERS, Sen Larissa",10764,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1019,2015-10-13,"WANG, Sen Zhenya",,senate,Palmer United Party,,,Palmer United Party,c,no-match,,,False
+au-federal-s1021,2016-03-02,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1024,2015-11-11,"LAMBIE, Sen Jacqui",10830,senate,Independent,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250026' and ROSTypeID eq 11,True
+au-federal-s1025,2015-11-24,"XENOPHON, Sen Nick",10717,senate,Independent,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,True
+au-federal-s1028,2015-12-01,"MCKENZIE, Sen Bridget",10758,senate,Nationals,,,Nationals,c,no-dated-party,,,False
+au-federal-s1030,2015-12-02,"LEYONHJELM, Sen David",10832,senate,Liberal Democratic Party,,,Liberal Democratic Party,c,no-match,,,False
+au-federal-s1032,2016-03-15,"CAMERON, Sen Doug",10706,senate,Labor,,,Labor,c,no-match,,,False
+au-federal-s1034,2016-03-01,"DI NATALE, Sen Richard",10755,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1036,2016-03-02,"RHIANNON, Sen Lee",10760,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1037,2016-03-03,"MUIR, Sen Ricky",10834,senate,Australian Motoring Enthusiast Party,,,Australian Motoring Enthusiast Party,c,no-match,,,False
+au-federal-s1040,2016-08-31,"BERNARDI, Sen Cory",10038,senate,Liberal,Liberal,Liberal,Liberal,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'G0D' and ROSTypeID eq 11,False
+au-federal-s1041,2016-09-13,"LEYONHJELM, Sen David",10832,senate,Liberal Democratic Party,,,Liberal Democratic Party,c,no-match,,,False
+au-federal-s1044,2016-09-15,"LEYONHJELM, Sen David",10832,senate,Liberal Democratic Party,,,Liberal Democratic Party,c,no-match,,,False
+au-federal-s1045,2016-09-15,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1049,2016-10-12,"KAKOSCHKE-MOORE, Sen Skye",10854,senate,Nick Xenophon Team,,,Nick Xenophon Team,c,no-match,,,False
+au-federal-s1050,2016-11-28,"FARRELL, Sen Don",10708,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s1052,2017-02-07,"BURSTON, Sen Brian",10848,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '207807' and ROSTypeID eq 11,False
+au-federal-s1054,2017-02-08,"LAMBIE, Sen Jacqui",10830,senate,Independent,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250026' and ROSTypeID eq 11,True
+au-federal-s1055,2017-02-13,"XENOPHON, Sen Nick",10717,senate,Independent,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,True
+au-federal-s1058,2017-02-16,"GALLAGHER, Sen Katy",10838,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s1059,2017-03-21,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1060,2017-03-21,"CAMERON, Sen Doug",10706,senate,Labor,,,Labor,c,no-match,,,False
+au-federal-s1061,2017-03-29,"RHIANNON, Sen Lee",10760,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1065,2017-03-28,"DI NATALE, Sen Richard",10755,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1066,2017-06-14,"MCALLISTER, Sen Jenny",10839,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s1067,2017-06-13,"WATERS, Sen Larissa",10764,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1070,2017-06-15,"XENOPHON, Sen Nick",10717,senate,Independent,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,True
+au-federal-s1071,2017-06-19,"LEYONHJELM, Sen David",10832,senate,Liberal Democratic Party,,,Liberal Democratic Party,c,no-match,,,False
+au-federal-s1073,2017-06-21,"RHIANNON, Sen Lee",10760,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1074,2017-06-21,"XENOPHON, Sen Nick",10717,senate,Independent,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,True
+au-federal-s1077,2017-09-12,"ROBERTS, Sen Malcolm",10856,senate,One Nation,,,One Nation,c,no-dated-party,,,False
+au-federal-s1078,2017-08-09,"BURSTON, Sen Brian",10848,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '207807' and ROSTypeID eq 11,False
+au-federal-s1079,2017-08-09,"SIEWERT, Sen Rachel",10584,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1080,2017-08-14,"GALLAGHER, Sen Katy",10838,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s1081,2017-08-16,"LAMBIE, Sen Jacqui",10830,senate,Independent,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250026' and ROSTypeID eq 11,True
+au-federal-s1082,2017-09-04,"FARRELL, Sen Don",10708,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s1083,2017-09-07,"RICE, Sen Janet",10836,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1085,2017-09-05,"LEYONHJELM, Sen David",10832,senate,Liberal Democratic Party,,,Liberal Democratic Party,c,no-match,,,False
+au-federal-s1086,2017-09-06,"HINCH, Sen Derryn",10852,senate,Derryn Hinch's Justice Party,,,Derryn Hinch's Justice Party,c,no-match,,,False
+au-federal-s1087,2017-09-11,"XENOPHON, Sen Nick",10717,senate,Independent,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,True
+au-federal-s1090,2017-09-12,"DI NATALE, Sen Richard",10755,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1091,2017-09-13,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1094,2017-10-17,"DI NATALE, Sen Richard",10755,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1098,2017-11-14,"BERNARDI, Sen Cory",10038,senate,Independent,Australian Conservatives,Australian Conservatives,Australian Conservatives,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'G0D' and ROSTypeID eq 11,True
+au-federal-s1099,2017-11-15,"SMITH, Sen Dean",10768,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1101,2017-11-15,"LEYONHJELM, Sen David",10832,senate,Liberal Democratic Party,,,Liberal Democratic Party,c,no-match,,,False
+au-federal-s1122,2018-02-06,"BERNARDI, Sen Cory",10038,senate,Independent,Australian Conservatives,Australian Conservatives,Australian Conservatives,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'G0D' and ROSTypeID eq 11,True
+au-federal-s1123,2018-02-07,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1124,2018-02-15,"BERNARDI, Sen Cory",10038,senate,Independent,Australian Conservatives,Australian Conservatives,Australian Conservatives,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'G0D' and ROSTypeID eq 11,True
+au-federal-s1125,2018-03-27,"RICE, Sen Janet",10836,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1126,2018-05-09,"LEYONHJELM, Sen David",10832,senate,Liberal Democratic Party,,,Liberal Democratic Party,c,no-match,,,False
+au-federal-s1127,2018-05-09,"PATRICK, Sen Rex",10903,senate,Nick Xenophon Team,Centre Alliance,Centre Alliance,Nick Xenophon Team,alias,alias,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '144292' and ROSTypeID eq 11,False
+au-federal-s1128,2018-05-09,"RICE, Sen Janet",10836,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1129,2018-06-18,"RHIANNON, Sen Lee",10760,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1130,2018-06-18,"STEELE-JOHN, Sen Jordon",10901,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1132,2018-06-25,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1133,2018-06-26,"RHIANNON, Sen Lee",10760,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1134,2018-08-22,"STORER, Sen Tim",10909,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '275424' and ROSTypeID eq 11,False
+au-federal-s1135,2018-06-27,"LEYONHJELM, Sen David",10832,senate,Liberal Democratic Party,,,Liberal Democratic Party,c,no-match,,,False
+au-federal-s1136,2018-06-27,"LEYONHJELM, Sen David",10832,senate,Liberal Democratic Party,,,Liberal Democratic Party,c,no-match,,,False
+au-federal-s1137,2018-06-27,"LEYONHJELM, Sen David",10832,senate,Liberal Democratic Party,,,Liberal Democratic Party,c,no-match,,,False
+au-federal-s1138,2018-08-15,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1139,2018-08-14,"GEORGIOU, Sen Peter",10898,senate,One Nation,,,One Nation,c,no-match,,,False
+au-federal-s1140,2018-08-14,"PATRICK, Sen Rex",10903,senate,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '144292' and ROSTypeID eq 11,False
+au-federal-s1142,2018-08-22,"PATRICK, Sen Rex",10903,senate,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '144292' and ROSTypeID eq 11,False
+au-federal-s1143,2018-08-23,"DI NATALE, Sen Richard",10755,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1144,2018-09-10,"SIEWERT, Sen Rachel",10584,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1145,2018-09-11,"BERNARDI, Sen Cory",10038,senate,Independent,Australian Conservatives,Australian Conservatives,Australian Conservatives,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'G0D' and ROSTypeID eq 11,True
+au-federal-s1146,2018-10-15,"CARR, Sen Kim",10103,senate,Labor,,,Labor,c,no-match,,,False
+au-federal-s1147,2018-10-16,"DI NATALE, Sen Richard",10755,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1148,2018-10-17,"STORER, Sen Tim",10909,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '275424' and ROSTypeID eq 11,False
+au-federal-s1149,2018-10-18,"ANNING, Sen Fraser",10902,senate,Katter's Australian Party,,,Katter's Australian Party,c,evidence-ends-before-date,,,False
+au-federal-s1150,2018-11-15,"FARUQI, Sen Mehreen",10912,senate,Greens,Greens,Greens,Greens,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250362' and ROSTypeID eq 11,False
+au-federal-s1151,2018-11-14,"BURSTON, Sen Brian",10848,senate,Independent,United Australia Party,United Australia Party,United Australia Party,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '207807' and ROSTypeID eq 11,True
+au-federal-s1152,2018-11-14,"CAMERON, Sen Doug",10706,senate,Labor,,,Labor,c,no-match,,,False
+au-federal-s1153,2018-11-26,"ANNING, Sen Fraser",10902,senate,Katter's Australian Party,Independent,Independent,Independent,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '273829' and ROSTypeID eq 11,True
+au-federal-s1154,2018-11-29,"WATERS, Sen Larissa",10764,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1156,2018-11-27,"DI NATALE, Sen Richard",10755,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1158,2018-12-03,"STORER, Sen Tim",10909,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '275424' and ROSTypeID eq 11,False
+au-federal-s1159,2018-11-28,"BERNARDI, Sen Cory",10038,senate,Independent,Australian Conservatives,Australian Conservatives,Australian Conservatives,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'G0D' and ROSTypeID eq 11,True
+au-federal-s1160,2018-11-29,"STORER, Sen Tim",10909,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '275424' and ROSTypeID eq 11,False
+au-federal-s1161,2018-11-29,"LEYONHJELM, Sen David",10832,senate,Liberal Democratic Party,,,Liberal Democratic Party,c,no-match,,,False
+au-federal-s1162,2018-11-29,"WONG, Sen Penny",10678,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s1163,2018-12-04,"ANNING, Sen Fraser",10902,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '273829' and ROSTypeID eq 11,False
+au-federal-s1167,2018-12-05,"WATERS, Sen Larissa",10764,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1170,2019-02-12,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1171,2019-02-14,"MCGRATH, Sen James",10833,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1172,2019-02-12,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1173,2019-02-13,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1174,2019-02-12,"STEELE-JOHN, Sen Jordon",10901,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1175,2019-02-12,"PATRICK, Sen Rex",10903,senate,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '144292' and ROSTypeID eq 11,False
+au-federal-s1181,2019-02-13,"GRIFF, Sen Stirling",10851,senate,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '76760' and ROSTypeID eq 11,False
+au-federal-s1182,2019-02-13,"PATRICK, Sen Rex",10903,senate,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '144292' and ROSTypeID eq 11,False
+au-federal-s1183,2019-02-14,"HINCH, Sen Derryn",10852,senate,Derryn Hinch's Justice Party,,,Derryn Hinch's Justice Party,c,no-match,,,False
+au-federal-s1187,2019-02-13,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1188,2019-02-13,"PRATT, Sen Louise",10714,senate,Labor,,,Labor,c,no-match,,,False
+au-federal-s1189,2019-04-02,"ANNING, Sen Fraser",10902,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '273829' and ROSTypeID eq 11,False
+au-federal-s1190,2019-04-02,"GRIFF, Sen Stirling",10851,senate,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '76760' and ROSTypeID eq 11,False
+au-federal-s1194,2019-04-03,"GRIFF, Sen Stirling",10851,senate,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '76760' and ROSTypeID eq 11,False
+au-federal-s1202,2019-07-04,"FARUQI, Sen Mehreen",10912,senate,Greens,Greens,Greens,Greens,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250362' and ROSTypeID eq 11,False
+au-federal-s1212,2019-07-04,"GRIFF, Sen Stirling",10851,senate,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '76760' and ROSTypeID eq 11,False
+au-federal-s1213,2019-07-04,"PATRICK, Sen Rex",10903,senate,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '144292' and ROSTypeID eq 11,False
+au-federal-s1214,2019-07-04,"GRIFF, Sen Stirling",10851,senate,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '76760' and ROSTypeID eq 11,False
+au-federal-s1215,2019-07-25,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1217,2019-07-23,"BERNARDI, Sen Cory",10038,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'G0D' and ROSTypeID eq 11,False
+au-federal-s1227,2019-10-17,"WATERS, Sen Larissa",10764,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1228,2021-08-03,"KITCHING, Sen Kimberley",10897,senate,Labor,,,Labor,c,no-match,,,False
+au-federal-s1231,2019-09-10,"PATRICK, Sen Rex",10903,senate,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '144292' and ROSTypeID eq 11,False
+au-federal-s1232,2019-09-12,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1234,2019-12-02,"GRIFF, Sen Stirling",10851,senate,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '76760' and ROSTypeID eq 11,False
+au-federal-s1237,2019-10-16,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1238,2019-11-27,"FARRELL, Sen Don",10708,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s1239,2019-11-27,"FARRELL, Sen Don",10708,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s1240,2019-11-13,"SIEWERT, Sen Rachel",10584,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1241,2019-11-13,"PATRICK, Sen Rex",10903,senate,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '144292' and ROSTypeID eq 11,False
+au-federal-s1242,2019-12-02,"GALLAGHER, Sen Katy",10838,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s1244,2020-02-05,"LAMBIE, Sen Jacqui",10830,senate,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250026' and ROSTypeID eq 11,False
+au-federal-s1247,2019-12-04,"KENEALLY, Sen Kristina",10906,senate,Labor,,,Labor,c,no-match,,,False
+au-federal-s1248,2019-12-05,"STERLE, Sen Glenn",10610,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s1249,2019-12-02,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1254,2020-02-10,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1255,2020-02-13,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1256,2020-02-26,"MCALLISTER, Sen Jenny",10839,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s1257,2020-02-27,"ROBERTS, Sen Malcolm",10856,senate,One Nation,,,One Nation,c,no-dated-party,,,False
+au-federal-s1258,2020-06-17,"WATERS, Sen Larissa",10764,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1259,2020-05-12,"FARUQI, Sen Mehreen",10912,senate,Greens,Greens,Greens,Greens,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250362' and ROSTypeID eq 11,False
+au-federal-s1261,2020-05-14,"RICE, Sen Janet",10836,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1262,2020-06-11,"MCCARTHY, Sen Malarndirri",10855,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s1263,2020-06-11,"WATERS, Sen Larissa",10764,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1264,2020-06-12,"GRIFF, Sen Stirling",10851,senate,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '76760' and ROSTypeID eq 11,False
+au-federal-s1270,2020-08-25,"GRIFF, Sen Stirling",10851,senate,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '76760' and ROSTypeID eq 11,False
+au-federal-s1271,2020-09-02,"O'NEILL, Sen Deborah",10747,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s1272,2020-10-06,"STEELE-JOHN, Sen Jordon",10901,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1273,2020-10-06,"PATRICK, Sen Rex",10903,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '144292' and ROSTypeID eq 11,False
+au-federal-s1275,2020-10-09,"SIEWERT, Sen Rachel",10584,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1277,2020-11-11,"KENEALLY, Sen Kristina",10906,senate,Labor,,,Labor,c,no-match,,,False
+au-federal-s1278,2020-11-12,"MCALLISTER, Sen Jenny",10839,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s1281,2020-12-07,"STEELE-JOHN, Sen Jordon",10901,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1283,2020-12-08,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1284,2020-12-08,"PATRICK, Sen Rex",10903,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '144292' and ROSTypeID eq 11,False
+au-federal-s1285,2020-12-09,"MCALLISTER, Sen Jenny",10839,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s1286,2020-12-09,"MCKENZIE, Sen Bridget",10758,senate,Nationals,,,Nationals,c,no-dated-party,,,False
+au-federal-s1287,2020-12-10,"RICE, Sen Janet",10836,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1288,2021-02-04,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1297,2021-05-12,"PATRICK, Sen Rex",10903,senate,Rex Patrick Team,Independent,Independent,Rex Patrick Team,b,convention,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '144292' and ROSTypeID eq 11,True
+au-federal-s1298,2021-05-13,"WATERS, Sen Larissa",10764,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1299,2021-06-21,"MCKIM, Sen Nick",10841,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1300,2021-06-16,"WATERS, Sen Larissa",10764,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1302,2021-06-16,"RICE, Sen Janet",10836,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1307,2021-06-24,"PATRICK, Sen Rex",10903,senate,Rex Patrick Team,Independent,Independent,Rex Patrick Team,b,convention,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '144292' and ROSTypeID eq 11,True
+au-federal-s1308,2021-08-10,"RICE, Sen Janet",10836,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1309,2021-08-04,"MCMAHON, Sen Sam",10948,senate,Liberal,Nationals,Nationals,Liberal,b,convention,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '282728' and ROSTypeID eq 11,True
+au-federal-s1311,2021-08-04,"GALLAGHER, Sen Katy",10838,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s1312,2021-08-05,"KENEALLY, Sen Kristina",10906,senate,Labor,,,Labor,c,no-match,,,False
+au-federal-s1313,2021-08-12,"KENEALLY, Sen Kristina",10906,senate,Labor,,,Labor,c,no-match,,,False
+au-federal-s1314,2021-08-25,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1316,2021-09-01,"PATRICK, Sen Rex",10903,senate,Rex Patrick Team,Independent,Independent,Rex Patrick Team,b,convention,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '144292' and ROSTypeID eq 11,True
+au-federal-s1317,2021-08-31,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1319,2021-09-01,"ROBERTS, Sen Malcolm",10856,senate,One Nation,,,One Nation,c,no-dated-party,,,False
+au-federal-s1320,2021-09-01,"FARUQI, Sen Mehreen",10912,senate,Greens,Greens,Greens,Greens,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250362' and ROSTypeID eq 11,False
+au-federal-s1321,2021-10-20,"PATRICK, Sen Rex",10903,senate,Rex Patrick Team,Independent,Independent,Rex Patrick Team,b,convention,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '144292' and ROSTypeID eq 11,True
+au-federal-s1323,2021-10-20,"GRIFF, Sen Stirling",10851,senate,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '76760' and ROSTypeID eq 11,False
+au-federal-s1324,2021-10-20,"MCKIM, Sen Nick",10841,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1325,2021-10-21,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1327,2021-11-23,"GRIFF, Sen Stirling",10851,senate,Centre Alliance,Centre Alliance,Centre Alliance,Centre Alliance,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '76760' and ROSTypeID eq 11,False
+au-federal-s1329,2021-12-01,"MCGRATH, Sen James",10833,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1330,2022-02-08,"MCKIM, Sen Nick",10841,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1335,2022-02-09,"MCGRATH, Sen James",10833,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1336,2022-02-10,"CHANDLER, Sen Claire",10955,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1337,2022-02-10,"ROBERTS, Sen Malcolm",10856,senate,One Nation,,,One Nation,c,no-dated-party,,,False
+au-federal-s1341,2022-03-29,"THORPE, Sen Lidia",10961,senate,Greens,Greens,Greens,Greens,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '280304' and ROSTypeID eq 11,False
+au-federal-s1344,2022-09-05,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1347,2022-08-03,"SMITH, Sen Dean",10768,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1348,2022-09-07,"LAMBIE, Sen Jacqui",10830,senate,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250026' and ROSTypeID eq 11,False
+au-federal-s1352,2022-09-27,"ALLMAN-PAYNE, Sen Penny",11002,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1353,2023-08-10,"SHOEBRIDGE, Sen David",11010,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1354,2022-09-28,"CANAVAN, Sen Matthew",10827,senate,Nationals,,,Nationals,c,no-dated-party,,,False
+au-federal-s1355,2022-11-30,"FARUQI, Sen Mehreen",10912,senate,Greens,Greens,Greens,Greens,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250362' and ROSTypeID eq 11,False
+au-federal-s1356,2022-11-22,"STEELE-JOHN, Sen Jordon",10901,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1357,2022-11-24,"WATERS, Sen Larissa",10764,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1358,2022-11-29,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1359,2022-11-30,"CANAVAN, Sen Matthew",10827,senate,Nationals,,,Nationals,c,no-dated-party,,,False
+au-federal-s1361,2023-02-08,"STEELE-JOHN, Sen Jordon",10901,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1362,2023-02-07,"MCKIM, Sen Nick",10841,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1364,2023-02-07,"NAMPIJINPA PRICE, Sen Jacinta",11006,senate,Country Liberal Party,,,Country Liberal Party,c,no-dated-party,,,False
+au-federal-s1366,2023-02-08,"ANTIC, Sen Alex",10954,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1367,2023-02-08,"CANAVAN, Sen Matthew",10827,senate,Nationals,,,Nationals,c,no-dated-party,,,False
+au-federal-s1368,2023-03-09,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1369,2023-03-06,"SHOEBRIDGE, Sen David",11010,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1370,2023-03-09,"RICE, Sen Janet",10836,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1371,2023-03-27,"POCOCK, Sen Barbara",11008,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1372,2023-03-22,"DUNIAM, Sen Jonathon",10847,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1373,2023-03-23,"CASH, Sen Michaelia",10707,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1374,2023-03-30,"RICE, Sen Janet",10836,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1375,2023-06-13,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1376,2023-03-29,"BRAGG, Sen Andrew",10945,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1377,2023-05-10,"FAWCETT, Sen David",10215,senate,Liberal,,,Liberal,c,no-match,,,False
+au-federal-s1378,2023-05-11,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1379,2023-06-19,"FARUQI, Sen Mehreen",10912,senate,Greens,Greens,Greens,Greens,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250362' and ROSTypeID eq 11,False
+au-federal-s1381,2023-06-14,"HENDERSON, Sen Sarah",10790,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1382,2023-06-19,"CANAVAN, Sen Matthew",10827,senate,Nationals,,,Nationals,c,no-dated-party,,,False
+au-federal-s1384,2023-06-22,"SMITH, Sen Dean",10768,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1385,2023-08-03,"POCOCK, Sen David",11009,senate,Independent,,,Independent,c,no-dated-party,,,False
+au-federal-s1386,2023-08-03,"POCOCK, Sen David",11009,senate,Independent,,,Independent,c,no-dated-party,,,False
+au-federal-s1387,2023-08-03,"BABET, Sen Ralph",11003,senate,United Australia Party,,,United Australia Party,c,no-dated-party,,,False
+au-federal-s1388,2023-08-08,"COX, Sen Dorinda",10964,senate,Greens,Greens,Greens,Greens,agrees,agrees,accepted-record,https://www.wikidata.org/wiki/Q108441696,False
+au-federal-s1389,2023-09-04,"WATERS, Sen Larissa",10764,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1390,2023-09-05,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1392,2023-09-12,"SMITH, Sen Dean",10768,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1393,2023-09-14,"ALLMAN-PAYNE, Sen Penny",11002,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1394,2023-09-12,"RICE, Sen Janet",10836,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s1395,2023-09-14,"CASH, Sen Michaelia",10707,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1396,2023-10-18,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1397,2023-10-18,"ANTIC, Sen Alex",10954,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1398,2023-11-06,"LAMBIE, Sen Jacqui",10830,senate,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250026' and ROSTypeID eq 11,False
+au-federal-s1399,2023-11-06,"LAMBIE, Sen Jacqui",10830,senate,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250026' and ROSTypeID eq 11,False
+au-federal-s1400,2023-11-06,"LAMBIE, Sen Jacqui",10830,senate,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250026' and ROSTypeID eq 11,False
+au-federal-s1401,2023-11-06,"LAMBIE, Sen Jacqui",10830,senate,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250026' and ROSTypeID eq 11,False
+au-federal-s1403,2023-11-29,"ROBERTS, Sen Malcolm",10856,senate,One Nation,,,One Nation,c,no-dated-party,,,False
+au-federal-s1406,2023-11-29,"THORPE, Sen Lidia",10961,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '280304' and ROSTypeID eq 11,False
+au-federal-s1407,2024-02-07,"THORPE, Sen Lidia",10961,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '280304' and ROSTypeID eq 11,False
+au-federal-s1409,2024-02-27,"CANAVAN, Sen Matthew",10827,senate,Nationals,,,Nationals,c,no-dated-party,,,False
+au-federal-s1410,2024-02-27,"MCKENZIE, Sen Bridget",10758,senate,Nationals,,,Nationals,c,no-dated-party,,,False
+au-federal-s1411,2024-02-27,"LAMBIE, Sen Jacqui",10830,senate,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250026' and ROSTypeID eq 11,False
+au-federal-s1412,2024-02-28,"FARUQI, Sen Mehreen",10912,senate,Greens,Greens,Greens,Greens,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250362' and ROSTypeID eq 11,False
+au-federal-s1413,2024-03-20,"MCKIM, Sen Nick",10841,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1414,2024-03-25,"POCOCK, Sen David",11009,senate,Independent,,,Independent,c,no-dated-party,,,False
+au-federal-s1415,2024-05-15,"VAN, Sen David",10957,senate,Liberal,Independent,Independent,Independent,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '283601' and ROSTypeID eq 11,True
+au-federal-s1416,2024-06-25,"POCOCK, Sen David",11009,senate,Independent,,,Independent,c,no-dated-party,,,False
+au-federal-s1417,2024-06-25,"HENDERSON, Sen Sarah",10790,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1418,2024-06-25,"CANAVAN, Sen Matthew",10827,senate,Nationals,,,Nationals,c,no-dated-party,,,False
+au-federal-s1419,2024-06-26,"ANTIC, Sen Alex",10954,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1420,2024-07-02,"COX, Sen Dorinda",10964,senate,Greens,Greens,Greens,Greens,agrees,agrees,accepted-record,https://www.wikidata.org/wiki/Q108441696,False
+au-federal-s1421,2024-07-02,"SMITH, Sen Dean",10768,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1425,2024-08-21,"CASH, Sen Michaelia",10707,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1426,2024-08-21,"CASH, Sen Michaelia",10707,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1427,2024-08-21,"BRAGG, Sen Andrew",10945,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1428,2024-09-12,"DUNIAM, Sen Jonathon",10847,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1429,2024-09-12,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1430,2024-09-16,"MCKIM, Sen Nick",10841,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1431,2024-10-08,"COLBECK, Sen Richard",10131,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1432,2024-10-09,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1434,2024-11-19,"MCKENZIE, Sen Bridget",10758,senate,Nationals,,,Nationals,c,no-dated-party,,,False
+au-federal-s1435,2024-11-20,"POCOCK, Sen David",11009,senate,Independent,,,Independent,c,no-dated-party,,,False
+au-federal-s1436,2025-02-11,"POCOCK, Sen David",11009,senate,Independent,,,Independent,c,no-dated-party,,,False
+au-federal-s1438,2024-11-28,"THORPE, Sen Lidia",10961,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '280304' and ROSTypeID eq 11,False
+au-federal-s1439,2024-11-28,"THORPE, Sen Lidia",10961,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '280304' and ROSTypeID eq 11,False
+au-federal-s1440,2024-11-28,"THORPE, Sen Lidia",10961,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '280304' and ROSTypeID eq 11,False
+au-federal-s1442,2025-02-05,"MCKIM, Sen Nick",10841,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1443,2025-02-05,"LAMBIE, Sen Jacqui",10830,senate,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250026' and ROSTypeID eq 11,False
+au-federal-s1444,2025-02-05,"LAMBIE, Sen Jacqui",10830,senate,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250026' and ROSTypeID eq 11,False
+au-federal-s1445,2025-02-11,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1446,2025-02-12,"POCOCK, Sen David",11009,senate,Independent,,,Independent,c,no-dated-party,,,False
+au-federal-s1447,2025-02-12,"BABET, Sen Ralph",11003,senate,United Australia Party,,,United Australia Party,c,no-dated-party,,,False
+au-federal-s1448,2025-02-12,"SHOEBRIDGE, Sen David",11010,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1449,2025-02-13,"SHOEBRIDGE, Sen David",11010,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1451,2025-02-13,"FARUQI, Sen Mehreen",10912,senate,Greens,Greens,Greens,Greens,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250362' and ROSTypeID eq 11,False
+au-federal-s1452,2025-03-26,"FARUQI, Sen Mehreen",10912,senate,Greens,Greens,Greens,Greens,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250362' and ROSTypeID eq 11,False
+au-federal-s1453,2025-03-26,"WATERS, Sen Larissa",10764,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1454,2025-03-26,"COX, Sen Dorinda",10964,senate,Greens,Greens,Greens,Greens,agrees,agrees,accepted-record,https://www.wikidata.org/wiki/Q108441696,False
+au-federal-s1455,2025-03-26,"FARUQI, Sen Mehreen",10912,senate,Greens,Greens,Greens,Greens,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250362' and ROSTypeID eq 11,False
+au-federal-s1461,2025-07-30,"POCOCK, Sen David",11009,senate,Independent,,,Independent,c,no-dated-party,,,False
+au-federal-s1462,2025-07-30,"COLBECK, Sen Richard",10131,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1463,2025-07-31,"ANTIC, Sen Alex",10954,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1464,2025-08-25,"CASH, Sen Michaelia",10707,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1466,2025-08-26,"ALLMAN-PAYNE, Sen Penny",11002,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1467,2025-09-04,"POCOCK, Sen Barbara",11008,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1468,2025-09-04,"BRAGG, Sen Andrew",10945,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1469,2025-09-04,"CANAVAN, Sen Matthew",10827,senate,Nationals,,,Nationals,c,no-dated-party,,,False
+au-federal-s1470,2025-09-04,"HUME, Sen Jane",10853,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1471,2025-11-24,"POCOCK, Sen David",11009,senate,Independent,,,Independent,c,no-dated-party,,,False
+au-federal-s1472,2025-10-28,"POCOCK, Sen David",11009,senate,Independent,,,Independent,c,no-dated-party,,,False
+au-federal-s1473,2025-10-29,"HUME, Sen Jane",10853,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1474,2025-11-03,"TYRRELL, Sen Tammy",11012,senate,Independent,,,Independent,c,no-dated-party,,,False
+au-federal-s1475,2025-11-05,"POCOCK, Sen Barbara",11008,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1479,2025-11-25,"FARUQI, Sen Mehreen",10912,senate,Greens,Greens,Greens,Greens,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250362' and ROSTypeID eq 11,False
+au-federal-s1480,2025-11-25,"BABET, Sen Ralph",11003,senate,United Australia Party,,,United Australia Party,c,no-dated-party,,,False
+au-federal-s1481,2025-11-26,"HUME, Sen Jane",10853,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1482,2025-11-26,"ANTIC, Sen Alex",10954,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1483,2025-11-27,"LAMBIE, Sen Jacqui",10830,senate,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250026' and ROSTypeID eq 11,False
+au-federal-s1485,2026-02-04,"HODGINS-MAY, Sen Steph",11020,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1486,2026-02-04,"CANAVAN, Sen Matthew",10827,senate,Nationals,,,Nationals,c,no-dated-party,,,False
+au-federal-s1487,2026-03-03,"PAYMAN, Sen Fatima",11007,senate,Australia's Voice,Australia's Voice,Australia's Voice,Australia's Voice,agrees,agrees,accepted-record,https://www.wikidata.org/wiki/Q112152550,False
+au-federal-s1488,2026-03-03,"DUNIAM, Sen Jonathon",10847,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1489,2026-03-10,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1490,2026-03-11,"CANAVAN, Sen Matthew",10827,senate,Nationals,,,Nationals,c,no-dated-party,,,False
+au-federal-s1491,2026-04-01,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1492,2026-03-31,"CADELL, Sen Ross",11004,senate,Nationals,,,Nationals,c,no-dated-party,,,False
+au-federal-s1497,2026-06-24,"HUME, Sen Jane",10853,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1499,2026-06-30,"MCKIM, Sen Nick",10841,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1500,2026-07-01,"CASH, Sen Michaelia",10707,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1501,2026-07-02,"POCOCK, Sen David",11009,senate,Independent,,,Independent,c,no-dated-party,,,False
+au-federal-s1502,2026-08-12,"POCOCK, Sen Barbara",11008,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1503,2026-08-12,"HANSON, Sen Pauline",10280,senate,One Nation,One Nation,One Nation,One Nation,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'BK6' and ROSTypeID eq 11,False
+au-federal-s1504,2026-08-13,"CANAVAN, Sen Matthew",10827,senate,Nationals,,,Nationals,c,no-dated-party,,,False
+au-federal-s1505,2026-08-13,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s1506,2026-08-13,"MCKENZIE, Sen Bridget",10758,senate,Nationals,,,Nationals,c,no-dated-party,,,False
+au-federal-s1507,2026-08-18,"THORPE, Sen Lidia",10961,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '280304' and ROSTypeID eq 11,False
+au-federal-s1508,2026-08-18,"THORPE, Sen Lidia",10961,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '280304' and ROSTypeID eq 11,False
+au-federal-s1509,2026-08-18,"ANTIC, Sen Alex",10954,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1510,2026-08-19,"HUME, Sen Jane",10853,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1511,2026-08-20,"SMITH, Sen Dean",10768,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1512,2026-09-07,"SMITH, Sen Dean",,senate,Liberal,,,Liberal,c,evidence-ends-before-date,,,False
+au-federal-s1513,2026-08-19,"BRAGG, Sen Andrew",10945,senate,Liberal,,,Liberal,c,no-dated-party,,,False
+au-federal-s1514,2026-09-07,"PAYMAN, Sen Fatima",,senate,Australia's Voice,Australia's Voice,Australia's Voice,Australia's Voice,agrees,agrees,accepted-record,https://www.wikidata.org/wiki/Q112152550,False
+au-federal-s1515,2026-09-15,"CADELL, Sen Ross",,senate,Nationals,,,Nationals,c,evidence-ends-before-date,,,False
+au-federal-s1516,2026-09-14,"BRAGG, Sen Andrew",,senate,Liberal,,,Liberal,c,evidence-ends-before-date,,,False
+au-federal-s1517,2026-09-15,"POCOCK, Sen David",,senate,Independent,,,Independent,c,evidence-ends-before-date,,,False
+au-federal-s1518,2026-09-15,"LAMBIE, Sen Jacqui",,senate,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,Jacqui Lambie Network,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250026' and ROSTypeID eq 11,False
+au-federal-s815,2010-11-24,"XENOPHON, Senator Nick",,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,False
+au-federal-s828,2011-05-12,"XENOPHON, Sen Nick",10717,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,False
+au-federal-s833,2011-06-20,"XENOPHON, Sen Nick",10717,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,False
+au-federal-s877,2012-03-22,"DI NATALE, Sen Richard",10755,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s889,2012-10-30,"XENOPHON, Sen Nick",10717,senate,Independent,Independent,Independent,Independent,agrees,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,False
+au-federal-s901,2013-06-20,"MADIGAN, Sen John",10759,senate,DLP,Democratic Labor Party,DLP,DLP,alias,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '217571' and ROSTypeID eq 11,False
+au-federal-s909,2013-03-19,"MADIGAN, Sen John",10759,senate,DLP,Democratic Labor Party,DLP,DLP,alias,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '217571' and ROSTypeID eq 11,False
+au-federal-s920,2013-06-27,"MADIGAN, Sen John",10759,senate,DLP,Democratic Labor Party,DLP,DLP,alias,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '217571' and ROSTypeID eq 11,False
+au-federal-s934,2013-11-13,"XENOPHON, Sen Nick",10717,senate,Independent,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,True
+au-federal-s936,2013-11-13,"MILNE, Sen Christine",10458,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s937,2013-11-13,"XENOPHON, Sen Nick",10717,senate,Independent,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,True
+au-federal-s938,2013-12-12,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s939,2013-12-05,"XENOPHON, Sen Nick",10717,senate,Independent,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,True
+au-federal-s940,2013-12-09,"WATERS, Sen Larissa",10764,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s941,2013-12-09,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s942,2013-12-11,"XENOPHON, Sen Nick",10717,senate,Independent,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,True
+au-federal-s943,2013-12-12,"FARRELL, Sen Don",10708,senate,Labor,,,Labor,c,no-dated-party,,,False
+au-federal-s944,2013-12-12,"XENOPHON, Sen Nick",10717,senate,Independent,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,True
+au-federal-s946,2014-03-04,"RHIANNON, Sen Lee",10760,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s947,2014-03-27,"RHIANNON, Sen Lee",10760,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s948,2014-02-12,"WRIGHT, Sen Penny",10765,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s949,2014-02-13,"WATERS, Sen Larissa",10764,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s950,2014-03-04,"SIEWERT, Sen Rachel",10584,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s952,2014-03-05,"URQUHART, Sen Anne",10763,senate,Labor,,,Labor,c,no-match,,,False
+au-federal-s953,2014-03-06,"MADIGAN, Sen John",10759,senate,DLP,Democratic Labor Party,DLP,DLP,alias,agrees,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '217571' and ROSTypeID eq 11,False
+au-federal-s954,2014-03-06,"XENOPHON, Sen Nick",10717,senate,Independent,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,True
+au-federal-s955,2014-03-06,"SIEWERT, Sen Rachel",10584,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s956,2014-03-18,"RHIANNON, Sen Lee",10760,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s957,2014-03-19,"LUDWIG, Sen Joe",10397,senate,Labor,,,Labor,c,no-match,,,False
+au-federal-s958,2014-03-20,"SINGH, Sen Lisa",10761,senate,Labor,,,Labor,c,no-match,,,False
+au-federal-s960,2014-03-25,"SIEWERT, Sen Rachel",10584,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s961,2014-03-27,"DI NATALE, Sen Richard",10755,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s962,2014-05-13,"DI NATALE, Sen Richard",10755,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s963,2014-05-15,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s964,2014-06-18,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s966,2014-06-24,"SIEWERT, Sen Rachel",10584,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s967,2014-07-10,"MILNE, Sen Christine",10458,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s968,2014-07-16,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s970,2014-07-17,"LUDLAM, Sen Scott",10713,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s971,2014-08-27,"MILNE, Sen Christine",10458,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s975,2014-09-04,"WATERS, Sen Larissa",10764,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s977,2014-09-25,"HANSON-YOUNG, Sen Sarah",10711,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s979,2014-11-17,"SIEWERT, Sen Rachel",10584,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s981,2014-10-28,"MILNE, Sen Christine",10458,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s983,2014-11-26,"LEYONHJELM, Sen David",10832,senate,Liberal Democratic Party,,,Liberal Democratic Party,c,no-match,,,False
+au-federal-s984,2014-11-27,"XENOPHON, Sen Nick",10717,senate,Independent,Nick Xenophon Team,Nick Xenophon Team,Nick Xenophon Team,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '8IV' and ROSTypeID eq 11,True
+au-federal-s986,2014-11-27,"LEYONHJELM, Sen David",10832,senate,Liberal Democratic Party,,,Liberal Democratic Party,c,no-match,,,False
+au-federal-s987,2014-11-27,"DI NATALE, Sen Richard",10755,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s988,2014-12-03,"WRIGHT, Sen Penny",10765,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s989,2014-12-02,"LAMBIE, Sen Jacqui",10830,senate,Palmer United Party,Independent,Independent,Independent,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '250026' and ROSTypeID eq 11,True
+au-federal-s992,2014-12-04,"RHIANNON, Sen Lee",10760,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s993,2015-02-09,"MILNE, Sen Christine",10458,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s994,2015-02-11,"BACK, Sen Chris",,senate,Liberal,,,Liberal,c,no-match,,,False
+au-federal-s995,2015-02-12,"MILNE, Sen Christine",10458,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s996,2015-03-04,"WATERS, Sen Larissa",10764,senate,Greens,,,Greens,c,no-dated-party,,,False
+au-federal-s997,2015-03-04,"LUDLAM, Sen Scott",10713,senate,Greens,,,Greens,c,no-match,,,False
+au-federal-s998,2015-03-05,"RHIANNON, Sen Lee",10760,senate,Greens,,,Greens,c,no-match,,,False
