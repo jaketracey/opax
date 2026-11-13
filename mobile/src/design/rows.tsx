@@ -1140,6 +1140,7 @@ export function MoneyRow({
   amount,
   href,
   external,
+  compact = false,
   testID,
 }: {
   name: string;
@@ -1148,6 +1149,11 @@ export function MoneyRow({
   amount: number;
   href?: Href;
   external?: External;
+  /**
+   * Every amount compact ("$9.4m"), for a ranked list that must read one
+   * way. The accessibility label keeps the full amount.
+   */
+  compact?: boolean;
   testID?: string;
 }) {
   return (
@@ -1157,7 +1163,7 @@ export function MoneyRow({
       titleLines={nameLines}
       detailLines={2}
       value={
-        Math.abs(amount) >= 10_000_000
+        compact || Math.abs(amount) >= 10_000_000
           ? formatMoneyCompact(amount)
           : formatMoney(amount)
       }

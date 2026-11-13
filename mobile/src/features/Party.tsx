@@ -628,6 +628,7 @@ function PartyContent({
                 name={donor.name}
                 detail={donor.associated ?? undefined}
                 amount={donor.amount}
+                compact
                 href={
                   donor.id.startsWith('donor:individual')
                     ? undefined

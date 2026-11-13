@@ -425,6 +425,7 @@ export function MoneyMapPanel({
                           .filter(Boolean)
                           .join(' · ')}
                         amount={edge.amount}
+                        compact
                         href={focus.flowRecord(other)}
                         testID={`money-map-flow-${index}`}
                       />
