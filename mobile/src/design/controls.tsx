@@ -486,6 +486,14 @@ export function FollowButton({
       testID={`${testID}-${following ? 'on' : 'off'}`}
     />
   );
+  const editFollowing = (
+    <Button
+      label="Edit Following"
+      variant="plain"
+      onPress={() => router.push('/follows?edit=1')}
+      testID={`${testID}-edit-following`}
+    />
+  );
   return (
     <View style={centre ? styles.followCentred : undefined}>
       {centre ? <View style={styles.followCentred}>{button}</View> : button}
@@ -514,12 +522,11 @@ export function FollowButton({
               </Text>
             </Animated.View>
             {limitReached ? (
-              <Button
-                label="Edit Following"
-                variant="plain"
-                onPress={() => router.push('/follows?edit=1')}
-                testID={`${testID}-edit-following`}
-              />
+              centre ? (
+                <View style={styles.followCentred}>{editFollowing}</View>
+              ) : (
+                editFollowing
+              )
             ) : null}
           </Group>
         ) : null}
