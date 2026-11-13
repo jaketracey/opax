@@ -1,6 +1,5 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {execFileSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
 import {readFile} from 'node:fs/promises';
 import {build} from 'esbuild';
@@ -10,11 +9,13 @@ import {governmentFunctionRows} from '../src/government-finance-functions.ts';
 import {governmentFinanceTableConfig,governmentFunctionTableConfig} from '../public/register-tables.js';
 import {formatCell,toCSV} from '../public/datatable.js';
 import {searchCatalog} from '../src/catalog-search.ts';
+import {pythonSkip,runPython} from './helpers/python.mjs';
 
-const repository=new URL('../../',import.meta.url),options={cwd:repository,encoding:'utf8',maxBuffer:32*1024*1024};
+const options={maxBuffer:32*1024*1024};
+const skip=pythonSkip(['openpyxl']);
 const verifyOriginals=process.env.OPAX_GFS_VERIFY_ORIGINALS==='1';
-const fixture=JSON.parse(execFileSync('python3',['tests/fixtures/abs_gfs_public_outputs.py',...(verifyOriginals?['--verify-originals']:[])],options));
-const hub=fixture.asset,sourceRows=[...hub.rows,...hub.function_rows];
+const fixture=skip?null:JSON.parse(runPython(['tests/fixtures/abs_gfs_public_outputs.py',...(verifyOriginals?['--verify-originals']:[])],options));
+const hub=fixture?.asset,sourceRows=hub?[...hub.rows,...hub.function_rows]:[];
 const locator=r=>`${r.workbook} · ${r.sheet}!${r.cell}`;
 const originals=new Map(sourceRows.map(r=>[locator(r),r]));
 const noDiagnostics=output=>{
@@ -25,7 +26,7 @@ const originalFetch=globalThis.fetch;
 globalThis.fetch=async()=>{throw Error('Public-output tests must never use the network');};
 test.after(()=>{globalThis.fetch=originalFetch;});
 
-test('real and fixture promoted assets and both CSVs retain workbook cells, never diagnostic division, education or group sums',()=>{
+test('real and fixture promoted assets and both CSVs retain workbook cells, never diagnostic division, education or group sums',{skip},()=>{
  assert.equal(fixture.source_observations_traced,8246);
  assert.equal(fixture.original_cells_verified,verifyOriginals?8246:0);noDiagnostics(JSON.stringify(hub));
  const publicAsset=JSON.parse(readFileSync(new URL('../public/government-finance/data.json',import.meta.url),'utf8'));
@@ -38,7 +39,7 @@ test('real and fixture promoted assets and both CSVs retain workbook cells, neve
  }
  for(const [rows,config] of [[governmentFinanceRows(hub),governmentFinanceTableConfig],[governmentFunctionRows(hub),governmentFunctionTableConfig]]){
   const csv=toCSV(rows,config(rows));noDiagnostics(csv);
-  const exported=JSON.parse(execFileSync('python3',['-c','import csv,json,sys; print(json.dumps(list(csv.DictReader(sys.stdin))))'],{...options,input:csv}));
+  const exported=JSON.parse(runPython(['-c','import csv,json,sys; print(json.dumps(list(csv.DictReader(sys.stdin))))'],{...options,input:csv}));
   assert.equal(exported.length,rows.length);
   for(const row of exported){
    const source=originals.get(row['Original cell']);assert.ok(source,row['Original cell']);
@@ -49,7 +50,7 @@ test('real and fixture promoted assets and both CSVs retain workbook cells, neve
  }
 });
 
-test('SSR cards, table amounts and hydration use original cells even where diagnostic sums differ by rounding',async()=>{
+test('SSR cards, table amounts and hydration use original cells even where diagnostic sums differ by rounding',{skip},async()=>{
  for(const {published,computed_sum_million} of Object.values(fixture.rounding_controls)){
   const query=new URLSearchParams({level:published.level_of_government,sector:published.sector,jurisdiction:published.jurisdiction,'gfsFunction.q':locator(published)});
   const result=await governmentFinancePage(new URL('https://opax.test/register/government-finance?'+query),async()=>hub,(title,text)=>`<h1>${title}</h1><p>${text}</p>`);
@@ -71,7 +72,7 @@ test('SSR cards, table amounts and hydration use original cells even where diagn
  }
 });
 
-test('built search catalogue and authenticated local /mcp never expose GFS reconciliation records or sums',async()=>{
+test('built search catalogue and authenticated local /mcp never expose GFS reconciliation records or sums',{skip},async()=>{
  const manifest=JSON.parse(await readFile(new URL('../public/search-catalog/manifest.json',import.meta.url)));
  let records=0;
  for(let shard=0;shard<Math.ceil(manifest.count/manifest.recordShardSize);shard++){
