@@ -108,7 +108,7 @@ class LoopbackCallTests : SafeVoiceTest() {
     }
   }
 
-  @Test fun loopbackAbnormalDropAndReconnectRefusedUntilStatusClears() = test {
+  @Test fun loopbackAbnormalDropAndReconnectReplacesOpenSession() = test {
     val (server, rig) = fixture(LoopbackRelay.Scenario.Quiet, CallTiming(pollInterval = 0.05, pollMaxInterval = 0.05))
     rig.controller.start()
     eventually { rig.controller.state == CallState.live }
@@ -116,12 +116,11 @@ class LoopbackCallTests : SafeVoiceTest() {
     server.drop()
     eventually { rig.controller.state == CallState.failed }
     rig.controller.start()
-    assertEquals(CallState.unavailable, rig.controller.state)
-    assertEquals(1, rig.http.count(AuthRoute.voiceStart))
-    assertEquals(1, server.snapshot().peers.size)
-    rig.http.configure(status = signedStatus(remaining = 0)) // fixture expiry fully charges reservation
-    eventually { rig.controller.latestStatus?.activeSession == null }
-    assertEquals(0L, rig.controller.latestStatus?.remainingSeconds)
+    assertEquals(CallState.connecting, rig.controller.state)
+    // One start for the original call and one explicit retry, even while status reports it open.
+    assertEquals(2, rig.http.count(AuthRoute.voiceStart))
+    eventually { rig.controller.state == CallState.live }
+    assertEquals(2, server.snapshot().peers.size)
     rig.close()
     server.stop()
   }
@@ -156,11 +155,15 @@ class LoopbackCallTests : SafeVoiceTest() {
       rig.http.resumeStart()
       task.join()
       eventually { rig.recorder.hasError(VoiceFailure.unavailable) }
+      assertEquals(1, rig.http.count(AuthRoute.voiceStart))
       assertEquals(1, rig.http.count(AuthRoute.voiceFinish))
       assertEquals(600L, rig.controller.latestStatus?.remainingSeconds)
       if (active != null) {
         rig.controller.start()
-        assertEquals(1, rig.http.count(AuthRoute.voiceStart))
+        // One start per explicit attempt: the 503 itself never retries the reservation.
+        assertEquals(2, rig.http.count(AuthRoute.voiceStart))
+        eventually { rig.controller.state == CallState.failed }
+        assertEquals(2, rig.http.count(AuthRoute.voiceFinish))
         val remaining = if (active == "connecting" || active == "active") 0 else 600
         rig.http.configure(status = signedStatus(remaining = remaining))
         eventually { rig.controller.latestStatus?.activeSession == null }
