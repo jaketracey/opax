@@ -1,7 +1,7 @@
 /** Anonymous projections of the same offline assets used by the election pages. */
 import {appJson, appRead, readOnly} from './app-http'
-import {findSeats, keyDateRows, latest, titledVotes, VIC_ELECTION_ABOUT, type Contest, type Member, type Seat, type VicElection, type VicPlaces} from './vic-election'
-import {VIC_ELECTION_PATH, VIC_ELECTION_ASSET, VIC_ELECTION_PLACES, VIC_ELECTION_POLLS_OPEN, VIC_ELECTION_POLLS_CLOSE, vicElectionEnabled} from '../public/vic-election.js'
+import {findSeats, keyDateRows, latest, titledVotes, vicElectionCopy, vicElectionState, visibleResults, VIC_ELECTION_ABOUT, type Contest, type Member, type Seat, type VicElection, type VicPlaces} from './vic-election'
+import {VIC_ELECTION_PATH, VIC_ELECTION_ASSET, VIC_ELECTION_PLACES, VIC_ELECTION_POLLS_OPEN, VIC_ELECTION_POLLS_CLOSE, VIC_ELECTION_CACHE, vicElectionEnabled} from '../public/vic-election.js'
 import {validateVicElection, validateVicPlaces, VIC_ELECTION_SOURCE_KEYS as SOURCE_KEYS} from './vic-election-data'
 
 type ElectionEnv = Pick<Env, 'ASSETS' | 'VIC_ELECTION_HUB_ENABLED'>
@@ -64,10 +64,13 @@ function seatRow(s: Seat) {
     : {...base, kind:'region' as const, members:s.members.map(memberName), districts:s.districts.length, candidates}
 }
 
-function overview(d: VicElection) {
-  return {schema_version:1, title:'Victorian election 2026', web_url:ORIGIN + VIC_ELECTION_PATH,
+function overview(d: VicElection, now: Date) {
+  const copy = vicElectionCopy(d,now)
+  const results = visibleResults(d,now)
+  return {schema_version:1, ...copy, current_results:results ? {election_day:results.election_day,fetched:results.fetched,status:results.status,url:results.url,
+    districts:results.districts.map(r=>({name:r.name,result:contest(r.result)}))} : null, web_url:ORIGIN + VIC_ELECTION_PATH,
     updated:d.updated, election_day:d.election_day, polls_open:VIC_ELECTION_POLLS_OPEN, polls_close:VIC_ELECTION_POLLS_CLOSE,
-    term_start:d.term_start, term_end:d.term_end, key_dates:keyDateRows(d),
+    term_start:d.term_start, term_end:d.term_end, key_dates:keyDateRows(d,now),
     notice:d.notice ? {text:d.notice.text, link:d.notice.link ? {label:d.notice.link.label, url:d.notice.link.url} : null} : null,
     candidates_published:d.seats.find(s=>s.candidates)?.candidates?.published ?? null,
     results_fetched:d.results_fetched, roster_date:d.seats.map(s=>s.roster_date).sort().at(-1)!,
@@ -77,9 +80,11 @@ function overview(d: VicElection) {
     corrections:{email:d.corrections.email, response:d.corrections.response}}
 }
 
-function seatDetail(d: VicElection, s: Seat) {
+function seatDetail(d: VicElection, s: Seat, now: Date) {
   const r = s.kind === 'district' ? d.seats.find(r=>r.kind === 'region' && r.name === s.region)! : null
-  return {schema_version:1, updated:d.updated, kind:s.kind, slug:slug(s.path), name:s.name, web_url:ORIGIN + s.path,
+  const current = visibleResults(d,now)?.districts.find(row=>row.name === s.name)?.result
+  return {schema_version:1, state:vicElectionState(d,now), current_result:current ? contest(current) : null,
+    updated:d.updated, kind:s.kind, slug:slug(s.path), name:s.name, web_url:ORIGIN + s.path,
     source_url:s.source_url, electorate_url:s.electorate_url, roster_date:s.roster_date,
     formerly:s.formerly, created:s.created, boundary_note:s.boundary_note,
     region:r ? {slug:slug(r.path), name:r.name, members:r.members.map(memberRef)} : null,
@@ -95,7 +100,7 @@ function seatDetail(d: VicElection, s: Seat) {
     results_fetched:d.results_fetched, speech_updated:d.speech_updated, division_start:d.division_start, division_end:d.division_end}
 }
 
-export async function appVicElection(req: Request, env: ElectionEnv): Promise<Response> {
+export async function appVicElection(req: Request, env: ElectionEnv, now = new Date()): Promise<Response> {
   const json = (body: unknown, status: number, headers: Record<string,string> = {}) => appJson(req,body,status,{'x-robots-tag':'noindex',...headers})
   if (!vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED)) return json({error:'not_published'},404)
   const method = readOnly(req)
@@ -116,15 +121,15 @@ export async function appVicElection(req: Request, env: ElectionEnv): Promise<Re
       const places = await cachedAsset(env.ASSETS,VIC_ELECTION_PLACES,cached.places.asset,value=>validateVicPlaces(value,d)).catch(()=>null)
       const hits = findSeats(q!,d,places).map(h=>({name:h.name, kind:h.kind,
         seats:h.seats.map(x=>({...seatRow(x.seat), share:h.seats.length > 1 ? x.share : null}))}))
-      body = {schema_version:1, q:q!, places_searched:places !== null, hits, split:hits.some(h=>h.seats.length > 1),
+      body = {schema_version:1, state:vicElectionState(d,now), q:q!, places_searched:places !== null, hits, split:hits.some(h=>h.seats.length > 1),
         empty:hits.length ? null : /^\d{4}$/.test(q!) ? 'postcode' : 'place', address_url:d.sources.address,
         attribution:places?.attribution ?? '', note:places?.note ?? ''}
     } else if (id !== null) {
       const s = d.seats.find(s=>s.path === `${VIC_ELECTION_PATH}/${id}`)
       if (!s) return json({error:'not_found'},404)
-      body = seatDetail(d,s)
-    } else body = overview(d)
-    const response = await appRead(req,body)
+      body = seatDetail(d,s,now)
+    } else body = overview(d,now)
+    const response = await appRead(req,body,VIC_ELECTION_CACHE)
     response.headers.set('x-robots-tag','noindex')
     return response
   } catch {

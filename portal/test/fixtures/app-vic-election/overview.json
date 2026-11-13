@@ -1,6 +1,23 @@
 {
   "schema_version": 1,
+  "state": "pre_poll",
   "title": "Victorian election 2026",
+  "lede": "Victorians vote on Saturday 28 November. Enrolment closed at 8 pm on Tuesday 3 November.",
+  "voting": {
+    "title": "How and where to vote",
+    "text": "Early voting runs 18–27 November, 9 am to 6 pm, except Sunday 22 November. Check locations and hours with the VEC.",
+    "links": [
+      {
+        "label": "VEC voting options and locations",
+        "url": "https://www.vec.vic.gov.au/voting/2026-state-election/voting-options"
+      }
+    ]
+  },
+  "finder": {
+    "title": "Which seat am I in?",
+    "button": "Find my seat"
+  },
+  "current_results": null,
   "web_url": "https://opax.com.au/vic-election-2026",
   "updated": "2026-11-12",
   "election_day": "2026-11-28",
@@ -11,7 +28,7 @@
   "key_dates": [
     {
       "id": "enrolment",
-      "label": "Enrol or update your details by",
+      "label": "Enrolment closed",
       "when": "8 pm Tuesday 3 November 2026",
       "passes_at": "2026-11-03T20:00:00+11:00",
       "passed_label": "Enrolment closed",
@@ -23,9 +40,9 @@
     },
     {
       "id": "caretaker",
-      "label": "Caretaker period begins",
+      "label": "Caretaker period began",
       "when": "6 pm Tuesday 3 November 2026",
-      "passes_at": "2026-11-03T20:00:00+11:00",
+      "passes_at": "2026-11-03T18:00:00+11:00",
       "passed_label": "Caretaker period began",
       "passed_when": null,
       "link": null
@@ -33,7 +50,7 @@
     {
       "id": "nominations",
       "label": "Candidates confirmed",
-      "when": "After nominations close at noon on Monday 9 November 2026",
+      "when": "Nominations closed at noon on Monday 9 November 2026",
       "passes_at": "2026-11-09T12:00:00+11:00",
       "passed_label": null,
       "passed_when": "Nominations closed at noon on Monday 9 November 2026",
@@ -55,9 +72,9 @@
       "id": "early",
       "label": "Early voting",
       "when": "18–27 November 2026, 9 am to 6 pm. Closed Sunday 22 November",
-      "passes_at": null,
-      "passed_label": null,
-      "passed_when": null,
+      "passes_at": "2026-11-27T18:00:00+11:00",
+      "passed_label": "Early voting closed",
+      "passed_when": "6 pm Friday 27 November 2026",
       "link": {
         "label": "Where and how to vote",
         "url": "https://www.vec.vic.gov.au/voting/2026-state-election/voting-options"
@@ -66,10 +83,10 @@
     {
       "id": "election_day",
       "label": "Election day",
-      "when": "Saturday 28 November 2026, 8 am to 6 pm",
-      "passes_at": null,
-      "passed_label": null,
-      "passed_when": null,
+      "when": "Saturday 28 November 2026, 8 am to 6 pm AEDT",
+      "passes_at": "2026-11-28T18:00:00+11:00",
+      "passed_label": "Voting closed",
+      "passed_when": "6 pm AEDT on Saturday 28 November 2026",
       "link": null
     }
   ],
