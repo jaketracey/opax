@@ -18,6 +18,7 @@ import copy
 import hashlib
 import json
 import sys
+from datetime import date
 from functools import lru_cache
 from pathlib import Path
 
@@ -167,14 +168,34 @@ def list_seat(snap, member):
                 basis=f"Official member list as at {snap['as_of']}; list-only service, no speech attribution")
 
 
+def term_start(entry, snap):
+    """The service start a reviewed list entry may carry (`term_start`: {start, url, checked, note}), else the list's
+    date. The list gives no term start; a reviewed source may (Wikidata's position-held start). It must be an ISO
+    date on or before the list's date, with an https source, a check date and a note saying what it rests on."""
+    ts = entry.get('term_start')
+    if ts is None:
+        return snap['as_of']
+    if not (isinstance(ts, dict) and set(ts) == {'start', 'url', 'checked', 'note'}
+            and all(isinstance(ts[k], str) and ts[k].strip() for k in ts) and str(ts['url']).startswith('https://')):
+        raise ValueError('A reviewed term start needs a start, an https source, a check date and a note')
+    try:
+        start = date.fromisoformat(ts['start'])
+    except ValueError:
+        raise ValueError('A reviewed term start is not an ISO date') from None
+    if start.isoformat() != ts['start'] or ts['start'] > snap['as_of']:
+        raise ValueError('A reviewed term start must be an ISO date on or before the list date')
+    return ts['start']
+
+
 def list_row(entry, state):
-    """The list-only profile a reviewed `new` entry describes, rebuilt from the list itself."""
+    """The list-only profile a reviewed `new` entry describes, rebuilt from the list itself (and its reviewed term
+    start, when it has one: the profile's first year)."""
     snap, m = list_member(entry.get('list'), entry.get('list_name'), state)
-    if entry.get('service') != dict(jurisdiction=snap['jurisdiction'], chamber=snap['chamber'], start=snap['as_of'], end=None):
+    start = term_start(entry, snap)
+    if entry.get('service') != dict(jurisdiction=snap['jurisdiction'], chamber=snap['chamber'], start=start, end=None):
         raise ValueError('Reviewed list service differs from the official list')
-    year = int(snap['as_of'][:4])
     row = dict(name=m['name'], speeches=0, states=[snap['jurisdiction']], chambers=[snap['chamber']],
-               first=year, last=year, roster_only=True)
+               first=int(start[:4]), last=int(snap['as_of'][:4]), roster_only=True)
     if m.get('aliases'):
         row['aliases'] = list(m['aliases'])
     row.update(party=m['party'], current=True, party_now=m['party'], representation=[list_seat(snap, m)])
@@ -202,6 +223,67 @@ def list_link(row, group, state):
             'representation': (seats, seats + [list_seat(snap, m)])}
 
 
+# A linked person's dated service in the list chamber (a second record group beside the link, evidence rule
+# LIST_SERVICE_RULE): they sit there now, under the list's party, from a reviewed term start. Their earlier Senate
+# service comes from the Parliamentary Handbook's dated party periods (scripts/handbook_party_service.json) and must
+# have ended before that start. Rebuilt here from those files, so a re-export reproduces it and a moved list, start or
+# Handbook record holds it. It writes the dated fields the accept list otherwise protects (current, party_now,
+# affiliations); roster_accept lets this group, and only once verified, touch them.
+LIST_SERVICE_RULE = 'official-list-service'
+HANDBOOK_PARTY_URL = "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '{phid}' and ROSTypeID eq 11"
+
+
+def handbook_senate_periods(pid, root=ROOT):
+    """The Handbook's dated Senate party periods for `pid`, as affiliations ({} when it holds no Senate record).
+    Every period must be dated and the service ended: an open or undated record is no basis for a later seat."""
+    doc = json.loads((Path(root) / 'scripts/handbook_party_service.json').read_text())
+    hits = [p for p in doc.get('people', []) if p.get('pid') == pid]
+    if not hits:
+        return None, []
+    if len(hits) != 1:
+        raise ValueError('The Handbook names the id more than once')
+    person = hits[0]
+    if person.get('current') or not person.get('service_end') or person.get('undated'):
+        raise ValueError('The Handbook Senate service is open or holds an undated party')
+    out = []
+    for period in person.get('periods') or []:
+        end = period.get('end') or period.get('through')
+        if not (period.get('start') and end and period.get('party')):
+            raise ValueError('A Handbook Senate period is undated')
+        out.append(dict(start=period['start'], end=end, party=period['party'],
+                        source_url=HANDBOOK_PARTY_URL.format(phid=person['phid'])))
+    return person['service_end'], out
+
+
+def list_service(row, group, state, root=ROOT):
+    """{field: (from, to)}: the dated service `group` gives an existing person already linked to its list chamber."""
+    snap, m = list_member(group.get('list'), group.get('list_name'), state)
+    names = {name_key(n) for n in [m['name'], *m.get('aliases', [])]}
+    if name_key(row['name']) not in names or not str(row.get('pid') or '').isdigit():
+        raise ValueError('The person is not the list member by full name with a verified id')
+    seat = list_seat(snap, m)
+    seats = row.get('representation') or []
+    if snap['chamber'] not in (row.get('chambers') or []) or seat not in seats:
+        raise ValueError('The person is not linked to the list chamber')
+    if any(row.get(f) for f in ('current', 'party_now', 'affiliations')):
+        raise ValueError('The person already has dated or current service')
+    if group.get('term_start') is None:
+        raise ValueError('A list service needs a reviewed term start')
+    start = term_start(group, snap)
+    senate = [r for r in seats if r.get('jurisdiction') == 'federal' and r.get('chamber') == 'senate']
+    service_end, periods = handbook_senate_periods(row['pid'], root)
+    if periods and len(senate) != 1:
+        raise ValueError('The Handbook Senate service needs one Senate seat on the record')
+    if service_end and service_end >= start:
+        raise ValueError('The Senate service must end before the list chamber term starts')
+    federal = [dict(jurisdiction='federal', chamber='senate', electorate=senate[0]['electorate'], party=p['party'],
+                    start=p['start'], end=p['end'], source_url=p['source_url']) for p in periods]
+    council = dict(jurisdiction=snap['jurisdiction'], chamber=snap['chamber'], electorate=m['electorate'],
+                   party=m['party'], start=start, end=None, source_url=group['term_start']['url'])
+    return {'current': (row.get('current'), True), 'party_now': (row.get('party_now'), m['party']),
+            'affiliations': (row.get('affiliations'), federal + [council])}
+
+
 def list_problem(name, entry, row=None, root=ROOT, link=False):
     """None when a reviewed list entry (a new row, or with link a record group on `row`) is exactly what the
     official list gives, else why it is held."""
@@ -210,8 +292,12 @@ def list_problem(name, entry, row=None, root=ROOT, link=False):
         if link:
             if row is None or row.get('name') != name:
                 return 'a list link needs one existing roster person'
-            fields = group_fields(list_link(_from_row(row, entry), entry, state))
-            return None if entry.get('fields') == fields else 'the link differs from the official list'
+            build = list_service if link == 'service' else list_link
+            fields = group_fields(build(_from_row(row, entry), entry, state, root) if link == 'service'
+                                  else build(_from_row(row, entry), entry, state))
+            return None if entry.get('fields') == fields else (
+                'the service differs from the official list, its term start or the Handbook' if link == 'service'
+                else 'the link differs from the official list')
         built = list_row(entry, state)
         return None if entry.get('row') == built and name == built['name'] else 'the row differs from the official list'
     except (OSError, ValueError, KeyError, TypeError, AttributeError) as err:
@@ -266,17 +352,25 @@ def propose_list(doc, snap, evidence, checked, url):
     return new, links, held
 
 
-def enrich_lists(out, accept, state):
+def enrich_lists(out, accept, state, root=ROOT):
     """Lay the reviewed list rows and links onto an export (idempotent; never a second row for one name)."""
     rule = lambda key: accept.get('evidence', {}).get(key, {}).get('rule')  # noqa: E731
     by = {p['name']: p for p in out['people']}
     for name, groups in accept.get('records', {}).items():
         row = by.get(name)
         for group in groups:
-            if row is None or rule(group.get('evidence')) != LIST_RULE:
+            if row is None or rule(group.get('evidence')) not in (LIST_RULE, LIST_SERVICE_RULE):
                 continue
             list_member(group.get('list'), group.get('list_name'), state)  # a moved list fails closed
             fields = group.get('fields') or {}
+            if rule(group.get('evidence')) == LIST_SERVICE_RULE:
+                # Rebuilt on the linked row; one that no longer gives the reviewed values is left for the overlay.
+                try:
+                    built = group_fields(list_service(row, group, state, root))
+                except ValueError:
+                    continue
+                if built != fields:
+                    continue
             # Only onto the reviewed `from` values: an export row that differs elsewhere is left as it is, and the
             # overlay keeps the shipped (linked) row and holds the group (roster_accept.apply: export moved).
             if all(row.get(f) == a for f, (a, _b) in fields.items()):
@@ -382,7 +476,7 @@ def install_list(chamber, evidence, root=ROOT, notes=None):
         if group not in groups:
             groups.append(group)
     accept_path.write_text(write_entries(accept_path.read_text(), links, new, accept))
-    fresh = enrich_lists(copy.deepcopy(shipped), accept, state)
+    fresh = enrich_lists(copy.deepcopy(shipped), accept, state, root)
     people, report = roster_accept.apply(shipped['people'], fresh['people'], accept, root)
     listed = {m['name'] for m in snap['members']} | set(links)
     held += [(n, why) for n, why in report['held'] if n in listed]  # other reviewed changes are not this review's
