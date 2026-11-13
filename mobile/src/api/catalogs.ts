@@ -1,6 +1,6 @@
 import { ReadSession } from './read-session';
 import { throwIfAborted } from './abort';
-import { samePartyLabel } from '../design/party';
+import { partyRename, samePartyLabel } from '../design/party';
 import { decodePartyFile } from '../features/directories/party-file';
 import { publicDiscovery } from '../features/money-public/discovery';
 import {
@@ -28,8 +28,10 @@ import {
   partyLabels,
   partyMembers,
   partyMoney,
+  partyPastMembers,
   recentPartyBills,
   resolveParty,
+  type PartyPastMember,
 } from './party-page';
 import {
   joinPerson,
@@ -108,6 +110,11 @@ export interface PartyPageRecord {
     label: string;
     rosterAsAt: string | null;
     members: Block<ReturnType<typeof partyMembers>>;
+    /**
+     * A renamed party's past members under a former name, from the voting
+     * record. Absent for every other party.
+     */
+    past?: Block<PartyPastMember[]>;
     receipts: Block<NonNullable<ReturnType<typeof partyMoney>>>;
     associated: Block<{
       rows: NonNullable<
@@ -343,10 +350,12 @@ export class Catalogs {
           ]
         : [],
     };
+    const renamed = !!partyRename(label);
     let view: NonNullable<PartyPageRecord['data']> = {
       label,
       rosterAsAt: core.data?.roster.data.meta.generated ?? null,
       members,
+      ...(renamed ? { past: loadingPartyBlock<PartyPastMember[]>() } : {}),
       receipts: loadingPartyBlock(),
       associated: loadingPartyBlock(),
       divisions: loadingPartyBlock(),
@@ -359,13 +368,40 @@ export class Catalogs {
         view.receipts,
         view.associated,
         view.divisions,
+        ...(view.past ? [view.past] : []),
       ].some((b) => b.stale),
     });
     throwIfAborted(signal);
     progress?.(result());
     // Give React a turn to commit the title and Members before optional decode work.
     await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    // A renamed party's past members sat under a former name: the voting
+    // record holds them, by the label they sat under.
+    const readPast = async () => {
+      const block = await read(this.votes(signal), 'They Vote For You, ODbL');
+      view = {
+        ...view,
+        past: {
+          ...block,
+          data: block.data
+            ? partyPastMembers(
+                label,
+                block.data,
+                core.data?.slugs.data ?? { generated: '', slugs: {} },
+                [
+                  ...(membership?.current ?? []),
+                  ...(membership?.recorded ?? []),
+                ],
+              )
+            : null,
+          asAt: block.data?.meta?.content_changed_at ?? null,
+        },
+      };
+      throwIfAborted(signal);
+      progress?.(result());
+    };
     await Promise.all([
+      ...(renamed ? [readPast()] : []),
       (money ? Promise.resolve(money) : readMoney())
         .then((block) => {
           view = {

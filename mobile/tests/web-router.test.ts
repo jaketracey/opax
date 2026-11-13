@@ -447,6 +447,43 @@ describe('incoming links open in the tab the shell spec gives them', () => {
     );
   });
   test.each([true, false])(
+    'the Liberal Democratic Party’s old links open the Libertarian Party page in Today (cold %s)',
+    (initial) => {
+      // The web's 301s: one party, at its current name.
+      for (const path of [
+        'https://opax.com.au/subject/party/liberal-democratic-party',
+        'https://opax.com.au/subject/party/liberal-democrats',
+        'https://opax.com.au/subject/party/Liberal%20Democratic%20Party',
+        'https://opax.com.au/party/liberal-democratic-party',
+        'https://opax.com.au/subject/party/libertarian-party',
+        'opax://party/liberal-democratic-party',
+      ])
+        expect(redirectSystemPath({ path, initial })).toBe(
+          '/(tabs)/(today)/party/libertarian-party',
+        );
+      const { fromWebPath } = jest.requireActual<
+        typeof import('../src/navigation/external')
+      >('../src/navigation/external');
+      expect(fromWebPath('/subject/party/liberal-democratic-party')).toEqual({
+        pathname: '/party/[slug]',
+        params: { slug: 'libertarian-party', name: 'Libertarian Party' },
+      });
+      expect(
+        redirectSystemPath({
+          path: 'https://opax.com.au/subject/party/liberal-democratic-party?section=changes',
+          initial,
+        }),
+      ).toBe('/(tabs)/(today)/party/libertarian-party?section=changes');
+      // Other parties' links are unchanged.
+      expect(
+        redirectSystemPath({
+          path: 'https://opax.com.au/subject/party/labor',
+          initial,
+        }),
+      ).toBe('/(tabs)/(today)/party/labor');
+    },
+  );
+  test.each([true, false])(
     'money pages and editions open in Today (cold %s)',
     (initial) => {
       for (const [path, target] of [
