@@ -127,6 +127,12 @@ test('exact containment cannot bypass the changed-person guard',()=>{
   for(const lines of [[text,named],[named,text]])assert.equal(api.distinctSummary(payload(lines)).answer,lines.join('\n\n'))
 })
 
+test('reordering people cannot reassign unchanged figures during deduplication',()=>{
+  const text='The Example Commission found Avery Sample approved 17 claims while Blake Example approved 19 claims.'
+  const reassigned='The Example Commission found Blake Example approved 17 claims while Avery Sample approved 19 claims.'
+  for(const lines of [[text,reassigned],[reassigned,text]])assert.equal(api.distinctSummary(payload(lines)).answer,lines.join('\n\n'))
+})
+
 test('a person mentioned as cleared never displaces the commission finding about Cabinet',()=>{
   const own='The royal commission found that Cabinet approved the recovery scheme without legislative authority.'
   const cleared='Rowan Ellery said the integrity commission cleared former minister Avery Quinlan of corrupt conduct.'

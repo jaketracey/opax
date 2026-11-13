@@ -21,7 +21,8 @@ function names(text:string):string {
   })
   // A surname alone can still change the subject. Exempt sentence openers, body labels and date words.
   for(const m of rest.matchAll(/\b\p{Lu}[\p{Ll}’'-]+\b/gu))if(!nonPerson.test(normal(m[0])))found.push(normal(m[0]))
-  return found.sort().join('|')
+  // Preserve mention order too: swapping people can reassign the same ordered figures.
+  return found.join('|')
 }
 const dates=(text:string)=>(normal(text).match(/\b(?:january|february|march|april|may|june|july|august|september|october|november|december)\b/g)??[]).join('|')
 function claimWords(text:string,context:string):Set<string> {
