@@ -78,7 +78,9 @@ test('the notice caveat appears only where a shadow minister is priced',async()=
 test('pay words about somebody else, or about what was said, go to the record',async()=>{
  for(const q of ['What did Labor say about wages?','What has parliament said about politicians pay rises?','Which party voted for the pay rise for aged care workers?',
   'Who are the highest paid CEOs donating to the Liberals?','Who gets the most money from gambling?','How much do nurses get paid?',
-  'What is the minimum wage?','How much does the government pay for submarines?','Who is the highest paid public servant?'])assert.equal(await ask(q),null,q);
+  'What is the minimum wage?','How much does the government pay for submarines?'])assert.equal(await ask(q),null,q);
+ // A public servant's pay is answered from the Tribunal's rates (ask-pay-offices.test.mjs), never as a politician's.
+ assert.doesNotMatch((await ask('Who is the highest paid public servant?')).answer,/parliamentarian/);
  assert.equal(await ask('Who is the highest paid politician?',{speaker:'Anthony Albanese'}),null);
  assert.equal(await ask('Who is the highest paid politician?',{kind:'speech'}),null);
  assert.equal(await ask('Who is the highest paid politician?',{state:'nsw'}),null);
