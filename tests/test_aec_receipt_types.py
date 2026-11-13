@@ -73,6 +73,30 @@ def test_migration_is_additive_and_idempotent():
     assert set(receipts.DONATION_COLUMNS) <= {r[1] for r in db.execute("PRAGMA table_info(donations)")}
 
 
+def test_retained_donor_figures_select_recipient_rows_once_without_a_drawing_graph(tmp_path):
+    from scripts.export_donor_disclosures import attach_selected_federal_receipts
+    db = database(tmp_path / 'db')
+    entries = {'Detailed Receipts.csv': [annual(Value='100'), annual(Value='100'),
+        annual('Other Receipt', Value='40'), annual('Loan', Value='30'), annual('Public Funding', Value='900')],
+        'Donations Made.csv': [{'Financial Year': '2020-2021', 'Donor Name': 'Example Mining Ltd',
+                               'Donation Made To': 'Example Party', 'Value': '100'}]}
+    donations.process_zip(db, archive('AllAnnualData', entries), 'AllAnnualData')
+    load(db, 'AllElectionsData', {})
+    load(db, 'AllReferendumData', {})
+    db.execute("UPDATE donations SET recipient_canonical='Labor',industry='mining'")
+    node = {'label': 'Example Mining Ltd', 'total': 999999, 'count': 99}
+    attach_selected_federal_receipts(db, [node])
+    assert (node['total'], node['count']) == (270, 4)
+    assert node['by_type'] == {'donation_received': 200, 'loan': 30, 'other_receipt': 40}
+    assert node['by_type_year']['2020-21']['donation_received'] == [200, 2], 'equal recipient rows stay distinct'
+    absent = {'label': 'No Recipient Receipt', 'total': 999, 'count': 1}
+    attach_selected_federal_receipts(db, [absent])
+    assert absent['by_type'] == {} and 'total' not in absent and 'count' not in absent
+    db.execute('DELETE FROM aec_receipt_files')
+    with pytest.raises(ValueError, match='Complete cached'):
+        attach_selected_federal_receipts(db, [node])
+
+
 def test_direct_loaders_keep_real_aec_columns(tmp_path):
     db = database(tmp_path / "db")
     with zipfile.ZipFile(io.BytesIO(archive("AllAnnualData", {"Detailed Receipts.csv": [annual()]}))) as z:
