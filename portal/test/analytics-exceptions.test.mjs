@@ -165,3 +165,15 @@ test('the served bundle carries the error hooks and the explicit capture setting
     assert.ok(bundle.includes(piece), `public/analytics.js is missing ${piece}; run npm run build:analytics`);
   assert.ok(!bundle.includes('capture_exceptions:!1'), 'public/analytics.js still turns exception capture off');
 });
+
+test('the privacy page says PostHog receives anonymous error reports and how they are cleaned', () => {
+  const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+  const privacy = html.match(/<section id="panel-privacy"[^>]*>([\s\S]*?)<\/section>/)[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+  for (const fact of ['sends PostHog anonymous error reports when a page goes wrong',
+    'PostHog also receives anonymous error reports when something on a page goes wrong in your browser',
+    'any quoted text is removed from the message', 'search terms and fragments are removed from any address in it',
+    'Errors from browser extensions or other sites\' scripts are not sent', 'Google Analytics receives no error reports'])
+    assert.ok(privacy.includes(fact), fact);
+  assert.doesNotMatch(privacy, /never receive[^.]*error messages/);
+  assert.doesNotMatch(privacy, /—/);
+});
