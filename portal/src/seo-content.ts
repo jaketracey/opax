@@ -5,7 +5,7 @@ import { shortDate } from '../public/format.js'
 import { personUrl, partyUrl } from '../public/party-page.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
 import sponsorParties from '../public/facts/sponsor-parties.json' with {type:'json'}
-import {rosterSeatParty, type RosterSeatParty} from '../public/roster-party.js'
+import {rosterSeatParty, rosterListParty, type RosterSeatParty, type RosterListObservation} from '../public/roster-party.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
 import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../public/datatable.js'
@@ -51,7 +51,7 @@ export interface Division {
   source_url?: string; url?: string; stage?: string;
   party_tallies?: { party: string; votes: Record<string,number> }[];
   recorded_ayes?: number; recorded_noes?: number; unknown_party_count?: number;
-  members?: { name: string; person_id?: string; person_slug?: string; party?: string; vote: string }[];
+  members?: { name: string; person_id?: string; person_slug?: string; party?: string; vote: string; party_source?: { basis: string; url?: string | null } }[];
   bills?: { key: string; title: string; url?: string }[];
 }
 interface Vote { question?: string; name?: string; title?: string; stage?: string; date?: string; vote?: string; division_slug?: string; source_url?: string }
@@ -161,20 +161,26 @@ export function associationCaveat(body: string, facts: string): string {
   const line=`<p>${ASSOCIATION_CAVEAT}</p>`
   return /<\/section>\s*$/.test(body) ? body.replace(/<\/section>\s*$/,line+'</section>') : body+line
 }
+/** Dated official chamber lists for full-name profiles (public/data/roster-list-parties.json). */
+export const ROSTER_LIST_PARTIES_PATH = '/data/roster-list-parties.json'
+export type RosterLists = readonly RosterListObservation[] | null | undefined
+/** A verified seat roster's party, else the latest dated official list's (public/roster-party.js). */
+const rosterParty = (p: Person, seats?: readonly Seat[] | null, lists?: RosterLists): RosterSeatParty | null =>
+  rosterSeatParty(p, seats) || rosterListParty(p, lists)
 /** The party a person's own record carries, else the one a verified seat roster
- *  records for them (public/roster-party.js), else nothing. */
-export function personParty(p: Person, seats?: readonly Seat[] | null): {party: string; roster: RosterSeatParty | null} | null {
+ *  or a dated official chamber list records for them (public/roster-party.js), else nothing. */
+export function personParty(p: Person, seats?: readonly Seat[] | null, lists?: RosterLists): {party: string; roster: RosterSeatParty | null} | null {
   const own = p.party_now || p.party
   if (own) return {party: own, roster: null}
-  const roster = rosterSeatParty(p, seats)
+  const roster = rosterParty(p, seats, lists)
   return roster ? {party: roster.party, roster} : null
 }
-export function partyLine(p: Person, seats?: readonly Seat[] | null): string {
+export function partyLine(p: Person, seats?: readonly Seat[] | null, lists?: RosterLists): string {
   // Preserve the roster's tri-state: false is former; missing is not evidence of retirement.
   const party = p.party_now || p.party
   if (!party) {
-    // Said of the seat roster on its date, not of the person's career.
-    const roster = rosterSeatParty(p, seats)
+    // Said of the roster on its date, not of the person's career.
+    const roster = rosterParty(p, seats, lists)
     return roster ? `${roster.party} (parliamentary roster as at ${shortDate(roster.as_of)})` : 'Party not recorded'
   }
   if (p.current === false) return `Formerly ${party}`
@@ -237,7 +243,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   const tableParams=tableState instanceof URLSearchParams ? tableState : new URLSearchParams(serializeQuery(tableState,'vr'))
   const tableQuery=parseQuery(tableParams,'vr')
   const registerHTML=(config:DataTableConfig)=>registerTableHTML(config,undefined,new URL('https://local.invalid/?'+tableParams))
-  const [interests, seats, bills, sponsored, heldBackCounts, chairRoleCounts, video] = await Promise.all([
+  const [interests, seats, bills, sponsored, heldBackCounts, chairRoleCounts, video, rosterLists] = await Promise.all([
     optional<{people: Record<string,unknown>; _by_name: Record<string,string>}>(read,'/interests/index.json'),
     optional<{index_url: string}>(read,'/electorates/manifest.json').then(m => m ? optional<{electorates: Seat[]}>(read,m.index_url) : null),
     // The bill fields profiles use (public/bill-titles.js), else the whole index.
@@ -246,13 +252,15 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     optional<Record<string, number>>(read,'/data/held-back-transcripts.json'),
     optional<Record<string, number>>(read,'/data/chair-role-transcripts.json'),
     optional<{videos: VideoRow[]}>(read,'/video/senate.json'),
+    optional<{observations: RosterListObservation[]}>(read,ROSTER_LIST_PARTIES_PATH),
   ])
+  const lists = rosterLists?.observations
   const display = p.full && p.speech_scope ? p.full : p.name
   const seatList = seats?.electorates || null
-  const description = `${display}. ${partyLine(p,seatList)}. ${(p.representation || []).map(r=>`${r.electorate}, ${chamber(r.chamber)}`).join('; ') || p.chambers.map(chamber).join(', ')}.`
+  const description = `${display}. ${partyLine(p,seatList,lists)}. ${(p.representation || []).map(r=>`${r.electorate}, ${chamber(r.chamber)}`).join('; ') || p.chambers.map(chamber).join(', ')}.`
   let body = '<h2>Party and representation</h2><ul>'
-  const party = personParty(p,seatList)?.party
-  body += `<li>${party ? link(partyUrl(party),partyLine(p,seatList)) : 'Party not recorded'}</li>`
+  const party = personParty(p,seatList,lists)?.party
+  body += `<li>${party ? link(partyUrl(party),partyLine(p,seatList,lists)) : 'Party not recorded'}</li>`
   for (const r of p.representation || []) {
     const seat = seats?.electorates.find(e=>fold(e.name)===fold(r.electorate) && e.jurisdiction===r.jurisdiction && e.chamber===r.chamber)
     body += `<li>${seat ? link(seat.url,r.electorate) : escapeHtml(r.electorate)} — ${escapeHtml(chamber(r.chamber))}</li>`
@@ -365,10 +373,24 @@ function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>,
   const parties=d.party_tallies || [...new Set(members.filter(m=>m.party).map(m=>m.party!))].map(party=>({party,votes:Object.fromEntries([...new Set(members.filter(m=>m.party===party).map(m=>m.vote))].map(vote=>[vote,members.filter(m=>m.party===party && m.vote===vote).length]))}))
   const ayes=d.recorded_ayes ?? members.filter(m=>m.vote==='aye').length, noes=d.recorded_noes ?? members.filter(m=>m.vote==='no').length
   if(!members.length && !parties.length) return '<p>No per-member votes or party tallies here. See the original division record.</p>'
-  let html=`<h3>How each party voted</h3><p>Party labels are those recorded for this division, rather than current affiliations.${ayes!==d.ayes || noes!==d.noes ? ` The member list is partial: ${ayes} recorded ayes and ${noes} recorded noes; the official tally above remains the source total.` : ''}</p>`
-  html+=parties.length ? `<ul>${parties.map(({party,votes})=>`<li>${partyLinks ? link(partyUrl(party),party) : escapeHtml(party)}: ${Object.entries(votes).map(([vote,n])=>`${human(vote)} ${n}`).join(', ')}</li>`).join('')}</ul>` : '<p>Party affiliation on the division date is not recorded in the member export.</p>'
+  // Rows the division source lists without a party can take one from a dated roster (scripts/vote_parties.py).
+  const fromRoster=members.filter(m=>m.party && m.party_source).length
   const missing=d.unknown_party_count ?? members.filter(m=>!m.party).length
-  if(missing) html+=`<p>Party affiliation is not recorded for ${missing} members.</p>`
+  const tallied=parties.reduce((n,{votes})=>n+Object.values(votes).reduce((a,b)=>a+b,0),0)
+  const listed=members.length || tallied+missing
+  const labelled=listed-missing
+  const plural=(n: number)=>`${count(n)} ${n===1 ? 'member' : 'members'}`
+  const origin=!fromRoster ? 'Party labels are those recorded for this division, rather than current affiliations.'
+    : fromRoster>=labelled ? 'The division record gives no parties. Each label here is the one a dated parliamentary roster records for that member on this date.'
+    : `Party labels are those recorded for this division, except for ${plural(fromRoster)} the division record lists without a party: their labels are the ones a dated parliamentary roster records for them on this date.`
+  let html=`<h3>How each party voted</h3><p>${origin}${ayes!==d.ayes || noes!==d.noes ? ` The member list is partial: ${ayes} recorded ayes and ${noes} recorded noes; the official tally above remains the source total.` : ''}</p>`
+  // Said before the lines when they describe a minority of the members, so a short list is not read as the whole vote.
+  const minority=parties.length>0 && missing>0 && labelled*2<listed
+  if(minority) html+=`<p>These party lines cover only ${count(labelled)} of the ${plural(listed)} listed. No party is recorded for the other ${count(missing)} on this date.</p>`
+  html+=parties.length ? `<ul>${parties.map(({party,votes})=>`<li>${partyLinks ? link(partyUrl(party),party) : escapeHtml(party)}: ${Object.entries(votes).map(([vote,n])=>`${human(vote)} ${n}`).join(', ')}</li>`).join('')}</ul>` : ''
+  if(!parties.length && !missing) html+='<p>Party affiliation on the division date is not recorded in the member export.</p>'
+  // Said in words, never as a party line: an "Unknown" total would read as a party.
+  if(missing && !minority) html+=`<p>${parties.length ? `No party is recorded for ${plural(missing)} on this date; they are not counted in any party line above.` : `No party is recorded for any of the ${plural(missing)} on this date.`}</p>`
   if(full) for(const side of [...new Set(members.map(m=>m.vote))]) {
     html+=`<h3>${side==='aye' ? 'Ayes' : side==='no' ? 'Noes' : human(side)}</h3><ul>${members.filter(m=>m.vote===side).map(m=>`<li>${link(personUrl(m.name),m.name)}${m.party ? ` (${escapeHtml(m.party)})` : ''} — ${escapeHtml(side)}</li>`).join('')}</ul>`
   }
@@ -387,8 +409,11 @@ export function renderDivisionAnswer(d: Division, people: Person[], slugs: Map<s
 
 export async function renderDirectory(dir: string, url: URL, read: ReadAsset, people: Person[], slugs: Map<string,string>, topics: Record<string,string>): Promise<RenderedContent | null> {
   if (dir==='person') {
-    const seats = (await optional<{index_url: string}>(read,'/electorates/manifest.json').then(m => m ? optional<{electorates: Seat[]}>(read,m.index_url) : null))?.electorates
-    return paginate(url,people.map(p=>({href:personHref(p,slugs),label:p.name,detail:partyLine(p,seats)})),'Parliamentarians','Parliamentarians in the parliamentary record, with speeches, votes and declared interests.')
+    const [seats, lists] = await Promise.all([
+      optional<{index_url: string}>(read,'/electorates/manifest.json').then(m => m ? optional<{electorates: Seat[]}>(read,m.index_url) : null).then(r => r?.electorates),
+      optional<{observations: RosterListObservation[]}>(read,ROSTER_LIST_PARTIES_PATH).then(r => r?.observations),
+    ])
+    return paginate(url,people.map(p=>({href:personHref(p,slugs),label:p.name,detail:partyLine(p,seats,lists)})),'Parliamentarians','Parliamentarians in the parliamentary record, with speeches, votes and declared interests.')
   }
   if (dir==='topic') return paginate(url,Object.entries(topics).map(([slug,name])=>({href:`/subject/topic/${slug}`,label:name})),'Topics','Browse topics in the parliamentary record.')
   if (dir==='electorate') {
