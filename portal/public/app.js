@@ -31,14 +31,14 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=59ae545e14").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=c59513779e").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=518b8a1250").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=71fab54334').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=a1bf34a557').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=a83f09ee1b').then(module => { askPerson = module; });
 let uiLabels;
@@ -1597,7 +1597,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=b719c3cadb');
+    const mod = await import('/money-explain.js?v=b319fa23b7');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -5494,7 +5494,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=eb6b782a60'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=195a4f679b'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -9960,7 +9960,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=b719c3cadb"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=b319fa23b7"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=f76d422664");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
