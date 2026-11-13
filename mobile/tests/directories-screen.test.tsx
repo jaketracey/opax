@@ -282,7 +282,11 @@ test('the bar holds Filters and a menu with Sources, Share, Copy link and Open o
     params: { list: 'directory', owner: 'electorate' },
   });
   expect(items[1]!.menu!.items.map((i) => i.label)).toEqual(
-    expect.arrayContaining(['Sources', 'Copy link', menuTitle('Open on opax.com.au')]),
+    expect.arrayContaining([
+      'Sources',
+      'Copy link',
+      menuTitle('Open on opax.com.au'),
+    ]),
   );
   await act(async () => renderer.unmount());
 });

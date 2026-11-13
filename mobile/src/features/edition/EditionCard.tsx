@@ -5,7 +5,7 @@ import { Icon } from '../../design/icon';
 import { Skeleton } from '../../design/states';
 import { SourceLine } from '../../design/source';
 import { Text } from '../../design/text';
-import { colors, radii } from '../../design/tokens';
+import { colors, minimumTarget, radii } from '../../design/tokens';
 import { editionRoute } from '../../navigation/routes/edition';
 import { presentSource } from '../../navigation/sheets';
 import { counted, formatDate } from '../../design/format';
@@ -26,15 +26,27 @@ export function EditionSkeleton({ story = false }: { story?: boolean }) {
       accessibilityRole="progressbar"
       style={styles.skeleton}
     >
+      {/* Laid out as the card is: the plate full-bleed, then the body and
+          the source line inside the card's padding, so no bar meets the
+          card's edges (build 61, nit 8). */}
       <View style={[styles.plateSkeleton, { height: story ? 220 : 196 }]} />
-      <Skeleton shape="text" count={3} label="Loading the daily edition" />
+      <View
+        testID={story ? undefined : 'today-edition-loading-body'}
+        style={[styles.body, story ? styles.storyBody : null]}
+      >
+        <Skeleton shape="text" count={3} label="Loading the daily edition" />
+        {story ? <Skeleton shape="card" count={1} /> : null}
+      </View>
       {!story ? (
-        <View
-          testID="today-edition-loading-source"
-          style={styles.sourceSkeleton}
-        />
+        <View style={styles.source}>
+          <View style={styles.sourceBand}>
+            <View
+              testID="today-edition-loading-source"
+              style={styles.sourceSkeleton}
+            />
+          </View>
+        </View>
       ) : null}
-      {story ? <Skeleton shape="card" count={1} /> : null}
     </View>
   );
 }
@@ -178,13 +190,15 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   skeleton: {
-    gap: 12,
     borderRadius: radii.container,
     borderCurve: 'continuous',
     overflow: 'hidden',
     backgroundColor: colors.raised,
   },
   plateSkeleton: { backgroundColor: colors.sunken },
+  storyBody: { paddingBottom: 20 },
+  // The source line's 44 pt band, its footnote centred.
+  sourceBand: { minHeight: minimumTarget, justifyContent: 'center' },
   sourceSkeleton: {
     height: 14,
     width: '60%',

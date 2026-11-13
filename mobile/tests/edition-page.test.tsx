@@ -648,6 +648,28 @@ describe('the replacement edition card', () => {
         host(root, 'today-edition-loading-source')[0]!.props.style,
       ).height,
     ).toBe(14);
+    // The bars sit inside the card's padding, as the loaded card's text and
+    // source line do, never against its edges (build 61, nit 8).
+    const body = host(root, 'today-edition-loading-body')[0]!;
+    expect(StyleSheet.flatten(body.props.style)).toMatchObject({
+      padding: 20,
+      paddingBottom: 0,
+    });
+    expect(body.findAllByType(Skeleton)).toHaveLength(1);
+    const hostAbove = (node: ReactTestInstance) => {
+      let up = node.parent;
+      while (up && typeof up.type !== 'string') up = up.parent;
+      return up!;
+    };
+    const band = hostAbove(host(root, 'today-edition-loading-source')[0]!);
+    expect(StyleSheet.flatten(band.props.style)).toMatchObject({
+      minHeight: 44,
+      justifyContent: 'center',
+    });
+    expect(StyleSheet.flatten(hostAbove(band).props.style)).toMatchObject({
+      paddingHorizontal: 20,
+      paddingBottom: 12,
+    });
   });
   test('an accessibility-sized record title stays at 34 pt and wraps without a line limit', async () => {
     Dimensions.set({
@@ -782,7 +804,11 @@ describe('the native edition reader', () => {
       ]);
       expect(
         items[1].menu.items.map((item: { label: string }) => item.label),
-      ).toEqual(['Copy link', 'How this is chosen', menuTitle('Open on opax.com.au')]);
+      ).toEqual([
+        'Copy link',
+        'How this is chosen',
+        menuTitle('Open on opax.com.au'),
+      ]);
       expect(items[1]).toMatchObject({
         type: 'menu',
         accessibilityLabel: 'More for Daily edition',
