@@ -151,6 +151,43 @@ export function industryGroups(graph) {
 /** The footer's coverage line (labels.js): one line on every page. */
 export { coverageLineHTML };
 
+// --- whether parliament sits today ------------------------------------------------
+// /parliament/sitting-days.json (docs/DATA-SITTING-DAYS.md) is the Parliament's published calendar as dated
+// flags. Outside its coverage, after it expires, or in any shape this does not expect, sitting is unknown and
+// there is no line: never a guess.
+const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
+const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+/** Today's calendar date in Sydney, as the file's dates are. */
+export const sydneyToday = (now = new Date()) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Australia/Sydney' }).format(now);
+/** "Monday 23 November" for an ISO day. */
+function longDay(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  return `${WEEKDAYS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()]} ${d} ${MONTH_NAMES[m - 1]}`;
+}
+/** The home page's sitting line for `today` (YYYY-MM-DD, Sydney), or null when the calendar cannot say. */
+export function sittingLine(calendar, today) {
+  if (!calendar || calendar.schema_version !== 1 || calendar.timezone !== 'Australia/Sydney' || !ISO_DAY.test(today || '')) return null;
+  const { first, last } = calendar.coverage || {};
+  if (!ISO_DAY.test(first || '') || !ISO_DAY.test(last || '') || today < first || today > last) return null;
+  if (!ISO_DAY.test(calendar.expires || '') || today > calendar.expires) return null;
+  if (!Array.isArray(calendar.days)) return null;
+  const days = calendar.days.filter(d => d && ISO_DAY.test(d.date || '') && (d.house === true || d.senate === true));
+  const now = days.find(d => d.date === today);
+  if (now) return { href: '/sitting', text: now.house && now.senate ? 'Parliament is sitting today'
+    : now.senate ? 'The Senate is sitting today' : 'The House of Representatives is sitting today' };
+  const next = days.filter(d => d.date > today && d.date <= last).sort((a, b) => a.date.localeCompare(b.date))[0];
+  return next ? { href: '/sitting', text: `Next sitting day: ${longDay(next.date)}` } : null;
+}
+/** Fills the line above the home page's title; it stays hidden when the calendar is missing or out of range. */
+export async function hydrateSitting(slot = document.querySelector('#hp-sitting'), today = sydneyToday()) {
+  if (!slot) return;
+  const line = sittingLine(await read('/parliament/sitting-days.json').catch(() => null), today);
+  if (!line) { slot.hidden = true; return; }
+  slot.innerHTML = `<a href="${esc(line.href)}">${esc(line.text)}</a>`;
+  slot.hidden = false;
+}
+
 // --- hydration -------------------------------------------------------------------
 
 /** Reports and the footer line: small files, read at once. */
