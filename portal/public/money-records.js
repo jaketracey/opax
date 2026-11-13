@@ -20,6 +20,10 @@ export function filterMoneyEdges(graph, filters = {}) {
     return !query || `${from.label} ${to.label}`.toLocaleLowerCase('en-AU').includes(query);
   });
 }
+// Not used by any page or the Worker: only tests import it. It sums each edge's record
+// total, which counts a gift twice where donor and party both declared it. For a reader-facing
+// money figure, read the graph through receiptGraph / receiptFigures (donor-disclosure.js),
+// the one rule every money page and Ask tool uses, rather than reviving this.
 export function moneyTotals(graph) {
   const nodes = new Map(graph.nodes.map(n => [n.id, n]));
   const totals = { receipts: 0, contracts: 0, grants: 0 };

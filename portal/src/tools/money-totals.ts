@@ -1,5 +1,5 @@
 /** Receipt aggregates from the published money graph, preserving its distinct party and donor scopes. */
-import { donorAssociatedTo, donorDisclosure, type DonorDisclosureRecord } from '../../public/donor-disclosure.js'
+import { donorAssociatedTo, donorDisclosure, hasPartyReceipts, receiptGraph, receiptGraphScope, type DonorDisclosureRecord } from '../../public/donor-disclosure.js'
 import { receiptYearWindow } from '../receipt-period'
 import { aud, clip, fold, siteUrl } from './record-common'
 import { readToolAsset, type StructuredToolResult, type ToolArgs, type ToolDefinition, type ToolEnv } from './types'
@@ -7,7 +7,7 @@ import { readToolAsset, type StructuredToolResult, type ToolArgs, type ToolDefin
 type Amount = [number, number]
 interface ReceiptSeries { total: number; count: number; byYear?: Record<string, Amount>; undated?: Amount }
 type MoneyNode = DonorDisclosureRecord & ReceiptSeries & { id: string; label: string; kind: string; industry?: string }
-interface MoneyEdge extends ReceiptSeries { source: string; target: string }
+interface MoneyEdge extends ReceiptSeries { source: string; target: string; grant?: boolean; flow?: string; by_type?: Record<string, number>; firstYear?: number | null; lastYear?: number | null }
 interface MoneyGraph { nodes: MoneyNode[]; edges: MoneyEdge[]; meta?: { generated?: string; coverage?: string } }
 interface TotalRow { party?: string; donor?: string; associated_entity?: string; year?: number; total_aud: number; receipts: number; period: string }
 const fy = (year: number) => `${year}-${String(year + 1).slice(-2)}`
@@ -56,6 +56,38 @@ function amount(series: ReceiptSeries, from: number, to: number, dated: boolean)
 const limitations = (env: ToolEnv, text: string, notes: string[] = []): StructuredToolResult => ({ rows: [], coverage_only: true,
   citations: [{ kind: 'record', text, url: siteUrl(env, '/money?jur=federal&type=receipts') }], notes: [text, ...notes] })
 
+interface DeclaredRow { party: string; donor_declared_aud: number; records: number; period: string }
+/**
+ * A donor's flows that only its own donor return declares (hasPartyReceipts is false).
+ * receiptGraph leaves them out of the each-gift-once figures, but OPAX holds the
+ * declaration, so an answer says what it is rather than that nothing is recorded. The
+ * amounts are the record figures of a flow the parties never reported: the donor's own
+ * declaration, labelled as that and never as a receipt.
+ */
+function declaredOnly(raw: MoneyGraph, donor: MoneyNode, party: MoneyNode | undefined, from: number, to: number, dated: boolean): DeclaredRow[] {
+  const parties = new Map(raw.nodes.filter(node => node.kind === 'party').map(node => [node.id, node]))
+  const rows: DeclaredRow[] = []
+  for (const edge of raw.edges) {
+    if (edge.source !== donor.id || edge.grant || edge.flow || !parties.has(edge.target) || party && edge.target !== party.id || hasPartyReceipts(edge)) continue
+    const sized = amount(edge, from, to, dated)
+    if (!sized || sized[0] <= 0) continue
+    const years = !dated && edge.firstYear != null && edge.lastYear != null ? span(edge.firstYear, edge.lastYear) : span(from, to)
+    rows.push({ party: parties.get(edge.target)!.label, donor_declared_aud: sized[0], records: sized[1], period: years })
+  }
+  return rows.sort((a, b) => b.donor_declared_aud - a.donor_declared_aud || a.party.localeCompare(b.party))
+}
+const records = (n: number) => `${n.toLocaleString('en-AU')} record${n === 1 ? '' : 's'}`
+/** The sentence for flows only the donor declared: what OPAX holds, and why it is not counted. */
+function declaredText(name: string, rows: DeclaredRow[]): string {
+  const total = rows.reduce((sum, row) => sum + row.donor_declared_aud, 0), count = rows.reduce((sum, row) => sum + row.records, 0)
+  const one = rows.length === 1 ? rows[0] : null
+  const recipients = one ? one.party : 'the parties'
+  return `${name}'s own donor return${count === 1 ? '' : 's'} declare${count === 1 ? 's' : ''} ${aud(total)} to ${one ? one.party : 'federal parties'} across ${records(count)}`
+    + `${one ? ` (${one.period})` : `: ${rows.map(row => `${row.party} ${aud(row.donor_declared_aud)} (${row.period})`).join('; ')}`}. `
+    + `${recipients === 'the parties' ? "The parties'" : `${recipients}'s`} own returns list no receipt from ${name}, so OPAX's figures, which count each gift once from the party's own return, do not include ${rows.length === 1 && count === 1 ? 'it' : 'them'}. `
+    + (rows.length === 1 && count === 1 ? "The amount is the donor's declaration, not a receipt a party reported." : "The amounts are the donor's declarations, not receipts a party reported.")
+}
+
 export const tool: ToolDefinition = {
   name: 'money_totals',
   description: 'Sum federal disclosed receipts for a party or donor, rank parties or donors by total, or show annual totals. Party totals use the full published party aggregates, not the selected donor flows. Use group_by=donor with party for its biggest receipt sources; group_by=party ranks recipient parties; group_by=year gives a chronological FY series. financial_year accepts 2017-18; from_year/to_year are inclusive FY starting years. With no period, use lifetime totals. These are mixed disclosed receipts, not just gifts. State the total first with its financial year or range; each citation binds its amount to that period. For grants use grants; for expenses use the expenses tool.',
@@ -75,8 +107,14 @@ export const tool: ToolDefinition = {
     typeof args[field] === 'string' && !!args[field].trim() && !/[<>{}\r\n]/.test(args[field])),
   stepLabel: args => ({ label: 'Adding disclosed receipts', arg: clip(args.party ?? args.donor ?? args.financial_year ?? '', 40) }),
   async handler(env, args) {
-    const graph = await readToolAsset(env, '/graph/money.json') as MoneyGraph | null
-    if (!graph?.nodes?.length || !Array.isArray(graph.edges)) throw new Error('Published money graph unavailable.')
+    // Donor nodes and donor-to-party flows read the typed cells (each receipt once, from the
+    // party's own return), so a figure here matches the donor, party and Explain pages it links.
+    // Party nodes keep their own received totals, which include transfers.
+    const raw = await readToolAsset(env, '/graph/money.json') as MoneyGraph | null
+    const graph = receiptGraph(raw)
+    if (!raw || !graph?.nodes?.length || !Array.isArray(graph.edges)) throw new Error('Published money graph unavailable.')
+    const scope = receiptGraphScope(graph)
+    const scopeNote = scope ? [`Donor and flow figures: ${scope}. Each receipt is counted once.`] : []
     const allYears = graph.nodes.filter(node => node.kind === 'party' || node.kind === 'donor')
       .flatMap(node => Object.keys(node.byYear ?? {}).map(Number)).filter(year => Number.isInteger(year) && year >= 1900 && year <= 2099)
     if (!allYears.length) throw new Error('Published receipt years unavailable.')
@@ -111,7 +149,7 @@ export const tool: ToolDefinition = {
         .sort((a, b) => b.total_aud - a.total_aud || a.industry.localeCompare(b.industry))
       const rows = ranked.slice(0, Number(args.limit) || 5)
       const notes = ['Industry totals cover classified sources within the published donor selection, not every AEC receipt. They exclude individuals, unclassified sources and associated entities of the recipient party. Industry labels are OPAX classifications, not AEC categories.',
-        'These are mixed disclosed receipts, including more than gifts; they do not establish influence or personal payments to politicians.']
+        'These are mixed disclosed receipts, including more than gifts; they do not establish influence or personal payments to politicians.', ...scopeNote]
       if (!rows.length) return { ...limitations(env, `No classified industry receipts are available for ${party?.label ?? 'federal parties'} in ${period}.`, notes), coverage }
       const citations = rows.map((row, i) => {
         const label = row.industry.replaceAll('_', ' ').replace(/^./, c => c.toUpperCase())
@@ -127,13 +165,15 @@ export const tool: ToolDefinition = {
       'Financial-year keys are the starting year; election returns can be assigned to their polling or event year.']
     const edgeScope = !!(party && (donor || group === 'donor')) || !!(donor && group === 'party')
     if (!edgeScope && !donor && group !== 'donor') notes.push('Party aggregates cover all cleaned rows assigned to each party, including internal party transfers; identified public electoral funding is excluded.')
-    else notes.push('Donor aggregates and flows exclude internal party transfers and public funding. Rankings cover the published donor selection (250 largest lifetime donors plus qualifying public-money recipients), not every disclosed donor.')
+    else notes.push('Donor aggregates and flows exclude internal party transfers and public funding. Rankings cover the published donor selection (250 largest lifetime donors plus qualifying public-money recipients), not every disclosed donor.', ...scopeNote)
     const rows: TotalRow[] = [], links = new Map<TotalRow, MoneyNode | undefined>()
     const nodes = new Map(graph.nodes.map(node => [node.id, node]))
     const sources: { series: ReceiptSeries; party?: MoneyNode; donor?: MoneyNode }[] = edgeScope
       ? graph.edges.filter(edge => nodes.get(edge.source)?.kind === 'donor' && nodes.get(edge.target)?.kind === 'party' && (!party || edge.target === party.id) && (!donor || edge.source === donor.id))
         .map(edge => ({ series: edge, party: nodes.get(edge.target), donor: nodes.get(edge.source) }))
       : (donor ? [donor] : party ? [party] : graph.nodes.filter(node => node.kind === (group === 'donor' ? 'donor' : 'party')))
+        // A donor the parties' returns list nothing from has no each-gift-once figure: never a $0 row.
+        .filter(node => node.kind !== 'donor' || hasPartyReceipts(node))
         .map(node => ({ series: node, ...(node.kind === 'party' ? { party: node } : { donor: node }) }))
     const buckets = new Map<string, { row: TotalRow; node?: MoneyNode }>()
     for (const source of sources) {
@@ -158,6 +198,15 @@ export const tool: ToolDefinition = {
     for (const entry of buckets.values()) { rows.push(entry.row); links.set(entry.row, entry.node) }
     rows.sort(group === 'year' ? (a, b) => a.year! - b.year! : (a, b) => b.total_aud - a.total_aud || String(a.party ?? a.donor).localeCompare(String(b.party ?? b.donor)))
     const picked = group === 'year' ? rows : rows.slice(0, Number(args.limit) || 5)
+    // Flows only the named donor's own return declares: said as that, never as nothing or $0.
+    const declared = donor ? declaredOnly(raw, donor, party, from, to, requested.dated) : []
+    if (!picked.length && declared.length) {
+      const text = declaredText(donorDisclosure(donor).name, declared)
+      const params = new URLSearchParams({ jur: 'federal', type: 'receipts', focus: donor.id })
+      return { rows: [], coverage_only: true, donor_declared: declared, notes: [text, ...notes], coverage,
+        citations: [{ kind: 'record', text, url: siteUrl(env, '/money?' + params) }], ...(party ? { party: party.label } : {}), donor: donorDisclosure(donor).name }
+    }
+    if (declared.length) notes.push(`Not counted above: ${declaredText(donorDisclosure(donor).name, declared)}`)
     if (!picked.length) return { ...limitations(env, `OPAX has no dated disclosed receipt total recorded${party ? ' for ' + party.label : ''}${donor ? ' from ' + donorDisclosure(donor).name : ''} in financial years ${period}.`, notes), coverage }
     const undated = !requested.dated && sources.some(source => (source.series.undated?.[1] ?? 0) > 0)
     if (undated) notes.push('Lifetime totals include undated receipts; annual totals exclude them.')
@@ -178,7 +227,7 @@ export const tool: ToolDefinition = {
       const text = `${who} across ${row.receipts.toLocaleString('en-AU')} receipt${row.receipts === 1 ? '' : 's'} in financial years ${row.period} ${dates}${undated && row.year === undefined ? ', including undated receipts' : ''}. ${basis}`
       return { kind: 'export' as const, text, value: row.total_aud, url: siteUrl(env, '/money?' + params) }
     })
-    return { rows: picked, citations, notes, period, group_by: group, ...(party ? { party: party.label } : {}), ...(donor ? { donor: donorDisclosure(donor).name } : {}),
+    return { rows: picked, citations, notes, period, group_by: group, ...(declared.length ? { donor_declared: declared } : {}), ...(party ? { party: party.label } : {}), ...(donor ? { donor: donorDisclosure(donor).name } : {}),
       coverage, matched: rows.length, truncated: picked.length < rows.length, query: { file: '/graph/money.json', from_year: from, to_year: to, lifetime: !requested.dated } }
   },
 }

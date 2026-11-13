@@ -7,7 +7,7 @@ import { personNameKey, personUrl, partyUrl } from '../portal/public/canonical-u
 import { PARTY_RENAMES } from '../portal/public/labels.js';
 import { recordPathIndex } from '../portal/public/record-paths.js';
 import { personSlug, personIndex, fullNameMatches } from '../portal/src/person-slug.ts';
-import {donorDisclosure,donorLookup} from '../portal/public/donor-disclosure.js';
+import {donorDisclosure,donorLookup,receiptFigures,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY} from '../portal/public/donor-disclosure.js';
 import {foldDonorName} from '../portal/public/donor-entity.js';
 import { moneyFlowType } from '../portal/public/money-records.js';
 import { auditComplete } from '../portal/public/audit.js';
@@ -90,11 +90,21 @@ export function personSpeechCount(p) {
 // Return references stay in the record's source url and the data export; the
 // snippet a result shows carries no raw reference text.
 const industrySentence=industry=>{const text=String(industry||'').replaceAll('_',' ').trim();return text ? text[0].toUpperCase()+text.slice(1)+'. ' : ''};
+// A donor or flow reads its typed cells where the graph has them (receiptFigures): each receipt
+// once, from the parties' own returns, as on the donor and party pages, with the same scope line.
+const receiptSnippet=x=>{
+ const f=x.by_type ? receiptFigures(x) : {total:Number(x.total)||0,count:Number(x.count)||0,firstYear:x.firstYear,lastYear:x.lastYear,typed:false};
+ return {...f,scope:f.typed ? ' '+receiptScopeLabel(f)+'.' : ''};
+};
 export function donorSearchRecord(jur, node) {
- const disclosure=donorDisclosure(node);
+ const disclosure=donorDisclosure(node), f=receiptSnippet(node);
+ // Off the map a federal figure is the record total, donor and party returns together, and says so.
+ const scope=f.typed ? f.scope : jur==='federal' ? ' '+receiptScopeLabel(f)+'.' : '';
+ // A donor only its own return declares has no each-gift-once figure (hasPartyReceipts): a labelled line, never $0.
  return {key:jur+':'+node.id,kind:'donor',title:disclosure.name,href:disclosure.href,
-  snippet:node.kind==='reference' ? node.source_note || '' : `${industrySentence(node.industry)}${cash(node.total||0)} in disclosed political receipts across ${(node.count||0).toLocaleString()} records.`,
-  extra:{aliases:[...(node.aliases||[]),...(node.lookup_names||[]),node.abn||''].join(' '),from:node.firstYear,to:node.lastYear,state:jur,source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(node.firstYear,node.lastYear),url:disclosure.returns[0]?.url || null,...(node.source_note?{source_note:node.source_note}:{})}};
+  snippet:node.kind==='reference' ? node.source_note || '' : !hasPartyReceipts(node) ? `${industrySentence(node.industry)}${DONOR_DECLARED_ONLY}.`
+   : `${industrySentence(node.industry)}${cash(f.total)} in disclosed political receipts across ${f.count.toLocaleString()} records.${scope}`,
+  extra:{aliases:[...(node.aliases||[]),...(node.lookup_names||[]),node.abn||''].join(' '),from:f.firstYear,to:f.lastYear,state:jur,source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(f.firstYear,f.lastYear),url:disclosure.returns[0]?.url || null,...(node.source_note?{source_note:node.source_note}:{})}};
 }
 
 /** The donor page for an access-register organisation. donorLookup keys by foldDonorName, which keeps
@@ -153,7 +163,10 @@ async function main() {
     add(`${jur}:${flow}-connection:${i}`,kind,`${b.label} — ${kind} connection`,'/money?'+new URLSearchParams({jur,q:b.label,type:flow}),`${cash(e.total)} across ${e.count||0} ${kind} records from ${a.label}. Aggregated map connection; individual notices may also appear separately in search.`,{aliases:[...(b.aliases||[]),b.abn||''].join(' '),from:e.firstYear,to:e.lastYear,state:jur,source:flow==='contracts'?'Public contract map aggregate':'Public grant map aggregate',dateLabel:period(e.firstYear,e.lastYear)});
     continue;
    }
-   add(`${jur}:receipt:${i}`,'receipt',`${a.label} → ${b.label}`,'/money?'+new URLSearchParams({jur,q:a.label,party:b.id,type:'receipts'}),`${cash(e.total)} in disclosed political receipts; ${e.count||0} records. Aggregated connection, not an individual gift. ${industrySentence(a.industry)}`.trim(),{aliases:(a.aliases||[]).join(' '),from:e.firstYear,to:e.lastYear,state:jur,parties:[b.label],source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(e.firstYear,e.lastYear)});
+   // A flow only the donor declared (empty typed cells) is not a receipt the parties reported.
+   if(!hasPartyReceipts(e))continue;
+   const f=receiptSnippet(e);
+   add(`${jur}:receipt:${i}`,'receipt',`${a.label} → ${b.label}`,'/money?'+new URLSearchParams({jur,q:a.label,party:b.id,type:'receipts'}),`${cash(f.total)} in disclosed political receipts; ${f.count} records.${f.scope} Aggregated connection, not an individual gift. ${industrySentence(a.industry)}`.trim(),{aliases:(a.aliases||[]).join(' '),from:f.firstYear,to:f.lastYear,state:jur,parties:[b.label],source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(f.firstYear,f.lastYear)});
   }
  }
  // A renamed party (labels.js PARTY_RENAMES) is one search entry under its current name, found by every

@@ -2,11 +2,9 @@ import type {DonorDisclosureRecord} from './donor-disclosure.js';
 import type {DataTableConfig, Query, Row} from './datatable.js';
 import type {AuditRow} from './audit.js';
 export interface InterestRegister {source_url?: string; as_at?: string; buckets: Record<string,{items:{description:string;holder?:string|null;kind?:string;url?:string;page?:number;date?:string}[]}>}
+import type {ReceiptCells} from './donor-disclosure.js';
+export {receiptFigures, receiptScopeLabel, type ReceiptCells, type ReceiptFigures} from './donor-disclosure.js';
 export interface PartyGraph {meta?:{source?:string;source_url?:string};nodes:(DonorDisclosureRecord & {id:string;kind:string;label:string;industry?:string;aliases?:string[]})[];edges:(ReceiptCells & {source:string;target:string;flow?:string;grant?:boolean})[]}
-export interface ReceiptCells {total?:number;count?:number;firstYear?:number|null;lastYear?:number|null;byYear?:Record<string,unknown>;undated?:[number,number];by_type?:Record<string,number>;by_type_year?:Record<string,Record<string,[number,number]>>}
-export interface ReceiptFigures {total:number;count:number;firstYear:number|null;lastYear:number|null;byYear:Record<string,number>;cells:Record<string,[number,number]>;undated:[number,number];byType:Record<string,number>|null;typed:boolean}
-export function receiptFigures(x: ReceiptCells | null | undefined): ReceiptFigures;
-export function receiptScopeLabel(figures: ReceiptFigures): string;
 export function partyReturnScopeLabel(figures: ReceiptFigures): string;
 export function partyReturnFigures(node: (ReceiptCells & {return_by_type?:Record<string,number>;return_by_type_year?:Record<string,Record<string,[number,number]>>}) | null | undefined): ReceiptFigures;
 export function instrumentTableConfig(): DataTableConfig;

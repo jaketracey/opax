@@ -140,7 +140,7 @@ export async function refreshFonts({ publicRoot = PUBLIC, fetcher = honestFetch 
  *  agencies.js and suppliers.js import each other: stamp the agencies → suppliers
  *  edge only, then app.js. Keep the reverse edge hand-versioned to avoid a hash cycle. */
 export const MODULE_STAMPS = [
-  ...['agencies.js','donor-views.js','ledger.js','quiz.js','money-journeys-data.js','home.js','wordsdollars.js','money-explain.js','grant-recipient.js','grants.js','growth-modules.js','supplier-growth.js'].map(file=>[file,'donor-disclosure.js']),
+  ...['agencies.js','donor-views.js','ledger.js','quiz.js','money-journeys-data.js','home.js','wordsdollars.js','money-explain.js','grant-recipient.js','grants.js','growth-modules.js','supplier-growth.js','suppliers.js','map-research.js'].map(file=>[file,'donor-disclosure.js']),
   ['donor-disclosure.js','donor-entity.js'],
   ['money-journeys-data.js','donor-views.js'],
   ['canonical-urls.js', 'person-paths.js'],
@@ -412,7 +412,7 @@ const PAGES = [
   // The community page wears the site chrome, synced from index.html as home.html's is.
   { page: 'community.html', chrome: true, bare: true, files: ['style.css', 'ui-controls.css', 'nav.css', 'community.css', 'community.js', 'navigation.js', 'quick-search.js'] },
   // The press kit (/press) wears the same chrome, synced the same way.
-  { page: 'press.html', chrome: true, bare: true, files: ['style.css', 'ui-controls.css', 'nav.css', 'navigation.js', 'quick-search.js'] },
+  { page: 'press.html', chrome: true, bare: true, files: ['style.css', 'ui-controls.css', 'nav.css', 'navigation.js', 'quick-search.js', 'analytics.js', 'events.js', 'gtm.js'] },
   { page: 'ui-workbench.html', chrome: false, bare: false, files: ['style.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'ui-workbench.css', 'ui-workbench.js'] },
   { page: 'home.html', chrome: true, bare: false, files: ['style.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'home.css', 'nav.css', 'home.js', 'navigation.js', 'quick-search.js', 'analytics.js', 'events.js', 'gtm.js'] },
   // /map is served from map.html. ui-controls.css is immutable, so a bare link
