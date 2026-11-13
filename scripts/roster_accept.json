@@ -2,6 +2,15 @@
   "reviewed": "2026-10-18",
   "note": "Reviewed per record against the raw box export of 2026-10-18 (OPAX_ROSTER_ACCEPT=1 export_people.sh). Source-only service and catalog aliases reviewed offline on 12 Nov 2026. Read scripts/roster_accept.py.",
   "evidence": {
+    "profile-party-service": {
+      "kind": "identity",
+      "rule": "profile-party-service",
+      "checked": "2026-11-14",
+      "url": "scripts/roster_party_evidence.json",
+      "reason": "Held Wikidata P39 term parties and Parliamentary Handbook records, or explicitly dated Wikidata P102 membership intersected with held same-house service. Exact full name and dated house overlap only. Partial records add affiliations without an undated party; scripts/roster_party_gaps.py verifies every value."
+    }
+  ,
+
     "hansard-growth": {
       "kind": "corpus",
       "rule": "growth",
@@ -473,6 +482,356 @@
     }
   },
   "records": {
+    "Adam Searle": [
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q4679743",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2011-05-24",
+                "end": "2023-03-03",
+                "through": "2026-11-14",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_lc",
+                "electorate": null,
+                "as_of": "2026-11-14",
+                "source_url": "https://www.wikidata.org/wiki/Q4679743",
+                "basis": "Wikidata P39 service intersected with explicitly dated P102 membership"
+              }
+            ]
+          ]
+        }
+      }
+    ],
+    "Guy Zangari": [
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q5622695",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2011-03-26",
+                "end": "2023-03-03",
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Fairfield",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q5622695",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
+    "Leslie Williams": [
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q6531238",
+        "fields": {
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Liberal",
+                "start": "2020-09-20",
+                "end": "2025-01-31",
+                "through": "2026-11-14",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Port Macquarie",
+                "as_of": "2026-11-14",
+                "source_url": "https://www.wikidata.org/wiki/Q6531238",
+                "basis": "Wikidata P39 service intersected with explicitly dated P102 membership"
+              }
+            ]
+          ]
+        }
+      }
+    ],
+    "Marjorie O'Neill": [
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q62556393",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2019-03-23",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Coogee",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q62556393",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
+    "Tamara Smith": [
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q19879144",
+        "fields": {
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Greens",
+                "start": "2015-03-28",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Ballina",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q19879144",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
+    "Chris Minns": [
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q19875673",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2015-03-28",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Kogarah",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q19875673",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
+    "Jamie Parker": [
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q6147330",
+        "fields": {
+          "party": [
+            null,
+            "Greens"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Greens",
+                "start": "2011-03-26",
+                "end": "2023-03-03",
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Balmain",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q6147330",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
+    "Jodi McKay": [
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q6207887",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2015-03-28",
+                "end": "2021-12-31",
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Strathfield",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q6207887",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
+    "Bronnie Taylor": [
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q19879829",
+        "fields": {
+          "party": [
+            null,
+            "Nationals"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Nationals",
+                "start": "2015-03-28",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_lc",
+                "electorate": "Legislative Council district of New South Wales",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q19879829",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
+    "Derryn Hinch": [
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '2O4' and ROSTypeID eq 11",
+        "fields": {
+          "party": [
+            null,
+            "Derryn Hinch's Justice Party"
+          ]
+        }
+      }
+    ],
+    "Duncan Spender": [
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '244276' and ROSTypeID eq 11",
+        "fields": {
+          "party": [
+            null,
+            "Liberal Democratic Party"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Liberal Democratic Party",
+                "start": "2019-03-20",
+                "end": "2019-06-30",
+                "through": "2026-11-13",
+                "jurisdiction": "federal",
+                "chamber": "senate",
+                "electorate": "New South Wales",
+                "as_of": "2026-11-13",
+                "source_url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '244276' and ROSTypeID eq 11",
+                "basis": "Parliamentary Handbook parliamentary party and service"
+              }
+            ]
+          ]
+        }
+      }
+    ],
+    "Jodi Mckay": [
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q6207887",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2015-03-28",
+                "end": "2021-12-31",
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Strathfield",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q6207887",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
+    "David Leyonhjelm": [
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '111206' and ROSTypeID eq 11",
+        "fields": {
+          "party": [
+            null,
+            "Liberal Democratic Party"
+          ]
+        }
+      }
+    ]
+  ,
+
     "Aaron Violi": [{"evidence": "hansard-growth", "fields": {"speeches": [174, 429]}}],
     "Abbott": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "representatives"], ["representatives"]], "last": [2025, 2004], "separated_witnesses": [null, {"name": "Abbott", "speaker_type": "witness", "speeches": 24, "states": ["federal"], "chambers": ["senate_committee"], "first": 2025, "last": 2025}], "speeches": [45, 21], "transcript": [null, {"speeches": 45, "witness_rows": 24, "states": ["federal"], "chambers": ["representatives", "senate_committee"], "first": 1999, "last": 2025}], "witness_rows": [24, null]}}],
     "Abigail Boyd": [{"evidence": "hansard-growth", "fields": {"speeches": [1039, 1069]}}],
@@ -510,7 +869,45 @@
     "Angie Bell": [{"evidence": "hansard-growth", "fields": {"speeches": [345, 459]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Angie Marion Bell"]]}}],
     "Angus Taylor": [{"evidence": "hansard-growth", "fields": {"speeches": [730, 949]}}],
     "Anika Wells": [{"evidence": "hansard-growth", "fields": {"speeches": [201, 293]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Anika Shay Wells"]]}}],
-    "Anna Watson": [{"evidence": "hansard-growth", "fields": {"speeches": [723, 731]}}],
+    "Anna Watson": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            723,
+            731
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q4767598",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2011-03-26",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Shellharbour",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q4767598",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "Anne Aly": [{"evidence": "hansard-growth", "fields": {"speeches": [332, 440]}}],
     "Anne Ruston": [{"evidence": "hansard-growth", "fields": {"speeches": [2766, 4718]}}],
     "Anne Stanley": [{"evidence": "hansard-growth", "fields": {"speeches": [366, 543]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Anne Maree Stanley"]]}}],
@@ -613,7 +1010,45 @@
     "David Mehan": [{"evidence": "hansard-growth", "fields": {"speeches": [548, 552]}}],
     "David Moncrieff": [{"evidence": "hansard-growth", "fields": {"speeches": [104, 107]}}],
     "David Pocock": [{"evidence": "hansard-growth", "fields": {"first": [2023, 2022], "speeches": [1989, 2653]}}],
-    "David Saliba": [{"evidence": "hansard-growth", "fields": {"speeches": [114, 118]}}],
+    "David Saliba": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            114,
+            118
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q117461917",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2023-03-25",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Fairfield",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q117461917",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "David Shoebridge": [{"evidence": "hansard-growth", "fields": {"speeches": [6418, 6922]}}],
     "David Smith": [{"evidence": "hansard-growth", "fields": {"speeches": [201, 365]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["David Philip Benedict Smith"]]}}],
     "Davies": [{"evidence": "witness-partition", "fields": {"chambers": [["house_committee", "joint_committee", "senate_committee", "nsw_la"], ["nsw_la"]], "separated_witnesses": [null, {"name": "Davies", "speaker_type": "witness", "speeches": 69, "states": ["federal"], "chambers": ["house_committee", "senate_committee", "joint_committee"], "first": 2025, "last": 2026}], "speeches": [73, 4], "states": [["federal", "nsw"], ["nsw"]], "transcript": [null, {"speeches": 73, "witness_rows": 69, "states": ["nsw", "federal"], "chambers": ["nsw_la", "house_committee", "senate_committee", "joint_committee"], "first": 2022, "last": 2026}], "witness_rows": [69, null]}}],
@@ -698,7 +1133,45 @@
     "Jacqui Munro": [{"evidence": "hansard-growth", "fields": {"speeches": [201, 216]}}, {"evidence": "state-party-snapshot", "url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf", "checked": "2026-11-12", "as_of": "2026-09-25", "fields": {"party": [null, "Liberal"], "representation": [[], [{"jurisdiction": "nsw", "chamber": "nsw_lc", "electorate": "New South Wales", "state": "NSW", "as_of": "2026-09-25", "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf", "basis": "Official parliamentary roster on the stated date; full name and chamber verified"}]]}}],
     "Jacqui Scruby": [{"evidence": "hansard-growth", "fields": {"speeches": [358, 373]}}],
     "James": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "qld_la", "joint_committee", "nsw_la", "house_committee"], ["qld_la", "nsw_la"]], "separated_witnesses": [null, {"name": "James", "speaker_type": "witness", "speeches": 274, "states": ["federal"], "chambers": ["senate_committee", "joint_committee", "house_committee"], "first": 2025, "last": 2026}], "speeches": [375, 101], "states": [["federal", "qld", "nsw"], ["qld", "nsw"]], "transcript": [null, {"speeches": 375, "witness_rows": 274, "states": ["nsw", "qld", "federal"], "chambers": ["nsw_la", "qld_la", "senate_committee", "joint_committee", "house_committee"], "first": 2024, "last": 2026}], "witness_rows": [274, null]}}],
-    "James Griffin": [{"evidence": "hansard-growth", "fields": {"speeches": [769, 778]}}],
+    "James Griffin": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            769,
+            778
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q29386045",
+        "fields": {
+          "party": [
+            null,
+            "Liberal"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Liberal",
+                "start": "2017-04-08",
+                "end": "2026-11-14",
+                "through": "2026-11-14",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Manly",
+                "as_of": "2026-11-14",
+                "source_url": "https://www.wikidata.org/wiki/Q29386045",
+                "basis": "Wikidata P39 service intersected with explicitly dated P102 membership"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "James McGrath": [{"evidence": "hansard-growth", "fields": {"first": [2023, 2019], "speeches": [47, 526]}}],
     "James Paterson": [{"evidence": "hansard-growth", "fields": {"first": [2023, 2019], "speeches": [24, 294]}}],
     "James Stevens": [{"evidence": "hansard-growth", "fields": {"speeches": [256, 491]}}],
@@ -713,7 +1186,45 @@
     "Jason Wood": [{"evidence": "hansard-growth", "fields": {"speeches": [523, 582]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Jason Peter Wood"]]}}],
     "Jenkins": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "joint_committee", "representatives", "house_committee"], ["representatives"]], "last": [2026, 2003], "separated_witnesses": [null, {"name": "Jenkins", "speaker_type": "witness", "speeches": 41, "states": ["federal"], "chambers": ["senate_committee", "joint_committee", "house_committee"], "first": 2025, "last": 2026}], "speeches": [44, 3], "transcript": [null, {"speeches": 44, "witness_rows": 41, "states": ["federal"], "chambers": ["representatives", "senate_committee", "joint_committee", "house_committee"], "first": 2002, "last": 2026}], "witness_rows": [41, null]}}],
     "Jenny Aitchison": [{"evidence": "hansard-growth", "fields": {"speeches": [1228, 1239]}}],
-    "Jenny Leong": [{"evidence": "hansard-growth", "fields": {"speeches": [867, 881]}}],
+    "Jenny Leong": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            867,
+            881
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q19875164",
+        "fields": {
+          "party": [
+            null,
+            "Greens"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Greens",
+                "start": "2015-03-28",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Newtown",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q19875164",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "Jenny McAllister": [{"evidence": "hansard-growth", "fields": {"first": [2023, 2019], "speeches": [40, 1002]}}],
     "Jenny Ware": [{"evidence": "hansard-growth", "fields": {"speeches": [24, 224]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Jennifer Leslie Ware"]]}}],
     "Jeremy Buckingham": [{"evidence": "hansard-growth", "fields": {"speeches": [567, 575]}}],
@@ -721,16 +1232,113 @@
     "Jess Teesdale": [{"evidence": "hansard-growth", "fields": {"speeches": [50, 53]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Jessica Ann Teesdale"]]}}],
     "Jess Walsh": [{"evidence": "hansard-growth", "fields": {"first": [2023, 2019], "speeches": [52, 494]}}],
     "Jessica Collins": [{"evidence": "hansard-growth", "fields": {"speeches": [62, 63]}}],
-    "Jihad Dib": [{"evidence": "hansard-growth", "fields": {"speeches": [802, 814]}}],
+    "Jihad Dib": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            802,
+            814
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q19872872",
+        "fields": {
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2023-03-25",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Bankstown",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q19872872",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "Jim Chalmers": [{"evidence": "hansard-growth", "fields": {"speeches": [626, 1097]}}],
     "Jo Briskey": [{"evidence": "hansard-growth", "fields": {"speeches": [190, 193]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Joanna Leigh Briskey"]]}}],
-    "Jo Haylen": [{"evidence": "hansard-growth", "fields": {"speeches": [829, 835]}}],
+    "Jo Haylen": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            829,
+            835
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q19874193",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2015-03-28",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Summer Hill",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q19874193",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "Joanne Ryan": [{"evidence": "hansard-growth", "fields": {"speeches": [862, 1009]}}],
     "Jodie Belyea": [{"evidence": "hansard-growth", "fields": {"first": [2025, 2024], "speeches": [116, 174]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Jodie Anne Belyea"]]}}],
     "Jodie Harrison": [{"evidence": "hansard-growth", "fields": {"speeches": [884, 895]}}],
     "Joe McGirr": [{"evidence": "hansard-growth", "fields": {"speeches": [532, 539]}}],
     "John Graham": [{"evidence": "hansard-growth", "fields": {"speeches": [1142, 1166]}}],
-    "John Hogg": [{"evidence": "presiding-officer", "fields": {"last": [2013, 2008], "speeches": [383, 145]}}],
+    "John Hogg": [
+      {
+        "evidence": "presiding-officer",
+        "fields": {
+          "last": [
+            2013,
+            2008
+          ],
+          "speeches": [
+            383,
+            145
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '7L6' and ROSTypeID eq 11",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ]
+        }
+      }
+    ],
     "John Ruddick": [{"evidence": "hansard-growth", "fields": {"speeches": [236, 246]}}, {"evidence": "state-party-snapshot", "url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf", "checked": "2026-11-12", "as_of": "2026-09-25", "fields": {"party": [null, "Libertarian Party"], "representation": [[], [{"jurisdiction": "nsw", "chamber": "nsw_lc", "electorate": "New South Wales", "state": "NSW", "as_of": "2026-09-25", "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf", "basis": "Official parliamentary roster on the stated date; full name and chamber verified"}]]}}],
     "John Williams": [{"evidence": "hansard-growth", "fields": {"last": [2013, 2019], "speeches": [127, 141]}}],
     "Johnson": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "house_committee", "joint_committee", "representatives"], ["representatives"]], "last": [2026, 2004], "separated_witnesses": [null, {"name": "Johnson", "speaker_type": "witness", "speeches": 374, "states": ["federal"], "chambers": ["joint_committee", "senate_committee", "house_committee"], "first": 2025, "last": 2026}], "speeches": [367, 2], "transcript": [null, {"speeches": 376, "witness_rows": 374, "states": ["federal"], "chambers": ["representatives", "joint_committee", "senate_committee", "house_committee"], "first": 2004, "last": 2026}], "witness_rows": [365, null]}}],
@@ -740,8 +1348,84 @@
     "Josh Burns": [{"evidence": "hansard-growth", "fields": {"speeches": [300, 476]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Joshua Solomon Burns"]]}}],
     "Josh Dolega": [{"evidence": "hansard-growth", "fields": {"speeches": [647, 668]}}],
     "Josh Wilson": [{"evidence": "hansard-growth", "fields": {"speeches": [327, 455]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Joshua Hamilton Wilson"]]}}],
-    "Judy Hannan": [{"evidence": "hansard-growth", "fields": {"speeches": [375, 388]}}],
-    "Julia Finn": [{"evidence": "hansard-growth", "fields": {"speeches": [790, 806]}}],
+    "Judy Hannan": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            375,
+            388
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q117319799",
+        "fields": {
+          "party": [
+            null,
+            "Independent"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Independent",
+                "start": "2023-03-25",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Wollondilly",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q117319799",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
+    "Julia Finn": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            790,
+            806
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q19873373",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2015-03-28",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Granville",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q19873373",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "Julian Hill": [{"evidence": "hansard-growth", "fields": {"speeches": [620, 768]}}],
     "Julian Leeser": [{"evidence": "hansard-growth", "fields": {"speeches": [564, 685]}}],
     "Julie Collins": [{"evidence": "hansard-growth", "fields": {"speeches": [556, 738]}}],
@@ -751,11 +1435,87 @@
     "Kara Cook": [{"evidence": "hansard-growth", "fields": {"speeches": [126, 135]}}],
     "Karen Andrews": [{"evidence": "hansard-growth", "fields": {"last": [2024, 2025], "speeches": [605, 677]}}],
     "Karen Grogan": [{"evidence": "hansard-growth", "fields": {"first": [2023, 2021], "speeches": [410, 704]}}],
-    "Karen McKeown": [{"evidence": "hansard-growth", "fields": {"speeches": [330, 342]}}],
+    "Karen McKeown": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            330,
+            342
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q117006730",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2023-03-25",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Penrith",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q117006730",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "Kate Chaney": [{"evidence": "hansard-growth", "fields": {"chambers": [["representatives", "house_committee", "joint_committee"], ["representatives", "joint_committee", "house_committee"]], "speeches": [158, 379]}}],
     "Kate Thwaites": [{"evidence": "hansard-growth", "fields": {"speeches": [186, 313]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Kate Lynne Thwaites"]]}}],
     "Kate Washington": [{"evidence": "hansard-growth", "fields": {"speeches": [602, 605]}}],
-    "Katelin McInerney": [{"evidence": "hansard-growth", "fields": {"speeches": [106, 115]}}],
+    "Katelin McInerney": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            106,
+            115
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q136249311",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2025-09-13",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Kiama",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q136249311",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "Katy Gallagher": [{"evidence": "hansard-growth", "fields": {"first": [2023, 2019], "speeches": [122, 2742]}}],
     "Keith Pitt": [{"evidence": "hansard-growth", "fields": {"last": [2023, 2024], "speeches": [515, 623]}}],
     "Keith Wolahan": [{"evidence": "hansard-growth", "fields": {"speeches": [26, 174]}}],
@@ -770,10 +1530,86 @@
     "Kim Carr": [{"evidence": "hansard-growth", "fields": {"last": [2013, 2022], "speeches": [200, 305]}}],
     "King": [{"evidence": "witness-partition", "fields": {"chambers": [["qld_la", "senate_committee", "house_committee", "joint_committee", "representatives"], ["qld_la", "representatives"]], "separated_witnesses": [null, {"name": "King", "speaker_type": "witness", "speeches": 103, "states": ["federal"], "chambers": ["senate_committee", "house_committee", "joint_committee"], "first": 2025, "last": 2026}], "speeches": [203, 100], "states": [["federal", "qld"], ["qld", "federal"]], "transcript": [null, {"speeches": 203, "witness_rows": 103, "states": ["qld", "federal"], "chambers": ["qld_la", "representatives", "senate_committee", "house_committee", "joint_committee"], "first": 2004, "last": 2026}], "witness_rows": [103, null]}}],
     "Knight": [{"evidence": "witness-partition", "fields": {"chambers": [["joint_committee", "vic_la"], ["vic_la"]], "last": [2026, 2018], "separated_witnesses": [null, {"name": "Knight", "speaker_type": "witness", "speeches": 9, "states": ["federal"], "chambers": ["joint_committee"], "first": 2025, "last": 2026}], "speeches": [16, 7], "states": [["federal", "vic"], ["vic"]], "transcript": [null, {"speeches": 16, "witness_rows": 9, "states": ["vic", "federal"], "chambers": ["vic_la", "joint_committee"], "first": 2018, "last": 2026}], "witness_rows": [9, null]}}],
-    "Kobi Shetty": [{"evidence": "hansard-growth", "fields": {"speeches": [338, 347]}}],
+    "Kobi Shetty": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            338,
+            347
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q117316523",
+        "fields": {
+          "party": [
+            null,
+            "Greens"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Greens",
+                "start": "2023-03-25",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Balmain",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q117316523",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "Kristy McBain": [{"evidence": "hansard-growth", "fields": {"speeches": [137, 257]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Kristy Louise McBain"]]}}],
     "Kylea Tink": [{"evidence": "hansard-growth", "fields": {"speeches": [28, 259]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Kylea Jane Tink"]]}}],
-    "Kylie Wilkinson": [{"evidence": "hansard-growth", "fields": {"speeches": [272, 275]}}],
+    "Kylie Wilkinson": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            272,
+            275
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q117294450",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2023-03-25",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "East Hills",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q117294450",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "Lane": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "joint_committee", "house_committee", "nsw_la"], ["nsw_la"]], "separated_witnesses": [null, {"name": "Lane", "speaker_type": "witness", "speeches": 137, "states": ["federal"], "chambers": ["joint_committee", "senate_committee", "house_committee"], "first": 2025, "last": 2026}], "speeches": [140, 4], "states": [["federal", "nsw"], ["nsw"]], "transcript": [null, {"speeches": 141, "witness_rows": 137, "states": ["nsw", "federal"], "chambers": ["nsw_la", "joint_committee", "senate_committee", "house_committee"], "first": 2025, "last": 2026}], "witness_rows": [137, null]}}],
     "Larissa Waters": [{"evidence": "hansard-growth", "fields": {"speeches": [184, 1121]}}],
     "Latham": [{"evidence": "record-evidence", "fields": {"representation": [[{"jurisdiction": "nsw", "chamber": "nsw_lc", "electorate": "New South Wales", "state": "NSW", "basis": "Dated parliamentary service or official roster; name, jurisdiction and chamber verified"}, {"jurisdiction": "federal", "chamber": "representatives", "electorate": "Werriwa", "state": "NSW", "basis": "Recorded parliamentary roster; exact name and chamber match"}], [{"jurisdiction": "nsw", "chamber": "nsw_lc", "electorate": "New South Wales", "state": "NSW", "basis": "Dated parliamentary service or official roster; name, jurisdiction and chamber verified"}, {"jurisdiction": "federal", "chamber": "representatives", "electorate": "Werriwa", "state": "NSW", "basis": "Dated parliamentary service or official roster; name, jurisdiction and chamber verified"}]]}, "note": "Werriwa 1994-01-29 to 2005-01-21, Mark William Latham, in the record's identity_evidence"}],
@@ -846,10 +1682,86 @@
     "Melissa Price": [{"evidence": "hansard-growth", "fields": {"speeches": [498, 615]}}],
     "Meryl Swanson": [{"evidence": "hansard-growth", "fields": {"speeches": [359, 485]}}],
     "Michael Daley": [{"evidence": "hansard-growth", "fields": {"speeches": [426, 428]}}],
-    "Michael Holland": [{"evidence": "hansard-growth", "fields": {"speeches": [258, 264]}}],
+    "Michael Holland": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            258,
+            264
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q111011680",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2022-02-12",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Bega",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q111011680",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "Michael Kemp": [{"evidence": "hansard-growth", "fields": {"speeches": [342, 356]}}],
     "Michael McCormack": [{"evidence": "hansard-growth", "fields": {"speeches": [1894, 2283]}}],
-    "Michael Regan": [{"evidence": "hansard-growth", "fields": {"speeches": [203, 214]}}],
+    "Michael Regan": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            203,
+            214
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q21062491",
+        "fields": {
+          "party": [
+            null,
+            "Independent"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Independent",
+                "start": "2023-03-25",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Wakehurst",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q21062491",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "Michael Sukkar": [{"evidence": "hansard-growth", "fields": {"speeches": [600, 767]}}],
     "Michaelia Cash": [{"evidence": "hansard-growth", "fields": {"speeches": [1426, 3039]}}],
     "Michelle Ananda-Rajah": [{"evidence": "hansard-growth", "fields": {"chambers": [["senate", "representatives", "senate_committee", "joint_committee"], ["representatives", "senate", "senate_committee", "joint_committee"]], "speeches": [1261, 1434]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Michelle Renuka Ananda-Rajah", "M. Ananda-Rajah"]]}}],
@@ -893,7 +1805,45 @@
     "Patrick Gorman": [{"evidence": "hansard-growth", "fields": {"speeches": [230, 339]}}],
     "Paul Fletcher": [{"evidence": "hansard-growth", "fields": {"speeches": [1277, 1703]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Paul William Fletcher"]]}}],
     "Paul Scarr": [{"evidence": "hansard-growth", "fields": {"first": [2023, 2019], "speeches": [68, 737]}}],
-    "Paul Scully": [{"evidence": "hansard-growth", "fields": {"speeches": [390, 396]}}],
+    "Paul Scully": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            390,
+            396
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q27897941",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2016-11-12",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Wollongong",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q27897941",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "Paul Toole": [{"evidence": "hansard-growth", "fields": {"speeches": [509, 514]}}],
     "Pauline Hanson": [{"evidence": "hansard-growth", "fields": {"speeches": [110, 937]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Pauline Lee Hanson"]]}}],
     "Pearce": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "sa_ha", "joint_committee", "representatives"], ["sa_ha", "representatives"]], "last": [2026, 2023], "separated_witnesses": [null, {"name": "Pearce", "speaker_type": "witness", "speeches": 92, "states": ["federal"], "chambers": ["joint_committee", "senate_committee"], "first": 2025, "last": 2026}], "speeches": [146, 54], "states": [["federal", "sa"], ["sa", "federal"]], "transcript": [null, {"speeches": 146, "witness_rows": 92, "states": ["federal", "sa"], "chambers": ["representatives", "sa_ha", "joint_committee", "senate_committee"], "first": 2005, "last": 2026}], "witness_rows": [92, null]}}],
@@ -950,7 +1900,45 @@
     "Ryall": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "vic_la"], ["vic_la"]], "last": [2026, 2018], "separated_witnesses": [null, {"name": "Ryall", "speaker_type": "witness", "speeches": 9, "states": ["federal"], "chambers": ["senate_committee"], "first": 2026, "last": 2026}], "speeches": [14, 5], "states": [["federal", "vic"], ["vic"]], "transcript": [null, {"speeches": 14, "witness_rows": 9, "states": ["vic", "federal"], "chambers": ["vic_la", "senate_committee"], "first": 2018, "last": 2026}], "witness_rows": [9, null]}}],
     "Ryan": [{"evidence": "hansard-growth", "fields": {"speeches": [704, 711], "witness_rows": [157, 164]}}],
     "Ryan Park": [{"evidence": "hansard-growth", "fields": {"speeches": [543, 549]}}],
-    "Sally Quinnell": [{"evidence": "hansard-growth", "fields": {"speeches": [194, 199]}}],
+    "Sally Quinnell": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            194,
+            199
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q117294421",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2023-03-25",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Camden",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q117294421",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "Sally Sitou": [{"evidence": "hansard-growth", "fields": {"speeches": [147, 264]}}],
     "Sam Birrell": [{"evidence": "hansard-growth", "fields": {"speeches": [77, 220]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Samuel Birrell"]]}}],
     "Sam Lim": [{"evidence": "hansard-growth", "fields": {"speeches": [59, 149]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Bon Cheng Lim"]]}}],
@@ -977,8 +1965,80 @@
     "Singh": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "joint_committee", "nsw_la"], ["nsw_la"]], "separated_witnesses": [null, {"name": "Singh", "speaker_type": "witness", "speeches": 27, "states": ["federal"], "chambers": ["senate_committee", "joint_committee"], "first": 2025, "last": 2026}], "speeches": [29, 2], "states": [["federal", "nsw"], ["nsw"]], "transcript": [null, {"speeches": 29, "witness_rows": 27, "states": ["nsw", "federal"], "chambers": ["nsw_la", "senate_committee", "joint_committee"], "first": 2025, "last": 2026}], "witness_rows": [27, null]}}],
     "Slade Brockman": [{"evidence": "hansard-growth", "fields": {"first": [2023, 2019], "speeches": [157, 598]}}],
     "Smith": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "qld_la", "joint_committee", "house_committee", "nsw_la"], ["qld_la", "nsw_la"]], "separated_witnesses": [null, {"name": "Smith", "speaker_type": "witness", "speeches": 338, "states": ["federal"], "chambers": ["joint_committee", "senate_committee", "house_committee"], "first": 2025, "last": 2026}], "speeches": [496, 158], "states": [["federal", "qld", "nsw"], ["qld", "nsw"]], "transcript": [null, {"speeches": 496, "witness_rows": 338, "states": ["qld", "nsw", "federal"], "chambers": ["qld_la", "nsw_la", "joint_committee", "senate_committee", "house_committee"], "first": 2022, "last": 2026}], "witness_rows": [338, null]}}],
-    "Sonia Hornery": [{"evidence": "hansard-growth", "fields": {"speeches": [807, 818]}}],
-    "Sophie Cotsis": [{"evidence": "hansard-growth", "fields": {"speeches": [479, 480]}}],
+    "Sonia Hornery": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            807,
+            818
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q7561715",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2007-03-24",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Wallsend",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q7561715",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
+    "Sophie Cotsis": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            479,
+            480
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q7562979",
+        "fields": {
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2016-11-12",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Canterbury",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q7562979",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "Sophie Scamps": [{"evidence": "hansard-growth", "fields": {"speeches": [151, 308]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Sophie Anna Rebecca Scamps"]]}}],
     "St Clair": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "representatives"], ["representatives"]], "last": [2026, 2000], "separated_witnesses": [null, {"name": "St Clair", "speaker_type": "witness", "speeches": 17, "states": ["federal"], "chambers": ["senate_committee"], "first": 2026, "last": 2026}], "speeches": [19, 2], "transcript": [null, {"speeches": 19, "witness_rows": 17, "states": ["federal"], "chambers": ["representatives", "senate_committee"], "first": 2000, "last": 2026}], "witness_rows": [17, null]}}],
     "Staley": [{"evidence": "state-evidence", "fields": {"representation": [[{"jurisdiction": "vic", "chamber": "vic_la", "electorate": "Ripon", "state": "VIC", "basis": "Recorded parliamentary roster; exact name and chamber match"}], [{"jurisdiction": "vic", "chamber": "vic_la", "electorate": "Ripon", "state": "VIC", "basis": "Dated parliamentary service or official roster; name, jurisdiction and chamber verified"}]]}, "url": "https://www.parliament.vic.gov.au/495e92/contentassets/4e53fff3154a497daaed2fe9dcdf4475/votes_vol_1_combined.pdf", "note": "Ripon (vic_la) in the 2018-10-30 snapshot"}],
@@ -1027,9 +2087,85 @@
     "Tony Sheldon": [{"evidence": "hansard-growth", "fields": {"first": [2023, 2019], "speeches": [68, 616]}}],
     "Tony Zappia": [{"evidence": "hansard-growth", "fields": {"speeches": [1212, 1330]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Antonio Zappia"]]}}],
     "Tracey Roberts": [{"evidence": "hansard-growth", "fields": {"speeches": [43, 184]}}],
-    "Tri Vo": [{"evidence": "hansard-growth", "fields": {"speeches": [223, 227]}}],
+    "Tri Vo": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            223,
+            227
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q117360945",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2023-03-25",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Cabramatta",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q117360945",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "Trish Cook": [{"evidence": "hansard-growth", "fields": {"speeches": [76, 89]}}, {"evidence": "catalog-aliases", "fields": {"aliases": [null, ["Patricia Ann Cook"]]}}],
-    "Trish Doyle": [{"evidence": "hansard-growth", "fields": {"speeches": [545, 555]}}],
+    "Trish Doyle": [
+      {
+        "evidence": "hansard-growth",
+        "fields": {
+          "speeches": [
+            545,
+            555
+          ]
+        }
+      },
+      {
+        "evidence": "profile-party-service",
+        "checked": "2026-11-14",
+        "url": "https://www.wikidata.org/wiki/Q19872994",
+        "fields": {
+          "party": [
+            null,
+            "Labor"
+          ],
+          "affiliations": [
+            null,
+            [
+              {
+                "party": "Labor",
+                "start": "2015-03-28",
+                "end": null,
+                "through": "2026-09-21",
+                "jurisdiction": "nsw",
+                "chamber": "nsw_la",
+                "electorate": "Blue Mountains",
+                "as_of": "2026-09-21",
+                "source_url": "https://www.wikidata.org/wiki/Q19872994",
+                "basis": "Wikidata P39 service with P4100 parliamentary group"
+              }
+            ]
+          ]
+        }
+      }
+    ],
     "Tyron Whitten": [{"evidence": "hansard-growth", "fields": {"speeches": [263, 271]}}],
     "Varun Ghosh": [{"evidence": "hansard-growth", "fields": {"first": [2025, 2024], "speeches": [366, 414]}}],
     "Warburton": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "representatives"], ["representatives"]], "last": [2026, 2014], "separated_witnesses": [null, {"name": "Warburton", "speaker_type": "witness", "speeches": 7, "states": ["federal"], "chambers": ["senate_committee"], "first": 2026, "last": 2026}], "speeches": [8, 1], "transcript": [null, {"speeches": 8, "witness_rows": 7, "states": ["federal"], "chambers": ["representatives", "senate_committee"], "first": 2014, "last": 2026}], "witness_rows": [7, null]}}],

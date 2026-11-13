@@ -110,13 +110,13 @@ test('the person page reads the same fallback, only for a record with no party o
   assert.match(app, /electorateReference\.module\.rosterSeatParty\?\.\(roster, electorateReference\.data\.electorates\)/);
   assert.match(app, /if \(seatParty\) party = seatParty\.party;/);
   const electorates = readFileSync(new URL('../public/electorates.js', import.meta.url), 'utf8');
-  assert.match(electorates, /export \{ rosterSeatParty, rosterListParty \} from '\.\/roster-party\.js/);
+  assert.match(electorates, /export \{ rosterSeatParty, rosterListParty, rosterServiceParty \} from '\.\/roster-party\.js/);
   // The dated official-list fallback: a full name only, never a single-name print, dated on the page.
   assert.match(app, /const listFallback = !partyNow && !roster\?\.party && \/\\S\\s\+\\S\/\.test\(String\(roster\?\.name \|\| ""\)\);/);
   assert.match(app, /electorateReference\.module\.rosterListParty\?\.\(roster, rosterLists\.observations\)/);
   // The chip in the meta line is dated too, not only the source-details panel.
-  assert.match(app, /seatParty \? `<span>parliamentary roster as at \$\{esc\(fmtDate\(seatParty\.as_of\)\)\}<\/span>` : "",/);
-  assert.match(app, /\["Party", esc\(`\$\{seatParty\.party\} \(parliamentary roster as at \$\{fmtDate\(seatParty\.as_of\)\}\)`\)\]/);
+  assert.match(app, /`parliamentary roster as at \$\{esc\(fmtDate\(seatParty\.as_of\)\)\}`\}<\/span>` : "",/);
+  assert.match(app, /`\$\{seatParty\.party\} \(parliamentary roster as at \$\{fmtDate\(seatParty\.as_of\)\}\)`\)/);
 });
 
 

@@ -6406,7 +6406,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // party they spoke for, so a defector reads "One Nation · formerly Nationals".
   if (currentSubjectKey !== key) return;
   const partyNow = roster?.party_now || null;
-  const { profileJurisdictions, profileAffiliations } = await import('/profile-jurisdictions.js?v=20261016-1');
+  const { profileJurisdictions, profileAffiliations } = await import('/profile-jurisdictions.js?v=c89fdf1c96');
   if (currentSubjectKey !== key) return;
   const representation = profileJurisdictions(roster);
   let party = partyNow || roster?.party || spokeAs;
@@ -6494,7 +6494,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const seatParty = (rosterFallback && electorateReference
     ? electorateReference.module.rosterSeatParty?.(roster, electorateReference.data.electorates) || null : null)
     || (listFallback && electorateReference && rosterLists
-      ? electorateReference.module.rosterListParty?.(roster, rosterLists.observations) || null : null);
+      ? electorateReference.module.rosterListParty?.(roster, rosterLists.observations) || null : null)
+    || (listFallback && roster && electorateReference ? electorateReference.module.rosterServiceParty?.(roster) || null : null);
   if (seatParty) party = seatParty.party;
   const partyOnMap = Boolean(party && findMoneyNode("party", party));
   const electorateLinks = electorateReference
@@ -6511,7 +6512,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   subjectTag(body).innerHTML = tagLineHTML([
     party ? partyChipHTML(party, { full: true }) : "",
     // A roster party is dated beside the chip, as the server's person answer dates it.
-    seatParty ? `<span>parliamentary roster as at ${esc(fmtDate(seatParty.as_of))}</span>` : "",
+    seatParty ? `<span>${seatParty.service_start
+      ? `service record ${esc(seatParty.service_start)} to ${esc(seatParty.service_end)}`
+      : `parliamentary roster as at ${esc(fmtDate(seatParty.as_of))}`}</span>` : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
     electorateLinks ? `<span>${seatWord}${electorateLinks}</span>` : "",
     representation.chambers.length ? `<span>${esc(representation.chambers.join(" ·\u00a0"))}</span>` : "",
@@ -6536,11 +6539,13 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     facts: [
       ["Status", esc(roster?.current ? "Sitting parliamentarian" : "Parliamentarian")],
       // A roster party is said of the roster's date, not of the whole career.
-      seatParty && ["Party", esc(`${seatParty.party} (parliamentary roster as at ${fmtDate(seatParty.as_of)})`)],
+      seatParty && ["Party", esc(seatParty.service_start
+        ? `${seatParty.party} (service record ${seatParty.service_start} to ${seatParty.service_end})`
+        : `${seatParty.party} (parliamentary roster as at ${fmtDate(seatParty.as_of)})`) ],
       ...electorateRows,
       ...profileAffiliations(roster).map((r) => ["Parliamentary service",
-        `${esc(r.jurisdictionLabel)} · ${esc(r.chamberLabel)} · ${esc(r.electorate)} · ${esc(r.party || 'Party not recorded')}, ` +
-        `${esc(r.start)} – ${esc(r.end || 'ongoing at the review date')}`]),
+        `${esc(r.jurisdictionLabel)} · ${esc(r.chamberLabel)} · ${r.electorate ? `${esc(r.electorate)} · ` : ''}${esc(r.party || 'Party not recorded')}, ` +
+        `${esc(r.start)} – ${esc(r.end || (r.through ? `observed through ${r.through}` : 'ongoing at the review date'))}`]),
       dates.length && ["Speeches in the record", `${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}`],
     ],
     notes: [rosterChecked ? `Checked ${esc(fmtDate(rosterChecked))}.` : ""],
@@ -7545,7 +7550,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=d9bcfae5c4").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=0fbc5db48a").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 

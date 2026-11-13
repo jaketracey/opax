@@ -37,6 +37,12 @@ A field absent from a record is written null (the roster never holds a JSON null
     A linked person's dated service there (official-list-service evidence, list_service) may then add `current`,
     the list's party as `party_now` and `affiliations` (the Handbook's dated Senate periods, then the list seat from a
     reviewed term start): the one group allowed to write a dated party, and only when it rebuilds exactly.
+    A profile-party-service group may add missing party fields and affiliations
+    from independently verified full-name, same-house dated evidence. Partial
+    histories add affiliations only. It cannot replace a curated history or a
+    witness identity; its own installed dates remain valid only while the source
+    reproduces them. Later valid groups are undone when checking an installed
+    source-only row against its original source record.
   - A dropped row is a shipped record that is not a person (parli.ingest.speaker_names.non_person_name: a group
     label such as 'Government members', a bare title, a parse fragment), carries no identity value, still is exactly
     the reviewed row, and is absent from the export (drop_problem). Nothing else is ever removed: the overlay keeps
@@ -370,6 +376,11 @@ def group_problem(name, group, evidence, row, curated, roster=True, root=ROOT):
         why = state_party_problem(name, group, row, root)
         if why:
             return why
+    if ev.get("rule") == "profile-party-service":
+        from scripts.roster_party_gaps import group_problem as party_service_problem
+        why = party_service_problem(name, group, row, root)
+        if why:
+            return why
     if not roster:
         return None
     if row is None:
@@ -384,6 +395,13 @@ def group_problem(name, group, evidence, row, curated, roster=True, root=ROOT):
             continue
         # A verified list service is the dated party: the pin it trips on is the value it wrote itself.
         if why == "a dated party" and ev.get("rule") == LIST_SERVICE and _own_dates(row, group):
+            continue
+        if why == "a dated party" and ev.get("rule") == "profile-party-service":
+            from scripts.roster_party_gaps import own_dates
+            if own_dates(row, group):
+                continue
+        if why == "a neutral namesake" and ev.get("rule") == "profile-party-service":
+            # The rule above independently verifies the full name and dated house.
             continue
         touched = set(fields) if pinned is EVERY_FIELD else set(fields) & pinned
         if touched and (pinned is EVERY_FIELD or ev["kind"] == "identity" or touched & IDENTITY_FIELDS):
@@ -522,7 +540,9 @@ def judge(accept, shipped_people=None, root=ROOT, curated=False):
                       if not (why is None and f == "aliases" and set(g["fields"]) == {"aliases"}
                               and evidence.get(g["evidence"], {}).get("rule") == "catalog-aliases")
                       and not (why is None and f == "affiliations" and set(g["fields"]) == LIST_SERVICE_FIELDS
-                               and evidence.get(g["evidence"], {}).get("rule") == LIST_SERVICE)}
+                               and evidence.get(g["evidence"], {}).get("rule") == LIST_SERVICE)
+                      and not (why is None and f == "affiliations"
+                               and evidence.get(g["evidence"], {}).get("rule") == "profile-party-service")}
         whole = ("two groups touch the same field, so every group on the record is held" if len(fields) != len(set(fields))
                  else "a group touches a protection field (" + ", ".join(sorted(protection & PROTECTION_FIELDS)) +
                  "), so every group on the record is held" if protection & PROTECTION_FIELDS else None)
@@ -531,7 +551,15 @@ def judge(accept, shipped_people=None, root=ROOT, curated=False):
     for name, entry in accept.get("new", {}).items():
         try:
             installed = have is not None and name in have
-            why = (None if installed and isinstance(entry, dict) and have[name] == entry.get("row") and
+            original = copy.deepcopy(have[name]) if installed else None
+            # A source-only profile may subsequently receive a separately
+            # verified additive party join. Compare its original source row
+            # after undoing only groups that passed every check above.
+            for n, _i, g, problem in groups:
+                if installed and n == name and problem is None and state(original, g) == 'applied':
+                    for field, (before, _after) in g['fields'].items():
+                        _put(original, field, before)
+            why = (None if installed and isinstance(entry, dict) and original == entry.get("row") and
                    new_row_problem(name, entry, evidence, root=root) is None else
                    "the name is already a shipped record" if installed else new_row_problem(name, entry, evidence, root=root))
         except Exception as err:  # noqa: BLE001
@@ -638,6 +666,8 @@ def revert(people, accept):
             if state(p, g) == "applied":
                 for f, (a, b) in g["fields"].items():
                     _put(p, f, a)
+        if p['name'] in new and p == new[p['name']]['row']:
+            continue
         out.append(p)
     names = {p["name"] for p in out}
     out += [copy.deepcopy(e["row"]) for n, e in accept.get("drop", {}).items()

@@ -69,9 +69,10 @@ test('directory discovery uses the small party-member export and tolerates its a
 
 test('directory coverage is exact, capitalised, and distinguishes independents from organisations', async () => {
   const pages = await readPartyPages(read);
-  for (const label of ['Australian Conservatives', 'Australian Motoring Enthusiast Party', "Derryn Hinch's Justice Party", 'Gerard Rennick People First']) {
+  for (const label of ['Australian Conservatives', 'Australian Motoring Enthusiast Party', 'Gerard Rennick People First']) {
     assert.equal(partyPageCoverage(pages.find(p => p.label === label)), 'Recorded divisions. No party-level disclosure file held by OPAX.');
   }
+  assert.equal(partyPageCoverage(pages.find(p => p.label === "Derryn Hinch's Justice Party")), 'Parliamentary roster and recorded divisions. No party-level disclosure file held by OPAX.');
   // The Libertarian Party's page holds the roster (its current name), the divisions (its former one) and,
   // since its money-map node (export rule 10), its receipts under both names.
   assert.equal(partyPageCoverage(pages.find(p => p.label === 'Libertarian Party')), 'Published political receipts; federal and state returns remain separate.');

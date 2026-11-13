@@ -8,7 +8,7 @@ export function profileJurisdictions(person) {
 }
 
 export function profileAffiliations(person) {
-  return (person?.affiliations || []).filter(r => r.electorate && r.start &&
+  return (person?.affiliations || []).filter(r => r.start &&
     person.states?.includes(r.jurisdiction) && person.chambers?.includes(r.chamber))
     .map(r => ({...r, jurisdictionLabel: parliaments[r.jurisdiction] || r.jurisdiction,
       chamberLabel: houses[r.chamber] || r.chamber}));

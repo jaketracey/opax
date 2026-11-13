@@ -94,9 +94,10 @@ test('the server page shows the same parliamentarian count as the browser page',
   // Council members from the dated official lists: Labor +8 NSW (A17); Liberal +5 NSW (A17), +2 SA (A22); Greens +3 NSW (A17).
   // SA Council list-only profiles (A27; no SA Hansard after 2023): Labor +2 (El Dannawi, Gumbys), Liberal +1
   // (Benjamin Hood), Greens +1 (Selwood). Cory Bernardi is linked to his existing row, so Liberal does not count him twice.
-  assert.equal(shown.Labor, 496);
-  assert.equal(shown.Liberal, 346);
-  assert.equal(shown.Greens, 51);
+  // Reviewed party-gap joins (scripts/roster_party_evidence.json) add recorded affiliations.
+  assert.equal(shown.Labor, 515);
+  assert.equal(shown.Liberal, 347);
+  assert.equal(shown.Greens, 54);
 });
 
 test('an SA Council list-only profile is a sitting MLC with no Hansard held, not "0 speeches"', async () => {
