@@ -137,6 +137,8 @@ const styles = StyleSheet.create({
   label: {
     marginTop: 4,
     fontFamily: fonts.sansSemiBold,
+    // a11y-ok(raw-font-size): the Material navigation bar label (12 sp);
+    // it follows the system font size up to LABEL_SCALE.
     fontSize: 12,
     lineHeight: 16,
   },

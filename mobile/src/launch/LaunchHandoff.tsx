@@ -452,6 +452,8 @@ function NameLine({
   });
   const text: TextStyle = {
     fontFamily: fonts.serifBold,
+    // a11y-ok(raw-font-size): the launch wordmark matches the native splash
+    // frame for frame; the overlay is hidden from the reader and never scales.
     fontSize: size,
     lineHeight: glyph.height,
     color: field.text,

@@ -2,6 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import assert from 'node:assert/strict';
+import { formatA11yIssue, scanA11yTree } from './a11y-static';
 import { scanSource } from './source-boundary';
 import { scanSecrets } from './secret-boundary';
 import { boundaryFiles } from './boundary-files';
@@ -284,6 +285,15 @@ for (const path of boundary.native)
     [],
     `Objective-C/C transport boundary: ${path}`,
   );
+// Accessibility rules on every screen and component (scripts/a11y-static.ts):
+// roles, labels, images, Text roles, target sizes and label copy, on both
+// platforms. Exceptions are inline a11y-ok markers with a reason.
+const a11y = scanA11yTree(sourceRoot);
+assert.deepEqual(
+  a11y.issues.map(formatA11yIssue),
+  [],
+  'Accessibility rules (scripts/a11y-static.ts; excuse a deliberate case with an a11y-ok marker and its reason)',
+);
 // Scan all text-bearing tracked contributor files, including JS, JSON, shell,
 // fixture manifests, documentation and dotfiles. Ignore only generated/local data.
 const contributorFiles = walk('.', true).filter(
@@ -422,5 +432,13 @@ if (appIndex !== -1) {
   }
 }
 console.log(
-  'PASS qa-static: variant origins/ATS, identity, iOS floor, dependency tree, secrets, transport boundary',
+  'PASS qa-static: variant origins/ATS, identity, iOS floor, dependency tree, secrets, transport boundary, accessibility rules',
+);
+console.log(
+  `  accessibility: ${Object.entries(a11y.checked)
+    .map(
+      ([rule, count]) =>
+        `${rule} ${count} checked${a11y.skipped[rule] ? `, ${a11y.skipped[rule]} not static` : ''}`,
+    )
+    .join('; ')}; ${a11y.exceptions.length} a11y-ok exceptions`,
 );
