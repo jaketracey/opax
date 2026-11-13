@@ -56,22 +56,102 @@ export function leadWithFinding<T extends Record<string,unknown>>(payload:T,ques
   return plainAnswerPayload(rewriteAnswerPayload({...payload,answer:written,citations},replace=>replace(/^Another (?=(?:says|said|reports|describes)\b)/g,'A selected passage ')))
 }
 
-/** The model's own direct answer (the first line of its points, cited or not) leads an answer that also carries record
- * facts or written record prose, which follow as the supporting record. A permutation: citations move with their text. */
-export function leadWithModelAnswer<T extends Record<string,unknown>>(payload:T,points:{answer?:unknown;citations?:unknown}|undefined):T {
+const QUANTITATIVE_QUESTION=/\bhow (?:many|much)\b|\b(?:most|highest|lowest|least|largest|biggest|top|total|fewest|ranked?)\b/i
+// "Who was responsible", "who led it": the answer is people. "Who is Jacinta Allan?" asks about one named person.
+const peopleQuestion=(question:string)=>/\bwho\b/i.test(question)&&!/^\s*who\s+(?:is|was|are|were)\s+(?:[A-Z]|the\s+(?:current\s+)?(?:member|senator|premier|prime|leader|treasurer|minister))/.test(question)
+// Capitalised words that open names of bodies, places, dates and parties rather than people.
+const NOT_PERSON=new Set(('the a an in on at of that this these those it its he she they his her their mr mrs ms dr senator minister prime royal commission commissioner house senate parliament parliamentary australian australia national '+
+  'audit office auditor-general government department cabinet scheme report act bill labor liberal liberals greens party coalition commonwealth federal state victorian victoria queensland new south wales '+
+  'western northern southern eastern sydney melbourne brisbane perth adelaide canberra airport international court tribunal inquiry committee review letters patent general services social human independent member '+
+  'members leader opposition treasurer treasury centrelink assembly council legislative legislation estimates question questions notice january february march april may june july august september october '+
+  'november december monday tuesday wednesday thursday friday saturday sunday hansard record records day hearing transcript transcripts mp mps').split(' '))
+const nameKey=(name:string)=>name.toLowerCase().replace(/[’']s$/,'')
+/** People a sentence names in what it reports, beyond who said it and any names already in context. */
+function namedPeople(line:string,exclude:string[]):string[] {
+  const reported=line.replace(/^(?:[-*]\s*)?[^.]{0,80}?\b(?:told|said|asked|moved|stated|argued|claimed)\b/,'')
+  const out:string[]=[]
+  for(const match of reported.matchAll(/\b[A-Z][a-z’'-]+(?:\s+[A-Z][a-z’'-]+)+/g)){
+    const words=match[0].split(/\s+/).map(nameKey)
+    // A run of capitals can join a body and a name ("Cabinet Scott Morrison"); the person is its last two words.
+    const tail=words.slice(-2)
+    if(tail.some(w=>NOT_PERSON.has(w)||w.length<2))continue
+    const name=tail.join(' ')
+    if(exclude.some(e=>e.includes(name)))continue
+    out.push(name)
+  }
+  return out
+}
+const firstSentence=(text:string)=>sentenceParts(text)[0]?.text??''
+const subjectOf=(sentence:string)=>{const m=/^(?:[-*]\s*)?((?:[A-Z][\w’'-]*|of|into|the|for|on|and)(?:\s+(?:[A-Z][\w’'-]*|of|into|the|for|on|and)){1,9})(?=,\s|\s+(?:is|was|are|were)\s)/.exec(sentence);return m?m[1]:''}
+/** The second sentence of an opening says again who or what the first is: the same subject, then "is a/the" or an
+ * apposition (a role, an office, establishment details). */
+export function restatesOpening(first:string,second:string):boolean {
+  const a=subjectOf(first),b=subjectOf(second)
+  if(!a||a.split(/\s+/).length<2||a.toLowerCase()!==b.toLowerCase())return false
+  const rest=(s:string,subject:string)=>s.replace(/^(?:[-*]\s*)?/,'').slice(subject.length)
+  const described=(tail:string)=>/^,\s|^\s+(?:is|was|are|were)\s+(?:a|an|the)\s/i.test(tail)
+  return described(rest(first,a))&&described(rest(second,b))
+}
+/** Merge a restated identity sentence into the opening: "X is a Victorian Labor politician who represents Y" after
+ * "X is the Victorian Premier…" keeps only what it adds ("As a Victorian Labor politician, X represents Y"). Null when
+ * the sentence has no such shape. */
+function mergedRestatement(first:string,second:string):string|null {
+  const subject=subjectOf(second),m=new RegExp('^'+subject.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s+(?:is|was)\\s+(?:a|an|the)\\s+([^,;.]+?)\\s+(?:who|that)\\s+(.+)$').exec(second)
+  if(!subject||!m)return null
+  const known=new Set(first.toLowerCase().match(/[a-z’'-]+/g)??[]),generic=/^(?:politician|person|member|parliamentarian|mp|figure)$/
+  const adds=(m[1].toLowerCase().match(/[a-z’'-]+/g)??[]).some(w=>!known.has(w)&&!generic.test(w))
+  return adds?`As ${/^[aeiou]/i.test(m[1])?'an':'a'} ${m[1]}, ${subject} ${m[2]}`:`${subject} ${m[2]}`
+}
+
+/** The model's direct answer leads an answer that also carries record facts or written record prose; the record prose
+ * follows as context, then the model's other points. For a who question about people (not "who is X?") the lead is the
+ * model's first point that names someone beyond its speaker and the record context, with the lines that continue it
+ * from the same source. An opening the record prose restates is said once: an uncited restatement goes, a cited
+ * identity sentence keeps only what it adds. A count or money question keeps its calculated record lead. Every
+ * kept line moves with its citations. */
+export function leadWithModelAnswer<T extends Record<string,unknown>>(payload:T,points:{answer?:unknown;citations?:unknown}|undefined,question=''):T {
   if(typeof payload.answer!=='string'||typeof points?.answer!=='string')return payload
-  const pointText=points.answer,first=/^[^\n]+/.exec(pointText)?.[0]
-  if(!first)return payload
-  const firstEnd=Array.from(first).length
-  const answer=payload.answer,at=answer.indexOf(first)
-  if(at<=0)return payload
-  const chars=Array.from(answer),from=Array.from(answer.slice(0,at)).length,until=from+firstEnd
-  const entries=Object.entries(payload.citations??{}),citations:Record<string,[number,number][]>={}
+  const answer=payload.answer,pointText=points.answer
+  const chars=Array.from(answer),entries=Object.entries(payload.citations??{}) as [string,unknown][]
+  // Lines of the composed answer, in code points, marked as the model's points or record prose.
+  type Line={a:number;b:number;text:string;point:boolean}
+  const lines:Line[]=[]
+  for(const m of answer.matchAll(/[^\n]+/g)){
+    const text=m[0].trim();if(!text)continue
+    const a=Array.from(answer.slice(0,m.index)).length+Array.from(m[0]).length-Array.from(m[0].trimStart()).length
+    lines.push({a,b:a+Array.from(text).length,text,point:pointText.includes(text.replace(/^[-*]\s*/,''))})
+  }
+  const firstPoint=lines.findIndex(l=>l.point)
+  // Nothing to lead past: no record prose before the points.
+  if(firstPoint<=0)return payload
+  const record=lines.slice(0,firstPoint),rest=lines.slice(firstPoint)
+  if(QUANTITATIVE_QUESTION.test(question)&&/\$?\d/.test(firstSentence(record[0].text)))return payload
+  const sourcesOf=(l:Line)=>new Set(entries.filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(r=>Array.isArray(r)&&r[0]<l.b&&r[1]>l.a)).map(([id])=>id.split('/')[0]))
+  const dropped=new Set<Line>()
+  let rewrite:string|null=null
+  const lead0=rest[0],opening=firstSentence(lead0.text),recordOpening=firstSentence(record[0].text)
+  if(restatesOpening(opening,recordOpening)){
+    if(!sourcesOf(lead0).size)dropped.add(lead0)
+    else{const merged=mergedRestatement(opening,recordOpening);if(merged)rewrite=merged}
+  }
+  const candidates=rest.filter(l=>l.point&&!dropped.has(l))
+  if(!candidates.length)return payload
+  let lead=candidates[0]
+  if(question&&peopleQuestion(question)){
+    const sources=(Array.isArray(payload.sources)?payload.sources:[]) as {speaker?:string}[]
+    const exclude=[question,...record.map(l=>l.text),...sources.map(s=>s.speaker??'')].map(t=>t.toLowerCase()).filter(Boolean)
+    const naming=(l:Line)=>{const speaker=/^(?:[-*]\s*)?(?:[A-Z][\w’'-]*\s+){0,3}?([A-Z][a-z’'-]+\s+[A-Z][a-z’'-]+)\s+(?:told|said|asked|moved|stated)\b/.exec(l.text)?.[1]?.toLowerCase();return namedPeople(l.text,speaker?[...exclude,speaker]:exclude).length>0}
+    if(!naming(lead))lead=candidates.find(naming)??lead
+  }
+  // Lines after the lead that continue it from the same source ("The same speech records…") stay with it.
+  const block=[lead]
+  for(let i=rest.indexOf(lead)+1;i<rest.length;i++){const l=rest[i],own=sourcesOf(lead),next=sourcesOf(l);if(!l.point||!next.size||![...next].every(id=>own.has(id)))break;block.push(l)}
+  const inBlock=new Set(block)
+  // Record prose keeps its own line breaks (a fact list stays a list); the points around it are paragraphs.
+  const pieces:[number,number][]=[[block[0].a,block[block.length-1].b],[record[0].a,record[record.length-1].b],...rest.filter(l=>!inBlock.has(l)&&!dropped.has(l)).map(l=>[l.a,l.b] as [number,number])]
+  const citations:Record<string,[number,number][]>={}
   let written=''
-  for(let [a,b]of [[from,until],[0,from],[until,chars.length]]){
-    while(a<b&&/\s/.test(chars[a]))a++
-    while(b>a&&/\s/.test(chars[b-1]))b--
-    if(a===b)continue
+  for(const [a,b] of pieces){
     if(written)written+='\n\n'
     const offset=Array.from(written).length
     written+=chars.slice(a,b).join('')
@@ -81,5 +161,7 @@ export function leadWithModelAnswer<T extends Record<string,unknown>>(payload:T,
       if(start<end)(citations[id]??=[]).push([offset+start-a,offset+end-a])
     }
   }
-  return {...payload,answer:written,citations}
+  let out={...payload,answer:written,citations} as T
+  if(rewrite){const merged=rewrite;let once=false;out=rewriteAnswerPayload(out,replace=>replace(new RegExp(recordOpening.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'),match=>once?match:(once=true,merged)))}
+  return out
 }
