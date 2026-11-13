@@ -53,20 +53,49 @@ android.buildTypes {
     return mod;
   });
   config = withMainActivity(config, (mod) => {
-    const intentMarker = '// OPAX retain links received during JS startup';
+    const intentMarker = '// OPAX durable link deliveries';
+    // Migrate worktrees that have already generated the previous retention hook.
+    mod.modResults.contents = mod.modResults.contents.replace(
+      /\n  \/\/ OPAX retain links received during JS startup\n  override fun onNewIntent\(intent: android\.content\.Intent\) \{\n    setIntent\(intent\)\n    super\.onNewIntent\(intent\)\n  \}\n/,
+      '\n',
+    );
     if (!mod.modResults.contents.includes(intentMarker)) {
       const anchor = 'class MainActivity : ReactActivity() {';
       if (!mod.modResults.contents.includes(anchor))
         throw new Error('Android links: review the MainActivity class anchor');
+      if (
+        /override fun (onNewIntent|onSaveInstanceState)/.test(
+          mod.modResults.contents,
+        )
+      )
+        throw new Error(
+          'Android links: review existing Activity lifecycle hooks',
+        );
       mod.modResults.contents = mod.modResults.contents.replace(
         anchor,
         `${anchor}
   ${intentMarker}
+  private val opaxLinks by lazy { au.com.opax.links.LinkIntentActivityDelegate(this) }
+
   override fun onNewIntent(intent: android.content.Intent) {
-    setIntent(intent)
+    opaxLinks.onNewIntent(intent)
     super.onNewIntent(intent)
   }
+
+  override fun onSaveInstanceState(outState: android.os.Bundle) {
+    opaxLinks.onSaveInstanceState(outState)
+    super.onSaveInstanceState(outState)
+  }
 `,
+      );
+      const create = '    super.onCreate(null)';
+      if (!mod.modResults.contents.includes(create))
+        throw new Error(
+          'Android links: review the MainActivity onCreate anchor',
+        );
+      mod.modResults.contents = mod.modResults.contents.replace(
+        create,
+        `    opaxLinks.onCreate(savedInstanceState)\n${create}`,
       );
     }
     const marker = '// OPAX Android is light-only';

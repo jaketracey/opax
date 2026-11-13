@@ -8,6 +8,9 @@ const reviewedNativeModules = Object.freeze({
   // UIKit backing and divider only; no transport or new permissions.
   'modules/opax-root-bar/index.ts': Object.freeze(['OpaxRootBar']),
   'modules/opax-voice/index.ts': Object.freeze(['OpaxVoice']),
+  // Android intent inbox and navigation acknowledgements. Local pending URLs
+  // only, erased on consumption; no transport or additional permissions.
+  'modules/opax-links/index.ts': Object.freeze(['OpaxLinks']),
   // Window size classes and reserved-region geometry only; no transport,
   // permissions or data (iPhone Duo, reviewed 11 Nov 2026).
   'modules/opax-duo/index.ts': Object.freeze(['OpaxDuo']),
