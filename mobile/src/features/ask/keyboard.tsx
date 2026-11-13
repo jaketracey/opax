@@ -72,11 +72,13 @@ export function useKeyboardOverlap(
     if (Platform.OS !== 'android') return;
     let active = true;
     const measure = (top: number) => {
-      ref.current?.measureInWindow((_x, y, _w, height) => {
-        if (!active || !Keyboard.isVisible()) return;
-        setVisible(Keyboard.isVisible());
-        setOverlap(Math.max(0, Math.round(y + height - top)));
-      });
+      if (!active || !Keyboard.isVisible()) return;
+      setVisible(true);
+      // The tab bar hides after keyboardDidShow. Its container still has
+      // the old bottom for a few frames; the resized window is current now.
+      setOverlap(
+        Math.max(0, Math.round(Dimensions.get('window').height - top)),
+      );
     };
     const metrics = Keyboard.metrics();
     if (metrics) measure(metrics.screenY);
