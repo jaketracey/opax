@@ -5,9 +5,13 @@ import {
   cleanEvent,
   eventFields,
   scrubEvent,
+  sectionOf,
   type AnalyticsContext,
 } from '../src/analytics/events';
-import { routePatternFor } from '../src/analytics/route-patterns';
+import {
+  routePatternFor,
+  routeSections,
+} from '../src/analytics/route-patterns';
 import { redirectSystemPath } from '../src/app/+native-intent';
 import {
   resetAdaptiveDeviceForTests,
@@ -187,9 +191,6 @@ describe('the boundary', () => {
     for (const event of Object.keys(valid))
       for (const key of Object.keys(valid[event]!))
         for (const value of privateValues) {
-          // from_section predates these events and is filled only from
-          // currentSection(), a route file's first segment (index.ts).
-          if (key === 'from_section') continue;
           const clean = cleanEvent(event, { [key]: value });
           expect(leaks(clean)).toEqual([]);
           const scrubbed = scrubEvent(
@@ -200,6 +201,19 @@ describe('the boundary', () => {
           // A route parameter value is never a template.
           if (key === 'route_pattern') expect(clean).toEqual({});
         }
+  });
+
+  test('from_section is a known route section, never a slug that looks like one', () => {
+    const from = (from_section: unknown) =>
+      cleanEvent('opax_source_open', { from_section })?.from_section;
+    for (const known of ['today', 'ask', 'person', 'bill', 'money', 'other'])
+      expect(from(known)).toBe(known);
+    for (const value of [slug, 'jane', 'au-federal-r9999', 'subject'])
+      expect(from(value)).toBe('other');
+    expect(sectionOf('/person/[slug]')).toBe('person');
+    expect(sectionOf(`/${slug}/votes`)).toBe('other');
+    // currentSection() can only ever return a section the rule keeps.
+    for (const known of routeSections) expect(from(known)).toBe(known);
   });
 
   test('call length is whole seconds, capped at 600, never negative', () => {

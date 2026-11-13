@@ -109,6 +109,19 @@ const routePatterns = new Set([
   '/your-mp',
 ]);
 
+/**
+ * The sections a screen can be in, for `from_section`: each pattern's first
+ * segment ("person" for "/person/[slug]"), "today" for the home screen and
+ * "other". A parameter is never a section.
+ */
+export const routeSections: ReadonlySet<string> = new Set([
+  'today',
+  'other',
+  ...[...routePatterns]
+    .map((pattern) => pattern.split('/')[1] ?? '')
+    .filter((first) => /^[a-z][a-z0-9-]{0,31}$/.test(first)),
+]);
+
 export function routeErrorPattern(value: unknown): string | undefined {
   return typeof value === 'string' && routePatterns.has(value)
     ? value

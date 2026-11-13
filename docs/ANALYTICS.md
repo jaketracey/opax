@@ -149,7 +149,9 @@ native SDK builds without passing through JS, do not carry them.
 | `opax_screen_ready` | `route_pattern`: one of `/`, `/person/[slug]`, `/bill/[key]`, `/your-mp`, `/search`, `/ask`; `duration_ms`: navigation to the first content commit, at most once per sampled visit |
 
 `from_section` is the first segment of the current route (`today` for the
-home screen); anything else becomes `other`. `scope` is one of the fixed search
+home screen). Only the sections in `routeSections`
+(`mobile/src/analytics/route-patterns.ts`, the first segments of the fixed
+route list) are kept; anything else, including a slug, becomes `other`. `scope` is one of the fixed search
 scopes. Counts are integers from 0 to 1,000,000 and durations are milliseconds
 up to an hour; any other value is dropped. Ask outcome `reason` accepts only
 `stall`, `deadline`, `network`, `server` or

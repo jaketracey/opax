@@ -13,7 +13,7 @@
  * (`$exception`) are rebuilt the same way by ./exceptions.ts.
  */
 import { scrubExceptionProperties } from './exceptions';
-import { routeErrorPattern } from './route-patterns';
+import { routeErrorPattern, routeSections } from './route-patterns';
 
 type Value = string | number | boolean;
 type Rule = (value: unknown) => Value | undefined;
@@ -95,10 +95,12 @@ export const sourcePlacements = [
 ] as const;
 export type SourcePlacement = (typeof sourcePlacements)[number];
 
-/** A screen's top-level section, from its route file name (never a parameter). */
-const sectionPattern = /^[a-z][a-z0-9-]{0,31}$/;
+/**
+ * A screen's top-level section: one of `routeSections` (route-patterns.ts),
+ * the list `currentSection()` returns from. Anything else is "other".
+ */
 export const section: Rule = (value) =>
-  typeof value === 'string' && sectionPattern.test(value) ? value : 'other';
+  typeof value === 'string' && routeSections.has(value) ? value : 'other';
 const version = pattern(/^\d{1,4}(?:\.\d{1,4}){0,3}$/);
 // The native SDKs report the build as a whole number; it is kept as digits.
 const build: Rule = (value) =>
@@ -328,7 +330,7 @@ const screenRule: Rule = (value) => {
 export function sectionOf(screen: string | null): string {
   const first = screen?.split('/')[1];
   if (screen === '/') return 'today';
-  return first && sectionPattern.test(first) ? first : 'other';
+  return first && routeSections.has(first) ? first : 'other';
 }
 
 /** Properties the SDK adds that are categories, not content. */
