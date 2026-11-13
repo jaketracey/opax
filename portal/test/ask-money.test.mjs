@@ -617,15 +617,15 @@ test('LNP comparisons retain industry or exact donor and single-party rankings r
 
 test('compound party names retain distinct federal identities and reject unsupported cohorts',async()=>{
  // The typed export holds no receipt-type cells for the Country Liberal Party's ten edges (empty by_type), so the
- // answer ranks their legacy totals under a label that says the AEC data OPAX holds has no type breakdown for them.
+ // answer ranks their own declarations under the same declaration label voice uses.
  const clpEdges=graph.edges.filter(e=>e.target==='party:Country Liberal Party'&&!e.flow&&!e.grant);
  assert.equal(clpEdges.length,10);assert.ok(clpEdges.every(e=>e.by_type&&!Object.keys(e.by_type).length));
  const country=await ask('Who donates the most to Country Liberal Party?');
- assert.equal(country.answer_status,'calculated');assert.equal(country.measure,'receipts_all');
- assert.equal(country.measure_label,'all receipt types (no type breakdown in the AEC data OPAX holds)');
- assert.match(country.answer,/^The largest source to Country Liberal Party is \*\*Thiess Pty Ltd: \$40,000\*\*, all receipt types \(no type breakdown in the AEC data OPAX holds\), 1998–99 to 2004–05\./);
- assert.match(country.answer,/the selection totals \$107,300\./);assert.equal(aud(clpEdges.reduce((s,e)=>s+e.total,0)),'$107,300');
- assert.doesNotMatch(country.answer,/donations received|other financial years|See these donations/);
+ assert.equal(country.answer_status,'calculated');assert.equal(country.measure,'donor_declared');
+ assert.equal(country.measure_label,"declared by the donors; Country Liberal Party's returns show no matching receipt");
+ assert.match(country.answer,/^\*\*Thiess Pty Ltd\*\* declared the most to Country Liberal Party: \*\*\$40,000\*\*\./);
+ assert.match(country.answer,/Donors declared \$107,300/);assert.equal(aud(clpEdges.reduce((s,e)=>s+e.total,0)),'$107,300');
+ assert.doesNotMatch(country.answer,/no type breakdown|donations received|other financial years|See these donations/);
  assert.match(country.answer,/\[See these on the money map\]\([^)]*party=party%3ACountry\+Liberal\+Party\)/);
  const pair=await ask('Who gets more money, Liberal or LNP?');assert.equal(pair.answer_status,'calculated');assert.match(pair.answer,/Liberal received \$96,444,577 more than LNP/); // 13 Nov 2026: was $96,469,578; Linc Energy left the federal map at rank 251 when NIOA's two 2015-16 gifts of $20,000 to the Liberal Democratic Party (one on the party's return, one the donor's own) lifted NIOA into the top 250 (export rule 10).
  assert.equal(new Set(pair.sources.slice(1).map(s=>new URL(s.href,'https://opax.test').searchParams.get('party'))).size,2);
