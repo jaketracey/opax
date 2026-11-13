@@ -1,4 +1,5 @@
 import type { PartyStatus } from '../api/party-transforms';
+import { PARTY_RENAMES, type PartyRename } from './party-renames';
 import {
   partyColors,
   partyColorsDark,
@@ -73,8 +74,70 @@ export function presidingRole(
   }
 }
 
-const knownParty = (name: string) =>
-  parties[name.trim().toLocaleLowerCase('en-AU').replace(/’/g, "'")];
+const fold = (name: string) =>
+  name.trim().toLocaleLowerCase('en-AU').replace(/’/g, "'");
+const knownParty = (name: string) => parties[fold(name)];
+
+// Every name, alias, slug and code of a renamed party, to its rename record.
+const renameIndex = new Map<string, PartyRename>();
+for (const rename of PARTY_RENAMES)
+  for (const name of [
+    rename.name,
+    ...rename.former.flatMap((f) => [f.name, ...(f.aliases ?? [])]),
+  ]) {
+    renameIndex.set(fold(name), rename);
+    renameIndex.set(partySlug(name), rename);
+  }
+for (const rename of PARTY_RENAMES) renameIndex.set(fold(rename.code), rename);
+
+/**
+ * The rename record for a party label, a slug of one of its names, or its
+ * code: "Liberal Democrats", "liberal-democratic-party" and "LDP" are the
+ * Libertarian Party. Null for every other party.
+ */
+export function partyRename(
+  party: string | null | undefined,
+): PartyRename | null {
+  const name = party?.trim();
+  return name ? (renameIndex.get(fold(name)) ?? null) : null;
+}
+
+/** The party's current name: a former name reads as its later one. */
+export const currentPartyName = (party: string) =>
+  partyRename(party)?.name ?? party;
+
+/**
+ * The record's own label when it carries a former name of a renamed party
+ * ("Liberal Democratic Party"), for a "Recorded as" line; null otherwise.
+ * The record keeps its label: this never relabels it.
+ */
+export function formerPartyName(
+  party: string | null | undefined,
+): string | null {
+  const rename = partyRename(party);
+  const name = party?.trim();
+  return rename &&
+    name &&
+    rename.former.some((f) =>
+      [f.name, ...(f.aliases ?? [])].some((n) => fold(n) === fold(name)),
+    )
+    ? name
+    : null;
+}
+
+/** "Recorded as Liberal Democratic Party", or null for a current name. */
+export function recordedAsLine(party: string | null | undefined) {
+  const former = formerPartyName(party);
+  return former ? `Recorded as ${former}` : null;
+}
+
+/**
+ * One code per party, for comparing labels: the dense label (ALP, LIB), or a
+ * renamed party's code for any of its names. Names stay as recorded; only
+ * the comparison is shared.
+ */
+export const partyCode = (party: string) =>
+  partyRename(party)?.code ?? partyIdentity(party).short;
 
 export function partyIdentity(party: string | null | undefined): PartyIdentity {
   const name = party?.trim();
@@ -118,9 +181,12 @@ export function partyWash(party: string | null | undefined): string {
   return partyWashes[(name && knownParty(name)?.key) || 'other'];
 }
 
-/** The web's samePartyLabel: two names for one party compare equal ("Labor", "ALP"). */
+/**
+ * The web's samePartyLabel: two names for one party compare equal ("Labor",
+ * "ALP"; "Liberal Democratic Party", "Libertarian Party").
+ */
 export function samePartyLabel(a: string, b: string): boolean {
-  return partyIdentity(a).short === partyIdentity(b).short;
+  return partyCode(a) === partyCode(b);
 }
 
 export interface PartyContext {
@@ -167,22 +233,34 @@ export function partyText(
   };
 }
 
-/** Slugs are derived only from recorded labels; this adds no party aliases. */
-export const partySlug = (name: string) =>
-  name
+/**
+ * Slugs are derived only from recorded labels; this adds no party aliases.
+ * (A renamed party's former slugs resolve through `partyRename`.)
+ */
+export function partySlug(name: string) {
+  // A declaration, not a const: the rename index above runs at load.
+  return name
     .trim()
     .toLocaleLowerCase('en-AU')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
+}
 
 /**
  * One recorded label for the input, or null: an exact label, a derived slug,
  * or one party identity among the labels. Never a prefix match, and never a
- * non-party label (Independent, presiding roles).
+ * non-party label (Independent, presiding roles). A renamed party resolves to
+ * its current name from any of its names or their slugs, when the labels
+ * record it under any of them.
  */
 export function resolveParty(input: string, labels: string[]): string | null {
   if (!isPartyLabel(input)) return null;
   labels = labels.filter(isPartyLabel);
+  const renamed = partyRename(input);
+  if (renamed)
+    return labels.some((label) => partyRename(label) === renamed)
+      ? renamed.name
+      : null;
   const exactName = labels.find((label) => label === input);
   const slugMatches = labels.filter((label) => partySlug(label) === input);
   const candidates = exactName
@@ -193,10 +271,9 @@ export function resolveParty(input: string, labels: string[]): string | null {
   const matches = labels.filter((label) =>
     candidates.some((candidate) => samePartyLabel(label, candidate)),
   );
-  const identities = new Set(
-    matches.map((label) => partyIdentity(label).short),
-  );
-  return identities.size === 1 ? matches[0]! : null;
+  const identities = new Set(matches.map(partyCode));
+  if (identities.size !== 1) return null;
+  return currentPartyName(matches[0]!);
 }
 
 /**

@@ -29,9 +29,10 @@
 # expo-glass-effect 57.0.4 is iOS-only; retain a future Android module boundary.
 -keep class expo.modules.glasseffect.** { *; }
 
-# PostHog 4.85.1 is JS-only (Android analytics is disabled); there is no native
-# SDK to keep today. If it gains one, preserve its reflection boundary too.
+# PostHog's native crash plugin and posthog-android (docs/ANALYTICS.md). Keep
+# their reflection boundary; crash frames are symbolicated from the R8 mapping.
 -keep class com.posthog.** { *; }
+-keep class com.posthogreactnativeplugin.** { *; }
 
 # Local Kotlin Expo module, including voice/account callbacks and model types.
 -keep class au.com.opax.voice.** { *; }

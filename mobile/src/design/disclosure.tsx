@@ -5,52 +5,20 @@ import {
   useRowCellStyle,
   useRowHighlight,
 } from './row-padding';
-import {
-  Animated,
-  Easing,
-  LayoutAnimation,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Animated, Easing, StyleSheet, View } from 'react-native';
 import { useAccessibilitySize, useReduceMotion } from './accessibility';
 import { Icon, type SFSymbol } from './icon';
+import { HeightReveal } from './reveal';
 import { Text } from './text';
 import { minimumTarget, rhythm, type Accent } from './tokens';
-
-/**
- * Expand and collapse smoothly, or instantly with Reduce Motion.
- *
- * On iOS this currently does nothing: Reanimated 4.5 replaces Fabric's
- * layout-animation delegate with one that ignores configureNext, so the
- * change lands in one frame. For a line that must ease the content below,
- * use HeightReveal (./reveal), which animates its own height (build 61).
- */
-export function animateLayout(
-  reduceMotion: boolean,
-  duration = 220,
-  easing: 'easeInEaseOut' | 'easeOut' = 'easeInEaseOut',
-) {
-  if (reduceMotion) return;
-  LayoutAnimation.configureNext(
-    LayoutAnimation.create(duration, easing, 'opacity'),
-  );
-}
-
-/**
- * A short line or block appearing or going (a confirmation under a button,
- * a failed preview collapsing): the content below slides over 200 ms,
- * ease-out, alongside the line's own fade. Instant with Reduce Motion.
- * Call it just before the state change that adds or removes the view.
- */
-export function animateResize(reduceMotion: boolean) {
-  animateLayout(reduceMotion, 200, 'easeOut');
-}
 
 /**
  * A native disclosure row: label, an optional value on the right ("12",
  * "$48,210") and a chevron that turns down when open. It replaces stacks of
  * bordered "Show…" buttons. VoiceOver hears the label and "expanded" or
- * "collapsed". The body is built only while open.
+ * "collapsed". The body is built only while open; it eases open and closed
+ * in a HeightReveal (at once with Reduce Motion), so the rows below slide
+ * rather than jump.
  */
 export function Disclosure({
   label = 'More',
@@ -114,7 +82,6 @@ export function Disclosure({
       accessibilityState={{ expanded: open }}
       testID={testID}
       onPress={() => {
-        animateLayout(reduceMotion);
         const next = !open;
         if (controlled === undefined) setOwn(next);
         onToggle?.(next);
@@ -181,14 +148,16 @@ export function Disclosure({
       ) : (
         header
       )}
-      {open ? (
-        <View
-          style={styles.body}
-          testID={bodyTestID ?? (testID ? `${testID}-body` : undefined)}
-        >
-          {typeof children === 'function' ? children() : children}
-        </View>
-      ) : null}
+      <HeightReveal reduceMotion={reduceMotion}>
+        {open ? (
+          <View
+            style={styles.body}
+            testID={bodyTestID ?? (testID ? `${testID}-body` : undefined)}
+          >
+            {typeof children === 'function' ? children() : children}
+          </View>
+        ) : null}
+      </HeightReveal>
     </View>
   );
 }

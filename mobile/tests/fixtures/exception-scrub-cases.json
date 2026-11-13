@@ -1,0 +1,1614 @@
+{
+ "note": "Invented inputs for the crash report scrub. tests/native-scrub.test.ts runs them through the JS rules and, with scripts/check-native-scrub.sh, through the Swift copy in the plugin patch, and expects the same output.",
+ "messages": [
+  "Bad input “my secret question” here",
+  "Bad input ‘my secret question’ here",
+  "Bad 'it's my secret' then",
+  "value='secret question' y",
+  "Error line one\nsecret question on line two",
+  "fetch https://fixture:hunter2@opax.com.au/api/search?q=secret failed",
+  "Unexpected token in JSON: {\"query\":\"secret question\",\"email\":\"a@b.co\"}",
+  "Failed: SearchState(query=secret question, page=1, email=a@b.co)",
+  "code ١٢٣٤٥٦ and 0412 345 678",
+  "Unhandled JS Exception: TypeError: Cannot read property 'x' of undefined, stack:\nfoo@123:456",
+  "unclosed \"secret question here\nnext line kept",
+  "Error: ‘O’Brien’s secret’ x",
+  "Café “naïve” ü@ü.de",
+  "A „secret question“ b",
+  "A 「secret question」 b",
+  "A 『secret question』 b",
+  "A ＂secret question＂ b",
+  "A ‛secret question‛ b",
+  "A ″secret question″ b",
+  "A ‚secret question‘ b",
+  "A »secret question« b",
+  "A ‹secret question› b",
+  "A ＇secret question＇ b",
+  "x\"secret question\" b",
+  "x\"secret question",
+  "x`secret question` b",
+  "GET https://opax.com.au/api/search/secret%20question failed",
+  "Load /ask#secret-question failed",
+  "Load opax.com.au/ask/secret-question failed",
+  "GET https://www.OPAX.com.au:8443/ask/secret?x=1#y",
+  "see https://opax.com.au.",
+  "mail jo@opax.com.au/secret",
+  "https://notopax.com.au/path?q=1",
+  "https://user:pw@example.com/a/b?c=d",
+  "Load failed: opax://ask#secret%20question",
+  "Bad request /api/ask?question=secret%20question",
+  "search?q=secret",
+  "Can't find variable: Fixture",
+  "The operation couldn’t be completed. (NSURLErrorDomain error -1009.)",
+  "Use » secret « here",
+  "rock ’n’ roll secret",
+  "Sign-in failed for jo.fixture@example.org",
+  "Code 482913 was rejected",
+  "Render failed: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "\"Did Senator Fixture vote against the bush tucker levy?\"",
+  "   \n\t ",
+  "",
+  "Bad input \"first line\nmiddle line my rent is late\nlast line\" end",
+  "Bad “first line\nmy rent is late\nlast line” end",
+  "Bad „first line\nmy rent is late\nlast line“ end",
+  "Bad «first line\nmy rent is late\nlast line» end",
+  "Bad 「first line\nmy rent is late\nlast line」 end",
+  "Bad ＂first line\nmy rent is late＂ end",
+  "Bad `first line\nmy rent is late\nlast line` end",
+  "Bad 'first line\nmy rent is late\nlast line' end",
+  "Bad ‘first line\nmy rent is late\nlast line’ end",
+  "Bad ’first line\nmy rent is late\nlast line’ end",
+  "Bad ‚first line\nmy rent is late‘ end",
+  "Bad \"first\r\nmy rent is late\r\nlast\" end",
+  "Bad \"first\u2028my rent is late\u2029last\" end",
+  "Bad \"first line\nmy rent is late\nlast line",
+  "Bad 'first line\nmy rent is late\nlast line",
+  "Bad ‘first line\nmy rent is late",
+  "Fetch https://opax.com.au./ask/my-rent-is-late failed",
+  "Fetch www.opax.com.au.:443/search?q=my%20rent failed",
+  "opax.com.au.example.org/path?q=1 kept",
+  "GET /api/search/my%20rent%20is%20late failed",
+  "GET /api/community/chats/fixture-chat-12345 failed",
+  "Route /ask/why-is-my-rent-late?x=1#y missing",
+  "Route /person/fixture-person not found",
+  "Route /ask missing",
+  "GET /api?q=my%20rent failed",
+  "(/search/my-rent-is-late) failed",
+  "at /src/analytics/exceptions.ts:12:3",
+  "Cannot open /Users/fixture/Library/Caches/x.db",
+  "ENOENT: /data/user/0/au.com.opax.app/files/x?y=1",
+  "see //cdn.example.org/a/b?c=1",
+  "and/or 12/11 w/ friends ~/proj/src/x.ts file:///ask/x/y C:/Users/x/y",
+  "x‘my rent is late’ end",
+  "x‚my rent is late‘ end",
+  "x‛my rent is late’ end",
+  "rock in the ‘90s and my rent is late",
+  "it’s O’Brien’s rent",
+  "x‘it’s my rent’ end",
+  "a\u0085my rent\ufeffis late",
+  "\ufeff lead and trail \u0085",
+  "a\u001cb\u001dc\u001ed\u001ff",
+  "\u001c\u001f\ufeff\u0085",
+  "\"my\u0085rent\" kept\ufeff",
+  "https://example.org/a\u0085b?q=1 /ask/x\ufeffy"
+ ],
+ "events": [
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$screen_name": "/person/[slug]",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-ios",
+    "$lib_version": "3.92.7\n",
+    "$session_id": "secret question",
+    "$os_name": "iOS\n",
+    "$device_type": "CarPlay",
+    "$app_name": "OPAX\n",
+    "$app_namespace": "au.com.opax.app\n",
+    "$app_version": "1.1.4 secret",
+    "$app_build": "58\n",
+    "$screen_name": "/person/[slug]",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal\n",
+    "$exception_source": "ios\n",
+    "$exception_fingerprint": "render\n",
+    "$exception_list": [
+     {
+      "type": "TypeError\n",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "generic\n",
+       "handled": 1,
+       "exception_id": 1.5,
+       "parent_id": 9007199254740993
+      },
+      "stacktrace": {
+       "type": "resolved",
+       "frames": [
+        {
+         "platform": "apple\n",
+         "chunk_id": "abc\n",
+         "lineno": 1.5,
+         "colno": true,
+         "in_app": 1,
+         "instruction_addr": "0x1\n",
+         "function": "f",
+         "filename": "a.js#secret"
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho\n",
+      "image_size": 1152921504606846976,
+      "arch": "arm64",
+      "code_id": "abc"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58.0,
+    "$screen_name": "/person/[slug]",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iPadOS",
+    "$device_type": "Tablet",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": "58",
+    "$screen_name": "/person/[slug]",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$screen_name": "/",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$screen_name": "",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$screen_name": "ask",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$screen_name": "/ask/",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$screen_name": "//",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$screen_name": "/(tabs)/ask",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$screen_name": "/index",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$screen_name": "/a/b/c/d/e/f/g/h",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$screen_name": "/a/b/c/d/e/f/g/h/i",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$screen_name": "/[...rest]",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$screen_name": "/Ask",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$screen_name": "/ask/secret question",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$screen_name": "/ask\n",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$screen_name": 42,
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Cannot read property \"secret question\" of undefined",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$exception_list": [],
+    "$exception_message": "secret"
+   }
+  },
+  {
+   "event": "$screen",
+   "properties": {
+    "$screen_name": "/ask"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$screen_name": "/person/[slug]",
+    "$screen_width": 1206,
+    "$app_state": "active",
+    "$exception_level": "fatal",
+    "$exception_source": "ios",
+    "$exception_fingerprint": "render:Answer",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Load /ask/secret-question failed: \"first line\nsecret question\nlast line\" end",
+      "module": "Answer",
+      "thread_id": 1.0,
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0,
+       "source": "secret"
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderAnswer",
+         "filename": "main.jsbundle?q=wombat%20crossing",
+         "lineno": 48213.0,
+         "colno": 12,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77",
+         "context_line": "const q = \"secret question\"",
+         "vars": {
+          "search": "secret"
+         }
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+         "in_app": true,
+         "lineno": 7
+        }
+       ]
+      },
+      "extra": "secret question"
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "code_file": "/private/var/containers/Bundle/Application/X/OPAX.app/OPAX",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "note": "secret"
+     }
+    ],
+    "$exception_steps": [
+     {
+      "$message": "Searched secret"
+     }
+    ],
+    "question": "secret question"
+   }
+  }
+ ]
+}

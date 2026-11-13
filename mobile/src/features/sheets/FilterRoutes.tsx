@@ -6,6 +6,7 @@ import {
   Stack,
   useLocalSearchParams,
   useNavigation,
+  type NativeStackHeaderProps,
 } from 'expo-router';
 import { FilterSheet, FilterFacet, filterBar } from '../../design/filter-sheet';
 import { ContentUnavailable } from '../../design/states';
@@ -15,13 +16,22 @@ import { filterModels, ensureFilterModel } from './filter-models';
 import { beginFilterSession } from './filter-model';
 import { AndroidReadingHeader } from '../../navigation/AndroidReadingHeader';
 
+/**
+ * The filters' full-screen dialog sits in a tab stack, where the native safe
+ * area view read no top inset: its bar starts below the status bar from the
+ * window's insets instead.
+ */
+export function FiltersHeader(props: NativeStackHeaderProps) {
+  return <AndroidReadingHeader {...props} windowInsets />;
+}
+
 export function FiltersLayout() {
   const stack = (
     <Stack
       screenOptions={{
         ...useStackChrome(),
         headerLargeTitleEnabled: false,
-        ...(Platform.OS === 'android' ? { header: AndroidReadingHeader } : {}),
+        ...(Platform.OS === 'android' ? { header: FiltersHeader } : {}),
       }}
     >
       <Stack.Screen

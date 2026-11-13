@@ -95,7 +95,11 @@ import type { BillEntry } from './navigation';
 import { BillIndexRow } from './parts';
 import { useCatalogRecord } from './useCatalogRecord';
 
-const PLACEHOLDER = 'Bills, sponsors and portfolios';
+// Short enough for the bar's field on a phone and beside a Duo's split
+// ("Bills, sponsors and por…" at 240pt). The field still matches sponsors
+// and portfolios. react-native-screens 4.26 gives the native field no
+// accessibility label of its own, so VoiceOver reads this placeholder.
+export const PLACEHOLDER = 'Search bills';
 const LIST_NOTE = 'This list may not include every bill yet.';
 
 /**
@@ -200,9 +204,8 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   const total = all ? scopeTotal(all, scope) : 0;
   const searching = !!query;
 
-  // iPad regular width: the selection lives in the route (`?bill=…`).
-  const regular = useLayout();
-  const split = regular.regular;
+  // Two panes (the split breakpoint): the selection lives in the route (`?bill=…`).
+  const split = useLayout().split;
   const selectedKey = params.bill || null;
   const titleFor = useCallback(
     (key: string) => {

@@ -13,25 +13,46 @@ export function object(value: unknown): Record<string, unknown> {
 export const text: Decoder<string> = (v) =>
   typeof v === 'string' ? v : invalid();
 export const nonempty: Decoder<string> = (v) =>
-  text(v).trim() ? text(v) : invalid();
+  typeof v === 'string' && v.trim() ? v : invalid();
 export const number: Decoder<number> = (v) =>
   typeof v === 'number' && Number.isFinite(v) ? v : invalid();
 export const count: Decoder<number> = (v) =>
-  Number.isSafeInteger(number(v)) && number(v) >= 0 ? number(v) : invalid();
+  typeof v === 'number' && Number.isSafeInteger(v) && v >= 0 ? v : invalid();
 export const boolean: Decoder<boolean> = (v) =>
   typeof v === 'boolean' ? v : invalid();
+/**
+ * Strings that already passed a check whose answer depends on the string
+ * alone. Catalogs repeat the same dates and links thousands of times, and on
+ * Hermes each `new URL` and `Date` round trip is slow enough to show on a
+ * profile's first open. Bounded: a full set starts again.
+ */
+export function passedStrings(limit: number) {
+  const passed = new Set<string>();
+  return {
+    has: (s: string) => passed.has(s),
+    add(s: string) {
+      if (passed.size >= limit) passed.clear();
+      passed.add(s);
+    },
+  };
+}
+const validDates = passedStrings(8192);
 export const date: Decoder<string> = (v) => {
   const s = nonempty(v);
+  if (validDates.has(s)) return s;
   if (
     !/^\d{4}-\d{2}-\d{2}(?:T.*)?$/.test(s) ||
     !Number.isFinite(Date.parse(s)) ||
     new Date(s).toISOString().slice(0, 10) !== s.slice(0, 10)
   )
     invalid();
+  validDates.add(s);
   return s;
 };
+const validURLs = passedStrings(8192);
 export const url: Decoder<string> = (v) => {
   const s = nonempty(v);
+  if (validURLs.has(s)) return s;
   try {
     const u = new URL(s);
     if (!['https:', 'http:'].includes(u.protocol) || u.username || u.password)
@@ -39,6 +60,7 @@ export const url: Decoder<string> = (v) => {
   } catch {
     invalid();
   }
+  validURLs.add(s);
   return s;
 };
 export const nullable =
@@ -242,23 +264,31 @@ type Shape<S extends Record<string, Decoder<unknown>>> = {
 export function shape<S extends Record<string, Decoder<unknown>>>(
   schema: S,
 ): Decoder<Shape<S>> {
+  // Every catalog row runs through here. Read the schema once, and build the
+  // row without per-field entry arrays: this is the hottest loop of a cold
+  // catalog read on Hermes. Schema keys are code, never `__proto__`.
+  const fields = Object.entries(schema);
+  if (Object.hasOwn(schema, '__proto__'))
+    throw new Error('A decoder schema cannot name __proto__');
   return (v) => {
     const input = object(v);
-    return markFromChildren(
-      Object.fromEntries(
-        Object.entries(schema).map(([key, decode]) => {
-          try {
-            return [key, decode(input[key])];
-          } catch (error) {
-            if (!(error instanceof ApiError) || error.code !== 'invalid-data')
-              throw error;
-            invalid(
-              `${key}: ${error instanceof Error ? error.message : 'Invalid field'}`,
-            );
-          }
-        }),
-      ),
-    ) as Shape<S>;
+    const out: Record<string, unknown> = {};
+    let partial = false;
+    for (const [key, decode] of fields) {
+      let value: unknown;
+      try {
+        value = decode(input[key]);
+      } catch (error) {
+        if (!(error instanceof ApiError) || error.code !== 'invalid-data')
+          throw error;
+        invalid(
+          `${key}: ${error instanceof Error ? error.message : 'Invalid field'}`,
+        );
+      }
+      out[key] = value;
+      if (!partial && isPartialCatalog(value)) partial = true;
+    }
+    return markPartial(out, partial) as Shape<S>;
   };
 }
 /** A `shape` that also refuses any key its schema does not name. */

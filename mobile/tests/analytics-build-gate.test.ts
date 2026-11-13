@@ -1,9 +1,11 @@
 import Constants from 'expo-constants';
 
 const mockCapture = jest.fn();
+const mockCaptureException = jest.fn();
 const mockScreen = jest.fn();
 const mockClient = jest.fn(() => ({
   capture: mockCapture,
+  captureException: mockCaptureException,
   screen: mockScreen,
 }));
 jest.mock('posthog-react-native', () => ({
@@ -48,6 +50,7 @@ beforeEach(() => {
     'standalone' as typeof Constants.executionEnvironment;
   mockClient.mockClear();
   mockCapture.mockClear();
+  mockCaptureException.mockClear();
 });
 afterAll(() => {
   Reflect.set(globalThis, '__DEV__', originalDev);
@@ -79,6 +82,7 @@ test.each(['ios', 'android'] as const)(
     expect(exercise(platform)).toBe(true);
     expect(mockClient).toHaveBeenCalledTimes(1);
     expect(mockCapture).toHaveBeenCalledTimes(2);
+    expect(mockCaptureException).toHaveBeenCalledTimes(1);
   },
 );
 
@@ -187,6 +191,7 @@ test.each([
     expect(exercise()).toBe(false);
     expect(mockClient).not.toHaveBeenCalled();
     expect(mockCapture).not.toHaveBeenCalled();
+    expect(mockCaptureException).not.toHaveBeenCalled();
   },
 );
 

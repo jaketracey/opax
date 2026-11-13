@@ -58,7 +58,8 @@ export function EditionStory() {
   const title = useTitleOnScroll(titleRef, 'Daily edition');
   const openAsk = useOpenAsk();
   const onAsk = () => {
-    if (edition) openAsk({ question: editionQuestion(edition) });
+    if (edition)
+      openAsk({ question: editionQuestion(edition) }, 'Daily edition');
   };
   const onShare = () => {
     if (edition) void shareEdition(edition);
@@ -286,6 +287,23 @@ export function EditionStory() {
   );
 }
 
+/**
+ * Whether a bars slide is parts of one whole, drawn as one split bar. The
+ * composer says so (`whole: true`) and leaves the field off otherwise. It
+ * never makes a member's topic labels (a speech can carry several) or a
+ * topic's speakers (scaled to the first) a whole, so those kinds keep the 0
+ * to 100% scale without it. Any other slide without the field predates it
+ * and is guessed from its numbers.
+ */
+function barsAreWhole(
+  kind: EditionView['kind'],
+  bars: NonNullable<EditionView['facts']['bars']>,
+): boolean {
+  if (typeof bars.whole === 'boolean') return bars.whole;
+  if (kind === 'politician' || kind === 'topic') return false;
+  return isPartOfWhole(bars.items.map((bar) => bar.pct));
+}
+
 function EditionFacts({
   edition,
   provenance: source,
@@ -341,7 +359,7 @@ function EditionFacts({
                 </Text>
                 {/* Bars slides are shares: parts of one whole read as one
                     bar; overlapping shares keep a 0 to 100% scale. */}
-                {isPartOfWhole(bars.items.map((bar) => bar.pct)) ? (
+                {barsAreWhole(edition.kind, bars) ? (
                   <ShareBar
                     parts={bars.items.map((bar) => ({
                       label: bar.label,

@@ -2506,43 +2506,61 @@ exports[`iOS design at font scale 1 Disclosure retains its iOS output 1`] = `
   </View>
   <View
     style={
-      {
-        "gap": 16,
-        "paddingBottom": 8,
-        "paddingTop": 4,
-      }
+      [
+        null,
+        null,
+        null,
+        {
+          "maxHeight": 1000000,
+        },
+      ]
     }
   >
-    <Text
-      accessibilityLanguage="en-AU"
-      allowFontScaling={true}
-      dynamicTypeRamp="body"
-      maxFontSizeMultiplier={0}
+    <View
+      collapsable={false}
       onLayout={[Function]}
-      style={
-        [
-          {
-            "color": {
-              "dynamic": {
-                "dark": "#ECEAE2",
-                "highContrastDark": "#ECEAE2",
-                "highContrastLight": "#23271F",
-                "light": "#23271F",
-              },
-            },
-            "flexShrink": 1,
-            "fontSize": 17,
-            "fontWeight": "400",
-            "lineHeight": 22.00100300902708,
-          },
-          null,
-          null,
-          undefined,
-        ]
-      }
     >
-      Record
-    </Text>
+      <View
+        style={
+          {
+            "gap": 16,
+            "paddingBottom": 8,
+            "paddingTop": 4,
+          }
+        }
+      >
+        <Text
+          accessibilityLanguage="en-AU"
+          allowFontScaling={true}
+          dynamicTypeRamp="body"
+          maxFontSizeMultiplier={0}
+          onLayout={[Function]}
+          style={
+            [
+              {
+                "color": {
+                  "dynamic": {
+                    "dark": "#ECEAE2",
+                    "highContrastDark": "#ECEAE2",
+                    "highContrastLight": "#23271F",
+                    "light": "#23271F",
+                  },
+                },
+                "flexShrink": 1,
+                "fontSize": 17,
+                "fontWeight": "400",
+                "lineHeight": 22.00100300902708,
+              },
+              null,
+              null,
+              undefined,
+            ]
+          }
+        >
+          Record
+        </Text>
+      </View>
+    </View>
   </View>
 </View>
 `;
@@ -5310,6 +5328,7 @@ exports[`iOS design at font scale 1 SectionHeader retains its iOS output 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
+      "flexWrap": "wrap",
       "gap": 8,
       "minHeight": 44,
     }
@@ -5343,7 +5362,8 @@ exports[`iOS design at font scale 1 SectionHeader retains its iOS output 1`] = `
         null,
         {
           "flexGrow": 1,
-          "flexShrink": 1,
+          "flexShrink": 0,
+          "maxWidth": "100%",
         },
       ]
     }
@@ -5389,6 +5409,10 @@ exports[`iOS design at font scale 1 SectionHeader retains its iOS output 1`] = `
           "borderRadius": 10,
           "justifyContent": "center",
           "minHeight": 44,
+        },
+        {
+          "flexShrink": 1,
+          "maxWidth": "100%",
         },
         null,
       ]
@@ -9428,13 +9452,15 @@ exports[`iOS design at font scale 2 ChoiceChips retains its iOS output 1`] = `
         {
           "alignItems": "center",
           "alignSelf": "stretch",
+          "columnGap": 8,
           "flexDirection": "row",
-          "gap": 8,
+          "flexWrap": "wrap",
           "minHeight": 44,
         },
         {
           "alignItems": "stretch",
           "flexDirection": "column",
+          "flexWrap": "nowrap",
           "gap": 4,
         },
       ]
@@ -10055,43 +10081,61 @@ exports[`iOS design at font scale 2 Disclosure retains its iOS output 1`] = `
   </View>
   <View
     style={
-      {
-        "gap": 16,
-        "paddingBottom": 8,
-        "paddingTop": 4,
-      }
+      [
+        null,
+        null,
+        null,
+        {
+          "maxHeight": 1000000,
+        },
+      ]
     }
   >
-    <Text
-      accessibilityLanguage="en-AU"
-      allowFontScaling={true}
-      dynamicTypeRamp="body"
-      maxFontSizeMultiplier={0}
+    <View
+      collapsable={false}
       onLayout={[Function]}
-      style={
-        [
-          {
-            "color": {
-              "dynamic": {
-                "dark": "#ECEAE2",
-                "highContrastDark": "#ECEAE2",
-                "highContrastLight": "#23271F",
-                "light": "#23271F",
-              },
-            },
-            "flexShrink": 1,
-            "fontSize": 17,
-            "fontWeight": "400",
-            "lineHeight": 22.00100300902708,
-          },
-          null,
-          null,
-          undefined,
-        ]
-      }
     >
-      Record
-    </Text>
+      <View
+        style={
+          {
+            "gap": 16,
+            "paddingBottom": 8,
+            "paddingTop": 4,
+          }
+        }
+      >
+        <Text
+          accessibilityLanguage="en-AU"
+          allowFontScaling={true}
+          dynamicTypeRamp="body"
+          maxFontSizeMultiplier={0}
+          onLayout={[Function]}
+          style={
+            [
+              {
+                "color": {
+                  "dynamic": {
+                    "dark": "#ECEAE2",
+                    "highContrastDark": "#ECEAE2",
+                    "highContrastLight": "#23271F",
+                    "light": "#23271F",
+                  },
+                },
+                "flexShrink": 1,
+                "fontSize": 17,
+                "fontWeight": "400",
+                "lineHeight": 22.00100300902708,
+              },
+              null,
+              null,
+              undefined,
+            ]
+          }
+        >
+          Record
+        </Text>
+      </View>
+    </View>
   </View>
 </View>
 `;
@@ -12951,6 +12995,7 @@ exports[`iOS design at font scale 2 SectionHeader retains its iOS output 1`] = `
           "minHeight": 44,
         },
         null,
+        null,
       ]
     }
   >
@@ -13240,13 +13285,15 @@ exports[`iOS design at font scale 2 SegmentedPicker retains its iOS output 1`] =
       {
         "alignItems": "center",
         "alignSelf": "stretch",
+        "columnGap": 8,
         "flexDirection": "row",
-        "gap": 8,
+        "flexWrap": "wrap",
         "minHeight": 44,
       },
       {
         "alignItems": "stretch",
         "flexDirection": "column",
+        "flexWrap": "nowrap",
         "gap": 4,
       },
     ]

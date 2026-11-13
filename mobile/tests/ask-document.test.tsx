@@ -83,12 +83,12 @@ test('mount does nothing; tapping opens a draft without submitting or creating a
   await act(async () => {
     view.root.findByProps({ testID: 'doc-ask' }).props.onPress();
   });
-  // From a browsing tab the draft opens in the current tab
+  // From a browsing tab the draft switches to the Ask tab
   // (tests/ask-entry-navigation.test.tsx drives the real router).
   expect(router.dismissTo).not.toHaveBeenCalled();
   expect(router.navigate).toHaveBeenCalledTimes(1);
   expect(router.navigate).toHaveBeenCalledWith({
-    pathname: '/ask',
+    pathname: '/(tabs)/(ask)/ask',
     params: { question: documentQuestion(speech), entry: expect.any(String) },
   });
   // The draft lands in the composer once, marked with the route's entry.

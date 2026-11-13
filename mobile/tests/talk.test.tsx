@@ -8,11 +8,14 @@ import {
   applyEvent,
   emptySnapshot,
   endCopy,
+  eventFailure,
   failureCopy,
   recoverSnapshot,
   refusal,
+  sendFailure,
 } from '../src/features/talk/model';
 import {
+  callStates,
   failures,
   endReasons,
   type VoiceEvent,
@@ -569,10 +572,114 @@ describe('call analytics', () => {
     ]);
   });
 
+  test('a 409 at Start is one call_failed, beside its call-still-ending line', async () => {
+    await mount();
+    // Row 118's 409: the server ends native's attempt while it reserves.
+    mockVoice.start.mockImplementationOnce(async () => {
+      listener({ type: 'state', state: 'reserving', reason: null });
+      listener({ type: 'state', state: 'ending', reason: null });
+      listener({ type: 'error', error: 'callOpen' });
+      listener({ type: 'state', state: 'failed', reason: 'failed' });
+      return ok;
+    });
+    await act(async () => {
+      await call.start();
+    });
+    expect(call.error).toBe('callOpen');
+    expect(sent()).toEqual([
+      { action: 'call_failed', account: 'signed_in', end_reason: 'limit' },
+    ]);
+  });
+
   test('a call this screen did not start sends nothing', async () => {
     await mount();
     state({ type: 'state', state: 'live', reason: null });
     state({ type: 'state', state: 'ended', reason: 'user' });
     expect(sent()).toEqual([]);
+  });
+});
+
+// Native says callOpen for three things; Talk gives the last
+// two their own lines and keeps the call-still-ending line for the 409.
+describe('callOpen in Talk words', () => {
+  const state = (
+    value: VoiceSnapshot['state'],
+    reason: null | 'failed' = null,
+  ) => listener({ type: 'state', state: value, reason });
+  test('a 409 from Start keeps the call-still-ending line', async () => {
+    mockBridge.readConsent.mockResolvedValue(true);
+    await mount();
+    mockVoice.start.mockImplementationOnce(async () => {
+      // Native's attempt: the server's 409 ends it, so it arrives while ending.
+      state('checking');
+      state('reserving');
+      state('ending');
+      listener({ type: 'error', error: 'callOpen' });
+      state('failed', 'failed');
+      return ok;
+    });
+    await act(async () => {
+      await call.start();
+    });
+    expect(call.error).toBe('callOpen');
+    expect(failureCopy[call.error!]).toBe(
+      'Your earlier call is still ending. Try again in a minute.',
+    );
+  });
+  test('Start during a call says so, and the line lapses when that call moves on', async () => {
+    mockBridge.readConsent.mockResolvedValue(true);
+    await mount();
+    act(() => state('live'));
+    // Native refuses Start with callOpen and leaves the call as it was.
+    mockVoice.start.mockImplementationOnce(async () => {
+      listener({ type: 'error', error: 'callOpen' });
+      return ok;
+    });
+    await act(async () => {
+      await call.start();
+    });
+    expect(mockVoice.start).toHaveBeenCalledTimes(1);
+    expect(call.error).toBe('alreadyInCall');
+    expect(failureCopy[call.error!]).toBe('You’re already in a call.');
+    // It must not outlive the call as the screen's message once it ends.
+    act(() => state('ending'));
+    expect(call.error).toBeNull();
+  });
+  test('only a call being set up or live turns callOpen into already in a call', () => {
+    const underWay = ['checking', 'reserving', 'connecting', 'live'];
+    for (const value of callStates)
+      expect([value, eventFailure('callOpen', value)]).toEqual([
+        value,
+        underWay.includes(value) ? 'alreadyInCall' : 'callOpen',
+      ]);
+    expect(eventFailure('network', 'live')).toBe('network');
+    plain(failureCopy.alreadyInCall);
+    plain(failureCopy.notLive);
+  });
+  test('text sent once the call is no longer live has its own line, which stays after the call ends', async () => {
+    mockBridge.readConsent.mockResolvedValue(true);
+    await mount();
+    act(() => state('live'));
+    mockBridge.sendText.mockResolvedValueOnce({ ok: false, error: 'callOpen' });
+    let sent: Awaited<ReturnType<typeof call.send>>;
+    await act(async () => {
+      sent = await call.send('Which bills passed?');
+    });
+    // The composer keeps the text: the result is still a failure.
+    expect(sent!).toEqual({ ok: false, error: 'callOpen' });
+    expect(call.error).toBe('notLive');
+    expect(failureCopy[call.error!]).toBe(
+      'The call ended before your message was sent.',
+    );
+    act(() => state('ended'));
+    expect(call.error).toBe('notLive');
+    // Other send failures keep their own words.
+    mockBridge.sendText.mockResolvedValueOnce({ ok: false, error: 'network' });
+    await act(async () => {
+      await call.send('Again');
+    });
+    expect(call.error).toBe('network');
+    expect(sendFailure('callOpen')).toBe('notLive');
+    expect(sendFailure('queueOverflow')).toBe('queueOverflow');
   });
 });

@@ -429,9 +429,11 @@ test('the bar menu: no Set as my electorate is ever disabled; Ask drafts without
   await act(async () =>
     menu.menu!.items.find((i) => i.label === 'Ask about Grayndler')!.onPress(),
   );
-  expect(mockOpenAsk).toHaveBeenCalledWith({
-    question: 'What has parliament said about Grayndler?',
-  });
+  // The seat's name goes with it, for Ask's way back.
+  expect(mockOpenAsk).toHaveBeenCalledWith(
+    { question: 'What has parliament said about Grayndler?' },
+    'Grayndler',
+  );
   await act(async () => r.unmount());
 });
 

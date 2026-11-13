@@ -2,22 +2,23 @@ const { withDangerousMod, withPodfile } = require('expo/config-plugins');
 const { execFileSync } = require('node:child_process');
 const { join } = require('node:path');
 
-module.exports = (config) => {
-  // Direct `expo prebuild` must replay before pod installation too.
-  config = withDangerousMod(config, [
-    'ios',
-    async (mod) => {
-      execFileSync(
-        'python3',
-        [join(mod.modRequest.projectRoot, 'scripts/apply-privacy-patches.py')],
-        {
-          cwd: mod.modRequest.projectRoot,
-          stdio: 'inherit',
-        },
-      );
-      return mod;
+const replay = async (mod) => {
+  execFileSync(
+    'python3',
+    [join(mod.modRequest.projectRoot, 'scripts/apply-privacy-patches.py')],
+    {
+      cwd: mod.modRequest.projectRoot,
+      stdio: 'inherit',
     },
-  ]);
+  );
+  return mod;
+};
+
+module.exports = (config) => {
+  // Direct `expo prebuild` must replay before pod installation too, and
+  // before Gradle compiles the patched PostHog plugin module on Android.
+  config = withDangerousMod(config, ['ios', replay]);
+  config = withDangerousMod(config, ['android', replay]);
   return withPodfile(config, (mod) => {
     const patchMarker = '# OPAX: pinned privacy patches before any pod install';
     if (!mod.modResults.contents.includes(patchMarker))

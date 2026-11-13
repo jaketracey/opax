@@ -81,7 +81,7 @@ Exactly the iOS 1.0 App Privacy label: seven types, all linked to the user, none
 - **Credential:** the account session is kept on the device in the Android Keystore, origin-scoped, and excluded from backup and device transfer.
 - **Encryption in transit:** yes. Cleartext traffic is disabled in every release build (`withAndroidPolicy.js`, verified by `verify-android-build.py`).
 - **Deletion:** in the app (Account and about, Delete account, confirmed by an emailed code) and on opax.com.au. Deletion removes the account and its personal data from the live database at once; recovery history keeps it for up to 30 days.
-- **No advertising, no tracking, no crash-reporting SDK.** The shared JavaScript bundle includes the `posthog-react-native` analytics SDK (JS only, no native PostHog code), but Android builds carry no analytics config, so it never starts and sends nothing. `verify-android-build.py` and `verify-play.py` assert that config is absent, and `verify-play.py` refuses any analytics SDK or host other than PostHog through `opax.com.au/ingest`. The answers above are therefore unchanged for this binary (docs/ANALYTICS.md, "iOS and Android app").
+- **No advertising, no tracking, and no crash reports sent.** The shared JavaScript bundle includes the `posthog-react-native` analytics SDK, and the build links its native crash plugin (`@posthog/react-native-plugin`, with posthog-android), but Android builds carry no analytics config, so neither ever starts and nothing is sent. `verify-android-build.py` and `verify-play.py` assert that config is absent, and `verify-play.py` refuses any analytics SDK or host other than PostHog through `opax.com.au/ingest`. The answers above are therefore unchanged for this binary (docs/ANALYTICS.md, "iOS and Android app").
 
 ### When Android analytics is turned on
 
@@ -91,8 +91,10 @@ iOS sends anonymous product analytics from 1.1.1. Turning it on for Android need
 | --- | --- | --- | --- | --- | --- | --- |
 | App activity: App interactions | Add the Analytics purpose | Yes (already) | No: PostHog processes it as OPAX's service provider | No (not user-optional) | No | App functionality, Analytics |
 | Device or other IDs | Newly collected (the SDK's random install ID, not the Android ID or advertising ID) | Yes | No: service provider | No | No | Analytics |
+| App info and performance: Crash logs | Newly collected (anonymous crash and error reports: exception type, scrubbed message, stack frames) | Yes | No: service provider | No | No | App functionality, Analytics |
+| App info and performance: Diagnostics | Add the Analytics purpose (crash reports' app version, OS and device type) | Yes (already) | No: service provider | No | No | App functionality, Analytics |
 
-Everything else stays as it is, including encryption in transit (yes) and the deletion answer. Analytics events carry no account ID, so deleting an account does not reach them; the privacy page should say so. Before saving, check that PostHog's terms still qualify it as a service provider for the "Shared" answer.
+Everything else stays as it is, including encryption in transit (yes) and the deletion answer. Crash logs then leave "Not collected". Analytics events and crash reports carry no account ID, so deleting an account does not reach them; the privacy page should say so. Before saving, check that PostHog's terms still qualify it as a service provider for the "Shared" answer.
 - **Answer from the evidence, not from this table:** whether each type counts as "shared" (the service-provider exemption depends on the provider contracts: Cloudflare, ElevenLabs, Progress Agentic RAG, OpenRouter), whether each is optional or required, and whether any is processed ephemerally. "No tracking" does not mean "no sharing".
 
 Support: https://opax.com.au/support. Privacy: https://opax.com.au/privacy.

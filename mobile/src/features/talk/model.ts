@@ -1,4 +1,5 @@
 import type {
+  CallState,
   EndReason,
   VoiceEvent,
   VoiceFailure,
@@ -11,11 +12,19 @@ export type TalkSnapshot = VoiceSnapshot & {
   sourceTurns?: Record<string, number | null>;
 };
 
+/**
+ * Native says callOpen for three different things. Talk keeps callOpen for
+ * a 409 from /api/voice/start and tells the other two apart: Start refused
+ * because a call is already under way, and typed text sent once the call is
+ * no longer live (eventFailure and sendFailure below).
+ */
+export type TalkFailure = VoiceFailure | 'alreadyInCall' | 'notLive';
+
 // Voice failures in plain sentences (specs/account.md 7.6, F-4 and F-5).
 // "Microphone off." is never said: the system indicator already shows it.
 const couldntConnect = 'Couldn’t connect. Check your connection and try again.';
 const wentWrong = 'Something went wrong with voice. Try again.';
-export const failureCopy: Record<VoiceFailure, string> = {
+export const failureCopy: Record<TalkFailure, string> = {
   signedOut: 'Talk needs a free OPAX account.',
   disabled: 'Voice is taking a break.',
   allowanceExhausted: 'You’ve used your voice minutes.',
@@ -24,6 +33,10 @@ export const failureCopy: Record<VoiceFailure, string> = {
   rateLimited: 'Too many tries. Wait a minute, then try again.',
   // Only a 409 from /api/voice/start: the server is still ending the earlier call.
   callOpen: 'Your earlier call is still ending. Try again in a minute.',
+  // Start while this device is already setting up or in a call.
+  alreadyInCall: 'You’re already in a call.',
+  // Typed text that reached native after the call stopped being live.
+  notLive: 'The call ended before your message was sent.',
   network: couldntConnect,
   timeout: couldntConnect,
   policy: couldntConnect,
@@ -183,6 +196,23 @@ export function refusal(status: VoiceStatus | null): VoiceFailure | null {
 }
 export const isCallActive = (state: VoiceSnapshot['state']) =>
   ['checking', 'reserving', 'connecting', 'live', 'ending'].includes(state);
+/**
+ * A failure event in Talk's words. Native refuses Start during a call with
+ * callOpen and no change of state. A 409 from the server always ends the
+ * attempt first, so it arrives while the call is "ending"; a Start refused
+ * while a call is ending keeps that copy too, since it is still ending.
+ */
+export function eventFailure(
+  error: VoiceFailure,
+  state: CallState,
+): TalkFailure {
+  return error === 'callOpen' && state !== 'ending' && isCallActive(state)
+    ? 'alreadyInCall'
+    : error;
+}
+/** A typed message refused by native: callOpen means the call is not live. */
+export const sendFailure = (error: VoiceFailure): TalkFailure =>
+  error === 'callOpen' ? 'notLive' : error;
 export const emptySnapshot: TalkSnapshot = {
   state: 'idle',
   reason: null,

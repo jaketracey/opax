@@ -369,10 +369,11 @@ Final answers, decided 6 Oct (default) under decision 14 ("answer conservatively
 | Search History | Yes | Yes | No | App Functionality |
 | Diagnostics: Other Diagnostic Data (server request logs, IP addresses) | Yes | Yes | No | App Functionality |
 | Identifiers: Device ID (from 1.1.1) | Yes | No | No | Analytics |
+| Diagnostics: Crash Data (from the crash reports build) | Yes | No | No | App Functionality |
 
 **Tracking: No.** No App Tracking Transparency prompt; `NSPrivacyTracking` is false and no tracking domains are declared (`verify-ios-release.py:98-99`).
 
-**Not collected:** Location (used on the device only), Contacts, Health and Fitness, Financial Info, Purchases, Browsing History, Crash Data and Performance Data, Sensitive Info, Photos or Videos, Advertising Data, and Emails or Text Messages (Community, the only messaging, is not in the 1.0 app).
+**Not collected:** Location (used on the device only), Contacts, Health and Fitness, Financial Info, Purchases, Browsing History, Crash Data (until the crash reports build) and Performance Data, Sensitive Info, Photos or Videos, Advertising Data, and Emails or Text Messages (Community, the only messaging, is not in the 1.0 app).
 
 **Where it is enforced.** The types and their linkage come from one policy file (`mobile/voice-production-policy.json:17-24`), turned into manifest entries with tracking false and the App Functionality purpose (`mobile/plugins/voiceProduction.js:14-40`), merged into the app's manifest only when the switch is on (`mobile/app.config.ts:155-158`). The release verifier refuses a switch-on archive whose manifest differs in any type, linkage, tracking flag or purpose, and states "location not collected" (`verify-ios-release.py:97-116,570-573`).
 
@@ -381,6 +382,8 @@ Final answers, decided 6 Oct (default) under decision 14 ("answer conservatively
 **Label change, 10 October 2026.** IP addresses are declared as Diagnostics (Other Diagnostic Data), not Other Data (Jake's choice; `release/1.0/app-privacy.json` in the store lane). Community is left out of the 1.0 app, so Emails or Text Messages is not declared. The policy's `linkedDataTypes` are now EmailAddress, UserID, AudioData, OtherUserContent, ProductInteraction, SearchHistory and OtherDiagnosticData, and the release verifier pins exactly that list (`LABEL_DATA_TYPES`).
 
 **Label change for 1.1.1, 10 November 2026.** The app adds anonymous product analytics (`docs/ANALYTICS.md`, "iOS and Android app"). Two answers change in App Store Connect and nothing else: Usage Data: Product Interaction adds the Analytics purpose (it stays linked, because App Store Connect takes one linkage per type and the voice minutes are linked), and Identifiers: Device ID is added as collected, not linked, not used for tracking, purpose Analytics. The manifest declares the analytics entries as not linked; the voice plugin merges them with its linked entries, so the shipped manifest has Product Interaction linked with App Functionality and Analytics, and Device ID unlinked with Analytics. The release verifier pins that exact list. App Privacy answers are app-wide, not per version, and publish when saved: change them no later than submitting 1.1.1 (saving early only overstates what 1.1.0 collects; saving late would understate 1.1.1).
+
+**Label change for crash reports, 13 November 2026.** The app adds anonymous crash and error reports (`docs/ANALYTICS.md`, "Crash and error reports"). One answer is added in App Store Connect: Diagnostics: Crash Data, collected, not linked to the user, not used for tracking, purpose App Functionality. Other Diagnostic Data is already declared (linked, App Functionality, because of server request logs) and covers the reports' app version, OS and device type, so it does not change. The manifest declares Crash Data and Other Diagnostic Data as not linked, App Functionality; the voice plugin merges Other Diagnostic Data with its linked entry, and the release verifier pins the result. Save the answer no later than submitting the first build with crash reports.
 
 ### 4.2 Why each answer
 

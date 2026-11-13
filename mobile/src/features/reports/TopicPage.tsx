@@ -251,7 +251,8 @@ function TopicContent({ slug, params }: { slug: string; params: Params }) {
     {
       title: `Ask about ${phrase}`,
       symbol: 'text.bubble',
-      onPress: () => openAsk({ question: topicQuestion(slug), topic: slug }),
+      onPress: () =>
+        openAsk({ question: topicQuestion(slug), topic: slug }, title),
     },
     {
       title: 'Copy link',

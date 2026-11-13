@@ -11,6 +11,7 @@ import {
   sections,
   useKeyCommand,
 } from '../design/keyboard';
+import { useReturnFromAsk } from '../features/ask/open';
 import { askSession } from '../features/ask/session';
 import { askRoute } from './routes';
 
@@ -30,6 +31,7 @@ export const sectionRoutes = sections.map((s) => s.route);
 export function KeyboardShortcuts() {
   const path = usePathname();
   const root = useNavigationContainerRef();
+  const returnFromAsk = useReturnFromAsk();
   useEffect(() => {
     installKeyCommands();
   }, []);
@@ -58,6 +60,8 @@ export function KeyboardShortcuts() {
   useKeyCommand('section-4', () => router.navigate(sectionRoutes[3] as Href));
   useKeyCommand('section-5', () => router.navigate(sectionRoutes[4] as Href));
   useKeyCommand('back', () => {
+    // On Ask itself after an arrival from another tab, Cmd-[ goes back there.
+    if (path === '/ask' && returnFromAsk()) return;
     if (router.canGoBack()) router.back();
   });
   useKeyCommand('list-escape', () => {

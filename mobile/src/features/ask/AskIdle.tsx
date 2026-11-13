@@ -76,7 +76,9 @@ export function AskIdle({
   readFailed,
   now: nowProp,
   starterCount = 4,
+  showStarters = true,
   showConversations = true,
+  conversationCount = 3,
   testPrefix = 'ask',
 }: {
   onAsk: (question: string) => void;
@@ -84,7 +86,11 @@ export function AskIdle({
   readFailed: boolean;
   now?: number;
   starterCount?: number;
+  /** False in the docked conversation column: the pane has the starters. */
+  showStarters?: boolean;
+  /** False in the sources pane: the conversation column has them. */
   showConversations?: boolean;
+  conversationCount?: number;
   /** `ask-pane` in the iPad pane, so its rows keep their own IDs. */
   testPrefix?: string;
 }) {
@@ -105,7 +111,7 @@ export function AskIdle({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [day, member, starterCount],
   );
-  const recent = saved.chats.slice(0, 3);
+  const recent = saved.chats.slice(0, conversationCount);
   const menu = (question: string) => [
     { title: idleCopy.edit, onPress: () => fillComposer(question) },
     {
@@ -121,41 +127,43 @@ export function AskIdle({
           {idleCopy.line}
         </Text>
       ) : null}
-      <View>
-        <SectionHeader title={idleCopy.tryAsking} />
-        <InsetGroup testID={`${testPrefix}-starters`}>
-          {/* With a seat saved, the first row is about the reader's own
+      {showStarters ? (
+        <View>
+          <SectionHeader title={idleCopy.tryAsking} />
+          <InsetGroup testID={`${testPrefix}-starters`}>
+            {/* With a seat saved, the first row is about the reader's own
               member (sweep 1 item 7.2); the day's starters follow. */}
-          {member ? (
-            <AskSuggestionRow
-              question={seatStarter(member)}
-              variant="fill"
-              onPress={() => fillComposer(seatStarter(member), member)}
-              testID={`${testPrefix}-starter-seat`}
-            />
-          ) : null}
-          {starters.map((question, i) => (
-            <AskSuggestionRow
-              key={question}
-              question={question}
-              variant="send"
-              offline={offline}
-              onPress={() => {
-                if (
-                  seatFill &&
-                  askSession.composerOptions().speaker === seatFill
-                )
-                  askSession.options({ ...defaultOptions });
-                seatFill = null;
-                track('opax_chip', { chip_kind: 'ask', placement: 'ask' });
-                onAsk(question);
-              }}
-              menu={menu(question)}
-              testID={`${testPrefix}-starter-${i}`}
-            />
-          ))}
-        </InsetGroup>
-      </View>
+            {member ? (
+              <AskSuggestionRow
+                question={seatStarter(member)}
+                variant="fill"
+                onPress={() => fillComposer(seatStarter(member), member)}
+                testID={`${testPrefix}-starter-seat`}
+              />
+            ) : null}
+            {starters.map((question, i) => (
+              <AskSuggestionRow
+                key={question}
+                question={question}
+                variant="send"
+                offline={offline}
+                onPress={() => {
+                  if (
+                    seatFill &&
+                    askSession.composerOptions().speaker === seatFill
+                  )
+                    askSession.options({ ...defaultOptions });
+                  seatFill = null;
+                  track('opax_chip', { chip_kind: 'ask', placement: 'ask' });
+                  onAsk(question);
+                }}
+                menu={menu(question)}
+                testID={`${testPrefix}-starter-${i}`}
+              />
+            ))}
+          </InsetGroup>
+        </View>
+      ) : null}
       {!showConversations ? null : readFailed ? (
         <InlineError
           subject="conversations"

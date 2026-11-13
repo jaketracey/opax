@@ -21,9 +21,10 @@ import importlib.util
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).parent))
 # The iOS release verifier owns the analytics policy (docs/ANALYTICS.md):
-# PostHog is the one reviewed SDK, JS only, sending to opax.com.au/ingest;
-# every other analytics or advertising SDK and host is refused. Android
-# reuses its Hermes string scan so both stores enforce one list.
+# PostHog is the one reviewed SDK: the JS SDK and its native crash plugin
+# (com.posthog, scrubbed by its pinned privacy patch), sending to
+# opax.com.au/ingest; every other analytics or advertising SDK and host is
+# refused. Android reuses its Hermes string scan so both stores enforce one list.
 _spec = importlib.util.spec_from_file_location(
     "release_policy", Path(__file__).with_name("verify-ios-release.py")
 )
@@ -34,7 +35,7 @@ _spec.loader.exec_module(release_policy)
 # same change in app.config.ts and the Data safety form.
 ANDROID_ANALYTICS_ENABLED = False
 
-from android_release import configured_version, verify_identity, verify_evidence, verify_ios_candidate, debug_artifacts, bundled_routes
+from android_release import configured_version, verify_identity, verify_evidence, verify_ios_candidate, debug_artifacts, bundled_routes, shipped_source_maps
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("aab", type=Path)
@@ -147,6 +148,10 @@ with zipfile.ZipFile(args.aab) as archive:
         {name.split("/")[2] for name in entries if name.startswith("base/lib/")}
     )
     assert abis == ["arm64-v8a", "x86_64"], "Unexpected release ABIs"
+    # The composed Hermes map stays in Gradle's outputs
+    # (android/app/build/generated/sourcemaps/react/release/), never in the AAB.
+    # R8's mapping under BUNDLE-METADATA/ is Play's and is never installed.
+    assert not shipped_source_maps(entries), "Source map shipped in the AAB"
     native_alignment = {}
     for name in entries:
         if not name.startswith("base/lib/") or not name.endswith(".so"):
@@ -184,7 +189,6 @@ with zipfile.ZipFile(args.aab) as archive:
         "com/adjust/sdk",
         "com/bugsnag",
         "com/datadog/android",
-        "com/posthog",
         "expo/modules/insights",
     ]
     blobs = {name: archive.read(name) for name in dex_names}
@@ -376,6 +380,7 @@ report = {
         "android_permission_allowlist": "passed",
         "microphone_follows_voice_switch": "passed",
         "known_advertising_analytics_namespaces_absent": "passed",
+        "no_source_map_in_aab": "passed",
         "analytics_only_posthog_via_opax_ingest": "passed",
         "analytics_config": "on" if ANDROID_ANALYTICS_ENABLED else "off",
         "signing_credentials_absent_from_bundle": "passed",

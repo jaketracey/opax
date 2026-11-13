@@ -43,13 +43,14 @@ import type { AskPerson } from './people';
 import { citedSources, sourceTitle } from './source-present';
 
 /**
- * Ask on iPad regular width (journeys/ask.md 4.12): the conversation in the
- * main column and, on the right, a pane that is never empty. Idle, it shows
- * Try asking and Conversations. After an answer it opens on citation 1 in
- * the `/citation` anatomy; a mark tapped in the column selects its source
- * here and highlights its sentence there; Previous and Next move between
- * sources; Open record opens in the pane with Back to "Sources". The
- * column's Records cited list is hidden.
+ * Ask with two panes (journeys/ask.md 4.12, the split breakpoint): the
+ * conversation in the main column and, on the right, a pane that is never
+ * empty. Idle, it shows Try asking; the column beside it has the
+ * Conversations, so neither repeats the other. After an answer it opens on
+ * citation 1 in the `/citation` anatomy; a mark tapped in the column selects
+ * its source here and highlights its sentence there; Previous and Next move
+ * between sources; Open record opens in the pane with Back to "Sources".
+ * The column's Records cited list is hidden.
  */
 export interface AskPane {
   /**
@@ -77,11 +78,13 @@ export function useAskSources(
     profiles,
     onAsk,
     readFailed = false,
+    offline = false,
   }: {
     chat?: string | null;
     profiles?: Map<string, AskPerson>;
     onAsk?: (question: string) => void;
     readFailed?: boolean;
+    offline?: boolean;
   } = {},
 ) {
   const latest = thread.map((turn) => turn.role).lastIndexOf('answer');
@@ -192,6 +195,7 @@ export function useAskSources(
         profiles={profiles}
         onAsk={onAsk}
         readFailed={readFailed}
+        offline={offline}
       />
     ),
   };
@@ -207,6 +211,7 @@ function SourcesPane({
   profiles,
   onAsk,
   readFailed,
+  offline,
 }: {
   answer?: Turn;
   marked: number;
@@ -217,6 +222,7 @@ function SourcesPane({
   profiles?: Map<string, AskPerson>;
   onAsk?: (question: string) => void;
   readFailed: boolean;
+  offline: boolean;
 }) {
   const top = stack.at(-1);
   const ground = askGround();
@@ -277,8 +283,9 @@ function SourcesPane({
             >
               <AskIdle
                 onAsk={(q) => onAsk?.(q)}
-                offline={false}
+                offline={offline}
                 readFailed={readFailed}
+                showConversations={false}
                 testPrefix="ask-pane"
               />
             </ScrollView>

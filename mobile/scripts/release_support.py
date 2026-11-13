@@ -8,6 +8,16 @@ import subprocess
 
 
 PRIVATE_NAMES = ("ASC_KEY_PATH", "ASC_KEY_ID", "ASC_ISSUER_ID", "APPLE_TEAM_ID")
+# The crash symbol upload key (scripts/upload-crash-symbols.sh): redacted from
+# every log and never handed to a build step, Xcode or Metro.
+UPLOAD_KEY_NAMES = ("POSTHOG_CLI_API_KEY", "POSTHOG_CLI_TOKEN")
+# Crash report symbols, beside the archive in the release evidence folder and
+# never inside the app: React Native's composed Hermes source map (written when
+# the archive step sets SOURCEMAP_FILE) and the bundle chunk ID Metro records
+# (metro.config.js). The archive step writes them, the verifier checks them,
+# and scripts/upload-crash-symbols.sh and scripts/symbolicate-js.sh read them.
+JS_SOURCE_MAP = "main.jsbundle.map"
+JS_CHUNK_ID = "ios.chunk-id"
 KEY_BEGIN = "-----BEGIN " + "PRIVATE KEY-----"
 KEY_END = "-----END " + "PRIVATE KEY-----"
 
@@ -44,7 +54,7 @@ def load_credentials():
 
 
 def redact(text):
-    for name in (*PRIVATE_NAMES, "OPAX_BUILD_GATE", "OPAX_SIM_GATE", "OPAX_PASTEBOARD_LOCK"):
+    for name in (*PRIVATE_NAMES, *UPLOAD_KEY_NAMES, "OPAX_BUILD_GATE", "OPAX_SIM_GATE", "OPAX_PASTEBOARD_LOCK"):
         value = os.environ.get(name)
         if value:
             text = text.replace(value, f"[{name} redacted]")
@@ -55,8 +65,9 @@ def redact(text):
 def run_logged(command, log, *, public_env=False, env=None):
     env = (os.environ if env is None else env).copy()
     if public_env:
-        for name in (*PRIVATE_NAMES, "OPAX_BUNDLE_ID", "OPAX_INTERNAL_TESTER_EMAIL", "OPAX_BUILD_GATE", "OPAX_SIM_GATE",
-                     "OPAX_CAPACITY_CMD", "OPAX_PASTEBOARD_LOCK", "OPAX_ALLOWED_UDIDS"):
+        for name in (*PRIVATE_NAMES, *UPLOAD_KEY_NAMES, "OPAX_BUNDLE_ID", "OPAX_INTERNAL_TESTER_EMAIL",
+                     "OPAX_BUILD_GATE", "OPAX_SIM_GATE", "OPAX_CAPACITY_CMD", "OPAX_PASTEBOARD_LOCK",
+                     "OPAX_ALLOWED_UDIDS"):
             env.pop(name, None)
         for name in list(env):
             if name.startswith("EXPO_PUBLIC_"):

@@ -1,8 +1,7 @@
 import { RouteOptions } from '../../navigation/preview';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ActionSheetIOS,
-  LayoutAnimation,
   Platform,
   Pressable,
   RefreshControl,
@@ -24,6 +23,7 @@ import { haptic } from '../../design/haptics';
 import { confirmAction } from '../../design/menu';
 import { phoneCopy } from '../../design/phone-copy';
 import { useReduceMotion } from '../../design/accessibility';
+import { HeightReveal, revealMotion } from '../../design/reveal';
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { ownsRowPadding, useRowCellStyle } from '../../design/row-padding';
 import { headerItems, pageMenu } from '../../navigation/chrome';
@@ -139,6 +139,15 @@ export default function Following() {
   const [editing, setEditing] = useState(params.edit === '1');
   const [busy, setBusy] = useState(false);
   const [saveFailed, setSaveFailed] = useState<(() => void) | null>(null);
+  // Rows on their way out: each closes in place as its follow goes, and is
+  // dropped once closed (a failed save opens it again). With Reduce Motion a
+  // row goes at once.
+  const [leaving, setLeaving] = useState<readonly FollowEntry[]>([]);
+  useEffect(() => {
+    if (!leaving.length) return;
+    const timer = setTimeout(() => setLeaving([]), revealMotion.duration);
+    return () => clearTimeout(timer);
+  }, [leaving]);
   const entries: FollowEntry[] = (follows ?? []).map((f) => {
     const state = states.get(followKey(f));
     return {
@@ -148,7 +157,12 @@ export default function Following() {
       ownMP: f.kind === 'person' && own.has(f.id),
     };
   });
-  const groups = followGroups(entries);
+  const going = new Set(leaving.map((e) => followKey(e.follow)));
+  const live = new Set(entries.map((e) => followKey(e.follow)));
+  const groups = followGroups([
+    ...entries,
+    ...leaving.filter((e) => !live.has(followKey(e.follow))),
+  ]);
   const count = follows?.length ?? 0;
   const inEdit = editing && count > 0;
 
@@ -164,17 +178,10 @@ export default function Following() {
       setBusy(false);
     }
   }
-  const remove = (f: Follow) => {
+  const remove = (entry: FollowEntry) => {
     haptic('selection');
-    // The row collapses; with Reduce Motion it fades.
-    LayoutAnimation.configureNext(
-      LayoutAnimation.create(
-        200,
-        'easeInEaseOut',
-        reduceMotion ? 'opacity' : 'scaleY',
-      ),
-    );
-    void save(() => unfollow(followKey(f)), count - 1);
+    if (!reduceMotion) setLeaving((old) => [...old, entry]);
+    void save(() => unfollow(followKey(entry.follow)), count - 1);
   };
   const unfollowAll = () => {
     const title = `Unfollow all ${count}?`;
@@ -323,22 +330,25 @@ export default function Following() {
                 header={group.title}
                 testID={`follows-${group.key}`}
               >
-                {group.rows.map((entry) =>
-                  inEdit ? (
-                    <EditRow
-                      key={followKey(entry.follow)}
-                      entry={entry}
-                      disabled={busy}
-                      onRemove={() => remove(entry.follow)}
-                    />
-                  ) : (
-                    <ListRow
-                      key={followKey(entry.follow)}
-                      entry={entry}
-                      onUnfollow={() => remove(entry.follow)}
-                    />
-                  ),
-                )}
+                {group.rows.map((entry) => {
+                  const key = followKey(entry.follow);
+                  return (
+                    <HeightReveal key={key} reduceMotion={reduceMotion}>
+                      {going.has(key) ? null : inEdit ? (
+                        <EditRow
+                          entry={entry}
+                          disabled={busy}
+                          onRemove={() => remove(entry)}
+                        />
+                      ) : (
+                        <ListRow
+                          entry={entry}
+                          onUnfollow={() => remove(entry)}
+                        />
+                      )}
+                    </HeightReveal>
+                  );
+                })}
               </InsetGroup>
             );
             // The check time leads the first group, in the source line's
