@@ -134,12 +134,9 @@ export function rankedDonors(view: MoneyGraph) {
     );
 }
 
-/** Only the exporter-selected donation cohort can have a donation rank; an
- * "Individual donors (N)" aggregate is not one donor and has none. */
+/** Only the exporter-selected donation cohort can have a donation rank. */
 export function donationRanks(donors: MoneyNode[]) {
   return new Map(
-    donors
-      .filter((n) => n.via !== 'public_money' && !n.withheld)
-      .map((n, i) => [n.id, i + 1]),
+    donors.filter((n) => n.via !== 'public_money').map((n, i) => [n.id, i + 1]),
   );
 }

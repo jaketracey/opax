@@ -106,14 +106,11 @@ describe('labelSlots without a focus', () => {
     );
   });
 
-  test('names up to NAME_LABELS other discs, largest first, never a party or a withheld donor', () => {
+  test('names up to NAME_LABELS other discs, largest first, never a party', () => {
     const names = ofKind(slots, 'name');
     expect(names).toHaveLength(NAME_LABELS);
     const nodes = names.map((s) => model.nodes[s.node!]!);
-    for (const n of nodes) {
-      expect(n.kind).not.toBe('party');
-      expect(n.withheld).toBe(false);
-    }
+    for (const n of nodes) expect(n.kind).not.toBe('party');
     for (let i = 1; i < nodes.length; i++)
       expect(nodes[i - 1]!.amount).toBeGreaterThanOrEqual(nodes[i]!.amount);
   });

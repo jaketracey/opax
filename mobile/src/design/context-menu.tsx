@@ -15,6 +15,7 @@ import {
 import { Pressable } from './pressable';
 import { androidControls } from './tokens';
 import { showMenu } from './menu';
+import { menuTitle } from './menu-title';
 import { menuLeaves, menuSections, type RowMenuAction } from './row-link';
 
 /** A menu on content that has no navigation destination. */
@@ -76,18 +77,22 @@ function nativeItems(items: readonly RowMenuAction[]): ReactElement[] {
   return items.map((item, index) =>
     'items' in item ? (
       item.inline ? (
-        <SwiftSection key={index} title={item.title || undefined}>
+        <SwiftSection key={index} title={menuTitle(item.title) || undefined}>
           {nativeItems(item.items)}
         </SwiftSection>
       ) : (
-        <SwiftMenu key={index} label={item.title} systemImage={item.symbol}>
+        <SwiftMenu
+          key={index}
+          label={menuTitle(item.title)}
+          systemImage={item.symbol}
+        >
           {nativeItems(item.items)}
         </SwiftMenu>
       )
     ) : (
       <SwiftButton
         key={index}
-        label={item.title}
+        label={menuTitle(item.title)}
         systemImage={item.symbol}
         role={item.destructive ? 'destructive' : undefined}
         onPress={item.onPress}

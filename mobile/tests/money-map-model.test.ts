@@ -66,7 +66,6 @@ describe('buildModel on the federal graph', () => {
             : 'donor',
       );
       expect(node.amount).toBe(raw.total);
-      expect(node.withheld).toBe(!!raw.withheld);
     }
     const kinds = new Set(model.nodes.map((n) => n.kind));
     expect(kinds).toEqual(new Set(['party', 'donor', 'hub']));
@@ -264,7 +263,6 @@ describe('nextAlongFlows', () => {
     radius: 2,
     colour: '#000',
     ink: '#000',
-    withheld: false,
   });
   const edge = (index: number, a: number, b: number, amount: number) =>
     ({

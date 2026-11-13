@@ -51,7 +51,7 @@ test('an unsupported kind or absent record has no link', () => {
 });
 
 test('associated entities use the published donor id, never a grant recipient id', () => {
-  const donor = graph.nodes.find((n) => n.kind === 'donor' && !n.withheld)!;
+  const donor = graph.nodes.find((n) => n.kind === 'donor')!;
   const named = {
     ...graph,
     nodes: [
@@ -80,11 +80,4 @@ test('an associated entity without a donor record opens a name search', () => {
     expect(
       associatedEntityRoute('Unlisted associated entity', available),
     ).toEqual(resultsRoute('all', { q: 'Unlisted associated entity' }));
-});
-
-test('associated entity matching excludes withheld donors', () => {
-  const withheld = graph.nodes.find((n) => n.kind === 'donor' && n.withheld)!;
-  expect(
-    associatedEntityRoute(withheld.label, { ...graph, nodes: [withheld] }),
-  ).toEqual(resultsRoute('all', { q: withheld.label }));
 });

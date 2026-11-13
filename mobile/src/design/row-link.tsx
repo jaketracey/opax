@@ -14,6 +14,7 @@ import {
   type PressableProps,
 } from 'react-native';
 import { Link, type Href } from 'expo-router';
+import { menuTitle } from './menu-title';
 import { useRecordLink } from '../navigation/record-link';
 import { canonicalUrl, openOnWeb } from '../navigation/external';
 import { shareRecord } from '../navigation/share';
@@ -86,7 +87,7 @@ function nativeItems(items: readonly RowMenuAction[]): ReactElement[] {
       // alias. `inline` is the public prop and maps to native displayInline.
       <Link.Menu
         key={`${index}-${item.title}`}
-        title={item.inline ? undefined : item.title}
+        title={item.inline ? undefined : menuTitle(item.title)}
         icon={item.symbol}
         inline={item.inline}
       >
@@ -95,7 +96,7 @@ function nativeItems(items: readonly RowMenuAction[]): ReactElement[] {
     ) : (
       <Link.MenuAction
         key={`${index}-${item.title}`}
-        title={item.title}
+        title={menuTitle(item.title)}
         icon={item.symbol}
         destructive={item.destructive}
         onPress={item.onPress}

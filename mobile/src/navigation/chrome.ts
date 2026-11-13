@@ -19,6 +19,7 @@ import { openOnWeb } from './external';
 import { copy } from '../design/copy';
 import { designFlags } from '../design/flags';
 import { Icon, type SFSymbol } from '../design/icon';
+import { menuTitle, plainMenuTitle } from '../design/menu-title';
 import { showMenu, type MenuAction } from '../design/menu';
 import type { RowMenuAction } from '../design/row-link';
 import {
@@ -298,7 +299,7 @@ function nativeMenuRows(items: RowMenuAction[]): NativeMenuRow[] {
       'items' in item
         ? {
             type: 'submenu',
-            label: item.title,
+            label: menuTitle(item.title),
             ...(item.symbol
               ? { icon: { type: 'sfSymbol' as const, name: item.symbol } }
               : {}),
@@ -307,7 +308,7 @@ function nativeMenuRows(items: RowMenuAction[]): NativeMenuRow[] {
           }
         : {
             type: 'action',
-            label: item.title,
+            label: menuTitle(item.title),
             ...(item.symbol
               ? { icon: { type: 'sfSymbol' as const, name: item.symbol } }
               : {}),
@@ -323,7 +324,7 @@ export function openOnOpaxItem(
 ): NativeStackHeaderItemMenuAction {
   return {
     type: 'action',
-    label: copy.openOnWeb,
+    label: menuTitle(copy.openOnWeb),
     icon: { type: 'sfSymbol', name: 'arrow.up.right.square' },
     onPress: () => void openOnWeb(path, title, { preferNative: false }),
   };
@@ -337,7 +338,10 @@ function moreMenuRows(
   let web: NativeStackHeaderItemMenuAction | undefined;
   const collect = (rows: NativeMenuRow[]): NativeMenuRow[] =>
     rows.flatMap((row): NativeMenuRow[] => {
-      if (row.type === 'action' && row.label === copy.openOnWeb) {
+      if (
+        row.type === 'action' &&
+        plainMenuTitle(row.label) === copy.openOnWeb
+      ) {
         web = row;
         return [];
       }

@@ -367,7 +367,7 @@ test('Money map and List return to the summary after record visits', () => {
   expect(steps[map! - 2]).toEqual({ tapOn: { id: 'BackButton' } });
   expect(steps[map!].extendedWaitUntil.visible).toEqual({
     id: 'money-view-summary',
-    text: 'Donations to parties in 2024–25, union donors only',
+    text: 'Money to parties in 2024–25, union donors only',
   });
   // The List view: scrolled, so the summary is pulled back into view.
   const list = steps.findIndex(
@@ -388,10 +388,10 @@ test('Money map and List return to the summary after record visits', () => {
   });
 });
 
-test('See all donors is centred upwards from the later footnote before tapping', () => {
+test('See all donors is centred upwards from the last donor row before tapping', () => {
   const steps = maestroSteps('.maestro/23-money-map.yaml');
   const footnote = steps.findIndex(
-    (step: any) => step.runFlow?.env?.TARGET_ID === 'money-individual-donors',
+    (step: any) => step.runFlow?.env?.TARGET_ID === 'money-donor-19',
   );
   const all = steps.findIndex(
     (step: any) => step.scrollUntilVisible?.element?.id === 'money-donors-all',

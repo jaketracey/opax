@@ -185,6 +185,8 @@ function MaterialMenuHost() {
       }}
     >
       <View style={StyleSheet.absoluteFill} accessibilityViewIsModal>
+        {/* a11y-ok(pressable-role): the tap-outside scrim. The modal menu
+            takes TalkBack focus and Back closes it. */}
         <Pressable
           style={StyleSheet.absoluteFill}
           onPress={close}

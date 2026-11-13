@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon } from '../design/icon';
 import { symbols } from '../design/symbols';
 import { colors, rhythm, textStyles } from '../design/tokens';
-import { androidBar, androidHeaderBar } from './chrome';
+import { androidHeaderBar } from './chrome';
 
 /**
  * A measured Android header: long reading titles wrap at the user's size.
@@ -69,7 +69,7 @@ export function AndroidReadingHeader({
   const heading = (
     <Text
       wordSafe
-      variant="inlineTitle"
+      variant="sectionTitle"
       accessibilityRole="header"
       style={[styles.title, largeText ? { flex: 0 } : null]}
     >
@@ -115,11 +115,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: rhythm.screen,
     paddingVertical: rhythm.tight,
   },
+  // The bar's title size (androidBar.title) is the sectionTitle role, drawn in
+  // the inline title's face; the role sets size and line height so word-safe
+  // fitting and font scale work on the size actually drawn.
   title: {
     flex: 1,
     fontFamily: textStyles.inlineTitle.fontFamily,
-    fontSize: androidBar.title,
-    lineHeight: 28,
+    fontWeight: textStyles.inlineTitle.fontWeight,
     color: colors.ink,
   },
   action: {

@@ -122,11 +122,22 @@ env:
       - tapOn:
           text: '(Cancel|Close)'
           optional: true
+      # The regions follow all 88 districts, about 18 screens down. At the
+      # default speed each swipe and look took about 6 s, so a 90 s scroll
+      # stopped three rows short (build 61). Fling to the page foot, then
+      # bring the region down from under the header before tapping it.
+      - scrollUntilVisible:
+          element:
+            id: vic-election-foot
+          speed: 90
+          timeout: 180000
       - scrollUntilVisible:
           element:
             id: vic-election-region-southern-metropolitan
+          direction: UP
           centerElement: true
-          timeout: 90000
+          speed: 20
+          timeout: 60000
       - tapOn:
           id: vic-election-region-southern-metropolitan
       - assertVisible: '.*Southern Metropolitan Region.*'

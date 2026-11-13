@@ -181,6 +181,30 @@ const thresholdCaveat =
   "It's a minimum: amounts under the disclosure threshold aren't published.";
 
 /**
+ * The words for the parties' summed figure (partyDonationsTotal) wherever it
+ * stands alone: the map's summary and list figure, its Show toggle and the
+ * hub's Parties card. A federal party's total is every receipt type but
+ * public funding (meta.party_totals_note), the figure each party's own
+ * section calls "Money received"; a state graph's is its register's
+ * donations or gifts, and keeps its words.
+ */
+export function partiesFigureWords(graph: MoneyGraph) {
+  const federal =
+    !graph.meta.jurisdiction || graph.meta.jurisdiction === 'federal';
+  return federal
+    ? {
+        title: 'Money to parties',
+        line: 'received by parties',
+        hubLine: 'received by political parties',
+      }
+    : {
+        title: 'Donations to parties',
+        line: 'disclosed to parties',
+        hubLine: 'disclosed to political parties',
+      };
+}
+
+/**
  * The first of `years` (as graph keys, sorted) whose annual returns were not
  * all published by the graph's date, so its bar holds only part of the year;
  * undefined when every year is complete.
@@ -268,7 +292,7 @@ export function latestCompleteYear(graph: MoneyGraph): number | null {
 }
 
 /**
- * Donations to parties in a window: the party nodes' own receipts (every
+ * Money to parties in a window: the party nodes' own receipts (every
  * cleaned row but public funding), one computation shared with the hub's
  * Parties card. Party receipts cannot be split by industry, so with an
  * industry filter the figure is the donor-to-party flows from that

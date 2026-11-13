@@ -1,5 +1,4 @@
 import { decodeAssociatedTag, decodeAssociatedWith } from './associated';
-import { publicTie, withholdIndividualDonors } from '../privacy/donorEntity';
 import { decodeBoundary, type Boundary } from './electorate-geometry';
 import { ApiError } from './errors';
 import {
@@ -614,8 +613,7 @@ export const decodeInterest = shape({
   unread_pages: optional(count),
   alterations: shape({ added: count, deleted: count }),
   buckets: dict(shape({ count, items: array(registerRow) })),
-  // A donor tie names a donor: only organisations (privacy/donorEntity).
-  ties: optional((v: unknown) => array(detailTie)(v).filter(publicTie)),
+  ties: optional(array(detailTie)),
 });
 export type InterestDetail = Decoded<typeof decodeInterest>;
 const recentDeclaration = shape({
@@ -632,7 +630,7 @@ const recentDeclaration = shape({
   description: text,
   url,
   page: nullable(count),
-  ties: optional((v: unknown) => array(tie)(v).filter(publicTie)),
+  ties: optional(array(tie)),
 });
 export const decodeRecentInterests = shape({
   meta: shape({
@@ -836,7 +834,7 @@ export const decodePhotoCredits = records(
   matching(/^wd-Q\d+$/),
 );
 export type PhotoCredits = Decoded<typeof decodePhotoCredits>;
-const decodeMoneyRows = shape({
+export const decodeMoney = shape({
   meta: shape({
     generated: date,
     source: nonempty,
@@ -871,13 +869,7 @@ const decodeMoneyRows = shape({
     }),
   ),
 });
-/** The money graph with every donor lacking organisation evidence renamed,
- * re-keyed and marked `withheld` (privacy/donorEntity), before any screen. */
-export const decodeMoney = (v: unknown) => {
-  const rows = decodeMoneyRows(v);
-  return markPartial(withholdIndividualDonors(rows), isPartialCatalog(rows));
-};
-export type Money = ReturnType<typeof decodeMoney>;
+export type Money = Decoded<typeof decodeMoney>;
 export const decodeCorpus = shape({
   version: date,
   expected_resources: count,

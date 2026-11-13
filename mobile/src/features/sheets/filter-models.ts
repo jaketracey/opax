@@ -440,6 +440,8 @@ export function moneyFilterModel(
     industries?: string[];
     loaded?: boolean;
     dollarsYear?: number;
+    /** The Show toggle for the parties' figure (records.partiesFigureWords). */
+    donationsLabel?: string;
   } = {},
 ) {
   const years = [...new Set(options.years ?? [])].sort((a, b) => a - b);
@@ -533,7 +535,10 @@ export function moneyFilterModel(
     ],
     years: { options: yearChoices, from: 'from', to: 'to', numeric: true },
     toggles: [
-      { ...toggle('donations', 'Donations to parties'), group: 'show' },
+      {
+        ...toggle('donations', options.donationsLabel ?? 'Money to parties'),
+        group: 'show',
+      },
       { ...toggle('grants', 'Grants to donors'), group: 'show' },
       { ...toggle('contracts', 'Contracts to donors'), group: 'show' },
       { ...toggle('inflation', 'Adjust for inflation'), group: 'inflation' },

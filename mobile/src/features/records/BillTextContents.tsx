@@ -5,7 +5,13 @@ import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { Skeleton, Text } from '../../design/primitives';
 import { useListSearchBar } from '../../design/search-bar';
 import { StatePageProvider } from '../../design/states';
-import { colors, hairline, layout, rhythm } from '../../design/tokens';
+import {
+  colors,
+  hairline,
+  layout,
+  minimumTarget,
+  rhythm,
+} from '../../design/tokens';
 import { publishContents } from './contentsChannel';
 import { RecordLoadError } from './RecordLoadError';
 import { records } from './runtime';
@@ -140,7 +146,7 @@ function Separator() {
 const styles = StyleSheet.create({
   list: { flex: 1, backgroundColor: colors.paper },
   row: {
-    minHeight: 44,
+    minHeight: minimumTarget,
     justifyContent: 'center',
     paddingVertical: rhythm.row,
     paddingHorizontal: layout.screenMargin,

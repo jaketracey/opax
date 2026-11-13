@@ -17,7 +17,14 @@ import { Icon, type SFSymbol } from './icon';
 import { Text } from './text';
 import { minimumTarget, rhythm, type Accent } from './tokens';
 
-/** Expand and collapse smoothly, or instantly with Reduce Motion. */
+/**
+ * Expand and collapse smoothly, or instantly with Reduce Motion.
+ *
+ * On iOS this currently does nothing: Reanimated 4.5 replaces Fabric's
+ * layout-animation delegate with one that ignores configureNext, so the
+ * change lands in one frame. For a line that must ease the content below,
+ * use HeightReveal (./reveal), which animates its own height (build 61).
+ */
 export function animateLayout(
   reduceMotion: boolean,
   duration = 220,
