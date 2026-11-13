@@ -2,7 +2,7 @@ import { readFile, readdir, mkdir, writeFile, rm } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
-import { normalize, tokens, bucket } from '../portal/src/catalog-query.mjs';
+import { normalize, tokens, bucket, PERSON_SEARCH_ALIASES } from '../portal/src/catalog-query.mjs';
 import { personNameKey, personUrl } from '../portal/public/canonical-urls.js';
 import { recordPathIndex } from '../portal/public/record-paths.js';
 import { personSlug, personIndex, fullNameMatches } from '../portal/src/person-slug.ts';
@@ -109,7 +109,7 @@ export function accessDonorHref(donorNames, name, fallback) {
 async function main() {
  const roster = await read('parliamentarians.json');
  const identity=personIndex(roster.people); peopleIndex=identity; canonicalPeople=identity.slugOf; canonicalAliases=new Map([...identity.addresses].map(([name,p])=>[name,identity.slugOf.get(p.name)]));
- for(const p of roster.people) add('person:'+p.name,'person',p.full||p.name,personHref(p.name),`${p.party_now||p.party||''}. ${(p.states||[]).join(', ')}. ${personSpeechCount(p)}${p.representation?.length?' Recorded representation: '+p.representation.map(r=>`${r.electorate}${r.state?', '+r.state:''}, ${r.jurisdiction}, ${r.chamber}`).join('; ')+'. Roster affiliations may include past seats and do not establish current tenure.':''}`,{aliases:[p.name,...(p.aliases||[])].join(' '),from:p.first,to:p.last,state:p.states,parties:[p.party_now||p.party||''],speakers:[p.name],source:'Parliamentarian directory',dateLabel:p.speech_scope?'':(p.roster_only?'Recorded service: ':p.speech_count_basis?'Transcript years: ':'')+period(p.first,p.last)});
+ for(const p of roster.people) add('person:'+p.name,'person',p.full||p.name,personHref(p.name),`${p.party_now||p.party||''}. ${(p.states||[]).join(', ')}. ${personSpeechCount(p)}${p.representation?.length?' Recorded representation: '+p.representation.map(r=>`${r.electorate}${r.state?', '+r.state:''}, ${r.jurisdiction}, ${r.chamber}`).join('; ')+'. Roster affiliations may include past seats and do not establish current tenure.':''}`,{aliases:[...new Set([p.name,...(p.aliases||[]),...(Object.hasOwn(PERSON_SEARCH_ALIASES,p.name)?PERSON_SEARCH_ALIASES[p.name]:[])])].join(' '),from:p.first,to:p.last,state:p.states,parties:[p.party_now||p.party||''],speakers:[p.name],source:'Parliamentarian directory',dateLabel:p.speech_scope?'':(p.roster_only?'Recorded service: ':p.speech_count_basis?'Transcript years: ':'')+period(p.first,p.last)});
  const donorRecords=[];
  for(const [jur,file] of [['federal','money.json'],['qld','money.qld.json'],['vic','money.vic.json'],['tas','money.tas.json']]) {
   const graph=await read('graph/'+file), byId=new Map(graph.nodes.map(n=>[n.id,n]));
@@ -244,7 +244,12 @@ async function main() {
   for(const [term,weight] of weights){const p=postings[bucket(term)];(p[term]??=[]).push(id,weight);}
  }
  const publicPaths=recordPathIndex(docs.map(d=>d.key.includes(':grant-recipient:')?{...d.record,owner:true}:d.record));
- const version=createHash('sha256').update(JSON.stringify([docs.map(d=>[d.record,d.meta,d.titleTokens,d.bodyTokens]),publicPaths,reportNames])).digest('hex').slice(0,16);
+ // Never derive correction names from donors, witnesses, suppliers or declarations.
+ const recoveryNames=docs.filter(d=>d.key.startsWith('person:') || ['bill','electorate'].includes(d.record.kind)).map(d=>({
+  kind:d.record.kind,label:d.key.startsWith('person:')?d.key.slice(7):d.record.title,href:d.record.href,
+  ...(d.key.startsWith('person:')?{aliases:[d.record.title,...(Object.hasOwn(PERSON_SEARCH_ALIASES,d.key.slice(7))?PERSON_SEARCH_ALIASES[d.key.slice(7)]:[])]}:{}),
+ }));
+ const version=createHash('sha256').update(JSON.stringify([docs.map(d=>[d.record,d.meta,d.titleTokens,d.bodyTokens]),publicPaths,reportNames,recoveryNames])).digest('hex').slice(0,16);
  const output=join(root,'search-catalog'); await mkdir(output,{recursive:true});
  // This directory contains generated search assets only.
  for(const name of await readdir(output))await rm(join(output,name),{recursive:true,force:true});
@@ -252,6 +257,7 @@ async function main() {
  const put=async(name,data)=>writeFile(join(output,version,name),JSON.stringify(data));
  await put('meta.json',meta);
  await put('report-names.json',reportNames);
+ await put('recovery-names.json',recoveryNames);
  // An unfiltered search needs only each record's kind and closing year (portal/src/catalog-search.ts).
  const kinds=[...new Set(meta.map(m=>m[0]))], kindIndex=new Map(kinds.map((k,i)=>[k,i]));
  await put('meta-core.json',{kinds,kind:meta.map(m=>kindIndex.get(m[0])),to:meta.map(m=>m[2])});

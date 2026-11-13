@@ -89,6 +89,9 @@ interface Env {
   /** Optional operator-configured token prices, USD per million, for monitoring. */
   AGENTIC_INPUT_USD_PER_MILLION?: string
   AGENTIC_OUTPUT_USD_PER_MILLION?: string
+  /** Optional; the same value in production and staging. Lets staging's voice tool state its remaining time to the
+   * production Worker's /api/ask over STAGING_API (src/ask-caller-budget.ts). Absent: Ask's usual allowances. */
+  ASK_INTERNAL_SECRET?: string
 
 }
 

@@ -1,10 +1,12 @@
-import {FEDERAL_RECEIPTS_NOTE} from './receipt-copy'
+import {receiptMeasureLabel,receiptDollars} from './receipt-copy'
 import {donorAssociatedTo,donorDisclosure,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {financialYear, receiptPeriodQuery, separateReceiptYears} from './receipt-period'
 
 type Node = DonorDisclosureRecord & { id:string; label:string; kind:string; industry?:string; group?:string; aliases?:string[] }
-type Edge = { source:string; target:string; total:number; count:number; flow?:string; grant?:boolean; firstYear?:number; lastYear?:number; byYear?:Record<string,number[]> }
-export type ReceiptGraph = { meta:Record<string,unknown>; nodes:Node[]; edges:Edge[] }
+export type ReceiptEdge = { by_type?:Record<string,number>; by_type_year?:Record<string,Record<string,[number,number]>>; source:string; target:string; total:number; count:number; flow?:string; grant?:boolean; firstYear?:number; lastYear?:number; byYear?:Record<string,number[]> }
+type CalculationEdge=ReceiptEdge&{receipt_type?:string;typed_periods?:string[]}
+export type ReceiptMeasure = 'donations'|'receipts_all'|'other_receipts'|'subscriptions'
+export type ReceiptGraph = { meta:Record<string,unknown>; nodes:Node[]; edges:ReceiptEdge[] }
 export function isReceiptGraph(data:Record<string,unknown>): data is Record<string,unknown>&ReceiptGraph {
   return !!data.meta&&typeof data.meta==='object'&&Array.isArray(data.nodes)&&Array.isArray(data.edges)
     &&data.nodes.every(n=>n&&typeof n==='object'&&typeof n.id==='string'&&typeof n.label==='string'&&typeof n.kind==='string')
@@ -13,7 +15,7 @@ export function isReceiptGraph(data:Record<string,unknown>): data is Record<stri
 const normal = (s:string) => s.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()
 const aliases:Record<string,string[]> = {
   gambling:['gambling','wagering','betting','casino','casinos','pokies','poker machines'],
-  property:['property','real estate','property developers'], finance:['finance','financial sector','financial services'],
+  property:['property','real estate','property developers'], finance:['finance','financial sector','financial services','banks','banking'],
   fossil_fuels:['fossil fuel','fossil fuels','coal','oil and gas'], mining:['mining'],
   unions:['unions','trade unions'], defence:['defence','defense'], health:['health','healthcare'],
   pharmacy:['pharmacy','pharmaceutical','pharma'], tech:['technology','tech'], media:['media'],
@@ -158,8 +160,39 @@ export async function receiptGraphForQuestion(query:string, load:(file:string)=>
   return selected
 }
 
+/** Schema 1 publishes recipient-side amounts separately from legacy aggregates. */
+function hasReceiptTypes(graph:ReceiptGraph):boolean {
+  const coverage=graph.meta.receipt_types as Record<string,unknown>|undefined
+  return coverage?.available===true&&coverage.schema===1&&coverage.donation_type==='donation_received'
+}
+const typedFinancialYear=(period:string):number|undefined=>{
+  const match=/^(\d{4})-(\d{2})$/.exec(period)
+  return match&&Number(match[2])===(Number(match[1])+1)%100?Number(match[1]):undefined
+}
+
+/** Adapt exporter cells to the calculator; every typed amount comes from by_type. */
+function receiptEdges(graph:ReceiptGraph):CalculationEdge[] {
+  if(!hasReceiptTypes(graph))return graph.edges
+  return graph.edges.flatMap(edge=>Object.entries(edge.by_type??{}).flatMap(([type,total])=>{
+    if(!Number.isFinite(total))return []
+    const periods=Object.entries(edge.by_type_year??{}).flatMap(([period,types])=>{
+      const cell=types[type]
+      return cell&&Number.isFinite(cell[0])&&Number.isInteger(cell[1])&&cell[1]>=0?[{period,cell}]:[]
+    })
+    const dated=periods.flatMap(({period,cell})=>{
+      const year=typedFinancialYear(period)
+      return year===undefined?[]:[{year,cell}]
+    })
+    return [{...edge,receipt_type:type,total,count:periods.reduce((sum,{cell})=>sum+cell[1],0),
+      byYear:Object.fromEntries(dated.map(({year,cell})=>[String(year),cell])),
+      typed_periods:periods.filter(({cell})=>cell[0]||cell[1]).map(({period})=>period),
+      firstYear:dated.length?Math.min(...dated.map(({year})=>year)):undefined,
+      lastYear:dated.length?Math.max(...dated.map(({year})=>year)):undefined}]
+  }))
+}
+
 /** Sum only donor-to-party receipt edges; node totals and public-money flows never enter the sum. */
-export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:string, origin:string, filters: {party?:string; from?:string; to?:string; compareYears?:boolean} = {}) {
+export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:string, origin:string, filters: {party?:string; from?:string; to?:string; compareYears?:boolean; measure?:ReceiptMeasure} = {}) {
   if(lendingQuestion(query))return {needs_scope:true,answer:jurisdiction==='federal'?'The published records cannot establish how much was lent. Federal debt records report balances owed at 30 June, not new lending, and name only the latest year’s largest creditors. Mixed receipt totals cannot establish loan amounts.':'The receipt records cannot establish how much was lent; a separate record identifying loans and their basis is needed.',sources:jurisdiction==='federal'?[{title:'AEC debt records: balance owed at 30 June; latest year only',url:origin+'/graph/aec-extras.json'}]:[],jurisdiction}
   if(!Array.isArray(graph.nodes)||!Array.isArray(graph.edges)) return null
   const periodQuery=receiptPeriodQuery(query)
@@ -171,7 +204,7 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   const named=exactReceiptDonors(graph,q)
   if(named.ambiguous)return {needs_scope:true,donor_query:named.ambiguous,answer:'Which organisation do you mean? Matching names in this map include '+receiptDonorChoices(graph,named.ambiguous).map(n=>n.label).join('; ')+'. Please use the full organisation name.',sources:[],jurisdiction}
   const exactDonors=named.nodes
-  if(!exactDonors.length && /\b(?:banks|banking)\b/.test(q)) return {needs_scope:true,answer:'Banks are grouped with other finance organisations in this map. For a like-for-like comparison, ask about the finance sector or name a specific bank.',sources:[],jurisdiction}
+
   if(!exactDonors.length && /\benergy\b/.test(q) && !industries.includes('fossil_fuels')) return {needs_scope:true,answer:'Energy can include fossil fuels and renewables. Please name the industry or company you want to compare.',sources:[],jurisdiction}
   if(exactDonors.length) industries=[]
   const donors=exactDonors.length?exactDonors:graph.nodes.filter(n=>n.kind==='donor' && industries.includes(n.industry||''))
@@ -201,42 +234,63 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   if(filters.from && /^\d{4}$/.test(filters.from)) from=Number(filters.from)
   if(filters.to && /^\d{4}$/.test(filters.to)) to=Number(filters.to)
   const donorIds=new Set(donors.map(n=>n.id)),partyIds=new Set(parties.map(n=>n.id))
-  const totals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],total_aud:number,receipts:number}>()
-  const donorTotals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],associated?:string,total_aud:number,receipts:number}>()
-  const industryTotals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],total_aud:number,receipts:number}>()
-  const flows: {donor_id:string,donor:string,donor_href:string|null,return_reference:string,party_id:string,party:string,associated?:string,total_aud:number,receipts:number}[]=[]
-  let cents=0,count=0,first=Infinity,last=-Infinity,matching=0
-  for(const edge of graph.edges) {
+  const totals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],total_aud:number,receipts:number,all_types_aud:number,other_receipts_aud:number}>()
+  const donorTotals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],associated?:string,total_aud:number,receipts:number,all_types_aud:number,other_receipts_aud:number}>()
+  const industryTotals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],total_aud:number,receipts:number,all_types_aud:number,other_receipts_aud:number}>()
+  // One row per donor-to-party pair: typed edges are split by receipt type above and merged back here.
+  const flows=new Map<string,{donor_id:string,donor:string,donor_href:string|null,return_reference:string,party_id:string,party:string,associated?:string,total_aud:number,receipts:number,all_types_aud:number,other_receipts_aud:number}>()
+  const eligible=receiptEdges(graph).filter(edge=>{
+    const donor=nodes.get(edge.source),party=nodes.get(edge.target)
+    if(edge.flow||edge.grant||donor?.kind!=='donor'||party?.kind!=='party'||(donors.length&&!donorIds.has(donor.id))||(parties.length&&!partyIds.has(party.id))||(industries.length&&!donors.length))return false
+    if(from===undefined&&to===undefined)return Number.isFinite(edge.total)&&Number.isFinite(edge.count)&&!!(edge.total||edge.count)
+    return Object.entries(edge.byYear??{}).some(([year,value])=>Number(year)>=(from??0)&&Number(year)<=(to??9999)&&Number.isFinite(value[0])&&Number.isFinite(value[1])&&!!(value[0]||value[1]))
+  })
+  const typed=hasReceiptTypes(graph)
+  const has=(type:string)=>eligible.some(edge=>edge.receipt_type===type)
+  const measure:ReceiptMeasure=filters.measure??(typed?(has('donation_received')?'donations':has('other_receipt')?'other_receipts':has('subscription')?'subscriptions':'receipts_all'):'receipts_all')
+  const selectedType=({donations:'donation_received',other_receipts:'other_receipt',subscriptions:'subscription'} as Record<string,string>)[measure]
+  let cents=0,count=0,allCents=0,otherCents=0,first=Infinity,last=-Infinity,matching=0
+  const eventPeriods=new Set<string>()
+  for(const edge of eligible) {
     const donor=nodes.get(edge.source),party=nodes.get(edge.target)
     if(edge.flow||edge.grant||donor?.kind!=='donor'||party?.kind!=='party'||(donors.length&&!donorIds.has(donor.id))||(parties.length&&!partyIds.has(party.id))) continue
     // A named industry with no visible donors must never select every industry.
     if(industries.length&&!donors.length) continue
     let amount=0,receipts=0
+    const selected=!typed||!selectedType||edge.receipt_type===selectedType
     if(from!==undefined||to!==undefined) {
       for(const [year,value] of Object.entries(edge.byYear||{})) {
         const y=Number(year);if(y<(from??0)||y>(to??9999)||!Number.isFinite(value[0])||!Number.isFinite(value[1]))continue
-        amount+=Math.round(value[0]*100);receipts+=value[1];first=Math.min(first,y);last=Math.max(last,y)
+        amount+=Math.round(value[0]*100);receipts+=value[1];if(selected&&(value[0]||value[1])){first=Math.min(first,y);last=Math.max(last,y)}
       }
     } else {
       if(!Number.isFinite(edge.total)||!Number.isFinite(edge.count))continue
       amount=Math.round(edge.total*100);receipts=edge.count
-      if(Number.isFinite(edge.firstYear))first=Math.min(first,edge.firstYear!)
-      if(Number.isFinite(edge.lastYear))last=Math.max(last,edge.lastYear!)
+      if(selected){
+        if(Number.isFinite(edge.firstYear))first=Math.min(first,edge.firstYear!)
+        if(Number.isFinite(edge.lastYear))last=Math.max(last,edge.lastYear!)
+        for(const period of edge.typed_periods??[])if(typedFinancialYear(period)===undefined)eventPeriods.add(period)
+      }
     }
     if(!receipts&&!amount)continue
+    const allAmount=amount,otherAmount=typed&&edge.receipt_type==='other_receipt'?amount:0
+    allCents+=allAmount;otherCents+=otherAmount
+    if(!selected){amount=0;receipts=0}
     matching++;cents+=amount;count+=receipts
-    const previous=totals.get(party.id)||{id:party.id,name:party.label,total_aud:0,receipts:0}
-    previous.total_aud+=amount/100;previous.receipts+=receipts;totals.set(party.id,previous)
-    const donorTotal=donorTotals.get(donor.id)||{id:donor.id,name:donor.label,href:donorDisclosure(donor).href,return_reference:returnReference((donor.returnReferences || []).find(ref=>!from || Number(String(ref.year).slice(0,4))>=from && (!to || Number(String(ref.year).slice(0,4))<=to)) || donor.returnReferences?.[0] || {}),total_aud:0,receipts:0}
+    const previous=totals.get(party.id)||{id:party.id,name:party.label,total_aud:0,receipts:0,all_types_aud:0,other_receipts_aud:0}
+    previous.all_types_aud+=allAmount/100;previous.other_receipts_aud+=otherAmount/100;previous.total_aud+=amount/100;previous.receipts+=receipts;totals.set(party.id,previous)
+    const donorTotal=donorTotals.get(donor.id)||{id:donor.id,name:donor.label,href:donorDisclosure(donor).href,return_reference:returnReference((donor.returnReferences || []).find(ref=>!from || Number(String(ref.year).slice(0,4))>=from && (!to || Number(String(ref.year).slice(0,4))<=to)) || donor.returnReferences?.[0] || {}),total_aud:0,receipts:0,all_types_aud:0,other_receipts_aud:0}
     // The AEC register line rides only on receipts to the party the register ties the donor to (export rule 9).
     const associated=donorAssociatedTo(donor,party.label)
     if(associated)donorTotal.associated=associated
-    donorTotal.total_aud+=amount/100;donorTotal.receipts+=receipts;donorTotals.set(donor.id,donorTotal)
+    donorTotal.all_types_aud+=allAmount/100;donorTotal.other_receipts_aud+=otherAmount/100;donorTotal.total_aud+=amount/100;donorTotal.receipts+=receipts;donorTotals.set(donor.id,donorTotal)
     if(donor.industry) {
-      const industryTotal=industryTotals.get(donor.industry)||{id:donor.industry,name:donor.industry.replaceAll('_',' '),total_aud:0,receipts:0}
-      industryTotal.total_aud+=amount/100;industryTotal.receipts+=receipts;industryTotals.set(donor.industry,industryTotal)
+      const industryTotal=industryTotals.get(donor.industry)||{id:donor.industry,name:donor.industry.replaceAll('_',' '),total_aud:0,receipts:0,all_types_aud:0,other_receipts_aud:0}
+      industryTotal.all_types_aud+=allAmount/100;industryTotal.other_receipts_aud+=otherAmount/100;industryTotal.total_aud+=amount/100;industryTotal.receipts+=receipts;industryTotals.set(donor.industry,industryTotal)
     }
-    flows.push({donor_id:donor.id,donor:donor.label,donor_href:donorDisclosure(donor).href,return_reference:returnReference((donor.returnReferences || []).find(ref=>!from || Number(String(ref.year).slice(0,4))>=from && (!to || Number(String(ref.year).slice(0,4))<=to)) || donor.returnReferences?.[0] || {}),party_id:party.id,party:party.label,...(associated?{associated}:{}),total_aud:amount/100,receipts})
+    const flowKey=donor.id+'|'+party.id,flow=flows.get(flowKey)
+    if(flow){flow.total_aud+=amount/100;flow.receipts+=receipts;flow.all_types_aud+=allAmount/100;flow.other_receipts_aud+=otherAmount/100}
+    else flows.set(flowKey,{donor_id:donor.id,donor:donor.label,donor_href:donorDisclosure(donor).href,return_reference:returnReference((donor.returnReferences || []).find(ref=>!from || Number(String(ref.year).slice(0,4))>=from && (!to || Number(String(ref.year).slice(0,4))<=to)) || donor.returnReferences?.[0] || {}),party_id:party.id,party:party.label,...(associated?{associated}:{}),total_aud:amount/100,receipts,all_types_aud:allAmount/100,other_receipts_aud:otherAmount/100})
   }
   const params=new URLSearchParams({jur:jurisdiction,type:'receipts'})
   if(industries.length===1)params.set('industry',industries[0])
@@ -246,23 +300,24 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   if(to!==undefined)params.set('to',String(to))
   const url=origin+'/money?'+params
   const subject=industries.length?industries.map(i=>i.replaceAll('_',' ')).join(' and '):donors.length?donors.map(n=>n.label).slice(0,3).join(', '):parties.map(n=>n.label).join(', ')||'all donors shown'
-  const period=Number.isFinite(first)?first===last?financialYear(first):`${financialYear(first)} to ${financialYear(last)}`:null
-  const amount=new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(cents/100)
+  const fiscalPeriod=Number.isFinite(first)?first===last?financialYear(first):`${financialYear(first)} to ${financialYear(last)}`:null
+  const period=[fiscalPeriod,...eventPeriods].filter(Boolean).join('; ')||null
+  const amount=receiptDollars(cents/100),measure_label=receiptMeasureLabel(measure,industries[0]??(exactDonors.length===1?exactDonors[0].industry:undefined))
   return {
-    answer:matching?(`The disclosed receipt total for ${subject} is ${amount}, across ${count} receipts${period?' in '+period:''}. This is the published map selection, not an exhaustive industry total.${jurisdiction==='federal'?' '+FEDERAL_RECEIPTS_NOTE:''}`):'No matching receipts are shown in this selection and period. This does not establish that no receipts occurred.',
+    answer:matching?`${subject}: ${amount} in ${measure_label}, financial years ${period}, across ${count.toLocaleString('en-AU')} records.`:`OPAX holds ${subject} receipts in other financial years. Explore the [money map](${url}) to choose a held period.`,
     period_coverage: { since: Number.isFinite(first) ? `${first}-01-01` : null, until: Number.isFinite(last) ? `${last}-12-31` : null,
       as_of: typeof graph.meta.generated === 'string' ? graph.meta.generated.slice(0, 10) : null,
       requested_since: from === undefined ? undefined : `${from}-01-01`, requested_until: to === undefined ? undefined : `${to}-12-31`,
       matched: matching > 0, basis: 'financial_year_start', note: 'Years identify financial years by starting year, not calendar-year totals; only matching recorded receipts in the published selection.' },
-    total_aud:cents/100,receipts:count,period,requested_years:{from:from??null,to:to??null},jurisdiction,subject,
-    by_party:[...totals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
-    by_donor:[...donorTotals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
-    by_industry:[...industryTotals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
-    flows:flows.sort((a,b)=>b.total_aud-a.total_aud),
+    measure,measure_label,typed,all_types_aud:allCents/100,other_receipts_aud:otherCents/100,total_aud:cents/100,receipts:count,period,requested_years:{from:from??null,to:to??null},jurisdiction,subject,
+    by_party:[...totals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100,all_types_aud:Math.round(t.all_types_aud*100)/100,other_receipts_aud:Math.round(t.other_receipts_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
+    by_donor:[...donorTotals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100,all_types_aud:Math.round(t.all_types_aud*100)/100,other_receipts_aud:Math.round(t.other_receipts_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
+    by_industry:[...industryTotals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100,all_types_aud:Math.round(t.all_types_aud*100)/100,other_receipts_aud:Math.round(t.other_receipts_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
+    flows:[...flows.values()].sort((a,b)=>b.total_aud-a.total_aud),
     selected_donors:donors.map(d=>d.label),
     selected_parties:parties.map(p=>p.label),
     selected_industries:industries,
-    scope:'Only donor-to-party receipts shown on the published Opax map; excludes off-map donors and public money. Do not present as all industry funding, payments to government, or personal payments to MPs.',
+    scope:'Party-level totals for sources in the published OPAX money map.',
     period_note:'Years use the first year of a financial year; election returns may use the polling year. Undated receipts are excluded when a year filter is requested. Dollar amounts are nominal, not inflation-adjusted.',
     coverage:graph.meta.coverage,methodology:graph.meta.methodology,generated:graph.meta.generated,
     sources:[{title:`${subject}: disclosed party receipts`,url}],

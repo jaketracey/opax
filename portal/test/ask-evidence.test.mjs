@@ -99,7 +99,7 @@ test('quote recovery changes generation instructions while preserving filters an
  const body=api.buildAskBody({question:'Q',speaker:'Example MP',context:[{text:'Earlier'}]});
  const retry=exports.quoteRecoveryAsk(body);
  assert.match(retry.prompt.user,/fresh, concise answer in your own words/);
- assert.match(retry.prompt.user,/Do not use direct quotations/);
+ assert.match(retry.prompt.user,/Use unquoted prose/);
  assert.equal(retry.citations,'llm_footnotes');
  assert.deepEqual(retry.filter_expression,body.filter_expression);
  assert.deepEqual(retry.chat_history,body.chat_history);
@@ -155,11 +155,11 @@ test('UI keeps footnotes after punctuation and closing quotes without crossing p
 test('position prompts keep the original question and treat an evidence gap as a complete response',()=>{
  const b=api.buildAskBody({question:'What would Pauline Hanson say about housing?',speaker:'Pauline Hanson',kind:'speech'});
  assert.match(b.prompt.user,/What would Pauline Hanson say about housing/);
- assert.match(b.prompt.user,/EXACT topic/);assert.match(b.prompt.user,/Do not add other policies/);
+ assert.match(b.prompt.user,/exact topic/);assert.match(b.prompt.user,/Use that person’s explicit speaking turns/);
  assert.equal(exports.isEvidenceGap(exports.EVIDENCE_GAP_ANSWER),true);
  assert.equal(exports.isEvidenceGap(exports.EVIDENCE_GAP_ANSWER+' She supports unrelated policy.'),false);
  const proposal=api.buildAskBody({question:'What has David Pocock proposed about housing?',speaker:'David Pocock',kind:'speech'});
- assert.equal(exports.isPositionBody(proposal),true);assert.match(proposal.prompt.user,/Omit ministerial replies/);
+ assert.equal(exports.isPositionBody(proposal),true);assert.match(proposal.prompt.user,/Use that person’s explicit speaking turns/);
 });
 
 test('an unrelated but cited position cannot pass as an answer about the requested topic',()=>{

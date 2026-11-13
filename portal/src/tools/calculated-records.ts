@@ -6,7 +6,7 @@ import { clip } from './record-common'
 export const calculatedRecordTools: ToolDefinition[] = ['paid_answer', 'ranked_money'].map(name => ({
   name,
   description: name === 'paid_answer'
-    ? 'Calculate a complete federal pay answer, ranking or comparison: parliamentarians for the requested year/date, and current Tribunal rates for departmental secretaries and agency heads. Pass the full question. Figures are deterministically calculated. Use parliamentary_pay for individual dated rows.'
+    ? 'Calculate a complete federal pay answer, ranking or comparison: parliamentarians for the requested year/date, and current Tribunal rates for departmental secretaries and agency heads. Pass the full question. The calculator supplies every figure. Use parliamentary_pay for individual dated office or member rows.'
     : 'Calculate rankings of individual published money records, state disclosure comparisons or public money overviews from a full question. Preserves donor identity gates and financial-year semantics. Federal mixed receipts are not donation or influence evidence. Use money_totals for summed receipts and contracts or grants for individual awards. No generation or writes.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     question: { type: 'string', minLength: 5, maxLength: 2000 },

@@ -107,7 +107,7 @@ test('hypothetical questions retrieve the named person and ask about recorded st
   assert.equal(input.speaker,'Pauline Hanson');assert.equal(input.kind,'speech');
   assert.equal(exports.askRetrievalQuery(input),'immigration');
  }
- assert.match(exports.POSITION_GROUNDING,/Do not roleplay/);
+ assert.match(exports.POSITION_GROUNDING,/third person/);
  assert.equal(resolveAskScope({question:'What would Pauline Hanson and Anthony Albanese say?'},people).input.speaker,undefined);
 });
 

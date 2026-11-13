@@ -175,7 +175,7 @@ test('person and party selectors expose the selected vote without removing divis
   const prompt = JSON.parse(api.writingPrompt({ question: 'How did Labor Rebel vote in this division?', period: { kind: 'window', since: '2025-08-28', until: '2025-08-28', label: '28 August 2025' }, facts: [] }));
   assert.match(prompt.contract, /division.*passed.*defeated.*ayes\/noes first.*then.*person or party vote/i);
   assert.match(prompt.contract, /retain.*partial.member.list qualification/i);
-  assert.match(prompt.contract, /division outcome is not.*passage of a bill/i);
+  assert.match(prompt.contract, /Bill passage uses its separately documented lifecycle result/i);
 });
 
 test('the common Labor Party alias selects published Labor votes and dissenters', async () => {

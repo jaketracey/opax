@@ -46,7 +46,7 @@ test('the pack uses whole-record facets, metadata dates, export bill links and t
  assert.equal(pack.records.records.filter(r=>r.kind==='bill').length,2);assert.ok(pack.records.records.some(r=>r.title==='Related Bill 2026'));assert.ok(!pack.records.records.some(r=>r.title==='Unrelated Bill'));
  assert.ok(!pack.records.records.filter(r=>r.source?.includes('verified')).some(r=>r.snippet.includes('later reply')));
  assert.ok(pack.records.records.reduce((sum,r)=>sum+r.snippet.length,0)<=OVERVIEW_CAPS.chars);
- assert.ok(calls.original.length<=12);assert.match(OVERVIEW_INSTRUCTIONS,/3–5 themes/);assert.match(OVERVIEW_INSTRUCTIONS,/EVERY factual sentence/);
+ assert.ok(calls.original.length<=12);assert.match(OVERVIEW_INSTRUCTIONS,/3–5 themes/);assert.match(OVERVIEW_INSTRUCTIONS,/every factual sentence/);
 });
 
 test('SA overview evidence is capped before the stub model, retaining provenance and the permission switch',async()=>{
