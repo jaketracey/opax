@@ -84,19 +84,37 @@ test('redirects, cross-origin replies and unreviewed paths fail closed before an
 });
 
 test.each([
+  // Seconds, up to the 120 s cap.
   ['60', 60_000],
+  [' 90 ', 90_000],
+  ['120', 120_000],
+  ['121', 120_000],
+  ['3600', 120_000],
+  // A huge value is a long wait, not garbage: it takes the cap.
+  ['999999999999999999999999999', 120_000],
+  ['9'.repeat(400), 120_000],
+  // HTTP dates (all three formats), measured from the response.
   ['Thu, 01 Jan 1970 00:02:40 GMT', 60_000],
   ['Thursday, 01-Jan-70 00:02:40 GMT', 60_000],
   ['Thu Jan  1 00:02:40 1970', 60_000],
+  ['Thu, 01 Jan 1970 00:03:40 GMT', 120_000],
+  ['Thu, 01 Jan 1970 01:00:00 GMT', 120_000],
+  ['Fri, 31 Dec 9999 23:59:59 GMT', 120_000],
+  // A past date takes the short default; the response's own second is now.
+  ['Thu, 01 Jan 1970 00:00:00 GMT', 30_000],
+  ['Thu, 01 Jan 1970 00:01:39 GMT', 30_000],
+  ['Thu, 01 Jan 1970 00:01:40 GMT', 0],
+  ['0', 0],
+  // Garbage takes the short default.
   [null, 30_000],
   ['', 30_000],
   ['invalid', 30_000],
   ['-1', 30_000],
   ['1.5', 30_000],
-  ['999999999999999999999999999', 30_000],
+  ['60 s', 30_000],
   ['1970-01-01T00:02:40Z', 30_000],
-  ['0', 0],
-  ['Thu, 01 Jan 1970 00:00:00 GMT', 0],
+  ['Thu, 32 Jan 1970 00:00:00 GMT', 30_000],
+  ['Thu, 01 Jan 1970 25:00:00 GMT', 30_000],
 ] as const)(
   'rate limit Retry-After %s is anchored to the response deadline',
   async (header, wait) => {
@@ -125,6 +143,32 @@ test.each([
       });
       expect(t).toHaveBeenCalledTimes(1);
       expect(jest.getTimerCount()).toBe(0);
+    } finally {
+      jest.useRealTimers();
+    }
+  },
+);
+
+test.each([
+  ['Thu, 01 Jan 1970 00:01:40 GMT', 100_400],
+  ['Thu, 01 Jan 1970 00:01:39 GMT', 130_400],
+  ['Thu, 01 Jan 1970 00:02:40 GMT', 160_000],
+  ['Thu, 01 Jan 1970 01:00:00 GMT', 220_400],
+  ['3600', 220_400],
+] as const)(
+  'Retry-After %s part-way through a second keeps the date absolute and the cap from the response',
+  async (header, retryAt) => {
+    jest.useFakeTimers();
+    jest.setSystemTime(100_400);
+    const t = jest
+      .fn()
+      .mockResolvedValue(response(429, {}, { headers: { get: () => header } }));
+    try {
+      expect(
+        await api(t)
+          .askPost('/api/ask?stream=1', {}, controller().signal)
+          .catch((error) => error),
+      ).toMatchObject({ code: 'rate-limited', retryAt });
     } finally {
       jest.useRealTimers();
     }

@@ -74,6 +74,14 @@ export type AskState = {
   pending: { question: string; carry?: Followup; fromDraft: boolean } | null;
   /** The newest answer is awaiting Ask next suggestions (three reserved rows). */
   nextLoading: boolean;
+  /**
+   * When the latest question's first words arrived (device clock) and how
+   * long after it was asked: the first streamed text, or a whole answer
+   * that streamed none. A new question clears it. Held here, not in the
+   * thread view, so a remounted view knows the words came while it was away
+   * and never gives the arrival haptic again or late.
+   */
+  firstText: { at: number; waited: number } | null;
 };
 export type AskIO = {
   post: (
@@ -114,6 +122,10 @@ type Running = {
   section: string;
   followUp: boolean;
 };
+const arrival = (run: Running, at: number) => ({
+  at,
+  waited: at - run.started,
+});
 /** What Stop did with the stopped question (journeys/ask.md 4.4 step 4). */
 export type StopResult = 'restored' | 'kept' | null;
 export class AskController {
@@ -136,6 +148,7 @@ export class AskController {
     queued: false,
     pending: null,
     nextLoading: false,
+    firstText: null,
   };
   private listeners = new Set<() => void>();
   private abort: AbortController | null = null;
@@ -468,6 +481,7 @@ export class AskController {
       notice: null,
       clarify: null,
       nextLoading: false,
+      firstText: null,
     });
     try {
       const data = decodeAnswer(
@@ -490,6 +504,10 @@ export class AskController {
                   ...(this.state.stage !== 'Writing the answer' ||
                   this.state.steps.length
                     ? { stage: 'Writing the answer' as const }
+                    : {}),
+                  // A recovery's rewrite keeps the first arrival.
+                  ...(!this.state.firstText && text.trim()
+                    ? { firstText: arrival(run, this.io.now()) }
                     : {}),
                 });
             },
@@ -548,6 +566,12 @@ export class AskController {
       this.update({
         thread: [...before, user, answer],
         busy: false,
+        // An answer that streamed nothing arrives whole.
+        ...(!this.state.firstText &&
+        answer.at !== undefined &&
+        answer.text.trim()
+          ? { firstText: arrival(run, answer.at) }
+          : {}),
         stage: null,
         streaming: '',
         nextLoading: passages.length > 0,

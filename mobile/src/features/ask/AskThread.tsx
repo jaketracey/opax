@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { AccessibilityInfo, AppState, StyleSheet, View } from 'react-native';
 import { Button } from '../../design/controls';
 import { haptic } from '../../design/haptics';
@@ -18,7 +18,7 @@ import { fillComposer } from './AskIdle';
 import type { AskState } from './controller';
 import type { Chat, Turn } from './model';
 import type { AskPerson } from './people';
-import type { AskFailure } from './stream';
+import { retryAfterCap, type AskFailure } from './stream';
 import { askErrorCopy, clarifyCopy, showAnsweredAs } from './turn-copy';
 
 /** A legacy answer's date: the first from `created`, later ones bound by `updated`. */
@@ -38,7 +38,6 @@ export function legacyDate(
 // A failure owns its deadline and announcement across component remounts.
 const failureKeys = new WeakMap<object, number>();
 const announcedRetries = new WeakSet<AskFailure>();
-const arrivedQuestions = new WeakSet<Turn>();
 let nextKey = 0;
 function errorKey(failure: object) {
   if (!failureKeys.has(failure)) failureKeys.set(failure, ++nextKey);
@@ -82,10 +81,14 @@ export function QuestionLine({
   );
 }
 
+// Never more than the cap, even if the device clock is set back mid-wait.
 const secondsUntil = (deadline: number | undefined) =>
   deadline === undefined
     ? 0
-    : Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+    : Math.min(
+        retryAfterCap / 1000,
+        Math.max(0, Math.ceil((deadline - Date.now()) / 1000)),
+      );
 
 /** Count from the rate-limit failure's deadline, including after a remount. */
 function RetryButton({
@@ -155,49 +158,41 @@ function RetryButton({
   );
 }
 
-/** Consume the first text once per submitted question, including fast/background arrivals. */
+/** A tap only for words that took this long after the question. */
+const slowArrival = 3000;
+/** Felt as the words appear: an arrival seen later than this stays silent. */
+const arrivalLate = 1000;
+
+/**
+ * Arrivals already felt or passed over, shared by every mounted thread: Ask
+ * can be open in more than one tab stack at once, all on one session.
+ */
+const feltArrivals = new WeakSet<object>();
+
+/**
+ * One light haptic when a slow answer's first words appear. The arrival is
+ * the controller's (`s.firstText`), consumed once per question across all
+ * mounted threads, including fast, failed and background arrivals. A view
+ * that mounts after the words came counts them as felt, so a remount never
+ * taps again or late.
+ */
 function useAnswerArrival(s: AskState) {
-  const waiting = useRef<{
-    question: Turn;
-    started: number | undefined;
-    arrived: boolean;
-  } | null>(null);
+  useState(() => {
+    if (s.firstText) feltArrivals.add(s.firstText);
+  });
+  const first = s.firstText;
+  const failed = !!(s.error || s.clarify);
   useEffect(() => {
-    if (s.error || s.clarify) {
-      waiting.current = null;
-      return;
-    }
-    const latest = s.thread.at(-1);
+    if (!first || feltArrivals.has(first)) return;
+    feltArrivals.add(first);
     if (
-      s.busy &&
-      latest?.role === 'user' &&
-      waiting.current?.question !== latest
+      !failed &&
+      first.waited >= slowArrival &&
+      Date.now() - first.at < arrivalLate &&
+      AppState.currentState === 'active'
     )
-      waiting.current = {
-        question: latest,
-        started: latest.at,
-        arrived: false,
-      };
-    const run = waiting.current;
-    const text = s.busy
-      ? s.streaming
-      : latest?.role === 'answer' && s.thread.at(-2) === run?.question
-        ? latest.text
-        : '';
-    if (run && !run.arrived && text.trim()) {
-      run.arrived = true;
-      const alreadyArrived = arrivedQuestions.has(run.question);
-      arrivedQuestions.add(run.question);
-      if (
-        !alreadyArrived &&
-        run.started !== undefined &&
-        Date.now() - run.started >= 3000 &&
-        AppState.currentState === 'active'
-      )
-        haptic('light');
-    }
-    if (!s.busy) waiting.current = null;
-  }, [s]);
+      haptic('light');
+  }, [first, failed]);
 }
 
 /**
