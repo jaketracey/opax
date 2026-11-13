@@ -1,11 +1,11 @@
-import { cleanEvent, safePath } from './privacy.mjs';
+import { cleanEvent, safePath, automationReason } from './privacy.mjs';
 
 // Delivered by GTM-PNDM87LW. Keep the audited mapping in source control rather
 // than copying reader-data handling into an untested Custom JavaScript tag.
 const ID = 'G-EGY7Y5VTEQ';
 const LAYER = 'opaxGaLayer';
 if (['opax.com.au', 'www.opax.com.au'].includes(location.hostname)
-    && navigator.doNotTrack !== '1' && window.doNotTrack !== '1' && !window.opaxGaLoaded) {
+    && navigator.doNotTrack !== '1' && window.doNotTrack !== '1' && !automationReason(navigator, window) && !window.opaxGaLoaded) {
   window.opaxGaLoaded = true;
   // Its own command queue, not GTM's dataLayer: GTM reads every 'config' pushed to
   // dataLayer and loads the Google tag a second time (gtag/js ...&cx=c), which
@@ -22,7 +22,7 @@ if (['opax.com.au', 'www.opax.com.au'].includes(location.hostname)
   gtag('config', ID, { send_page_view: false });
   let previous = '';
   const send = ({ event, properties }) => {
-    if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
+    if (navigator.doNotTrack === '1' || window.doNotTrack === '1' || automationReason(navigator, window)) return;
     const clean = cleanEvent(event, properties);
     if (!clean) return;
     const path = safePath(properties.page_path || location.href);

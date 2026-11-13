@@ -1,4 +1,4 @@
-import { cleanEvent, safePath } from './privacy.mjs';
+import { cleanEvent, safePath, automationReason } from './privacy.mjs';
 import { askPageType } from '../public/growth-modules.js';
 /* --- OPAX events -------------------------------------------------------------
    The site is a single page app on real paths, so Tag Manager sees one page
@@ -9,7 +9,8 @@ import { askPageType } from '../public/growth-modules.js';
    question text, a search phrase or any free text they typed: the events say
    what kind of thing happened, not what was asked. */
 (function () {
-  const optedOut = () => navigator.doNotTrack === '1' || window.doNotTrack === '1';
+  // Do Not Track, or a clearly automated browser: nothing is measured or forwarded.
+  const optedOut = () => navigator.doNotTrack === '1' || window.doNotTrack === '1' || !!automationReason(navigator, window);
   // One privacy boundary for every producer, including async application outcomes.
   // Buffer early events so the GTM-delivered GA adapter can replay the first view.
   window.opaxAnalyticsPending = [];

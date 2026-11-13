@@ -1,11 +1,24 @@
 import posthog from 'posthog-js/dist/module.no-external';
-import { cleanEvent, beforeSend } from './privacy.mjs';
+import { cleanEvent, beforeSend, automationReason, likelyBot } from './privacy.mjs';
 
 // Public, write-only ingestion token for PostHog project 507367 (Opax).
 const TOKEN = 'phc_AsHnQM2UrGBubA5HU9sagkGbg8vqQLNXu3WjEhPRDejr';
-const enabled = ['opax.com.au', 'www.opax.com.au'].includes(location.hostname);
+const enabled = ['opax.com.au', 'www.opax.com.au'].includes(location.hostname) && !automationReason(navigator, window);
 if (enabled) {
   try {
+    // Any scroll, key, touch or pointer press before the page is left. A page
+    // left without one is sent as likely_bot, not dropped: readers can read
+    // the top of a page and go.
+    let interacted = false;
+    const seen = () => { interacted = true; };
+    for (const type of ['pointerdown', 'keydown', 'touchstart', 'scroll', 'wheel']) addEventListener(type, seen, { capture: true, passive: true, once: true });
+    const filtered = (event) => {
+      // Re-checked per event: SDK events ($pageleave) skip the router path.
+      if (!event || automationReason(navigator, window)) return null;
+      const clean = beforeSend(event);
+      if (clean) clean.properties.likely_bot = likelyBot(navigator, window, { leaving: clean.event === '$pageleave', interacted });
+      return clean;
+    };
     posthog.init(TOKEN, {
       api_host: '/ingest',
       ui_host: 'https://us.posthog.com',
@@ -21,7 +34,7 @@ if (enabled) {
       advanced_disable_flags: true,
       ip: false,
       respect_dnt: true,
-      before_send: beforeSend,
+      before_send: filtered,
     });
     const send = (detail) => {
       try {
