@@ -69,14 +69,20 @@ import XCTest
     func testStatusRefusalsBeforePermissionOrReservation() async throws {
         let cases: [(Data, VoiceFailure)] = [
             (signedStatus(signedIn: false), .signedOut), (signedStatus(enabled: false), .disabled),
-            (signedStatus(remaining: 0), .allowanceExhausted), (signedStatus(budget: false), .budgetClosed),
-            (signedStatus(active: "reserved"), .callOpen), (signedStatus(active: "connecting"), .callOpen), (signedStatus(active: "active"), .callOpen)]
+            (signedStatus(remaining: 0), .allowanceExhausted), (signedStatus(budget: false), .budgetClosed)]
         for (status, refusal) in cases {
             let rig = try await Rig.make(); await rig.http.configure(status: status); await rig.controller.start()
             let state = await rig.controller.state; XCTAssertEqual(state, .unavailable)
             let permissionCount = await rig.permission.count; XCTAssertEqual(permissionCount, 0)
             let starts = await rig.http.count(.voiceStart); XCTAssertEqual(starts, 0)
             try await eventually { await rig.recorder.hasError(refusal) }; await rig.close()
+        }
+    }
+    func testOpenSessionStillReachesStartSoTheServerTakesItOver() async throws {
+        for active in ["reserved", "connecting", "active"] {
+            let rig = try await Rig.make(); await rig.http.configure(status: signedStatus(active: active)); try await rig.live()
+            let starts = await rig.http.count(.voiceStart); XCTAssertEqual(starts, 1)
+            let refused = await rig.recorder.hasError(.callOpen); XCTAssertFalse(refused); await rig.close()
         }
     }
     func testConsentAndMicrophoneRefusedBeforeReserving() async throws {

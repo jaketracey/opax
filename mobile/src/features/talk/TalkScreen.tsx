@@ -258,15 +258,13 @@ function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
       ? statusFailed
         ? 'retry'
         : 'checking'
-      : blocked === 'callOpen'
-        ? 'retry'
-        : blocked
-          ? 'ask'
-          : microphoneDenied
-            ? 'settings'
-            : terminal || s.transcript.length
-              ? 'startAgain'
-              : 'start';
+      : blocked
+        ? 'ask'
+        : microphoneDenied
+          ? 'settings'
+          : terminal || s.transcript.length
+            ? 'startAgain'
+            : 'start';
   const sources = openableSources(s.sources);
   const showTranscript = captions && s.transcript.length > 0;
   // The call row and transcript only while captions show (7.4); hidden, the
@@ -281,8 +279,7 @@ function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
     !terminal &&
     !microphoneDenied &&
     blocked !== 'allowanceExhausted' &&
-    blocked !== 'budgetClosed' &&
-    blocked !== 'callOpen';
+    blocked !== 'budgetClosed';
   const example = exampleQuestion();
 
   useEffect(() => {
