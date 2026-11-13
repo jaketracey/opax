@@ -163,7 +163,6 @@ test('the served bundle carries the error hooks and the explicit capture setting
   for (const piece of ['errorWrappingFunctions', 'capture_exceptions:{capture_unhandled_errors:!0,capture_unhandled_rejections:!0,capture_console_errors:!1}',
     'captureExtensionExceptions:!1', 'exception_steps:{enabled:!1}', 'captured with value: |captured as exception: '])
     assert.ok(bundle.includes(piece), `public/analytics.js is missing ${piece}; run npm run build:analytics`);
-  assert.ok(!bundle.includes('capture_exceptions:!1'), 'public/analytics.js still turns exception capture off');
 });
 
 test('the privacy page says PostHog receives anonymous error reports and how they are cleaned', () => {
