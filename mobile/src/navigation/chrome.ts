@@ -83,11 +83,13 @@ export const opaqueBar = (ground: ColorValue = colors.paper) => ({
  * also suppresses the title, even with a transparent standard appearance.
  * The screen supplies the page ground beneath the native scroll edge.
  * Empty styles replace the navigator's opaque defaults. The edge is soft at
- * rest and while the large title collapses: a hard edge paints its divider
- * at rest. Soft alone blurs only the status strip, so the title, the clock
- * and a search field printed over page text once it ran under the bar
- * (sweep 1, item 1). `underBar` asks for UIKit's hard edge from then on; it
- * switches without animation, at the moment text first meets the bar. For
+ * rest, where a hard edge would paint its divider. Soft alone blurs only the
+ * status strip, so the title, the clock and a search field printed over page
+ * text once it ran under the bar (sweep 1, item 1). `underBar` asks for
+ * UIKit's hard edge, which switches without animation. It turns on from the
+ * first point of scroll, the large-title collapse included (Screen compares
+ * with the bar height last reported, which holds the expanded title until
+ * the collapse settles), and the edge is soft again back at rest. For
  * accessibility only, useRootBarAppearance supplies a solid native sibling
  * below the bar, preserving the large title and automatic insets.
  */

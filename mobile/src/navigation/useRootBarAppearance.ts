@@ -73,10 +73,11 @@ export function useRootBarSearchOptions(
  * their FlatList/ScrollView does not use Screen. The five tab roots and
  * explicit large-title lists opt in; record and inline screens keep the
  * stack's opaque bar. Scrolling belongs to UIKit, never JS collapse
- * thresholds. The one scroll-driven update is `underBar` from Screen: text
- * has run under the bar, so the top edge turns hard (once each way, never
- * per frame). Today and Search on iPhone only; the iPad roots and the
- * RouteOptions owners keep the soft edge.
+ * thresholds. The one scroll-driven update is `underBar` from Screen: the
+ * page has left rest, so the top edge turns hard from the first point of
+ * scroll, the large-title collapse included, and soft again at rest (once
+ * each way, never per frame). Today and Search on iPhone only; the iPad
+ * roots and the RouteOptions owners keep the soft edge.
  * The setter must be the shared useSafeSetOptions guard.
  */
 export function useRootBarAppearance(

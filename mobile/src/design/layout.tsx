@@ -292,9 +292,11 @@ export function Screen({
   const setOptions = useSafeSetOptions();
   const inPane = useSplitPane() !== null;
   // Content under the bar: its top has passed the bar's bottom edge. At rest
-  // UIKit insets the content to that edge exactly, and while a large title
-  // collapses the content follows the edge up, so this turns on only once
-  // something can be read behind the title, the clock or a search field.
+  // UIKit insets the content to that edge exactly, so this is off. The bar
+  // height is the one last reported (debounced), which holds the expanded
+  // large title until a collapse settles, so this turns on from the first
+  // point of scroll, the collapse included, not only once text runs under
+  // the collapsed bar.
   const headerBottom = useHeaderBottom();
   const scrollY = useRef<number | null>(null);
   const [underBar, setUnderBar] = useState(false);
