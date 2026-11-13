@@ -6,7 +6,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
-import {recordedElections, seatRosterMembers} from '../../scripts/build_party_index.mjs';
+import {officialListMembers, recordedElections, seatRosterMembers} from '../../scripts/build_party_index.mjs';
 import {partyMembers, partyMembersHTML} from '../public/party-page.js';
 
 const seat = (over = {}) => ({
@@ -49,9 +49,10 @@ test('the shipped index gives the three minor state parties their sitting member
   const read = path => JSON.parse(readFileSync(new URL(`../public${path}`, import.meta.url), 'utf8'));
   const roster = read('/parliamentarians.json'), divisions = read('/graph/party-members.json');
   const names = label => partyMembers(label, {roster, divisions, today: '2026-11-13'}).current.map(m => m.name);
-  assert.deepEqual(names('Animal Justice Party'), ['Georgie Purcell']);
-  assert.deepEqual(names('Legalise Cannabis'), ['David Ettershank', 'Rachel Payne']);
-  assert.deepEqual(names('Shooters, Fishers and Farmers'), ['Jeff Bourman']);
+  // Victorian members from the seat roster; NSW Council members from the dated official list (A17).
+  assert.deepEqual(names('Animal Justice Party'), ['Emma Hurst', 'Georgie Purcell']);
+  assert.deepEqual(names('Legalise Cannabis'), ['David Ettershank', 'Jeremy Buckingham', 'Rachel Payne']);
+  assert.deepEqual(names('Shooters, Fishers and Farmers'), ['Jeff Bourman', 'Mark Banasiak', 'Robert Borsak']);
 });
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[c]);
@@ -136,9 +137,12 @@ test('election days come from the repository: the electorate release and the com
   assert.ok(days.vic.includes(vic));
   assert.ok(days.federal.length > 0);
   const index = JSON.parse(readFileSync(new URL('../public/graph/party-members.json', import.meta.url), 'utf8'));
+  // With no recorded election after the date, an official-list entry ends at its term window's reviewed end (A22).
+  const windows = JSON.parse(readFileSync(new URL('../../scripts/roster_service.json', import.meta.url), 'utf8')).snapshot_party_windows;
   for (const list of Object.values(index.seat_rosters)) for (const m of list) {
     assert.ok(m.jurisdiction && m.chamber && m.as_of, m.name);
-    assert.equal(m.next_election, (days[m.jurisdiction] || []).filter(d => d > m.as_of).sort()[0] || null, m.name);
+    const end = windows[m.chamber]?.end > m.as_of ? windows[m.chamber].end : null;
+    assert.equal(m.next_election, (days[m.jurisdiction] || []).filter(d => d > m.as_of).sort()[0] || end, m.name);
   }
 });
 
@@ -186,4 +190,153 @@ test('A3d: a sitting member with no roster row is counted from the party index, 
     const later = partyMembers('Labor', {roster: {people: people2}, divisions: {seat_rosters}, today: '2026-12-01'});
     assert.deepEqual([later.current.length, later.former.map(m => m.name)], [0, ['Mara Quint']]);
   }
+});
+
+// A17: a sitting MLC whose roster row carries a party from the dated NSW Council list (a state-party-snapshot
+// accept: party and representation, no `current`) was listed as former. The chamber's latest official list,
+// inside the reviewed term window, now dates them as sitting. Invented people throughout.
+const mlcRow = (over = {}) => ({
+  name: 'Quill Varney', speeches: 120, states: ['nsw'], chambers: ['nsw_lc'], first: 2025, last: 2026, party: 'Fixture Party',
+  representation: [{jurisdiction: 'nsw', chamber: 'nsw_lc', electorate: 'New South Wales', state: 'NSW', as_of: '2026-09-25',
+    source_url: 'https://example.invalid/lc-list.pdf', basis: 'Official parliamentary roster on the stated date; full name and chamber verified'}],
+  ...over,
+});
+const listed = (name, over = {}) => ({name, aliases: [], jurisdiction: 'nsw', chamber: 'nsw_lc', electorate: 'New South Wales',
+  party: 'Fixture Party', as_of: '2026-09-25', source_url: 'https://example.invalid/lc-list.pdf', basis: 'official list', ...over});
+const nswWindow = {nsw_lc: {start: '2023-03-25'}};
+
+test('A17: a sitting MLC with the snapshot-accept row shape is a sitting member; a retired one stays former', () => {
+  const retired = mlcRow({name: 'Odile Prest', first: 2015, last: 2023});
+  const people = [mlcRow(), retired];
+  // The retiree is on an older list only; the chamber's latest list decides.
+  const observations = [listed('Quill Varney'), listed('Odile Prest', {as_of: '2023-02-01'})];
+  const seat_rosters = officialListMembers(people, observations, nswWindow, {});
+  assert.deepEqual(seat_rosters, {'Fixture Party': [{name: 'Quill Varney', pid: null, jurisdiction: 'nsw', chamber: 'nsw_lc',
+    electorate: 'New South Wales', as_of: '2026-09-25', next_election: null}]});
+  const members = partyMembers('Fixture Party', {roster: {people}, divisions: {parties: {}, seat_rosters}, today: '2026-11-13'});
+  assert.deepEqual(members.current.map(m => m.name), ['Quill Varney']);
+  assert.deepEqual(members.former.map(m => m.name), ['Odile Prest']);
+  // Before the fix the electorate path skipped a row with its own party, so the same MLC was former.
+  const before = partyMembers('Fixture Party', {roster: {people}, divisions: {seat_rosters: seatRosterMembers(people, [])}, today: '2026-11-13'});
+  assert.deepEqual(before.current, []);
+  // A recorded election after the list date ends it, as for seat rosters.
+  const later = officialListMembers(people, observations, nswWindow, {nsw: ['2027-03-27']});
+  assert.equal(later['Fixture Party'][0].next_election, '2027-03-27');
+  assert.deepEqual(partyMembers('Fixture Party', {roster: {people}, divisions: {seat_rosters: later}, today: '2027-04-01'}).current, []);
+});
+
+test('A17: no reviewed window, a list before the term, a later service end, a surname print or two parties: nothing', () => {
+  const people = [mlcRow()];
+  assert.deepEqual(officialListMembers(people, [listed('Quill Varney')], {}, {}), {}, 'no reviewed term window');
+  assert.deepEqual(officialListMembers(people, [listed('Quill Varney', {as_of: '2022-12-01'})], nswWindow, {}), {}, 'list predates the term');
+  assert.deepEqual(officialListMembers(people, [listed('Quill Varney'), {...listed('Quill Varney', {as_of: '2026-10-30'}), basis: 'service record'}],
+    nswWindow, {}), {}, 'a later service record ends their service');
+  assert.deepEqual(officialListMembers([mlcRow({name: 'Varney'})], [listed('Varney')], nswWindow, {}), {}, 'a surname print never matches');
+  assert.deepEqual(officialListMembers(people, [listed('Quill Varney'), listed('Quill Varney', {party: 'Other Party'})], nswWindow, {}), {},
+    'two parties at the date');
+  assert.deepEqual(officialListMembers([mlcRow({chambers: ['nsw_la']})], [listed('Quill Varney')], nswWindow, {}), {}, 'another chamber');
+  // A person the electorate roster already lists in that chamber is not listed twice.
+  const seat = {'Fixture Party': [{name: 'Quill Varney', pid: null, jurisdiction: 'nsw', chamber: 'nsw_lc', electorate: 'New South Wales',
+    as_of: '2026-09-01', next_election: null}]};
+  assert.deepEqual(officialListMembers(people, [listed('Quill Varney')], nswWindow, {}, seat)['Fixture Party'].map(m => m.as_of), ['2026-09-01']);
+});
+
+test('A17: the shipped index lists every member of the latest NSW Council list as sitting', () => {
+  const read = path => JSON.parse(readFileSync(new URL(`../public${path}`, import.meta.url), 'utf8'));
+  const roster = read('/parliamentarians.json'), divisions = read('/graph/party-members.json');
+  const list = read('/data/roster-list-parties.json').observations.filter(o => o.chamber === 'nsw_lc' && o.basis === 'official list');
+  const latest = list.reduce((a, o) => (o.as_of > a ? o.as_of : a), '');
+  const fold = s => s.replace(/[‘’]/g, "'");
+  const members = list.filter(o => o.as_of === latest);
+  assert.ok(members.length >= 40, `${members.length} listed`);
+  for (const o of members) {
+    const sitting = partyMembers(o.party, {roster, divisions, today: '2026-11-13'}).current.map(m => fold(m.name));
+    assert.ok(sitting.includes(fold(o.name)), `${o.name} sits for ${o.party}`);
+  }
+  const libertarian = partyMembers('Libertarian Party', {roster, divisions, today: '2026-11-13'});
+  assert.ok(libertarian.current.some(m => m.name === 'John Ruddick') && !libertarian.former.some(m => m.name === 'John Ruddick'));
+});
+
+// A22: the SA Council. SA Hansard prints every member by initials ("K.J. Maher"), so the list entry records that
+// print (`prints`), reviewed, and only this rule reads it. An MLC serves two four-year terms and half the Council
+// is elected at each periodic election: the window starts at the latest one, and a list dated inside it names both
+// halves. Invented people throughout.
+const saRow = (name, over = {}) => ({name, speeches: 80, states: ['sa'], chambers: ['sa_lc'], first: 2020, last: 2023,
+  representation: [], ...over});
+const saListed = (name, over = {}) => ({name, aliases: [], jurisdiction: 'sa', chamber: 'sa_lc', electorate: 'South Australia',
+  party: 'Fixture Party', as_of: '2026-11-13', source_url: 'https://example.invalid/lc-members', basis: 'official list', ...over});
+const saWindow = {sa_lc: {start: '2026-03-21', end: '2030-03-16'}};
+
+test('A22: two-term halves: the half elected in 2022 and the half elected in 2026 both sit; a member whose term ended in 2026 is former', () => {
+  // Odessa Ferrant: elected 2022, sits until 2030 (not up in 2026). Piers Lowth: elected 2026, a first-term
+  // member with no speeches yet in this data. Saul Dace: elected 2018, term ended at the March 2026 election.
+  const people = [saRow('O.M. Ferrant', {party: 'Fixture Party', first: 2022}), saRow('P.L. Lowth', {first: 2026, last: 2026}),
+    saRow('S.A. Dace', {party: 'Fixture Party', first: 2018, last: 2023})];
+  const observations = [
+    // The list before the 2026 election names the 2018 and 2022 halves.
+    saListed('Odessa Ferrant', {as_of: '2025-08-01', aliases: ['Odessa Mae Ferrant'], prints: ['O.M. Ferrant']}),
+    saListed('Saul Dace', {as_of: '2025-08-01', aliases: ['Saul Arno Dace'], prints: ['S.A. Dace']}),
+    // The list after it names the 2022 and 2026 halves.
+    saListed('Odessa Ferrant', {aliases: ['Odessa Mae Ferrant'], prints: ['O.M. Ferrant']}),
+    saListed('Piers Lowth', {aliases: ['Piers Leon Lowth'], prints: ['P.L. Lowth']}),
+  ];
+  const seat_rosters = officialListMembers(people, observations, saWindow, {});
+  assert.deepEqual(seat_rosters['Fixture Party'].map(m => [m.name, m.as_of, m.next_election]),
+    [['O.M. Ferrant', '2026-11-13', '2030-03-16'], ['P.L. Lowth', '2026-11-13', '2030-03-16']]);
+  const members = partyMembers('Fixture Party', {roster: {people}, divisions: {parties: {}, seat_rosters}, today: '2026-11-13'});
+  assert.deepEqual(members.current.map(m => m.name), ['O.M. Ferrant', 'P.L. Lowth']);
+  assert.deepEqual(members.former.map(m => m.name), ['S.A. Dace']);
+  // With only the pre-election list, nobody is dated as sitting: the 2022 half is not carried across the 2026 election.
+  assert.deepEqual(officialListMembers(people, observations.filter(o => o.as_of === '2025-08-01'), saWindow, {}), {});
+  // After the window's end (the next periodic election) the entries are stale, not sitting.
+  assert.deepEqual(partyMembers('Fixture Party', {roster: {people}, divisions: {seat_rosters}, today: '2030-03-17'}).current, []);
+  // A recorded election before the reviewed end wins.
+  assert.equal(officialListMembers(people, observations, saWindow, {sa: ['2028-01-01']})['Fixture Party'][0].next_election, '2028-01-01');
+});
+
+test('A22: an initials print matches only as the list records it, and never in another chamber', () => {
+  const people = [saRow('O.M. Ferrant', {party: 'Fixture Party'})];
+  assert.deepEqual(officialListMembers(people, [saListed('Odessa Ferrant', {aliases: ['Odessa Mae Ferrant']})], saWindow, {}), {},
+    'no recorded print: the initials are never derived');
+  assert.deepEqual(officialListMembers(people, [saListed('Odessa Ferrant', {prints: ['O. Ferrant']})], saWindow, {}), {},
+    'another print');
+  assert.deepEqual(officialListMembers([saRow('O.M. Ferrant', {chambers: ['sa_ha']})], [saListed('Odessa Ferrant', {prints: ['O.M. Ferrant']})],
+    saWindow, {}), {}, 'another chamber');
+  assert.deepEqual(officialListMembers(people, [saListed('Odessa Ferrant', {prints: ['O.M. Ferrant']}),
+    saListed('Olive Ferrant', {prints: ['O.M. Ferrant'], party: 'Other Party'})], saWindow, {}), {}, 'one print on two members');
+});
+
+test('A22: every recorded SA Council print is the initials of the listed full name, unique, and one roster row', () => {
+  const evidence = JSON.parse(readFileSync(new URL('../../scripts/roster_state_evidence.json', import.meta.url), 'utf8'));
+  const roster = JSON.parse(readFileSync(new URL('../public/parliamentarians.json', import.meta.url), 'utf8')).people;
+  const rows = roster.filter(p => (p.chambers || []).includes('sa_lc')).map(p => p.name);
+  const seen = new Set();
+  let count = 0;
+  for (const snap of evidence.snapshots) for (const m of snap.members) for (const print of m.prints || []) {
+    count++;
+    assert.equal(snap.chamber, 'sa_lc', `${print}: prints are recorded only for the SA Council`);
+    const full = [m.name, ...(m.aliases || [])].sort((a, b) => b.split(' ').length - a.split(' ').length)[0].split(' ');
+    assert.equal(print, `${full.slice(0, -1).map(t => `${t[0]}.`).join('')} ${full.at(-1)}`, `${print} is ${full.join(' ')}`);
+    assert.ok(!seen.has(`${snap.as_of}|${print}`), `${print} once per list`);
+    seen.add(`${snap.as_of}|${print}`);
+    assert.equal(rows.filter(r => r === print).length, 1, `${print} is one SA Council roster row`);
+  }
+  assert.ok(count >= 15, `${count} prints`);
+});
+
+test('A22: the shipped index lists every printed member of the latest SA Council list as sitting, and its leavers as former', () => {
+  const read = path => JSON.parse(readFileSync(new URL(`../public${path}`, import.meta.url), 'utf8'));
+  const roster = read('/parliamentarians.json'), divisions = read('/graph/party-members.json');
+  const list = read('/data/roster-list-parties.json').observations.filter(o => o.chamber === 'sa_lc' && o.basis === 'official list');
+  const latest = list.reduce((a, o) => (o.as_of > a ? o.as_of : a), '');
+  assert.ok(latest >= '2026-03-21', `latest SA Council list ${latest} is inside the term`);
+  const printed = list.filter(o => o.as_of === latest && o.prints?.length);
+  assert.ok(printed.length >= 15, `${printed.length} printed`);
+  for (const o of printed) {
+    const page = partyMembers(o.party, {roster, divisions, today: '2026-11-13'});
+    assert.ok(page.current.some(m => m.name === o.prints[0]), `${o.prints[0]} sits for ${o.party}`);
+  }
+  // Rob Lucas retired at the 2022 election: on the 2021 list, not the current one.
+  const liberal = partyMembers('Liberal', {roster, divisions, today: '2026-11-13'});
+  assert.ok(liberal.former.some(m => m.name === 'R.I. Lucas') && !liberal.current.some(m => m.name === 'R.I. Lucas'));
 });

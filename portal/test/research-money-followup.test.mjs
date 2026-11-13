@@ -30,16 +30,18 @@ test('fragment guard flags short and complete entity names, including long names
  assert.equal(api.verifyWrittenAnswer({sentences:[{text:'Mining.',facts:[1]}]},input(fixtures[0].request.question)).answer,'Mining.')
 })
 test('the real donor aggregate supplies its count, human-readable dates and exclusion basis together',()=>{
- assert.equal(result.rows[0].receipts,37);assert.equal(result.rows[0].total_aud,4316973)
+ // The typed figure (each receipt once, from the parties' own returns), as on the union's donor page;
+ // the legacy aggregate (37 receipts, $4,144,973) also counted its own declarations of the same gifts.
+ assert.equal(result.rows[0].receipts,32);assert.equal(result.rows[0].total_aud,4144973)
  assert.match(fact.text,/\(1 July 1998 to 30 June 2025\)/)
  assert.match(fact.text,/exclude internal party transfers and public funding/)
  assert.deepEqual([result.coverage.since,result.coverage.until],['1998-07-01','2025-06-30'])
  assert.doesNotMatch(fact.text.replace(/\b\d{4}-\d{2}-\d{2}\b/g,''),/\(\s*to\s*\)/)
 })
 test('receipt fallback answers count, inclusion and years as distinct fields',()=>{
- const questions=[fixtures[0].request.question,`Are internal party transfers counted in the $4,316,973 from the ${donor}?`,fixtures[2].request.question]
+ const questions=[fixtures[0].request.question,`Are internal party transfers counted in the $4,144,973 from the ${donor}?`,fixtures[2].request.question]
  const answers=questions.map(q=>api.proseFallback(input(q)))
- assert.match(answers[0].answer,/^37 disclosed receipts from Mining and Energy Union/);assert.doesNotMatch(answers[0].answer,/\$/)
+ assert.match(answers[0].answer,/^32 disclosed receipts from Mining and Energy Union/);assert.doesNotMatch(answers[0].answer,/\$/)
  assert.match(answers[1].answer,/^No, internal party transfers and public funding are excluded/)
  assert.match(answers[2].answer,/receipt total covers financial years 1998-99 to 2024-25/)
  answers.forEach(bound)
@@ -55,7 +57,7 @@ test('each observed year is retained when selected records contain an annual ser
 })
 test('JSON and SSE release a fragment payload as written rather than swapping in fresh evidence',async()=>{
  for(const [i,fixture] of fixtures.entries())for(const stream of [false,true]){
-  const question=i===1?`Are internal party transfers counted in the $4,316,973 from the ${donor}?`:fixture.request.question
+  const question=i===1?`Are internal party transfers counted in the $4,144,973 from the ${donor}?`:fixture.request.question
   const answer=i===0?'Mining.\n\nThe Mining.':'Mining.'
   const raw={...fixture.response,answer,answer_decision:'answer',citations:{'fact-1/t/body/0':[[0,Array.from(answer).length]]},sources:[record],research:{pre_writer_sources:[record]}}
   const wire=stream?new Response('event: delta\ndata: '+JSON.stringify({text:answer})+'\n\nevent: done\ndata: '+JSON.stringify(raw)+'\n\n',{headers:{'content-type':'text/event-stream'}}):Response.json(raw)

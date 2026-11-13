@@ -25,8 +25,12 @@ const VAPOLD=/^associated entity of Liberal Party of Australia \(Victorian Divis
 const SDA=/^associated entity of Labor, per AEC register \(returns \d{4}-\d{2} to \d{4}-\d{2}; \d+ party entries\)$/
 const cases=[
  {party:'Liberal',query:{party:'Liberal'},id:'donor:vapold',name:'Vapold Pty Ltd',tag:VAPOLD,question:'Top donors to the Liberal Party'},
- {party:'Labor',query:{party:'Labor',from_year:2019,to_year:2019},id:'donor:shop distributive and allied employees association',name:'Shop Distributive & Allied Employees Association',tag:SDA,question:'Who gave the most money to Labor in 2019-20?'},
+ {party:'Labor',query:{party:'Labor',from_year:2019,to_year:2019},id:'donor:shop distributive and allied employees association',name:'Shop Distributive & Allied Employees Association',tag:SDA,question:'Who gave the most money to Labor in 2019-20?',
+  // party_receipts ranks on all receipt types, each counted once from Labor's own returns: Westpac
+  // ($1,177,000, mostly other receipts) leads Labor in 2019-20, and the SDA leads in 2020-21.
+  receipts:{query:{party:'Labor',from_year:2020,to_year:2020},question:'Who gave the most money to Labor in 2020-21?'}},
 ]
+const receiptCase=c=>({...c,...c.receipts})
 
 test('the export flags both parties\' associated entities from the AEC register and leaves their amounts alone',()=>{
  assert.match(graph.meta.associated_register_url,/^https:\/\/transparency\.aec\.gov\.au\//)
@@ -63,7 +67,7 @@ test('donor names on pages and the map carry the tag linked to the AEC register,
 })
 
 test('party_receipts keeps each associated entity at its rank and names it with the tag',async()=>{
- for(const c of cases){
+ for(const c of cases.map(receiptCase)){
   const r=await api.partyDonations(deps,{...c.query,limit:15})
   const row=r.data.rows.find(x=>x.donor===c.name)
   assert.ok(row,c.name);assert.match(row.associated_entity,c.tag)
@@ -76,7 +80,7 @@ test('party_receipts keeps each associated entity at its rank and names it with 
 })
 
 test('the written Ask answer names the top associated entity with its tag, for both parties',async()=>{
- for(const c of cases){
+ for(const c of cases.map(receiptCase)){
   const r=await api.partyDonations(deps,{...c.query,limit:5})
   const sheet=api.factSheet([r])
   assert.ok(sheet.facts.some(f=>f.text.includes(`${c.name} (associated entity of `)),`${c.name} fact`)

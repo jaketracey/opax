@@ -91,9 +91,10 @@ test('the server page shows the same parliamentarian count as the browser page',
     shown[label] = server;
   }
   // Maree Edwards (Bendigo West, Speaker) has no roster row; both count her. The "T Bull" print is not Labor's.
-  assert.equal(shown.Labor, 486);
-  assert.equal(shown.Liberal, 338);
-  assert.equal(shown.Greens, 47);
+  // Council members from the dated official lists: Labor +8 NSW (A17); Liberal +5 NSW (A17), +2 SA (A22); Greens +3 NSW (A17).
+  assert.equal(shown.Labor, 494);
+  assert.equal(shown.Liberal, 345);
+  assert.equal(shown.Greens, 50);
 });
 
 test('sitemap index and every type file have export lastmod, unique canonical URLs and accurate counts',async()=>{

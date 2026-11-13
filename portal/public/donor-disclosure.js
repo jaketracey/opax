@@ -71,3 +71,127 @@ export function donorLookup(records) {
   }
   return index;
 }
+
+// One figure for a donor-to-party flow, so the map card, the donor page, the
+// party table, /api/register/party-money and "Explain this money" agree.
+//
+// The money graph's typed cells (by_type, by_type_year) sum each receipt once,
+// from the party's own return, across all receipt types. The older
+// total/count/byYear also add the donor's own declarations of the same gifts,
+// so one gift can appear twice there (docs/reports/2026-11-12-aec-receipt-types.md).
+// They are used only for a graph with no typed cells (the state graphs), and
+// the scope line says so.
+
+// Event periods count at their polling year, as on the map (graph/index.ts).
+const RECEIPT_EVENT_YEARS = {'braddon by-election':2018,'wentworth by-election':2018,'eden-monaro by-election':2020,'fadden by-election':2023};
+
+/**
+ * A flow's figures: total, count, first and last year, dollars by year
+ * (`byYear`), [dollars, receipts] by year (`cells`), what carries no year
+ * (`undated`, [dollars, receipts]) and dollars by receipt type (`byType`, typed only).
+ */
+export function receiptFigures(x) {
+  if (!x?.by_type) {
+    const byYear = {}, cells = {};
+    for (const [year, cell] of Object.entries(x?.byYear || {})) {
+      const dollars = Number(Array.isArray(cell) ? cell[0] : cell) || 0;
+      byYear[year] = dollars;
+      cells[year] = [dollars, Array.isArray(cell) ? Number(cell[1]) || 0 : 0];
+    }
+    const undated = [Number(x?.undated?.[0]) || 0, Number(x?.undated?.[1]) || 0];
+    return {total:Number(x?.total) || 0, count:Number(x?.count) || 0, firstYear:x?.firstYear ?? null, lastYear:x?.lastYear ?? null,
+      byYear, cells, undated, byType:null, typed:false};
+  }
+  let count = 0, firstYear = null, lastYear = null;
+  const byYear = {}, cells = {}, undated = [0, 0];
+  for (const [period, types] of Object.entries(x.by_type_year || {})) {
+    // Financial years count at their first year ("2020-21" is 2020), as on the map.
+    const year = Number(String(period).match(/\b(?:19|20)\d{2}\b/)?.[0]) || RECEIPT_EVENT_YEARS[String(period).toLowerCase()];
+    let dollars = 0, n = 0;
+    for (const cell of Object.values(types || {})) { dollars += Number(cell?.[0]) || 0; n += Number(cell?.[1]) || 0; }
+    count += n;
+    if (n <= 0) continue;
+    if (!year) { undated[0] += dollars; undated[1] += n; continue; }
+    byYear[year] = (byYear[year] || 0) + dollars;
+    const cell = cells[year] || (cells[year] = [0, 0]);
+    cell[0] += dollars; cell[1] += n;
+    firstYear = firstYear === null ? year : Math.min(firstYear, year);
+    lastYear = lastYear === null ? year : Math.max(lastYear, year);
+  }
+  const byType = {};
+  for (const [type, amount] of Object.entries(x.by_type)) byType[type] = Number(amount) || 0;
+  const total = Object.values(byType).reduce((sum, amount) => sum + amount, 0);
+  return {total, count, firstYear, lastYear, byYear, cells, undated, byType, typed:true};
+}
+
+export const financialYear = year => `${year}-${String((year + 1) % 100).padStart(2, '0')}`;
+
+/** The scope of a receiptFigures result, in a reader's words, for its own line under the figure. */
+export function receiptScopeLabel(figures, measure = 'all_types') {
+  if (!figures?.typed) return 'All federal disclosure records, as given by both donor and party, so a gift can appear twice';
+  const span = figures.firstYear == null ? '' : figures.firstYear === figures.lastYear
+    ? `, ${financialYear(figures.firstYear)}` : `, ${financialYear(figures.firstYear)} to ${financialYear(figures.lastYear)}`;
+  // The map's "Donation-only" measure (graph/index.ts) keeps only the donation_received cells.
+  return `${measure === 'donation_only' ? 'Donations only' : 'All receipt types'}${span}, as the parties reported them in federal returns`;
+}
+
+/**
+ * The graph with every donor-to-party edge and every donor node read the way
+ * the map card, the donor page and the party table read them (receiptFigures):
+ * the typed cells, each receipt once from the party's own return, all receipt
+ * types. The older total/byYear cells also hold the donor's own declaration of
+ * the same gift and stay only where a graph has no typed cells (the state graphs).
+ * Each typed edge and node keeps its shape (total, count, byYear as [dollars, receipts],
+ * firstYear, lastYear, undated), so a sum written for the old cells reads it unchanged;
+ * an edge or node without typed cells is returned as it is.
+ * A typed edge with no receipts is left out: the party reported none. Party
+ * nodes keep their own received totals (they include transfers; a different
+ * measure), and grants and public-money flows are untouched.
+ */
+const isReceiptEdge = edge => edge && !edge.grant && !edge.flow;
+
+/**
+ * Whether the parties' own returns list any receipt for a donor or a donor-to-party
+ * flow: its typed cells hold at least one receipt. A record without typed cells (every
+ * record of a state graph) keeps its record figures and counts as listed. A donor or a
+ * flow that only its own donor return declares has empty typed cells, so it has no
+ * each-gift-once figure: show DONOR_DECLARED_ONLY for it, never $0.
+ */
+export function hasPartyReceipts(x) {
+  if (!x?.by_type) return true;
+  const f = receiptFigures(x);
+  return f.count > 0 || f.total !== 0;
+}
+/** The line for a donor or flow that hasPartyReceipts rules out, in a reader's words. */
+export const DONOR_DECLARED_ONLY = "Declared on its own donor return; the parties' returns list no receipt from it";
+// Not cached: a few milliseconds for the federal graph, and a cache keyed on the
+// object would hand back a stale view of a graph changed after its first read.
+export function receiptGraph(graph) {
+  if (!graph || graph.receiptMeasure || !Array.isArray(graph.edges)) return graph;
+  const read = (x, f) => ({...x, total:f.total, count:f.count, byYear:f.cells, firstYear:f.firstYear, lastYear:f.lastYear,
+    undated:f.undated, byType:f.byType, typed:f.typed});
+  const edges = [];
+  for (const edge of graph.edges) {
+    // An edge without typed cells (every edge of a state graph) keeps its record figures as they are.
+    if (!isReceiptEdge(edge) || !edge.by_type) { edges.push(edge); continue; }
+    if (!hasPartyReceipts(edge)) continue;
+    edges.push(read(edge, receiptFigures(edge)));
+  }
+  const nodes = Array.isArray(graph.nodes) ? graph.nodes.map(node => node?.kind === 'donor' && node.by_type ? read(node, receiptFigures(node)) : node) : graph.nodes;
+  return {...graph, nodes, edges, receiptMeasure:true};
+}
+
+/**
+ * The scope line for a receiptGraph's donor figures, spanning its typed edges
+ * (optionally only those `keep` accepts); empty for a graph without typed cells.
+ */
+export function receiptGraphScope(graph, keep = () => true) {
+  let typed = false, firstYear = null, lastYear = null;
+  for (const edge of receiptGraph(graph)?.edges || []) {
+    if (!isReceiptEdge(edge) || !edge.typed || !keep(edge)) continue;
+    typed = true;
+    if (edge.firstYear != null) firstYear = firstYear == null ? edge.firstYear : Math.min(firstYear, edge.firstYear);
+    if (edge.lastYear != null) lastYear = lastYear == null ? edge.lastYear : Math.max(lastYear, edge.lastYear);
+  }
+  return typed ? receiptScopeLabel({typed, firstYear, lastYear}) : '';
+}

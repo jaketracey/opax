@@ -252,10 +252,13 @@ test('published Nationals and donor values reconcile to the real byYear cells', 
   const out = await api.callTool(publishedEnv, 'money_totals', { party: 'Nationals', financial_year: '2017-18' });
   assert.equal(out.rows[0].total_aud, party.byYear['2017'][0]);
   assert.equal(out.rows[0].receipts, party.byYear['2017'][1]);
-  const donor = published.nodes.find(row => row.kind === 'donor' && row.byYear?.['2017']);
+  // A donor's figures are its typed cells (each receipt once, from the parties' own returns),
+  // as on its donor page; its legacy byYear also holds its own declarations of the same gifts.
+  const donor = published.nodes.find(row => row.kind === 'donor' && row.by_type_year?.['2017-18']);
   assert.ok(donor);
   const donated = await api.callTool(publishedEnv, 'money_totals', { donor: donor.label, from_year: 2017, to_year: 2018 });
-  assert.equal(donated.rows[0].total_aud, [2017, 2018].reduce((sum, year) => sum + (donor.byYear[year]?.[0] ?? 0), 0));
+  const typed = year => Object.values(donor.by_type_year[`${year}-${String(year + 1).slice(-2)}`] ?? {}).reduce((sum, cell) => sum + cell[0], 0);
+  assert.equal(donated.rows[0].total_aud, typed(2017) + typed(2018));
 });
 
 const token = 'opax_' + 'M'.repeat(43);

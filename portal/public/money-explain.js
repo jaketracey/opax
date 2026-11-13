@@ -1,6 +1,8 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
-import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
-import {receiptFigures, receiptScopeLabel, partyReturnFigures, industryName} from './register-tables.js?v=8fd4480ee8';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptScopeLabel} from './donor-disclosure.js?v=8c73ceafd6';
+// receiptGraph is shared with every money page (donor-disclosure.js); re-exported for the tests that read it here.
+export {receiptGraph};
+import {loadDonorViewIndex} from './donor-views.js?v=c475b569bf';
+import {partyReturnFigures, industryName} from './register-tables.js?v=6fe318ff05';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph
@@ -104,37 +106,6 @@ export function yearPhrase(year, jur, electionYears = []) {
 /** An industry key as a name: one helper with the party table (register-tables.js). */
 export { industryName };
 
-/**
- * The graph with every donation edge's figures read the way the map card,
- * the donor page and the party table read them (register-tables.js, receiptFigures): the typed
- * cells, each receipt once from the party's own return, all receipt types. The
- * older total/byYear cells also hold the donor's own declaration of the same
- * gift and stay only where a graph has no typed cells (the state graphs).
- * Each edge keeps its shape (total, count, byYear as [dollars, receipts],
- * firstYear, lastYear, undated), so every sum below reads it unchanged.
- * A typed edge with no receipts is left out: the party reported none.
- */
-const receiptGraphs = new WeakMap();
-export function receiptGraph(graph) {
-  if (!graph || graph.receiptMeasure) return graph;
-  if (receiptGraphs.has(graph)) return receiptGraphs.get(graph);
-  const edges = [];
-  for (const edge of graph.edges || []) {
-    if (!isDonation(edge)) { edges.push(edge); continue; }
-    const f = receiptFigures(edge);
-    if (f.typed && f.count <= 0 && f.total === 0) continue;
-    edges.push({ ...edge, total: f.total, count: f.count, byYear: f.cells, firstYear: f.firstYear, lastYear: f.lastYear,
-      undated: f.undated, byType: f.byType, typed: f.typed });
-  }
-  const out = { ...graph, edges, receiptMeasure: true };
-  receiptGraphs.set(graph, out);
-  return out;
-}
-
-// Integrator: once im/money-typed-sweep (merge-queue row 99) lands, receiptGraph
-// lives in donor-disclosure.js. If this module then only re-exports it
-// (export {receiptGraph} from ...), receiptHeadline below needs a local
-// `import {receiptGraph}` as well, or it calls an unbound name.
 /**
  * A whole graph's receipts in one line, read through receiptGraph: what a
  * page states as the map's headline (the /money answer, the homepage map
