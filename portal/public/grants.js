@@ -1,3 +1,4 @@
+import {hydrateRecordCore} from './record-core.js';
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
 import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
 import {subjectUrl} from './canonical-urls.js?v=e32f13c6c8';
@@ -1798,6 +1799,8 @@ export function mountGrants (container, opts = {}) {
   }
 
   function renderProgramDetail (td, r, p) {
+    const coreActive = hydrateRecordCore('program',p,{jurisdiction:state.jur})
+    if (!coreActive) td.id = "program-records"
     const notes = p.notes || null
     const progNotes = notes && notes.programs && notes.programs[state.jur] ? notes.programs[state.jur][p.id] : null
     const qld = state.jur === 'qld'
@@ -1806,7 +1809,8 @@ export function mountGrants (container, opts = {}) {
     const head = el('div', 'gr-detail-head')
     const h3 = el('h3', null, p.n)
     h3.tabIndex = -1
-    head.append(h3, el('span', 'gr-muted', p.ag || agencyName(r.ag)))
+    if (!coreActive) head.appendChild(h3)
+    head.append(el('span', 'gr-muted', p.ag || agencyName(r.ag)))
     if (p.id && p.id !== p.n && !/^activity:/.test(p.id)) head.append(el('span', 'gr-id', p.id))
     td.appendChild(head)
 
@@ -1834,7 +1838,7 @@ export function mountGrants (container, opts = {}) {
     if (cncShare != null) tiles.append(tile(pct(cncShare), `closed non-competitive, of the ${pct(shareOf(selKnown, p.t) || 0)} with a selection process recorded`))
     if (govShareOfMapped != null) tiles.append(tile(pct(govShareOfMapped), 'to seats held by the government of the day, of the dollars in seats with a member on the grant date'))
     if (p.t > 0) tiles.append(tile(pct(shareOf(elKnown, p.t) || 0), 'of the dollars are mapped to an electorate'))
-    td.appendChild(tiles)
+    if (!coreActive) td.appendChild(tiles)
     // A reader arriving from a local story wants their seat, which sits below
     // the charts; one button takes them there (the router drops #hash links).
     if ((p.electorates || []).length) {
@@ -2030,7 +2034,7 @@ export function mountGrants (container, opts = {}) {
 
     // grants table
     const grants = p.grants || []
-    if (grants.length) {
+    if (grants.length && !coreActive) {
       td.appendChild(el('p', 'gr-kicker', p.grants_total > grants.length
         ? `Largest ${NUM.format(grants.length)} of ${NUM.format(p.grants_total)} ${noun}`
         : `${noun.charAt(0).toUpperCase() + noun.slice(1)}, largest first`))

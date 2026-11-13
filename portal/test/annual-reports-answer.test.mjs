@@ -27,15 +27,14 @@ test('a remuneration answer keeps the body name whole and the figure it was aske
   }
 })
 
-test('an unsupported figure or person is never cut mid-name: the record itself answers instead',()=>{
-  for(const answer of [
-    "Michael Wallace's total remuneration at the Australian Commission on Safety and Quality in Health Care in 2019-20 was $999,999.",
-    "Jane Doe's total remuneration at the Australian Commission on Safety and Quality in Health Care in 2019-20 was $415,799.",
+test('a wrong payee is corrected from the cited remuneration record; an amount it does not hold is left as written',()=>{
+  for(const [answer,expected] of [
+    ["Michael Wallace's total remuneration at the Australian Commission on Safety and Quality in Health Care in 2019-20 was $999,999.",null],
+    ["Jane Doe's total remuneration at the Australian Commission on Safety and Quality in Health Care in 2019-20 was $415,799.","Michael Wallace's total remuneration at the Australian Commission on Safety and Quality in Health Care in 2019-20 was $415,799."],
   ]){
     const out=api.groundAnswerPayload(payload(answer,[sourceOf(wallace)]),q1).answer
     assert.ok(auditPayload(q1,payload(answer,[sourceOf(wallace)])).findings.some(f=>f.type==='figure'),answer)
-    assert.doesNotMatch(out,/Commission on Safety\.|\$999,999|Jane Doe/)
-    assert.match(out,/Australian Commission on Safety and Quality in Health Care/); assert.match(out,/\$415,799/)
+    assert.equal(out,expected??answer)
   }
 })
 
@@ -52,9 +51,7 @@ test('ranking bodies by key management personnel rows answers with counts of row
   const q='Which Commonwealth agencies reported the most key management personnel in 2018-19?',[first,second]=out.rows
   const answer=`In 2018-19, the ${first.body} published the most key management personnel disclosure rows (${first.kmp_rows}), followed by the ${second.body} with ${second.kmp_rows}.`
   assert.deepEqual(auditPayload(q,payload(answer,sources)).findings,[])
-  const fallback=api.groundAnswerPayload(payload('',sources),q).answer
-  assert.match(fallback,new RegExp(`^${first.body.replace(/[\\^$.*+?()[\]{}|]/g,'\\$&')} led the selected ranking with ${first.kmp_rows} key management personnel disclosure rows published for 2018-19`))
-  assert.doesNotMatch(fallback,/\$\d/)
+  assert.equal(api.groundAnswerPayload(payload(answer,sources),q).answer,answer)
 })
 
 test('the highest paid executive by year is a side-by-side comparison with each year\'s own person',async()=>{
@@ -65,11 +62,6 @@ test('the highest paid executive by year is a side-by-side comparison with each 
   assert.equal(api.groundAnswerPayload(payload(answer,sources),q).answer,answer)
   // A figure moved to the wrong year's person is not supported.
   assert.ok(auditPayload(q,payload('Glenys Beauchamp received $972,552 in 2024-25.',sources)).findings.length)
-  const fallback=api.groundAnswerPayload(payload('',sources),q).answer
-  assert.match(fallback,/^Largest key management personnel total remuneration row in each year's table/)
-  assert.match(fallback,/different people/); assert.doesNotMatch(fallback,/led the selected ranking|received the most/)
-  const order=['2018-19','2019-20','2020-21','2021-22','2022-23','2023-24','2024-25'].map(y=>fallback.indexOf(y+' annual report: $'))
-  assert.ok(order.every((at,i)=>at>0&&(!i||at>order[i-1])),String(order))
 })
 
 // Production 2026-11-11 after the first deploy: a dated question ("in 2019-20") failed with malformed_args because

@@ -1,5 +1,5 @@
-// The loosened Ask contract (16 Oct): an answer beats no answer. Soft checks keep a point (unquoted, uncited);
-// hard lines (wrong person, a person the question cannot pin down, unattributed influence) still drop it or decline.
+// The minimum-checks Ask contract (13 Nov): every drafted point is kept. A point citing a retrieved passage stays
+// cited; one without stands uncited. Only quote marks around words the passage lacks come off.
 // Invented people and passages only; mock models, no live calls.
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -35,65 +35,53 @@ function loop(responses,{named=scope,q=question,wallMs,rosterDelay=0,money=null}
  return {model,failures,run:()=>api.runAgentic(q,deps,async()=>{},40_000,api.inferPeriod(q),{},named)};
 }
 const softPoints=[
- {claim:'Robin Example said the reform would help struggling communities.',id,quote:'struggling communities need help'},
- {claim:'Robin Example warned about online betting advertising.',id,quote:'betting advertising is everywhere'}];
+ {claim:'Robin Example said the reform would help struggling communities.'},
+ {claim:'Robin Example warned about online betting advertising.'}];
 
-test('all points fail soft checks: an uncited answer, answered, with no repair turn',async()=>{
+test('points with no passage id: an uncited answer, answered, with no repair turn',async()=>{
  const f=loop([reply([call('search',{query:'poker machine reform'})]),reply([call('answer',{points:softPoints})]),reply([call('answer',{points:softPoints})])]);
  const run=await f.run(),body=api.agenticAskPayload(run,question);
  assert.equal(run.answered,true);assert.equal(f.model.doGenerateCalls.length,2,'no repair turn');assert.equal(f.failures.length,0);
  assert.equal(body.answer,'- Robin Example said the reform would help struggling communities.\n- Robin Example warned about online betting advertising.');
- assert.equal(body.answer_status,'uncited');assert.deepEqual(body.citations,{});assert.ok(body.sources.length&&body.sources.every(s=>s.cited===false));
- assert.equal(body.research.mode,'loop');assert.equal(body.research.answer_stats.mode,'uncited');assert.equal(body.research.answer_stats.points_uncited,2);assert.deepEqual(body.research.answer_stats.uncited,{quote_not_in_passage:2});
+ assert.equal(body.answer_status,'uncited');assert.deepEqual(body.citations,{});assert.ok(body.sources.every(s=>s.cited===false));
+ assert.equal(body.research.mode,'loop');assert.equal(body.research.answer_stats.mode,'uncited');assert.equal(body.research.answer_stats.points_uncited,2);
 });
 
-test('a misquote becomes a paraphrase: cited when it still restates the passage, uncited when it does not',()=>{
+test('a misquote becomes a paraphrase and stays cited to its passage',()=>{
  const a=verify([{claim:'Robin Example said “poker machine losses must be capped at a dollar a spin”.',id,quote:'cap poker machine losses at one dollar a spin'}]);
  assert.equal(a.lines[0],'Robin Example said poker machine losses must be capped at a dollar a spin.');assert.ok(a.out.citations[id]);assert.equal(a.out.answer_status,undefined);assert.equal(a.tally.repairs.unquoted,1);
  const b=verify([{claim:'Robin Example said “online betting advertising should be banned outright”.',id,quote:'online betting advertising should be banned'}]);
- assert.equal(b.lines[0],'Robin Example said online betting advertising should be banned outright.');assert.doesNotMatch(b.out.answer,/[“”"]/);assert.equal(b.out.answer_status,'uncited');assert.deepEqual(b.out.citations,{});
+ assert.equal(b.lines[0],'Robin Example said online betting advertising should be banned outright.');assert.doesNotMatch(b.out.answer,/[“”"]/);assert.equal(b.out.answer_status,undefined);assert.ok(b.out.citations[id]);
  // A quotation the cited passage does hold keeps its marks, even on an uncited line.
  const c=verify([{claim:'Robin Example on online betting: “Mandatory precommitment will protect families”.',id,quote:'not in the passage at all'}]);
  assert.match(c.out.answer,/“Mandatory precommitment will protect families”/);
 });
 
-test('a wrong-speaker point is dropped while the others stay',()=>{
- const {out,tally,lines}=verify([
+test('speaker, named-person, ambiguous-name, causal and figure checks no longer cut points',async()=>{
+ // Minimum checks: each of these points used to be dropped; each now stands as written, cited to its passage.
+ const wrong=verify([
   {claim:'Casey Sample said “Mandatory precommitment will protect families from gambling harm.”',id,quote:'Mandatory precommitment will protect families'},
   {claim:'Robin Example said losses should be capped at one dollar a spin.',id,quote:'cap poker machine losses at one dollar a spin'},
   {claim:'Robin Example also raised online betting.',id,quote:'not in the passage'}]);
- assert.deepEqual(lines,['Robin Example said losses should be capped at one dollar a spin.','Robin Example also raised online betting.']);
- assert.equal(tally.drops.claim_speaker_mismatch,1);assert.equal(out.answer_status,'partly_cited');assert.ok(out.citations[id]);
- // A question about one person never answers from another speaker's passage, cited or not.
- const named=verify([{claim:'Robin Example said losses should be capped at one dollar a spin.',id,quote:'cap poker machine losses at one dollar a spin'},{claim:'Robin Example raised online betting.',id,quote:'not in the passage'}],'What has Casey Sample said about poker machines?',{...scope,people:['Casey Sample']});
- assert.equal(named.out,null);assert.equal(named.tally.drops.speaker_not_named,2);
-});
-
-test('an ambiguous person gets clarification and a missing full name gets explicit absence, with no repair turn',async()=>{
- for(const [named,label,q] of [[{...scope,ambiguous:true},'named_ambiguous',question],[{...scope,unresolved:true},'named_unresolved','What has Zed Nobody said about poker machines?']]){
-  const v=verify(softPoints,q,named);assert.equal(v.out,null);assert.equal(v.tally.drops[label],1);
-  assert.equal(api.recordPassagesAnswer(passages,q,named),null);
+ assert.deepEqual(wrong.lines,['Casey Sample said “Mandatory precommitment will protect families from gambling harm.”','Robin Example said losses should be capped at one dollar a spin.','Robin Example also raised online betting.']);
+ assert.deepEqual(wrong.tally.drops,{});assert.equal(wrong.out.answer_status,undefined);assert.ok(wrong.out.citations[id]);
+ // A question about one person may answer from another speaker's passage.
+ const named=verify([{claim:'Robin Example said losses should be capped at one dollar a spin.',id,quote:'cap poker machine losses at one dollar a spin'}],'What has Casey Sample said about poker machines?',{...scope,people:['Casey Sample']});
+ assert.deepEqual(named.lines,['Robin Example said losses should be capped at one dollar a spin.']);
+ // An ambiguous or unresolved name no longer blocks the answer.
+ for(const [named,q] of [[{...scope,ambiguous:true},question],[{...scope,unresolved:true},'What has Zed Nobody said about poker machines?']]){
+  assert.equal(verify(softPoints,q,named).lines.length,2);
   const f=loop([reply([call('search',{query:'poker machine reform'})]),reply([call('answer',{points:softPoints})]),reply([call('answer',{points:softPoints})])],{named,q});
-  const run=await f.run();assert.equal(run.answered,true);assert.equal(f.model.doGenerateCalls.length,0);assert.equal(f.failures.length,0);if(named.ambiguous){assert.match(run.answer,/Please give the full name/)}else{assert.match(run.answer,/^OPAX has no record of a parliamentarian named Zed Nobody\./);assert.equal(run.qualitative.answer_decision,'limitation')}
+  const run=await f.run();assert.equal(run.answered,true);assert.equal(run.research.mode,'loop');assert.equal(f.model.doGenerateCalls.length,2);assert.equal(f.failures.length,0);
+  assert.equal(run.answer,'- Robin Example said the reform would help struggling communities.\n- Robin Example warned about online betting advertising.');assert.equal(run.qualitative.answer_decision,'answer');
  }
-});
-
-test('a causal influence claim is dropped when no speaker can own it; the other points stand',()=>{
- const {out,tally,lines}=verify([
-  {claim:'Industry donations influenced the poker machine reform vote.',id:other,quote:'Mandatory precommitment will protect families'},
-  {claim:'Robin Example said losses should be capped at one dollar a spin.',id,quote:'cap poker machine losses at one dollar a spin'}]);
- assert.deepEqual(lines,['Robin Example said losses should be capped at one dollar a spin.']);assert.equal(tally.drops.causal_claim,1);assert.ok(out.citations[id]);
- // An uncited causal line from a passage with no speaker is dropped too.
- assert.equal(verify([{claim:'Industry donations influenced the vote on online betting.',id:other,quote:'not in the passage'}]).out,null);
-});
-
-test('figures: an unsupported figure in a trailing clause or parenthetical comes out; one at the heart of the claim drops the point',()=>{
- const a=verify([{claim:'Robin Example said losses should be capped at one dollar a spin, saving families $4 billion a year.',id,quote:'cap poker machine losses at one dollar a spin'}]);
- assert.equal(a.lines[0],'Robin Example said losses should be capped at one dollar a spin.');assert.ok(a.out.citations[id]);assert.equal(a.tally.repairs.figure_removed,1);
- const b=verify([{claim:'Robin Example backed mandatory precommitment (first proposed in 1998) to protect families.',id,quote:'Mandatory precommitment will protect families'}]);
- assert.equal(b.lines[0],'Robin Example backed mandatory precommitment to protect families.');
- const c=verify([{claim:'Robin Example said 40 per cent of losses come from problem gamblers.',id,quote:'cap poker machine losses'}]);
- assert.equal(c.out,null);assert.equal(c.tally.drops.figure_unsupported,1);
+ // Causal claims stand, including one from a passage with no speaker.
+ const causal=verify([{claim:'Industry donations influenced the poker machine reform vote.',id:other,quote:'Mandatory precommitment will protect families'},{claim:'Robin Example said losses should be capped at one dollar a spin.',id,quote:'cap poker machine losses at one dollar a spin'}]);
+ assert.deepEqual(causal.lines,['Industry donations influenced the poker machine reform vote.','Robin Example said losses should be capped at one dollar a spin.']);assert.ok(causal.out.citations[other]&&causal.out.citations[id]);
+ // Figures the passage lacks stay in the point.
+ for(const claim of ['Robin Example said losses should be capped at one dollar a spin, saving families $4 billion a year.','Robin Example backed mandatory precommitment (first proposed in 1998) to protect families.','Robin Example said 40 per cent of losses come from problem gamblers.']){
+  const v=verify([{claim,id,quote:'cap poker machine losses'}]);assert.deepEqual(v.lines,[claim]);assert.ok(v.out.citations[id]);
+ }
 });
 
 test('a loop timeout after the model has answered returns that draft, not the old pipeline',async()=>{
@@ -114,12 +102,12 @@ test('a loop timeout with only record facts in hand answers from those facts, ca
  assert.deepEqual(run.qualitative.sources[0].receipt,{party:'Labor',source:'Tabcorp Holdings Limited',amount:2371237,period:'1998-99 to 2025-26',jurisdiction:'federal',industry:'gambling',filter:'gambling'});
 });
 
-test('a loop timeout before any draft answers from the verified passages it already holds',async()=>{
+test('a loop timeout before any draft answers from the passages it holds, cited, with no further model call',async()=>{
  let n=0;
  const f=loop(async()=>++n===1?reply([call('search',{query:'poker machine reform'})]):new Promise(()=>{}),{wallMs:250});
  const run=await f.run();
- assert.equal(run.answered,true);assert.match(run.answer,/^What the record says:\n- In 2012, Robin Example \(Australian Labor Party\) said: “/);
- assert.equal(run.research.answer_stats.mode,'record_list');assert.equal(run.research.answer_stats.salvaged,'timeout');
+ assert.equal(run.answered,true);assert.equal(run.research.mode,'loop');assert.deepEqual(f.failures,[]);assert.equal(n,2)
+ assert.match(run.answer,/said “/);assert.ok(Object.keys(run.qualitative.citations).length)
 });
 
 // The page: the exact renderer, plus the kicker expression from the Ask result view.

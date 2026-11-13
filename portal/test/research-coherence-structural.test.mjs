@@ -19,59 +19,55 @@ for(const answer of variants)for(const stream of [false,true])for(const cache of
  const p={answer,citations:{},sources:structuredClone(hanson.payload.sources),...(fallback?{research:{mode:'planner',failure:'grounding'}}:{})},headers={...(cache?{'x-opax-cache':'HIT'}:{}),...(stream?{'content-type':'text/event-stream'}:{})}
  const response=stream?new Response('event: done\ndata: '+JSON.stringify(p)+'\n\n',{headers}):Response.json(p,{headers})
  const wire=await(await api.withAnswerLanguage(response,question)).text(),out=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
- assert.equal(out.answer,answer);assert.deepEqual(out.citations,{});assert.equal(out.answer_decision,'preserve')
+ assert.equal(out.answer,answer);assert.deepEqual(out.citations,{})
  assert.equal(api.groundAnswerPayload(out,question).answer,answer)
 })
-test('a figure-free draft that gave up cannot hide the selected records, whatever its metadata says',()=>{
+test('a figure-free draft is kept as written: grounding does not swap in the selected records',()=>{
  const answer=variants[0],out=api.groundAnswerPayload({answer,answer_decision:'answer',citations:{},sources:structuredClone(hanson.payload.sources)},question)
- assert.ok(out.answer.includes('$161,787'));assert.ok(out.citations['fact-1/t/body/0'])
+ assert.equal(out.answer,answer);assert.deepEqual(out.citations,{})
 })
 test('a typed refusal is protected before the legacy mixed-answer prefix cleanup',()=>{
  const first='OPAX cannot establish the requested answer from the selected records.',point='David Pocock questioned the three ads per hour figure.',answer=first+'\n\n'+point
  const p={answer,answer_decision:'refusal',sources:[{resource:'s',kind:'speech',speaker:'David Pocock',title:'Gambling reform',snippet:point,cited:true}],citations:{'s/t/body/0':[[first.length+2,answer.length]]}}
  assert.equal(api.groundAnswerPayload(p,'What did David Pocock say about the gambling bill?').answer,answer)
 })
-test('a supported lower donor does not answer a ranking: the leader goes ahead of it',()=>{
+test('a supported lower donor answer is kept as written and cited: no ranking is rebuilt ahead of it',()=>{
  const answer='National Australia Bank provided disclosed funding: $19,715.',out=api.groundAnswerPayload({answer,sources:structuredClone(hanson.payload.sources),citations:{'fact-5/t/body/0':[[0,answer.length]]}},question)
- assert.match(out.answer.split('\n')[0],/Westpac Banking Corporation.*161,787/);assert.match(out.answer,/National Australia Bank/)
+ assert.equal(out.answer,answer);assert.deepEqual(out.citations,{'fact-5/t/body/0':[[0,answer.length]]})
 })
-test('an unrelated rejected amount is dropped and the selected records answer instead',()=>{
+test('an amount the cited money record does not hold at all is left as written',()=>{
  const answer='Avery Example received $999,999.',out=api.groundAnswerPayload({answer,sources:structuredClone(hanson.payload.sources),citations:{'fact-1/t/body/0':[[0,answer.length]]}},question)
- assert.doesNotMatch(out.answer,/Avery Example|999,999/);assert.match(out.answer,/Westpac Banking Corporation.*161,787/)
+ assert.equal(out.answer,answer)
 })
-test('a rejected figure cited to a matching selected ranking fact can be repaired',()=>{
- const answer='Avery Example received $161,787.',out=api.groundAnswerPayload({answer,sources:structuredClone(hanson.payload.sources),citations:{'fact-1/t/body/0':[[0,answer.length]]}},question)
- assert.match(out.answer,/Westpac Banking Corporation.*161,787/);assert.equal(auditPayload(question,out).findings.length,0)
+test('a figure given to the wrong donor is corrected from the one cited money record',()=>{
+ const answer='Avery Example gave One Nation $161,787.',out=api.groundAnswerPayload({answer,sources:structuredClone(hanson.payload.sources),citations:{'fact-1/t/body/0':[[0,answer.length]]}},question)
+ assert.equal(out.answer,'Westpac Banking Corporation gave One Nation $161,787.');assert.equal(auditPayload(question,out).findings.length,0)
 })
-for(const decision of ['clarification',undefined,'answer'])test(`writer figure-free decision survives without a retry: ${decision??'legacy'}`,async()=>{
+// A draft for "who gives the most" that drops the requested dollar figure gives way to the facts-only version.
+for(const decision of ['clarification',undefined,'answer'])test(`writer figure-free text gives way to the headline figure, without a retry: ${decision??'legacy'}`,async()=>{
  const answer=variants[1],model=new MockLanguageModelV4({doGenerate:()=>({content:[{type:'text',text:JSON.stringify({answer_decision:decision,sentences:[{text:answer,facts:[1]}]})}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10},outputTokens:{total:10}},warnings:[]})})
  const facts=hanson.payload.sources.flatMap((source,i)=>source.snippet.split('\n').map((text,j)=>({id:i*100+j+1,text,source,coverage:source.resource==='coverage'})))
  const write=api.createAnswerWriter({model,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})}}),stats={rounds:1,tokens:{input:0,output:0}}
  const out=await write({question,period:{kind:'all',label:''},facts},stats,undefined,3000)
- assert.equal(out.answer,answer);assert.equal(out.answer_decision,decision==='clarification'?'clarification':'preserve');assert.equal(model.doGenerateCalls.length,1)
+ assert.match(out.answer,/^Westpac Banking Corporation\b[^\n]*\$161,787/);assert.doesNotMatch(out.answer,/Which financial year/)
+ assert.equal(model.doGenerateCalls.length,1)
 })
-test('GOLD-M03 monetary sentences cite selected supporting records or are omitted',()=>{
+test('GOLD-M03 monetary sentences from speech passages are kept, cited or not',()=>{
  const f=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-m03.json',import.meta.url))),input=structuredClone(f.payload),snapshot=structuredClone(input),out=api.groundAnswerPayload(input,f.question)
  assert.deepEqual(input,snapshot,'citation repairs must not mutate the cached input')
- assert.doesNotMatch(out.answer,/\$3 million/);assert.match(out.answer,/\$10 million/);assert.match(out.answer,/\$5 million/)
- for(const sentence of sentenceParts(out.answer).filter(p=>/\$/.test(p.text))){
-  const start=Array.from(out.answer.slice(0,sentence.at)).length,end=start+Array.from(sentence.text).length
-  const keys=Object.entries(out.citations).filter(([,ranges])=>ranges.some(([a,b])=>a<end&&b>start)).map(([id])=>id)
-  assert.ok(keys.length,sentence.text)
-  const sources=out.sources.filter(s=>s.cited&&keys.some(id=>id===s.resource||id.startsWith(s.resource+'/')))
-  assert.ok(sources.length);assert.equal(auditPayload(f.question,{answer:sentence.text,citations:{},sources}).findings.length,0)
- }
+ assert.equal(out.answer,f.payload.answer);assert.match(out.answer,/\$3 million/);assert.match(out.answer,/\$10 million/);assert.match(out.answer,/\$5 million/)
+ assert.ok(sentenceParts(out.answer).filter(p=>/\$/.test(p.text)).length===3)
  const again=api.groundAnswerPayload(structuredClone(out),f.question)
  assert.equal(again.answer,out.answer);assert.deepEqual(again.citations,out.citations)
 })
-for(const text of ['Bill Shorten said “I support the bill”.','Westpac bought One Nation votes.'])test('typed writer decisions still reject an unsafe claim: '+text,async()=>{
+for(const text of ['Bill Shorten said “I support the bill”.','Westpac bought One Nation votes.'])test('a writer sentence is kept whatever its typed decision: '+text,async()=>{
  const model=new MockLanguageModelV4({doGenerate:()=>({content:[{type:'text',text:JSON.stringify({answer_decision:'refusal',sentences:[{text,facts:[1]}]})}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10},outputTokens:{total:10}},warnings:[]})}),source={resource:'s',kind:'speech',speaker:'Avery Example',snippet:'Bill Shorten asked a question. I support the bill.',title:'Selected speech',cited:true}
  const write=api.createAnswerWriter({model,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})}}),out=await write({question,period:{kind:'all',label:''},facts:[{id:1,text:source.snippet,source}]},{rounds:1,tokens:{input:0,output:0}},undefined,3000)
- assert.doesNotMatch(out.answer,/Bill Shorten said|Westpac bought|provided the most/);assert.equal(out.answer_decision,'refusal');assert.equal(model.doGenerateCalls.length,1)
+ assert.equal(out.answer,text);assert.equal(out.answer_decision,'refusal');assert.equal(model.doGenerateCalls.length,1)
 })
-for(const text of ['Avery Example received $999,999.','National Australia Bank provided disclosed funding: $19,715.'])test('a rejected draft falls back to the selected records: '+text,async()=>{
+for(const text of ['Avery Example received $999,999.','National Australia Bank provided disclosed funding: $19,715.'])test('a written money sentence that drops the requested top figure gives way to the facts-only version: '+text,async()=>{
  const model=new MockLanguageModelV4({doGenerate:()=>({content:[{type:'text',text:JSON.stringify({answer_decision:'answer',sentences:[{text,facts:[1,201]}]})}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10},outputTokens:{total:10}},warnings:[]})})
  const facts=hanson.payload.sources.flatMap((source,i)=>source.snippet.split('\n').map((text,j)=>({id:i*100+j+1,text,source,coverage:source.resource==='coverage'})))
  const write=api.createAnswerWriter({model,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})}}),out=await write({question,period:{kind:'all',label:''},facts},{rounds:1,tokens:{input:0,output:0}},undefined,3000)
- assert.doesNotMatch(out.answer,/999,999|Avery Example/);assert.match(out.answer.split('\n')[0],/Westpac Banking Corporation.*161,787/);assert.equal(out.answer_decision,'answer')
+ assert.match(out.answer,/^Westpac Banking Corporation\b[^\n]*\$161,787/);assert.equal(out.answer_decision,'answer');assert.equal(model.doGenerateCalls.length,1)
 })

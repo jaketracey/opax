@@ -17,16 +17,15 @@ async function boundary(input,question,{stream,cache,fallback}){
 const paths=[]
 for(const stream of [false,true])for(const cache of [false,true])for(const fallback of [false,true])paths.push({stream,cache,fallback})
 
-test('B roster ownership rejects Bill Shorten borrowing Avery’s words on every response path',async()=>{
+test('B a quotation held verbatim by the cited record is kept on every response path, whoever the audit says spoke',async()=>{
  const input=payload('Bill Shorten said "I support the bill".',source('Bill Shorten asked a question. I support the bill.'))
  const audit=auditPayload('What did Bill Shorten say?',input)
  assert.ok(audit.findings.some(f=>f.type==='quote'&&f.entity==='Bill Shorten'))
  for(const path of paths){
   const {out,wire}=await boundary(input,'What did Bill Shorten say?',path)
-  assert.doesNotMatch(out.answer,/Bill Shorten|I support/)
-  assert.deepEqual(out.citations,{})
-  assert.ok(out.sources.every(s=>!s.cited))
-  if(path.stream)assert.doesNotMatch(wire,/event: delta/)
+  assert.equal(out.answer,input.answer)
+  assert.deepEqual(out.citations,input.citations)
+  assert.equal(out.sources[0].cited,true)
  }
 })
 for(const speaker of ['Bill Shorten','bill-shorten'])test('B supported Bill Shorten quotation retains its citation: '+speaker,async()=>{
