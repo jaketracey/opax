@@ -1,7 +1,11 @@
 import { Link, router } from 'expo-router';
-import { NavigationContext } from 'expo-router/react-navigation';
-import { act, type ReactElement, type ReactNode } from 'react';
 import {
+  HeaderHeightContext,
+  NavigationContext,
+} from 'expo-router/react-navigation';
+import { act, useContext, type ReactElement, type ReactNode } from 'react';
+import {
+  Animated,
   Dimensions,
   Text as NativeText,
   Platform,
@@ -14,6 +18,7 @@ import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { Icon } from '../src/design/icon';
 import {
   InsetGroup,
+  PinnedRestContext,
   Screen,
   ScreenHeader,
   SectionHeader,
@@ -23,6 +28,7 @@ import { FaceStack, PersonRow, Portrait } from '../src/design/people';
 import { RowLink, menuLeaves, rowMenus } from '../src/design/row-link';
 import {
   BillRow,
+  wordClamp,
   DivisionRow,
   LinkRow,
   MoneyRow,
@@ -45,7 +51,13 @@ import {
   splitRowStyles,
 } from '../src/design/selection';
 import { SourceLine } from '../src/design/source';
-import { colors, minimumTarget, radii, rhythm } from '../src/design/tokens';
+import {
+  colors,
+  layout,
+  minimumTarget,
+  radii,
+  rhythm,
+} from '../src/design/tokens';
 import { menuTitle } from '../src/design/menu-title';
 
 jest.mock('../src/features/follows/store', () => ({
@@ -835,7 +847,7 @@ test.each([2, 3] as const)(
     ).toBe(headerStyle.minHeight);
   },
 );
-test('section actions stack at AX1+ and keep a named 44 pt target', () => {
+test('section actions wrap after the title at AX1+ and keep a named 44 pt target', () => {
   size(1.786);
   const root = render(
     <SectionHeader
@@ -843,8 +855,14 @@ test('section actions stack at AX1+ and keep a named 44 pt target', () => {
       action={{ accessibilityLabel: 'See all bills', href }}
     />,
   ).root;
+  // Beside the title while both fit, below it only when they do not: a
+  // column put Today's "Bills" over a menu also reading Bills (sweep 1, 2.2).
   expect(flat(root.findByType(View).props.style)).toEqual({
-    gap: rhythm.line,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    columnGap: rhythm.tight,
+    rowGap: rhythm.line,
     marginBottom: rhythm.heading - rhythm.block,
   });
   expect(strings(root)).toEqual(['Bills', 'See all']);
@@ -1329,4 +1347,198 @@ test.each([
     .findAllByType(Text)
     .find((text) => text.props.children === 'A long program and its dates')!;
   expect(detail.props.numberOfLines).toBe(2);
+});
+
+describe('Today bill previews at accessibility sizes (sweep 1, 2.3)', () => {
+  const portfolio =
+    'Infrastructure, Transport, Regional Development, Communications and the Arts';
+  const preview = () =>
+    render(
+      <BillRow
+        preview
+        billKey="au-federal-example"
+        title="Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Bill 2026"
+        status="Introduced"
+        meta={{ portfolio }}
+        href="/bill/au-federal-example"
+        testID="bill"
+      />,
+    ).root;
+  test('the title reads to six lines and the portfolio to two whole words', () => {
+    size(2.643);
+    const root = preview();
+    expect(host(root, 'bill-title').props.numberOfLines).toBe(6);
+    const probe = root.find(
+      (node) =>
+        node.props.testID === 'word-clamp-probe' &&
+        typeof node.type === 'string',
+    );
+    act(() =>
+      probe.props.onTextLayout({
+        nativeEvent: {
+          lines: [
+            { text: 'Infrastructure, Transport, ' },
+            { text: 'Regional Development, ' },
+            { text: 'Communications and the Arts' },
+          ],
+        },
+      }),
+    );
+    // Two laid-out lines, less the last word so the ellipsis fits.
+    expect(strings(root)).toContain('Infrastructure, Transport, Regional…');
+  });
+  test('Large to XXXL keep their three-line clamp and plain portfolio', () => {
+    size(1.353);
+    const root = preview();
+    expect(host(root, 'bill-title').props.numberOfLines).toBe(3);
+    expect(
+      root.findAll((node) => node.props.testID === 'word-clamp-probe'),
+    ).toHaveLength(0);
+    expect(strings(root)).toContain(portfolio);
+  });
+  test('wordClamp keeps whole words and leaves room for the ellipsis', () => {
+    expect(wordClamp('Health', [{ text: 'Health' }], 2)).toBe('Health');
+    expect(
+      wordClamp(
+        portfolio,
+        [
+          { text: 'Infrastructure, ' },
+          { text: 'Transport, Regional ' },
+          { text: 'Development, Communications' },
+        ],
+        2,
+      ),
+    ).toBe('Infrastructure, Transport…');
+    // One long word per line still ends on a whole word.
+    expect(
+      wordClamp(
+        'Parliamentary Superannuation',
+        [{ text: 'Parliamentary ' }, { text: 'Superannuation' }],
+        1,
+      ),
+    ).toBe('Parliamentary…');
+  });
+});
+
+describe('Screen pins a band under the bar (sweep 1, item 1)', () => {
+  const band = (os: 'ios' | 'android') => {
+    jest.replaceProperty(Platform, 'OS', os);
+    return render(
+      <HeaderHeightContext.Provider value={100}>
+        <Screen testID="page" pinned={<View testID="scopes" />}>
+          <View testID="first" />
+        </Screen>
+      </HeaderHeightContext.Provider>,
+    ).root;
+  };
+  test('iOS: the first child sticks, a line above the content', () => {
+    const root = band('ios');
+    const scroll = root.find(
+      (node) => node.props.testID === 'page' && node.props.stickyHeaderIndices,
+    );
+    expect(scroll.props.stickyHeaderIndices).toEqual([0]);
+    const pinned = host(root, 'screen-pinned');
+    expect(pinned.findAll((n) => n.props.testID === 'scopes')).not.toHaveLength(
+      0,
+    );
+    expect(flat(pinned.props.style).marginBottom).toBe(
+      rhythm.line - layout.sectionGap,
+    );
+    // It holds at the bar's bottom edge, not under the bar at the top.
+    const Sticky = scroll.props.StickyHeaderComponent;
+    const sticky = (header: number, rest: number | null) => {
+      const offset = new Animated.Value(rest ?? -header);
+      const root = render(
+        <HeaderHeightContext.Provider value={header}>
+          <PinnedRestContext.Provider value={rest}>
+            <Sticky scrollAnimatedValue={offset} onLayout={jest.fn()}>
+              <View />
+            </Sticky>
+          </PinnedRestContext.Provider>
+        </HeaderHeightContext.Provider>,
+      ).root;
+      act(() =>
+        root
+          .find(
+            (n) =>
+              n.props.testID === 'screen-pinned-header' &&
+              typeof n.props.onLayout === 'function',
+          )
+          .props.onLayout({ nativeEvent: { layout: { y: 16, height: 52 } } }),
+      );
+      return (y: number) => {
+        act(() => offset.setValue(y));
+        const node = root.find(
+          (n) =>
+            n.props.testID === 'screen-pinned-header' &&
+            typeof n.type === 'string',
+        );
+        const transform = flat(node.props.style).transform as {
+          translateY: number;
+        }[];
+        return transform[0]!.translateY;
+      };
+    };
+    // At rest (offset -100) and until its top meets the bar: it scrolls.
+    const at = sticky(100, -100);
+    expect(at(-100)).toBe(0);
+    expect(at(16 - 100)).toBe(0);
+    // Then it holds there.
+    expect(at(16 - 100 + 240)).toBe(240);
+    // Search's active field: the header still counts the hidden large title
+    // (240 pt) over a 123 pt bar. At rest the band stays under the field,
+    // above the count line, and sticks once its top reaches the bar.
+    const stale = sticky(240, -123);
+    expect(stale(-123)).toBe(0);
+    expect(stale(16 - 123)).toBe(0);
+    expect(stale(16 - 123 + 50)).toBe(50);
+    // Before the reader first drags, nothing moves it.
+    const undragged = sticky(240, null);
+    expect(undragged(-123)).toBe(0);
+    expect(undragged(300)).toBe(0);
+  });
+  test('the first drag from rest sets where the band sticks', () => {
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    // The provider wraps the scroll view, so the band (and its sticky
+    // header) reads it.
+    let rest: number | null | undefined;
+    function RestProbe() {
+      rest = useContext(PinnedRestContext);
+      return null;
+    }
+    const root = render(
+      <HeaderHeightContext.Provider value={240}>
+        <Screen testID="page" pinned={<RestProbe />}>
+          <View />
+        </Screen>
+      </HeaderHeightContext.Provider>,
+    ).root;
+    const drag = (y: number) =>
+      act(() =>
+        root
+          .find(
+            (node) =>
+              node.props.testID === 'page' &&
+              typeof node.props.onScrollBeginDrag === 'function',
+          )
+          .props.onScrollBeginDrag({ nativeEvent: { contentOffset: { y } } }),
+      );
+    expect(rest).toBeNull();
+    // A drag from further down says nothing about the bar.
+    drag(300);
+    expect(rest).toBeNull();
+    drag(-123);
+    expect(rest).toBe(-123);
+    drag(-40);
+    expect(rest).toBe(-123);
+  });
+  test('Android: the band is the first thing in the content and scrolls', () => {
+    const root = band('android');
+    expect(
+      root.findAll((node) => node.props.testID === 'screen-pinned'),
+    ).toHaveLength(0);
+    expect(
+      root.findAll((node) => node.props.testID === 'scopes'),
+    ).not.toHaveLength(0);
+  });
 });

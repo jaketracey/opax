@@ -6,7 +6,15 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import React, { act } from 'react';
-import { Animated, Dimensions, Platform, StyleSheet, View } from 'react-native';
+import * as Native from 'react-native';
+import {
+  Animated,
+  Dimensions,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import TestRenderer from 'react-test-renderer';
 import TalkStack from '../src/app/talk/_layout';
@@ -50,6 +58,8 @@ import {
 } from '../src/navigation/stack/screen';
 import {
   BarTitle,
+  barItemGrowthAX,
+  barTitleClearanceAX,
   barTitleWidth,
   emptyBarTitle,
   inlineTitleScaleCap,
@@ -279,20 +289,57 @@ test.each([
       return null;
     }
     let view: TestRenderer.ReactTestRenderer | undefined;
+    const scheme = jest
+      .spyOn(Native, 'useColorScheme')
+      .mockReturnValue('light');
     try {
       view = tree(<Harness />);
       expect(chrome.headerLargeTitleStyle).toEqual({
         fontFamily: tokens.textStyles.largeTitle.fontFamily,
         fontWeight: tokens.textStyles.largeTitle.fontWeight,
         fontSize: expectedSize,
-        color: colors.ink,
+        color: tokens.schemeColour('ink', 'light'),
       });
     } finally {
       if (view) act(() => view!.unmount());
       Dimensions.set({ window, screen });
+      scheme.mockRestore();
     }
   },
 );
+
+test('bar titles resolve ink in the app appearance, whatever the bar resolves (11b-3)', () => {
+  jest.replaceProperty(Platform, 'OS', 'ios');
+  const scheme = jest.spyOn(Native, 'useColorScheme').mockReturnValue('dark');
+  let chrome!: ReturnType<typeof useStackChrome>;
+  function Harness() {
+    chrome = useStackChrome();
+    return null;
+  }
+  const view = tree(<Harness />);
+  try {
+    // The bar takes its interface style from the navigation theme, so the
+    // dynamic ink token resolved light: dark ink over the dark Ask page.
+    const darkInk = (colors.ink as unknown as { dynamic: { dark: string } })
+      .dynamic.dark;
+    for (const style of [
+      chrome.headerTitleStyle,
+      chrome.headerLargeTitleStyle,
+    ]) {
+      const { dynamic } = (
+        style as unknown as {
+          color: { dynamic: Record<string, string> };
+        }
+      ).color;
+      expect(dynamic.light).toBe(darkInk);
+      expect(dynamic.dark).toBe(darkInk);
+      expect(dynamic.highContrastLight).toBe(dynamic.highContrastDark);
+    }
+  } finally {
+    act(() => view.unmount());
+    scheme.mockRestore();
+  }
+});
 
 test.each([
   ['xSmall', 0.823, 14, 14],
@@ -897,6 +944,71 @@ test('the tab layout records the selected tab for warm Money map links', () => {
 describe('bar titles keep their initial layout clear of the bar items', () => {
   const style = (view: TestRenderer.ReactTestRenderer) =>
     StyleSheet.flatten(view.root.findByType(Animated.Text).props.style);
+  // Jest's window reports fontScale 2 (AX2); these cases are about Large.
+  let restore: (() => void) | undefined;
+  beforeEach(() => {
+    const window = Dimensions.get('window');
+    const screen = Dimensions.get('screen');
+    Dimensions.set({
+      window: { ...window, fontScale: 1 },
+      screen: { ...screen, fontScale: 1 },
+    });
+    restore = () => Dimensions.set({ window, screen });
+  });
+  afterEach(() => restore?.());
+  test('at AX3 it keeps 8 pt clear of the larger items and shrinks to fit (sweep 1, 2.6)', () => {
+    const window = Dimensions.get('window');
+    Dimensions.set({
+      window: { ...window, fontScale: 2.643 },
+      screen: { ...Dimensions.get('screen'), fontScale: 2.643 },
+    });
+    const view = tree(
+      <BarTitle title="Interactive Gambling Bill" shown trailing={2} />,
+    );
+    try {
+      // The larger items and 8 pt more come off the room, and nothing is
+      // added back as padding: UIKit runs a title view wider than its span
+      // left over the back button (5 pt clear at AX3 with a 205 pt view).
+      const room =
+        barTitleWidth(
+          window.width,
+          2,
+          undefined,
+          '',
+          undefined,
+          barItemGrowthAX,
+        ) - barTitleClearanceAX;
+      expect(style(view).maxWidth).toBe(room);
+      for (const node of view.root.findAll(
+        (candidate) => typeof candidate.type === 'string',
+      )) {
+        const flat = StyleSheet.flatten(node.props.style);
+        if (flat?.maxWidth !== undefined) expect(flat.maxWidth).toBe(room);
+        expect(flat?.paddingHorizontal ?? 0).toBe(0);
+      }
+      // On a 402 pt iPhone the room is 186 pt: "Interactive Gambling…",
+      // 176 pt at Large, still fits and is shown (s1-bill-02).
+      expect(
+        barTitleWidth(402, 2, undefined, '', undefined, barItemGrowthAX) -
+          barTitleClearanceAX,
+      ).toBe(186);
+      // Fabric shrinks only text it sees truncated; a clipped line never is.
+      expect(view.root.findByType(Animated.Text).props).toMatchObject({
+        adjustsFontSizeToFit: true,
+        minimumFontScale: 1 / inlineTitleScaleCap,
+        ellipsizeMode: 'tail',
+      });
+      // The retreat is measured at the Large size, the same as every size.
+      for (const probe of view.root.findAll(
+        (node) =>
+          node.props.testID === 'bar-title-probe' &&
+          typeof node.type !== 'string',
+      ))
+        expect(probe.props.allowFontScaling).toBe(false);
+    } finally {
+      act(() => view.unmount());
+    }
+  });
   test('at rest the title keeps its text and width, hidden only by opacity and accessibility', () => {
     const view = tree(
       <BarTitle title="Interactive Gambling Bill" shown={false} />,
@@ -1287,6 +1399,96 @@ test.each(fadeCases)(
       }
     }),
 );
+
+// Sweep 1, item 1: soft alone blurs only the status strip, so Today's title,
+// the clock and Search's field printed over page text once it scrolled
+// under the bar. The edge turns hard then, and only then.
+const scrollTo = (renderer: TestRenderer.ReactTestRenderer, y: number) =>
+  act(() =>
+    renderer.root
+      .findByType(ScrollView)
+      .props.onScroll({ nativeEvent: { contentOffset: { y } } }),
+  );
+const edgeCalls = (navigation: { setOptions: jest.Mock }) =>
+  navigation.setOptions.mock.calls
+    .map(([options]) => options.scrollEdgeEffects?.top)
+    .filter(Boolean);
+test.each([
+  ['(today)', 'index'],
+  ['(search)', 'search'],
+] as const)(
+  '%s %s turns the top edge hard once text runs under the bar, soft again at rest',
+  (segment, name) =>
+    withGlass(() => {
+      const { navigation, ground, page } = fadePage(name, segment);
+      const expanded = 120;
+      const renderer = tree(page(expanded));
+      try {
+        navigation.setOptions.mockClear();
+        // At rest UIKit insets the content to the bar's bottom edge.
+        scrollTo(renderer, -expanded);
+        expect(edgeCalls(navigation)).toEqual([]);
+        // Under the expanded bar, before the collapse height arrives.
+        scrollTo(renderer, -expanded + 40);
+        expect(navigation.setOptions).toHaveBeenLastCalledWith(
+          expect.objectContaining({
+            ...largeTitleBar(ground, false, true),
+            headerLargeTitleEnabled: true,
+          }),
+        );
+        expect(edgeCalls(navigation)).toEqual(['hard']);
+        // Collapsed: text keeps running under the compact bar, no repeats.
+        act(() => renderer.update(page(68)));
+        scrollTo(renderer, 0);
+        scrollTo(renderer, 400);
+        expect(edgeCalls(navigation)).toEqual(['hard']);
+        // Back to the top: the bar expands over clean ground.
+        scrollTo(renderer, -68);
+        act(() => renderer.update(page(expanded)));
+        scrollTo(renderer, -expanded);
+        expect(edgeCalls(navigation)).toEqual(['hard', 'soft']);
+        expect(RootBar!.setSolid).not.toHaveBeenCalled();
+      } finally {
+        act(() => renderer.unmount());
+      }
+    }),
+);
+
+test.each([
+  ['(your-mp)', 'your-mp'],
+  ['(bills)', 'bills'],
+  ['(ask)', 'ask'],
+] as const)('%s %s keeps the soft edge under scrolled text', (segment, name) =>
+  withGlass(() => {
+    const { navigation, page } = fadePage(name, segment);
+    const renderer = tree(page(120));
+    try {
+      navigation.setOptions.mockClear();
+      if (renderer.root.findAllByType(ScrollView).length) {
+        scrollTo(renderer, 0);
+        scrollTo(renderer, 400);
+      }
+      expect(edgeCalls(navigation)).not.toContain('hard');
+    } finally {
+      act(() => renderer.unmount());
+    }
+  }),
+);
+
+test('the accessibility backing keeps the edge hidden under scrolled text', () =>
+  withGlass(() => {
+    mockSolidBar = true;
+    const { navigation, page } = fadePage('index', '(today)');
+    const renderer = tree(page(120));
+    try {
+      navigation.setOptions.mockClear();
+      scrollTo(renderer, 400);
+      expect(edgeCalls(navigation)).not.toContain('hard');
+    } finally {
+      act(() => renderer.unmount());
+      mockSolidBar = false;
+    }
+  }));
 
 test.each([41, 52, 85])(
   'a pinned search field with a %s pt title never adds a backing',

@@ -282,7 +282,8 @@ export function Button({
             !toggle
               ? styles.quiet
               : null,
-            stacked ? styles.leading : null,
+            // A filled primary button keeps its label centred, wrapped or not.
+            stacked && variant !== 'primary' ? styles.leading : null,
             {
               backgroundColor:
                 variant === 'primary' || (toggle && variant === 'default')
@@ -328,7 +329,13 @@ export function Button({
                   variant="strong"
                   tone={state.label}
                   wordSafe
-                  style={stacked ? styles.shrink : styles.center}
+                  style={
+                    stacked
+                      ? variant === 'primary'
+                        ? [styles.shrink, styles.center]
+                        : styles.shrink
+                      : styles.center
+                  }
                 >
                   {label}
                 </Text>
@@ -549,6 +556,8 @@ function columnWidth(layout: ReturnType<typeof useLayout>) {
  */
 function MenuPicker<T extends string>({
   label,
+  title = label,
+  inline = false,
   value,
   options,
   onChange,
@@ -557,6 +566,13 @@ function MenuPicker<T extends string>({
   disabled = false,
 }: {
   label: string;
+  /** The drawn row title, when it differs from the spoken label. */
+  title?: string;
+  /**
+   * At accessibility sizes, keep the title and the button on one line when
+   * both fit ("Showing: New"), wrapping the button under it only when not.
+   */
+  inline?: boolean;
   value: T;
   options: readonly PickerOption<T>[];
   onChange: (value: T) => void;
@@ -613,7 +629,7 @@ function MenuPicker<T extends string>({
     );
   // At accessibility sizes the button spans the column, so a long value
   // wraps under the title instead of running off the screen.
-  const wide = row && large;
+  const wide = row && large && !inline;
   const button = (
     <View
       testID={testID}
@@ -679,17 +695,32 @@ function MenuPicker<T extends string>({
   );
   if (!row) return button;
   return (
-    <View style={[styles.menuRow, large ? styles.menuRowStacked : null]}>
+    <View
+      style={[
+        styles.menuRow,
+        large
+          ? inline
+            ? styles.menuRowWrapping
+            : styles.menuRowStacked
+          : null,
+      ]}
+    >
       {/* The button speaks the title with its value; the drawn title is
           not a second stop for VoiceOver. */}
       <Text
         variant="body"
         wordSafe
-        style={large ? null : styles.menuRowTitle}
+        style={
+          large
+            ? inline
+              ? styles.menuRowInlineTitle
+              : null
+            : styles.menuRowTitle
+        }
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
       >
-        {label}
+        {large && inline ? `${title}:` : title}
       </Text>
       {button}
     </View>
@@ -787,12 +818,18 @@ export function SegmentedPicker<T extends string>({
   value,
   onChange,
   accessibilityLabel,
+  menuTitle,
   testID,
 }: {
   options: readonly PickerOption<T>[];
   value: T;
   onChange: (value: T) => void;
   accessibilityLabel: string;
+  /**
+   * The menu's drawn title at accessibility sizes, on one line with its
+   * value ("Showing: New"), when the spoken label would repeat a heading.
+   */
+  menuTitle?: string;
   testID?: string;
 }) {
   const large = useAccessibilitySize();
@@ -812,6 +849,8 @@ export function SegmentedPicker<T extends string>({
       <MenuPicker
         row
         label={accessibilityLabel}
+        title={menuTitle}
+        inline={menuTitle !== undefined}
         value={value}
         options={options}
         onChange={onChange}
@@ -1014,6 +1053,7 @@ export function IconButton({
   selected,
   disabled = false,
   badge,
+  maxScale = 1,
   testID,
   ref,
 }: {
@@ -1029,6 +1069,12 @@ export function IconButton({
   disabled?: boolean;
   /** A count beside the symbol (Sources, 3); the label must say it too. */
   badge?: number;
+  /**
+   * How far the symbol follows Dynamic Type; 1 keeps it fixed. The box
+   * stays a 44 pt target. Ask's composer scales its symbols with its
+   * placeholder (sweep 1, 2.1).
+   */
+  maxScale?: number;
   testID?: string;
 }) {
   const states = iconButtonStates[selected ? 'selected' : variant];
@@ -1083,7 +1129,7 @@ export function IconButton({
             <Icon
               name={symbol}
               size={symbolSize}
-              maxScale={1}
+              maxScale={maxScale}
               tone={stateOf(pressed).label}
             />
             {badge ? (
@@ -2054,6 +2100,10 @@ const styles = StyleSheet.create({
     gap: rhythm.line,
   },
   menuRowTitle: { flexGrow: 1, flexShrink: 0, maxWidth: '100%' },
+  menuRowWrapping: { flexWrap: 'wrap', columnGap: 0, rowGap: 0 },
+  // Its own width too, so "Showing:" never breaks inside the word; the
+  // value moves under it when the two do not fit.
+  menuRowInlineTitle: { flexShrink: 0, maxWidth: '100%' },
   groupedInput: { borderRadius: radii.container, borderCurve: 'continuous' },
   composerBody: {
     gap: 8,

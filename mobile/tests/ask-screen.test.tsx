@@ -42,6 +42,9 @@ import { chatsSnapshot } from '../src/features/ask/store';
 import { openAskOptions } from '../src/features/ask/Options';
 import { AskFailure, type StreamHandlers } from '../src/features/ask/stream';
 import { colors, rhythm, textStyles } from '../src/design/tokens';
+import { chromeTextScaleCap } from '../src/design/text-scale';
+import { Icon } from '../src/design/icon';
+import { Text } from '../src/design/text';
 import { designFlags } from '../src/design/flags';
 import * as ScrollTop from '../src/design/scroll-to-top';
 import { askRoute, conversationsRoute } from '../src/navigation/routes/ask';
@@ -324,6 +327,42 @@ test.each([
     }
   },
 );
+
+test("an open thread's inset drops the hidden large-title band: its question sits 8 pt under the bar at rest (sweep 1, 7.1)", async () => {
+  jest
+    .mocked(client.askPost)
+    .mockResolvedValueOnce(answer)
+    .mockResolvedValueOnce({ questions: [] });
+  // A 47 pt status area and 44 pt inline bar; UIKit keeps the bar's 52 pt
+  // large-title frame once the title goes inline, and reports it.
+  const compact = 91;
+  const expanded = compact + 52;
+  await mount(
+    <SafeAreaInsetsContext.Provider
+      value={{ top: 47, bottom: 34, left: 0, right: 0 }}
+    >
+      <HeaderHeightContext.Provider value={expanded}>
+        <AskScreen />
+      </HeaderHeightContext.Provider>
+    </SafeAreaInsetsContext.Provider>,
+  );
+  const scrollView = () =>
+    view!.root.find(
+      (n) => n.props.testID === 'ask-screen' && n.type === ScrollView,
+    );
+  // Idle: the large title is real; UIKit's inset stands.
+  expect(scrollView().props.contentInset).toBeUndefined();
+  expect(
+    StyleSheet.flatten(scrollView().props.contentContainerStyle).paddingTop,
+  ).toBe(rhythm.block);
+  await type('A fixture question?');
+  await press('ask-submit');
+  expect(scrollView().props.contentInset).toEqual({ top: -52 });
+  expect(scrollView().props.scrollIndicatorInsets).toEqual({ top: -52 });
+  expect(
+    StyleSheet.flatten(scrollView().props.contentContainerStyle).paddingTop,
+  ).toBe(rhythm.heading);
+});
 
 test.each(['before', 'after'] as const)(
   'send pins below the compact bar when fallback frames run %s the turn layout and native height arrives late',
@@ -1688,6 +1727,61 @@ describe('the composer at AX5 (ask.md 2.11)', () => {
     expect(style.fontSize).toBe(textStyles.body.fontSize);
     expect(style.lineHeight).toBe(textStyles.body.lineHeight);
     act(() => r.unmount());
+  });
+
+  test('empty, it is one capped placeholder line with its symbols on it; typed text is uncapped (sweep 1, 2.1)', () => {
+    act(() =>
+      Dimensions.set({
+        window: { ...original, width: 402, height: 874, fontScale: 2.643 },
+      }),
+    );
+    const { r, field } = dock();
+    // No native placeholder: a multiline one scales uncapped and wraps.
+    expect(field.props.placeholder).toBeUndefined();
+    expect(field.props.maxFontSizeMultiplier).toBe(chromeTextScaleCap);
+    expect(field.props.accessibilityHint).toBe('Ask about the public record');
+    const placeholder = r.root.find(
+      (n) => n.props.testID === 'ask-placeholder' && n.type === Text,
+    );
+    expect(placeholder.props).toMatchObject({
+      children: 'Ask about the public record',
+      numberOfLines: 1,
+      maxFontSizeMultiplier: chromeTextScaleCap,
+    });
+    for (const icon of r.root.findAllByType(Icon))
+      expect(icon.props.maxScale).toBe(chromeTextScaleCap);
+    act(() => askSession.setDraft('What did the committee find?'));
+    const typed = r.root.find(
+      (n) => n.props.testID === 'ask-question' && n.props.style !== undefined,
+    );
+    expect(typed.props.maxFontSizeMultiplier).toBeUndefined();
+    expect(
+      r.root.findAll((n) => n.props.testID === 'ask-placeholder'),
+    ).toHaveLength(0);
+    act(() => askSession.setDraft(''));
+    act(() => r.unmount());
+  });
+
+  test('Android keeps its native hint and unscaled symbols', () => {
+    act(() =>
+      Dimensions.set({
+        window: { ...original, width: 402, height: 874, fontScale: 2.643 },
+      }),
+    );
+    const platform = jest.replaceProperty(Platform, 'OS', 'android');
+    try {
+      const { r, field } = dock();
+      expect(field.props.placeholder).toBe('Ask about the public record');
+      expect(field.props.maxFontSizeMultiplier).toBeUndefined();
+      expect(
+        r.root.findAll((n) => n.props.testID === 'ask-placeholder'),
+      ).toHaveLength(0);
+      for (const icon of r.root.findAllByType(Icon))
+        expect(icon.props.maxScale).toBe(1);
+      act(() => r.unmount());
+    } finally {
+      platform.restore();
+    }
   });
 
   test('with the keyboard up the whole composer stays within 40% of what is visible', () => {

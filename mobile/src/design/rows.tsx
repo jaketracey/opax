@@ -481,6 +481,73 @@ function BillLink({
     </RowLink>
   );
 }
+/**
+ * The text cut to its whole words that fit in `lines` laid-out lines, with
+ * an ellipsis, or the whole text when it fits. Line layout breaks between
+ * words; the last kept word goes too, so the ellipsis has room on the line.
+ */
+export function wordClamp(
+  text: string,
+  laidOut: readonly { text: string }[],
+  lines: number,
+): string {
+  if (laidOut.length <= lines) return text;
+  const kept = laidOut
+    .slice(0, lines)
+    .map((line) => line.text)
+    .join('');
+  const words = kept.trimEnd().split(/(\s+)/);
+  let cut = kept.trimEnd();
+  // Free at least two characters for the ellipsis, a whole word at a time.
+  while (words.length > 1 && kept.trimEnd().length - cut.length < 2) {
+    words.splice(-2, 2);
+    cut = words.join('');
+  }
+  return `${cut.replace(/[\s,;:·–-]+$/u, '')}…`;
+}
+
+/**
+ * Up to `lines` lines, never cut inside a word (a portfolio at AX sizes).
+ * TextKit's tail truncation cuts mid-word ("Infrastructure, Trans…"), so a
+ * hidden, unclamped copy at the same width supplies the line breaks.
+ */
+function WordClampText({
+  lines,
+  children,
+  style,
+  ...props
+}: Omit<React.ComponentProps<typeof Text>, 'children' | 'numberOfLines'> & {
+  lines: number;
+  children: string;
+}) {
+  const [clamped, setClamped] = useState<{ full: string; text: string }>();
+  const text = clamped?.full === children ? clamped.text : children;
+  return (
+    <View style={style}>
+      <Text {...props} numberOfLines={lines} ellipsizeMode="tail">
+        {text}
+      </Text>
+      <Text
+        {...props}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        testID="word-clamp-probe"
+        style={styles.clampProbe}
+        onTextLayout={(event) => {
+          const next = wordClamp(children, event.nativeEvent.lines, lines);
+          setClamped((old) =>
+            old?.full === children && old.text === next
+              ? old
+              : { full: children, text: next },
+          );
+        }}
+      >
+        {children}
+      </Text>
+    </View>
+  );
+}
+
 export function BillRow({
   preview = false,
   billKey,
@@ -580,7 +647,9 @@ export function BillRow({
         <Text
           wordSafe={!preview}
           variant="rowRecord"
-          numberOfLines={preview ? 3 : undefined}
+          // A preview holds three lines to XXXL; from AX1, six, so the bill
+          // reads to its distinguishing words (sweep 1, 2.3).
+          numberOfLines={preview ? (stacked ? 6 : 3) : undefined}
           ellipsizeMode={preview ? 'tail' : undefined}
           testID={testID && `${testID}-title`}
         >
@@ -597,7 +666,15 @@ export function BillRow({
           />
         ) : who || affiliation ? (
           <View style={[styles.line, stacked ? styles.stacked : null]}>
-            {who ? (
+            {who && preview && stacked ? (
+              <WordClampText
+                lines={2}
+                variant="secondary"
+                style={styles.clampColumn}
+              >
+                {who}
+              </WordClampText>
+            ) : who ? (
               <Text
                 wordSafe={!preview}
                 variant="secondary"
@@ -1304,6 +1381,8 @@ function SuggestionName({
 }
 
 const styles = StyleSheet.create({
+  clampColumn: { alignSelf: 'stretch' },
+  clampProbe: { position: 'absolute', left: 0, right: 0, opacity: 0 },
   row: {
     flexDirection: 'row',
     alignItems: 'center',

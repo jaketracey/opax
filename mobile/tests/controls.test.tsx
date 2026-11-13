@@ -890,3 +890,60 @@ test('Android text field still offers its clear button while focused', () =>
       r.root.findAll((node) => node.props.testID === 'email-clear').length,
     ).toBeGreaterThan(0);
   }));
+
+test('a menu title stands in for a label the heading above already says (sweep 1, 2.2)', () => {
+  size(2.643);
+  const r = render(
+    <SegmentedPicker
+      options={options}
+      value="all"
+      onChange={noop}
+      accessibilityLabel="Bills"
+      menuTitle="Showing"
+      testID="bills"
+    />,
+  );
+  const drawn = r.root.findAllByType(Text).map((node) => node.props.children);
+  expect(drawn).toContain('Showing:');
+  expect(drawn).not.toContain('Bills');
+  // VoiceOver still hears what the menu chooses.
+  expect(r.root.findByType(Picker).props.modifiers).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        $type: 'accessibilityLabel',
+        label: 'Bills, All jurisdictions, pop-up button',
+      }),
+    ]),
+  );
+  // Title and button share a line while they fit.
+  expect(
+    r.root.findAll(
+      (node) => typeof node.type === 'string' && flat(node).flexWrap === 'wrap',
+    ),
+  ).not.toHaveLength(0);
+});
+
+test('a wrapped primary button keeps its label centred at AX3 (sweep 1, 2.7)', () => {
+  size(2.643);
+  const label = (variant: 'primary' | 'quiet', text: string) => {
+    const r = render(
+      <Button label={text} variant={variant} onPress={noop} testID={text} />,
+    );
+    const pressable = press(r, text);
+    return {
+      text: flat(
+        r.root.findAll(
+          (node) => node.type === Text && node.props.children === text,
+        )[0]!,
+      ),
+      button: RN.StyleSheet.flatten(pressable.props.style({ pressed: false })),
+    };
+  };
+  const primary = label('primary', 'Find my electorate');
+  expect(primary.text).toMatchObject({ textAlign: 'center' });
+  expect(primary.button.alignItems).not.toBe('flex-start');
+  // Frameless buttons still read from the text column's leading edge.
+  const quiet = label('quiet', 'See all');
+  expect(quiet.text.textAlign).toBeUndefined();
+  expect(quiet.button.alignItems).toBe('flex-start');
+});

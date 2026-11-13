@@ -134,7 +134,19 @@ test('an answered search stops asking: the scope control and count line head the
     (n) => n.props?.testID === 'search-results-header',
   );
   // Only the scope control and the count line sit above the first result.
-  expect(header.findAllByType(ScopeBar)).toHaveLength(1);
+  // On iPhone the scope control is pinned under the search field, so the
+  // reader sees what they searched while results scroll (sweep 1, item 1).
+  const pinned = renderer.root.find(
+    (n) => n.props?.testID === 'screen-pinned' && typeof n.type === 'string',
+  );
+  expect(pinned.findAllByType(ScopeBar)).toHaveLength(1);
+  expect(header.findAllByType(ScopeBar)).toHaveLength(0);
+  expect(renderer.root.findAllByType(ScopeBar)).toHaveLength(1);
+  expect(
+    renderer.root.find(
+      (n) => n.props?.testID === 'search-screen' && n.props.stickyHeaderIndices,
+    ).props.stickyHeaderIndices,
+  ).toEqual([0]);
   expect(header.findAllByType(ResultsHeader)).toHaveLength(1);
   expect(header.findByType(ResultsHeader).props.filters).toBeUndefined();
   expect(renderer.root.findByType(ScopeBar).props.value).toBe('all');

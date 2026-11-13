@@ -10,7 +10,7 @@ import {
   useLayoutEffect,
   useSyncExternalStore,
 } from 'react';
-import { useWindowDimensions, type ColorValue } from 'react-native';
+import { Platform, useWindowDimensions, type ColorValue } from 'react-native';
 import { useSolidBar } from '../design/accessibility';
 import { RootBar, useVerticalBarEdge } from '../../modules/opax-root-bar';
 import { colors } from '../design/tokens';
@@ -18,6 +18,8 @@ import { glassBar, largeTitleBar, scrollBar, tabRootGround } from './chrome';
 import { isTabStack } from './floating-bar';
 
 const roots = ['index', 'your-mp', 'bills', 'search', 'ask'];
+/** Roots whose Screen turns the top edge hard under scrolled text. */
+const hardEdgeRoots = ['index', 'search'];
 
 const searches = new WeakMap<
   object,
@@ -70,8 +72,12 @@ export function useRootBarSearchOptions(
  * Screen supplies its ground. Bills and Ask use this from RouteOptions because
  * their FlatList/ScrollView does not use Screen. The five tab roots and
  * explicit large-title lists opt in; record and inline screens keep the
- * stack's opaque bar. Scrolling belongs to UIKit, never JS collapse thresholds
- * or route appearance updates.
+ * stack's opaque bar. Scrolling belongs to UIKit, never JS collapse
+ * thresholds. The one scroll-driven update is `underBar` from Screen: the
+ * page has left rest, so the top edge turns hard from the first point of
+ * scroll, the large-title collapse included, and soft again at rest (once
+ * each way, never per frame). Today and Search on iPhone only; the iPad
+ * roots and the RouteOptions owners keep the soft edge.
  * The setter must be the shared useSafeSetOptions guard.
  */
 export function useRootBarAppearance(
@@ -81,11 +87,14 @@ export function useRootBarAppearance(
     disabled = false,
     names = roots,
     owner = 'screen',
+    underBar = false,
   }: {
     ground?: ColorValue;
     disabled?: boolean;
     names?: readonly string[];
     owner?: 'screen' | 'options';
+    /** Screen's content has scrolled under the bar (iOS). */
+    underBar?: boolean;
   } = {},
 ) {
   const navigation = useContext(NavigationContext);
@@ -132,6 +141,12 @@ export function useRootBarAppearance(
     (name === 'search' && rootOptions.largeTitle === false);
   const rootKey = root?.key;
   const identifier = rootKey ? `opax-root-bar-${rootKey}` : undefined;
+  const hardEdge =
+    underBar &&
+    owner === 'screen' &&
+    Platform.OS === 'ios' &&
+    !Platform.isPad &&
+    hardEdgeRoots.includes(name);
 
   useLayoutEffect(() => {
     if (
@@ -143,7 +158,7 @@ export function useRootBarAppearance(
     setOptions(
       largeTitleEnabled && !verticalBar
         ? {
-            ...largeTitleBar(colour, solid),
+            ...largeTitleBar(colour, solid, hardEdge),
             // Override the stack's inline default for legacy callers too.
             headerLargeTitleEnabled: true,
             unstable_nativeProps: { testID: identifier },
@@ -161,6 +176,7 @@ export function useRootBarAppearance(
     largeTitleEnabled,
     verticalBar,
     barEdge,
+    hardEdge,
   ]);
   // A coloured UIKit appearance hides large titles on iOS 26. Only the
   // accessibility fallback needs this native sibling. Header-height updates

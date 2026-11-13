@@ -49,7 +49,6 @@ export function StatusCapsule({
   hidden?: boolean;
   accessibilityLabel?: string;
 }) {
-  const fixed = useAccessibilitySize();
   const surface = useContext(SurfaceContext);
   const active = statusTone(status) === 'active';
   return (
@@ -63,7 +62,8 @@ export function StatusCapsule({
       testID={testID}
       style={[
         styles.status,
-        fixed ? styles.fixed : styles.hug,
+        // Hugs its label at every size; a long label wraps inside it.
+        styles.hug,
         {
           backgroundColor: active
             ? colors.billsWash
@@ -114,7 +114,7 @@ export function Tag({
               } as const,
             ]
           : []),
-        fixed ? styles.fixed : styles.hug,
+        styles.hug,
         pressed ? { backgroundColor: highlight } : null,
       ]}
     >
@@ -136,7 +136,7 @@ export function Tag({
         accessible
         accessibilityLabel={`${kind}: ${label}`}
         testID={testID}
-        style={fixed ? styles.fixed : styles.hug}
+        style={styles.hug}
       >
         {face(false)}
       </View>
@@ -149,7 +149,7 @@ export function Tag({
       onPress={onPress}
       style={[
         styles.tagTarget,
-        fixed ? styles.fixed : styles.hug,
+        styles.hug,
         ...(Platform.OS === 'android'
           ? [
               {
@@ -284,7 +284,6 @@ const machineSymbol = 'sparkles';
 
 const styles = StyleSheet.create({
   hug: { alignSelf: 'flex-start', maxWidth: '100%' },
-  fixed: { alignSelf: 'stretch' },
   shrink: { flexShrink: 1 },
   center: { textAlign: 'center' },
   status: {

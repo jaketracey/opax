@@ -12,6 +12,7 @@ import {
   Text,
   ToastAndroid,
   View,
+  useColorScheme,
   useWindowDimensions,
   type ColorValue,
 } from 'react-native';
@@ -29,6 +30,7 @@ import {
   headingFace,
   headlineSizes,
   largeTitleSizes,
+  schemeColour,
   textStyles,
 } from '../design/tokens';
 import { accountSnapshot } from '../features/account/store';
@@ -80,14 +82,21 @@ export const opaqueBar = (ground: ColorValue = colors.paper) => ({
  * Keep both appearances transparent while expanded. A scroll-edge background
  * also suppresses the title, even with a transparent standard appearance.
  * The screen supplies the page ground beneath the native scroll edge.
- * Empty styles replace the navigator's opaque defaults. UIKit owns the soft
- * edge throughout scrolling; no collapse threshold, backing or hairline is
- * added. For accessibility only, useRootBarAppearance supplies a solid native
- * sibling below the bar, preserving the large title and automatic insets.
+ * Empty styles replace the navigator's opaque defaults. The edge is soft at
+ * rest, where a hard edge would paint its divider. Soft alone blurs only the
+ * status strip, so the title, the clock and a search field printed over page
+ * text once it ran under the bar (sweep 1, item 1). `underBar` asks for
+ * UIKit's hard edge, which switches without animation. It turns on from the
+ * first point of scroll, the large-title collapse included (Screen compares
+ * with the bar height last reported, which holds the expanded title until
+ * the collapse settles), and the edge is soft again back at rest. For
+ * accessibility only, useRootBarAppearance supplies a solid native sibling
+ * below the bar, preserving the large title and automatic insets.
  */
 export const largeTitleBar = (
   ground: ColorValue = colors.paper,
   solid = false,
+  underBar = false,
 ) =>
   glassBar()
     ? {
@@ -99,7 +108,7 @@ export const largeTitleBar = (
         headerLargeTitleShadowVisible: false,
         scrollEdgeEffects: barScrollEdges(
           'unspecified',
-          solid ? 'hidden' : 'soft',
+          solid ? 'hidden' : underBar ? 'hard' : 'soft',
         ),
       }
     : opaqueBar(ground);
@@ -142,6 +151,8 @@ export const androidBar = {
 
 export function useStackChrome() {
   const { fontScale } = useWindowDimensions();
+  // Bar titles resolve in the app's appearance, not the bar's (11b-3).
+  const titleInk = schemeColour('ink', useColorScheme());
   const barEdge = useVerticalBarEdge();
   const category = contentSizeCategory(fontScale);
   const sizes = {
@@ -165,7 +176,7 @@ export function useStackChrome() {
         : headingFace === 'serif'
           ? { fontSize: sizes.title }
           : {}),
-      color: colors.ink,
+      color: titleInk,
     },
     headerLargeTitleStyle: {
       fontFamily: textStyles.largeTitle.fontFamily,
@@ -176,7 +187,7 @@ export function useStackChrome() {
       ...(Platform.OS === 'ios' || headingFace === 'serif'
         ? { fontSize: sizes.largeTitle }
         : {}),
-      color: colors.ink,
+      color: titleInk,
     },
     // Wave 2 found the soft top edge too light over serif record text: the
     // record remained readable through the title and bar buttons. Keep the
