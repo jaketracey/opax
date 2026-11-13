@@ -37,3 +37,12 @@ test('two divisions on one day with identical tallies are both shown and both co
   const body = (html.match(/<tbody[\s\S]*?<\/tbody>/) || [''])[0];
   assert.equal((body.match(/<tr\b/g) || []).length, 2);
 });
+
+test('the bill list fineprint says the bill page shows every division it counts', () => {
+  const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
+  const start = app.indexOf('const BILLS_FINEPRINT =');
+  const fineprint = app.slice(start, app.indexOf('`;', start)).replace(/\s+/g, ' ');
+  assert.match(fineprint, /Each division record counted here is one division of the house, and the bill's page shows every one of them\./);
+  assert.doesNotMatch(app, /folds the duplicates|usually shows fewer/);
+  assert.doesNotMatch(fineprint, /\u2014/);
+});
