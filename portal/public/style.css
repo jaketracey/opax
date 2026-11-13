@@ -1714,7 +1714,7 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 
 /* ---- document page ------------------------------------------------------ */
 
-#panel-doc h2 { font: 700 clamp(1.55rem, 2.8vw, 2.1rem)/1.2 var(--serif); margin: var(--sp-2) 0 var(--sp-4); max-width: 68ch; }
+#panel-doc .doc-head > h2 { font: 700 clamp(1.55rem, 2.8vw, 2.1rem)/1.2 var(--serif); margin: var(--sp-2) 0 var(--sp-4); max-width: 68ch; }
 #panel-doc #doc-title { margin: var(--space-line) 0 var(--space-tight); max-width: var(--size-readable); }
 .doc-topic { font: italic var(--type-record); color: var(--ink-soft); margin: 0 0 var(--sp-8); max-width: 68ch; }
 .doc-meta { color: var(--ink-soft); font-size: var(--text-15); margin: 0; }
@@ -4378,7 +4378,7 @@ html[data-panel="chat"] footer { display: none; }
 .area-nav a { color: var(--ink-soft); padding: var(--space-row) 0; min-height: var(--size-target); font: var(--type-body); text-decoration: none; }
 .area-nav a[aria-current] { color: var(--navy); border-bottom: var(--border-focus) solid var(--navy); font: var(--type-strong); }
 .bill-text-overview { margin: var(--sp-24) 0; padding: var(--sp-20) 0; border-block: var(--border-hairline) solid var(--divider-subtle); }
-.bill-text-overview h3 { margin: 0 0 var(--sp-8); }
+.bill-text-overview h3 { font: var(--weight-bold) var(--text-16)/var(--leading-normal) var(--sans); margin: 0 0 var(--sp-8); }
 .bill-text-overview p { max-width: 75ch; }
 .bill-text-topics { display: flex; flex-wrap: wrap; gap: var(--sp-8) var(--sp-16); margin: var(--sp-12) 0; }
 .bill-text-topics a { color: var(--bronze-ink); text-transform: capitalize; }

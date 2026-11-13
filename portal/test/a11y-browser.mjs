@@ -14,6 +14,8 @@ const pub=new URL('../public/',import.meta.url),output=new URL('../private/web-a
 const read=async file=>JSON.parse(await readFile(new URL(file,pub),'utf8'));
 const axeSource=await readFile(require.resolve('axe-core/axe.min.js'),'utf8');
 const person=personUrl((await read('speakers.json'))[0][0]);
+const billKey=(await read('bills/index.json')).bills.find(b=>b.divisions>0).key;
+const division='/doc/'+(await read('divisions/index.json')).divisions[0].slug;
 const representative=[['Home','/'],['Money','/money'],['Person',person],['Search results','/ask?view=search&q=housing'],['Budget','/budget'],['Ask idle','/ask']];
 const audit=process.argv.includes('--audit');
 const keyboardOnly=process.argv.includes('--keyboard-only');
@@ -22,7 +24,7 @@ let pages=representative;
 if(audit) {
  const graph=await read('graph/money.json'),manifest=await read('electorates/manifest.json');
  const seats=(await read(manifest.index_url.slice(1))).electorates;
- pages=[...representative,['Money map','/map'],['Bill','/bill/'+(await read('bills/index.json')).bills.find(b=>b.divisions>0).key],['Division','/doc/'+(await read('divisions/index.json')).divisions[0].slug],['Donor',donorDisclosure(graph.nodes.find(n=>n.kind==='donor')).href],['Labor','/subject/party/labor'],['Electorate','/subject/electorate/'+seats.find(s=>s.jurisdiction==='federal'&&s.representatives.length).slug],['Search empty','/ask?view=search&q=zzqxnonexistentaccessibilityterm'],['Connections','/connections'],['Budget year','/budget?year=2024-25'],['Time machine year','/explore?game=tm'],['404','/this-page-does-not-exist'],['Menu open','/']];
+ pages=[...representative,['Money map','/map'],['Bill','/bill/'+billKey],['Division',division],['Donor',donorDisclosure(graph.nodes.find(n=>n.kind==='donor')).href],['Labor','/subject/party/labor'],['Electorate','/subject/electorate/'+seats.find(s=>s.jurisdiction==='federal'&&s.representatives.length).slug],['Search empty','/ask?view=search&q=zzqxnonexistentaccessibilityterm'],['Connections','/connections'],['Budget year','/budget?year=2024-25'],['Time machine year','/explore?game=tm'],['404','/this-page-does-not-exist'],['Menu open','/']];
 }
 const browser=await chromium.launch({executablePath:process.env.OPAX_BROWSER_EXECUTABLE || '/usr/bin/google-chrome',headless:true,args:['--mute-audio','--disable-dev-shm-usage']});
 const evidence=[],focusChecks=[],blocked=new Set();
@@ -45,6 +47,41 @@ async function load(page,path) {
  if(path.startsWith('/ask?view=search&q=housing')) await page.locator('#search-results > li').first().waitFor();
  if(path.startsWith('/explore?game=tm')) await page.locator('.tm-year').waitFor();
  await page.evaluate(()=>document.fonts.ready);
+}
+async function typography(page,width,theme) {
+ const checks=[];
+ async function heading(name,path,selector,expected) {
+  const node=page.locator(selector);await node.waitFor();await page.evaluate(()=>document.fonts.ready);
+  const actual=await node.evaluate(e=>{
+   const s=getComputedStyle(e);
+   return {tag:e.tagName,fontFamily:s.fontFamily,fontSize:s.fontSize,fontWeight:s.fontWeight,lineHeight:s.lineHeight,margin:s.margin};
+  });
+  evidence.push({kind:'typography',name,path,width,theme,...actual});checks.push({name,actual,expected});
+ }
+ await load(page,division);
+ await heading('Who voted which way',division,'#division-members-head',{tag:'H2',fontFamily:'Merriweather, Georgia, "Times New Roman", serif',fontSize:'24px',fontWeight:'600',lineHeight:'30px',margin:'0px 0px 16px'});
+ // Serve synthetic enriched text locally, then open the real bill reader. No KB is needed.
+ const prefix=`/bill-texts/${billKey}/`;
+ const version={id:'first-reps',status:'complete',text_url:prefix+'first-reps.json'};
+ const text='Synthetic provision for the local browser typography test.';
+ const fixture=route=>{
+  const url=new URL(route.request().url());
+  if(url.origin!==base||!url.pathname.startsWith(prefix))return route.fallback();
+  return route.fulfill({json:url.pathname===prefix+'index.json'
+   ?{bill_key:billKey,default_version_id:version.id,versions:[version]}
+   :{bill_key:billKey,version,complete:true,text,sections:[{id:'one',title:'Example provision',text}],enrichment:{brief:'Synthetic overview for the local browser test.',topics:[],evidence:[]}}});
+ };
+ await page.route('**/bill-texts/**',fixture);
+ try {
+  const path='/bill/'+billKey;await load(page,path);
+  await page.locator('.bill-text-read').click();
+  await heading('In this version',path,'.bill-text-overview h3',{tag:'H3',fontFamily:'"Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',fontSize:'16px',fontWeight:'700',lineHeight:'23.2px',margin:'0px 0px 8px'});
+ } finally {await page.unroute('**/bill-texts/**',fixture);}
+ await writeFile(new URL(receiptName,output),JSON.stringify(evidence,null,2)+'\n');
+ for(const {name,actual,expected} of checks) for(const [property,value] of Object.entries(expected)) {
+  assert.equal(actual[property],value,`${name} ${theme} ${width}: ${property}`);
+ }
+ console.log(`PASS typography ${theme} ${width} Division and bill reader`);
 }
 async function resetTabs(page) {await page.evaluate(()=>{document.body.tabIndex=-1;document.body.focus();document.body.removeAttribute('tabindex');});}
 async function ring(page) {
@@ -133,6 +170,7 @@ try {
    assert.equal(result.h1,1,`${name}: one h1`);assert.deepEqual(result.skips,[],`${name}: heading order`);assert.equal(result.main,1,`${name}: main landmark`);assert.deepEqual(result.bareLinks,[],`${name}: link names`);assert.deepEqual(result.animations,[],`${name}: reduced motion`);
    console.log(`PASS axe ${theme} ${width} ${name}`);
   }
+  if(!keyboardOnly) await typography(page,width,theme);
   if(theme==='light'||keyboardOnly) await keyboard(page,width,theme);
   await c.close();
  }
@@ -147,5 +185,5 @@ try {
   }await c.close();
  }
  await writeFile(new URL(receiptName,output),JSON.stringify({evidence,focusChecks,blocked:[...blocked]},null,2)+'\n');
- console.log(`a11y-browser: ${keyboardOnly?0:pages.length*4} axe checks, ${keyboardOnly?4:2} keyboard journeys and ${keyboardOnly?0:pages.length*2} zoom checks passed`);
+ console.log(`a11y-browser: ${keyboardOnly?0:pages.length*4} axe checks, ${keyboardOnly?4:2} keyboard journeys, ${keyboardOnly?0:8} typography checks and ${keyboardOnly?0:pages.length*2} zoom checks passed`);
 } finally {await browser.close();}
