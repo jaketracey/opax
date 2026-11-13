@@ -3,10 +3,10 @@ import {mountContractsTable} from './contracts-table.js?v=bd2b252bf0';
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
-import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=4820b37acf";
+import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=1269f8aa0b";
 import { sourceLineHTML } from "./labels.js?v=75e6c65ff7";
 import { partyUrl } from "./canonical-urls.js?v=e32f13c6c8";
-import { receiptGraph, receiptGraphScope } from "./donor-disclosure.js?v=b601705758";
+import { receiptGraph, receiptGraphScope } from "./donor-disclosure.js?v=8c73ceafd6";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const number = (value) => (Number(value) || 0).toLocaleString("en-AU");
 const currency = (value) => (Number(value) || 0).toLocaleString("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 });
