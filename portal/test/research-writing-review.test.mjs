@@ -22,8 +22,8 @@ for(const [name,bad] of [
  assert.equal(api.verifyWrittenAnswer({sentences:[{text:bad,facts:[1,2,3]}]},input).answer,bad)
  const out=api.verifyWrittenAnswer({sentences:[{text:good+' '+bad,facts:[1,2,3]}]},input)
  assert.equal(out.answer.split('\n\n')[0],good)
- // The same figure for the same person, restated with a date, is a repeat the claim dedupe leaves out.
- if(name==='date before value')assert.ok(!out.answer.includes(bad));else assert.ok(out.answer.includes(bad))
+ // A different date carries a distinct figure, even when the salary amount is repeated.
+ assert.ok(out.answer.includes(bad))
 })
 test('review grounding: structured atoms retain entity metric value unit chamber period and evidence',()=>{
  const fs=api.writingFacts(undefined,[{id:1,text:salary[0].text,cite:{kind:'record',url:'https://example.org',label:salary[0].text}}])
