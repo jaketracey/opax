@@ -2,7 +2,8 @@
 # scripts/vm/export_people.sh -- portal/public/parliamentarians.json as committed: the speech-derived directory
 # (scripts/export_parliamentarians.py) plus the recorded parliamentary representation that
 # scripts/enrich_profile_jurisdictions.py attaches from the members table and the AEC seat list in research/mlci.json,
-# with certain surname-only prints folded into their person by scripts/roster_fold.py.
+# with certain surname-only prints folded into their person, and the rows that share one verified person id folded
+# into one person under the electorate release's public name, by scripts/roster_fold.py.
 # Prints the finished JSON to stdout (scripts/vm/export_step.sh json installs it only if it moved by more than a
 # timestamp). The bare export alone would drop every person's `representation`, which portal tests and the person
 # pages need (found by the first VM rehearsal, 2026-09-29: David Pocock lost his territory).
@@ -24,7 +25,8 @@ trap 'rm -rf "$T"' EXIT
 sqlite3 -readonly -json "$DB" "SELECT full_name, state, chamber, electorate, entered_house, left_house FROM members" > "$T/members.json"
 "$PY" scripts/enrich_profile_jurisdictions.py --members "$T/members.json" --directory "$T/directory.json" \
     --research portal/public/research/mlci.json >&2
-# Surname-only prints ("Shoebridge") fold into the one full-name person they certainly are (scripts/roster_fold.py).
+# Surname-only prints ("Shoebridge") fold into the one full-name person they certainly are, then the rows that carry
+# one verified person id ("Mark Butler", "Mark Christopher Butler") fold into one person (scripts/roster_fold.py).
 "$PY" scripts/roster_fold.py --directory "$T/directory.json" --members "$T/members.json" >&2
 "$PY" scripts/roster_source_profiles.py --directory "$T/directory.json" >&2
 "$PY" scripts/export_parliamentarians.py --check-directory "$T/directory.json" >&2

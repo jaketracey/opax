@@ -825,11 +825,14 @@ there is no incomplete override. Before creating staging or invoking export,
 `evidence_inputs.py` opens available inputs read-only and checks the same coverage
 requirements within **60 seconds plus a 5-second kill grace**, configurable with
 `OPAX_EVIDENCE_READINESS_TIMEOUT`. A timed-out probe reports waiting and cannot block
-later groups indefinitely. Missing inputs, unreadable coverage or a growing source
-with old sidecars produce **one warning per attempted night**, return success and
-preserve catch-up.
-The status summary says `evidence: waiting for inputs (missing: …)` or `(mismatch: …)`
-and names the affected files; no export retry occurs that night. Shards stay unchanged.
+later groups indefinitely. Unreadable coverage or a growing source with old sidecars
+produce **one warning per attempted night**, return success and preserve catch-up; the
+status summary says `evidence: waiting for inputs (mismatch: …)` and names the affected
+files. Missing sidecars (none were ever provisioned on the box; see
+[the 13 Nov report](../reports/2026-11-13-evidence-layers.md)) are one info line instead:
+the status says `evidence layers: snapshot 8 Sep 2026; rebuild pending a decision`, the
+day read from the shipped `portal/public/evidence/stats.json`, and the log line also names
+the missing files. Either way no export retry occurs that night. Shards stay unchanged.
 Coverage counts alone do not prove source text provenance; the full export/source audit
 still gates publication after readiness. See [evidence-provisioning.md](evidence-provisioning.md)
 for the five-file inventory, exact-size receipts, WAL-safe snapshots and match verification.

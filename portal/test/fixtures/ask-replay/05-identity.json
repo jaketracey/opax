@@ -1,0 +1,18 @@
+{
+ "id": "identity",
+ "question": "Which party is Penny Wong in?",
+ "input": {
+  "kind": "speech"
+ },
+ "model": [],
+ "services": [],
+ "assets": {},
+ "expect": {
+  "answered": true,
+  "includes": [
+   "Penny Wong",
+   "Labor"
+  ],
+  "citations": 1
+ }
+}

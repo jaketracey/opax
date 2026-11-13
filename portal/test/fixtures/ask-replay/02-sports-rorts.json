@@ -1,0 +1,124 @@
+{
+ "id": "sports-rorts",
+ "question": "Who was responsible for the sports rorts affair?",
+ "input": {
+  "kind": "speech"
+ },
+ "model": [
+  {
+   "tool_calls": [
+    {
+     "name": "search",
+     "args": {
+      "query": "sports grants Auditor-General community sport infrastructure"
+     }
+    }
+   ]
+  },
+  {
+   "tool_calls": [
+    {
+     "name": "answer",
+     "args": {
+      "points": [
+       {
+        "claim": "Bridget McKenzie, as Minister for Sport, approved the Community Sport Infrastructure Program grants in the lead-up to the 2019 election, and the Auditor-General found the funding decisions favoured marginal and targeted seats."
+       },
+       {
+        "claim": "Casey Example told the House the Auditor-General found the minister's office \"ran a parallel assessment process\" that did not follow Sport Australia's merit scores.",
+        "id": "22222222222222222222222222222222/t/body/0-176",
+        "quote": "the minister's office ran a parallel assessment process"
+       },
+       {
+        "claim": "Bridget McKenzie resigned from Cabinet in February 2020 after a review found she had breached ministerial standards over a grant to a club she belonged to."
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "services": [
+  {
+   "path": "/find",
+   "match": [
+    "sports"
+   ],
+   "response": {
+    "resources": {
+     "22222222222222222222222222222222": {
+      "slug": "speech-910002",
+      "title": "Community Sport Infrastructure Program",
+      "origin": {
+       "created": "2020-02-04T00:00:00Z",
+       "collaborators": [
+        "Casey Example"
+       ]
+      },
+      "extra": {
+       "metadata": {
+        "kind": "speech"
+       }
+      },
+      "fields": {
+       "body": {
+        "paragraphs": {
+         "22222222222222222222222222222222/t/body/0-176": {
+          "text": "The Auditor-General found the minister's office ran a parallel assessment process, and the grants that were approved did not reflect the merit scores Sport Australia had given."
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "path": "/slug/speech-910002",
+   "response": {
+    "id": "22222222222222222222222222222222",
+    "title": "Community Sport Infrastructure Program",
+    "origin": {
+     "created": "2020-02-04T00:00:00Z",
+     "collaborators": [
+      "Casey Example"
+     ]
+    },
+    "extra": {
+     "metadata": {
+      "date": "2020-02-04"
+     }
+    },
+    "data": {
+     "texts": {
+      "body": {
+       "value": {
+        "body": "The Auditor-General found the minister's office ran a parallel assessment process, and the grants that were approved did not reflect the merit scores Sport Australia had given."
+       }
+      }
+     }
+    },
+    "usermetadata": {
+     "classifications": [
+      {
+       "labelset": "kind",
+       "label": "speech"
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "assets": {},
+ "expect": {
+  "answered": true,
+  "includes": [
+   "Bridget McKenzie",
+   "Auditor-General"
+  ],
+  "citations": 1,
+  "cited": [
+   "22222222222222222222222222222222"
+  ]
+ }
+}

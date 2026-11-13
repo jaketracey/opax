@@ -3,9 +3,9 @@ import {mountContractsTable} from './contracts-table.js?v=0aff850e06';
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
-import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=410d91a7a6";
-import { sourceLineHTML } from "./labels.js?v=6a4764139d";
-import { partyUrl } from "./canonical-urls.js?v=6c889d487d";
+import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=cb257240bb";
+import { sourceLineHTML } from "./labels.js?v=75e6c65ff7";
+import { partyUrl } from "./canonical-urls.js?v=e32f13c6c8";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const number = (value) => (Number(value) || 0).toLocaleString("en-AU");
 const currency = (value) => (Number(value) || 0).toLocaleString("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 });
@@ -360,7 +360,7 @@ async function mountFunding(root, links, life, register = "") {
       slot.hidden = false;
       slot.innerHTML = '<p role="status">Opening the money map…</p>';
       try {
-        const { mountMoneyMap } = await import("/money-map.js?v=2e9dfab24a");
+        const { mountMoneyMap } = await import("/money-map.js?v=6494696c46");
         if (!life.alive()) return;
         slot.textContent = "";
         const handle = await mountMoneyMap(slot, "/graph/money.json", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });

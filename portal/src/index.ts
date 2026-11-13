@@ -17,7 +17,7 @@ import { repairQuotes } from './research-evidence'
 import {ServerTiming, timed, timedSync, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import { chamberLabel, PARTY_MAP } from '../public/party-page.js'
-import {partySpeechLabel, partyMembers, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, readPartyPages, resolvePartyPage, type PartyPage} from '../public/party-page.js'
+import {partySpeechLabel, partyMembers, partyBills, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, readPartyPages, resolvePartyPage, dayMonthYear, type PartyPage, type PartyBill} from '../public/party-page.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
@@ -47,7 +47,7 @@ import { governmentFinancePage, governmentFinanceReader } from './government-fin
 import { govAdvertisingPage, govAdvertisingReader, govAdvertisingReady } from './gov-advertising'
 import { taxExpendituresPage, taxExpendituresReader, taxExpendituresReady } from './tax-expenditures'
 import {parseQuery,serializeQuery,type Page} from '../public/datatable.js'
-import {partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
+import {partyMoneyData,partyMoneyTableConfig,receiptFigures,registerTableHTML} from '../public/register-tables.js'
 import {grantsHTML} from './grants-table'
 import {saGrantsPage,saGrantsReader} from './sa-grants'
 import {actInvoicesPage} from './act-invoices'
@@ -90,6 +90,7 @@ import { reviewerLoginEnabled } from './community-auth'
 import { operatorAuthorized } from './operator-auth'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/party-page.js'
+import { referenceOnlyPeople } from '../public/roster-party.js'
 import {foldDonorName} from '../public/donor-entity.js'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
@@ -124,7 +125,7 @@ import { createResearch, researchLimits } from './research-loop'
 import { recordResearchAnswer, recordResearchComparison, recordResearchFailure } from './research-monitor'
 import { cachedKbLookup } from './kb-cache'
 import { ANSWER_WRITING_VERSION } from './research-writing'
-import { cacheableRoutedAnswer, withAnswerLanguage, withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
+import { cacheableRoutedAnswer, calculatedPayAnswer, withAnswerLanguage, withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
 import { groundAnswerPayload } from './research-grounding'
 import { researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
 import { ResearchError, type ResearchPayload } from './research-types'
@@ -1660,9 +1661,13 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   const t0 = Date.now()
   let answer = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
   mark('ask')
-  // A stall or an upstream error gets one lighter attempt before the reader hears about it;
-  // a spent model budget does not.
-  if (answer instanceof Response && !answer.headers.get(MODEL_BUDGET_HEADER) && (!firstBudget || firstBudget.remaining > 0)) answer = await askOnce(lighterAsk(body), ASK_SYNC_TIMEOUT_MS)
+  // A stall, an upstream error or a blank answer gets one lighter attempt before the reader hears about it;
+  // a spent model budget does not. A blank first answer keeps its retrieved records if the retry fails outright.
+  const blank = (a: AskAnswer | Response) => !(a instanceof Response) && !String(a.answer ?? '').trim()
+  if ((answer instanceof Response && !answer.headers.get(MODEL_BUDGET_HEADER) || blank(answer)) && (!firstBudget || firstBudget.remaining > 0)) {
+    const again = await askOnce(lighterAsk(body), ASK_SYNC_TIMEOUT_MS)
+    if (answer instanceof Response || !(again instanceof Response)) answer = again
+  }
   if (answer instanceof Response) return answer
   if (isRefusal(answer) && healthyRetrieval(answer) && Date.now() - t0 < ASK_RETRY_BUDGET_MS) {
     const again = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
@@ -4002,7 +4007,7 @@ interface Person {
   representation?: { electorate: string; jurisdiction: string; chamber: string; state?: string | null }[]
   rosterOnly?: { asOf?: string; seats: string[] }
 }
-interface PeopleData { generated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person>; addresses: Map<string, Person>; bySlug: Map<string, Person>; slugOf: Map<string, string> }
+interface PeopleData { generated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person>; addresses: Map<string, Person>; bySlug: Map<string, Person>; slugOf: Map<string, string>; formerSlugs: Map<string, Person> }
 
 async function speakerAttribution(env: Env, raw: string | null | undefined): Promise<SpeechScope | null> {
   if (!raw) return null
@@ -4150,17 +4155,13 @@ function loadPeople(env: Env): Promise<PeopleData> {
   peopleMemo ??= assetJson<{ meta?: { generated?: string }; people: Person[] }>(env, '/parliamentarians.json')
     .then(async (raw) => {
       const reference = await loadElectorates(env).catch(() => null)
-      const names = new Set(raw.people.flatMap((p) => [p.name, ...splitSpeakers(p)].map(foldName)))
-      for (const p of reference?.people || []) {
-        if ([p.name, ...p.aliases].some((n) => names.has(foldName(n)))) continue
-        const seats = p.electorates.filter((e) => e.current)
-        if (!seats.length) continue
+      // One rule with the party index (scripts/build_party_index.mjs), so party pages count them alike.
+      for (const { person: p, seats } of referenceOnlyPeople(raw.people, reference?.people)) {
         raw.people.push({ name: p.name, pid: p.legacy_person_id || p.person_id, speeches: 0,
           party: seats[0].party || null, party_now: seats[0].party || undefined, current: true,
           representation: seats.map(e=>({electorate:e.name,jurisdiction:e.jurisdiction,chamber:e.chamber})), states: [...new Set(seats.map((e) => e.jurisdiction))],
           chambers: [...new Set(seats.map((e) => e.chamber))], first: null, last: null,
           rosterOnly: { asOf: seats[0].as_of, seats: seats.map((e) => e.name) } })
-        names.add(foldName(p.name))
       }
       return { generated: raw.meta?.generated ?? '', people: raw.people, ...personIndex(raw.people) }
     })
@@ -5007,6 +5008,8 @@ async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMet
 /** The person a /subject/person/<segment> names: by slug, by name, by folded name. */
 function personAt(people: PeopleData, segment: string): Person | null {
   return people.byName.get(segment) ?? people.bySlug.get(segment.toLowerCase()) ?? people.byFold.get(foldName(segment))
+    // A row folded into its person keeps its old slug as a forward ("mark-christopher-butler").
+    ?? people.formerSlugs.get(segment.toLowerCase())
     // Older clients slugified reviewed full-name aliases such as Jess Pugh.
     ?? people.byFold.get(foldName(segment.replace(/-/g,' ')))
     // A surname row's own full name ("david-crisafulli" for "Crisafulli"): the address only, never a speaker.
@@ -5552,6 +5555,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   const ldType = dir==='donor' ? 'Dataset' : independent ? 'CollectionPage' : 'Organization'
   let card: CardSpec
   let memberNames: string[] = []
+  let sponsored: PartyBill[] = []
   if (dir === 'party') {
     // Speeches as the search index labels them (scripts/build_party_speeches.mjs), so the page promises
     // what its members said only where the record holds it: "Reason Party" has money, no Hansard.
@@ -5559,14 +5563,17 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     const speeches = partySpeechLabel(display, { indexed, roster: people, same: samePartyLabel })?.count ?? 0
     // The division records name those who sat for a party the roster files elsewhere
     // (scripts/build_party_index.mjs): one senator's own party has its senator.
-    const recorded = await assetJson<{ parties?: Record<string, { name: string }[]> }>(env, '/graph/party-members.json').catch(() => null)
+    const recorded = await assetJson<{ parties?: Record<string, { name: string }[]>; bills?: Record<string, PartyBill[]> }>(env, '/graph/party-members.json').catch(() => null)
     // Shared with the browser directory and party page: a distinct person may
     // have recorded affiliations with more than one party across their career.
     const members = partyMembers(display, {roster: people, divisions: recorded})
     memberNames = [...members.current, ...members.former].map(p=>p.name)
+    // The bills the register records a sponsor of this party for (scripts/build_party_index.mjs bills).
+    sponsored = partyBills(display, recorded)
     const parts: string[] = []
     const count = memberNames.length
     if (count) parts.push(`${num(count)} parliamentarian${count === 1 ? '' : 's'}${speeches ? ` and ${num(speeches)} speeches` : ''} in the record`)
+    if (sponsored.length) parts.push(`${num(sponsored.length)} bill${sponsored.length === 1 ? '' : 's'} sponsored`)
     if (node) parts.push(`${money(node.total)} in disclosed receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort})`)
     if (parts.length) {
       facts = independent ? `${heading}: ${INDEPENDENTS_DESCRIPTION} ${parts.join('; ')}.` : `${heading}: ${parts.join('; ')}.`
@@ -5582,7 +5589,10 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     }
   } else if (node) {
     const what = node.industry === 'individual' ? 'donor' : `${industryLabel(node.industry)} donor`
-    facts = `${display}: disclosed political ${what}, ${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort}).`
+    // The page's own measure (receiptFigures): the parties' returns, each gift once.
+    const own = receiptFigures(node as Parameters<typeof receiptFigures>[0])
+    const span = years(own.firstYear ?? node.firstYear, own.lastYear ?? node.lastYear)
+    facts = `${display}: disclosed political ${what}, ${money(own.total)} across ${num(own.count)} receipts, ${span} (${node.sourceShort}).`
     // An AEC associated entity says so with its figures, the same way for every party (export rule 9).
     const associated = donorDisclosure(node as DonorDisclosureRecord).associated
     if (associated) facts += ` ${associated.charAt(0).toUpperCase()}${associated.slice(1)}.`
@@ -5590,7 +5600,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     card = {
       kicker: `Donor · ${industryLabel(node.industry)}`,
       title: display,
-      lines: [`${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear,node.lastYear)} (${node.sourceShort})`,
+      lines: [`${money(own.total)} across ${num(own.count)} receipts, ${span} (${node.sourceShort})`,
         ...(associated ? [`${associated.charAt(0).toUpperCase()}${associated.slice(1)}`] : [])],
     }
   } else {
@@ -5605,10 +5615,10 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     const graph = await read<Parameters<typeof partyMoneyData>[0]>('/graph/money.json').catch(()=>null)
     const party = graph?.nodes.find(n=>n.kind === 'party' && foldName(n.label) === foldName(display))
     if (graph && party) {
-      const {rows} = partyMoneyData(graph,party.id)
+      const {rows,scope} = partyMoneyData(graph,party.id)
       const config = partyMoneyTableConfig(rows,undefined,undefined,undefined,{party:party.label,jurisdiction:'federal'})
       config.id = 'ssr-party-money-table'
-      table = `<section class="wrap"><h2>Where it came from</h2>${registerTableHTML(config,undefined,url)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
+      table = `<section class="wrap"><h2>Where it came from</h2>${scope ? `<p class="entry-scope">${escHtml(scope)}</p>` : ''}${registerTableHTML(config,undefined,url)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
     }
   }
   return {
@@ -5619,7 +5629,9 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: heading, url: canonical, description },
     prerender: prerenderBlock(heading,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${indexLinks()}`
-      : memberNames.length ? `<h2>${independent ? 'Parliamentarians' : 'Members'}</h2><ul>${memberNames.slice(0,24).map(n=>{const href=personPath(people,n);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}</li>`}).join('')}</ul><p>${escHtml(PARTY_MEMBER_SCOPE)}</p>${indexLinks()}` : indexLinks()) + table,
+      : (memberNames.length ? `<h2>${independent ? 'Parliamentarians' : 'Members'}</h2><ul>${memberNames.slice(0,24).map(n=>{const href=personPath(people,n);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}</li>`}).join('')}</ul><p>${escHtml(PARTY_MEMBER_SCOPE)}</p>` : '')
+        + (sponsored.length ? `<h2>Bills sponsored</h2><ul>${sponsored.slice(0,24).map(b=>`<li><a href="/bill/${encodeURIComponent(b.key)}">${escHtml(b.title)}</a>${b.introduced ? `, introduced ${escHtml(dayMonthYear(b.introduced))}` : ''}</li>`).join('')}</ul>` : '')
+        + indexLinks()) + table,
     card,
   }
 }
@@ -6633,7 +6645,7 @@ async function executeAgentic(input: Record<string, unknown>, env: Env, ctx: Exe
   if (report) deps.onResearchFailure = async error => { failure = error; await report(error) }
   try {
     // Covers the whole path, including an SSE writer or provider that stalls.
-    run = await bounded(signal => runAgentic(question, { ...deps, signal, ...deps.withSignal?.(signal) }, progress, budgetMs, period, agenticFilters(input), namedScope), budgetMs, signal)
+    run = await bounded(signal => runAgentic(question, { ...deps, signal, ...deps.withSignal?.(signal) }, progress, budgetMs, period, agenticFilters(input), namedScope, typeof input.kind === 'string' ? input.kind : undefined), budgetMs, signal)
   } catch (error) {
     if (env.RESEARCH_LOOP === 'route' && !failure) {
       failure = new ResearchError(signal?.aborted ? 'aborted' : error instanceof Error && error.name === 'TimeoutError' ? 'timeout' : 'error')
@@ -6860,7 +6872,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     const finish = (run: AgenticPayload) => {
       const payload=agenticAskPayload(run, question)
       // Source rows are linked last: grounding reads the rows as evidence and re-derives which are cited.
-      const finalPayload=linkAskSources(withTranscriptNote(loopRoute?groundAnswerPayload(payload,question):payload),run.source_links,SITE_ORIGIN)
+      const finalPayload=linkAskSources(withTranscriptNote(loopRoute&&!calculatedPayAnswer(payload)?groundAnswerPayload(payload,question):payload),run.source_links,SITE_ORIGIN)
       const response = json(finalPayload)
       // An answer with no citation at all is not kept for a week, and a refusal or limitation not at all: the next ask may do better (as cacheableAnswer).
       if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && !shortenedCaller(caller) && run.qualitative?.answer_status !== 'uncited' && cacheableRoutedAnswer(finalPayload, loopRoute)) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)

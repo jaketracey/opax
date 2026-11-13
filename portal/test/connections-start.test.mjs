@@ -19,7 +19,7 @@ const ENTITIES=[
 ];
 const record=entity=>({id:entity.id,records:entity.records,kind:entity.kind,years:{2024:3,2025:5},excerpts:[]});
 
-async function mount({index=null}={}){
+async function mount({index=null,meta}={}){
  const dom=new JSDOM(`<!doctype html><html><body><main>${panel}</main></body></html>`,{url:'https://opax.test/connections'});
  const saved={document:globalThis.document,fetch:globalThis.fetch,matchMedia:globalThis.matchMedia};
  globalThis.document=dom.window.document;
@@ -27,7 +27,7 @@ async function mount({index=null}={}){
  const requests=[];
  globalThis.fetch=async url=>{
   requests.push(url);
-  if(url==='/evidence/index.json'){await index;return {ok:true,json:async()=>({entities:ENTITIES.map(e=>({...e}))})};}
+  if(url==='/evidence/index.json'){await index;return {ok:true,json:async()=>({...(meta?{meta}:{}),entities:ENTITIES.map(e=>({...e}))})};}
   const shard=url.match(/^\/evidence\/([a-f0-9]{2})\.json$/)?.[1];
   const entries=Object.fromEntries(ENTITIES.filter(e=>e.id.startsWith(shard)).map(e=>[e.id,record(e)]));
   return {ok:true,json:async()=>({entries})};
@@ -111,5 +111,33 @@ test('a quick pick opens its connection as the list row does, and focus lands on
   await settle();
   assert.equal(detail.querySelector(':scope > h2').textContent,'Fictional Ridge');
   assert.equal(doc.activeElement,detail.querySelector(':scope > h2'));
+ }finally{restore();}
+});
+
+test('the page says once, under its title, the day the connections run to, and an opened connection does not repeat it',async()=>{
+ const meta={generated_at:'2026-09-08T09:21:53+00:00',source_records:{speeches:100,ext_press_releases:20,government_grants:30}};
+ const {doc,page,settle,restore}=await mount({meta});
+ try{
+  const head=doc.querySelector('.connections-head');
+  const lines=doc.querySelectorAll('.ui-source');
+  assert.equal(lines.length,1,'one dated line on the page');
+  assert.equal(lines[0].parentElement,head,'it sits in the page head');
+  assert.equal(head.lastElementChild,lines[0],'at the foot of the head');
+  assert.ok(lines[0].textContent.includes('As at 8 Sep 2026'),lines[0].textContent);
+  assert.ok(lines[0].textContent.includes('Connections from records collected to 8 September 2026.'));
+  doc.querySelector('.connection-choice[data-entity="bb0000000000000000000002"]').click();
+  await settle();
+  assert.equal(doc.querySelectorAll('.ui-source').length,1,'the opened connection adds no second date');
+  assert.ok(!doc.getElementById('connection-detail').textContent.includes('As at'));
+  page.destroy();
+  assert.equal(head.querySelector('.ui-source'),null,'leaving the page takes the line with it');
+ }finally{restore();}
+});
+
+test('without a dated index the page shows no date line',async()=>{
+ const {doc,restore}=await mount();
+ try{
+  assert.ok(doc.querySelector('.connection-choice'),'the list still loads');
+  assert.equal(doc.querySelectorAll('.ui-source').length,0);
  }finally{restore();}
 });

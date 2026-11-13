@@ -1,0 +1,126 @@
+{
+ "id": "robodebt",
+ "question": "Who was responsible for robodebt?",
+ "input": {
+  "kind": "speech"
+ },
+ "model": [
+  {
+   "tool_calls": [
+    {
+     "name": "search",
+     "args": {
+      "query": "robodebt royal commission responsibility ministers"
+     }
+    }
+   ]
+  },
+  {
+   "tool_calls": [
+    {
+     "name": "answer",
+     "args": {
+      "points": [
+       {
+        "claim": "The Royal Commission into the Robodebt Scheme, led by Commissioner Catherine Holmes, found responsibility lay with the ministers who approved and defended the scheme and with senior public servants."
+       },
+       {
+        "claim": "Scott Morrison took the proposal to Cabinet as Social Services Minister in 2015, and Alan Tudge oversaw the 2016 rollout as Human Services Minister."
+       },
+       {
+        "claim": "Jordan Sample told the Senate the commission found the scheme was \"a crude and cruel mechanism, neither fair nor legal\".",
+        "id": "11111111111111111111111111111111/t/body/0-149",
+        "quote": "a crude and cruel mechanism, neither fair nor legal"
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "services": [
+  {
+   "path": "/find",
+   "match": [
+    "robodebt"
+   ],
+   "response": {
+    "resources": {
+     "11111111111111111111111111111111": {
+      "slug": "speech-910001",
+      "title": "Royal Commission into the Robodebt Scheme",
+      "origin": {
+       "created": "2023-07-10T00:00:00Z",
+       "collaborators": [
+        "Jordan Sample"
+       ]
+      },
+      "extra": {
+       "metadata": {
+        "kind": "speech"
+       }
+      },
+      "fields": {
+       "body": {
+        "paragraphs": {
+         "11111111111111111111111111111111/t/body/0-149": {
+          "text": "The royal commission found the robodebt scheme was a crude and cruel mechanism, neither fair nor legal, and that ministers were told it was unlawful."
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "path": "/slug/speech-910001",
+   "response": {
+    "id": "11111111111111111111111111111111",
+    "title": "Royal Commission into the Robodebt Scheme",
+    "origin": {
+     "created": "2023-07-10T00:00:00Z",
+     "collaborators": [
+      "Jordan Sample"
+     ]
+    },
+    "extra": {
+     "metadata": {
+      "date": "2023-07-10",
+      "speaker": "Jordan Sample"
+     }
+    },
+    "data": {
+     "texts": {
+      "body": {
+       "value": {
+        "body": "The royal commission found the robodebt scheme was a crude and cruel mechanism, neither fair nor legal, and that ministers were told it was unlawful."
+       }
+      }
+     }
+    },
+    "usermetadata": {
+     "classifications": [
+      {
+       "labelset": "kind",
+       "label": "speech"
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "assets": {},
+ "expect": {
+  "answered": true,
+  "includes": [
+   "Catherine Holmes",
+   "Scott Morrison",
+   "Alan Tudge"
+  ],
+  "citations": 1,
+  "cited": [
+   "11111111111111111111111111111111"
+  ]
+ }
+}

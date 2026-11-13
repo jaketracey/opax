@@ -56,22 +56,96 @@ export function leadWithFinding<T extends Record<string,unknown>>(payload:T,ques
   return plainAnswerPayload(rewriteAnswerPayload({...payload,answer:written,citations},replace=>replace(/^Another (?=(?:says|said|reports|describes)\b)/g,'A selected passage ')))
 }
 
-/** The model's own direct answer (the first line of its points, cited or not) leads an answer that also carries record
- * facts or written record prose, which follow as the supporting record. A permutation: citations move with their text. */
-export function leadWithModelAnswer<T extends Record<string,unknown>>(payload:T,points:{answer?:unknown;citations?:unknown}|undefined):T {
+const QUANTITATIVE_QUESTION=/\bhow (?:many|much)\b|\b(?:most|highest|lowest|least|largest|biggest|top|total|fewest|ranked?)\b/i
+// The kind of inquiry a record opening names ("The Royal Commission into the Robodebt Scheme" is a royal commission).
+const INQUIRY_KIND=/\b(?:commission|inquiry|review|audit|investigation|report)\b/i
+const escapeRegExp=(text:string)=>text.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
+/** How a sentence refers to the inquiry a record opening is about: by its name before "into …" or as "the <kind>"
+ * ("Royal Commission", "the commission"). `mentions` finds it anywhere; `opens` finds a sentence that has it as its
+ * subject and describes it ("The commission was established …"), which restates the record's opening. Null when the
+ * opening is not about an inquiry. */
+function inquiryReference(subject:string):{mentions:RegExp;opens:RegExp}|null {
+  const head=subject.replace(/\s+(?:into|of|on|for)\b.*$/i,'').replace(/^the\s+/i,'').trim()
+  if(!head||!INQUIRY_KIND.test(head))return null
+  const name=`(?:${escapeRegExp(head)}|${escapeRegExp(head.split(/\s+/).pop()!)})`
+  return {mentions:new RegExp(`\\b${escapeRegExp(head)}|\\bthe ${name}(?![a-z])`,'i'),
+    opens:new RegExp(`^(?:[-*]\\s*)?(?:the\\s+)?${name}(?![a-z])(?:\\s+(?:into|of|on|for)\\s[^,.]*?)?(?:,\\s|\\s+(?:is|was|are|were)\\s)`,'i')}
+}
+const firstSentence=(text:string)=>sentenceParts(text)[0]?.text??''
+const subjectOf=(sentence:string)=>{const m=/^(?:[-*]\s*)?((?:[A-Z][\w’'-]*|of|into|the|for|on|and)(?:\s+(?:[A-Z][\w’'-]*|of|into|the|for|on|and)){1,9})(?=,\s|\s+(?:is|was|are|were)\s)/.exec(sentence);return m?m[1]:''}
+/** The second sentence of an opening says again who or what the first is: the same subject, then "is", "was" or an
+ * apposition (a role, an office, establishment details). */
+export function restatesOpening(first:string,second:string):boolean {
+  const a=subjectOf(first),b=subjectOf(second)
+  if(!a||a.split(/\s+/).length<2||a.toLowerCase()!==b.toLowerCase())return false
+  const rest=(s:string,subject:string)=>s.replace(/^(?:[-*]\s*)?/,'').slice(subject.length)
+  const described=(tail:string)=>/^,\s|^\s+(?:is|was|are|were)\s/i.test(tail)
+  return described(rest(first,a))&&described(rest(second,b))
+}
+/** Merge a restated identity sentence into the opening: "X is a Victorian Labor politician who represents Y" after
+ * "X is the Victorian Premier…" keeps only what it adds ("As a Victorian Labor politician, X represents Y"). Null when
+ * the sentence has no such shape. */
+function mergedRestatement(first:string,second:string):string|null {
+  const subject=subjectOf(second),m=new RegExp('^'+subject.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s+(?:is|was)\\s+(?:a|an|the)\\s+([^,;.]+?)\\s+(?:who|that)\\s+(.+)$').exec(second)
+  if(!subject||!m)return null
+  const known=new Set(first.toLowerCase().match(/[a-z’'-]+/g)??[]),generic=/^(?:politician|person|member|parliamentarian|mp|figure)$/
+  const adds=(m[1].toLowerCase().match(/[a-z’'-]+/g)??[]).some(w=>!known.has(w)&&!generic.test(w))
+  return adds?`As ${/^[aeiou]/i.test(m[1])?'an':'a'} ${m[1]}, ${subject} ${m[2]}`:`${subject} ${m[2]}`
+}
+
+/** The model's direct answer leads an answer that also carries record facts or written record prose; the record prose
+ * follows as context, then the model's other points. The lead is the model's first point; when the record opens with
+ * an inquiry, it is the model's first point reporting that inquiry, if there is one. Lines that continue the lead from
+ * the same source stay with it. The record's opening is said once: a model point restating it goes, unless it is the cited
+ * lead, when the record sentence keeps only what it adds. A count or money question keeps its calculated record lead. Every
+ * kept line moves with its citations. */
+export function leadWithModelAnswer<T extends Record<string,unknown>>(payload:T,points:{answer?:unknown;citations?:unknown}|undefined,question=''):T {
   if(typeof payload.answer!=='string'||typeof points?.answer!=='string')return payload
-  const pointText=points.answer,first=/^[^\n]+/.exec(pointText)?.[0]
-  if(!first)return payload
-  const firstEnd=Array.from(first).length
-  const answer=payload.answer,at=answer.indexOf(first)
-  if(at<=0)return payload
-  const chars=Array.from(answer),from=Array.from(answer.slice(0,at)).length,until=from+firstEnd
-  const entries=Object.entries(payload.citations??{}),citations:Record<string,[number,number][]>={}
+  const answer=payload.answer,pointText=points.answer
+  const chars=Array.from(answer),entries=Object.entries(payload.citations??{}) as [string,unknown][]
+  const cites=(a:number,b:number)=>entries.filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(r=>Array.isArray(r)&&r[0]<b&&r[1]>a)).map(([id])=>id)
+  // Record facts and their coverage are cited as fact-N or coverage; the model's points cite passages, or nothing.
+  const recordId=(id:string)=>/^(?:fact-\d+|coverage)(?:\/|$)/.test(id)
+  // Lines of the composed answer, in code points. A line is the model's point when it cites only passages (the writer
+  // may have worded a passage line itself) or, uncited, is one of the model's own lines; anything else is record prose.
+  type Line={i:number;a:number;b:number;text:string;point:boolean;ids:string[]}
+  const lines:Line[]=[]
+  for(const m of answer.matchAll(/[^\n]+/g)){
+    const text=m[0].trim();if(!text)continue
+    const a=Array.from(answer.slice(0,m.index)).length+Array.from(m[0]).length-Array.from(m[0].trimStart()).length,b=a+Array.from(text).length,ids=cites(a,b)
+    lines.push({i:lines.length,a,b,text,ids,point:ids.length?ids.every(id=>!recordId(id)):pointText.includes(text.replace(/^[-*]\s*/,''))})
+  }
+  const firstPoint=lines.findIndex(l=>l.point)
+  // Nothing to lead past: no record prose before the points.
+  if(firstPoint<=0)return payload
+  const lastPoint=lines.length-1-[...lines].reverse().findIndex(l=>l.point)
+  const record=lines.filter(l=>!l.point&&l.i<lastPoint),modelLines=lines.filter(l=>l.point)
+  if(QUANTITATIVE_QUESTION.test(question)&&/\$?\d/.test(firstSentence(record[0].text)))return payload
+  const sourcesOf=(l:Line)=>new Set(l.ids.map(id=>id.split('/')[0]))
+  // The record's opening (an inquiry's dates and commissioner, a person's seat) is said once: a model point that
+  // restates it goes when uncited or when the record sentence carries the citation; a cited lead keeps only what it adds.
+  const recordOpening=firstSentence(record[0].text),recordCited=record[0].ids.length>0
+  const inquiry=inquiryReference(subjectOf(recordOpening))
+  const restating=new Set(modelLines.filter(l=>restatesOpening(firstSentence(l.text),recordOpening)||!!inquiry?.opens.test(firstSentence(l.text))))
+  const candidates=modelLines.filter(l=>!restating.has(l)||l.ids.length>0)
+  if(!candidates.length)return payload
+  // The model's first point leads, unless the record opens with an inquiry: then the first of its points that reports
+  // that inquiry (its findings, its report, its commissioner) leads, so another body's view never comes first.
+  const lead=(inquiry&&candidates.find(l=>!restating.has(l)&&inquiry.mentions.test(l.text)))||candidates[0]
+  let rewrite:string|null=null
+  if(restating.has(lead)){const merged=mergedRestatement(firstSentence(lead.text),recordOpening);if(merged)rewrite=merged}
+  const dropped=new Set([...restating].filter(l=>l!==lead&&(!l.ids.length||recordCited)))
+  // Lines after the lead that continue it from the same source ("The same speech records…") stay with it.
+  const block=[lead]
+  for(let i=lead.i+1;i<lines.length;i++){const l=lines[i],own=sourcesOf(lead),next=sourcesOf(l);if(!l.point||!next.size||![...next].every(id=>own.has(id)))break;block.push(l)}
+  const moved=new Set([...block,...dropped])
+  // Record prose keeps its own line breaks where its lines were adjacent (a fact list stays a list); the points
+  // around it are paragraphs. Record lines after the last point (coverage notes) stay last.
+  const runs=(group:Line[])=>{const out:[number,number][]=[];let prev:Line|undefined;for(const l of group){if(prev&&prev.i===l.i-1&&out.length)out[out.length-1][1]=l.b;else out.push([l.a,l.b]);prev=l}return out}
+  const pieces:[number,number][]=[[block[0].a,block[block.length-1].b],...runs(record),...modelLines.filter(l=>!moved.has(l)).map(l=>[l.a,l.b] as [number,number]),...runs(lines.filter(l=>!l.point&&l.i>lastPoint))]
+  const citations:Record<string,[number,number][]>={}
   let written=''
-  for(let [a,b]of [[from,until],[0,from],[until,chars.length]]){
-    while(a<b&&/\s/.test(chars[a]))a++
-    while(b>a&&/\s/.test(chars[b-1]))b--
-    if(a===b)continue
+  for(const [a,b] of pieces){
     if(written)written+='\n\n'
     const offset=Array.from(written).length
     written+=chars.slice(a,b).join('')
@@ -81,5 +155,7 @@ export function leadWithModelAnswer<T extends Record<string,unknown>>(payload:T,
       if(start<end)(citations[id]??=[]).push([offset+start-a,offset+end-a])
     }
   }
-  return {...payload,answer:written,citations}
+  let out={...payload,answer:written,citations} as T
+  if(rewrite){const merged=rewrite;let once=false;out=rewriteAnswerPayload(out,replace=>replace(new RegExp(recordOpening.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'),match=>once?match:(once=true,merged)))}
+  return out
 }

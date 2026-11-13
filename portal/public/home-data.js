@@ -1,8 +1,8 @@
-import {subjectUrl} from './canonical-urls.js?v=6c889d487d';
+import {subjectUrl} from './canonical-urls.js?v=e32f13c6c8';
 /* Homepage adapters: source exports, never editorial selections. Each block's
    figures carry the date of the export they came from, in its source line. */
 import {shortDate} from './format.js';
-import {partyLabelHTML, statusLabelHTML, sourceLineHTML} from './labels.js?v=6a4764139d';
+import {partyLabelHTML, statusLabelHTML, sourceLineHTML, coverageLineHTML} from './labels.js?v=75e6c65ff7';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const count = value => Number(value).toLocaleString('en-AU');
 const date = value => shortDate(String(value).slice(0,10));
@@ -101,18 +101,20 @@ export function sourceFreshness(refresh, sources = []) {
   for (const [name, access] of paused) {
     facts.push(['Source check', esc(`${access.host || name}: paused, ${access.reason || 'access refused'}. Entries shown are retained from the last successful read, not a current check.`)]);
   }
-  return { state: paused.length ? 'source paused' : '', facts };
+  // A paused source reads as the date of its last good read on the line ("Last checked 4 Oct 2026");
+  // the sheet keeps why it is paused.
+  return { state: '', dateLabel: paused.length ? 'Last checked' : 'Updated', facts };
 }
 export function billsSourceHTML(index, refresh = null) {
   const freshness = sourceFreshness(refresh, ['bills']);
-  return sourceLineHTML({ updated: index.generated_at, source: 'Parliament of Australia', state: freshness.state, facts: freshness.facts, notes: [
+  return sourceLineHTML({ updated: index.generated_at, dateLabel: freshness.dateLabel, source: 'Parliament of Australia', facts: freshness.facts, notes: [
     'Bills and their dates come from the parliamentary record; each bill page links the official source it was read from.',
     'A bill missing from this list is not evidence it does not exist: the register is still being built.',
   ] });
 }
 export function declarationsSourceHTML(meta, refresh = null) {
   const freshness = sourceFreshness(refresh, ['interests_federal', 'interests_qld']);
-  return sourceLineHTML({ updated: meta?.generated, source: 'Registers of interests', state: freshness.state, facts: freshness.facts, asAt: meta?.source ? `${meta.source}.` : '', notes: [
+  return sourceLineHTML({ updated: meta?.generated, dateLabel: freshness.dateLabel, source: 'Registers of interests', facts: freshness.facts, asAt: meta?.source ? `${meta.source}.` : '', notes: [
     'Entries as declared, not verified by OPAX.',
     'The date is when the register recorded the entry, which can differ from the date of the gift or event. Each entry links to its page in the register.',
   ] });
@@ -147,12 +149,44 @@ export function industryGroups(graph) {
   return [...counts].map(([key, n]) => ({ key, label: key[0].toUpperCase() + key.slice(1), count: n }))
     .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'en'));
 }
-/** The footer's coverage line: two dated figures and the full table. */
-export function coverageLineHTML(corpus) {
-  const link = '<a href="/stats">Sources and coverage</a>';
-  const aec = corpus?.sources?.find?.(s => String(s.name).startsWith('AEC donations'));
-  if (!corpus?.version || !Number.isFinite(corpus.collected_speeches) || !Number.isFinite(aec?.docs)) return link;
-  return `${count(corpus.collected_speeches)} speeches and ${count(aec.docs)} donations classified, as at ${esc(date(corpus.version))} · ${link}`;
+/** The footer's coverage line (labels.js): one line on every page. */
+export { coverageLineHTML };
+
+// --- whether parliament sits today ------------------------------------------------
+// /parliament/sitting-days.json (docs/DATA-SITTING-DAYS.md) is the Parliament's published calendar as dated
+// flags. Outside its coverage, after it expires, or in any shape this does not expect, sitting is unknown and
+// there is no line: never a guess.
+const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
+const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+/** Today's calendar date in Sydney, as the file's dates are. */
+export const sydneyToday = (now = new Date()) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Australia/Sydney' }).format(now);
+/** "Monday 23 November" for an ISO day. */
+function longDay(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  return `${WEEKDAYS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()]} ${d} ${MONTH_NAMES[m - 1]}`;
+}
+/** The home page's sitting line for `today` (YYYY-MM-DD, Sydney), or null when the calendar cannot say. */
+export function sittingLine(calendar, today) {
+  if (!calendar || calendar.schema_version !== 1 || calendar.timezone !== 'Australia/Sydney' || !ISO_DAY.test(today || '')) return null;
+  const { first, last } = calendar.coverage || {};
+  if (!ISO_DAY.test(first || '') || !ISO_DAY.test(last || '') || today < first || today > last) return null;
+  if (!ISO_DAY.test(calendar.expires || '') || today > calendar.expires) return null;
+  if (!Array.isArray(calendar.days)) return null;
+  const days = calendar.days.filter(d => d && ISO_DAY.test(d.date || '') && (d.house === true || d.senate === true));
+  const now = days.find(d => d.date === today);
+  if (now) return { href: '/sitting', text: now.house && now.senate ? 'Parliament is sitting today'
+    : now.senate ? 'The Senate is sitting today' : 'The House of Representatives is sitting today' };
+  const next = days.filter(d => d.date > today && d.date <= last).sort((a, b) => a.date.localeCompare(b.date))[0];
+  return next ? { href: '/sitting', text: `Next sitting day: ${longDay(next.date)}` } : null;
+}
+/** Fills the line above the home page's title; it stays hidden when the calendar is missing or out of range. */
+export async function hydrateSitting(slot = document.querySelector('#hp-sitting'), today = sydneyToday()) {
+  if (!slot) return;
+  const line = sittingLine(await read('/parliament/sitting-days.json').catch(() => null), today);
+  if (!line) { slot.hidden = true; slot.innerHTML = ''; return; }
+  slot.innerHTML = `<a href="${esc(line.href)}">${esc(line.text)}</a>`;
+  slot.hidden = false;
 }
 
 // --- hydration -------------------------------------------------------------------

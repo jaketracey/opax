@@ -2,8 +2,8 @@ import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './don
 import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
 let donorIndex=new Map();
 loadDonorViewIndex().then(index=>{donorIndex=index});
-import { personUrl, partyUrl } from './canonical-urls.js?v=6c889d487d';
-import { hydrateCollections, hydrateLatest, industryGroups, mapSourceHTML, mapSpan, refreshInfo } from '/home-data.js?v=18f1e1d779';
+import { personUrl, partyUrl } from './canonical-urls.js?v=e32f13c6c8';
+import { hydrateCollections, hydrateLatest, hydrateSitting, industryGroups, mapSourceHTML, mapSpan, refreshInfo } from '/home-data.js?v=4051ccd44e';
 
 // The homepage and research workspace have separate document lifecycles.
 const legacyRoute = location.href.split('#')[1] || '';
@@ -427,7 +427,7 @@ async function mount() {
     const span = mapSpan(graph.meta);
     if (span) $("hp-map-span").textContent = span;
     const { mountMoneyMap } = await import(
-      "/money-map.js?v=2e9dfab24a"
+      "/money-map.js?v=6494696c46"
     );
     if (disposed) return;
     root.replaceChildren();
@@ -505,6 +505,8 @@ OpaxQuickSearch.attach($('mast-q'), $('mast-sugg'), {idPrefix:'ms', source:heade
 
 OpaxQuickSearch.attach($('drawer-q'), $('drawer-sugg'), {idPrefix:'ds', source:headerSuggestions, navigate:href => location.assign(href), searchHref, beforeGo:() => navDrawer.close()});
 
+// Whether parliament sits today, above the title: from the published calendar, or no line.
+hydrateSitting();
 // Reports and the footer's coverage line now; new bills and declarations when
 // their block nears the screen. The page ships with dated rows to fall back on.
 hydrateCollections();

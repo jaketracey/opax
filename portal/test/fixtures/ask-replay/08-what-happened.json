@@ -1,0 +1,124 @@
+{
+ "id": "what-happened",
+ "question": "What happened with the Leppington Triangle land purchase?",
+ "input": {
+  "kind": "speech"
+ },
+ "model": [
+  {
+   "tool_calls": [
+    {
+     "name": "search",
+     "args": {
+      "query": "Leppington Triangle land purchase Auditor-General"
+     }
+    }
+   ]
+  },
+  {
+   "tool_calls": [
+    {
+     "name": "answer",
+     "args": {
+      "points": [
+       {
+        "claim": "In 2018 the Commonwealth bought the Leppington Triangle, land near the Western Sydney Airport site, for $29.8 million, and the Auditor-General later found it paid about ten times its value."
+       },
+       {
+        "claim": "Casey Example told the House the Auditor-General found the land \"was worth about $3 million\".",
+        "id": "88888888888888888888888888888888/t/body/0-136",
+        "quote": "was worth about $3 million"
+       },
+       {
+        "claim": "The purchase was referred to the Australian Federal Police, and the Infrastructure Department official who led the negotiation later left the department."
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "services": [
+  {
+   "path": "/find",
+   "match": [
+    "Leppington"
+   ],
+   "response": {
+    "resources": {
+     "88888888888888888888888888888888": {
+      "slug": "speech-910008",
+      "title": "Leppington Triangle",
+      "origin": {
+       "created": "2020-09-29T00:00:00Z",
+       "collaborators": [
+        "Casey Example"
+       ]
+      },
+      "extra": {
+       "metadata": {
+        "kind": "speech"
+       }
+      },
+      "fields": {
+       "body": {
+        "paragraphs": {
+         "88888888888888888888888888888888/t/body/0-136": {
+          "text": "The Auditor-General found the department paid $29.8 million for land at Leppington that was worth about $3 million, ten times its value."
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "path": "/slug/speech-910008",
+   "response": {
+    "id": "88888888888888888888888888888888",
+    "title": "Leppington Triangle",
+    "origin": {
+     "created": "2020-09-29T00:00:00Z",
+     "collaborators": [
+      "Casey Example"
+     ]
+    },
+    "extra": {
+     "metadata": {
+      "date": "2020-09-29"
+     }
+    },
+    "data": {
+     "texts": {
+      "body": {
+       "value": {
+        "body": "The Auditor-General found the department paid $29.8 million for land at Leppington that was worth about $3 million, ten times its value."
+       }
+      }
+     }
+    },
+    "usermetadata": {
+     "classifications": [
+      {
+       "labelset": "kind",
+       "label": "speech"
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "assets": {},
+ "expect": {
+  "answered": true,
+  "includes": [
+   "Leppington Triangle",
+   "\\$29.8 million"
+  ],
+  "citations": 1,
+  "cited": [
+   "88888888888888888888888888888888"
+  ]
+ }
+}

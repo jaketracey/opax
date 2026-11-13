@@ -11,6 +11,7 @@ import { readFileSync } from 'node:fs';
 import { runInNewContext as baseVM } from 'node:vm';
 import ts from 'typescript';
 import { personSpeechCount } from '../../scripts/build_search_catalog.mjs';
+import { referenceOnlyPeople } from '../public/roster-party.js';
 import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, splitSpeakers, splitPerson, personScope, scopedCollaborators } from '../public/speech-attribution.js';
 
 const source = ts.createSourceFile('index.ts', readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
@@ -214,7 +215,7 @@ test('full-name and reviewed KB aliases resolve to one scoped print, including P
 test('full-name routing merges roster-only Pugh, keeps clean pages, and redirects to the print canonical', async () => {
   const reference = { people: [{ name: 'Jess Pugh', aliases: [], electorates: [{ current: true, name: 'Mount Ommaney' }] }] };
   const data = scopedContext(ts.transpile(select(['loadPeople', 'personAt', 'canonicalRoutePath', 'personPath', 'matchSeoRoute', 'foldName'])) + ';({loadPeople,personAt,canonicalRoutePath})', {
-    peopleMemo: null, splitSpeakers, Response, URL, missingEntitySlug:()=>false,
+    peopleMemo: null, splitSpeakers, referenceOnlyPeople, Response, URL, missingEntitySlug:()=>false,
     assetJson: async () => structuredClone(roster), loadElectorates: async () => reference,
     slugIndex: people => ({ slugOf: new Map(people.map(p => [p.name, p.name.toLowerCase()])), bySlug: new Map(people.map(p => [p.name.toLowerCase(), p])) }),
   });

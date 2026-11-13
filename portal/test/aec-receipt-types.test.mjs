@@ -22,12 +22,22 @@ test('published typed receipts load through Ask, map and the party money API',as
   assert.deepEqual(moneyTotals(graph),moneyTotals(legacy));
   assert.equal(buildGraph(graph).edges.length,buildGraph(legacy).edges.length);
   assert.equal(typeof receiptAnswer(graph,'gambling in 2024','federal','https://opax.test').answer,'string');
+  // The party-money API once returned the legacy all-record cells for the typed graph too, and this test
+  // pinned that. Those cells also hold the donor's own declaration of each gift, so a gift counted twice
+  // (Pratt Holdings to Labor read $14.89m against $8.47m on the party's own returns). The API now reads
+  // the typed cells, as the map card and the donor page do, and says so in `scope`; a graph without typed
+  // cells keeps the legacy figures and has no scope. Figures: test/party-receipt-totals.test.mjs.
   const assets=data=>({fetch:async()=>new Response(JSON.stringify(data))});
   const request=new Request('https://opax.test/api/register/party-money?partyId=party%3ALabor');
-  const typed=await partyMoneyResponse(request,assets(graph));
-  const untyped=await partyMoneyResponse(request,assets(legacy));
-  assert.equal(typed.status,200);
-  assert.equal(await typed.text(),await untyped.text());
+  const typed=await (await partyMoneyResponse(request,assets(graph))).json();
+  const untyped=await (await partyMoneyResponse(request,assets(legacy))).json();
+  const row=(data,label)=>data.rows.find(r=>r.label===label);
+  assert.equal(row(typed,'Pratt Holdings Pty Ltd').total,8473476);
+  assert.equal(row(untyped,'Pratt Holdings Pty Ltd').total,14885966);
+  assert.equal(typed.scope,'All receipt types, 1998-99 to 2024-25, as the parties reported them in federal returns');
+  assert.equal(untyped.scope,undefined);
+  assert.deepEqual(Object.keys(typed).sort(),['rows','scope']);
+  assert.deepEqual(Object.keys(typed.rows[0]),Object.keys(untyped.rows[0]),'each row keeps its fields');
 });
 
 function industryRanking(industry,measure,from=-Infinity,to=Infinity){

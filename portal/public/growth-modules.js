@@ -3,7 +3,7 @@ import {donorDisclosure,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744
 import { shortDate } from './format.js';
 import { isOrganisationDonor } from './donor-entity.js?v=3fd3e51b56';
 export { isOrganisationDonor };
-import { sourceLineHTML } from './labels.js?v=6a4764139d';
+import { sourceLineHTML } from './labels.js?v=75e6c65ff7';
 import { sponsorPerson, sponsorKey } from './sponsor-person.js?v=74d9a1f8cf';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text = value => typeof value === 'string' ? value.trim() : '';
@@ -11,7 +11,7 @@ export async function loadModuleDonors(signal) {
   return await fetch('/growth/donors.json',{signal,cache:'no-cache'}).then(r=>r.ok?r.json():null).catch(()=>null) || {donors:[]};
 }
 export const ASSOCIATION_NOTE = 'An association does not prove influence.';
-export const correctionHTML = () => '<p class="growth-correction"><a href="/support#support-report">Report a data correction</a><span>Response target: 48 hours.</span></p>';
+export const correctionHTML = () => '<p class="growth-correction">Seen a mistake? <a href="/support#support-report">Tell us</a>. We answer within two days.</p>';
 export const associationHTML = () => `<p class="growth-association">${ASSOCIATION_NOTE}</p>`;
 export const moduleAttrs = (module, pageType, position) => `data-module="${esc(module)}" data-page-type="${esc(pageType)}" data-module-position="${position}"`;
 export function askEntry(question, pageType, record = {}) {

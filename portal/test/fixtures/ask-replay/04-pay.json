@@ -1,0 +1,1261 @@
+{
+ "id": "pay",
+ "question": "How much is a federal backbencher paid?",
+ "input": {
+  "kind": "all"
+ },
+ "model": [],
+ "services": [],
+ "assets": {
+  "/pay.json": {
+   "meta": {
+    "generated": "2026-10-19T11:21:33+00:00",
+    "as_of": "2026-10-19",
+    "from": "1999-12-07",
+    "handbook_fetched": "2026-10-19T11:19:09+00:00",
+    "people": 4,
+    "sitting": 4,
+    "sources": [
+     {
+      "id": "base-history",
+      "publisher": "Parliamentary Library",
+      "title": "The base salary for senators and members (Background Note, 17 August 2012)",
+      "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+     },
+     {
+      "id": "frl",
+      "publisher": "Federal Register of Legislation",
+      "title": "Remuneration Tribunal determinations, as made",
+      "url": "https://www.legislation.gov.au/"
+     },
+     {
+      "id": "mp-determination",
+      "publisher": "Remuneration Tribunal",
+      "title": "Remuneration Tribunal (Members of Parliament) Determination 2026",
+      "url": "https://www.remtribunal.gov.au/document-library-search/remuneration-tribunal-members-parliament-determination-2026"
+     },
+     {
+      "id": "ministerial-report",
+      "publisher": "Remuneration Tribunal",
+      "title": "Report on Ministerial Salaries: Salary Additional to the Parliamentary Base Salary, July 2026",
+      "url": "https://www.remtribunal.gov.au/document-library-search/report-ministerial-salaries-salary-additional-parliamentary-base-salary-july-2026"
+     },
+     {
+      "id": "handbook",
+      "publisher": "Parliament of Australia",
+      "title": "Parliamentary Handbook: service, ministries, shadow ministries and parliamentary positions",
+      "url": "https://handbook.aph.gov.au/"
+     },
+     {
+      "id": "frl",
+      "publisher": "Federal Register of Legislation",
+      "title": "Remuneration Tribunal determinations, as made",
+      "url": "https://www.legislation.gov.au/"
+     },
+     {
+      "id": "third-party-reasons",
+      "publisher": "Remuneration Tribunal",
+      "title": "Members of Parliament Amendment Determination (No.1) 2026: reasons for determination",
+      "url": "https://www.remtribunal.gov.au/sites/default/files/2026-07/RT%20MP%20Amendment%20Determination%20No.1%202026%20-%20Reasons%20for%20Decisions.pdf"
+     }
+    ],
+    "method": "For each day a person sat in the federal parliament: the parliamentary base salary then in force, plus the additional salary of the post they then held, as a percentage of that base. A Minister is paid the one ministerial rate that applies. Other office holders are paid the sum of the percentages of their offices, rounded up to the next $10; a shadow minister is paid a flat rate instead. Yearly figures add those days across a financial year. Nothing is adjusted for inflation.",
+    "not_covered": [
+     {
+      "id": "chairs",
+      "text": "Committee chairs and deputy chairs are paid a further 3% to 16% that is not counted, because the Parliamentary Handbook gives no dates for who chaired what."
+     },
+     {
+      "id": "shadow-notice",
+      "text": "A shadow minister is paid a loading only if named in the Opposition Leader’s notice to the Clerks, which is capped and not published; Opax assumes every listed shadow minister is named."
+     }
+    ],
+    "electorate_allowance": {
+     "min": 39700,
+     "max": 57100,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 8: $39,700 for a senator or an electorate under 2,000 km2, $47,200 under 5,000 km2, $57,100 above."
+    },
+    "skipped": {
+     "ministry rows without a full start date": 3,
+     "shadow ministry rows without a full start date": 27
+    }
+   },
+   "base": [
+    {
+     "from": "1999-12-07",
+     "amount": 85500,
+     "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+     "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+    },
+    {
+     "from": "2000-07-01",
+     "amount": 92000,
+     "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+     "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+    },
+    {
+     "from": "2001-07-01",
+     "amount": 95600,
+     "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+     "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+    },
+    {
+     "from": "2002-07-01",
+     "amount": 98800,
+     "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+     "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+    },
+    {
+     "from": "2003-07-01",
+     "amount": 102760,
+     "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+     "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+    },
+    {
+     "from": "2004-07-01",
+     "amount": 106770,
+     "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+     "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+    },
+    {
+     "from": "2005-07-01",
+     "amount": 111150,
+     "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+     "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+    },
+    {
+     "from": "2006-07-01",
+     "amount": 118950,
+     "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+     "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+    },
+    {
+     "from": "2007-07-01",
+     "amount": 127060,
+     "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+     "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+    },
+    {
+     "from": "2009-10-01",
+     "amount": 131040,
+     "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+     "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+    },
+    {
+     "from": "2010-08-01",
+     "amount": 136040,
+     "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+     "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+    },
+    {
+     "from": "2011-07-01",
+     "amount": 140910,
+     "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+     "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+    },
+    {
+     "from": "2012-03-15",
+     "amount": 185000,
+     "source": "Remuneration Tribunal Determination 2012/02, clause 2.1",
+     "url": "https://www.legislation.gov.au/F2012L00567/asmade/text"
+    },
+    {
+     "from": "2012-07-01",
+     "amount": 190550,
+     "source": "Remuneration Tribunal Determination 2012/15, clause 1.2",
+     "url": "https://www.legislation.gov.au/F2012L01302/asmade/text"
+    },
+    {
+     "from": "2013-07-01",
+     "amount": 195130,
+     "source": "Remuneration Tribunal Determination 2013/13, clause 2.1",
+     "url": "https://www.legislation.gov.au/F2013L01090/asmade/text"
+    },
+    {
+     "from": "2016-01-01",
+     "amount": 199040,
+     "source": "Remuneration Tribunal Determination 2015/22, clause 2.1",
+     "url": "https://www.legislation.gov.au/F2015L01973/asmade/text"
+    },
+    {
+     "from": "2017-07-01",
+     "amount": 203030,
+     "source": "Remuneration Tribunal Determination 2017/12, clause 2.1",
+     "url": "https://www.legislation.gov.au/F2017L00810/asmade/text"
+    },
+    {
+     "from": "2018-07-01",
+     "amount": 207100,
+     "source": "Remuneration Tribunal Determination 2018/06, clause 1.2",
+     "url": "https://www.legislation.gov.au/F2018L00879/asmade/text"
+    },
+    {
+     "from": "2019-07-01",
+     "amount": 211250,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2019, clause 2.1",
+     "url": "https://www.legislation.gov.au/F2019L00859/asmade/text"
+    },
+    {
+     "from": "2022-07-01",
+     "amount": 217060,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2022, clause 2.1",
+     "url": "https://www.legislation.gov.au/F2022L00769/asmade/text"
+    },
+    {
+     "from": "2023-09-01",
+     "amount": 225750,
+     "source": "Remuneration Tribunal (Members of Parliament) Amendment Determination (No. 1) 2023, Schedule 1 Part 2",
+     "url": "https://www.legislation.gov.au/F2023L01119/asmade/text"
+    },
+    {
+     "from": "2024-07-01",
+     "amount": 233660,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2024, clause 2.1",
+     "url": "https://www.legislation.gov.au/F2024L00799/asmade/text"
+    },
+    {
+     "from": "2025-07-01",
+     "amount": 239270,
+     "source": "Remuneration Tribunal (Members of Parliament) Amendment Determination (No. 2) 2025, Schedule 1 item 1",
+     "url": "https://www.legislation.gov.au/F2025L00713/asmade/text"
+    }
+   ],
+   "offices": {
+    "pm": {
+     "label": "Prime Minister",
+     "kind": "ministerial",
+     "pct": 160.0,
+     "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."
+    },
+    "dpm": {
+     "label": "Deputy Prime Minister",
+     "kind": "ministerial",
+     "pct": 105.0,
+     "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."
+    },
+    "treasurer": {
+     "label": "Treasurer",
+     "kind": "ministerial",
+     "pct": 87.5,
+     "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."
+    },
+    "lgs": {
+     "label": "Leader of the Government in the Senate",
+     "kind": "ministerial",
+     "pct": 87.5,
+     "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."
+    },
+    "loh": {
+     "label": "Leader of the House",
+     "kind": "ministerial",
+     "pct": 75.0,
+     "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."
+    },
+    "mgbs": {
+     "label": "Manager of Government Business in the Senate",
+     "kind": "ministerial",
+     "pct": 0.0,
+     "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."
+    },
+    "mgbs_cabinet": {
+     "label": "Cabinet Minister and Manager of Government Business in the Senate",
+     "kind": "ministerial",
+     "pct": 75.0,
+     "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."
+    },
+    "mgbs_minister": {
+     "label": "Minister and Manager of Government Business in the Senate",
+     "kind": "ministerial",
+     "pct": 67.5,
+     "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."
+    },
+    "mgbs_parlsec": {
+     "label": "Parliamentary Secretary and Manager of Government Business in the Senate",
+     "kind": "ministerial",
+     "pct": 35.0,
+     "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."
+    },
+    "cabinet": {
+     "label": "Cabinet Minister",
+     "kind": "ministerial",
+     "pct": 72.5,
+     "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."
+    },
+    "minister": {
+     "label": "Minister outside Cabinet",
+     "kind": "ministerial",
+     "pct": 57.5,
+     "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."
+    },
+    "parlsec": {
+     "label": "Assistant Minister (Parliamentary Secretary)",
+     "kind": "ministerial",
+     "pct": 25.0,
+     "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."
+    },
+    "loto": {
+     "label": "Leader of the Opposition",
+     "kind": "office",
+     "pct": 85.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "president": {
+     "label": "President of the Senate",
+     "kind": "office",
+     "pct": 75.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "speaker": {
+     "label": "Speaker of the House of Representatives",
+     "kind": "office",
+     "pct": 75.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "deputy_loto": {
+     "label": "Deputy Leader of the Opposition",
+     "kind": "office",
+     "pct": 57.5,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "loto_senate": {
+     "label": "Leader of the Opposition in the Senate",
+     "kind": "office",
+     "pct": 57.5,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "third_party_leader": {
+     "label": "Leader of the third largest party in the House of Representatives",
+     "kind": "office",
+     "pct": 45.0,
+     "source": "Determination 2005/02 (\"Leader of the Third Party in the House\", 45%); Remuneration Tribunal (Members of Parliament) Amendment Determination (No.1) 2026, F2026L00909."
+    },
+    "minor_leader_large": {
+     "label": "Leader of a minority party with more than 10 members",
+     "kind": "office",
+     "pct": 45.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "minor_leader_small": {
+     "label": "Leader of a minority party with five to 10 members",
+     "kind": "office",
+     "pct": 42.5,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "mob_house": {
+     "label": "Manager of Opposition Business in the House of Representatives",
+     "kind": "office",
+     "pct": 27.5,
+     "source": "Remuneration Tribunal Determination 2012/03, F2012L00568: a new office from 15 March 2012."
+    },
+    "chief_govt_whip_house": {
+     "label": "Chief Government Whip in the House of Representatives",
+     "kind": "office",
+     "pct": 26.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "mob_senate": {
+     "label": "Manager of Opposition Business in the Senate",
+     "kind": "office",
+     "pct": 25.0,
+     "source": "Remuneration Tribunal (2018/09 Members of Parliament) Amendment Determination 2018, F2018L01338: applies from 17 September 2018."
+    },
+    "chief_opp_whip_house": {
+     "label": "Chief Opposition Whip in the House of Representatives",
+     "kind": "office",
+     "pct": 23.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "deputy_president": {
+     "label": "Deputy President and Chair of Committees in the Senate",
+     "kind": "office",
+     "pct": 20.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "deputy_speaker": {
+     "label": "Deputy Speaker of the House of Representatives",
+     "kind": "office",
+     "pct": 20.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "deputy_loto_senate": {
+     "label": "Deputy Leader of the Opposition in the Senate",
+     "kind": "office",
+     "pct": 20.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "chief_govt_whip_senate": {
+     "label": "Chief Government Whip in the Senate",
+     "kind": "office",
+     "pct": 20.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "chief_opp_whip_senate": {
+     "label": "Chief Opposition Whip in the Senate",
+     "kind": "office",
+     "pct": 18.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "second_deputy_speaker": {
+     "label": "Second Deputy Speaker of the House of Representatives",
+     "kind": "office",
+     "pct": 13.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "govt_whip_house": {
+     "label": "Government Whip in the House of Representatives",
+     "kind": "office",
+     "pct": 13.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "opp_whip_house": {
+     "label": "Opposition Whip in the House of Representatives",
+     "kind": "office",
+     "pct": 12.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "govt_deputy_whip_senate": {
+     "label": "Government Deputy Whip in the Senate",
+     "kind": "office",
+     "pct": 5.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "opp_deputy_whip_senate": {
+     "label": "Opposition Deputy Whip in the Senate",
+     "kind": "office",
+     "pct": 5.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "govt_deputy_whip_house": {
+     "label": "Government Deputy Whip in the House of Representatives",
+     "kind": "office",
+     "pct": 3.0,
+     "source": "First listed in Determination 2008/19, F2008L03890, from 1 November 2008."
+    },
+    "opp_deputy_whip_house": {
+     "label": "Opposition Deputy Whip in the House of Representatives",
+     "kind": "office",
+     "pct": 3.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "speakers_panel": {
+     "label": "Member of the Speaker’s Panel",
+     "kind": "office",
+     "pct": 3.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "temp_chair": {
+     "label": "Temporary Chair of Committees in the Senate",
+     "kind": "office",
+     "pct": 3.0,
+     "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."
+    },
+    "shadow_cabinet": {
+     "label": "Shadow Cabinet Minister",
+     "kind": "shadow",
+     "pct": 25.0,
+     "source": "Remuneration Tribunal Determination 2012/03, F2012L00568, clause 2.4: shadow ministers were first paid from 15 March 2012."
+    },
+    "shadow_minister": {
+     "label": "Shadow Minister outside Shadow Cabinet",
+     "kind": "shadow",
+     "pct": 20.0,
+     "source": "Remuneration Tribunal Determination 2012/03, F2012L00568, clause 2.4."
+    }
+   },
+   "current": [
+    {
+     "id": "R36",
+     "name": "Anthony Albanese",
+     "party": "Labor",
+     "chamber": "representatives",
+     "post": "Prime Minister",
+     "pct": 160.0,
+     "salary": 622102
+    },
+    {
+     "id": "37998",
+     "name": "Jim Chalmers",
+     "party": "Labor",
+     "chamber": "representatives",
+     "post": "Treasurer",
+     "pct": 87.5,
+     "salary": 448631
+    },
+    {
+     "id": "269375",
+     "name": "Alex Antic",
+     "party": "Liberal",
+     "chamber": "senate",
+     "post": "Senator",
+     "pct": 0.0,
+     "salary": 239270
+    },
+    {
+     "id": "HWO",
+     "name": "Alex Hawke",
+     "party": "Liberal",
+     "chamber": "representatives",
+     "post": "Member of Parliament",
+     "pct": 0.0,
+     "salary": 239270
+    }
+   ],
+   "names": {
+    "alex antic": "269375",
+    "alex george hawke": "HWO",
+    "alex hawke": "HWO",
+    "alexander antic": "269375",
+    "alexander charles antic": "269375",
+    "alexander george hawke": "HWO",
+    "alexander hawke": "HWO",
+    "anthony albanese": "R36",
+    "anthony norman albanese": "R36",
+    "james chalmers": "37998",
+    "jim chalmers": "37998"
+   },
+   "people": {
+    "269375": {
+     "name": "Alex Antic",
+     "pid": "10954",
+     "party": "Liberal",
+     "chamber": "senate",
+     "from": "2019-07-01",
+     "to": null,
+     "sitting": true,
+     "now": {
+      "post": "Senator",
+      "pct": 0.0,
+      "salary": 239270,
+      "since": "2019-07-01"
+     },
+     "peak": {
+      "post": "Senator",
+      "pct": 0.0,
+      "salary": 239270,
+      "year": 2026
+     },
+     "total": 1620782,
+     "spells": [
+      [
+       "2019-07-01",
+       null,
+       "Senator",
+       0.0,
+       239270
+      ]
+     ],
+     "by_year": [
+      [
+       2019,
+       211250
+      ],
+      [
+       2020,
+       211250
+      ],
+      [
+       2021,
+       211250
+      ],
+      [
+       2022,
+       217060
+      ],
+      [
+       2023,
+       224278
+      ],
+      [
+       2024,
+       233660
+      ],
+      [
+       2025,
+       239270
+      ],
+      [
+       2026,
+       72764
+      ]
+     ]
+    },
+    "37998": {
+     "name": "Jim Chalmers",
+     "pid": "10809",
+     "party": "Labor",
+     "chamber": "representatives",
+     "from": "2013-09-07",
+     "to": null,
+     "sitting": true,
+     "now": {
+      "post": "Treasurer",
+      "pct": 87.5,
+      "salary": 448631,
+      "since": "2022-05-23"
+     },
+     "peak": {
+      "post": "Treasurer",
+      "pct": 87.5,
+      "salary": 448631,
+      "year": 2026
+     },
+     "total": 3997181,
+     "spells": [
+      [
+       "2013-09-07",
+       "2015-10-13",
+       "Member of Parliament",
+       0.0,
+       195130
+      ],
+      [
+       "2015-10-13",
+       "2016-07-23",
+       "Shadow Minister for Financial Services and Superannuation",
+       20.0,
+       238850,
+       1
+      ],
+      [
+       "2016-07-23",
+       "2019-06-02",
+       "Shadow Minister for Finance (Shadow Cabinet)",
+       25.0,
+       258880,
+       1
+      ],
+      [
+       "2019-06-02",
+       "2022-05-23",
+       "Shadow Treasurer (Shadow Cabinet)",
+       25.0,
+       264070,
+       1
+      ],
+      [
+       "2022-05-23",
+       null,
+       "Treasurer",
+       87.5,
+       448631
+      ]
+     ],
+     "by_year": [
+      [
+       2013,
+       158777
+      ],
+      [
+       2014,
+       195130
+      ],
+      [
+       2015,
+       225402
+      ],
+      [
+       2016,
+       248200
+      ],
+      [
+       2017,
+       253790
+      ],
+      [
+       2018,
+       258880
+      ],
+      [
+       2019,
+       264070
+      ],
+      [
+       2020,
+       264070
+      ],
+      [
+       2021,
+       278177
+      ],
+      [
+       2022,
+       406988
+      ],
+      [
+       2023,
+       420521
+      ],
+      [
+       2024,
+       438112
+      ],
+      [
+       2025,
+       448631
+      ],
+      [
+       2026,
+       136433
+      ]
+     ]
+    },
+    "HWO": {
+     "name": "Alex Hawke",
+     "pid": "10290",
+     "party": "Liberal",
+     "chamber": "representatives",
+     "from": "2007-11-24",
+     "to": null,
+     "sitting": true,
+     "now": {
+      "post": "Member of Parliament",
+      "pct": 0.0,
+      "salary": 239270,
+      "since": "2026-02-17"
+     },
+     "peak": {
+      "post": "Minister for Immigration, Citizenship, Migrant Services and Multicultural Affairs (Cabinet)",
+      "pct": 72.5,
+      "salary": 364406,
+      "year": 2021
+     },
+     "total": 4305935,
+     "spells": [
+      [
+       "2007-11-24",
+       "2014-03-04",
+       "Member of Parliament",
+       0.0,
+       195130
+      ],
+      [
+       "2014-03-04",
+       "2015-09-21",
+       "Member of the Speaker's Panel",
+       3.0,
+       200990
+      ],
+      [
+       "2015-09-21",
+       "2016-07-19",
+       "Assistant Minister to the Treasurer",
+       25.0,
+       248800
+      ],
+      [
+       "2016-07-19",
+       "2017-12-20",
+       "Assistant Minister for Immigration and Border Protection",
+       25.0,
+       253788
+      ],
+      [
+       "2017-12-20",
+       "2018-08-28",
+       "Assistant Minister for Home Affairs",
+       25.0,
+       258875
+      ],
+      [
+       "2018-08-28",
+       "2019-05-29",
+       "Special Minister of State",
+       57.5,
+       326182
+      ],
+      [
+       "2019-05-29",
+       "2020-12-22",
+       "Minister for International Development and the Pacific",
+       57.5,
+       332719
+      ],
+      [
+       "2020-12-22",
+       "2021-10-08",
+       "Minister for Immigration, Citizenship, Migrant Services and Multicultural Affairs",
+       57.5,
+       332719
+      ],
+      [
+       "2021-10-08",
+       "2022-05-23",
+       "Minister for Immigration, Citizenship, Migrant Services and Multicultural Affairs (Cabinet)",
+       72.5,
+       364406
+      ],
+      [
+       "2022-05-23",
+       "2025-05-28",
+       "Member of Parliament",
+       0.0,
+       233660
+      ],
+      [
+       "2025-05-28",
+       "2026-02-17",
+       "Manager of Opposition Business in the House",
+       27.5,
+       305070
+      ],
+      [
+       "2026-02-17",
+       null,
+       "Member of Parliament",
+       0.0,
+       239270
+      ]
+     ],
+     "by_year": [
+      [
+       2007,
+       76375
+      ],
+      [
+       2008,
+       127060
+      ],
+      [
+       2009,
+       130037
+      ],
+      [
+       2010,
+       135615
+      ],
+      [
+       2011,
+       153920
+      ],
+      [
+       2012,
+       190550
+      ],
+      [
+       2013,
+       197041
+      ],
+      [
+       2014,
+       200990
+      ],
+      [
+       2015,
+       236726
+      ],
+      [
+       2016,
+       248800
+      ],
+      [
+       2017,
+       253788
+      ],
+      [
+       2018,
+       315487
+      ],
+      [
+       2019,
+       332719
+      ],
+      [
+       2020,
+       332719
+      ],
+      [
+       2021,
+       339447
+      ],
+      [
+       2022,
+       217060
+      ],
+      [
+       2023,
+       224278
+      ],
+      [
+       2024,
+       239646
+      ],
+      [
+       2025,
+       280913
+      ],
+      [
+       2026,
+       72764
+      ]
+     ]
+    },
+    "R36": {
+     "name": "Anthony Albanese",
+     "pid": "10007",
+     "party": "Labor",
+     "chamber": "representatives",
+     "from": "1999-12-07",
+     "to": null,
+     "sitting": true,
+     "now": {
+      "post": "Prime Minister",
+      "pct": 160.0,
+      "salary": 622102,
+      "since": "2022-05-23"
+     },
+     "peak": {
+      "post": "Prime Minister",
+      "pct": 160.0,
+      "salary": 622102,
+      "year": 2026
+     },
+     "total": 7539482,
+     "spells": [
+      [
+       "1999-12-07",
+       "2007-12-03",
+       "Member of Parliament",
+       0.0,
+       127060
+      ],
+      [
+       "2007-12-03",
+       "2008-02-12",
+       "Minister for Infrastructure, Transport, Regional Development and Local Government (Cabinet)",
+       72.5,
+       219178
+      ],
+      [
+       "2008-02-12",
+       "2010-09-14",
+       "Leader of the House, Minister for Infrastructure, Transport, Regional Development and Local Government",
+       75.0,
+       238070
+      ],
+      [
+       "2010-09-14",
+       "2013-06-27",
+       "Leader of the House, Minister for Infrastructure and Transport",
+       75.0,
+       333462
+      ],
+      [
+       "2013-06-27",
+       "2013-09-18",
+       "Deputy Prime Minister",
+       105.0,
+       400016
+      ],
+      [
+       "2013-09-18",
+       "2013-10-18",
+       "Member of Parliament",
+       0.0,
+       195130
+      ],
+      [
+       "2013-10-18",
+       "2016-07-23",
+       "Shadow Minister for Infrastructure and Transport (Shadow Cabinet)",
+       25.0,
+       248800,
+       1
+      ],
+      [
+       "2016-07-23",
+       "2019-05-27",
+       "Shadow Minister for Tourism (Shadow Cabinet)",
+       25.0,
+       258880,
+       1
+      ],
+      [
+       "2019-05-27",
+       "2022-05-23",
+       "Leader of the Opposition",
+       85.0,
+       390820
+      ],
+      [
+       "2022-05-23",
+       null,
+       "Prime Minister",
+       160.0,
+       622102
+      ]
+     ],
+     "by_year": [
+      [
+       1999,
+       48357
+      ],
+      [
+       2000,
+       92000
+      ],
+      [
+       2001,
+       95600
+      ],
+      [
+       2002,
+       98800
+      ],
+      [
+       2003,
+       102760
+      ],
+      [
+       2004,
+       106770
+      ],
+      [
+       2005,
+       111150
+      ],
+      [
+       2006,
+       118950
+      ],
+      [
+       2007,
+       181382
+      ],
+      [
+       2008,
+       222355
+      ],
+      [
+       2009,
+       227564
+      ],
+      [
+       2010,
+       237327
+      ],
+      [
+       2011,
+       269360
+      ],
+      [
+       2012,
+       334088
+      ],
+      [
+       2013,
+       273695
+      ],
+      [
+       2014,
+       243920
+      ],
+      [
+       2015,
+       246347
+      ],
+      [
+       2016,
+       248800
+      ],
+      [
+       2017,
+       253790
+      ],
+      [
+       2018,
+       270795
+      ],
+      [
+       2019,
+       390820
+      ],
+      [
+       2020,
+       390820
+      ],
+      [
+       2021,
+       407748
+      ],
+      [
+       2022,
+       564356
+      ],
+      [
+       2023,
+       583123
+      ],
+      [
+       2024,
+       607516
+      ],
+      [
+       2025,
+       622102
+      ],
+      [
+       2026,
+       189187
+      ]
+     ]
+    }
+   }
+  },
+  "/pay-offices.json": {
+   "meta": {
+    "generated": "2026-11-12T23:38:47+00:00",
+    "as_of": "2026-10-22",
+    "checked": "2026-11-13",
+    "jurisdiction": "federal",
+    "sources": [
+     {
+      "id": "secretaries",
+      "frl_id": "F2026L00746",
+      "compilation_id": "F2026C01104",
+      "compilation_no": 2,
+      "compilation_date": "2026-08-30",
+      "registered": "2026-10-27",
+      "title": "Remuneration Tribunal (Departmental Secretaries—Classification Structure and Terms and Conditions) Determination 2026",
+      "url": "https://www.legislation.gov.au/F2026L00746/latest/text",
+      "publisher": "Federal Register of Legislation"
+     },
+     {
+      "id": "full_time",
+      "frl_id": "F2026L00741",
+      "compilation_id": "F2026C01150",
+      "compilation_no": 3,
+      "compilation_date": "2026-10-22",
+      "registered": "2026-11-04",
+      "title": "Remuneration Tribunal (Remuneration and Allowances for Holders of Full-time Public Office) Determination 2026",
+      "url": "https://www.legislation.gov.au/F2026L00741/latest/text",
+      "publisher": "Federal Register of Legislation"
+     },
+     {
+      "id": "statutory",
+      "frl_id": "F2026L00745",
+      "compilation_id": "F2026C01087",
+      "compilation_no": 2,
+      "compilation_date": "2026-08-30",
+      "registered": "2026-10-26",
+      "title": "Remuneration Tribunal (Specified Statutory Offices—Remuneration and Allowances) Determination 2026",
+      "url": "https://www.legislation.gov.au/F2026L00745/latest/text",
+      "publisher": "Federal Register of Legislation"
+     },
+     {
+      "id": "peo",
+      "frl_id": "F2026L00743",
+      "compilation_id": "F2026C01095",
+      "compilation_no": 2,
+      "compilation_date": "2026-08-30",
+      "registered": "2026-10-27",
+      "title": "Remuneration Tribunal (Principal Executive Offices—Classification Structure and Terms and Conditions) Determination 2026",
+      "url": "https://www.legislation.gov.au/F2026L00743/latest/text",
+      "publisher": "Federal Register of Legislation"
+     }
+    ],
+    "measure": "Total remuneration: the Remuneration Tribunal's measure of the total cost to the employer of salary, allowances, benefits and the employer superannuation contribution, per year.",
+    "notes": [
+     "Every amount is total remuneration per year, which includes the employer superannuation contribution and benefits; a parliamentarian's salary (pay.json) does not include superannuation.",
+     "Secretaries at levels 3 and 4 are assigned to a pay point by the Secretary of the Department of the Prime Minister and Cabinet, so their rate is shown as the level's range.",
+     "A Principal Executive Office band is a range: the employing body sets the holder's pay within it, and band E has no upper limit.",
+     "Actual pay, including any performance pay and leave paid out, is reported in each body's annual report."
+    ],
+    "not_covered": [
+     "Which office sits in which Principal Executive Office band (set by ministerial declaration, not in the determination).",
+     "Judges and judicial offices, the Governor-General, and bodies that set their own executive pay outside the Tribunal (such as the Reserve Bank).",
+     "Who holds each office, except where the determination itself names the holder."
+    ]
+   },
+   "offices": [
+    {
+     "id": "secretary-the-prime-minister-and-cabinet",
+     "office": "Secretary of the Department of the Prime Minister and Cabinet",
+     "body": "Department of the Prime Minister and Cabinet",
+     "kind": "secretary",
+     "head": true,
+     "amount": 1035690,
+     "min": 1035690,
+     "max": 1035690,
+     "measure": "total remuneration",
+     "classification": "Level 1",
+     "source": "secretaries",
+     "clause": "s 11, Tables 2A and 2B",
+     "aliases": [],
+     "keys": [
+      "prime minister and cabinet",
+      "pm and c",
+      "pmc"
+     ],
+     "frl_id": "F2026L00746"
+    },
+    {
+     "id": "secretary-the-treasury",
+     "office": "Secretary to the Treasury",
+     "body": "Department of the Treasury",
+     "kind": "secretary",
+     "head": true,
+     "amount": 1009790,
+     "min": 1009790,
+     "max": 1009790,
+     "measure": "total remuneration",
+     "classification": "Level 2",
+     "source": "secretaries",
+     "clause": "s 11, Tables 2A and 2B",
+     "aliases": [],
+     "keys": [
+      "treasury"
+     ],
+     "frl_id": "F2026L00746"
+    },
+    {
+     "id": "office-chair-australian-prudential-regulation-authority",
+     "office": "Chair, Australian Prudential Regulation Authority",
+     "body": "Australian Prudential Regulation Authority",
+     "kind": "full_time_office",
+     "head": true,
+     "amount": 1004300,
+     "min": 1004300,
+     "max": 1004300,
+     "measure": "total remuneration",
+     "classification": null,
+     "source": "full_time",
+     "clause": "s 10, Table 2A",
+     "aliases": [
+      "apra"
+     ],
+     "frl_id": "F2026L00741"
+    },
+    {
+     "id": "secretary-agriculture-fisheries-and-forestry",
+     "office": "Secretary of the Department of Agriculture, Fisheries and Forestry",
+     "body": "Department of Agriculture, Fisheries and Forestry",
+     "kind": "secretary",
+     "head": true,
+     "amount": null,
+     "min": 932120,
+     "max": 983910,
+     "measure": "total remuneration",
+     "classification": "Level 3",
+     "source": "secretaries",
+     "clause": "s 11, Tables 2A and 2B; pay point set under s 11(4)",
+     "aliases": [],
+     "keys": [
+      "agriculture fisheries and forestry",
+      "agriculture",
+      "daff"
+     ],
+     "special": "Level 3 has 2 pay points. The Secretary of the Department of the Prime Minister and Cabinet assigns each office to one by a separate pay point assignment (s 11(4)), so the rate is shown as the Level 3 range.",
+     "frl_id": "F2026L00746"
+    }
+   ]
+  }
+ },
+ "expect": {
+  "answered": true,
+  "includes": [
+   "A federal backbencher’s base salary is \\$239,270 a year"
+  ],
+  "citations": 1,
+  "mode": "loop"
+ }
+}
