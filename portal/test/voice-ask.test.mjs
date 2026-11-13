@@ -9,7 +9,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {build} from 'esbuild';
-import {loadConfig,renderTools,planSync,formatPlan,parseArgs,differences,run,samePrompt} from '../voice/agent-sync.mjs';
+import {loadConfig,renderTools,planSync,formatPlan,parseArgs,differences,run,samePrompt,inSync} from '../voice/agent-sync.mjs';
 
 crypto.subtle.timingSafeEqual ??= timingSafeEqual;
 const folder=mkdtempSync(join(tmpdir(),'opax-voice-ask-test-'));
@@ -242,20 +242,30 @@ test('a caller budget only shortens Ask, and when it runs short Ask returns what
   assert.deepEqual(voiced.sources.map(s=>[s.type,s.title,s.date]),[['Legislation','Example Office Determination 2025','2025-07-01'],['Speech','Robin Example: Pay','2025-02-05']]);
 });
 
-// A stand-in for the ElevenLabs agents and tools API, in memory.
-function provider({prompt='Old prompt',failAgentPatches=0,padPrompt=false,extraTools=[]}={}){
+// A stand-in for the ElevenLabs agents and tools API, in memory. Like the provider, it refuses an agent update that
+// carries the deprecated prompt.tools: with tool_ids it is the 400 staging returned on 13 Nov. `mirror` makes the
+// agent read return prompt.tools as a view of the attached tools, as the provider may.
+function provider({prompt='Old prompt',failAgentPatches=0,padPrompt=false,extraTools=[],mirror=false}={}){
   const config=loadConfig(),origin='https://staging.opax.com.au';
   const [search]=renderTools(config,{origin,secretId:'secret_live'}).filter(t=>t.name==='search_records');
   const tools=new Map([['tool_search',{...search,description:'Old description'}],['tool_end',{name:'end_call',type:'system'}],...extraTools]);
   const agent={agent_id:'agent_x',conversation_config:{agent:{prompt:{prompt,llm:'example-llm',tool_ids:['tool_search','tool_end']}}}};
-  const calls=[];let next=1;
+  const calls=[],patches=[];let next=1;
   const call=async(method,path,body)=>{
     calls.push(method+' '+path);
     const url=new URL('https://api.test'+path),tool=/^\/v1\/convai\/tools\/(.+)$/.exec(url.pathname);
-    if(url.pathname==='/v1/convai/agents/agent_x'&&method==='GET') return structuredClone(agent);
+    if(url.pathname==='/v1/convai/agents/agent_x'&&method==='GET'){
+      const read=structuredClone(agent),p=read.conversation_config.agent.prompt;
+      if(mirror) p.tools=(p.tool_ids??[]).map(id=>({id,...structuredClone(tools.get(id))}));
+      return read;
+    }
     if(url.pathname==='/v1/convai/agents/agent_x'&&method==='PATCH'){
+      patches.push(structuredClone(body));
       if(failAgentPatches-->0) throw new Error('PATCH /v1/convai/agents/agent_x -> 500: unavailable');
-      const p=structuredClone(body.conversation_config.agent.prompt);agent.conversation_config.agent.prompt={...p,prompt:padPrompt?p.prompt+'  \r\n':p.prompt};return {};
+      const p=structuredClone(body.conversation_config.agent.prompt);
+      if('tools' in p&&'tool_ids' in p) throw new Error('PATCH /v1/convai/agents/agent_x -> 400: {"detail":{"status":"both_tools_and_tool_ids_provided","message":"Cannot specify both tools and tool IDs - please provide only one of these options."}}');
+      if('tools' in p) throw new Error('PATCH /v1/convai/agents/agent_x -> 400: {"detail":{"status":"tools_deprecated","message":"prompt.tools is no longer accepted; use tool_ids."}}');
+      agent.conversation_config.agent.prompt={...p,prompt:padPrompt?p.prompt+'  \r\n':p.prompt};return {};
     }
     if(url.pathname==='/v1/convai/tools'&&method==='GET') return {tools:[...tools].filter(([,c])=>c.name.startsWith(url.searchParams.get('search'))).map(([id,c])=>({id,tool_config:structuredClone(c)})),has_more:false};
     if(url.pathname==='/v1/convai/tools'&&method==='POST'){const id='tool_new_'+next++;tools.set(id,{...structuredClone(body.tool_config),provider_default:1});return {id}}
@@ -263,7 +273,7 @@ function provider({prompt='Old prompt',failAgentPatches=0,padPrompt=false,extraT
     if(tool&&method==='PATCH'){tools.set(tool[1],{...structuredClone(body.tool_config),provider_default:1});return {}}
     throw new Error('unexpected '+method+' '+path);
   };
-  return {agent,tools,calls,call,origin};
+  return {agent,tools,calls,patches,call,origin};
 }
 const quiet=()=>{const lines=[];return {lines,log:line=>lines.push(String(line))}};
 
@@ -321,6 +331,66 @@ test('agent sync: a failed agent update says what was left, and a re-run reuses 
   assert.equal(p.calls.filter(c=>c==='POST /v1/convai/tools').length,posts,'no duplicate tools');
   assert.match(out.lines.join('\n'),/same   ask_opax \(tool_new_1, in workspace, not attached\)/);
   assert.ok(p.agent.conversation_config.agent.prompt.tool_ids.includes('tool_new_1'));
+});
+
+test('agent sync sends tool_ids and never prompt.tools (staging 400 on 13 Nov); the re-run attaches the ask_opax it created',async()=>{
+  const stage=renderTools(loadConfig(),{origin:'https://staging.opax.com.au',secretId:'secret_live'});
+  // Inline entries kept on the agent (legacy), or returned by the agent read as a view of tool_ids (mirror).
+  for(const mirror of [false,true]){
+    const p=provider({mirror}),dir=mkdtempSync(join(tmpdir(),'opax-voice-backup-'));
+    // Staging after the failed run: seven tools attached and current, ask_opax created but not attached.
+    p.tools.delete('tool_search');
+    for(const tool of stage) p.tools.set('tool_stage_'+tool.name,structuredClone(tool));
+    const seven=stage.filter(t=>t.name!=='ask_opax'),before=[...seven.map(t=>'tool_stage_'+t.name),'tool_end'];
+    p.agent.conversation_config.agent.prompt.tool_ids=[...before];
+    if(!mirror) p.agent.conversation_config.agent.prompt.tools=structuredClone(seven);
+    // The body the old script sent (the fetched prompt with tool_ids set) is the one the provider refused.
+    const fetched=(await p.call('GET','/v1/convai/agents/agent_x')).conversation_config.agent.prompt;
+    assert.ok(fetched.tools.length>=7);
+    await assert.rejects(p.call('PATCH','/v1/convai/agents/agent_x',{conversation_config:{agent:{prompt:{...fetched,tool_ids:[...before,'tool_stage_ask_opax']}}}}),/-> 400: .*both_tools_and_tool_ids_provided/);
+    await assert.rejects(p.call('PATCH','/v1/convai/agents/agent_x',{conversation_config:{agent:{prompt:{...fetched,tools:[],tool_ids:before}}}}),/both_tools_and_tool_ids_provided/,'an empty list is still both');
+    p.calls.length=0;p.patches.length=0;
+    const out=quiet();
+    assert.equal(await run({agent:'agent_x',origin:p.origin,apply:true},{call:p.call,log:out.log,backupDir:dir}),0,out.lines.join('\n'));
+    const text=out.lines.join('\n');
+    assert.match(text,/same   ask_opax \(tool_stage_ask_opax, in workspace, not attached\)/);
+    assert.match(text,/the agent update sends tool_ids only/);assert.match(text,/In sync\./);
+    assert.equal(p.calls.filter(c=>c==='POST /v1/convai/tools').length,0,'ask_opax reused, not created again');
+    assert.equal(p.patches.length,1);
+    const sent=p.patches[0].conversation_config.agent.prompt;
+    assert.deepEqual(Object.keys(p.patches[0]),['conversation_config']);assert.deepEqual(Object.keys(p.patches[0].conversation_config),['agent']);
+    assert.ok(!('tools' in sent),'no prompt.tools in the body');
+    assert.deepEqual(Object.keys(sent).sort(),['llm','prompt','tool_ids']);
+    assert.deepEqual(new Set(sent.tool_ids),new Set([...before,'tool_stage_ask_opax']));
+    // A second run finds nothing to do.
+    const again=quiet();
+    assert.equal(await run({agent:'agent_x',origin:p.origin,apply:true},{call:p.call,log:again.log,backupDir:dir}),0,again.lines.join('\n'));
+    assert.match(again.lines.join('\n'),/Already in sync\./);assert.equal(p.patches.length,1);
+    // Restore sends tool_ids only too, even from a backup that holds prompt.tools.
+    const [file]=readdirSync(dir),undo=quiet();
+    assert.equal(await run({agent:'agent_x',origin:p.origin,restore:join(dir,file),apply:true},{call:p.call,log:undo.log,backupDir:dir}),0,undo.lines.join('\n'));
+    assert.ok(!('tools' in p.patches.at(-1).conversation_config.agent.prompt));
+    assert.deepEqual(p.agent.conversation_config.agent.prompt.tool_ids,before);
+    if(!mirror) assert.match(undo.lines.join('\n'),/prompt\.tools in the backup is not sent/);
+  }
+});
+
+test('agent sync: inline prompt.tools absent, empty or matching attached tools is in sync; one with no tool id is refused',()=>{
+  const config=loadConfig(),origin='https://staging.opax.com.au',stage=renderTools(config,{origin,secretId:'secret_live'});
+  const attached=[...stage.map(t=>({id:'tool_'+t.name,tool_config:t})),{id:'tool_end',tool_config:{name:'end_call',type:'system'}}];
+  const agent=extra=>({conversation_config:{agent:{prompt:{prompt:config.prompt.join('\n'),tool_ids:attached.map(t=>t.id),...extra}}}});
+  for(const extra of [{},{tools:[]},{tools:attached.map(t=>({id:t.id,...t.tool_config}))},{tools:[{name:'language_detection',type:'system'}],built_in_tools:{language_detection:{name:'language_detection',type:'system'}}}]){
+    const plan=planSync(config,agent(extra),attached,{origin});
+    assert.deepEqual(plan.problems,[],JSON.stringify(extra));assert.deepEqual(plan.inline_replaced,[]);
+    assert.ok(inSync(plan),JSON.stringify(extra));
+  }
+  // A configured name the agent lists only inline: replaced by the tool id, so not yet in sync.
+  const replaced=planSync(config,agent({tools:[stage[0]]}),attached.slice(1),{origin});
+  assert.deepEqual(replaced.inline_replaced,['ask_opax']);assert.ok(!inSync(replaced));
+  assert.match(formatPlan(replaced),/inline ask_opax: deprecated prompt\.tools entries replaced by the tool ids above; the agent update sends tool_ids only/);
+  // Anything else only inline would be dropped by an update without prompt.tools: refused before any write.
+  const orphan=planSync(config,agent({tools:[{name:'legacy_lookup',type:'webhook'}]}),attached,{origin});
+  assert.match(orphan.problems.join('\n'),/legacy_lookup is only in the deprecated prompt\.tools[\s\S]*apply refused/);
 });
 
 test('agent sync never reuses another environment\'s tool and fails the check when the provider differs',async()=>{
