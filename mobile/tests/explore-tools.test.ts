@@ -458,6 +458,8 @@ jest.mock('expo-router', () => {
     }),
     useLocalSearchParams: jest.fn(() => ({})),
     useSegments: () => ['(tabs)', '(today)'],
+    // Screens load inside the tests, after the shared preview patch runs.
+    useIsPreview: () => false,
   };
 });
 jest.mock('../src/features/explore/runtime', () => ({

@@ -58,6 +58,8 @@ jest.mock('expo-router', () => {
       },
     },
     useFocusEffect: jest.fn(),
+    // Screens load inside the tests, after the shared preview patch runs.
+    useIsPreview: () => false,
   };
 });
 jest.mock('../src/design/menu', () => ({

@@ -51,9 +51,24 @@ import type { ProfileView } from '../src/features/your-mp/model';
 import { catalogs, manifest, people, pinned, roster, slugs } from './pinned';
 
 // The party page reads the pinned snapshot through the real catalogue code.
+// Like ApiClient, each decoder validates a catalogue once and later reads
+// share the result: Labor and Liberal read the same money, bills, people and
+// roster files, and decoding them twice made the party beforeAll the slowest
+// hook in the suite (5 s timeout under gate load, 13 Nov).
+const decoded = new Map<string, Map<unknown, unknown>>();
+const decodeOnce = <T,>(path: string, decoder: (value: unknown) => T): T => {
+  let byDecoder = decoded.get(path);
+  if (!byDecoder) decoded.set(path, (byDecoder = new Map()));
+  if (!byDecoder.has(decoder))
+    byDecoder.set(
+      decoder,
+      decoder(path === '/api/person-slugs' ? slugs : pinned(path)),
+    );
+  return byDecoder.get(decoder) as T;
+};
 const partyApi = new c.Catalogs({
   get: async (path, decoder) => ({
-    data: decoder(path === '/api/person-slugs' ? slugs : pinned(path)),
+    data: decodeOnce(path, decoder),
     stale: false,
     savedAt: 1000,
     asOf: null,
@@ -1399,10 +1414,15 @@ describe('profile', () => {
 describe('party', () => {
   type PartyView = Awaited<ReturnType<typeof partyApi.partyPage>>;
   const views: Record<string, PartyView> = {};
+  // Real, bounded work: two party pages through the real catalogue code over
+  // the pinned snapshot (money graph, bill index and up to 32 bills, people,
+  // roster), about 0.25 s on an idle Mac. Jest's 5 s default is only a hang
+  // check, and gate load has run this suite 5x slower (22.9 s, 13 Nov). 30 s
+  // still fails a read that never settles.
   beforeAll(async () => {
     for (const name of ['Labor', 'Liberal'])
       views[name] = await partyApi.partyPage(name);
-  });
+  }, 30_000);
   beforeEach(() => {
     jest
       .mocked(runtime.partyPage)

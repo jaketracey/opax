@@ -1,4 +1,4 @@
-import { spawn, type ChildProcess } from 'node:child_process';
+import type { ChildProcess } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { get, request as httpRequest } from 'node:http';
 import { resolve } from 'node:path';
@@ -18,14 +18,16 @@ import {
   decodeRecentDivisions,
   recentReadingVotes,
 } from '../src/features/today/votes';
+import {
+  fixtureHookTimeout,
+  startFixture,
+  type Fixture,
+} from './fixture-process';
 import { files, pinned, servedFiles } from './pinned';
 let child: ChildProcess;
-let primaryFixture: ReturnType<typeof startFixture>;
+let primaryFixture: Fixture;
 let output = '';
 let port = 0; // Each unit-test fixture reserves its own loopback port atomically.
-// Bound process readiness separately from HTTP and per-test budgets.
-const fixtureStartupTimeout = 30_000;
-const fixtureTestTimeout = 40_000;
 // HTTP completion and the child process's stderr pipe are independent. Wait
 // for the actual refusal log rather than assuming it reached Jest first.
 function waitForOutput(
@@ -78,14 +80,14 @@ function request(
   });
 }
 beforeAll(async () => {
-  primaryFixture = startFixture('pinned', 0, { OPAX_TARGET_PLATFORM: 'ios' });
+  primaryFixture = startEdition('pinned', { OPAX_TARGET_PLATFORM: 'ios' });
   child = primaryFixture.child;
   const receive = (chunk: Buffer) => (output += chunk.toString());
   child.stdout!.on('data', receive);
   child.stderr!.on('data', receive);
   await primaryFixture.ready;
   port = primaryFixture.port();
-}, fixtureTestTimeout);
+}, fixtureHookTimeout);
 afterAll(() => primaryFixture?.stop());
 test.each([
   ['overview', ''],
@@ -333,70 +335,8 @@ test('a production Host header is rejected even on the loopback socket', async (
 });
 
 // Second servers, as e2e.sh starts them for the edition journeys 13b and 13c.
-function startFixture(
-  mode: string,
-  port = 0,
-  env: Record<string, string> = {},
-) {
-  const child = spawn(
-    process.execPath,
-    ['--import', 'tsx', 'scripts/fixture-server.ts'],
-    {
-      cwd: resolve(__dirname, '..'),
-      env: {
-        ...process.env,
-        OPAX_FIXTURE_PORT: String(port),
-        OPAX_FIXTURE_EDITION: mode,
-        ...env,
-      },
-      stdio: ['ignore', 'pipe', 'pipe'],
-    },
-  );
-  let log = '';
-  const ready = new Promise<void>((resolve, reject) => {
-    const timer = setTimeout(() => {
-      reject(
-        new Error(
-          `Fixture startup timeout after ${fixtureStartupTimeout}ms: ${log}`,
-        ),
-      );
-      child.kill('SIGTERM');
-    }, fixtureStartupTimeout);
-    const receive = (chunk: Buffer) => {
-      log += chunk.toString();
-      const ready = /OPAX_FIXTURE_READY port=(\d+)/.exec(log);
-      if (ready) {
-        port = Number(ready[1]);
-        clearTimeout(timer);
-        resolve();
-      }
-    };
-    child.stdout!.on('data', receive);
-    child.stderr!.on('data', receive);
-    child.once('error', (error) => {
-      clearTimeout(timer);
-      reject(error);
-    });
-    child.once('exit', (code) => {
-      clearTimeout(timer);
-      reject(new Error(`Fixture exited ${code}: ${log}`));
-    });
-  });
-  // Exits are expected after the test; only startup failures reject.
-  ready.catch(() => undefined);
-  return {
-    child,
-    ready,
-    log: () => log,
-    port: () => port,
-    stop: () =>
-      child.pid && child.exitCode === null && child.signalCode === null
-        ? new Promise<void>((resolve) => {
-            child.once('exit', () => resolve());
-            child.kill('SIGTERM');
-          })
-        : Promise.resolve(),
-  };
+function startEdition(mode: string, env: Record<string, string> = {}) {
+  return startFixture({ OPAX_FIXTURE_EDITION: mode, ...env });
 }
 function getAt(
   port: number,
@@ -422,7 +362,7 @@ const notPublished = { error: 'edition_not_published', date: '2026-10-04' };
 test(
   'Android opts into only its emulator host alias and keeps the path boundary',
   async () => {
-    const fixture = startFixture('pinned', 0, {
+    const fixture = startEdition('pinned', {
       OPAX_TARGET_PLATFORM: 'android',
     });
     try {
@@ -450,15 +390,15 @@ test(
       await fixture.stop();
     }
   },
-  fixtureTestTimeout,
+  fixtureHookTimeout,
 );
 
 describe('the no-edition fixture', () => {
-  let fixture: ReturnType<typeof startFixture>;
+  let fixture: Fixture;
   beforeAll(() => {
-    fixture = startFixture('absent');
+    fixture = startEdition('absent');
     return fixture.ready;
-  }, fixtureTestTimeout);
+  }, fixtureHookTimeout);
   afterAll(() => fixture?.stop());
   test('answers the edition as the Worker does when none is posted, without a boundary alarm', async () => {
     expect(fixture.log()).toContain('edition=absent');
@@ -481,11 +421,11 @@ describe('the no-edition fixture', () => {
 });
 
 describe('the withdrawn-edition fixture', () => {
-  let fixture: ReturnType<typeof startFixture>;
+  let fixture: Fixture;
   beforeAll(() => {
-    fixture = startFixture('withdrawn');
+    fixture = startEdition('withdrawn');
     return fixture.ready;
-  }, fixtureTestTimeout);
+  }, fixtureHookTimeout);
   afterAll(() => fixture?.stop());
   test('serves the edition until the app revalidates it, then 404s for good', async () => {
     expect(fixture.log()).toContain('edition=withdrawn');
@@ -509,7 +449,7 @@ describe('the withdrawn-edition fixture', () => {
 test(
   'the fixture refuses an unknown edition mode at startup',
   async () => {
-    const fixture = startFixture('preview');
+    const fixture = startEdition('preview');
     try {
       await expect(fixture.ready).rejects.toThrow(
         'OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn',
@@ -518,17 +458,17 @@ test(
       await fixture.stop();
     }
   },
-  fixtureTestTimeout,
+  fixtureHookTimeout,
 );
 
 // Journey 26: the follows fixture moves one declaration and one bill stage.
 describe('the changed-data fixture', () => {
-  let fixture: ReturnType<typeof startFixture>;
+  let fixture: Fixture;
   const port = () => fixture.port();
   beforeAll(() => {
-    fixture = startFixture('pinned', 0, { OPAX_FIXTURE_DATA: 'changed' });
+    fixture = startEdition('pinned', { OPAX_FIXTURE_DATA: 'changed' });
     return fixture.ready;
-  }, fixtureTestTimeout);
+  }, fixtureHookTimeout);
   afterAll(() => fixture?.stop());
   test('serves pinned bytes with a long max-age until a revalidation, then the bumped catalogs', async () => {
     expect(fixture.log()).toContain('data=changed');
@@ -574,7 +514,7 @@ describe('the changed-data fixture', () => {
 test(
   'the fixture refuses an unknown data mode at startup',
   async () => {
-    const fixture = startFixture('pinned', 0, { OPAX_FIXTURE_DATA: 'live' });
+    const fixture = startEdition('pinned', { OPAX_FIXTURE_DATA: 'live' });
 
     try {
       await expect(fixture.ready).rejects.toThrow(
@@ -584,13 +524,13 @@ test(
       await fixture.stop();
     }
   },
-  fixtureTestTimeout,
+  fixtureHookTimeout,
 );
 
 test(
   'null-optional roster mode changes one field and preserves the People record',
   async () => {
-    const fixture = startFixture('pinned', 0, {
+    const fixture = startEdition('pinned', {
       OPAX_FIXTURE_ROSTER: 'null-optional',
     });
     try {
@@ -615,13 +555,13 @@ test(
       await fixture.stop();
     }
   },
-  fixtureTestTimeout,
+  fixtureHookTimeout,
 );
 
 test(
   'vacant roster removes the member from the electorate index as well as both people catalogs',
   async () => {
-    const fixture = startFixture('pinned', 0, {
+    const fixture = startEdition('pinned', {
       OPAX_FIXTURE_ROSTER: 'vacant',
     });
     try {
@@ -656,13 +596,13 @@ test(
       await fixture.stop();
     }
   },
-  fixtureTestTimeout,
+  fixtureHookTimeout,
 );
 
 test(
   'the fixture refuses an unknown roster mode at startup',
   async () => {
-    const fixture = startFixture('pinned', 0, { OPAX_FIXTURE_ROSTER: 'live' });
+    const fixture = startEdition('pinned', { OPAX_FIXTURE_ROSTER: 'live' });
     try {
       await expect(fixture.ready).rejects.toThrow(
         'OPAX_FIXTURE_ROSTER must be pinned, null-optional or vacant',
@@ -671,7 +611,7 @@ test(
       await fixture.stop();
     }
   },
-  fixtureTestTimeout,
+  fixtureHookTimeout,
 );
 
 test('search results open matching native excerpt resources and preserve related-speech fixtures', async () => {
