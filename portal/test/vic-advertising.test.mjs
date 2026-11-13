@@ -2,12 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {build} from 'esbuild';
-import {execFileSync} from 'node:child_process';
-import {fileURLToPath} from 'node:url';
 import {JSDOM} from 'jsdom';
 import {toCSV,applyQuery} from '../public/datatable.js';
 import {govAdvertisingTableConfig,hydrateRegisterTables} from '../public/register-tables.js';
 import {workerFetch} from './helpers/worker-fetch.mjs';
+import {pythonSkip,runPython} from './helpers/python.mjs';
 const bundle=await build({entryPoints:[new URL('../src/gov-advertising.ts',import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false});
 const {govAdvertisingPage,clearedAdvertising,advertisingTableRows,govAdvertisingReady}=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
 const hub=JSON.parse(readFileSync(new URL('../../data/staged/vic-advertising/hub.json',import.meta.url)));
@@ -46,8 +45,8 @@ test('plain receipt dates and a single page source block retain full timestamps 
  assert.ok(toCSV(rows,config).includes(hub.rows[0].snapshot));
 });
 
-test('authorised description stays page/CSV/search text without creating person entities, links or facets',async()=>{
- const fixture=JSON.parse(execFileSync('python3',['-c',"import sys,json;sys.path.insert(0,'tests');from test_vic_advertising import private_description_fixture;print(json.dumps(private_description_fixture()))"],{cwd:fileURLToPath(new URL('../../',import.meta.url)),encoding:'utf8'}));
+test('authorised description stays page/CSV/search text without creating person entities, links or facets',{skip:pythonSkip(['openpyxl'])},async()=>{
+ const fixture=JSON.parse(runPython(['-c',"import sys,json;sys.path.insert(0,'tests');from test_vic_advertising import private_description_fixture;print(json.dumps(private_description_fixture()))"]));
  const name='Avery Fenwick',h=fixture.hub;
  assert.ok(JSON.stringify(fixture.hub).includes(name)); // Record text also survives the shared future app asset.
  assert.equal(clearedAdvertising(h).length,1);

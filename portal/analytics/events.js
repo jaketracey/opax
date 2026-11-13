@@ -125,6 +125,8 @@ import { askPageType } from '../public/growth-modules.js';
     const a = t.closest("a");
     if (!a) return;
     const href = a.getAttribute("href") || "";
+    // Press kit images (/press): that one was taken, not which.
+    if (a.closest("[data-press-asset]")) return push("opax_press", { action: "asset_download" });
     if (a.classList.contains("ui-button") && /download|\.json|\.csv/i.test(href + a.textContent)) {
       return push("opax_download", { format: /\.csv(?:[?#]|$)/i.test(href) ? "csv" : /\.json(?:[?#]|$)/i.test(href) ? "json" : "other" });
     }
@@ -135,6 +137,21 @@ import { askPageType } from '../public/growth-modules.js';
     }
     if (url.pathname.startsWith('/community')) return push('opax_community_open', { placement: a.closest('footer') ? 'footer' : 'navigation' });
     if (a.closest('[data-money-navigation]')) return push('opax_money_view', { view: url.pathname === '/money' ? 'connections' : url.pathname === '/money/contracts' ? 'contracts' : url.pathname.endsWith('/grants') ? 'grants' : 'receipts' });
-    if (/^\/?#?\/doc\//.test(href)) return push("opax_source_open", { from_section: sectionOf(here()) });
+    if (/^\/?#?\/doc\//.test(href)) return push("opax_source_open", { from_section: sectionOf(here()), placement: sourcePlacement(a) });
+  }, true);
+  // Where a source link sat: in an answer's text, in its sources list, or in
+  // the voice panel's sources. Elsewhere (search results, lists) is "other".
+  const sourcePlacement = (a) =>
+    a.closest(".opax-voice-sources") ? "talk_sources"
+      : a.closest(".chat-sources") ? "sources_pane"
+      : a.closest(".answer, .opax-voice-transcript") ? "inline"
+      : "other";
+  // A copy from the press kit's boilerplate (/press). Only where the selection
+  // starts is looked at, never its text; the event says that it happened.
+  const elementOf = (n) => (n?.nodeType === 1 ? n : n?.parentElement) || null;
+  addEventListener("copy", (e) => {
+    let start = null;
+    try { start = elementOf(document.getSelection?.()?.anchorNode); } catch { /* no selection API */ }
+    if ((start || elementOf(e.target))?.closest?.("[data-press-copy]")) push("opax_press", { action: "boilerplate_copy" });
   }, true);
 })();

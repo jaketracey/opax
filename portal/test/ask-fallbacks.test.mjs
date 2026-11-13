@@ -1,7 +1,8 @@
 // Ask never shows nothing when the model misbehaves (13 Nov 2026, found by the offline replay). A scripted model drives
 // the real /api/ask route with no provider or network calls, in the replay's style: a research turn that answers in plain
 // text instead of calling a tool, malformed tool arguments, and an answer writer that throws or times out. Each gives a
-// non-empty, cited answer; a money ranking keeps its leader; and an empty answer never leaves the Worker as answered.
+// non-empty, cited answer; a money ranking keeps its leader; and an empty answer never leaves the Worker: with nothing found
+// it is a no-record answer naming what was searched.
 // Names are invented (the passage speaker, donors); public office titles and the public pay data are real.
 import test from 'node:test'
 import assert from 'node:assert/strict'
@@ -138,12 +139,12 @@ test('with no usable prose and no answer call, the passages research holds answe
   cited(run.body,rid,'passages only')
 })
 
-test('nothing found, written or retrieved: the response says it is unanswered, never an empty answered: true',async()=>{
+test('nothing found, written or retrieved: a no-record answer that says what was searched, never a blank one',async()=>{
   // Research fails before any lookup and the ordinary path generates nothing, twice (first ask and its lighter retry).
   const run=await ask(robodebt,[prose('Let me search the record.'),throws])
   assert.equal(run.status,200)
-  assert.equal(run.body.answer,'')
-  assert.equal(run.body.answered,false,JSON.stringify(run.body).slice(0,400))
+  assert.match(run.body.answer,/^OPAX searched Hansard speeches and OPAX’s public records and found no record that answers this question\. Try asking again with a member, party, bill or year named/,JSON.stringify(run.body).slice(0,400))
+  assert.equal(run.body.answer_decision,'limitation');assert.notEqual(run.body.answered,false)
   assert.equal(run.kbCalls,2,'a blank generation gets one lighter retry')
 })
 
@@ -237,16 +238,19 @@ const built=await build({stdin:{contents:"export {ensureAnswerText} from './src/
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
 const source={resource:rid,slug:'speech-910001',title:'Royal Commission into the Robodebt Scheme',href:'https://opax.com.au/doc/speech-910001',url:'https://opax.com.au/doc/speech-910001',snippet:passage,kind:'speech',speaker:'Jordan Sample',date:'2023-07-10',cited:false}
 
-test('boundary: an empty answer is written from the records it lists, or else marked unanswered; explicit non-answers stay',()=>{
+test('boundary: an empty answer is written from the records it lists, else their record lines, else a no-record answer; explicit non-answers stay',()=>{
   const listed=api.ensureAnswerText({answer:'',citations:{},sources:[source]},robodebt)
   // The display step after this boundary drops a lone list marker (the route tests above see the clean line).
   assert.match(listed.answer,/^(?:- )?On 10 July 2023, Jordan Sample said “The royal commission found/)
   assert.ok(Object.keys(listed.citations).some(id=>id.startsWith(rid)));assert.equal(listed.sources[0].cited,true)
-  // The ordinary path's empty answer, with no passage to list (a record fact is not listed as a quotation): unanswered.
-  for(const payload of [{answer:'',citations:{},sources:[]},{answer:'',citations:{},sources:[{...source,resource:'fact-1',snippet:'Example Freight Pty Ltd: $2,681,740 in federal disclosed receipts.'}]}]){
-    const out=api.ensureAnswerText(payload,robodebt)
-    assert.equal(out.answered,false,JSON.stringify(payload));assert.equal(out.answer,'')
-  }
+  // A record fact is not listed as a quotation: it is shown as the tool's own line, cited, under a plain lead.
+  const fact={...source,resource:'fact-1',kind:'record',snippet:'Example Freight Pty Ltd: $2,681,740 in federal disclosed receipts.'}
+  const summary=api.ensureAnswerText({answer:'',citations:{},sources:[fact]})
+  assert.equal(summary.answer,'Here is what the record shows.\n- Example Freight Pty Ltd: $2,681,740 in federal disclosed receipts.')
+  assert.deepEqual(summary.citations,{'fact-1/t/body/0':[[33,99]]});assert.equal(summary.sources[0].cited,true);assert.equal(summary.answered,true)
+  // Nothing found at all: what was searched, and what to ask next.
+  const none=api.ensureAnswerText({answer:'',citations:{},sources:[]},robodebt)
+  assert.match(none.answer,/^OPAX searched Hansard speeches and OPAX’s public records and found no record that answers this question\./);assert.equal(none.answer_decision,'limitation')
   // A response that claimed an answer keeps the existing contract: one plain line on what the records could not establish.
   const claimed=api.ensureAnswerText({answered:true,answer_decision:'answer',answer:'  ',citations:{},sources:[]},robodebt)
   assert.ok(claimed.answer.trim());assert.notEqual(claimed.answer_decision,'answer')

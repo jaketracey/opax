@@ -339,3 +339,92 @@ test('a zero viewport that is still zero once on screen stays off', async () => 
   assert.equal(h.posthogInits(), 0);
   assert.equal(h.context.window.dataLayer, undefined);
 });
+
+// --- Feature-use events (telemetry scan, 13 Nov 2026, items 2, 5, 6 and 13) ---
+
+test('static pages are counted by name; their sub-pages and look-alikes stay /other', () => {
+  for (const page of ['press', 'today', 'sitting', 'budget', 'privacy', 'support', 'audit', 'estimates', 'instruments']) {
+    assert.equal(safePath(`/${page}`), `/${page}`);
+    assert.equal(safePath(`https://opax.com.au/${page}?q=private#private`), `/${page}`);
+    assert.equal(safePath(`/${page}/private-record`), '/other');
+    assert.equal(safePath(`/${page}private`), '/other');
+  }
+  assert.deepEqual(cleanEvent('opax_view', { page_path: '/press', page_section: 'press' }), { page_path: '/press', page_section: 'press' });
+});
+
+test('opax_source_open, opax_share and opax_press take fixed words only', () => {
+  for (const placement of ['inline', 'sources_pane', 'talk_sources', 'other'])
+    assert.deepEqual(cleanEvent('opax_source_open', { from_section: 'ask', placement, href: '/doc/private' }), { from_section: 'ask', placement });
+  assert.deepEqual(cleanEvent('opax_source_open', { from_section: 'ask', placement: 'private' }), { from_section: 'ask' });
+  for (const record_type of ['person', 'party', 'bill', 'electorate', 'doc', 'money', 'other'])
+    assert.deepEqual(cleanEvent('opax_share', { kind: 'copy_link', record_type, url: 'https://opax.com.au/doc/private' }), { kind: 'copy_link', record_type });
+  // A slug-shaped value would pass the generic check; here it is not one of the words.
+  assert.deepEqual(cleanEvent('opax_share', { kind: 'private-slug', record_type: 'private-person' }), {});
+  for (const action of ['asset_download', 'boilerplate_copy']) assert.deepEqual(cleanEvent('opax_press', { action, text: 'private' }), { action });
+  assert.deepEqual(cleanEvent('opax_press', { action: 'private' }), {});
+});
+
+async function clickHarness(html, doc = {}) {
+  const { JSDOM } = await import('jsdom');
+  const { runInNewContext } = await import('node:vm');
+  const dom = new JSDOM(`<!doctype html><body>${html}</body>`);
+  const h = browserHarness('0', {}, {}, doc);
+  h.context.Element = dom.window.Element;
+  const captured = [];
+  Object.assign(h.context, { cleanEvent, beforeSend, automationReason, likelyBot, whenMeasurable });
+  h.context.posthog = { init() {}, capture: (event, properties) => captured.push({ event, properties }) };
+  runInNewContext(readFileSync(new URL('../public/events.js', import.meta.url), 'utf8'), h.context);
+  runInNewContext(readFileSync(new URL('../analytics/index.js', import.meta.url), 'utf8').replace(/^import .*;\n/gm, ''), h.context);
+  const views = h.measured.length;
+  h.click = (selector) => h.context.dispatchEvent({ type: 'click', button: 0, target: dom.window.document.querySelector(selector) });
+  h.after = () => h.measured.slice(views);
+  return { ...h, dom, captured };
+}
+
+test('a source link says where it sat, and neither GA nor PostHog sees which record', async () => {
+  const h = await clickHarness(`
+    <article class="answer"><p>Said <a id="inline" href="/doc/2026-10-14-private-slug">here</a>.</p></article>
+    <details class="chat-sources"><a id="pane" href="/doc/2026-10-14-private-slug">Source</a></details>
+    <aside class="opax-voice"><div class="opax-voice-transcript"><a id="talk-inline" href="/doc/2026-10-14-private-slug">x</a></div>
+      <details class="opax-voice-sources"><a id="talk" href="/doc/2026-10-14-private-slug">x</a></details></aside>
+    <ul><li><a id="list" href="/doc/2026-10-14-private-slug">x</a></li></ul>`);
+  for (const id of ['inline', 'pane', 'talk-inline', 'talk', 'list']) h.click(`#${id}`);
+  assert.deepEqual(h.after().map((m) => [m.event, m.properties.placement]), [
+    ['opax_source_open', 'inline'], ['opax_source_open', 'sources_pane'], ['opax_source_open', 'inline'],
+    ['opax_source_open', 'talk_sources'], ['opax_source_open', 'other']]);
+  assert.deepEqual(h.captured.filter((c) => c.event === 'opax_source_open').map((c) => c.properties.placement), ['inline', 'sources_pane', 'inline', 'talk_sources', 'other']);
+  assert.ok(!/private/.test(JSON.stringify([h.measured, h.captured, h.context.window.dataLayer])));
+});
+
+test('press kit: an image taken and a boilerplate copy are counted, with no file name or text', async () => {
+  let anchor = null;
+  const h = await clickHarness(`
+    <p data-press-copy><strong>Short.</strong> <span id="words">private boilerplate words</span></p>
+    <p id="elsewhere">private other words</p>
+    <ul><li><a id="asset" data-press-asset href="/social/private-asset.png">Avatar</a></li><li><a id="plain" href="/methods">Methods</a></li></ul>`,
+  { getSelection: () => ({ anchorNode: anchor, toString: () => { throw new Error('the selection text is never read'); } }) });
+  const doc = h.dom.window.document;
+  h.click('#asset');
+  h.click('#plain');
+  anchor = doc.getElementById('words').firstChild; // a text node inside the boilerplate
+  h.context.dispatchEvent({ type: 'copy', target: doc.body });
+  anchor = doc.getElementById('elsewhere').firstChild;
+  h.context.dispatchEvent({ type: 'copy', target: doc.body });
+  // No selection API: the copy event's own target decides.
+  anchor = null;
+  h.context.dispatchEvent({ type: 'copy', target: doc.getElementById('words') });
+  assert.deepEqual(h.after().map((m) => [m.event, m.properties.action]),
+    [['opax_press', 'asset_download'], ['opax_press', 'boilerplate_copy'], ['opax_press', 'boilerplate_copy']]);
+  assert.deepEqual(h.captured.filter((c) => c.event === 'opax_press').map((c) => c.properties.action), ['asset_download', 'boilerplate_copy', 'boilerplate_copy']);
+  assert.ok(!/private/.test(JSON.stringify([h.measured, h.captured, h.context.window.dataLayer])));
+});
+
+test('the press kit loads the shared event emitter and PostHog, and marks its assets and boilerplate', () => {
+  const press = readFileSync(new URL('../public/press.html', import.meta.url), 'utf8');
+  assert.match(press, /src="\/events.js\?v=[^"]+" defer/);
+  assert.match(press, /src="\/gtm.js\?v=[^"]+" defer/);
+  assert.match(press, /src="\/analytics.js\?v=[^"]+" defer/);
+  assert.ok(press.indexOf('/analytics.js?v=') > press.indexOf('/events.js?v='));
+  assert.equal(press.match(/data-press-copy/g)?.length, 2);
+  assert.ok((press.match(/<a data-press-asset href="\/(?:social|og)[^"]*\.png"/g) || []).length >= 3);
+});
