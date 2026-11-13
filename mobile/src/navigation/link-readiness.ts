@@ -1,47 +1,114 @@
-import { Linking, Platform } from 'react-native';
+import { Platform } from 'react-native';
+import nativeLinks, { type LinkDelivery } from '../../modules/opax-links';
 
-// Capture starts at JS entry, before Router attaches its URL listener. The
-// app's root hook consumes this buffer after navigation reports readiness.
+export type { LinkDelivery };
+export const linkDeliveryParam = '__opaxLinkDelivery';
+
 let ready = false;
-let capture: ReturnType<typeof Linking.addEventListener> | null = null;
-let listener: ((url: string) => void) | null = null;
-let initialURL: string | null = null;
-const pending: string[] = [];
+let capture: { remove(): void } | null = null;
+let listener: ((delivery: LinkDelivery) => Promise<boolean>) | null = null;
+const pending: LinkDelivery[] = [];
+const acknowledged = new Set<string>();
 let draining = false;
+let revision = 0;
+
+/** The native inbox is authoritative; snapshots and events can overlap. */
+function receive(deliveries: LinkDelivery[], route = true) {
+  for (const delivery of deliveries) {
+    if (
+      acknowledged.has(delivery.id) ||
+      pending.some((entry) => entry.id === delivery.id)
+    )
+      continue;
+    pending.push(delivery);
+  }
+  pending.sort((a, b) => a.sequence - b.sequence);
+  if (route) drain();
+}
 
 function drain() {
-  if (draining) return;
+  revision++;
+  if (draining || !ready || !capture) return;
   draining = true;
-  try {
-    while (ready && listener && pending.length) listener(pending.shift()!);
-  } finally {
-    draining = false;
-  }
+  const owner = capture;
+  const startedAt = revision;
+  void (async () => {
+    try {
+      while (capture === owner && ready && pending.length) {
+        const deliver = listener;
+        if (!deliver) break;
+        const delivery = pending[0]!;
+        // The listener resolves only when this ID reaches navigation state.
+        // A root unmount cancels an uncommitted navigation without consuming it.
+        if (!(await deliver(delivery)) || capture !== owner) break;
+        await nativeLinks!.acknowledge(delivery.id);
+        acknowledged.add(delivery.id);
+        const index = pending.findIndex((entry) => entry.id === delivery.id);
+        if (index >= 0) pending.splice(index, 1);
+      }
+    } catch {
+      // Failed navigation or persistence keeps the delivery pending for retry.
+    } finally {
+      draining = false;
+      if (
+        capture &&
+        revision !== startedAt &&
+        ready &&
+        listener &&
+        pending.length
+      )
+        drain();
+    }
+  })();
 }
 
 export function installAndroidLinkCapture(): () => void {
-  if (Platform.OS !== 'android' || capture) return () => {};
-  const subscription = Linking.addEventListener('url', ({ url }) => {
-    // Some launchers also emit the cold URL as an event during startup.
-    if (!ready && url === initialURL) return;
-    pending.push(url);
-    drain();
-  });
+  if (Platform.OS !== 'android' || !nativeLinks || capture) return () => {};
+  // Subscribe before reading so an intent arriving during startup cannot fall
+  // between the snapshot and event listener. Identity makes the overlap safe.
+  const subscription = nativeLinks.addListener('onLinkDeliveries', (event) =>
+    receive(event.deliveries),
+  );
   capture = subscription;
+  receive(nativeLinks.pending());
   return () => {
     if (capture !== subscription) return;
     subscription.remove();
     capture = null;
     listener = null;
     pending.length = 0;
-    initialURL = null;
+    acknowledged.clear();
     ready = false;
   };
 }
 
 export const hasAndroidLinkCapture = () => capture !== null;
 
-export function subscribeAndroidLinks(next: (url: string) => void) {
+/** Initial navigation uses the oldest pending delivery, never the latest URL. */
+export function initialAndroidLink(): LinkDelivery | undefined {
+  if (!capture) return undefined;
+  const snapshot = nativeLinks!.pending();
+  receive(snapshot, false);
+  // A native acknowledgement can finish before its JS promise resolves.
+  // The older JS queue must never reselect that already-consumed delivery.
+  return snapshot[0];
+}
+
+export function linkDeliveryPath(path: string, id: string): string {
+  const hash = path.indexOf('#');
+  const suffix = hash < 0 ? '' : path.slice(hash);
+  const base = hash < 0 ? path : path.slice(0, hash);
+  const query = base.indexOf('?');
+  const pathname = query < 0 ? base : base.slice(0, query);
+  const params = new URLSearchParams(query < 0 ? '' : base.slice(query + 1));
+  // An external URL cannot supply its own navigation receipt.
+  params.set(linkDeliveryParam, id);
+  return `${pathname}?${params}${suffix}`;
+}
+
+export function subscribeAndroidLinks(
+  next: (delivery: LinkDelivery) => Promise<boolean>,
+) {
   listener = next;
   drain();
   return () => {
@@ -49,18 +116,7 @@ export function subscribeAndroidLinks(next: (url: string) => void) {
   };
 }
 
-/** The initial URL already opens its page; do not replay its startup event. */
-export function consumeInitialAndroidLink(url: string) {
-  initialURL = url;
-  for (let index = pending.length - 1; index >= 0; index--) {
-    if (pending[index] !== url) continue;
-    pending.splice(0, index + 1);
-    break;
-  }
-}
-
 export function setLinkNavigationReady(value: boolean) {
   ready = value;
-  if (ready) initialURL = null;
   drain();
 }

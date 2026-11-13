@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import React, { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Linking, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import {
   DarkTheme,
@@ -29,12 +29,26 @@ import LegacyMoneyNode from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/
 import MoneyRecord from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/money-record';
 import MoneyRecordScreen from '../src/features/money/MoneyRecord';
 import { publicMoneyScreens } from '../src/navigation/stack/public-money';
-import { installAndroidLinkCapture } from '../src/navigation/link-readiness';
+import {
+  installAndroidLinkCapture,
+  linkDeliveryPath,
+  type LinkDelivery,
+} from '../src/navigation/link-readiness';
 
 let mockRootNavigationKey: string | undefined = 'root';
 let mockContainerReady = false;
+let mockNativeDeliveries: LinkDelivery[] = [];
+jest.mock('../modules/opax-links', () => ({
+  __esModule: true,
+  default: {
+    pending: () => mockNativeDeliveries,
+    acknowledge: jest.fn(async () => {}),
+    addListener: () => ({ remove: () => {} }),
+  },
+}));
 const mockNavigationRef = {
   isReady: () => mockContainerReady,
+  getRootState: () => ({ routes: [] }),
   addListener: () => () => {},
 };
 
@@ -109,7 +123,6 @@ test('Android drains warm links when the container is ready and the root snapsho
   const original = Platform.OS;
   let tree: TestRenderer.ReactTestRenderer | undefined;
   let stopCapture: (() => void) | undefined;
-  let spy: jest.SpyInstance | undefined;
   const routed = router.navigate as jest.Mock;
   routed.mockClear();
   try {
@@ -119,27 +132,22 @@ test('Android drains warm links when the container is ready and the root snapsho
     });
     mockRootNavigationKey = undefined;
     mockContainerReady = true;
-    let event!: (event: { url: string }) => void;
-    spy = jest
-      .spyOn(Linking, 'addEventListener')
-      .mockImplementation((_name, callback) => {
-        event = callback;
-        return { remove: () => {} } as ReturnType<
-          typeof Linking.addEventListener
-        >;
-      });
+    mockNativeDeliveries = [
+      { id: 'before-root', sequence: 1, url: 'opax://party/labor' },
+    ];
     stopCapture = installAndroidLinkCapture();
-    event({ url: 'opax://party/labor' });
     expect(routed).not.toHaveBeenCalled();
     act(() => {
       tree = TestRenderer.create(React.createElement(RootLayout));
     });
     expect(routed).toHaveBeenCalledTimes(1);
-    expect(routed).toHaveBeenCalledWith('/(tabs)/(today)/party/labor');
+    expect(routed).toHaveBeenCalledWith(
+      linkDeliveryPath('/(tabs)/(today)/party/labor', 'before-root'),
+    );
   } finally {
     if (tree) act(() => tree!.unmount());
     stopCapture?.();
-    spy?.mockRestore();
+    mockNativeDeliveries = [];
     mockRootNavigationKey = 'root';
     mockContainerReady = false;
     Object.defineProperty(Platform, 'OS', {

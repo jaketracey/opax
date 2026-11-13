@@ -163,20 +163,20 @@ test.each(variants)(
       result.stdout.split(root).join('<PROJECT_ROOT>'),
     );
     // Expo's platform-neutral inventory includes Android-only local modules.
-    // Removing exactly this entry must recover the unchanged iOS baseline.
-    expect(
-      JSON.parse(
-        readFileSync(
-          join(root, 'modules/opax-text-metrics/expo-module.config.json'),
-          'utf8',
-        ),
-      ).platforms,
-    ).toEqual(['android']);
+    // Removing exactly these entries must recover the unchanged iOS baseline.
     const inventory: string[] = inspected._internal.autolinkedModules;
-    expect(
-      inventory.filter((name) => name === 'opax-text-metrics'),
-    ).toHaveLength(1);
-    inventory.splice(inventory.indexOf('opax-text-metrics'), 1);
+    for (const module of ['opax-text-metrics', 'opax-links']) {
+      expect(
+        JSON.parse(
+          readFileSync(
+            join(root, `modules/${module}/expo-module.config.json`),
+            'utf8',
+          ),
+        ).platforms,
+      ).toEqual(['android']);
+      expect(inventory.filter((name) => name === module)).toHaveLength(1);
+      inventory.splice(inventory.indexOf(module), 1);
+    }
     const normalised = JSON.stringify(inspected);
     expect(createHash('sha256').update(normalised).digest('hex')).toBe(
       iosPrebuildHashes[variant],
