@@ -1,3 +1,4 @@
+import {hydrateRecordCore} from './record-core.js';
 import {donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
 import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, plural, procurementSourceHTML, procurementRailHTML, slowNotice, statsHTML, withheldHTML } from './suppliers.js?v=e82f0f4f77';
 import { procurementGraph } from './procurement-data.js';
@@ -128,6 +129,7 @@ export function agencySupplierMetadataHTML(supplier) {
 }
 
 function renderProfile(root, profile, meta, helpers, life) {
+  const coreActive = hydrateRecordCore('agency',profile);
   const top = profile.suppliers[0];
   const mapped = Math.min(60, profile.suppliers.filter(s => s.total > 0).length);
   const listed = profile.contracts.filter(c => !placeholderContract(c)).length;
@@ -138,9 +140,23 @@ function renderProfile(root, profile, meta, helpers, life) {
     profile.years?.length ? ['procurement-years', 'Contract value over time'] : null, ['agency-contracts', 'The contract record'],
   ].filter(Boolean);
   root.removeAttribute('aria-busy');
-  root.innerHTML = `<div class="supplier-page agency-page"><div class="ui-page-head supplier-head"><h1 id="subject-title" tabindex="-1">${esc(profile.name)}</h1><p class="ui-page-meta">Commonwealth awarding agency</p><p class="ui-lede supplier-lede">${top ? `<a href="${supplierUrl(top.id)}">${esc(top.name)}</a> has the largest recorded contract value with this agency.` : 'No suppliers are recorded.'}</p>${statsHTML([[compact(profile.total), 'Recorded contract value', money(profile.total)], [number(profile.count), 'Contracts'], [number(profile.suppliers.length), 'Suppliers']])}</div><div class="supplier-profile-grid"><div class="supplier-profile-main">${mapped ? `<section class="ui-section supplier-section" id="agency-connections"><h2 class="ui-section-title">Agency and company connections</h2><p class="ui-section-note supplier-section-note">${mapped === 1 ? 'The 3D map shows the one supplier relationship with positive recorded value.' : `The 3D map shows the largest ${mapped} supplier relationships with positive recorded value.`} Select a company or connection to explore it. All suppliers are listed below.</p><div class="supplier-money-map agency-map"></div></section>` : ''}<section class="ui-section supplier-section" id="agency-suppliers"><h2 class="ui-section-title">Who receives the contracts</h2>${supplierTools ? `<div class="ui-toolbar agency-supplier-controls"><label class="ui-field">Find a supplier<input class="ui-input" name="agency-supplier-query" type="search" placeholder="Name or ABN" autocomplete="off"></label>${supplierSortHTML()}</div>` : ''}<p class="ui-filter-count agency-supplier-count" role="status"></p><ul class="ui-list agency-suppliers agency-rows" role="list"></ul><div class="ui-actions agency-suppliers-more"></div>${procurementSourceHTML(meta, ['This is the agency name recorded in the source. Renamed departments remain separate entries.', 'A link to a donor profile records a matching name or ABN. It does not establish that donations influenced contract awards.'])}</section>${yearChart(profile.years || [], profile.undated)}<section class="ui-section supplier-section" id="agency-contracts"><h2 class="ui-section-title">The contract record</h2>${contractTools ? '<div class="ui-toolbar agency-contract-controls"><label class="ui-field">Filter contracts<input class="ui-input" name="agency-contract-query" type="search" placeholder="Title, supplier or reference" autocomplete="off"></label></div>' : ''}<p class="ui-filter-count supplier-contract-count" role="status"></p><div class="supplier-contract-list"></div><div class="ui-actions supplier-contract-more"></div>${procurementSourceHTML(meta)}</section>${withheldHTML(profile.withheld, null, 'agency-withheld')}</div>${procurementRailHTML(sections, [
+  const html = `<div class="supplier-page agency-page"><div class="ui-page-head supplier-head"><h1 id="subject-title" tabindex="-1">${esc(profile.name)}</h1><p class="ui-page-meta">Commonwealth awarding agency</p><p class="ui-lede supplier-lede">${top ? `<a href="${supplierUrl(top.id)}">${esc(top.name)}</a> has the largest recorded contract value with this agency.` : 'No suppliers are recorded.'}</p>${statsHTML([[compact(profile.total), 'Recorded contract value', money(profile.total)], [number(profile.count), 'Contracts'], [number(profile.suppliers.length), 'Suppliers']])}</div><div class="supplier-profile-grid"><div class="supplier-profile-main">${mapped ? `<section class="ui-section supplier-section" id="agency-connections"><h2 class="ui-section-title">Agency and company connections</h2><p class="ui-section-note supplier-section-note">${mapped === 1 ? 'The 3D map shows the one supplier relationship with positive recorded value.' : `The 3D map shows the largest ${mapped} supplier relationships with positive recorded value.`} Select a company or connection to explore it. All suppliers are listed below.</p><div class="supplier-money-map agency-map"></div></section>` : ''}<section class="ui-section supplier-section" id="agency-suppliers"><h2 class="ui-section-title">Who receives the contracts</h2>${supplierTools ? `<div class="ui-toolbar agency-supplier-controls"><label class="ui-field">Find a supplier<input class="ui-input" name="agency-supplier-query" type="search" placeholder="Name or ABN" autocomplete="off"></label>${supplierSortHTML()}</div>` : ''}<p class="ui-filter-count agency-supplier-count" role="status"></p><ul class="ui-list agency-suppliers agency-rows" role="list"></ul><div class="ui-actions agency-suppliers-more"></div>${procurementSourceHTML(meta, ['This is the agency name recorded in the source. Renamed departments remain separate entries.', 'A link to a donor profile records a matching name or ABN. It does not establish that donations influenced contract awards.'])}</section>${yearChart(profile.years || [], profile.undated)}<section class="ui-section supplier-section" id="agency-contracts"><h2 class="ui-section-title">The contract record</h2>${contractTools ? '<div class="ui-toolbar agency-contract-controls"><label class="ui-field">Filter contracts<input class="ui-input" name="agency-contract-query" type="search" placeholder="Title, supplier or reference" autocomplete="off"></label></div>' : ''}<p class="ui-filter-count supplier-contract-count" role="status"></p><div class="supplier-contract-list"></div><div class="ui-actions supplier-contract-more"></div>${procurementSourceHTML(meta)}</section>${withheldHTML(profile.withheld, null, 'agency-withheld')}</div>${procurementRailHTML(sections, [
     [`/ask?view=search&kind=speech&q=${encodeURIComponent(`"${profile.name}"`)}`, 'Find mentions in parliament'], ['/subject/agency', 'Browse all agencies'], ['/subject/supplier', 'Browse all suppliers'],
   ])}</div></div>`;
+  if (coreActive) {
+    const template = document.createElement('template');
+    template.innerHTML = html;
+    for (const selector of ['.supplier-head','#agency-suppliers','#agency-contracts']) template.content.querySelector(selector)?.remove();
+    if (mapped) {
+      // The map's accessible fallback also lists suppliers. Open it on request so
+      // boot leaves one visible record list, including without WebGL.
+      const map = template.content.querySelector('.agency-map');
+      const disclosure = document.createElement('details'), summary = document.createElement('summary');
+      summary.textContent = 'Open the connections map';
+      map.replaceWith(disclosure); disclosure.append(summary,map);
+    }
+    root.replaceChildren(template.content);
+  } else root.innerHTML = html;
   let suppliersVisible = 20, contractsVisible = 15;
   const supplierQuery = root.querySelector('[name="agency-supplier-query"]');
   const contractQuery = root.querySelector('[name="agency-contract-query"]');
@@ -170,6 +186,14 @@ function renderProfile(root, profile, meta, helpers, life) {
   supplierQuery?.addEventListener('input', () => { suppliersVisible = 20; suppliers(); });
   contractQuery?.addEventListener('input', () => { contractsVisible = 15; contracts(); });
   mountYearChart(root, life);
-  suppliers(); contracts(); helpers.onCanonical?.(profile.id, profile.name); helpers.onTitle?.(`${profile.name} · Government agency`);
-  if (mapped) mountProcurementPreview(root.querySelector('.agency-map'), profile, 'agency', life).catch(() => {});
+  if (!coreActive) { suppliers(); contracts(); }
+  helpers.onCanonical?.(profile.id, profile.name); helpers.onTitle?.(`${profile.name} · Government agency`);
+  if (mapped) {
+    const map = root.querySelector('.agency-map');
+    const openMap = () => mountProcurementPreview(map,profile,'agency',life).catch(()=>{});
+    if (coreActive) {
+      let opened = false;
+      map.parentElement.addEventListener('toggle',()=>{ if (map.parentElement.open && !opened) { opened = true; openMap(); } });
+    } else openMap();
+  }
 }

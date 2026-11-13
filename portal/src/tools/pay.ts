@@ -1,8 +1,11 @@
 /** Federal parliamentarians' salary entitlements from public/pay.json (Remuneration Tribunal rates joined to
- * Handbook posts). Public servants' pay is not held: the tool says so and names where it is published. */
+ * Handbook posts), and the Tribunal's rates for departmental secretaries and statutory offices from
+ * public/pay-offices.json. Other public servants' pay is not held: the tool says where it is published. */
 import { datedPay } from '../pay-history'
 import type { PayData as HistoricalPayData } from '../ask-pay'
 import { personUrl } from '../../public/party-page.js'
+import { officesNamed, generalOfficeQuestion, type OfficeData, type OfficeRow } from '../ask-pay-offices'
+import { payOfficeRecord, rankedOffices, officeSource } from '../pay-records.mjs'
 import { aud, clip, fold, readableRange, siteUrl, tableRows } from './record-common'
 import { readToolAsset, type ToolDefinition, type ToolEnv } from './types'
 
@@ -13,9 +16,27 @@ interface PayData { meta: { as_of: string; sources?: { id: string; url: string }
 
 export const PAY_LIMITS = 'Salary entitlements set by the Remuneration Tribunal, not payslips: electorate allowance, expenses, superannuation and outside income are not included. Federal parliament only.'
 // Offices a public servant or statutory officer holds. "Parliamentary Secretary" is an MP post and stays in scope.
-const PUBLIC_SERVICE = /\b(?:secretar(?:y|ies)|departments?|departmental|agency|agencies|public serv\w*|commissioners?|chief executives?|ceos?|heads? of|director[- ]general|judges?|governors?|ambassadors?|statutory|executives?|officials?|bureaucrats?)\b/i
+const PUBLIC_SERVICE = /\b(?:secretar(?:y|ies)|departments?|departmental|agency|agencies|public serv\w*|commissioners?|chief executives?|ceos?|heads? of|director[- ]general|judges?|governors?|ambassadors?|statutory|executives?|officials?|bureaucrats?|ombudsman|statistician|auditor[- ]general|solicitor[- ]general|chief of the defence force)\b/i
 const pctText = (pct: number) => pct ? `base salary plus ${pct}%` : 'base salary'
 const rate = (base: number, o: Office) => o.kind === 'ministerial' ? Math.round(base * (1 + o.pct / 100)) : base + Math.ceil(base * o.pct / 1000) * 10
+
+/** Rates the Remuneration Tribunal sets for the offices named, or the agency-head ranking; null when none match. */
+async function officeRates(env: ToolEnv, text: string, limit: number) {
+  const data = await readToolAsset(env, '/pay-offices.json') as OfficeData | null
+  if (!Array.isArray(data?.offices)) return null
+  let rows = officesNamed(text, data).rows
+  if (!rows.length && (generalOfficeQuestion(text) || /\bheads?\b|\bsecretar/i.test(text)))
+    rows = rankedOffices(data, (row: OfficeRow) => row.kind !== 'peo_band' && (/secretar/i.test(text) && !/agenc|public serv/i.test(text) ? row.kind === 'secretary' : row.head)).slice(0, limit)
+  if (!rows.length) return null
+  const asAt = data.meta.as_of
+  return {
+    rows: rows.map(row => ({ office: row.office, body: row.body, kind: row.kind, total_remuneration: row.amount, min: row.min, max: row.max, classification: row.classification,
+      clause: row.clause, frl_id: officeSource(data, row)?.frl_id ?? null, holder: row.holder ? { name: row.holder.name, clause: row.holder.clause } : null })),
+    citations: rows.map(row => ({ kind: 'record' as const, url: officeSource(data, row)?.url ?? 'https://www.legislation.gov.au/', value: row.amount ?? row.max ?? row.min ?? undefined, text: payOfficeRecord(data, row).snippet })),
+    coverage: { since: asAt, until: asAt, as_of: asAt, matched: true },
+    notes: ['Total remuneration set by the Remuneration Tribunal, including the employer superannuation contribution and benefits. A range is a secretary\'s level (pay point set by the Secretary of PM&C) or a Principal Executive Office band (set by the employing body). Actual pay is reported in each body\'s annual report.', `Coverage: rates as at ${asAt}.`],
+  }
+}
 
 async function notHeld(env: ToolEnv) {
   const citations = [{ kind: 'record' as const, url: 'https://www.remtribunal.gov.au/',
@@ -33,7 +54,7 @@ async function notHeld(env: ToolEnv) {
 
 export const tool: ToolDefinition = {
   name: 'parliamentary_pay',
-  description: 'Dated salaries of federal MPs, senators and ministers (since 7 December 1999); pass as_of (year/date) or since/until for historical questions: a person\'s current salary and post, what an office (Prime Minister, Treasurer, Cabinet Minister, Speaker, Leader of the Opposition...) pays, or the highest-paid sitting parliamentarians. MP and minister pay comes from here. OPAX does NOT hold public servants\' pay (departmental secretaries, agency heads, commissioners): ask with that office anyway and it returns where that pay is published.',
+  description: 'Dated salaries of federal MPs, senators and ministers (since 7 December 1999); pass as_of (year/date) or since/until for historical questions: a person\'s salary and post, what an office (Prime Minister, Treasurer, Speaker...) pays, or the highest-paid parliamentarians. Also current Tribunal rates (total remuneration, FRL clause) for departmental secretaries, agency heads and statutory offices: pass office, e.g. "Secretary of the Department of Finance" or "agency heads". Reported actual pay: annual_reports.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     person: { type: 'string', minLength: 2, maxLength: 120, description: 'A federal parliamentarian\'s name.' },
     people: { type: 'array', minItems: 2, maxItems: 6, items: { type: 'string' }, description: 'Named people in a comparison; include every requested person.' },
@@ -48,6 +69,12 @@ export const tool: ToolDefinition = {
   async handler(env, args) {
     const pay = await readToolAsset(env, '/pay.json') as PayData | null
     if (!pay?.current || !pay.base?.length) return { rows: [], citations: [], notes: [], error: 'Parliamentary pay records are unavailable.' }
+    // A public office's current rate is not a dated MP spell: an order or limit must not send it there.
+    const asked = typeof args.office === 'string' ? args.office : typeof args.person === 'string' && !pay.names[fold(args.person)] ? args.person : ''
+    if (asked && PUBLIC_SERVICE.test(asked) && !/\bparliamentary secretar/i.test(asked) && !args.people && !args.as_of && !args.since && !args.until && (!args.jurisdiction || args.jurisdiction === 'federal')) {
+      const rates = await officeRates(env, asked, Number(args.limit) || 5).catch(() => null)
+      if (rates) return rates
+    }
     if (args.people || args.party || args.chamber || args.order || args.as_of || args.since || args.until || args.jurisdiction && args.jurisdiction !== 'federal') return datedPay(pay as unknown as HistoricalPayData, args)
     const base = pay.base[pay.base.length - 1].amount, asAt = pay.meta.as_of, limit = Number(args.limit) || 5
     const href = (name: string) => siteUrl(env, `${personUrl(name)}#person-pay`)
@@ -58,6 +85,8 @@ export const tool: ToolDefinition = {
     const citations: { kind: 'record'; url: string; value?: number; text: string }[] = []
     const rows: unknown[] = []
     if (PUBLIC_SERVICE.test(office) && !/\bparliamentary secretar/i.test(office) || PUBLIC_SERVICE.test(person) && !pay.names[fold(person)]) {
+      const rates = await officeRates(env, office || person, limit).catch(() => null)
+      if (rates) return rates
       citations.push(...await notHeld(env))
       return { rows: [{ held: false, office: clip(office || person, 160) }], citations, notes: [] }
     }
@@ -79,7 +108,11 @@ export const tool: ToolDefinition = {
       }
       const holders = pay.current.filter(c => words.every(w => fold(c.post).includes(w))).slice(0, limit)
       for (const c of holders) { citations.push(row(c)); rows.push({ name: c.name, post: c.post, salary: c.salary }) }
-      if (!citations.length) return { rows: [], citations: [], notes: [`No parliamentary office matches "${clip(office, 60)}".`, PAY_LIMITS] }
+      if (!citations.length) {
+        const rates = await officeRates(env, office, limit).catch(() => null)
+        if (rates) return rates
+        return { rows: [], citations: [], notes: [`No parliamentary office matches "${clip(office, 60)}".`, PAY_LIMITS] }
+      }
     } else {
       citations.push({ kind: 'record', url: determination, value: base, text: `Federal parliamentary base salary: ${aud(base)} a year, as at ${asAt}` })
       for (const c of pay.current.slice(0, limit)) { citations.push(row(c)); rows.push({ name: c.name, post: c.post, salary: c.salary }) }

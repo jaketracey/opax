@@ -19,7 +19,8 @@ for(const [label,g,store] of [['typed',graph,assets],['untyped',untypedGraph,unt
 // Public exporter subset from receipt-types a51f2d872; amounts and typed cells are unchanged.
 const typedGraph=JSON.parse(await readFile(new URL('./fixtures/money-ranking-exporter.json',import.meta.url)))
 const typedAssets={fetch:async()=>Response.json(typedGraph)}
-const typedCases=moneyRankingCases.filter(c=>c.industry)
+// The exporter subset holds the original industries; a published-only case needs the full graph.
+const typedCases=moneyRankingCases.filter(c=>c.industry&&!c.publishedOnly)
 for(const c of typedCases)test('exporter money accuracy and directness: '+c.id,async()=>{
  const result=await api.federalPartyMoneyAnswer({question:c.question},typedAssets)
  const score=scoreMoneyRanking(result,graphRanking(typedGraph,c),c,typedGraph)
@@ -41,7 +42,9 @@ test('real exporter gambling ranking matches independent reconciliation and igno
 test('typed remaining sources sum Other Receipt before qualifying their all-types cell',async()=>{
  const c=typedCases.find(c=>c.id==='banks-labor-1'),out=await api.federalPartyMoneyAnswer({question:c.question},typedAssets)
  const expected=graphRanking(typedGraph,c)
- const all=expected.allCents-expected.rows.reduce((s,r)=>s+r.allCents,0),other=expected.otherCents-expected.rows.reduce((s,r)=>s+r.otherCents,0)
+ // The remainder covers ranked sources only: a source with $0 in the measure is not ranked.
+ const ranked=expected.allRows.filter(r=>r.cents>0),sum=(list,key)=>list.reduce((s,r)=>s+r[key],0)
+ const all=sum(ranked,'allCents')-sum(expected.rows,'allCents'),other=sum(ranked,'otherCents')-sum(expected.rows,'otherCents')
  assert.ok(other>=all/2&&other>0,'real finance remainder exercises the qualifier')
  const row=out.answer.split('\n').find(l=>l.startsWith('| Other sources'))
  assert.ok(row.endsWith(`$${(all/100).toLocaleString('en-AU')} (includes loans) |`),row)

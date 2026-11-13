@@ -116,7 +116,7 @@ test('missing speech collaborators resolve only exact full names in record title
  assert.equal(api.titledSpeaker('Hanson-Young — Bills',roster),undefined)
 })
 
-test('broad overview names cited speakers or drops anonymous points while keeping four to eight points',()=>{
+test('broad overview keeps each distinct point as written, an identical anonymous point once',()=>{
  const speakers=['Tony Burke','Amanda Rishworth','Sarah Hanson-Young','Mehreen Faruqi','Tony Zappia',undefined]
  const text='The Basin Plan needs better protection for the river system.'
  const passages=new Map(speakers.map((speaker,i)=>{const id=`speech-${i}/t/body/0`;return [id,{id,resource:'speech-'+i,slug:'speech-'+i,title:speaker??'Basin debate',text,url:'https://opax.test/doc/speech-'+i,kind:'speech',speaker,date:'2012-11-20'}]}))
@@ -124,7 +124,6 @@ test('broad overview names cited speakers or drops anonymous points while keepin
  const out=api.verifyResearchPoints(points,passages,mdbQuestion,named,false,roster)
  assert.ok(out)
  assert.equal(out.answer.split('\n').filter(Boolean).length,5)
- assert.match(out.answer,/Sarah Hanson-Young said/)
- assert.doesNotMatch(out.answer,/A speaker/)
+ assert.equal((out.answer.match(/A speaker said/g)??[]).length,1)
  ranges(out)
 })

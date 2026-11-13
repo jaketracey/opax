@@ -13,6 +13,7 @@ import { honestFetch, USER_AGENT, pauseSource, runSource } from './lib/http.mjs'
  *   node scripts/stamp_assets.mjs           # stamp (what `npm run deploy` runs)
  *   node scripts/stamp_assets.mjs --check   # exit 1 if the stamps are stale
  *   node scripts/stamp_assets.mjs --fonts   # re-pull the self-hosted webfonts
+ *   node scripts/stamp_assets.mjs --files   # list what the stamp writes or hashes (stampFiles)
  *
  * WHY IT MUST RUN: `wrangler deploy` on its own ships an unstamped index.html
  * against immutable Cache-Control. Deploy with `npm run deploy`, never by hand.
@@ -28,11 +29,12 @@ import { honestFetch, USER_AGENT, pauseSource, runSource } from './lib/http.mjs'
  */
 import { createHash } from 'node:crypto'
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, unlinkSync, statSync } from 'node:fs'
-import { dirname, join, relative, resolve } from 'node:path'
+import { dirname, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { runInNewContext } from 'node:vm'
-import { buildSpaShell } from './build_spa_shell.mjs'
-import { buildMethods } from './build_methods.mjs'
+import { buildSpaShell, SPA_SHELL_FILES } from './build_spa_shell.mjs'
+import { buildMethods, METHODS_PAGE } from './build_methods.mjs'
+import { SEARCH_CATALOG_MANIFEST } from './build_coverage.mjs'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const PUBLIC = join(ROOT, 'portal', 'public')
@@ -400,6 +402,46 @@ function stampHeaders({ check }) {
   return after !== before
 }
 
+// The entry pages beside index.html, each with the files it loads under a content stamp.
+// chrome: the page wears the site masthead, drawer and footer, synced from index.html.
+// bare: a link without ?v= gets one (otherwise only an existing ?v= is refreshed).
+const PAGES = [
+  // The community page wears the site chrome, synced from index.html as home.html's is.
+  { page: 'community.html', chrome: true, bare: true, files: ['style.css', 'ui-controls.css', 'nav.css', 'community.css', 'community.js', 'navigation.js', 'quick-search.js'] },
+  // The press kit (/press) wears the same chrome, synced the same way.
+  { page: 'press.html', chrome: true, bare: true, files: ['style.css', 'ui-controls.css', 'nav.css', 'navigation.js', 'quick-search.js'] },
+  { page: 'ui-workbench.html', chrome: false, bare: false, files: ['style.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'ui-workbench.css', 'ui-workbench.js'] },
+  { page: 'home.html', chrome: true, bare: false, files: ['style.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'home.css', 'nav.css', 'home.js', 'navigation.js', 'quick-search.js', 'analytics.js', 'events.js', 'gtm.js'] },
+  // /map is served from map.html. ui-controls.css is immutable, so a bare link
+  // there would keep a returning reader on an old stylesheet for a year.
+  { page: 'map.html', chrome: false, bare: true, files: ['tokens.css', 'ui-controls.css', 'map-page.js'] },
+]
+
+const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+/** A page's text with its chrome synced from the stamped index.html and its own stamps rewritten. */
+function stampPage({ chrome, bare, files }, html, index) {
+  const stampRe = bare ? '(?:\\?v=[A-Za-z0-9._-]*)?(?=")' : '\\?v=[A-Za-z0-9._-]*'
+  const pattern = new RegExp(`/(${files.map(escapeRegExp).join('|')})${stampRe}`, 'g')
+  return (chrome ? syncHomeChrome(html, index) : html).replace(pattern, (_, file) => `/${file}?v=${hashOf(file)}`)
+}
+
+/** Every file `node scripts/stamp_assets.mjs` writes, every file whose content hash it writes
+ *  into another, and the search-catalogue manifest the build rebuilds and the coverage table
+ *  counts, repo-relative and sorted (--fonts also rewrites fonts/; that refresh is run by hand). The deploy job commits whichever of these its build changed
+ *  (scripts/restamp_commit.sh): a stamp committed without the file it was made from fails
+ *  --check on main (13 Nov 2026: index.html went in without spa-shell.js). */
+export function stampFiles() {
+  const stamps = [...ASSET_STAMPS, ...MODULE_STAMPS]
+  const written = [
+    METHODS_PAGE, ...Object.values(SPA_SHELL_FILES), ...stamps.map(([importer]) => importer),
+    relative(PUBLIC, INDEX), ...PAGES.map(({ page }) => page), relative(PUBLIC, HEADERS),
+  ]
+  const hashed = [...STAMPED, ...stamps.map(([, mod]) => mod), ...PAGES.flatMap(({ files }) => files)]
+  const repoPath = (file) => relative(ROOT, join(PUBLIC, file)).split(sep).join('/')
+  return [...new Set([...written, ...hashed, SEARCH_CATALOG_MANIFEST].map(repoPath))].sort()
+}
+
 function stamp({ check }) {
   buildMethods({ check })
   buildSpaShell({ check })
@@ -421,31 +463,16 @@ function stamp({ check }) {
     )
     process.exit(1)
   }
-  const communityPath = join(PUBLIC, 'community.html')
-  const communityBefore = readFileSync(communityPath, 'utf8')
-  // The community page wears the site masthead, drawer and footer, synced from index.html as home.html's are.
-  const communityAfter = syncHomeChrome(communityBefore, after).replace(/\/(style\.css|ui-controls\.css|nav\.css|community\.css|community\.js|navigation\.js|quick-search\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
-  if (!check && communityAfter !== communityBefore) writeFileSync(communityPath, communityAfter)
-  // The press kit (/press) wears the same chrome, synced the same way.
-  const pressPath = join(PUBLIC, 'press.html')
-  const pressBefore = readFileSync(pressPath, 'utf8')
-  const pressAfter = syncHomeChrome(pressBefore, after).replace(/\/(style\.css|ui-controls\.css|nav\.css|navigation\.js|quick-search\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
-  if (!check && pressAfter !== pressBefore) writeFileSync(pressPath, pressAfter)
-  const workbenchPath = join(PUBLIC, 'ui-workbench.html')
-  const workbenchBefore = readFileSync(workbenchPath, 'utf8')
-  const workbenchAfter = workbenchBefore.replace(/\/(style\.css|ui-controls\.css|ui-source\.css|ui-source\.js|ui-workbench\.css|ui-workbench\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
-  if (!check && workbenchAfter !== workbenchBefore) writeFileSync(workbenchPath, workbenchAfter)
-  const homePath = join(PUBLIC, 'home.html')
-  const homeBefore = readFileSync(homePath, 'utf8')
-  const homeAfter = syncHomeChrome(homeBefore, after).replace(/\/(style\.css|ui-controls\.css|ui-source\.css|ui-source\.js|home\.css|nav\.css|home\.js|navigation\.js|quick-search\.js|analytics\.js|events\.js|gtm\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
-  if (!check && homeAfter !== homeBefore) writeFileSync(homePath, homeAfter)
-  // /map is served from map.html. ui-controls.css is immutable, so a bare link
-  // there would keep a returning reader on an old stylesheet for a year.
-  const mapPath = join(PUBLIC, 'map.html')
-  const mapBefore = readFileSync(mapPath, 'utf8')
-  const mapAfter = mapBefore.replace(/\/(tokens\.css|ui-controls\.css|map-page\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
-  if (!check && mapAfter !== mapBefore) writeFileSync(mapPath, mapAfter)
-  const pagesStale = staleModules.length || homeAfter !== homeBefore || after !== before || communityAfter !== communityBefore || pressAfter !== pressBefore || workbenchAfter !== workbenchBefore || mapAfter !== mapBefore
+  let pagesChanged = false
+  for (const page of PAGES) {
+    const path = join(PUBLIC, page.page)
+    const pageBefore = readFileSync(path, 'utf8')
+    const pageAfter = stampPage(page, pageBefore, after)
+    if (pageAfter === pageBefore) continue
+    pagesChanged = true
+    if (!check) writeFileSync(path, pageAfter)
+  }
+  const pagesStale = staleModules.length || pagesChanged || after !== before
   if (check && pagesStale) {
     console.error('stamp_assets: entry-page stamps or shared chrome are stale — run `node scripts/stamp_assets.mjs`.')
     process.exit(1)
@@ -468,6 +495,10 @@ function stamp({ check }) {
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   await runSource(async () => {
     const args = process.argv.slice(2)
+    if (args.includes('--files')) {
+      console.log(stampFiles().join('\n'))
+      return
+    }
     if (args.includes('--fonts')) await refreshFonts()
     stamp({ check: args.includes('--check') })
   })
