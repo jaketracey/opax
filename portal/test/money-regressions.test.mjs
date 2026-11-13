@@ -109,13 +109,15 @@ test('DT-FYR-004: a party total leads the real mixed aggregate and donor-source 
   assert.match(out.answer, /\n\nAltum Pty Ltd provided \$1,659,674/);
   assert.match(out.answer, /\n\nMacquarie Telecom provided \$189,500/);
   cited(out, '$6,575,931');
-  // Reproduce a writer that keeps only the example donor: the checked aggregate must survive both revisions.
+  // A writer that keeps only the example donor drops the requested party total: the facts-only version, which leads
+  // with it, answers instead, in one call.
   const draft = { answer_decision: 'answer', sentences: [{ text: 'Altum Pty Ltd provided $1,659,674 in disclosed receipts to LNP in financial year 2019-20.', facts: [input.facts.find(f => f.source.receipt?.source === 'Altum Pty Ltd').id] }] };
   const response = { content: [{ type: 'text', text: JSON.stringify(draft) }], finishReason: { unified: 'stop', raw: 'stop' }, usage: { inputTokens: { total: 20 }, outputTokens: { total: 20 } }, warnings: [] };
   const model = new MockLanguageModelV4({ doGenerate: [response, response] });
   const writer = api.createAnswerWriter({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) } });
   const written = await writer(input, { rounds: 0, tokens: { input: 0, output: 0 } }, undefined, 15000);
   assert.match(written.answer, /^LNP received \$6,575,931/);
+  assert.equal(model.doGenerateCalls.length, 1);
 });
 
 test('MN-DONR-028: a named donor answer excludes another donor returned by an exploratory call', () => {

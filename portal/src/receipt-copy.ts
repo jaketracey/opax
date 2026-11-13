@@ -11,6 +11,10 @@ export function receiptMeasureLabel(measure:string,industry?:string):string {
 }
 export function receiptMeasureHeading(measure:string,finance=false,context:'ranking'|'comparison'='ranking'):string {
   if(context==='comparison'&&measure==='receipts_all')return 'All receipt types'
-  return measure==='donations'?'Donations':measure==='other_receipts'?'Other receipts (includes loans)':measure==='subscriptions'?'Subscriptions':finance?'Disclosed receipts (includes loans)':'Disclosed receipts'
+  return measure==='donations'?'Donations':measure==='other_receipts'?'Other receipts (includes loans and other amounts)':measure==='subscriptions'?'Subscriptions':finance?'Disclosed receipts (includes loans)':'Disclosed receipts'
+}
+/** The measure a ranking uses when the AEC records no donations, as it reads in a sentence. */
+export function receiptMeasurePhrase(measure:string):string {
+  return measure==='other_receipts'?'other receipts (includes loans and other amounts)':measure==='subscriptions'?'subscriptions (membership and affiliation fees)':'disclosed receipts of all types'
 }
 export const receiptDollars=(n:number)=>new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',minimumFractionDigits:Number.isInteger(n)?0:2,maximumFractionDigits:2}).format(n)

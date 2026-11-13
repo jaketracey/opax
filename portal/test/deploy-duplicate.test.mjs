@@ -25,7 +25,10 @@ test('only a verified active main deploy permits in-progress skipping; API failu
 test('five failed post-deploy pushes and rebases warn and succeed; serial deploys never cancel',()=>{
  const workflow=readFileSync(new URL('../../.github/workflows/deploy.yml',import.meta.url),'utf8');
  assert.match(workflow,/group: deploy-production\n  cancel-in-progress: false/);
- const script=workflow.slice(workflow.indexOf('          for attempt in 1 2 3 4 5;'),workflow.indexOf('\n      - name: Summary')).replace(/^          /gm,'');
+ // the push loop closes the restamp step's script (scripts/restamp_commit.sh)
+ assert.match(workflow,/run: bash scripts\/restamp_commit\.sh\n/);
+ const restamp=readFileSync(new URL('../../scripts/restamp_commit.sh',import.meta.url),'utf8');
+ const script=restamp.slice(restamp.indexOf('for attempt in 1 2 3 4 5;'));
  const dir=mkdtempSync(join(tmpdir(),'opax-restamp-'));
  try {
   writeFileSync(join(dir,'git'),'#!/bin/sh\nexit 1\n');writeFileSync(join(dir,'sleep'),'#!/bin/sh\nexit 0\n');

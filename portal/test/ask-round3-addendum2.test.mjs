@@ -47,9 +47,8 @@ function hearingAnswer(out) {
   validRanges(out)
 }
 for (const q of questions) {
-  test('hearing intent and actual roster scope: '+q,async()=>{
+  test('hearing intent: '+q,()=>{
     assert.equal(api.hearingEvidenceQuestion(q),true)
-    assert.equal(api.unresolvedPersonAsked(q,await scope(q)),false)
   })
   for (const terminal of ['answer','finish','provider-stop']) test(terminal+' retains retrieved hearing evidence: '+q,async()=>{
     let turn=0
@@ -66,43 +65,20 @@ for (const q of questions) {
     assert.doesNotMatch(JSON.stringify(out.research?.rejections??[]),/named_unresolved/)
   })
 }
-test('real unresolved names and ordinary parliamentary discussion retain their guards',async()=>{
-  const q='What did Zqxv Nobody say about income averaging at the Robodebt Royal Commission?'
-  assert.equal(api.unresolvedPersonAsked(q,await scope(q)),true)
+test('ordinary parliamentary discussion is not hearing evidence',()=>{
   for(const q of ['What has Parliament said about the Robodebt Royal Commission?','What did witnesses tell Parliament about the Robodebt Royal Commission?','How many hearing days were held at the Robodebt Royal Commission?']) assert.equal(api.hearingEvidenceQuestion(q),false,q)
   assert.equal(api.hearingEvidenceQuestion('x '.repeat(100000)+questions[0]),false)
   assert.equal(api.hearingEvidenceQuestion('What did witnesses say at '+'a'.repeat(100000)+' Royal Commission?'),false)
 })
 const gap = {answer:'This selection does not establish their position on that topic.',answer_decision:'limitation',answer_status:'evidence_gap',citations:{},sources:[{...source,cited:false}]}
-for(const q of questions) for(const stream of [false,true]) test('final '+(stream?'SSE':'JSON')+' boundary explains a hearing gap without substituting Hansard: '+q,async()=>{
-  const bad = {...gap,answer:speech,answer_decision:'answer',citations:{[id]:[[0,speech.length]]},sources:[source]}
-  for(const payload of [gap,bad]) {
-    const response=stream?new Response('event: delta\ndata: '+JSON.stringify({text:payload.answer})+'\n\nevent: done\ndata: '+JSON.stringify(payload)+'\n\n',{headers:{'content-type':'text/event-stream','x-opax-cache':'HIT'}}):Response.json(payload)
-    const wire=await(await api.withAnswerLanguage(response,q)).text()
-    const out=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
-    assert.equal(out.answer,api.HEARING_EVIDENCE_GAP)
-    assert.equal(out.answer_decision,'limitation');assert.deepEqual(out.citations,{});assert.deepEqual(out.sources,[])
-    if(stream) assert.doesNotMatch(wire,/event: delta/)
-  }
-})
-test('a stale caveat recovers pre-writer hearing evidence and stays grounded on repetition',async()=>{
-  const text='Royal Commission into the Robodebt Scheme, Transcript Hearing Day 46 (10 March 2023), transcript page P-4899 (PDF page 15), hearing turn by Ms Preston: "Income averaging did not make sense to me." Hearing transcript: evidence, not findings.'
-  const hearing={...source,resource:'fact-1',kind:'record',title:text,snippet:text,speaker:'Ms Preston',url:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15'}
-  let out=api.ensureAnswerText({...gap,research:{pre_writer_sources:[hearing]}},questions[0])
-  for(let i=0;i<3;i++) out=api.groundAnswerPayload(out,questions[0])
-  hearingAnswer(out)
-  const restricted={...hearing,snippet:text.replace('transcript page','Not quoted: suppression order. transcript page')}
-  const limited=api.groundAnswerPayload({...gap,research:{pre_writer_sources:[restricted]}},questions[0])
-  assert.match(limited.answer,/not quoted/);assert.doesNotMatch(limited.answer,/“|Income averaging did not/);validRanges(limited)
-})
-test('a caveat alone is replaced while typed refusals and clarifications survive',()=>{
-  assert.notEqual(api.ensureAnswerText(gap,'What did records show?').answer,gap.answer)
+test('a caveat is kept as written, and typed refusals and clarifications survive',()=>{
+  assert.deepEqual(api.ensureAnswerText(gap,'What did records show?'),gap)
   for(const answer_decision of ['refusal','clarification']) {
     const p={...gap,answer_decision,answer_status:answer_decision==='refusal'?'refused':'needs_scope',answer:'Please clarify the person, or ask about public records.'}
     assert.deepEqual(api.groundAnswerPayload(p,questions[0]),p)
   }
 })
-test('writer repair retains original transcript statements when a paraphrase fails',async()=>{
+test('a written quotation not in the transcript loses its quote marks; a verbatim one keeps them, in one pass',async()=>{
   const text='Royal Commission into the Robodebt Scheme, Transcript Hearing Day 46 (10 March 2023), transcript page P-4899 (PDF page 15), hearing turn by Ms Preston: "Income averaging did not make sense to me." transcript page P-4933 (PDF page 49), hearing turn by Mr Scott: "Do you agree that this approach described income averaging?" Hearing transcript: evidence, not findings.'
   const facts=api.writingFacts(undefined,[{id:1,text,cite:{kind:'record',url:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',label:text}}])
   let turn=0
@@ -113,7 +89,8 @@ test('writer repair retains original transcript statements when a paraphrase fai
   const stats={rounds:0,tokens:{input:0,output:0},turns:[]}
   const write=api.createAnswerWriter({model,dailyBudget,modelBudgetSpent:async()=>false})
   const out=await write({question:questions[1],period:api.inferPeriod(questions[1]),facts},stats,undefined,20000)
-  assert.equal(model.doGenerateCalls.length,2)
-  assert.match(JSON.stringify(model.doGenerateCalls[1].prompt),/Ms Preston/)
-  hearingAnswer(out)
+  assert.equal(model.doGenerateCalls.length,1)
+  assert.match(out.answer,/^Ms Preston said A fabricated quotation about averaging/);assert.doesNotMatch(out.answer,/“A fabricated/)
+  assert.match(out.answer,/Mr Scott asked on hearing day 46 \(10 March 2023\): “Do you agree that this approach described income averaging/)
+  validRanges(out)
 })

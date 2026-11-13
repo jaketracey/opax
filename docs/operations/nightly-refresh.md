@@ -69,7 +69,7 @@ The nightly only brings new records in and publishes them.
 the push (portal/ changed) ──► .github/workflows/deploy.yml
       npm ci · build:release (search/social/grants-map/analytics/voice, stamps, photos, privacy)
       npm test (Node 24) · wrangler types + tsc · `npm run deploy:built`
-      mandatory privacy sweep before upload · commit restamped assets back with [skip ci]
+      mandatory privacy sweep before upload · commit restamped assets back with [skip ci], checked first
 11:00 Sydney   .github/workflows/refresh-watchdog.yml reads https://opax.com.au/corpus.json and the
                nightly-status branch; a red run (GitHub emails the owner) means the chain broke
 ```
@@ -767,9 +767,15 @@ Failed fetches never blank an existing brief. `index.json` is written in the com
 except tests and markdown, `scripts/`, the Python version and lock, the ACT invoice release, the ingest user agent and
 the design tokens; the full list is the workflow's `paths`), so merged portal and data PRs deploy themselves (a push that only changes portal tests or markdown does not deploy; run it by hand if needed), or by hand (Actions → Deploy → Run workflow); never on pull_request (the repo is public and the job holds the Cloudflare
 token). Concurrency group `deploy-production`, no cancellation. The restamp commit it pushes back is pushed with
-the job's `GITHUB_TOKEN` (whose pushes start no workflows), carries `[skip ci]`, and the job refuses to run for the bot's own pushes, so it cannot loop. Restamps
-commit only `portal/public/*.html` and the analytics bundles: `voice.js` and `chunks/` are left alone because esbuild bakes the
-absolute checkout path into their hashes, so a CI build never matches the committed one. The `skip_tests` input is an
+the job's `GITHUB_TOKEN` (whose pushes start no workflows), carries `[skip ci]`, and the job refuses to run for the bot's own pushes, so it cannot loop. The restamp
+(`scripts/restamp_commit.sh`) commits every file `stamp_assets.mjs` writes or hashes that the build changed, as listed by
+`node scripts/stamp_assets.mjs --files` (the pages, `spa-shell.js`, `seo-links.json`, `_headers`, the module importers, the
+stamped bundles and `search-catalog/manifest.json`, whose report count the coverage table shows), then checks that commit
+out on its own, before the first push and again after every rebase onto a newer main: if `stamp_assets.mjs --check` fails
+there or stamping leaves it dirty, nothing is pushed on that or any later attempt and the job fails (13 Nov 2026: a fixed
+file pattern committed `index.html` without `spa-shell.js`).
+`voice.js` and `chunks/` are never committed because esbuild bakes the absolute checkout path into their hashes, so a CI
+build never matches the committed one. The `skip_tests` input is an
 emergency escape hatch. It always uses `npm run deploy`, never a bare `wrangler deploy`.
 
 **Watchdog** (`.github/workflows/refresh-watchdog.yml`): daily 11:00 Sydney (01:00 UTC; 12:00 in daylight saving). Fails if the live `corpus.json`'s

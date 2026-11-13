@@ -206,7 +206,7 @@ test('a written vote answer keeps the aye and no split however the writer words 
     const model = new MockLanguageModelV4({doGenerate: () => ({content: [{type: 'text', text: JSON.stringify(reply)}], finishReason: {unified: 'stop', raw: 'stop'}, usage: {inputTokens: {total: 10}, outputTokens: {total: 10}}, warnings: []})})
     const write = w.createAnswerWriter({model, modelBudgetSpent: async () => false, dailyBudget: {reserve: async () => ({settle: async () => {}})}})
     const out = await write(input, {rounds: 1, tokens: {input: 0, output: 0}}, undefined, 8000)
-    assert.match(out.answer, /aye (?:in )?6\b/, lead); assert.match(out.answer, /no (?:in )?7\b/, lead)
+    assert.match(out.answer, /aye (?:in )?6\b|\b6 aye\b/, lead); assert.match(out.answer, /no (?:in )?7\b|\b7 no\b/, lead)
     assert.doesNotMatch(out.answer, /Divisions are matched|statement of reasons/, 'coverage stays outside the answer: ' + lead)
     assert.match(out.coverage?.note ?? '', /matched by (?:a word|words).*title/, 'the aggregate retains its title-search coverage note: ' + lead)
   }

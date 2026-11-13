@@ -40,6 +40,11 @@ globalThis.HTMLRewriter=Rewriter;
 const {default:worker}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
 const origin='https://opax.com.au';
 const env={COMMUNITY_ORIGIN:origin,ASSETS:{async fetch(req){const path=new URL(req.url).pathname;const file=new URL(path==='/'?'index.html':path==='/home'?'home.html':path==='/community'?'community.html':path.slice(1),pub);if(!existsSync(file)) return new Response('Missing',{status:404}); const response=new Response(readFileSync(file),{headers:{'content-type':path.endsWith('.json')?'application/json':'text/html'}}); if(path.endsWith('.json')) response.json=()=>read(path); return response;}}};
+// Topics now render their existing cached counts and speech window on the server.
+const topicCache=new Map();
+globalThis.caches={default:{async match(request){return topicCache.get(request.url)?.clone()},async put(request,response){topicCache.set(request.url,response.clone())}}};
+await (await import('./server-html-cache.mjs')).seedTopicCache(env,caches.default);
+caches.default.put=async()=>{};
 async function get(path){const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});assert.equal(r.status,200,path);return r.text();}
 test('all 24 audited grant source IDs and nine long file keys serve their own program facts', async () => {
   const audit=JSON.parse(readFileSync(new URL('fixtures/portal-facts.json',import.meta.url)));

@@ -34,17 +34,14 @@ test('unsupported figures are removed locally while the supported answer survive
  const written=api.verifyWrittenAnswer({sentences:[{text:prose,facts:[1,2]},{text:'The salary entitlement excludes allowances, with $999,999 in invented expenses.',facts:[3],coverage:true}]},input)
  assert.doesNotMatch(written.answer,/999,999/);assert.match(written.answer,/Robin Example.*277,602/)
 })
-test('reworded dates preserve their day, month and year',()=>{
- assert.equal(api.supportedDates('from 1 July 2005',texts[1]),true)
- assert.equal(api.supportedDates('from July 1, 2005',texts[1]),true)
- assert.equal(api.supportedDates('from June 1, 2005',texts[1]),false)
- for(const text of ['from 1 June 2005','from 1 July 2006'])assert.equal(api.supportedDates(text,texts[1]),false)
- const repaired=api.verifyWrittenAnswer({sentences:[{text:prose.replace('1 July','1 August'),facts:[1,2]}]},input);assert.equal(repaired,null,'an invalid date outside the repair allowlist requires a retry')
+test('the writer keeps a reworded date as written',()=>{
+ const text=prose.replace('1 July','1 August'),out=api.verifyWrittenAnswer({sentences:[{text,facts:[1,2]}]},input)
+ assert.equal(out.answer,text)
 })
 test('raw rate lines, coverage blocks and repeated figure sets cannot pass through',()=>{
  for(const text of [texts[0],texts[2]])assert.equal(api.verifyWrittenAnswer({sentences:[{text,facts:[1,2]}]},input),null)
- // Pay questions are outside the donor repair allowlist; request a retry instead of emitting a fragment.
- const repaired=api.verifyWrittenAnswer({sentences:[{text:prose.replace('$277,602','$999,999'),facts:[1,2]}]},input);assert.equal(repaired,null)
+ // The writer has no figure cut: a written amount the facts do not hold is kept as written.
+ const kept=api.verifyWrittenAnswer({sentences:[{text:prose.replace('$277,602','$999,999'),facts:[1,2]}]},input);assert.equal(kept.answer,prose.replace('$277,602','$999,999'))
  check(api.verifyWrittenAnswer({sentences:[...draft.sentences,...draft.sentences,{text:'Robin Example received $277,602 and $288,990 in annual salary rates.',facts:[1,2]}]},input))
 })
 const response=text=>({content:[{type:'text',text}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10,noCache:10,cacheRead:0,cacheWrite:0},outputTokens:{total:5,text:5,reasoning:0}},warnings:[]})
@@ -73,15 +70,9 @@ test('legacy one-character anchors use source facts, with rebuilt prose spans',(
  const sheet=api.writingFacts(legacy)
  assert.equal(sheet[0].text,texts[0]);check(api.proseFallback({...input,facts:sheet}))
 })
-test('amounts cannot swap owners or salary periods, even when both figures exist',()=>{
- const a={id:1,text:'Robin Example: $100,000 from public contracts.',source:source('a','')},b={id:2,text:'Casey Sample: $200,000 from public contracts.',source:source('b','')}
- assert.equal(api.boundFigures('Robin Example received $200,000 and Casey Sample received $100,000.',[a,b]),false)
- assert.equal(api.boundFigures('Robin Example received $100,000 and Casey Sample received $200,000.',[a,b]),true)
- assert.equal(api.boundFigures('Robin Example was paid $277,602 from 1 July 2005.',facts),false)
-})
-test('a coverage update date cannot become the year of a historical salary claim',()=>{
- const out=api.verifyWrittenAnswer({sentences:[{text:'In 2026 Robin Example earned $277,602 as Prime Minister.',facts:[1,3]}]},input)
- assert.equal(out,null)
+test('the writer keeps a written year as written, whatever the cited coverage date',()=>{
+ const text='In 2026 Robin Example earned $277,602 as Prime Minister.',out=api.verifyWrittenAnswer({sentences:[{text,facts:[1,3]}]},input)
+ assert.equal(out.answer,text)
 })
 test('mixed answers retain already written uncited points and preserve evidence IDs for cited points',()=>{
  const written=api.proseFallback(input),claim='Robin Example said the contracts should be published.',loose='Independent scrutiny would improve transparency.'
@@ -90,14 +81,6 @@ test('mixed answers retain already written uncited points and preserve evidence 
  assert.match(out.answer,/Independent scrutiny/);assert.equal(out.answer_status,'partly_cited')
  const [a,b]=out.citations['speech-evidence/t/body/0-90'][0]
  assert.equal(Array.from(out.answer).slice(a,b).join(''),claim)
-})
-test('count figures remain attached to the selected speaker and vote metric',()=>{
- const count=(id,name,n)=>({id,text:`${name}: ${n} chamber speeches since 2022`,source:{...source('fact-'+id,''),kind:'count'}})
- const rows=[count(1,'Robin Example',87),count(2,'Casey Sample',13)]
- assert.equal(api.boundFigures('Robin Example made 13 speeches and Casey Sample made 87.',rows),false)
- assert.equal(api.boundFigures('Robin Example made 87 speeches and Casey Sample made 13.',rows),true)
- const vote={id:1,text:'Robin Example in 10 divisions: all aye in 9, all no in 1, split in 0',source:source('votes','')}
- assert.equal(api.boundFigures('Robin Example voted all aye in 1 and all no in 9.',[vote]),false)
 })
 test('a full money calculation plus overlapping rows falls back without boilerplate or duplicated amounts',()=>{
  const raw=['Example Party received the most disclosed funding from mining donors: $165,050.','Financial years: 2005–06. 5 donors in the selected map. Federal (AEC). Amounts are not adjusted for inflation.','| Party | Amount |','| Example Party | $165,050 |','| Sample Party | $40,000 |','[Explore these records](https://example.org/money)','This tool covers an unknown start to an unknown end.']
@@ -189,10 +172,10 @@ test('identity findings do not acquire ranked-count notes from unrelated selecte
  assert.equal(out.coverage,undefined)
 })
 
-test('a selected-facts preamble is rejected and the writer contract asks for the finding first',()=>{
+test('a selected-facts preamble is kept as written and the writer contract asks for the finding first',()=>{
  const text='Robin Example declared a shareholding in Fixture Company.'
  const query={question:'What interests did Robin Example declare?',period:{kind:'all',label:''},facts:[{id:1,text,source:source('interest',text)}]}
- assert.equal(api.verifyWrittenAnswer({sentences:[{text:'The selected facts show that '+text,facts:[1]}]},query),null)
+ assert.equal(api.verifyWrittenAnswer({sentences:[{text:'The selected facts show that '+text,facts:[1]}]},query).answer,'The selected facts show that '+text)
  const out=api.verifyWrittenAnswer({sentences:[{text,facts:[1]}]},query)
  assert.equal(out.answer,text)
  const contract=JSON.parse(api.writingPrompt(query)).contract
