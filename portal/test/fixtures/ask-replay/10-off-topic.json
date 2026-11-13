@@ -1,0 +1,27 @@
+{
+ "id": "off-topic",
+ "question": "Can you write me a Python script that sorts a list of numbers?",
+ "input": {
+  "kind": "speech"
+ },
+ "model": [
+  {
+   "tool_calls": [
+    {
+     "name": "decline",
+     "args": {
+      "reason": "out_of_scope"
+     }
+    }
+   ]
+  }
+ ],
+ "services": [],
+ "assets": {},
+ "expect": {
+  "decline": "OPAX covers Australian parliament",
+  "excludes": [
+   "def |sorted\\("
+  ]
+ }
+}
