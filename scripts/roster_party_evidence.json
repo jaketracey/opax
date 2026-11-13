@@ -414,10 +414,10 @@
       "identity": "Q19879829",
       "jurisdiction": "nsw",
       "chamber": "nsw_lc",
-      "electorate": "Legislative Council district of New South Wales",
+      "electorate": null,
       "start": "2015-03-28",
-      "end": null,
-      "as_of": "2026-09-21",
+      "end": "2024-09-16",
+      "as_of": "2026-11-14",
       "source_party": "National Party of Australia",
       "source_url": "https://www.wikidata.org/wiki/Q19879829",
       "basis": "Wikidata P39 service with P4100 parliamentary group",
@@ -425,11 +425,12 @@
         {
           "party": "Nationals",
           "start": "2015-03-28",
-          "end": null,
-          "through": "2026-09-21"
+          "end": "2024-09-16",
+          "through": "2026-11-14"
         }
       ],
-      "undated": []
+      "undated": [],
+      "service_statement": "Q19879829$3fd85273-4dc0-78f4-8d94-4e0b0eaa336b"
     },
     {
       "name": "Bruce Notley-Smith",
@@ -1105,7 +1106,7 @@
         {
           "party": "Liberal",
           "start": "2017-04-08",
-          "end": "2026-11-14",
+          "end": null,
           "through": "2026-11-14"
         }
       ],
@@ -1901,13 +1902,14 @@
       "chamber": "nsw_la",
       "electorate": "Hornsby",
       "start": "2011-03-26",
-      "end": null,
-      "as_of": "2026-09-21",
+      "end": "2024-08-02",
+      "as_of": "2026-11-14",
       "source_party": "Liberal-National Coalition",
       "source_url": "https://www.wikidata.org/wiki/Q6788883",
       "basis": "Wikidata P39 service with P4100 parliamentary group",
       "periods": [],
-      "undated": []
+      "undated": [],
+      "service_statement": "Q6788883$048F38E2-17D7-4A7F-B16C-C57745BB2D79"
     },
     {
       "name": "Matthew Mason-Cox",
@@ -2559,13 +2561,14 @@
       "chamber": "nsw_lc",
       "electorate": null,
       "start": "2019-10-17",
-      "end": null,
-      "as_of": "2026-09-21",
+      "end": "2024-12-09",
+      "as_of": "2026-11-14",
       "source_party": null,
       "source_url": "https://www.wikidata.org/wiki/Q71235827",
       "basis": "Wikidata P39 service with P4100 parliamentary group",
       "periods": [],
-      "undated": []
+      "undated": [],
+      "service_statement": "Q71235827$a018645b-4626-a54e-d682-2b97d0f218f3"
     },
     {
       "name": "Sarah Mitchell",
@@ -4855,13 +4858,14 @@
       "chamber": "vic_la",
       "electorate": "Nepean",
       "start": "2022-11-26",
-      "end": null,
-      "as_of": "2026-09-21",
+      "end": "2026-02-13",
+      "as_of": "2026-11-14",
       "source_party": "Liberal-National Coalition",
       "source_url": "https://www.wikidata.org/wiki/Q1284978",
       "basis": "Wikidata P39 service with P4100 parliamentary group",
       "periods": [],
-      "undated": []
+      "undated": [],
+      "service_statement": "Q1284978$4ae96d06-49d3-aae6-393d-5315e4d12bb9"
     },
     {
       "name": "Sam Hibbins",
@@ -4885,13 +4889,14 @@
       "chamber": "vic_lc",
       "electorate": "Northern Metropolitan Region",
       "start": "2017-10-19",
-      "end": null,
-      "as_of": "2026-09-21",
+      "end": "2024-11-08",
+      "as_of": "2026-11-14",
       "source_party": null,
       "source_url": "https://www.wikidata.org/wiki/Q27063725",
       "basis": "Wikidata P39 service with P4100 parliamentary group",
       "periods": [],
-      "undated": []
+      "undated": [],
+      "service_statement": "Q27063725$1c95848f-45f1-e1a9-b710-0240679e6623"
     },
     {
       "name": "Sarah Connolly",

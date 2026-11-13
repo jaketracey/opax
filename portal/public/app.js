@@ -6513,7 +6513,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     party ? partyChipHTML(party, { full: true }) : "",
     // A roster party is dated beside the chip, as the server's person answer dates it.
     seatParty ? `<span>${seatParty.service_start
-      ? `service record ${esc(seatParty.service_start)} to ${esc(seatParty.service_end)}`
+      ? `service record ${esc(seatParty.service_start)}${seatParty.service_end ? ` to ${esc(seatParty.service_end)}` : `, observed through ${esc(seatParty.service_through)}`}`
       : `parliamentary roster as at ${esc(fmtDate(seatParty.as_of))}`}</span>` : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
     electorateLinks ? `<span>${seatWord}${electorateLinks}</span>` : "",
@@ -6540,7 +6540,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       ["Status", esc(roster?.current ? "Sitting parliamentarian" : "Parliamentarian")],
       // A roster party is said of the roster's date, not of the whole career.
       seatParty && ["Party", esc(seatParty.service_start
-        ? `${seatParty.party} (service record ${seatParty.service_start} to ${seatParty.service_end})`
+        ? `${seatParty.party} (service record ${seatParty.service_start}${seatParty.service_end ? ` to ${seatParty.service_end}` : `, observed through ${seatParty.service_through}`})`
         : `${seatParty.party} (parliamentary roster as at ${fmtDate(seatParty.as_of)})`) ],
       ...electorateRows,
       ...profileAffiliations(roster).map((r) => ["Parliamentary service",
@@ -7550,7 +7550,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=0fbc5db48a").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=ed2f004691").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 

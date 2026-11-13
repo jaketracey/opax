@@ -16,7 +16,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from parli.ingest.state_rosters import canonical_party  # noqa: E402
+from parli.ingest.state_rosters import POSITIONS, canonical_party  # noqa: E402
 from parli.ingest.speech_hygiene import clean_party  # noqa: E402
 from scripts.roster_fold import name_key  # noqa: E402
 from scripts.roster_identity import weak  # noqa: E402
@@ -27,15 +27,55 @@ def label(raw):
     return clean_party(value) or value if value else None
 
 
-def time_value(snak):
+def time_value(snak, *, end=False):
     v = snak.get('datavalue', {}).get('value', {})
     # A year-precision membership start supplies only its latest possible day.
-    # That conservative boundary cannot label a day before membership began.
+    # Ends use the earliest possible day, so an imprecise end never extends it.
     if v.get('precision') == 9:
-        return v['time'][1:5] + '-12-31'
+        return v['time'][1:5] + ('-01-01' if end else '-12-31')
     if v.get('precision', 0) < 11:
         return None
     return v['time'][1:11]
+
+
+def service_details(source, entity):
+    """Close a held term only from the same P39 position and exact start date."""
+    district = source['district']
+    if source['chamber'].endswith('_lc') and (district or '').startswith('Legislative Council district of '):
+        district = None
+    result = dict(electorate=district, end=source['term_end'])
+    if result['end']:
+        return result
+    hits = []
+    for claim in entity.get('claims', {}).get('P39', []):
+        position = claim['mainsnak'].get('datavalue', {}).get('value', {}).get('id')
+        if claim.get('rank') == 'deprecated' or position != POSITIONS.get((source['state'], source['chamber'])):
+            continue
+        q = claim.get('qualifiers', {})
+        if any(v.get('datavalue', {}).get('value', {}).get('precision') != 11 for v in q.get('P580', [])):
+            continue
+        starts = [time_value(v) for v in q.get('P580', [])]
+        ends = [time_value(v, end=True) for v in q.get('P582', [])]
+        if starts == [source['term_start']] and len(ends) == 1 and ends[0] and ends[0] >= source['term_start']:
+            hits.append((ends[0], claim['id']))
+    if len({end for end, _ in hits}) == 1:
+        result.update(end=hits[0][0], service_statement=hits[0][1])
+    return result
+
+
+def membership_period(service, qualifiers, party, fetched):
+    starts = [time_value(v) for v in qualifiers.get('P580', [])]
+    ends = [time_value(v, end=True) for v in qualifiers.get('P582', [])]
+    if len(starts) != 1 or not starts[0] or (ends and (len(ends) != 1 or not ends[0])):
+        return None
+    start = max(service['start'], starts[0])
+    boundaries = [service['end']] if service['end'] else []
+    if ends:
+        boundaries.append(str(date.fromisoformat(ends[0]) - timedelta(days=1)))
+    end = min(boundaries) if boundaries else None
+    if start <= (end or fetched):
+        return dict(party=party, start=start, end=end, through=fetched)
+    return None
 
 
 def build(db, roster, wikidata_cache, handbook_cache, fetched):
@@ -62,6 +102,9 @@ def build(db, roster, wikidata_cache, handbook_cache, fetched):
                      end=source['term_end'], as_of=source['fetched_at'][:10], source_party=source['party'],
                      source_url='https://www.wikidata.org/wiki/' + source['qid'],
                      basis='Wikidata P39 service with P4100 parliamentary group', periods=[], undated=[])
+            s.update(service_details(source, entities.get(source['qid'], {})))
+            if s.get('service_statement'):
+                s['as_of'] = fetched
             party = label(source['party'])
             if party:
                 s['periods'] = [dict(party=party, start=s['start'], end=s['end'], through=s['as_of'])]
@@ -73,16 +116,13 @@ def build(db, roster, wikidata_cache, handbook_cache, fetched):
                     if claim.get('rank') == 'deprecated':
                         continue
                     q = claim.get('qualifiers', {})
-                    starts = [time_value(v) for v in q.get('P580', [])]
-                    ends = [time_value(v) for v in q.get('P582', [])]
                     party_qid = claim['mainsnak'].get('datavalue', {}).get('value', {}).get('id')
                     party = label(party_names.get(party_qid))
-                    if not party or len(starts) != 1 or not starts[0] or (ends and (len(ends) != 1 or not ends[0])):
+                    if not party:
                         continue
-                    start = max(s['start'], starts[0])
-                    end = min(s['end'] or fetched, str(date.fromisoformat(ends[0]) - timedelta(days=1)) if ends else fetched)
-                    if start <= end:
-                        s['periods'].append(dict(party=party, start=start, end=end, through=fetched))
+                    period = membership_period(s, q, party, fetched)
+                    if period:
+                        s['periods'].append(period)
                         s['as_of'] = fetched
                         s['basis'] = 'Wikidata P39 service intersected with explicitly dated P102 membership'
                         s['membership_statement'] = claim['id']

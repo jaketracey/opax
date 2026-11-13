@@ -730,12 +730,12 @@
               {
                 "party": "Nationals",
                 "start": "2015-03-28",
-                "end": null,
-                "through": "2026-09-21",
+                "end": "2024-09-16",
+                "through": "2026-11-14",
                 "jurisdiction": "nsw",
                 "chamber": "nsw_lc",
-                "electorate": "Legislative Council district of New South Wales",
-                "as_of": "2026-09-21",
+                "electorate": null,
+                "as_of": "2026-11-14",
                 "source_url": "https://www.wikidata.org/wiki/Q19879829",
                 "basis": "Wikidata P39 service with P4100 parliamentary group"
               }
@@ -1158,7 +1158,7 @@
               {
                 "party": "Liberal",
                 "start": "2017-04-08",
-                "end": "2026-11-14",
+                "end": null,
                 "through": "2026-11-14",
                 "jurisdiction": "nsw",
                 "chamber": "nsw_la",

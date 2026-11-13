@@ -2,14 +2,78 @@
 import copy
 import json
 from pathlib import Path
+import sqlite3
 import tempfile
 import unittest
 
 from scripts import roster_accept
+from scripts.build_roster_party_evidence import build, membership_period, service_details, time_value
 from scripts.roster_party_gaps import enrich, group_problem, proposal, read
 from scripts.roster_source_profiles import enrich as source_profiles, reference
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def snak(value, precision=11):
+    return {'datavalue': {'value': {'time': '+' + value + 'T00:00:00Z', 'precision': precision}}}
+
+
+class EvidenceDates(unittest.TestCase):
+    def test_builder_uses_held_term_end_and_cleans_council_district(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); cache=root/'wikidata'; cache.mkdir(); handbook=root/'handbook'; handbook.mkdir()
+            db=root/'roster.db'
+            with sqlite3.connect(db) as conn:
+                conn.execute('CREATE TABLE ext_state_roster (qid, state, chamber, full_name, district, party, term_start, term_end, fetched_at)')
+                conn.execute('INSERT INTO ext_state_roster VALUES (?,?,?,?,?,?,?,?,?)',
+                             ('Q123','nsw','nsw_lc','Alex Example','Legislative Council district of New South Wales',
+                              'National Party of Australia','2015-03-28',None,'2026-09-21'))
+            claim=dict(id='Q123$service',rank='normal',mainsnak={'datavalue':{'value':{'id':'Q18810377'}}},
+                       qualifiers={'P580':[snak('2015-03-28')],'P582':[snak('2024-09-16')]})
+            (cache/'batch-0.json').write_text(json.dumps({'entities':{'Q123':{'claims':{'P39':[claim]}}}}))
+            (cache/'parties.json').write_text('{"entities":{}}')
+            (handbook/'party_records.json').write_text('{"individuals":[]}')
+            roster={'people':[dict(name='Alex Example',states=['nsw'],chambers=['nsw_lc'],first=2015,last=2022)]}
+            evidence=build(db,roster,cache,handbook,'2026-11-14')['people'][0]
+            values=proposal(roster['people'][0],{'people':[evidence]})
+            self.assertIsNone(values['affiliations'][0]['electorate'])
+            self.assertEqual(values['affiliations'][0]['end'],'2024-09-16')
+            self.assertEqual(evidence['service_statement'],'Q123$service')
+
+    def test_open_membership_has_observation_but_no_end(self):
+        q = {'P580': [snak('2017-04-08')]}
+        service = {'start': '2017-04-08', 'end': None}
+        self.assertEqual(membership_period(service, q, 'Example Party', '2026-11-14'),
+                         dict(party='Example Party', start='2017-04-08', end=None, through='2026-11-14'))
+        closed = membership_period({**service, 'end':'2024-09-16'}, q, 'Example Party', '2026-11-14')
+        self.assertEqual(closed['end'], '2024-09-16')
+
+    def test_year_only_membership_end_never_widens_the_period(self):
+        year = snak('2025-00-00', 9)
+        self.assertEqual(time_value(year), '2025-12-31')
+        self.assertEqual(time_value(year, end=True), '2025-01-01')
+        period = membership_period({'start':'2020-01-01','end':None},
+                                   {'P580':[snak('2020-01-01')], 'P582':[year]}, 'Example Party', '2026-11-14')
+        self.assertEqual(period['end'], '2024-12-31')
+
+    def test_generic_council_district_is_empty_but_real_regions_remain(self):
+        source = dict(state='nsw', chamber='nsw_lc', term_start='2015-03-28', term_end=None,
+                      district='Legislative Council district of New South Wales')
+        self.assertIsNone(service_details(source, {})['electorate'])
+        self.assertEqual(service_details({**source,'district':'Example Region'}, {})['electorate'], 'Example Region')
+
+    def test_held_service_end_requires_same_position_and_exact_start(self):
+        source = dict(state='nsw', chamber='nsw_lc', term_start='2015-03-28', term_end=None, district=None)
+        claim = dict(id='Q123$service', rank='normal', mainsnak={'datavalue':{'value':{'id':'Q18810377'}}},
+                     qualifiers={'P580':[snak('2015-03-28')], 'P582':[snak('2024-09-16')]})
+        def details(c):
+            return service_details(source, {'claims':{'P39':[c]}})
+        self.assertEqual(details(claim),dict(electorate=None,end='2024-09-16',service_statement='Q123$service'))
+        for patch in [dict(rank='deprecated'), dict(mainsnak={'datavalue':{'value':{'id':'Q18810369'}}}),
+                      dict(qualifiers={'P580':[snak('2019-03-23')], 'P582':[snak('2024-09-16')]}),
+                      dict(qualifiers={'P580':[snak('2015-03-28')]}),
+                      dict(qualifiers={'P580':[snak('2015-00-00',9)], 'P582':[snak('2024-09-16')]})]:
+            self.assertIsNone(details({**claim, **patch})['end'])
 
 
 def person(**over):

@@ -119,7 +119,8 @@ export function rosterServiceParty(person) {
   if (new Set(top.map(r => r.party)).size !== 1) return null;
   const r = top.sort((a, b) => b.start.localeCompare(a.start))[0];
   return {party:r.party, as_of:r.as_of, electorate:r.electorate || '', url:null,
-    source_url:r.source_url || null, service_start:r.start, service_end:r.end || r.through || r.as_of};
+    source_url:r.source_url || null, service_start:r.start, service_end:r.end || null,
+    service_through:r.through || r.as_of};
 }
 
 /**

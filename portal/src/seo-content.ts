@@ -188,7 +188,7 @@ export function partyLine(p: Person, seats?: readonly Seat[] | null, lists?: Ros
     // Said of the roster on its date, not of the person's career.
     const roster = rosterParty(p, seats, lists)
     return roster ? roster.service_start
-      ? `${roster.party} (service record ${roster.service_start} to ${roster.service_end})`
+      ? `${roster.party} (service record ${roster.service_start}${roster.service_end ? ` to ${roster.service_end}` : `, observed through ${roster.service_through}`})`
       : `${roster.party} (parliamentary roster as at ${shortDate(roster.as_of)})` : 'Party not recorded'
   }
   if (p.current === false) return `Formerly ${party}`

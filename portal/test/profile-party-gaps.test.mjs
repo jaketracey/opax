@@ -13,14 +13,18 @@ const person={name:'Alex Example',states:['nsw'],chambers:['nsw_la'],affiliation
 
 test('a partial source party reaches server and app with its service dates',async()=>{
   assert.equal(rosterServiceParty(person).party,'Example Party');
-  assert.equal(partyLine(person),'Example Party (service record 2023-03-25 to 2026-09-21)');
+  assert.equal(rosterServiceParty(person).service_end,null);
+  assert.equal(partyLine(person),'Example Party (service record 2023-03-25, observed through 2026-09-21)');
   const rendered=await renderPersonAnswer(person,async()=>{throw new Error('offline');},new Map());
-  assert.match(rendered.html,/Example Party \(service record 2023-03-25 to 2026-09-21\)/);
+  assert.match(rendered.html,/Example Party \(service record 2023-03-25, observed through 2026-09-21\)/);
+  assert.doesNotMatch(rendered.html,/to 2026-09-21/);
   assert.match(rendered.html,/href="https:\/\/www.wikidata.org\/wiki\/Q123"/);
   assert.equal(partyLine({...person,party:'Own Party'}),'Own Party (recorded affiliation)');
   const app=readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
   assert.match(app,/listFallback && roster && electorateReference \? electorateReference.module.rosterServiceParty/);
   assert.match(app,/service record \$\{esc\(seatParty.service_start\)\}/);
+  assert.match(app,/observed through \$\{esc\(seatParty.service_through\)\}/);
+  assert.match(app,/observed through \$\{seatParty.service_through\}/);
   const helper=readFileSync(new URL('../public/roster-party.js',import.meta.url));
   const hash=createHash('sha256').update(helper).digest('hex').slice(0,10);
   const imports=readFileSync(new URL('../public/electorates.js',import.meta.url),'utf8');
@@ -30,6 +34,15 @@ test('a partial source party reaches server and app with its service dates',asyn
   assert.equal(profileAffiliations(undistricted)[0].electorate,null);
   const council=await renderPersonAnswer(undistricted,async()=>{throw new Error('offline');},new Map());
   assert.doesNotMatch(council.html,/\bnsw_lc\b/);
+});
+
+test('an open membership renders an observation while a closed service keeps its end',async()=>{
+  const open={...person,party:'Example Party',affiliations:[{...period,start:'2017-04-08',through:'2026-11-14'}]};
+  const rendered=await renderPersonAnswer(open,async()=>{throw new Error('offline');},new Map());
+  assert.match(rendered.html,/2017-04-08 to observed through 2026-11-14/);
+  assert.doesNotMatch(rendered.html,/2017-04-08 to 2026-11-14/);
+  const closed={...person,affiliations:[{...period,end:'2024-09-16'}]};
+  assert.equal(partyLine(closed),'Example Party (service record 2023-03-25 to 2024-09-16)');
 });
 
 test('service party never crosses a house, a source date, or an unattributed speech',()=>{
