@@ -4,6 +4,7 @@ import {
   DynamicColorIOS,
   Platform,
   useColorScheme,
+  type ColorSchemeName,
   type ColorValue,
 } from 'react-native';
 import {
@@ -63,6 +64,27 @@ function resolve(role: Role): ColorValue {
 export const colors = Object.fromEntries(
   (Object.keys(light) as Role[]).map((role) => [role, resolve(role)]),
 ) as Record<Role, ColorValue>;
+
+/**
+ * A role in the app's own appearance, wherever it is drawn. UIKit resolves
+ * `colors` in the view's interface style, and the navigation bar takes its
+ * style from the navigation theme rather than the system: dark ink then
+ * resolved for a dark page under the glass bar (11b-3). Increase Contrast
+ * still resolves natively.
+ */
+export function schemeColour(role: Role, scheme: ColorSchemeName): ColorValue {
+  if (Platform.OS !== 'ios') return colors[role];
+  const palette = scheme === 'dark' ? dark : paletteFor('light');
+  const contrast = scheme === 'dark' ? darkHighContrast : lightHighContrast;
+  const value = palette[role];
+  const high = contrast[role] ?? value;
+  return DynamicColorIOS({
+    light: value,
+    dark: value,
+    highContrastLight: high,
+    highContrastDark: high,
+  });
+}
 
 /** Current hex colours for imperative native APIs. */
 export function currentChromeColours() {

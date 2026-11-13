@@ -6,7 +6,15 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import React, { act } from 'react';
-import { Animated, Dimensions, Platform, StyleSheet, View } from 'react-native';
+import * as Native from 'react-native';
+import {
+  Animated,
+  Dimensions,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import TestRenderer from 'react-test-renderer';
 import TalkStack from '../src/app/talk/_layout';
@@ -278,20 +286,57 @@ test.each([
       return null;
     }
     let view: TestRenderer.ReactTestRenderer | undefined;
+    const scheme = jest
+      .spyOn(Native, 'useColorScheme')
+      .mockReturnValue('light');
     try {
       view = tree(<Harness />);
       expect(chrome.headerLargeTitleStyle).toEqual({
         fontFamily: tokens.textStyles.largeTitle.fontFamily,
         fontWeight: tokens.textStyles.largeTitle.fontWeight,
         fontSize: expectedSize,
-        color: colors.ink,
+        color: tokens.schemeColour('ink', 'light'),
       });
     } finally {
       if (view) act(() => view!.unmount());
       Dimensions.set({ window, screen });
+      scheme.mockRestore();
     }
   },
 );
+
+test('bar titles resolve ink in the app appearance, whatever the bar resolves (11b-3)', () => {
+  jest.replaceProperty(Platform, 'OS', 'ios');
+  const scheme = jest.spyOn(Native, 'useColorScheme').mockReturnValue('dark');
+  let chrome!: ReturnType<typeof useStackChrome>;
+  function Harness() {
+    chrome = useStackChrome();
+    return null;
+  }
+  const view = tree(<Harness />);
+  try {
+    // The bar takes its interface style from the navigation theme, so the
+    // dynamic ink token resolved light: dark ink over the dark Ask page.
+    const darkInk = (colors.ink as unknown as { dynamic: { dark: string } })
+      .dynamic.dark;
+    for (const style of [
+      chrome.headerTitleStyle,
+      chrome.headerLargeTitleStyle,
+    ]) {
+      const { dynamic } = (
+        style as unknown as {
+          color: { dynamic: Record<string, string> };
+        }
+      ).color;
+      expect(dynamic.light).toBe(darkInk);
+      expect(dynamic.dark).toBe(darkInk);
+      expect(dynamic.highContrastLight).toBe(dynamic.highContrastDark);
+    }
+  } finally {
+    act(() => view.unmount());
+    scheme.mockRestore();
+  }
+});
 
 test.each([
   ['xSmall', 0.823, 14, 14],
@@ -698,7 +743,7 @@ describe.each([false, true])(
         'minimal',
       ],
     ] as const)(
-    '%s (%s, %j) stays full through late metrics and uses them on the next reveal',
+      '%s (%s, %j) stays full through late metrics and uses them on the next reveal',
       (title, person, widths, nextTitle, nextBackMode) => {
         jest.useFakeTimers();
         mockReducedMotion = reduced;

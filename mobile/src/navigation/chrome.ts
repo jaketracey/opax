@@ -12,6 +12,7 @@ import {
   Text,
   ToastAndroid,
   View,
+  useColorScheme,
   useWindowDimensions,
   type ColorValue,
 } from 'react-native';
@@ -28,6 +29,7 @@ import {
   headingFace,
   headlineSizes,
   largeTitleSizes,
+  schemeColour,
   textStyles,
 } from '../design/tokens';
 import { accountSnapshot } from '../features/account/store';
@@ -141,6 +143,8 @@ export const androidBar = {
 
 export function useStackChrome() {
   const { fontScale } = useWindowDimensions();
+  // Bar titles resolve in the app's appearance, not the bar's (11b-3).
+  const titleInk = schemeColour('ink', useColorScheme());
   const barEdge = useVerticalBarEdge();
   const category = contentSizeCategory(fontScale);
   const sizes = {
@@ -164,7 +168,7 @@ export function useStackChrome() {
         : headingFace === 'serif'
           ? { fontSize: sizes.title }
           : {}),
-      color: colors.ink,
+      color: titleInk,
     },
     headerLargeTitleStyle: {
       fontFamily: textStyles.largeTitle.fontFamily,
@@ -175,7 +179,7 @@ export function useStackChrome() {
       ...(Platform.OS === 'ios' || headingFace === 'serif'
         ? { fontSize: sizes.largeTitle }
         : {}),
-      color: colors.ink,
+      color: titleInk,
     },
     // Wave 2 found the soft top edge too light over serif record text: the
     // record remained readable through the title and bar buttons. Keep the
