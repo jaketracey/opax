@@ -9,7 +9,7 @@ import { JSDOM } from 'jsdom';
 import { mapSourceHTML } from '../public/home-data.js';
 import { receiptHeadline } from '../public/money-explain.js';
 import { shortMoney } from '../public/format.js';
-import { homeMapFallbackHTML, mapDonorsPhrase, mapSpanPhrase, renderMoneyAnswer } from '../src/seo-content.ts';
+import { homeMapFallbackHTML, homeMapSpan, mapDonorsPhrase, mapSpanPhrase, renderMoneyAnswer } from '../src/seo-content.ts';
 import { loadWorker, offline } from './worker-harness.mjs';
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8');
@@ -107,6 +107,9 @@ test('for the same map file the home line and the /money answer give one total, 
   assert.equal(line.textContent, `${shortMoney(Number(dollars.replace(/,/g, '')))} in receipts from ${sources} sources to 2 parties.`);
   assert.equal(line.textContent, '$1.5m in receipts from 2 sources to 2 parties.');
   assert.equal(scopeLine.textContent, scope);
+  // The card's lede names the same years, not the file's wider coverage.
+  assert.equal(homeMapSpan(graph), '2010–11 to 2021–22');
+  assert.equal(homeMapSpan({ nodes: graph.nodes, edges: [] }), null);
   assert.equal(link.textContent, 'Open the money map');
   assert.equal(link.querySelector('a').getAttribute('href'), '/money');
   // A file without typed cells has no scope to state: the plain sentence and the link.
@@ -224,6 +227,12 @@ test('the Worker writes the person head, the /money boot field, the home fallbac
     const headline = receiptHeadline(published);
     assert.ok(money.includes(`$${headline.total.toLocaleString('en-AU')} from ${headline.sources} receipt sources`), 'the /money answer states the same figures');
     assert.doesNotMatch(card.innerHTML, /<h2>/);
+    // The lede over the card (it read the file's 1998-99 to 2025-26 coverage over a 2024-25 headline).
+    const [, first, last] = /, (\d{4}-\d{2}) to (\d{4}-\d{2}), as the parties/.exec(headline.scope);
+    const lede = new JSDOM(home).window.document.getElementById('hp-map-span').textContent;
+    assert.equal(lede, `${first} to ${last}`.replace(/(\d{4})-(\d{2})/g, '$1–$2'));
+    assert.match(homeHtml, /<span id="hp-map-span">from federal returns<\/span>/, 'no baked span to go stale');
+    assert.doesNotMatch(readFileSync(new URL('../public/home.js', import.meta.url), 'utf8'), /hp-map-span/, 'the client leaves the Worker\'s span');
 
     const map = await (await h.fetch('/map')).text();
     assert.match(map, /<div class="ui-sheet"><div id="crawl-facts"><section id="prerender"/);

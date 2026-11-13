@@ -373,6 +373,19 @@ export function mapSpanPhrase(graph: unknown): string {
 }
 
 /**
+ * The span in the homepage map card's lede ("Disclosed funding between donors
+ * and parties, 1998–99 to 2024–25"), by the rule the card's headline and scope
+ * line use (receiptHeadline), not the file's wider coverage. Null when the file
+ * has no typed cells; the page then keeps its own "from federal returns".
+ */
+export function homeMapSpan(graph: unknown): string | null {
+  const {firstYear, lastYear} = receiptHeadline(graph)
+  if (firstYear == null || lastYear == null) return null
+  const fy = (year: number) => `${year}–${String((year + 1) % 100).padStart(2, '0')}`
+  return firstYear === lastYear ? fy(firstYear) : `${fy(firstYear)} to ${fy(lastYear)}`
+}
+
+/**
  * Who the federal map draws, counted from the file itself: every donor node,
  * and, where the export says how it chose them (meta.donor_nodes_by_total,
  * meta.donors_via_public_money, meta.public_money_floor), the two groups.
