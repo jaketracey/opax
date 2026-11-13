@@ -35,6 +35,13 @@ CREATE TABLE ext_donor_aliases(alias_raw, entity_id, confidence, method);
 """
 
 
+def selected_receipts(*rows):
+    """Party-side fixtures supplied by the uncapped money build, not raw sums."""
+    return {"meta": {"uncapped": True}, "nodes": [{"id": "donor:" + name, "label": name, "kind": "donor",
+        "aliases": aliases, "total": amount, "count": 1, "by_type": {"donation_received": amount},
+        "by_type_year": {"2019-20": {"donation_received": [amount,1]}}} for name, amount, aliases in rows]}
+
+
 def fixture_db(path, donations=(), ext=(), entities=(), aliases=()):
     with sqlite3.connect(path) as db:
         db.executescript(SCHEMA)
@@ -118,7 +125,7 @@ class FederalSourceTests(ExportCase):
         db = sqlite3.connect(path)
         self.addCleanup(db.close)
         catalog = disclosure_catalog(db, [{"id": "donor:acme", "label": "Acme Pty Ltd", "kind": "donor",
-                                           "aliases": [], "references": []}])
+                                           "aliases": [], "references": []}], selected_receipts(("Acme Pty Ltd", 100, [])))
         by_jur = {d["jurisdiction"]: d for d in catalog["donors"]}
         self.assertEqual(by_jur["federal"]["total"], 100)
         self.assertEqual({r["return_type"] for r in by_jur["federal"]["returnReferences"]}, {"AEC annual return"})
@@ -340,7 +347,7 @@ class CatalogueDedupeTests(unittest.TestCase):
                        [("Pratt Holdings Pty Ltd",), ("PRATT HOLDINGS P/L",)])
         candidates = [{"id": "donor:a", "label": "Pratt Holdings Pty Ltd", "kind": "donor", "aliases": [], "references": []},
                       {"id": "donor:b", "label": "PRATT HOLDINGS P/L", "kind": "donor", "aliases": [], "references": []}]
-        records = disclosure_catalog(db, candidates)["donors"]
+        records = disclosure_catalog(db, candidates, selected_receipts(("Pratt Holdings Pty Ltd", 500, ["PRATT HOLDINGS P/L"])))["donors"]
         self.assertEqual(len(records), 1)
         self.assertEqual(records[0]["total"], 500)
         self.assertEqual(records[0]["lookup_names"], ["PRATT HOLDINGS P/L", "Pratt Holdings Pty Ltd"])
@@ -354,7 +361,7 @@ class CatalogueDedupeTests(unittest.TestCase):
                        [("Acme A", 300, "2019-20", 1), ("Acme B", 200, "2020-21", 2)])
         candidates = [{"id": "donor:a", "label": "Acme A", "kind": "donor", "aliases": [], "references": []},
                       {"id": "donor:b", "label": "Acme B", "kind": "donor", "aliases": [], "references": []}]
-        self.assertEqual(len(disclosure_catalog(db, candidates)["donors"]), 2)
+        self.assertEqual(len(disclosure_catalog(db, candidates, selected_receipts(("Acme A", 300, []), ("Acme B", 200, [])))["donors"]), 2)
 
 
 if __name__ == "__main__":

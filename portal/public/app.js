@@ -2,12 +2,12 @@ let donorRows = (rows,_index,limit=Infinity) => [...(rows || [])].sort((a,b)=>b[
 let donorViewIndex = new Map();
 let donorDisclosure = record => ({name:typeof record==='string'?record:record?.label || '',href:null,reference:''});
 let donorLabelHTML = record => esc(typeof record==='string'?record:record?.label || '');
-let receiptGraph = graph => graph, receiptGraphScope = () => '', receiptScopeLabel = () => '';
+let receiptGraph = graph => graph, receiptGraphScope = () => '', receiptScopeLabel = () => '', receiptTypeLine = () => '', receiptFigures = x => x;
 // Until donor-views.js loads: a donor with no figure at all is left out, as hasPartyReceipts leaves out
 // a donor the parties' returns list nothing from (donor-disclosure.js).
 let hasPartyReceipts = (x) => Boolean(x?.total || x?.count), DONOR_DECLARED_ONLY = '', notListedLine = () => DONOR_DECLARED_ONLY;
-const donorViewReady = import('/donor-views.js?v=9770cf1299').then(module => {
-  ({donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);
+const donorViewReady = import('/donor-views.js?v=f5cf08678b').then(module => {
+  ({donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,receiptTypeLine,receiptFigures,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);
   return module.loadDonorViewIndex();
 }).then(index => (donorViewIndex=index));
 const donorViewKey = name => String(name).normalize('NFKC').replace(/[‘’ʼ`]/g,"'").replace(/\s+/g,' ').trim().toLowerCase();
@@ -25,7 +25,7 @@ async function showNotFound(container, kind, slug, { headingId, manageFocus = fa
   if (manageFocus) heading?.focus();
   return heading;
 }
-const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
+const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(name));
 /* OPAX portal — vanilla JS, no build step.
    The hash is the single source of truth for navigation; route() renders it. */
 
@@ -36,9 +36,9 @@ let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=8c4c1460a6").then(module => { growthModules = module; });
+const growthModulesReady = import("/growth-modules.js?v=aab04ce6aa").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=ba98f7415d').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=970d2e6a25').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=a83f09ee1b').then(module => { askPerson = module; });
 let uiLabels;
@@ -1565,7 +1565,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=ec514c7dd9' : '/ledger.js?v=98df9630e3');
+    const mod = await import(grants ? '/grants.js?v=aeded94c48' : '/ledger.js?v=85c9aa4835');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1596,7 +1596,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=3d39dcc3ce');
+    const mod = await import('/money-explain.js?v=d6513f3cfd');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1615,7 +1615,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=a926a85586');
+    const mod = await import('/grant-recipient.js?v=0989a030c1');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1726,7 +1726,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = MAP_DRAWING_HTML;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=3f185c0ece"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=abd2e22b2b"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=3f185c0ece"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=047e1dca9a"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1869,7 +1869,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=e60198e8e0");
+    const module = await import("/suppliers.js?v=f240bced37");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -3662,7 +3662,7 @@ let moneyReceiptScope = "";
 let moneyDataPromise = null;
 function loadMoneyData() {
   // Factual profiles and Ask share the uncapped parse. Map mounts load their capped file separately.
-  moneyDataPromise ??= import('/donor-views.js?v=9770cf1299').then((module) => module.loadMoneyGraph("/graph/money-receipts.json").then(async (d) => {
+  moneyDataPromise ??= import('/donor-views.js?v=f5cf08678b').then((module) => module.loadMoneyGraph("/graph/money-receipts.json").then(async (d) => {
     const {donationGraph} = await import("/money-receipts.js");
     moneyDonationReceipts = donationGraph(d);
     moneyDonationScope = module.receiptGraphScope(moneyDonationReceipts).replace(/^All receipt types/, "Donations only");
@@ -4755,16 +4755,22 @@ function donorRecordHTML(record, meta) {
     </section>`;
   }
   if (!Number.isFinite(record?.total)) return "";
+  if (record.by_type) {
+    if (!hasPartyReceipts(record)) return `<section class="donor-record" id="donor-record"><p>${esc(notListedLine(record))}.</p></section>`;
+    record = {...record, ...receiptFigures(record)};
+  }
+  const records = record.jurisdiction === "federal" && !record.by_type;
   const source = meta?.sourceShort || (record.jurisdiction === "federal" ? "AEC annual returns" : MONEY_JURISDICTIONS[record.jurisdiction]?.label || "Disclosure returns");
   return `<section class="donor-record" id="donor-record" data-accent="money" data-rail-figure="${esc(fmtMoney(record.total))}">
-    <h3 class="subject-section-title">Disclosed gifts</h3>
+    <h3 class="subject-section-title">${records ? "Source records" : "Disclosed receipts"}</h3>
     <div class="tiles tiles-compact">
       ${tile(fmtMoney(record.total), "disclosed")}
-      ${tile((record.count || 0).toLocaleString(), record.count === 1 ? "gift" : "gifts")}
+      ${tile((record.count || 0).toLocaleString(), `${records ? "record" : "receipt"}${record.count === 1 ? "" : "s"}`)}
       ${record.firstYear ? tile(yearSpan(record.firstYear, record.lastYear), "years") : ""}
     </div>
+    ${record.by_type ? `<p class="entry-scope">${esc(receiptScopeLabel({typed:true,firstYear:record.firstYear,lastYear:record.lastYear}))}. ${esc(receiptTypeLine(record))}.</p>` : ""}
     ${sourceLineHTML({ source, state: "totals are a floor", originals,
-      notes: [`Gifts disclosed under this exact name${meta?.commission ? ` to the ${esc(meta.commission)}` : ""}. This donor is not drawn on the money map, which shows only the largest donors, so the parties these gifts went to are in the returns themselves.`, esc(AEC_NOTE)],
+      notes: [`Receipts disclosed under this exact name${meta?.commission ? ` to the ${esc(meta.commission)}` : ""}. This donor is not drawn on the money map, which shows only the largest donors, so the recipients are listed in the source returns.`, esc(AEC_NOTE)],
       licence: record.jurisdiction === "federal" ? AEC_LICENCE : "" })}
   </section>`;
 }
@@ -6259,6 +6265,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       [isParty ? "Received (disclosed)" : "Received by parties (disclosed)", reported ? `<b>${esc(fmtMoney((own ? own.total : node.total) || 0))}</b>` : esc(declaredOnlyLine)],
       reported && ["Receipts counted", esc(((own ? own.count : node.count) || 0).toLocaleString())],
       reported && ["Measured as", esc(ownScope)],
+      !isParty && reported && receiptTypeLine(node) && ["Receipt types", esc(receiptTypeLine(node))],
       lodgedAs && ["Lodged as", esc(lodgedAs)],
       node.via === "public_money"
         ? ["On the map for", `${esc(fmtMoney(node.publicMoney || 0))} in Commonwealth contracts and grants`]
@@ -6273,7 +6280,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       updated: moneyData.meta?.generated || "", source: "AEC annual returns", state: "totals are a floor",
       originals: [{ label: "AEC Transparency Register", href: "https://transparency.aec.gov.au/" },
         { label: "Funding records", href: `/money/receipts?${new URLSearchParams({ focus: node.id })}` },
-        { label: "The money map's data (JSON)", href: "/graph/money.json" }],
+        { label: "Selected receipt data (JSON)", href: "/graph/money-receipts.json" }],
       facts: entryFacts,
       notes: [entryNote, "The parties with the largest disclosed sums."],
       licence: 'AEC Transparency Register returns, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener" target="_blank">CC BY 4.0 ↗︎</a>.',
@@ -6293,7 +6300,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         askAbout,
         { href: searchHash(`"${node.label}"`, {}), label: "Search mentions in the record" },
         { href: `/money?focus=${encodeURIComponent(node.id)}`, label: "Open the full money map" },
-        { href: "/graph/money.json", label: "Download the map data", detail: "JSON, the whole map" },
+        { href: "/graph/money-receipts.json", label: "Download receipt data", detail: "JSON, uncapped party receipts" },
       ], isParty ? "More about this party" : "More about this donor")}
     </div>`);
     box.classList.add("entry-rail");
@@ -6717,7 +6724,7 @@ const PARTY_RAIL = [
   ["entry-news", "In the news"],
 ];
 const DONOR_RAIL = [
-  ["entry-flows", "Where the money went"], ["donor-record", "Disclosed gifts"], ["donor-balance", "The balance, year by year"], ["entry-evidence", "Across the record"],
+  ["entry-flows", "Where the money went"], ["donor-record", "Disclosed receipts"], ["donor-balance", "The balance, year by year"], ["entry-evidence", "Across the record"],
   ["donor-interests", "Named in members' registers"], ["state-money", "State commissions"], ["donor-tax", "Charity and tax"],
   ["subject-access", "Meetings and lobbying"], ["entry-mentions", "In parliament"], ["entry-news", "In the news"],
 ];
@@ -8123,7 +8130,7 @@ async function buildPartiesDirectory() {
 async function buildDonorsDirectory() {
   await donorViewReady;
   const [fed, qld, vic, tas, acc, fits] = await Promise.all([
-    loadMoneyFile("federal"), loadMoneyFile("qld"), loadMoneyFile("vic"), loadMoneyFile("tas"), loadAccess(), loadFits(),
+    loadMoneyData(), loadMoneyFile("qld"), loadMoneyFile("vic"), loadMoneyFile("tas"), loadAccess(), loadFits(),
   ]);
   // Each donor and flow read through its typed cells (receiptGraph), as on the
   // donor page; the state files have none and keep their record figures.
@@ -8140,7 +8147,7 @@ async function buildDonorsDirectory() {
       if (n.kind !== "donor") continue;
       const k = normName(n.label) || String(n.label).toLowerCase();
       if (!donors.has(k)) {
-        donors.set(k, { label: n.label, labels: new Set(), industry: n.industry, group: n.group, money: {},
+        donors.set(k, { label: n.label, disclosure:n, labels: new Set(), industry: n.industry, group: n.group, money: {},
           parties: new Map(), first: n.firstYear || 9999, last: n.lastYear || 0 });
       }
       const d = donors.get(k);
@@ -8171,7 +8178,7 @@ async function buildDonorsDirectory() {
     // Off the map, a federal figure is the record total (donor and party returns together),
     // not the map's each-gift-once measure: its row says so (recordMeasure).
     donors.set(k,{label:n.label,labels:new Set([n.label,...n.aliases || [],...n.lookup_names || []]),industry:n.industry || 'other',group:'other',money,parties:new Map(),first:n.firstYear || 9999,last:n.lastYear || 0,referenceOnly:n.kind==='reference',
-      recordMeasure:n.kind!=='reference' && (n.jurisdiction || 'federal')==='federal'});
+      recordMeasure:n.kind!=='reference' && !n.by_type && (n.jurisdiction || 'federal')==='federal'});
   }
   const items = [...donors.values()];
   const sourceShort = { federal: "AEC returns", qld: (qld?.meta?.sourceShort) || "ECQ", vic: (vic?.meta?.sourceShort) || "VEC", tas:(tas?.meta?.sourceShort)||"TEC" };
@@ -8201,7 +8208,7 @@ async function buildDonorsDirectory() {
   const withAccess = items.filter((d) => d._lobbyists || d._meetings).length;
 
   const row = (d) => {
-    if(d.referenceOnly)return `<li class="dir-row dir-row-plain"><div class="dir-main"><span class="source-title dir-name">${donorNameHTML(d.label)}</span><span class="result-meta">Source reference; electoral donation not established.</span></div></li>`;
+    if(d.referenceOnly)return `<li class="dir-row dir-row-plain"><div class="dir-main"><span class="source-title dir-name">${donorNameHTML(d.label,d.disclosure)}</span><span class="result-meta">Source reference; electoral donation not established.</span></div></li>`;
     const colour = donorGroupColour(d.group);
     const shownParties = d._partyList.slice(0, 3);
     const more = d._partyList.length - shownParties.length;
@@ -8228,7 +8235,7 @@ async function buildDonorsDirectory() {
     ].join("") : "";
     return `<li class="dir-row dir-row-plain">
       <div class="dir-main">
-        <span class="source-title dir-name">${donorNameHTML(d.label)}</span>
+        <span class="source-title dir-name">${donorNameHTML(d.label,d.disclosure)}</span>
         <span class="result-meta">${meta}</span>
       </div>
       <div class="dir-figs">${figs}</div>
@@ -8263,7 +8270,7 @@ async function buildDonorsDirectory() {
       ["name", "Name A-Z", byName],
     ],
     row,
-    fineprint: `This directory combines the bounded money-map selection with names referenced elsewhere in the source records. Unconfirmed electoral matches have no profile link or receipt amount.
+    fineprint: `Federal figures use the uncapped selected party receipts. State figures use each state money map’s selection. The directory also retains names referenced elsewhere in the source records. Unconfirmed electoral matches have no profile link or receipt amount.
       ${esc(AEC_NOTE)} The same goes for gifts under each state's disclosure threshold.
       ${esc(STATE_NOT_SUMMED)} Source: ${esc(commissions.join("; "))}. Lobbyist and meeting markers
       come from the six lobbyist registers and the NSW and QLD ministerial diaries; names must match
@@ -9923,8 +9930,8 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=3d39dcc3ce"), loadMoneyFile(jur)]);
-    const { loadDonorViewIndex } = await import("/donor-views.js?v=9770cf1299");
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=d6513f3cfd"), loadMoneyFile(jur)]);
+    const { loadDonorViewIndex } = await import("/donor-views.js?v=f5cf08678b");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
 }
@@ -9941,11 +9948,11 @@ document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 const GAMES = {
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=b70d70e779", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
-  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=f720238809", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=98df9630e3", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=ec514c7dd9", mount: "mountGrants" },
+  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=98521e6d86", mount: "mountQuiz" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=85c9aa4835", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=aeded94c48", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
-  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=f267a8a4db", mount: "mountWordsDollars" },
+  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=4685107781", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=e0fe3734aa", mount: "mountThenVsNow" },
 };
 
@@ -15178,7 +15185,7 @@ document.addEventListener("close", (e) => {
 /** Words per dollar for the report's own industry: money beside the debate share, party by party. */
 async function mountReportWords(el, cfg, slug) {
   try {
-    const { mountWordsDollars } = await import("/wordsdollars.js?v=f267a8a4db");
+    const { mountWordsDollars } = await import("/wordsdollars.js?v=4685107781");
     if (currentReportSlug !== slug || !el.isConnected) return;
     reportWordsHandle = mountWordsDollars(el, { only: [cfg.topic] });
   } catch {

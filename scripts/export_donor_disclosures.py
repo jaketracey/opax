@@ -104,12 +104,62 @@ def indexed_off_map(public):
     return out
 
 
-def disclosure_catalog(db, candidates):
+def select_federal_receipts(nodes, federal_receipts):
+    """Replace retained federal figures, preserving source names and references."""
+    if not federal_receipts.get("meta", {}).get("uncapped"):
+        raise ValueError("Uncapped money-receipts.json required for donor page figures")
+    selected_names, selected_labels, selected_entities = {}, {}, {}
+    for node in federal_receipts["nodes"]:
+        if node.get("kind") == "donor":
+            selected_labels.setdefault(clean_name(node["label"]), {})[node["id"]] = node
+            eid = (node.get("match") or {}).get("entity_id")
+            if eid:
+                selected_entities.setdefault(eid, {})[node["id"]] = node
+            for name in [node["label"], *node.get("aliases", []), *node.get("lookup_names", [])]:
+                selected_names.setdefault(clean_name(name).casefold(), {})[node["id"]] = node
+    for node in nodes:
+        matches = selected_entities.get((node.get("match") or {}).get("entity_id"), {}).copy()
+        # A rolled-up union keeps its canonical node, rather than also
+        # summing separately resolved branches whose names it references.
+        for names in ([node["label"]], node.get("lookup_names", [])):
+            if not matches:
+                for name in names:
+                    matches.update(selected_labels.get(clean_name(name), {}))
+            if matches:
+                break
+        for name in [node["label"], node.get("source_name", ""), *node.get("aliases", []), *node.get("lookup_names", [])]:
+            if not matches:
+                matches = selected_names.get(clean_name(name).casefold(), {}).copy()
+        if len(matches) > 1:
+            raise ValueError("Ambiguous selected receipt identity: " + node["label"])
+        selected = next(iter(matches.values()), {})
+        if not any(amount for kind, amount in selected.get("by_type", {}).items() if kind != "public_funding"):
+            selected = {}
+        for key in ("total", "count", "byYear", "firstYear", "lastYear", "industry", "by_type", "by_type_year"):
+            node.pop(key, None)
+            if key in selected:
+                node[key] = selected[key]
+        # No eligible recipient receipts: keep the name and its provenance,
+        # never turn donor declarations or excluded receipts into a total.
+        node.setdefault("by_type", {})
+        node.setdefault("by_type_year", {})
+    return nodes
+
+
+def disclosure_catalog(db, candidates, federal_receipts):
+    """Identity/provenance from disclosures; federal figures from the money build.
+
+    The legacy donations table includes donor declarations of party-reported gifts.
+    Never use that sum for retained pages: use the same uncapped ReceiptSelection export
+    as Ask, including its receipt types and its exclusions.
+    """
     donors = []
     for jurisdiction in ["federal", "qld", "vic", "tas"]:
         graph = {"meta": {"sourceShort": jurisdiction.upper() + " disclosure returns"},
                  "nodes": [{**n, "aliases": list(n["aliases"]), "_summarise_disclosures": True} for n in candidates]}
         attach_donor_disclosures(db, graph, jurisdiction)
+        if jurisdiction == "federal":
+            select_federal_receipts(graph["nodes"], federal_receipts)
         # Candidates are keyed by spelling, so two spellings of one resolved entity
         # come back as two identical records; publish one (money-donations-009).
         by_entity = {}
@@ -145,7 +195,7 @@ def disclosure_catalog(db, candidates):
                            "match": {"confidence": 0, "method": "unresolved", "href": None},
                            "returnReferences": refs,
                            "source_note": "Source reference only; no matching electoral return established."})
-    return {"version": 1, "donors": donors, "references": references}
+    return {"version": 2, "receiptSource": "graph/money-receipts.json", "donors": donors, "references": references}
 
 
 def main():
@@ -156,7 +206,9 @@ def main():
     db = sqlite3.connect("file:" + quote(str(Path(args.db).resolve()), safe="/") + "?mode=ro", uri=True)
     db.execute("PRAGMA query_only=ON")
     try:
-        result = disclosure_catalog(db, published_references(Path(args.public)))
+        public = Path(args.public)
+        receipts = json.loads((public / "graph/money-receipts.json").read_text())
+        result = disclosure_catalog(db, published_references(public), receipts)
         print(json.dumps(result, ensure_ascii=False, separators=(",", ":")))
     finally:
         db.close()

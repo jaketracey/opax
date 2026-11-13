@@ -186,7 +186,7 @@ test('search snippets: donor and flow records give the typed figure with the sco
   const pratt = published.nodes.find(n => n.id === PRATT);
   const record = donorSearchRecord('federal', pratt);
   assert.match(record.snippet, /\$19\.6m|\$19,572,876|19\.57/);
-  assert.match(record.snippet, /across 120 records\./);
+  assert.match(record.snippet, /across 120 receipts\./);
   assert.ok(record.snippet.includes(SCOPE));
   assert.doesNotMatch(record.snippet, /31\.7m|221 records/);
   const state = donorSearchRecord('qld', {id: 'donor:x', kind: 'donor', label: 'Example Pty Ltd', total: 500, count: 2, firstYear: 2020, lastYear: 2021});
@@ -327,7 +327,7 @@ test('donors directory: Pratt Holdings at $19.6m across 120 receipts, Liberal an
   const qld = await readPublic('/graph/money.qld.json');
   const build = async files => {
     const context = appContext({
-      donorViewReady: Promise.resolve(), loadMoneyFile: async jur => files[jur] ?? {nodes: []}, loadAccess: async () => ({}), loadFits: async () => ({}),
+      donorViewReady: Promise.resolve(), loadMoneyData: async () => files.federal, loadMoneyFile: async jur => files[jur] ?? {nodes: []}, loadAccess: async () => ({}), loadFits: async () => ({}),
       receiptGraph, receiptGraphScope, STATE_NOT_SUMMED: '', byNumDesc: () => () => 0, byName: () => 0, moneyFor: () => 0,
     });
     runInNewContext(`${await appFunctions(['buildDonorsDirectory', 'normName', 'industryLabel'])}\nthis.directory=buildDonorsDirectory;`, context);
@@ -350,7 +350,7 @@ test('donors directory: Pratt Holdings at $19.6m across 120 receipts, Liberal an
 test('app.js keeps one projected graph beside moneyData, from donor-views.js', async () => {
   const source = await readFile(new URL('../public/app.js', import.meta.url), 'utf8');
   assert.ok(source.includes('moneyReceipts = module.receiptGraph(d);'));
-  assert.ok(source.includes('({donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);'));
+  assert.ok(source.includes('({donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,receiptTypeLine,receiptFigures,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);'));
 });
 
 // ---- Games: the ledger, the quiz's donor and industry questions, words per dollar ----
@@ -533,11 +533,11 @@ test('Ask money_totals: never a $0 donor row; a flow only the donor declared is 
   assert.ok(ranked.rows.every(r => r.total_aud > 0));
 });
 
-test('donors directory: no row at $0; declared-only donors carry the labelled line; off-map federal rows say they are record totals', async () => {
+test('donors directory: no row at $0; declared-only donors carry the labelled line; off-map federal rows retain selected receipt totals', async () => {
   const index = await readPublic('/graph/donor-index.json');
   const graphs = {federal: published, qld: await readPublic('/graph/money.qld.json'), vic: await readPublic('/graph/money.vic.json'), tas: await readPublic('/graph/money.tas.json')};
   const context = appContext({
-    donorViewReady: Promise.resolve(), loadMoneyFile: async jur => graphs[jur], loadAccess: async () => ({}), loadFits: async () => ({}),
+    donorViewReady: Promise.resolve(), loadMoneyData: async () => graphs.federal, loadMoneyFile: async jur => graphs[jur], loadAccess: async () => ({}), loadFits: async () => ({}),
     receiptGraph, receiptGraphScope, STATE_NOT_SUMMED: '', byNumDesc: () => () => 0, byName: () => 0, moneyFor: () => 0,
     donorViewIndex: donorLookup(index.donors), donorGroupColour: () => '#000', donorNameHTML: name => name, entityHrefAttr: href => `href="${href}"`,
     anyPartyDotHTML: () => '', yearSpan: (a, b) => `${a}-${b}`,
@@ -557,13 +557,15 @@ test('donors directory: no row at $0; declared-only donors carry the labelled li
   }
   assert.ok(directory.filters.find(f => f.key === 'jur').test(declared[0][0], 'federal'), 'still listed as disclosed to the AEC');
   const offMap = html.filter(([d]) => d.recordMeasure && d.money.federal);
-  assert.ok(offMap.length > 100);
-  for (const [d, row] of offMap) assert.ok(row.includes('All federal disclosure records, as given by both donor and party, so a gift can appear twice') && row.includes('AEC records'), d.label);
+  assert.equal(offMap.length, 0, "federal retained records now carry selected typed receipts");
+  const linc = html.find(([d]) => d.label === "Linc Energy");
+  assert.deepEqual([linc[0].money.federal.total,linc[0].money.federal.count],[357799,9]);
+  assert.ok(!linc[1].includes("AEC records"));
   const onMap = html.find(([d]) => d.label === 'Pratt Holdings Pty Ltd')[1];
   assert.ok(onMap.includes('AEC returns') && !onMap.includes('AEC records'));
 });
 
-test('search: no donor or receipt record says $0.00; declared-only donors carry the labelled line; off-map federal donors say they are record totals', async () => {
+test('search: no donor or receipt record says $0.00; declared-only donors carry the labelled line; off-map federal donors say they are selected receipts', async () => {
   for (const n of published.nodes.filter(n => n.kind === 'donor')) assert.doesNotMatch(donorSearchRecord('federal', n).snippet, ZERO, n.label);
   assert.equal(donorSearchRecord('federal', published.nodes.find(n => n.id === GOLDMAN)).snippet, `Finance. ${DONOR_DECLARED_ONLY}.`);
   assert.equal(donorSearchRecord('federal', PUBLIC_ONLY[0]).snippet, `Individual. ${PUBLIC_FUNDING_ONLY}.`);
@@ -573,7 +575,7 @@ test('search: no donor or receipt record says $0.00; declared-only donors carry 
   for (const file of ['money.json', 'money.qld.json', 'money.vic.json', 'money.tas.json']) for (const n of (await readPublic('/graph/' + file)).nodes) onMap.add(n.id);
   for (const n of index.donors) if (n.kind !== 'reference' && !onMap.has(n.id)) assert.doesNotMatch(donorSearchRecord(n.jurisdiction || 'federal', n).snippet, ZERO, n.label);
   const offMap = index.donors.find(n => n.kind === 'donor' && (n.jurisdiction || 'federal') === 'federal' && !onMap.has(n.id) && n.total > 0);
-  assert.match(donorSearchRecord('federal', offMap).snippet, /records\. All federal disclosure records, as given by both donor and party, so a gift can appear twice\.$/);
+  assert.match(donorSearchRecord('federal', offMap).snippet, /receipts\. All receipt types.*as the parties reported them in federal returns\.$/);
   const source = await readFile(new URL('../../scripts/build_search_catalog.mjs', import.meta.url), 'utf8');
   assert.ok(source.includes('   if(!hasPartyReceipts(e))continue;'), 'receipt records use the same predicate');
 });

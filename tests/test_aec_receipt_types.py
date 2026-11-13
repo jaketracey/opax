@@ -647,3 +647,33 @@ def test_uncapped_money_export_is_independent_of_drawing_cap_and_keeps_receipt_r
     assert full['meta']['uncapped'] is True
     assert not any(n['label'] in ('Example Opaque Payer', 'Electoral Commission Example', 'Labor Branch Example')
                    and n.get('by_type', {}).get('donation_received') for n in full['nodes'])
+
+
+def test_retained_donor_export_uses_uncapped_selection_and_keeps_receipt_types(tmp_path):
+    from scripts.export_money_receipts import export_receipts
+    from scripts.export_donor_disclosures import disclosure_catalog
+    path = tmp_path / 'db'
+    db = database(path)
+    rows = {'Detailed Receipts.csv': [annual(Value='150'), annual('Other Receipt', Value='900'),
+                                     annual('Loan', Value='800'), annual('Public Funding', Value='700')],
+            'Donations Made.csv': [{'Financial Year': '2020-2021', 'Donor Name': 'Example Mining Ltd',
+                                   'Donation Made To': 'Example Party', 'Value': '150'}]}
+    donations.process_zip(db, archive('AllAnnualData', rows), 'AllAnnualData')
+    load(db, 'AllElectionsData', {})
+    load(db, 'AllReferendumData', {})
+    db.execute("UPDATE donations SET recipient_canonical='Labor',industry='mining'")
+    db.commit()
+    full, _ = export_receipts(db, export(path))
+    candidate = {'id': 'donor:example', 'label': 'Example Mining Ltd', 'kind': 'donor', 'aliases': [], 'references': []}
+    db.execute('CREATE TABLE ext_donations(donor_name,amount,financial_year,source,source_record_id,source_url,disclosure_type,jurisdiction,recipient_party)')
+    [retained] = disclosure_catalog(db, [candidate], full)['donors']
+    assert (retained['total'], retained['count']) == (1850, 3)
+    assert retained['by_type'] == {'donation_received': 150, 'other_receipt': 900, 'loan': 800}
+    assert retained['by_type_year']['2020-21']['donation_received'] == [150, 1]
+    # A published name without any eligible recipient receipt keeps its provenance,
+    # but declarations / excluded rows acquire no receipt total.
+    [unselected] = disclosure_catalog(db, [candidate], {'meta': {'uncapped': True}, 'nodes': []})['donors']
+    assert unselected['by_type'] == {}
+    assert 'total' not in unselected and 'count' not in unselected
+    with pytest.raises(ValueError, match='Uncapped'):
+        disclosure_catalog(db, [candidate], {'meta': {}, 'nodes': []})

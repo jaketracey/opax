@@ -25,6 +25,8 @@ Branch `im/ask-money-uncapped`, based on `origin/main` at `d15bd2706`.
 | State Ask/Explain figures | State graphs' selected map edges, without federal typed receipt semantics | Same state map selection; scope says the map shows only the largest donors |
 | Actual map, map cards, map Connections, journeys, homepage map fallback and map crawl summary | Capped drawing graph | Same cap and amounts; totals carry “on the map, which shows only the largest donors” |
 
+The [off-map donor follow-up](2026-11-14-off-map-donor-receipts.md) also moves the retained donor export/index, factual donor directory and funding-record ledger/CSV to this uncapped selection. It reconciles Linc and Nimrod and records every retained total that changes.
+
 Other quiz templates use report speech counts/timelines, roster/portraits and published corpus/year summaries, rather than money edges. Ask's grants, contracts, expenses and pay tools read their own published records; this change does not substitute receipt totals for those measures.
 
 ## Selection and audit
