@@ -53,9 +53,10 @@ export interface OpaxTextProps extends TextProps {
    */
   tone?: TextTone;
   /**
-   * Never break a word across lines. React Native has no hyphenation on iOS,
-   * so at large text sizes this text steps its own scale down, only as far as
-   * its longest word needs and never below the reader's default size.
+   * Keep words whole. React Native has no hyphenation on iOS, so this text
+   * steps its own scale down only after a measured mid-word break, as far as
+   * its longest word needs, with an 11pt floor.
+   * URLs and email addresses wrap at full size instead of stepping down.
    * Headings, control labels and field labels use it.
    */
   wordSafe?: boolean;
@@ -287,11 +288,10 @@ function provenToFit(state: WordSafeState): WordSafeState {
 /**
  * The state after one line measurement. Only the generation now drawn counts,
  * and only for this text. The cap only steps down, in 10% steps, after a
- * mid-word break measured at the size now drawn. It runs only above the
- * reader's default text size (fontScale above 1); from there it may step
- * below the role's default size, to `floor` (wordSafeFloor), when a word is
- * still wider than its column (a layout from a larger size delivered late
- * included). The first measurement must
+ * mid-word break measured at the size now drawn. At any reader text size it
+ * may step below the role's default size, to `floor` (wordSafeFloor), when a
+ * word is still wider than its column (a layout from a larger size delivered
+ * late included). The first measurement must
  * also match the expected full scale when native conversion is available.
  * Without it, retain the measurement-backed baseline used by older binaries.
  * Returns `state` itself when nothing changes.
@@ -302,14 +302,13 @@ export function wordSafeOnLines(
   lines: readonly { text: string; width: number; height: number }[],
   content: string,
   baseLineHeight: number,
-  fontScale: number,
   validateScale = true,
   floor = 1,
 ): WordSafeState {
   if (at.key !== state.key || at.gen !== state.gen || !lines.length)
     return state;
   if (!Number.isFinite(state.full) || state.full < 0) return state;
-  if (fontScale <= 1 || !state.fullFrame) return state;
+  if (!state.fullFrame) return state;
   if (compact(lines.map((line) => line.text).join('')) !== compact(content))
     return state;
   const measuredAt = lineScale(lines[0]!.height, baseLineHeight);
@@ -389,7 +388,7 @@ export function Text({
   variant = 'body',
   tone,
   style,
-  wordSafe = false,
+  wordSafe: wantsWordSafe = false,
   tabular: tabularProp = false,
   monospace = false,
   onTextLayout,
@@ -433,6 +432,12 @@ export function Text({
   // (nested text included, such as a field's "(required)"): any change starts
   // again from full size, and so does a wider column (wordSafeOnFrame).
   const content = textContent(props.children);
+  // Addresses need character wrapping, including inside generic row text.
+  const wordSafe =
+    wantsWordSafe &&
+    !/(?:\b[a-z][a-z\d+.-]*:\/\/|\bwww\.|[^\s@]+@[^\s@]+|\b[a-z\d-]+\.[a-z]{2,}(?:[/?#]\S*)?(?=\s|$))/i.test(
+      content,
+    );
   const baseLineHeight = role.lineHeight + LINE_HEIGHT_NUDGE;
   const androidCap = androidSizeCap(
     baseLineHeight,
@@ -560,7 +565,6 @@ export function Text({
         lines,
         content,
         role.lineHeight + LINE_HEIGHT_NUDGE,
-        fontScale,
         expectedFull !== undefined,
         wordSafeFloor(role.fontSize),
       ),

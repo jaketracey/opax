@@ -1,7 +1,12 @@
 import { router } from 'expo-router';
 import { useNavigation, usePreventRemove } from 'expo-router/react-navigation';
 import { act } from 'react';
-import { Keyboard, Platform, StyleSheet } from 'react-native';
+import {
+  Keyboard,
+  Platform,
+  StyleSheet,
+  Text as NativeText,
+} from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { codeFigureCeiling } from '../src/design/controls';
 import { Screen } from '../src/design/layout';
@@ -11,8 +16,10 @@ import {
   ErrorState,
   Field,
   InlineError,
+  Text,
 } from '../src/design/primitives';
 import { AccountGroups } from '../src/features/account/AccountGroups';
+import { textStyles } from '../src/design/tokens';
 import { AccountScreen } from '../src/features/account/AccountScreen';
 import {
   codeDigits,
@@ -561,6 +568,23 @@ describe('Account groups', () => {
 });
 
 describe('Identity rows at accessibility sizes', () => {
+  test('a long signed-in email wraps at full size with word-safe fitting disabled', async () => {
+    mockFontScale = 1;
+    const email = 'averylongexampleperson@archive.example.invalid';
+    mocked.status.mockResolvedValue({ ok: true, value: status() });
+    const renderer = await render(<AccountGroups />);
+    await act(async () => codeAccepted(email, status()));
+    const identity = renderer.root.findByProps({ testID: 'account-identity' });
+    expect(identity.findByType(Text).props.wordSafe).toBe(false);
+    const address = identity.findByType(NativeText);
+    expect(address.props.onTextLayout).toBeUndefined();
+    expect(address.props.numberOfLines).toBeUndefined();
+    expect(address.props.adjustsFontSizeToFit).toBeUndefined();
+    expect(StyleSheet.flatten(address.props.style).fontSize).toBe(
+      textStyles.name.fontSize,
+    );
+    expect(address.props.children).toBe(email);
+  });
   const flat = (renderer: Renderer, testID: string) =>
     StyleSheet.flatten(
       renderer.root.find(

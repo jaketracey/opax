@@ -91,6 +91,40 @@ test.each(['file', 'width', 'licence', 'source_url'])(
     expect(() => decodePictures(duplicate)).toThrow();
   },
 );
+test('an optional credit_url is decoded alongside the named credit', () => {
+  const credit_url = 'https://archive.example.org/photos/2025';
+  const photo = { ...raw['2025'][0], credit: 'Example Archive', credit_url };
+  expect(decodePictures({ '2025': [photo] })['2025']![0]).toMatchObject({
+    credit: 'Example Archive',
+    credit_url,
+  });
+  expect(
+    decodePictures({ '2025': [raw['2025'][0]] })['2025']![0]!.credit_url,
+  ).toBeUndefined();
+});
+
+test.each([
+  'javascript:alert(1)',
+  'ftp://archive.example.org/photo',
+  'https://reader:password@archive.example.org/photo',
+  'http://reader@archive.example.org/photo',
+  'not an address',
+  42,
+])(
+  'a bad credit_url %j drops only that field and preserves the feed',
+  (credit_url) => {
+    const feed = {
+      ...raw,
+      '2025': raw['2025'].map((p: object, i: number) =>
+        i === 0 ? { ...p, credit_url } : p,
+      ),
+    };
+    const decoded = decodePictures(feed);
+    expect(decoded['2025']![0]!.credit_url).toBeUndefined();
+    expect(decoded).toEqual(decodePictures(raw));
+    expect(Object.values(decoded).flat()).toHaveLength(189);
+  },
+);
 test.each([
   '/years/pictures.json',
   '/years/pictures/1998/swanson-dock-picket.webp',

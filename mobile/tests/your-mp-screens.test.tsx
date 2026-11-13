@@ -841,10 +841,10 @@ test.each(['federal', 'state'])(
         variant: 'footnote',
         tone: 'navy',
         children: 'corrections@opax.com.au',
-        numberOfLines: 1,
-        adjustsFontSizeToFit: true,
-        minimumFontScale: 0.5,
       });
+      expect(address!.props.numberOfLines).toBeUndefined();
+      expect(address!.props.adjustsFontSizeToFit).toBeUndefined();
+      expect(address!.props.wordSafe).toBeUndefined();
       const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined);
       await act(async () => correction.props.onPress());
       expect(open).toHaveBeenCalledWith(CORRECTION_CONTACT);
