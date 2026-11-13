@@ -196,18 +196,54 @@ export function sittingLine(file: SittingDays, now: Date): SittingLine | null {
       years: [yearOf(today)],
     };
   }
+  const next = nextListed(file, today);
+  if (!next) return null;
+  return {
+    kind: 'next',
+    text: `${nextWords[houses(next.day)]} ${next.words}`,
+    today,
+    day: next.day.date,
+    years: [...new Set([yearOf(today), yearOf(next.day.date)])],
+  };
+}
+
+/**
+ * The first listed day after `today` the calendar publishes, before its
+ * coverage and expiry end, with its words ("Monday 23 November"), or null.
+ */
+function nextListed(
+  file: SittingDays,
+  today: string,
+): { day: SittingDay; words: string } | null {
   const end =
     file.expires < file.coverage.last ? file.expires : file.coverage.last;
   const next = file.days.find((d) => d.date > today && d.date <= end);
   const words = next ? calendarDayWords(next.date) : null;
   if (!next || !words || !publishedYear(file, yearOf(next.date))) return null;
-  return {
-    kind: 'next',
-    text: `${nextWords[houses(next)]} ${words}`,
-    today,
-    day: next.date,
-    years: [...new Set([yearOf(today), yearOf(next.date)])],
-  };
+  return { day: next, words };
+}
+
+export interface NextSitting {
+  /** Who sits that day. */
+  houses: 'both' | 'house' | 'senate';
+  /** "Tuesday 17 November". */
+  words: string;
+}
+
+/**
+ * The next sitting day after today, by the sitting line's own rule (the
+ * calendar's timezone, coverage, expiry and published years), for Today's
+ * closing line (sweep 3, item 7). Unlike the line it looks past a sitting
+ * today. Null whenever the calendar cannot say.
+ */
+export function nextSitting(file: SittingDays, now: Date): NextSitting | null {
+  const today = calendarDayIn(file.timezone, now);
+  if (!today) return null;
+  if (today > file.expires) return null;
+  if (today < file.coverage.first || today > file.coverage.last) return null;
+  if (!publishedYear(file, yearOf(today))) return null;
+  const next = nextListed(file, today);
+  return next ? { houses: houses(next.day), words: next.words } : null;
 }
 
 type Houses = Exclude<SittingKind, 'next'>;

@@ -2,7 +2,8 @@
 import { copy } from '../src/design/copy';
 
 test('shared copy keeps shell wording and the shorter website menu label', () => {
-  const { savedCopyNote, offline, couldNotLoad, ...strings } = copy;
+  const { savedCopyNote, offline, couldNotLoad, todayEnding, ...strings } =
+    copy;
   expect(strings).toEqual({
     done: 'Done',
     cancel: 'Cancel',
@@ -41,6 +42,17 @@ test('shared copy keeps shell wording and the shorter website menu label', () =>
   );
   expect(couldNotLoad('Bills')).toBe("Bills couldn't be loaded.");
   expect(couldNotLoad('the bill')).toBe("The bill couldn't be loaded.");
+  expect(todayEnding('Saturday 14 November')).toBe(
+    "That's the record for Saturday 14 November.",
+  );
+  expect(
+    todayEnding('Saturday 14 November', {
+      houses: 'both',
+      words: 'Tuesday 17 November',
+    }),
+  ).toBe(
+    "That's the record for Saturday 14 November. Parliament next sits on Tuesday 17 November.",
+  );
   expect(Object.isFrozen(copy)).toBe(true);
 });
 test('date-only values retain the calendar day, and dates accept epoch or Date', () => {

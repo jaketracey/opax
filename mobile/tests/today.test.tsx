@@ -7,6 +7,7 @@ import {
 } from 'expo-router/react-navigation';
 import {
   ActionSheetIOS,
+  Dimensions,
   Platform,
   RefreshControl,
   ScrollView,
@@ -24,7 +25,9 @@ import { rhythm } from '../src/design/tokens';
 import { OfflineLine } from '../src/design/states';
 import Today from '../src/features/Today';
 import { WelcomePage } from '../src/features/welcome/Welcome';
-import { Masthead } from '../src/features/today/Masthead';
+import { AustraliaDots } from '../src/features/today/AustraliaDots';
+import { TodayFoot } from '../src/features/today/Foot';
+import { Masthead, mastheadDate } from '../src/features/today/Masthead';
 import { useOverview as useElectionOverview } from '../src/features/vic-election/reads';
 import { decodeOverview } from '../src/features/vic-election/decoders';
 import electionOverview from '../scripts/fixtures/vic-election/overview.json';
@@ -911,6 +914,84 @@ describe('the invitation’s line', () => {
     expect(
       invitationBody(seat({ name: 'New South Wales', chamber: 'senate' })),
     ).toBe('Choose your current federal electorate.');
+  });
+});
+
+describe('the first second and the last line (sweep 3, lane A)', () => {
+  const restore: (() => void)[] = [];
+  afterEach(() => restore.splice(0).forEach((undo) => undo()));
+  const hosts = (r: TestRenderer.ReactTestRenderer, id: string) =>
+    r.root.findAll((n) => typeof n.type === 'string' && n.props.testID === id);
+  test('the dot map draws in the first frame, neutral, holding the date’s place; the seat then tints it', async () => {
+    setUp({ seat: true, cached: { date: addDays(today, -1) } });
+    // A compact phone: the map is not drawn on a regular-width phone.
+    const window = Dimensions.get('window');
+    const screen = Dimensions.get('screen');
+    Dimensions.set({
+      window: { width: 402, height: 874, scale: 3, fontScale: 1 },
+      screen: { width: 402, height: 874, scale: 3, fontScale: 1 },
+    });
+    restore.push(() => Dimensions.set({ window, screen }));
+    let answer!: (choice: Awaited<ReturnType<typeof loadChoice>>) => void;
+    jest.mocked(loadChoice).mockReturnValue(
+      new Promise((resolve) => {
+        answer = resolve;
+      }),
+    );
+    const r = await render(<Today />);
+    // The seat is still being read: the launch skeleton is up, and the map
+    // with its clearance already sits ahead of the date (crop-01: none, and
+    // the date dropped 16 pt when it came).
+    expect(hosts(r, 'today-launching')).toHaveLength(1);
+    const dots = r.root.findByType(AustraliaDots);
+    expect(dots.props).toMatchObject({ state: null, neutral: true });
+    const masthead = hosts(r, 'today-masthead')[0]!;
+    const order = masthead
+      .findAll(
+        (n) =>
+          typeof n.type === 'string' &&
+          ['today-australia-dots-clearance', 'today-screen-message'].includes(
+            n.props.testID,
+          ),
+      )
+      .map((n) => n.props.testID);
+    expect([...new Set(order)]).toEqual([
+      'today-australia-dots-clearance',
+      'today-screen-message',
+    ]);
+    await act(async () =>
+      answer({ version: 1, seatId: grayndler.electorate_id, stateSeatIds: [] }),
+    );
+    expect(r.root.findByType(AustraliaDots).props).toMatchObject({
+      state: 'nsw',
+      neutral: false,
+    });
+    expect(hosts(r, 'today-australia-dots-clearance')).toHaveLength(1);
+  });
+
+  test('the page ends on the day’s sentence, above the independence line', async () => {
+    setUp({ cached: { date: addDays(today, -1) } });
+    const r = await render(<Today />);
+    const foot = r.root.findByType(TodayFoot);
+    expect(foot.props.ending).toMatchObject({ attempt: 0 });
+    // The masthead's own date; no sitting calendar in this suite, so the
+    // date alone.
+    expect(strings(hosts(r, 'today-ending')[0]!)).toBe(
+      `That's the record for ${mastheadDate(r.root.findByType(Masthead).props.now)}.`,
+    );
+  });
+
+  test('no ending while the masthead says it shows a saved copy', async () => {
+    setUp({ edition: { ...editionAged(1), savedAt: 1 } });
+    jest.mocked(useNetworkState).mockReturnValue({ isConnected: false });
+    try {
+      const r = await render(<Today />);
+      expect(r.root.findAllByType(OfflineLine)).toHaveLength(1);
+      expect(r.root.findByType(TodayFoot).props.ending).toBeUndefined();
+      expect(hosts(r, 'today-ending')).toHaveLength(0);
+    } finally {
+      jest.mocked(useNetworkState).mockReturnValue({});
+    }
   });
 });
 

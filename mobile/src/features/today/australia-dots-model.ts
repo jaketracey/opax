@@ -76,8 +76,23 @@ export function cycleLevel(group: number, seconds: number): number {
   return d < 1.35 ? smooth(d / 0.35) * (1 - smooth((d - 1) / 0.35)) : 0;
 }
 
+/** No seat: the highlight walks the states, west to east. */
+export const DOT_CYCLE = -1;
+/**
+ * The seat is not known yet (sweep 3, item 1): every state at the navy base,
+ * no bronze and no clock, so the map can draw from Today's first frame and
+ * the seat's tint (or the walk) fades in once the seat read answers.
+ */
+export const DOT_NEUTRAL = -2;
+
+/** The highlight's target for a seat's state, its absence, or not knowing. */
+export function dotTarget(state: DotState | null, neutral = false): number {
+  if (neutral) return DOT_NEUTRAL;
+  return state ? dotStates.indexOf(state) : DOT_CYCLE;
+}
+
 export interface DotHighlight {
-  /** -1 cycles; otherwise an index into dotStates. */
+  /** DOT_CYCLE walks, DOT_NEUTRAL holds none; otherwise an index into dotStates. */
   target: number;
   /** A snapshot allows an interrupted crossfade to continue without a jump. */
   from: number[];
@@ -94,7 +109,8 @@ export function dotLevel(
   'worklet';
   const held = group === highlight.target ? 1 : 0;
   if (reduced) return held;
-  const target = highlight.target < 0 ? cycleLevel(group, seconds) : held;
+  const target =
+    highlight.target === DOT_CYCLE ? cycleLevel(group, seconds) : held;
   if (highlight.changedAt < 0) return target;
   const k = smooth((seconds - highlight.changedAt) / dotCrossfadeSeconds);
   return (highlight.from[group] ?? 0) * (1 - k) + target * k;
@@ -126,7 +142,7 @@ export function dotClockNeeded(
     focused &&
     foreground &&
     !reduced &&
-    (highlight.target < 0 ||
+    (highlight.target === DOT_CYCLE ||
       (highlight.changedAt >= 0 &&
         seconds - highlight.changedAt < dotCrossfadeSeconds))
   );

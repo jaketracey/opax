@@ -296,6 +296,33 @@ export default function Today() {
   const nothingSaved =
     reports.nothingSaved && edition.block?.status === 'error';
 
+  const electionSavedAt =
+    election.record &&
+    todayWindow(electionNow) &&
+    todayEligible(
+      choice,
+      directory?.electorates.data.electorates ?? [],
+      Intl.DateTimeFormat().resolvedOptions().timeZone,
+    ) &&
+    offline
+      ? election.record.savedAt
+      : null;
+
+  const offlineAt = [
+    electionSavedAt,
+    reports.savedAt,
+    offline ? reports.cachedAt : null,
+    edition.block &&
+    (edition.block.stale || (offline && edition.block.status === 'ready'))
+      ? edition.block.savedAt
+      : null,
+    directory?.electorates.stale || (offline && !!home)
+      ? directory?.electorates.savedAt
+      : null,
+  ]
+    .filter((d): d is number => typeof d === 'number')
+    .sort((a, b) => a - b)[0];
+
   const slot = (name: TodaySlot): ReactNode => {
     if (!order) return null;
     switch (name) {
@@ -401,36 +428,19 @@ export default function Today() {
           </Fragment>
         );
       case 'foot':
-        return <TodayFoot key={name} />;
+        // The page ends on a sentence only when it shows today's record.
+        return (
+          <TodayFoot
+            key={name}
+            ending={
+              nothingSaved || offlineAt !== undefined
+                ? undefined
+                : { now, attempt }
+            }
+          />
+        );
     }
   };
-
-  const electionSavedAt =
-    election.record &&
-    todayWindow(electionNow) &&
-    todayEligible(
-      choice,
-      directory?.electorates.data.electorates ?? [],
-      Intl.DateTimeFormat().resolvedOptions().timeZone,
-    ) &&
-    offline
-      ? election.record.savedAt
-      : null;
-
-  const offlineAt = [
-    electionSavedAt,
-    reports.savedAt,
-    offline ? reports.cachedAt : null,
-    edition.block &&
-    (edition.block.stale || (offline && edition.block.status === 'ready'))
-      ? edition.block.savedAt
-      : null,
-    directory?.electorates.stale || (offline && !!home)
-      ? directory?.electorates.savedAt
-      : null,
-  ]
-    .filter((d): d is number => typeof d === 'number')
-    .sort((a, b) => a - b)[0];
 
   return (
     <Screen
@@ -448,14 +458,15 @@ export default function Today() {
         now={now}
         offlineSavedAt={offlineAt ?? null}
         sitting={<SittingLine now={now} attempt={attempt} />}
+        // From the first frame, neutral until the seat read answers, so the
+        // map's clearance never moves the date (sweep 3, item 1).
         mark={
-          seat.status !== 'loading' ? (
-            <AustraliaDots
-              state={electorateDotState(home)}
-              scroll={dots.scroll}
-              expandedHeader={dots.expandedHeader}
-            />
-          ) : null
+          <AustraliaDots
+            state={electorateDotState(home)}
+            neutral={seat.status === 'loading'}
+            scroll={dots.scroll}
+            expandedHeader={dots.expandedHeader}
+          />
         }
       />
       <TodayReports value={reports}>

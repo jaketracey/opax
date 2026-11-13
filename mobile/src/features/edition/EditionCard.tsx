@@ -5,7 +5,7 @@ import { Icon } from '../../design/icon';
 import { LoadingStatus, Skeleton } from '../../design/states';
 import { SourceLine } from '../../design/source';
 import { Text } from '../../design/text';
-import { colors, minimumTarget, radii } from '../../design/tokens';
+import { colors, hairline, minimumTarget, radii } from '../../design/tokens';
 import { editionRoute } from '../../navigation/routes/edition';
 import { presentSource } from '../../navigation/sheets';
 import { counted, formatDate } from '../../design/format';
@@ -17,37 +17,59 @@ import { editionMenu, shareEdition } from './actions';
 import { useEditionSubject } from './data';
 import { Plate } from './Plate';
 
+/**
+ * The edition card's outline while it loads (sweep 3, item 1): the raised
+ * card with its corners, a hairline edge and, on Today, the card's shadow;
+ * the plate a block one step darker than the bars. Sunken on sunken, the
+ * plate vanished into Today's ground and left a square-topped body.
+ */
 export function EditionSkeleton({ story = false }: { story?: boolean }) {
+  const dark = useColorScheme() === 'dark';
   return (
-    <LoadingStatus
-      testID={story ? 'edition-loading' : 'today-edition-loading'}
-      accessibilityLabel="Loading the daily edition"
-      accessible
-      accessibilityRole="progressbar"
-      style={styles.skeleton}
+    <View
+      testID={story ? undefined : 'today-edition-loading-outline'}
+      style={!story && !dark ? styles.shadow : undefined}
     >
-      {/* Laid out as the card is: the plate full-bleed, then the body and
-          the source line inside the card's padding, so no bar meets the
-          card's edges (build 61, nit 8). */}
-      <View style={[styles.plateSkeleton, { height: story ? 220 : 196 }]} />
-      <View
-        testID={story ? undefined : 'today-edition-loading-body'}
-        style={[styles.body, story ? styles.storyBody : null]}
+      <LoadingStatus
+        testID={story ? 'edition-loading' : 'today-edition-loading'}
+        accessibilityLabel="Loading the daily edition"
+        accessible
+        accessibilityRole="progressbar"
+        style={styles.skeleton}
       >
-        <Skeleton shape="text" count={3} label="Loading the daily edition" />
-        {story ? <Skeleton shape="card" count={1} /> : null}
-      </View>
-      {!story ? (
-        <View style={styles.source}>
-          <View style={styles.sourceBand}>
-            <View
-              testID="today-edition-loading-source"
-              style={styles.sourceSkeleton}
-            />
-          </View>
+        {/* Laid out as the card is: the plate full-bleed, then the body and
+            the source line inside the card's padding, so no bar meets the
+            card's edges (build 61, nit 8). */}
+        <View
+          testID={story ? undefined : 'today-edition-loading-plate'}
+          style={[styles.plateSkeleton, { height: story ? 220 : 196 }]}
+        />
+        <View
+          testID={story ? undefined : 'today-edition-loading-body'}
+          style={[styles.body, story ? styles.storyBody : null]}
+        >
+          <Skeleton shape="text" count={3} label="Loading the daily edition" />
+          {story ? <Skeleton shape="card" count={1} /> : null}
         </View>
-      ) : null}
-    </LoadingStatus>
+        {!story ? (
+          <View style={styles.source}>
+            <View style={styles.sourceBand}>
+              <View
+                testID="today-edition-loading-source"
+                style={styles.sourceSkeleton}
+              />
+            </View>
+          </View>
+        ) : null}
+        {/* Drawn over the content, so the hairline adds nothing to the
+            card's geometry and the loaded card lands where this one was. */}
+        <View
+          testID={story ? undefined : 'today-edition-loading-edge'}
+          pointerEvents="none"
+          style={styles.edge}
+        />
+      </LoadingStatus>
+    </View>
   );
 }
 
@@ -195,7 +217,16 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: colors.raised,
   },
-  plateSkeleton: { backgroundColor: colors.sunken },
+  // One step darker than the bars (sunken), so the plate reads on Today's
+  // sunken ground and the card's top corners show.
+  plateSkeleton: { backgroundColor: colors.dividerSubtle },
+  edge: {
+    ...StyleSheet.absoluteFill,
+    borderRadius: radii.container,
+    borderCurve: 'continuous',
+    borderWidth: hairline,
+    borderColor: colors.dividerSubtle,
+  },
   storyBody: { paddingBottom: 20 },
   // The source line's 44 pt band, its footnote centred.
   sourceBand: { minHeight: minimumTarget, justifyContent: 'center' },
