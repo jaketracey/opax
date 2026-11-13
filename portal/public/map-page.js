@@ -1,6 +1,6 @@
 const container = document.getElementById('map')
 try {
-  const { mountMoneyMap } = await import('/money-map.js?v=b257485bd7')
+  const { mountMoneyMap } = await import('/money-map.js?v=890b3994a2')
   document.getElementById('status')?.remove()
   // Embed testbed: /map.html?focus=party:Labor&chrome=mini exercises the
   // options subject pages use.

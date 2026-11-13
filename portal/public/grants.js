@@ -1,8 +1,9 @@
 import {hydrateRecordCore} from './record-core.js';
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=6f3407d116';
-import {loadDonorViewIndex} from './donor-views.js?v=1cc1ecb232';
-import {subjectUrl} from './canonical-urls.js?v=e32f13c6c8';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=dffa19bbff';
+import {loadDonorViewIndex} from './donor-views.js?v=9770cf1299';
+import {subjectUrl} from './canonical-urls.js?v=c40e3d805e';
 import {programKey, resolveProgram, resolveProgramId} from './facts/grant-programs.js?v=5b8dddc342';
+import { kindLabel } from './record-core-content.js'
 export {programKey, resolveProgram, resolveProgramId};
 /**
  * OPAX Who gets the grants — every published grant award, resolved to the
@@ -56,7 +57,7 @@ export {programKey, resolveProgram, resolveProgramId};
  */
 
 import { shortMoney as fmtMoney } from './format.js'
-import { sourceLineHTML } from './labels.js?v=75e6c65ff7'
+import { sourceLineHTML } from './labels.js?v=89dda4a520'
 
 /** Text into the source line's HTML fields (labels.js escapes only its own text fields). */
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) =>
@@ -70,13 +71,6 @@ const STYLE_ID = 'gr-styles'
 const NUM = new Intl.NumberFormat('en-AU')
 const AUD_FULL = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 })
 
-const KIND_LABELS = {
-  company: 'Company', association: 'Association / not-for-profit', trust: 'Trust',
-  partnership: 'Partnership', 'co-operative': 'Co-operative', council: 'Local council',
-  government: 'Government body', university: 'University / TAFE', 'health service': 'Health service',
-  'super fund': 'Super fund', union: 'Union', individual: 'Individual', undisclosed: 'Not disclosed',
-  other: 'Other',
-}
 const STATE_REGISTERS = { qld: 'ECQ (Queensland)', vic: 'VEC (Victoria)', tas: 'TEC (Tasmania)' }
 /** A party's name (or the code a register writes), lowercased, to [its dot's
  *  colour class, the short name a dense cell shows]. Sentence case: a code
@@ -96,9 +90,8 @@ const PARTY_MAP = {
 /** The shared short form (format.js), under the name the grants modules use. */
 export { fmtMoney }
 
-export function kindLabel (k) {
-  return KIND_LABELS[k] || (k ? k.charAt(0).toUpperCase() + k.slice(1) : 'Other')
-}
+/** A recipient kind in words; shared with the Worker's record core (record-core-content.js). */
+export { kindLabel }
 
 export function fyStart (fy) {
   const n = Number.parseInt(String(fy || '').slice(0, 4), 10)

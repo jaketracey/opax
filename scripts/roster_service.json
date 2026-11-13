@@ -148,6 +148,12 @@
           "note": "Reviewed first-term exception. Both already-cached ext_state_roster observations (fetched 21 September 2026) record this start with no end. Party comes separately from the NSW Council list of 25 September 2026. This exception does not assert party history for other members."
         }
       }
+    },
+    "sa_lc": {
+      "start": "2026-03-21",
+      "end": "2030-03-16",
+      "source_url": "https://www.legislation.sa.gov.au/lz?path=/c/a/constitution%20act%201934",
+      "note": "The current term of the Council: the periodic election of 21 March 2026 (56th Parliament) to the next one on 16 March 2030, both fixed by the Constitution Act 1934 (SA) s 28 as the third Saturday in March every four years. An MLC serves two terms, so only half the Council (11 seats) was elected in 2026; the other half was elected on 19 March 2022 and sits until 2030. The window does not split the halves: it only requires the Council list to be dated after the latest periodic election, and a list dated then names both halves. A member of the 2022 half is sitting because the 2026 list names them, not because of 2022; a member whose term ended in March 2026 is on no list inside the window. Casual vacancies are filled for the rest of the departing member's term and show on the next list."
     }
   }
 }

@@ -1,5 +1,5 @@
-import {donorDisclosure} from './donor-disclosure.js?v=6f3407d116';
-import {subjectUrl} from './canonical-urls.js?v=e32f13c6c8';
+import {donorDisclosure} from './donor-disclosure.js?v=dffa19bbff';
+import {subjectUrl} from './canonical-urls.js?v=c40e3d805e';
 import {moneyFlowType, filterMoneyEdges, readMoneyFilters} from './money-records.js';
 
 const labels={receipts:'Political receipts',contracts:'Contract values',grants:'Grant awards'};
@@ -9,7 +9,7 @@ export function filterMoneyConnectionView(graph,params) {
 }
 
 /** Source names and amounts are preserved; only confident donor matches link.
- * @returns {import('./datatable.js?v=893767f2bd').DataTableConfig} */
+ * @returns {import('./datatable.js?v=5fe413541f').DataTableConfig} */
 export function moneyConnectionsConfig(graph) {
   const nodes=new Map(graph.nodes.map(n=>[n.id,n]));
   const rows=[],types=new Set();
@@ -41,6 +41,8 @@ export function moneyConnectionsConfig(graph) {
       {key:'records',label:'Records',type:'count',facet:'range'},
       {key:'years',label:'Years',type:'text'},
     ],primaryLink:row=>row.to_href,
+    // Each row holds one of the money columns; the line names the giver and the years.
+    phone:{figure:values.map(column=>column.key),meta:['type',{key:'from',label:'From'},{key:'records',unit:['record','records']},'years']},
     actions:[{icon:'⌖',label:'Focus in map',href:row=>`#money-focus=${encodeURIComponent(row.focusId)}`}],
     export:{filename:'opax-map-connections.csv'}};
 }

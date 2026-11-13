@@ -1,8 +1,8 @@
-import {subjectUrl} from './canonical-urls.js?v=e32f13c6c8';
+import {subjectUrl} from './canonical-urls.js?v=c40e3d805e';
 /* Homepage adapters: source exports, never editorial selections. Each block's
    figures carry the date of the export they came from, in its source line. */
 import {shortDate} from './format.js';
-import {partyLabelHTML, statusLabelHTML, sourceLineHTML, coverageLineHTML} from './labels.js?v=75e6c65ff7';
+import {partyLabelHTML, statusLabelHTML, sourceLineHTML, coverageLineHTML} from './labels.js?v=89dda4a520';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const count = value => Number(value).toLocaleString('en-AU');
 const date = value => shortDate(String(value).slice(0,10));
@@ -75,8 +75,9 @@ export function declarationRowHTML(item, { photos = {}, parties = new Map() } = 
   return `<li class="hp-row hp-person-row">${portrait}<div class="hp-row-body">` +
     `<div class="hp-row-who"><h3 class="hp-row-name"><a href="${href('person', name)}">${esc(name)}</a></h3>${party}</div>` +
     `<p class="hp-row-text">“${esc(item.description)}”</p>` +
-    `<p class="hp-row-detail">${item.kind === 'deletion' ? `${statusLabelHTML('Removed')} ` : ''}${esc(kind)} · <span>recorded ${time(item.date)}</span>` +
-    `${source ? ` · <a href="${esc(source)}" rel="noopener" target="_blank" aria-label="Register entry for ${esc(name)}">Register</a>` : ''}</p>` +
+    // Each dot sits inside the unbroken part after it, so a wrapped line never ends in one.
+    `<p class="hp-row-detail">${item.kind === 'deletion' ? `${statusLabelHTML('Removed')} ` : ''}${esc(kind)} <span>· recorded ${time(item.date)}</span>` +
+    `${source ? ` <span>· <a href="${esc(source)}" rel="noopener" target="_blank" aria-label="Register entry for ${esc(name)}">Register</a></span>` : ''}</p>` +
     `</div></li>`;
 }
 export function reportCardHTML(r) {

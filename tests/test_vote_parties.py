@@ -559,6 +559,394 @@ class RosterListFile(unittest.TestCase):
             got = module.observations(root)
         self.assertEqual([(o["name"], o["party"], o["as_of"]) for o in got], [("Ivo Quarrington", "Labor", "2026-09-25")])
 
+    def test_a_recorded_hansard_print_is_kept_apart_from_aliases(self):
+        # A22: an SA Council list entry records the Hansard print ("I.Q. Arden"); it goes out as `prints`,
+        # never as an alias, so roster-party.js (which reads aliases) gives no initials row a party from it.
+        sys.path.insert(0, str(ROOT))
+        spec = importlib.util.spec_from_file_location("roster_list", ROOT / "scripts/export_roster_list_parties.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "scripts").mkdir()
+            (root / "scripts/roster_state_evidence.json").write_text(json.dumps({"snapshots": [
+                {"jurisdiction": "sa", "chamber": "sa_lc", "as_of": "2026-11-13", "source_url": LIST, "members": [
+                    {"name": "Ines Arden", "aliases": ["Ines Quella Arden"], "prints": ["I.Q. Arden"],
+                     "electorate": "South Australia", "party": "Labor"},
+                    {"name": "Otto Brack", "aliases": [], "electorate": "South Australia", "party": "Liberal"}]}]}))
+            (root / "scripts/roster_service.json").write_text(json.dumps({"service": [], "history": []}))
+            got = {o["name"]: o for o in module.observations(root)}
+        self.assertEqual(got["Ines Arden"]["prints"], ["I.Q. Arden"])
+        self.assertEqual(got["Ines Arden"]["aliases"], ["Ines Quella Arden"])
+        self.assertNotIn("prints", got["Otto Brack"])
+
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ---- dated Senate party records (Parliamentary Handbook) and reviewed per-record periods --------
+
+from contextlib import redirect_stderr  # noqa: E402
+import io  # noqa: E402
+import os  # noqa: E402
+from unittest import mock  # noqa: E402
+import urllib.error  # noqa: E402
+
+sys.path.insert(0, str(ROOT))
+import build_handbook_parties as H  # noqa: E402
+from parli.ingest import http as source_http  # noqa: E402
+
+
+def handbook_file(root, people, fetched="2026-11-13"):
+    path = Path(root) / "scripts/handbook_party_service.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(H.dump({"source": "fixture", "url": "https://example.test/handbook", "fetched": fetched,
+                            "chamber": "senate", "from": "2006-01-01", "note": "fixture", "people": people}))
+    return path
+
+
+def senator(phid, name, pid, periods):
+    return {"phid": phid, "pid": pid, "name": name, "names": [name], "current": False, "match": "fixture",
+            "service_end": None, "periods": [dict(zip(("party", "start", "end", "through"), p)) for p in periods]}
+
+
+# Invented: Quinn Harrowgate sat as a Liberal, left for a new party, then sat as an independent.
+HARROWGATE = senator("ZZ1", "Quinn Harrowgate", "99500", [
+    ("Liberal", "2006-05-04", "2017-02-07", None), ("Example Conservatives", "2017-02-07", "2019-06-25", None),
+    ("Independent", "2019-06-25", None, "2020-01-20")])
+# Invented: Avery Pellingham's party was renamed while the senator sat; Morwenna Tisdall has two periods with a gap.
+PELLINGHAM = senator("ZZ2", "Avery Pellingham", "99501", [
+    ("Independent", "2008-07-01", "2013-07-01", None), ("Nick Xenophon Team", "2013-07-01", None, "2017-10-31")])
+TISDALL = senator("ZZ3", "Morwenna Tisdall", "99502", [
+    ("Palmer United Party", "2014-07-01", "2014-11-24", None), ("Example Network", "2015-05-14", None, "2026-11-13")])
+
+
+def senate(key, date, members):
+    record = federal(key, date, members, "senate")
+    record.update(ayes=sum(m["vote"] == "aye" for m in members), noes=sum(m["vote"] == "no" for m in members))
+    return record
+
+
+def evidence_from(root, release=()):
+    """load_evidence over a fixture root, with a fixture release in place of the real one."""
+    with mock.patch.object(V, "release_evidence", lambda public: list(release)):
+        return V.load_evidence(Path(root), None)
+
+
+class SenatePartyRecords(unittest.TestCase):
+    def test_a_senate_switch_shows_the_party_held_on_each_date(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            handbook_file(tmp, [HARROWGATE])
+            evidence = evidence_from(tmp)
+        records = [senate("federal-senate-1", "2007-02-06", [labelled("Quinn Harrowgate", "Example Conservatives", "tvfy_99500")]),
+                   senate("federal-senate-2", "2018-03-01", [labelled("Quinn Harrowgate", "Example Conservatives", "tvfy_99500")]),
+                   senate("federal-senate-3", "2019-09-10", [labelled("Quinn Harrowgate", "Example Conservatives", "tvfy_99500")]),
+                   senate("federal-senate-4", "2017-02-07", [labelled("Quinn Harrowgate", "Example Conservatives", "tvfy_99500")])]
+        got = fill(records, evidence)
+        self.assertEqual([r["members"][0]["party"] for r in records],
+                         ["Liberal", "Example Conservatives", "Independent", "Example Conservatives"])
+        self.assertEqual(got[("federal-senate-1", "Quinn Harrowgate")], ("Liberal", "label-corrected"))
+        self.assertEqual(got[("federal-senate-2", "Quinn Harrowgate")][1], "label-agrees")
+        member = records[0]["members"][0]
+        self.assertEqual((member["party_source"]["basis"], member["party_source"]["source_party"]),
+                         ("handbook-term", "Example Conservatives"))
+        # Inside the dated range the record says its labels were checked.
+        self.assertEqual(records[0]["_meta"]["party_dated"]["record"], "handbook")
+        # The same person's House rows are never read from Senate records.
+        house = federal("federal-representatives-1", "2007-02-06", [labelled("Quinn Harrowgate", "Example Conservatives", "tvfy_99500")])
+        self.assertEqual(fill([house], evidence)[("federal-representatives-1", "Quinn Harrowgate")][1], "label-kept-no-match")
+        self.assertNotIn("party_dated", house["_meta"])
+
+    def test_a_rename_is_not_a_switch(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            handbook_file(tmp, [PELLINGHAM])
+            evidence = evidence_from(tmp)
+        # The source gives the party's later name on every date.
+        records = [senate("federal-senate-1", "2010-03-01", [labelled("Avery Pellingham", "Centre Alliance", "tvfy_99501")]),
+                   senate("federal-senate-2", "2015-03-01", [labelled("Avery Pellingham", "Centre Alliance", "tvfy_99501")])]
+        got = fill(records, evidence)
+        self.assertEqual(got[("federal-senate-1", "Avery Pellingham")], ("Independent", "label-corrected"))
+        self.assertEqual(got[("federal-senate-2", "Avery Pellingham")], ("Centre Alliance", "label-kept-variant"))
+        self.assertEqual(records[1]["members"][0], labelled("Avery Pellingham", "Centre Alliance", "tvfy_99501"))
+
+    def test_a_gap_with_no_dated_period_keeps_the_source_label(self):
+        undated = senator("ZZ4", "Lowen Brasher", "99503", [])  # the Handbook gives one undated party only
+        with tempfile.TemporaryDirectory() as tmp:
+            handbook_file(tmp, [TISDALL, undated])
+            evidence = evidence_from(tmp)
+        records = [senate("federal-senate-1", "2015-02-10", [labelled("Morwenna Tisdall", "Example Network", "tvfy_99502"),
+                                                             labelled("Lowen Brasher", "Later Party", "tvfy_99503", "no")]),
+                   senate("federal-senate-2", "2014-08-01", [labelled("Morwenna Tisdall", "Example Network", "tvfy_99502")])]
+        got = fill(records, evidence)
+        self.assertEqual(got[("federal-senate-1", "Morwenna Tisdall")], ("Example Network", "label-kept-evidence-ends-before-date"))
+        self.assertEqual(got[("federal-senate-1", "Lowen Brasher")][0], "Later Party")
+        self.assertEqual([m["party"] for m in records[0]["members"]], ["Example Network", "Later Party"])
+        self.assertEqual(records[1]["members"][0]["party"], "Palmer United Party")
+        # A division after the fetch date is outside the dated range: no mark, so the page keeps its caveat.
+        later = senate("federal-senate-3", "2026-11-20", [labelled("Morwenna Tisdall", "Example Network", "tvfy_99502")])
+        fill([later], evidence)
+        self.assertNotIn("party_dated", later["_meta"])
+
+    def test_a_night_without_the_senate_records_keeps_the_published_senate_labels(self):
+        release = [release_term("Corin Ashdale", "Nationals", "2013-09-07", "2025-12-15")]
+        def fresh(ashdale="Nationals"):
+            records = [senate("federal-senate-1", "2007-02-06", [labelled("Quinn Harrowgate", "Example Conservatives", "tvfy_99500"),
+                                                                 row("Ivo Quarrington", "no", "tvfy_99504")]),
+                       federal("federal-representatives-1", "2014-03-20", [labelled("Corin Ashdale", ashdale)])]
+            records[1].update(ayes=1, noes=0)
+            return {r["key"]: r for r in records}
+        quarrington = senator("ZZ5", "Ivo Quarrington", "99504", [("Example Labour", "2005-07-01", None, "2011-06-30")])
+        with tempfile.TemporaryDirectory() as tmp:
+            handbook_file(tmp, [HARROWGATE, quarrington])
+            evidence = evidence_from(tmp)
+            self.assertEqual(evidence.frozen, frozenset())
+            out = Path(tmp) / "divisions"
+            D.write_projection(fresh("One Nation"), out, party_evidence=evidence)
+            senate_page = (out / "division-federal-senate-1.json").read_bytes()
+            shard = json.loads(senate_page)
+            self.assertEqual([m.get("party") for m in shard["members"]], ["Liberal", "Example Labour"])
+            self.assertIn("party_dated", shard["_meta"])
+            # Tonight the Handbook file is missing: one WARNING, and the Senate is not recomputed.
+            (Path(tmp) / "scripts/handbook_party_service.json").unlink()
+            err = io.StringIO()
+            with redirect_stderr(err):
+                missing = evidence_from(tmp, release)
+            warnings = [line for line in err.getvalue().splitlines() if "WARNING" in line]
+            self.assertEqual(len(warnings), 1, err.getvalue())
+            self.assertIn("Senate", warnings[0])
+            self.assertEqual(missing.frozen, frozenset({("federal", "senate")}))
+            self.assertTrue(missing.check_labels)
+            D.write_projection(fresh(), out, party_evidence=missing)
+            self.assertEqual((out / "division-federal-senate-1.json").read_bytes(), senate_page)
+            # The House is still recomputed from its own dated record.
+            house = json.loads((out / "division-federal-representatives-1.json").read_text())
+            self.assertEqual((house["members"][0]["party"], "party_source" in house["members"][0]), ("Nationals", False))
+            # The Senate file is back: recomputed again, the same result.
+            handbook_file(tmp, [HARROWGATE, quarrington])
+            D.write_projection(fresh(), out, party_evidence=evidence_from(tmp, release))
+            self.assertEqual((out / "division-federal-senate-1.json").read_bytes(), senate_page)
+
+    def test_a_malformed_senate_file_is_a_missing_one(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp) / "scripts").mkdir()
+            (Path(tmp) / "scripts/handbook_party_service.json").write_text('{"chamber": "senate"}')
+            err = io.StringIO()
+            with redirect_stderr(err):
+                evidence = evidence_from(tmp)
+        self.assertEqual(evidence.frozen, frozenset({("federal", "senate")}))
+        self.assertEqual(sum("WARNING" in line for line in err.getvalue().splitlines()), 1)
+
+
+class ReviewedPartyPeriods(unittest.TestCase):
+    # Invented: the release gives Ellery Voss one party for the whole term; a reviewed record splits it.
+    ACCEPT = {"name": "Ellery Voss", "chamber": "representatives", "pid": "99600", "url": "https://example.test/record",
+              "replaces": [{"party": "Independent", "start": "1993-03-13", "end": "2007-10-17"}],
+              "periods": [{"party": "Labor", "start": "1993-03-13", "end": "2007-08-20"},
+                          {"party": "Independent", "start": "2007-08-20", "end": "2007-10-17"}]}
+
+    def records(self):
+        return [federal("federal-representatives-1", "2007-02-01", [labelled("Ellery Voss", "Independent", "tvfy_99600")]),
+                federal("federal-representatives-2", "2007-09-19", [labelled("Ellery Voss", "Independent", "tvfy_99600")])]
+
+    def test_a_reviewed_record_replaces_the_release_periods_it_names(self):
+        release = [release_term("Ellery Voss", "Independent", "1993-03-13", "2007-10-17", pid="99600")]
+        evidence = V.Evidence(V.apply_accepts(release, [self.ACCEPT]), elections={})
+        self.assertEqual({e["source"] for e in evidence}, {"accepted-record"})
+        records = self.records()
+        got = fill(records, evidence)
+        self.assertEqual(got[("federal-representatives-1", "Ellery Voss")], ("Labor", "label-corrected"))
+        self.assertEqual(got[("federal-representatives-2", "Ellery Voss")][1], "label-agrees")
+        self.assertEqual(records[0]["members"][0]["party_source"]["basis"], "accepted-record")
+
+    def test_a_record_whose_release_periods_moved_is_held(self):
+        release = [release_term("Ellery Voss", "Independent", "1993-03-13", "2007-10-18", pid="99600")]
+        err = io.StringIO()
+        with redirect_stderr(err):
+            evidence = V.apply_accepts(release, [self.ACCEPT, {"name": "Broken", "chamber": "senate"}])
+        self.assertEqual(evidence, release)
+        self.assertIn("Ellery Voss held", err.getvalue())
+        self.assertIn("accepted party record held (KeyError", err.getvalue())
+
+    def test_the_committed_reviewed_records_all_apply(self):
+        err = io.StringIO()
+        with redirect_stderr(err):
+            evidence = V.load_evidence(ROOT)
+        self.assertNotRegex(err.getvalue(), r"accepted party record.*held")
+        accepted = {(e["chamber"], next(iter(e["pids"])), e["party"], e["start"], e["end"])
+                    for e in evidence if e["source"] == "accepted-record"}
+        self.assertIn(("representatives", "10525", "Labor", "1993-03-13", "2007-08-20"), accepted)  # Harry Quick
+        self.assertIn(("representatives", "10342", "Independent", "2010-05-21", "2010-08-21"), accepted)  # Michael Johnson
+        self.assertIn(("senate", "10350", "Nationals", "2005-07-01", "2013-08-09"), accepted)  # Barnaby Joyce
+        self.assertFalse([e for e in evidence if e["source"] == "release-term" and "10525" in e["pids"]])
+        self.assertEqual(evidence.frozen, frozenset())
+        self.assertEqual(evidence.dated[("federal", "senate")]["from"], "2006-01-01")
+
+
+class HandbookBuild(unittest.TestCase):
+    def raw(self):
+        ind = lambda phid, family, given, start, end, current="False": {
+            "PHID": phid, "FamilyName": family, "GivenName": given, "PreferredName": "", "DisplayName": f"{family}, {given}",
+            "MPorSenator": ["Senator"], "SenateState": "SA", "State": "South Australia", "StateAbbrev": "SA",
+            "InCurrentParliament": current, "ServiceHistory_Start": start, "ServiceHistory_End": end}
+        rec = lambda phid, party, start, end: {"PHID": phid, "OBY": 20, "ROSTypeID": 11, "Value1": party,
+                                               "DateStart1": start, "DateEnd1": end}
+        return {"fetched": "2026-11-13T05:00:00+00:00", "individuals": [
+                    ind("ZZ1", "HARROWGATE", "Quinn", "2014-07-01", "2026-11-13", "True"),
+                    ind("ZZ2", "BRASHER", "Lowen", "2022-07-01", "2025-06-30"),
+                    ind("ZZ3", "OLDHAM", "Piers", "1990-07-01", "2002-06-30")],
+                "party_records": [
+                    rec("ZZ1", "Palmer United Party", "1900-01-01", "2014-11-24"),
+                    rec("ZZ1", "United Australia Party [2018]", "2014-11-24", "1900-01-01"),
+                    rec("ZZ1", "", "2014-11-24", "2015-01-01"),
+                    rec("ZZ2", "Australian Labor Party", "1900-01-01", "1900-01-01")]}
+
+    def test_build_reads_undated_starts_open_ends_and_leaves_undated_records_out(self):
+        members = [{"person_id": "99700", "first_name": "Quinn", "last_name": "Harrowgate", "full_name": "Quinn Harrowgate",
+                    "chamber": "senate", "electorate": "SA"}]
+        doc, unmatched, unlabelled = H.build(self.raw(), members)
+        people = {p["phid"]: p for p in doc["people"]}
+        self.assertEqual(set(people), {"ZZ1", "ZZ2"})  # service before 2006 is left out
+        self.assertEqual(people["ZZ1"]["pid"], "99700")
+        self.assertEqual([(p["party"], p["start"], p["end"], p["through"]) for p in people["ZZ1"]["periods"]],
+                         [("Palmer United Party", "2014-07-01", "2014-11-24", None),
+                          ("United Australia Party", "2014-11-24", None, "2026-11-13")])
+        self.assertEqual(people["ZZ2"]["periods"], [])  # one undated party: no dated period
+        self.assertEqual(len(unmatched), 1)
+        self.assertEqual(unlabelled, [])
+        self.assertEqual(json.loads(H.dump(doc)), doc)
+
+    def test_a_refused_or_rate_limited_request_stops_without_a_retry(self):
+        calls = []
+        def refuse(code):
+            def opener(req, timeout=None):
+                calls.append(req.full_url)
+                raise urllib.error.HTTPError(req.full_url, code, "refused", {}, io.BytesIO(b""))
+            return opener
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.dict(
+                os.environ, {"OPAX_SOURCE_STATUS_FILE": str(Path(tmp) / "status.json")}), \
+                redirect_stderr(io.StringIO()), mock.patch("builtins.print"):
+            for code in (403, 429):
+                calls.clear()
+                with mock.patch.object(H._opener, "open", refuse(code)), mock.patch.object(H.time, "sleep"):
+                    with self.assertRaises(source_http.SourceRefused):
+                        H.fetch(Path(tmp) / "cache", refresh=True, say=lambda *a: None)
+                self.assertEqual(len(calls), 1)
+                self.assertTrue(calls[0].startswith("https://handbookapi.aph.gov.au/api/"))
+            self.assertFalse((Path(tmp) / "cache").exists())  # nothing cached from a refused run
+
+
+class UndatedSenateChanges(unittest.TestCase):
+    # Invented: the Handbook gives Sorrel Ainsley one undated party; the source gives a later one on every date.
+    AINSLEY = dict(senator("ZZ6", "Sorrel Ainsley", "99800", []), undated=["Labor"])
+    # Invented: an undated record that agrees with the source says nothing.
+    BEXLEY = dict(senator("ZZ7", "Tobin Bexley", "99801", []), undated=["Greens"])
+
+    def records(self):
+        return [senate("federal-senate-1", "2023-03-01", [labelled("Sorrel Ainsley", "Example Voice", "tvfy_99800"),
+                                                         labelled("Tobin Bexley", "Greens", "tvfy_99801", "no")])]
+
+    def test_a_label_the_undated_record_contradicts_is_kept_and_marked(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            handbook_file(tmp, [self.AINSLEY, self.BEXLEY])
+            evidence = evidence_from(tmp)
+        records = self.records()
+        got = fill(records, evidence)
+        self.assertEqual(got[("federal-senate-1", "Sorrel Ainsley")], ("Example Voice", "label-kept-undated-change"))
+        self.assertEqual(got[("federal-senate-1", "Tobin Bexley")][1], "label-kept-no-match")
+        ainsley, bexley = records[0]["members"]
+        self.assertEqual(ainsley["party"], "Example Voice")
+        self.assertEqual(ainsley["party_unchecked"],
+                         {"source_party": "Example Voice", "reason": "undated-change", "record_parties": ["Labor"]})
+        self.assertNotIn("party_unchecked", bexley)
+        # The page keeps its caveat: a label on it is not checked against a dated record.
+        self.assertNotIn("party_dated", records[0]["_meta"])
+        # Recomputed every run: without the undated record the mark goes.
+        fill(records, V.Evidence([], elections={}))
+        self.assertNotIn("party_unchecked", records[0]["members"][0])
+
+    def test_the_mark_is_kept_on_a_night_without_the_senate_file(self):
+        def fresh():
+            record = self.records()[0]
+            return {record["key"]: record}
+        with tempfile.TemporaryDirectory() as tmp:
+            handbook_file(tmp, [self.AINSLEY, self.BEXLEY])
+            out = Path(tmp) / "divisions"
+            D.write_projection(fresh(), out, party_evidence=evidence_from(tmp))
+            page = (out / "division-federal-senate-1.json").read_bytes()
+            self.assertIn(b"party_unchecked", page)
+            self.assertNotIn(b"party_dated", page)
+            (Path(tmp) / "scripts/handbook_party_service.json").unlink()
+            with redirect_stderr(io.StringIO()):
+                missing = evidence_from(tmp, [release_term("Corin Ashdale", "Nationals", "2013-09-07")])
+            D.write_projection(fresh(), out, party_evidence=missing)
+            self.assertEqual((out / "division-federal-senate-1.json").read_bytes(), page)
+
+
+class HoldsAndRenames(unittest.TestCase):
+    # Invented: the Handbook dates Wren Calloway's first party to a period other reporting contradicts.
+    CALLOWAY = senator("ZZ8", "Wren Calloway", "99900", [
+        ("One Nation", "2017-11-10", "2018-01-15", None), ("Independent", "2018-01-15", None, "2019-06-30")])
+    HOLD = {"name": "Wren Calloway", "chamber": "senate", "pid": "99900",
+            "windows": [{"start": "2017-11-10", "end": "2018-01-15"}],
+            "reason": "Handbook dates conflict with contemporaneous reporting, pending a primary source."}
+
+    def reviewed(self, tmp, holds=(), renames=()):
+        (Path(tmp) / "scripts/roster_accept.json").write_text(json.dumps(
+            {"vote_party_periods": {"people": [], "holds": list(holds), "renames": list(renames)}}))
+
+    def test_a_held_window_keeps_the_source_label_and_the_page_caveat(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            handbook_file(tmp, [self.CALLOWAY])
+            self.reviewed(tmp, [self.HOLD])
+            err = io.StringIO()
+            with redirect_stderr(err):
+                evidence = evidence_from(tmp)
+        self.assertIn("party periods for Wren Calloway held (2017-11-10 to 2018-01-15)", err.getvalue())
+        self.assertEqual(err.getvalue().count("Wren Calloway held"), 1)
+        records = [senate("federal-senate-1", "2017-11-14", [labelled("Wren Calloway", "Independent", "tvfy_99900")]),
+                   senate("federal-senate-2", "2018-03-01", [labelled("Wren Calloway", "Example Party", "tvfy_99900")])]
+        got = fill(records, evidence)
+        self.assertEqual(got[("federal-senate-1", "Wren Calloway")], ("Independent", "label-kept-held"))
+        self.assertEqual(records[0]["members"][0]["party_unchecked"]["reason"], "held")
+        self.assertNotIn("party_dated", records[0]["_meta"])
+        # Outside the window the dated period still applies.
+        self.assertEqual(got[("federal-senate-2", "Wren Calloway")], ("Independent", "label-corrected"))
+        self.assertIn("party_dated", records[1]["_meta"])
+
+    def test_a_renamed_party_shows_one_name_on_a_date(self):
+        rename = {"evidence": "fixture", "url": "https://example.test/rename",
+                  "names": [{"name": "Nick Xenophon Team"}, {"name": "Centre Alliance", "from": "2018-04-10"}]}
+        quinlan = senator("ZZ9", "Ada Quinlan", "99901", [("Nick Xenophon Team", "2017-11-14", "2018-04-10", None),
+                                                          ("Centre Alliance", "2018-04-10", None, "2022-06-30")])
+        with tempfile.TemporaryDirectory() as tmp:
+            handbook_file(tmp, [quinlan])
+            self.reviewed(tmp, renames=[rename])
+            evidence = evidence_from(tmp)
+        # The source gives the later name to everyone; the Handbook replaces one label with the name on the day.
+        before = senate("federal-senate-1", "2017-11-15", [labelled("Ada Quinlan", "Independent", "tvfy_99901"),
+                                                           labelled("Ivo Pemberton", "Centre Alliance", "tvfy_99902", "no")])
+        after = senate("federal-senate-2", "2018-05-08", [labelled("Ivo Pemberton", "Centre Alliance", "tvfy_99902")])
+        fill([before, after], evidence)
+        self.assertEqual({m["party"] for m in before["members"]}, {"Nick Xenophon Team"})
+        pemberton = before["members"][1]
+        self.assertEqual(pemberton["party_name"], {"source_party": "Centre Alliance", "basis": "dated-name"})
+        self.assertNotIn("party_source", pemberton)
+        self.assertEqual(after["members"][0], labelled("Ivo Pemberton", "Centre Alliance", "tvfy_99902"))
+        # Recomputed every run: the source label comes back when the rename is withdrawn.
+        fill([before], V.Evidence([], elections={}))
+        self.assertEqual(before["members"][1], labelled("Ivo Pemberton", "Centre Alliance", "tvfy_99902", "no"))
+
+    def test_the_committed_holds_and_renames_load(self):
+        with redirect_stderr(io.StringIO()):
+            evidence = V.load_evidence(ROOT)
+        self.assertEqual([h["pid"] for h in evidence.holds], ["10902"])  # Fraser Anning
+        self.assertEqual(V.dated_name(evidence.renames, "Centre Alliance", "2017-11-15"), "Nick Xenophon Team")
+        self.assertEqual(V.dated_name(evidence.renames, "Nick Xenophon Team", "2018-04-10"), "Centre Alliance")
+        self.assertEqual(V.dated_name(evidence.renames, "United Australia Party", "2014-07-07"), "Palmer United Party")
+        self.assertEqual(V.dated_name(evidence.renames, "Palmer United Party", "2019-07-02"), "United Australia Party")
+        self.assertIsNone(V.dated_name(evidence.renames, "Labor", "2019-07-02"))
+        anning = {"name": "Fraser Anning", "person_id": "tvfy_10902"}
+        self.assertTrue(evidence.held("senate", anning, "2017-11-14"))
+        self.assertTrue(evidence.held("senate", anning, "2018-11-12"))
+        self.assertIsNone(evidence.held("senate", anning, "2018-07-01"))

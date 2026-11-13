@@ -1,9 +1,10 @@
 import {hydrateRecordCore} from './record-core.js';
+import {recipientMetaLine} from './record-core-content.js';
 import {renderNotFound} from './not-found.js';
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=6f3407d116';
-import {loadDonorViewIndex} from './donor-views.js?v=1cc1ecb232';
-import {partyUrl} from './canonical-urls.js?v=e32f13c6c8';
-import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=1fcfed6b4c';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=dffa19bbff';
+import {loadDonorViewIndex} from './donor-views.js?v=9770cf1299';
+import {partyUrl} from './canonical-urls.js?v=c40e3d805e';
+import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=f46cf4aa20';
 
 const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const NUMBER = new Intl.NumberFormat('en-AU');
@@ -11,6 +12,16 @@ const JURISDICTIONS = { federal: 'Commonwealth', qld: 'Queensland' };
 const SOURCES = { federal: 'https://www.grants.gov.au/', qld: 'https://www.data.qld.gov.au/dataset/b102c881-2c7f-484a-a8b6-b056fe318964' };
 const REGISTERS = { qld: 'Queensland electoral returns', vic: 'Victorian electoral returns', tas: 'Tasmanian electoral returns' };
 const money = value => MONEY.format(Number(value) || 0);
+/** The site's short money form ("$602.2m"); the exact figure goes in the element's title. */
+export const compactMoney = value => {
+  const n = Number(value) || 0;
+  for (const [scale, suffix] of [[1e9, 'bn'], [1e6, 'm'], [1e3, 'k']]) {
+    if (Math.abs(n) >= scale) return `${n < 0 ? '−' : ''}$${(Math.round(Math.abs(n) / (scale / 10)) / 10).toFixed(1).replace(/\.0$/, '')}${suffix}`;
+  }
+  return money(n);
+};
+/** The source runs an acronym into the next word ("(MRFF)Accelerated"); shown with its space. */
+export const spaced = value => String(value ?? '').replace(/\)(?=[A-Za-z])/g, ') ');
 /** One award's value: "$0 (as published)" when the source records $0.00, never a silent $0 for a missing value (search-hubs-008). */
 export const awardMoney = value => value === 0 ? '$0 (as published)' : value == null || value === '' || !Number.isFinite(Number(value)) ? 'Value not recorded' : money(value);
 const node = (tag, text, className) => {
@@ -90,19 +101,25 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
   };
   const programReference = (programs, label) => {
     const matches = recipientProgramMatches(programs, label);
-    if (!matches.length) return node('span', label);
-    if (matches.length === 1) return link(`/money/grants?${new URLSearchParams({ jur: jurisdiction, program: matches[0].id })}`, label);
-    const group = node('span', null, 'grant-recipient-program-options'); group.append(node('span', label));
-    for (const match of matches) group.append(link(`/money/grants?${new URLSearchParams({ jur: jurisdiction, program: match.id })}`, `Program ${match.id}`));
+    if (!matches.length) return node('span', spaced(label));
+    if (matches.length === 1) return link(`/money/grants?${new URLSearchParams({ jur: jurisdiction, program: matches[0].id })}`, spaced(label));
+    // A label shared by many program rounds names them behind one disclosure, not a column of ids.
+    const group = node('span', null, 'grant-recipient-program-options'); group.append(node('span', spaced(label)));
+    const rounds = node('details', null, 'grant-recipient-program-rounds'), list = node('span');
+    rounds.append(node('summary', `${NUMBER.format(matches.length)} program rounds`));
+    for (const match of matches) list.append(link(`/money/grants?${new URLSearchParams({ jur: jurisdiction, program: match.id })}`, `Program ${spaced(match.id)}`));
+    rounds.append(list); group.append(rounds);
     return group;
   };
   function render(data, index) {
     const coreActive = hydrateRecordCore('recipient',data,{jurisdiction});
     root.replaceChildren(); root.removeAttribute('aria-busy');
     const qld = jurisdiction === 'qld', recordNoun = qld ? 'expenditure rows' : 'award records';
+    // The shared record header: the title, then one meta line under it.
     const header = node('div', null, 'grant-recipient-header');
-    header.append(node('p', `${JURISDICTIONS[jurisdiction]} · ${kindLabel(data.k)}`, 'grant-recipient-kicker'));
-    const title = node('h1', data.n); title.tabIndex = -1; if (!coreActive) header.append(title);
+    // When the server's record core leads the page, it is the header; the meta line belongs under the client's own title.
+    const title = node('h1', data.n); title.tabIndex = -1;
+    if (!coreActive) header.append(title, node('p', recipientMetaLine(jurisdiction, data.k), 'grant-recipient-meta'));
     header.append(node('p', qld
       ? 'Published annual expenditure, including grants, service agreements and other assistance.'
       : 'Published Commonwealth grant awards. Award values do not establish payments received.', 'grant-recipient-intro'));
@@ -124,8 +141,9 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
       root.append(featured);
     }
     const metrics = node('dl', null, 'grant-recipient-metrics');
-    for (const [label, value] of [[qld ? 'Published expenditure' : 'Published award value', money(data.t)], [recordNoun, NUMBER.format(data.c)], ['Financial years', data.y0 === data.y1 ? data.y0 : `${data.y0 || '—'} to ${data.y1 || '—'}`]]) {
-      const item = node('div'); item.append(node('dt', label), node('dd', value)); metrics.append(item);
+    for (const [label, value, exact] of [[qld ? 'Published expenditure' : 'Published award value', compactMoney(data.t), money(data.t)], [recordNoun, NUMBER.format(data.c)], ['Financial years', data.y0 === data.y1 ? data.y0 : `${data.y0 || '—'} to ${data.y1 || '—'}`]]) {
+      const item = node('div'), figure = node('dd', value); if (exact && exact !== value) figure.title = exact;
+      item.append(node('dt', label), figure); metrics.append(item);
     }
     if (!coreActive) root.append(metrics);
     const jump = node('nav', null, 'grant-recipient-jump'); jump.setAttribute('aria-label', 'On this recipient page');
@@ -145,7 +163,7 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
       list.replaceChildren(); list.start = page * 20 + 1;
       for (const grant of grants.slice(page * 20, page * 20 + 20)) {
         const item = node('li'), heading = node('div', null, 'grant-recipient-record-heading');
-        heading.append(node('h3', grant.n || grant.pr || grant.id), node('strong', awardMoney(grant.v)));
+        heading.append(node('h3', spaced(grant.n || grant.pr || grant.id)), node('strong', awardMoney(grant.v)));
         item.append(heading);
         if (grant.desc) item.append(node('p', grant.desc, 'grant-recipient-description'));
         const metadata = [grant.ag, grant.cat].filter(Boolean);

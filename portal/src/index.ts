@@ -17,7 +17,7 @@ import { repairQuotes } from './research-evidence'
 import {ServerTiming, timed, timedSync, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import { chamberLabel, PARTY_MAP } from '../public/party-page.js'
-import {partySpeechLabel, partyMembers, partyBills, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, readPartyPages, resolvePartyPage, dayMonthYear, type PartyPage, type PartyBill} from '../public/party-page.js'
+import {partySpeechLabel, partyMembers, partyBills, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, readPartyPages, resolvePartyPage, dayMonthYear, partyHistory, recordedAsText, type PartyPage, type PartyBill} from '../public/party-page.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
@@ -53,7 +53,7 @@ import {saGrantsPage,saGrantsReader} from './sa-grants'
 import {actInvoicesPage} from './act-invoices'
 import {GRANTS_COVERAGE} from '../public/grants-table.js'
 import {resolveProgram, programKey, type GrantProgram} from '../public/facts/grant-programs.js'
-import {grantCoreBody, agencyCoreBody, firstAgencySuppliers, topicCoreBody, topicSummary, type GrantDetail, type AgencyDetail, type TopicCounts, type TopicSpeech} from './seo-record-content'
+import {grantCoreBody, recipientMetaLine, agencyCoreBody, firstAgencySuppliers, topicCoreBody, topicSummary, type GrantDetail, type AgencyDetail, type TopicCounts, type TopicSpeech} from './seo-record-content'
 import sponsorParties from '../public/facts/sponsor-parties.json' with {type:'json'}
 import { hubPage } from './hubs'
 import { estimatesPage, readEstimatesRecord, type EstimatesCommittee, type EstimatesRecord, type EstimatesRound, type EstimatesRounds } from './estimates'
@@ -125,7 +125,7 @@ import { createResearch, researchLimits } from './research-loop'
 import { recordResearchAnswer, recordResearchComparison, recordResearchFailure } from './research-monitor'
 import { cachedKbLookup } from './kb-cache'
 import { ANSWER_WRITING_VERSION } from './research-writing'
-import { cacheableRoutedAnswer, calculatedPayAnswer, withAnswerLanguage, withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
+import { cacheableAskAnswer, cacheableRoutedAnswer, calculatedPayAnswer, withAnswerLanguage, withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
 import { groundAnswerPayload } from './research-grounding'
 import { researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
 import { ResearchError, type ResearchPayload } from './research-types'
@@ -144,7 +144,7 @@ import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { navGates, pageTrail, trail } from './nav-model.mjs'
 import { EMPTY_REPORTS_INDEX, REPORTS_INDEX, appUserAgent, reportDataPath, reportsAppData, reportsEnabled, reportsPath } from './reports-gate'
-import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, agencyTopSuppliers, type AgencyTopSuppliers, type Division, type ReadAsset } from './seo-content'
+import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, personHeadPrerender, homeMapFallbackHTML, mapDonorsPhrase, mapSpanPhrase, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, agencyTopSuppliers, type AgencyTopSuppliers, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { AGENCY_TOP_SUPPLIERS_PATH, type AgencyTopRow } from '../public/agency-top-suppliers.js'
 import { SUPPLIER_ID_RE, supplierRowsPath } from '../public/supplier-row-buckets.js'
@@ -1340,9 +1340,8 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
   })
 }
 
-/** Worth keeping for a week: a real answer with at least one cited source. */
-const cacheableAnswer = (p: AskPayload): boolean =>
-  (p.answer_status !== 'evidence_only' || p.evidence_kind === 'original_position_proposal') && !isRefusal({ answer: p.answer }) && p.sources.some((s) => (s as { cited?: boolean }).cited === true)
+/** Worth keeping for a week: a real answer with at least one cited source, never a boundary fallback (research-response.ts). */
+const cacheableAnswer = (p: AskPayload): boolean => cacheableAskAnswer(p, isRefusal({ answer: p.answer }))
 
 /** Cut on word boundaries into pieces of about `size` characters; pieces concatenate to the input exactly. */
 function chunkText(text: string, size: number): string[] {
@@ -4470,10 +4469,11 @@ const indexLinks = (): string =>
 /** The no-JS page: its one title, one sentence and the directory links. No
  *  kicker: the title says what the page is once (principle 3). Server-only
  *  pages pass their breadcrumb trail after Home (crumbsHTML). */
-function prerenderBlock(heading: string, sentence: string, links = indexLinks(), crumbs: Crumb[] = []): string {
+function prerenderBlock(heading: string, sentence: string, links = indexLinks(), crumbs: Crumb[] = [], meta = ''): string {
   // Only a trail reaches for the helper (tests lift this function out on its own).
+  // meta: the record's one meta line under its title, as the client's own header draws it.
   return `${crumbs.length ? crumbsHTML(crumbs) : ''}<section id="prerender" class="wrap">` +
-    `<h1>${escHtml(heading)}</h1><p>${escHtml(sentence)}</p>${links}</section>`
+    `<h1>${escHtml(heading)}</h1>${meta ? `<p class="grant-recipient-meta">${escHtml(meta)}</p>` : ''}<p>${escHtml(sentence)}</p>${links}</section>`
 }
 
 /** Canonical for a route: the clean path, plus the query only where it names the page. */
@@ -4751,6 +4751,9 @@ async function topicMeta(slug: string, name: string, url: URL, request: Request,
  * kilobytes of HTML, so an isolate renders each title once. A failed render is not kept.
  */
 const moneyAnswerMemo = new Map<string, ReturnType<typeof renderMoneyAnswer>>()
+/** Server HTML placed under another page's h1: every heading one level down (h6 stays h6). */
+const demoteHeadings = (html: string): string =>
+  html.replace(/<(\/?)h([1-6])\b/gi, (_m, close: string, level: string) => `<${close}h${Math.min(6, Number(level) + 1)}`)
 function sharedMoneyAnswer(title: string, read: ReadAsset): ReturnType<typeof renderMoneyAnswer> {
   const kept = moneyAnswerMemo.get(title)
   if (kept) return kept
@@ -4809,9 +4812,10 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         const identity={...profiles?.by_name[foldName(p.name)],...profiles?.people[p.pid || '']}
           const query = guardTableURL(voteTableConfig(p.pid || ''),url).query
         const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,url.searchParams))
-        meta.prerender = content.html + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '')
-        if(content.description) meta.description=clip(content.description)
         const photos=await loadPhotos(env).catch(()=>null)
+        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name)})
+        meta.prerender = head + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '')
+        if(content.description) meta.description=clip(content.description)
         personIdentity={...identity,portraitId:photoIdFor(photos,p.name)}
         if(meta.jsonLd?.['@type']==='Person') {
           // The person's own party, else the one a verified seat roster records for them (seo-content personParty).
@@ -4846,6 +4850,8 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       },url.searchParams))
     } else if(route.kind==='static' && ['money','connections','explore'].includes(route.page)) {
       meta.prerender=(await sharedMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description)
+      // The boot frame draws the map card's place with this line (style.css data-boot-field).
+      if(route.page==='money') meta.prerender=meta.prerender.replace('<section id="prerender"','<section id="prerender" data-boot-field="Drawing the map"')
       if(route.page==='money')meta.prerender+=await renderMoneyConnectionsTable(url,read).catch(()=> '')
     } else if (route.kind === 'static' && route.page === 'money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest')) {
       const hadState = Boolean(url.search)
@@ -5327,7 +5333,7 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
     const original = award.guid ? `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(award.guid)}` : `https://www.grants.gov.au/Ga/ListResult?Type=Ga&AgencyStatus=-1&GaId=${encodeURIComponent(award.id)}`
     return { title: `${award.id}: ${recipient.n} · OPAX`, description, canonical: selected, ogType: 'article', status: 200,
       jsonLd: { '@context': 'https://schema.org', '@type': 'Article', headline: `${award.id}: ${recipient.n}`, description, url: selected, citation: original },
-      prerender: prerenderBlock(`${award.id}: ${recipient.n}`, description, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath))),
+      prerender: prerenderBlock(`${award.id}: ${recipient.n}`, description, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath)), [], recipientMetaLine(jurisdiction, detail.k)),
       card: { kicker: `${award.id}${award.s ? ` · Starts ${award.s}` : ''}`, title: recipient.n, lines: [purpose, 'Award value, not payments received.'], stat: { value: money(award.v!), label: 'published grant award' } } }
   }
   const qld = jurisdiction === 'qld'
@@ -5339,7 +5345,7 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
   return { title: `${recipient.n} · Grant recipient · OPAX`, description, canonical, ogType: 'profile', status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': 'ProfilePage', name: recipient.n, url: canonical, description,
       mainEntity: { '@type': 'Thing', name: recipient.n, ...(id.startsWith('abn:') ? { identifier: { '@type': 'PropertyValue', propertyID: 'ABN', value: id.slice(4) } } : {}) } },
-    prerender: prerenderBlock(recipient.n, `${facts} ${caveat}`, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath))),
+    prerender: prerenderBlock(recipient.n, `${facts} ${caveat}`, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath)), [], recipientMetaLine(jurisdiction, detail.k)),
     card: { kicker: 'Grant recipient', title: recipient.n, lines: [`${money(recipient.t)} in ${basis}`, `${num(recipient.c)} ${countBasis}`, caveat] } }
 }
 
@@ -5592,6 +5598,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   const ldType = dir==='donor' ? 'Dataset' : independent ? 'CollectionPage' : 'Organization'
   let card: CardSpec
   let memberNames: string[] = []
+  let memberRows: {name: string; labels: string[]}[] = []
   let sponsored: PartyBill[] = []
   if (dir === 'party') {
     // Speeches as the search index labels them (scripts/build_party_speeches.mjs), so the page promises
@@ -5604,7 +5611,8 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     // Shared with the browser directory and party page: a distinct person may
     // have recorded affiliations with more than one party across their career.
     const members = partyMembers(display, {roster: people, divisions: recorded})
-    memberNames = [...members.current, ...members.former].map(p=>p.name)
+    memberRows = [...members.current, ...members.former].map(p=>({name: p.name, labels: p.labels ?? []}))
+    memberNames = memberRows.map(p=>p.name)
     // The bills the register records a sponsor of this party for (scripts/build_party_index.mjs bills).
     sponsored = partyBills(display, recorded)
     const parts: string[] = []
@@ -5652,13 +5660,17 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     facts = disclosureRecord?.kind==='reference' ? `${display}: source reference; no matching electoral donation established.` : `${display}: disclosed electoral returns outside the bounded money-map selection.`
     card = {kicker:disclosureRecord?.kind==='reference'?'Source reference':'Donor',title:display,lines:[facts]}
   }
+  // A renamed party's name history (labels.js PARTY_RENAMES): the line under its heading, with the notices.
+  const history = dir === 'party' ? partyHistory(display) : null
+  if (history) facts = `${facts} ${history.line}`
+  const historyHTML = history ? `<p class="party-history">${escHtml(history.line)} Sources: ${history.sources.map(s => `<a href="${escHtml(s.href)}" rel="noopener">${escHtml(s.label)}</a>`).join('; ')}.</p>` : ''
   const sentence = tail ? `${facts} ${tail}` : facts
   const description = withTail(facts, tail)
   let table = ''
   if (dir === 'party') {
     const read = <T>(path:string)=>assetJson<T>(env,path)
     const graph = await read<Parameters<typeof partyMoneyData>[0]>('/graph/money.json').catch(()=>null)
-    const party = graph?.nodes.find(n=>n.kind === 'party' && foldName(n.label) === foldName(display))
+    const party = graph?.nodes.find(n=>n.kind === 'party' && foldName(n.label) === foldName(display)) ?? graph?.nodes.find(n=>n.kind === 'party' && samePartyLabel(n.label, display))
     if (graph && party) {
       const {rows,scope} = partyMoneyData(graph,party.id)
       const config = partyMoneyTableConfig(rows,undefined,undefined,undefined,{party:party.label,jurisdiction:'federal'})
@@ -5674,8 +5686,8 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: heading, url: canonical, description },
     prerender: prerenderBlock(heading,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${indexLinks()}`
-      : (memberNames.length ? `<h2>${independent ? 'Parliamentarians' : 'Members'}</h2><ul>${memberNames.slice(0,24).map(n=>{const href=personPath(people,n);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}</li>`}).join('')}</ul><p>${escHtml(PARTY_MEMBER_SCOPE)}</p>` : '')
-        + (sponsored.length ? `<h2>Bills sponsored</h2><ul>${sponsored.slice(0,24).map(b=>`<li><a href="/bill/${encodeURIComponent(b.key)}">${escHtml(b.title)}</a>${b.introduced ? `, introduced ${escHtml(dayMonthYear(b.introduced))}` : ''}</li>`).join('')}</ul>` : '')
+      : historyHTML + (memberRows.length ? `<h2>${independent ? 'Parliamentarians' : 'Members'}</h2><ul>${memberRows.slice(0,24).map(({name: n, labels})=>{const href=personPath(people,n),as=recordedAsText(display,labels);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}${as ? ` (${escHtml(as.charAt(0).toLowerCase()+as.slice(1))})` : ''}</li>`}).join('')}</ul><p>${escHtml(PARTY_MEMBER_SCOPE)}</p>` : '')
+        + (sponsored.length ? `<h2>Bills sponsored</h2><ul>${sponsored.slice(0,24).map(b=>{const as=recordedAsText(display,[b.party ?? ''],'sponsor recorded as');return `<li><a href="/bill/${encodeURIComponent(b.key)}">${escHtml(b.title)}</a>${b.introduced ? `, introduced ${escHtml(dayMonthYear(b.introduced))}` : ''}${as ? `, ${escHtml(as)}` : ''}</li>`}).join('')}</ul>` : '')
         + indexLinks()) + table,
     card,
   }
@@ -7323,10 +7335,16 @@ export default {
     if(url.pathname==='/map' && ['GET','HEAD'].includes(request.method)) {
       const shell=await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/map.html`))
       const facts=await sharedMoneyAnswer('Money map',<T>(path:string)=>assetJson<T>(env,path))
+      // Who the map draws, counted from the file it draws (seo-content.ts mapDonorsPhrase).
+      const federal=await assetJson<Parameters<typeof mapDonorsPhrase>[0]>(env,'/graph/money.json').catch(()=>null)
+      const donors=federal ? mapDonorsPhrase(federal) : null
+      // Its span by the figures' own rule (seo-content.ts mapSpanPhrase).
+      const span=federal ? mapSpanPhrase(federal) : null
       const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/map`,title:'Money map · OPAX'})).replace(/</g,'\\u003c')
-      const out=new HTMLRewriter().on('div#crawl-facts',{element(el){el.setInnerContent(facts.html,{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(shell)
+      // The drawer sits under the page's own h1: its headings step down a level.
+      const out=new HTMLRewriter().on('div#crawl-facts',{element(el){el.setInnerContent(demoteHeadings(facts.html),{html:true})}}).on('span#map-donors',{element(el){if(donors)el.setInnerContent(donors)}}).on('span#map-span',{element(el){if(span)el.setInnerContent(span)}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(shell)
       const headers=new Headers(out.headers);headers.delete('content-length')
-      if(shell.ok){const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',shell.headers.get('etag'),facts.html,schema]);headers.set('etag',etag);const unchanged=notModified(request,etag,headers);if(unchanged)return communityResponse(unchanged)}
+      if(shell.ok){const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',shell.headers.get('etag'),facts.html,schema,donors,span]);headers.set('etag',etag);const unchanged=notModified(request,etag,headers);if(unchanged)return communityResponse(unchanged)}
       return communityResponse(new Response(request.method==='HEAD' ? null : out.body,{status:out.status,headers}))
     }
     const entry = await pageEntry(request, env.ASSETS)
@@ -7334,8 +7352,9 @@ export default {
       if (/^\/search\/?$/.test(url.pathname)) entry.headers.set('x-robots-tag', url.search ? 'noindex' : 'all')
       if(entry.status===200 && url.pathname==='/') {
         const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/`,title:SITE_TITLE,description:SITE_DESCRIPTION})).replace(/</g,'\\u003c')
-        const money=await sharedMoneyAnswer('Public money',<T>(path:string)=>assetJson<T>(env,path)).catch(()=>null)
-        const moneyHtml=money ? money.html.replace('id="prerender"','id="prerender-money"').replace('<h1>','<h2>').replace('</h1>','</h2>') : null
+        // The map card's fallback: the /money answer's federal figures and a link to
+        // /money, which carries the full answer (seo-content.ts homeMapFallbackHTML).
+        const moneyHtml=await assetJson<unknown>(env,'/graph/money.json').then(homeMapFallbackHTML).catch(()=>null)
         // The menus read the published optional sections off the page (navigation.js).
         const gates=navGates(env)
         // The home page's Reports block goes with the reports (src/reports-gate.ts).

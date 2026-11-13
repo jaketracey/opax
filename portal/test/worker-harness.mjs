@@ -23,6 +23,10 @@ class Rewriter {
         };
         if (selector === 'main#main') html = html.replace(/(<main\b[^>]*>)([\s\S]*?)(<\/main>)/, mutate);
         else if (selector === 'div#crawl-facts') html = html.replace(/(<div\b[^>]*id="crawl-facts"[^>]*>)([\s\S]*?)(<\/div>)/, mutate);
+        else if (selector === 'span#map-span') html = html.replace(/(<span\b[^>]*id="map-span"[^>]*>)([\s\S]*?)(<\/span>)/, mutate);
+        else if (selector === 'span#map-donors') html = html.replace(/(<span\b[^>]*id="map-donors"[^>]*>)([\s\S]*?)(<\/span>)/, mutate);
+        // The homepage map card: its static fallback is one div, closed by the card's own </div>.
+        else if (selector === 'div#hp-money-map') html = html.replace(/(<div\b[^>]*id="hp-money-map"[^>]*>)([\s\S]*?<\/div>\s*)(<\/div>)/, mutate);
         else if (selector === 'title') html = html.replace(/(<title>)([\s\S]*?)(<\/title>)/, mutate);
         else if (selector === 'head') html = html.replace(/(<head>)([\s\S]*?)(<\/head>)/, mutate);
         else if (selector === 'body') html = html.replace(/(<body\b[^>]*>)([\s\S]*?)(<\/body>)/, mutate);

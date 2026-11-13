@@ -408,6 +408,30 @@
     {"source_url": "https://www.parliament.sa.gov.au/Search/Member?id=4845&type=member", "as_of": "2020-02-19", "jurisdiction": "sa", "chamber": "sa_ha", "members": [{"name": "Jon Gee", "aliases": ["Jonathan Peter Gee"], "electorate": "Taylor", "party": "Labor"}]},
     {"source_url": "https://www.parliament.vic.gov.au/members/john-kennedy/", "as_of": "2020-02-19", "jurisdiction": "vic", "chamber": "vic_la", "members": [{"name": "John Kennedy", "aliases": ["John Ormond Kennedy"], "electorate": "Hawthorn", "party": "Labor"}]},
     {"source_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/gippsland-south-district-results", "as_of": "2022-11-26", "jurisdiction": "vic", "chamber": "vic_la", "members": [{"name": "Danny O'Brien", "aliases": [], "electorate": "Gippsland South", "party": "Nationals"}]},
-    {"source_url": "https://www.ecsa.sa.gov.au/electoral-districts/electoral-district-profiles/newland", "as_of": "2020-05-01", "jurisdiction": "sa", "chamber": "sa_ha", "members": [{"name": "Richard Harvey", "aliases": [], "electorate": "Newland", "party": "Liberal"}]}
+    {"source_url": "https://www.ecsa.sa.gov.au/electoral-districts/electoral-district-profiles/newland", "as_of": "2020-05-01", "jurisdiction": "sa", "chamber": "sa_ha", "members": [{"name": "Richard Harvey", "aliases": [], "electorate": "Newland", "party": "Liberal"}]},
+    {"source_url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members", "data_url": "https://contact-details-api.parliament.sa.gov.au/api/LCMembersDetails", "source_label": "Legislative Council members, 56th Parliament, fetched 13 November 2026", "sha256": "da90f57e347b85e0eb1ea0e0a1e03e143cfccaa1236628927dd2e6a5aff3c9d2", "as_of": "2026-11-13", "jurisdiction": "sa", "chamber": "sa_lc", "note": "Party labels as printed: ALP is Labor, Greens SA is Greens, Pauline Hanson's One Nation is One Nation, Family First Party is Family First. prints: the Hansard print of a roster row in this chamber that is exactly the initials of every given name on this list plus the surname; reviewed, never derived at build time. Only the party index sitting rule (scripts/build_party_index.mjs officialListMembers) reads them.", "members": [
+      {"name": "Cory Bernardi", "aliases": [], "electorate": "South Australia", "party": "One Nation"},
+      {"name": "Emily Bourke", "aliases": ["Emily Sarah Bourke"], "electorate": "South Australia", "party": "Labor", "prints": ["E.S. Bourke"]},
+      {"name": "Nicola Centofanti", "aliases": ["Nicola Jane Centofanti"], "electorate": "South Australia", "party": "Liberal", "prints": ["N.J. Centofanti"]},
+      {"name": "Mira El Dannawi", "aliases": [], "electorate": "South Australia", "party": "Labor"},
+      {"name": "Sarah Game", "aliases": ["Sarah Leslie Game"], "electorate": "South Australia", "party": "Family First", "prints": ["S.L. Game"]},
+      {"name": "Heidi Girolamo", "aliases": ["Heidi Margaret Girolamo"], "electorate": "South Australia", "party": "Liberal", "prints": ["H.M. Girolamo"]},
+      {"name": "Hilton Gumbys", "aliases": ["Hilton Jonas Gumbys"], "electorate": "South Australia", "party": "Labor"},
+      {"name": "Justin Hanson", "aliases": ["Justin Eric Hanson"], "electorate": "South Australia", "party": "Labor", "prints": ["J.E. Hanson"]},
+      {"name": "Laura Henderson", "aliases": ["Laura Aberdeen Henderson"], "electorate": "South Australia", "party": "Liberal", "prints": ["L.A. Henderson"]},
+      {"name": "Rebecca Hewett", "aliases": ["Rebecca Jane Hewett"], "electorate": "South Australia", "party": "One Nation"},
+      {"name": "Benjamin Hood", "aliases": ["Benjamin Robin Hood"], "electorate": "South Australia", "party": "Liberal"},
+      {"name": "Dennis Hood", "aliases": ["Dennis Garry Edward Hood"], "electorate": "South Australia", "party": "Liberal", "prints": ["D.G.E. Hood"]},
+      {"name": "Ian Hunter", "aliases": ["Ian Keith Hunter"], "electorate": "South Australia", "party": "Labor", "prints": ["I.K. Hunter"]},
+      {"name": "Jacqueline Lensink", "aliases": ["Jacqueline Michelle Ann Lensink", "Michelle Lensink"], "electorate": "South Australia", "party": "Liberal", "prints": ["J.M.A. Lensink"]},
+      {"name": "Kyam Maher", "aliases": ["Kyam Joseph Maher"], "electorate": "South Australia", "party": "Labor", "prints": ["K.J. Maher"]},
+      {"name": "Reggie Martin", "aliases": ["Reggie Brian Martin"], "electorate": "South Australia", "party": "Labor", "prints": ["R.B. Martin"]},
+      {"name": "Tung Ngo", "aliases": ["Tung The Ngo"], "electorate": "South Australia", "party": "Labor", "prints": ["T.T. Ngo"]},
+      {"name": "Carlos Quaremba", "aliases": ["Carlos Leonel Quaremba"], "electorate": "South Australia", "party": "One Nation"},
+      {"name": "Clare Scriven", "aliases": ["Clare Michele Scriven"], "electorate": "South Australia", "party": "Labor", "prints": ["C.M. Scriven"]},
+      {"name": "Melanie Selwood", "aliases": [], "electorate": "South Australia", "party": "Greens"},
+      {"name": "Robert Simms", "aliases": ["Robert Andrew Simms"], "electorate": "South Australia", "party": "Greens", "prints": ["R.A. Simms"]},
+      {"name": "Russell Wortley", "aliases": ["Russell Paul Wortley"], "electorate": "South Australia", "party": "Labor", "prints": ["R.P. Wortley"]}
+    ]}
   ]
 }

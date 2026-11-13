@@ -553,5 +553,470 @@
     "speaker": "Zoe Daniel"
    }
   ]
+ },
+ "event-01-run4": {
+  "question": "Who was responsible for robodebt?",
+  "answer": "Bill Shorten told the House that hearings had shown the previous government had legal advice that robodebt was unlawful from its start and that Clayton Utz said the scheme could not be justified.\n\nThe commission found the scheme was \"a crude and cruel mechanism, neither fair nor legal\", and that despite mounting warnings the Government of the time continued to illegally raise debts.\n\nThe Royal Commission into the Robodebt Scheme was led by Royal Commissioner Catherine Holmes AC SC, and its report named the scheme's failings; the National Anti-Corruption Commission (NACC) later found in its Operation Myrtleford investigation report that Mr Withnell and Ms Wilson each engaged in corrupt conduct, while it found Mr Morrison did not.\n\nThe Royal Commission into the Robodebt Scheme was established on 18 August 2022 and issued its final report on 7 July 2023, listing 57 recommendations, though 56 are numbered in the report's list and the Australian Government's response refers to 56.\n\nWith respect to the referral about Mr Withnell, the NACC stated it was satisfied he engaged in corrupt conduct because he knew and intended automatic default averaging would be central to OCI and, by representing that OCI would not involve averaging, engaged in deliberate conduct designed to mislead Mr Kimber and Mr McBride, and through them DSS, within section 8(1)(a) and alternatively section 8(1)(b) of the NACC Act.\n\nWith respect to the referral about Ms Wilson, the NACC stated it was satisfied she engaged in corrupt conduct by intentionally misleading, or attempting to mislead, the Ombudsman, amounting to dishonest performance of her official functions and alternatively their dishonest exercise for the improper purpose of misleading the Ombudsman, within section 8(1)(a) and alternatively section 8(1)(b) of the NACC Act.\n\nThe NACC published its Operation Myrtleford investigation report in March 2026, holding 6 findings or opinions, and stated it makes no recommendations.\n\nCatryna Bilyk told the Senate that the Prime Minister was the minister who designed robodebt, the Treasurer who cashed the money from it, and the Prime Minister who refused to fix it.\n\nThe National Anti-Corruption Commission's Operation Myrtleford report found Mr Withnell engaged in corrupt conduct by representing the scheme would not involve averaging, and Ms Wilson engaged in corrupt conduct by misleading the Ombudsman.\n\nZali Steggall told the House in March 2026 that the NACC found two public officials engaged in serious corrupt conduct while four others, including former prime minister Scott Morrison, were cleared.\n\nThe Royal Commission into the Robodebt Scheme published 57 recommendations; it listed 56 numbered recommendations plus one printed without a number in its closing observations.",
+  "citations": {
+   "speech-1538479/t/body/0-645": [
+    [
+     0,
+     195
+    ]
+   ],
+   "speech-1553204/t/body/0-646": [
+    [
+     197,
+     385
+    ]
+   ],
+   "fact-17/t/body/0": [
+    [
+     387,
+     738
+    ]
+   ],
+   "fact-37/t/body/0": [
+    [
+     387,
+     738
+    ],
+    [
+     992,
+     1414
+    ]
+   ],
+   "fact-38/t/body/0": [
+    [
+     387,
+     738
+    ],
+    [
+     1416,
+     1827
+    ]
+   ],
+   "fact-42/t/body/0": [
+    [
+     387,
+     738
+    ]
+   ],
+   "fact-3/t/body/0": [
+    [
+     740,
+     990
+    ]
+   ],
+   "fact-15/t/body/0": [
+    [
+     740,
+     990
+    ]
+   ],
+   "fact-8/t/body/0": [
+    [
+     1829,
+     1980
+    ]
+   ],
+   "fact-7/t/body/0": [
+    [
+     1829,
+     1980
+    ]
+   ],
+   "speech-1514430/t/body/0-649": [
+    [
+     1982,
+     2165
+    ]
+   ],
+   "speech-1201173/t/body/0-643": [
+    [
+     2409,
+     2608
+    ]
+   ]
+  },
+  "sources": [
+   {
+    "resource": "fact-17",
+    "slug": "",
+    "title": "Royal Commission into the Robodebt Scheme commissioners as Report of the Royal Commission into the Robodebt Scheme names them: Catherine Holmes AC SC (Royal Commissioner).",
+    "href": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+    "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+    "snippet": "Royal Commission into the Robodebt Scheme commissioners as Report of the Royal Commission into the Robodebt Scheme names them: Catherine Holmes AC SC (Royal Commissioner).",
+    "cited": true,
+    "kind": "record"
+   },
+   {
+    "resource": "fact-37",
+    "slug": "",
+    "title": "National Anti-Corruption Commission (NACC), \"Operation Myrtleford investigation report\", Operation Myrtleford Investigation Report, page 440, Determination: Determination [finding]: \"With respect to the referral made by the Royal Commission in relation to Mr Withnell, I am satisfied that Mr Withnell engaged in corrupt conduct because at all relevant times, Mr Withnell knew and intended that automatic default averaging would be central to OCI, and I am satisfied that, by representing to Mr Kimber and Mr McBride that OCI would not involve averaging, Mr Withnell engaged in deliberate conduct that was designed to mislead Mr Kimber and Mr McBride, and, through them, DSS. This amounted to corrupt conduct within the meaning of section 8(1)(a) and further or alternatively section 8(1)(b) of the NACC Act.\"",
+    "href": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf#page=440",
+    "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf#page=440",
+    "snippet": "National Anti-Corruption Commission (NACC), \"Operation Myrtleford investigation report\", Operation Myrtleford Investigation Report, page 440, Determination: Determination [finding]: \"With respect to the referral made by the Royal Commission in relation to Mr Withnell, I am satisfied that Mr Withnell engaged in corrupt conduct because at all relevant times, Mr Withnell knew and intended that automatic default averaging would be central to OCI, and I am satisfied that, by representing to Mr Kimber and Mr McBride that OCI would not involve averaging, Mr Withnell engaged in deliberate conduct that was designed to mislead Mr Kimber and Mr McBride, and, through them, DSS. This amounted to corrupt conduct within the meaning of section 8(1)(a) and further or alternatively section 8(1)(b) of the NACC Act.\"",
+    "cited": true,
+    "kind": "record"
+   },
+   {
+    "resource": "fact-38",
+    "slug": "",
+    "title": "National Anti-Corruption Commission (NACC), \"Operation Myrtleford investigation report\", Operation Myrtleford Investigation Report, page 440, Determination: Determination [finding]: \"With respect to the referral made by the Royal Commission in relation to Ms Wilson, I am satisfied that Ms Wilson engaged in corrupt conduct by intentionally misleading, or attempting to mislead, the Ombudsman. Ms Wilson’s conduct in so misleading or attempting to mislead the Ombudsman amounted to dishonest performance by Ms Wilson of her official functions or duties as a public official and further, or alternatively, the dishonest exercise of her official functions or duties as a public official for the improper purpose of misleading the Ombudsman, and therefore was corrupt conduct within the meaning of section 8(1)(a) and further, or alternatively, section 8(1)(b) of the NACC Act.\"",
+    "href": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf#page=440",
+    "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf#page=440",
+    "snippet": "National Anti-Corruption Commission (NACC), \"Operation Myrtleford investigation report\", Operation Myrtleford Investigation Report, page 440, Determination: Determination [finding]: \"With respect to the referral made by the Royal Commission in relation to Ms Wilson, I am satisfied that Ms Wilson engaged in corrupt conduct by intentionally misleading, or attempting to mislead, the Ombudsman. Ms Wilson’s conduct in so misleading or attempting to mislead the Ombudsman amounted to dishonest performance by Ms Wilson of her official functions or duties as a public official and further, or alternatively, the dishonest exercise of her official functions or duties as a public official for the improper purpose of misleading the Ombudsman, and therefore was corrupt conduct within the meaning of section 8(1)(a) and further, or alternatively, section 8(1)(b) of the NACC Act.\"",
+    "cited": true,
+    "kind": "record"
+   },
+   {
+    "resource": "fact-42",
+    "slug": "",
+    "title": "National Anti-Corruption Commission (NACC), \"Operation Myrtleford investigation report\", Operation Myrtleford Investigation Report, page 440, Determination: Determination [no_finding]: \"With respect to the referral made by the Royal Commission in relation to Mr Morrison, I am satisfied that Mr Morrison did not engage in corrupt conduct.\"",
+    "href": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf#page=440",
+    "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf#page=440",
+    "snippet": "National Anti-Corruption Commission (NACC), \"Operation Myrtleford investigation report\", Operation Myrtleford Investigation Report, page 440, Determination: Determination [no_finding]: \"With respect to the referral made by the Royal Commission in relation to Mr Morrison, I am satisfied that Mr Morrison did not engage in corrupt conduct.\"",
+    "cited": true,
+    "kind": "record"
+   },
+   {
+    "resource": "fact-3",
+    "slug": "",
+    "title": "Royal Commission into the Robodebt Scheme (royal commission, Commonwealth): established 18 August 2022, final report 7 July 2023. 57 recommendations loaded; 0 government response or implementation documents listed; 47 hearing transcripts listed as documents (evidence, not findings).",
+    "href": "https://opax.com.au/royal-commissions/commission-cth-robodebt.json",
+    "url": "https://opax.com.au/royal-commissions/commission-cth-robodebt.json",
+    "snippet": "Royal Commission into the Robodebt Scheme (royal commission, Commonwealth): established 18 August 2022, final report 7 July 2023. 57 recommendations loaded; 0 government response or implementation documents listed; 47 hearing transcripts listed as documents (evidence, not findings).",
+    "cited": true,
+    "kind": "record"
+   },
+   {
+    "resource": "fact-15",
+    "slug": "",
+    "title": "Royal Commission into the Robodebt Scheme (OPAX note): The report's list of recommendations (page 19) refers to 57 recommendations; 56 are numbered there. The other, in the list's closing observations (page 27), is headed \"Section 34 of the Cth FOI Act should be repealed\" and has no number; it is loaded under that heading. The Australian Government's response refers to 56 recommendations.",
+    "href": "https://opax.com.au/royal-commissions/commission-cth-robodebt.json",
+    "url": "https://opax.com.au/royal-commissions/commission-cth-robodebt.json",
+    "snippet": "Royal Commission into the Robodebt Scheme (OPAX note): The report's list of recommendations (page 19) refers to 57 recommendations; 56 are numbered there. The other, in the list's closing observations (page 27), is headed \"Section 34 of the Cth FOI Act should be repealed\" and has no number; it is loaded under that heading. The Australian Government's response refers to 56 recommendations.",
+    "cited": true,
+    "kind": "record"
+   },
+   {
+    "resource": "fact-8",
+    "slug": "",
+    "title": "National Anti-Corruption Commission (NACC) published an investigation report in March 2026 (month taken from the publisher's file path), \"Operation Myrtleford investigation report\" (Operation Myrtleford). OPAX holds 6 findings or opinions from it. The report says it makes no recommendations.",
+    "href": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf",
+    "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf",
+    "snippet": "National Anti-Corruption Commission (NACC) published an investigation report in March 2026 (month taken from the publisher's file path), \"Operation Myrtleford investigation report\" (Operation Myrtleford). OPAX holds 6 findings or opinions from it. The report says it makes no recommendations.",
+    "cited": true,
+    "kind": "record"
+   },
+   {
+    "resource": "fact-7",
+    "slug": "",
+    "title": "OPAX holds 1 integrity commission report or statement matching \"robodebt\" (records as at 2026-11-11).",
+    "href": "https://opax.com.au/integrity-reports/index.json",
+    "url": "https://opax.com.au/integrity-reports/index.json",
+    "snippet": "OPAX holds 1 integrity commission report or statement matching \"robodebt\" (records as at 2026-11-11).",
+    "cited": true,
+    "kind": "count"
+   },
+   {
+    "resource": "coverage",
+    "slug": "",
+    "title": "Coverage of the selected records",
+    "href": "https://opax.com.au/royal-commissions/index.json",
+    "url": "https://opax.com.au/royal-commissions/index.json",
+    "snippet": "Recommendations are the commission's own words with the report page each was read from. A status appears only where a government publishes one for that recommendation, in its own words; otherwise the status is unknown, not unimplemented. Findings and recommendations of a royal commission or inquiry are not findings of criminal or civil liability. Hearing transcripts are evidence, not findings. Quoted in each commission's own words, with the report's own labels. Allegations are not findings, and a finding or opinion of corrupt conduct or misconduct is not a finding of criminal guilt. More items: view=report, record_id nacc-undated-operation-myrtleford, part=findings, recommendations or responses.",
+    "cited": false,
+    "kind": "record",
+    "coverage": true
+   },
+   {
+    "resource": "speech-1553201",
+    "slug": "speech-1553201",
+    "title": "Kate Thwaites — PRIVATE MEMBERS' BUSINESS — 2023-08-07",
+    "href": "https://opax.com.au/doc/speech-1553201",
+    "url": "https://opax.com.au/doc/speech-1553201",
+    "snippet": "I move: That this House: (1) acknowledges the release of the report of the Royal Commission into the Robodebt Scheme, a 990-page report that examined the establishment of the scheme and who was responsible for it, and made 57 recommendations; (2) recognises that the Robodebt Scheme, which was put forward as a budget measure in 2015 and was found to be unlawful by the Federal Court in late 2019, caused great harm to vulnerable members of the Australian community; (3) notes that despite the mounting warnings and criticism of the scheme, in the words of the report the Government of the time 'continued to illegally raise debts against some of",
+    "cited": false,
+    "kind": "speech",
+    "date": "2023-08-07",
+    "speaker": "Kate Thwaites"
+   },
+   {
+    "resource": "speech-1553204",
+    "slug": "speech-1553204",
+    "title": "Zoe Daniel — PRIVATE MEMBERS' BUSINESS — 2023-08-07",
+    "href": "https://opax.com.au/doc/speech-1553204",
+    "url": "https://opax.com.au/doc/speech-1553204",
+    "snippet": "The royal commission puts it very simply: Robodebt was a crude and cruel mechanism, neither fair nor legal, and it made many people feel like criminals. … It was a costly failure of public administration, in both human and economic terms. Those costs include lives, unjustified financial hardship for thousands, stress, anxiety, depression and other mental health problems for many. In the end, an illegal mechanism touted to raise at least $1.8 billion ended up costing the budget $1.7 billion, not counting the below-the-line costs within the government or indeed of the royal commission itself. The report of the commission is an extraordinary",
+    "cited": true,
+    "kind": "speech",
+    "date": "2023-08-07",
+    "speaker": "Zoe Daniel"
+   },
+   {
+    "resource": "speech-1538479",
+    "slug": "speech-1538479",
+    "title": "Bill Shorten — QUESTIONS WITHOUT NOTICE — 2022-11-09",
+    "href": "https://opax.com.au/doc/speech-1538479",
+    "url": "https://opax.com.au/doc/speech-1538479",
+    "snippet": "RTEN (—) (): In just under two weeks of hearings in the royal commission into robodebt, we've learned several facts. First, the previous government received departmental and external legal advice that robodebt was unlawful from its start. We've also learned that a top-tier law firm, Clayton Utz, provided legal advice to the former government that the scheme was not able to be justified, prompting internal emails noting that this particular draft view was catastrophic. We've also learned that the former director of Payments and Integrity at the Department of Social Services and his team saw the income averaging and what became robodebt as",
+    "cited": true,
+    "kind": "speech",
+    "date": "2022-11-09",
+    "speaker": "Bill Shorten"
+   },
+   {
+    "resource": "speech-1514430",
+    "slug": "speech-1514430",
+    "title": "Catryna Bilyk — MATTERS OF PUBLIC IMPORTANCE — 2020-12-01",
+    "href": "https://opax.com.au/doc/speech-1514430",
+    "url": "https://opax.com.au/doc/speech-1514430",
+    "snippet": "[by video link] I speak today about the matter of public importance that is robodebt and the Prime Minister's failure to accept fault for his actions as minister, Treasurer and Prime Minister. He's completed a trifecta that nobody would want to win on a program that was illegal and atrociously executed. He was the minister who designed robodebt, he was the Treasurer who cashed the money from robodebt and he is the Prime Minister who refused to fix it. We could look at the numbers—and they're large—but what are we dealing with? We're not dealing with numbers; we're dealing with the lives of hundreds of thousands of fellow Australians who have",
+    "cited": true,
+    "kind": "speech",
+    "date": "2020-12-01",
+    "speaker": "Catryna Bilyk"
+   },
+   {
+    "resource": "speech-1201173",
+    "slug": "speech-1201173",
+    "title": "Zali Steggall — Adjournment — 2026-03-11",
+    "href": "https://opax.com.au/doc/speech-1201173",
+    "url": "https://opax.com.au/doc/speech-1201173",
+    "snippet": "Today the findings of the investigation by the National Anti-Corruption Commission into the robodebt referrals were released. It found that two public officials engaged in serious corrupt conduct, while four others, including former prime ministerScott Morrison, were cleared. But today's findings leave major unfinished business. The robodebt scheme was not a minor policy mistake. It was an illegal automated debt collection system that wrongly pursued hundreds of thousands of Australians for debts they did not owe. More than 443,000 people received false debt notices, often demanding thousands of dollars. For many, the consequences were",
+    "cited": true,
+    "kind": "speech",
+    "date": "2026-03-11",
+    "speaker": "Zali Steggall"
+   }
+  ]
+ },
+ "event-01-live-r100": {
+  "question": "Who was responsible for robodebt?",
+  "answer": "The Royal Commission into the Robodebt Scheme was established by Letters Patent on 18 August 2022, and its final report is dated 7 July 2023.\n\nBill Shorten moved in the House that it accept the royal commission's findings regarding the former ministers involved in the design and implementation of robodebt.\n\nThe report names Catherine Holmes AC SC as the Royal Commissioner.\n\nThe Royal Commission's reports make 57 recommendations, and 47 hearing transcripts are held, which are evidence rather than findings.\n\nOn 10 August 2023, the House of Representatives voted on a motion to accept the Royal Commission into the Robodebt Scheme's findings, introduced by Maribyrnong MP Bill Shorten, and the majority voted in favour.\n\nMark Dreyfus told the House the royal commission concluded the former Liberal government's robodebt scheme was a crude and cruel mechanism, neither fair nor legal.\n\nDon Farrell told the Senate the report set out findings on the Liberal and Nationals' robodebt scheme, which unlawfully raised $1.8 billion of debt against about 435,000 people.\n\nStephen Bates told the House that the member for Cook's statements on robodebt had been shown to be false by the royal commission.\n\nBrian Mitchell told the House that former Liberal ministers including the member for Cook had offered the defence that they didn't know and nobody told them.\n\nBill Shorten told the House that the member for Cook claimed he stopped robodebt, and that Stuart Robert had also claimed credit.",
+  "citations": {
+   "fact-6/t/body/0": [
+    [
+     0,
+     141
+    ]
+   ],
+   "fact-8/t/body/0": [
+    [
+     0,
+     141
+    ]
+   ],
+   "speech-1554704/t/body/0-647": [
+    [
+     143,
+     307
+    ]
+   ],
+   "fact-7/t/body/0": [
+    [
+     309,
+     375
+    ]
+   ],
+   "fact-4/t/body/0": [
+    [
+     377,
+     510
+    ]
+   ],
+   "fact-14/t/body/0": [
+    [
+     512,
+     722
+    ]
+   ],
+   "speech-1594111/t/body/0-648": [
+    [
+     724,
+     887
+    ]
+   ],
+   "speech-1551933/t/body/0-644": [
+    [
+     889,
+     1066
+    ]
+   ],
+   "speech-1553591/t/body/165-815": [
+    [
+     1068,
+     1198
+    ]
+   ],
+   "speech-1552125/t/body/0-646": [
+    [
+     1200,
+     1357
+    ]
+   ],
+   "speech-1553102/t/body/0-649": [
+    [
+     1359,
+     1488
+    ]
+   ]
+  },
+  "sources": [
+   {
+    "resource": "fact-6",
+    "slug": "",
+    "title": "Royal Commission into the Robodebt Scheme: \"established by Letters Patent on 18 August 2022\" (Report of the Royal Commission into the Robodebt Scheme, page 11).",
+    "href": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+    "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+    "snippet": "Royal Commission into the Robodebt Scheme: \"established by Letters Patent on 18 August 2022\" (Report of the Royal Commission into the Robodebt Scheme, page 11).",
+    "cited": true,
+    "kind": "record"
+   },
+   {
+    "resource": "fact-8",
+    "slug": "",
+    "title": "Report of the Royal Commission into the Robodebt Scheme (dated 7 July 2023).",
+    "href": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+    "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+    "snippet": "Report of the Royal Commission into the Robodebt Scheme (dated 7 July 2023).",
+    "cited": true,
+    "kind": "record"
+   },
+   {
+    "resource": "fact-7",
+    "slug": "",
+    "title": "Royal Commission into the Robodebt Scheme commissioners as Report of the Royal Commission into the Robodebt Scheme names them: Catherine Holmes AC SC (Royal Commissioner).",
+    "href": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+    "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+    "snippet": "Royal Commission into the Robodebt Scheme commissioners as Report of the Royal Commission into the Robodebt Scheme names them: Catherine Holmes AC SC (Royal Commissioner).",
+    "cited": true,
+    "kind": "record"
+   },
+   {
+    "resource": "fact-4",
+    "slug": "",
+    "title": "Royal Commission into the Robodebt Scheme (royal commission, Commonwealth): established 18 August 2022, final report 7 July 2023. Its reports make 57 recommendations; no government response or implementation document is held; 47 hearing transcripts are held (evidence, not findings).",
+    "href": "https://opax.com.au/royal-commissions/commission-cth-robodebt.json",
+    "url": "https://opax.com.au/royal-commissions/commission-cth-robodebt.json",
+    "snippet": "Royal Commission into the Robodebt Scheme (royal commission, Commonwealth): established 18 August 2022, final report 7 July 2023. Its reports make 57 recommendations; no government response or implementation document is held; 47 hearing transcripts are held (evidence, not findings).",
+    "cited": true,
+    "kind": "record"
+   },
+   {
+    "resource": "fact-14",
+    "slug": "",
+    "title": "Division: Motions - Royal Commission into the Robodebt Scheme - Accept findings — House of Representatives. The majority voted in favour of a [motion]() introduced by Maribyrnong MP [Bill Shorten](",
+    "href": "https://opax.com.au/doc/division-federal-representatives-8290",
+    "url": "https://opax.com.au/doc/division-federal-representatives-8290",
+    "snippet": "Division: Motions - Royal Commission into the Robodebt Scheme - Accept findings — House of Representatives. The majority voted in favour of a [motion]() introduced by Maribyrnong MP [Bill Shorten](",
+    "cited": true,
+    "kind": "record"
+   },
+   {
+    "resource": "coverage",
+    "slug": "",
+    "title": "Coverage of the selected records",
+    "href": "https://opax.com.au/report/royal-commission-cth-robodebt",
+    "url": "https://opax.com.au/report/royal-commission-cth-robodebt",
+    "snippet": "Catalog hits are ranked matches, not complete totals; open the matching tool for figures. Recommendations are the commission's own words with the report page each was read from. A status appears only where a government publishes one for that recommendation, in its own words; otherwise the status is unknown, not unimplemented. Findings and recommendations of a royal commission or inquiry are not findings of criminal or civil liability. Hearing transcripts are evidence, not findings. view=transcripts lists the hearing transcripts, newest first.",
+    "cited": false,
+    "kind": "record",
+    "coverage": true
+   },
+   {
+    "resource": "speech-1553201",
+    "slug": "speech-1553201",
+    "title": "Kate Thwaites — PRIVATE MEMBERS' BUSINESS — 2023-08-07",
+    "href": "https://opax.com.au/doc/speech-1553201",
+    "url": "https://opax.com.au/doc/speech-1553201",
+    "snippet": "I move: That this House: (1) acknowledges the release of the report of the Royal Commission into the Robodebt Scheme, a 990-page report that examined the establishment of the scheme and who was responsible for it, and made 57 recommendations; (2) recognises that the Robodebt Scheme, which was put forward as a budget measure in 2015 and was found to be unlawful by the Federal Court in late 2019, caused great harm to vulnerable members of the Australian community; (3) notes that despite the mounting warnings and criticism of the scheme, in the words of the report the Government of the time 'continued to illegally raise debts against some of",
+    "cited": false,
+    "kind": "speech",
+    "date": "2023-08-07",
+    "speaker": "Kate Thwaites",
+    "chamber": "representatives"
+   },
+   {
+    "resource": "speech-1554704",
+    "slug": "speech-1554704",
+    "title": "Bill Shorten — MOTIONS — 2023-08-10",
+    "href": "https://opax.com.au/doc/speech-1554704",
+    "url": "https://opax.com.au/doc/speech-1554704",
+    "snippet": "I move: That this House: (1) accepts the findings of the report of the Royal Commission into the Robodebt Scheme regarding the former ministers involved in the design and implementation of the scheme; (2) expresses its deep regret and apologises to the victims of the unlawful robodebt scheme, and to front-line Centrelink staff; and (3) commits to ensuring this cruel, unlawful chapter in the history of Australian public administration is never repeated. The reason why I'm moving this resolution and the government is supporting it is that we believe that the nation and the parliament cannot move on without accepting a genuine account of what",
+    "cited": true,
+    "kind": "speech",
+    "date": "2023-08-10",
+    "speaker": "Bill Shorten",
+    "chamber": "representatives"
+   },
+   {
+    "resource": "speech-1594111",
+    "slug": "speech-1594111",
+    "title": "Mark Dreyfus — QUESTIONS WITHOUT NOTICE — 2024-10-10",
+    "href": "https://opax.com.au/doc/speech-1594111",
+    "url": "https://opax.com.au/doc/speech-1594111",
+    "snippet": "I thank the member for Lalor for her question. The robodebt royal commission concluded that the former Liberal government's robodebt scheme was a 'crude and cruel mechanism, neither fair nor legal'. This illegal scheme resulted in hundreds of thousands of Australians being served with wrongful debt notices. The royal commissioner, Catherine Holmes AC SC, stated: … made many people feel like criminals. In essence, people were traumatised on the off-chance they might owe money. It was a costly failure of public administration, in both human and economic terms. And with those words, the royal commission summed up the human tragedy that was the",
+    "cited": true,
+    "kind": "speech",
+    "date": "2024-10-10",
+    "speaker": "Mark Dreyfus",
+    "chamber": "representatives"
+   },
+   {
+    "resource": "speech-1551933",
+    "slug": "speech-1551933",
+    "title": "Don Farrell — QUESTIONS WITHOUT NOTICE — 2023-08-01",
+    "href": "https://opax.com.au/doc/speech-1551933",
+    "url": "https://opax.com.au/doc/speech-1551933",
+    "snippet": "I thank Senator Sheldon for his question and for his deep concern for the impact of robodebt on so many Australians. Yes, I can answer that question because Labor committed to establishing a royal commission into robodebt, and just over 12 months after the government being elected, on the morning of 7 July 2023, Commissioner Holmes delivered her final report for all to see. The report set out its findings on the Liberal and Nationals' cruel robodebt scheme. The report highlighted how the scheme unlawfully raised $1.8 billion of debt against approximately 435,000 vulnerable Australians. The report told the personal stories of tragedy and",
+    "cited": true,
+    "kind": "speech",
+    "date": "2023-08-01",
+    "speaker": "Don Farrell",
+    "chamber": "senate"
+   },
+   {
+    "resource": "speech-1553591",
+    "slug": "speech-1553591",
+    "title": "Stephen Bates — PRIVILEGE — 2023-08-08",
+    "href": "https://opax.com.au/doc/speech-1553591",
+    "url": "https://opax.com.au/doc/speech-1553591",
+    "snippet": "made by the member for Cook constitute a possible breach of privilege or contempt of the parliament. The member for Cook made statements in the House in relation to the robodebt scheme that have subsequently been shown to be false by the Royal Commission into the Robodebt Scheme. Just last week, the member for Cook made statements that clearly contradict the findings of the royal commission. This is the first sitting week since these statements were made and the earliest opportunity I have had to present this matter to the House in the manner required. In response to a question without notice on 11 June 2020, the member for Cook stated: Where",
+    "cited": true,
+    "kind": "speech",
+    "date": "2023-08-08",
+    "speaker": "Stephen Bates",
+    "chamber": "representatives"
+   },
+   {
+    "resource": "speech-1552125",
+    "slug": "speech-1552125",
+    "title": "Brian Mitchell — STATEMENTS BY MEMBERS — 2023-08-02",
+    "href": "https://opax.com.au/doc/speech-1552125",
+    "url": "https://opax.com.au/doc/speech-1552125",
+    "snippet": "'I didn't know. It wasn't my fault. Nobody told me.' That is the defence that former Liberal ministers, including the member for Cook, have been rolling out in the wake of the damning findings of the robodebt royal commission. But they did know, it was their fault and they were told. In January 2017 the then Labor opposition formally requested that the then Prime Minister, Malcolm Turnbull, halt robodebt. The scheme didn't end until November 2019, nearly three years later. When the member for Cook got up on Monday to dismiss the royal commission's findings and complain about his treatment I could not believe my ears. The government he was",
+    "cited": true,
+    "kind": "speech",
+    "date": "2023-08-02",
+    "speaker": "Brian Mitchell",
+    "chamber": "representatives"
+   },
+   {
+    "resource": "speech-1553102",
+    "slug": "speech-1553102",
+    "title": "Bill Shorten — QUESTIONS WITHOUT NOTICE — 2023-08-07",
+    "href": "https://opax.com.au/doc/speech-1553102",
+    "url": "https://opax.com.au/doc/speech-1553102",
+    "snippet": "In recent days there have many who've claimed to have stopped robodebt. Last week, the member for Cook claimed he stopped robodebt. He said: … I closed the scheme down during the operational phases of the scheme when the issues and unintended consequences first arose. But he's not the first former coalition Liberal minister to now claim credit for stopping robodebt. Stuart Robert, the former member for Fadden, also famously claimed credit in this place. He curiously didn't credit the member for Cook for it! Whilst the commission doesn't deal with the member for Cook's claim that he stopped robodebt—presumably because no-one except the member",
+    "cited": true,
+    "kind": "speech",
+    "date": "2023-08-07",
+    "speaker": "Bill Shorten",
+    "chamber": "representatives"
+   }
+  ]
  }
 }

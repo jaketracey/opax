@@ -9,7 +9,7 @@
 <!-- Google Tag Manager (container GTM-PNDM87LW). The loader and the site's
      own dataLayer events live in /gtm.js so no inline script is needed. -->
 <script src="/spa-entry.js?v=6d1168d62e"></script>
-<script src="/events.js?v=9fecb3d510" defer></script>
+<script src="/events.js?v=84d63fa620" defer></script>
 <script src="/gtm.js?v=0764911f84" defer></script>
 <!-- Home page values. On a real path (/subject/person/slug, /reports/gambling)
      the Worker rewrites these per route; app.js keeps canonical and og:url in
@@ -61,18 +61,18 @@
      which is what lets _headers serve these two immutable. -->
 <link rel="stylesheet" href="/datatable.css">
 <link rel="stylesheet" href="/register-tables.css?v=b98ab37c03">
-<script type="module" src="/register-tables-entry.js?v=607794256c"></script>
+<script type="module" src="/register-tables-entry.js?v=c54ecf868b"></script>
 <link rel="stylesheet" href="/vote-tables.css?v=d727aad769">
-<script type="module" src="/vote-tables.js?v=26d27861c3"></script>
-<link rel="stylesheet" href="/style.css?v=df103eebb9">
+<script type="module" src="/vote-tables.js?v=543bf0a704"></script>
+<link rel="stylesheet" href="/style.css?v=fac98cc2a8">
 <link rel="stylesheet" href="/ui-controls.css?v=ce29178242">
 <link rel="stylesheet" href="/ui-source.css?v=78ddb8fc1b">
 <link rel="stylesheet" href="/page-actions.css?v=a416a2254f">
 <link rel="stylesheet" href="/voice.css?v=19eea6fcdc">
-<link rel="stylesheet" href="/nav.css?v=2ea742d4ee">
+<link rel="stylesheet" href="/nav.css?v=edd37b6174">
 <link rel="stylesheet" href="/procurement.css?v=db00e48205">
 <!-- labels.js: app.js imports it before its first render. -->
-<link rel="modulepreload" href="/labels.js?v=75e6c65ff7">
+<link rel="modulepreload" href="/labels.js?v=89dda4a520">
 </head>
 <body class="research-app">
 <!-- Google Tag Manager (noscript) -->
@@ -157,7 +157,7 @@
              inside the field at any width; the wrapper takes the row rules the
              bare textarea used to. -->
         <div class="ask-field ui-input-wrap">
-          <textarea id="ask-input" name="q" class="grow-field ui-input" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false"></textarea>
+          <textarea id="ask-input" name="q" class="grow-field ui-input" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false" placeholder="Ask about a person, a bill or the money"></textarea>
           <button type="button" class="field-clear ui-button ui-icon-button" id="ask-clear" aria-label="Clear the question" data-variant="quiet"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button>
         </div>
         <button type="submit" class="ui-button" id="ask-submit" data-variant="primary">Ask the record</button>
@@ -211,15 +211,17 @@
            holds its line whether or not anything is set, so a chip arriving
            never shoves the answer below it down. -->
       <div id="ask-filter-chips" class="filter-chips" role="group" aria-label="Active filters"></div>
-      <!-- Sample questions as plain links, without a label (the home page's rule). -->
+      <!-- Sample questions as plain links, under one short label. -->
       <div id="ask-chips" hidden>
-        <div class="ask-samples" id="chip-row" role="group" aria-label="Sample questions"></div>
+        <p class="ask-samples-label" id="ask-samples-label">Or start with</p>
+        <div class="ask-samples" id="chip-row" role="group" aria-labelledby="ask-samples-label"></div>
       </div>
       <!-- A question, assembled: a shape to choose, slots to fill from the
            record's own names. It writes the question the free box would take,
            so everything after it (the address, the cache, the answer) is the
            same. app.js renders the sentence per shape (ASK_SHAPES). Closed by
-           default, as on the home page: the free box comes first. -->
+           default, as on the home page: the free box comes first. A phone
+           opens it (initAskBuilder), so the idle page is not blank paper. -->
       <details class="ask-guided" id="ask-guided">
       <summary>Build a question</summary>
       <section id="ask-builder" class="ask-builder" aria-labelledby="ask-builder-head">
@@ -576,7 +578,7 @@
       </div>
       <div id="money-stage" class="money-stage">
         <aside id="money-journey-story" class="journey-story" aria-label="Guided journey" hidden></aside>
-        <div id="money-map-root" class="money-map-root ui-plate"></div>
+        <div id="money-map-root" class="money-map-root ui-plate"><p class="map-drawing" role="status">Drawing the map</p></div>
       </div>
       <div id="money-research-results"></div>
       <!-- The map's one source line (moneyFineprintHTML in app.js). -->
@@ -2100,12 +2102,12 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=506fbec2dd" defer></script>
-<script src="/navigation.js?v=5a97b288b9" defer></script>
-<script src="/quick-search.js?v=7f0d91ca48" defer></script>
+<script src="/spa-shell.js?v=98e80e22af" defer></script>
+<script src="/navigation.js?v=f8e186e029" defer></script>
+<script src="/quick-search.js?v=1009512e8a" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
-<script src="/app.js?v=0faa226eda" defer></script>
+<script src="/app.js?v=9a9c201081" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
-<script src="/analytics.js?v=dbad81cb8b" defer></script>
+<script src="/analytics.js?v=5fb3114d72" defer></script>
 </body>
 </html>

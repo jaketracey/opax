@@ -1,8 +1,8 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptScopeLabel} from './donor-disclosure.js?v=6f3407d116';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptScopeLabel} from './donor-disclosure.js?v=dffa19bbff';
 // receiptGraph is shared with every money page (donor-disclosure.js); re-exported for the tests that read it here.
 export {receiptGraph};
-import {loadDonorViewIndex} from './donor-views.js?v=1cc1ecb232';
-import {partyReturnFigures} from './register-tables.js?v=3f42fd4c24';
+import {loadDonorViewIndex} from './donor-views.js?v=9770cf1299';
+import {partyReturnFigures, industryName} from './register-tables.js?v=b854085280';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph
@@ -20,8 +20,8 @@ import {partyReturnFigures} from './register-tables.js?v=3f42fd4c24';
 //
 // Styles: money-explain.css, loaded with the module.
 
-import { sourceLineHTML, partyLabelHTML } from './labels.js?v=75e6c65ff7';
-import { subjectUrl } from './canonical-urls.js?v=e32f13c6c8';
+import { sourceLineHTML, partyLabelHTML } from './labels.js?v=89dda4a520';
+import { subjectUrl } from './canonical-urls.js?v=c40e3d805e';
 import { shortMoney, shortDate } from './format.js?v=9fcab43d8d';
 
 const STYLE_HREF = '/money-explain.css?v=9d581f0740';
@@ -103,13 +103,34 @@ export function yearPhrase(year, jur, electionYears = []) {
   return jur === 'federal' && electionYears.includes(Number(year)) ? `${fyLabel(year)} (with the ${year} election returns)` : fyLabel(year);
 }
 
-/** An industry key as a name: "fossil_fuels" is "Fossil fuels", "mining & energy" "Mining & energy". */
-export function industryName(key) {
-  const k = String(key || '');
-  if (!k) return 'Industry not recorded';
-  if (['individual', 'individuals'].includes(k.toLowerCase())) return 'Industry not recorded';
-  const words = k.replace(/_/g, ' ');
-  return words.charAt(0).toUpperCase() + words.slice(1);
+/** An industry key as a name: one helper with the party table (register-tables.js). */
+export { industryName };
+
+/**
+ * A whole graph's receipts in one line, read through receiptGraph: what a
+ * page states as the map's headline (the /money answer, the homepage map
+ * card). `total` and `receipts` sum every donation edge from a receipt
+ * source to a party; `pairs` counts those edges and `sources` their
+ * distinct senders. `scope` is receiptScopeLabel's line, with the span the
+ * typed cells report, or '' for a graph without typed cells (the state graphs).
+ */
+export function receiptHeadline(graph) {
+  const read = receiptGraph(graph) || { nodes: [], edges: [] };
+  const nodes = read.nodes || [];
+  const senders = new Set(nodes.filter((n) => n.kind === 'donor').map((n) => n.id));
+  const edges = (read.edges || []).filter((e) => isDonation(e) && senders.has(e.source));
+  const { total, count } = sumEdges(edges);
+  let firstYear = null, lastYear = null;
+  for (const e of edges) {
+    if (Number.isInteger(e.firstYear)) firstYear = firstYear === null ? e.firstYear : Math.min(firstYear, e.firstYear);
+    if (Number.isInteger(e.lastYear)) lastYear = lastYear === null ? e.lastYear : Math.max(lastYear, e.lastYear);
+  }
+  const typed = edges.length > 0 && edges.every((e) => e.typed);
+  return {
+    total, receipts: count, pairs: edges.length, sources: new Set(edges.map((e) => e.source)).size,
+    parties: nodes.filter((n) => n.kind === 'party').length, firstYear, lastYear, typed,
+    scope: typed ? receiptScopeLabel({ typed, firstYear, lastYear }) : '',
+  };
 }
 
 /** What a flow's figures count, on its own line (receiptScopeLabel); empty for a state graph. */

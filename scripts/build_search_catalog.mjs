@@ -3,7 +3,8 @@ import { fileURLToPath } from 'node:url';
 import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { normalize, tokens, bucket, PERSON_SEARCH_ALIASES } from '../portal/src/catalog-query.mjs';
-import { personNameKey, personUrl } from '../portal/public/canonical-urls.js';
+import { personNameKey, personUrl, partyUrl } from '../portal/public/canonical-urls.js';
+import { PARTY_RENAMES } from '../portal/public/labels.js';
 import { recordPathIndex } from '../portal/public/record-paths.js';
 import { personSlug, personIndex, fullNameMatches } from '../portal/src/person-slug.ts';
 import {donorDisclosure,donorLookup,receiptFigures,receiptScopeLabel,hasPartyReceipts,notListedLine} from '../portal/public/donor-disclosure.js';
@@ -31,7 +32,7 @@ const ministerHref = m => { const n=m.page||m.name; return fullNameMatches(peopl
 const supplierHref = n => '/subject/supplier/'+encodeURIComponent(n);
 const year = d => Number(String(d || '').slice(0,4)) || 0;
 const period = (a,b) => a && b ? (a===b?String(a):`${a}–${b}`) : '';
-const party = p => normalize(p).replace(/australian labor party|australian labour party/g,'labor').replace(/liberal party of australia/g,'liberal').replace(/the nationals/g,'nationals');
+const party = p => normalize(p).replace(/australian labor party|australian labour party/g,'labor').replace(/liberal party of australia/g,'liberal').replace(/the nationals/g,'nationals').replace(/\bliberal democratic party\b|\bliberal democrats\b/g,'libertarian party');
 function add(key, kind, title, href, text, extra={}) {
   if(ids.has(key)) return; ids.add(key);
   const { aliases='', from=year(extra.date), to=year(extra.date), state='', parties=[], speakers=[], topics=[], slug='', ...rest }=extra;
@@ -117,6 +118,12 @@ export function accessDonorHref(donorNames, name, fallback) {
  return (record && donorDisclosure(record).href) || fallback || null;
 }
 
+/** One search record per renamed party: its current name, its former names as aliases, its name history. */
+export function renamedPartyRecords(renames=PARTY_RENAMES) {
+ return renames.map(r=>({key:'party-rename:'+r.code,title:r.name,href:partyUrl(r.name),snippet:r.history,
+  extra:{aliases:r.former.flatMap(f=>[f.name,...(f.aliases||[])]).join(' '),parties:[r.name],source:'Party registers (AEC)',dateLabel:r.since?'Current name since '+r.since.slice(0,4):''}}));
+}
+
 async function main() {
  const roster = await read('parliamentarians.json');
  const identity=personIndex(roster.people); peopleIndex=identity; canonicalPeople=identity.slugOf; canonicalAliases=new Map([...identity.addresses].map(([name,p])=>[name,identity.slugOf.get(p.name)]));
@@ -142,6 +149,9 @@ async function main() {
    add(`${jur}:receipt:${i}`,'receipt',`${a.label} → ${b.label}`,'/money?'+new URLSearchParams({jur,q:a.label,party:b.id,type:'receipts'}),`${cash(f.total)} in disclosed political receipts; ${f.count} records.${f.scope} Aggregated connection, not an individual gift. ${industrySentence(a.industry)}`.trim(),{aliases:(a.aliases||[]).join(' '),from:f.firstYear,to:f.lastYear,state:jur,parties:[b.label],source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(f.firstYear,f.lastYear)});
   }
  }
+ // A renamed party (labels.js PARTY_RENAMES) is one search entry under its current name, found by every
+ // former name, at its one page. A party the money map holds already has its entry above.
+ for(const r of renamedPartyRecords(PARTY_RENAMES)) if(!ids.has(r.key)) add(r.key,'party',r.title,r.href,r.snippet,r.extra);
  for(const node of (await read('graph/donor-index.json')).donors || []){const r=donorSearchRecord(node.jurisdiction || 'federal',node);add(r.key,r.kind,r.title,r.href,r.snippet,r.extra);}
  const suppliers=await read('suppliers.json');
  // a supplier with no counted contract (every notice cancelled at source or held for review) keeps its page, not a search entry

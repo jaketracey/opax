@@ -54,8 +54,10 @@ function summaryOut(c: RecordRow): RecordRow {
 function summaryCite(env: ToolEnv, c: RecordRow): ToolCitation {
   const counts = object(c.counts)
   const parts = [dated('established', c.established), dated('interim report', c.interim_report_date), dated('final report', c.final_report_date)].filter(Boolean)
-  const loaded = counts.recommendations ? `${counts.recommendations} recommendations loaded${counts.with_status ? `, ${counts.with_status} with a government-published status` : ''}` : c.recommendations_status === 'no_report' ? 'No report published or loaded' : 'Recommendations not loaded'
-  return { kind: 'record', url: siteUrl(env, String(c.file)), text: clip(`${c.name} (${TYPES[String(c.inquiry_type)] ?? 'inquiry'}, ${c.jurisdiction_name})${parts.length ? ': ' + parts.join(', ') : ''}. ${loaded}; ${counts.responses ?? 0} government response or implementation documents listed${counts.transcripts ? `; ${counts.transcripts} hearing transcripts listed as documents (evidence, not findings)` : ''}${counts.court_context ? '; a court has ruled on parts of a report (see the profile\'s court_context)' : ''}.`, 600) }
+  // Worded as the public record reads ("its reports make 57 recommendations"), never as OPAX stored it: a writer that
+  // copied "57 recommendations loaded; 0 … documents listed" produced "The report loaded 57 recommendations, with 0 …".
+  const loaded = counts.recommendations ? `Its reports make ${counts.recommendations} recommendations${counts.with_status ? `, ${counts.with_status} with a government-published status` : ''}` : c.recommendations_status === 'no_report' ? 'OPAX holds no published report' : 'OPAX does not hold its recommendations'
+  return { kind: 'record', url: siteUrl(env, String(c.file)), text: clip(`${c.name} (${TYPES[String(c.inquiry_type)] ?? 'inquiry'}, ${c.jurisdiction_name})${parts.length ? ': ' + parts.join(', ') : ''}. ${loaded}; ${counts.responses ? `${counts.responses} government response or implementation documents are held` : 'no government response or implementation document is held'}${counts.transcripts ? `; ${counts.transcripts} hearing transcripts are held (evidence, not findings)` : ''}${counts.court_context ? '; a court has ruled on parts of a report (see the profile\'s court_context)' : ''}.`, 600) }
 }
 
 const courtFor = (c: RecordRow, key: unknown) => records(c.court_context).filter(x => x.applies_to === key).map(x => ({ text: x.text, source_url: sourceUrl(object(x.cite).url) }))
@@ -96,6 +98,22 @@ function transcriptCite(t: RecordRow): ToolCitation {
     return { kind: 'record', url: text.hits[0].url, text: `${clip(`${t.commission}, ${t.title}${t.date ? ` (${dayWords(t.date)})` : ''}, ${body}`, 900)} ${TRANSCRIPT_LABEL}. ${text.attribution}.` }
   }
   return { kind: 'record', url: String(t.pdf_url ?? t.page_url), text: clip(`${t.commission}, ${t.title}${t.date ? ` (${dayWords(t.date)})` : ''}${t.pages ? `, ${t.pages} pages` : ''}. ${TRANSCRIPT_LABEL}.`, 400) }
+}
+
+/** The report's findings in its own words: the quotes the report record holds ("In the body's own words", checked
+ * verbatim against the cited page by scripts/report_summaries/gate.py and built into /report-records/). One fact per
+ * quote, cited to its page, so an accountability question can lead with what the commission found rather than with
+ * its dates and counts. Empty when the record or its quotes are not built. */
+async function findingCites(env: ToolEnv, c: RecordRow): Promise<ToolCitation[]> {
+  if (!ID.test(String(c.id))) return []
+  const record = object(await readToolAsset(env, `/report-records/royal-commission-${c.id}.json`).catch(() => null))
+  return records(object(object(record.summary).quotes).items).slice(0, 4).flatMap(q => {
+    const cite = object(q.cite), url = sourceUrl(cite.url), quote = String(q.quote ?? '').trim()
+    if (!url || !quote) return []
+    const page = Number.isInteger(cite.page) ? Number(cite.page) : null
+    return [{ kind: 'record' as const, url: page ? `${url}#page=${page}` : url,
+      text: clip(`${c.name}, ${cite.document || 'report'}${page ? `, page ${page}` : ''} [${q.kind === 'conclusion' ? 'conclusion' : 'finding'}], in the commission's own words: "${quote}"`, 700) }]
+  })
 }
 
 function recOut(c: RecordRow, r: RecordRow, reports: Map<string, RecordRow>): RecordRow {
@@ -143,7 +161,9 @@ export const tool: ToolDefinition = {
 
     if (args.view === 'list') {
       const rows = matched.slice(offset, offset + limit).map(summaryOut)
-      return publishedResult(rows, [{ kind: 'count', url: ix.url, text: coverage }, ...matched.slice(offset, offset + limit).map(c => summaryCite(env, c))],
+      // One commission named: its findings travel with its line, so a list call alone can answer what it found.
+      const findings = args.commission && matched.length === 1 ? await findingCites(env, matched[0]) : []
+      return publishedResult(rows, [{ kind: 'count', url: ix.url, text: coverage }, ...matched.slice(offset, offset + limit).map(c => summaryCite(env, c)), ...findings],
         { view: 'list', total: matched.length, offset, next_offset: offset + rows.length < matched.length ? offset + rows.length : null, snapshot, notes: [NOTE] })
     }
     if (args.view === 'profile') {
@@ -159,7 +179,7 @@ export const tool: ToolDefinition = {
         reports: records(c.reports).map(doc), responses: records(c.responses).map(doc), transcripts: transcriptSummary(c),
         reference_pages: records(c.reference_pages).map(x => ({ title: x.title, url: sourceUrl(x.url) })), status_source: c.status_source ?? null,
         recommendations: records(c.recommendations).length, notes: c.notes, gaps: c.gaps, follow_up: { view: 'recommendations', commission: c.id } }
-      const citations: ToolCitation[] = [summaryCite(env, matched[0])]
+      const citations: ToolCitation[] = [summaryCite(env, matched[0]), ...await findingCites(env, c)]
       // The record's own notes (whether it has reported, how its recommendations are counted, publication orders)
       // travel as facts, so a sitting commission is described as sitting rather than inferred from other sources.
       for (const n of (Array.isArray(c.notes) ? c.notes as unknown[] : []).map(String).slice(0, 3)) citations.push({ kind: 'record', url: siteUrl(env, String(matched[0].file)), text: clip(`${c.name} (OPAX note): ${n}`, 600) })

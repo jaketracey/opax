@@ -1,5 +1,6 @@
 /** Party names a reader or model writes, mapped to the KB's speech party labels (the party on the day). */
 const fold = (s: string) => s.normalize('NFKC').toLowerCase().replace(/[‘’]/g, "'").replace(/\bparty\b|\bof australia\b|\bthe\b|\baustralian\b/g, ' ').replace(/\s+/g, ' ').trim()
+const LIBERTARIAN = ['Libertarian Party', 'Liberal Democratic Party']
 const LABELS: Record<string, string[]> = {
   labor: ['Labor'], alp: ['Labor'], labour: ['Labor'],
   liberal: ['Liberal'], liberals: ['Liberal'],
@@ -13,6 +14,9 @@ const LABELS: Record<string, string[]> = {
   'country liberal': ['Country Liberal Party'], clp: ['Country Liberal Party'],
   'jacqui lambie network': ['Jacqui Lambie Network', 'JLN'], jln: ['Jacqui Lambie Network', 'JLN'], 'lambie network': ['Jacqui Lambie Network', 'JLN'],
   'centre alliance': ['Centre Alliance'], 'united australia': ['United Australia Party'], uap: ['United Australia Party'],
+  // One party under two names (labels.js PARTY_RENAMES): either name finds both, and each record keeps its own label.
+  libertarian: LIBERTARIAN, libertarians: LIBERTARIAN, 'liberal democratic': LIBERTARIAN, 'liberal democrats': LIBERTARIAN,
+  'liberal democrat': LIBERTARIAN, ldp: LIBERTARIAN, 'libertarian (formerly liberal democrats)': LIBERTARIAN,
 }
 /** "Coalition" is every Coalition party label. Unknown names return null so the caller can say so. */
 export function searchPartyLabels(party: string): string[] | null {

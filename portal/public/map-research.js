@@ -1,7 +1,7 @@
 import { readMoneyFilters } from './money-records.js?v=ia-ux-20260908-2';
-import {mountDataTable, guardTableURL} from './datatable.js?v=893767f2bd';
-import {prepareMoneyConnectionsConfig} from './money-connections.js?v=de45e8652c';
-import {receiptScopeLabel} from './donor-disclosure.js?v=6f3407d116';
+import {mountDataTable, guardTableURL} from './datatable.js?v=5fe413541f';
+import {prepareMoneyConnectionsConfig} from './money-connections.js?v=8e557afed0';
+import {receiptScopeLabel} from './donor-disclosure.js?v=dffa19bbff';
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 /**
  * What the table's receipt figures count, in the party page's words (receiptScopeLabel).

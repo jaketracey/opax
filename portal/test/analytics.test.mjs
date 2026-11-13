@@ -32,7 +32,7 @@ test('the three campaign tags on Opax links survive when they are plain slugs; e
   const event = beforeSend({ properties: { $current_url: 'https://opax.com.au/bill/x?utm_source=bluesky&utm_medium=social&utm_campaign=daily_record&utm_content=2026-09-26', utm_source: 'bluesky', utm_medium: 'social', utm_campaign: 'daily_record', utm_content: '2026-09-26', utm_term: 'private', gclid: 'private', fbclid: 'private', $client_session_initial_utm_source: 'private', $set_once: { $initial_utm_source: 'private' } } });
   assert.deepEqual([event.properties.utm_source, event.properties.utm_medium, event.properties.utm_campaign], ['bluesky', 'social', 'daily_record']);
   assert.equal(event.properties.utm_content, undefined);
-  assert.equal(event.properties.$current_url, 'https://opax.com.au/bill/x');
+  assert.equal(event.properties.$current_url, 'https://opax.com.au/bill/[id]');
   assert.ok(!JSON.stringify(event).includes('private'));
   const free = beforeSend({ properties: { $current_url: 'https://opax.com.au/', utm_source: 'my name is private', utm_campaign: 'x'.repeat(41), utm_medium: 7 } });
   assert.equal(free.properties.utm_source, undefined);
@@ -338,4 +338,165 @@ test('a zero viewport that is still zero once on screen stays off', async () => 
   assert.equal(h.scripts.length, 0);
   assert.equal(h.posthogInits(), 0);
   assert.equal(h.context.window.dataLayer, undefined);
+});
+
+// --- Feature-use events (telemetry scan, 13 Nov 2026, items 2, 5, 6 and 13) ---
+
+test('static pages are counted by name; their sub-pages and look-alikes stay /other', () => {
+  for (const page of ['press', 'today', 'sitting', 'budget', 'privacy', 'support', 'audit', 'estimates', 'instruments']) {
+    assert.equal(safePath(`/${page}`), `/${page}`);
+    assert.equal(safePath(`https://opax.com.au/${page}?q=private#private`), `/${page}`);
+    assert.equal(safePath(`/${page}/private-record`), '/other');
+    assert.equal(safePath(`/${page}private`), '/other');
+  }
+  assert.deepEqual(cleanEvent('opax_view', { page_path: '/press', page_section: 'press' }), { page_path: '/press', page_section: 'press' });
+});
+
+test('opax_source_open, opax_share and opax_press take fixed words only', () => {
+  for (const placement of ['inline', 'sources_pane', 'talk_sources', 'other'])
+    assert.deepEqual(cleanEvent('opax_source_open', { from_section: 'ask', placement, href: '/doc/private' }), { from_section: 'ask', placement });
+  assert.deepEqual(cleanEvent('opax_source_open', { from_section: 'ask', placement: 'private' }), { from_section: 'ask' });
+  for (const record_type of ['person', 'party', 'bill', 'electorate', 'doc', 'money', 'other'])
+    assert.deepEqual(cleanEvent('opax_share', { kind: 'copy_link', record_type, url: 'https://opax.com.au/doc/private' }), { kind: 'copy_link', record_type });
+  // A slug-shaped value would pass the generic check; here it is not one of the words.
+  assert.deepEqual(cleanEvent('opax_share', { kind: 'private-slug', record_type: 'private-person' }), {});
+  for (const action of ['asset_download', 'boilerplate_copy']) assert.deepEqual(cleanEvent('opax_press', { action, text: 'private' }), { action });
+  assert.deepEqual(cleanEvent('opax_press', { action: 'private' }), {});
+});
+
+async function clickHarness(html, doc = {}) {
+  const { JSDOM } = await import('jsdom');
+  const { runInNewContext } = await import('node:vm');
+  const dom = new JSDOM(`<!doctype html><body>${html}</body>`);
+  const h = browserHarness('0', {}, {}, doc);
+  h.context.Element = dom.window.Element;
+  const captured = [];
+  Object.assign(h.context, { cleanEvent, beforeSend, automationReason, likelyBot, whenMeasurable });
+  h.context.posthog = { init() {}, capture: (event, properties) => captured.push({ event, properties }) };
+  runInNewContext(readFileSync(new URL('../public/events.js', import.meta.url), 'utf8'), h.context);
+  runInNewContext(readFileSync(new URL('../analytics/index.js', import.meta.url), 'utf8').replace(/^import .*;\n/gm, ''), h.context);
+  const views = h.measured.length;
+  h.click = (selector) => h.context.dispatchEvent({ type: 'click', button: 0, target: dom.window.document.querySelector(selector) });
+  h.after = () => h.measured.slice(views);
+  return { ...h, dom, captured };
+}
+
+test('a source link says where it sat, and neither GA nor PostHog sees which record', async () => {
+  const h = await clickHarness(`
+    <article class="answer"><p>Said <a id="inline" href="/doc/2026-10-14-private-slug">here</a>.</p></article>
+    <details class="chat-sources"><a id="pane" href="/doc/2026-10-14-private-slug">Source</a></details>
+    <aside class="opax-voice"><div class="opax-voice-transcript"><a id="talk-inline" href="/doc/2026-10-14-private-slug">x</a></div>
+      <details class="opax-voice-sources"><a id="talk" href="/doc/2026-10-14-private-slug">x</a></details></aside>
+    <ul><li><a id="list" href="/doc/2026-10-14-private-slug">x</a></li></ul>`);
+  for (const id of ['inline', 'pane', 'talk-inline', 'talk', 'list']) h.click(`#${id}`);
+  assert.deepEqual(h.after().map((m) => [m.event, m.properties.placement]), [
+    ['opax_source_open', 'inline'], ['opax_source_open', 'sources_pane'], ['opax_source_open', 'inline'],
+    ['opax_source_open', 'talk_sources'], ['opax_source_open', 'other']]);
+  assert.deepEqual(h.captured.filter((c) => c.event === 'opax_source_open').map((c) => c.properties.placement), ['inline', 'sources_pane', 'inline', 'talk_sources', 'other']);
+  assert.ok(!/private/.test(JSON.stringify([h.measured, h.captured, h.context.window.dataLayer])));
+});
+
+test('press kit: an image taken and a boilerplate copy are counted, with no file name or text', async () => {
+  let anchor = null;
+  const h = await clickHarness(`
+    <p data-press-copy><strong>Short.</strong> <span id="words">private boilerplate words</span></p>
+    <p id="elsewhere">private other words</p>
+    <ul><li><a id="asset" data-press-asset href="/social/private-asset.png">Avatar</a></li><li><a id="plain" href="/methods">Methods</a></li></ul>`,
+  { getSelection: () => ({ anchorNode: anchor, toString: () => { throw new Error('the selection text is never read'); } }) });
+  const doc = h.dom.window.document;
+  h.click('#asset');
+  h.click('#plain');
+  anchor = doc.getElementById('words').firstChild; // a text node inside the boilerplate
+  h.context.dispatchEvent({ type: 'copy', target: doc.body });
+  anchor = doc.getElementById('elsewhere').firstChild;
+  h.context.dispatchEvent({ type: 'copy', target: doc.body });
+  // No selection API: the copy event's own target decides.
+  anchor = null;
+  h.context.dispatchEvent({ type: 'copy', target: doc.getElementById('words') });
+  assert.deepEqual(h.after().map((m) => [m.event, m.properties.action]),
+    [['opax_press', 'asset_download'], ['opax_press', 'boilerplate_copy'], ['opax_press', 'boilerplate_copy']]);
+  assert.deepEqual(h.captured.filter((c) => c.event === 'opax_press').map((c) => c.properties.action), ['asset_download', 'boilerplate_copy', 'boilerplate_copy']);
+  assert.ok(!/private/.test(JSON.stringify([h.measured, h.captured, h.context.window.dataLayer])));
+});
+
+test('the press kit loads the shared event emitter and PostHog, and marks its assets and boilerplate', () => {
+  const press = readFileSync(new URL('../public/press.html', import.meta.url), 'utf8');
+  assert.match(press, /src="\/events.js\?v=[^"]+" defer/);
+  assert.match(press, /src="\/gtm.js\?v=[^"]+" defer/);
+  assert.match(press, /src="\/analytics.js\?v=[^"]+" defer/);
+  assert.ok(press.indexOf('/analytics.js?v=') > press.indexOf('/events.js?v='));
+  assert.equal(press.match(/data-press-copy/g)?.length, 2);
+  assert.ok((press.match(/<a data-press-asset href="\/(?:social|og)[^"]*\.png"/g) || []).length >= 3);
+});
+
+// --- Record paths are templates (telemetry scan 1.5, item 1) ---
+
+const RECORD_PATHS = {
+  '/subject/person/jane-private': '/subject/person/[slug]',
+  '/subject/party/private-party-of-australia': '/subject/party/[slug]',
+  '/subject/donor/private-donor-pty-ltd': '/subject/donor/[slug]',
+  '/subject/supplier/private-supplier': '/subject/supplier/[slug]',
+  '/subject/topic/private-topic': '/subject/topic/[slug]',
+  '/bill/r7777private': '/bill/[id]',
+  '/doc/2026-10-14-private-speech': '/doc/[slug]',
+  '/money/grants/federal/recipient/private-recipient': '/money/grants/[jurisdiction]/recipient/[id]',
+  '/money/receipts/private-receipt': '/money/receipts/[id]',
+};
+
+test('record paths become templates; directories, money views and templates themselves are unchanged', () => {
+  for (const [path, template] of Object.entries(RECORD_PATHS)) {
+    assert.equal(safePath(path), template);
+    assert.equal(safePath(`https://opax.com.au${path}?q=private#private`), template);
+    assert.equal(safePath(`https://opax.com.au/#${path}`), template, 'a route-shaped hash from older links');
+    assert.equal(safePath(template), template, 'a template passes through unchanged');
+  }
+  for (const path of ['/subject', '/subject/person', '/subject/party', '/bill', '/bills', '/doc', '/money', '/money/receipts', '/money/grants', '/money/contracts'])
+    assert.equal(safePath(path), path);
+  // Anything not a known kind or view is reader input, not a page.
+  assert.equal(safePath('/subject/private-name'), '/other');
+  assert.equal(safePath('/money/Private%20Name'), '/other');
+  assert.deepEqual(cleanEvent('opax_view', { page_path: '/subject/person/jane-private', page_section: 'subject:person' }), { page_path: '/subject/person/[slug]', page_section: 'subject:person' });
+});
+
+test('no record path survives in page_path, $pathname, $current_url or any referrer or entry field', () => {
+  for (const path of Object.keys(RECORD_PATHS)) {
+    const url = `https://opax.com.au${path}`;
+    const event = beforeSend({ event: '$pageview', properties: {
+      page_path: cleanEvent('opax_view', { page_path: path }).page_path,
+      $pathname: path, $current_url: url, $referrer: url, $referring_domain: 'opax.com.au',
+      $initial_referrer: url, $initial_current_url: url, $initial_pathname: path,
+      $session_entry_url: url, $session_entry_pathname: path, $session_entry_referrer: url,
+      $prev_pageview_pathname: path, $set_once: { $initial_pathname: path },
+    } });
+    const p = event.properties;
+    assert.equal(p.$pathname, RECORD_PATHS[path]);
+    assert.equal(p.$current_url, `https://opax.com.au${RECORD_PATHS[path]}`);
+    assert.equal(p.page_path, RECORD_PATHS[path]);
+    assert.ok(!/private/.test(JSON.stringify(event)), JSON.stringify(event));
+  }
+});
+
+test('a record page view reaches GA and PostHog as its template only', async () => {
+  const { runInNewContext } = await import('node:vm');
+  const { context, location, emit } = browserHarness();
+  const captured = [];
+  Object.assign(context, { cleanEvent, beforeSend, automationReason, likelyBot, whenMeasurable });
+  let options;
+  context.posthog = { init(_t, o) { options = o; }, capture: (event, properties) => captured.push({ event, properties }) };
+  Object.assign(location, { href: 'https://opax.com.au/subject/person/jane-private', pathname: '/subject/person/jane-private', search: '' });
+  for (const file of ['events', 'ga']) runInNewContext(readFileSync(new URL(`../public/${file}.js`, import.meta.url), 'utf8'), context);
+  runInNewContext(readFileSync(new URL('../analytics/index.js', import.meta.url), 'utf8').replace(/^import .*;\n/gm, ''), context);
+  emit('DOMContentLoaded');
+  Object.assign(location, { href: 'https://opax.com.au/doc/2026-10-14-private-speech', pathname: '/doc/2026-10-14-private-speech' });
+  emit('opax:route');
+  emit('opax:analytics', { event: 'opax_share', properties: { kind: 'copy_link', record_type: 'doc' } });
+  // The SDK's own events go through before_send.
+  const sdk = captured.map((c) => options.before_send({ event: c.event, properties: { ...c.properties } }));
+  assert.deepEqual(captured.map((c) => [c.event, c.properties.$pathname ?? c.properties.page_path]),
+    [['$pageview', '/subject/person/[slug]'], ['$pageview', '/doc/[slug]'], ['opax_share', '/doc/[slug]']]);
+  assert.deepEqual(captured.map((c) => c.properties.page_section), ['subject:person', 'doc', 'doc']);
+  const ga = Array.from(context.window.opaxGaLayer.filter((e) => e[0] === 'event'), (e) => e[2]);
+  assert.deepEqual(Array.from(ga, (e) => e.page_location), ['https://opax.com.au/subject/person/[slug]', 'https://opax.com.au/doc/[slug]', 'https://opax.com.au/doc/[slug]']);
+  assert.equal(ga[1].page_referrer, 'https://opax.com.au/subject/person/[slug]');
+  assert.ok(!/private/.test(JSON.stringify([captured, sdk, context.window.dataLayer, ga])));
 });

@@ -4,6 +4,7 @@
  * wording, so the claim audit cannot tie its numbers to the record and strips the answer. When every fact is
  * a listing row, the transcript tool's own lines are the answer. Excerpts from transcript text still go to
  * the writer, which quotes or paraphrases them. */
+import {sentenceSpans} from './sentence-bounds.mjs'
 export const TRANSCRIPT_LABEL = 'Hearing transcript: evidence, not findings'
 /** Evidence before an inquiry is a different record from parliamentary discussion about its topic. */
 export function hearingEvidenceQuestion(question: string): boolean {
@@ -42,7 +43,7 @@ export function shortTranscriptQuote(excerpt: string, question = ''): string {
   // Prefer a complete topical sentence over an initial short response.
   const scaffolding = new Set(['what','which','said','witness','witnesses','royal','commission','transcript','hearing','about','evidence','findings'])
   const terms = new Set((question.toLowerCase().match(/\p{L}{4,}/gu) ?? []).filter(w => !scaffolding.has(w)))
-  const sentences = excerpt.split(/(?<=[.!?])\s+/)
+  const sentences = sentenceSpans(excerpt).map(s => s.text)
   const score = (s: string) => [...terms].filter(t => s.toLowerCase().includes(t)).length
   const topical = [...sentences].sort((a,b) => score(b) - score(a))[0] ?? excerpt
   const words = [...topical.matchAll(/\S+/g)]

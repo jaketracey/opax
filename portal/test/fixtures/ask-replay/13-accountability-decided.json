@@ -1,0 +1,122 @@
+{
+ "id": "accountability-decided",
+ "question": "Who decided to buy the Leppington Triangle land?",
+ "input": {
+  "kind": "speech"
+ },
+ "model": [
+  {
+   "tool_calls": [
+    {
+     "name": "search",
+     "args": {
+      "query": "Leppington Triangle land purchase decision"
+     }
+    }
+   ]
+  },
+  {
+   "tool_calls": [
+    {
+     "name": "answer",
+     "args": {
+      "points": [
+       {
+        "claim": "Taylor Sample told the Senate the then minister must have signed off on the purchase."
+       },
+       {
+        "claim": "The Auditor-General found the department did not conduct appropriate due diligence before it bought the land.",
+        "id": "dddddddddddddddddddddddddddddddd/t/body/0-152",
+        "quote": "did not conduct appropriate due diligence before it bought the land"
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "services": [
+  {
+   "path": "/find",
+   "match": [
+    "Leppington"
+   ],
+   "response": {
+    "resources": {
+     "dddddddddddddddddddddddddddddddd": {
+      "slug": "speech-910014",
+      "title": "Leppington Triangle",
+      "origin": {
+       "created": "2020-09-30T00:00:00Z",
+       "collaborators": [
+        "Casey Sample"
+       ]
+      },
+      "extra": {
+       "metadata": {
+        "kind": "speech"
+       }
+      },
+      "fields": {
+       "body": {
+        "paragraphs": {
+         "dddddddddddddddddddddddddddddddd/t/body/0-152": {
+          "text": "The Auditor-General found the department did not conduct appropriate due diligence before it bought the land, and the price paid was far above its value."
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "path": "/slug/speech-910014",
+   "response": {
+    "id": "dddddddddddddddddddddddddddddddd",
+    "title": "Leppington Triangle",
+    "origin": {
+     "created": "2020-09-30T00:00:00Z",
+     "collaborators": [
+      "Casey Sample"
+     ]
+    },
+    "extra": {
+     "metadata": {
+      "date": "2020-09-30",
+      "speaker": "Casey Sample"
+     }
+    },
+    "data": {
+     "texts": {
+      "body": {
+       "value": {
+        "body": "The Auditor-General found the department did not conduct appropriate due diligence before it bought the land, and the price paid was far above its value."
+       }
+      }
+     }
+    },
+    "usermetadata": {
+     "classifications": [
+      {
+       "labelset": "kind",
+       "label": "speech"
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "assets": {},
+ "expect": {
+  "answered": true,
+  "lead": "^The Auditor-General found the department",
+  "includes": [
+   "Taylor Sample"
+  ],
+  "citations": 1,
+  "cited": [
+   "dddddddddddddddddddddddddddddddd"
+  ]
+ }
+}

@@ -9,7 +9,7 @@
 <meta property="og:url" content="https://opax.com.au/press">
 <meta property="og:image" content="https://opax.com.au/og-default.png">
 <meta name="twitter:card" content="summary_large_image">
-<title>Press kit · OPAX</title><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/style.css?v=df103eebb9"><link rel="stylesheet" href="/ui-controls.css?v=ce29178242"><link rel="stylesheet" href="/nav.css?v=2ea742d4ee">
+<title>Press kit · OPAX</title><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/style.css?v=fac98cc2a8"><link rel="stylesheet" href="/ui-controls.css?v=ce29178242"><link rel="stylesheet" href="/nav.css?v=edd37b6174">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/merriweather-normal-latin.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/public-sans-normal-latin.woff2">
 <style>
@@ -24,8 +24,12 @@
 @font-face{font-family:'Public Sans';font-style:normal;font-weight:400 700;font-display:swap;src:url(/fonts/public-sans-normal-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 </style>
 <!-- fonts:end -->
-<script src="/quick-search.js?v=7f0d91ca48" defer></script>
-<script type="module" src="/navigation.js?v=5a97b288b9"></script>
+<script src="/events.js?v=84d63fa620" defer></script>
+<script src="/gtm.js?v=0764911f84" defer></script>
+<script src="/quick-search.js?v=1009512e8a" defer></script>
+<script type="module" src="/navigation.js?v=f8e186e029"></script>
+<!-- After the page's own scripts; PostHog replays earlier events (analytics/index.js). -->
+<script src="/analytics.js?v=5fb3114d72" defer></script>
 <style>#press-main{padding-top:var(--sp-24);padding-bottom:var(--space-section)}</style>
 </head>
 <body data-skip-target="press-main"><a class="visually-hidden" href="#press-main" data-skip>Skip to content</a>
@@ -94,8 +98,8 @@
 <p>Ask what Australian politicians actually said, see how they voted, and follow who funds them.</p>
 
 <h2 id="press-boilerplate">Boilerplate</h2>
-<p><strong>Short.</strong> OPAX (opax.com.au) is a free, open-source site and app that makes the Australian parliamentary record searchable and citable: speeches, votes, bills, donations, grants and contracts, each linked to its official source.</p>
-<p><strong>Long.</strong> OPAX, the Open Parliamentary Accountability Exchange, puts the public record of Australian politics in one place. It holds Hansard speeches from the Commonwealth Parliament and the New South Wales, Victorian, South Australian, Queensland and ACT legislatures, every recorded federal division since 2013 with each member's vote, every federal bill since 2013 with a plain-English summary marked as machine-written, political donation returns from the federal and state electoral commissions with donors named as the commissions publish them, and federal contracts and grants. Every item links to its official source. Ask answers questions in plain English from retrieved passages only, and cites them. A read-only MCP service lets research tools query the same record. OPAX is independent and non-partisan, built in Melbourne by Jake Tracey and published by Noice Pty Ltd under an open-source licence (AGPL-3.0).</p>
+<p data-press-copy><strong>Short.</strong> OPAX (opax.com.au) is a free, open-source site and app that makes the Australian parliamentary record searchable and citable: speeches, votes, bills, donations, grants and contracts, each linked to its official source.</p>
+<p data-press-copy><strong>Long.</strong> OPAX, the Open Parliamentary Accountability Exchange, puts the public record of Australian politics in one place. It holds Hansard speeches from the Commonwealth Parliament and the New South Wales, Victorian, South Australian, Queensland and ACT legislatures, every recorded federal division since 2013 with each member's vote, every federal bill since 2013 with a plain-English summary marked as machine-written, political donation returns from the federal and state electoral commissions with donors named as the commissions publish them, and federal contracts and grants. Every item links to its official source. Ask answers questions in plain English from retrieved passages only, and cites them. A read-only MCP service lets research tools query the same record. OPAX is independent and non-partisan, built in Melbourne by Jake Tracey and published by Noice Pty Ltd under an open-source licence (AGPL-3.0).</p>
 
 <h2 id="press-facts">Key facts</h2>
 <p>Counts as at 10 November 2026, from the live collection statistics at <a href="/stats">opax.com.au/stats</a>, which update as records are added.</p>
@@ -144,10 +148,10 @@
 <h2 id="press-images">Images</h2>
 <p>These may be used in coverage of OPAX with the credit "OPAX". They do not imply endorsement.</p>
 <ul class="about-list">
-<li><a href="/social/opax-header.png">Header image</a> (PNG, wide): the OPAX mark and wordmark on navy.</li>
-<li><a href="/social/opax-avatar.png">Avatar</a> (PNG, square): the OPAX mark.</li>
-<li><a href="/og-default.png">Default share card</a> (PNG, 1200 by 630).</li>
-<li>Share cards for individual pages, generated from the record: for example the <a href="/og/vic-election-2026.png">Victorian election card</a>. Any member, bill, grant or report page has one at the same address with <code>/og/</code> in front.</li>
+<li><a data-press-asset href="/social/opax-header.png">Header image</a> (PNG, wide): the OPAX mark and wordmark on navy.</li>
+<li><a data-press-asset href="/social/opax-avatar.png">Avatar</a> (PNG, square): the OPAX mark.</li>
+<li><a data-press-asset href="/og-default.png">Default share card</a> (PNG, 1200 by 630).</li>
+<li>Share cards for individual pages, generated from the record: for example the <a data-press-asset href="/og/vic-election-2026.png">Victorian election card</a>. Any member, bill, grant or report page has one at the same address with <code>/og/</code> in front.</li>
 <li>Screenshots of the app are on the <a href="https://apps.apple.com/au/app/opax/id6818756305" rel="noopener">App Store listing</a>.</li>
 </ul>
 
