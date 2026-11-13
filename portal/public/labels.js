@@ -224,6 +224,16 @@ export function sourceLineHTML({ updated = '', dateLabel = 'Updated', source = '
     `<div class="ui-sheet">${sheet || '<p>No further notes for this source.</p>'}</div></details>`;
 }
 
+/** The footer's coverage line, the same on every page: two dated figures from
+ *  corpus.json and the full table. Without the figures it is the link alone. */
+export function coverageLineHTML(corpus) {
+  const link = '<a href="/stats">Sources and coverage</a>';
+  const aec = corpus?.sources?.find?.((s) => String(s?.name).startsWith('AEC donations'));
+  if (!corpus?.version || !Number.isFinite(corpus.collected_speeches) || !Number.isFinite(aec?.docs)) return link;
+  const count = (n) => Number(n).toLocaleString('en-AU');
+  return `${count(corpus.collected_speeches)} speeches and ${count(aec.docs)} donation records, as at ${esc(shortDate(String(corpus.version).slice(0, 10)))} · ${link}`;
+}
+
 /** The adapter for fine print a block already writes: its paragraph becomes the
  *  notes of the block's source line, so a page moves over by wrapping what it
  *  has. `<p class="fineprint">${html}</p>` becomes

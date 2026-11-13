@@ -180,7 +180,7 @@ test('module touch targets are scoped to module controls, never record titles',(
  assert.match(css,/\.subject-person #subject-votes \.result-meta \{ display: block; \}/);
  const region=css.slice(css.indexOf('/* Landing modules'),css.indexOf('.growth-correction a'));
  assert.doesNotMatch(region,/--space-[0-9]|--heading-|font-size: *[0-9]|font: *[0-9]|(margin|padding|gap)[^;]*[0-9]px/);
- assert.match(core.correctionHTML(),/^<p class="growth-correction"><a href="\/support#support-report">Report a data correction<\/a><span>Response target: 48 hours\.<\/span><\/p>$/);
+ assert.match(core.correctionHTML(),/^<p class="growth-correction">Seen a mistake\? <a href="\/support#support-report">Tell us<\/a>\. We answer within two days\.<\/p>$/);
 });
 test('a supplier growth block that fails collapses instead of printing an error',async()=>{
  const {mountSupplierGrowth}=await import('../public/supplier-growth.js');

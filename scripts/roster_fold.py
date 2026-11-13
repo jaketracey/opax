@@ -24,6 +24,13 @@ seats, portrait and status; a person printed by initials also takes the print's 
 searches also read the speeches the knowledge box still holds under the bare surname, and the old
 /subject/person/<surname> address forwards to the person.
 
+Last, rows that carry one verified person id under several printed names fold into one person (fold_ids,
+docs/ROSTER-FOLDS.md "One verified id, one person"): "Mark Butler" and "Mark Christopher Butler" are one
+member, so one row, one address. The row printed under the electorate release's primary name for the id keeps
+its name and slug ("Bob Baldwin", not the formal "Robert Baldwin" with more speeches); where no row carries that
+name, the row with the most speeches (a tie goes to the sitting member). A surname print never holds it. The other
+names become `prints`, so their speeches, old addresses and records reach the one page.
+
   python3 scripts/roster_fold.py --directory portal/public/parliamentarians.json [--members members.json]
 
 scripts/vm/export_people.sh runs it on the enriched export, so the nightly keeps the folds; run by hand
@@ -33,11 +40,12 @@ import argparse
 import json
 import sys
 import unicodedata
+from itertools import combinations
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from scripts.roster_identity import COMMITTEES, FEDERAL, agrees, parts  # noqa: E402
+from scripts.roster_identity import COMMITTEES, FEDERAL, agrees, parts, same_person, usable_alias  # noqa: E402
 
 PUBLIC = ROOT / "portal" / "public"
 SPLIT_FIELDS = ("speech_scope", "separated_witnesses", "transcript")
@@ -102,7 +110,7 @@ def registry_from_reference(reference):
             spans = [(None, WRAGGE_LAST_YEAR)]
         for first, last in spans or [(None, None)]:
             out.append({"names": names, "jurisdiction": p.get("jurisdiction"), "first": first, "last": last,
-                        "open": last is None, "pid": legacy})
+                        "open": last is None, "pid": legacy, "primary": p.get("name") or ""})
     return out
 
 
@@ -258,10 +266,182 @@ def fold_twins(people):
     return [p for p in people if id(p) not in gone], folded
 
 
-def fold(people, registry=()):
+# --- One verified person id, several printed names (portal audit F2, 13 November 2026) ----------------------
+#
+# The export keys rows by the printed name, so one member printed two ways ("Mark Butler" and, in the 2021-22
+# reprints, "Mark Christopher Butler"; "Bob Baldwin" and "Robert Baldwin"; "Brendan O'Connor" with a straight and a
+# curly apostrophe) became two rows with the same verified `pid` (scripts/roster_identity.py) and two profile
+# addresses. The id is the evidence, checked again here against the record itself: every name must agree with the
+# person's (or be listed by hand in scripts/person_identity.json), the rows must share a parliament, every row's years
+# must touch the id's dated service where the electorate release has it, and no two rows may hold different seats
+# in one house in the same years (two people). Anything a fold cannot merge exactly (a witness split, committee-witness
+# rows, pending counts, dated or source-only identity) leaves the group for review.
+
+ID_HOLD_FIELDS = SPLIT_FIELDS + ("witness_rows", "speech_count_basis", "affiliations", "identity_basis",
+                                 "identity_evidence", "recorded_parties", "roster_only")
+
+
+def sub_print(row, group):
+    """A print that is only the tail of another name in the group: a surname ("Payman") or a shorter print
+    ("Nampijinpa Price" beside "Jacinta Nampijinpa Price"). It never holds the person's name or address."""
+    mine = parts(row["name"])
+    return len(mine) < 2 or any(o is not row and len(parts(o["name"])) > len(mine)
+                                and parts(o["name"])[-len(mine):] == mine for o in group)
+
+
+def release_names(pid, registry=()):
+    """The name keys the electorate release prints one verified id under as its primary name (registry_from_reference)."""
+    return {name_key(m["primary"]) for m in registry if pid and m.get("pid") == pid and m.get("primary")}
+
+
+def id_holder(group, registry=()):
+    """The row that keeps the person's name and slug, and takes the other rows' data. The row printed under the
+    electorate release's primary name for the id, where the release has one name for it and a row carries it: the
+    public "Bob Baldwin", not the formal "Robert Baldwin" with more speeches. Otherwise, and among spelling twins of
+    that name, the most speeches, then the sitting member's row. Never a surname print. None when every row is one."""
+    names = [p for p in group if not sub_print(p, group)]
+    if not names:
+        return None
+    primary = release_names(str(names[0].get("pid") or ""), registry)
+    public = [p for p in names if name_key(p["name"]) in primary] if len(primary) == 1 else []
+    return sorted(public or names, key=lambda p: (-(p.get("speeches") or 0), not p.get("current"), p["name"]))[0]
+
+
+def _houses(row):
+    seats = {}
+    for r in row.get("representation") or []:
+        seats.setdefault((r.get("jurisdiction"), r.get("chamber")), set()).add(r.get("electorate"))
+    return seats
+
+
+def id_problem(group, holder, registry=(), same=None):
+    """None when every row of `group` (one verified pid) is `holder`'s person and can merge exactly, else why not."""
+    pid = str(holder.get("pid") or "")
+    if not pid:
+        return "no verified id"
+    for p in group:
+        if str(p.get("pid") or "") != pid:
+            return f"{p['name']} carries another id"
+        held = [k for k in ID_HOLD_FIELDS if p.get(k)]
+        if held:
+            return f"{p['name']} carries {', '.join(held)} (a reviewed record of its own)"
+        if not isinstance(p.get("speeches"), int) or isinstance(p.get("speeches"), bool):
+            return f"{p['name']} has no speech count"
+    same = same_person() if same is None else same
+    names = [holder["name"], holder.get("full"), *(holder.get("aliases") or [])]
+    names += [n for m in registry if m.get("pid") == pid for n in m["names"]]
+    for p in group:
+        if p is holder:
+            continue
+        agreeing = any(same_name(n, m) for n in (p["name"], p.get("full")) if n for m in names if m)
+        if not agreeing and same.get(p["name"].strip().lower()) != pid:
+            return f"{p['name']} is not a name of {holder['name']} (no agreeing name, not in scripts/person_identity.json)"
+        if not set(p.get("states") or []) & set(holder.get("states") or []):
+            return f"{p['name']} shares no parliament with {holder['name']}"
+    # The electorate release dates House seats only, so only a row printed in the House alone is held to them.
+    terms = [m for m in registry if m.get("pid") == pid and m.get("first") is not None]
+    for p in group if terms else ():
+        if {"senate", "senate_committee"} & set(p.get("chambers") or []) or not set(p.get("states") or []) <= {"federal"}:
+            continue
+        if not any(overlaps(p.get("first"), p.get("last"), t["first"] - 1,
+                            None if t.get("open") or t.get("last") is None else t["last"] + 1) for t in terms):
+            return f"{p['name']} ({p.get('first')}-{p.get('last')}) falls outside the dated service of id {pid}"
+    for a, b in combinations(group, 2):
+        if not overlaps(a.get("first"), a.get("last"), b.get("first"), b.get("last")):
+            continue
+        sa, sb = _houses(a), _houses(b)
+        for house in sa.keys() & sb.keys():
+            if not sa[house] & sb[house]:
+                return f"{a['name']} and {b['name']} hold different seats in one house in the same years"
+    return None
+
+
+def merge_ids(target, variants):
+    """The person's row holding every other row of their id. Field by field (a field of the result reads only that
+    field of the rows), so a merge of the reviewed baseline and of today's rows differ only where the rows do:
+    speeches sum, houses and years join, seats join, the other names become prints and, where they are full names,
+    aliases (ahead of the reviewed source aliases); party labels the other rows spoke under join `parties`; a print's
+    members-register name fills an empty `full`, as in merge(); the person's name, id, party and status stay theirs."""
+    for v in variants:
+        target["speeches"] = (target.get("speeches") or 0) + (v.get("speeches") or 0)
+        target["states"] = _join(target.get("states"), v.get("states"))
+        target["chambers"] = _join(target.get("chambers"), v.get("chambers"))
+        for key, pick in (("first", min), ("last", max)):
+            values = [x for x in (target.get(key), v.get(key)) if x is not None]
+            if values:
+                target[key] = pick(values)
+    group = [target, *variants]
+    own = name_key(target["name"])
+    full = next((v["full"] for v in variants if v.get("full") and name_key(v["full"]) != own), None)
+    if full and not target.get("full"):
+        # A print's members-register name ("Dave Tollner" on "Tollner"), as merge() takes it.
+        target["full"] = full
+    spoken = [v["name"] for v in variants if usable_alias(v["name"]) and not sub_print(v, group)]
+    aliases = [n for n in dict.fromkeys([*spoken, *(target.get("aliases") or []),
+                                         *(a for v in variants for a in v.get("aliases") or [])]) if name_key(n) != own]
+    if aliases or "aliases" in target:
+        target["aliases"] = aliases
+    labels, seen = [], set()
+    for p in (target.get("party"), *(target.get("parties") or []),
+              *(x for v in variants for x in (v.get("party"), *(v.get("parties") or [])))):
+        if p and name_key(p) not in seen:
+            seen.add(name_key(p))
+            labels.append(p)
+    if labels and not target.get("party"):
+        target["party"] = labels[0]
+    if len(labels) > 1:
+        target["parties"] = labels
+    sitting = next((v for v in variants if v.get("current")), None)
+    if sitting and not target.get("current"):
+        target["current"] = True
+        if sitting.get("party_now") and not target.get("party_now"):
+            target["party_now"] = sitting["party_now"]
+    seats = list(target.get("representation") or [])
+    have = {(r.get("jurisdiction"), r.get("chamber"), r.get("electorate")) for r in seats}
+    for v in variants:
+        for r in v.get("representation") or []:
+            key = (r.get("jurisdiction"), r.get("chamber"), r.get("electorate"))
+            if key not in have:
+                have.add(key)
+                seats.append(r)
+    if seats or "representation" in target:
+        target["representation"] = seats
+    target["prints"] = sorted({*target.get("prints", []), *(n for v in variants for n in (v["name"], *v.get("prints", [])))})
+    return target
+
+
+def id_groups(people):
+    """{pid: [rows]} for every verified id the roster prints under more than one name."""
+    groups = {}
+    for p in people:
+        if p.get("pid"):
+            groups.setdefault(str(p["pid"]), []).append(p)
+    return {pid: rows for pid, rows in groups.items() if len(rows) > 1}
+
+
+def fold_ids(people, registry=(), same=None):
+    """(people with each verified id's rows folded into one, [(print, person)], [(names, why)]). Rows are not copied.
+    The other rows merge in name order, so the result does not depend on the roster's order."""
+    registry = list(registry)
+    folded, skipped, gone = [], [], set()
+    for pid, group in id_groups(people).items():
+        holder = id_holder(group, registry)
+        why = "every row is a surname print" if holder is None else id_problem(group, holder, registry, same)
+        if why:
+            skipped.append((" / ".join(sorted(p["name"] for p in group)), why))
+            continue
+        variants = sorted((p for p in group if p is not holder), key=lambda p: p["name"])
+        merge_ids(holder, variants)
+        gone.update(id(v) for v in variants)
+        folded += [(v["name"], holder["name"]) for v in variants]
+    return [p for p in people if id(p) not in gone], folded, skipped
+
+
+def fold(people, registry=(), same=None):
     """(people with the certain prints folded, [(print, person)], [(print, why)]). Rows are not copied.
 
-    Spelling twins fold first (fold_twins), so a surname print is judged against one row per person."""
+    Spelling twins fold first (fold_twins), so a surname print is judged against one row per person; rows that
+    share a verified id fold last (fold_ids), so the surname rule reads the rows as exported."""
     registry = list(registry)
     people, twins = fold_twins(people)
     folded, skipped, gone = list(twins), [], set()
@@ -275,6 +455,9 @@ def fold(people, registry=()):
         gone.add(id(stub))
         folded.append((stub["name"], target["name"]))
     out = [p for p in people if id(p) not in gone]
+    out, by_id, id_skipped = fold_ids(out, registry, same)
+    folded += by_id
+    skipped += id_skipped
     out.sort(key=lambda r: (-(r.get("speeches") or 0), r["name"]))
     return out, folded, skipped
 
@@ -284,18 +467,41 @@ def main(argv=None):
     ap.add_argument("--directory", type=Path, default=PUBLIC / "parliamentarians.json")
     ap.add_argument("--members", type=Path, help="the members table dump (export_people.sh); adds dated terms")
     ap.add_argument("--report", type=Path, help="write the folded and skipped prints as JSON")
+    ap.add_argument("--ids-only", action="store_true",
+                    help="fold only the rows that share a verified id (fold_ids): how a review applies them to the "
+                         "committed roster, which the other folds were already judged on")
+    ap.add_argument("--rebase-accept", type=Path, metavar="ACCEPT",
+                    help="with --ids-only: move the reviewed accept-list groups of the folded rows onto their person "
+                         "(scripts/roster_accept.py rebase_folds), rewriting ACCEPT in place")
     a = ap.parse_args(argv)
     doc = json.loads(a.directory.read_text())
     registry = default_registry()
     if a.members:
         registry += registry_from_members(json.loads(a.members.read_text() or "[]"))
-    doc["people"], folded, skipped = fold(doc["people"], registry)
+    before = doc["people"]
+    if a.ids_only:
+        import copy
+        doc["people"], folded, skipped = fold_ids(copy.deepcopy(before), registry)
+        # The shipped order is a stable sort by speeches (roster_accept.ordered): only moved rows move.
+        doc["people"].sort(key=lambda r: -(r.get("speeches") or 0))
+    elif a.rebase_accept:
+        ap.error("--rebase-accept needs --ids-only")
+    else:
+        doc["people"], folded, skipped = fold(before, registry)
+    if a.rebase_accept:
+        from scripts import roster_accept
+        text = a.rebase_accept.read_text(encoding="utf-8")
+        folds = {}
+        for stub, person in folded:
+            folds.setdefault(person, []).append(stub)
+        changes = roster_accept.rebase_folds(json.loads(text), before, doc["people"], folds)
+        a.rebase_accept.write_text(roster_accept.edit_records(text, changes), encoding="utf-8")
     doc["meta"]["people"] = len(doc["people"])
     doc["meta"]["prints_folded"] = sum(len(p.get("prints") or []) for p in doc["people"])
     a.directory.write_text(json.dumps(doc, ensure_ascii=False, separators=(",", ":")) + "\n")
     if a.report:
         a.report.write_text(json.dumps({"folded": folded, "skipped": skipped}, ensure_ascii=False, indent=1) + "\n")
-    print(f"[fold] {len(folded)} surname prints folded into their person, {len(skipped)} left as they are", file=sys.stderr)
+    print(f"[fold] {len(folded)} prints folded into their person, {len(skipped)} left as they are", file=sys.stderr)
 
 
 if __name__ == "__main__":

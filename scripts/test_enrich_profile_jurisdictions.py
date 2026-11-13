@@ -293,9 +293,11 @@ class GeneralGuardTests(unittest.TestCase):
 
     def test_dated_election_aliases_preserve_verified_federal_nicknames(self):
         people={p['name']:p for p in json.loads((profiles.PUBLIC/'parliamentarians.json').read_text())['people']}
+        # These stubs fold into the full-name row holding their verified id (scripts/roster_fold.py fold_ids).
+        people.update({s:p for p in list(people.values()) for s in p.get('prints') or [] if s not in people})
         for name,pid in [('Macklin','10409'),('Hockey','10306'),('Ripoll','10542')]:
             self.assertEqual(people[name]['pid'],pid)
-            self.assertTrue(people[name]['full'])
+            self.assertTrue(people[name].get('full') or len(people[name]['name'].split())>1)
 
     def test_bad_stub_aliases_never_become_given_names(self):
         from parli.ingest.link_speakers import normalize_state_speaker_name

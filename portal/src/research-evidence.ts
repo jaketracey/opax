@@ -72,7 +72,7 @@ export function pointsDraft(points:AnswerPoint[]):AnswerDraft {
  for(const point of points){if(text)text+='\n';text+='- ';const start=Array.from(text).length;text+=point.claim;if(point.id)citations.push({id:point.id,quote:point.quote??'',start,end:Array.from(text).length})}
  return {text,citations}
 }
-const sourcesOf=(used:Passage[],cited=true):QualitativeAnswer['sources']=>[...new Map(used.map(p=>[p.resource,{resource:p.resource,slug:p.slug,title:p.title,href:p.url,url:p.url,snippet:p.text,cited,kind:p.kind,...(p.date?{date:p.date}:{}),...(p.speaker?{speaker:p.speaker}:{})}])).values()]
+const sourcesOf=(used:Passage[],cited=true):QualitativeAnswer['sources']=>[...new Map(used.map(p=>[p.resource,{resource:p.resource,slug:p.slug,title:p.title,href:p.url,url:p.url,snippet:p.text,cited,kind:p.kind,...(p.date?{date:p.date}:{}),...(p.speaker?{speaker:p.speaker}:{}),...(p.chamber?{chamber:p.chamber}:{})}])).values()]
 /** Accept draft prose, attaching retrieved citations where available. */
 /** The draft is the answer. Its citations attach where they name a retrieved passage and a range inside the text;
  * text without a citation stands, and the answer says how much of it is cited. */

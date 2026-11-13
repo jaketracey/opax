@@ -43,10 +43,25 @@ test('incomplete enrichment is never shown as completed corpus coverage',async()
  assert.ok(html.includes('One record can connect to several entries'));
 });
 
+test('a record page leaves out connections under three records, and the block no longer apologises',async()=>{
+ const id='c'.repeat(24);
+ const entry=(records)=>({records,kind:'organisation',years:{},excerpts:[]});
+ const prior=globalThis.fetch;
+ for (const [records,shown] of [[2,false],[3,true]]) {
+  globalThis.fetch=async(url)=>({ok:true,status:200,json:async()=>String(url).includes('/lookup/')?{'acme holdings':[id]}:{entries:{[id]:entry(records)}}});
+  try {
+   const root={hidden:true,innerHTML:''};
+   assert.equal(await mountEvidence(root,{name:'Acme Holdings'}),shown,`${records} records`);
+   assert.equal(root.hidden,!shown);
+   if (shown) assert.ok(!root.innerHTML.includes('not searchable yet'));
+  }finally{globalThis.fetch=prior;}
+ }
+});
+
 // When the connections data is from: one date, read from the export's own
 // metadata (generated_at), said once per block. Fixture names are invented.
 const META={generated_at:'2026-09-08T09:21:53.082961+00:00',source_records:{speeches:1310477,ext_press_releases:21234,government_grants:230007}};
-const ENTRY={records:2,kind:'organisation',years:{2025:2},excerpts:[{text:'Example Freight Co was named.',matched_text:'Example Freight Co',source_kind:'Official release',source_id:'1',start:0,end:18}]};
+const ENTRY={records:3,kind:'organisation',years:{2025:3},excerpts:[{text:'Example Freight Co was named.',matched_text:'Example Freight Co',source_kind:'Official release',source_id:'1',start:0,end:18}]};
 const count=(html,needle)=>html.split(needle).length-1;
 
 test('the as-at day is the Sydney calendar day of the export build, or nothing',async()=>{

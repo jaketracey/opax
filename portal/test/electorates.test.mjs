@@ -52,7 +52,8 @@ test('released electorates render complete candidate lists, safe HTML and distin
     const entry = index.electorates.find((e) => e.name === name);
     const data = JSON.parse(readFileSync(publicFile(entry.detail_url)));
     const html = profileHTML(data);
-    assert.match(html, /Latest verified representation/);
+    assert.match(html, /<h2 class="ui-section-title">(Current|Last recorded) members?<\/h2>/);
+    assert.doesNotMatch(html, /verified representation|Retrieved|\(exclusive\)|end not recorded/);
     for (const contest of data.elections) for (const c of contest.candidates) assert.ok(html.includes(c.name.replaceAll('&', '&amp;').replaceAll("'", '&#39;')));
     if (data.elections.length) assert.match(html, /Two-candidate preferred/);
     const unsafe = profileHTML({ ...data, name: '<img src=x onerror=alert(1)>' });
@@ -114,14 +115,31 @@ test('roster names in capitals read in title case; Mc, Mac and O\' keep their sh
   assert.equal(displayName("SAM O'TEST"), "Sam O'Test");
   assert.equal(displayName('Robin McTest'), 'Robin McTest');
 });
-test('an electorate page has one visible title and says relation years in words', () => {
+test('an electorate page has one visible title and names its related electorates plainly', () => {
   const entry = index.electorates.find((e) => e.name === 'Farrer');
   const data = JSON.parse(readFileSync(publicFile(entry.detail_url)));
   const html = profileHTML({ ...data, relations: [{ related: { slug: 'x', name: 'Elsewhere', chamber: 'senate' }, vintage: '2026 source configuration' }, { related: { slug: 'y', name: 'Other', chamber: 'senate' }, vintage: '2025' }] });
   assert.match(html, /^<div class="ui-page-head el-head"><h1 id="subject-title" tabindex="-1">Farrer<\/h1>/);
   assert.doesNotMatch(html, /source configuration/);
-  assert.match(html, />Elsewhere<\/a> · Senate · as at 2026<\/li>/);
-  assert.match(html, />Other<\/a> · Senate · as at 2025<\/li>/);
+  assert.match(html, />Elsewhere<\/a> · Senate<\/li>/);
+  assert.match(html, />Other<\/a> · Senate<\/li>/);
+  assert.doesNotMatch(html, / as at 20\d\d/);
+  assert.match(html, /<h2 class="ui-section-title">Related electorates<\/h2>/);
+  const upper = profileHTML({ ...data, relations: [{ kind: 'within_upper_house', related: { slug: 'x', name: 'New South Wales', chamber: 'senate' }, vintage: '2026' }] });
+  assert.match(upper, /<h2 class="ui-section-title">Also represents you<\/h2>/);
+  assert.match(upper, /<h2 class="ui-section-title">Who lives here<\/h2>/);
+});
+test('service periods read as dates: "Since" for an open record, "to" for a closed one', () => {
+  const entry = index.electorates.find((e) => e.name === 'Farrer');
+  const data = JSON.parse(readFileSync(publicFile(entry.detail_url)));
+  const html = profileHTML({ ...data, terms: [
+    { person_id: 'x', start: '1996-03-02', end: null, end_precision: 'open', observed_through: '2026-09-09', party_periods: [] },
+    { person_id: 'y', start: '1990-03-24', end: '1996-03-02', end_precision: 'day', party_periods: [] },
+  ] });
+  assert.match(html, /Since <time>2 Mar 1996<\/time>/);
+  assert.match(html, /<time>24 Mar 1990<\/time> to <time>2 Mar 1996<\/time>/);
+  assert.doesNotMatch(html, /\(exclusive\)|end not recorded|observed /);
+  assert.match(html, /As at /);
 });
 
 test('every Victorian electorate profile keeps Jake’s exact authorisation after client rendering', () => {
@@ -145,7 +163,7 @@ test('empty census and election sections are left out, heading and all', () => {
   assert.match(full, /id="el-context"/);
   assert.match(full, /id="el-elections"/);
   const empty = profileHTML({ ...data, demographics: [], elections: [] });
-  for (const gone of ['id="el-context"', 'Census context', 'id="el-elections"', 'Election timeline']) assert.ok(!empty.includes(gone), gone);
+  for (const gone of ['id="el-context"', 'Who lives here', 'id="el-elections"', 'Election timeline']) assert.ok(!empty.includes(gone), gone);
   assert.doesNotMatch(empty, /imported|indexed|in this release|dated release/i);
   assert.match(empty, /id="el-history"/);
 });
