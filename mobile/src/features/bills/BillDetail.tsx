@@ -488,7 +488,9 @@ export function PaneMenu({
     );
   return (
     <View testID={testID} accessibilityLabel="More" style={styles.paneMenu}>
-      <Host matchContents>
+      {/* A fixed frame: a content-sized host re-measured late after a width
+          change and drew ⋯ a line below Ask and Share (build 61, Duo). */}
+      <Host style={styles.paneMenuHost}>
         <Menu label="" systemImage={symbols.more}>
           {items.map((item) => (
             <SwiftButton
@@ -2119,6 +2121,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  paneMenuHost: { width: minimumTarget, height: minimumTarget },
   toolbar: {
     flexDirection: 'row',
     justifyContent: 'space-between',

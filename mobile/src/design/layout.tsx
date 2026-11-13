@@ -308,7 +308,22 @@ export function Screen({
                           : {}),
                       }}
                     >
-                      {bar}
+                      {bar ? (
+                        // The record starts just under its pane actions,
+                        // not a section gap below them (build 61 Bills).
+                        <View
+                          testID="screen-pane-bar"
+                          style={{
+                            marginBottom:
+                              rhythm.tight * 2 -
+                              (regular
+                                ? rhythmRegular.section
+                                : rhythm.section),
+                          }}
+                        >
+                          {bar}
+                        </View>
+                      ) : null}
                       {androidRoot.title}
                       <ScreenSectionGapContext.Provider
                         value={regular ? rhythmRegular.section : rhythm.section}

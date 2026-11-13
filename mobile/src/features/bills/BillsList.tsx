@@ -95,7 +95,11 @@ import type { BillEntry } from './navigation';
 import { BillIndexRow } from './parts';
 import { useCatalogRecord } from './useCatalogRecord';
 
-const PLACEHOLDER = 'Bills, sponsors and portfolios';
+// Short enough for the bar's field on a phone and beside a Duo's split
+// ("Bills, sponsors and por…" at 240pt). The field still matches sponsors
+// and portfolios. react-native-screens 4.26 gives the native field no
+// accessibility label of its own, so VoiceOver reads this placeholder.
+export const PLACEHOLDER = 'Search bills';
 const LIST_NOTE = 'This list may not include every bill yet.';
 
 /**
