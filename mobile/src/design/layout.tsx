@@ -7,8 +7,10 @@ import {
   isValidElement,
   useCallback,
   useContext,
+  useEffect,
   useImperativeHandle,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type ReactElement,
@@ -17,6 +19,7 @@ import {
   type RefObject,
 } from 'react';
 import {
+  Animated,
   Platform,
   ScrollView,
   StyleSheet,
@@ -58,6 +61,7 @@ import {
   SurfaceContext,
 } from './row-padding';
 import { usePaneBar, useSplitPane } from './split';
+import { useHeaderBottom } from './useHeaderBottom';
 import { ScreenSectionGapContext, StatePageProvider } from './states';
 import { Heading, Text } from './text';
 import {
@@ -130,6 +134,82 @@ export function useScreenColumn(
   return { onLayout, content, inner, bar, breakout, regular };
 }
 
+/** Half a point of rounding between UIKit's inset and the reported bar. */
+const underBarSlack = 1;
+const stickyFirst = [0];
+
+/**
+ * Screen's pinned band: it scrolls with the content until its top meets the
+ * bar's bottom edge, then holds there. React Native's own sticky header
+ * holds at the scroll view's top, which runs under the translucent bar, so
+ * the band would hide behind the bar and the search field. This is that
+ * header (ScrollViewStickyHeader) with the stick point moved down by the
+ * header's height; Fabric needs the same explicit value on each commit, or a
+ * re-render would put the band back where the last commit left it.
+ */
+function BarStickyHeader(props: {
+  children?: ReactNode;
+  onLayout: (event: LayoutChangeEvent) => void;
+  scrollAnimatedValue: Animated.Value;
+  nativeID?: string | null;
+}) {
+  const { scrollAnimatedValue } = props;
+  const headerBottom = useHeaderBottom();
+  const [top, setTop] = useState<number | null>(null);
+  const [latest, setLatest] = useState<number | null>(null);
+  const translateY = useMemo(() => {
+    if (top === null)
+      return scrollAnimatedValue.interpolate({
+        inputRange: [-1, 0],
+        outputRange: [0, 0],
+      });
+    const stick = top - headerBottom;
+    return scrollAnimatedValue.interpolate({
+      inputRange: [stick - 1, stick, stick + 1],
+      outputRange: [0, 0, 1],
+      extrapolateLeft: 'clamp',
+      extrapolateRight: 'extend',
+    });
+  }, [scrollAnimatedValue, top, headerBottom]);
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const id = translateY.addListener(({ value }) => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => setLatest(value), stickyDebounce);
+    });
+    return () => {
+      translateY.removeListener(id);
+      if (timer) clearTimeout(timer);
+    };
+  }, [translateY]);
+  const child = Children.only(props.children) as ReactElement<{
+    style?: ViewProps['style'];
+  }>;
+  return (
+    <Animated.View
+      collapsable={false}
+      nativeID={props.nativeID ?? undefined}
+      testID="screen-pinned-header"
+      onLayout={(event) => {
+        setTop(event.nativeEvent.layout.y);
+        props.onLayout(event);
+      }}
+      style={[child.props.style, styles.stuck, { transform: [{ translateY }] }]}
+      // Not in the public Animated.View type; createAnimatedComponent reads it.
+      {...{
+        passthroughAnimatedPropExplicitValues:
+          latest === null
+            ? null
+            : { style: { transform: [{ translateY: latest }] } },
+      }}
+    >
+      {cloneElement(child, { style: styles.fillPinned })}
+    </Animated.View>
+  );
+}
+/** React Native's sticky header settles its explicit value after 64 ms. */
+const stickyDebounce = 64;
+
 /**
  * A scrolling screen on paper, under the native navigation bar. It is the
  * first scroll view in the screen, so the large title collapses and the
@@ -139,6 +219,7 @@ export function useScreenColumn(
 export function Screen({
   testID,
   children,
+  pinned,
   refreshControl,
   scrollRef,
   onScroll,
@@ -176,6 +257,12 @@ export function Screen({
   scrollRef?: Ref<ScrollView>;
   onScroll?: (y: number) => void;
   children: ReactNode;
+  /**
+   * iOS: a control first in the content that stays in view under the bar
+   * once the page scrolls (Search's scope control, sweep 1, item 1). Other
+   * platforms draw it first in the content and let it scroll.
+   */
+  pinned?: ReactNode;
   refreshControl?: ReactElement<RefreshControlProps>;
   /** The content column on regular width: `readable` (700pt) or `wide`. */
   column?: keyof typeof columns;
@@ -189,14 +276,28 @@ export function Screen({
   const androidRoot = useAndroidRootScroll(androidScroll, colors[ground]);
   const setOptions = useSafeSetOptions();
   const inPane = useSplitPane() !== null;
+  // Content under the bar: its top has passed the bar's bottom edge. At rest
+  // UIKit insets the content to that edge exactly, and while a large title
+  // collapses the content follows the edge up, so this turns on only once
+  // something can be read behind the title, the clock or a search field.
+  const headerBottom = useHeaderBottom();
+  const scrollY = useRef<number | null>(null);
+  const [underBar, setUnderBar] = useState(false);
+  const checkUnderBar = useCallback(() => {
+    if (Platform.OS !== 'ios' || scrollY.current === null) return;
+    setUnderBar(scrollY.current + headerBottom > underBarSlack);
+  }, [headerBottom]);
+  useLayoutEffect(checkUnderBar, [checkUnderBar]);
   const nativeRoot = useRootBarAppearance(setOptions, {
     ground: colors[ground],
     disabled: inPane,
+    underBar,
   });
   useLayoutEffect(() => {
     // A detail pane must not recolour its parent route's navigation bar.
     if (!inPane && !nativeRoot) setOptions(opaqueBar(colors[ground]));
   }, [setOptions, ground, inPane, nativeRoot]);
+  const pinnedHere = Platform.OS === 'ios' && !!pinned;
   const contentRoot = useRef<View>(null);
   const [anchorBottom, setAnchorBottom] = useState<number | null>(null);
   const titleScroll = useRef<TitleScrollHandler | null>(null);
@@ -272,6 +373,8 @@ export function Screen({
           onScroll={(event) => {
             if (clampScrollOnContentChange) bounds.onScroll(event);
             const y = event.nativeEvent.contentOffset.y;
+            scrollY.current = y;
+            checkUnderBar();
             if (Platform.OS === 'android') androidRoot.onScroll(y);
             if (titleScroll.current) titleScroll.current(y, anchorBottom);
             else if (!inPane && barTitle) nativeTitle.onScroll(y);
@@ -284,7 +387,41 @@ export function Screen({
             clampScrollOnContentChange ? bounds.onScroll : undefined
           }
           scrollEventThrottle={16}
+          stickyHeaderIndices={pinnedHere ? stickyFirst : undefined}
+          StickyHeaderComponent={pinnedHere ? BarStickyHeader : undefined}
         >
+          {pinnedHere ? (
+            <View
+              testID="screen-pinned"
+              style={[
+                {
+                  // Full width, so rows scrolling under it never show at its
+                  // sides; its own content keeps the page margins.
+                  marginLeft: -(
+                    content.paddingLeft ?? content.paddingHorizontal
+                  ),
+                  marginRight: -(
+                    content.paddingRight ?? content.paddingHorizontal
+                  ),
+                  paddingLeft: content.paddingLeft ?? content.paddingHorizontal,
+                  paddingRight:
+                    content.paddingRight ?? content.paddingHorizontal,
+                  backgroundColor: colors[ground],
+                  // The content's own gap would stand between this band and
+                  // the content; it keeps a line's space instead.
+                  marginBottom:
+                    rhythm.line -
+                    (regular ? rhythmRegular.section : layout.sectionGap),
+                },
+              ]}
+            >
+              <RegionProvider value={inner}>
+                <SurfaceContext.Provider value={ground}>
+                  {pinned}
+                </SurfaceContext.Provider>
+              </RegionProvider>
+            </View>
+          ) : null}
           <RegionProvider value={inner}>
             <SurfaceContext.Provider value={ground}>
               <TitleAnchorContext.Provider value={setContentAnchor}>
@@ -310,6 +447,7 @@ export function Screen({
                     >
                       {bar}
                       {androidRoot.title}
+                      {pinned && !pinnedHere ? pinned : null}
                       <ScreenSectionGapContext.Provider
                         value={regular ? rhythmRegular.section : rhythm.section}
                       >
@@ -811,6 +949,8 @@ function anchorHeadings(children: ReactNode): ReactNode {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
+  stuck: { zIndex: 10 },
+  fillPinned: { flex: 1 },
   content: {
     paddingHorizontal: layout.screenMargin,
     paddingTop: rhythm.block,

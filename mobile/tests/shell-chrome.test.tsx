@@ -1390,6 +1390,96 @@ test.each(fadeCases)(
     }),
 );
 
+// Sweep 1, item 1: soft alone blurs only the status strip, so Today's title,
+// the clock and Search's field printed over page text once it scrolled
+// under the bar. The edge turns hard then, and only then.
+const scrollTo = (renderer: TestRenderer.ReactTestRenderer, y: number) =>
+  act(() =>
+    renderer.root
+      .findByType(ScrollView)
+      .props.onScroll({ nativeEvent: { contentOffset: { y } } }),
+  );
+const edgeCalls = (navigation: { setOptions: jest.Mock }) =>
+  navigation.setOptions.mock.calls
+    .map(([options]) => options.scrollEdgeEffects?.top)
+    .filter(Boolean);
+test.each([
+  ['(today)', 'index'],
+  ['(search)', 'search'],
+] as const)(
+  '%s %s turns the top edge hard once text runs under the bar, soft again at rest',
+  (segment, name) =>
+    withGlass(() => {
+      const { navigation, ground, page } = fadePage(name, segment);
+      const expanded = 120;
+      const renderer = tree(page(expanded));
+      try {
+        navigation.setOptions.mockClear();
+        // At rest UIKit insets the content to the bar's bottom edge.
+        scrollTo(renderer, -expanded);
+        expect(edgeCalls(navigation)).toEqual([]);
+        // Under the expanded bar, before the collapse height arrives.
+        scrollTo(renderer, -expanded + 40);
+        expect(navigation.setOptions).toHaveBeenLastCalledWith(
+          expect.objectContaining({
+            ...largeTitleBar(ground, false, true),
+            headerLargeTitleEnabled: true,
+          }),
+        );
+        expect(edgeCalls(navigation)).toEqual(['hard']);
+        // Collapsed: text keeps running under the compact bar, no repeats.
+        act(() => renderer.update(page(68)));
+        scrollTo(renderer, 0);
+        scrollTo(renderer, 400);
+        expect(edgeCalls(navigation)).toEqual(['hard']);
+        // Back to the top: the bar expands over clean ground.
+        scrollTo(renderer, -68);
+        act(() => renderer.update(page(expanded)));
+        scrollTo(renderer, -expanded);
+        expect(edgeCalls(navigation)).toEqual(['hard', 'soft']);
+        expect(RootBar!.setSolid).not.toHaveBeenCalled();
+      } finally {
+        act(() => renderer.unmount());
+      }
+    }),
+);
+
+test.each([
+  ['(your-mp)', 'your-mp'],
+  ['(bills)', 'bills'],
+  ['(ask)', 'ask'],
+] as const)('%s %s keeps the soft edge under scrolled text', (segment, name) =>
+  withGlass(() => {
+    const { navigation, page } = fadePage(name, segment);
+    const renderer = tree(page(120));
+    try {
+      navigation.setOptions.mockClear();
+      if (renderer.root.findAllByType(ScrollView).length) {
+        scrollTo(renderer, 0);
+        scrollTo(renderer, 400);
+      }
+      expect(edgeCalls(navigation)).not.toContain('hard');
+    } finally {
+      act(() => renderer.unmount());
+    }
+  }),
+);
+
+test('the accessibility backing keeps the edge hidden under scrolled text', () =>
+  withGlass(() => {
+    mockSolidBar = true;
+    const { navigation, page } = fadePage('index', '(today)');
+    const renderer = tree(page(120));
+    try {
+      navigation.setOptions.mockClear();
+      scrollTo(renderer, 400);
+      expect(edgeCalls(navigation)).not.toContain('hard');
+    } finally {
+      act(() => renderer.unmount());
+      mockSolidBar = false;
+    }
+  }));
+
 test.each([41, 52, 85])(
   'a pinned search field with a %s pt title never adds a backing',
   (titleHeight) =>
