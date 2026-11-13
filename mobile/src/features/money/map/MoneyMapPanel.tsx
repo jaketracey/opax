@@ -22,6 +22,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useReduceMotion } from '../../../design/accessibility';
 import { Icon } from '../../../design/icon';
+import { useAccessibilityFocusRequest } from '../../../design/keyboard';
 import {
   counted,
   formatMoney,
@@ -231,8 +232,22 @@ export function MoneyMapPanel({
       </Text>
     </View>
   );
+  // A search result's subject is where VoiceOver goes next: the search
+  // field it was chosen from has closed.
+  const titleRef = useAccessibilityFocusRequest('money-map-focus');
   const entityTitle = focus ? (
-    <View style={styles.grow}>
+    <View
+      style={styles.grow}
+      // Without a page to open, the title still reads as one line.
+      ref={entityRoute ? undefined : titleRef}
+      accessible={!entityRoute}
+      accessibilityLabel={
+        entityRoute
+          ? undefined
+          : `${focusMetaLine(focus.node)}, ${focus.node.label}`
+      }
+      testID="money-map-focus-title"
+    >
       <Text variant="footnote" wordSafe testID="money-map-focus-meta">
         {focusMetaLine(focus.node)}
       </Text>
@@ -287,6 +302,7 @@ export function MoneyMapPanel({
               <View style={styles.titleRow}>
                 {entityRoute ? (
                   <Pressable
+                    ref={titleRef}
                     accessibilityRole="link"
                     accessibilityLabel={`${focusMetaLine(focus.node)}, ${focus.node.label}`}
                     onPress={entityLink.open}

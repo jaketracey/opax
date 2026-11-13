@@ -1,6 +1,6 @@
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
 import { colors } from '../src/design/tokens';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
@@ -565,3 +565,115 @@ test.each(['android', 'ios'] as const)(
     }
   },
 );
+
+// VoiceOver and TalkBack: the search card closes either way, so the reader's
+// place moves on with it rather than falling back to the top of the screen.
+test.each([
+  ['ios', 'setAccessibilityFocus'],
+  ['android', 'sendAccessibilityEvent'],
+] as const)(
+  '%s: a search result moves the screen reader to the new subject, Close back to Search',
+  async (os, call) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
+    Object.defineProperty(Platform, 'OS', { configurable: true, value: os });
+    const moved = jest
+      .spyOn(AccessibilityInfo, call)
+      .mockImplementation(() => undefined);
+    // Views in tests are component instances; iOS asks for a native handle,
+    // which here is the view's test ID, so a move names the view it reached.
+    const ReactNative = jest.requireActual<object>('react-native');
+    const native = Object.getOwnPropertyDescriptor(
+      ReactNative,
+      'findNodeHandle',
+    )!;
+    Object.defineProperty(ReactNative, 'findNodeHandle', {
+      configurable: true,
+      value: (view: { props?: { testID?: string } } | null) =>
+        view?.props?.testID ?? null,
+    });
+    let r!: TestRenderer.ReactTestRenderer;
+    const settle = () =>
+      act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      });
+    const reached = () =>
+      moved.mock.calls.map(([target]) =>
+        typeof target === 'string'
+          ? target
+          : (target as unknown as { props: { testID?: string } }).props.testID,
+      );
+    try {
+      await act(async () => {
+        r = TestRenderer.create(
+          withNavigationOptions(<MoneyScreen />, () => undefined),
+        );
+      });
+      const search = () =>
+        r.root
+          .findAllByType(IconButton)
+          .find((b) => b.props.testID === 'money-map-search')!;
+      // Close: back on the button that opened the search.
+      act(() => search().props.onPress());
+      await act(async () => r.root.findByType(MoneyMapSearch).props.onClose());
+      await settle();
+      expect(reached()).toEqual(['money-map-search']);
+      // A result: on the panel's subject, a link to its record.
+      act(() => search().props.onPress());
+      await act(async () =>
+        r.root.findByType(MoneyMapSearch).props.onChoose('party:Labor'),
+      );
+      await act(async () =>
+        r.update(withNavigationOptions(<MoneyScreen />, () => undefined)),
+      );
+      await settle();
+      expect(reached()).toEqual(['money-map-search', 'money-map-focus-link']);
+      expect(byTestID(r.root, 'money-map-focus-link')!.props).toMatchObject({
+        accessibilityRole: 'link',
+        accessibilityLabel: 'Party, Labor',
+      });
+      // Nothing else moves it: Zoom and the panel's own steps leave it be.
+      act(() =>
+        r.root
+          .findAllByType(IconButton)
+          .find((b) => b.props.testID === 'money-map-zoom-in')!
+          .props.onPress(),
+      );
+      await settle();
+      expect(moved).toHaveBeenCalledTimes(2);
+    } finally {
+      if (r) act(() => r.unmount());
+      moved.mockRestore();
+      Object.defineProperty(ReactNative, 'findNodeHandle', native);
+      Object.defineProperty(Platform, 'OS', descriptor);
+    }
+  },
+);
+
+test('a subject without a page reads as one title line', async () => {
+  const r = await render();
+  await act(async () => stage().onFocus('party:Labor'));
+  await act(async () =>
+    r.update(withNavigationOptions(<MoneyScreen />, () => undefined)),
+  );
+  const props = r.root.findByType(MoneyMapPanel).props;
+  act(() => r.unmount());
+  let panel!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    panel = TestRenderer.create(
+      <MoneyMapPanel
+        {...props}
+        focus={{
+          ...props.focus!,
+          node: { ...props.focus!.node, kind: 'unknown' as MapNode['kind'] },
+        }}
+      />,
+    );
+  });
+  const title = panel.root.find(
+    (n) =>
+      typeof n.type === 'string' && n.props.testID === 'money-map-focus-title',
+  );
+  expect(title.props.accessible).toBe(true);
+  expect(title.props.accessibilityLabel).toMatch(/, Labor$/);
+  act(() => panel.unmount());
+});

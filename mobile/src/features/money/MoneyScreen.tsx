@@ -29,6 +29,7 @@ import { ReservedRegionArea, useReservedRegions } from '../../design/fold-area';
 import type { RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
 import { copy } from '../../design/copy';
+import { requestFocus } from '../../design/keyboard';
 import {
   counted,
   formatCount,
@@ -747,8 +748,16 @@ function MapMode({
   const topContent = searchOpen ? (
     <MoneyMapSearch
       model={model}
-      onChoose={flyTo}
-      onClose={() => setSearchOpen(false)}
+      // The search card closes either way, taking VoiceOver's place with it:
+      // a result moves it to the panel's new subject, Close back to Search.
+      onChoose={(id) => {
+        requestFocus('money-map-focus');
+        flyTo(id);
+      }}
+      onClose={() => {
+        requestFocus('money-map-search');
+        setSearchOpen(false);
+      }}
     />
   ) : (
     <View style={styles.card} testID="money-map-card">

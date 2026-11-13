@@ -1,4 +1,5 @@
 import { StyleSheet, View } from 'react-native';
+import { useAccessibilityFocusRequest } from '../../../design/keyboard';
 import { IconButton } from '../../../design/primitives';
 import { symbols } from '../../../design/symbols';
 import { colors, hairline, radii } from '../../../design/tokens';
@@ -21,12 +22,15 @@ export function MoneyMapControls({
   onFit: () => void;
   horizontal?: boolean;
 }) {
+  // Closing search puts VoiceOver back on the button that opened it.
+  const searchRef = useAccessibilityFocusRequest('money-map-search');
   return (
     <View
       style={[styles.stack, horizontal ? styles.horizontal : null]}
       testID="money-map-controls"
     >
       <IconButton
+        ref={searchRef}
         symbol={symbols.search}
         accessibilityLabel="Search the map"
         onPress={onSearch}
