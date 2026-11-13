@@ -240,7 +240,7 @@ test('real Liberal and Greens page lists count each person once and agree with t
   const directory = await renderEntry('/subject/party?sort=name', 'li.dir-row');
   assert.deepEqual(directory.errors, []);
   const doc = new JSDOM(directory.html).window.document;
-  for (const [slug, expected] of [['liberal', 314], ['greens', 41]]) {
+  for (const [slug, expected] of [['liberal', 338], ['greens', 47]]) {
     const row = doc.querySelector(`a[href="/subject/party/${slug}"]`).closest('li');
     const figure = [...row.querySelectorAll('.dir-fig')].find(n => n.textContent.includes('parliamentarians in the record'));
     assert.equal(figure.querySelector('b').textContent, String(expected));
