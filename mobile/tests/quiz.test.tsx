@@ -231,7 +231,9 @@ test('starting a round keeps the named Back button when the question installs it
   });
   expect(options()).not.toHaveProperty('headerBackTitle');
   for (const [delta] of navigation.setOptions.mock.calls)
-    expect(Object.keys(delta).filter((key) => key.startsWith('headerBack'))).toEqual([]);
+    expect(
+      Object.keys(delta).filter((key) => key.startsWith('headerBack')),
+    ).toEqual([]);
 });
 
 test('a full round: typed guesses exact, every answer then its source, and the result with eight reviews', async () => {
@@ -275,7 +277,7 @@ test('a full round: typed guesses exact, every answer then its source, and the r
       );
       if (q.format === 'money')
         expect(byID('quiz-guess-value').props.accessibilityLabel).toBe(
-          'Your guess, $929,297',
+          'Your guess, $850,000',
         );
       expect(
         root()
@@ -288,7 +290,7 @@ test('a full round: typed guesses exact, every answer then its source, and the r
     await press('quiz-confirm');
     expect(has('quiz-confirm')).toBe(false);
     const source = withProp(`quiz-source-${i}`, 'citation');
-    expect(source.props.asOf).toBe('2026-09-21');
+    expect(source.props.asOf).toBe('2026-11-11');
     expect(['AEC annual returns', 'OPAX topics', 'OPAX']).toContain(
       source.props.citation,
     );
@@ -312,8 +314,10 @@ test('a full round: typed guesses exact, every answer then its source, and the r
   );
   expect(quizSession.inProgress()).toBeNull();
   // The review shows the guess as typed, never a second answer for a figure.
-  await press('quiz-review-0');
-  expect(allText()).toContain('$929,297');
+  await press(
+    `quiz-review-${round.findIndex((q) => q.kind === 'slider' && q.format === 'money')}`,
+  );
+  expect(allText()).toContain('$850,000');
   expect(allText()).not.toMatch(/Answer: \$/);
   const share = options().unstable_headerRightItems()[0];
   const { shareRecord } = jest.requireMock('../src/navigation/share');
@@ -332,11 +336,17 @@ test('a full round: typed guesses exact, every answer then its source, and the r
 test('the reveal keeps the reader’s own answer and marks the right one, by word', async () => {
   await mount(<Quiz />);
   await press('quiz-start');
-  const q = quizRounds.mixed[0]![0]!;
-  await answer(q);
-  await press('quiz-confirm');
-  await press('quiz-next');
-  const second = quizRounds.mixed[0]![1]!;
+  // Answer up to the round's first single-choice question after the first.
+  const round = quizRounds.mixed[0]!;
+  const at = round.findIndex(
+    (q, i) => i > 0 && ['mc', 'tf', 'higher-lower'].includes(q.kind),
+  );
+  for (const q of round.slice(0, at)) {
+    await answer(q);
+    await press('quiz-confirm');
+    await press('quiz-next');
+  }
+  const second = round[at]!;
   const wrong = second.options!.findIndex((o) => !o.correct);
   await press(`quiz-answer-${wrong}`);
   await press('quiz-confirm');
@@ -453,8 +463,17 @@ test('at accessibility sizes the footer flows after the content and the typed gu
   expect(footer()).toHaveLength(0);
   expect(toolbars()).toHaveLength(0);
   expect(has('quiz-confirm')).toBe(true);
+  // Move on to the round's first typed guess.
+  const round = quizRounds.mixed[0]!;
+  const at = round.findIndex((q) => q.kind === 'slider' || q.kind === 'year');
+  for (const q of round.slice(0, at)) {
+    await answer(q);
+    await press('quiz-confirm');
+    await press('quiz-next');
+  }
+  expect(footer()).toHaveLength(0);
   expect(has('quiz-guess-value')).toBe(true);
-  await answer(quizRounds.mixed[0]![0]!);
+  await answer(round[at]!);
   await press('quiz-confirm');
   expect(has('quiz-next')).toBe(true);
 });

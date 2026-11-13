@@ -20,7 +20,7 @@ const partyLinks = questions.filter((q) =>
 );
 
 test('every quiz party link resolves to one recorded party', () => {
-  expect(partyLinks).toHaveLength(34);
+  expect(partyLinks).toHaveLength(33);
   const resolved = new Map<string, string | null>();
   for (const q of partyLinks) {
     const destination = quizDestination(q);
@@ -46,7 +46,7 @@ test('every quiz party link resolves to one recorded party', () => {
   // Each name is itself a recorded label, found on the roster alone.
   expect(Object.fromEntries(resolved)).toEqual({
     Liberal: 'Liberal',
-    'Country Liberal Party': 'Country Liberal Party',
+    Labor: 'Labor',
     'One Nation': 'One Nation',
     LNP: 'LNP',
     Nationals: 'Nationals',

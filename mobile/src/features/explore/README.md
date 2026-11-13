@@ -46,15 +46,21 @@ the hub does no data reads.
 ### Data
 
 `quiz-rounds.json` holds 48 eight-question rounds, 16 for each web deck, from
-the checked-in web question engine (`portal/public/quiz.js`) over the public
-static exports. Prompts, answers and grading follow that engine. Private
-donor names are never bundled (the generator skips any round naming one).
-From `mobile/`, regenerate with:
+the web question engine (`portal/public/quiz.js`) over the public static
+exports, read from an up-to-date portal main checkout (not this repo's own
+`portal/public` copy, which lags). The engine is imported by file URL
+(`scripts/explore-engine.mjs`), so its own imports such as
+`donor-disclosure.js` resolve and donor figures count each receipt once, as on
+the web. Prompts, answers, grading and donor names follow that engine. The
+same run writes `quiz-front-page.json`. From `mobile/`, regenerate with:
 
 ```sh
-node scripts/generate-explore.mjs
-npx prettier --write src/features/explore/quiz-rounds.json
+node scripts/generate-explore.mjs --portal <portal main checkout>/portal
+npx prettier --write src/features/explore/quiz-rounds.json src/features/explore/quiz-front-page.json
 ```
+
+After regenerating, update the pinned money hash and donor totals in
+`tests/explore-generator.test.ts` from the donor records in that checkout.
 
 The snapshot records input SHA-256 hashes, including the engine's. Two old web
 caveats predate the money export's public-money additions; the app uses the
@@ -108,7 +114,8 @@ type FrontPageQuestion = {
   (`/explore/quiz?q=<id>`). Read it through `frontPageDeck` and
   `frontPageQuestion(id)` in `quiz/data.ts`, which apply the same on-screen
   punctuation as the quiz.
-- Rule: every question in `quiz-rounds.json` whose subject a general reader
+- `generate-explore.mjs` writes it from the rounds by this rule: every
+  question in `quiz-rounds.json` whose subject a general reader
   recognises (parliament, its record, parliamentarians, parties, the AEC's
   rules), one per id, sorted by id. Templates: `words-topic-higher-lower`,
   `words-topic-figure`, `words-year-order`, `words-peak-year`,
@@ -116,9 +123,8 @@ type FrontPageQuestion = {
   `words-record-true-false`, `money-party-peak-year`,
   `money-party-from-industry`, `money-true-false`. No donor or industry
   question. `tests/explore.test.ts` checks the file against this rule.
-- 71 questions today. It is a candidate for the reviewed deck (DIRECTION
-  data lane D5): Jake reviews it before ship, and the engine should write it
-  beside the rounds.
+- 77 questions today. It is a candidate for the reviewed deck (DIRECTION
+  data lane D5): Jake reviews it before ship.
 
 ## Tools
 
