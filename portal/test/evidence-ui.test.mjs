@@ -75,23 +75,23 @@ test('the dated line is the house source line, with the long date, the counts an
  const {evidenceDateHTML}=await import('../public/evidence-date.js');
  const html=evidenceDateHTML(META);
  assert.equal(count(html,'class="ui-pop ui-source"'),1);
- assert.ok(html.includes('As at 8 Sep 2026'),html);
+ assert.ok(html.includes('Updated 8 Sep 2026'),html);
  assert.ok(html.includes('Speeches, official releases and grant records'));
  assert.ok(html.includes('Connections from records collected to 8 September 2026.'));
  for(const figure of ['1,310,477','21,234','230,007'])assert.ok(html.includes(figure),figure);
  assert.ok(html.includes('href="/evidence/stats.json"'));
  assert.ok(!html.includes('—'),'no em dashes in page text');
- assert.equal(evidenceDateHTML(META,{plain:true}),'<p class="evidence-as-at">As at 8 Sep 2026 · Speeches, official releases and grant records</p>');
+ assert.equal(evidenceDateHTML(META,{plain:true}),'<p class="evidence-as-at">Updated 8 Sep 2026 · Speeches, official releases and grant records</p>');
  assert.equal(evidenceDateHTML({generated_at:'old'}),'');
  assert.equal(evidenceDateHTML(null,{plain:true}),'');
 });
 
 test('a connection panel says its date once at its foot, and not at all without metadata',()=>{
  const dated=evidenceHTML(ENTRY,{meta:META});
- assert.equal(count(dated,'As at 8 Sep 2026'),1);
- assert.ok(dated.indexOf('As at 8 Sep 2026')>dated.indexOf('They do not establish influence'),'the date follows the fine print');
+ assert.equal(count(dated,'Updated 8 Sep 2026'),1);
+ assert.ok(dated.indexOf('Updated 8 Sep 2026')>dated.indexOf('They do not establish influence'),'the date follows the fine print');
  assert.equal(count(evidenceHTML(ENTRY,{meta:META,plain:true}),'class="evidence-as-at"'),1);
- for(const html of [evidenceHTML(ENTRY),evidenceHTML(ENTRY,{meta:null})])assert.ok(!html.includes('As at'));
+ for(const html of [evidenceHTML(ENTRY),evidenceHTML(ENTRY,{meta:null})])assert.ok(!html.includes('Updated'));
 });
 
 async function routed(module,{stats=META}={}){
@@ -120,8 +120,8 @@ test('a mounted panel reads the export date once a page and shows it at its foot
   assert.equal(await module.mountEvidence(first,{name}),true);
   assert.equal(await module.mountEvidence(second,{name}),true);
   assert.equal(await module.mountEvidence(compact,{name},{compact:true}),true);
-  for(const root of [first,second])assert.equal(count(root.innerHTML,'As at 8 Sep 2026'),1);
-  assert.equal(count(compact.innerHTML,'<p class="evidence-as-at">As at 8 Sep 2026'),1,'the money map card takes the plain line');
+  for(const root of [first,second])assert.equal(count(root.innerHTML,'Updated 8 Sep 2026'),1);
+  assert.equal(count(compact.innerHTML,'<p class="evidence-as-at">Updated 8 Sep 2026'),1,'the money map card takes the plain line');
   assert.equal(requests.filter(url=>url==='/evidence/stats.json').length,1,'the panels on a page share one read');
  }finally{restore();}
 });
@@ -134,7 +134,7 @@ test('a panel still shows, undated, when the export date cannot be read',async()
   assert.equal(await module.mountEvidence(root,{name}),true);
   assert.equal(root.hidden,false);
   assert.ok(root.innerHTML.includes('Example Freight Co'));
-  assert.ok(!root.innerHTML.includes('As at'));
+  assert.ok(!root.innerHTML.includes('Updated'));
   assert.equal(await module.mountEvidence({hidden:true,innerHTML:''},{name}),true);
   assert.equal(requests.filter(url=>url==='/evidence/stats.json').length,2,'a failed read is tried again');
  }finally{restore();}

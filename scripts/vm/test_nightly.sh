@@ -144,6 +144,7 @@ DREOF
   cp "$SRC/tests/fixtures/evidence-nightly/export_stub.py" "$seed/scripts/export_evidence_layers.py"
   cp "$SRC/tests/fixtures/evidence-nightly/audit_stub.py" "$seed/scripts/audit_evidence_export.py"
   python3 "$SRC/tests/fixtures/evidence-nightly/seed.py" "$seed/portal/public/evidence"
+  python3 "$SRC/tests/fixtures/evidence-nightly/pin_budget.py" "$seed/scripts/vm/evidence_guard.py" "$seed/portal/public/evidence"
   # Acquisition/review is tested offline by tests.test_promote_hub_data. This
   # fixture checks nightly ordering, independent failure and group rollback.
   cat > "$seed/scripts/promote_hub_data.py" <<'HPEOF'
