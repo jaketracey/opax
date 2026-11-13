@@ -235,34 +235,54 @@ function commentsOf(
     }));
 }
 
-/** `a11y-ok:` or `a11y-ok(rule, rule):` opening a comment, then the reason. */
+/**
+ * `a11y-ok:` or `a11y-ok(rule, rule):` opening a comment, then the reason.
+ * A reason may run on over the `//` lines straight after the marker.
+ */
 function markersOf(
   source: ts.SourceFile,
   comments: ReturnType<typeof commentsOf>,
 ): Marker[] {
   const text = source.getFullText();
-  return comments.flatMap((comment) => {
-    const body = text
+  const bodyOf = (comment: (typeof comments)[number]) =>
+    text
       .slice(comment.pos, comment.end)
       .replace(/^\/\/|^\/\*+|\*+\/$/g, '')
       .split('\n')
       .map((line) => line.replace(/^\s*\*?\s?/, '').trim())
       .join(' ')
       .trim();
-    const match = /^a11y-ok(?:\(([a-z, -]+)\))?:\s*(.*)$/.exec(body);
-    if (!match) return [];
-    return [
-      {
-        line: comment.first,
-        last: comment.last,
-        rules: match[1]
-          ? (match[1].split(',').map((rule) => rule.trim()) as A11yRule[])
-          : null,
-        reason: match[2]!.trim(),
-        used: false,
-      },
-    ];
+  const pattern = /^a11y-ok(?:\(([a-z, -]+)\))?:\s*(.*)$/;
+  const markers: Marker[] = [];
+  comments.forEach((comment, index) => {
+    const match = pattern.exec(bodyOf(comment));
+    if (!match) return;
+    const words = [match[2]!.trim()];
+    let last = comment.last;
+    const line = text.slice(comment.pos, comment.pos + 2) === '//';
+    for (let after = index + 1; line && after < comments.length; after++) {
+      const next = comments[after]!;
+      const body = bodyOf(next);
+      if (
+        text.slice(next.pos, next.pos + 2) !== '//' ||
+        next.first !== last + 1 ||
+        pattern.test(body)
+      )
+        break;
+      words.push(body);
+      last = next.last;
+    }
+    markers.push({
+      line: comment.first,
+      last,
+      rules: match[1]
+        ? (match[1].split(',').map((rule) => rule.trim()) as A11yRule[])
+        : null,
+      reason: words.join(' ').trim(),
+      used: false,
+    });
   });
+  return markers;
 }
 
 function isComponentBoundary(node: ts.Node): boolean {

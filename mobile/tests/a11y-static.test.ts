@@ -142,6 +142,33 @@ describe('a11y-static rules', () => {
     });
   });
 
+  it('reads a marker reason that runs over the // lines after it', () => {
+    const report = scanA11y(
+      'src/features/x/Styles.tsx',
+      [
+        "import { StyleSheet } from 'react-native';",
+        'const styles = StyleSheet.create({',
+        '  label: {',
+        '    // a11y-ok(raw-font-size): the Material navigation bar label;',
+        '    // it follows the system font size.',
+        '    fontSize: 12,',
+        '  },',
+        '});',
+        'export default styles;',
+      ].join('\n'),
+    );
+    expect(report.issues).toEqual([]);
+    expect(report.exceptions).toEqual([
+      {
+        path: 'src/features/x/Styles.tsx',
+        line: 4,
+        rules: ['raw-font-size'],
+        reason:
+          'the Material navigation bar label; it follows the system font size.',
+      },
+    ]);
+  });
+
   it('classifies every design component that renders a pressable', () => {
     // A new wrapper in src/design must be read and added to designPressables:
     // either it names itself, or the rule checks its call sites.
