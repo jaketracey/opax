@@ -103,18 +103,26 @@ test('RESEARCH_LOOP=off: legacy fields remain byte-identical; stepped research m
   const mainCopy=(text,stream)=>!COPY.some(([from])=>text.includes(from))?text:stream
    ?text.replace(/^(data: )(\{.*\})$/gm,(all,frame,data)=>COPY.some(([from])=>data.includes(from))?frame+JSON.stringify(recopyPayload(JSON.parse(data))):all)
    :JSON.stringify(recopyPayload(JSON.parse(text)));
-  // 13 Nov (im/ask-fallbacks): an empty answer is sent as unanswered (answered: false), so readers show their
-  // no-answer view instead of a blank answer. origin/main's empty done payloads get the same flag before the
-  // byte comparison; every other byte is still pinned.
-  const unanswered=payload=>payload&&typeof payload.answer==='string'&&!payload.answer.trim()&&!('answered' in payload)&&typeof payload.error!=='string'?{...payload,answered:false}:payload;
-  const mainUnanswered=(text,stream)=>stream
-   ?text.replace(/(event: done\r?\ndata: )([^\r\n]+)/g,(_all,frame,data)=>frame+JSON.stringify(unanswered(JSON.parse(data))))
-   :JSON.stringify(unanswered(JSON.parse(text)));
+  // 13 Nov (im/ask-blank-cause, after im/ask-fallbacks): an empty answer never reaches a reader. With nothing found it is
+  // the no-record answer naming what was searched (from the research trail). origin/main's empty done payloads go
+  // through the current boundary (ensureAnswerText, with no question as on this RESEARCH_LOOP=off path), holding this
+  // branch's research trail (main has no stepped trail to name a search from), before research is dropped and the
+  // bytes compared; every other byte is still pinned.
+  const boundary=await build({entryPoints:[root+'portal/src/research-response.ts'],bundle:true,platform:'node',format:'esm',write:false});
+  const {ensureAnswerText}=await import('data:text/javascript;base64,'+Buffer.from(boundary.outputFiles[0].text).toString('base64'));
+  const unanswered=(payload,research)=>payload&&typeof payload.answer==='string'&&!payload.answer.trim()&&!('answered' in payload)&&typeof payload.error!=='string'?ensureAnswerText(research?{...payload,research}:payload):payload;
+  const doneData=(text,stream)=>JSON.parse(stream?text.match(/event: done\r?\ndata: ([^\r\n]+)/)?.[1]??'{}':text);
+  const mainUnanswered=(text,stream,served)=>{
+   const research=doneData(served,stream).research;
+   return stream
+    ?text.replace(/(event: done\r?\ndata: )([^\r\n]+)/g,(_all,frame,data)=>frame+JSON.stringify(unanswered(JSON.parse(data),research)))
+    :JSON.stringify(unanswered(JSON.parse(text),research));
+  };
   for(const q of gold)for(const stream of [false,true]) {
    expected=q.expected;
    const post=h=>h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json','x-opax-nocache':'1',...(stream?{accept:'text/event-stream'}:{})},body:JSON.stringify({question:q.question,kind:'speech',period:'all'})});
    const a=await post(main),b=await post(current);assert.equal(b.status,a.status,q.id);
-   const [after,before]=[legacyBody(await b.text(),stream),mainUnanswered(mainCopy(legacyBody(await a.text(),stream),stream),stream)];
+   const served=await b.text(),[after,before]=[legacyBody(served,stream),legacyBody(mainUnanswered(mainCopy(await a.text(),stream),stream,served),stream)];
    // 14 Oct: origin/main read lowercase words as surname-only people ("speakers on defence" -> "On") and
    // declined these; the capitalised-surname rule now answers them from tool rows. Every other body stays byte-identical.
    if(PARTY_CLARIFY.has(q.id)){assert.match(after,/"answer_decision":"clarification"/);assert.match(after,/Which party do you mean/);assert.doesNotMatch(after,/"tool":"(?:party_receipts|count_speeches)"/);}

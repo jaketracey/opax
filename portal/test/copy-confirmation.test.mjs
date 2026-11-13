@@ -34,13 +34,16 @@ function page() {
   const copied = [];
   Object.defineProperty(window.navigator, 'clipboard', { value: { writeText: async (t) => { copied.push(t); } }, configurable: true });
   window.prompt = () => { throw new Error('the fallback prompt is not expected'); };
+  // app.js's trackOutcome, recorded rather than dispatched.
+  const tracked = [];
+  window.trackOutcome = (event, properties) => tracked.push({ event, properties });
   window.eval(`${confirmationSource()}\nwindow.copyText = copyText;`);
   const doc = window.document;
   // Resting sizes as a layout would give them (jsdom has none).
   const sizes = { 'ask-copylink': { width: 132, height: 44 }, after: { width: 96, height: 44 } };
   for (const [id, size] of Object.entries(sizes)) doc.getElementById(id).getBoundingClientRect = () => ({ ...size, top: 0, left: 0, right: size.width, bottom: size.height });
   doc.querySelector('.page-menu-item').getBoundingClientRect = () => ({ width: 256, height: 44, top: 0, left: 0, right: 256, bottom: 44 });
-  return { window, doc, copied };
+  return { window, doc, copied, tracked };
 }
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -121,4 +124,24 @@ test('no caller adds words to the confirmation', () => {
     assert.ok(commas <= 1, `copyText(${args})`);
   }
   assert.match(app, /const COPIED = "Copied";/);
+});
+
+test('a copied link is counted as opax_share with a coarse record_type, never the link', async () => {
+  const { window, doc, tracked } = page();
+  const label = doc.querySelector('#ask-copylink span');
+  const links = {
+    'https://opax.com.au/doc/2026-10-14-private-slug': 'doc',
+    'https://opax.com.au/subject/person/private-person': 'person',
+    'https://opax.com.au/subject/party/private-party': 'party',
+    'https://opax.com.au/subject/donor/private-donor': 'money',
+    'https://opax.com.au/bill/r7777': 'bill',
+    'https://opax.com.au/money/grants/federal/recipient/private-recipient': 'money',
+    'https://opax.com.au/ask?q=private+question': 'other',
+    'https://opax.com.au/reports/private-report/s/2': 'other',
+    'not a url at all private': 'other',
+  };
+  for (const link of Object.keys(links)) await window.copyText(link, label);
+  assert.deepEqual(tracked.map((t) => t.event), Object.keys(links).map(() => 'opax_share'));
+  assert.deepEqual(tracked.map((t) => ({ ...t.properties })), Object.values(links).map((record_type) => ({ kind: 'copy_link', record_type })));
+  assert.ok(!/private|r7777/.test(JSON.stringify(tracked)), 'no part of any link is in the event');
 });
