@@ -159,3 +159,58 @@ export function leadWithModelAnswer<T extends Record<string,unknown>>(payload:T,
   if(rewrite){const merged=rewrite;let once=false;out=rewriteAnswerPayload(out,replace=>replace(new RegExp(recordOpening.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'),match=>once?match:(once=true,merged)))}
   return out
 }
+
+/** "Who was responsible for …", "who is to blame for …", "who decided …": questions answered by findings first. */
+export const ACCOUNTABILITY_QUESTION=/\bwho\b[^?]{0,40}?\b(?:(?:was|were|is|are)\s+(?:(?:most|ultimately|really|mainly|primarily|personally)\s+)?(?:responsible|accountable|culpable|at fault|to blame)|(?:to\s+)?blame[sd]?\b|decided|approved|authori[sz]ed|signed off|ordered|made the (?:decision|call))/i
+// An official body as the subject of a finding: "The commission found …", "The NACC's Operation Myrtleford report
+// found …", "The Royal Commission into X, led by Y, concluded …". The words before the verb never report a speaker.
+const BODY=String.raw`(?:royal commission(?:er)?|commission(?:er)?|inquiry|committee|report|review|auditor-general|ANAO|ombudsman|court|NACC|IBAC|ICAC|CCC|tribunal|coroner|investigation)`
+const FINDING=new RegExp(String.raw`^[^.;:]{0,140}?\b${BODY}(?:['’]s)?\b[^.;:]{0,100}?\b(?:found|finds|concluded|determined|ruled|held that|reported that|recorded that|criticised|rejected|made (?:adverse )?findings)\b`,'i')
+const SPEAKER_VERB=/\b(?:told|said|says|claimed|claims|argued|alleged|accused|stated|asked|according to)\b/i
+// A line that leans on the line before it cannot open the answer.
+const ANAPHORIC=/^(?:The same|That|This|These|Those|It|Its|He|She|They|His|Her|Their|Also|However|But|And|In that|In the same|With respect)\b/
+const OFFICIAL_RECORD=/\b(?:royal commission|commission|inquiry|committee|auditor-general|ombudsman|court|tribunal|coroner|report|review|investigation|department|minister|government)\b/i
+type SourceRow={resource?:string;kind?:string;title?:string;coverage?:boolean}
+/** For an accountability question, an answer never opens on a member's claim in debate when it holds a finding or an
+ * official record: the first line that reports what an inquiry, court or official body found (or, failing that, cites
+ * an official record or a department's or minister's own release) moves to the front; every other line keeps its
+ * place. Nothing is removed or reworded, and a lead that is not a member's claim stays where it is. */
+export function leadWithAuthority<T extends Record<string,unknown>>(payload:T,question=''):T {
+  if(typeof payload.answer!=='string'||!ACCOUNTABILITY_QUESTION.test(question))return payload
+  const sources=(Array.isArray(payload.sources)?payload.sources:[]) as SourceRow[]
+  const entries=Object.entries(payload.citations??{}) as [string,unknown][]
+  const sourceOf=(id:string)=>sources.find(s=>s.resource&&(id===s.resource||id.startsWith(s.resource+'/')))
+  const answer=payload.answer
+  type Line={a:number;b:number;text:string;sources:SourceRow[];ids:string[]}
+  const lines:Line[]=[]
+  for(const m of answer.matchAll(/[^\n]+/g)){
+    const text=m[0].trim();if(!text)continue
+    const a=Array.from(answer.slice(0,m.index)).length+Array.from(m[0]).length-Array.from(m[0].trimStart()).length,b=a+Array.from(text).length
+    const ids=entries.filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(r=>Array.isArray(r)&&r[0]<b&&r[1]>a)).map(([id])=>id)
+    lines.push({a,b,text,ids,sources:ids.map(sourceOf).filter((s):s is SourceRow=>!!s)})
+  }
+  const speechOnly=(l:Line)=>l.sources.length>0&&l.sources.every(s=>s.kind==='speech')
+  const finding=(l:Line)=>{const m=FINDING.exec(l.text);return !!m&&!SPEAKER_VERB.test(m[0])}
+  // A member's claim: a line resting only on debate passages, or one that opens on a named person telling a chamber.
+  const memberClaim=(l:Line)=>!finding(l)&&(speechOnly(l)||/^(?:\p{Lu}[\p{L}’'-]+\s+){1,3}(?:told|said|claimed|argued|alleged|accused)\b/u.test(l.text))
+  const coverageOnly=(l:Line)=>l.ids.length>0&&l.ids.every(id=>/^coverage(?:-|\/|$)/.test(id)||sourceOf(id)?.coverage)
+  const official=(l:Line)=>l.sources.some(s=>s.kind==='press_release'||s.kind==='record'&&!s.coverage&&OFFICIAL_RECORD.test(s.title??''))
+  const eligible=(l:Line)=>!coverageOnly(l)&&!ANAPHORIC.test(l.text)&&!memberClaim(l)
+  const lead=lines[0]&&memberClaim(lines[0])?lines.find(l=>eligible(l)&&finding(l))??lines.find(l=>eligible(l)&&official(l)):undefined
+  if(!lead)return payload
+  // The chosen line goes first; the rest keep their order. A paragraph answer stays paragraphs, a list stays a list.
+  const chars=Array.from(answer),sep=lines.slice(1).some((l,i)=>chars.slice(lines[i].b,l.a).filter(c=>c==='\n').length>1)?'\n\n':'\n'
+  const order=[lead,...lines.filter(l=>l!==lead)],pieces:[number,number,string][]=order.map((l,i)=>[l.a,l.b,i<order.length-1?sep:''])
+  const citations:Record<string,[number,number][]>={}
+  let written=''
+  for(const [a,b,after] of pieces){
+    const offset=Array.from(written).length
+    written+=chars.slice(a,b).join('')+after
+    for(const [id,ranges]of entries)if(Array.isArray(ranges))for(const range of ranges){
+      if(!Array.isArray(range)||range.length!==2||!range.every(Number.isSafeInteger))continue
+      const start=Math.max(a,range[0]),end=Math.min(b,range[1])
+      if(start<end)(citations[id]??=[]).push([offset+start-a,offset+end-a])
+    }
+  }
+  return {...payload,answer:written,citations}
+}
