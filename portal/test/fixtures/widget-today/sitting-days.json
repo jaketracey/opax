@@ -1,0 +1,22 @@
+{
+ "schema_version": 1,
+ "published": "2026-11-13",
+ "timezone": "Australia/Sydney",
+ "coverage": {"from": "2026-01-01", "to": "2027-12-31"},
+ "expires": "2027-12-31",
+ "source": {"publisher": "Parliament of Australia", "url": "https://www.aph.gov.au/", "published": "2026-11-01"},
+ "notes": "Test fixture in the shape im/sitting-days describes. The dates are invented.",
+ "days": [
+  {"date": "2026-11-10", "house": true, "senate": true},
+  {"date": "2026-11-12", "house": false, "senate": true},
+  {"date": "2026-11-13", "house": false, "senate": false},
+  {"date": "2026-11-26", "house": true, "senate": true},
+  {"date": "2026-11-23", "house": true, "senate": true, "note": "unknown fields are ignored"},
+  {"date": "2026-11-24", "house": true, "senate": true},
+  {"date": "2026-11-25", "house": true, "senate": false},
+  {"date": "2026-12-01", "house": false, "senate": true},
+  {"date": "2027-01-11", "house": true, "senate": true},
+  {"date": "2027-01-12", "house": true, "senate": true},
+  {"date": "2027-02-02", "house": true, "senate": true}
+ ]
+}
