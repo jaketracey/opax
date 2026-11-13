@@ -1,6 +1,7 @@
 import {trimQuestionEnd, questionSpaces} from './question-text.mjs'
 import type { RecordQuestion } from './ask-records'
 import { receiptPeriodQuery } from './receipt-period'
+import { latestReceiptYear, readReceiptPeriod, type PeriodOption } from './receipt-reading'
 import { receiptAnswer, receiptDonorChoices, unmatchedReceiptRankingScope, type ReceiptGraph } from './voice-money'
 
 export const fundingContinuation = (question:string) => /^(?:and\b|what about\b|how about\b)/i.test(question.trim())
@@ -13,9 +14,11 @@ export type FundingSelection = {
   compareParties?:[string,string]
   from:number|null; to:number|null; mode:'donors'|'parties'|'connections'
 }
-type Clarification = {money_question?:string; answer:string; answer_status:'needs_scope'|'needs_period'; money_ranking:true; citations:Record<string,never>; sources:never[]}
-const clarify = (answer:string, answer_status:Clarification['answer_status']='needs_scope'):Clarification =>
-  ({answer,answer_status,money_ranking:true,citations:{},sources:[]})
+type Clarification = {money_question?:string; answer:string; answer_status:'needs_scope'; money_ranking:true; citations:Record<string,never>; sources:never[]}
+const clarify = (answer:string):Clarification =>
+  ({answer,answer_status:'needs_scope',money_ranking:true,citations:{},sources:[]})
+/** A resolved request plus the reading taken and the other readings to offer. */
+export type ReadQuestion = {question:string; reading?:string; options?:{label:string;question:string}[]}
 // Only a date correction may carry the previous selection through clarification.
 const periodOnly = (fragment:string) => !fragment.replace(/\b(?:and|in|during|for|the|since|from|before|after|until|through|between|to|of|financial|fiscal|fy|year|years|ending|ended|last|past|recent|recently|latest|this|decade|january|february|march|april|may|june|july|august|september|october|november|december)\b/gi,'').replace(/[\d\s–—.,/\-]+/g,'')
 const comparisonPeriodOnly = (fragment:string) => periodOnly(receiptPeriodQuery(fragment).query.replace(/‑/g,'-').replace(/\b(?:all|time|lifetime|over|calendar|quarter)\b/gi,''))
@@ -30,31 +33,43 @@ const unknown = () => clarify('Please name one donor, industry or recipient part
 export function fundingScopeQuestion(s:FundingSelection,jurisdiction:string):string {
   const stem=s.party ? 'Who has the most disclosed receipts' : s.mode==='donors' ? 'Who are the top donors by disclosed receipts' : s.mode==='connections' ? 'Which source has the largest disclosed receipts to which party' : 'Who receives the most disclosed receipts'
   const donor=s.donor || (s.industry ? s.industry.replaceAll('_',' ')+' donors' : '')
-  const period=s.from===s.to&&s.from!==null?` in ${s.from}`:s.from!==null&&s.to!==null?` from ${s.from} to ${s.to}`:s.from!==null?` since ${s.from}`:s.to!==null?` through ${s.to}`:''
+  // An open start is written as a labelled financial year so it reads back as that year.
+  const period=s.from===s.to&&s.from!==null?` in ${s.from}`:s.from!==null&&s.to!==null?` from ${s.from} to ${s.to}`:s.from!==null?` since ${s.from}–${String(s.from+1).slice(-2)}`:s.to!==null?` through ${s.to}`:''
   const region=({federal:'federal',qld:'Queensland',vic:'Victoria',tas:'Tasmania'} as Record<string,string>)[jurisdiction]
   if(s.compareParties) return `Who receives more disclosed receipts${donor?' from '+donor:''}, ${s.compareParties.join(' or ')}${region?' in '+region+' records':''}${period}?`
   return `${stem}${s.party?' to '+s.party:''}${donor?' from '+donor:''}${!s.party&&!donor?' in all receipts':''}${region?' in '+region+' records':''}${period}?`
 }
 
-/** A choice replaces only the unresolved donor phrase and validates the whole
- * resulting request, including current controls, before offering a link. */
-export function fundingNameChoice(graph:ReceiptGraph,fragment:string,jurisdiction:string,questionFor:(label:string)=>string,filters:RecordQuestion):Clarification|null {
+/** A partial organisation name is read as the matching organisation with the
+ * most disclosed receipts. Each choice replaces only the unresolved phrase and
+ * validates the whole resulting request, including current controls; the
+ * other matches come back as one-tap options. */
+export function fundingNameChoice(graph:ReceiptGraph,fragment:string,jurisdiction:string,questionFor:(label:string)=>string,filters:RecordQuestion,shown=fragment):ReadQuestion|null {
   const choices=receiptDonorChoices(graph,fragment).flatMap(node=>{
     const question=questionFor(node.label)
     const result=receiptAnswer(graph,question,jurisdiction,'https://opax.com.au',filters)
-    if(!result || 'needs_scope' in result || 'needs_period' in result || result.selected_parties.length>1 || result.selected_industries.length>1 || result.selected_donors.length!==1 || unmatchedReceiptRankingScope(graph,receiptPeriodQuery(question).query,result,filters.party))return []
+    if(!result || 'needs_scope' in result || result.selected_parties.length>1 || result.selected_industries.length>1 || result.selected_donors.length!==1 || unmatchedReceiptRankingScope(graph,receiptPeriodQuery(question).query,result,filters.party))return []
     const canonical=fundingScopeQuestion({party:result.selected_parties[0],donor:result.selected_donors[0],...result.requested_years,mode:result.selected_parties.length?'donors':'parties'},jurisdiction)
-    return [{label:node.label.replace(/[\[\]\n\r*]/g,' '),question:canonical}]
-  })
+    return [{label:node.label.replace(/[\[\]\n\r*]/g,' ').replace(/\s+/g,' ').trim(),question:canonical,total:result.total_aud}]
+  }).sort((a,b)=>b.total-a.total||a.label.localeCompare(b.label,'en-AU'))
   if(!choices.length)return null
-  const intro=choices.length===1?'Did you mean this organisation?':'Which organisation do you mean? These are separate records in this map.'
-  return clarify(intro+'\n\n'+choices.map(c=>`- [${c.label}](/ask?q=${encodeURIComponent(c.question).replace(/\(/g,'%28').replace(/\)/g,'%29')})`).join('\n')+'\n\nChoose a name to see its figures. No total has been calculated for this question yet.')
+  const [best,...others]=choices
+  const said=shown.replace(/[\[\]\n\r*]/g,' ').replace(/\s+/g,' ').trim()
+  const reading=others.length?`“${said}” matches ${choices.length} organisations in this map; this answer is for ${best.label}, the one with the most disclosed receipts.`
+    :`Reading “${said}” as ${best.label}.`
+  return {question:best.question,reading,options:others.map(({label,question})=>({label,question}))}
+}
+
+/** Offer each period option as a complete question for the same selection. */
+export function periodChoices(selected:FundingSelection,options:PeriodOption[],jurisdiction:string) {
+  return options.map(option=>({label:option.label,question:fundingScopeQuestion({...selected,from:option.from,to:option.to},jurisdiction)}))
 }
 
 /** Reconstruct scope from user questions only. Answers and client amounts are
  * never used. Explicit controls are applied later by the receipt calculator. */
-export function fundingFollowUp(input:RecordQuestion,graph:ReceiptGraph,jurisdiction:string,isRanking:(input:RecordQuestion)=>boolean): {question:string}|Clarification|null {
+export function fundingFollowUp(input:RecordQuestion,graph:ReceiptGraph,jurisdiction:string,isRanking:(input:RecordQuestion)=>boolean): ReadQuestion|Clarification|null {
   let selected:FundingSelection|undefined
+  const latest=latestReceiptYear(graph)
   const turns=[...fundingUserTurns(input),input.question||'']
   for(let i=0;i<turns.length;i++) {
     const original=turns[i], last=i===turns.length-1
@@ -68,7 +83,7 @@ export function fundingFollowUp(input:RecordQuestion,graph:ReceiptGraph,jurisdic
         /\b(?:compare|more|less|higher|lower|versus|vs)\b/i.test(original) &&
         samePeriodFundingComparison(receiptPeriodQuery(original).query) &&
         !/\b(?:change\w*|increase\w*|decrease\w*|growth|grew|rose|fell)\b/i.test(original)
-      if(!result || 'needs_scope' in result || 'needs_period' in result ||
+      if(!result || 'needs_scope' in result ||
         (!pair && result.selected_parties.length>1) || result.selected_industries.length>1 ||
         (!result.selected_industries.length&&result.selected_donors.length>1) ||
         unmatchedReceiptRankingScope(graph,receiptPeriodQuery(original).query,result) ||
@@ -90,16 +105,20 @@ export function fundingFollowUp(input:RecordQuestion,graph:ReceiptGraph,jurisdic
     if(selected.compareParties && !comparisonPeriodOnly(fragment)) { selected=undefined;continue }
     // Questions about speech, influence, grants, etc. return to ordinary Ask.
     if(!isRanking({question:`Who gets the most funding from ${fragment}`})) { selected=undefined;continue }
-    const periodProblem=(answer:string):Clarification => ({...clarify(answer,'needs_period'),...((selected!.compareParties?comparisonPeriodOnly(fragment):periodOnly(fragment))?{money_question:fundingScopeQuestion(selected!,jurisdiction)}:{})})
-    const normalized=receiptPeriodQuery(fragment)
-    if(normalized.error) { const result=periodProblem(normalized.error);if(last)return result;if(!result.money_question)selected=undefined;continue }
-    fragment=normalized.query.trim()
-    if(/\b(?:last|past|recent|recently|latest|this year|decade)\b/i.test(fragment)) {
-      const result=periodProblem('Choose an explicit financial year, such as 2021–22, so the follow-up uses the right period.')
-      if(last)return result
-      if(!result.money_question)selected=undefined;continue
-    }
+    // The follow-up's period is read the same way as a whole question's.
+    const read=readReceiptPeriod(fragment,latest,{compare:!!selected.compareParties})
+    let reading=read.reading,periodOptions=read.options
+    let normalized=receiptPeriodQuery(read.query)
     let changed=false
+    if(normalized.error) {
+      // A period these records cannot place: keep the selection across all years and say so.
+      if(!(selected.compareParties?comparisonPeriodOnly(fragment):periodOnly(fragment))) { selected=undefined;continue }
+      normalized={query:''}
+      selected={...selected,from:null,to:null};changed=true
+      reading='Reading this across all published financial years, because these records are grouped by financial year.'
+      periodOptions=[]
+    }
+    fragment=normalized.query.trim()
     if(/\b(?:all years|all time|lifetime)\b$/i.test(fragment)) {
       fragment=fragment.replace(/(?:\b(?:in|over|for)\s+)?\b(?:all years|all time|lifetime)\b$/i,'').trim()
       selected={...selected,from:null,to:null};changed=true
@@ -107,11 +126,8 @@ export function fundingFollowUp(input:RecordQuestion,graph:ReceiptGraph,jurisdic
       const period=/(?:\b(?:in|during|since|from|before|after|until|through|between)\s+(?:the\s+)?)?\b(?:19|20)\d{2}(?:\s+(?:to|through|until|and)\s+(?:19|20)\d{2})?$/i.exec(fragment)
       if(period) {
         const parsed=receiptAnswer(graph,`Who receives the most money from all receipts ${period[0].replace(/\bthe\s+/gi,'')}`,jurisdiction,'https://opax.com.au')
-        if(!parsed || 'needs_scope' in parsed || 'needs_period' in parsed) {
-          const result=periodProblem(parsed&&'answer' in parsed?parsed.answer:'Choose one financial year or a continuous year range.')
-          if(last)return result
-          if(!result.money_question)selected=undefined;continue
-        }
+        if(!parsed || 'needs_scope' in parsed) { selected=undefined;continue }
+        reading??=parsed.period_reading;if(!periodOptions.length)periodOptions=parsed.period_options
         selected={...selected,...parsed.requested_years};fragment=fragment.slice(0,period.index).trim();changed=true
       }
     }
@@ -123,7 +139,7 @@ export function fundingFollowUp(input:RecordQuestion,graph:ReceiptGraph,jurisdic
       else {
         const query=`Who has the most disclosed receipts to ${name}`
         const match=receiptAnswer(graph,query,jurisdiction,'https://opax.com.au')
-        if(!match || 'needs_scope' in match || 'needs_period' in match || unmatchedReceiptRankingScope(graph,query,match) ||
+        if(!match || 'needs_scope' in match || unmatchedReceiptRankingScope(graph,query,match) ||
           match.selected_parties.length>1 || match.selected_industries.length>1 ||
           (!match.selected_industries.length&&match.selected_donors.length>1) ||
           (!match.selected_parties.length&&!match.selected_industries.length&&!match.selected_donors.length)) {
@@ -136,7 +152,7 @@ export function fundingFollowUp(input:RecordQuestion,graph:ReceiptGraph,jurisdic
         changed=true
       }
     }
-    if(last) return changed?{question:fundingScopeQuestion(selected,jurisdiction)}:unknown()
+    if(last) return changed?{question:fundingScopeQuestion(selected,jurisdiction),...(reading?{reading,options:periodChoices(selected,periodOptions,jurisdiction)}:{})}:unknown()
   }
   return null
 }

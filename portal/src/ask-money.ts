@@ -1,10 +1,12 @@
 import {trimQuestionEnd, questionSpaces} from './question-text.mjs'
-import {federalPartyRankingQuestion,federalPartyRankingIntent,federalPartyRankingClarification} from './ask-money-family'
-import {FEDERAL_RECEIPTS_NOTE} from './receipt-copy'
+import {federalPartyRankingQuestion,federalPartyRankingIntent,federalPartyRankingClarification,federalPartyRankingReading} from './ask-money-family'
+import {receiptMeasureLabel,receiptMeasureHeading,receiptMeasurePhrase,receiptDollars} from './receipt-copy'
 import type { RecordQuestion } from './ask-records'
 import type { MoneyFacts } from './ask-money-overview'
-import {fundingContinuation, fundingFollowUp, fundingNameChoice, fundingScopeQuestion, fundingUserTurns, samePeriodFundingComparison} from './ask-money-followup'
+import {fundingContinuation, fundingFollowUp, fundingNameChoice, fundingScopeQuestion, fundingUserTurns, periodChoices, samePeriodFundingComparison, type FundingSelection} from './ask-money-followup'
 import {financialYear, receiptPeriodQuery} from './receipt-period'
+import {earliestReceiptYear, latestReceiptYear, readReceiptPeriod} from './receipt-reading'
+import {questionKey, sameQuestion} from './question-key'
 import {isReceiptGraph, mentionedReceiptIndustries, moneyQuestion, receiptAnswer, receiptGraphForQuestion, unmatchedReceiptRankingScope, type ReceiptGraph} from './voice-money'
 import type {ReceiptFact} from './research-types'
 
@@ -34,14 +36,14 @@ export function isMoneyRanking(input: RecordQuestion): boolean {
   const impliedFunding=industries.length>0&&!ambiguousMedia
   return !!federalPartyRankingQuestion(q)||(moneyQuestion(q)||impliedFunding||/\b(?:takes?|gets?|receives?)\b.*\blobby\b/i.test(q)) && (/\b(?:largest|biggest|most|top)\b/i.test(q)||/^who funds\b/i.test(q)||comparisonQuestion(q)||yearComparisonQuestion(q))
 }
-const aud=(n:number)=>new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(n)
+const aud=receiptDollars
 const plain=(s:string)=>s.replace(/[|\n\r\[\]*]/g,' ')
 const disclosureRegister=(jurisdiction:string)=>({federal:'AEC political disclosure records',qld:'Electoral Commission of Queensland disclosure records',vic:'Victorian Electoral Commission disclosure records',tas:'Tasmanian political disclosure records'}[jurisdiction]||'published political disclosure records')
 const recordCount=(n:number)=>`${n.toLocaleString('en-AU')} disclosed receipt ${n===1?'record':'records'}`
 const sourceCopy=(text:string)=>plain(text).replace(/\s+/g,' ').trim()
-type ReceiptTotals = Exclude<ReturnType<typeof receiptAnswer>, null | {needs_period:boolean} | {needs_scope:boolean}>
-
-const LIMITS=['These are party receipts, not personal payments to politicians.','Not every receipt is a gift.','Only receipt sources in Opax\u2019s published selection are counted, not every receipt source.','An industry grouping is not proof of coordinated lobbying or influence.','Amounts are not adjusted for inflation.']
+type MoneyAnswerPayload={answer:string;citations:Record<string,number[][]>;sources:{resource:string;title:string;href:string;url:string;kind:string;snippet:string;cited:boolean;source?:string;dateLabel?:string;date?:string;receipt?:ReceiptFact}[];answer_status:string;money_ranking:boolean;measure?:ReceiptTotals['measure'];measure_label?:string;coverage:ReceiptTotals['period_coverage']&{held_since?:string|null;held_until?:string|null};money_context?:string;money_question?:string;money_facts?:MoneyFacts;scope?:{state:string;party?:string}}
+type ReceiptTotals = Exclude<ReturnType<typeof receiptAnswer>, null | {needs_scope:boolean}>
+type FollowUp = {label:string; question:string}
 
 /**
  * What a written opening is allowed to draw on. Every figure a model could
@@ -49,18 +51,18 @@ const LIMITS=['These are party receipts, not personal payments to politicians.',
  * what the rest come to, the leader's share - so the paragraph above the table
  * never has to do arithmetic of its own. See ask-money-overview.ts.
  */
-function moneyFacts(question:string|undefined, ranked_by:string, selection:string, rows:{name:string;total_aud:number;receipts:number}[],jurisdiction?:string,recipient_party?:string):MoneyFacts|undefined {
+function moneyFacts(question:string|undefined, ranked_by:string, selection:string, rows:{name:string;total_aud:number;receipts:number}[],jurisdiction?:string,recipient_party?:string,total_aud?:number):MoneyFacts|undefined {
   if(rows.length<1)return undefined
-  const listed=rows.reduce((sum,row)=>sum+row.total_aud,0)
+  const listed=total_aud??rows.reduce((sum,row)=>sum+row.total_aud,0)
   const derived:string[]=[]
   if(rows.length>1){
     const gap=Math.round((rows[0].total_aud-rows[1].total_aud)*100)/100
     derived.push(gap?`Gap between ${plain(rows[0].name)} and ${plain(rows[1].name)}: ${aud(gap)}`:`${plain(rows[0].name)} and ${plain(rows[1].name)}: the same total`)
     derived.push(`Everything below ${plain(rows[0].name)}, added together: ${aud(listed-rows[0].total_aud)}`)
-    if(listed>0)derived.push(`${plain(rows[0].name)}'s share of the shown total (${aud(listed)}): ${Math.round((rows[0].total_aud/listed)*100)}%`)
+    if(listed>0)derived.push(`${plain(rows[0].name)}'s share of the selection total (${aud(listed)}): ${Math.round((rows[0].total_aud/listed)*100)}%`)
   }
   return {jurisdiction,recipient_party,...(question?.trim()?{question:question.trim()}:{}),ranked_by,selection:sourceCopy(selection.replace(/\*\*/g,'')),
-    rows:rows.map(row=>({name:plain(row.name).trim(),amount:aud(row.total_aud),records:recordCount(row.receipts)})),derived,limits:LIMITS}
+    rows:rows.map(row=>({name:plain(row.name).trim(),amount:aud(row.total_aud),records:recordCount(row.receipts)})),derived,measure:'receipts_all',measure_label:receiptMeasureLabel('receipts_all')}
 }
 
 function moneyContext(result:ReceiptTotals, years?:number[]) {
@@ -69,55 +71,102 @@ function moneyContext(result:ReceiptTotals, years?:number[]) {
     :bounds.from!==null||bounds.to!==null?`${bounds.from===null?'earliest records':financialYear(bounds.from)} to ${bounds.to===null?'latest records':financialYear(bounds.to)}`
     :result.period||'No dated records'
   const coverage=!years&&selected!==result.period?` Matching recorded years: ${result.period||'none'}.`:''
-  return `**Financial years: ${selected}.**${coverage} ${result.by_donor.length.toLocaleString('en-AU')} ${result.by_donor.length===1?'receipt source':'receipt sources'} with matching receipts in Opax’s selected map. ${result.jurisdiction==='federal'?'Federal (AEC)':result.jurisdiction.toUpperCase()}. Disclosed party receipts, including more than gifts; amounts in Australian dollars, without inflation adjustment.`
+  return `**Financial years: ${selected}.**${coverage} ${result.by_donor.length.toLocaleString('en-AU')} ${result.by_donor.length===1?'receipt source':'receipt sources'} with matching receipts in Opax’s selected map. ${result.jurisdiction==='federal'?'Federal (AEC)':result.jurisdiction.toUpperCase()}. ${result.measure_label}; nominal Australian dollars.`
+}
+
+function partialMoneyComparison(rows:{name:string;total_aud:number;url:string}[],result:ReceiptTotals,note:string){
+  const answer=rows.map(r=>`${plain(r.name)} recorded ${aud(r.total_aud)} in ${result.measure_label}, ${result.period}.`).join(' ')+` ${note}\n\nThese figures are party-level totals for the matching records in OPAX’s published selection.\n\n[See these on the money map](${rows[0].url})`
+  const resource='receipt-comparison-held',url=rows[0].url
+  return {answer,answer_status:'calculated',comparison_complete:false,money_ranking:true,measure:result.measure,measure_label:result.measure_label,coverage:result.period_coverage,citations:{[resource]:[[0,Array.from(answer).length]]},sources:[{resource,title:'Matching comparison records',href:url,url,kind:'receipt',snippet:answer,cited:true}]}
+}
+
+function heldMoneyComparison(result:ReceiptTotals,graph:ReceiptGraph,partyComparison:boolean,note:string){
+  const from=result.selected_industries.length?result.selected_industries.map(i=>i.replaceAll('_',' ')).join(' or '):result.selected_donors.length?result.selected_donors[0]:'all receipts'
+  const to=result.selected_parties.length?' to '+result.selected_parties.join(' or '):''
+  const held=receiptAnswer(graph,`Who receives the most disclosed receipts from ${from}${to}?`,result.jurisdiction,'https://opax.com.au')
+  if(!held||'needs_scope' in held||'needs_period' in held||!held.receipts)return null
+  const rows=partyComparison?held.by_party:held.by_industry
+  const payload=partialMoneyComparison(rows.map(r=>{const url=new URL(held.sources[0].url);if(partyComparison)url.searchParams.set('party',r.id);else url.searchParams.set('industry',r.id);return {name:r.name,total_aud:r.total_aud,url:url.href}}),held,note)
+  const prefix='Held-period figures: '
+  return {...payload,answer:prefix+payload.answer,citations:Object.fromEntries(Object.entries(payload.citations).map(([id,ranges])=>[id,ranges.map(([a,b])=>[a+prefix.length,b+prefix.length])])),coverage:{...result.period_coverage,held_since:held.period_coverage.since,held_until:held.period_coverage.until}}
 }
 
 /** Compare two individual year cells, never their pooled range or lifetime sum. */
 function comparedYearAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:string, file:string, input:RecordQuestion) {
   const clarify=(answer:string,answer_status='needs_period')=>({answer,citations:{},sources:[],answer_status,money_ranking:true})
-  const years=[...query.matchAll(/\b(?:19|20)\d{2}\b/g)].map(m=>Number(m[0])).sort((a,b)=>a-b)
+  let years=[...query.matchAll(/\b(?:19|20)\d{2}\b/g)].map(m=>Number(m[0])).sort((a,b)=>a-b)
+  // A change named by one year is read as the change into it from the year before.
+  let reading:string|undefined
+  // More than two years is read as the change from the first to the last.
+  const named=new Set(years)
+  if(!/\b(?:before|after|since|until|through)\b/i.test(query)&&(named.size===1||named.size>2)){
+    years=named.size===1?[years[0]-1,years[0]]:[years[0],years[years.length-1]]
+    reading=`Reading this as the change from ${financialYear(years[0])} to ${financialYear(years[1])}.`
+    input={...input,from:undefined,to:undefined}
+  }
   if(years.length!==2 || years[0]===years[1] || /\b(?:before|after|since|until|through)\b/i.test(query)) {
     return clarify('Choose two individual financial years to compare, for example 2020 and 2021. Each year means the financial year starting in that year.')
   }
   if((input.from&&Number(input.from)!==years[0]) || (input.to&&Number(input.to)!==years[1])) {
-    return clarify('The year filters differ from the two years in your question. Clear the filters or choose the same years in both places.')
+    return clarify('Choose the same financial years in the question and the year filters.')
   }
   if(result.selected_parties.length!==1 || result.selected_industries.length>1 || (!result.selected_industries.length&&result.selected_donors.length>1)) {
     return clarify('Choose one recipient party and, optionally, one donor or industry for the year comparison. For example: “How did gambling receipts to Labor change from 2020 to 2021?”','needs_scope')
   }
-  const rows=years.map(year=>{
-    const one=receiptAnswer(graph,query,result.jurisdiction,'https://opax.com.au',{...input,from:String(year),to:String(year)})
-    return one&&!('needs_scope' in one)&&!('needs_period' in one)?{year,...one}:null
+  // Both years use one measure: the lead measure when either year holds it
+  // (a year with none in that measure is $0 recorded), otherwise every
+  // receipt type, so the comparison stays inside the reading.
+  const yearRows=(measure:ReceiptTotals['measure'])=>years.map(year=>{
+    const one=receiptAnswer(graph,query,result.jurisdiction,'https://opax.com.au',{...input,from:String(year),to:String(year),measure})
+    return one&&!('needs_scope' in one)?{year,...one}:null
   })
+  let rows=yearRows(result.measure)
+  if(result.typed&&result.measure!=='receipts_all'&&rows.every(r=>!r?.receipts)){
+    const all=yearRows('receipts_all')
+    if(all.some(r=>r?.receipts))rows=all
+  }
   const [earlier,later]=rows
-  if(!earlier||!later||!earlier.receipts||!later.receipts) {
-    return clarify('There are not enough matching receipts for both years in this selection. A missing year does not establish that no receipts occurred.','evidence_gap')
+  // A year with none in the measure is $0 recorded only inside the published years.
+  const first=earliestReceiptYear(graph),last=latestReceiptYear(graph)
+  const published=first!==undefined&&last!==undefined&&years.every(y=>y>=first&&y<=last)
+  if(!earlier||!later||(!earlier.receipts&&!later.receipts)||((!result.typed||!published)&&(!earlier.receipts||!later.receipts))) {
+    // Figures stay inside the stated years: the year that holds records, and the year that holds none.
+    const held=[earlier,later].filter((r):r is NonNullable<typeof r>=>!!r&&r.receipts>0)
+    const missing=years.filter(y=>!held.some(r=>r.year===y))
+    const outside=missing.filter(y=>first!==undefined&&y<first||last!==undefined&&y>last)
+    const note=outside.length&&first!==undefined&&last!==undefined?`The published records run from ${financialYear(first)} to ${financialYear(last)}.`
+      :`The AEC records no matching receipts in ${missing.map(financialYear).join(' and ')}.`
+    if(held.length)return {...partialMoneyComparison(held.map(r=>({name:result.selected_parties[0]+' in '+financialYear(r.year),total_aud:r.total_aud,url:r.sources[0].url})),held[0],note),coverage:result.period_coverage,...(reading?{reading}:{})}
+    if(result.receipts)return {...partialMoneyComparison([{name:result.selected_parties[0],total_aud:result.total_aud,url:result.sources[0].url}],result,note),coverage:result.period_coverage,...(reading?{reading}:{})}
+    return heldMoneyComparison(result,graph,true,note)??clarify('Choose a held financial year in the [money map](/money) to compare the recorded figures.','evidence_gap')
   }
   const fy=financialYear
   const party=plain(result.selected_parties[0])
   const from=result.selected_industries.length?` from ${plain(result.selected_industries[0].replaceAll('_',' '))} receipt sources`:result.selected_donors.length?` from ${plain(result.selected_donors[0])}`:''
   const difference=Math.round((later.total_aud-earlier.total_aud)*100)/100
-  let answer=difference?`**${party} received ${aud(Math.abs(difference))} ${difference>0?'more':'less'}${from} in ${fy(later.year)} than in ${fy(earlier.year)}** in this published selection.`
-    :`**${party} has the same disclosed total${from} in ${fy(earlier.year)} and ${fy(later.year)}** in this published selection.`
+  const label=later.measure_label
+  let answer=difference?`**${party} received ${aud(Math.abs(difference))} ${difference>0?'more':'less'}${from} in ${fy(later.year)} than in ${fy(earlier.year)}** in ${label}.`
+    :`**${party} has the same disclosed total${from} in ${fy(earlier.year)} and ${fy(later.year)}** in ${label}.`
   const citations:Record<string,number[][]>={}
   const sources:{resource:string;title:string;href:string;url:string;kind:string;snippet:string;cited:boolean;source?:string;dateLabel?:string}[]=[]
   const cite=(title:string,href:string,snippet:string,offset=0)=>{
     const resource=`receipt-years-${sources.length}`,end=Array.from(answer).length-offset
-    citations[resource]=[[end-1,end]];sources.push({resource,title,href,url:href,kind:'receipt',snippet:sourceCopy(snippet),cited:true,source:disclosureRegister(result.jurisdiction),dateLabel:'Calculated by Opax'})
+    citations[resource]=[[end-1,end]];sources.push({resource,title,href,url:href,kind:'receipt',snippet:sourceCopy(snippet),cited:true,source:disclosureRegister(result.jurisdiction),dateLabel:'Calculated by OPAX'})
   }
   cite('How the two years were compared','/methods',`${party}: ${fy(earlier.year)} ${aud(earlier.total_aud)}; ${fy(later.year)} ${aud(later.total_aud)}. Change: ${aud(difference)}. ${result.period_note}`)
   const context=moneyContext({...result,by_donor:[...new Map([...earlier.by_donor,...later.by_donor].map(d=>[d.id,d])).values()]},years)
   answer+=`\n\n${context}`
-  answer+='\n\n| Financial year | Disclosed receipts | Records |\n| --- | ---: | ---: |'
+  answer+=`\n\n| Financial year | ${receiptMeasureHeading(result.measure,false,'comparison')} | Records |\n| --- | ---: | ---: |`
   for(const row of [earlier,later]) {
     answer+=`\n| ${fy(row.year)} | ${aud(row.total_aud)} | ${row.receipts.toLocaleString('en-AU')} |`
     const url=new URL(row.sources[0].url)
     cite(`${fy(row.year)}: ${aud(row.total_aud)}`,url.pathname+url.search,`${party}${from}: ${aud(row.total_aud)} across ${recordCount(row.receipts)} in ${fy(row.year)}. Based on ${disclosureRegister(result.jurisdiction)} in this published selection.`,2)
   }
-  answer+='\n\nCoverage: **Selected party receipts, not a gifts-only donation total or personal payments.** These totals include only receipt sources in Opax’s published map. Undated receipts and other years are excluded. Election returns may use polling-year dates. An industry grouping does not establish lobbying or influence.'
-  answer+=`\n\n[Download the calculation data](https://opax.com.au${file})`
+  answer+='\n\nThese figures are party-level totals for the matching financial years in OPAX’s published selection.'
+  answer+=`\n\n[See these on the money map](${result.sources[0].url}) · [How OPAX counts money](/money/explain) · [Download the calculation data](https://opax.com.au${file})`
   const money_facts=moneyFacts(undefined,'financial year',context,[earlier,later].map(row=>({name:fy(row.year),total_aud:row.total_aud,receipts:row.receipts})))
-  return {answer,citations,sources,answer_status:'calculated',money_ranking:true,coverage:result.period_coverage,money_context:context,money_facts,scope:{state:result.jurisdiction,party:result.selected_parties[0]}}
+  if(money_facts){money_facts.measure=result.measure;money_facts.measure_label=result.measure_label}
+  return {answer,citations,sources,answer_status:'calculated',money_ranking:true,measure:result.measure,measure_label:result.measure_label,coverage:result.period_coverage,money_context:context,money_facts,scope:{state:result.jurisdiction,party:result.selected_parties[0]},...(reading?{reading}:{})}
 }
 
 /** Compare one dimension at a time, over exactly the same dated receipt selection. */
@@ -138,37 +187,41 @@ function comparedMoneyAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:str
       donor:result.selected_industries.length?undefined:result.selected_donors[0],...result.requested_years,mode:'parties'},result.jurisdiction)
     : undefined
   // Absence from a selected export does not establish an actual zero.
-  if(rows.some(r=>!r.receipts))return {answer:'There are not enough matching receipts for both sides of that comparison in this selection and period. A missing total does not establish that no receipts occurred.',citations:{},sources:[],answer_status:'evidence_gap',money_ranking:true,money_question}
+  if(rows.some(r=>!r.receipts)){
+    const held=rows.filter(r=>r.receipts>0)
+    return held.length?{...partialMoneyComparison(held.map(r=>({name:r.name,total_aud:r.total_aud,url:result.sources[0].url})),result,'One comparison side has matching records; the comparison needs records for both sides.'),money_question}:{...(heldMoneyComparison(result,graph,partyComparison,'The requested comparison needs matching records for both sides.')??{answer:'Choose a held period in the [money map](/money) for this comparison.',citations:{},sources:[],answer_status:'evidence_gap',money_ranking:true}),money_question}
+  }
   const difference=Math.round((first.total_aud-second.total_aud)*100)/100
   const sector=result.selected_industries.map(i=>i.replaceAll('_',' ')).join(' and ')
   const subject=partyComparison?(sector?` from ${plain(sector)} receipt sources`:result.selected_donors.length?` from ${plain(result.subject)}`:''):(result.selected_parties.length?` to ${plain(result.selected_parties[0])}`:' to parties')
-  let answer=difference?`**${plain(first.name)} ${partyComparison?'received':'accounted for'} ${aud(difference)} more${subject} than ${plain(second.name)}** in this published selection.`:`**${plain(first.name)} and ${plain(second.name)} have the same disclosed total${subject}** in this published selection.`
+  let answer=difference?`**${plain(first.name)} ${partyComparison?'received':'accounted for'} ${aud(difference)} more${subject} than ${plain(second.name)}** in ${result.measure_label}, ${result.period}.`:`**${plain(first.name)} and ${plain(second.name)} have the same disclosed total${subject}** in ${result.measure_label}, ${result.period}.`
   const citations:Record<string,number[][]>={}
   const sources:{resource:string;title:string;href:string;url:string;kind:string;snippet:string;cited:boolean;source?:string;dateLabel?:string}[]=[]
   const cite=(title:string,href:string,snippet:string,offset=0)=>{
     const resource=`receipt-comparison-${sources.length}`
     const end=Array.from(answer).length-offset
     citations[resource]=[[end-1,end]]
-    sources.push({resource,title,href,url:href,kind:'receipt',snippet:sourceCopy(snippet),cited:true,source:disclosureRegister(result.jurisdiction),dateLabel:'Calculated by Opax'})
+    sources.push({resource,title,href,url:href,kind:'receipt',snippet:sourceCopy(snippet),cited:true,source:disclosureRegister(result.jurisdiction),dateLabel:'Calculated by OPAX'})
   }
   cite('How the two receipt totals were compared','/methods',`${first.name}: ${aud(first.total_aud)}; ${second.name}: ${aud(second.total_aud)}. Difference: ${aud(difference)}. ${result.period_note}`)
   const bounds=result.requested_years
   const context=moneyContext(result)
   answer+=`\n\n${context}`
-  answer+=`\n\n| ${partyComparison?'Recipient party':'Source industry'} | Disclosed receipts | Records |\n| --- | ---: | ---: |`
+  answer+=`\n\n| ${partyComparison?'Recipient party':'Source industry'} | ${receiptMeasureHeading(result.measure,false,'comparison')} | Records |\n| --- | ---: | ---: |`
   for(const row of rows) {
     const identity=result.by_donor.find(d=>d.id===row.id);
-      const donorName=identity ? (identity.href ? `[${plain(row.name)}](${identity.href})` : plain(row.name)) : plain(row.name);
+      const donorName=identity ? (identity.href ? `[${plain(row.name)}](${new URL(identity.href,'https://opax.com.au').href})` : plain(row.name)) : plain(row.name);
       answer+=`\n| ${donorName} | ${aud(row.total_aud)} | ${row.receipts.toLocaleString('en-AU')} |`
     const params=new URLSearchParams(new URL(result.sources[0].url).search)
     if(partyComparison)params.set('party',graph.nodes.find(n=>n.kind==='party'&&n.label===row.name)?.id||row.id)
     else params.set('industry',row.id)
     cite(`${row.name}: ${aud(row.total_aud)}`,'/money?'+params,`${row.name}: ${aud(row.total_aud)} across ${recordCount(row.receipts)}. Period: ${result.period}. Based on ${disclosureRegister(result.jurisdiction)} in this published selection.`,2)
   }
-  answer+='\n\nCoverage: These are **party receipts, not personal payments to politicians**. Only receipt sources in Opax’s published map are included, not every receipt source. Industry labels do not establish lobbying or influence. Both sides use the same year filters; undated records are excluded when filtering by year.'
-  answer+=`\n\n[Download the calculation data](https://opax.com.au${file})`
+  answer+='\n\nThese figures are party-level totals from the same financial-year selection on OPAX’s published money map.'
+  answer+=`\n\n[See these on the money map](${result.sources[0].url}) · [How OPAX counts money](/money/explain) · [Download the calculation data](https://opax.com.au${file})`
   const money_facts=moneyFacts(money_question,partyComparison?'recipient party':'donor industry',context,rows,result.jurisdiction,result.selected_parties[0])
-  return {answer,citations,sources,answer_status:'calculated',money_ranking:true,coverage:result.period_coverage,money_context:context,money_question,money_facts,scope:{state:result.jurisdiction,...(bounds.from!==null?{from:String(bounds.from)}:{}),...(bounds.to!==null?{to:String(bounds.to)}:{})}}
+  if(money_facts){money_facts.measure=result.measure;money_facts.measure_label=result.measure_label}
+  return {answer,citations,sources,answer_status:'calculated',money_ranking:true,measure:result.measure,measure_label:result.measure_label,coverage:result.period_coverage,money_context:context,money_question,money_facts,scope:{state:result.jurisdiction,...(bounds.from!==null?{from:String(bounds.from)}:{}),...(bounds.to!==null?{to:String(bounds.to)}:{})}}
 }
 
 /** Reuse the web money path's scope resolver before a research-loop follow-up. */
@@ -204,11 +257,17 @@ export async function fundingResearchFollowUp(input:RecordQuestion,assets:Fetche
 }
 
 export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) {
+  const topTen=/\btop\s+10\b/i.test(input.question??'')
+  let uncertain:string|undefined
   if((!input.state||input.state==='federal')&&!input.speaker&&!input.chamber&&!input.topic){
     const intent=federalPartyRankingIntent(input.question??'')
-    if(intent?.uncertain)return federalPartyRankingClarification(intent)
+    // An informal party ranking is read as the largest disclosed receipts to that party, and said so.
+    if(intent?.uncertain&&intent.parties.length===1){
+      uncertain=`Reading this as the largest disclosed receipts to ${intent.parties[0]}.`
+      input={...input,question:`Who has the most disclosed receipts to ${intent.parties[0]}?`,kind:'all'}
+    } else if(intent?.uncertain)return federalPartyRankingClarification(intent)
     const canonical=federalPartyRankingQuestion(input.question??'')
-    input={...input,...(canonical?{question:canonical,kind:'all'}:{}),context:Array.isArray(input.context)?input.context.map(t=>t&&typeof t.text==='string'&&(t.author==='user'||t.author==='question')?{...t,text:federalPartyRankingQuestion(t.text)??t.text}:t):undefined}
+    input={...input,...(canonical?{question:canonical,kind:'all'}:{}),context:Array.isArray(input.context)?input.context.map(t=>t&&typeof t.text==='string'&&(t.author==='user'||t.author==='question')?{...t,text:federalPartyRankingReading(t.text)??t.text}:t):undefined}
   }
   // Debt stocks cannot establish a history of loan receipts. Do not infer lenders from names.
   if((!input.state||input.state==='federal')&&!input.speaker&&!input.chamber&&!input.topic&&(!input.kind||['all','receipt'].includes(input.kind))&&/^\s*Which banks lent money to Labor\s*[?!.]*$/i.test(input.question??'')) {
@@ -233,92 +292,246 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
   },input.state)
   if(!selection)return null
   const {graph,file,jurisdiction}=selection
+  let carried:Carried={options:[]}
   if(!standalone) {
     const followUp=fundingFollowUp(input,graph,jurisdiction,isMoneyRanking)
     if(!followUp)return null
     if('answer' in followUp)return followUp
     input={...direct,question:followUp.question}
+    carried={reading:followUp.reading,options:followUp.options??[]}
   } else input=direct
-  const periodQuery=receiptPeriodQuery(input.question||'')
-  if(periodQuery.error)return {answer:periodQuery.error,citations:{},sources:[],answer_status:'needs_period',money_ranking:true}
-  const query=periodQuery.query
+  return readMoneyRanking(input,graph,file,jurisdiction,carried,input.question||'',{topTen,reading:uncertain})
+}
+
+/** The reading carried from an earlier step (a follow-up or a name match). */
+type Carried={reading?:string;options:FollowUp[]}
+type ReadPayload={answer:string;citations:Record<string,number[][]>;sources:unknown[];answer_status:string;money_ranking:boolean;money_question?:string;[key:string]:unknown}
+
+/**
+ * State the reading in one line after the opening paragraph, and offer the
+ * other readings as one-tap questions. Citation offsets after the insert move
+ * with it. An option that repeats the asked question is left out.
+ */
+export function withReading<T extends {answer:string;citations:Record<string,number[][]>}>(payload:T,lines:(string|undefined)[],options:FollowUp[],asked:string):T&{money_reading?:string;money_followups?:FollowUp[]} {
+  const reading=[...new Set(lines.filter((l):l is string=>!!l))].join(' ')
+  const seen=new Set<string>()
+  const followups=options.filter(o=>{
+    const key=questionKey(o.question)
+    // An option that gives the answer already shown is not another reading.
+    const shown=(payload as {money_question?:string}).money_question
+    if(!key||sameQuestion(o.question,asked)||seen.has(key)||(shown&&key===questionKey(shown)))return false
+    seen.add(key);return true
+  }).slice(0,4)
+  if(!reading&&!followups.length)return payload
+  let answer=payload.answer,citations=payload.citations
+  if(reading) {
+    const cut=answer.indexOf('\n\n'),at=Array.from(cut<0?answer:answer.slice(0,cut)).length
+    const insert='\n\n'+reading,shift=Array.from(insert).length,chars=Array.from(answer)
+    answer=chars.slice(0,at).join('')+insert+chars.slice(at).join('')
+    citations=Object.fromEntries(Object.entries(citations).map(([k,ranges])=>[k,ranges.map(([a,b])=>a>=at?[a+shift,b+shift]:[a,b])]))
+  }
+  if(followups.length)answer+='\n\nOther readings: '+followups.map(f=>`[${plain(f.label)}](/ask?q=${encodeURIComponent(f.question).replace(/\(/g,'%28').replace(/\)/g,'%29')})`).join(' · ')
+  return {...payload,answer,citations,...(reading?{money_reading:reading}:{}),...(followups.length?{money_followups:followups}:{})}
+}
+
+/**
+ * Read the question's period and names, calculate, and answer with figures.
+ * Each reading taken (a period, a grouping, the likeliest of several matching
+ * names) is stated in one line, and the other readings are offered.
+ */
+function readMoneyRanking(input:RecordQuestion,graph:ReceiptGraph,file:string,jurisdiction:string,carried:Carried,asked:string,options:{topTen?:boolean;reading?:string;allowChoice?:boolean}={}):ReadPayload|null {
+  // The question's own period is read first, while financial-year labels are
+  // still visible ("since 2023–24" starts at 2023–24; "since 2023" at 2022–23).
+  const read=readReceiptPeriod(input.question||'',latestReceiptYear(graph),{compare:yearComparisonQuestion(receiptPeriodQuery(input.question||'').query)})
+  const query=receiptPeriodQuery(read.query).query.replace(/\btop\s+10\b/gi,'top')
   // Explicit dates in this question outrank stale UI controls on every route.
   if (/\b(?:19|20)\d{2}\b/.test(query)) input={...input,from:undefined,to:undefined}
   const result=receiptAnswer(graph,query,jurisdiction,'https://opax.com.au',{...input,compareYears:yearComparisonQuestion(query)})
-  const nameChoice=(fragment:string)=>fundingNameChoice(graph,fragment,jurisdiction,label=>{
+  // A partial organisation name is answered for its likeliest match.
+  const nameChoice=(fragment:string)=>{
+    if(options.allowChoice===false)return null
     const escaped=fragment.split(/\s+/).map(word=>word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('[^a-z0-9]+')
-    return query.replace(new RegExp('\\b'+escaped+'\\b','i'),()=>label)
-  },input)
-  const missingScope=()=>({answer:'Please name the donor, industry or recipient party you want to compare. You can [browse the names in the money map](https://opax.com.au/money). I could not match the whole question, so I have not calculated a total.',citations:{},sources:[],answer_status:'needs_scope',money_ranking:true})
+    const written=new RegExp('\\b'+escaped+'\\b','i').exec(query)?.[0]??fragment
+    const choice=fundingNameChoice(graph,fragment,jurisdiction,label=>query.replace(new RegExp('\\b'+escaped+'\\b','i'),()=>label),input,written)
+    if(!choice)return null
+    return readMoneyRanking({...input,question:choice.question},graph,file,jurisdiction,
+      {reading:[carried.reading,read.reading,choice.reading].filter(Boolean).join(' '),options:[...carried.options,...choice.options??[]]},asked,{...options,allowChoice:false})
+  }
+  const missingScope=()=>({answer:'Name a donor, industry or recipient party from the [money map](https://opax.com.au/money) and OPAX will calculate its disclosed receipts.',citations:{},sources:[],answer_status:'needs_scope',money_ranking:true})
   if(!result) return comparisonQuestion(query)||yearComparisonQuestion(query)?null:nameChoice(unmatchedReceiptRankingScope(graph,query,{selected_donors:[],selected_parties:[],selected_industries:[]}))||missingScope()
   if('needs_scope' in result) return ('donor_query' in result&&result.donor_query?nameChoice(result.donor_query):null)||{answer:result.answer,citations:{},sources:[],answer_status:'needs_scope',money_ranking:true}
-  if('needs_period' in result) return {answer:result.answer,citations:{},sources:[],answer_status:'needs_period',money_ranking:true}
-  const unmatched=unmatchedReceiptRankingScope(graph,query,result,input.party)
+  const scoped=result.read_query
+  const unmatched=unmatchedReceiptRankingScope(graph,scoped,result,input.party)
   if(unmatched){
     // Preserve unsupported comparison handling; no partial ranking is returned.
     if((comparisonQuestion(query)||yearComparisonQuestion(query)) && (/\bfrom\s+(?!(?:19|20)\d{2}\b)/i.test(query)||/\b(?:lobby|industry|sector)\b/i.test(query)) && !result.selected_industries.length&&!result.selected_donors.length)return null
-    return nameChoice(unmatched)||{answer:`I couldn't match **${unmatched}** in this map. Please use a donor, industry or party name from the [money map](https://opax.com.au/money) so the calculation includes your whole question.`,citations:{},sources:[],answer_status:'needs_scope',money_ranking:true}
+    return nameChoice(unmatched)||{answer:`OPAX calculates from the donor, industry and party names in the [money map](https://opax.com.au/money); **${unmatched}** is not one of them. Ask again with a name from the map and the calculation will cover your whole question.`,citations:{},sources:[],answer_status:'needs_scope',money_ranking:true}
   }
   if(/\bfrom\s+(?!(?:19|20)\d{2}\b)/i.test(query) && !result.selected_industries.length && !result.selected_donors.length) return null
   if(/\b(?:lobby|industry|sector)\b/i.test(query) && !result.selected_industries.length && !result.selected_donors.length) return null
-  if(yearComparisonQuestion(query))return comparedYearAnswer(result,graph,query,file,input)
-  if(comparisonQuestion(query))return comparedMoneyAnswer(result,graph,query,file)
+  // What was read, and the other readings as complete questions for the same selection.
+  const lines=[options.reading,carried.reading,read.reading??result.period_reading,result.scope_reading]
+  const choices=readingChoices(result,read.reading?read.options:result.period_options,carried.options)
+  if(yearComparisonQuestion(query)){
+    const compared=comparedYearAnswer(result,graph,query,file,input)
+    return withReading(compared,[...lines,'reading' in compared?compared.reading:undefined],'money_question' in compared?[]:choices('donors'),asked)
+  }
+  if(comparisonQuestion(query)){
+    const compared=comparedMoneyAnswer(result,graph,query,file)
+    return compared&&withReading(compared,lines,choices('parties'),asked)
+  }
   if(result.selected_parties.length>1) return null
   if(result.selected_industries.length>1) return null
+  const answer=calculatedMoneyAnswer(result,graph,query,file,input,{topTen:options.topTen})
+  return withReading(answer,lines,choices(result.selected_parties.length?'donors':'parties'),asked)
+}
+
+/** Each period or name option as a complete question for the same selection. */
+export function readingChoices(result:ReceiptTotals,periodOptions:ReceiptTotals['period_options'],carried:FollowUp[]=[]) {
+  return (mode:FundingSelection['mode']):FollowUp[]=>{
+    const selection:FundingSelection={party:result.selected_parties[0],industry:result.selected_industries[0],
+      donor:result.selected_industries.length?undefined:result.selected_donors.length===1?result.selected_donors[0]:undefined,...result.requested_years,mode}
+    return [...carried,...periodChoices(selection,periodOptions,result.jurisdiction),
+      ...result.scope_options.map(o=>({label:o.label,question:fundingScopeQuestion({...selection,...(o.party?{party:o.party}:{})},result.jurisdiction)}))]
+  }
+}
+
+/** Render the calculator's validated selection for every money ranking route. */
+export function calculatedMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph,query:string,file:string,input:RecordQuestion,options:{total?:boolean;bankGrouping?:boolean;topTen?:boolean;held?:boolean;member?:{name:string;href:string}}={}):MoneyAnswerPayload {
+  const jurisdiction=result.jurisdiction
   const donorIntent = !/\b(?:receiv\w*|takes?|gets?)\b/i.test(query) && (/\b(?:biggest|largest|top)\b[^?.]{0,60}\bdonors?\b/i.test(query) || (/^who\s+donat\w*\b/i.test(query) && !/\bto who(?:m)?\b/i.test(query)))
   const fromDonors=result.selected_parties.length>0 || donorIntent
   const allFlows=!result.selected_parties.length && !result.selected_industries.length && !result.selected_donors.length && !fromDonors
-  const rows=(allFlows ? result.flows.map(r=>({name:`${r.donor} → ${r.party}`,donor:r.donor,total_aud:r.total_aud,receipts:r.receipts,id:r.donor_id,party:r.party,associated:r.associated}))
-    : (fromDonors?result.by_donor:result.by_party).map(r=>({...r,party:fromDonors?result.selected_parties[0]:r.name}))).slice(0,5)
-  if(!rows.length){
-    if(jurisdiction==='federal'&&federalPartyRankingQuestion(input.question??'')&&result.selected_parties.length===1){
-      const bounds=result.requested_years,period=bounds.from===bounds.to&&bounds.from!==null?financialYear(bounds.from):bounds.from!==null&&bounds.to!==null?`${financialYear(bounds.from)} to ${financialYear(bounds.to)}`:'the requested period'
-      const party=plain(result.selected_parties[0]),answer=`The published federal selection has no matching disclosed receipts to ${party} for ${period}. This does not establish that no receipts occurred. ${FEDERAL_RECEIPTS_NOTE}`
-      const resource='receipt-ranking-gap',href=result.sources[0].url
-      return {answer,coverage:result.period_coverage,citations:{[resource]:[[0,Array.from(answer).length]]},sources:[{resource,title:`Selected receipts to ${party}: ${period}`,href,url:href,kind:'receipt',snippet:answer,cited:true}],answer_status:'evidence_gap',money_ranking:true,money_question:fundingScopeQuestion({party:result.selected_parties[0],...bounds,mode:'donors'},jurisdiction)}
+  const connections=new Map<string,{id:string;name:string;party:string;donor:string;total_aud:number;receipts:number;all_types_aud:number;other_receipts_aud:number;associated?:string}>()
+  for(const f of result.flows){
+    const key=f.donor_id+'|'+f.party_id,old=connections.get(key)
+    if(old){old.total_aud+=f.total_aud;old.receipts+=f.receipts;old.all_types_aud+=f.all_types_aud;old.other_receipts_aud+=f.other_receipts_aud}
+    else connections.set(key,{...f,id:f.donor_id,name:`${f.donor} → ${f.party}`})
+  }
+  const ranked=(allFlows?[...connections.values()]:fromDonors?result.by_donor:result.by_party)
+    .map(r=>({...r,party:allFlows?(r as {party:string}).party:fromDonors?result.selected_parties[0]:r.name}))
+    .sort((a,b)=>b.total_aud-a.total_aud||a.name.localeCompare(b.name,'en-AU'))
+    // A $0 row in the measure is not a place in the ranking.
+    .filter((r,_i,all)=>r.total_aud>0||!all.some(x=>x.total_aud>0))
+  if(!ranked.length){
+    if(!options.held&&(result.requested_years.from!==null||result.requested_years.to!==null)){
+      const heldQuery=fundingScopeQuestion({party:result.selected_parties[0],industry:result.selected_industries[0],donor:result.selected_industries.length?undefined:result.selected_donors[0],from:null,to:null,mode:fromDonors?'donors':'parties'},jurisdiction)
+      const held=receiptAnswer(graph,heldQuery,jurisdiction,'https://opax.com.au',{party:input.party})
+      if(held&&!('needs_scope' in held)&&!('needs_period' in held)&&held.receipts){
+        const first=held.period_coverage.since?.slice(0,4),last=held.period_coverage.until?.slice(0,4)
+        const dated=receiptAnswer(graph,heldQuery,jurisdiction,'https://opax.com.au',{party:input.party,from:first,to:last})
+        if(dated&&!('needs_scope' in dated)&&!('needs_period' in dated)){
+          const answer=calculatedMoneyAnswer(dated,graph,heldQuery,file,{...input,from:first,to:last},{...options,held:true})
+          return {...answer,coverage:{...result.period_coverage,held_since:dated.period_coverage.since,held_until:dated.period_coverage.until}}
+        }
+      }
     }
     return {answer:result.answer,coverage:result.period_coverage,citations:{},sources:[],answer_status:'evidence_gap',money_ranking:true}
   }
-  const who=rows[0], recipient=result.selected_parties.join(' and '), sector=result.selected_industries.map(i=>i.replaceAll('_',' ')).join(' and ')
-  // An AEC associated entity keeps its rank and is named with the register's own line (export rule 9).
+  const rows=ranked.slice(0,fromDonors||allFlows?options.topTen?10:5:10),who=rows[0]
+  const recipient=plain(result.selected_parties.join(' and ')),industry=result.selected_industries[0]
+  const sector=industry?.replaceAll('_',' '),from=sector?`${sector}-linked sources`:plain(result.subject)
+  const leadIndustry=industry??graph.nodes.find(n=>n.id===who.id)?.industry
+  const measure_label=receiptMeasureLabel(result.measure,leadIndustry),heading=receiptMeasureHeading(result.measure,leadIndustry==='finance')
+  const period=result.period??'the held financial years',label=`${measure_label}, ${period}`
   const tag=(row:object)=>{const associated=(row as {associated?:string}).associated;return associated?` (${plain(associated)})`:''}
-  const lead=who ? allFlows ? `The largest source-to-party receipt connection in this published selection is **${plain(who.name)}: ${aud(who.total_aud)}**${tag(who)}.`
-    : fromDonors ? `The largest disclosed receipts${recipient?` to ${plain(recipient)}`:''}${sector?` among ${plain(sector)} sources`:''} in this published selection are from **${plain(who.name)}: ${aud(who.total_aud)}**${tag(who)} across ${who.receipts.toLocaleString('en-AU')} records.`
-    : `**${plain(who.name)}** received the most disclosed receipts${sector?` from donors OPAX groups under ${plain(sector)}`:` from ${plain(result.subject)}`} in this published selection: **${aud(who.total_aud)}**.`
-    : result.answer
-  const sources: {resource:string;title:string;href:string;url:string;kind:string;snippet:string;cited:boolean;source?:string;dateLabel?:string;date?:string;receipt?:ReceiptFact;coverage?:boolean}[]=[]
-  const citations: Record<string,number[][]>={}
+  let lead=options.total?`**${recipient}** has received **${aud(result.total_aud)}** from ${from} in ${label}, across ${result.receipts.toLocaleString('en-AU')} records.`
+    :allFlows?`The largest source-to-party connection is **${plain(who.name)}: ${aud(who.total_aud)}**${'associated' in who&&who.associated?` (associated entity of ${recipient||who.party}, per AEC register)`:''}, ${label}.`
+    :fromDonors?`The largest ${sector?sector+'-linked ':''}source to ${recipient||'parties'} is **${plain(who.name)}: ${aud(who.total_aud)}**${'associated' in who&&who.associated?` (associated entity of ${recipient||who.party}, per AEC register)`:''}, ${label}.`
+    :`**${plain(who.name)}** leads parties receiving money from ${from}: **${aud(who.total_aud)}** in ${label}.`
+  if(ranked.length===1&&!fromDonors&&!allFlows)lead=`**${plain(who.name)}** is the only party receiving **${aud(who.total_aud)}** in ${label} from ${from}, across ${recordCount(who.receipts).replace(/^([\d,]+) disclosed receipt /,'$1 ')}.`
+  if(options.member)lead=`AEC returns record this money at party level. **${plain(options.member.name)}’s party, ${recipient}**, received **${aud(result.total_aud)}** in ${label}.`
+  // When the AEC records no donations in the selection, the answer says so
+  // first, then ranks the receipts it does record under their own label.
+  const noDonations=result.typed&&result.measure!=='donations'&&!options.total&&!options.member
+  if(noDonations){
+    const bounds=result.requested_years
+    const window=bounds.from!==null&&bounds.to!==null?(bounds.from===bounds.to?`in ${financialYear(bounds.from)}`:`from ${financialYear(bounds.from)} to ${financialYear(bounds.to)}`)
+      :bounds.from!==null?`from ${financialYear(bounds.from)} onwards`:`in ${period}`
+    const phrase=receiptMeasurePhrase(result.measure)
+    const ranking=allFlows?`the largest source-to-party connection is **${plain(who.name)}: ${aud(who.total_aud)}**, ${period}`
+      :fromDonors?`the largest ${sector?sector+'-linked ':''}source to ${recipient||'parties'} is **${plain(who.name)}: ${aud(who.total_aud)}**${'associated' in who&&who.associated?` (associated entity of ${recipient||who.party}, per AEC register)`:''}, ${period}`
+      :`**${plain(who.name)}** received the most: **${aud(who.total_aud)}**, ${period}`
+    lead=`The AEC records no donations from ${allFlows?'any source':from} to ${recipient||'any party'} ${window}. In ${phrase}, ${ranking}.`
+  }
+  if(options.held)lead='Held-period figures: '+lead
+  const sources:{resource:string;title:string;href:string;url:string;kind:string;snippet:string;cited:boolean;source?:string;dateLabel?:string;date?:string;receipt?:ReceiptFact;coverage?:boolean}[]=[]
+  const citations:Record<string,number[][]>={}
   let answer=lead
-  if (jurisdiction==='federal') answer+=' '+FEDERAL_RECEIPTS_NOTE
-  const cite=(title:string,href:string,snippet:string,offset=0,typed:Pick<ReceiptFact,'party'|'source'|'amount'|'aggregate'>|null=null)=>{
+  const cite=(start:number,title:string,href:string,snippet:string,receipt?:ReceiptFact)=>{
     const resource=`receipt-ranking-${sources.length}`
-    citations[resource]=[[Array.from(answer).length-offset-1,Array.from(answer).length-offset]]
-    sources.push({resource,title,href,url:href,kind:'receipt',snippet:sourceCopy(snippet),cited:true,source:disclosureRegister(result.jurisdiction),dateLabel:'Calculated by Opax',date:typeof graph.meta.generated==='string'?graph.meta.generated:undefined,...(typed?{receipt:{...typed,period:result.period??'',jurisdiction:result.jurisdiction,...(result.selected_industries[0]?{filter:result.selected_industries[0]}:{})}}:{coverage:true})})
+    citations[resource]=[[start,Array.from(answer).length]]
+    sources.push({resource,title,href,url:href,kind:'receipt',snippet:sourceCopy(snippet),cited:true,source:disclosureRegister(jurisdiction),dateLabel:'Calculated by OPAX',date:typeof graph.meta.generated==='string'?graph.meta.generated:undefined,...(receipt?{receipt}:{})})
   }
-  cite('How these receipt totals were calculated',result.sources[0].url,`${who.name}: ${aud(who.total_aud)}, ${recordCount(who.receipts)}.${recipient?` Receipts to ${plain(recipient)}.`:''} Period: ${result.period}. Opax added the disclosed receipts matching this question, grouped by ${fromDonors?'source':allFlows?'source and recipient party':'recipient party'}. This selection covers ${result.by_donor.length.toLocaleString('en-AU')} receipt sources during ${result.period}. It excludes government funding and records outside the published selection. Amounts are in Australian dollars and are not adjusted for inflation.`)
-  citations['receipt-ranking-0']=[[0,Array.from(answer).length]]
-  const context=moneyContext(result)
-  answer+=`\n\n${context}`
-  if(rows.length){
-    answer+=`\n\n| ${allFlows?'Source → party':fromDonors?'Source':'Recipient party'} | Disclosed receipts | Records |\n| --- | ---: | ---: |`
-    for(const row of rows){
-      const identity=result.by_donor.find(d=>d.id===row.id);
-      const donorName=identity ? (identity.href ? `[${plain(row.name)}](${identity.href})` : plain(row.name)) : plain(row.name);
-      answer+=`\n| ${donorName}${tag(row)} | ${aud(row.total_aud)} | ${row.receipts.toLocaleString('en-AU')} |`
+  cite(0,'How OPAX counts money',result.sources[0].url,`${options.total?recipient:who.name}: ${aud(options.total?result.total_aud:who.total_aud)} in ${label}. Calculation grouped by ${fromDonors?'source':'recipient party'}. `+lead+tag(who))
+  const second=options.total?`Largest sources: ${plain(who.name)} (${aud(who.total_aud)})${rows[1]?`, ${plain(rows[1].name)} (${aud(rows[1].total_aud)})`:''}.`:rows[1]?`${plain(rows[1].name)} follows on ${aud(rows[1].total_aud)}; the selection totals ${aud(result.total_aud)}.`:`The selection totals ${aud(result.total_aud)}.`
+  if(ranked.length>1||fromDonors||allFlows){const start=Array.from(answer).length;answer+=' '+second+(result.typed&&result.measure!=='receipts_all'?` The leader has ${aud(who.all_types_aud)} across all receipt types${who.other_receipts_aud>=who.all_types_aud/2?' (includes loans)':''}.`:'');cite(start,'Selection totals',result.sources[0].url,answer.slice(start))}
+  // Recipient rankings also show donation-only amounts (AEC "Donation Received"),
+  // per financial year for a window of up to six years, and in total.
+  const recipients=result.typed&&!fromDonors&&!allFlows
+  const bounds=result.requested_years
+  const yearCols=recipients&&!noDonations&&bounds.from!==null&&bounds.to!==null&&bounds.to-bounds.from<=5?Array.from({length:bounds.to-bounds.from+1},(_,i)=>bounds.from!+i):[]
+  const donationsCol=recipients&&result.measure!=='donations'&&!noDonations
+  const donated=(row:object)=>(row as {donations_aud?:number}).donations_aud??0
+  const donatedIn=(row:object,year:number)=>(row as {donations_by_year?:Record<string,number>}).donations_by_year?.[year]??0
+  if(donationsCol){
+    const start=Array.from(answer).length,total=ranked.reduce((sum,r)=>sum+donated(r),0)
+    answer+=` Donations received (AEC receipt type: Donation Received): ${aud(total)}.`
+    cite(start,'Donations in this selection',result.sources[0].url,answer.slice(start))
+  }
+  const donationCells=(row:object)=>yearCols.map(y=>` ${aud(donatedIn(row,y))} |`).join('')+(donationsCol?` ${aud(donated(row))} |`:'')
+  const sumCells=(list:object[])=>yearCols.map(y=>` ${aud(list.reduce((sum,r)=>sum+donatedIn(r,y),0))} |`).join('')+(donationsCol?` ${aud(list.reduce((sum,r)=>sum+donated(r),0))} |`:'')
+  if(rows.length>1||fromDonors||allFlows){
+    answer+=`\n\n| ${allFlows?'Source → party':fromDonors?'Source':'Recipient'} | ${heading} | Share | ${result.typed&&result.measure!=='receipts_all'?'All receipt types':'Records'} |${yearCols.map(y=>` Donations ${financialYear(y)} |`).join('')}${donationsCol?' Donations total |':''}\n| --- | ---: | ---: | ---: |${yearCols.map(()=>' ---: |').join('')}${donationsCol?' ---: |':''}`
+    const share=(amount:number)=>result.total_aud?amount/result.total_aud*100<0.5&&amount>0?'<1%':`${Math.round(amount/result.total_aud*100)}%`:'0%'
+    const appendRow=(row:typeof who)=>{
       const params=new URLSearchParams(new URL(result.sources[0].url).search)
-      if(row.party)params.set('party',graph.nodes.find(n=>n.kind==='party'&&n.label===row.party)?.id||row.party)
+      if(row.party)params.set('party',graph.nodes.find(n=>n.kind==='party'&&n.label===row.party)?.id??row.party)
       if(fromDonors||allFlows)params.set('focus',row.id)
-      cite(`${row.name}: ${aud(row.total_aud)}`, '/money?'+params,`${row.name}: ${aud(row.total_aud)}, ${recordCount(row.receipts)}. Period: ${result.period}. Based on ${disclosureRegister(result.jurisdiction)} in this published selection.`,2,{party:row.party,source:fromDonors?row.name:allFlows?String((row as {donor?:string}).donor):plain(result.subject),amount:row.total_aud,...(fromDonors||allFlows?{}:{aggregate:true})})
+      const url='/money?'+params,start=Array.from(answer).length
+      const finance=result.measure==='receipts_all'&&(industry==='finance'||graph.nodes.find(n=>n.id===row.id)?.industry==='finance')
+      const amount=aud(row.total_aud)+(finance?' (includes loans)':'')
+      const identity=result.by_donor.find(d=>d.id===row.id),name=identity?.href?`[${plain(row.name)}](${new URL(identity.href,'https://opax.com.au').href})`:plain(row.name)
+      const all=aud(row.all_types_aud)+(row.other_receipts_aud>=row.all_types_aud/2&&row.other_receipts_aud>0?' (includes loans)':'')
+      answer+=`\n| ${name}${tag(row)} | ${amount} | ${share(row.total_aud)} | ${result.typed&&result.measure!=='receipts_all'?all:row.receipts.toLocaleString('en-AU')} |${donationCells(row)}`
+      cite(start,`${row.name}: ${amount}`,url,`${row.name}: ${aud(row.total_aud)} in ${receiptMeasureLabel(result.measure,finance?'finance':industry)}, ${period}, ${recordCount(row.receipts)}; share ${share(row.total_aud)} of ${aud(result.total_aud)}; all receipt types ${aud(row.all_types_aud)}.`,{party:row.party,source:fromDonors?row.name:allFlows?String((row as {donor?:string}).donor):plain(result.subject),amount:row.total_aud,period,jurisdiction,measure:result.measure,measure_label,...(industry?{filter:industry}:{}),...(fromDonors||allFlows?{}:{aggregate:true})})
     }
+    for(const row of rows)appendRow(row)
+    const more=ranked.length-rows.length
+    if(more){
+      const rest=ranked.slice(rows.length),amount=rest.reduce((sum,r)=>sum+r.total_aud,0),records=rest.reduce((sum,r)=>sum+r.receipts,0),all=rest.reduce((sum,r)=>sum+r.all_types_aud,0),other=rest.reduce((sum,r)=>sum+r.other_receipts_aud,0)
+      const start=Array.from(answer).length,includesLoans=result.measure==='receipts_all'&&industry==='finance'?' (includes loans)':''
+      answer+=`\n| Other ${fromDonors||allFlows?'sources':'parties'} (${more} more on the map) | ${aud(amount)}${includesLoans} | ${share(amount)} | ${result.typed&&result.measure!=='receipts_all'?aud(all)+(other>=all/2&&other>0?' (includes loans)':''):records.toLocaleString('en-AU')} |${sumCells(rest)}`
+      cite(start,'Remaining sources',result.sources[0].url,`${aud(amount)} in ${measure_label}, ${period}; ${records} records across ${more} sources; share ${share(amount)}${result.typed&&result.measure!=='receipts_all'?`; all receipt types ${aud(all)}`:''}.`)
+    }
+    const start=Array.from(answer).length,includesLoans=result.measure==='receipts_all'&&industry==='finance'?' (includes loans)':''
+    // The total sums the rows shown.
+    const shownAll=ranked.reduce((sum,r)=>sum+r.all_types_aud,0),shownOther=ranked.reduce((sum,r)=>sum+r.other_receipts_aud,0)
+    const allTotal=aud(Math.round(shownAll*100)/100)+(shownOther>=shownAll/2&&shownOther>0?' (includes loans)':'')
+    answer+=`\n| Total, ${ranked.length} ${fromDonors||allFlows?ranked.length===1?'source':'sources':ranked.length===1?'party':'parties'} | ${aud(result.total_aud)}${includesLoans} | 100% | ${result.typed&&result.measure!=='receipts_all'?allTotal:result.receipts.toLocaleString('en-AU')} |${sumCells(ranked)}`
+    cite(start,'Whole selection',result.sources[0].url,`${aud(result.total_aud)} in ${measure_label}, ${period}; ${ranked.length} ${fromDonors||allFlows?'sources':'parties'} with figures in this measure; ${result.receipts} records; share 100%; all receipt types ${aud(Math.round(shownAll*100)/100)}.`)
   }
-  answer+='\n\nThese are **party receipts, not personal payments to politicians**, and not all receipts are gifts. An industry grouping is not proof of coordinated lobbying or influence.'
-  answer+=`\n\nCoverage: Only receipts included in Opax’s published map are ranked. This is a selection, not every receipt source or an exhaustive industry total. Years use the first year of each financial year; election returns may use the polling year. Undated records are excluded from year-filtered answers.`
-  answer+=`\n\n[Explore these records](${result.sources[0].url}) · [Download the calculation data](https://opax.com.au${file})`
-  // A canonical request preserves UI-only filters and survives a bounded chat
-  // history. It contains selections, never amounts or generated answer text.
-  const money_question=fundingScopeQuestion({party:result.selected_parties[0],industry:result.selected_industries[0],
-    donor:result.selected_industries.length?undefined:result.selected_donors.length===1?result.selected_donors[0]:undefined,
+  if(industry){
+    const named=result.by_donor.filter(d=>d.total_aud>0&&(!options.bankGrouping||/\bbank(?:ing)?\b/i.test(d.name))).slice(0,3)
+    const start=Array.from(answer).length
+    answer+=`\n\nOPAX groups ${result.by_donor.length} sources as ${sector}-linked${options.bankGrouping?' (banks, insurers and investment firms)':''}; ${options.bankGrouping?'named banks':'the largest'}: `+named.map(d=>{const url=new URL(result.sources[0].url);url.searchParams.set('focus',d.id);return `[${plain(d.name)}](${url.href}) (${aud(d.total_aud)}${industry==='finance'&&result.measure==='receipts_all'?', includes loans':''})`}).join(', ')+'.'
+    cite(start,'Sources in this grouping',result.sources[0].url,answer.slice(start))
+  }
+  const caveat=result.typed?'These figures are party-level totals from recipient returns in OPAX’s published selection; amounts below each year’s disclosure threshold sit outside the register.':`These figures are party-level totals, including branches, for OPAX’s published ${jurisdiction==='federal'?'AEC':'disclosure'} selection; payments reported by both sides can appear twice.`
+  const start=Array.from(answer).length
+  answer+='\n\n'+caveat
+  cite(start,'What these figures count',result.sources[0].url,caveat)
+  const build=typeof graph.meta.generated==='string'?graph.meta.generated:'the published graph'
+  answer+=`\n\nSource: ${jurisdiction==='federal'?'AEC Transparency Register returns':disclosureRegister(jurisdiction)}, OPAX build of ${build}. [${result.typed?'See all receipt types on the money map':'See these on the money map'}](${result.sources[0].url}) · [How OPAX counts money](/money/explain) · [Download the calculation data](https://opax.com.au${file})`
+  if(options.member)answer+=` · [${plain(options.member.name)}’s declared interests](${options.member.href})`
+  const context=moneyContext(result)
+  const money_question=fundingScopeQuestion({party:result.selected_parties[0],industry,
+    donor:industry?undefined:result.selected_donors.length===1?result.selected_donors[0]:undefined,
     ...result.requested_years,mode:fromDonors?'donors':allFlows?'connections':'parties'},jurisdiction)
-  const money_facts=moneyFacts(money_question,allFlows?'donor and recipient party':fromDonors?'donor':'recipient party',context,rows,result.jurisdiction,result.selected_parties[0])
-  return {answer,citations,sources,answer_status:'calculated',money_ranking:true,coverage:result.period_coverage,money_context:context,money_question,money_facts,scope:{state:jurisdiction,...(input.party?{party:input.party}:{})}}
+  const money_facts=moneyFacts(money_question,allFlows?'source and recipient party':fromDonors?'source':'recipient party',context,rows,jurisdiction,result.selected_parties[0],result.total_aud)
+  if(money_facts){
+    money_facts.measure=result.measure;money_facts.measure_label=measure_label
+    money_facts.rows=money_facts.rows.map((row,i)=>({...row,measure_label:receiptMeasureLabel(result.measure,industry??graph.nodes.find(n=>n.id===rows[i].id)?.industry)}))
+  }
+  return {answer,citations,sources,answer_status:'calculated',money_ranking:true,measure:result.measure,measure_label,coverage:result.period_coverage,money_context:context,money_question,money_facts,scope:{state:jurisdiction,...(input.party?{party:input.party}:{})}}
 }

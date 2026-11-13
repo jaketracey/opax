@@ -1,6 +1,6 @@
-import {guardAnswerAttribution} from './fixtures/ask-attribution.mjs';
+import {withoutSaLabel} from './fixtures/ask-attribution.mjs';
 import {speechPresentation, joinMixedSpeakers} from '../src/mixed-speakers.ts';
-const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; context.guardAnswerAttribution ??= guardAnswerAttribution; return baseVM(code, context, options); };
+const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; context.withoutSaLabel ??= withoutSaLabel; return baseVM(code, context, options); };
 import * as passageText from '../src/passage-text.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -22,7 +22,7 @@ const scopeBundle=await build({entryPoints:[new URL('../src/ask-scope.ts',import
 const scopeHelpers=await import('data:text/javascript;base64,'+Buffer.from(scopeBundle.outputFiles[0].text).toString('base64'));
 const payBundle=await build({entryPoints:[new URL('../src/ask-pay.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
 const payHelpers=await import('data:text/javascript;base64,'+Buffer.from(payBundle.outputFiles[0].text).toString('base64'));
-const worker={...passageText,isWitness,...records,...evidenceHelpers,...scopeHelpers,mentionsPay:payHelpers.mentionsPay};
+const worker={...passageText,isWitness,...records,...evidenceHelpers,...scopeHelpers,mentionsPay:payHelpers.mentionsPay,mentionsOfficePay:payHelpers.mentionsOfficePay};
 runInNewContext(ts.transpile(code),worker);
 const plain=value=>JSON.parse(JSON.stringify(value));
 
@@ -71,8 +71,8 @@ test('Ask defaults to all documents and includes structured evidence without uns
  assert.match(filters, /"not":\{"prop":"label","labelset":"kind","label":"news"\}/);
  assert.equal(body.extra_context.length,1);
  assert.equal(JSON.parse(body.extra_context[0]).period,'2020–2024');
- assert.match(body.prompt.system,/NOT proof that any individual politician/);
- assert.match(body.prompt.system,/never use it as a subtotal/i);
+ assert.match(body.prompt.system,/names the party organisation as recipient/);
+ assert.match(body.prompt.system,/For a requested subtotal, use matching dated records/i);
  assert.deepEqual(plain(body.rag_strategies),[{name:'neighbouring_paragraphs',before:1,after:1},{name:'metadata_extension',types:['classification_labels']}]);
  const speech=worker.buildAskBody({question:'What did he say?',kind:'speech',speaker:'Andrew Wilkie'});
  assert.match(JSON.stringify(speech.filter_expression),/"label":"speech"/);
@@ -102,7 +102,7 @@ test('bill dates describe introduction, never passage or assent',()=>{
  const row=JSON.parse(records.recordContext([{kind:'bill',title:'Voice 2023',snippet:'passed',date:'2023-03-30'}])[0]);
  assert.equal(row.period,'2023-03-30');
  assert.match(row.date_meaning,/Introduction date, not passage or assent/);
- assert.match(worker.buildAskBody({question:'When did it pass?'}).prompt.system,/only give a passage or assent date when separately documented/);
+ assert.match(worker.buildAskBody({question:'When did it pass?'}).prompt.system,/Introduction, passage and assent each have their own dates/);
 });
 
 test('referential funding questions retain the donor in catalog retrieval',()=>{
@@ -127,7 +127,7 @@ test('follow-ups preserve generation history but bypass the failing implicit ret
 
 test('anti-corruption answers require evidence identifying the relevant institution',()=>{
  const body=worker.buildAskBody({question:'Who argued against a federal anti-corruption commission?'});
- assert.match(body.prompt.user,/explicitly identifies a corruption or integrity body/);
+ assert.match(body.prompt.user,/identifies the specific corruption or integrity body/);
  assert.match(JSON.stringify(body.filter_expression),/"prop":"keyword","word":"corruption"/);
  assert.ok(!worker.buildAskBody({question:'What did the Productivity Commission recommend?'}).prompt.user.includes('For this question, use a passage'));
 });
@@ -175,11 +175,11 @@ test('bill-stage speaker questions require stage evidence, not bill-version meta
  const question='Who spoke at the second reading of the Fair Work Amendment Bill 2014 on 27 February 2014?';
  const body=worker.buildAskBody({question,from:'2014',to:'2014'});
  assert.match(body.prompt.system,/matching bill, requested stage and date/);
- assert.match(body.prompt.system,/First-reading bill text.*does not establish who spoke/);
- assert.match(body.prompt.system,/sponsor.*does not establish who spoke/);
- assert.match(body.prompt.system,/single speaking turn.*complete list of speakers/);
- assert.match(body.prompt.system,/cite the original speaking turn/);
- assert.match(body.prompt.system,/never use it as a subtotal/);
+ assert.match(body.prompt.system,/First-reading text and sponsors supply bill metadata/);
+ assert.match(body.prompt.system,/stage speakers come from explicit original speaking turns/);
+ assert.match(body.prompt.system,/complete speaker list requires complete stage-and-date coverage/);
+ assert.match(body.prompt.system,/cite an original speaking turn/);
+ assert.match(body.prompt.system,/For a requested subtotal, use matching dated records/);
  assert.match(body.prompt.user,/27 February 2014/);
  const filters=JSON.stringify(body.filter_expression);
  assert.match(filters,/2014-01-01/);

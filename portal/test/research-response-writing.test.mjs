@@ -114,7 +114,8 @@ test('JSON and chunked SSE remove answer caveats before releasing the final payl
   assert.deepEqual(JSON.parse(result.match(/event: done\ndata: (.+)/)[1]),expected)
   assert.equal(response.headers.get('x-opax-cache'),'HIT')
   assert.equal(expected.conversation_id,input.conversation_id)
-  assert.deepEqual(expected.research,input.research)
+  const {claim_audit,...research}=expected.research
+  assert.deepEqual(research,input.research)
 })
 
 test('clean SSE deltas replay unchanged when only metadata is present',async()=>{
@@ -240,7 +241,7 @@ test('a dated prose fallback puts the period warning in coverage.note and preser
   const out=await(await api.withFallbackPeriod(Response.json(input),{kind:'range',since:'2005-01-01',until:'2005-12-31',label:'2005'})).json()
   assert.equal(out.answer,answer)
   assert.deepEqual(out.citations,input.citations)
-  assert.equal(out.answer_status,'coverage_only')
+  assert.equal(out.answer_status,undefined)
   assert.equal(out.coverage.matched,false)
   assert.equal(out.coverage.as_of,'2004-07-01')
   assert.match(out.coverage.note,/^The speech is an individual contribution\. These records may not cover 2005-01-01 to 2005-12-31: a returned source is dated 2004-07-01\.$/)
@@ -253,13 +254,14 @@ test('note-only coverage does not block dated source acceptance',async()=>{
   assert.deepEqual(out,input)
 })
 
-test('out-of-period financial figures still receive the substantive period refusal',async()=>{
+test('out-of-period financial figures are kept with the period warning in coverage.note',async()=>{
   const answer='Avery Example received $20,000.'
   const input={answer,citations:{'receipt/t/body/0':[[0,answer.length]]},sources:[source('receipt',answer,{date:'2004-07-01'})],coverage:{note:'Disclosed receipts can include loans.'}}
   const out=await(await api.withFallbackPeriod(Response.json(input),{kind:'range',since:'2005-01-01',until:'2005-12-31',label:'2005'})).json()
-  assert.match(out.answer,/do not establish the requested answer for 2005-01-01 to 2005-12-31/)
-  assert.doesNotMatch(out.answer,/20,000/)
-  assert.equal(out.answer_status,'coverage_only')
+  assert.equal(out.answer,answer)
+  assert.deepEqual(out.citations,input.citations)
+  assert.equal(out.coverage.matched,false)
+  assert.match(out.coverage.note,/^Disclosed receipts can include loans\. These records may not cover 2005-01-01 to 2005-12-31: a returned source is dated 2004-07-01\.$/)
 })
 
 for(const kind of ['contract','grant'])test('equal values on distinct titled '+kind+' records both survive semantic deduplication',()=>{

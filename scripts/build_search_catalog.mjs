@@ -10,7 +10,7 @@ import {donorDisclosure,donorLookup} from '../portal/public/donor-disclosure.js'
 import {foldDonorName} from '../portal/public/donor-entity.js';
 import { moneyFlowType } from '../portal/public/money-records.js';
 import { auditComplete } from '../portal/public/audit.js';
-import { payPersonRecord, payPersonOrder, payGeneralRecords } from '../portal/src/pay-records.mjs';
+import { payPersonRecord, payPersonOrder, payGeneralRecords, payOfficeRecord, payOfficeGeneralRecords } from '../portal/src/pay-records.mjs';
 import { reportsPublished } from './reports_flag.mjs';
 import { pageSearchRecords } from './search_catalog_pages.mjs';
 import { buildReportCatalog } from './build_report_catalog.mjs';
@@ -171,6 +171,10 @@ async function main() {
  // the model when a pay question is too loose for the calculated answer.
  const pay=await read('pay.json');
  for(const row of [...payPersonOrder(pay).map(id=>payPersonRecord(pay,id)).filter(Boolean),...payGeneralRecords(pay)]) add(row.key,row.kind,row.title,row.href,row.snippet,row.extra);
+ // What departmental secretaries and statutory office holders are paid, from the
+ // Remuneration Tribunal's determinations (scripts/build_pay_offices.py).
+ const payOffices=await read('pay-offices.json');
+ for(const row of [...payOfficeGeneralRecords(payOffices),...payOffices.offices.map(o=>payOfficeRecord(payOffices,o))]) add(row.key,row.kind,row.title,row.href,row.snippet,row.extra);
  const expenses=await read('expenses.json');
  for(const [id,p] of Object.entries(expenses.people)) add('expenses:'+id,'expense',`${p.name} — parliamentary expenses`,personHref(p.name),`${cash(p.total)} reported expenditure. ${(p.by_category||[]).map(([n,v])=>`${n}: ${cash(v)}`).join('; ')}.`,{speakers:[p.name],state:'federal',from:p.from,to:p.to,source:'Independent Parliamentary Expenses Authority',url:expenses.meta.source_url,dateLabel:period(p.from,p.to)});
  const campaigners=await read('graph/campaigners.json');

@@ -1,3 +1,4 @@
+import {ASK_EVIDENCE_RULES} from './ask-writing-rules'
 /**
  * A follow-up in a conversation, rewritten as one standalone question so the
  * record can be searched on it (see standaloneQuestion in index.ts).
@@ -15,7 +16,7 @@ export type ConversationTurn = { author?: string; text?: string; sources?: {reso
 /** null: search the words as typed. A string: the standalone question. */
 export type FollowUpRewrite = string | null | { unclear: true; suggestion?: string }
 
-export const REWRITE_SYSTEM = 'You rewrite follow-up messages as standalone questions. You output only the rewritten question and nothing else.'
+export const REWRITE_SYSTEM = 'You rewrite follow-up messages as standalone questions. Return the question on one line. ' + ASK_EVIDENCE_RULES
 
 /** Messages that are acknowledgement or noise, never a question: no model call. */
 const FILLER = new Set(('ok okay k kk yes yeah yep yup ya yah no nope nah sure thanks thank you ty thx cheers ' +
@@ -55,12 +56,12 @@ export function rewritePrompt(transcript: string): string {
   return (
     `Conversation so far:\n${transcript}\n\n` +
     'Rewrite the reader\'s latest message, given below, as ONE standalone question about the Australian public record that names its subject explicitly - the person, organisation, program, place or topic the conversation is about - so the record can be searched on it alone. ' +
-    'Keep the reader\'s intent, and keep any names, dates, places, figures and other specifics they gave. Keep their own wording wherever it already stands alone; add nothing the conversation does not contain; do not answer, judge, soften or comment. ' +
+    'Keep the reader\'s intent, and keep any names, dates, places, figures and other specifics they gave. Keep their own wording wherever it already stands alone; use the conversation’s stated specifics and preserve the question’s intent. ' +
     'A message about the conversation itself (who or what are we talking about, look again) becomes a question about the conversation\'s subject. ' +
     'A message asking for more (is that all, anything else, what else, more, go on) becomes a question asking what ELSE the subject said or did on the topic, beyond the points the last answer already gave, naming those points briefly so they are not repeated. ' +
     'If the message already names its subject and stands on its own, return it exactly as written. ' +
-    'If the message does not say what the reader wants to know - a lone word that is not a name, place, party, year or topic, an acknowledgement, or a fragment whose meaning you would have to guess - do NOT repeat an earlier question in its place: return UNCLEAR, optionally followed by a colon and the one full question you think they most likely meant, if it is a different question from any already asked. ' +
-    'Return only the question (or UNCLEAR), on one line, with no quotation marks or preamble.\n\n' +
+    'If the message does not say what the reader wants to know - a lone word that is not a name, place, party, year or topic, an acknowledgement, or a fragment whose meaning you would have to guess - return UNCLEAR, optionally followed by a colon and the one full question you think they most likely meant, if it is a different question from any already asked. ' +
+    'Return the question or UNCLEAR as one plain line.\n\n' +
     'Examples, where the conversation so far was about Barnaby Joyce and grants:\n' +
     '"no he has been in tons of grants, look more" -> What grants has Barnaby Joyce been involved in?\n' +
     '"who are we talking about?" -> Who is Barnaby Joyce?\n' +

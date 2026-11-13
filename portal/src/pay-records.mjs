@@ -73,3 +73,67 @@ export function payGeneralRecords(pay) {
       extra: { ...common, slug: 'pay-ranking', aliases: 'highest paid best paid top earners politicians MPs senators Labor Liberal Nationals Greens', from: thisYear, to: thisYear, dateLabel: `As at ${asAt}` } },
   ];
 }
+
+// --- offices whose pay the Remuneration Tribunal sets (pay-offices.json) -------
+// Departmental secretaries, full-time statutory offices and the Principal Executive
+// Office bands, from scripts/build_pay_offices.py. Same text for the search catalogue
+// and for the model; every row names its instrument, compilation and clause.
+
+const OFFICE_SOURCE = 'Remuneration Tribunal determinations on the Federal Register of Legislation';
+const longDay = iso => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+
+/** "$533,550", "$932,120 to $983,910", "up to $271,830" or "from $645,570". */
+export function officeRate(row) {
+  if (row.amount != null) return whole(row.amount);
+  if (row.min != null && row.max != null) return row.min === row.max ? whole(row.min) : `${whole(row.min)} to ${whole(row.max)}`;
+  return row.max != null ? `up to ${whole(row.max)}` : `from ${whole(row.min)}`;
+}
+
+/** The instrument behind a row: title, FRL id, compilation date, link. */
+export function officeSource(offices, row) {
+  return offices.meta.sources.find(src => src.id === row.source);
+}
+
+const askHref = q => '/ask?q=' + encodeURIComponent(q);
+
+/** One office's record: its rate, what the figure is, and where it is set. */
+export function payOfficeRecord(offices, row) {
+  const src = officeSource(offices, row);
+  const what = row.kind === 'peo_band' ? 'total remuneration range' : 'total remuneration';
+  const parts = [
+    `${row.office}: ${officeRate(row)} a year in ${what}${row.classification ? ` (${row.classification})` : ''}, as at ${offices.meta.as_of}.`,
+    row.special ? row.special : '',
+    row.holder ? `The determination names ${row.holder.name} as the holder (${row.holder.clause})${row.holder.amount ? `, at ${whole(row.holder.amount)} a year` : ''}.` : '',
+    src ? `Set by the ${src.title} (${src.frl_id}, compilation of ${longDay(src.compilation_date)}), ${row.clause}.` : '',
+    'Total remuneration includes the employer superannuation contribution and benefits; actual pay is reported in the body’s annual report.',
+  ];
+  return {
+    key: 'pay-office:' + row.id, kind: 'pay', title: `${row.office}: pay set by the Remuneration Tribunal`,
+    href: askHref(row.kind === 'peo_band' ? 'What are the Principal Executive Office pay bands?' : `What is the ${row.office} paid?`),
+    snippet: parts.filter(Boolean).join(' ').slice(0, 1790),
+    extra: { slug: 'pay-office-' + row.id, record_id: row.id, state: 'federal', source: OFFICE_SOURCE, url: src?.url || '',
+      aliases: [row.body || '', ...(row.aliases || []), ...(row.keys || []), row.kind === 'secretary' ? 'departmental secretary agency head public servant' : 'agency head statutory office public servant'].join(' ').trim(),
+      from: year(offices.meta.as_of), to: year(offices.meta.as_of), dateLabel: `As at ${offices.meta.as_of}` },
+  };
+}
+
+/** Rows ranked by their top rate: a fixed amount, or the top of a range. */
+export function rankedOffices(offices, filter = row => row.head && row.kind !== 'peo_band') {
+  return offices.offices.filter(filter).sort((a, b) => (b.amount ?? b.max ?? 0) - (a.amount ?? a.max ?? 0) || a.office.localeCompare(b.office));
+}
+
+/** The two rankings readers ask for: agency heads, and departmental secretaries. */
+export function payOfficeGeneralRecords(offices) {
+  const asAt = offices.meta.as_of, bands = offices.offices.filter(row => row.kind === 'peo_band');
+  const line = (rows, n) => rows.slice(0, n).map((row, i) => `${i + 1}. ${row.office}, ${officeRate(row)}`).join('; ');
+  const common = { state: 'federal', source: OFFICE_SOURCE, url: offices.meta.sources[0]?.url || '', from: year(asAt), to: year(asAt), dateLabel: `As at ${asAt}` };
+  const tail = 'Total remuneration includes the employer superannuation contribution and benefits. Actual pay is reported in each body’s annual report.';
+  return [
+    { key: 'pay-office:ranking', kind: 'pay', title: 'Highest paid agency heads: rates set by the Remuneration Tribunal', href: askHref('Who is the highest paid agency head?'),
+      snippet: `As at ${asAt}, by total remuneration a year: ${line(rankedOffices(offices), 25)}. Heads of bodies in the Principal Executive Office structure are paid within a band the employing body applies: ${bands.map(b => `${b.classification} ${officeRate(b)}`).join('; ')}. ${tail}`.slice(0, 1790),
+      extra: { ...common, slug: 'pay-office-ranking', aliases: 'highest paid agency head public servant bureaucrat statutory office commissioner chief executive' } },
+    { key: 'pay-office:secretaries', kind: 'pay', title: 'Departmental secretaries: total remuneration by department', href: askHref('How much are departmental secretaries paid?'),
+      snippet: `As at ${asAt}: ${line(rankedOffices(offices, row => row.kind === 'secretary'), 30)}. Level 3 and 4 secretaries are each assigned to a pay point by the Secretary of the Department of the Prime Minister and Cabinet, so their rate is the level's range. ${tail}`.slice(0, 1790),
+      extra: { ...common, slug: 'pay-office-secretaries', aliases: 'departmental secretaries secretary department head public servant' } },
+  ];
+}

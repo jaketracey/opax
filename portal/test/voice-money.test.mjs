@@ -1,10 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtempSync,rmSync,readFileSync} from 'node:fs';
+import {mkdtempSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {build} from 'esbuild';
+import {typedMoney,untypedMoney,moneyAsset,moneyAssets} from './money-graph-data.mjs';
 const dir=mkdtempSync(join(tmpdir(),'opax-voice-money-'));
 await build({entryPoints:[new URL('../src/voice-money.ts',import.meta.url).pathname,new URL('../src/voice-tools.ts',import.meta.url).pathname],outdir:dir,bundle:true,platform:'node',format:'esm'});
 const {receiptAnswer,receiptJurisdiction,receiptGraphForQuestion}=await import(pathToFileURL(join(dir,'voice-money.js')));
@@ -24,7 +25,7 @@ const graph={meta:{coverage:'2020–2022',methodology:'Selected donors only'},no
 const answer=q=>receiptAnswer(graph,q,'federal','https://opax.test');
 test('graph selection masks exact donor names only when resolving conflicting region words',async()=>{
  const reads=[];
- const load=async file=>{reads.push(file);return JSON.parse(readFileSync(new URL('../public'+file,import.meta.url),'utf8'))};
+ const read=moneyAsset('typed'),load=async file=>{reads.push(file);return read(file)};
  const query='money from The Federal Group in Tasmania';
  const selection=await receiptGraphForQuestion(query,load);
  assert.equal(selection.jurisdiction,'tas');assert.equal(selection.file,'/graph/money.tas.json');
@@ -45,7 +46,7 @@ test('graph selection masks exact donor names only when resolving conflicting re
 });
 
 test('voice receipt tools calculate the same named Tasmanian donor without speech retrieval',async()=>{
- const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:{fetch:async req=>new Response(readFileSync(new URL('../public'+new URL(req.url).pathname,import.meta.url)))}};
+ const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:moneyAssets('typed')};
  for(const [tool,args] of [['search_records',{query:'How much funding from The Federal Group in Tasmania in 2025–26?'}],['find_connections',{query:'The Federal Group in Tasmania in 2025–26'}]]) {
   const out=await runVoiceTool(tool,args,env,async()=>{throw Error('Unexpected speech retrieval')});
   assert.equal(out.data.total_aud,10142);assert.equal(out.data.receipts,2);assert.equal(out.data.jurisdiction,'tas');
@@ -56,17 +57,22 @@ test('industry totals sum receipt edges once and exclude public money and node t
  const result=answer('How much money flowed from the gambling industry to government?');
  assert.equal(result.total_aud,350);assert.equal(result.receipts,5);
  assert.deepEqual(result.by_party.map(p=>[p.name,p.total_aud]),[['Liberal',250],['Labor',100]]);
- assert.match(result.answer,/published map selection, not an exhaustive industry total/);
- assert.match(result.scope,/not present as.*payments to government/);
+ assert.match(result.answer,/disclosed receipts, all types/);
+ assert.match(result.scope,/Party-level totals/);
  assert.match(result.sources[0].url,/industry=gambling/);
 });
 test('year and party filters resummate dated receipts without lifetime or undated amounts',()=>{
  assert.equal(answer('gambling in 2020').total_aud,260);
  assert.equal(answer('gambling to Labor in 2020').total_aud,60);
- assert.equal(answer('gambling since 2021').total_aud,40);
+ // "since 2021" starts at the financial year that includes January 2021 (2020–21);
+ // a labelled financial year starts at that year.
+ assert.equal(answer('gambling since 2021').total_aud,300);
+ assert.deepEqual(answer('gambling since 2021').requested_years,{from:2020,to:2021});
+ assert.match(answer('gambling since 2021').period_reading,/^Reading “since 2021” as the 2020–21 to 2021–22 disclosure years/);
+ assert.equal(answer('gambling since 2021–22').total_aud,40);
  assert.equal(answer('gambling before 2021').total_aud,260);
  assert.equal(answer('gambling in 2019').total_aud,0);
- assert.match(answer('gambling in 2019').answer,/does not establish that no receipts occurred/);
+ assert.match(answer('gambling in 2019').answer,/choose a held period/);
  assert.match(answer('gambling in 2020').sources[0].url,/from=2020&to=2020/);
 });
 test('known donors, parties, aliases and jurisdictions retain their scope',()=>{
@@ -78,40 +84,53 @@ test('known donors, parties, aliases and jurisdictions retain their scope',()=>{
  assert.equal(receiptJurisdiction('Victoria gambling'),'vic');
  assert.equal(receiptJurisdiction('NSW gambling'),null);
  assert.equal(receiptJurisdiction('federal and Queensland gambling'),null);
- assert.equal(answer('gambling over the last 20 years').needs_period,true);
+ const twenty=answer('gambling over the last 20 years');
+ assert.equal(twenty.needs_period,undefined);assert.deepEqual(twenty.requested_years,{from:2002,to:2021});
+ assert.match(twenty.period_reading,/last 20 published disclosure years, 2002–03 to 2021–22/);
+ assert.ok(twenty.period_options.some(o=>o.label==='All years'&&o.from===null&&o.to===null));
 });
 test('money tools distinguish donation limitations from mixed receipt exploration before speech search',async()=>{
  const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:{fetch:async()=>Response.json(graph)}};
  for(const [tool,args] of [['search_records',{query:'gambling donations'}],['find_connections',{query:'gambling'}]]){
   const out=await runVoiceTool(tool,args,env,async()=>{throw Error('Unrelated speech retrieval')});
   if(tool==='search_records'){
-   assert.equal(out.data.answer_status,'evidence_gap');assert.match(out.data.answer,/figures currently combine donations with loans and other receipts/);assert.doesNotMatch(out.data.answer,/\$\d/);assert.ok(out.sources.every(s=>s.kind==='receipt'));
+   assert.equal(out.data.answer_status,'calculated');assert.match(out.data.answer,/disclosed receipts, all types/);assert.match(out.data.answer,/\$250/);assert.ok(out.sources.every(s=>s.kind==='receipt'));
   }else{
-   assert.equal(out.data.total_aud,350);assert.equal(out.sources.length,1);assert.match(out.data.answer,/disclosed receipt total/);
+   assert.equal(out.data.total_aud,350);assert.equal(out.sources.length,1);assert.match(out.data.answer,/disclosed receipts, all types/);
   }
  }
  let reads=0;
  await runVoiceTool('search_records',{query:'health grant funding'},env,async()=>{reads++;return Response.json({results:[]})});assert.equal(reads,1);
  await runVoiceTool('search_records',{query:'gambling donations',kind:'speech'},env,async()=>{reads++;return Response.json({results:[]})});assert.equal(reads,2);
 });
-test('published gambling data yields a bounded answer with the right map filters',()=>{
- const real=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url),'utf8'));
+test('published (typed) gambling data yields a bounded answer with the right map filters',()=>{
+ const real=typedMoney();
  const result=receiptAnswer(real,'gambling','federal','https://opax.test');
- assert.ok(result.total_aud>0);assert.ok(result.by_party.length>1);
+ assert.equal(result.typed,true);assert.equal(result.measure,'donations');assert.ok(result.total_aud>0);assert.ok(result.by_party.length>1);
  assert.ok(JSON.stringify(result).length<15000);assert.equal(new URL(result.sources[0].url).searchParams.get('industry'),'gambling');
 });
 test.after(()=>rmSync(dir,{recursive:true,force:true}));
 
 test('voice period labels and separate years cannot become a wider total',()=>{
- const real=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url),'utf8'));
+ const real=typedMoney();
+ // Typed (published): gambling donations to Labor in 2020–21 are one $1,000 Donation Received cell.
  const one=receiptAnswer(real,'gambling in financial year ending 2021','federal','https://opax.test');
- assert.equal(one.by_party.find(x=>x.name==='Labor').total_aud,445573);
- for(const q of ['gambling in 2019–20 and 2021–22','gambling in January to June 2020','gambling on 2020-1-1','gambling in calendar year 2020','gambling on 1/1/2020','gambling on 30/06/2021','gambling on 2020.01.01','gambling in H1 2020','gambling in the 1st half of 2020']) assert.equal(receiptAnswer(real,q,'federal','https://opax.test').needs_period,true,q);
+ assert.equal(one.measure,'donations');assert.equal(one.period,'2020–21');
+ assert.equal(one.by_party.find(x=>x.name==='Labor').total_aud,1000);assert.equal(one.by_party.find(x=>x.name==='Labor').all_types_aud,206620);
+ // Untyped fallback: the same question over a file without receipt types sums every legacy 2020–21 receipt.
+ const legacy=receiptAnswer(untypedMoney(),'gambling in financial year ending 2021','federal','https://opax.test');
+ assert.equal(legacy.typed,false);assert.equal(legacy.measure,'receipts_all');assert.equal(legacy.by_party.find(x=>x.name==='Labor').total_aud,445573);
+ // Calendar periods and separate years are read as the financial years that
+ // contain them; the answer states the reading and keeps figures.
+ for(const [q,from,to] of [['gambling in 2019–20 and 2021–22',2019,2021],['gambling in January to June 2020',2019,2019],['gambling on 2020-1-1',2019,2019],['gambling in calendar year 2020',2019,2020],['gambling on 1/1/2020',2019,2019],['gambling on 30/06/2021',2020,2020],['gambling on 2020.01.01',2019,2019],['gambling in H1 2020',2019,2019],['gambling in the 1st half of 2020',2019,2019]]) {
+  const r=receiptAnswer(real,q,'federal','https://opax.test')
+  assert.equal(r.needs_period,undefined,q);assert.deepEqual(r.requested_years,{from,to},q);assert.match(r.period_reading,/^(?:Reading|These records are grouped by financial year)/,q);assert.ok(r.all_types_aud>0,q)
+ }
 });
 
 
 test('overlapping aliases cannot combine separate organisations',()=>{
- const real=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url),'utf8'));
+ const real=typedMoney();
  const full=real.nodes.find(n=>n.kind==='donor' && /Crown Resorts Limited/.test(n.label));
  const selected=receiptAnswer(real,`money from ${full.label}`,'federal','https://opax.test');
  assert.deepEqual(selected.selected_donors,[full.label]);
@@ -150,10 +169,12 @@ test('missing compound party identities never become shorter parties or all reci
  assert.deepEqual(controlled.selected_parties,['Liberal']);assert.equal(controlled.total_aud,250);
 });
 
-test('party aliases shared by distinct identities require a full name',()=>{
+test('a party alias shared by distinct identities answers for one party, says which, and offers the other',()=>{
  const shared={...graph,nodes:[...graph.nodes.map(n=>n.id==='labor'?{...n,aliases:['Example Party']}:n),{id:'new',kind:'party',label:'New Party',aliases:['Example Party']}]};
  const r=receiptAnswer(shared,'Example Party donations','federal','https://opax.test');
- assert.equal(r.needs_scope,true);assert.equal(r.total_aud,undefined);assert.deepEqual(r.sources,[]);
+ assert.equal(r.needs_scope,undefined);assert.deepEqual(r.selected_parties,['Labor']);
+ assert.match(r.scope_reading,/matches Labor and New Party in this map; this answer is for Labor, the party with the most disclosed receipts/);
+ assert.deepEqual(r.scope_options,[{label:'New Party',party:'New Party'}]);assert.match(r.answer,/this answer is for Labor/);
  assert.deepEqual(receiptAnswer(shared,'New Party donations','federal','https://opax.test').selected_parties,['New Party']);
 });
 
@@ -170,7 +191,7 @@ test('party words inside a resolved donor name are not recipient selections',()=
 });
 
 test('voice lending questions cannot reuse mixed receipt totals',async()=>{
- const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:{fetch:async req=>new Response(readFileSync(new URL('../public'+new URL(req.url).pathname,import.meta.url)))}};
+ const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:moneyAssets('typed')};
  for(const query of ['Who loaned the most money to Labor?','How much money did Westpac Banking Corporation lend to Labor?','Which banks lent money to Labor?','How much money was loaned to Labor by Westpac Banking Corporation?',...['lent','loan','loaned','borrowed','borrowing','owe','owes','owed','debt'].map(verb=>'How much money '+verb+' to Labor by Westpac Banking Corporation?')])for(const tool of ['search_records','find_connections']){
   const out=await runVoiceTool(tool,{query},env,async()=>{throw Error('Unexpected network retrieval')});
   assert.match(out.data.answer,/cannot establish how much was lent/);
@@ -180,25 +201,30 @@ test('voice lending questions cannot reuse mixed receipt totals',async()=>{
   assert.doesNotMatch(out.data.answer,/42,540,985/);
   assert.match(out.sources[0].url,/graph\/aec-extras.json$/);
  }
+ // Typed (published): the receipt question leads with Westpac's donations only.
  const receipt=await runVoiceTool('search_records',{query:'How much money from Westpac Banking Corporation to Labor?'},env,async()=>{throw Error('Unexpected network retrieval')});
- assert.equal(receipt.data.total_aud,42540985);
- assert.match(receipt.data.answer,/These federal totals mix donations with other receipts such as loans, so this is not a donation ranking/);
+ assert.equal(receipt.data.measure,'donations');assert.equal(receipt.data.total_aud,875018);assert.equal(receipt.data.all_types_aud,47331887);
+ assert.match(receipt.data.answer,/^Westpac Banking Corporation: \$875,018 in donations received \(AEC receipt type: Donation Received\), financial years 1998–99 to 2024–25, across 35 records\./);
+ // Untyped fallback: without receipt types the same question shows the mixed total, labelled as including loans.
+ const legacy=await runVoiceTool('search_records',{query:'How much money from Westpac Banking Corporation to Labor?'},{...env,ASSETS:moneyAssets('untyped')},async()=>{throw Error('Unexpected network retrieval')});
+ assert.equal(legacy.data.measure,'receipts_all');assert.equal(legacy.data.total_aud,42540985);
+ assert.match(legacy.data.answer,/disclosed receipts, all types, including bank loans to the party/);
 });
 
 test('voice uses the shared family calculator, with its entire table and citations',async()=>{
- const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:{fetch:async req=>new Response(readFileSync(new URL('../public'+new URL(req.url).pathname,import.meta.url)))}};
+ const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:moneyAssets('typed')};
  for(const query of ['Who bankrolls Labor?','Who props up Labor?','Who has donated the most to the Greens?','Who is giving the most money to Labor?'])for(const [tool,kind]of [['search_records','all'],['search_records','receipt'],['search_records','speech'],['find_connections',undefined]]){
   const out=await runVoiceTool(tool,{query,kind},env,async()=>{throw Error('A family question reached generic retrieval')});
   assert.equal(out.data.money_route,'federal-party-ranking-v1');assert.equal(out.data.answer_status,'calculated');
-  assert.match(out.data.answer,/largest disclosed receipts/);assert.match(out.data.answer,/not a donation ranking/);
-  assert.match(out.data.answer,/\| Source \| Disclosed receipts \| Records \|/);
-  assert.equal(out.data.answer.split('\n').filter(s=>/^\| /.test(s)).length,7);
+  assert.match(out.data.answer,/largest source/);assert.match(out.data.answer.split('\n')[0],/donations received \(AEC receipt type: Donation Received\)/);
+  assert.match(out.data.answer,/\| Source \| Donations \| Share \| All receipt types \|/);
+  assert.equal(out.data.answer.split('\n').filter(s=>/^\| /.test(s)).length,9);
   assert.ok(Object.keys(out.data.citations).length>=6);assert.equal('money_facts' in out.data,false);
  }
 });
 
 test('voice recognises plural, contracted, misspelled and uncertain family requests',async()=>{
- const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:{fetch:async req=>new Response(readFileSync(new URL('../public'+new URL(req.url).pathname,import.meta.url)))}};
+ const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:moneyAssets('typed')};
  for(const query of ["Who are the Greens' top donors?","Who's been giving the most money to the Greens?",'who donates teh most to labor','Who Labor top donors?'])for(const tool of ['search_records','find_connections']){
   const out=await runVoiceTool(tool,{query},env,async()=>{throw Error('Long-tail family reached generic retrieval')});
   assert.equal(out.data.money_route,'federal-party-ranking-v1');assert.ok(['calculated','needs_scope'].includes(out.data.answer_status));

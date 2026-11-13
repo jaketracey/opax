@@ -8,7 +8,7 @@ export type AugmentedContext = {
   fields?: Record<string, { id?: string; text?: string; parent?: string }>
 }
 
-export const ASK_PIPELINE_VERSION = '2026-11-12-topic-scope-v8'
+export const ASK_PIPELINE_VERSION = '2026-11-13-minimum-checks-v9'
 
 /** A deliberately scoped evidence gap is a valid answer, not a missing citation. */
 export const EVIDENCE_GAP_ANSWER = 'This selection does not establish their position on that topic.'
@@ -19,7 +19,7 @@ export function stripListingBoilerplate(value: string): string {
   return value.replace(/\b(?:the\s+)?full\s+listing\s+can\s+be\s+found\s+at\s*:?\s*(?:\[[^\]\n]*\]\(https?:\/\/[^\s)]+\)|<https?:\/\/[^>\s]+>|https?:\/\/[^\s<>]+)\.?/gi, '').trim()
 }
 
-export const FOOTNOTE_INSTRUCTIONS = 'Cite factual claims with Markdown footnotes, for example [^1]. After the answer, define EVERY reference on its own line using an exact block identifier from the provided context, for example [^1]: block-AA. Do not use that example identifier unless it is present in the context. Never invent an identifier or use paragraph order as a citation. '
+export const FOOTNOTE_INSTRUCTIONS = 'Cite factual claims with Markdown footnotes, for example [^1]. Define every reference on its own line using a block identifier actually present in the supplied context: [^1]: <exact source block id>. '
 
 /** A bounded compatibility fallback for models that omit the beta mapping. */
 export function legacyCitationsAsk(body: Record<string, unknown>): Record<string, unknown> {
@@ -33,10 +33,10 @@ export function legacyCitationsAsk(body: Record<string, unknown>): Record<string
 export function quoteRecoveryAsk(body: Record<string, unknown>): Record<string, unknown> {
   const prompt = body.prompt as { system?: string; user?: string } | undefined
   return { ...body, prompt: { ...prompt,
-    system: (prompt?.system ?? '') + ' For this recovery, paraphrase the source evidence with citations. Do not use direct quotations.',
+    system: (prompt?.system ?? '') + ' For this recovery, paraphrase the substantive source evidence with citations.',
     user: (prompt?.user ?? '{context}\n{question}') +
     '\nRecovery instructions: Write a fresh, concise answer in your own words, with citations. ' +
-    'Do not use direct quotations or quotation marks in this answer. Do not reproduce a speech opening or procedural motion. ' +
+    'Use unquoted prose focused on the substantive passages. ' +
     'Summarise only the passages that address the question, in up to three short paragraphs. ' +
     'Keep allegations attributed as claims and preserve uncertainty about speakers, dates and coverage. ' +
     'If the passages support only part of the question, answer that part and briefly say what remains unclear.' } }

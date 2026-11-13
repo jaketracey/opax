@@ -20,6 +20,7 @@ const fixedTypos:Record<string,string>={teh:'the',hte:'the',waht:'what',moeny:'m
 const normal=(q:string)=>trimQuestionEnd(questionSpaces(q.normalize('NFKC').toLowerCase().replace(/[’‘]/g,"'"))).replace(/^please /,'').replace(/ please$/,'').replace(/^and /,'').replace(/\b(?:teh|hte|waht|moeny|donatoins|dontes)\b/g,word=>fixedTypos[word]).replace(/\b([a-z]+s)'(?=\s|$)/g,"$1's").replace(/^who've /,'who have ')
 const escape=(s:string)=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
 function exactRankingQuestion(q:string):string|null {
+ q=q.replace(/\btop 10\b/g,'top')
  // An explicit state jurisdiction never enters this federal route.
  if(/\b(?:queensland|qld|victoria|victorian|vic|tasmania|tasmanian|tas|new south wales|nsw|south australia|western australia|northern territory|act disclosures|state records|state disclosures)\b/.test(q))return null
  let target:string|undefined
@@ -99,6 +100,13 @@ export function federalPartyRankingIntent(question:string):FederalPartyRankingIn
 export function federalPartyRankingQuestion(question:string):string|null {
  const intent=federalPartyRankingIntent(question)
  return intent&&!intent.uncertain?intent.question??null:null
+}
+/** The exact question, or for an informal single-party ranking its natural reading. */
+export function federalPartyRankingReading(question:string):string|null {
+ const intent=federalPartyRankingIntent(question)
+ if(!intent)return null
+ if(!intent.uncertain)return intent.question??null
+ return intent.parties.length===1?`Who has the most disclosed receipts to ${intent.parties[0]}?`:null
 }
 export function federalPartyRankingClarification(intent:FederalPartyRankingIntent){
  const answer=intent.parties.length===1?`Do you mean the largest disclosed receipts to ${intent.parties[0]}?`:`Which party do you mean: ${intent.parties.join(' or ')}? I can rank their largest disclosed receipts.`

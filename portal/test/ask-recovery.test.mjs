@@ -1,6 +1,6 @@
-import {guardAnswerAttribution} from './fixtures/ask-attribution.mjs';
+import {withoutSaLabel} from './fixtures/ask-attribution.mjs';
 import {speechPresentation, joinMixedSpeakers} from '../src/mixed-speakers.ts';
-const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; context.guardAnswerAttribution ??= guardAnswerAttribution; return baseVM(code, context, options); };
+const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; context.withoutSaLabel ??= withoutSaLabel; return baseVM(code, context, options); };
 import {saConversationInput} from './sa-evidence-harness.mjs';
 import * as passageText from '../src/passage-text.ts';
 import {isIdentityQuestion} from '../src/ask-identity-intent.ts';
@@ -76,7 +76,7 @@ for (const stream of [false, true]) {
     const result = await h.run(stream);
     assert.equal(h.calls.length, 2);
     assert.equal(h.calls[1].citations, 'llm_footnotes');
-    assert.match(h.calls[1].prompt.user, /Do not use direct quotations/);
+    assert.match(h.calls[1].prompt.user, /Use unquoted prose/);
     assert.equal(result.answer, good().answer);
     assert.equal(result.answer_status, undefined);
     assert.ok(result.citations[id]);

@@ -1,7 +1,6 @@
 /** Money summaries preserve the recorded total, counterparties and reporting basis. */
 import type { WritingFact, WritingInput, WrittenSentence } from './research-writing'
 import { mergeRegisterItems } from './tools/interests'
-import { causalAsk } from './research-coherence.mjs'
 
 const key = (text: string) => text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
 const named = (question: string, name: string) => (' ' + key(question) + ' ').includes(' ' + key(name) + ' ')
@@ -11,7 +10,7 @@ const donorName = (f: WritingFact) => f.source.receipt?.source ?? donorTotal(f)?
 
 /** Answer the requested field of a selected receipt aggregate, never the previous turn's metric. */
 export function receiptWritingLines(input: WritingInput, available = input.facts): WrittenSentence[] | null {
-  if (causalAsk(input.question) || /\b(?:why|votes?|voted|positions?|policy|policies)\b/i.test(input.question)) return null
+  if (/\b(?:why|votes?|voted|positions?|policy|policies)\b/i.test(input.question)) return null
   const rows = available.flatMap(f => { const m = donorTotal(f); return m ? [{ f, m }] : [] })
   const donors = [...new Set(rows.map(({ m }) => m[1]))]
   let selected = rows.filter(({ m }) => named(input.question, m[1]) || donors.length === 1 &&

@@ -25,12 +25,8 @@ function plannerPayload(payload: Record<string, unknown>, previous?: ResearchPay
 export const cacheableRoutedAnswer = (payload: Record<string, unknown>, requireCitation: boolean): boolean =>
   typeof payload.answer === 'string' && !!payload.answer.trim() && !protectedDecision(payload) && (!requireCitation || Object.keys(payload.citations ?? {}).length > 0)
 
-/** A successful response always has text, including old cached and streamed payloads. */
+/** An answer with no text is written from the facts research gathered, including old cached and streamed payloads. */
 export function ensureAnswerText(payload: Record<string, unknown>, question?: string): Record<string, unknown> {
-  if (typeof payload.answer === 'string' && isEvidenceGap(payload.answer) && !['refusal','clarification'].includes(String(answerDecision(payload)))) {
-    if (question && hearingEvidenceQuestion(question)) return groundAnswerPayload(payload, question)
-    return {...payload,answer:'The selected records do not establish the requested answer. Try naming a person, period or a more specific topic.',answer_decision:'limitation',citations:{},sources:[],claim_atoms:[]}
-  }
   if (typeof payload.answer === 'string' && payload.answer.trim() || payload.answered !== true && payload.answer_decision !== 'answer') return payload
   if (question && !protectedDecision(payload)) {
     const research = payload.research as ResearchPayload | undefined
@@ -40,10 +36,10 @@ export function ensureAnswerText(payload: Record<string, unknown>, question?: st
     const period = inferPeriod(question), constraints = { ...(payload.answer_scope as import('./ask-constraints').AskConstraints | undefined), period }
     const written = proseFallback({ question, period, constraints, facts })
     const checked = groundAnswerPayload({ ...payload, ...written, answer_scope: constraints }, question)
-    if (written.answer_decision === 'answer' && typeof checked.answer === 'string' && checked.answer.trim() && !protectedDecision(checked) && Object.keys(checked.citations ?? {}).length) return { ...checked, answered: true }
+    if (typeof checked.answer === 'string' && checked.answer.trim()) return { ...checked, answered: true }
   }
-  return { ...payload, answered: false, answer_decision: 'refusal', answer_status: 'coverage_only',
-    answer: 'The research did not produce a usable answer. Please try a more specific question.', citations: {}, sources: [], claim_atoms: [] }
+  // Nothing to write from: the response says it is unanswered rather than claiming an empty answer.
+  return { ...payload, answered: false }
 }
 
 /** Add metadata only at the boundary. Existing JSON and SSE fields survive. */
@@ -122,13 +118,7 @@ export async function withFallbackPeriod(response: Response, period: import('./a
   if (!response.ok) return response
   return mapResearchResponse(response, payload => {
     payload=normaliseWrittenPayload(payload)
-    if(protectedDecision(payload)){
-      if(period.kind!=='all'&&(period.since||period.until)&&/^This selection does not establish their position on that topic\.$/.test(String(payload.answer??''))){
-        const answer=`The selected records do not establish the requested answer for ${period.since??'the start of the record'} to ${period.until??'the present'}.`
-        return {...payload,answer,citations:{},sources:[],answer_status:'coverage_only'}
-      }
-      return payload
-    }
+    if(protectedDecision(payload))return payload
     // A request for a name asserts no dated facts; keep it through ordinary fallback.
     if(/^Please (?:give the full name|name the person)/i.test(String(payload.answer??''))&&!/[\d$]/.test(String(payload.answer))&&!((payload.sources??[]) as unknown[]).length)return payload
     // No fallback/cache delta is released before both writing and period checks.
@@ -150,19 +140,9 @@ export async function withFallbackPeriod(response: Response, period: import('./a
     const outside = cited.find(s => typeof s.date === 'string' && (period.since && s.date.slice(0, 10) < period.since || period.until && s.date.slice(0, 10) > period.until))
     if (!periodCoverage && !outside && cited.length && cited.every(s => typeof s.date === 'string' && /^\d{4}-\d{2}-\d{2}/.test(s.date))) return payload
     const requested = `${period.since ?? 'the start of the record'} to ${period.until ?? 'the present'}`
-    // Figures cannot be sorted by period after the fact, so they stay out. Prose is kept with its dates stated.
-    const answerText = String(payload.answer ?? '')
-    if (answerText.trim() && cited.length && !tokens(answerText).some(n => !/^(?:19|20)\d{2}$/.test(n))) {
-      const note = `These records may not cover ${requested}: ${outside ? `a returned source is dated ${String(outside.date).slice(0, 10)}.` : 'their dates could not be confirmed for that period.'}`
-      return { ...payload, answer_status: 'coverage_only', coverage: { ...coverage, requested_since: period.since ?? null, requested_until: period.until ?? null, as_of: outside?.date ?? coverage?.as_of ?? null, matched: false, note:[coverage?.note,note].filter(Boolean).join(' ') } }
-    }
-    const text = `The returned records do not establish the requested answer for ${requested}. ${outside ? `A returned source is dated ${String(outside.date).slice(0, 10)}, outside that period.` : 'The returned evidence has no verified date coverage for that period.'} I have not substituted current figures. Please narrow the question or check the records linked here.`
-    const url = String(outside?.href ?? outside?.url ?? cited[0]?.href ?? cited[0]?.url ?? 'https://opax.com.au/methods')
-    // Do not retain calculated tables, openings or snippets from another period.
-    return { answer: text, answer_status: 'coverage_only', citations: { 'period-coverage/t/body/0': [[0, Array.from(text).length]] },
-      sources: [{ resource: 'period-coverage', slug: '', title: 'Coverage of the returned records', href: url, url, kind: 'record', snippet: text, cited: true }],
-      coverage: { requested_since: period.since ?? null, requested_until: period.until ?? null, as_of: outside?.date ?? null, matched: false },
-    }
+    // A period the records may not cover is a note under the answer, never a replacement for it.
+    const note = `These records may not cover ${requested}: ${outside ? `a returned source is dated ${String(outside.date).slice(0, 10)}.` : 'their dates could not be confirmed for that period.'}`
+    return { ...payload, coverage: { ...coverage, requested_since: period.since ?? null, requested_until: period.until ?? null, as_of: outside?.date ?? coverage?.as_of ?? null, matched: false, note:[coverage?.note,note].filter(Boolean).join(' ') } }
   }, true)
 }
 
