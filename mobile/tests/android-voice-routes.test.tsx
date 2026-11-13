@@ -67,6 +67,9 @@ jest.mock('expo-router', () => {
   };
   return {
     Stack,
+    ThemeProvider: ({ children }: { children: ReactNode }) => children,
+    DarkTheme: { dark: true },
+    DefaultTheme: { dark: false },
     Link,
     router: { push: jest.fn(), back: jest.fn(), navigate: jest.fn() },
     useFocusEffect: jest.fn(),

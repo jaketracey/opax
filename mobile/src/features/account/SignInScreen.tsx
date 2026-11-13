@@ -1,5 +1,6 @@
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { Heading, Screen } from '../../design/primitives';
+import { useScrollReveal } from '../../design/scroll-reveal';
 import {
   signInCodeRoute,
   talkSignInCodeRoute,
@@ -49,17 +50,24 @@ export function SignInCodeScreen({ base = 'account' }: { base?: Base }) {
   const email = one(params.email) ?? '';
   const to = signInReturn(one(params.return), base);
   const challenge = one(params.challenge);
+  const errors = useScrollReveal();
   // Opened cold, with no code sent in this app session: start at the address.
   if (!email || !challenge)
     return (
       <Redirect href={base === 'talk' ? '/talk/sign-in' : '/account/sign-in'} />
     );
   return (
-    <Screen grouped testID="account-sign-in-code-screen">
+    <Screen
+      grouped
+      testID="account-sign-in-code-screen"
+      scrollRef={errors.scrollRef}
+      onScroll={errors.onScroll}
+    >
       <CodeStep
         email={email}
         challenge={challenge}
         onSignedIn={() => finishSignIn(to)}
+        reveal={errors.reveal}
       />
     </Screen>
   );
