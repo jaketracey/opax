@@ -110,7 +110,7 @@ public struct VoiceStatusSnapshot: Sendable, Codable, Equatable {
     public var refusal: VoiceFailure? {
         if !enabled { return .disabled }
         if !signedIn { return .signedOut }
-        if activeSession != nil { return .callOpen }
+        // An open session is not a refusal: /api/voice/start ends it and reserves the new call.
         if unlimited != true && remainingSeconds <= 0 { return .allowanceExhausted }
         if budgetOpen == false { return .budgetClosed }
         return nil
