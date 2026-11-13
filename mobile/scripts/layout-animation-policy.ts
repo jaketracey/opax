@@ -3,16 +3,13 @@ import { relative } from 'node:path';
 /**
  * LayoutAnimation does nothing on iOS while Reanimated 4.5 owns Fabric's
  * layout-animation delegate (src/design/reveal.tsx), so content meant to ease
- * open just jumps. Content that comes and goes uses HeightReveal instead.
- * A file listed here keeps LayoutAnimation, with the reason; paths are
- * relative to the source root.
+ * open just jumps. Content that comes and goes uses HeightReveal instead, and
+ * Ask's composer follows the keyboard through Reanimated
+ * (src/features/ask/keyboard.tsx). A file listed here would keep
+ * LayoutAnimation, with the reason; paths are relative to the source root.
+ * None is listed.
  */
-export const layoutAnimationAllowed: Readonly<Record<string, string>> = {
-  'features/ask/AskScreen.tsx':
-    'Keyboard frame sync on iOS, not a reveal: the dock follows the keyboard. ' +
-    'It needs a keyboard-tracked Reanimated animation across AskScreen and ' +
-    'AskDock, after ad/duo-b62 (which changes AskScreen) lands.',
-};
+export const layoutAnimationAllowed: Readonly<Record<string, string>> = {};
 
 /** True when code (comments aside) names LayoutAnimation. */
 export function usesLayoutAnimation(content: string): boolean {

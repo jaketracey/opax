@@ -50,13 +50,29 @@ test('an unlisted user is refused, and a listed file that stopped using it is re
   ]);
 });
 
-test('the app uses LayoutAnimation only where listed, each with a reason', () => {
+test('the app uses LayoutAnimation nowhere: no file is excepted', () => {
   const root = join(__dirname, '..', 'src');
   const files = boundaryFiles(root, join(__dirname, '..', 'modules'))
     .javascript.filter((path) => path.startsWith(root))
     .map((path) => ({ path, content: readFileSync(path, 'utf8') }));
   expect(files.length).toBeGreaterThan(100);
+  expect(layoutAnimationAllowed).toEqual({});
   expect(layoutAnimationIssues(files, root)).toEqual([]);
-  for (const reason of Object.values(layoutAnimationAllowed))
-    expect(reason.length).toBeGreaterThan(20);
+  // Ask's keyboard sync was the last exception; it is refused like any other.
+  const ask = files.find((file) =>
+    file.path.endsWith('features/ask/AskScreen.tsx'),
+  )!;
+  expect(
+    layoutAnimationIssues(
+      [
+        {
+          path: ask.path,
+          content: `${ask.content}\nLayoutAnimation.configureNext(preset);`,
+        },
+      ],
+      root,
+    ),
+  ).toEqual([
+    'features/ask/AskScreen.tsx: LayoutAnimation is inert on iOS; use HeightReveal',
+  ]);
 });

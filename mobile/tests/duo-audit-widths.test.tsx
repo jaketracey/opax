@@ -411,8 +411,9 @@ describe('Ask’s composer on a Duo', () => {
   test('the folded Duo leaves the rail side to the screen and keeps the bottom', () => {
     pose(poses[0]!);
     expect(edges(0)).toEqual({ sides: false, both: false, bottom: true });
-    // Over the keyboard nothing pads.
-    expect(edges(300)).toEqual({ sides: false, both: false, bottom: false });
+    // Over the keyboard the bottom stays: iOS lifts the composer from its
+    // resting place by the keyboard's overlap past that inset (KeyboardLift).
+    expect(edges(300)).toEqual({ sides: false, both: false, bottom: true });
   });
 
   test('an ordinary iPhone, with no SidebarSafe above, still pads both sides', () => {
@@ -426,6 +427,6 @@ describe('Ask’s composer on a Duo', () => {
       });
     });
     expect(edges(0)).toEqual({ sides: true, both: true, bottom: true });
-    expect(edges(300)).toEqual({ sides: true, both: true, bottom: false });
+    expect(edges(300)).toEqual({ sides: true, both: true, bottom: true });
   });
 });

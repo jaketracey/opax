@@ -24,6 +24,7 @@ import { isPad, useWindowTraits } from '../design/adaptive';
 import { hasSourcePreview } from '../design/environment';
 import { AndroidMenuHost } from '../design/menu';
 import { colors } from '../design/tokens';
+import { KeyboardFrames } from '../features/ask/keyboard';
 import { RootLaunchHandoff } from '../launch/LaunchHandoff';
 import {
   decideLaunchSequence,
@@ -120,23 +121,25 @@ export default function Layout() {
     <SafeAreaProvider>
       <MyMemberProvider>
         <StatusBar style={Platform.OS === 'android' ? 'dark' : 'auto'} />
-        <View style={styles.app}>
-          <AndroidMenuHost />
-          <ExternalURLProbe />
-          {isPad ? <KeyboardShortcuts /> : null}
-          <ThemeProvider value={navigationTheme(scheme)}>
-            <Stack
-              screenOptions={{
-                ...chrome,
-                headerShown: false,
-                contentStyle: { backgroundColor: colors.paper },
-              }}
-            >
-              {[...rootScreens(chrome)]}
-            </Stack>
-          </ThemeProvider>
-          {handedOver ? null : <RootLaunchHandoff onDone={endHandoff} />}
-        </View>
+        <KeyboardFrames>
+          <View style={styles.app}>
+            <AndroidMenuHost />
+            <ExternalURLProbe />
+            {isPad ? <KeyboardShortcuts /> : null}
+            <ThemeProvider value={navigationTheme(scheme)}>
+              <Stack
+                screenOptions={{
+                  ...chrome,
+                  headerShown: false,
+                  contentStyle: { backgroundColor: colors.paper },
+                }}
+              >
+                {[...rootScreens(chrome)]}
+              </Stack>
+            </ThemeProvider>
+            {handedOver ? null : <RootLaunchHandoff onDone={endHandoff} />}
+          </View>
+        </KeyboardFrames>
       </MyMemberProvider>
     </SafeAreaProvider>
   );

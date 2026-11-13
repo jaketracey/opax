@@ -61,6 +61,11 @@ jest.mock('@shopify/react-native-skia', () => {
 jest.mock('react-native-worklets', () =>
   require('react-native-worklets/lib/module/mock'),
 );
+// Keyboard frames for Ask's composer (src/features/ask/keyboard.tsx); a suite
+// that drives the keyboard replaces useKeyboardHandler (ask-keyboard.test.tsx).
+jest.mock('react-native-keyboard-controller', () =>
+  require('react-native-keyboard-controller/jest'),
+);
 jest.mock('react-native-reanimated', () => ({
   ...require('react-native-reanimated/mock'),
   useFrameCallback: () => ({
