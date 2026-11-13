@@ -294,8 +294,8 @@ check_rc keep-reuse 0
 pass 'kept UDID survives lock release; another UDID is refused; same device reuses and clears state on shutdown'
 
 # Simulator preflight, against fake reports in the scratch HOME and stub simctl
-# (which fails any call made outside the lock and gate). Limits: more than 2
-# crash reports in the last hour, or a poster store over 500 MB.
+# (which fails any call made outside the lock and gate). Limits: 5 or more crash
+# reports from one process in the last hour, or a poster store over 500 MB.
 erased_before_boot() {
   local erase boot
   erase=$(awk -v lane="$1" '$1 == lane && $2 == "erase" {print NR; exit}' "$SCRATCH/trace")
@@ -304,17 +304,20 @@ erased_before_boot() {
     grep -q "^$1 erase .*lock=held gate=1" "$SCRATCH/trace" && [ -f "$MOBILE/private/qa/$1/device-erased" ]
 }
 not_erased() { ! grep -q "^$1 erase " "$SCRATCH/trace" && [ ! -e "$MOBILE/private/qa/$1/device-erased" ]; }
-for i in 1 2; do echo '"coalitionName":"SimDevice.lane-a"' > "$REPORTS/chronod-$i.ips"; done
+# Normal traffic: about one report per run from assorted daemons. Seven reports,
+# four of them from one process, stay under the per-process limit.
+for i in 1 2 3 4; do echo '"coalitionName":"SimDevice.lane-a"' > "$REPORTS/PosterBoard-2026-11-13-21000$i.ips"; done
+for name in chronod swcd Family; do echo '"coalitionName":"SimDevice.lane-a"' > "$REPORTS/$name-2026-11-13-210010.ips"; done
 # macOS refreshes the modification time of old reports; their birth time stays.
 if [ "$(uname -s)" = Darwin ]; then
-  echo '"coalitionName":"SimDevice.lane-a"' > "$REPORTS/siriactionsd-old.ips"
-  touch -t 202611080000 "$REPORTS/siriactionsd-old.ips"; touch "$REPORTS/siriactionsd-old.ips"
+  echo '"coalitionName":"SimDevice.lane-a"' > "$REPORTS/PosterBoard-2026-11-08-193606.ips"
+  touch -t 202611080000 "$REPORTS/PosterBoard-2026-11-08-193606.ips"; touch "$REPORTS/PosterBoard-2026-11-08-193606.ips"
 fi
 run_lane preflight-under 01
 check_rc preflight-under 0
-grep -q '2 crash report(s) in the last 1 h' "$MOBILE/private/qa/preflight-under/sim-health.log" && not_erased preflight-under || fail 'preflight erased a device under its limits'
-pass 'preflight under the limits leaves the device alone (2 new crashes; a re-touched old report does not count)'
-echo '"coalitionName":"SimDevice.lane-a"' > "$REPORTS/PosterBoard-3.ips"
+grep -q '7 crash report(s) in the last 1 h.*most from one process: PosterBoard x4' "$MOBILE/private/qa/preflight-under/sim-health.log" && not_erased preflight-under || fail 'preflight erased a device under its limits'
+pass 'preflight under the limits leaves the device alone (7 reports, 4 from one process; a re-touched old report does not count)'
+echo '"coalitionName":"SimDevice.lane-a"' > "$REPORTS/PosterBoard-2026-11-13-210005.ips"
 run_lane preflight-crashes 01
 check_rc preflight-crashes 0
 erased_before_boot preflight-crashes || fail 'preflight over the crash limit did not erase under the lock before boot'
@@ -322,7 +325,7 @@ erased_before_boot preflight-crashes || fail 'preflight over the crash limit did
 run_lane preflight-erased 01
 check_rc preflight-erased 0
 not_erased preflight-erased || fail 'reports from before the erase triggered another erase'
-pass 'preflight over the crash limit erases under the lock before boot, then installs and tests; older reports stop counting'
+pass 'preflight at 5 reports from one process erases under the lock before boot, then installs and tests; older reports stop counting'
 POSTER="$HOME/Library/Developer/CoreSimulator/Devices/lane-a/data/Library/Application Support/PRBPosterExtensionDataStore"
 mkdir -p "$POSTER"; dd if=/dev/zero of="$POSTER/snapshot.atx" bs=1024 count=2048 2>/dev/null
 export OPAX_SIM_PREFLIGHT_POSTER_MB=1
@@ -338,7 +341,7 @@ check_rc posterboard-on 0
 grep -q '^posterboard-on spawn launchctl enable system/com.apple.PosterBoard lock=held gate=1' "$SCRATCH/trace" || fail 'OPAX_SIM_POSTERBOARD=1 did not re-enable PosterBoard'
 unset OPAX_SIM_POSTERBOARD
 pass 'every run disables PosterBoard under the lock after boot; OPAX_SIM_POSTERBOARD=1 re-enables it'
-for i in 4 5 6; do echo '"coalitionName":"SimDevice.lane-a"' > "$REPORTS/swcd-$i.ips"; done
+for i in 1 2 3 4 5; do echo '"coalitionName":"SimDevice.lane-a"' > "$REPORTS/swcd-2026-11-13-21100$i.ips"; done
 export OPAX_SIM_PREFLIGHT=0
 run_lane preflight-off 01
 check_rc preflight-off 0

@@ -87,8 +87,8 @@ OWN_DEVICE=1
 touch "$OUT/device-started"
 device_start=$SECONDS
 # Preflight, inside this run's own shared lock: erase a simulator whose poster
-# store is over OPAX_SIM_PREFLIGHT_POSTER_MB (500) or that wrote more than
-# OPAX_SIM_PREFLIGHT_CRASHES (2) system crash reports in the last
+# store is over OPAX_SIM_PREFLIGHT_POSTER_MB (500) or where one process wrote
+# more than OPAX_SIM_PREFLIGHT_CRASHES (4) system crash reports in the last
 # OPAX_SIM_PREFLIGHT_HOURS (1); the run then boots and installs as usual.
 # OPAX_SIM_PREFLIGHT=0 skips it, and it never runs without a configured lock.
 # README.md "Simulator preflight" explains why.
@@ -100,7 +100,7 @@ else
   assert_device_lock
   preflight_rc=0
   timed "$PREFLIGHT_TIMEOUT" bash scripts/sim-health.sh "$UDID" --hours "${OPAX_SIM_PREFLIGHT_HOURS:-1}" \
-    --max-crashes "${OPAX_SIM_PREFLIGHT_CRASHES:-2}" --max-poster-mb "${OPAX_SIM_PREFLIGHT_POSTER_MB:-500}" \
+    --per-process --max-crashes "${OPAX_SIM_PREFLIGHT_CRASHES:-4}" --max-poster-mb "${OPAX_SIM_PREFLIGHT_POSTER_MB:-500}" \
     --erase > "$OUT/sim-health.log" 2>&1 || preflight_rc=$?
   case "$preflight_rc" in
     0) ;;

@@ -5,21 +5,25 @@
 # (PosterBoard crashing every few seconds on the QA simulator, with a 9 GB
 # poster store). This reports those signs and, with --erase, resets the device.
 #
-#   sim-health.sh <udid> [--hours N] [--max-crashes N] [--max-poster-mb N] [--erase]
+#   sim-health.sh <udid> [--hours N] [--max-crashes N [--per-process]] [--max-poster-mb N] [--erase]
 #
 # Unhealthy: more than --max-crashes system crash reports in the last --hours
 # (default 2 in 6 h), or a poster store over --max-poster-mb (default 2047, so
-# 2 GB or more). The e2e preflight (scripts/e2e-device.sh) passes tighter
-# limits. Exit 0 healthy, 3 unhealthy (or erased when --erase was given),
-# 2 usage. Hold the Mac's native lock before --erase: it shuts the simulator down.
+# 2 GB or more). With --per-process the crash limit applies to the most reports
+# from any one process: a normal run leaves about one report from some daemon,
+# a crash loop leaves 8 to 20 from one process an hour. The e2e preflight
+# (scripts/e2e-device.sh) uses that. Exit 0 healthy, 3 unhealthy (or erased when
+# --erase was given), 2 usage. Hold the Mac's native lock before --erase: it
+# shuts the simulator down.
 set -euo pipefail
 UDID=${1:?udid}; shift
-HOURS=6; ERASE=0; MAX_CRASHES=2; MAX_POSTER_MB=2047
+HOURS=6; ERASE=0; MAX_CRASHES=2; MAX_POSTER_MB=2047; PER_PROCESS=0
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --hours) HOURS=${2:?hours}; shift 2 ;;
     --max-crashes) MAX_CRASHES=${2:?max crashes}; shift 2 ;;
     --max-poster-mb) MAX_POSTER_MB=${2:?max poster MB}; shift 2 ;;
+    --per-process) PER_PROCESS=1; shift ;;
     --erase) ERASE=1; shift ;;
     *) echo "Unknown option: $1" >&2; exit 2 ;;
   esac
@@ -57,12 +61,17 @@ fi
 poster="$DEVICE_DIR/data/Library/Application Support/PRBPosterExtensionDataStore"
 poster_mb=0
 [ -d "$poster" ] && poster_mb=$(( $(/usr/bin/du -sk "$poster" 2>/dev/null | awk '{print $1}') / 1024 ))
-unhealthy=0
-echo "Simulator $UDID: $crashes crash report(s) in the last $HOURS h${processes:+ (${processes# })}; poster store ${poster_mb} MB"
-[ "$crashes" -gt "$MAX_CRASHES" ] && unhealthy=1
+# The process with the most reports, as "count name" ("0 " with none).
+top="0 "
+[ "$crashes" = 0 ] || top=$(printf '%s\n' $processes | sort | uniq -c | awk '$1 > max {max = $1; name = $2} END {print max, name}')
+top_count=${top%% *}
+unhealthy=0; counted=$crashes; limit="$MAX_CRASHES crash report(s)"
+if [ "$PER_PROCESS" = 1 ]; then counted=$top_count; limit="$MAX_CRASHES crash report(s) from one process"; fi
+echo "Simulator $UDID: $crashes crash report(s) in the last $HOURS h${processes:+ (${processes# }; most from one process: ${top#* } x$top_count)}; poster store ${poster_mb} MB"
+[ "$counted" -gt "$MAX_CRASHES" ] && unhealthy=1
 [ "$poster_mb" -gt "$MAX_POSTER_MB" ] && unhealthy=1
 if [ "$unhealthy" = 0 ]; then echo "Simulator looks healthy."; exit 0; fi
-echo "Simulator is unhealthy (over $MAX_CRASHES crash report(s) or ${MAX_POSTER_MB} MB): expect slow XCTest driver startup (crash-reporter waits)." >&2
+echo "Simulator is unhealthy (over $limit or ${MAX_POSTER_MB} MB): expect slow XCTest driver startup (crash-reporter waits)." >&2
 if [ "$ERASE" = 1 ]; then
   echo "Erasing $UDID (shutdown, erase)."
   xcrun simctl shutdown "$UDID" >/dev/null 2>&1 || true

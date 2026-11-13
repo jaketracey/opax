@@ -387,6 +387,13 @@ command(['bash', 'scripts/sim-health.sh', udid, '--max-crashes', '9'], mobile)
 assert 'poster store 2 MB' in command(['bash', 'scripts/sim-health.sh', udid, '--max-crashes', '9', '--max-poster-mb', '1'], mobile, expect=3)
 shutil.rmtree(device/'data')
 ok('crash and poster store limits are flags; defaults keep 3 crashes and 2 GB')
+# Three reports from three processes: over a total of 2, under 2 from one process.
+assert 'x1' in command(['bash', 'scripts/sim-health.sh', udid, '--per-process', '--max-crashes', '2'], mobile)
+loop = [reports/f'PosterBoard-2026-11-13-21000{i}.ips' for i in range(3)]
+for report in loop: write(report, 'SimDevice.12345678\n')
+assert 'most from one process: PosterBoard x3' in command(['bash', 'scripts/sim-health.sh', udid, '--per-process', '--max-crashes', '2'], mobile, expect=3)
+for report in loop: report.unlink()
+ok('--per-process limits the reports from any one process, not the total')
 if sys.platform == 'darwin':
     # macOS refreshes the modification time of old reports; birth time dates them.
     report = reports/'siriactionsd-old.ips'; write(report, 'SimDevice.12345678\n')

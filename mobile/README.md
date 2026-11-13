@@ -152,15 +152,18 @@ cores. No journey shows the lock screen. `OPAX_SIM_POSTERBOARD=1` re-enables it
 from the next boot.
 
 The device command also checks the simulator first, inside its own lock and before
-boot (`scripts/sim-health.sh`). If the poster store is over 500 MB, or the device
-wrote more than 2 system crash reports in the last hour, it erases the simulator.
-The run then boots (a cold first boot), installs and tests as usual;
-`sim-health.log` and `device-erased` in the run's evidence record it. Reports from
-before an erase do not count, and reports are dated by their birth time, because
-macOS refreshes the modification time of old ones. `OPAX_SIM_PREFLIGHT_POSTER_MB`,
-`OPAX_SIM_PREFLIGHT_CRASHES` and `OPAX_SIM_PREFLIGHT_HOURS` change the limits, and
-`OPAX_SIM_PREFLIGHT=0` skips the check. With no shared lock configured it never
-runs, because an erase must not hit a simulator another lane is using.
+boot (`scripts/sim-health.sh`). If the poster store is over 500 MB, or one system
+process wrote 5 or more crash reports in the last hour, it erases the simulator.
+The count is per process because a normal run leaves about one report from some
+daemon, while a crash loop leaves 8 to 20 from one process an hour. The run then
+boots (a cold first boot), installs and tests as usual; `sim-health.log` and
+`device-erased` in the run's evidence record it. Reports from before an erase do
+not count, and reports are dated by their birth time, because macOS refreshes the
+modification time of old ones. `OPAX_SIM_PREFLIGHT_POSTER_MB`,
+`OPAX_SIM_PREFLIGHT_CRASHES` (reports allowed from one process, default 4) and
+`OPAX_SIM_PREFLIGHT_HOURS` change the limits, and `OPAX_SIM_PREFLIGHT=0` skips the
+check. With no shared lock configured it never runs, because an erase must not hit
+a simulator another lane is using.
 `OPAX_PASTE_WAIT_SECONDS` covers active waiting time, excluding SIGSTOP and host suspend gaps; every minute `lock.log`
 names the lock, the elapsed time and the holder. Never write your own lock wrapper.
 
