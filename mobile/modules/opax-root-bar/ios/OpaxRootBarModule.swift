@@ -119,7 +119,7 @@ public final class OpaxRootBarModule: Module {
       backing.frame = CGRect(x: barFrame.minX, y: top, width: barFrame.width, height: barFrame.maxY - top)
       backing.layoutIfNeeded()
     }
-    // This sibling exists only for Reduce Transparency or Increase Contrast.
-    // Its ground is always solid; normal scrolling uses UIKit's soft edge.
+    // Reduce Transparency, Increase Contrast and Today's AX title band use
+    // this solid ground; other scrolling keeps UIKit's own edge treatment.
   }
 }

@@ -45,6 +45,12 @@ private enum OpaxSearchGeometryProbe {
     let askError = inScreen.first { ($0.accessibilityIdentifier ?? "").hasPrefix("ask-error-") }
     let nav = all.compactMap { $0 as? UINavigationBar }.first { !$0.isHidden && $0.window != nil && $0.convert($0.bounds, to: window).minX >= 0 }
     let large = nav.flatMap { views($0).first { String(describing: type(of: $0)).contains("LargeTitleView") } }
+    let placeholderFont = field.flatMap { f -> UIFont? in
+      guard let text = f.attributedPlaceholder, text.length > 0 else { return nil }
+      return text.attribute(.font, at: 0, effectiveRange: nil) as? UIFont
+    }
+    let placeholderSize = field.flatMap { f in placeholderFont.map { ((f.placeholder ?? "") as NSString).size(withAttributes: [.font: $0]) } }
+    let placeholderRect = field.map { $0.placeholderRect(forBounds: $0.bounds).intersection($0.bounds).insetBy(dx: 1, dy: 1) }
     let data: [String: Any] = [
       "screen": screen.accessibilityIdentifier ?? "", "button": rect(field, window),
       "windowHeight": window.bounds.height,
@@ -59,6 +65,14 @@ private enum OpaxSearchGeometryProbe {
       "results": views(screen).contains { ["search-cache-state", "search-count", "search-results-count"].contains($0.accessibilityIdentifier ?? "") },
       // The query field itself: an answered search collapses the form below it.
       "field": rect(field, window),
+      "placeholder": field?.placeholder ?? "",
+      "placeholderPointSize": placeholderFont?.pointSize ?? 0,
+      "placeholderWidth": placeholderSize?.width ?? 0,
+      "placeholderLineHeight": placeholderFont?.lineHeight ?? 0,
+      "placeholderAvailableWidth": placeholderRect?.width ?? 0,
+      "placeholderAvailableHeight": placeholderRect?.height ?? 0,
+      "askViewport": rect(scroll, window),
+      "askComposer": rect(all.first { $0.accessibilityIdentifier == "ask-phone-dock" }, window),
       "askQuestion": rect(askQuestion, window), "askStages": rect(askStages, window), "askError": rect(askError, window),
     ]
     guard let raw = try? JSONSerialization.data(withJSONObject: data, options: [.sortedKeys]), let text = String(data: raw, encoding: .utf8) else { return }

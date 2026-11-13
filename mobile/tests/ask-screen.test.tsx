@@ -2123,19 +2123,26 @@ describe('the idle page at accessibility sizes', () => {
       (node) => typeof node.type === 'string' && node.props.testID === id,
     );
   const COLUMN = 678;
-  const AREA = 678 - 34; // Less the home indicator's inset.
   const COMPOSER = 120;
-  async function layOut() {
+  async function layOut(columnHeight = COLUMN) {
+    const areaHeight = columnHeight - 34;
     await act(async () => {
       native('ask-conversation-column').props.onLayout({
-        nativeEvent: { layout: { x: 0, y: 0, width: 402, height: COLUMN } },
+        nativeEvent: {
+          layout: { x: 0, y: 0, width: 402, height: columnHeight },
+        },
       });
       native('ask-composer-bounds').props.onLayout({
-        nativeEvent: { layout: { x: 0, y: 0, width: 402, height: AREA } },
+        nativeEvent: { layout: { x: 0, y: 0, width: 402, height: areaHeight } },
       });
       native('ask-composer-position').props.onLayout({
         nativeEvent: {
-          layout: { x: 0, y: AREA - COMPOSER, width: 402, height: COMPOSER },
+          layout: {
+            x: 0,
+            y: areaHeight - COMPOSER,
+            width: 402,
+            height: COMPOSER,
+          },
         },
       });
       view!.root.findByType(AskDock).props.onLayout({
@@ -2151,12 +2158,12 @@ describe('the idle page at accessibility sizes', () => {
     StyleSheet.flatten(
       view!.root.findByType(ScrollView).props.contentContainerStyle,
     );
-  async function at(fontScale: number) {
+  async function at(fontScale: number, height = COLUMN) {
     const platform = jest.replaceProperty(Platform, 'OS', 'ios');
     const window = Dimensions.get('window');
     act(() =>
       Dimensions.set({
-        window: { ...window, width: 402, height: 678, fontScale },
+        window: { ...window, width: 402, height, fontScale },
       }),
     );
     return () => {
@@ -2166,18 +2173,20 @@ describe('the idle page at accessibility sizes', () => {
   }
 
   test.each([
-    ['AX3', 2.643],
-    ['AX5', 3.571],
+    ['AX3 Duo', 2.643, COLUMN],
+    ['AX5 Duo', 3.571, COLUMN],
+    ['AX3 phone', 2.643, 874],
+    ['AX5 phone', 3.571, 874],
   ])(
     '%s: the page ends at the resting composer, so every starter in view takes its tap',
-    async (_size, fontScale) => {
-      const restore = await at(fontScale);
+    async (_size, fontScale, height) => {
+      const restore = await at(fontScale, height);
       try {
         await mount();
-        await layOut();
+        await layOut(height);
         // The scroll view stops where the composer's band starts.
-        const restTop = AREA - COMPOSER;
-        expect(scrollStyle().marginBottom).toBe(COLUMN - restTop);
+        const restTop = height - 34 - COMPOSER;
+        expect(scrollStyle().marginBottom).toBe(height - restTop);
         expect(contentStyle().paddingBottom).toBe(rhythm.section);
         // A starter in that view asks; it does not focus the composer.
         const focus = jest.mocked(TextInput.prototype.focus);

@@ -1360,12 +1360,15 @@ function fadePage(
 }
 function withGlass(test: () => void) {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+  const window = Dimensions.get('window');
+  act(() => Dimensions.set({ window: { ...window, fontScale: 1 } }));
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
   jest.mocked(RootBar!.setSolid!).mockClear();
   jest.mocked(RootBar!.remove).mockClear();
   try {
     test();
   } finally {
+    act(() => Dimensions.set({ window }));
     Object.defineProperty(Platform, 'Version', version);
   }
 }
@@ -1491,6 +1494,52 @@ test('the accessibility backing keeps the edge hidden under scrolled text', () =
       mockSolidBar = false;
     }
   }));
+
+test.each([
+  ['AX3', 2.643],
+  ['AX5', 3.571],
+])(
+  'Today %s keeps a solid band across scroll, resize and focus',
+  (_size, fontScale) =>
+    withGlass(() => {
+      const window = Dimensions.get('window');
+      const { navigation, page, ground, identifier, listeners } = fadePage(
+        'index',
+        '(today)',
+      );
+      const renderer = tree(page(120));
+      try {
+        expect(RootBar!.setSolid).not.toHaveBeenCalled();
+        act(() => Dimensions.set({ window: { ...window, fontScale } }));
+        expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
+        expect(navigation.setOptions).toHaveBeenLastCalledWith(
+          expect.objectContaining(largeTitleBar(ground, true)),
+        );
+        navigation.setOptions.mockClear();
+        scrollTo(renderer, 400);
+        expect(edgeCalls(navigation)).not.toContain('hard');
+        act(() => renderer.update(page(68)));
+        expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
+        act(() => listeners.get('blur')!.forEach((listener) => listener()));
+        expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
+        jest.mocked(RootBar!.setSolid!).mockClear();
+        act(() => listeners.get('focus')!.forEach((listener) => listener()));
+        expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
+        act(() => Dimensions.set({ window }));
+        expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
+        expect(navigation.setOptions).toHaveBeenLastCalledWith(
+          expect.objectContaining(largeTitleBar(ground, false, true)),
+        );
+        scrollTo(renderer, -120);
+        expect(navigation.setOptions).toHaveBeenLastCalledWith(
+          expect.objectContaining(largeTitleBar(ground)),
+        );
+      } finally {
+        act(() => renderer.unmount());
+        act(() => Dimensions.set({ window }));
+      }
+    }),
+);
 
 test.each([41, 52, 85])(
   'a pinned search field with a %s pt title never adds a backing',

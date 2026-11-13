@@ -13,7 +13,7 @@ import {
 import { Platform, useWindowDimensions, type ColorValue } from 'react-native';
 import { useSolidBar } from '../design/accessibility';
 import { RootBar, useVerticalBarEdge } from '../../modules/opax-root-bar';
-import { colors } from '../design/tokens';
+import { colors, isAccessibilityCategory } from '../design/tokens';
 import { glassBar, largeTitleBar, scrollBar, tabRootGround } from './chrome';
 import { isTabStack } from './floating-bar';
 
@@ -131,8 +131,15 @@ export function useRootBarAppearance(
   const { width, height, fontScale } = useWindowDimensions();
   const barEdge = useVerticalBarEdge();
   const verticalBar = barEdge !== 'unspecified';
-  const solid = useSolidBar();
+  const solidSetting = useSolidBar();
   const name = root?.name ?? '';
+  // Today's tall AX title band needs an opaque ground even when neither
+  // legibility setting is on. Keep UIKit's native title and collapse.
+  const solid =
+    solidSetting ||
+    (Platform.OS === 'ios' &&
+      name === 'index' &&
+      isAccessibilityCategory(fontScale));
   const colour =
     ground ?? (roots.includes(name) ? tabRootGround(name) : colors.paper);
   const ownsBar =
@@ -178,8 +185,8 @@ export function useRootBarAppearance(
     barEdge,
     hardEdge,
   ]);
-  // A coloured UIKit appearance hides large titles on iOS 26. Only the
-  // accessibility fallback needs this native sibling. Header-height updates
+  // A coloured UIKit appearance hides large titles on iOS 26. The legibility
+  // fallback and Today's AX band use this native sibling. Header-height updates
   // resize it, without deriving opacity or changing any route appearances.
   useLayoutEffect(() => {
     if (

@@ -97,3 +97,103 @@
    // The below code makes the screen view adapt dimensions provided by the system. We take these
    // into account only when the view is mounted under RNSNavigationController in which case system
    // provides additional padding to account for possible header, and in the case when screen is
+--- a/node_modules/react-native-screens/ios/RNSSearchBar.mm
++++ b/node_modules/react-native-screens/ios/RNSSearchBar.mm
+@@ -16,0 +17,83 @@
++// OPAX placeholder fitting: only the prompt steps down in a fixed-height native field.
++#if !TARGET_OS_TV
++@interface RNSSearchPlaceholderSizer : UIView
++@end
++
++@implementation RNSSearchPlaceholderSizer
++- (instancetype)initWithFrame:(CGRect)frame
++{
++  if (self = [super initWithFrame:frame]) {
++    self.userInteractionEnabled = NO;
++    self.accessibilityElementsHidden = YES;
++    self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
++    [[NSNotificationCenter defaultCenter] addObserver:self
++                                             selector:@selector(contentSizeChanged:)
++                                                 name:UIContentSizeCategoryDidChangeNotification
++                                               object:nil];
++  }
++  return self;
++}
++
++- (void)dealloc
++{
++  [[NSNotificationCenter defaultCenter] removeObserver:self];
++}
++
++- (void)contentSizeChanged:(NSNotification *)notification
++{
++  [self setNeedsLayout];
++}
++
++- (void)didMoveToWindow
++{
++  [super didMoveToWindow];
++  [self setNeedsLayout];
++}
++
++- (void)layoutSubviews
++{
++  [super layoutSubviews];
++  UISearchTextField *field = (UISearchTextField *)self.superview;
++  if (![field isKindOfClass:UISearchTextField.class] || field.placeholder.length == 0) {
++    return;
++  }
++  UIFont *preferred = [UIFont preferredFontForTextStyle:UIFontTextStyleBody
++                        compatibleWithTraitCollection:field.traitCollection];
++  UIFont *font = preferred;
++  if (UIContentSizeCategoryIsAccessibilityCategory(field.traitCollection.preferredContentSizeCategory)) {
++    // UIKit owns the icon/cancel-button insets. Fit both dimensions: width
++    // fitting alone still clips AX glyphs vertically in the native bar.
++    CGRect rect = CGRectIntersection(field.bounds, [field placeholderRectForBounds:field.bounds]);
++    CGSize available = CGRectInset(rect, 1, 1).size;
++    if (available.width <= 0 || available.height <= 0) {
++      return;
++    }
++    CGFloat low = MIN(14, preferred.pointSize);
++    CGFloat high = preferred.pointSize;
++    for (NSInteger step = 0; step < 10; step++) {
++      CGFloat size = (low + high) / 2;
++      UIFont *candidate = [preferred fontWithSize:size];
++      CGFloat width = [field.placeholder sizeWithAttributes:@{NSFontAttributeName : candidate}].width;
++      if (width <= available.width && candidate.lineHeight <= available.height) {
++        low = size;
++      } else {
++        high = size;
++      }
++    }
++    font = [preferred fontWithSize:low];
++  }
++  NSMutableAttributedString *placeholder = field.attributedPlaceholder.mutableCopy;
++  if (!placeholder || ![placeholder.string isEqualToString:field.placeholder]) {
++    placeholder = [[NSMutableAttributedString alloc] initWithString:field.placeholder];
++  }
++  [placeholder addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, placeholder.length)];
++  if (![field.attributedPlaceholder isEqualToAttributedString:placeholder]) {
++    field.attributedPlaceholder = placeholder;
++  }
++  // Do not set field.font or disable adjustsFontForContentSizeCategory:
++  // entered text retains UIKit's own Dynamic Type and editing behaviour.
++}
++@end
++#endif
++// OPAX placeholder fitting end.
++
+@@ -19,0 +103,3 @@
++#if !TARGET_OS_TV
++  RNSSearchPlaceholderSizer *_placeholderSizer;
++#endif
+@@ -48,0 +135,5 @@
++#if !TARGET_OS_TV
++  UISearchTextField *field = _controller.searchBar.searchTextField;
++  _placeholderSizer = [[RNSSearchPlaceholderSizer alloc] initWithFrame:field.bounds];
++  [field addSubview:_placeholderSizer];
++#endif
+@@ -154,0 +246,3 @@
++#if !TARGET_OS_TV
++  [_placeholderSizer setNeedsLayout];
++#endif
