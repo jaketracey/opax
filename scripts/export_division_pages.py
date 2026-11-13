@@ -438,10 +438,12 @@ def write_projection(records, output, carry=False, strict=False, party_evidence=
         # label goes back to its source label before it is checked again.
         vote_parties.clear_fills([r for r in guarded.values() if not frozen(r)])
     # Enrich a retained snapshot only from matching dated source facts and votes.
+    # A party-only refresh has no new source observation: its candidate labels
+    # may be old derived fills and must not be copied back as source labels.
     # Never substitute current-roster affiliations or discard its extra members.
     for key, record in guarded.items():
         candidate = records.get(key)
-        if not candidate or not record["_meta"]["refresh_retained"]:
+        if party_refresh or not candidate or not record["_meta"]["refresh_retained"]:
             continue
         if any(record.get(field) != candidate.get(field)
                for field in ("date", "house", "ayes", "noes", "source_url")):

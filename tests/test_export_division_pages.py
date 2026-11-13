@@ -22,6 +22,56 @@ D = load("export_division_pages")
 
 
 class DivisionExportTests(unittest.TestCase):
+    def test_blank_rows_in_period_and_observation_gaps_stay_blank_on_export_and_refresh(self):
+        v = D.vote_parties
+        evidence = v.Evidence([
+            v.entry("service", "representatives", ("name", "avery fixture"), ["Avery Fixture"],
+                    "Labor", "2022-05-21", "2024-02-01", url="https://example.test/service"),
+            v.entry("service", "representatives", ("name", "avery fixture"), ["Avery Fixture"],
+                    "Independent", "2024-03-01", "2025-05-03", url="https://example.test/service"),
+            v.entry("service", "representatives", ("name", "casey fixture"), ["Casey Fixture"],
+                    "Labor", "2022-05-21", "2025-05-03", url="https://example.test/service"),
+            *[v.entry("official-list", "representatives", ("name", "robin fixture"), ["Robin Fixture"],
+                      "Nationals", day, day, day, point=True, url="https://example.test/list")
+              for day in ["2022-05-21", "2024-03-01"]],
+        ])
+        key = "federal-representatives-fixture-gap"
+        record = {"key": key, "slug": f"division-{key}", "house": "representatives",
+                  "jurisdiction": "federal", "date": "2024-02-15", "name": "Fixture motion",
+                  "question": "That the motion be agreed to", "ayes": 3, "noes": 0,
+                  "members": [{"name": name, "vote": "aye"}
+                              for name in ["Avery Fixture", "Robin Fixture", "Casey Fixture"]],
+                  "_meta": {"member_coverage": "recorded"}}
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            D.write_projection({key: record}, out, party_evidence=evidence)
+            path = out / f"division-{key}.json"
+            published = json.loads(path.read_text())
+            for member in published["members"][:2]:
+                self.assertNotIn("party", member)
+                self.assertNotIn("party_source", member)
+            self.assertEqual(published["members"][2]["party"], "Labor")
+            self.assertEqual(published["_meta"]["party_fill"]["filled"], 1)
+            # A source-fact retention hold must not turn old derived labels
+            # into source labels when the published snapshot is refreshed.
+            published["_meta"].update(refresh_retained=True, refresh_retained_reason="source-facts-changed")
+            path.write_text(json.dumps(published))
+            D.write_projection(D.read_previous_projection(out), out, party_evidence=evidence, party_refresh=True)
+            before = {p.name: p.read_bytes() for p in out.glob("*.json")}
+            # Refresh must also remove a previously published inference.
+            published["members"][1].update(
+                party="Nationals", party_source={"basis": "bracket", "url": "https://example.test/list"})
+            published["_meta"]["party_fill"] = {"rule": "dated-roster", "filled": 1}
+            path.write_text(json.dumps(published))
+            with patch("sys.argv", ["export_division_pages.py", "--refresh-parties", "--out", str(out)]), \
+                    patch.object(v, "load_evidence", return_value=evidence), \
+                    patch.object(D.sqlite3, "connect", side_effect=AssertionError("offline refresh opened a DB")):
+                D.main()
+            self.assertEqual({p.name: p.read_bytes() for p in out.glob("*.json")}, before)
+            refreshed = json.loads(path.read_text())
+            self.assertEqual(refreshed["members"][2]["party_source"]["basis"], "service")
+            self.assertEqual(refreshed["_meta"]["party_fill"]["filled"], 1)
+
     def test_published_parties_follow_a_mid_term_switch_and_refresh_idempotently(self):
         v = D.vote_parties
         evidence = v.Evidence([

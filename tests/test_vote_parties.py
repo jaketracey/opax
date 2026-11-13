@@ -111,15 +111,26 @@ class DatedParty(unittest.TestCase):
         self.assertEqual(got[("nsw-lc-2026-09-25-1", "Ivo Quarrington")], ("Example Labour", "filled"))
         self.assertEqual(got[("nsw-lc-2026-06-01-1", "Ivo Quarrington")], (None, "no-dated-party"))
 
-    def test_two_agreeing_lists_bracket_the_date_but_disagreeing_ones_do_not(self):
+    def test_point_observations_cannot_fill_a_blank_between_them(self):
         evidence = [official("Ivo Quarrington", "Example Labour", "2023-04-01"),
                     official("Ivo Quarrington", "Example Labour", "2026-09-25"),
                     official("Una Blackwood", "Example Labour", "2023-04-01"),
                     official("Una Blackwood", "Example Independents", "2026-09-25")]
         records = [division("nsw-lc-2025-06-01-1", "2025-06-01", [row("Ivo Quarrington"), row("Una Blackwood")])]
         got = fill(records, evidence)
-        self.assertEqual(got[("nsw-lc-2025-06-01-1", "Ivo Quarrington")], ("Example Labour", "filled"))
+        self.assertEqual(got[("nsw-lc-2025-06-01-1", "Ivo Quarrington")], (None, "evidence-ends-before-date"))
         self.assertEqual(got[("nsw-lc-2025-06-01-1", "Una Blackwood")], (None, "conflicting"))
+        self.assertNotIn("party_fill", records[0]["_meta"])
+
+    def test_a_blank_between_two_party_periods_stays_blank(self):
+        evidence = [service("Ivo Quarrington", "Example Labour", "2023-03-25", "2024-02-01"),
+                    service("Ivo Quarrington", "Example Independents", "2024-03-01", "2027-03-27")]
+        records = [division("nsw-lc-2024-02-15-1", "2024-02-15", [row("Ivo Quarrington")])]
+        self.assertEqual(fill(records, evidence)[("nsw-lc-2024-02-15-1", "Ivo Quarrington")],
+                         (None, "evidence-ends-before-date"))
+        self.assertNotIn("party", records[0]["members"][0])
+        self.assertNotIn("party_source", records[0]["members"][0])
+        self.assertNotIn("party_fill", records[0]["_meta"])
 
     def test_a_wikidata_term_needs_a_later_official_list_in_the_same_term(self):
         records = [division("nsw-lc-2026-05-01-1", "2026-05-01", [row("Ivo Quarrington")])]
@@ -355,17 +366,20 @@ class OneParliament(unittest.TestCase):
         # On the later list's own date the new party is the list's.
         self.assertEqual(got[("nsw-lc-2026-09-25-1", "Una Blackwood")][0], "Example Independents")
 
-    def test_a_bracket_never_spans_a_general_election(self):
+    def test_a_source_label_bracket_never_spans_a_general_election(self):
         evidence = [official("Ivo Quarrington", "Example Labour", "2022-12-01", chamber="vic_la"),
                     official("Ivo Quarrington", "Example Labour", "2026-09-09", chamber="vic_la"),
                     official("Una Blackwood", "Example Labour", "2021-06-01", chamber="vic_la"),
                     official("Una Blackwood", "Example Labour", "2023-06-01", chamber="vic_la")]
-        records = [division("vic-la-2025-06-01-1", "2025-06-01", [row("Ivo Quarrington")], "vic_la", "vic"),
-                   division("vic-la-2022-06-01-1", "2022-06-01", [row("Una Blackwood")], "vic_la", "vic")]
+        records = [division("vic-la-2025-06-01-1", "2025-06-01",
+                            [{**row("Ivo Quarrington"), "party": "Example Independents"}], "vic_la", "vic"),
+                   division("vic-la-2022-06-01-1", "2022-06-01",
+                            [{**row("Una Blackwood"), "party": "Example Independents"}], "vic_la", "vic")]
         got = fill(records, evidence)
-        self.assertEqual(got[("vic-la-2025-06-01-1", "Ivo Quarrington")], ("Example Labour", "filled"))
+        self.assertEqual(got[("vic-la-2025-06-01-1", "Ivo Quarrington")], ("Example Labour", "label-corrected"))
         # 2021 and 2023 straddle the 26 Nov 2022 election.
-        self.assertIsNone(got[("vic-la-2022-06-01-1", "Una Blackwood")][0])
+        self.assertEqual(got[("vic-la-2022-06-01-1", "Una Blackwood")],
+                         ("Example Independents", "label-kept-evidence-ends-before-date"))
 
     def test_without_election_dates_bracket_and_wikidata_fail_closed(self):
         evidence = V.Evidence([official("Ivo Quarrington", "Example Labour", "2023-04-01"),
