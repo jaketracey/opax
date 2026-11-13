@@ -19,10 +19,21 @@ export interface PortraitCatalogs {
   photoPeople: PhotoPeople;
   photoCredits: PhotoCredits;
 }
+type ReleasePerson = PeopleCatalog['people'][number];
+// First release row per person_id, as a find over the rows would return.
+const releaseRows = new WeakMap<PeopleCatalog, Map<string, ReleasePerson>>();
+function releaseRow(c: PortraitCatalogs, id: string | null | undefined) {
+  let rows = releaseRows.get(c.people);
+  if (!rows) {
+    rows = new Map();
+    for (const row of c.people.people)
+      if (!rows.has(row.person_id)) rows.set(row.person_id, row);
+    releaseRows.set(c.people, rows);
+  }
+  return id == null ? undefined : rows.get(id);
+}
 function identityNames(p: PersonProfile, c: PortraitCatalogs): string[] {
-  const release = c.people.people.find(
-    (r) => r.person_id === p.canonicalPersonId,
-  );
+  const release = releaseRow(c, p.canonicalPersonId);
   if (!fullPortraitName(p.name)) return [];
   return [
     p.name,
@@ -62,9 +73,14 @@ function* portraitIndexSteps(c: PortraitCatalogs) {
   const candidates = new Map<string, PortraitInfo>();
   const owners = new Map<string, PersonProfile[]>();
   let identityRefusals = 0;
-  let processed = 0;
+  let sliceStart = -Infinity; // yield once before any work, as before
   for (const slug of Object.keys(c.slugs.slugs)) {
-    if (processed++ % 12 === 0) yield;
+    // Yield by elapsed work, not by row count: a fixed count paid one timer
+    // turn per 12 slugs (about 130 on the full roster) however fast they ran.
+    if (Date.now() - sliceStart >= 8) {
+      yield;
+      sliceStart = Date.now();
+    }
     try {
       const identity = joinPerson(
         slug,

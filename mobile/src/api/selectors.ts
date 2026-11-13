@@ -216,6 +216,15 @@ export function commonsLicenceShown(licence: string): boolean {
     licence.trim(),
   );
 }
+// The directory index asks once per slug; one key set per decoded photo map
+// keeps that linear rather than scanning every value for each person.
+const portraitKeySets = new WeakMap<PhotoPeople, Set<string>>();
+function portraitKeys(people: PhotoPeople): Set<string> {
+  let keys = portraitKeySets.get(people);
+  if (!keys)
+    portraitKeySets.set(people, (keys = new Set(Object.values(people))));
+  return keys;
+}
 export function portraitFor(
   names: string[],
   people: PhotoPeople,
@@ -231,10 +240,7 @@ export function portraitFor(
   // Distinct exact spellings can refer to distinct photos. A folded spelling
   // is only evidence when none of the supplied full names has an exact key.
   const keys = [...new Set(exact.length ? exact : nameValues(people, names))];
-  const official =
-    id &&
-    /^\d+$/.test(id) &&
-    Object.values(people).includes(id as import('./ids').PortraitKey);
+  const official = id && /^\d+$/.test(id) && portraitKeys(people).has(id);
   if (keys.length > 1 && !official)
     throw new ApiError('invalid-data', 'The portrait identity needs review.');
   const key = official ? (id as import('./ids').PortraitKey) : keys[0];
@@ -288,6 +294,21 @@ const foldedProfileName = (name: string) =>
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .replace(/[’‘ʼ`']/g, '');
+// Release rows by person_id, in file order, for the same per-person loop.
+const releaseRowIndexes = new WeakMap<
+  PeopleCatalog,
+  Map<string, PeopleCatalog['people']>
+>();
+function releaseRowsById(people: PeopleCatalog) {
+  let index = releaseRowIndexes.get(people);
+  if (!index) {
+    index = new Map();
+    for (const row of people.people)
+      index.set(row.person_id, [...(index.get(row.person_id) ?? []), row]);
+    releaseRowIndexes.set(people, index);
+  }
+  return index;
+}
 function slugNameIndex(slugs: Slugs) {
   let index = slugNameIndexes.get(slugs);
   if (!index) {
@@ -310,10 +331,7 @@ export function profileFor(id: PersonId, catalogs: ProfileCatalogs) {
       'The people records are out of step. Try again shortly.',
     );
   const canonicalId = personId(id);
-  const p = unique(
-    people.people.filter((p) => p.person_id === canonicalId),
-    'Person',
-  );
+  const p = unique(releaseRowsById(people).get(canonicalId) ?? [], 'Person');
   if (!p)
     throw new ApiError(
       'not-found',
