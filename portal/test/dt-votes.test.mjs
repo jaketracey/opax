@@ -103,5 +103,5 @@ test('vote titles drop the Hansard heading prefix and keep acronyms; phone rows 
   const [division] = divisionRows([{title:'BILLS - Fixture Bill 2026 - Third Reading', date:'2026-03-01', house:'senate', ayes:30, noes:28}]);
   assert.doesNotMatch(JSON.stringify(division), /BILLS - /);
   assert.deepEqual(divisionTableConfig({bill:'au-federal-fixture'}).phone, {figure:['outcome', {key:'ayes', to:'noes'}], meta:['chamber']});
-  assert.deepEqual(voteTableConfig('fixture-member').phone, {figure:['vote'], meta:['date']});
+  assert.deepEqual(voteTableConfig('fixture-member').phone, {figure:['vote'], meta:['date', {key:'party_position', omit:['Not recorded']}]});
 });

@@ -138,7 +138,8 @@ export function stateBillsTableConfig(rows) {
       {key:'source_url',label:'Source URL',type:'text'},
       {key:'sha256',label:'SHA-256',type:'text'},
       {key:'licence_url',label:'Licence URL',type:'text'}],primaryLink:row=>row.href || null,
-    phone:{meta:['jurisdiction','introduced_date','status']}};
+    // A status is always read with the date the source gave it.
+    phone:{meta:['jurisdiction','parliament','introduced_date',{key:'sponsor_name',label:'Sponsor'},{key:'status',then:{key:'status_as_of',word:'as at'}},'last_action','publisher','licence']}};
 }
 
 /** Retain existing bookmarked register URLs while the shared core owns state. */

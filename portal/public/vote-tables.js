@@ -52,7 +52,8 @@ export function voteTableConfig(person, caption = 'Voting record') {
   const people = [...new Set((Array.isArray(person) ? person : [person]).filter(Boolean))];
   return {id:'vote-table', caption, columns:voteColumns, source:{endpoint:'/api/table/votes', params:{'f.person':JSON.stringify(people)}},
     pageSize:25, defaultSort:{key:'date', dir:'desc'}, primaryLink:row => safeLink(row.href),
-    phone:{figure:['vote'], meta:['date']},
+    // Whether the member voted with their party, where the record says.
+    phone:{figure:['vote'], meta:['date', {key:'party_position', omit:['Not recorded']}]},
     export:{filename:'voting-record.csv'}, urlKey:'vr', pageType:'person'};
 }
 
