@@ -995,6 +995,84 @@ describe('the first second and the last line (sweep 3, lane A)', () => {
   });
 });
 
+describe('offline on a first install, nothing saved', () => {
+  const offlineError = {
+    status: 'error',
+    data: null,
+    asAt: null,
+    sources: [],
+    stale: false,
+    savedAt: null,
+    error: { code: 'offline', message: 'Failed.' },
+  } as never;
+  const hosts = (r: TestRenderer.ReactTestRenderer, id: string) =>
+    r.root.findAll((n) => typeof n.type === 'string' && n.props.testID === id);
+  const settle = async () => {
+    for (let i = 0; i < 10; i++)
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      });
+  };
+  function offlineFirstInstall() {
+    setUp({ cached: 'missing' });
+    jest.mocked(useNetworkState).mockReturnValue({ isConnected: false });
+    mock.todayEdition.mockResolvedValue(offlineError);
+    mock.todayBills.mockResolvedValue(offlineError);
+    mock.todayDeclarations.mockResolvedValue(offlineError);
+    mock.todayDeclarationsProfiled.mockResolvedValue(offlineError);
+  }
+  afterEach(() => jest.mocked(useNetworkState).mockReturnValue({}));
+
+  test('the page settles: Bills says so once, the blocks stay aside, the reads stop, and no closing line', async () => {
+    offlineFirstInstall();
+    const r = await render(<Today />);
+    await settle();
+    // Before the latch the blocks remounted on every report and read again
+    // (416 Bills reads before the page stopped settling).
+    expect(mock.todayBills.mock.calls.length).toBeLessThanOrEqual(2);
+    const reads = mock.todayBills.mock.calls.length;
+    await settle();
+    expect(mock.todayBills).toHaveBeenCalledTimes(reads);
+    expect(hosts(r, 'today-unavailable')).not.toHaveLength(0);
+    expect(blocks(r.root)).not.toContain('today-bills');
+    expect(blocks(r.root)).not.toContain('today-declarations');
+    expect(r.root.findByType(TodayFoot).props.ending).toBeUndefined();
+    expect(hosts(r, 'today-ending')).toHaveLength(0);
+  });
+
+  test('coming back online retries once', async () => {
+    offlineFirstInstall();
+    const r = await render(<Today />);
+    await settle();
+    const edition = mock.todayEdition.mock.calls.length;
+    const bills = mock.todayBills.mock.calls.length;
+    // Still failing after the retry, so the page settles again.
+    jest.mocked(useNetworkState).mockReturnValue({ isConnected: true });
+    await act(async () => r.update(<Today />));
+    await settle();
+    // One new attempt: the edition is asked again once, with a refresh,
+    // and Bills reads once more.
+    expect(mock.todayEdition.mock.calls.slice(edition)).toEqual([[true]]);
+    expect(mock.todayBills.mock.calls.length - bills).toBe(1);
+    await settle();
+    expect(mock.todayEdition.mock.calls.length).toBe(edition + 1);
+    expect(hosts(r, 'today-unavailable')).not.toHaveLength(0);
+  });
+
+  test('a device that was never offline does not retry on its own', async () => {
+    offlineFirstInstall();
+    // Reads fail as offline while the device reports a connection.
+    jest.mocked(useNetworkState).mockReturnValue({ isConnected: true });
+    const r = await render(<Today />);
+    await settle();
+    const edition = mock.todayEdition.mock.calls.length;
+    await act(async () => r.update(<Today />));
+    await settle();
+    expect(mock.todayEdition).toHaveBeenCalledTimes(edition);
+    expect(hosts(r, 'today-unavailable')).not.toHaveLength(0);
+  });
+});
+
 test.each(['edition', 'bills', 'declarations'] as const)(
   'device offline state draws one line for a fresh saved %s block',
   async (cached) => {

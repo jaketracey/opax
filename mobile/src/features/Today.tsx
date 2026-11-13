@@ -293,8 +293,24 @@ export default function Today() {
     edition.block?.status === 'ready' && edition.block.data
       ? editionTier(edition.block.data.date, today)
       : null;
-  const nothingSaved =
+  // Nothing saved and offline: Bills says so once and the blocks that
+  // cannot draw step aside. Unmounting them clears their reports, so the
+  // condition is held for this attempt; without it the blocks remounted,
+  // failed again and looped. A pull, or the device coming back online,
+  // starts the next attempt.
+  const nothingSavedNow =
     reports.nothingSaved && edition.block?.status === 'error';
+  const [nothingSavedAt, setNothingSavedAt] = useState<number | null>(null);
+  // Held while rendering (React's adjust-state-on-change pattern), so the
+  // commit that sets the blocks aside already holds it.
+  if (nothingSavedNow && nothingSavedAt !== attempt) setNothingSavedAt(attempt);
+  const nothingSaved = nothingSavedNow || nothingSavedAt === attempt;
+  const wasOffline = useRef(offline);
+  useEffect(() => {
+    const back = wasOffline.current && !offline;
+    wasOffline.current = offline;
+    if (back && nothingSavedAt === attempt) retry();
+  }, [offline, nothingSavedAt, attempt, retry]);
 
   const electionSavedAt =
     election.record &&
