@@ -5,7 +5,7 @@ import {existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {buildSlimAssets, countFiles, FD_LIMIT, isBulkAssetPath, MAX_ASSET_FILES, SKIPPED_FOLDERS, stopGroup, stopGroupOnExit, waitForHealth} from '../../scripts/research_local_assets.mjs';
+import {buildSlimAssets, countFiles, FD_LIMIT, isBulkAssetPath, MAX_ASSET_FILES, PARTIAL_FOLDERS, SKIPPED_FOLDERS, stopGroup, stopGroupOnExit, waitForHealth} from '../../scripts/research_local_assets.mjs';
 
 const portal = fileURLToPath(new URL('../', import.meta.url));
 const write = (path, body = '{}') => { mkdirSync(join(path, '..'), {recursive: true}); writeFileSync(path, body); };
@@ -16,6 +16,7 @@ function fixture(t) {
   const pub = join(root, 'public');
   for (const folder of SKIPPED_FOLDERS) for (let i = 0; i < 3; i++) write(join(pub, folder, `x${i}.json`));
   write(join(pub, 'index.html'), '<!doctype html>');
+  for (const name of ['annual-report-x.json', 'integrity-report-y.json', 'royal-commission-cth-example.json']) write(join(pub, 'report-records', name));
   write(join(pub, 'agencies', 'a.json'));
   write(join(pub, 'electorates', 'manifest.json'), JSON.stringify({release_id: 'new1', index_url: '/electorates/releases/new1/index.json'}));
   for (const release of ['old1', 'old2', 'new1']) for (let i = 0; i < 4; i++) write(join(pub, 'electorates', 'releases', release, `el_${i}.json`));
@@ -26,34 +27,36 @@ test('the slim folder leaves out the bulk and unread folders and keeps only the 
   const {pub, slim} = fixture(t);
   const result = buildSlimAssets(pub, slim);
   assert.deepEqual(result.skipped, [...SKIPPED_FOLDERS].sort());
-  assert.deepEqual(result.trimmed, ['electorates (release new1 only)']);
+  assert.deepEqual(result.trimmed, ['electorates (release new1 only)', `report-records (${PARTIAL_FOLDERS['report-records'].source} only)`]);
   for (const folder of SKIPPED_FOLDERS) assert.equal(existsSync(join(slim, folder)), false, folder);
+  // Only the royal commission report records, whose findings Ask reads.
+  assert.deepEqual(readdirSync(join(slim, 'report-records')), ['royal-commission-cth-example.json']);
   assert.deepEqual(readdirSync(join(slim, 'electorates', 'releases')), ['new1']);
   assert.ok(lstatSync(join(slim, 'agencies')).isSymbolicLink());
-  // index.html + agencies/a.json + manifest + 4 current-release files
-  assert.equal(result.files, 7);
-  assert.equal(countFiles(slim), 7);
+  // index.html + agencies/a.json + manifest + 4 current-release files + 1 royal commission record
+  assert.equal(result.files, 8);
+  assert.equal(countFiles(slim), 8);
 });
 
 test('the slim folder rebuilds cleanly over a previous one', t => {
   const {pub, slim} = fixture(t);
   buildSlimAssets(pub, slim);
-  assert.equal(buildSlimAssets(pub, slim).files, 7);
+  assert.equal(buildSlimAssets(pub, slim).files, 8);
 });
 
 test('an electorates folder without a usable manifest is kept whole rather than guessed at', t => {
   const {pub, slim} = fixture(t);
   writeFileSync(join(pub, 'electorates', 'manifest.json'), JSON.stringify({release_id: 'missing'}));
   const result = buildSlimAssets(pub, slim);
-  assert.deepEqual(result.trimmed, []);
-  assert.equal(result.files, 2 + 1 + 12);
+  assert.deepEqual(result.trimmed, [`report-records (${PARTIAL_FOLDERS['report-records'].source} only)`]);
+  assert.equal(result.files, 2 + 1 + 12 + 1);
 });
 
 test('a slim folder over the limit fails before wrangler starts, naming the largest folders', t => {
   const {pub, slim} = fixture(t);
   for (let i = 0; i < 10; i++) write(join(pub, 'evidence', `e${i}.json`));
   assert.throws(() => buildSlimAssets(pub, slim, {max: 12}), err => {
-    assert.match(err.message, /has 17 files, over the 12 limit/);
+    assert.match(err.message, /has 18 files, over the 12 limit/);
     assert.match(err.message, new RegExp(`ulimit -n ${FD_LIMIT}`));
     assert.match(err.message, /Largest folders: evidence 10/);
     return true;
@@ -79,6 +82,9 @@ test('Ask code never reads a skipped folder through the Worker assets, except th
   for (const file of files) {
     const text = readFileSync(file, 'utf8');
     for (const folder of unread) assert.doesNotMatch(text, new RegExp(`['\`"]/${folder}/`), `${file} reads /${folder}/`);
+    // A partly linked folder is read only by the names the slim folder links.
+    for (const [folder, only] of Object.entries(PARTIAL_FOLDERS))
+      for (const m of text.matchAll(new RegExp(`['\`"]/${folder}/([^'\`"]*)`, 'g'))) assert.match(m[1].replace(/\$\{[^}]+\}/g, 'x'), only, `${file} reads /${folder}/${m[1]}`);
   }
 });
 
