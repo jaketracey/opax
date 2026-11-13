@@ -88,7 +88,8 @@ test('implicit funding wording preserves scope restrictions and unknown qualifie
 
 test('the live fossil-fuel ranking failure is corrected using all selected edges',async()=>{
  const r=await ask('Who receives the most disclosed receipts from fossil fuel donors?');
- assert.match(r.answer,/^\*\*Liberal\*\*/);assert.match(r.answer,/\| Liberal \| \$957,000 \| 70% \| \$2,981,580 \(includes loans\) \|/);assert.match(r.answer,/\| Labor \| \$269,975 \| 20% \| \$3,732,932 \(includes loans\) \|/);
+ // 13 Nov 2026: Liberal $957,000 to $807,000 and Labor $269,975 to $249,975: Linc Energy left the federal map at rank 251 when NIOA's two 2015-16 gifts of $20,000 to the Liberal Democratic Party (one on the party's return, one the donor's own) lifted NIOA into the top 250 (export rule 10); its fossil-fuel receipts left with it.
+ assert.match(r.answer,/^\*\*Liberal\*\*/);assert.match(r.answer,/\| Liberal \| \$807,000 \| 75% \| \$2,773,580 \(includes loans\) \|/);assert.match(r.answer,/\| Labor \| \$249,975 \| 23% \| \$3,708,132 \(includes loans\) \|/);
  assert.equal(r.answer_status,'calculated');assert.match(r.answer,/These figures are party-level totals from recipient returns in OPAX’s published selection/);
  assert.ok(r.sources.some(s=>s.href.includes('industry=fossil_fuels')&&s.href.includes('party=party%3ALiberal')));
 });
@@ -626,11 +627,11 @@ test('compound party names retain distinct federal identities and reject unsuppo
  assert.match(country.answer,/the selection totals \$107,300\./);assert.equal(aud(clpEdges.reduce((s,e)=>s+e.total,0)),'$107,300');
  assert.doesNotMatch(country.answer,/donations received|other financial years|See these donations/);
  assert.match(country.answer,/\[See these on the money map\]\([^)]*party=party%3ACountry\+Liberal\+Party\)/);
- const pair=await ask('Who gets more money, Liberal or LNP?');assert.equal(pair.answer_status,'calculated');assert.match(pair.answer,/Liberal received \$96,469,578 more than LNP/);
+ const pair=await ask('Who gets more money, Liberal or LNP?');assert.equal(pair.answer_status,'calculated');assert.match(pair.answer,/Liberal received \$96,444,577 more than LNP/); // 13 Nov 2026: was $96,469,578; Linc Energy left the federal map at rank 251 when NIOA's two 2015-16 gifts of $20,000 to the Liberal Democratic Party (one on the party's return, one the donor's own) lifted NIOA into the top 250 (export rule 10).
  assert.equal(new Set(pair.sources.slice(1).map(s=>new URL(s.href,'https://opax.test').searchParams.get('party'))).size,2);
  // The comparison gives the CLP's all-types total under its own label, and says it is not like for like.
  const clp=await ask('Who gets more money, Country Liberal Party or Liberal?');
- assert.equal(clp.answer_status,'calculated');assert.equal(clp.comparison_complete,false);assert.match(clp.answer,/^Liberal recorded \$100,512,875 in donations received/);
+ assert.equal(clp.answer_status,'calculated');assert.equal(clp.comparison_complete,false);assert.match(clp.answer,/^Liberal recorded \$100,362,875 in donations received/); // 13 Nov 2026: was $100,512,875; Linc Energy's $150,000 left with it when NIOA's 2015-16 gifts to the Liberal Democratic Party lifted NIOA into the top 250.
  assert.match(clp.answer,/ Country Liberal Party recorded \$107,300 in all receipt types \(no type breakdown in the AEC data OPAX holds\), 1998–99 to 2004–05\. The AEC data OPAX holds for Country Liberal Party doesn't split receipts by type, so its total can't be set beside the donation figures as like for like\./);
  assert.doesNotMatch(clp.answer,/One comparison side has matching records|Country Liberal Party recorded \$[\d,]+ in donations/);
  const clpLinks=[...clp.answer.matchAll(/\[(See [^\]]+ on the money map)\]\(([^)]+)\)/g)].map(m=>[m[1],new URL(m[2]).searchParams.get('party'),new URL(m[2]).searchParams.get('receipt')]);
@@ -667,7 +668,8 @@ test('untyped fallback: industry rankings and party winners use all disclosed re
  const mining=await askUntyped('Who gets the most from mining?');
  assert.equal(mining.measure,'receipts_all');assert.match(mining.answer,/^\*\*United Australia Party\*\*/);assert.match(mining.answer,/\$151,692,621/);
  const fossil=await askUntyped('Who receives the most disclosed receipts from fossil fuel donors?');
- assert.match(fossil.answer,/^\*\*Labor\*\*/);assert.match(fossil.answer,/\$6,553,737/);assert.match(fossil.answer,/\$6,121,113/);assert.match(fossil.answer,/published AEC selection/);
+ // 13 Nov 2026: Labor $6,553,737 to $6,505,237 and Liberal $6,121,113 to $5,748,113: Linc Energy left the federal map at rank 251 when NIOA's two 2015-16 gifts of $20,000 to the Liberal Democratic Party (one on the party's return, one the donor's own) lifted NIOA into the top 250 (export rule 10).
+ assert.match(fossil.answer,/^\*\*Labor\*\*/);assert.match(fossil.answer,/\$6,505,237/);assert.match(fossil.answer,/\$5,748,113/);assert.match(fossil.answer,/published AEC selection/);
  assert.match(fossil.answer,/disclosed receipts, all types/);
  const gambling=await askUntyped('Who takes the most money from the gambling lobby?');
  assert.match(gambling.answer,/^\*\*Labor\*\*/);assert.ok(gambling.answer.includes(aud(industryTotal('gambling','Labor',legacyGraph,legacyTotal))));assert.equal(aud(industryTotal('gambling','Labor',legacyGraph,legacyTotal)),'$9,324,627');

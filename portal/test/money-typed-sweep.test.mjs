@@ -444,19 +444,23 @@ test('person page ties: the scope line shows once the exporter marks the flows t
 });
 
 // ---- Donors and flows only their own donor return declares (round 3) ------------
-// receiptGraph drops 131 flows whose typed cells are empty: the parties' returns list no
-// receipt for them. Ten donors have no other flow, so their typed total is 0. No surface
+// receiptGraph drops 140 flows whose typed cells are empty: the parties' returns list no
+// receipt for them. Eleven donors have no other flow, so their typed total is 0. No surface
 // may show such a donor at $0: each says what is true (DONOR_DECLARED_ONLY) instead.
 const DECLARED_ONLY = published.nodes.filter(n => n.kind === 'donor' && !hasPartyReceipts(n));
 const GOLDMAN = 'donor:goldman sachs australia';
 const ZERO = /\$0(?:\.00)?(?![\d.,])/;
 
 test('one predicate: hasPartyReceipts picks out the released donors and flows only their own returns declare', () => {
-  assert.equal(DECLARED_ONLY.length, 10);
+  // 13 Nov 2026: 10 to 11, IT Alliance Australia, whose only row is its own 2019-20 declaration of $1,000 to the
+  // Liberal Democratic Party (ACT Branch); the party's return lists no such receipt.
+  assert.equal(DECLARED_ONLY.length, 11);
   assert.ok(DECLARED_ONLY.every(n => !Object.keys(n.by_type).length && n.total > 0), 'each holds a record figure from its own declarations');
   assert.ok(DECLARED_ONLY.some(n => n.id === GOLDMAN));
   const dropped = published.edges.filter(e => !e.grant && !e.flow && !hasPartyReceipts(e));
-  assert.equal(dropped.length, 131);
+  // 13 Nov 2026: 131 to 140, the nine flows to the Libertarian Party that only the donor's own return declares
+  // (Ancora, Australian Energy Producers, Chevron, Australian Hotels Association, IAG, IT Alliance, Deloitte, Allianz, Sanofi).
+  assert.equal(dropped.length, 140);
   assert.equal(receiptGraph(published).edges.length, published.edges.length - dropped.length, 'receiptGraph drops exactly those flows');
   assert.equal(hasPartyReceipts({total: 0, count: 0}), true, 'a record without typed cells (a state graph) keeps its figures');
 });
@@ -479,7 +483,8 @@ test('Ask money_totals: never a $0 donor row; a flow only the donor declared is 
   // A donor with both kinds: the counted flows as rows, the declared-only one as a note.
   const allianz = await api.callTool(env, 'money_totals', {donor: 'donor:allianz australia', group_by: 'party'});
   assert.deepEqual(allianz.rows.map(r => r.party), ['Labor', 'Liberal', 'Nationals']);
-  assert.ok(allianz.notes.some(n => n.startsWith("Not counted above: Allianz Australia Limited's own donor returns declare $67,798 to LNP across 18 records (2011-12 to 2022-23).")));
+  // 13 Nov 2026: Allianz's own 2018-19 declaration of $500 to the Liberal Democratic Party joins the note; that party's return lists no such receipt.
+  assert.ok(allianz.notes.some(n => n.startsWith("Not counted above: Allianz Australia Limited's own donor returns declare $68,298 to federal parties across 19 records: LNP $67,798 (2011-12 to 2022-23); Libertarian Party $500 (2018-19).")));
   // A ranking holds only donors the parties' returns list.
   const ranked = await api.callTool(env, 'money_totals', {group_by: 'donor', limit: 20});
   assert.equal(ranked.matched, published.nodes.filter(n => n.kind === 'donor' && hasPartyReceipts(n)).length);
