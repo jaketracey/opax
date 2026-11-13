@@ -37,7 +37,8 @@ import {
 } from '../src/features/your-mp/RepresentativeRows';
 import { loadChoice } from '../src/features/your-mp/choice-store';
 import { resetSeatForTests } from '../src/features/your-mp/useSeat';
-import { menuTitle } from '../src/design/menu-title';
+import { menuTitle, plainMenuTitle } from '../src/design/menu-title';
+import { WORD_JOINER } from '../src/design/record-title';
 
 jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn(async () => null) },
@@ -427,12 +428,13 @@ test('the bar menu: no Set as my electorate is ever disabled; Ask drafts without
   const menu = items.find((i) => i.type === 'menu')!;
   const labels = menu.menu!.items.map((i) => i.label);
   expect(labels).toEqual([
-    'Set Grayndler as my electorate',
+    `Set Grayndler as my ${[...'electorate'].join(WORD_JOINER)}`,
     'View on a date',
     'Ask about Grayndler',
     'Copy link',
     menuTitle('Open on opax.com.au'),
   ]);
+  expect(plainMenuTitle(labels[0]!)).toBe('Set Grayndler as my electorate');
   await act(async () =>
     menu.menu!.items.find((i) => i.label === 'Ask about Grayndler')!.onPress(),
   );

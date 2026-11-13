@@ -10,6 +10,7 @@ import {
   type RefObject,
 } from 'react';
 import {
+  Platform,
   Pressable,
   RefreshControl,
   StyleSheet,
@@ -45,6 +46,7 @@ import {
   copy,
 } from '../design/primitives';
 import { RowLink, rowMenus, type RowMenuAction } from '../design/row-link';
+import { WORD_JOINER } from '../design/record-title';
 import {
   ownsRowPadding,
   useRowCellStyle,
@@ -375,7 +377,15 @@ export function useElectorateMenu(
     ...(setMine.visible
       ? [
           {
-            title: setMine.label,
+            // Keep the full action wording. Like domains in menuTitle,
+            // bind this word so UIKit cannot hyphenate it as "elec-torate".
+            title:
+              Platform.OS === 'ios'
+                ? setMine.label.replace(
+                    /\belectorate\b/,
+                    [...'electorate'].join(WORD_JOINER),
+                  )
+                : setMine.label,
             symbol: 'building.columns' as const,
             onPress: () => {
               void setMine.run();

@@ -1418,12 +1418,19 @@ const edgeCalls = (navigation: { setOptions: jest.Mock }) =>
 test.each([
   ['(today)', 'index'],
   ['(search)', 'search'],
+  ['(today)', 'leads'],
+  ['(ask)', 'ask'],
 ] as const)(
   '%s %s turns the top edge hard once text runs under the bar, soft again at rest',
   (segment, name) =>
     withGlass(() => {
-      const { navigation, ground, page } = fadePage(name, segment);
-      const expanded = 120;
+      const { navigation, ground, page } = fadePage(
+        name,
+        segment,
+        name === 'leads',
+        true,
+      );
+      const expanded = 100; // useHeaderBottom's measured bar in this suite.
       const renderer = tree(page(expanded));
       try {
         navigation.setOptions.mockClear();
@@ -1431,10 +1438,14 @@ test.each([
         scrollTo(renderer, -expanded);
         expect(edgeCalls(navigation)).toEqual([]);
         // Under the expanded bar, before the collapse height arrives.
-        scrollTo(renderer, -expanded + 40);
+        scrollTo(renderer, -expanded + 2);
         expect(navigation.setOptions).toHaveBeenLastCalledWith(
           expect.objectContaining({
-            ...largeTitleBar(ground, false, true),
+            ...largeTitleBar(
+              name === 'leads' ? colors.paper : ground,
+              false,
+              true,
+            ),
             headerLargeTitleEnabled: true,
           }),
         );
@@ -1459,7 +1470,6 @@ test.each([
 test.each([
   ['(your-mp)', 'your-mp'],
   ['(bills)', 'bills'],
-  ['(ask)', 'ask'],
 ] as const)('%s %s keeps the soft edge under scrolled text', (segment, name) =>
   withGlass(() => {
     const { navigation, page } = fadePage(name, segment);
@@ -2031,12 +2041,11 @@ describe('scroll edges on every bar shape', () => {
     ['leading', 'left', 'right'],
     ['trailing', 'right', 'left'],
   ] as const)(
-    'Duo folded, %s rail: the top edge stays hard under the title and search field',
+    'Duo folded, %s rail: the top edge follows the page under the title and search field',
     (edge, rail, far) => {
-      // Pushed pages (Vic hub, Leads) and roots (Bills, Search) alike.
       for (const active of ['hard', 'soft'] as const) {
         const edges = barScrollEdges(edge, active);
-        expect(edges.top).toBe('hard');
+        expect(edges.top).toBe(active);
         expect(edges.bottom).toBe('soft');
         expect(edges[rail]).toBe(active);
         expect(edges[far]).toBe('soft');
@@ -2045,16 +2054,42 @@ describe('scroll edges on every bar shape', () => {
       expect(barScrollEdges(edge, 'hidden').top).toBe('hidden');
     },
   );
-  test('a glass tab root on the folded rail asks for the hard top edge', () =>
+  test('a glass tab root on the folded rail is soft at rest and hard under content', () =>
     withGlass(() => {
-      expect(scrollBar(colors.paper, false, 'leading')).toMatchObject({
+      expect(scrollBar(colors.paper, false, 'leading', false)).toMatchObject({
         headerTransparent: true,
+        scrollEdgeEffects: { top: 'soft', left: 'soft' },
+      });
+      expect(scrollBar(colors.paper, false, 'leading', true)).toMatchObject({
         scrollEdgeEffects: { top: 'hard', left: 'soft' },
       });
       expect(scrollBar(colors.paper, false, 'unspecified')).toMatchObject({
         scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
       });
     }));
+  test.each(['leading', 'trailing'] as const)(
+    'Duo Today on the %s rail leaves the map whole at rest and covers it from the first scroll point',
+    (edge) =>
+      withGlass(() => {
+        mockBarEdge = edge;
+        const { page, navigation } = fadePage('index', '(today)');
+        const renderer = tree(page(100));
+        try {
+          expect(edgeCalls(navigation).at(-1)).toBe('soft');
+          navigation.setOptions.mockClear();
+          scrollTo(renderer, -100);
+          scrollTo(renderer, -110);
+          expect(edgeCalls(navigation)).toEqual([]);
+          scrollTo(renderer, -98);
+          scrollTo(renderer, 20);
+          expect(edgeCalls(navigation)).toEqual(['hard']);
+          scrollTo(renderer, -100);
+          expect(edgeCalls(navigation)).toEqual(['hard', 'soft']);
+        } finally {
+          act(() => renderer.unmount());
+        }
+      }),
+  );
   test.each(['leading', 'trailing'] as const)(
     'pushed pages on a %s rail keep the hard top edge',
     (edge) => {
@@ -2087,9 +2122,11 @@ describe('scroll edges on every bar shape', () => {
         );
         expect(resolved).toMatchObject({
           headerTransparent: true,
-          scrollEdgeEffects: { top: 'hard', bottom: 'soft', right: 'soft' },
+          scrollEdgeEffects: { top: 'soft', bottom: 'soft', right: 'soft' },
         });
         expect(resolved.headerLargeTitleEnabled).not.toBe(true);
+        scrollTo(renderer, -68 + 2);
+        expect(edgeCalls(navigation).at(-1)).toBe('hard');
       } finally {
         act(() => renderer.unmount());
       }
