@@ -1,3 +1,4 @@
+import './helpers/vic-election-clock.mjs';
 import {test, beforeEach} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile,writeFile,mkdir,mkdtemp,rm} from 'node:fs/promises';

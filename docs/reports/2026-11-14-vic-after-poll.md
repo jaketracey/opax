@@ -41,6 +41,7 @@ Times below are in AEDT. Results are absent unless explicitly stated.
 | --- | --- | --- | --- |
 | Pre-poll control | Existing enrolment, caretaker, nomination and postal rows, with separate correct instants. Early voting dates unchanged; election hours include AEDT. | How and where to vote. Early voting runs 18–27 November, 9 am to 6 pm, except Sunday 22 November. Check locations and hours with the VEC. Links to VEC voting options and locations. | Which seat am I in? / Find my seat |
 | 27 Nov, 10 am | Enrolment closed; caretaker began; nominations closed; postal applications closed. Early voting dates and voting link remain. Election day is 28 November, 8 am to 6 pm AEDT. | Same dated early-voting information and VEC link. | Same voting finder |
+| 27 Nov, 6 pm to midnight | Early voting closed: 6 pm Friday 27 November 2026. The lifecycle remains `early_voting` until election-day midnight. | How and where to vote. Early voting has closed. Election day voting is Saturday 28 November, 8 am to 6 pm AEDT. | Same voting finder |
 | 28 Nov, 8 am | Early voting closed: 6 pm Friday 27 November 2026. Election day: Saturday 28 November 2026, 8 am to 6 pm AEDT. | How and where to vote. Election day voting is from 8 am to 6 pm AEDT. Check voting locations with the VEC. | Same voting finder |
 | 28 Nov, 6:01 pm | Early voting closed, with its historical end date and no voting link. Voting closed: 6 pm AEDT on Saturday 28 November 2026. | After voting. Voting has closed. Check the VEC for postal vote requirements and count updates. Links to VEC election information and state results. | Find a seat and its records / Find seat records |
 | 29 Nov | Same closed date rows | Same After voting block | Same records finder |
@@ -66,6 +67,12 @@ underlying asset is unchanged. This prevents a fresh five-minute API response
 from retaining voting instructions past 6 pm on a subsequent request. A page
 already left open does not refresh itself.
 
+Election share-image URLs carry the same `state` as the page. Their edge-cache
+keys recompute `vicElectionState` from the clock and validated data before a
+cache lookup, ignoring supplied state parameters. An old election-day image URL
+therefore cannot reselect an election-day cache entry after polls close. Offline
+checks cover the hub, district and region in PNG and portrait JPEG formats.
+
 ## Results data path and rehearsal
 
 `build_vic_election.mjs` optionally reads `scripts/hubs/vic-results-2026.json`.
@@ -82,6 +89,14 @@ After polls close, a nonempty `partial` bundle enables `results`; `final` enable
 show results for their constituent districts, with upper house results linked
 to VEC. Party shares and winning margins are records, with no forecasts or
 candidate identity matching. API outputs retain explicit allowlists.
+
+Page reads also validate the whole hub asset. Invalid results fall back to the
+validated core with `current_results: null`, while invalid core data returns an
+unavailable page with status 503. The app continues to reject invalid assets
+with 503. A district absent from a partial bundle explicitly says that no result
+has been published here for that district yet; its share card uses that wording.
+The Victorian test files force `TZ=UTC` and assert the no-offset ISO parse, so
+an AEDT Mac cannot conceal a local-time boundary error.
 
 The dry run uses the held `vic-results-2022.json` through the actual optional
 source-file read, validator, asset builder, HTML renderer and API. It changes
@@ -130,7 +145,7 @@ previous source/output. The 2026 URL and live markup have not been verified in
 this pre-election lane. Publication still requires the usual checked release;
 these commands alone do not deploy.
 
-## Gates
+## Initial lane gates
 
 - `cd portal && nice -n 10 npx tsc --noEmit`: passed, after local Wrangler type generation.
 - Focused election, parser, catalogue and model-budget checks: **105 passed**. This includes **71 election/hub/parser tests** across the five focused election files.
@@ -146,3 +161,21 @@ The search manifest was refreshed to match its rebuilt shards, retaining
 333,036 records and identical kind counts. An unrelated regenerated agency
 summary was restored. Local hub/crawl outputs and Wrangler types remain ignored.
 `.ops/` is excluded. No production, native or device action was performed.
+
+## Review note 1 gates
+
+All six review findings are addressed: state-specific share URLs and cache keys,
+monotonic Friday-evening state, validated HTML reads with a no-results fallback,
+district-specific pending-result copy, 2026 acquisition documentation and UTC
+test clocks. The original acquisition limits and data-presence gates remain.
+
+- Focused election, share-image and existing card checks: **87 passed**. The share-image checks cover different URLs and cache keys before/after close, plus stale and forged state queries in PNG and portrait JPEG for hub, district and region routes.
+- Full portal suite: **4,953 passed, 0 failed, 0 skipped**, 176.5 seconds.
+- `cd portal && nice -n 10 npx tsc --noEmit`: passed.
+- Asset stamping and `--check`: passed; browser assets and SPA shell remain byte-identical.
+- `git diff --check`: passed; no added em dashes, CSS or native changes.
+
+Tests used the Mac slot wrapper at concurrency 4 and `nice -n 10`. Focused
+checks waited 120 seconds for an existing slot; the slot limit was unchanged.
+The Victorian suites import the UTC clock setup even when invoked separately.
+No live 2026 result acquisition, production write or native/device action ran.

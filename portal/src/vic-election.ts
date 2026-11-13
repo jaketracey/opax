@@ -4,6 +4,7 @@ import {VIC_ELECTION_PATH, VIC_ELECTION_POLLS_OPEN, VIC_ELECTION_POLLS_CLOSE, VI
 import {escapeHtml as esc, safeHref, type Crumb, type ReadAsset} from './seo-content'
 import {hubShell, type HubFooterConfig} from './hubs'
 import {trail} from './nav-model.mjs'
+import {validateVicElection} from './vic-election-data'
 
 interface Division { date: string; title: string; href: string; vote: string; source_url: string }
 export interface Member {
@@ -59,18 +60,20 @@ export function vicElectionState(d: VicElection, now = new Date()): VicElectionS
     return 'polls_closed'
   }
   if (past(VIC_ELECTION_DAY_START,now)) return 'election_day'
-  if (past(VIC_ELECTION_EARLY_OPEN,now) && !past(VIC_ELECTION_EARLY_CLOSE,now)) return 'early_voting'
+  if (past(VIC_ELECTION_EARLY_OPEN,now)) return 'early_voting'
   return 'pre_poll'
 }
 export const pollsClosed = (now: Date) => past(VIC_ELECTION_POLLS_CLOSE,now)
 export const visibleResults = (d: VicElection, now: Date) => pollsClosed(now) ? d.current_results ?? null : null
 
 /** Plain text shared by SSR and the app, including voting links and finder labels. */
-export function vicElectionCopy(d: VicElection, now = new Date()) {
+export function vicElectionCopy(d: VicElection, now = new Date(), seat: Seat | null = null) {
   const state = vicElectionState(d,now), closed = pollsClosed(now)
+  const awaitingDistrict = state === 'results' && seat?.kind === 'district'
+    && !visibleResults(d,now)?.districts.some(row=>row.name === seat.name)
   const title = 'Victorian election 2026' + (state === 'results_final' ? ': final lower house results' : state === 'results' ? ': results' : closed ? ': polls closed' : '')
   const lede = closed
-    ? `Voting closed at 6 pm AEDT on Saturday 28 November.${state === 'results_final' ? ' Final lower house district results are available.' : state === 'results' ? ' Published lower house district results are available.' : ' Check the VEC for count updates.'}`
+    ? `Voting closed at 6 pm AEDT on Saturday 28 November.${awaitingDistrict ? ' No result for this district has been published here yet. Check the VEC for count updates.' : state === 'results_final' ? ' Final lower house district results are available.' : state === 'results' ? ' Published lower house district results are available.' : ' Check the VEC for count updates.'}`
     : state === 'election_day'
       ? past(VIC_ELECTION_POLLS_OPEN,now) ? 'Election day is today. Voting is open until 6 pm AEDT.' : 'Election day is today. Voting runs from 8 am to 6 pm AEDT.'
       : `Victorians vote on Saturday 28 November. ${past(d.enrolment_close,now) ? 'Enrolment closed at 8 pm on Tuesday 3 November.' : 'Enrol or update your details by 8 pm on Tuesday 3 November.'}`
@@ -263,7 +266,7 @@ export function findSeats(q: string, d: VicElection, places: VicPlaces | null): 
 
 export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFooterConfig = {}, now = new Date(), find: {place: string; hits: PlaceHit[]} | null = null) {
   const path = s?.path || VIC_ELECTION_PATH
-  const copy = vicElectionCopy(d,now), closed = pollsClosed(now)
+  const copy = vicElectionCopy(d,now,s), closed = pollsClosed(now)
   const rosterNote = closed ? `Members are from the published roster dated ${shortDate(d.seats.map(s=>s.roster_date).sort().at(-1)!)}. ` : ''
   const districtNote = rosterNote + 'Each row shows the member and the winning margin at the 2022 election, in percentage points, unless a later by-election is named.'
   const districts = d.seats.filter(x=>x.kind === 'district'), regions = d.seats.filter(x=>x.kind === 'region')
@@ -311,10 +314,27 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
   return {state:copy.state,title,description,html:hubShell(`<div class="vic-hub" data-election-state="${copy.state}">${body}</div>`,approvedFooter(footer),crumbs),jsonLd:structured(path,d,s ? s.members.map(m=>({href:m.href,name:m.name})) : d.seats.map(x=>({href:x.path,name:x.name}))),
     card:{kicker:'Victorian election · 28 November 2026',title,lines:[description],authorisation:VIC_ELECTION_AUTHORISATION_LINE}}
 }
+/** A broken results drop may not break otherwise valid voting and seat records. */
+export async function readVicElection(read: ReadAsset): Promise<VicElection> {
+  const data = await read<VicElection>(VIC_ELECTION_ASSET)
+  try { return validateVicElection(data) }
+  catch (error) {
+    if (data?.current_results == null) throw error
+    // Validate the remaining core too: never use invalid seats, dates or sources.
+    return validateVicElection({...data,current_results:null})
+  }
+}
+
 export async function vicElectionPage(id: string | null, read: ReadAsset, config: HubFooterConfig & {VIC_ELECTION_HUB_ENABLED?: string} = {}, place: string | null = null, now = new Date()) {
   const missing = {title:'Hub not found',description:'This hub is not available.',html:hubShell('<h1>Hub not found</h1><p>This hub is not available.</p>',vicElectionEnabled(config.VIC_ELECTION_HUB_ENABLED) ? approvedFooter(config) : {},vicElectionEnabled(config.VIC_ELECTION_HUB_ENABLED) ? trail(VIC_ELECTION_PATH,'Not found') : []),jsonLd:null,status:404}
   if (!vicElectionEnabled(config.VIC_ELECTION_HUB_ENABLED) || (id !== null && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id))) return missing
-  const d = await read<VicElection>(VIC_ELECTION_ASSET)
+  let d: VicElection
+  try { d = await readVicElection(read) }
+  catch {
+    const title = 'Election information temporarily unavailable'
+    const description = 'Please check the VEC for election information and count updates.'
+    return {title,description,html:hubShell(`<h1>${title}</h1><p>${description}</p>`,approvedFooter(config),trail(VIC_ELECTION_PATH)),jsonLd:null,status:503}
+  }
   if (id === null) {
     const q = place?.trim().slice(0,60) || null
     // Seat and member names answer without the place index; suburbs and postcodes need it.

@@ -1,5 +1,6 @@
-"""Fetch the VEC's district results for the 2022 Victorian state election and
-the by-elections held since, into scripts/hubs/vic-results-2022.json.
+"""Fetch completed VEC district results for the 2022 or 2026 Victorian state election
+into scripts/hubs/vic-results-<year>.json. The default 2022 mode also includes
+subsequent by-elections and the Narracan supplementary poll; 2026 mode does not.
 
 Records only: the elected member as the VEC lists them, and the party shares in
 the VEC's "Results after distribution of preferences" table. Other candidates'

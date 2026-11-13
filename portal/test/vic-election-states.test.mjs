@@ -1,3 +1,4 @@
+import './helpers/vic-election-clock.mjs';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile,writeFile} from 'node:fs/promises';
@@ -33,6 +34,10 @@ const cases=[
   ['2026-11-29T10:00:00+11:00','polls_closed','Voting closed at 6 pm AEDT on Saturday 28 November. Check the VEC for count updates.','Early voting closed','Voting closed'],
   ['2026-12-15T10:00:00+11:00','polls_closed','Voting closed at 6 pm AEDT on Saturday 28 November. Check the VEC for count updates.','Early voting closed','Voting closed'],
 ];
+test('Victorian election suites run in UTC, including ISO strings without an offset',()=>{
+  assert.equal(process.env.TZ,'UTC');
+  assert.equal(new Date('2026-11-28T08:00:00').toISOString(),'2026-11-28T08:00:00.000Z');
+});
 for(const [date,state,lede,early,election] of cases) test('offline clock state and SSR/app copy: '+date,async()=>{
   const now=new Date(date),d={...data,current_results:null},overview=await api(d,now);
   assert.equal(overview.state,state);assert.equal(overview.lede,lede);assert.equal(overview.current_results,null);
@@ -72,8 +77,8 @@ for(const [date,state,lede,early,election] of cases) test('offline clock state a
 test('AEDT boundaries use instants on a UTC Worker, including early close and election-day midnight',()=>{
   for(const [date,state] of [
     ['2026-11-17T21:59:59Z','pre_poll'],['2026-11-17T22:00:00Z','early_voting'],
-    ['2026-11-27T06:59:59Z','early_voting'],['2026-11-27T07:00:00Z','pre_poll'],
-    ['2026-11-27T12:59:59Z','pre_poll'],['2026-11-27T13:00:00Z','election_day'],
+    ['2026-11-27T06:59:59Z','early_voting'],['2026-11-27T07:00:00Z','early_voting'],
+    ['2026-11-27T12:59:59Z','early_voting'],['2026-11-27T13:00:00Z','election_day'],
     ['2026-11-28T06:59:59Z','election_day'],['2026-11-28T07:00:00Z','polls_closed'],
   ]) assert.equal(vicElectionState(data,new Date(date)),state,date);
   const before=JSDOM.fragment(renderVicElection(data,null,{},new Date('2026-11-27T20:59:59Z')).html);
@@ -84,6 +89,8 @@ test('AEDT boundaries use instants on a UTC Worker, including early close and el
   const rows=JSDOM.fragment(renderVicElection(data,null,{},new Date('2026-11-03T18:01:00+11:00')).html);
   assert.match(rows.querySelector('#key-dates').textContent,/Caretaker period began/);
   assert.match(rows.querySelector('#key-dates').textContent,/Enrol or update/);
+  const evening=JSDOM.fragment(renderVicElection(data,null,{},new Date('2026-11-27T07:00:00Z')).html);
+  assert.match(evening.querySelector('#voting').textContent,/Early voting has closed/);
 });
 
 // Invented 2026 test data derived from held shares, never written to a source file.
@@ -111,10 +118,42 @@ for(const status of ['partial','final']) test('data presence enables '+status+' 
       assert.deepEqual(detail.result.general,seat.result.general);
     }
     const absent=d.seats.find(s=>s.kind==='district'&&!source.districts[s.name]);
-    if(absent) assert.equal(JSDOM.fragment(renderVicElection(d,absent,{},now).html).querySelector('#results'),null);
+    if(absent) {
+      const page=renderVicElection(d,absent,{},now),doc=JSDOM.fragment(page.html);
+      assert.equal(doc.querySelector('#results'),null);
+      assert.match(doc.querySelector('.ui-lede').textContent,/No result for this district has been published here yet/);
+      assert.doesNotMatch(page.description+' '+page.card.lines.join(' '),/Published lower house district results are available/);
+    }
     const region=d.seats.find(s=>s.kind==='region'&&s.districts.includes(names[0]));
     const regional=JSDOM.fragment(renderVicElection(d,region,{},now).html);
     assert.equal(regional.querySelectorAll('#results li').length,d.current_results.districts.filter(r=>region.districts.includes(r.name)).length);
+  }
+});
+
+test('HTML validates the asset and drops invalid results before rendering any district result',async()=>{
+  const results=projectVicResults(fixture(),data.election_day,names),now=new Date('2026-11-29T00:00:00Z');
+  const invalidResults=[{...results,districts:[]},{...results,status:'final'},
+    {...results,districts:results.districts.map((r,i)=>i===1?{...r,result:{...r.result,share:999}}:r)},
+    {...results,districts:results.districts.map((r,i)=>i===1?{...r,name:'Unknown district'}:r)},
+  ];
+  for(const current_results of invalidResults) {
+    const d={...data,current_results},read=async path=>path===VIC_ELECTION_ASSET?d:places;
+    assert.equal((await appVicElection(request(),env(d),now)).status,503);
+    for(const seat of [null,data.seats[0],data.seats.find(s=>s.kind==='region')]) {
+      const page=await vicElectionPage(seat?.path.split('/').at(-1)??null,read,{VIC_ELECTION_HUB_ENABLED:'true'},null,now);
+      assert.equal(page.status,200);assert.equal(page.state,'polls_closed');
+      assert.equal(page.html,renderVicElection({...data,current_results:null},seat,{},now).html);
+      assert.equal(JSDOM.fragment(page.html).querySelector('#results'),null);
+    }
+  }
+});
+
+test('invalid core data cannot be rendered as a partly usable election page',async()=>{
+  for(const d of [null,{}, {...data,seats:[]},{...data,postal_close:'bad'},
+    {...data,current_results:{districts:[]},seats:data.seats.map((s,i)=>i===0?{...s,members:[]}:s)}]) {
+    const page=await vicElectionPage(null,async()=>d,{VIC_ELECTION_HUB_ENABLED:'true'},null,new Date('2026-11-29T00:00:00Z'));
+    assert.equal(page.status,503);assert.equal(JSDOM.fragment(page.html).querySelector('#results'),null);
+    assert.match(page.html,/Election information temporarily unavailable/);
   }
 });
 
