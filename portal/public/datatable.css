@@ -111,9 +111,10 @@
   .dt-root[data-phone="stack"] .dt > tbody > tr > td { display: none; }
   .dt-root[data-phone="stack"] .dt > tbody > tr > :is(td[data-phone-title], td.dt-actions, td[colspan]) { display: block; position: static; min-width: 0; padding: 0; border: 0; box-shadow: none; background: transparent; text-align: start; }
   .dt-root[data-phone="stack"] .dt > tbody > tr > :is(td[data-phone-title], td[colspan]) { flex: 1 1 0; }
-  /* The row title in the serif at body size, so ten rows of two-line titles fit a phone's screen and a half. */
-  .dt-root[data-phone="stack"] .dt td[data-phone-title] > .dt-value { display: block; font: var(--type-subheading); font-size: 1rem; line-height: 1.35; }
-  .dt-root[data-phone="stack"] .dt-phone { display: flex; align-items: baseline; gap: var(--space-tight); margin-top: var(--space-line); font: var(--type-metadata); color: var(--ink-soft); }
+  .dt-root[data-phone="stack"] .dt td[data-phone-title] > .dt-value { display: block; font: var(--type-subheading); }
+  /* The line sits straight under its title, and rows keep 8 px either side of
+     the hairline, so ten votes with two-line titles fit under 1,000 px. */
+  .dt-root[data-phone="stack"] .dt-phone { display: flex; align-items: baseline; gap: var(--space-tight); margin-top: 0; font: var(--type-metadata); color: var(--ink-soft); }
   .dt-root[data-phone="stack"] .dt-phone-meta { flex: 1 1 0; min-width: 0; }
   .dt-root[data-phone="stack"] .dt-phone-figure { flex: none; margin-inline-start: auto; font: var(--type-strong); color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: end; }
   .dt-root[data-phone="stack"] .dt-actions { width: auto; }
