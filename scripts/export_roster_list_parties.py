@@ -35,19 +35,24 @@ def observations(root: Path = ROOT) -> list[dict]:
     service = json.loads((root / "scripts/roster_service.json").read_text(encoding="utf-8"))
     out = []
 
-    def add(name, aliases, jurisdiction, chamber, electorate, party, as_of, url, basis):
+    def add(name, aliases, jurisdiction, chamber, electorate, party, as_of, url, basis, prints=()):
         if not party or not as_of or not ISO.match(as_of) or not name or " " not in name.strip():
             return
-        out.append({"name": name, "aliases": sorted(set(a for a in aliases if a and a != name)),
-                    "jurisdiction": jurisdiction, "chamber": chamber, "electorate": electorate,
-                    "party": clean_party(party) or party.strip(), "as_of": as_of,
-                    "source_url": url, "basis": basis})
+        row = {"name": name, "aliases": sorted(set(a for a in aliases if a and a != name)),
+               "jurisdiction": jurisdiction, "chamber": chamber, "electorate": electorate,
+               "party": clean_party(party) or party.strip(), "as_of": as_of,
+               "source_url": url, "basis": basis}
+        # A reviewed Hansard print ("K.J. Maher") for the same member; only the party index's sitting
+        # rule reads it (scripts/build_party_index.mjs officialListMembers), never a profile's party.
+        if prints := sorted(set(p for p in prints if p and p != name)):
+            row["prints"] = prints
+        out.append(row)
 
     for snapshot in state.get("snapshots", []):
         for member in snapshot.get("members", []):
             add(member.get("name"), member.get("aliases", []), snapshot["jurisdiction"], snapshot["chamber"],
                 member.get("electorate"), member.get("party"), member.get("as_of") or snapshot.get("as_of"),
-                snapshot.get("source_url"), "official list")
+                snapshot.get("source_url"), "official list", member.get("prints", []))
     for row in [*service.get("service", []), *service.get("history", [])]:
         if row.get("start") and ISO.match(str(row["start"])):
             add(row.get("name"), [], row["jurisdiction"], row["chamber"], row.get("electorate"),

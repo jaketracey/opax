@@ -1,5 +1,5 @@
 import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=5fe413541f';
-import {donorDisclosure} from './donor-disclosure.js?v=18e84bb744';
+import {donorDisclosure, financialYear, receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=8c73ceafd6';
 import {interestHolder} from './interest-holder.js';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -238,67 +238,11 @@ export function governmentFunctionTableConfig(rows) {
       {key:'code_status',label:'Code availability',type:'text'}],primaryLink:()=>null};
 }
 
-// One figure for a donor-to-party flow, so the map card, the donor page, the
-// party table, /api/register/party-money and "Explain this money" agree.
-//
-// The money graph's typed cells (by_type, by_type_year) sum each receipt once,
-// from the party's own return, across all receipt types. The older
-// total/count/byYear also add the donor's own declarations of the same gifts,
-// so one gift can appear twice there (docs/reports/2026-11-12-aec-receipt-types.md).
-// They are used only for a graph with no typed cells (the state graphs), and
-// the scope line says so.
-
-// Event periods count at their polling year, as on the map (graph/index.ts).
-const RECEIPT_EVENT_YEARS = {'braddon by-election':2018,'wentworth by-election':2018,'eden-monaro by-election':2020,'fadden by-election':2023};
-
-/**
- * A flow's figures: total, count, first and last year, dollars by year
- * (`byYear`), [dollars, receipts] by year (`cells`), what carries no year
- * (`undated`, [dollars, receipts]) and dollars by receipt type (`byType`, typed only).
- */
-export function receiptFigures(x) {
-  if (!x?.by_type) {
-    const byYear = {}, cells = {};
-    for (const [year, cell] of Object.entries(x?.byYear || {})) {
-      const dollars = Number(Array.isArray(cell) ? cell[0] : cell) || 0;
-      byYear[year] = dollars;
-      cells[year] = [dollars, Array.isArray(cell) ? Number(cell[1]) || 0 : 0];
-    }
-    const undated = [Number(x?.undated?.[0]) || 0, Number(x?.undated?.[1]) || 0];
-    return {total:Number(x?.total) || 0, count:Number(x?.count) || 0, firstYear:x?.firstYear ?? null, lastYear:x?.lastYear ?? null,
-      byYear, cells, undated, byType:null, typed:false};
-  }
-  let count = 0, firstYear = null, lastYear = null;
-  const byYear = {}, cells = {}, undated = [0, 0];
-  for (const [period, types] of Object.entries(x.by_type_year || {})) {
-    // Financial years count at their first year ("2020-21" is 2020), as on the map.
-    const year = Number(String(period).match(/\b(?:19|20)\d{2}\b/)?.[0]) || RECEIPT_EVENT_YEARS[String(period).toLowerCase()];
-    let dollars = 0, n = 0;
-    for (const cell of Object.values(types || {})) { dollars += Number(cell?.[0]) || 0; n += Number(cell?.[1]) || 0; }
-    count += n;
-    if (n <= 0) continue;
-    if (!year) { undated[0] += dollars; undated[1] += n; continue; }
-    byYear[year] = (byYear[year] || 0) + dollars;
-    const cell = cells[year] || (cells[year] = [0, 0]);
-    cell[0] += dollars; cell[1] += n;
-    firstYear = firstYear === null ? year : Math.min(firstYear, year);
-    lastYear = lastYear === null ? year : Math.max(lastYear, year);
-  }
-  const byType = {};
-  for (const [type, amount] of Object.entries(x.by_type)) byType[type] = Number(amount) || 0;
-  const total = Object.values(byType).reduce((sum, amount) => sum + amount, 0);
-  return {total, count, firstYear, lastYear, byYear, cells, undated, byType, typed:true};
-}
-
-const financialYear = year => `${year}-${String((year + 1) % 100).padStart(2, '0')}`;
-
-/** The scope of a receiptFigures result, in a reader's words, for its own line under the figure. */
-export function receiptScopeLabel(figures) {
-  if (!figures?.typed) return 'All federal disclosure records, as given by both donor and party, so a gift can appear twice';
-  const span = figures.firstYear == null ? '' : figures.firstYear === figures.lastYear
-    ? `, ${financialYear(figures.firstYear)}` : `, ${financialYear(figures.firstYear)} to ${financialYear(figures.lastYear)}`;
-  return `All receipt types${span}, as the parties reported them in federal returns`;
-}
+// receiptFigures and receiptScopeLabel live in donor-disclosure.js (one rule
+// for every money figure, light enough for the games and the Worker's tools);
+// they are re-exported here for the pages and tables that already import them.
+// financialYear ("2020-21") comes from there too, for any scope line written here.
+export {receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=8c73ceafd6';
 
 /**
  * A party's headline: its own federal returns, every receipt line once and all

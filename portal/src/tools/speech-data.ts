@@ -1,4 +1,4 @@
-import {donorAssociatedTo,donorDisclosure,returnReference,type DonorDisclosureRecord} from '../../public/donor-disclosure.js'
+import {donorAssociatedTo,donorDisclosure,receiptGraph,receiptGraphScope,returnReference,type DonorDisclosureRecord} from '../../public/donor-disclosure.js'
 /**
  * Structured tools for Ask (docs/design/agentic-ask-2026-10.md).
  *
@@ -335,8 +335,9 @@ export async function memberVotes(deps: ToolDeps, input: { keyword: string; pers
 // ---------------------------------------------------------------- party_receipts
 interface MoneyNode extends DonorDisclosureRecord { id: string; label: string; kind: string; industry?: string; aliases?: string[]; jurisdiction?: string; total?: number; byYear?: Record<string, [number, number]> }
 interface MoneyEdge { source: string; target: string; total: number; count: number; byYear?: Record<string, [number, number]>; firstYear?: number; lastYear?: number }
+/** Each flow read through its typed cells (each receipt once, from the party's own return), as on the donor and party pages. */
 async function money(deps: ToolDeps) {
-  const g = await deps.asset('/graph/money.json') as { nodes: MoneyNode[]; edges: MoneyEdge[] } | null
+  const g = receiptGraph(await deps.asset('/graph/money.json') as { nodes: MoneyNode[]; edges: MoneyEdge[] } | null)
   if (!g?.nodes) throw new Error('money graph unavailable')
   return g
 }
@@ -370,6 +371,8 @@ export async function partyDonations(deps: ToolDeps, input: { party?: string | n
   }
   const limit = Math.min(Number(input.limit) || 5, 15)
   const notes = ['Federal AEC disclosed receipts, financial years 1998-99 to 2025-26, in the published selection of the 250 largest donors (so totals are lower bounds).', 'These totals cover all receipt types: donations, loans and other receipts.', 'Party-level totals in the published selection.']
+  const scope = receiptGraphScope(g)
+  if (scope) notes.push(`${scope}. Each receipt is counted once.`)
   const coverage = { since: `${Math.max(from ?? 1998, 1998)}-07-01`, until: `${Math.min(to ?? 2025, 2025) + 1}-06-30`, as_of: null,
     ...(input.since ? { requested_since: input.since } : {}), ...(input.until ? { requested_until: input.until } : {}), note: notes[0] }
   if (input.party) {

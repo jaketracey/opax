@@ -559,6 +559,27 @@ class RosterListFile(unittest.TestCase):
             got = module.observations(root)
         self.assertEqual([(o["name"], o["party"], o["as_of"]) for o in got], [("Ivo Quarrington", "Labor", "2026-09-25")])
 
+    def test_a_recorded_hansard_print_is_kept_apart_from_aliases(self):
+        # A22: an SA Council list entry records the Hansard print ("I.Q. Arden"); it goes out as `prints`,
+        # never as an alias, so roster-party.js (which reads aliases) gives no initials row a party from it.
+        sys.path.insert(0, str(ROOT))
+        spec = importlib.util.spec_from_file_location("roster_list", ROOT / "scripts/export_roster_list_parties.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "scripts").mkdir()
+            (root / "scripts/roster_state_evidence.json").write_text(json.dumps({"snapshots": [
+                {"jurisdiction": "sa", "chamber": "sa_lc", "as_of": "2026-11-13", "source_url": LIST, "members": [
+                    {"name": "Ines Arden", "aliases": ["Ines Quella Arden"], "prints": ["I.Q. Arden"],
+                     "electorate": "South Australia", "party": "Labor"},
+                    {"name": "Otto Brack", "aliases": [], "electorate": "South Australia", "party": "Liberal"}]}]}))
+            (root / "scripts/roster_service.json").write_text(json.dumps({"service": [], "history": []}))
+            got = {o["name"]: o for o in module.observations(root)}
+        self.assertEqual(got["Ines Arden"]["prints"], ["I.Q. Arden"])
+        self.assertEqual(got["Ines Arden"]["aliases"], ["Ines Quella Arden"])
+        self.assertNotIn("prints", got["Otto Brack"])
+
 
 if __name__ == "__main__":
     unittest.main()
