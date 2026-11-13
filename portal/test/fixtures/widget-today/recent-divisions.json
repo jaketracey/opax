@@ -1,0 +1,13 @@
+{
+ "generated_at": "2026-11-12T20:00:00Z",
+ "divisions": [
+  {"bill_key": "au-federal-r9001", "title": "Example Tax Amendment (Fair Rates) Bill 2026", "short_title": "Example Tax Bill 2026", "division_key": "senate-2026-11-12-11", "stage": "Limitation of debate", "question_type": "procedural", "chamber": "senate", "date": "2026-11-12", "outcome": "affirmative", "ayes": 36, "noes": 30},
+  {"bill_key": "au-federal-r9001", "title": "Example Tax Amendment (Fair Rates) Bill 2026", "short_title": "Example Tax Bill 2026", "division_key": "senate-2026-11-12-9", "stage": "Second reading", "chamber": "senate", "date": "2026-11-12", "outcome": "affirmative", "ayes": 38, "noes": 31},
+  {"bill_key": "au-federal-r9001", "title": "Example Tax Amendment (Fair Rates) Bill 2026", "short_title": "Example Tax Bill 2026", "division_key": "senate-2026-11-12-10", "stage": "Third reading", "chamber": "senate", "date": "2026-11-12", "outcome": "agreed", "ayes": 37, "noes": 30, "source_url": "https://example.test/senate-2026-11-12-10"},
+  {"bill_key": "au-federal-r9002", "title": "Example Water Bill 2026", "division_key": "senate-2026-11-12-8", "stage": "Second reading amendment", "chamber": "senate", "date": "2026-11-12", "outcome": "negative", "ayes": 10, "noes": 50},
+  {"bill_key": "au-federal-r9003", "title": "Example Roads Bill 2026", "division_key": "house-2026-11-12-4", "stage": "Third reading", "question_type": "amendment", "chamber": "representatives", "date": "2026-11-12", "outcome": "affirmative", "ayes": 80, "noes": 55},
+  {"bill_key": "au-federal-r9004", "title": "Example Housing Bill 2026", "short_title": null, "division_key": "house-2026-11-11-1", "stage": "third_reading", "chamber": "representatives", "date": "2026-11-11", "outcome": "", "ayes": 76, "noes": 55},
+  {"bill_key": "au-federal-r9005", "title": "Example Schools Bill 2026", "short_title": "  ", "division_key": "house-2026-11-10-2", "stage": "Second reading", "chamber": "House of Representatives", "date": "2026-11-10T00:00:00Z", "outcome": "negative", "ayes": 54, "noes": 81},
+  {"bill_key": "au-federal-r9006", "title": "Example Ports Bill 2026", "division_key": "house-2026-11-13-1", "stage": "Second reading", "chamber": "representatives", "date": "2026-11-13", "outcome": "affirmative", "ayes": -1, "noes": 50}
+ ]
+}
