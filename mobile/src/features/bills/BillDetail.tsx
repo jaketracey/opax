@@ -1403,6 +1403,10 @@ function KeyDates({
                 date: short(p.date),
               }))}
               latestIndex={points.length - 1}
+              // The section's own "Updated · ParlInfo" line sources it; a
+              // second, differently written line is not drawn (sweep 1,
+              // item 9). The ruler's label still says every stage and date.
+              caption={false}
               {...chartSource(
                 entries[0]!.from,
                 points.at(-1)!.date,

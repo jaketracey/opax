@@ -169,6 +169,35 @@ test('the timeline reveals stages sharing dates even when every date is on the r
     'Third reading',
   );
 });
+test('How it moved has one source line: the ruler draws no date-range caption (sweep 1, item 9)', async () => {
+  mockParams.key = 'au-federal-r7534';
+  const record = await fixture.billFor(mockParams.key);
+  mock.billFor.mockResolvedValue({
+    ...record,
+    data: {
+      ...record.data,
+      keyDates: {
+        ...record.data.keyDates,
+        data: [
+          { stage: 'Introduced', date: '2026-08-17', house: 'representatives' },
+          { stage: 'Third reading', date: '2026-08-19', house: 'senate' },
+          { stage: 'Royal assent', date: '2026-08-26', house: null },
+        ],
+      },
+    },
+  });
+  const root = await render(<BillDetail />);
+  const section = host(root, 'bill-key-dates')[0]!;
+  expect(host(section, 'stage-timeline')).toHaveLength(1);
+  expect(host(section, 'stage-timeline-caption')).toHaveLength(0);
+  expect(texts(section).join(' ')).not.toMatch(/\d{4} to \d{1,2} \w+ \d{4}/);
+  // VoiceOver still hears every stage with its full date.
+  const ruler = host(section, 'bill-dates-ruler')[0]!;
+  expect(ruler.props.accessibilityLabel).toContain('17 August 2026');
+  expect(ruler.props.accessibilityLabel).toContain('26 August 2026');
+  // The section's dated source line is the one line under it.
+  expect(host(section, 'bill-dates-source')).not.toHaveLength(0);
+});
 /** The bar's trailing items, from the newest Stack.Screen options. */
 function barItems() {
   const options = mockScreens.findLast(
