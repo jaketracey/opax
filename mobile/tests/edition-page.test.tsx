@@ -12,6 +12,7 @@ import {
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import editionJSON from '../scripts/fixtures/edition-latest.json';
 import personJSON from '../scripts/fixtures/edition-politician.json';
+import programJSON from '../scripts/fixtures/edition-program.json';
 import {
   decodeBill,
   decodeEdition,
@@ -1523,6 +1524,40 @@ test('AX5: a long first stage name wraps to a second line, never an ellipsis; de
     );
   expect(row).toBeDefined();
 });
+
+test.each([1, 2])(
+  'program bars at Android font %s retain both blocks and each heading once',
+  async (fontScale) => {
+    Platform.OS = 'android';
+    const window = { width: 412, height: 923, scale: 2.625, fontScale };
+    Dimensions.set({ window, screen: window });
+    jest
+      .mocked(catalogs.todayEdition)
+      .mockResolvedValue(editionFor(decodeEdition(programJSON)));
+    const { root } = await render(<EditionStory />);
+    const read = readAloud(root).join('\n');
+    for (const title of [
+      'By the party holding the seat',
+      'Time to the next federal election',
+    ]) {
+      expect(read.split(title)).toHaveLength(2);
+    }
+    // The base uses labelled horizontal shares: every label is visible, with
+    // no repeated table title or thinned column axis at either font scale.
+    expect(root.findAllByType(BarSeries)).toHaveLength(0);
+    expect(root.findAllByType(ShareRows)).toHaveLength(1);
+    expect(root.findAllByType(ShareBar)).toHaveLength(1);
+    for (const label of [
+      'Labor-held',
+      'Coalition-held',
+      'Crossbench-held',
+      'Under 3 months',
+      'Over 2 years',
+    ]) {
+      expect(read).toContain(label);
+    }
+  },
+);
 
 describe('the edition facts with VoiceOver, at Large, AX3 and AX5', () => {
   const facts = (
