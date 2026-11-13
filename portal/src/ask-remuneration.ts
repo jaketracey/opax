@@ -4,7 +4,7 @@ export function agencyHeadRanking(question: string): boolean {
   if (question.length > 4000) return false
   return /\b(?:highest|largest|biggest|top|most)\b/i.test(question) &&
     /\b(?:paid|pay|remuneration|salary)\b/i.test(question) &&
-    /\b(?:agency heads?|departmental secretar(?:y|ies)|department secretar(?:y|ies))\b/i.test(question) &&
+    /\b(?:agency heads?|departmental secretar(?:y|ies)|department secretar(?:y|ies)|public servants?)\b/i.test(question) &&
     !/\bnamed\b/i.test(question)
 }
 

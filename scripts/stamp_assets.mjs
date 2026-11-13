@@ -150,7 +150,7 @@ export const MODULE_STAMPS = [
   ['datatable.js', 'server-csv.js'], ['datatable.js', 'wombat.js'], ['connections.js', 'wombat.js'],
 
   ['datatable-workbench.js', 'datatable.js'],
-  ['register-tables.js', 'donor-disclosure.js'], ['register-tables.js', 'datatable.js'], ['register-tables-entry.js', 'register-tables.js'], ['app.js', 'register-tables.js'],
+  ['register-tables.js', 'donor-disclosure.js'], ['register-tables.js', 'datatable.js'], ['register-tables-entry.js', 'register-tables.js'], ['app.js', 'register-tables.js'], ['money-explain.js', 'register-tables.js'],
   ['vote-tables.js', 'labels.js'], ['vote-tables.js', 'division-markdown.js'], ['vote-tables.js', 'datatable.js'],
   ['donor-views.js', 'donor-entity.js'], ['wordsdollars.js','donor-views.js'], ['quiz.js','donor-views.js'],  ['home.js', 'donor-views.js'],
 
@@ -204,6 +204,9 @@ export const MODULE_STAMPS = [
   ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],
   ['app.js', 'thenvsnow.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'], ['app.js', 'ask-steps.js'],
   ['home.js', 'home-data.js'], ['home.js', 'money-map.js'],
+  // The one not-found block's still wombat. The block's own module and stylesheet stay
+  // on the default module cache: two more immutable rules would pass _headers' 100.
+  ['not-found.js', 'wombat.js'],
 ]
 
 // Files stamped the same way that are not MODULE_STAMPS imports: a stylesheet

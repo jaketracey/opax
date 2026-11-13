@@ -114,12 +114,13 @@ export function rosterListParty(person, observations) {
  * with their current seats. The Worker adds them to its people (src/index.ts loadPeople) and the
  * party index lists them (scripts/build_party_index.mjs seat_rosters, `reference`), so a party page
  * counts them the same way in the server answer and in the browser.
- * @param {{name: string, full?: string|null, speech_scope?: unknown}[]} rosterPeople
+ * @param {{name: string, full?: string|null, speech_scope?: unknown, prints?: string[]}[]} rosterPeople
  * @param {{name: string, aliases?: string[], electorates?: {current?: boolean}[]}[]} referencePeople
  */
 export function referenceOnlyPeople(rosterPeople, referencePeople) {
-  // The roster names a row's speeches sit under: the same set as speech-attribution.js splitSpeakers.
-  const spoken = (p) => [p.name, ...(p.speech_scope && p.full ? [p.full === 'Craig Crawford' ? 'Cd Crawford' : p.full, p.full] : [])];
+  // The roster names a row's speeches sit under: the same set as speech-attribution.js splitSpeakers,
+  // plus the prints of rows folded into it (docs/ROSTER-FOLDS.md), so a folded twin is never a seat-only person.
+  const spoken = (p) => [p.name, ...(p.speech_scope && p.full ? [p.full === 'Craig Crawford' ? 'Cd Crawford' : p.full, p.full] : []), ...(Array.isArray(p.prints) ? p.prints : [])];
   const names = new Set((rosterPeople || []).flatMap(spoken).map(rosterFold));
   const out = [];
   for (const person of referencePeople || []) {

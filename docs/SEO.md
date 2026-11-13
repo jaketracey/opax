@@ -83,6 +83,14 @@ Rules the table obeys:
   their address. Two spellings that fold to one slug: the entry with more speeches
   takes it and the other keeps its name. app.js carries a copy of `personSlug()`;
   `test/person-slug.test.mjs` holds the two together over the whole roster.
+- **A folded row's old address forwards.** Rows the roster folds into their person
+  (a surname print, or another printed name of one verified id: `docs/ROSTER-FOLDS.md`)
+  keep the slug they had, their own or the suffixed slug a spelling twin held, in
+  `formerSlugs` (`src/person-slug.ts`). It **301s to the person's slug**, so
+  `/subject/person/mark-christopher-butler` lands on `/subject/person/mark-butler`. A
+  slug a row holds today is never taken over. Sitemaps, `person-paths.js` and
+  `/api/person-slugs` carry the person's slug only; app.js opens the person for an old
+  slug from the roster's `prints` (`twinPersonSlug()` mirrors the suffix).
 - **Names fold.** `foldName()` normalises curly apostrophes, doubled spaces and
   case, so `/subject/person/brendan o'connor` finds Brendan O'Connor and
   forwards to his slug.

@@ -10,11 +10,13 @@ const app=await readFile(new URL('../public/app.js',import.meta.url),'utf8');
 const roster=JSON.parse(await readFile(new URL('../public/parliamentarians.json',import.meta.url),'utf8')).people;
 // The app's pinned roster (8f1305e3): Mehreen Faruqi's full-name row had no pid and only the surname
 // print "Faruqi" (committee transcripts) held 10912; the curly O'Connor twin had no pid. The shipped
-// roster has since folded the print into her row (scripts/roster_fold.py), so the pin restores it.
+// roster has since folded the print into her row (scripts/roster_fold.py), so the pin restores it. The shipped roster
+// also folds the curly twin into Brendan O'Connor, the row holding their verified id (fold_ids); the pin restores it too.
 const faruqiPrint={name:'Faruqi',speeches:635,party:'Greens',states:['federal'],chambers:['senate_committee'],first:2025,last:2026,
  pid:'10912',current:true,party_now:'Greens',full:'Mehreen Faruqi',representation:[]};
+const curlyTwin={name:'Brendan O’Connor',speeches:598,party:'Labor',states:['federal'],chambers:['representatives'],first:2005,last:2011};
 const pinned=roster.flatMap((p)=>p.name==='Mehreen Faruqi'?[faruqiPrint,(({pid,prints,...rest})=>rest)(p)]
- :p.name==='Brendan O’Connor'?[(({pid,...rest})=>rest)(p)]:[p]);
+ :p.name==="Brendan O'Connor"?[(({prints,...rest})=>rest)(p),curlyTwin]:[p]);
 const at=(name,pid,people=roster)=>sponsorPerson(name,pid,people)?.name??null;
 
 test('the register print is read as a name',()=>{
@@ -45,6 +47,7 @@ test('one case per cause: the person, or plain text',()=>{
   ['middle name, no pid','Andrew Damien Wilkie',null,null],
   ['curly twin with the pid (pin)','Brendan O’Connor','10496',"Brendan O'Connor",pinned],
   ['twins, no pid (pin)','Brendan O’Connor',null,null,pinned],
+  ['twins folded into one person, no pid','Brendan O’Connor',null,"Brendan O'Connor"],
   ['upper case','ANDREW WILKIE','10727','Andrew Wilkie'],
   ["another member's pid",'Andrew Wilkie','10001',null],
   // David Leyonhjelm was this case until 18 Oct 2026, when the reviewed roster accept list gave him a row.

@@ -7,6 +7,7 @@ import { researchTurnReservationUsd } from './research-budget'
 import { isResearchCreditError, researchCreditCooldown } from './research-credit'
 import type { ResearchOptions } from './research-loop'
 import {groundAnswerPayload} from './research-grounding'
+import {withRecordedChambers} from './ask-chamber-phrases'
 import {auditPayload} from './research-claim-audit.mjs'
 import type { QualitativeAnswer, ResearchStats } from './research-types'
 import {recordAnswerLines} from './research-record-answer'
@@ -18,7 +19,8 @@ export function createAnswerWriter(options: ResearchOptions) {
     input=moneyWritingInput(input)
     // Every check sees all the facts handed in, not just those a draft happened to cite.
     const found=input.facts.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
-    const ground=(payload:QualitativeAnswer)=>{const {research:_found,...checked}=groundAnswerPayload({...payload,research:{pre_writer_sources:found}},input.question);return checked as unknown as QualitativeAnswer}
+    // A chamber named for a cited speaker is the one their source records (ask-chamber-phrases.ts).
+    const ground=(payload:QualitativeAnswer)=>{const {research:_found,...checked}=groundAnswerPayload({...withRecordedChambers(payload),research:{pre_writer_sources:found}},input.question);return checked as unknown as QualitativeAnswer}
     // Exact record findings have a complete prose answer without a writing turn, unless that prose is only a limit.
     if(recordAnswerLines(input)||receiptWritingLines(input)||completeMoneySelection(input)){const exact=proseFallback(input);if(exact.answer_decision!=='limitation')return ground(exact)}
     let lastDraft:QualitativeAnswer|null=null

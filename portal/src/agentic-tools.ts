@@ -4,7 +4,7 @@ import type { Json, ToolSpec, ToolDeps, ToolResult } from './agentic-tool-types'
 export type { ToolSpec, ToolDeps, ToolResult, Cite, RelatedCite } from './agentic-tool-types'
 export { TOPICS, STATES, CHAMBERS, TERMS, countSpeeches, speechTrend, findPeople, memberVotes, partyDonations, findQuotes } from './tools/speech-data'
 import { TOPICS, STATES, CHAMBERS, TERMS } from './tools/speech-data'
-export const AGENTIC_TOOLS_VERSION = 'agentic-tools-19-shared-data/' + TOOL_REGISTRY_VERSION
+export const AGENTIC_TOOLS_VERSION = 'agentic-tools-20-pay-route/' + TOOL_REGISTRY_VERSION
 export const TOOL_SPECS: ToolSpec[] = askToolSpecs
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 /** Schema-check model plans before any lookup. References are validated separately. */

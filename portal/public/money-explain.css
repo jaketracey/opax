@@ -28,6 +28,8 @@
 .mx-figure { display: flex; flex-direction: column-reverse; gap: var(--space-line); min-width: 0; }
 .mx-figure dt { color: var(--ink-soft); font: var(--type-fine); }
 .mx-figure dd { margin: 0; color: var(--ink); font: var(--type-display); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+/* What the figures above count, on its own line. */
+.mx-scope { max-width: var(--size-readable); margin: calc(-1 * var(--space-block)) 0 var(--space-group); color: var(--ink-soft); font: var(--type-fine); }
 .mx-story p { max-width: var(--size-readable); margin: 0 0 var(--space-block); color: var(--ink); font: var(--type-record); }
 .mx-note { max-width: var(--size-readable); margin: var(--space-group) 0; padding: var(--space-block) var(--space-group); border-radius: var(--radius-md); background: var(--paper-sunken); color: var(--ink-soft); font: var(--type-fine); }
 .mx-shows .ui-source { margin-top: var(--space-block); }

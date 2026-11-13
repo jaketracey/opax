@@ -1609,6 +1609,8 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .chart-tick { fill: var(--ink-faint); font-size: var(--text-13); }
 .chart-peak { fill: var(--ink); font-size: var(--text-13); }
 .chart-note { color: var(--ink-faint); font-size: var(--text-13); margin: var(--sp-8) 0 0; }
+/* What a block of money figures counts, on its own line under its heading. */
+.entry-scope { color: var(--ink-soft); font-size: var(--text-13); margin: calc(-1 * var(--sp-4)) 0 var(--sp-12); max-width: 60ch; }
 /* Phones: the 640-unit viewBox shows at about half size, so the labels are
    set in larger units to land at a readable size; the year ticks drop below
    the axis and the svg may overflow its box by that much. */
@@ -3024,7 +3026,7 @@ a.ask-research-source-title:hover { color: var(--bronze-ink); text-decoration: u
 @media (min-width: 701px) {
   .subject-person .subject-head:has(.subject-portrait) {
     grid-template-columns: max-content minmax(0, 1fr) auto;
-    grid-template-areas: "portrait title actions" "portrait meta meta" "portrait source source" "portrait heldback heldback" "portrait chair chair" "portrait fits fits" "portrait caveat caveat";
+    grid-template-areas: "portrait title actions" "portrait meta meta" "portrait source source" "portrait fits fits" "portrait caveat caveat";
     align-items: start; row-gap: 0;
   }
   .subject-person .subject-head:has(.subject-portrait) .subject-portrait { grid-area: portrait; grid-row: 1 / -1; align-self: start; }
@@ -3033,10 +3035,12 @@ a.ask-research-source-title:hover { color: var(--bronze-ink); text-decoration: u
   .subject-person .subject-head:has(.subject-portrait) > .ui-source { grid-area: source; }
   .subject-person .subject-head:has(.subject-portrait) > .person-caveat { grid-area: caveat; }
   .subject-person .subject-head:has(.subject-portrait) > .person-fits { grid-area: fits; }
-  .subject-person .subject-head:has(.subject-portrait) > .person-held-back { grid-area: heldback; }
-  .subject-person .subject-head:has(.subject-portrait) > .person-chair-role { grid-area: chair; }
   .subject-person .subject-head:has(.subject-portrait) > .person-actions { grid-area: actions; margin: 0; align-self: center; justify-content: flex-end; }
 }
+#person-speeches :is(.person-held-back, .person-chair-role) { margin: var(--space-tight) 0 0; max-width: 68ch; }
+/* The page's last block: where to go next, two links on a hairline. */
+.person-closing { display: flex; flex-wrap: wrap; column-gap: var(--space-block); margin-top: var(--space-section); padding-top: var(--space-block); border-top: var(--border-hairline) solid var(--divider-default); font: var(--type-body); }
+.person-closing a { display: inline-flex; align-items: center; min-height: var(--size-target); color: var(--bronze-ink); text-decoration-color: var(--bronze-rule); text-underline-offset: 0.2em; }
 .person-caveat { margin: var(--space-tight) 0 0; max-width: 68ch; font: var(--type-fine); color: var(--ink-soft); }
 .person-fits { margin: var(--space-tight) 0 0; max-width: 68ch; font: var(--type-metadata); color: var(--ink-soft); }
 .person-fits b { color: var(--ink); font-weight: var(--weight-strong); }
@@ -3099,11 +3103,13 @@ a.ask-research-source-title:hover { color: var(--bronze-ink); text-decoration: u
 .person-section-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight) var(--space-heading); margin-bottom: var(--space-heading); }
 .subject-person #subject-sections .person-section-head .subject-section-title { margin: 0; }
 .subject-person .votes-lede { margin: var(--space-tight) 0 0; font: var(--type-metadata); color: var(--ink-soft); }
-/* The party's money, a link row under the money block with its one caveat
-   line and the association line, both set as fine print. */
+/* The party's money, one row of the pay and expenses group: the link, the
+   party's latest-year figure, its one caveat line and the association line. */
 .person-party-money {
-  margin: var(--space-group) 0 0; padding-top: var(--space-row); border-top: var(--border-hairline) solid var(--divider-subtle);
+  margin: var(--space-block) 0 0; padding-top: var(--space-row); border-top: var(--border-hairline) solid var(--divider-subtle);
 }
+.person-party-money .person-party-figure { font: var(--type-metadata); color: var(--ink-soft); }
+.person-party-figure b { font: var(--type-strong); font-variant-numeric: tabular-nums; color: var(--ink); }
 .person-party-money a { display: flex; align-items: center; width: fit-content; min-height: var(--size-target); font: var(--type-strong); color: var(--navy); }
 .person-party-money p { margin: 0; max-width: 68ch; font: var(--type-fine); color: var(--ink-soft); }
 /* Charts sit on the section's paper, never in a box (principle 2). */
@@ -3164,6 +3170,13 @@ a.ask-research-source-title:hover { color: var(--bronze-ink); text-decoration: u
 .subject-person .votes-tiles .tile:last-child { grid-column: auto; }
 .subject-person .votes-tiles .tile b { font-size: var(--text-24); font-variant-numeric: tabular-nums; }
 .subject-person .votes-tiles .tile span { font-size: var(--text-13); }
+/* On a phone the person page's row meta reads at the metadata size (15 px);
+   fine print is kept for source lines and the one short caveat (TOKENS.md). */
+@media (max-width: 700px) {
+  .subject-person :is(.pay-row, .pay-post small, .pay-rate small, .expense-key, .expense-value small, .tile span, .votes-tiles .tile span, .news-meta) { font: var(--type-metadata); }
+  .subject-person :is(.expense-name, .expense-name.barrow-term, .expense-value b) { font: var(--type-metadata); font-weight: var(--weight-strong); }
+  .subject-person .pay-post { font-weight: var(--weight-strong); }
+}
 .subject-person #person-mentions .source-title { display: inline-flex; align-items: center; min-height: 44px; font: var(--weight-strong) var(--text-16)/var(--leading-normal) var(--serif); }
 .subject-person #person-mentions .snippet { font: var(--weight-regular) var(--text-16)/var(--leading-body) var(--serif); }
 .subject-person #person-mentions .result-meta { display: block; }
@@ -3398,6 +3411,16 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search #search-empty .empty-actions { justify-content: flex-start; gap: var(--sp-8); margin-top: var(--sp-20); }
 #panel-search #search-empty h3 { margin-top: var(--sp-24); color: var(--ink); }
 #panel-search #search-empty .ui-button { max-width: 100%; min-width: 0; }
+/* "No records mention ...": the meaning-ranked records wait, closed, under their
+   own heading at the foot of the recovery block, and open in place below it. */
+#panel-search.is-meaning-closed :is(#results-bar, #search-answer, #search-results, #search-pager) { display: none !important; }
+#panel-search #search-empty .search-meaning { margin-top: var(--sp-32); padding-top: var(--sp-8); border-top: var(--border-hairline) solid var(--divider-subtle); }
+#panel-search #search-empty .search-meaning-title { margin: 0; }
+#panel-search .search-meaning-toggle { display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 0 var(--sp-12); min-height: var(--size-target); margin: 0; padding: 0; border: 0; background: none; color: var(--ink); font: var(--type-subheading); text-align: left; cursor: pointer; }
+#panel-search .search-meaning-toggle::before { content: "+" / ""; color: var(--bronze-ink); font: var(--type-strong); }
+#panel-search .search-meaning-toggle[aria-expanded="true"]::before { content: "−" / ""; }
+#panel-search .search-meaning-toggle:hover { color: var(--bronze-ink); }
+#panel-search .search-meaning-count { font: var(--type-fine); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 #panel-search .search-result-heading .result-title { display: flex; align-items: center; min-height: var(--size-target); }
 #panel-search .search-result-text.is-collapsed { display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
 /* Give the bronze reading action room beneath the faded passage. */
@@ -4492,7 +4515,7 @@ html[data-panel="chat"] footer { display: none; }
 .evidence-locations small {display:block;margin-top:var(--sp-4)}
 /* Programs & places: the list of connections (ui-list rows) beside the open
    one, which reads as a column of its own, unboxed. One column on a phone,
-   the list a short scroller above the open connection. */
+   the list in the page's flow, a connection opening as the next view. */
 .connections-page { min-width: 0; }
 .connections-layout { display: grid; grid-template-columns: minmax(calc(var(--size-control) * 5), 1fr) minmax(0, 2fr); gap: var(--space-group); align-items: start; margin-top: var(--space-heading); }
 .connection-choice { display: grid; gap: var(--space-line); width: 100%; min-height: var(--size-target); margin: 0; padding: 0; border: 0; background: none; color: inherit; text-align: left; cursor: pointer; }
@@ -4516,10 +4539,20 @@ html[data-panel="chat"] footer { display: none; }
 .connection-detail-art .wb-wrap { margin: 0 auto var(--space-heading); }
 .connection-detail-art .wb-label { display: none; }
 .connection-picks { justify-content: center; }
+/* "Show 20 more" and the way back belong to a phone's reading only. */
+.connection-more, .connection-back { display: none; }
 @media (max-width: 700px) {
-  .connections-layout { grid-template-columns: minmax(0, 1fr); }
-  #connection-list { max-height: 20rem; overflow: auto; }
-  .connection-detail-empty { display: none; }
+  /* One column in the page's own flow (no inner scroller): the starting card
+     above the list as a short invitation, then twenty rows and "Show 20 more". */
+  .connections-layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-block); }
+  #connection-detail:has(> .connection-detail-empty) { position: static; order: -1; }
+  .connection-detail-empty { padding-block: var(--space-block); }
+  .connection-detail-empty .connection-detail-art .wb-wrap { margin-bottom: var(--space-tight); }
+  .connection-more:not([hidden]) { display: inline-flex; justify-self: start; }
+  /* A connection opened on a phone is the next view: the list and its controls step aside. */
+  .connections-reading :is(.ui-filter-bar, #connection-status, #connection-list, .connection-more) { display: none; }
+  .connections-reading .connection-back { display: inline-flex; margin: 0 0 var(--space-tight); }
+  .connections-reading .connection-back::before { content: "‹" / ""; margin-right: var(--sp-8); }
 }
 .evidence-years meter::-webkit-meter-optimum-value {background:var(--chart-mark)}
 .evidence-years meter::-moz-meter-bar {background:var(--chart-mark)}
@@ -5153,6 +5186,8 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
   .growth-ask { margin-bottom: var(--space-group); }
   .growth-ask-form { flex-wrap: wrap; }
   .growth-ask-form textarea { flex-basis: calc(100% - 6rem); }
+  /* On a phone a suggestion wraps to a second line rather than stopping mid-word. */
+  .growth-questions a { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; white-space: normal; text-overflow: clip; }
 }
 /* A phone's first screen keeps the composer and one suggestion; the record follows. */
 @media (max-width: 600px) {
@@ -5175,13 +5210,15 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 /* A vote row: the bill's title, then its meta on a line of its own (RecordRow). */
 .subject-person #subject-votes > .subject-list > li > .source-title { display: block; padding-block: var(--space-row) var(--space-line); font: var(--type-body); font-family: var(--serif); }
 .subject-person #subject-votes .result-meta { display: block; }
+/* "Voting record" heads the block above its figures; the table's caption stays for screen readers. */
+.subject-person #subject-votes .dt caption { position: absolute; width: 1px; height: 1px; margin: calc(-1 * var(--border-hairline)); padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 @media (forced-colors: active) { [data-module] :focus-visible { outline-color: Highlight; } }
 @media (prefers-reduced-motion: reduce) { [data-module] * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 
 [data-module] .ui-source .ui-sheet .ui-sheet-originals a { min-height: var(--size-target); min-width: var(--size-target); }
 /* The correction line is fine print with its link on a target of its own. */
-.growth-correction { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--space-tight); margin-block: var(--space-block); font: var(--type-fine); color: var(--ink-soft); }
-.growth-correction a { display: flex; align-items: center; min-height: var(--size-target); }
+.growth-correction { margin-block: var(--space-block); font: var(--type-fine); color: var(--ink-soft); }
+.growth-correction a { display: inline-flex; align-items: center; min-height: var(--size-target); }
 @media (max-width: 700px) {
   .bill-date { grid-template-columns: minmax(0, 1fr); row-gap: var(--sp-2); }
 }

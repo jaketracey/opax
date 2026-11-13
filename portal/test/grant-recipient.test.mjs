@@ -38,7 +38,8 @@ test('a missing or failed recipient shows the error state, not a script error', 
   const saved = {window: globalThis.window, document: globalThis.document, location: globalThis.location, fetch: globalThis.fetch, requestAnimationFrame: globalThis.requestAnimationFrame};
   Object.assign(globalThis, {window: dom.window, document: dom.window.document, location: dom.window.location, requestAnimationFrame: fn => setTimeout(fn, 0)});
   try {
-    for (const [status, heading, retry] of [[404, 'Recipient not found', 0], [503, 'Recipient records could not load', 1]]) {
+    // A missing recipient is the one not-found block: no alert (nothing failed), no retry, the pill to the grants.
+    for (const [status, heading, retry, alerts] of [[404, 'No grant recipient at this address', 0, 0], [503, 'Recipient records could not load', 1, 1]]) {
       globalThis.fetch = async () => new Response('{}', {status});
       const root = dom.window.document.getElementById('root');
       const view = mountGrantRecipient(root, {jurisdiction: 'federal', id: 'abn:1'});
@@ -46,7 +47,12 @@ test('a missing or failed recipient shows the error state, not a script error', 
       const article = root.querySelector('.grant-recipient-page');
       assert.equal(article.getAttribute('aria-busy'), null);
       assert.equal(article.querySelector('h1').textContent, heading);
-      assert.equal(article.querySelectorAll('[role="alert"]').length, 1);
+      assert.equal(article.querySelectorAll('[role="alert"]').length, alerts);
+      if (status === 404) {
+        assert.equal(article.querySelector('.not-found input[name="q"]').value, '', 'an id is never offered as words');
+        assert.equal(article.querySelector('.not-found-more a').getAttribute('href'), '/money/grants');
+        assert.doesNotMatch(article.textContent, /abn:1/);
+      }
       assert.equal([...article.querySelectorAll('button')].filter(b => b.textContent === 'Try again').length, retry);
       view.destroy();
     }

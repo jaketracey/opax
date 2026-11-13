@@ -1,0 +1,2810 @@
+{
+ "id": "money-ranking",
+ "question": "Which donors gave the most to the Liberal Party in 2022-23?",
+ "input": {
+  "kind": "speech"
+ },
+ "model": [
+  {
+   "tool_calls": [
+    {
+     "name": "money_totals",
+     "args": {
+      "party": "Liberal",
+      "group_by": "donor",
+      "financial_year": "2022-23"
+     }
+    }
+   ]
+  },
+  {
+   "tool_calls": [
+    {
+     "name": "answer",
+     "args": {
+      "facts": [
+       1,
+       2,
+       3
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "text": {
+    "sentences": [
+     {
+      "text": "Example Freight Pty Ltd gave the Liberal Party the most in 2022-23: $2,681,740 in disclosed receipts.",
+      "facts": [
+       1
+      ]
+     },
+     {
+      "text": "Sample Banking Group Ltd was next with $1,314,270 across 16 receipts, then Harbour Example Holdings with $235,206.",
+      "facts": [
+       2,
+       3
+      ]
+     }
+    ]
+   }
+  }
+ ],
+ "services": [],
+ "assets": {
+  "/graph/money.json": {
+   "meta": {
+    "generated": "2026-11-11",
+    "source": "AEC Transparency Register returns (annual, election, referendum) via parli.db `donations` table",
+    "coverage": "financial years 1998-99 to 2025-26",
+    "methodology": "Donor->party flows from rows with a canonical party recipient; amounts aggregated per (canonical donor entity, party) using ext_donor_aliases, so every spelling of a donor counts once. Top 250 donors by lifetime total shown, plus donors under that cut-off holding $50,000,000+ in Commonwealth contracts and grants.",
+    "entity_resolution": "parli.ingest.donor_entities resolves each raw donor_name to an entity in ext_donor_entities (exact-normalised, rule-based suffix/branch stripping, then the hand-curated parli/ingest/donor_aliases.json). Node label is the canonical name; node.aliases lists the other spellings it answers to.",
+    "year_derivation": "financial_year is the AEC event name on election returns; the first 4-digit year is used, and named by-elections fall back to their polling year (Braddon/Wentworth 2018, Eden-Monaro 2020, Fadden 2023).",
+    "by_year": "byYear maps the first year of each financial year (2023 for 2023-24; election returns by polling year) to [dollars, donations] for that node or flow; undated holds the rows with no year. The cells sum to total and count up to rounding, so a year window can re-sum every figure.",
+    "rows_considered": 100622,
+    "rows_excluded_public_funding": 107,
+    "rows_excluded_party_internal": 888,
+    "rows_excluded_government_entity": 6539,
+    "rows_without_year": 0,
+    "donors_unresolved": 0,
+    "node_id_collisions": 0,
+    "party_rows_excluded_public_funding": 2456,
+    "party_rows_excluded_government_entity": 386,
+    "donor_nodes": 4,
+    "donor_nodes_by_total": 250,
+    "donors_via_public_money": 150,
+    "public_money_floor": 50000000,
+    "public_money_note": "donors_via_public_money are under the top-250 donation cut-off but hold at least $50,000,000 in Commonwealth contracts and grants resolved to the same entity; node.via = 'public_money' and node.publicMoney say so.",
+    "party_nodes": 1,
+    "edge_count": 4,
+    "grants_source": "GrantConnect grant awards (Department of Finance), CC BY 3.0 AU",
+    "grantor_nodes": 2,
+    "donors_with_grants": 74,
+    "grant_dollars_to_map_donors": 12466803758,
+    "grants_note": "Grant flows run from the grantor node out to the donors on this map that the grant register resolves to the same entity (parli.ingest.grant_recipients: ABN, then unique name). They are public money going the other way and are never summed with donations; node totals stay donations only. byYear keys are the first year of the financial year the grant started.",
+    "contracts_source": "AusTender contract notices (Department of Finance), CC BY 3.0 AU; a varied contract counts once, at its latest notice's value",
+    "contracts_coverage": "notices published 2007-01-01 to 2026-11-10",
+    "donors_with_contracts": 218,
+    "contract_dollars_to_map_donors": 243309514671,
+    "contracts_note": "Contract flows run from the Commonwealth contracts hub out to the donors on this map that the supplier register resolves to the same entity (parli.ingest.contract_suppliers: ABN, then name). Public money going the other way, never summed with donations; byYear keys are the first year of the financial year the contract started.",
+    "associated_entities": "Rule 9: a donor the AEC associated-entity register lists as an associated entity of a party it gives to (any branch or division of it) is flagged, not moved: node.associatedWith and node.associatedTag; receipts, totals, flows and rank are unchanged. The same rule applies to every party.",
+    "associated_entity_nodes": 24,
+    "associated_register_url": "https://transparency.aec.gov.au/RegisterOfEntities?clientType=associatedentity",
+    "party_totals_note": "Party node totals cover all cleaned AEC rows assigned to a party except public funding identified by the reported donor name and payments by entities the resolver knows as government bodies; unlike donor totals and flows, they include internal party transfers."
+   },
+   "nodes": [
+    {
+     "id": "party:Liberal",
+     "label": "Liberal",
+     "kind": "party",
+     "industry": "parties",
+     "group": "parties",
+     "colour": "#1D4F91",
+     "total": 786968554,
+     "count": 35558,
+     "firstYear": 1998,
+     "lastYear": 2024,
+     "byYear": {
+      "1998": [
+       32832952,
+       2209
+      ],
+      "1999": [
+       17795115,
+       1359
+      ],
+      "2000": [
+       20109859,
+       1717
+      ],
+      "2001": [
+       42684366,
+       2458
+      ],
+      "2002": [
+       25786660,
+       2692
+      ],
+      "2003": [
+       24264061,
+       2592
+      ],
+      "2004": [
+       44400738,
+       4037
+      ],
+      "2005": [
+       18134579,
+       1669
+      ],
+      "2006": [
+       21556463,
+       1175
+      ],
+      "2007": [
+       35018273,
+       1134
+      ],
+      "2008": [
+       11969898,
+       649
+      ],
+      "2009": [
+       14421813,
+       634
+      ],
+      "2010": [
+       41866711,
+       1116
+      ],
+      "2011": [
+       13984635,
+       542
+      ],
+      "2012": [
+       24833664,
+       877
+      ],
+      "2013": [
+       46344014,
+       1081
+      ],
+      "2014": [
+       25252614,
+       691
+      ],
+      "2015": [
+       31114034,
+       1138
+      ],
+      "2016": [
+       28067716,
+       643
+      ],
+      "2017": [
+       19675242,
+       878
+      ],
+      "2018": [
+       56203355,
+       1280
+      ],
+      "2019": [
+       15177553,
+       491
+      ],
+      "2020": [
+       18865760,
+       842
+      ],
+      "2021": [
+       42811443,
+       1141
+      ],
+      "2022": [
+       25847707,
+       556
+      ],
+      "2023": [
+       19685459,
+       621
+      ],
+      "2024": [
+       68263870,
+       1336
+      ]
+     },
+     "by_type": {
+      "donation_received": 100512875.0,
+      "other_receipt": 99928919.0,
+      "subscription": 80000.0,
+      "unspecified": 1235148.0
+     },
+     "by_type_year": {
+      "1998-99": {
+       "donation_received": [
+        4251791.0,
+        140
+       ],
+       "other_receipt": [
+        376286.0,
+        56
+       ]
+      },
+      "1999-00": {
+       "donation_received": [
+        3027407.0,
+        54
+       ],
+       "other_receipt": [
+        837162.0,
+        58
+       ],
+       "unspecified": [
+        753257.0,
+        50
+       ]
+      },
+      "2000-01": {
+       "donation_received": [
+        3047631.0,
+        66
+       ],
+       "other_receipt": [
+        1406037.0,
+        97
+       ],
+       "unspecified": [
+        88500.0,
+        5
+       ]
+      },
+      "2001-02": {
+       "donation_received": [
+        2866266.0,
+        93
+       ],
+       "other_receipt": [
+        1822588.0,
+        92
+       ],
+       "unspecified": [
+        372250.0,
+        25
+       ]
+      },
+      "2002-03": {
+       "donation_received": [
+        2687753.0,
+        108
+       ],
+       "other_receipt": [
+        2152842.0,
+        138
+       ],
+       "unspecified": [
+        10000.0,
+        1
+       ]
+      },
+      "2003-04": {
+       "donation_received": [
+        2252512.0,
+        74
+       ],
+       "other_receipt": [
+        2057450.0,
+        152
+       ]
+      },
+      "2004-05": {
+       "donation_received": [
+        5050303.0,
+        138
+       ],
+       "other_receipt": [
+        2333069.0,
+        178
+       ]
+      },
+      "2005-06": {
+       "donation_received": [
+        2201673.0,
+        59
+       ],
+       "other_receipt": [
+        1712827.0,
+        124
+       ],
+       "unspecified": [
+        11141.0,
+        1
+       ]
+      },
+      "2006-07": {
+       "donation_received": [
+        2983246.0,
+        52
+       ],
+       "other_receipt": [
+        1917432.0,
+        59
+       ]
+      },
+      "2007-08": {
+       "donation_received": [
+        4716730.0,
+        59
+       ],
+       "other_receipt": [
+        1421201.0,
+        59
+       ]
+      },
+      "2008-09": {
+       "donation_received": [
+        1846780.0,
+        22
+       ],
+       "other_receipt": [
+        1191024.0,
+        41
+       ]
+      },
+      "2009-10": {
+       "donation_received": [
+        2230750.0,
+        27
+       ],
+       "other_receipt": [
+        705305.0,
+        27
+       ]
+      },
+      "2010-11": {
+       "donation_received": [
+        6583862.0,
+        64
+       ],
+       "other_receipt": [
+        4662329.0,
+        34
+       ]
+      },
+      "2011-12": {
+       "donation_received": [
+        1283653.0,
+        15
+       ],
+       "other_receipt": [
+        1767547.0,
+        43
+       ]
+      },
+      "2012-13": {
+       "donation_received": [
+        3971443.0,
+        38
+       ],
+       "other_receipt": [
+        2205136.0,
+        45
+       ]
+      },
+      "2013-14": {
+       "donation_received": [
+        5772451.0,
+        50
+       ],
+       "other_receipt": [
+        5092826.0,
+        51
+       ]
+      },
+      "2014-15": {
+       "donation_received": [
+        1565000.0,
+        19
+       ],
+       "other_receipt": [
+        9949462.0,
+        53
+       ]
+      },
+      "2015-16": {
+       "donation_received": [
+        5336417.0,
+        50
+       ],
+       "other_receipt": [
+        3968429.0,
+        49
+       ]
+      },
+      "2016-17": {
+       "donation_received": [
+        2590136.0,
+        34
+       ],
+       "other_receipt": [
+        4698329.0,
+        50
+       ]
+      },
+      "2017-18": {
+       "donation_received": [
+        3872554.0,
+        18
+       ],
+       "other_receipt": [
+        3663533.0,
+        53
+       ]
+      },
+      "2018-19": {
+       "donation_received": [
+        7643340.0,
+        78
+       ],
+       "other_receipt": [
+        10616480.0,
+        59
+       ]
+      },
+      "2019-20": {
+       "donation_received": [
+        2003323.0,
+        11
+       ],
+       "other_receipt": [
+        6333552.0,
+        54
+       ]
+      },
+      "2020-21": {
+       "donation_received": [
+        2321199.0,
+        32
+       ],
+       "other_receipt": [
+        4709379.0,
+        61
+       ]
+      },
+      "2021-22": {
+       "donation_received": [
+        6968910.0,
+        58
+       ],
+       "other_receipt": [
+        6095684.0,
+        57
+       ]
+      },
+      "2022-23": {
+       "donation_received": [
+        11000.0,
+        2
+       ],
+       "other_receipt": [
+        6116366.0,
+        54
+       ]
+      },
+      "2023-24": {
+       "donation_received": [
+        893500.0,
+        13
+       ],
+       "other_receipt": [
+        6857928.0,
+        48
+       ],
+       "subscription": [
+        25000.0,
+        1
+       ]
+      },
+      "2024-25": {
+       "donation_received": [
+        12533245.0,
+        53
+       ],
+       "other_receipt": [
+        5258716.0,
+        54
+       ],
+       "subscription": [
+        55000.0,
+        2
+       ]
+      }
+     }
+    },
+    {
+     "id": "donor:example freight pty ltd",
+     "label": "Example Freight Pty Ltd",
+     "kind": "donor",
+     "industry": "other",
+     "group": "other",
+     "total": 27790108,
+     "count": 34,
+     "firstYear": 1999,
+     "lastYear": 2024,
+     "byYear": {
+      "1999": [
+       78500,
+       1
+      ],
+      "2000": [
+       123000,
+       2
+      ],
+      "2001": [
+       86000,
+       1
+      ],
+      "2002": [
+       161074,
+       2
+      ],
+      "2003": [
+       461000,
+       2
+      ],
+      "2004": [
+       287700,
+       2
+      ],
+      "2005": [
+       230500,
+       1
+      ],
+      "2006": [
+       389720,
+       2
+      ],
+      "2007": [
+       249308,
+       1
+      ],
+      "2008": [
+       259280,
+       1
+      ],
+      "2009": [
+       269650,
+       1
+      ],
+      "2010": [
+       580436,
+       2
+      ],
+      "2011": [
+       291653,
+       1
+      ],
+      "2012": [
+       303319,
+       1
+      ],
+      "2013": [
+       1995451,
+       2
+      ],
+      "2015": [
+       341000,
+       1
+      ],
+      "2016": [
+       362996,
+       1
+      ],
+      "2017": [
+       2335000,
+       1
+      ],
+      "2018": [
+       725000,
+       1
+      ],
+      "2019": [
+       4263012,
+       1
+      ],
+      "2020": [
+       2095900,
+       2
+      ],
+      "2021": [
+       1587500,
+       1
+      ],
+      "2022": [
+       2681740,
+       1
+      ],
+      "2023": [
+       4990394,
+       1
+      ],
+      "2024": [
+       2640975,
+       2
+      ]
+     },
+     "source_name": "Example Freight Pty Ltd",
+     "lookup_names": [
+      "Example Freight Pty Ltd"
+     ],
+     "match": {
+      "confidence": 1,
+      "method": "exact",
+      "entity_id": "example-freight-pty-ltd",
+      "href": "/subject/donor/Example%20Freight%20Pty%20Ltd"
+     },
+     "returnReferences": [
+      {
+       "source_name": "Example Freight Pty Ltd",
+       "return_type": "AEC annual return",
+       "year": "2024-25",
+       "url": "https://transparency.aec.gov.au/"
+      },
+      {
+       "source_name": "Example Freight Pty Ltd",
+       "return_type": "AEC annual return",
+       "year": "2023-24",
+       "url": "https://transparency.aec.gov.au/"
+      },
+      {
+       "source_name": "Example Freight Pty Ltd",
+       "return_type": "AEC annual return",
+       "year": "2022-23",
+       "url": "https://transparency.aec.gov.au/"
+      }
+     ],
+     "by_type": {
+      "donation_received": 6969513.0,
+      "other_receipt": 20820595.0
+     },
+     "by_type_year": {
+      "1999-00": {
+       "donation_received": [
+        78500.0,
+        1
+       ]
+      },
+      "2000-01": {
+       "donation_received": [
+        83000.0,
+        1
+       ],
+       "other_receipt": [
+        40000.0,
+        1
+       ]
+      },
+      "2001-02": {
+       "donation_received": [
+        86000.0,
+        1
+       ]
+      },
+      "2002-03": {
+       "donation_received": [
+        93000.0,
+        1
+       ],
+       "other_receipt": [
+        68074.0,
+        1
+       ]
+      },
+      "2003-04": {
+       "donation_received": [
+        96000.0,
+        1
+       ],
+       "other_receipt": [
+        365000.0,
+        1
+       ]
+      },
+      "2004-05": {
+       "donation_received": [
+        215700.0,
+        1
+       ],
+       "other_receipt": [
+        72000.0,
+        1
+       ]
+      },
+      "2005-06": {
+       "donation_received": [
+        230500.0,
+        1
+       ]
+      },
+      "2006-07": {
+       "donation_received": [
+        239720.0,
+        1
+       ],
+       "other_receipt": [
+        150000.0,
+        1
+       ]
+      },
+      "2007-08": {
+       "donation_received": [
+        249308.0,
+        1
+       ]
+      },
+      "2008-09": {
+       "donation_received": [
+        259280.0,
+        1
+       ]
+      },
+      "2009-10": {
+       "donation_received": [
+        269650.0,
+        1
+       ]
+      },
+      "2010-11": {
+       "donation_received": [
+        280436.0,
+        1
+       ],
+       "other_receipt": [
+        300000.0,
+        1
+       ]
+      },
+      "2011-12": {
+       "donation_received": [
+        291653.0,
+        1
+       ]
+      },
+      "2012-13": {
+       "donation_received": [
+        303319.0,
+        1
+       ]
+      },
+      "2013-14": {
+       "donation_received": [
+        1495451.0,
+        1
+       ],
+       "other_receipt": [
+        500000.0,
+        1
+       ]
+      },
+      "2015-16": {
+       "other_receipt": [
+        341000.0,
+        1
+       ]
+      },
+      "2016-17": {
+       "donation_received": [
+        362996.0,
+        1
+       ]
+      },
+      "2017-18": {
+       "donation_received": [
+        2335000.0,
+        1
+       ]
+      },
+      "2018-19": {
+       "other_receipt": [
+        725000.0,
+        1
+       ]
+      },
+      "2019-20": {
+       "other_receipt": [
+        4263012.0,
+        1
+       ]
+      },
+      "2020-21": {
+       "other_receipt": [
+        2095900.0,
+        2
+       ]
+      },
+      "2021-22": {
+       "other_receipt": [
+        1587500.0,
+        1
+       ]
+      },
+      "2022-23": {
+       "other_receipt": [
+        2681740.0,
+        1
+       ]
+      },
+      "2023-24": {
+       "other_receipt": [
+        4990394.0,
+        1
+       ]
+      },
+      "2024-25": {
+       "other_receipt": [
+        2640975.0,
+        2
+       ]
+      }
+     },
+     "aliases": []
+    },
+    {
+     "id": "donor:sample banking group ltd",
+     "label": "Sample Banking Group Ltd",
+     "kind": "donor",
+     "industry": "finance",
+     "group": "finance",
+     "total": 76984493,
+     "count": 1041,
+     "firstYear": 1998,
+     "lastYear": 2024,
+     "byYear": {
+      "1998": [
+       1808428,
+       54
+      ],
+      "1999": [
+       1035209,
+       41
+      ],
+      "2000": [
+       1453405,
+       14
+      ],
+      "2001": [
+       1335335,
+       29
+      ],
+      "2002": [
+       1332508,
+       47
+      ],
+      "2003": [
+       2351989,
+       46
+      ],
+      "2004": [
+       4347140,
+       70
+      ],
+      "2005": [
+       579909,
+       61
+      ],
+      "2006": [
+       3394895,
+       41
+      ],
+      "2007": [
+       8469922,
+       16
+      ],
+      "2008": [
+       1169267,
+       33
+      ],
+      "2009": [
+       1932662,
+       38
+      ],
+      "2010": [
+       6045206,
+       47
+      ],
+      "2011": [
+       1432988,
+       56
+      ],
+      "2012": [
+       3033906,
+       66
+      ],
+      "2013": [
+       2142611,
+       47
+      ],
+      "2014": [
+       11570781,
+       54
+      ],
+      "2015": [
+       4201704,
+       34
+      ],
+      "2016": [
+       959095,
+       16
+      ],
+      "2017": [
+       640923,
+       29
+      ],
+      "2018": [
+       6775850,
+       26
+      ],
+      "2019": [
+       734100,
+       14
+      ],
+      "2020": [
+       662964,
+       23
+      ],
+      "2021": [
+       5553487,
+       44
+      ],
+      "2022": [
+       1529453,
+       32
+      ],
+      "2023": [
+       152220,
+       26
+      ],
+      "2024": [
+       2338536,
+       37
+      ]
+     },
+     "source_name": "Sample Banking Group Ltd",
+     "lookup_names": [
+      "Sample Banking Group Ltd"
+     ],
+     "match": {
+      "confidence": 1,
+      "method": "curated",
+      "entity_id": "sample-banking-group-ltd",
+      "href": "/subject/donor/Sample%20Banking%20Group%20Ltd"
+     },
+     "returnReferences": [
+      {
+       "source_name": "Sample Banking Group Ltd",
+       "return_type": "AEC annual return",
+       "year": "2011-12",
+       "url": "https://transparency.aec.gov.au/"
+      },
+      {
+       "source_name": "Sample Banking Group Ltd",
+       "return_type": "AEC annual return",
+       "year": "2005-06",
+       "url": "https://transparency.aec.gov.au/"
+      },
+      {
+       "source_name": "Sample Banking Group Ltd",
+       "return_type": "AEC annual return",
+       "year": "2003-04",
+       "url": "https://transparency.aec.gov.au/"
+      }
+     ],
+     "by_type": {
+      "donation_received": 1992175.0,
+      "other_receipt": 79887944.0,
+      "subscription": 51700.0,
+      "unspecified": 75106.0
+     },
+     "by_type_year": {
+      "1998-99": {
+       "donation_received": [
+        383357.0,
+        19
+       ],
+       "other_receipt": [
+        1056588.0,
+        9
+       ]
+      },
+      "1999-00": {
+       "donation_received": [
+        355000.0,
+        12
+       ],
+       "other_receipt": [
+        329214.0,
+        5
+       ],
+       "unspecified": [
+        29995.0,
+        4
+       ]
+      },
+      "2000-01": {
+       "donation_received": [
+        140000.0,
+        4
+       ],
+       "other_receipt": [
+        1082475.0,
+        2
+       ]
+      },
+      "2001-02": {
+       "donation_received": [
+        360000.0,
+        6
+       ],
+       "other_receipt": [
+        651319.0,
+        4
+       ],
+       "unspecified": [
+        21916.0,
+        3
+       ]
+      },
+      "2002-03": {
+       "donation_received": [
+        175300.0,
+        5
+       ],
+       "other_receipt": [
+        914608.0,
+        8
+       ],
+       "unspecified": [
+        23195.0,
+        5
+       ]
+      },
+      "2003-04": {
+       "donation_received": [
+        182000.0,
+        7
+       ],
+       "other_receipt": [
+        1933749.0,
+        9
+       ]
+      },
+      "2004-05": {
+       "donation_received": [
+        162000.0,
+        8
+       ],
+       "other_receipt": [
+        3903870.0,
+        22
+       ]
+      },
+      "2005-06": {
+       "donation_received": [
+        117500.0,
+        4
+       ],
+       "other_receipt": [
+        224604.0,
+        12
+       ]
+      },
+      "2006-07": {
+       "donation_received": [
+        43500.0,
+        1
+       ],
+       "other_receipt": [
+        3118745.0,
+        5
+       ],
+       "subscription": [
+        11000.0,
+        1
+       ]
+      },
+      "2007-08": {
+       "donation_received": [
+        20000.0,
+        1
+       ],
+       "other_receipt": [
+        8407997.0,
+        2
+       ],
+       "subscription": [
+        13200.0,
+        1
+       ]
+      },
+      "2008-09": {
+       "donation_received": [
+        13750.0,
+        1
+       ],
+       "other_receipt": [
+        1102308.0,
+        6
+       ]
+      },
+      "2009-10": {
+       "other_receipt": [
+        1862696.0,
+        10
+       ]
+      },
+      "2010-11": {
+       "other_receipt": [
+        6443972.0,
+        19
+       ]
+      },
+      "2011-12": {
+       "donation_received": [
+        1500.0,
+        1
+       ],
+       "other_receipt": [
+        1291009.0,
+        6
+       ]
+      },
+      "2012-13": {
+       "other_receipt": [
+        2851899.0,
+        11
+       ]
+      },
+      "2013-14": {
+       "donation_received": [
+        27500.0,
+        1
+       ],
+       "other_receipt": [
+        2955107.0,
+        13
+       ]
+      },
+      "2014-15": {
+       "donation_received": [
+        1000.0,
+        1
+       ],
+       "other_receipt": [
+        11706576.0,
+        33
+       ],
+       "subscription": [
+        27500.0,
+        1
+       ]
+      },
+      "2015-16": {
+       "other_receipt": [
+        5077499.0,
+        9
+       ]
+      },
+      "2016-17": {
+       "other_receipt": [
+        922500.0,
+        5
+       ]
+      },
+      "2017-18": {
+       "other_receipt": [
+        2588000.0,
+        10
+       ]
+      },
+      "2018-19": {
+       "other_receipt": [
+        7764500.0,
+        18
+       ]
+      },
+      "2019-20": {
+       "other_receipt": [
+        1204500.0,
+        7
+       ]
+      },
+      "2020-21": {
+       "other_receipt": [
+        617518.0,
+        9
+       ]
+      },
+      "2021-22": {
+       "donation_received": [
+        6515.0,
+        3
+       ],
+       "other_receipt": [
+        6491000.0,
+        17
+       ]
+      },
+      "2022-23": {
+       "other_receipt": [
+        1434704.0,
+        8
+       ]
+      },
+      "2023-24": {
+       "donation_received": [
+        1450.0,
+        1
+       ],
+       "other_receipt": [
+        93800.0,
+        10
+       ]
+      },
+      "2024-25": {
+       "donation_received": [
+        1803.0,
+        1
+       ],
+       "other_receipt": [
+        3857187.0,
+        16
+       ]
+      }
+     },
+     "aliases": []
+    },
+    {
+     "id": "donor:harbour example holdings",
+     "label": "Harbour Example Holdings",
+     "kind": "donor",
+     "industry": "other",
+     "group": "other",
+     "total": 941692,
+     "count": 31,
+     "firstYear": 1998,
+     "lastYear": 2024,
+     "byYear": {
+      "1998": [
+       6662,
+       1
+      ],
+      "1999": [
+       14450,
+       3
+      ],
+      "2000": [
+       13000,
+       1
+      ],
+      "2001": [
+       17480,
+       3
+      ],
+      "2002": [
+       11945,
+       3
+      ],
+      "2003": [
+       2200,
+       1
+      ],
+      "2004": [
+       9660,
+       2
+      ],
+      "2005": [
+       15000,
+       1
+      ],
+      "2007": [
+       28226,
+       2
+      ],
+      "2011": [
+       8250,
+       1
+      ],
+      "2012": [
+       7500,
+       1
+      ],
+      "2013": [
+       52034,
+       2
+      ],
+      "2014": [
+       7000,
+       2
+      ],
+      "2016": [
+       66839,
+       1
+      ],
+      "2018": [
+       19888,
+       1
+      ],
+      "2019": [
+       169829,
+       1
+      ],
+      "2020": [
+       195907,
+       2
+      ],
+      "2022": [
+       235206,
+       1
+      ],
+      "2024": [
+       60616,
+       2
+      ]
+     },
+     "source_name": "Harbour Example Holdings",
+     "lookup_names": [
+      "Harbour Example Holdings"
+     ],
+     "match": {
+      "confidence": 1,
+      "method": "exact",
+      "entity_id": "harbour-example-holdings",
+      "href": "/subject/donor/Harbour%20Example%20Holdings"
+     },
+     "returnReferences": [
+      {
+       "source_name": "Harbour Example Holdings",
+       "return_type": "AEC annual return",
+       "year": "2024-25",
+       "url": "https://transparency.aec.gov.au/"
+      },
+      {
+       "source_name": "Harbour Example Holdings",
+       "return_type": "AEC annual return",
+       "year": "2022-23",
+       "url": "https://transparency.aec.gov.au/"
+      },
+      {
+       "source_name": "Harbour Example Holdings",
+       "return_type": "AEC annual return",
+       "year": "2020-21",
+       "url": "https://transparency.aec.gov.au/"
+      }
+     ],
+     "by_type": {
+      "other_receipt": 924492.0,
+      "unspecified": 17200.0
+     },
+     "by_type_year": {
+      "1998-99": {
+       "other_receipt": [
+        6662.0,
+        1
+       ]
+      },
+      "1999-00": {
+       "other_receipt": [
+        14450.0,
+        3
+       ]
+      },
+      "2000-01": {
+       "other_receipt": [
+        13000.0,
+        1
+       ]
+      },
+      "2001-02": {
+       "other_receipt": [
+        2480.0,
+        1
+       ],
+       "unspecified": [
+        15000.0,
+        2
+       ]
+      },
+      "2002-03": {
+       "other_receipt": [
+        9745.0,
+        2
+       ],
+       "unspecified": [
+        2200.0,
+        1
+       ]
+      },
+      "2003-04": {
+       "other_receipt": [
+        2200.0,
+        1
+       ]
+      },
+      "2004-05": {
+       "other_receipt": [
+        9660.0,
+        2
+       ]
+      },
+      "2005-06": {
+       "other_receipt": [
+        15000.0,
+        1
+       ]
+      },
+      "2007-08": {
+       "other_receipt": [
+        28226.0,
+        2
+       ]
+      },
+      "2011-12": {
+       "other_receipt": [
+        8250.0,
+        1
+       ]
+      },
+      "2012-13": {
+       "other_receipt": [
+        7500.0,
+        1
+       ]
+      },
+      "2013-14": {
+       "other_receipt": [
+        52034.0,
+        2
+       ]
+      },
+      "2014-15": {
+       "other_receipt": [
+        7000.0,
+        2
+       ]
+      },
+      "2016-17": {
+       "other_receipt": [
+        66839.0,
+        1
+       ]
+      },
+      "2018-19": {
+       "other_receipt": [
+        19888.0,
+        1
+       ]
+      },
+      "2019-20": {
+       "other_receipt": [
+        169829.0,
+        1
+       ]
+      },
+      "2020-21": {
+       "other_receipt": [
+        195907.0,
+        2
+       ]
+      },
+      "2022-23": {
+       "other_receipt": [
+        235206.0,
+        1
+       ]
+      },
+      "2024-25": {
+       "other_receipt": [
+        60616.0,
+        2
+       ]
+      }
+     },
+     "aliases": []
+    },
+    {
+     "id": "donor:placeholder medical industries ltd",
+     "label": "Placeholder Medical Industries Ltd",
+     "kind": "donor",
+     "industry": "pharmacy",
+     "group": "health & pharma",
+     "total": 3942598,
+     "count": 339,
+     "firstYear": 2002,
+     "lastYear": 2024,
+     "byYear": {
+      "2002": [
+       29000,
+       3
+      ],
+      "2003": [
+       81586,
+       11
+      ],
+      "2004": [
+       67585,
+       13
+      ],
+      "2005": [
+       144582,
+       19
+      ],
+      "2006": [
+       272388,
+       21
+      ],
+      "2007": [
+       140320,
+       14
+      ],
+      "2008": [
+       107284,
+       10
+      ],
+      "2009": [
+       80900,
+       5
+      ],
+      "2010": [
+       62000,
+       9
+      ],
+      "2011": [
+       100100,
+       7
+      ],
+      "2012": [
+       86775,
+       14
+      ],
+      "2013": [
+       57400,
+       6
+      ],
+      "2014": [
+       108858,
+       13
+      ],
+      "2015": [
+       119712,
+       18
+      ],
+      "2016": [
+       104450,
+       14
+      ],
+      "2017": [
+       279865,
+       31
+      ],
+      "2018": [
+       259332,
+       23
+      ],
+      "2019": [
+       237375,
+       10
+      ],
+      "2020": [
+       265590,
+       19
+      ],
+      "2021": [
+       273400,
+       26
+      ],
+      "2022": [
+       457096,
+       25
+      ],
+      "2023": [
+       319200,
+       11
+      ],
+      "2024": [
+       287800,
+       17
+      ]
+     },
+     "source_name": "Placeholder Medical Industries Ltd",
+     "lookup_names": [
+      "Placeholder Medical Industries Ltd"
+     ],
+     "match": {
+      "confidence": 0.9,
+      "method": "rule",
+      "entity_id": "placeholder-medical-industries-ltd",
+      "href": "/subject/donor/Placeholder%20Medical%20Industries%20Ltd"
+     },
+     "returnReferences": [
+      {
+       "source_name": "Placeholder Medical Industries Ltd",
+       "return_type": "AEC annual return",
+       "year": "2024-25",
+       "url": "https://transparency.aec.gov.au/"
+      },
+      {
+       "source_name": "Placeholder Medical Industries Ltd",
+       "return_type": "AEC annual return",
+       "year": "2023-24",
+       "url": "https://transparency.aec.gov.au/"
+      },
+      {
+       "source_name": "Placeholder Medical Industries Ltd",
+       "return_type": "AEC annual return",
+       "year": "2022-23",
+       "url": "https://transparency.aec.gov.au/"
+      }
+     ],
+     "by_type": {
+      "donation_received": 148726.0,
+      "other_receipt": 1678329.0,
+      "subscription": 27500.0
+     },
+     "by_type_year": {
+      "2002-03": {
+       "other_receipt": [
+        6000.0,
+        1
+       ]
+      },
+      "2003-04": {
+       "other_receipt": [
+        26000.0,
+        3
+       ]
+      },
+      "2004-05": {
+       "donation_received": [
+        18000.0,
+        1
+       ],
+       "other_receipt": [
+        16500.0,
+        2
+       ]
+      },
+      "2005-06": {
+       "donation_received": [
+        20500.0,
+        2
+       ],
+       "other_receipt": [
+        48890.0,
+        4
+       ]
+      },
+      "2006-07": {
+       "donation_received": [
+        24026.0,
+        3
+       ],
+       "other_receipt": [
+        105700.0,
+        2
+       ]
+      },
+      "2007-08": {
+       "donation_received": [
+        18000.0,
+        1
+       ],
+       "other_receipt": [
+        41594.0,
+        3
+       ]
+      },
+      "2008-09": {
+       "other_receipt": [
+        67175.0,
+        3
+       ]
+      },
+      "2009-10": {
+       "other_receipt": [
+        80900.0,
+        5
+       ]
+      },
+      "2010-11": {
+       "other_receipt": [
+        47300.0,
+        4
+       ]
+      },
+      "2011-12": {
+       "other_receipt": [
+        76400.0,
+        6
+       ]
+      },
+      "2012-13": {
+       "donation_received": [
+        13200.0,
+        1
+       ],
+       "other_receipt": [
+        48175.0,
+        5
+       ]
+      },
+      "2013-14": {
+       "other_receipt": [
+        28600.0,
+        3
+       ]
+      },
+      "2014-15": {
+       "other_receipt": [
+        22975.0,
+        4
+       ],
+       "subscription": [
+        27500.0,
+        1
+       ]
+      },
+      "2015-16": {
+       "donation_received": [
+        30000.0,
+        2
+       ],
+       "other_receipt": [
+        27500.0,
+        1
+       ]
+      },
+      "2016-17": {
+       "other_receipt": [
+        35000.0,
+        2
+       ]
+      },
+      "2017-18": {
+       "other_receipt": [
+        110100.0,
+        6
+       ]
+      },
+      "2018-19": {
+       "other_receipt": [
+        115900.0,
+        7
+       ]
+      },
+      "2019-20": {
+       "other_receipt": [
+        106100.0,
+        3
+       ]
+      },
+      "2020-21": {
+       "other_receipt": [
+        116320.0,
+        3
+       ]
+      },
+      "2021-22": {
+       "other_receipt": [
+        117200.0,
+        4
+       ]
+      },
+      "2022-23": {
+       "other_receipt": [
+        202000.0,
+        7
+       ]
+      },
+      "2023-24": {
+       "donation_received": [
+        25000.0,
+        1
+       ],
+       "other_receipt": [
+        115000.0,
+        2
+       ]
+      },
+      "2024-25": {
+       "other_receipt": [
+        117000.0,
+        3
+       ]
+      }
+     },
+     "aliases": []
+    }
+   ],
+   "edges": [
+    {
+     "source": "donor:example freight pty ltd",
+     "target": "party:Liberal",
+     "total": 27790108,
+     "count": 34,
+     "firstYear": 1999,
+     "lastYear": 2024,
+     "byYear": {
+      "1999": [
+       78500,
+       1
+      ],
+      "2000": [
+       123000,
+       2
+      ],
+      "2001": [
+       86000,
+       1
+      ],
+      "2002": [
+       161074,
+       2
+      ],
+      "2003": [
+       461000,
+       2
+      ],
+      "2004": [
+       287700,
+       2
+      ],
+      "2005": [
+       230500,
+       1
+      ],
+      "2006": [
+       389720,
+       2
+      ],
+      "2007": [
+       249308,
+       1
+      ],
+      "2008": [
+       259280,
+       1
+      ],
+      "2009": [
+       269650,
+       1
+      ],
+      "2010": [
+       580436,
+       2
+      ],
+      "2011": [
+       291653,
+       1
+      ],
+      "2012": [
+       303319,
+       1
+      ],
+      "2013": [
+       1995451,
+       2
+      ],
+      "2015": [
+       341000,
+       1
+      ],
+      "2016": [
+       362996,
+       1
+      ],
+      "2017": [
+       2335000,
+       1
+      ],
+      "2018": [
+       725000,
+       1
+      ],
+      "2019": [
+       4263012,
+       1
+      ],
+      "2020": [
+       2095900,
+       2
+      ],
+      "2021": [
+       1587500,
+       1
+      ],
+      "2022": [
+       2681740,
+       1
+      ],
+      "2023": [
+       4990394,
+       1
+      ],
+      "2024": [
+       2640975,
+       2
+      ]
+     },
+     "by_type": {
+      "donation_received": 6969513.0,
+      "other_receipt": 20820595.0
+     },
+     "by_type_year": {
+      "1999-00": {
+       "donation_received": [
+        78500.0,
+        1
+       ]
+      },
+      "2000-01": {
+       "donation_received": [
+        83000.0,
+        1
+       ],
+       "other_receipt": [
+        40000.0,
+        1
+       ]
+      },
+      "2001-02": {
+       "donation_received": [
+        86000.0,
+        1
+       ]
+      },
+      "2002-03": {
+       "donation_received": [
+        93000.0,
+        1
+       ],
+       "other_receipt": [
+        68074.0,
+        1
+       ]
+      },
+      "2003-04": {
+       "donation_received": [
+        96000.0,
+        1
+       ],
+       "other_receipt": [
+        365000.0,
+        1
+       ]
+      },
+      "2004-05": {
+       "donation_received": [
+        215700.0,
+        1
+       ],
+       "other_receipt": [
+        72000.0,
+        1
+       ]
+      },
+      "2005-06": {
+       "donation_received": [
+        230500.0,
+        1
+       ]
+      },
+      "2006-07": {
+       "donation_received": [
+        239720.0,
+        1
+       ],
+       "other_receipt": [
+        150000.0,
+        1
+       ]
+      },
+      "2007-08": {
+       "donation_received": [
+        249308.0,
+        1
+       ]
+      },
+      "2008-09": {
+       "donation_received": [
+        259280.0,
+        1
+       ]
+      },
+      "2009-10": {
+       "donation_received": [
+        269650.0,
+        1
+       ]
+      },
+      "2010-11": {
+       "donation_received": [
+        280436.0,
+        1
+       ],
+       "other_receipt": [
+        300000.0,
+        1
+       ]
+      },
+      "2011-12": {
+       "donation_received": [
+        291653.0,
+        1
+       ]
+      },
+      "2012-13": {
+       "donation_received": [
+        303319.0,
+        1
+       ]
+      },
+      "2013-14": {
+       "donation_received": [
+        1495451.0,
+        1
+       ],
+       "other_receipt": [
+        500000.0,
+        1
+       ]
+      },
+      "2015-16": {
+       "other_receipt": [
+        341000.0,
+        1
+       ]
+      },
+      "2016-17": {
+       "donation_received": [
+        362996.0,
+        1
+       ]
+      },
+      "2017-18": {
+       "donation_received": [
+        2335000.0,
+        1
+       ]
+      },
+      "2018-19": {
+       "other_receipt": [
+        725000.0,
+        1
+       ]
+      },
+      "2019-20": {
+       "other_receipt": [
+        4263012.0,
+        1
+       ]
+      },
+      "2020-21": {
+       "other_receipt": [
+        2095900.0,
+        2
+       ]
+      },
+      "2021-22": {
+       "other_receipt": [
+        1587500.0,
+        1
+       ]
+      },
+      "2022-23": {
+       "other_receipt": [
+        2681740.0,
+        1
+       ]
+      },
+      "2023-24": {
+       "other_receipt": [
+        4990394.0,
+        1
+       ]
+      },
+      "2024-25": {
+       "other_receipt": [
+        2640975.0,
+        2
+       ]
+      }
+     }
+    },
+    {
+     "source": "donor:sample banking group ltd",
+     "target": "party:Liberal",
+     "total": 25602132,
+     "count": 417,
+     "firstYear": 1998,
+     "lastYear": 2024,
+     "byYear": {
+      "1998": [
+       374042,
+       21
+      ],
+      "1999": [
+       310000,
+       13
+      ],
+      "2000": [
+       205330,
+       5
+      ],
+      "2001": [
+       264538,
+       8
+      ],
+      "2002": [
+       209845,
+       17
+      ],
+      "2003": [
+       247169,
+       24
+      ],
+      "2004": [
+       344068,
+       25
+      ],
+      "2005": [
+       375931,
+       32
+      ],
+      "2006": [
+       123558,
+       19
+      ],
+      "2007": [
+       21000,
+       8
+      ],
+      "2008": [
+       73619,
+       10
+      ],
+      "2009": [
+       38175,
+       15
+      ],
+      "2010": [
+       3407043,
+       18
+      ],
+      "2011": [
+       269469,
+       22
+      ],
+      "2012": [
+       99077,
+       21
+      ],
+      "2013": [
+       1134061,
+       15
+      ],
+      "2014": [
+       7275485,
+       22
+      ],
+      "2015": [
+       2072625,
+       12
+      ],
+      "2016": [
+       53045,
+       7
+      ],
+      "2017": [
+       69108,
+       17
+      ],
+      "2018": [
+       4568050,
+       11
+      ],
+      "2019": [
+       48500,
+       6
+      ],
+      "2020": [
+       66470,
+       11
+      ],
+      "2021": [
+       2412396,
+       22
+      ],
+      "2022": [
+       1314270,
+       16
+      ],
+      "2023": [
+       61020,
+       9
+      ],
+      "2024": [
+       164238,
+       11
+      ]
+     },
+     "by_type": {
+      "donation_received": 889000.0,
+      "other_receipt": 24022060.0,
+      "unspecified": 10000.0
+     },
+     "by_type_year": {
+      "1998-99": {
+       "donation_received": [
+        177000.0,
+        7
+       ],
+       "other_receipt": [
+        36892.0,
+        3
+       ]
+      },
+      "1999-00": {
+       "donation_received": [
+        155000.0,
+        4
+       ],
+       "other_receipt": [
+        5000.0,
+        1
+       ],
+       "unspecified": [
+        10000.0,
+        2
+       ]
+      },
+      "2000-01": {
+       "donation_received": [
+        105000.0,
+        2
+       ]
+      },
+      "2001-02": {
+       "donation_received": [
+        120000.0,
+        2
+       ],
+       "other_receipt": [
+        13538.0,
+        2
+       ]
+      },
+      "2002-03": {
+       "donation_received": [
+        87500.0,
+        2
+       ],
+       "other_receipt": [
+        22000.0,
+        5
+       ]
+      },
+      "2003-04": {
+       "donation_received": [
+        97000.0,
+        4
+       ],
+       "other_receipt": [
+        32629.0,
+        5
+       ]
+      },
+      "2004-05": {
+       "donation_received": [
+        80000.0,
+        2
+       ],
+       "other_receipt": [
+        132848.0,
+        6
+       ]
+      },
+      "2005-06": {
+       "donation_received": [
+        67500.0,
+        2
+       ],
+       "other_receipt": [
+        185061.0,
+        5
+       ]
+      },
+      "2006-07": {
+       "other_receipt": [
+        23388.0,
+        2
+       ]
+      },
+      "2007-08": {
+       "other_receipt": [
+        11000.0,
+        1
+       ]
+      },
+      "2008-09": {
+       "other_receipt": [
+        66414.0,
+        3
+       ]
+      },
+      "2010-11": {
+       "other_receipt": [
+        3342603.0,
+        3
+       ]
+      },
+      "2011-12": {
+       "other_receipt": [
+        200000.0,
+        1
+       ]
+      },
+      "2012-13": {
+       "other_receipt": [
+        45000.0,
+        2
+       ]
+      },
+      "2013-14": {
+       "other_receipt": [
+        2073607.0,
+        6
+       ]
+      },
+      "2014-15": {
+       "other_receipt": [
+        7208080.0,
+        8
+       ]
+      },
+      "2015-16": {
+       "other_receipt": [
+        2027500.0,
+        2
+       ]
+      },
+      "2016-17": {
+       "other_receipt": [
+        55000.0,
+        2
+       ]
+      },
+      "2017-18": {
+       "other_receipt": [
+        55000.0,
+        2
+       ]
+      },
+      "2018-19": {
+       "other_receipt": [
+        4582500.0,
+        5
+       ]
+      },
+      "2019-20": {
+       "other_receipt": [
+        27500.0,
+        1
+       ]
+      },
+      "2020-21": {
+       "other_receipt": [
+        27500.0,
+        1
+       ]
+      },
+      "2021-22": {
+       "other_receipt": [
+        2357500.0,
+        3
+       ]
+      },
+      "2022-23": {
+       "other_receipt": [
+        1266500.0,
+        2
+       ]
+      },
+      "2023-24": {
+       "other_receipt": [
+        37500.0,
+        1
+       ]
+      },
+      "2024-25": {
+       "other_receipt": [
+        187500.0,
+        4
+       ]
+      }
+     }
+    },
+    {
+     "source": "donor:harbour example holdings",
+     "target": "party:Liberal",
+     "total": 549163,
+     "count": 12,
+     "firstYear": 1999,
+     "lastYear": 2022,
+     "byYear": {
+      "1999": [
+       4500,
+       1
+      ],
+      "2000": [
+       13000,
+       1
+      ],
+      "2001": [
+       2480,
+       1
+      ],
+      "2002": [
+       9745,
+       2
+      ],
+      "2003": [
+       2200,
+       1
+      ],
+      "2005": [
+       15000,
+       1
+      ],
+      "2007": [
+       15000,
+       1
+      ],
+      "2016": [
+       66839,
+       1
+      ],
+      "2019": [
+       169829,
+       1
+      ],
+      "2020": [
+       15364,
+       1
+      ],
+      "2022": [
+       235206,
+       1
+      ]
+     },
+     "by_type": {
+      "other_receipt": 549163.0
+     },
+     "by_type_year": {
+      "1999-00": {
+       "other_receipt": [
+        4500.0,
+        1
+       ]
+      },
+      "2000-01": {
+       "other_receipt": [
+        13000.0,
+        1
+       ]
+      },
+      "2001-02": {
+       "other_receipt": [
+        2480.0,
+        1
+       ]
+      },
+      "2002-03": {
+       "other_receipt": [
+        9745.0,
+        2
+       ]
+      },
+      "2003-04": {
+       "other_receipt": [
+        2200.0,
+        1
+       ]
+      },
+      "2005-06": {
+       "other_receipt": [
+        15000.0,
+        1
+       ]
+      },
+      "2007-08": {
+       "other_receipt": [
+        15000.0,
+        1
+       ]
+      },
+      "2016-17": {
+       "other_receipt": [
+        66839.0,
+        1
+       ]
+      },
+      "2019-20": {
+       "other_receipt": [
+        169829.0,
+        1
+       ]
+      },
+      "2020-21": {
+       "other_receipt": [
+        15364.0,
+        1
+       ]
+      },
+      "2022-23": {
+       "other_receipt": [
+        235206.0,
+        1
+       ]
+      }
+     }
+    },
+    {
+     "source": "donor:placeholder medical industries ltd",
+     "target": "party:Liberal",
+     "total": 1829045,
+     "count": 153,
+     "firstYear": 2002,
+     "lastYear": 2024,
+     "byYear": {
+      "2002": [
+       29000,
+       3
+      ],
+      "2003": [
+       45450,
+       6
+      ],
+      "2004": [
+       20495,
+       9
+      ],
+      "2005": [
+       97783,
+       14
+      ],
+      "2006": [
+       144052,
+       14
+      ],
+      "2007": [
+       91825,
+       7
+      ],
+      "2008": [
+       31414,
+       6
+      ],
+      "2009": [
+       44000,
+       1
+      ],
+      "2010": [
+       31200,
+       6
+      ],
+      "2011": [
+       47200,
+       3
+      ],
+      "2012": [
+       38600,
+       9
+      ],
+      "2014": [
+       13500,
+       2
+      ],
+      "2015": [
+       53240,
+       11
+      ],
+      "2016": [
+       20100,
+       3
+      ],
+      "2017": [
+       139500,
+       13
+      ],
+      "2018": [
+       115250,
+       5
+      ],
+      "2019": [
+       114875,
+       4
+      ],
+      "2020": [
+       134490,
+       8
+      ],
+      "2021": [
+       137900,
+       10
+      ],
+      "2022": [
+       206271,
+       10
+      ],
+      "2023": [
+       133200,
+       3
+      ],
+      "2024": [
+       139700,
+       6
+      ]
+     },
+     "by_type": {
+      "donation_received": 105726.0,
+      "other_receipt": 683594.0
+     },
+     "by_type_year": {
+      "2002-03": {
+       "other_receipt": [
+        6000.0,
+        1
+       ]
+      },
+      "2003-04": {
+       "other_receipt": [
+        16500.0,
+        1
+       ]
+      },
+      "2004-05": {
+       "other_receipt": [
+        5500.0,
+        1
+       ]
+      },
+      "2005-06": {
+       "donation_received": [
+        20500.0,
+        2
+       ],
+       "other_receipt": [
+        21000.0,
+        2
+       ]
+      },
+      "2006-07": {
+       "donation_received": [
+        24026.0,
+        3
+       ],
+       "other_receipt": [
+        40000.0,
+        1
+       ]
+      },
+      "2007-08": {
+       "donation_received": [
+        18000.0,
+        1
+       ],
+       "other_receipt": [
+        15594.0,
+        1
+       ]
+      },
+      "2008-09": {
+       "other_receipt": [
+        16500.0,
+        1
+       ]
+      },
+      "2009-10": {
+       "other_receipt": [
+        44000.0,
+        1
+       ]
+      },
+      "2010-11": {
+       "other_receipt": [
+        16500.0,
+        1
+       ]
+      },
+      "2011-12": {
+       "other_receipt": [
+        22000.0,
+        1
+       ]
+      },
+      "2012-13": {
+       "donation_received": [
+        13200.0,
+        1
+       ]
+      },
+      "2015-16": {
+       "donation_received": [
+        30000.0,
+        2
+       ]
+      },
+      "2017-18": {
+       "other_receipt": [
+        50000.0,
+        1
+       ]
+      },
+      "2018-19": {
+       "other_receipt": [
+        50000.0,
+        1
+       ]
+      },
+      "2019-20": {
+       "other_receipt": [
+        50000.0,
+        1
+       ]
+      },
+      "2020-21": {
+       "other_receipt": [
+        60000.0,
+        1
+       ]
+      },
+      "2021-22": {
+       "other_receipt": [
+        60000.0,
+        1
+       ]
+      },
+      "2022-23": {
+       "other_receipt": [
+        90000.0,
+        2
+       ]
+      },
+      "2023-24": {
+       "other_receipt": [
+        60000.0,
+        1
+       ]
+      },
+      "2024-25": {
+       "other_receipt": [
+        60000.0,
+        1
+       ]
+      }
+     }
+    }
+   ]
+  }
+ },
+ "expect": {
+  "answered": true,
+  "includes": [
+   "Example Freight Pty Ltd",
+   "\\$2,681,740",
+   "Sample Banking Group Ltd"
+  ],
+  "citations": 2
+ }
+}

@@ -202,18 +202,18 @@ function paginate(url: URL, rows: { href: string; label: string; detail?: string
 }
 const optional = async <T>(read: ReadAsset, path: string): Promise<T | null> => read<T>(path).catch(() => null)
 
-type PartyReceipts = { meta: MoneyGraph['meta']; label: string; rows: ReturnType<typeof partyMoneyData>['rows'] }
+type PartyReceipts = { meta: MoneyGraph['meta']; label: string; rows: ReturnType<typeof partyMoneyData>['rows']; scope?: string }
 /**
  * A party's disclosed-receipt rows from one money graph: its bucket (public/party-money-buckets.js),
  * or the whole graph when the bucket is unreadable. Null when the graph has no such party.
  */
 async function partyReceipts(read: ReadAsset, path: string, party: string): Promise<PartyReceipts | null> {
   const key = partyFold(party)
-  const bucket = await optional<{meta: MoneyGraph['meta']; parties: Record<string, {label: string; rows: PartyReceipts['rows']}>}>(read,partyMoneyBucketPath(path,partyMoneyBucket(key)))
+  const bucket = await optional<{meta: MoneyGraph['meta']; parties: Record<string, {label: string; rows: PartyReceipts['rows']; scope?: string}>}>(read,partyMoneyBucketPath(path,partyMoneyBucket(key)))
   if (bucket?.parties && bucket.meta) return Object.hasOwn(bucket.parties,key) ? {meta: bucket.meta, ...bucket.parties[key]} : null
   const graph = await optional<MoneyGraph>(read,path)
   const node = graph?.nodes.find(n=>n.kind==='party' && fold(n.label)===fold(party))
-  return graph && node ? {meta: graph.meta, label: node.label, rows: partyMoneyData(graph,node.id).rows} : null
+  return graph && node ? {meta: graph.meta, label: node.label, ...partyMoneyData(graph,node.id)} : null
 }
 type VoteData = Record<string, Votes | Record<string,string[]>>
 /**
@@ -260,7 +260,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   const display = p.full && p.speech_scope ? p.full : p.name
   const seatList = seats?.electorates || null
   const description = `${display}. ${partyLine(p,seatList,lists)}. ${(p.representation || []).map(r=>`${r.electorate}, ${chamber(r.chamber)}`).join('; ') || p.chambers.map(chamber).join(', ')}.`
-  let body = heldBackTranscriptsHTML(p.pid, heldBackCounts) + chairRoleTranscriptsHTML(p.pid, chairRoleCounts) + '<h2>Party and representation</h2><ul>'
+  let body = '<h2>Party and representation</h2><ul>'
   const party = personParty(p,seatList,lists)?.party
   body += `<li>${party ? link(partyUrl(party),partyLine(p,seatList,lists)) : 'Party not recorded'}</li>`
   for (const r of p.representation || []) {
@@ -268,6 +268,8 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     body += `<li>${seat ? link(seat.url,r.electorate) : escapeHtml(r.electorate)} — ${escapeHtml(chamber(r.chamber))}</li>`
   }
   body += `</ul>${original(profileUrl)}<p>${link('/parliamentarians.json','Parliamentarian data (JSON)')}. Recorded representation can include historical seats; affiliation with no current-roster flag is not verified as current or former.</p>`
+  // The notes on what the speech count leaves out sit with the speeches, never in the head.
+  body += heldBackTranscriptsHTML(p.pid, heldBackCounts) + chairRoleTranscriptsHTML(p.pid, chairRoleCounts)
   // The Senate's own video of a first speech, matched to this roster row by the fetcher; nothing when there is none.
   body += videoSectionHTML('First speech',personVideos(video?.videos,slugs.get(p.name),p),{id:'ssr-first-speech',note:'Video published by the Senate Public Information Office on YouTube.',after:`<p class="video-more">${link('/video/senate?kind=first-speech','All first speeches')}</p>`})
   if (!p.speech_scope) {
@@ -302,9 +304,9 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   for (const [i,found] of received.entries()) {
     const source = graphs[i][1]
     if (!found) continue
-    const {meta, label, rows} = found
+    const {meta, label, rows, scope} = found
     const config = partyMoneyTableConfig(rows,`person-party-money-${source.toLowerCase()}`,`partyMoney${source}`,'person',{party:label,jurisdiction:({AEC:'federal',ECQ:'qld',VEC:'vic'} as Record<string,string>)[source]})
-    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(meta.coverage || '')}</p>${registerHTML(config)}`
+    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(meta.coverage || '')}</p>${scope ? `<p>${escapeHtml(scope)}</p>` : ''}${registerHTML(config)}`
     body += `<p>Source: ${escapeHtml(meta.sourceShort || meta.source || source)}. Federal and state returns are shown separately and never summed.</p>${original(meta.source_url || (source==='AEC' ? 'https://transparency.aec.gov.au/' : source==='ECQ' ? 'https://disclosures.ecq.qld.gov.au/' : 'https://disclosures.vec.vic.gov.au/'))}`
   }
   const owned = sponsored?.sponsored[p.pid || p.name] || []

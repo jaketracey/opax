@@ -21,7 +21,7 @@ export function partyMoneyBucketFiles(path,graph){
  for(const node of graph.nodes){
   if(node.kind!=='party')continue;
   const key=partyFold(node.label), bucket=buckets[partyMoneyBucket(key)];
-  if(!(key in bucket))bucket[key]={label:node.label,rows:partyMoneyData(graph,node.id).rows};
+  if(!(key in bucket))bucket[key]={label:node.label,...partyMoneyData(graph,node.id)}; // rows, and scope when the graph is typed
  }
  return buckets.map((parties,i)=>[partyMoneyBucketPath(path,i),{meta:graph.meta,parties}]);
 }

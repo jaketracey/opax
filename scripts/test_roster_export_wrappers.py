@@ -256,8 +256,11 @@ class ShippedIdentityReplayTests(unittest.TestCase):
                 # Explicit catalog aliases reconcile the Dave/David source
                 # spellings, so the reviewed Tollner identity remains supported.
                 self.assertEqual(set(changes),{'Blandthorn','McDermott','Robinson','Crawford'})
+                # 'Tollner' now ships as a print of the person holding its verified id (fold_ids), on both sides.
+                holder = next(p for p in shipped if 'Tollner' in (p.get('prints') or []))
+                self.assertIs(by['Tollner'], by[holder['name']])
                 for field in ('pid', 'full', 'party'):
-                    self.assertEqual(by['Tollner'].get(field),next(p for p in shipped if p['name']=='Tollner').get(field))
+                    self.assertEqual(by['Tollner'].get(field), holder.get(field))
                 print(f'Reviewer replay {scenario}: SHIPPED {len(actual)} records, {len(scoped)}/16 scoped; 4 identity differences / cap25; zero unscoped split identities; Robinson/Crawford below own-service floor',file=sys.stderr)
 
 

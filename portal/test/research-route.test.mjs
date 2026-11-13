@@ -166,13 +166,19 @@ test('failed shadow inference never invokes a second planner',async()=>{
  h.env.RESEARCH_LOOP='shadow';const fake=new MockLanguageModelV4({doGenerate:()=>{throw Error('fixture provider failure')}});globalThis.__researchModel=fake;const before=plannerCalls;
  await(await post()).text();await flush();assert.equal(plannerCalls,before+1);assert.equal(fake.doGenerateCalls.length,2,'a failed provider gets one final answer call, which fails too');assert.equal(logs.findLast(r=>r.kind==='research_loop_shadow').loop.failure,'error');
 });
-test('route money and pay calculations are chosen by the agent in JSON and SSE',async()=>{
+test('route money and pay calculations are answered by the calculators before any model turn, in JSON and SSE',async()=>{
  const fixtures=h.env.ASSETS;h.env.ASSETS=realAssets;h.env.RESEARCH_LOOP='route';
  try{for(const [question,tool] of [['Who gets the most from mining?','ranked_money'],['Who is the highest paid politician?','paid_answer'],['who is the highest paid politician in 2005','parliamentary_pay']])for(const stream of [false,true]){
   const historical=question.includes('2005');
   const fake=new MockLanguageModelV4({doGenerate:[reply([call(tool,historical?{as_of:'2026-10-19',limit:1}:{})]),reply([call('answer',{facts:historical?[1,2]:[1]})])]});globalThis.__researchModel=fake;
   const models=modelQuota,plans=plannerCalls,ordinary=ordinaryCalls,aq=quota,response=await post(question,stream,{kind:'all'}),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);
   if(tool==='ranked_money'){assert.equal(body.answer_status,'calculated');assert.equal(body.money_route,'federal-party-ranking-v1');assert.equal(fake.doGenerateCalls.length,0);assert.equal(modelQuota,models);assert.equal(plannerCalls,plans);assert.equal(ordinaryCalls,ordinary);await flush();continue}
+  // Pay, current or dated, is calculated (paid_answer), as on the ordinary path: no model turn, no planner, no fallback.
+  assert.equal(body.answer_status,'calculated',JSON.stringify({s:body.answer_status,a:body.answer.slice(0,400)}));assert.equal(body.pay_answer,true);assert.equal(fake.doGenerateCalls.length,0);assert.equal(modelQuota,models);assert.equal(plannerCalls,plans);assert.equal(ordinaryCalls,ordinary);
+  assert.equal(body.research.mode,'loop');assert.deepEqual(body.research.trail.map(t=>t.tool),['paid_answer']);
+  if(historical){assert.match(body.answer,/John Howard/);assert.match(body.answer,/277,602/);assert.match(body.answer,/288,990/);assert.doesNotMatch(body.answer,/622,102|Anthony Albanese|Salaries as at 19 October 2026/);}
+  else assert.match(body.answer,/Anthony Albanese.*\$622,102/);
+  await flush();continue
   assert.equal(body.research.mode,'loop',JSON.stringify({research:body.research,prompt:fake.doGenerateCalls[1]?.prompt.slice(-3),logs:logs.slice(-1)}));assert.equal(fake.doGenerateCalls.length,3);assert.equal(modelQuota,models+3);assert.equal(quota,aq+1);assert.equal(plannerCalls,plans);assert.equal(ordinaryCalls,ordinary);assert.ok(body.research.trail.some(t=>t.tool===tool));
   assert.deepEqual(answerStyleChecks(question,body.answer),{no_tool_echo:'pass',no_duplicates:'pass',direct_first_sentence:'pass'},JSON.stringify({question,answer:body.answer}));
   if(historical){assert.match(body.answer,/John Howard/);assert.match(body.answer,/277,602/);assert.match(body.answer,/288,990/);assert.doesNotMatch(body.answer,/622,102|Anthony Albanese|Salaries as at 19 October 2026/);}await flush();
@@ -187,13 +193,17 @@ test('route Census answers require the agent to call and select the electorate t
   assert.equal(body.research.mode,'loop',JSON.stringify({research:body.research,prompt:fake.doGenerateCalls[1]?.prompt.slice(-3),logs:logs.slice(-1)}));assert.equal(fake.doGenerateCalls.length,3);assert.equal(modelQuota,models+3);assert.ok(body.research.trail.some(t=>t.tool==='electorates'));await flush();
  }}finally{h.env.ASSETS=previous;}
 });
-test('moved salary route keeps the request, model and daily budget guards',async()=>{
+test('moved salary route keeps the request guard; a calculated salary answer spends no model budget',async()=>{
  h.env.RESEARCH_LOOP='route';const limiter=h.env.ASK_LIMITER,ml=h.env.MODEL_LIMITER,oldDaily=h.env.RESEARCH_LOOP_DAILY_USD;
  const q='who is the highest paid politician in 2005';
  try{
   h.env.ASK_LIMITER={limit:async()=>({success:false})};let fake=counted();globalThis.__researchModel=fake;assert.equal((await post(q)).status,429);assert.equal(fake.doGenerateCalls.length,0);
-  h.env.ASK_LIMITER=limiter;h.env.MODEL_LIMITER={limit:async()=>({success:false})};fake=counted();globalThis.__researchModel=fake;const exhausted=await(await post(q,false,{kind:'all'})).json();assert.equal(fake.doGenerateCalls.length,0);assert.ok(exhausted.error || !/John Howard:|Coverage:/.test(exhausted.answer));if(exhausted.research)assert.equal(exhausted.research.failure,'limiter');
-  h.env.MODEL_LIMITER=ml;h.env.RESEARCH_LOOP_DAILY_USD='0';fake=counted();globalThis.__researchModel=fake;const capped=await(await post(q,false,{kind:'all'})).json();assert.equal(fake.doGenerateCalls.length,0);assert.ok(capped.error || !/John Howard:|Coverage:/.test(capped.answer));if(capped.research)assert.equal(capped.research.failure,'daily_budget');
+  h.env.ASK_LIMITER=limiter;h.env.MODEL_LIMITER={limit:async()=>({success:false})};fake=counted();globalThis.__researchModel=fake;const exhausted=await(await post(q,false,{kind:'all'})).json();assert.equal(fake.doGenerateCalls.length,0);
+  // The dated salary is calculated before any model turn, so the model limiter and the daily model budget have nothing to stop.
+  assert.equal(exhausted.answer_status,'calculated');assert.match(exhausted.answer,/John Howard/);assert.equal(exhausted.research.failure,undefined);assert.equal(exhausted.research.cost_usd,0);
+  h.env.MODEL_LIMITER=ml;h.env.RESEARCH_LOOP_DAILY_USD='0';fake=counted();globalThis.__researchModel=fake;const capped=await(await post(q,false,{kind:'all'})).json();assert.equal(fake.doGenerateCalls.length,0);assert.equal(capped.answer_status,'calculated');assert.match(capped.answer,/John Howard/);
+  // A question the calculator cannot take still meets both model guards.
+  h.env.MODEL_LIMITER={limit:async()=>({success:false})};delete h.env.RESEARCH_LOOP_DAILY_USD;fake=counted();globalThis.__researchModel=fake;const guarded=await(await post('What did the Treasurer say about wages policy?',false,{kind:'all'})).json();assert.equal(fake.doGenerateCalls.length,0);if(guarded.research)assert.equal(guarded.research.failure,'limiter');
  }finally{h.env.ASK_LIMITER=limiter;h.env.MODEL_LIMITER=ml;h.env.RESEARCH_LOOP_DAILY_USD=oldDaily;}
 });
 test('ordinary loop timeout gives fallback its full budget beyond the former 40s request deadline, JSON and SSE',async()=>{
@@ -237,7 +247,10 @@ test('failed research constrains ordinary money and senator fallbacks before cal
  try{for(const stream of [false,true])for(const question of ['Who gets the most from mining in 2005?','Who was the highest paid senator in 2005?']){
   const raw=await(await post(question,stream,{kind:'all',from:'2024',to:'2024',...(question.includes('senator')?{chamber:'senate'}:{})})).text()
   assert.doesNotMatch(raw,/786,999|622,102|2024–25|Prime Minister/);assert.ok(/2005|error/.test(raw))
-  assert.doesNotMatch(raw,/Coverage:|a year as .*; base|\| Party \|/)
+  // The dated pay calculator answers a historical senator ranking before any model turn, with its data limit stated;
+  // a model-written fallback never echoes a calculator's rows.
+  if(question.includes('senator'))assert.match(raw,/OPAX’s pay records cover 2005-01-01 to 2005-12-31|OPAX's pay records cover 2005-01-01 to 2005-12-31/);
+  else assert.doesNotMatch(raw,/Coverage:|a year as .*; base|\| Party \|/)
   await flush()
  }}finally{h.env.ASSETS=assets;h.env.MODEL_LIMITER=limiter}
 });

@@ -22,7 +22,7 @@ class Rewriter {
   transform(response){const handlers=this.handlers;return new Response(new ReadableStream({async start(controller){
     let html=await response.text();
     for(const [selector,handler] of handlers){
-      const mutate=(outer,open,inner,close)=>{let attr=open,body=inner,removed=false;const el={setAttribute(name,value){const re=new RegExp(` ${name}="[^"]*"`);const next=` ${name}="${escapeHtml(value)}"`;attr=re.test(attr)?attr.replace(re,next):attr.replace(/>$/,next+'>');},setInnerContent(value,opts){body=opts?.html?value:escapeHtml(value);},append(value){body+=value;},prepend(value){body=value+body;},remove(){removed=true;}};handler.element(el);return removed?'':attr+body+close;};
+      const mutate=(outer,open,inner,close)=>{let attr=open,body=inner,removed=false;const el={getAttribute(name){const m=new RegExp(` ${name}="([^"]*)"`).exec(attr);return m?m[1]:null;},setAttribute(name,value){const re=new RegExp(` ${name}="[^"]*"`);const next=` ${name}="${escapeHtml(value)}"`;attr=re.test(attr)?attr.replace(re,next):attr.replace(/>$/,next+'>');},setInnerContent(value,opts){body=opts?.html?value:escapeHtml(value);},append(value){body+=value;},prepend(value){body=value+body;},remove(){removed=true;}};handler.element(el);return removed?'':attr+body+close;};
       if(selector==='main#main')html=html.replace(/(<main\b[^>]*>)([\s\S]*?)(<\/main>)/,mutate);
       else if(selector==='div#crawl-facts')html=html.replace(/(<div\b[^>]*id="crawl-facts"[^>]*>)([\s\S]*?)(<\/div>)/,mutate);
       else if(selector==='title')html=html.replace(/(<title>)([\s\S]*?)(<\/title>)/,mutate);
@@ -279,24 +279,27 @@ test('mobile voting asset retains schema 1 and the shipped per-person keys',asyn
 });
 test('affected person notice is served before JavaScript and its methods link resolves', async () => {
   const html = await get('/subject/person/anthony-albanese');
-  assert.match(html, /814 earlier transcripts include this member alongside others and aren't counted yet\./);
+  assert.match(html, /814 earlier transcripts also record this member, alongside other speakers\. They join these speeches once each speaker’s words are separated\./);
+  assert.doesNotMatch(html, /aren't counted yet/);
+  // The note sits with the speeches it qualifies, after the head's party and representation.
+  assert.ok(html.indexOf('person-held-back') > html.indexOf('Party and representation'));
   assert.match(html, /href="\/methods#speaker-attribution"/);
   const methods = await get('/methods');
   assert.match(methods, /id="speaker-attribution"/);
   assert.match(methods, /fuller split into individual\s+speaking turns is planned/);
   const unverified = await get('/subject/person/anthony-albanese?attribution=unattributed');
-  assert.doesNotMatch(unverified, /person-held-back|aren't counted yet/);
+  assert.doesNotMatch(unverified, /person-held-back|earlier transcripts/);
 });
 test('chair-only and overlapping notices are served before JavaScript', async () => {
   for (const [slug, count] of [['milton-dick', '1,658'], ['john-hogg', '2,418']]) {
     const html = await get(`/subject/person/${slug}`);
-    assert.ok(html.includes(`${count} transcripts record this member presiding in the chair and aren't counted as their own speeches.`));
+    assert.ok(html.includes(`${count} transcripts record this member presiding in the chair. They are kept apart from their own speeches.`));
     assert.doesNotMatch(html, /person-held-back/);
     assert.match(html, /href="\/methods#speaker-attribution"/);
   }
   const both = await get('/subject/person/sue-lines');
-  assert.match(both, /11 earlier transcripts include this member alongside others and aren't counted yet\./);
-  assert.match(both, /1,659 transcripts record this member presiding in the chair and aren't counted as their own speeches\./);
+  assert.match(both, /11 earlier transcripts also record this member, alongside other speakers\. They join these speeches once each speaker’s words are separated\./);
+  assert.match(both, /1,659 transcripts record this member presiding in the chair\. They are kept apart from their own speeches\./);
   const methods = await get('/methods');
   assert.match(methods, /Chair-role transcripts record a member\s+presiding over proceedings/);
   const unverified = await get('/subject/person/sue-lines?attribution=unattributed');
@@ -417,6 +420,12 @@ test('page aliases, including combined www/path aliases, redirect once to an exp
     ['/subject/person/jess-pugh','/subject/person/pugh'],['/subject/person/scott-stewart','/subject/person/stewart'],
     // A surname print folded into its person (scripts/roster_fold.py) forwards to the person.
     ['/subject/person/Shoebridge','/subject/person/david-shoebridge'],['/subject/person/shoebridge','/subject/person/david-shoebridge'],
+    // A row folded into the person holding its verified id (fold_ids) keeps its old address as a forward:
+    // its own slug, its printed name, and the suffixed slug a spelling twin held.
+    ['/subject/person/mark-christopher-butler','/subject/person/mark-butler'],['/subject/person/Mark%20Christopher%20Butler','/subject/person/mark-butler'],
+    ['/subject/person/katter-bob-jnr','/subject/person/bob-katter'],['/subject/person/robert-baldwin','/subject/person/bob-baldwin'],
+    ['/subject/person/deb-oneill','/subject/person/deborah-oneill'],
+    ['/subject/person/brendan-oconnor-4272656e64616e204f2019436f6e6e6f72','/subject/person/brendan-oconnor'],
     ['/subject/person/BRUCE-BAIRD/','/subject/person/bruce-baird'],
     ['/person/Bruce%20Baird','/subject/person/bruce-baird'],
     ['/subject/mp/Bruce%20Baird','/subject/person/bruce-baird'],
@@ -591,16 +600,56 @@ test('an address nothing answers gets the site page, noindex, with a way on; a m
     const response=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});
     assert.equal(response.status,404,path);assert.equal(response.headers.get('x-robots-tag'),'noindex',path);
     const html=await response.text();
-    assert.match(html,/<title>Page not found · OPAX<\/title>/,path);
+    assert.match(html,/<title>Nothing at this address · OPAX<\/title>/,path);
     assert.match(html,/<nav class="crumbs prerender-crumbs"[^>]*>.*<span class="crumb-label">Page not found<\/span>/s,path);
-    assert.match(html,/<h1>Page not found<\/h1><p>Nothing is published at this address\. Search the record, or start again from the home page\.<\/p><p><a href="\/ask\?view=search">Search the record<\/a> · <a href="\/">Home<\/a><\/p>/,path);
+    // The one not-found block (public/not-found.js): a title, one line, the search and a way home.
+    assert.match(html,/<section class="not-found" data-not-found="page"[^>]*><div class="not-found-art" aria-hidden="true"><\/div><h1 id="not-found-title" tabindex="-1">Nothing at this address<\/h1><p class="not-found-line">The link may be old, or the record may not be published yet\.<\/p><form class="not-found-search" action="\/ask" method="get" role="search">/,path);
+    assert.match(html,/<a class="ui-button" href="\/">Go to the home page<\/a>/,path);
     // The canonical goes with the status; the app scripts go in the real HTMLRewriter (not modelled here).
     assert.doesNotMatch(html,/rel="canonical"/,path);
   }
   for(const path of ['/no-such-script.js','/missing.png']){
     const response=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});
-    assert.equal(response.status,404,path);assert.doesNotMatch(await response.text(),/Page not found · OPAX/,path);
+    assert.equal(response.status,404,path);assert.doesNotMatch(await response.text(),/Nothing at this address · OPAX/,path);
   }
+});
+test('every empty record address is the one not-found block, served without the app, still a 404',async()=>{
+  const index=await read('/graph/donor-index.json');
+  const cases=[
+    ['/this-page-does-not-exist','Nothing at this address','this page does not exist','/'],
+    ['/subject/person/zz-nobody-here','No parliamentarian at this address','zz nobody here','/subject/person'],
+    ['/subject/donor/Zzqx%20Nobody%20Pty%20Ltd','No donor by this name','Zzqx Nobody Pty Ltd','/subject/donor'],
+    ['/bill/au-federal-r99999','No bill at this address','','/bills'],
+    ['/doc/division-federal-senate-9999999','No division at this address','','/bills'],
+    ['/subject/electorate/federal-representatives-nsw-nowhere','No electorate at this address','nowhere','/subject/electorate'],
+    ['/money/grants/federal/recipient/abn:00000000000','No grant recipient at this address','','/money/grants'],
+  ];
+  for(const [path,title,words,pill] of cases){
+    const response=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});
+    assert.equal(response.status,404,path);
+    const html=await response.text();
+    const block=html.slice(html.indexOf('<section id="prerender"'),html.indexOf('</section></section>')+20);
+    assert.match(block,new RegExp(`<h1 id="not-found-title" tabindex="-1">${title}</h1>`),path);
+    assert.match(html,new RegExp(`<title>${title} · OPAX</title>`),`${path}: the tab says what the heading says`);
+    assert.ok(block.includes(`name="q" type="search" value="${words}"`),path);
+    assert.ok(block.includes(`<a class="ui-button" href="${pill}">`),path);
+    // No profile shell, no source line, no alarm, never the raw identifier.
+    assert.doesNotMatch(block,/subject-portrait|ui-source|role="alert"|r99999|9999999|00000000000|zz-nobody-here/,path);
+    assert.doesNotMatch(html,/<script[^>]*src="\/(?:app|spa-entry|spa-shell)\.js/,path);
+    assert.match(html,/<link rel="stylesheet" href="\/not-found\.css"[^>]*><script type="module" src="\/not-found\.js"><\/script>/,path);
+    assert.match(html,/<meta name="robots" content="noindex">/,path);
+  }
+  // A donor name any return holds keeps its page (Jake, 16 Oct): one outside the money map's own donors.
+  const graphs=new Set();
+  for(const path of ['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json','/graph/money.tas.json'])
+    for(const n of (await read(path)).nodes) if(n.kind==='donor') graphs.add(n.label);
+  const once=index.donors.find(d=>!graphs.has(d.label) && (d.returnReferences||[]).length===1 && /^[\w .&'-]+$/.test(d.label));
+  assert.ok(once,'a donor in one return, outside the map');
+  const kept=await worker.fetch(new Request(origin+'/subject/donor/'+encodeURIComponent(once.label)),env,{waitUntil(){}});
+  assert.equal(kept.status,200,once.label);
+  const keptHtml=await kept.text();
+  assert.doesNotMatch(keptHtml,/data-not-found/,once.label);
+  assert.match(keptHtml,/<script[^>]*src="\/app\.js/,once.label);
 });
 test('/privacy and /support are served whole, from their panels, with canonical links',async()=>{
   const types=['Email Address','User ID','Audio Data','Other User Content','Product Interaction','Search History','Other Diagnostic Data'];

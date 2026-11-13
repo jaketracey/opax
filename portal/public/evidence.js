@@ -1,4 +1,4 @@
-import { personUrl, partyUrl } from './canonical-urls.js?v=6c889d487d';
+import { personUrl, partyUrl } from './canonical-urls.js?v=e32f13c6c8';
 /* Source-backed connections. Only unambiguous identities are displayed. */
 import {shortDate} from './format.js';
 import { evidenceDateHTML } from './evidence-date.js';
@@ -32,6 +32,8 @@ function sourceContent(row) {
   const values=[['Recipient',fields.recipient,'recipient'],['Recorded amount',fields.amount==null?null:Number(fields.amount).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0})],['Program',fields.program,'program'],['Agency',fields.agency],['Recorded place',[fields.suburb,fields.state?.toUpperCase(),fields.postcode].filter(Boolean).join(', '),'place']];
   return `<dl class="evidence-fields">${values.filter(([,value])=>value).map(([label,value,field])=>`<div><dt>${esc(label)}</dt><dd>${/^[a-f0-9]{24}$/.test(row.links?.[field] || '')?`<a href="/connections?entity=${row.links[field]}">${esc(value)}</a>`:esc(value)}</dd></div>`).join('')}</dl>`;
 }
+/** A record page shows its connections from three records up. */
+export const MIN_RECORDS=3;
 /** One connection's panel. `options.meta` (the export's stats) dates it at its foot;
  *  `options.plain` dates it as a note line instead (see evidenceDateHTML). */
 export function evidenceHTML(entry, options={}) {
@@ -47,7 +49,7 @@ export function evidenceHTML(entry, options={}) {
     ${(entry.representatives || []).length?`<details class="evidence-locations"><summary>Speakers recorded for this electorate</summary><ul>${entry.representatives.slice(0,15).map(person=>`<li><a href="${personUrl(person.name)}">${esc(person.name)}</a><small>${Number(person.records).toLocaleString('en-AU')} speeches carrying this electorate in their source fields · ${esc(person.first_date)} to ${esc(person.last_date)}</small></li>`).join('')}</ul><p class="fineprint">Speech metadata, not a list of current officeholders or verified terms of office.</p></details>`:''}
     ${(entry.identity_links || []).length?`<details class="evidence-locations"><summary>How the identities connect</summary><ul>${entry.identity_links.map(link=>`<li>${esc(link.name)} · ABN ${esc(link.abn)}<small>Exact full name matched to a source identity with a validated ABN.</small><details><summary>Source records</summary><pre>${esc(JSON.stringify({source:link.source_records,matched:link.matching_records},null,2))}</pre></details></li>`).join('')}</ul></details>`:''}
     <p><a href="/connections?entity=${encodeURIComponent(entry.id || '')}">Explore connections, programs and places</a></p>
-    <p class="fineprint">Connections come from recorded names and locations. They do not establish influence. Some of these records are not searchable yet.</p>${evidenceDateHTML(options.meta,{plain:options.plain})}`;
+    <p class="fineprint">Connections come from recorded names and locations. They do not establish influence.</p>${evidenceDateHTML(options.meta,{plain:options.plain})}`;
 }
 export async function mountEvidence(root, identity, options={}) {
   const lookup=identity.abn ? 'abn:'+String(identity.abn).replace(/\s/g,'') : nameKey(identity.name);
@@ -68,6 +70,8 @@ export async function mountEvidence(root, identity, options={}) {
     const data=await read(`/evidence/${ids[0].slice(0,2)}.json`,options.signal);
     const entry=data?.entries?.[ids[0]];
     if (!entry || options.alive && !options.alive()) return false;
+    // Fewer than three records is not yet a picture of connections: the block stays out.
+    if (!(Number(entry.records) >= MIN_RECORDS)) { root.hidden=true; return false; }
     const meta=await dated;
     if (options.alive && !options.alive()) return false;
     root.innerHTML=evidenceHTML(options.compact ? {...entry, years:{},locations:[],excerpts:entry.excerpts.slice(0,2)} : entry, {meta, plain:options.compact});
