@@ -73,6 +73,8 @@ jest.mock('expo-router', () => {
     useRootNavigationState: () => ({ key: 'root' }),
     useNavigationContainerRef: () => ({ isReady: () => false }),
     useSegments: () => [],
+    // Screens load inside the tests, after the shared preview patch runs.
+    useIsPreview: () => false,
   };
 });
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
