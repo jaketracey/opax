@@ -114,3 +114,23 @@ test('robodebt, second run: the model point reporting the Royal Commission leads
   assert.match(cited(out,'fact-22/t/body/0')[0],/^The Royal Commission into the Robodebt Scheme was established by Letters Patent/)
   assert.match(cited(out,'speech-1594111/t/body/0-648')[0],/^Mark Dreyfus told the House/)
 })
+
+test('robodebt, third run: "The commission was established …" restates the record opening; a Royal Commission point leads',()=>{
+  // Line 0 is the model's uncited point; lines 1 to 6 are the writer's record prose; lines 7 to 12 are the model's points.
+  const {question,payload,points}=recompose('event-01-run3',[0,7,8,9,10,11,12])
+  const out=api.leadWithModelAnswer(payload,points,question)
+  const [first]=sentences(out.answer)
+  assert.match(first,/^The royal commission described robodebt as a crude and cruel mechanism/,first)
+  assert.doesNotMatch(first,/National Anti-Corruption Commission|NACC|cleared/)
+  for(const date of ['18 August 2022','7 July 2023'])assert.equal(out.answer.split(date).length-1,1,date)
+  assert.doesNotMatch(out.answer,/^The commission was established/m)
+  assert.match(cited(out,'fact-4/t/body/0')[0],/^The Royal Commission into the Robodebt Scheme was established/)
+})
+
+test('an inquiry opening is recognised by name or as "the commission"; a finding it reports is not a restatement',()=>{
+  const record='The Royal Commission into the Example Scheme was established on 1 March 2022.'
+  const points='The commission was established by Letters Patent on 1 March 2022.\nTaylor Example told the House the Example Integrity Commission cleared the minister.\nThe royal commission found the scheme unlawful.'
+  const answer=record+'\n'+points
+  const out=api.leadWithModelAnswer({answer,citations:{'fact-1/t/body/0':[[0,Array.from(record).length]]}},{answer:points,citations:{}},'Who was responsible for the Example Scheme?')
+  assert.equal(out.answer,'The royal commission found the scheme unlawful.\n\nThe Royal Commission into the Example Scheme was established on 1 March 2022.\n\nTaylor Example told the House the Example Integrity Commission cleared the minister.')
+})

@@ -60,13 +60,16 @@ const QUANTITATIVE_QUESTION=/\bhow (?:many|much)\b|\b(?:most|highest|lowest|leas
 // The kind of inquiry a record opening names ("The Royal Commission into the Robodebt Scheme" is a royal commission).
 const INQUIRY_KIND=/\b(?:commission|inquiry|review|audit|investigation|report)\b/i
 const escapeRegExp=(text:string)=>text.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
-/** Words that refer to the inquiry a record opening is about: its name before "into …" and "the <kind>"
- * ("Royal Commission", "the commission"). Null when the opening is not about an inquiry. */
-function inquiryReference(subject:string):RegExp|null {
+/** How a sentence refers to the inquiry a record opening is about: by its name before "into …" or as "the <kind>"
+ * ("Royal Commission", "the commission"). `mentions` finds it anywhere; `opens` finds a sentence that has it as its
+ * subject and describes it ("The commission was established …"), which restates the record's opening. Null when the
+ * opening is not about an inquiry. */
+function inquiryReference(subject:string):{mentions:RegExp;opens:RegExp}|null {
   const head=subject.replace(/\s+(?:into|of|on|for)\b.*$/i,'').replace(/^the\s+/i,'').trim()
   if(!head||!INQUIRY_KIND.test(head))return null
-  const kind=head.split(/\s+/).pop()!
-  return new RegExp(`\\b${escapeRegExp(head)}|\\bthe ${escapeRegExp(kind)}(?![a-z])`,'i')
+  const name=`(?:${escapeRegExp(head)}|${escapeRegExp(head.split(/\s+/).pop()!)})`
+  return {mentions:new RegExp(`\\b${escapeRegExp(head)}|\\bthe ${name}(?![a-z])`,'i'),
+    opens:new RegExp(`^(?:[-*]\\s*)?(?:the\\s+)?${name}(?![a-z])(?:\\s+(?:into|of|on|for)\\s[^,.]*?)?(?:,\\s|\\s+(?:is|was|are|were)\\s)`,'i')}
 }
 const firstSentence=(text:string)=>sentenceParts(text)[0]?.text??''
 const subjectOf=(sentence:string)=>{const m=/^(?:[-*]\s*)?((?:[A-Z][\w’'-]*|of|into|the|for|on|and)(?:\s+(?:[A-Z][\w’'-]*|of|into|the|for|on|and)){1,9})(?=,\s|\s+(?:is|was|are|were)\s)/.exec(sentence);return m?m[1]:''}
@@ -122,13 +125,13 @@ export function leadWithModelAnswer<T extends Record<string,unknown>>(payload:T,
   // The record's opening (an inquiry's dates and commissioner, a person's seat) is said once: a model point that
   // restates it goes when uncited or when the record sentence carries the citation; a cited lead keeps only what it adds.
   const recordOpening=firstSentence(record[0].text),recordCited=record[0].ids.length>0
-  const restating=new Set(modelLines.filter(l=>restatesOpening(firstSentence(l.text),recordOpening)))
+  const inquiry=inquiryReference(subjectOf(recordOpening))
+  const restating=new Set(modelLines.filter(l=>restatesOpening(firstSentence(l.text),recordOpening)||!!inquiry?.opens.test(firstSentence(l.text))))
   const candidates=modelLines.filter(l=>!restating.has(l)||l.ids.length>0)
   if(!candidates.length)return payload
   // The model's first point leads, unless the record opens with an inquiry: then the first of its points that reports
   // that inquiry (its findings, its report, its commissioner) leads, so another body's view never comes first.
-  const inquiry=inquiryReference(subjectOf(recordOpening))
-  const lead=(inquiry&&candidates.find(l=>!restating.has(l)&&inquiry.test(l.text)))||candidates[0]
+  const lead=(inquiry&&candidates.find(l=>!restating.has(l)&&inquiry.mentions.test(l.text)))||candidates[0]
   let rewrite:string|null=null
   if(restating.has(lead)){const merged=mergedRestatement(firstSentence(lead.text),recordOpening);if(merged)rewrite=merged}
   const dropped=new Set([...restating].filter(l=>l!==lead&&(!l.ids.length||recordCited)))

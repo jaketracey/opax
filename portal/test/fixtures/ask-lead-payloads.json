@@ -383,5 +383,175 @@
     "speaker": "Stephen Bates"
    }
   ]
+ },
+ "event-01-run3": {
+  "question": "Who was responsible for robodebt?",
+  "answer": "The commission was established by Letters Patent on 18 August 2022 and delivered its final report on 7 July 2023.\n\nThe Royal Commission into the Robodebt Scheme was established by Letters Patent on 18 August 2022 and its final report was dated 7 July 2023, with Catherine Holmes AC SC named as Royal Commissioner.\n\nThe Royal Commission's report loaded 57 recommendations, with 0 government response or implementation documents listed, and 47 hearing transcripts listed as documents, which are evidence rather than findings.\n\nFollowing the Royal Commission's referrals, the National Anti-Corruption Commission's Operation Myrtleford investigation report, published in March 2026, records 6 findings or opinions and states it makes no recommendations.\n\nIn that report, the National Anti-Corruption Commission found that Mr Withnell engaged in corrupt conduct because he knew and intended that automatic default averaging would be central to OCI, and by representing to Mr Kimber and Mr McBride that OCI would not involve averaging he engaged in deliberate conduct designed to mislead them and, through them, DSS.\n\nThe National Anti-Corruption Commission found that Ms Wilson engaged in corrupt conduct by intentionally misleading, or attempting to mislead, the Ombudsman, amounting to dishonest performance of her official functions.\n\nThe National Anti-Corruption Commission found that Ms Halbert, Ms Musolino, Ms Campbell and Mr Morrison each did not engage in corrupt conduct.\n\nThe National Anti-Corruption Commission's Operation Myrtleford report found Mr Withnell engaged in corrupt conduct for deliberately misleading Mr Kimber and Mr McBride about averaging in the scheme's income calculations.\n\nThe NACC found Ms Wilson engaged in corrupt conduct by intentionally misleading, or attempting to mislead, the Ombudsman, which amounted to dishonest performance of her official functions.\n\nThe NACC cleared Ms Halbert, Ms Musolino, Ms Campbell and Mr Morrison, finding each did not engage in corrupt conduct.\n\nZali Steggall told the House that the two officials' serious corrupt conduct findings left major unfinished business on robodebt.\n\nThe scheme was put forward as a budget measure in 2015 and found unlawful by the Federal Court in late 2019.\n\nThe royal commission described robodebt as a crude and cruel mechanism, neither fair nor legal.",
+  "citations": {
+   "fact-4/t/body/0": [
+    [
+     115,
+     313
+    ]
+   ],
+   "fact-5/t/body/0": [
+    [
+     115,
+     313
+    ]
+   ],
+   "fact-6/t/body/0": [
+    [
+     115,
+     313
+    ]
+   ],
+   "fact-2/t/body/0": [
+    [
+     315,
+     523
+    ]
+   ],
+   "fact-12/t/body/0": [
+    [
+     525,
+     749
+    ]
+   ],
+   "fact-19/t/body/0": [
+    [
+     751,
+     1110
+    ]
+   ],
+   "fact-20/t/body/0": [
+    [
+     1112,
+     1331
+    ]
+   ],
+   "fact-21/t/body/0": [
+    [
+     1333,
+     1476
+    ]
+   ],
+   "fact-22/t/body/0": [
+    [
+     1333,
+     1476
+    ]
+   ],
+   "fact-23/t/body/0": [
+    [
+     1333,
+     1476
+    ]
+   ],
+   "fact-24/t/body/0": [
+    [
+     1333,
+     1476
+    ]
+   ],
+   "speech-1201173/t/body/0-643": [
+    [
+     2010,
+     2139
+    ]
+   ],
+   "speech-1553201/t/body/0-646": [
+    [
+     2141,
+     2249
+    ]
+   ],
+   "speech-1553204/t/body/0-646": [
+    [
+     2251,
+     2346
+    ]
+   ]
+  },
+  "sources": [
+   {
+    "resource": "fact-4",
+    "kind": "record",
+    "title": "Royal Commission into the Robodebt Scheme: \"established by Letters Patent on 18 August 2022\" (Report of the Royal Commission into the Robodebt Scheme, page 11)."
+   },
+   {
+    "resource": "fact-5",
+    "kind": "record",
+    "title": "Royal Commission into the Robodebt Scheme commissioners as Report of the Royal Commission into the Robodebt Scheme names them: Catherine Holmes AC SC (Royal Commissioner)."
+   },
+   {
+    "resource": "fact-6",
+    "kind": "record",
+    "title": "Report of the Royal Commission into the Robodebt Scheme (dated 7 July 2023)."
+   },
+   {
+    "resource": "fact-2",
+    "kind": "record",
+    "title": "Royal Commission into the Robodebt Scheme (royal commission, Commonwealth): established 18 August 2022, final report 7 July 2023. 57 recommendations loaded; 0 government response or implementation documents listed; 47 hearing transcripts listed as documents (evidence, not findings)."
+   },
+   {
+    "resource": "fact-12",
+    "kind": "record",
+    "title": "National Anti-Corruption Commission (NACC) published an investigation report in March 2026 (month taken from the publisher's file path), \"Operation Myrtleford investigation report\" (Operation Myrtleford). OPAX holds 6 findings or opinions from it. The report says it makes no recommendations."
+   },
+   {
+    "resource": "fact-19",
+    "kind": "record",
+    "title": "National Anti-Corruption Commission (NACC), \"Operation Myrtleford investigation report\", Operation Myrtleford Investigation Report, page 440, Determination: Determination [finding]: \"With respect to the referral made by the Royal Commission in relation to Mr Withnell, I am satisfied that Mr Withnell engaged in corrupt conduct because at all relevant times, Mr Withnell knew and intended that automatic default averaging would be central to OCI, and I am satisfied that, by representing to Mr Kimber and Mr McBride that OCI would not involve averaging, Mr Withnell engaged in deliberate conduct that was designed to mislead Mr Kimber and Mr McBride, and, through them, DSS. This amounted to corrupt conduct within the meaning of section 8(1)(a) and further or alternatively section 8(1)(b) of the NACC Act.\""
+   },
+   {
+    "resource": "fact-20",
+    "kind": "record",
+    "title": "National Anti-Corruption Commission (NACC), \"Operation Myrtleford investigation report\", Operation Myrtleford Investigation Report, page 440, Determination: Determination [finding]: \"With respect to the referral made by the Royal Commission in relation to Ms Wilson, I am satisfied that Ms Wilson engaged in corrupt conduct by intentionally misleading, or attempting to mislead, the Ombudsman. Ms Wilson’s conduct in so misleading or attempting to mislead the Ombudsman amounted to dishonest performance by Ms Wilson of her official functions or duties as a public official and further, or alternatively, the dishonest exercise of her official functions or duties as a public official for the improper purpose of misleading the Ombudsman, and therefore was corrupt conduct within the meaning of section 8(1)(a) and further, or alternatively, section 8(1)(b) of the NACC Act.\""
+   },
+   {
+    "resource": "fact-21",
+    "kind": "record",
+    "title": "National Anti-Corruption Commission (NACC), \"Operation Myrtleford investigation report\", Operation Myrtleford Investigation Report, page 440, Determination: Determination [no_finding]: \"With respect to the referral made by the Royal Commission in relation to Ms Halbert, I am satisfied that Ms Halbert did not engage in corrupt conduct.\""
+   },
+   {
+    "resource": "fact-22",
+    "kind": "record",
+    "title": "National Anti-Corruption Commission (NACC), \"Operation Myrtleford investigation report\", Operation Myrtleford Investigation Report, page 440, Determination: Determination [no_finding]: \"With respect the referral made by the Royal Commission in relation to Ms Musolino, I am satisfied that Ms Musolino did not engage in corrupt conduct.\""
+   },
+   {
+    "resource": "fact-23",
+    "kind": "record",
+    "title": "National Anti-Corruption Commission (NACC), \"Operation Myrtleford investigation report\", Operation Myrtleford Investigation Report, page 440, Determination: Determination [no_finding]: \"With respect to the referral made by the Royal Commission in relation to Ms Campbell, I am satisfied that Ms Campbell did not engage in corrupt conduct.\""
+   },
+   {
+    "resource": "fact-24",
+    "kind": "record",
+    "title": "National Anti-Corruption Commission (NACC), \"Operation Myrtleford investigation report\", Operation Myrtleford Investigation Report, page 440, Determination: Determination [no_finding]: \"With respect to the referral made by the Royal Commission in relation to Mr Morrison, I am satisfied that Mr Morrison did not engage in corrupt conduct.\""
+   },
+   {
+    "resource": "coverage",
+    "kind": "record",
+    "title": "Coverage of the selected records"
+   },
+   {
+    "resource": "speech-1553201",
+    "kind": "speech",
+    "title": "Kate Thwaites — PRIVATE MEMBERS' BUSINESS — 2023-08-07",
+    "speaker": "Kate Thwaites"
+   },
+   {
+    "resource": "speech-1201173",
+    "kind": "speech",
+    "title": "Zali Steggall — Adjournment — 2026-03-11",
+    "speaker": "Zali Steggall"
+   },
+   {
+    "resource": "speech-1553204",
+    "kind": "speech",
+    "title": "Zoe Daniel — PRIVATE MEMBERS' BUSINESS — 2023-08-07",
+    "speaker": "Zoe Daniel"
+   }
+  ]
  }
 }
