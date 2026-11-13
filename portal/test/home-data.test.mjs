@@ -79,11 +79,11 @@ test('a paused source reads as "Last checked" on the line and keeps its reason i
  assert.match(bills,/Last checked 4 Oct 2026 · <span class="ui-source-name">Parliament of Australia<\/span>/);
  assert.doesNotMatch(bills,/source paused|ui-source-state|data-state/);
  assert.match(bills,/<dt>Site refreshed<\/dt><dd>9 Nov 2026<\/dd>/);
- assert.match(bills,/<dt>Source check<\/dt><dd>parlinfo.aph.gov.au: paused, HTTP 403 verified 2026-10-10; permission requested\. Entries shown are retained from the last successful read, not a current check\.<\/dd>/);
+ assert.match(bills,/<dt>Source check<\/dt><dd>parlinfo\.aph\.gov\.au: paused, HTTP 403 verified 2026-10-10; permission requested\. Entries shown are retained from the last successful read, not a current check\.<\/dd>/);
  assert.doesNotMatch(billsSourceHTML({generated_at:'2026-10-04',bills:[]}),/Last checked|Site refreshed/);
  assert.match(billsSourceHTML({generated_at:'2026-10-04',bills:[]}),/Updated 4 Oct 2026/);
  const declared=declarationsSourceHTML({generated:'2026-10-18',source:'Registers'},refresh);
- assert.match(declared,/Last checked 18 Oct 2026/);assert.doesNotMatch(declared,/source paused/);assert.match(declared,/www.aph.gov.au: paused, HTTP 403\./);
+ assert.match(declared,/Last checked 18 Oct 2026/);assert.doesNotMatch(declared,/source paused/);assert.match(declared,/www\.aph\.gov\.au: paused, HTTP 403\./);
  assert.match(declarationsSourceHTML({generated:'2026-10-18'},{checked_at:'2026-11-09T19:10:54+00:00',source_access:{}}),/Updated 18 Oct 2026/);
  const map=mapSourceHTML(money.meta,refresh);
  assert.match(map,/totals are a floor/);assert.match(map,/<dt>Site refreshed<\/dt><dd>9 Nov 2026<\/dd>/);assert.doesNotMatch(map,/source paused|Last checked/);
