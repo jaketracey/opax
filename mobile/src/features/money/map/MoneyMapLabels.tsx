@@ -12,6 +12,13 @@ import type { LabelSlot } from './labels';
 /** The label box the de-overlap pass assumes, in points at the default size. */
 export const LABEL_WIDTH = 120;
 export const LABEL_HEIGHT = 22;
+/**
+ * The largest text size a name on the map is drawn at, and the most its box
+ * grows: past it a name outgrew its box and broke inside a word
+ * ("Commonwealt / h" at AX3). Names stay hidden from VoiceOver; the panel,
+ * search and the List view say them at the reader's size.
+ */
+export const LABEL_MAX_SCALE = 1.6;
 
 const LabelText = memo(function LabelText({
   text,
@@ -32,6 +39,7 @@ const LabelText = memo(function LabelText({
       <Text
         variant={variant}
         wordSafe
+        maxFontSizeMultiplier={LABEL_MAX_SCALE}
         accessible={false}
         style={[styles.underlay, styles.halo]}
       >
@@ -40,6 +48,7 @@ const LabelText = memo(function LabelText({
       <Text
         variant={variant}
         wordSafe
+        maxFontSizeMultiplier={LABEL_MAX_SCALE}
         accessible={false}
         style={[styles.halo, { color: ink }]}
       >
@@ -50,6 +59,7 @@ const LabelText = memo(function LabelText({
           variant="footnote"
           wordSafe
           tone="inkSoft"
+          maxFontSizeMultiplier={LABEL_MAX_SCALE}
           accessible={false}
           style={styles.halo}
         >
@@ -83,7 +93,9 @@ function Slot({
   width: number;
 }) {
   const { fontScale } = useWindowDimensions();
-  const labelWidth = Math.round(LABEL_WIDTH * Math.min(fontScale, 1.6));
+  const labelWidth = Math.round(
+    LABEL_WIDTH * Math.min(fontScale, LABEL_MAX_SCALE),
+  );
   const style = useAnimatedStyle(() => {
     const sx = slot.x * k.value + tx.value;
     const sy = slot.y * k.value + ty.value;

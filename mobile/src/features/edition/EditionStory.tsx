@@ -354,7 +354,12 @@ function EditionFacts({
           <View key={id} testID={id} style={styles.fact}>
             {fact.type === 'bars' && bars ? (
               <>
-                <Text wordSafe variant="subsectionTitle">
+                <Text
+                  wordSafe
+                  variant="subsectionTitle"
+                  accessibilityRole="header"
+                  testID={`${id}-title`}
+                >
                   {bars.title}
                 </Text>
                 {/* Bars slides are shares: parts of one whole read as one

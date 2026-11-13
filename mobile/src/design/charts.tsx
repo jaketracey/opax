@@ -618,11 +618,37 @@ function BarSeriesContent({
       rhythm.tight * 2
     : 0;
   const plotWidth = Math.max(0, width - gutter);
+  // Each scale value centred on its gridline, inside the plot's height. At
+  // the largest text sizes the 50% value would overlap the 100% one, so the
+  // gridline stands alone there.
+  const scaleTicks = (() => {
+    const ticks = [1, 0.5].map((fraction, index) => {
+      const text = scaleValues[index]!;
+      const textHeight = sizes[scaleKey(text)]?.height ?? 0;
+      return {
+        fraction,
+        text,
+        textHeight,
+        top: Math.max(
+          0,
+          Math.min(
+            plotHeight - textHeight,
+            plotHeight * (1 - fraction) - textHeight / 2,
+          ),
+        ),
+      };
+    });
+    const [full, half] = ticks;
+    return half!.top < full!.top + full!.textHeight + 2 ? [full!] : ticks;
+  })();
   const step = data.length ? plotWidth / data.length : 0;
   const partial = (index: number) =>
     partialFrom !== undefined && index >= partialFrom;
   const yearLabel = (index: number) =>
     partial(index) ? `${data[index]!.label} so far` : data[index]!.label;
+  /** One year as a screen reader says it, on its bar or its table row. */
+  const pointLabel = (index: number) =>
+    `${yearLabel(index)}, ${format(data[index]!.value)}`;
   const keys = data.map(
     (item, index) =>
       `${fontScale}:${index}:${item.label}:${format(item.value)}`,
@@ -675,7 +701,7 @@ function BarSeriesContent({
       accessible={spark || undefined}
       accessibilityLabel={
         spark
-          ? `${tableTitle}. ${data.map((item, index) => `${yearLabel(index)}, ${format(item.value)}`).join('. ')}. ${provenance({ dateRange, citation })}`
+          ? `${tableTitle}. ${data.map((_, index) => pointLabel(index)).join('. ')}. ${provenance({ dateRange, citation })}`
           : tableTitle
       }
       accessibilityActions={tableActions}
@@ -762,41 +788,35 @@ function BarSeriesContent({
             </SizedCanvas>
           </View>
           {!spark
-            ? [1, 0.5].map((fraction, index) => {
-                const height =
-                  sizes[scaleKey(scaleValues[index]!)]?.height ?? 0;
-                return (
-                  <Text
-                    key={fraction}
-                    testID={`bar-series-scale-${fraction}`}
-                    variant="footnote"
-                    tone="inkSoft"
-                    tabular
-                    // In the gutter, never over a bar: centred on its
-                    // gridline, inside the plot's height.
-                    style={{
-                      position: 'absolute',
-                      left: 0,
-                      width: Math.max(0, gutter - rhythm.tight),
-                      top: Math.max(
-                        0,
-                        Math.min(
-                          plotHeight - height,
-                          plotHeight * (1 - fraction) - height / 2,
-                        ),
-                      ),
-                      textAlign: 'right',
-                    }}
-                  >
-                    {scaleValues[index]}
-                  </Text>
-                );
-              })
+            ? scaleTicks.map(({ fraction, text, top }) => (
+                <Text
+                  key={fraction}
+                  testID={`bar-series-scale-${fraction}`}
+                  variant="footnote"
+                  tone="inkSoft"
+                  tabular
+                  // The scale is drawn, not read: each bar says its value.
+                  accessible={false}
+                  accessibilityElementsHidden
+                  importantForAccessibility="no-hide-descendants"
+                  // In the gutter, never over a bar: centred on its
+                  // gridline, inside the plot's height.
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    width: Math.max(0, gutter - rhythm.tight),
+                    top,
+                    textAlign: 'right',
+                  }}
+                >
+                  {text}
+                </Text>
+              ))
             : null}
           {!spark
             ? data.map((item, index) => {
                 const a11y = {
-                  accessibilityLabel: `${yearLabel(index)}, ${format(item.value)}`,
+                  accessibilityLabel: pointLabel(index),
                   accessibilityActions: tableActions,
                   onAccessibilityAction: tableAction,
                 };
@@ -846,7 +866,13 @@ function BarSeriesContent({
       {!spark ? (
         <>
           {values === 'all' && data.length > 1 && !showTable ? (
-            <View testID="bar-series-captions">
+            <View
+              testID="bar-series-captions"
+              // Every bar already says its own value, so the list under the
+              // plot is drawn once and not read a second time.
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants"
+            >
               {data.map((item, index) => (
                 <Text
                   key={`${item.label}:${index}`}
@@ -890,7 +916,14 @@ function BarSeriesContent({
                 {tableTitle}
               </Text>
               {data.map((item, index) => (
-                <View key={`${item.label}:${index}`} style={styles.tableRow}>
+                // A row is one stop, year and value, as its bar is.
+                <View
+                  key={`${item.label}:${index}`}
+                  style={styles.tableRow}
+                  accessible
+                  accessibilityLabel={pointLabel(index)}
+                  testID={`bar-series-row-${index}`}
+                >
                   <Text variant="body" style={styles.tableCell}>
                     {yearLabel(index)}
                   </Text>

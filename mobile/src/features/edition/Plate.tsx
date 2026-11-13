@@ -7,7 +7,7 @@ import type { EditionView } from '../../api/selectors';
 import { yearPictureKey } from '../../api/year-picture-policy';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { VoteSplit } from '../../design/charts';
-import { formatDate } from '../../design/format';
+import { formatDate, spokenFigures } from '../../design/format';
 import { Icon } from '../../design/icon';
 import { Portrait } from '../../design/people';
 import { Text } from '../../design/text';
@@ -289,7 +289,9 @@ export function PlateArt({
         figures[0] ? (
         <View
           accessible
-          accessibilityLabel={`${figures[0].value}, ${figures[0].label}, ${formatDate(edition.date, 'long')}`}
+          accessibilityLabel={spokenFigures(
+            `${figures[0].value}, ${figures[0].label}, ${formatDate(edition.date, 'long')}`,
+          )}
         >
           <Text wordSafe variant="figure" tone="onBand">
             {figures[0].value}

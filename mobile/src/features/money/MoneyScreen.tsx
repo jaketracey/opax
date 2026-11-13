@@ -11,6 +11,7 @@ import {
   useState,
 } from 'react';
 import {
+  AccessibilityInfo,
   BackHandler,
   Platform,
   RefreshControl,
@@ -29,6 +30,7 @@ import { ReservedRegionArea, useReservedRegions } from '../../design/fold-area';
 import type { RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
 import { copy } from '../../design/copy';
+import { requestFocus } from '../../design/keyboard';
 import {
   counted,
   formatCount,
@@ -72,6 +74,7 @@ import { MoneyMapLegend } from './map/MoneyMapLegend';
 import {
   MoneyMapPanel,
   focusFlows,
+  focusMetaLine,
   type PanelFocus,
 } from './map/MoneyMapPanel';
 import { MoneyMapSearch } from './map/MoneyMapSearch';
@@ -663,6 +666,17 @@ function MapMode({
     setFocus(id, nextTrail);
   };
   const flyTo = (id: string) => go(id, [id]);
+  // Next and Previous keep VoiceOver on the button they were pressed from,
+  // so the new subject is said aloud in the panel title's words, after the
+  // button's own reply.
+  const step = (index: number, nextTrail: string[]) => {
+    const node = model.nodes[index]!;
+    go(node.id, nextTrail);
+    AccessibilityInfo.announceForAccessibilityWithOptions(
+      `${focusMetaLine(node)}, ${node.label}`,
+      { queue: true },
+    );
+  };
   /** A search result chosen: the action only, never the text or the result. */
   const chooseSearchResult = (id: string) => {
     mapAction('search');
@@ -694,15 +708,12 @@ function MapMode({
           ? null
           : {
               label: model.nodes[next]!.label,
-              onPress: () => {
-                const id = model.nodes[next]!.id;
-                go(id, [...trail, id]);
-              },
+              onPress: () => step(next, [...trail, model.nodes[next]!.id]),
             },
       previous: previous
         ? {
             label: previous.label,
-            onPress: () => go(previous.id, trail.slice(0, -1)),
+            onPress: () => step(previous.index, trail.slice(0, -1)),
           }
         : null,
     };
@@ -772,8 +783,16 @@ function MapMode({
   const topContent = searchOpen ? (
     <MoneyMapSearch
       model={model}
-      onChoose={chooseSearchResult}
-      onClose={() => setSearchOpen(false)}
+      // The search card closes either way, taking VoiceOver's place with it:
+      // a result moves it to the panel's new subject, Close back to Search.
+      onChoose={(id) => {
+        requestFocus('money-map-focus');
+        chooseSearchResult(id);
+      }}
+      onClose={() => {
+        requestFocus('money-map-search');
+        setSearchOpen(false);
+      }}
     />
   ) : (
     <View style={styles.card} testID="money-map-card">

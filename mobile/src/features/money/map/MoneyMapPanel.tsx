@@ -22,6 +22,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useReduceMotion } from '../../../design/accessibility';
 import { Icon } from '../../../design/icon';
+import { useAccessibilityFocusRequest } from '../../../design/keyboard';
 import {
   counted,
   formatMoney,
@@ -227,7 +228,9 @@ export function MoneyMapPanel({
       accessibilityLabel={`${moneyAccessibilityLabel(value, true)}, ${label}`}
       testID={testID}
     >
-      <Text variant="tileFigure" tone={tone} tabular>
+      {/* A figure is one word: at accessibility sizes it steps down
+          rather than break ("$305.9b / n" at AX3). */}
+      <Text variant="tileFigure" tone={tone} tabular wordSafe>
         {formatMoneyCompact(value)}
       </Text>
       <Text variant="footnote" wordSafe>
@@ -235,8 +238,22 @@ export function MoneyMapPanel({
       </Text>
     </View>
   );
+  // A search result's subject is where VoiceOver goes next: the search
+  // field it was chosen from has closed.
+  const titleRef = useAccessibilityFocusRequest('money-map-focus');
   const entityTitle = focus ? (
-    <View style={styles.grow}>
+    <View
+      style={styles.grow}
+      // Without a page to open, the title still reads as one line.
+      ref={entityRoute ? undefined : titleRef}
+      accessible={!entityRoute}
+      accessibilityLabel={
+        entityRoute
+          ? undefined
+          : `${focusMetaLine(focus.node)}, ${focus.node.label}`
+      }
+      testID="money-map-focus-title"
+    >
       <Text variant="footnote" wordSafe testID="money-map-focus-meta">
         {focusMetaLine(focus.node)}
       </Text>
@@ -291,6 +308,7 @@ export function MoneyMapPanel({
               <View style={styles.titleRow}>
                 {entityRoute ? (
                   <Pressable
+                    ref={titleRef}
                     accessibilityRole="link"
                     accessibilityLabel={`${focusMetaLine(focus.node)}, ${focus.node.label}`}
                     onPress={() => {
@@ -329,7 +347,7 @@ export function MoneyMapPanel({
                 accessibilityLabel={`${moneyAccessibilityLabel(focus.node.amount, true)}, ${focusFigureLine(focus.node)}`}
                 testID="money-map-focus-figure"
               >
-                <Text variant="tileFigure" tone="moneyInk" tabular>
+                <Text variant="tileFigure" tone="moneyInk" tabular wordSafe>
                   {formatMoneyCompact(focus.node.amount)}
                 </Text>
                 <Text variant="footnote" wordSafe>

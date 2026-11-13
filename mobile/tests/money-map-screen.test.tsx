@@ -1,6 +1,6 @@
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
 import { colors } from '../src/design/tokens';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
@@ -9,9 +9,17 @@ import * as adaptiveLayout from '../src/design/adaptive';
 import * as accessibility from '../src/design/accessibility';
 import MoneyScreen, { moneyMapLabel } from '../src/features/money/MoneyScreen';
 import { MoneyMap } from '../src/features/money/map/MoneyMap';
-import { MoneyMapPanel } from '../src/features/money/map/MoneyMapPanel';
+import {
+  MoneyMapPanel,
+  focusMetaLine,
+} from '../src/features/money/map/MoneyMapPanel';
 import { MoneyMapControls } from '../src/features/money/map/MoneyMapControls';
 import { MoneyMapSearch } from '../src/features/money/map/MoneyMapSearch';
+import {
+  LABEL_MAX_SCALE,
+  MoneyMapLabels,
+} from '../src/features/money/map/MoneyMapLabels';
+import { Text as DesignText } from '../src/design/text';
 import {
   cameraAt,
   fitCamera,
@@ -571,6 +579,244 @@ test.each(['android', 'ios'] as const)(
   },
 );
 
+// VoiceOver and TalkBack: the search card closes either way, so the reader's
+// place moves on with it rather than falling back to the top of the screen.
+test.each([
+  ['ios', 'setAccessibilityFocus'],
+  ['android', 'sendAccessibilityEvent'],
+] as const)(
+  '%s: a search result moves the screen reader to the new subject, Close back to Search',
+  async (os, call) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
+    Object.defineProperty(Platform, 'OS', { configurable: true, value: os });
+    const moved = jest
+      .spyOn(AccessibilityInfo, call)
+      .mockImplementation(() => undefined);
+    // Views in tests are component instances; iOS asks for a native handle,
+    // which here is the view's test ID, so a move names the view it reached.
+    const ReactNative = jest.requireActual<object>('react-native');
+    const native = Object.getOwnPropertyDescriptor(
+      ReactNative,
+      'findNodeHandle',
+    )!;
+    Object.defineProperty(ReactNative, 'findNodeHandle', {
+      configurable: true,
+      value: (view: { props?: { testID?: string } } | null) =>
+        view?.props?.testID ?? null,
+    });
+    let r!: TestRenderer.ReactTestRenderer;
+    const settle = () =>
+      act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      });
+    const reached = () =>
+      moved.mock.calls.map(([target]) =>
+        typeof target === 'string'
+          ? target
+          : (target as unknown as { props: { testID?: string } }).props.testID,
+      );
+    try {
+      await act(async () => {
+        r = TestRenderer.create(
+          withNavigationOptions(<MoneyScreen />, () => undefined),
+        );
+      });
+      const search = () =>
+        r.root
+          .findAllByType(IconButton)
+          .find((b) => b.props.testID === 'money-map-search')!;
+      // Close: back on the button that opened the search.
+      act(() => search().props.onPress());
+      await act(async () => r.root.findByType(MoneyMapSearch).props.onClose());
+      await settle();
+      expect(reached()).toEqual(['money-map-search']);
+      // A result: on the panel's subject, a link to its record.
+      act(() => search().props.onPress());
+      await act(async () =>
+        r.root.findByType(MoneyMapSearch).props.onChoose('party:Labor'),
+      );
+      await act(async () =>
+        r.update(withNavigationOptions(<MoneyScreen />, () => undefined)),
+      );
+      await settle();
+      expect(reached()).toEqual(['money-map-search', 'money-map-focus-link']);
+      // The same choice is one `search` for analytics, the action alone.
+      expect(
+        jest
+          .mocked(track)
+          .mock.calls.filter(
+            ([event, properties]) =>
+              event === 'opax_map_action' &&
+              (properties as { action?: string }).action === 'search',
+          ),
+      ).toEqual([['opax_map_action', { action: 'search', filter_count: 0 }]]);
+      expect(byTestID(r.root, 'money-map-focus-link')!.props).toMatchObject({
+        accessibilityRole: 'link',
+        accessibilityLabel: 'Party, Labor',
+      });
+      // Nothing else moves it: Zoom and the panel's own steps leave it be.
+      act(() =>
+        r.root
+          .findAllByType(IconButton)
+          .find((b) => b.props.testID === 'money-map-zoom-in')!
+          .props.onPress(),
+      );
+      await settle();
+      expect(moved).toHaveBeenCalledTimes(2);
+    } finally {
+      if (r) act(() => r.unmount());
+      moved.mockRestore();
+      Object.defineProperty(ReactNative, 'findNodeHandle', native);
+      Object.defineProperty(Platform, 'OS', descriptor);
+    }
+  },
+);
+
+test('a subject without a page reads as one title line', async () => {
+  const r = await render();
+  await act(async () => stage().onFocus('party:Labor'));
+  await act(async () =>
+    r.update(withNavigationOptions(<MoneyScreen />, () => undefined)),
+  );
+  const props = r.root.findByType(MoneyMapPanel).props;
+  act(() => r.unmount());
+  let panel!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    panel = TestRenderer.create(
+      <MoneyMapPanel
+        {...props}
+        focus={{
+          ...props.focus!,
+          node: { ...props.focus!.node, kind: 'unknown' as MapNode['kind'] },
+        }}
+      />,
+    );
+  });
+  const title = panel.root.find(
+    (n) =>
+      typeof n.type === 'string' && n.props.testID === 'money-map-focus-title',
+  );
+  expect(title.props.accessible).toBe(true);
+  expect(title.props.accessibilityLabel).toMatch(/, Labor$/);
+  act(() => panel.unmount());
+});
+
+// Dynamic Type: at AX3 a figure broke inside itself ("$305.9b / n") and a
+// name on the map outgrew its box ("Commonwealt / h").
+test("Next and Previous say the new subject aloud, in the title's words", async () => {
+  const said = jest
+    .spyOn(AccessibilityInfo, 'announceForAccessibilityWithOptions')
+    .mockImplementation(() => undefined);
+  const r = await render();
+  try {
+    await act(async () => stage().onFocus('party:Labor'));
+    const refresh = () =>
+      act(async () =>
+        r.update(withNavigationOptions(<MoneyScreen />, () => undefined)),
+      );
+    await refresh();
+    // Choosing a subject on the map says nothing: VoiceOver goes there.
+    expect(said).not.toHaveBeenCalled();
+    const press = async (id: string) => {
+      await act(async () =>
+        r.root
+          .findAll(
+            (n) =>
+              n.props.testID === id && typeof n.props.onPress === 'function',
+          )[0]!
+          .props.onPress(),
+      );
+      await refresh();
+    };
+    const title = () =>
+      r.root.findAll(
+        (n) =>
+          (n.props.testID === 'money-map-focus-link' ||
+            n.props.testID === 'money-map-focus-title') &&
+          typeof n.props.accessibilityLabel === 'string',
+      )[0]!.props.accessibilityLabel as string;
+    // VoiceOver stays on the button, so the subject is said after its reply.
+    await press('money-map-next');
+    const walked = r.root.findByType(MoneyMapPanel).props.focus.node;
+    expect(walked.id).not.toBe('party:Labor');
+    expect(said.mock.calls).toEqual([
+      [`${focusMetaLine(walked)}, ${walked.label}`, { queue: true }],
+    ]);
+    expect(said.mock.calls[0]![0]).toBe(title());
+    await press('money-map-previous');
+    expect(said.mock.calls[1]).toEqual(['Party, Labor', { queue: true }]);
+    expect(title()).toBe('Party, Labor');
+    // The map's own Next flow action says it too.
+    await act(async () =>
+      stage()
+        .actions.find((a: { name: string }) => a.name === 'nextFlow')
+        .onAction(),
+    );
+    expect(said.mock.calls[2]![0]).toBe(said.mock.calls[0]![0]);
+    expect(said).toHaveBeenCalledTimes(3);
+  } finally {
+    act(() => r.unmount());
+    said.mockRestore();
+  }
+});
+
+test('the panel figures step down rather than break, at rest and focused', async () => {
+  const r = await render();
+  const figureText = (id: string) =>
+    byTestID(r.root, id)!.findAllByType(DesignText)[0]!.props;
+  for (const id of ['money-map-total-donations', 'money-map-total-public'])
+    expect(figureText(id)).toMatchObject({
+      variant: 'tileFigure',
+      wordSafe: true,
+    });
+  await act(async () => stage().onFocus('party:Labor'));
+  await act(async () =>
+    r.update(withNavigationOptions(<MoneyScreen />, () => undefined)),
+  );
+  expect(figureText('money-map-focus-figure')).toMatchObject({
+    variant: 'tileFigure',
+    wordSafe: true,
+  });
+  act(() => r.unmount());
+});
+
+test('names on the map grow no further than their boxes', () => {
+  const value = <T,>(v: T) => ({ value: v }) as never;
+  let r!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    r = TestRenderer.create(
+      <MoneyMapLabels
+        slots={[
+          {
+            key: 'hub',
+            kind: 'name',
+            text: 'Commonwealth contracts',
+            sub: 'Public money',
+            ink: '#000000',
+            x: 0,
+            y: 0,
+            r: 4,
+          } as never,
+        ]}
+        tx={value(0)}
+        ty={value(0)}
+        k={value(1)}
+        fitK={value(1)}
+        allowed={value({ hub: 1 })}
+        width={402}
+      />,
+    );
+  });
+  const texts = r.root.findAllByType(DesignText);
+  expect(texts).toHaveLength(3);
+  for (const text of texts)
+    expect(text.props).toMatchObject({
+      wordSafe: true,
+      maxFontSizeMultiplier: LABEL_MAX_SCALE,
+    });
+  act(() => r.unmount());
+});
+
 test('map actions send the action and how many filters are set, never the record', async () => {
   // One filter set: the grants layer is off.
   mockParams.layers = 'donations,contracts';
@@ -605,7 +851,8 @@ test('map actions send the action and how many filters are set, never the record
     r.root.findByType(MoneyMapSearch).props.onChoose('donor:mineralogy'),
   );
   await refresh();
-  expect(sent()[4]).toEqual({ action: 'search', filter_count: 1 });
+  // Once, as the action alone: the focus move rides the same choice.
+  expect(sent().slice(4)).toEqual([{ action: 'search', filter_count: 1 }]);
   // A focus is no filter, and the record opens three ways.
   await act(async () => stage().onFocus('party:Labor'));
   await refresh();

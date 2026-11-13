@@ -170,9 +170,12 @@ exports[`iOS design at font scale 1 BarSeries retains its iOS output 1`] = `
         pointerEvents="none"
       />
       <Text
+        accessibilityElementsHidden={true}
         accessibilityLanguage="en-AU"
+        accessible={false}
         allowFontScaling={true}
         dynamicTypeRamp="footnote"
+        importantForAccessibility="no-hide-descendants"
         maxFontSizeMultiplier={0}
         onLayout={[Function]}
         style={
@@ -211,9 +214,12 @@ exports[`iOS design at font scale 1 BarSeries retains its iOS output 1`] = `
         100
       </Text>
       <Text
+        accessibilityElementsHidden={true}
         accessibilityLanguage="en-AU"
+        accessible={false}
         allowFontScaling={true}
         dynamicTypeRamp="footnote"
+        importantForAccessibility="no-hide-descendants"
         maxFontSizeMultiplier={0}
         onLayout={[Function]}
         style={
@@ -7598,9 +7604,12 @@ exports[`iOS design at font scale 2 BarSeries retains its iOS output 1`] = `
         pointerEvents="none"
       />
       <Text
+        accessibilityElementsHidden={true}
         accessibilityLanguage="en-AU"
+        accessible={false}
         allowFontScaling={true}
         dynamicTypeRamp="footnote"
+        importantForAccessibility="no-hide-descendants"
         maxFontSizeMultiplier={0}
         onLayout={[Function]}
         style={
@@ -7639,9 +7648,12 @@ exports[`iOS design at font scale 2 BarSeries retains its iOS output 1`] = `
         100
       </Text>
       <Text
+        accessibilityElementsHidden={true}
         accessibilityLanguage="en-AU"
+        accessible={false}
         allowFontScaling={true}
         dynamicTypeRamp="footnote"
+        importantForAccessibility="no-hide-descendants"
         maxFontSizeMultiplier={0}
         onLayout={[Function]}
         style={

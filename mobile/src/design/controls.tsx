@@ -1015,10 +1015,13 @@ export function IconButton({
   disabled = false,
   badge,
   testID,
+  ref,
 }: {
   symbol: SFSymbol;
   accessibilityLabel: string;
   onPress: () => void;
+  /** The button's view, for moving VoiceOver or TalkBack back to it. */
+  ref?: Ref<View>;
   variant?: IconButtonVariant;
   size?: keyof typeof iconButtonSizes;
   /** A toggled control (Captions, Mute): navy while on, said as selected. */
@@ -1035,6 +1038,7 @@ export function IconButton({
   return (
     <Hoverable effect={disabled ? 'none' : 'highlight'} cornerRadius={box / 2}>
       <Pressable
+        ref={ref}
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel}
         accessibilityState={{

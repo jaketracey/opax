@@ -685,6 +685,8 @@ export function InsetGroup({
         <Text
           wordSafe
           variant="groupHeader"
+          // A grouped list's section header, as UIKit's has the header trait.
+          accessibilityRole="header"
           style={{ marginBottom: rhythm.groupHeader }}
         >
           {header}

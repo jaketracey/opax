@@ -603,28 +603,7 @@ function PartyContent({
     >
       {(data) => (
         <Group>
-          <View
-            accessible
-            accessibilityLabel={`${moneyAccessibilityLabel(data.node.total)}, disclosed`}
-            testID="party-receipts-total"
-          >
-            <Text wordSafe variant="figure" tone="moneyInk" tabular>
-              {formatMoney(data.node.total)}
-            </Text>
-            <Text wordSafe variant="secondary">
-              {[
-                `disclosed, from ${formatCount(data.node.count)} ${data.node.count === 1 ? 'donation or receipt' : 'donations and receipts'}`,
-                data.node.firstYear !== undefined &&
-                data.node.lastYear !== undefined
-                  ? data.node.firstYear === data.node.lastYear
-                    ? String(data.node.firstYear)
-                    : `${data.node.firstYear} to ${data.node.lastYear}`
-                  : null,
-              ]
-                .filter(Boolean)
-                .join(', ')}
-            </Text>
-          </View>
+          <ReceiptsTotal node={data.node} />
           {data.node.lodgedAs ? (
             // Both names' returns, summed: which name each part was lodged as.
             <Text wordSafe variant="footnote" testID="party-receipts-lodged">
@@ -964,6 +943,44 @@ function PartyDivision({ row, label }: { row: DivisionData; label: string }) {
       })}
       testID={`party-bill-${row.billKey}`}
     />
+  );
+}
+
+/**
+ * The disclosed total and what it is drawn from. VoiceOver hears both lines,
+ * the count and the years included, not just the sum.
+ */
+function ReceiptsTotal({
+  node,
+}: {
+  node: Pick<
+    NonNullable<View_['receipts']['data']>['node'],
+    'total' | 'count' | 'firstYear' | 'lastYear'
+  >;
+}) {
+  const line = [
+    `disclosed, from ${formatCount(node.count)} ${node.count === 1 ? 'donation or receipt' : 'donations and receipts'}`,
+    node.firstYear !== undefined && node.lastYear !== undefined
+      ? node.firstYear === node.lastYear
+        ? String(node.firstYear)
+        : `${node.firstYear} to ${node.lastYear}`
+      : null,
+  ]
+    .filter(Boolean)
+    .join(', ');
+  return (
+    <View
+      accessible
+      accessibilityLabel={`${moneyAccessibilityLabel(node.total)}, ${line}`}
+      testID="party-receipts-total"
+    >
+      <Text wordSafe variant="figure" tone="moneyInk" tabular>
+        {formatMoney(node.total)}
+      </Text>
+      <Text wordSafe variant="secondary">
+        {line}
+      </Text>
+    </View>
   );
 }
 

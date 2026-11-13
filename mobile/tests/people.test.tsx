@@ -15,7 +15,6 @@ import { PadGrid } from '../src/design/adaptive';
 import {
   formatCount,
   formatMoney,
-  formatMoneyCompact,
   moneyAccessibilityLabel,
 } from '../src/design/format';
 import { Screen, Section } from '../src/design/layout';
@@ -1557,7 +1556,10 @@ describe('party', () => {
     expect(total).toBeGreaterThan(0);
     const tile = (id: string) => host(r, id).props.accessibilityLabel as string;
     expect(tile('party-figure-members')).toContain(formatCount(members));
-    expect(tile('party-figure-receipts')).toContain(formatMoneyCompact(total));
+    // Drawn compact, said in words.
+    expect(tile('party-figure-receipts')).toContain(
+      moneyAccessibilityLabel(total, true),
+    );
     // The sections draw the same figures.
     expect(tile('party-current-count')).toContain(formatCount(members));
     expect(tile('party-receipts-total')).toContain(

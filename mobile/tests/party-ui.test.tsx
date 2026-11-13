@@ -18,7 +18,7 @@ import {
 import { Catalogs } from '../src/api/catalogs';
 import { combinedPartyNode } from '../src/api/party-page';
 import { apiClient, catalogs as runtime } from '../src/api/runtime';
-import { moneyAccessibilityLabel } from '../src/design/format';
+import { formatCount, moneyAccessibilityLabel } from '../src/design/format';
 import { partyColors } from '../src/design/palette';
 import { PartyLabel, PersonRow, Portrait } from '../src/design/people';
 import { Screen, TitleAnchor } from '../src/design/layout';
@@ -53,6 +53,7 @@ import {
 import { LinkRow, MoneyRow } from '../src/design/rows';
 import { pinned, slugs } from './pinned';
 import { describeWrappingColumns } from './wrapping-columns';
+import { accessibilityElements } from './a11y-tree';
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
   Link: Object.assign(({ children }: { children?: unknown }) => children, {
@@ -649,8 +650,10 @@ test('recorded members open native profiles; the total and every block have prov
     'party-divisions-source',
   ])
     expect(has(r, id)).toBe(true);
+  // VoiceOver hears the whole figure: the sum, the count and the years.
+  const node = view.data!.receipts.data!.node;
   expect(host(r, 'party-receipts-total').props.accessibilityLabel).toBe(
-    `${moneyAccessibilityLabel(view.data!.receipts.data!.node.total)}, disclosed`,
+    `${moneyAccessibilityLabel(node.total)}, disclosed, from ${formatCount(node.count)} donations and receipts, ${node.firstYear} to ${node.lastYear}`,
   );
   act(() => r.unmount());
 });
@@ -1277,7 +1280,7 @@ describe('the Libertarian Party, formerly the Liberal Democratic Party', () => {
     });
     const r = await render('Harbourside Party');
     expect(host(r, 'party-receipts-total').props.accessibilityLabel).toBe(
-      `${moneyAccessibilityLabel(3000)}, disclosed`,
+      `${moneyAccessibilityLabel(3000)}, disclosed, from 6 donations and receipts, 2016 to 2020`,
     );
     expect(drawn(r)).toContain(
       'disclosed, from 6 donations and receipts, 2016 to 2020',
@@ -1296,4 +1299,118 @@ describe('the Libertarian Party, formerly the Liberal Democratic Party', () => {
     expect(has(r, 'party-past-toggle')).toBe(false);
     act(() => r.unmount());
   });
+});
+
+describe('VoiceOver and Dynamic Type on a party page', () => {
+  const pages = ['Labor', 'liberal-democratic-party'] as const;
+  let records: Record<string, typeof view>;
+  beforeAll(async () => {
+    records = Object.fromEntries(
+      await Promise.all(
+        pages.map(async (name) => [name, await api.partyPage(name)] as const),
+      ),
+    );
+  });
+  test.each(
+    [1, 2.643, 3.571].flatMap((fontScale) =>
+      pages.map((name) => [name, fontScale] as const),
+    ),
+  )(
+    '%s at %s: every stop is labelled and nothing is cut short',
+    async (name, fontScale) => {
+      jest
+        .mocked(useWindowDimensions)
+        .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale });
+      jest.mocked(runtime.partyPage).mockResolvedValue(records[name]!);
+      const r = await render(name);
+      for (const id of ['party-past-toggle', 'party-recorded-toggle'])
+        if (has(r, id)) press(r, id);
+      const read = accessibilityElements(r.root);
+      expect(read.filter((e) => !e.label)).toEqual([]);
+      // Figures say compact sums in words, never "$1.1bn".
+      expect(read.filter((e) => /\$[\d.,]+(k|m|bn)\b/.test(e.label))).toEqual(
+        [],
+      );
+      const tile = read.find((e) => e.testID === 'party-figure-receipts');
+      if (tile)
+        expect(tile).toMatchObject({
+          role: 'button',
+          label: expect.stringMatching(
+            / (thousand|million|billion) dollars, disclosed receipts$/,
+          ),
+        });
+      // Every source line reads as a button that names its source.
+      const lines = read.filter((e) => /-source$/.test(e.testID ?? ''));
+      expect(lines.length).toBeGreaterThan(0);
+      for (const line of lines)
+        expect(line).toMatchObject({
+          role: 'button',
+          hint: 'Opens the sources',
+          label: expect.stringMatching(/, [A-Z]/),
+        });
+      if (name === 'liberal-democratic-party') {
+        // Heading, history line, its sources, then the figures, as drawn.
+        const at = (testID: string) =>
+          read.findIndex((e) => e.testID === testID);
+        const history = read.findIndex((e) =>
+          e.label.startsWith(
+            'Liberal Democratic Party (Liberal Democrats), renamed',
+          ),
+        );
+        expect(read[0]).toMatchObject({
+          role: 'header',
+          label: 'Libertarian Party',
+        });
+        expect(history).toBeGreaterThan(0);
+        expect(read[history + 1]).toMatchObject({
+          testID: 'party-history-source',
+          label: '12 Jan 2024, AEC party register',
+          role: 'button',
+        });
+        expect(at('party-figure-members')).toBeGreaterThan(history + 1);
+        expect(read[at('party-past-toggle')]).toMatchObject({
+          role: 'button',
+          label: 'Past members, 2',
+          state: { expanded: true },
+        });
+        expect(
+          read
+            .filter(
+              (e) =>
+                /^party-past-/.test(e.testID ?? '') &&
+                e.testID !== 'party-past-toggle',
+            )
+            .map((e) => e.label),
+        ).toEqual([
+          'David Leyonhjelm, Senate, 2014 to 2019, Recorded as Liberal Democratic Party',
+          'Duncan Spender, Senate, 2019, Recorded as Liberal Democratic Party',
+        ]);
+      }
+      // No text is cut short or held below the reader's size: a money row's
+      // two-line name (its full name is in its label) and portrait initials
+      // are the only limits.
+      const allowed = new Set([
+        ...r.root
+          .findAllByType(MoneyRow)
+          .flatMap((row) => row.findAllByType(NativeText)),
+        ...r.root
+          .findAllByType(Portrait)
+          .flatMap((portrait) => portrait.findAllByType(NativeText)),
+      ]);
+      expect(
+        r.root
+          .findAllByType(NativeText)
+          .filter(
+            (text) =>
+              !allowed.has(text) &&
+              (text.props.numberOfLines ||
+                (text.props.maxFontSizeMultiplier > 0 &&
+                  text.props.maxFontSizeMultiplier < fontScale)),
+          )
+          .map((text) => text.props.testID ?? text.props.children),
+      ).toEqual([]);
+      expect(describeWrappingColumns(r)).toEqual([]);
+      act(() => r.unmount());
+    },
+  );
 });
