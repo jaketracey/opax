@@ -9,7 +9,10 @@ import * as adaptiveLayout from '../src/design/adaptive';
 import * as accessibility from '../src/design/accessibility';
 import MoneyScreen, { moneyMapLabel } from '../src/features/money/MoneyScreen';
 import { MoneyMap } from '../src/features/money/map/MoneyMap';
-import { MoneyMapPanel } from '../src/features/money/map/MoneyMapPanel';
+import {
+  MoneyMapPanel,
+  focusMetaLine,
+} from '../src/features/money/map/MoneyMapPanel';
 import { MoneyMapControls } from '../src/features/money/map/MoneyMapControls';
 import { MoneyMapSearch } from '../src/features/money/map/MoneyMapSearch';
 import {
@@ -700,6 +703,63 @@ test('a subject without a page reads as one title line', async () => {
 
 // Dynamic Type: at AX3 a figure broke inside itself ("$305.9b / n") and a
 // name on the map outgrew its box ("Commonwealt / h").
+test("Next and Previous say the new subject aloud, in the title's words", async () => {
+  const said = jest
+    .spyOn(AccessibilityInfo, 'announceForAccessibilityWithOptions')
+    .mockImplementation(() => undefined);
+  const r = await render();
+  try {
+    await act(async () => stage().onFocus('party:Labor'));
+    const refresh = () =>
+      act(async () =>
+        r.update(withNavigationOptions(<MoneyScreen />, () => undefined)),
+      );
+    await refresh();
+    // Choosing a subject on the map says nothing: VoiceOver goes there.
+    expect(said).not.toHaveBeenCalled();
+    const press = async (id: string) => {
+      await act(async () =>
+        r.root
+          .findAll(
+            (n) =>
+              n.props.testID === id && typeof n.props.onPress === 'function',
+          )[0]!
+          .props.onPress(),
+      );
+      await refresh();
+    };
+    const title = () =>
+      r.root.findAll(
+        (n) =>
+          (n.props.testID === 'money-map-focus-link' ||
+            n.props.testID === 'money-map-focus-title') &&
+          typeof n.props.accessibilityLabel === 'string',
+      )[0]!.props.accessibilityLabel as string;
+    // VoiceOver stays on the button, so the subject is said after its reply.
+    await press('money-map-next');
+    const walked = r.root.findByType(MoneyMapPanel).props.focus.node;
+    expect(walked.id).not.toBe('party:Labor');
+    expect(said.mock.calls).toEqual([
+      [`${focusMetaLine(walked)}, ${walked.label}`, { queue: true }],
+    ]);
+    expect(said.mock.calls[0]![0]).toBe(title());
+    await press('money-map-previous');
+    expect(said.mock.calls[1]).toEqual(['Party, Labor', { queue: true }]);
+    expect(title()).toBe('Party, Labor');
+    // The map's own Next flow action says it too.
+    await act(async () =>
+      stage()
+        .actions.find((a: { name: string }) => a.name === 'nextFlow')
+        .onAction(),
+    );
+    expect(said.mock.calls[2]![0]).toBe(said.mock.calls[0]![0]);
+    expect(said).toHaveBeenCalledTimes(3);
+  } finally {
+    act(() => r.unmount());
+    said.mockRestore();
+  }
+});
+
 test('the panel figures step down rather than break, at rest and focused', async () => {
   const r = await render();
   const figureText = (id: string) =>
