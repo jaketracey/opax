@@ -545,6 +545,8 @@ function BarSeriesContent({
   sourceLine,
   tableTestID,
   emphasisFrom,
+  scaleGutter = false,
+  partialFrom,
 }: ChartProvenance & {
   data: readonly { label: string; value: number }[];
   ink: Accent | 'ink';
@@ -554,6 +556,16 @@ function BarSeriesContent({
   sourceLine?: React.ReactNode | false;
   tableTestID?: string;
   emphasisFrom?: number;
+  /**
+   * Scale values in their own column left of the bars, clear of every bar at
+   * any text size, rather than over the plot's trailing edge.
+   */
+  scaleGutter?: boolean;
+  /**
+   * Bars from this index hold a year whose returns are not all in yet: drawn
+   * lighter, read "so far", with the caption placed under the last bar.
+   */
+  partialFrom?: number;
   onShowTable?: () => void;
   selectedIndex?: number;
   onSelect?: (index: number) => void;
@@ -574,15 +586,38 @@ function BarSeriesContent({
     0,
     ...data.map((item) => (Number.isFinite(item.value) ? item.value : 0)),
   );
-  const step = data.length ? width / data.length : 0;
+  const scaleValues = [1, 0.5].map((fraction) => format(maximum * fraction));
+  const scaleKey = (text: string) => `${fontScale}:scale:${text}`;
+  const gutter =
+    scaleGutter && !spark
+      ? Math.ceil(
+          Math.max(
+            0,
+            ...scaleValues.map((text) => sizes[scaleKey(text)]?.width ?? 0),
+          ),
+        ) +
+        1 +
+        rhythm.tight * 2
+      : 0;
+  const plotWidth = Math.max(0, width - gutter);
+  const step = data.length ? plotWidth / data.length : 0;
+  const partial = (index: number) =>
+    partialFrom !== undefined && index >= partialFrom;
+  const yearLabel = (index: number) =>
+    partial(index) ? `${data[index]!.label} so far` : data[index]!.label;
   const keys = data.map(
     (item, index) =>
       `${fontScale}:${index}:${item.label}:${format(item.value)}`,
   );
   const clearLabel = (label: PositionedLabel): PositionedLabel => {
     const clear = clearChartLabel(
-      { x: label.left, y: 0, width: label.width, height: label.height },
-      (label.index + 0.5) * step,
+      {
+        x: label.left + gutter,
+        y: 0,
+        width: label.width,
+        height: label.height,
+      },
+      gutter + (label.index + 0.5) * step,
       regions,
       width,
     );
@@ -590,7 +625,7 @@ function BarSeriesContent({
   };
   const xLabels = axisLabels(
     keys.map((key) => sizes[`${key}:x`]),
-    width,
+    plotWidth,
     labels?.every,
   ).map(clearLabel);
   const xHeight = Math.max(0, ...xLabels.map((label) => label.height));
@@ -622,7 +657,7 @@ function BarSeriesContent({
       accessible={spark || undefined}
       accessibilityLabel={
         spark
-          ? `${tableTitle}. ${data.map((item) => `${item.label}, ${format(item.value)}`).join('. ')}. ${provenance({ dateRange, citation })}`
+          ? `${tableTitle}. ${data.map((item, index) => `${yearLabel(index)}, ${format(item.value)}`).join('. ')}. ${provenance({ dateRange, citation })}`
           : tableTitle
       }
       accessibilityActions={tableActions}
@@ -645,6 +680,19 @@ function BarSeriesContent({
               </Text>
             </View>
           ))}
+          {scaleGutter
+            ? scaleValues.map((text) => (
+                <View key={`scale:${text}`} style={styles.probe}>
+                  <Text
+                    variant="footnote"
+                    tabular
+                    onTextLayout={measure(scaleKey(text))}
+                  >
+                    {text}
+                  </Text>
+                </View>
+              ))
+            : null}
         </View>
       ) : null}
       {!showTable ? (
@@ -663,9 +711,9 @@ function BarSeriesContent({
                 ? [0, 0.5, 1].map((position) => (
                     <Rect
                       key={position}
-                      x={0}
+                      x={gutter}
                       y={Math.min(plotHeight - 1, plotHeight * position)}
-                      width={width}
+                      width={plotWidth}
                       height={1}
                       color={palette.dividerSubtle}
                     />
@@ -680,7 +728,8 @@ function BarSeriesContent({
                 return (
                   <Rect
                     key={`${item.label}:${index}`}
-                    x={index * step + 2}
+                    opacity={partial(index) ? 0.4 : 1}
+                    x={gutter + index * step + 2}
                     y={plotHeight - barHeight}
                     width={Math.max(0, step - 4)}
                     height={barHeight}
@@ -697,35 +746,56 @@ function BarSeriesContent({
             </SizedCanvas>
           </View>
           {!spark
-            ? [1, 0.5].map((fraction) => (
-                <Text
-                  key={fraction}
-                  testID={`bar-series-scale-${fraction}`}
-                  variant="footnote"
-                  tone="inkSoft"
-                  tabular
-                  style={{
-                    position: 'absolute',
-                    right: 0,
-                    top: plotHeight * (1 - fraction),
-                    textAlign: 'right',
-                    backgroundColor: palette.paper,
-                  }}
-                >
-                  {format(maximum * fraction)}
-                </Text>
-              ))
+            ? [1, 0.5].map((fraction, index) => {
+                const height =
+                  sizes[scaleKey(scaleValues[index]!)]?.height ?? 0;
+                return (
+                  <Text
+                    key={fraction}
+                    testID={`bar-series-scale-${fraction}`}
+                    variant="footnote"
+                    tone="inkSoft"
+                    tabular
+                    style={
+                      scaleGutter
+                        ? {
+                            position: 'absolute',
+                            left: 0,
+                            width: Math.max(0, gutter - rhythm.tight),
+                            // Centred on its gridline, inside the plot's height.
+                            top: Math.max(
+                              0,
+                              Math.min(
+                                plotHeight - height,
+                                plotHeight * (1 - fraction) - height / 2,
+                              ),
+                            ),
+                            textAlign: 'right',
+                          }
+                        : {
+                            position: 'absolute',
+                            right: 0,
+                            top: plotHeight * (1 - fraction),
+                            textAlign: 'right',
+                            backgroundColor: palette.paper,
+                          }
+                    }
+                  >
+                    {scaleValues[index]}
+                  </Text>
+                );
+              })
             : null}
           {!spark
             ? data.map((item, index) => {
                 const a11y = {
-                  accessibilityLabel: `${item.label}, ${format(item.value)}`,
+                  accessibilityLabel: `${yearLabel(index)}, ${format(item.value)}`,
                   accessibilityActions: tableActions,
                   onAccessibilityAction: tableAction,
                 };
                 const style = [
                   styles.barTarget,
-                  { left: index * step, width: step },
+                  { left: gutter + index * step, width: step },
                 ];
                 return onSelect ? (
                   <Pressable
@@ -774,12 +844,16 @@ function BarSeriesContent({
               tone="inkSoft"
               tabular
               testID="bar-series-caption"
+              // A partial year's caption sits under its own (last) bar.
+              style={partial(data.length - 1) ? styles.endCaption : undefined}
             >
-              {latestBarCaption(
-                latest.label,
-                format(latest.value),
-                dateRange.end,
-              )}
+              {partial(data.length - 1)
+                ? `${yearLabel(data.length - 1)}: ${format(latest.value)}`
+                : latestBarCaption(
+                    latest.label,
+                    format(latest.value),
+                    dateRange.end,
+                  )}
             </Text>
           ) : null}
           <Button
@@ -797,7 +871,7 @@ function BarSeriesContent({
               {data.map((item, index) => (
                 <View key={`${item.label}:${index}`} style={styles.tableRow}>
                   <Text variant="body" style={styles.tableCell}>
-                    {item.label}
+                    {yearLabel(index)}
                   </Text>
                   <Text variant="body" tabular>
                     {format(item.value)}
@@ -864,6 +938,7 @@ const styles = StyleSheet.create({
   verticalStageWords: { gap: 4, flexShrink: 1 },
   stageLabel: { fontFamily: fonts.sansSemiBold, fontWeight: '600' },
   positionedLabel: { position: 'absolute', textAlign: 'center' },
+  endCaption: { textAlign: 'right', alignSelf: 'flex-end' },
   barTarget: {
     position: 'absolute',
     top: 0,
