@@ -172,13 +172,14 @@ describe('floating Today and Search buttons', () => {
       'features/money-public/parts.tsx',
       'features/directories/DivisionHistory.tsx',
       'features/explore/PhotoCredits.tsx',
+      'features/records/BillTextContents.tsx',
     ];
     for (const file of pages) {
       const source = readFileSync(join(__dirname, '../src', file), 'utf8');
       expect([file, /useFloatingBarFoot\(/.test(source)]).toEqual([file, true]);
       expect([
         file,
-        /contentContainerStyle=\{\[[^\]]*\bfoot\b/.test(source),
+        /contentContainerStyle=\{(?:\[[^\]]*)?\bfoot\b/.test(source),
       ]).toEqual([file, true]);
     }
   });
