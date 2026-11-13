@@ -76,7 +76,7 @@ import {
 } from './map/MoneyMapPanel';
 import { MoneyMapSearch } from './map/MoneyMapSearch';
 import { MINI_HEIGHT, MINI_WIDTH } from './map/MiniMap';
-import { mapControlLayout } from './map/regions';
+import { largeTextLimits, mapControlLayout } from './map/regions';
 import { buildModel, nextAlongFlows, type MapModel } from './map/model';
 import { moneyPageMenu } from './menu';
 import { MoneyTestHooks } from './money-probe';
@@ -559,8 +559,24 @@ function MapMode({
     topHeight + rhythm.block + stackHeight + rhythm.block >
       (stage.height || window.height) - below - peek;
   const horizontalControls = (managed && pose.horizontal) || rowOnPhone;
-  const panelMaxHeight = managed ? pose.panelMaxHeight : undefined;
-  const topMaxHeight = managed ? pose.topMaxHeight : undefined;
+  // At accessibility sizes a compact card and panel would fill the screen and
+  // bury the controls: they share what the band leaves and scroll inside it.
+  // Regular layouts keep their own caps, which already leave the band room.
+  const limits =
+    large && !regular
+      ? largeTextLimits(
+          managed
+            ? pose.controls.height
+            : (stage.height || window.height) - below,
+          topHeight,
+          controlsHeight || (horizontalControls ? 48 : 190),
+          searchOpen ? 'search' : expanded ? 'expanded' : 'map',
+        )
+      : null;
+  const panelMaxHeight =
+    limits?.panelMaxHeight ?? (managed ? pose.panelMaxHeight : undefined);
+  const topMaxHeight =
+    limits?.topMaxHeight ?? (managed ? pose.topMaxHeight : undefined);
   const insets = useMemo(
     () =>
       pose.folded
@@ -578,11 +594,10 @@ function MapMode({
               (horizontalControls && !searchOpen && !expanded
                 ? 48 + rhythm.block
                 : 0),
-            bottom: managed
-              ? (safe?.bottom ?? 0) +
-                Math.min(peek, panelMaxHeight ?? peek) +
-                rhythm.tight
-              : below + peek + rhythm.tight,
+            bottom:
+              (managed ? (safe?.bottom ?? 0) : below) +
+              Math.min(peek, panelMaxHeight ?? peek) +
+              rhythm.tight,
             left: (safe?.left ?? 0) + rhythm.tight,
             right:
               (safe?.right ?? 0) +
@@ -815,18 +830,19 @@ function MapMode({
             style={[
               styles.top,
               cardWidth,
-              managed ? { maxHeight: topMaxHeight } : null,
+              topMaxHeight === undefined ? null : { maxHeight: topMaxHeight },
             ]}
             pointerEvents="box-none"
             onLayout={(event) =>
               setTopHeight(Math.ceil(event.nativeEvent.layout.height))
             }
           >
-            {managed ? (
+            {topMaxHeight !== undefined ? (
               <ScrollView
-                scrollEnabled={managed}
-                style={{ flexGrow: 0 }}
+                style={styles.topScroll}
                 keyboardShouldPersistTaps="handled"
+                // Android hides the bar at rest; a capped card shows it has more.
+                persistentScrollbar
               >
                 {topContent}
               </ScrollView>
@@ -1192,6 +1208,7 @@ const styles = StyleSheet.create({
     paddingTop: rhythm.tight,
     width: '100%',
   },
+  topScroll: { flexGrow: 0 },
   card: {
     backgroundColor: colors.raised,
     borderRadius: radii.container,
