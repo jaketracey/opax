@@ -35,6 +35,19 @@ const months = [
   'November',
   'December',
 ];
+const dayWords = (day: Date) =>
+  `${weekdays[day.getUTCDay()]} ${day.getUTCDate()} ${months[day.getUTCMonth()]}`;
+
+/** "Monday 23 November": the words for a calendar day ("2026-11-23"). */
+export function calendarDayWords(day: string): string | null {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(day);
+  if (!match) return null;
+  const date = new Date(
+    Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])),
+  );
+  return Number.isNaN(date.getTime()) ? null : dayWords(date);
+}
+
 /** "Sunday 8 November": the Sydney calendar day of an instant. */
 export function mastheadDate(now: Date): string {
   try {
@@ -47,8 +60,7 @@ export function mastheadDate(now: Date): string {
     const n = (type: string) =>
       Number(parts.find((p) => p.type === type)?.value);
     const day = new Date(Date.UTC(n('year'), n('month') - 1, n('day')));
-    if (!Number.isNaN(day.getTime()))
-      return `${weekdays[day.getUTCDay()]} ${day.getUTCDate()} ${months[day.getUTCMonth()]}`;
+    if (!Number.isNaN(day.getTime())) return dayWords(day);
   } catch {
     /* Fall through to the device calendar. */
   }
@@ -92,21 +104,25 @@ export function useNow(): Date {
 
 /**
  * Slot 0 under the large title: the date line ("Sunday 8 November", plain
- * text, not a header), then, only when the last revalidation failed for
- * network reasons, the page's one offline line with the oldest saved date
- * among the blocks drawn. No rule under it. `today-screen-message` names
- * the first line for the journeys.
+ * text, not a header), the sitting line when the published calendar can
+ * say it, then, only when the last revalidation failed for network
+ * reasons, the page's one offline line with the oldest saved date among
+ * the blocks drawn. No rule under it. `today-screen-message` names the
+ * first line for the journeys.
  */
 export function Masthead({
   now,
   offlineSavedAt,
   mark,
+  sitting,
 }: {
   now: Date;
   /** Set when offline: the oldest saved date among the drawn blocks. */
   offlineSavedAt?: DateInput | null;
   /** Absolute decorative art, behind the date and the native large title. */
   mark?: ReactNode;
+  /** The sitting line under the date (`SittingLine`); draws nothing when unknown. */
+  sitting?: ReactNode;
 }) {
   const { fontScale } = useWindowDimensions();
   const androidArt =
@@ -134,6 +150,7 @@ export function Masthead({
           {date}
         </>
       )}
+      {sitting}
       {offlineSavedAt !== undefined && offlineSavedAt !== null ? (
         <OfflineLine savedAt={offlineSavedAt} testID="today-offline" />
       ) : null}
