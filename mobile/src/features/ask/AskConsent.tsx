@@ -11,6 +11,7 @@ import { LinkRow } from '../../design/rows';
 import { Text } from '../../design/text';
 import { colors, rhythm } from '../../design/tokens';
 import { openOnWeb } from '../../navigation/external';
+import { useFittedSheetHeight } from '../sheets/fitted';
 import { machineNote } from './AnswerView';
 import { askSession, continueHeld } from './session';
 
@@ -28,10 +29,21 @@ export const consentCopy = {
  * route sheet at `fitToContents` with no Done and no ✕. Continue records
  * consent and sends the held question; Not now, or a swipe down, sends
  * nothing and leaves the question in the composer.
+ *
+ * The scroll view is capped at the space the sheet can use, and its range
+ * ends at Not now. Uncapped, at AX3 and AX5 it ran below the sheet, so its
+ * range ended before Continue and a first question could not be sent
+ * (build 61). When everything fits (Large), the cap does nothing and the
+ * sheet draws as before. The buttons stay inside the scroll view rather
+ * than in Talk's pinned footer: this sheet sits in a tab's stack, where
+ * react-native-screens sets the first nested scroll view back to
+ * `automatic` insets, and with a pinned footer the words drew below the
+ * buttons there.
  */
 export default function AskConsent() {
   const margin = useScreenMargin();
   const insets = useSafeAreaInsets();
+  const maxHeight = useFittedSheetHeight();
   const decided = useRef(false);
   // A swipe down is Not now.
   useEffect(
@@ -50,7 +62,7 @@ export default function AskConsent() {
     <SurfaceContext.Provider value="sunken">
       <ScrollView
         testID="ask-consent"
-        style={styles.screen}
+        style={[styles.screen, { maxHeight }]}
         contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={[
           styles.content,
@@ -75,7 +87,7 @@ export default function AskConsent() {
             onPress={() => void openOnWeb('/privacy', consentCopy.privacy)}
           />
         </InsetGroup>
-        <View style={styles.actions}>
+        <View testID="ask-consent-actions" style={styles.actions}>
           <Button
             label={consentCopy.continue}
             variant="primary"

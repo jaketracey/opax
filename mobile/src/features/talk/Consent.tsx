@@ -1,16 +1,13 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
   Platform,
   ScrollView,
   StyleSheet,
-  useWindowDimensions,
   View,
 } from 'react-native';
 import { router } from 'expo-router';
-import { HeaderHeightContext } from 'expo-router/react-navigation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
 import {
   Button,
   ErrorState,
@@ -22,6 +19,7 @@ import {
 } from '../../design/primitives';
 import { colors, layout, rhythm } from '../../design/tokens';
 import { openOnWeb } from '../../navigation/external';
+import { useFittedSheetHeight } from '../sheets/fitted';
 import { setConsent } from './bridge';
 import { requestStartAfterConsent } from './consent-store';
 import { failureCopy, microphoneCopy, talkCopy } from './model';
@@ -66,6 +64,8 @@ export const talkMachineNote = {
   ],
 };
 
+export { SHEET_HEADER } from '../sheets/fitted';
+
 /**
  * `/talk/consent`, a form sheet sized to its content (7.7). The text scrolls
  * under the two buttons, which stay pinned at the foot, so at the largest
@@ -73,21 +73,11 @@ export const talkMachineNote = {
  * Talk screen to start once the sheet has gone; Not now and a swipe down
  * leave everything as it was.
  */
-/** The sheet's own bar when the stack has not measured it yet. */
-export const SHEET_HEADER = 56;
-
 export function ConsentSheet() {
   const insets = useSafeAreaInsets();
-  // A fitToContents sheet stops at full height, but its root would keep
-  // growing: cap it at the space the sheet can use, so at AX5 the text
-  // scrolls and the two buttons stay above the home indicator (7.7).
-  const { height: window } = useWindowDimensions();
-  const header = useContext(HeaderHeightContext) || SHEET_HEADER;
-  const verticalBar = useVerticalBarEdge() !== 'unspecified';
-  const maxHeight = Math.max(
-    0,
-    window - insets.top - (verticalBar ? 0 : header),
-  );
+  // Capped at the space the sheet can use, so at AX5 the text scrolls and
+  // the two buttons stay above the home indicator (7.7).
+  const maxHeight = useFittedSheetHeight();
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
   const [under, setUnder] = useState(false);
