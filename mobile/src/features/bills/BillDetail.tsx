@@ -420,8 +420,8 @@ export default function BillDetail({
             {notFound ? (
               <ContentUnavailable
                 symbol="doc.text.magnifyingglass"
-                title="Bill not found"
-                body="This link may be old."
+                title="This bill isn’t in OPAX"
+                body="The link may be old, or the bill may not be collected yet."
                 action={{
                   label: 'Search bills',
                   onPress: () =>

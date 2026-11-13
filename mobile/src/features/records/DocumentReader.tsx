@@ -85,7 +85,7 @@ import {
   type ReaderPart,
 } from './ReaderList';
 import { recordBarItems } from './RecordActions';
-import { RecordLoadError } from './RecordLoadError';
+import { RecordLoadError, isMissingRecord } from './RecordLoadError';
 import { FindControls } from './FindControls';
 import { records } from './runtime';
 import { recordCaveat, recordOriginal, recordSource } from './source';
@@ -437,6 +437,7 @@ export default function DocumentReader({
         jumpTo={find.jump}
         find={find.marks}
         onScroll={embedded ? undefined : title.onScroll}
+        centred={!!error && isMissingRecord(error, slug)}
         header={
           error ? (
             <RecordLoadError

@@ -56,6 +56,7 @@ import { minimumTarget, rhythm } from '../design/tokens';
 import { headerItems, pageItems } from '../navigation/chrome';
 import { openOnWeb } from '../navigation/external';
 import {
+  directoryRoute,
   electionRoute,
   electorateDateRoute,
   electorateRoute,
@@ -244,11 +245,15 @@ function ElectorateContent({
   const scroll = useRef<ScrollView>(null);
   const identity = loaded?.view.identity.data;
   const offline = failure?.code === 'offline' || failure?.code === 'timeout';
+  // A missing seat takes the shared not-found pattern (sweep 2, item 2):
+  // centred on the paper ground like every other missing record.
+  const missing = !loaded && failure?.code === 'not-found';
   return (
     <>
       {embedded ? null : <ElectorateBar loaded={loaded} asof={asof} />}
       <Screen
-        grouped
+        grouped={!missing}
+        centred={missing}
         column="readable"
         testID="electorate-screen"
         scrollRef={scroll}
@@ -269,11 +274,12 @@ function ElectorateContent({
             failure.code === 'not-found' ? (
               <ContentUnavailable
                 symbol="map"
-                title="We couldn't find this electorate."
-                body="Search for an electorate or its member."
+                title="This electorate isn’t in OPAX"
+                body="It may have been renamed or abolished."
                 action={{
-                  label: 'Search',
-                  onPress: () => router.navigate('/search'),
+                  label: 'Search electorates',
+                  onPress: () => router.navigate(directoryRoute('electorate')),
+                  testID: 'electorate-not-found-search',
                 }}
                 testID="electorate-error"
               />

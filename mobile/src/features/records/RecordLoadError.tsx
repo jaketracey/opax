@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { View } from 'react-native';
 import { ApiError } from '../../api/errors';
 import { isRecordSlug } from '../../api/record-policy';
@@ -15,6 +16,45 @@ export const isOffline = (error: unknown) =>
   error instanceof ApiError &&
   (error.code === 'offline' || error.code === 'timeout');
 
+const RECORD = 'This record';
+
+/**
+ * A record that isn't there: a link that names no record, or a record OPAX
+ * doesn't hold. The screen centres it on the page (sweep 2, item 2).
+ */
+export function isMissingRecord(
+  error: unknown,
+  slug: string,
+  subject = RECORD,
+): boolean {
+  if (slug && !isRecordSlug(slug)) return true;
+  return (
+    subject === RECORD &&
+    error instanceof ApiError &&
+    error.code === 'not-found'
+  );
+}
+
+/**
+ * The shared not-found pattern for a record (sweep 2, item 2): one voice,
+ * the likely reason, and Search to go on from.
+ */
+export function MissingRecord({ testID }: { testID?: string }) {
+  return (
+    <ContentUnavailable
+      symbol="doc.text.magnifyingglass"
+      title="This record isn’t in OPAX"
+      body="The link may be old."
+      action={{
+        label: 'Search the record',
+        onPress: () => router.navigate('/search'),
+        testID: testID ? `${testID}-search` : undefined,
+      }}
+      testID={testID}
+    />
+  );
+}
+
 /**
  * A record that can't be shown (records.md 2.5): one centred view per
  * reason, in plain words. A link that names no record, a record OPAX doesn't
@@ -25,7 +65,7 @@ export function RecordLoadError({
   error,
   slug,
   onRetry,
-  subject = 'This record',
+  subject = RECORD,
   testID,
 }: {
   error: unknown;
@@ -35,14 +75,8 @@ export function RecordLoadError({
   subject?: string;
   testID?: string;
 }) {
-  if (slug && !isRecordSlug(slug))
-    return (
-      <ContentUnavailable
-        symbol="link"
-        title="This link doesn't open a record"
-        testID={testID}
-      />
-    );
+  if (isMissingRecord(error, slug, subject))
+    return <MissingRecord testID={testID} />;
   if (error instanceof ApiError && error.code === 'not-found')
     return (
       <ContentUnavailable

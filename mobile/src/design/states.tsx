@@ -834,7 +834,6 @@ export function ContentUnavailable({
   };
   testID?: string;
 }) {
-  const large = useAccessibilitySize();
   const layout = useLayout();
   const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
   const columnWidth =
@@ -881,17 +880,15 @@ export function ContentUnavailable({
         </View>
       )}
       {action ? (
-        <View
-          testID={action.containerTestID}
-          style={
-            large
-              ? { alignSelf: 'stretch' }
-              : { flexDirection: 'row', justifyContent: 'center' }
-          }
-        >
+        // Centred under the centred text at every size (sweep 2, item 2). At
+        // accessibility sizes a stretched secondary button reads from the
+        // leading edge, so it hung left under the title; it hugs here and
+        // the row centres it, its label wrapping inside the column.
+        <View testID={action.containerTestID} style={styles.unavailableAction}>
           <Button
             label={action.label}
             variant="secondary"
+            hug
             onPress={action.onPress}
             testID={action.testID ?? (testID ? `${testID}-retry` : undefined)}
           />
@@ -1130,6 +1127,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: rhythm.heading,
+    alignSelf: 'stretch',
+  },
+  unavailableAction: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignSelf: 'stretch',
   },
   pane: {

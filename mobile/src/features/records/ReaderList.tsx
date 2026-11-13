@@ -130,9 +130,12 @@ export function ReaderList({
   jumpTo,
   find,
   onScroll,
+  centred = false,
 }: {
   parts: ReaderPart[];
   header: ReactNode;
+  /** A whole-page state in the header (a missing record), centred. */
+  centred?: boolean;
   footer?: ReactNode;
   testID: string;
   /** Scrolls a part into view; `position` 0 is the top, 0.33 a third down. */
@@ -197,7 +200,12 @@ export function ReaderList({
           extraData={marks}
           keyExtractor={(part) => part.id}
           style={styles.screen}
-          contentContainerStyle={[styles.content, column.content, foot]}
+          contentContainerStyle={[
+            styles.content,
+            column.content,
+            foot,
+            centred ? styles.centred : null,
+          ]}
           onLayout={column.onLayout}
           contentInsetAdjustmentBehavior="automatic"
           // In the iPad split pane the list's search keyboard may still be
@@ -268,6 +276,7 @@ const styles = StyleSheet.create({
     paddingTop: rhythm.block,
     paddingBottom: rhythm.section * 2,
   },
+  centred: { flexGrow: 1, justifyContent: 'center' },
   // Paragraphs 11 apart (`row`); a part title 8 above its text.
   part: { paddingVertical: rhythm.row / 2, gap: rhythm.heading },
   match: { backgroundColor: colors.navyWash },

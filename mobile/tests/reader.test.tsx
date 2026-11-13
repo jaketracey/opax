@@ -406,7 +406,7 @@ test.each([
   [
     'not found',
     new ApiError('not-found', 'HTTP 404'),
-    /^This record isn't available$/,
+    /^This record isn’t in OPAX$/,
   ],
   [
     'unreadable',
@@ -430,9 +430,13 @@ test('a link that names no record says so', async () => {
     .mocked(records.document)
     .mockRejectedValue(new ApiError('invalid-data', 'bad slug'));
   const view = await mount(<DocumentReader />);
-  expect(view.root.findByType(ContentUnavailable).props.title).toBe(
-    "This link doesn't open a record",
-  );
+  // The shared not-found pattern (sweep 2, item 2): a title, a body and
+  // Search, centred on the page.
+  const state = view.root.findByType(ContentUnavailable);
+  expect(state.props.title).toBe('This record isn’t in OPAX');
+  expect(state.props.body).toBe('The link may be old.');
+  expect(state.props.action.label).toBe('Search the record');
+  expect(view.root.findByType(ReaderList).props.centred).toBe(true);
   await act(async () => view.unmount());
 });
 

@@ -21,8 +21,8 @@ name: 60 Bill states and arrivals
     visible:
       id: bill-not-found
     timeout: 60000
-- assertVisible: Bill not found
-- assertVisible: This link may be old.
+- assertVisible: This bill isn’t in OPAX
+- assertVisible: The link may be old, or the bill may not be collected yet\.
 - takeScreenshot: ${EVIDENCE}/60-not-found
 - tapOn:
     id: bill-not-found-search

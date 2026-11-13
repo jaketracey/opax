@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import type { Electorate } from '../../api/catalogs';
@@ -11,7 +11,7 @@ import { SourceLine } from '../../design/source';
 import { ContentUnavailable, Skeleton } from '../../design/states';
 import { Heading, Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
-import { personRoute } from '../../navigation/routes';
+import { directoryRoute, personRoute } from '../../navigation/routes';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { CachedPortrait } from '../CachedPortrait';
 import { byFamilyName } from './FaceStackRow';
@@ -107,13 +107,21 @@ export default function Members() {
         />
       </Screen>
     );
-  // An old link or a removed seat: say so, never load for good.
+  // An old link or a removed seat: say so, never load for good. The shared
+  // not-found pattern (sweep 2, item 2): the directory's symbol, not a
+  // warning, and the parliamentarians directory to browse.
   if (failed === 'missing')
     return (
-      <Screen testID="members-screen">
+      <Screen testID="members-screen" centred>
         <ContentUnavailable
-          symbol="exclamationmark.triangle"
-          title="These members couldn't be found."
+          symbol="person.crop.circle"
+          title="These members aren’t in OPAX"
+          body="The list may have changed."
+          action={{
+            label: 'Browse parliamentarians',
+            onPress: () => router.navigate(directoryRoute('person')),
+            testID: 'members-missing-browse',
+          }}
           testID="members-missing"
         />
       </Screen>

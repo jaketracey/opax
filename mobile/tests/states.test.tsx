@@ -1159,6 +1159,42 @@ describe('shared state kit', () => {
     act(() => r.root.findByType(Button).props.onPress());
     expect(retry).toHaveBeenCalledTimes(1);
   });
+  // Sweep 2, item 2: at AX3 a stretched secondary button read from the
+  // leading edge and hung left under the centred title. The action hugs
+  // and a row centres it at every size.
+  test.each([1, 2.353, 3.571])(
+    'ContentUnavailable centres its action at font scale %s',
+    (fontScale) => {
+      act(() =>
+        Dimensions.set({
+          window: { ...window, width: 402, fontScale },
+          screen,
+        }),
+      );
+      const r = mount(
+        <ContentUnavailable
+          symbol={symbols.search}
+          title="This bill isn’t in OPAX"
+          body="The link may be old, or the bill may not be collected yet."
+          action={{
+            label: 'Search bills',
+            onPress: noop,
+            containerTestID: 'missing-action',
+          }}
+        />,
+      );
+      const row = r.root.find(
+        (node) =>
+          node.props.testID === 'missing-action' && typeof node.type === 'string',
+      );
+      expect(StyleSheet.flatten(row.props.style)).toMatchObject({
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignSelf: 'stretch',
+      });
+      expect(r.root.findByType(Button).props.hug).toBe(true);
+    },
+  );
   test.each([false, true])(
     'ContentUnavailable action=%s is optional',
     (action) => {

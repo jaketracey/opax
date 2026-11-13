@@ -876,16 +876,24 @@ test('a Senate seat lists six members then one face-stack row to the members lis
 test('not found and failure states', async () => {
   mockParams.id = 'el_000000000000000000000000';
   let r = await render(<Electorate />);
+  // The shared not-found pattern (sweep 2, item 2): centred on paper, one
+  // voice, no full stop, and the electorate directory to search.
   expect(unavailable(r, 'electorate-error')).toBe(
-    "We couldn't find this electorate.",
+    'This electorate isn’t in OPAX',
   );
   const missing = r.root
     .findAllByType(ContentUnavailable)
     .find((node) => node.props.testID === 'electorate-error')!;
-  expect(missing.props.body).toBeTruthy();
-  expect(missing.props.action.label).toBe('Search');
+  expect(missing.props.body).toBe('It may have been renamed or abolished.');
+  expect(missing.props.action.label).toBe('Search electorates');
   act(() => missing.props.action.onPress());
-  expect(router.navigate).toHaveBeenCalledWith('/search');
+  expect(router.navigate).toHaveBeenCalledWith({
+    pathname: '/directory',
+    params: { kind: 'electorate' },
+  });
+  const page = r.root.findByType(Screen);
+  expect(page.props.centred).toBe(true);
+  expect(page.props.grouped).toBe(false);
   await act(async () => r.unmount());
   mockParams.id = seat('Grayndler').electorate_id;
   mock.electorateFor.mockRejectedValue(new ApiError('http', 'nope'));
@@ -980,9 +988,22 @@ test('a Members link to a seat not in the release says so, never loads for good'
   load('New South Wales');
   mockParams.seat = 'fixture-removed-seat';
   const r = await render(<Members />);
+  // The shared not-found pattern (sweep 2, item 2).
   expect(unavailable(r, 'members-missing')).toBe(
-    "These members couldn't be found.",
+    'These members aren’t in OPAX',
   );
+  const missing = r.root
+    .findAllByType(ContentUnavailable)
+    .find((node) => node.props.testID === 'members-missing')!;
+  expect(missing.props.symbol).toBe('person.crop.circle');
+  expect(missing.props.body).toBe('The list may have changed.');
+  expect(missing.props.action.label).toBe('Browse parliamentarians');
+  act(() => missing.props.action.onPress());
+  expect(router.navigate).toHaveBeenCalledWith({
+    pathname: '/directory',
+    params: { kind: 'person' },
+  });
+  expect(r.root.findByType(Screen).props.centred).toBe(true);
   await act(async () => r.unmount());
 });
 
