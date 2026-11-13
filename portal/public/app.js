@@ -5671,9 +5671,11 @@ async function renderPartyMemberList(label, sections, key, { speechesLink = true
   const members = partyPage.partyMembers(label, { roster, divisions, same: samePartyLabel });
   const directoryParty = roster?.people?.find((p) => p.party && samePartyLabel(p.party, label))?.party;
   // Only a party the index holds speeches for, under the label the index files them as.
-  const speeches = speechesLink ? partyPage.partySpeechLabel(label, { indexed, roster, same: samePartyLabel }) : null;
+  const speeches = partyPage.partySpeechLabel(label, { indexed, roster, same: samePartyLabel });
+  const speechDate = indexed?.generated || roster?.meta?.generated;
   const html = partyPage.partyMembersHTML(label, members, partyPageHelpers(), {
-    speechesHref: speeches ? partySpeechSearch(speeches.label) : "",
+    speechesHref: speechesLink && speeches ? partySpeechSearch(speeches.label) : "",
+    speechSummary: speeches && speechDate ? `${speeches.count.toLocaleString('en-AU')} speeches in the record, as of ${partyPage.dayMonthYear(speechDate)}.` : "",
     directoryHref: directoryParty ? directoryHash("person", { party: directoryParty }) : "",
     updated: roster?.meta?.generated || "",
   });
@@ -9961,6 +9963,12 @@ async function openGame(which, params = null) {
       explore[which] = mod[game.mount]($(game.body), {
         displayTitle, topics: TOPICS, topicPhrase, searchHash, subjectHash, coverageRuleHTML,
       });
+      if (which === "tm") {
+        const {mountYearSnapshots} = await import('/year-snapshots.js');
+        const snapshots = mountYearSnapshots($(game.body));
+        const destroy = explore[which].destroy;
+        explore[which].destroy = () => { snapshots.destroy(); destroy(); };
+      }
     }
     // Every Explore dialog carries its hero into the sticky head once it
     // scrolls past: the Time Machine's big year, the others' own title.

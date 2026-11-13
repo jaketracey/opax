@@ -46,6 +46,12 @@ for(const path of paths) test(`server HTML contains the complete fixture core: $
   assert.match(core.querySelector('dl').textContent,/25,000|50,000|43/);
   for(const table of core.querySelectorAll('table')) assert.equal(table.querySelectorAll('tbody tr').length,20);
   assert.match(core.querySelector('tbody tr').textContent,/Example|GA100/);
+  if (path.includes('program=')) {
+    assert.ok(core.querySelector('tbody tr:first-child td:nth-child(2) a'), 'catalogued recipient remains linked');
+    const outside = core.querySelector('tbody tr:nth-child(2) td:nth-child(2)');
+    assert.equal(outside.textContent, 'Example Outside Catalogue Ltd');
+    assert.equal(outside.querySelector('a'), null, 'invented off-catalogue recipient stays plain text');
+  }
   if(path.includes('/agency/')) assert.equal(core.querySelector('tbody tr td').textContent,'Example Supplier 1 Pty Ltd','Agency previews use the client value/name order, even for reversed exports');
   assert.ok(core.querySelector('a[href*="example.org"], a[href*="grants.gov.au"], a[href*="data.qld.gov.au"], a[href*="tenders.gov.au"]'));
   assert.match(core.textContent,/Source:/);
