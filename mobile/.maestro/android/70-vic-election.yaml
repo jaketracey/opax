@@ -43,7 +43,14 @@ name: 70 Victorian election on Android
 - assertNotVisible: Share
 - assertVisible:
     id: vic-election-screen
-- tapOn: Suburb, postcode or district
+# The finder is the bar's native SearchView: collapsed to an icon until
+# tapped, and its hint carries leading spaces, so open it by resource id.
+- tapOn:
+    id: '.*:id/(search_src_text|search_button)'
+- extendedWaitUntil:
+    visible:
+      id: '.*:id/search_src_text'
+    timeout: 15000
 - inputText: '3350'
 - hideKeyboard
 - extendedWaitUntil:
@@ -63,7 +70,17 @@ name: 70 Victorian election on Android
 - assertVisible: Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.
 - takeScreenshot: ${EVIDENCE}/70-android-district
 - pressKey: Back
-- pressKey: Back
+- assertVisible:
+    id: vic-election-screen
+# Leave the search as iOS does with Cancel or Close. Android has neither:
+# its SearchView offers "Navigate up" (collapse) and "Clear query" (the X).
+- runFlow:
+    when:
+      visible:
+        id: '.*:id/search_src_text'
+    commands:
+      - tapOn:
+          text: '^(Navigate up|Clear query)$'
 - openLink: opax:///vic-election/southern-metropolitan
 - extendedWaitUntil:
     visible: Southern Metropolitan Region

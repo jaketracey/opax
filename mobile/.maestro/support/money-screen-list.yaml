@@ -19,8 +19,9 @@ appId: au.com.opax.app
           duration: 600
 # A native segment: tap and assert it by its label.
 - tapOn: List
+# Android's segmented button says "List, 1 of 2"; iOS says "List".
 - assertVisible:
-    text: List
+    text: 'List(, 1 of 2)?'
     selected: true
 # Donors is the List view's first section.
 - runFlow:
