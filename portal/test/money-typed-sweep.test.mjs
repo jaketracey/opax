@@ -456,7 +456,7 @@ test('person page ties: the scope line shows once the exporter marks the flows t
 });
 
 // ---- Donors and flows only their own donor return declares (round 3) ------------
-// receiptGraph drops 140 flows whose typed cells are empty: the parties' returns list no
+// receiptGraph drops 139 flows whose typed cells are empty: the parties' returns list no
 // receipt for them. Eleven donors have no other flow, so their typed total is 0. No surface
 // may show such a donor at $0: each says what is true (DONOR_DECLARED_ONLY) instead.
 // A donor whose only receipt is Public Funding (NSW Efa) is also left out, with its own line (PUBLIC_FUNDING_ONLY).
@@ -472,9 +472,9 @@ test('one predicate: hasPartyReceipts picks out the released donors and flows on
   assert.ok(DECLARED_ONLY.every(n => !Object.keys(n.by_type).length && n.total > 0), 'each holds a record figure from its own declarations');
   assert.ok(DECLARED_ONLY.some(n => n.id === GOLDMAN));
   const dropped = published.edges.filter(e => !e.grant && !e.flow && !hasPartyReceipts(e));
-  // 13 Nov 2026: 131 to 140 donor-declared flows, the nine to the Libertarian Party that only the donor's own return declares
+  // 13 Nov 2026: 130 to 139 donor-declared flows, the nine to the Libertarian Party that only the donor's own return declares
   // (Ancora, Australian Energy Producers, Chevron, Australian Hotels Association, IAG, IT Alliance, Deloitte, Allianz, Sanofi).
-  assert.equal(dropped.length, 141, '140 only the donor declared and 1 only public funding');
+  assert.equal(dropped.length, 140, '139 only the donor declared and 1 only public funding');
   assert.deepEqual(PUBLIC_ONLY.map(n => n.id), ['donor:nsw efa']);
   assert.equal(receiptGraph(published).edges.length, published.edges.length - dropped.length, 'receiptGraph drops exactly those flows');
   assert.equal(hasPartyReceipts({total: 0, count: 0}), true, 'a record without typed cells (a state graph) keeps its figures');
