@@ -2,20 +2,20 @@
   "scope": "Eligible recipient-side receipts, existing federal map nodes and edges. Before: entity/raw spelling. After: unique normalised/bracketless fallback with annotation review and state compatibility. Exported figures exclude Public Funding as in #355; exported_cells retains every typed cell for exporter coverage. No production calls.",
   "counts": {
     "after_exported": {
-      "rows": 16209,
-      "aud": 710857091.0
+      "rows": 16211,
+      "aud": 711000854.0
     },
     "after_exported_cells": {
-      "rows": 16210,
-      "aud": 711926864.0
+      "rows": 16212,
+      "aud": 712070627.0
     },
     "after_unmatched_brackets": {
       "rows": 6,
       "aud": 23050.0
     },
     "after_unmatched_node": {
-      "rows": 38913,
-      "aud": 507747630.0
+      "rows": 38954,
+      "aud": 509763561.0
     },
     "ambiguous": {
       "rows": 6,
@@ -26,24 +26,24 @@
       "aud": 190322.0
     },
     "before_exported": {
-      "rows": 16063,
-      "aud": 708654117.0
+      "rows": 16065,
+      "aud": 708797880.0
     },
     "before_exported_cells": {
-      "rows": 16064,
-      "aud": 709723890.0
+      "rows": 16066,
+      "aud": 709867653.0
     },
     "before_spelling_candidates": {
       "rows": 152,
       "aud": 2226024.0
     },
     "before_unmatched_node": {
-      "rows": 39059,
-      "aud": 509950604.0
+      "rows": 39100,
+      "aud": 511966535.0
     },
     "eligible": {
-      "rows": 55123,
-      "aud": 1219674494.0
+      "rows": 55166,
+      "aud": 1221834188.0
     },
     "newly_exported": {
       "rows": 146,
@@ -117,11 +117,11 @@
       "after_rows": 156
     },
     {
-      "before_aud": 553057.0,
-      "after_aud": 628057.0,
+      "before_aud": 568913.0,
+      "after_aud": 643913.0,
       "gain_aud": 75000.0,
-      "before_rows": 10,
-      "after_rows": 11
+      "before_rows": 11,
+      "after_rows": 12
     },
     {
       "before_aud": 4509342.0,
@@ -148,24 +148,24 @@
     },
     {
       "party": "LNP",
-      "before_aud": 27301290.0,
-      "after_aud": 27341540.0,
+      "before_aud": 27176291.0,
+      "after_aud": 27216541.0,
       "gain_aud": 40250.0,
-      "percent": 0.147429
+      "percent": 0.148107
     },
     {
       "party": "Labor",
-      "before_aud": 360120968.0,
-      "after_aud": 362084192.0,
+      "before_aud": 360096168.0,
+      "after_aud": 362059392.0,
       "gain_aud": 1963224.0,
-      "percent": 0.545157
+      "percent": 0.545194
     },
     {
       "party": "Liberal",
-      "before_aud": 201756942.0,
-      "after_aud": 201804942.0,
+      "before_aud": 201548942.0,
+      "after_aud": 201596942.0,
       "gain_aud": 48000.0,
-      "percent": 0.023791
+      "percent": 0.023816
     },
     {
       "party": "Nationals",

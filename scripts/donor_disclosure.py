@@ -29,6 +29,22 @@ from urllib.parse import quote
 AEC_SOURCES = ("aec_annual", "aec_election", "aec_referendum")
 AEC_SOURCE_SQL = "source IN ('aec_annual','aec_election','aec_referendum')"
 
+def own_party_recipients(db) -> dict:
+    """Rule 10: recipient spelling -> money-map party, for AEC rows with no canonical
+    recipient whose name reads as a party selected in its own right."""
+    from parli.ingest.money_aec_extras import current_party, own_party  # noqa: PLC0415
+    out = {}
+    if "recipient" not in {r[1] for r in db.execute("PRAGMA table_info(donations)")}:
+        return out
+    for (recipient,) in db.execute(
+            f"SELECT DISTINCT recipient FROM donations WHERE (recipient_canonical IS NULL OR recipient_canonical = '') "
+            f"AND {AEC_SOURCE_SQL}"):
+        party = current_party(own_party(recipient))
+        if party:
+            out[recipient] = party
+    return out
+
+
 RETURN_TYPES = {"aec_annual": "AEC annual return", "aec_election": "AEC election return",
                 "aec_referendum": "AEC referendum return", "vic_vec": "VEC donation return",
                 "tas_tec": "TEC disclosure"}
@@ -125,17 +141,25 @@ def attach_donor_disclosures(db, graph, jurisdiction):
     records = defaultdict(list)
     if jurisdiction == "federal":
         # AEC returns only: see AEC_SOURCES.
+        # export_money_graph rule 10: rows to a party the table leaves unbucketed count as the map counts them.
+        own = sorted(own_party_recipients(db))
+        own_sql = f" OR recipient IN ({','.join('?' * len(own))})" if own else ""
         rows = db.execute("SELECT donor_name,amount,financial_year,source,donation_id,donation_type "
-                          "FROM donations WHERE amount>0 AND recipient_canonical IS NOT NULL "
-                          f"AND donation_type!='flagged_review' AND {AEC_SOURCE_SQL}")
+                          f"FROM donations WHERE amount>0 AND (recipient_canonical IS NOT NULL{own_sql}) "
+                          f"AND donation_type!='flagged_review' AND {AEC_SOURCE_SQL}", own)
         for name, amount, year, source, row_id, kind in rows:
             records[name].append((amount, year, source, None, "https://transparency.aec.gov.au/", kind))
     else:
-        rows = db.execute("SELECT donor_name,amount,financial_year,source,source_record_id,source_url,disclosure_type "
-                          "FROM ext_donations WHERE jurisdiction=? AND amount>0 AND recipient_party IS NOT NULL",
+        # export_state_money rule 9: a gift with no recipient_party whose recipient reads as a party
+        # selected in its own right (the Libertarian Party) is counted there, so it is referenced here.
+        from parli.ingest.money_aec_extras import own_party  # noqa: PLC0415
+        recipient = "recipient" if "recipient" in {c[1] for c in db.execute("PRAGMA table_info(ext_donations)")} else "NULL"
+        rows = db.execute("SELECT donor_name,amount,financial_year,source,source_record_id,source_url,disclosure_type,"
+                          f"recipient_party,{recipient} FROM ext_donations WHERE jurisdiction=? AND amount>0",
                           (jurisdiction,))
-        for name, amount, year, source, record_id, url, kind in rows:
-            records[name].append((amount, year, source, record_id, url, kind))
+        for name, amount, year, source, record_id, url, kind, party, recipient in rows:
+            if party or own_party(recipient):
+                records[name].append((amount, year, source, record_id, url, kind))
     # A spelling loaded after the resolver last ran joins the entity it matches exactly.
     for name in list(records):
         eid = exact_index.get(norm_exact(name)) if name not in aliases else None

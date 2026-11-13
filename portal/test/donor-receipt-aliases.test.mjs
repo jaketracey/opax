@@ -38,7 +38,8 @@ test('released typed cells reconcile with the before/after audit and receipt cov
   assert.equal(rows - audit.counts.before_exported.rows, 146);
   assert.equal(audit.donors_gaining, 30);
   assert.equal(audit.counts.existing_match_changed?.rows ?? 0, 0);
-  assert.deepEqual([audit.counts.after_unmatched_node.rows, audit.counts.after_unmatched_node.aud], [38913, 507747630]);
+  // Row 137 adds 43 eligible rows; its new receipts and the Linc Energy cap loss leave 41 more unmatched.
+  assert.deepEqual([audit.counts.after_unmatched_node.rows, audit.counts.after_unmatched_node.aud], [38954, 509763561]);
   assert.equal(audit.counts.after_unmatched_node.rows,
     matching.by_result.unmatched[0] + matching.by_result.ambiguous[0] + matching.by_result.state_mismatch[0]);
   assert.deepEqual(graph.nodes.filter(publicFundingOnly).map(n => n.id), ['donor:nsw efa'], '#355 public-funding assertion stays in force');

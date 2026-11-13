@@ -1,9 +1,9 @@
 {
   "method": "Independent stdlib CSV/ZIP/Decimal calculation; no production receipt modules imported",
   "archive_sha256": "44b29dc4f7d830c12846a779d4b15283e0558ff864d7c2da7ffb75855e147c0a",
-  "receipt_edges_checked": 866,
+  "receipt_edges_checked": 878,
   "detailed_receipts_csv_sha256": "275569652822a4f6f6d02b8dca277e80bf4e4be2cf1c4ff7261152f94cc6186e",
-  "exported_rows": 16210,
+  "exported_rows": 16212,
   "legacy_fields_unchanged": true,
   "industries": {
     "gambling": {
@@ -99,7 +99,7 @@
     "finance": {
       "uncapped": {
         "donation_only": {
-          "aud": "38959336",
+          "aud": "39059336",
           "top5": [
             {
               "recipient": "Liberal",
@@ -124,7 +124,7 @@
           ]
         },
         "all_types": {
-          "aud": "203571178",
+          "aud": "203686884",
           "top5": [
             {
               "recipient": "Labor",
@@ -176,7 +176,7 @@
           ]
         },
         "all_types": {
-          "aud": "169655725",
+          "aud": "169671431",
           "top5": [
             {
               "recipient": "Labor",

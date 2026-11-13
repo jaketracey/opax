@@ -76,6 +76,15 @@ Methodology / exclusion rules (all documented in the output's `meta` block):
    `associatedTag`, the one line every surface shows beside the name. The same
    rule applies to every party; a branch or division of the party counts.
 
+10. A party the legacy `donations` table leaves unbucketed (recipient_canonical
+   empty) but the AEC extras grammar selects in its own right
+   (money_aec_extras.own_party: the Liberal Democratic Party and the Libertarian
+   Party, one party under two names) gets its node from the rows whose recipient
+   name reads as it, under its current name (money_aec_extras.current_party), with
+   node.aliases holding the former names. Those rows are counted like any other
+   party's: in the party node and, under rules 3 to 7, in each donor's total and
+   flow (aec_receipt_selection maps the same recipients for the typed cells).
+
 Node ids are 'donor:' + norm_key(label). Two donors whose labels share a key
 (an entity and an unresolved look-alike) get distinct ids: the second takes
 '~<entity id>' (or '~2') and meta.node_id_collisions counts them, so an id
@@ -97,9 +106,12 @@ instead of only testing whether a lifetime span overlaps it.
 
 try:
     from scripts.donor_disclosure import (AEC_SOURCE_SQL, attach_donor_disclosures, exact_alias_index,
-                                          resolve_alias)
+                                          own_party_recipients, resolve_alias)
 except ModuleNotFoundError:
-    from donor_disclosure import AEC_SOURCE_SQL, attach_donor_disclosures, exact_alias_index, resolve_alias
+    from donor_disclosure import (AEC_SOURCE_SQL, attach_donor_disclosures, exact_alias_index,
+                                  own_party_recipients, resolve_alias)
+
+from parli.ingest.money_aec_extras import PARTY_FORMER_NAMES
 
 import os
 import json
@@ -277,13 +289,14 @@ def load_associated_register(db, alias_to_entity: dict, exact_index: dict) -> di
     if not have:
         sys.stderr.write("export_money_graph: no associated_entities table; no donor is flagged\n")
         return {}
-    # The party grammar the AEC extras loader uses for the same returns (Labor, Liberal, LNP, ...).
-    from parli.ingest.money_aec_extras import canon_party
+    # The party grammar the AEC extras loader uses for the same returns (Labor, Liberal, LNP, ...),
+    # under the money map's node name (a renamed party's former name reads as its current one).
+    from parli.ingest.money_aec_extras import canon_party, current_party
     reg: dict = defaultdict(lambda: defaultdict(lambda: defaultdict(set)))
     for name, party, fy in db.execute(
             "SELECT DISTINCT entity_name, associated_party, financial_year FROM associated_entities "
             "WHERE source = 'aec_assoc_entity'"):
-        canon = canon_party(party)
+        canon = current_party(canon_party(party))
         if not canon or not (name or "").strip():
             continue
         for key in {resolve_alias(name.strip(), alias_to_entity, exact_index), norm_key(name)} - {None, ""}:
@@ -604,13 +617,25 @@ def main() -> None:
     # rule 0: what the AEC filter leaves out, by source, for meta
     non_aec = {r[0] or "unknown": r[1] for r in db.execute(
         f"SELECT source, COUNT(*) {base} AND NOT ({AEC_SOURCE_SQL}) GROUP BY source")}
-    rows = db.execute(
+    rows = [dict(r) for r in db.execute(
         f"""
         SELECT donor_name, recipient_canonical AS party, amount, financial_year,
                industry, donor_type
         {base} AND {AEC_SOURCE_SQL}
         """
-    ).fetchall()
+    )]
+    # rule 10: rows to a party the table leaves unbucketed, under the party's current name.
+    own = own_party_recipients(db)
+    if own:
+        slots = ",".join("?" * len(own))
+        for r in db.execute(
+                f"""SELECT donor_name, recipient, amount, financial_year, industry, donor_type FROM donations
+                    WHERE (recipient_canonical IS NULL OR recipient_canonical = '')
+                      AND donation_type != 'flagged_review' AND amount > 0 AND {AEC_SOURCE_SQL}
+                      AND recipient IN ({slots})""", sorted(own)):
+            r = dict(r)
+            r["party"] = own[r.pop("recipient")]
+            rows.append(r)
     used_rows = len(rows)
 
     # Aggregate per canonical donor entity (rule 6).
@@ -754,6 +779,8 @@ def main() -> None:
             "total": round(pt["total"]),
             "count": pt["count"],
             **year_fields(pt),
+            # rule 10: a renamed party answers to its former names.
+            **({"aliases": list(PARTY_FORMER_NAMES[party])} if party in PARTY_FORMER_NAMES else {}),
         })
 
     eid_to_node: dict = {}

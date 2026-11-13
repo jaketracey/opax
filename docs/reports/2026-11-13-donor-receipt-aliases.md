@@ -1,5 +1,7 @@
 # Receipt donor spelling coverage after review
 
+Historical #355-baseline measurements are retained below. The current #357 rebuild and every re-pin reason are in [the 14 November merge report](2026-11-14-donor-aliases-main-merge.md); the companion audit JSON now records that current build.
+
 This rebuild merges `origin/main` at de66531cc (#355) into the donor-alias lane. Row 137 (`im/ldp-money`) is not included. Counts come from the current cached AEC receipt backfill and the merged exporter, not either branch's previous pins. The before path uses the former entity/raw donor lookup on those same inputs; the after path adds the reviewed spelling fallbacks. No production requests were made.
 
 `donor-disclosure.js` `receiptGraph` reads typed cells. `export_money_graph.py` attaches them through `aec_receipt_types.attach_receipt_types`. Case, punctuation, spacing and HTML encodings use the existing exact normaliser. Bracket fallbacks require one existing node and do not merge or create nodes or edges. The original individual example still gains four rows worth $65,000: $826,049 over 19 receipts becomes $891,049 over 23.

@@ -19,6 +19,8 @@ import sqlite3
 import unicodedata
 import zipfile
 
+OWN_PARTIES = [(re.compile(r'\b(?:liberal democrat(?:s|ic)?|libertarian)\b', re.I), 'Libertarian Party')]
+
 
 def decoded_name(name):
     for _ in range(2):
@@ -81,6 +83,10 @@ def audit(db, archive, graph, comparison, legacy=None):
     for donor, recipient, party, amount, fy, tag, flag in db.execute(
         "SELECT donor_name,recipient,recipient_canonical,amount,financial_year,industry,donation_type "
         "FROM donations WHERE source IN ('aec_annual','aec_election','aec_referendum')"):
+        # Independent copy of export rule 10: unbucketed former/current names
+        # of the selected renamed party count under its current node.
+        if not party:
+            party = next((current for pattern, current in OWN_PARTIES if pattern.search(recipient or '')), None)
         if party:
             recipients[recipient].add(party)
         if flag == 'flagged_review':

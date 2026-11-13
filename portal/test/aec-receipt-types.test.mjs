@@ -83,7 +83,8 @@ test('typed map finance figures and leading recipients match the independent CSV
   const donations=industryRanking('finance','donation_only');
   const allTypes=industryRanking('finance','all_types');
   assert.equal(donations.reduce((sum,[,amount])=>sum+amount,0),24789585);
-  assert.equal(allTypes.reduce((sum,[,amount])=>sum+amount,0),169655725);
+  // Merge #357: finance all types rises $15,706 from $169,655,725 to $169,671,431 for Westpac's LDP receipt; alias gains are retained.
+  assert.equal(allTypes.reduce((sum,[,amount])=>sum+amount,0),169671431);
   assert.deepEqual(donations.slice(0,5),[['Liberal',14414067],['Labor',8722283],['Nationals',1335985],['LNP',289250],['Greens',28000]]);
   assert.deepEqual(allTypes.slice(0,5),[['Labor',82305854],['Liberal',64113800],['Nationals',10982297],['LNP',10229071],["Katter's Australian Party",1017881]]);
 });
