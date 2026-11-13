@@ -1105,6 +1105,60 @@ describe('the native edition reader', () => {
     expect(lines).toHaveLength(1);
     expect(root.findAllByType(SourceLine).length).toBeGreaterThanOrEqual(3);
   });
+  // The composer's flag decides. Without it, a member's topic labels and a
+  // topic's speakers are never parts of one whole (the composer never says
+  // so for them); an older grant or program slide is guessed from its numbers.
+  test.each([
+    ['grant', true, [55, 28, 11], 'share'],
+    ['politician', true, [40, 35, 25], 'share'],
+    ['grant', false, [100, 1], 'series'],
+    ['program', false, [40, 35, 25], 'series'],
+    ['topic', undefined, [100, 1], 'series'],
+    ['politician', undefined, [40, 35, 25], 'series'],
+    ['politician', undefined, [19, 12], 'series'],
+    ['grant', undefined, [60, 40], 'share'],
+    ['program', undefined, [10, 83, 7], 'share'],
+  ] as const)(
+    'a %s bars slide with whole=%s at %j draws a %s',
+    async (kind, whole, pcts, draws) => {
+      const base =
+        kind === 'politician'
+          ? person
+          : kind === 'topic'
+            ? { ...edition, kind, path: '/reports/housing' }
+            : { ...edition, kind };
+      const data = {
+        ...base,
+        facts: {
+          ...base.facts,
+          figures: [],
+          events: [],
+          division: null,
+          bars: {
+            title: 'Shares',
+            items: pcts.map((pct, i) => ({ label: `Part ${i + 1}`, pct })),
+            note: null,
+            ...(whole === undefined ? {} : { whole }),
+          },
+          order: [{ type: 'bars' as const, index: 0 }],
+        },
+      };
+      jest.mocked(catalogs.todayEdition).mockResolvedValue({ ...ready, data });
+      const { root } = await render(<EditionStory />);
+      const fact = host(root, 'edition-fact-0')[0]!;
+      expect(fact.findAllByType(ShareBar)).toHaveLength(
+        draws === 'share' ? 1 : 0,
+      );
+      expect(fact.findAllByType(BarSeries)).toHaveLength(
+        draws === 'share' ? 0 : 1,
+      );
+      const drawn =
+        draws === 'share'
+          ? fact.findByType(ShareBar).props.parts
+          : fact.findByType(BarSeries).props.data;
+      expect(drawn.map((part: { value: number }) => part.value)).toEqual(pcts);
+    },
+  );
   test('with a chart before a figure, the one source line shown opens the full sheet', async () => {
     const grant = {
       ...edition,
