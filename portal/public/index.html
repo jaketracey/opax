@@ -64,7 +64,7 @@
 <script type="module" src="/register-tables-entry.js?v=9ebc706d8d"></script>
 <link rel="stylesheet" href="/vote-tables.css?v=d727aad769">
 <script type="module" src="/vote-tables.js?v=c174e74912"></script>
-<link rel="stylesheet" href="/style.css?v=ee22537027">
+<link rel="stylesheet" href="/style.css?v=4dcd0efb54">
 <link rel="stylesheet" href="/ui-controls.css?v=ce29178242">
 <link rel="stylesheet" href="/ui-source.css?v=78ddb8fc1b">
 <link rel="stylesheet" href="/page-actions.css?v=a416a2254f">
@@ -578,7 +578,7 @@
       </div>
       <div id="money-stage" class="money-stage">
         <aside id="money-journey-story" class="journey-story" aria-label="Guided journey" hidden></aside>
-        <div id="money-map-root" class="money-map-root ui-plate"></div>
+        <div id="money-map-root" class="money-map-root ui-plate"><p class="map-drawing" role="status">Drawing the map</p></div>
       </div>
       <div id="money-research-results"></div>
       <!-- The map's one source line (moneyFineprintHTML in app.js). -->
@@ -2102,7 +2102,7 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=e98be429d3" defer></script>
+<script src="/spa-shell.js?v=98e80e22af" defer></script>
 <script src="/navigation.js?v=f8e186e029" defer></script>
 <script src="/quick-search.js?v=1009512e8a" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>

@@ -1611,6 +1611,19 @@ async function openLargestGrants(month, manageFocus) {
   }
 }
 let moneyMapGeneration = 0;
+/* A map card while its module and data load: a sunken field that says what is
+   coming (the server's boot frame shows the same field), in place of an empty
+   plate with live controls. It goes once the map has drawn its first frame. */
+const MAP_DRAWING_HTML = `<p class="map-drawing" role="status">Drawing the map</p>`;
+function settleMapDrawing(root) {
+  const field = root.querySelector(":scope > .map-drawing");
+  if (!field) return;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return field.remove();
+    field.classList.add("is-done");
+    setTimeout(() => field.remove(), 260);
+  }));
+}
 let moneyMapSetup = null;
 let moneyJourneys = null;
 let moneyJourneyModule = null;
@@ -1671,14 +1684,15 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   if (moneyMapHandle) { moneyMapHandle.destroy(); moneyMapHandle = null; moneyMapJur = null; }
   const root = $("money-map-root");
   root.classList.remove("show-key");
-  root.innerHTML = `<p class="ui-status-line money-map-status" role="status">Loading the map…</p>`;
+  root.innerHTML = MAP_DRAWING_HTML;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
     const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=7ca6ed22e2"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=20acce6c66"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
-    root.textContent = "";
+    // The "Drawing the map" field stays over the card until the map's first frame.
+    for (const child of [...root.children]) if (!child.classList.contains("map-drawing")) child.remove();
     const research = await researchModule.mountMapResearch($('money-research'), data, {
       signal: setup.signal, isCurrent,
       resultsContainer: $('money-research-results'),
@@ -1703,6 +1717,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
     });
     if (!isCurrent()) { handle.destroy(); return; }
     moneyMapHandle = handle;
+    settleMapDrawing(root);
     const legend = root.querySelector('.mm-legend');
     if (legend) {
       legend.id = 'money-map-key';
