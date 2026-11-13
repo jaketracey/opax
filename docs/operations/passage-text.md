@@ -202,11 +202,13 @@ KB or external schedule was inspected or changed in this lane.
 
 The step exports to a fresh empty staging directory and runs the full source
 audit before installation. The publication guard requires complete, reconciled
-metadata, retains every public entity and excerpt ID, and refuses more than 2%
+metadata, retains every public entity and every excerpt ID except one rotated out
+of its entity's 12-excerpt window by newer records, and refuses more than 2%
 shrink in content/lookup shard counts or total published record connections.
-Its byte ceiling is the smaller of HEAD's size and **163,453,646 bytes**, the
-existing 155.88 MiB allocation (515 files: 256 content shards, 256 lookup shards,
-index, stats and identity links). Timestamp-only changes use the existing
+Its byte ceiling (13 Nov 2026) is the 164,138,847-byte tree shipped then plus 25%,
+**205,173,558 bytes**, with no file over Cloudflare's 25 MiB asset limit; see
+[nightly-refresh.md](nightly-refresh.md#evidence-refresh-weekly-and-first-run-catch-up).
+Timestamp-only changes use the existing
 keep-if-unchanged semantics. Any evidence failure restores HEAD, cleans new
 shards and records a failed step while the rest of the nightly continues.
 
