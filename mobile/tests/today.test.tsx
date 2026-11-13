@@ -26,6 +26,7 @@ import { OfflineLine } from '../src/design/states';
 import Today from '../src/features/Today';
 import { WelcomePage } from '../src/features/welcome/Welcome';
 import { AustraliaDots } from '../src/features/today/AustraliaDots';
+import { TodayEditionCard } from '../src/features/today/FeaturedPeopleCard';
 import { TodayFoot } from '../src/features/today/Foot';
 import { Masthead, mastheadDate } from '../src/features/today/Masthead';
 import { useOverview as useElectionOverview } from '../src/features/vic-election/reads';
@@ -73,6 +74,8 @@ jest.mock('../src/api/runtime', () => ({
     bill: jest.fn(() => new Promise(() => {})),
     roster: jest.fn(() => new Promise(() => {})),
     slugs: jest.fn(() => new Promise(() => {})),
+    // No published calendar: no sitting line, the closing line's date alone.
+    sittingDays: jest.fn(async () => null),
   },
 }));
 jest.mock('../src/features/vic-election/reads', () => ({
@@ -973,12 +976,27 @@ describe('the first second and the last line (sweep 3, lane A)', () => {
     setUp({ cached: { date: addDays(today, -1) } });
     const r = await render(<Today />);
     const foot = r.root.findByType(TodayFoot);
-    expect(foot.props.ending).toMatchObject({ attempt: 0 });
+    // The sitting line's own read, asked once for both lines.
+    expect(foot.props.ending).toMatchObject({ sitting: { record: null } });
+    expect(mock.sittingDays).toHaveBeenCalledTimes(1);
     // The masthead's own date; no sitting calendar in this suite, so the
     // date alone.
     expect(strings(hosts(r, 'today-ending')[0]!)).toBe(
       `That's the record for ${mastheadDate(r.root.findByType(Masthead).props.now)}.`,
     );
+  });
+
+  test('the late slot’s edition card draws its plate finished; the top slot’s draws', async () => {
+    setUp({ cached: null, edition: editionAged(7) });
+    const late = await render(<Today />);
+    expect(blocks(late.root).indexOf('today-edition-card')).toBeGreaterThan(
+      blocks(late.root).indexOf('today-declarations'),
+    );
+    expect(late.root.findByType(TodayEditionCard).props.still).toBe(true);
+    setUp({ cached: { date: addDays(today, -1) } });
+    const top = await render(<Today />);
+    expect(blocks(top.root)[0]).toBe('today-edition-card');
+    expect(top.root.findByType(TodayEditionCard).props.still).toBe(false);
   });
 
   test('no ending while the masthead says it shows a saved copy', async () => {

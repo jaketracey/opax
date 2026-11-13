@@ -1,12 +1,11 @@
 import { StyleSheet, View } from 'react-native';
-import { catalogs } from '../../api/runtime';
 import { copy } from '../../design/copy';
 import { PageFoot } from '../../design/record';
 import { Text } from '../../design/text';
 import { colors, hairline, rhythm } from '../../design/tokens';
 import { mastheadDate } from './Masthead';
-import { nextSitting, type SittingDays } from './sitting';
-import { useTodayRead } from './TodayBlock';
+import { nextSitting } from './sitting';
+import type { SittingRead } from './SittingLine';
 
 /**
  * The foot of Today (`PageFoot`, Today variant): the independence line,
@@ -24,7 +23,8 @@ import { useTodayRead } from './TodayBlock';
 export function TodayFoot({
   ending,
 }: {
-  ending?: { now: Date; attempt: number };
+  /** Today's clock and its sitting calendar read (`useSittingRead`). */
+  ending?: { now: Date; sitting: SittingRead | null };
 }) {
   return (
     <View
@@ -44,26 +44,22 @@ export function TodayFoot({
 
 /**
  * The closing line, drawn once the sitting calendar's read answers so the
- * sentence never grows under the reader. It reads the copy the sitting
- * line saved (no second request on a pull); no calendar is the date alone.
- * One text, so VoiceOver reads it in one pass; the rule is decoration.
+ * sentence never grows under the reader. It is the sitting line's own read
+ * (one request, revalidated with it on a pull); no calendar is the date
+ * alone. One text, so VoiceOver reads it in one pass; the rule is decoration.
  */
-function TodayEnding({ now, attempt }: { now: Date; attempt: number }) {
-  const read = useTodayRead(
-    'sitting',
-    async (): Promise<{ file: SittingDays | null }> => {
-      try {
-        return { file: (await catalogs.sittingDays())?.data ?? null };
-      } catch {
-        return { file: null };
-      }
-    },
-    attempt,
-  );
-  if (!read) return null;
+function TodayEnding({
+  now,
+  sitting,
+}: {
+  now: Date;
+  sitting: SittingRead | null;
+}) {
+  if (!sitting) return null;
+  const file = sitting.record?.data ?? null;
   const line = copy.todayEnding(
     mastheadDate(now),
-    read.file ? nextSitting(read.file, now) : null,
+    file ? nextSitting(file, now) : null,
   );
   return (
     <View testID="today-ending" style={styles.ending}>

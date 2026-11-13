@@ -7,7 +7,7 @@ import { ApiError } from '../src/api/errors';
 import { assertAllowedPath } from '../src/api/policy';
 import { catalogs } from '../src/api/runtime';
 import { Text } from '../src/design/text';
-import { SittingLine } from '../src/features/today/SittingLine';
+import { SittingLine, useSittingRead } from '../src/features/today/SittingLine';
 import {
   decodeSittingDays,
   sittingDaysPath,
@@ -272,14 +272,17 @@ test('the calendar is the one new static read the app allows', () => {
     expect(() => assertAllowedPath(path)).toThrow();
 });
 
+// Today reads the calendar once and hands the answer to the line.
+function Line({ now }: { now: Date }) {
+  return <SittingLine now={now} sitting={useSittingRead(0)} />;
+}
+
 describe('the drawn line', () => {
   async function render(read: unknown, iso = '2026-11-13T01:00:00Z') {
     jest.mocked(catalogs.sittingDays).mockResolvedValue(read as never);
     let renderer!: TestRenderer.ReactTestRenderer;
     await act(async () => {
-      renderer = TestRenderer.create(
-        <SittingLine now={new Date(iso)} attempt={0} />,
-      );
+      renderer = TestRenderer.create(<Line now={new Date(iso)} />);
     });
     return renderer;
   }

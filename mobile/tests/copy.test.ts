@@ -51,7 +51,7 @@ test('shared copy keeps shell wording and the shorter website menu label', () =>
       words: 'Tuesday 17 November',
     }),
   ).toBe(
-    "That's the record for Saturday 14 November. Parliament next sits on Tuesday 17 November.",
+    "That's the record for Saturday 14 November. Parliament next sits Tuesday 17 November.",
   );
   expect(Object.isFrozen(copy)).toBe(true);
 });

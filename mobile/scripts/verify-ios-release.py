@@ -368,8 +368,19 @@ def verify_no_drawn_diagnostics(body):
     return count
 
 
-# Launch arguments only e2e builds read (src/onboarding/launch-flag.e2e.ts).
-E2E_LAUNCH_FLAGS = ("OPAXWelcomeTour",)
+# Launch arguments only e2e builds read: the welcome tour's
+# (src/onboarding/launch-flag.e2e.ts) and Today's capture fixture
+# (src/features/today/launch-fixture.ts; release bundles resolve
+# launch-fixture.production.ts, which names none of them).
+E2E_LAUNCH_FLAGS = (
+    "OPAXWelcomeTour",
+    "OPAXSeat",
+    "OPAXEditionCache",
+    "OPAXEditionAge",
+    "OPAXWelcomeDeclined",
+    "OPAXPlateDraw",
+    "OPAXVicElection",
+)
 
 
 def verify_no_e2e_launch_flags(body):

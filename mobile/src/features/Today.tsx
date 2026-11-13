@@ -48,7 +48,7 @@ import {
 } from './today/launch-fixture';
 import { Masthead, useNow } from './today/Masthead';
 import { MoreToExplore } from './today/MoreToExplore';
-import { SittingLine } from './today/SittingLine';
+import { SittingLine, useSittingRead } from './today/SittingLine';
 import {
   editionInSlot,
   launchCase,
@@ -311,6 +311,7 @@ export default function Today() {
     wasOffline.current = offline;
     if (back && nothingSavedAt === attempt) retry();
   }, [offline, nothingSavedAt, attempt, retry]);
+  const sitting = useSittingRead(attempt);
 
   const electionSavedAt =
     election.record &&
@@ -392,6 +393,9 @@ export default function Today() {
             edition={edition.block}
             tier={tier ?? undefined}
             today={today}
+            // The late slot sits below the fold: its plate is drawn
+            // finished and leaves the timeline's one draw for the story.
+            still={name === 'edition-late'}
           />
         );
       }
@@ -451,7 +455,7 @@ export default function Today() {
             ending={
               nothingSaved || offlineAt !== undefined
                 ? undefined
-                : { now, attempt }
+                : { now, sitting }
             }
           />
         );
@@ -473,7 +477,7 @@ export default function Today() {
       <Masthead
         now={now}
         offlineSavedAt={offlineAt ?? null}
-        sitting={<SittingLine now={now} attempt={attempt} />}
+        sitting={<SittingLine now={now} sitting={sitting} />}
         // From the first frame, neutral until the seat read answers, so the
         // map's clearance never moves the date (sweep 3, item 1).
         mark={

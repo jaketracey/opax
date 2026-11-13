@@ -7,7 +7,7 @@
  * Today's first frame in today.test.tsx.
  */
 import { act, type ReactElement, type ReactNode } from 'react';
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import type * as ReanimatedTypes from 'react-native-reanimated';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import snapshot from '../scripts/fixture-snapshot.json';
@@ -22,10 +22,14 @@ import { copy } from '../src/design/copy';
 import { PageFoot } from '../src/design/record';
 import { Text } from '../src/design/text';
 import { colors, hairline, radii, rhythm } from '../src/design/tokens';
-import { EditionSkeleton } from '../src/features/edition/EditionCard';
+import {
+  EditionCard,
+  EditionSkeleton,
+} from '../src/features/edition/EditionCard';
 import { Plate, timelineStop } from '../src/features/edition/Plate';
 import { resetTimelineDrawForTests } from '../src/features/edition/timeline-draw';
 import { TodayFoot } from '../src/features/today/Foot';
+import { SittingLine, useSittingRead } from '../src/features/today/SittingLine';
 import { decodeSittingDays, nextSitting } from '../src/features/today/sitting';
 import { todayFixture } from '../src/features/today/launch-fixture';
 // Trimmed 2026 calendar: Senate only 16 to 19 Nov, both 23 to 26 Nov.
@@ -44,7 +48,14 @@ jest.mock('../src/features/today/launch-fixture', () => ({
   todayFixture: jest.fn(),
 }));
 jest.mock('../src/api/runtime', () => ({
-  catalogs: { sittingDays: jest.fn() },
+  catalogs: {
+    sittingDays: jest.fn(),
+    bills: jest.fn(() => new Promise(() => {})),
+    bill: jest.fn(() => new Promise(() => {})),
+    roster: jest.fn(() => new Promise(() => {})),
+    slugs: jest.fn(() => new Promise(() => {})),
+    directory: jest.fn(() => new Promise(() => {})),
+  },
   portraits: { get: jest.fn(async () => null) },
   yearPictures: { get: jest.fn(async () => null) },
 }));
@@ -56,9 +67,22 @@ jest.mock('expo-router', () => {
   const React = require('react');
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const Native = require('react-native');
+  const Wrap = ({ children, ...props }: { children?: ReactNode }) =>
+    React.createElement(Native.View, props, children);
+  const Link = Object.assign(
+    (props: { children?: ReactNode }) => React.createElement(Wrap, props),
+    {
+      Trigger: (props: { children?: ReactNode }) =>
+        React.createElement(Wrap, props),
+      Preview: () => null,
+      Menu: (props: { children?: ReactNode }) =>
+        React.createElement(Wrap, props),
+      MenuAction: (props: { children?: ReactNode }) =>
+        React.createElement(Wrap, props),
+    },
+  );
   return {
-    Link: (props: { children?: ReactNode }) =>
-      React.createElement(Native.View, props, props.children),
+    Link,
     router: { push: jest.fn(), navigate: jest.fn() },
     useSegments: () => [],
   };
@@ -68,9 +92,10 @@ const Reanimated = jest.requireMock(
   'react-native-reanimated',
 ) as typeof ReanimatedTypes;
 
-const edition: EditionView = editionFor(
+const block = editionFor(
   decodeEdition(JSON.parse(responseBytes(snapshot, editionPath).toString())),
-).data!;
+);
+const edition: EditionView = block.data!;
 const sitting = decodeSittingDays(raw);
 // Saturday 14 November, noon in Sydney.
 const saturday = new Date('2026-11-14T01:00:00Z');
@@ -93,6 +118,7 @@ const fixture = (plateDraw: 'on' | null) =>
     plateDraw,
   });
 beforeEach(() => {
+  jest.clearAllMocks();
   mockReduced = false;
   resetTimelineDrawForTests();
   fixture('on');
@@ -141,18 +167,30 @@ describe('item 1: the launch skeleton is the edition card’s outline', () => {
 });
 
 describe('item 7: Today ends on a sentence', () => {
-  const foot = async (file: unknown, now = saturday) => {
-    jest
-      .mocked(catalogs.sittingDays)
-      .mockResolvedValue(
-        file === null
-          ? null
-          : ({ data: file, stale: false, savedAt: 1 } as never),
-      );
-    return (await render(<TodayFoot ending={{ now, attempt: 0 }} />)).root;
-  };
+  const answered = (file: unknown) => ({
+    record:
+      file === null
+        ? null
+        : ({ data: file, stale: false, savedAt: 1 } as never),
+  });
+  const foot = async (file: unknown, now = saturday) =>
+    (await render(<TodayFoot ending={{ now, sitting: answered(file) }} />))
+      .root;
+  // Today's arrangement: one calendar read for the line under the date and
+  // the closing line.
+  function Page({ attempt = 0 }: { attempt?: number }) {
+    const read = useSittingRead(attempt);
+    return (
+      <>
+        <SittingLine now={saturday} sitting={read} />
+        <TodayFoot ending={{ now: saturday, sitting: read }} />
+      </>
+    );
+  }
+  const ending = (root: ReactTestInstance) =>
+    host(root, 'today-ending')[0]?.findByType(Text).props.children;
 
-  test('the wording, in one place, Australian dates and no dashes', () => {
+  test('the wording, in one place, in the sitting line’s form, Australian dates and no dashes', () => {
     expect(copy.todayEnding('Saturday 14 November')).toBe(
       "That's the record for Saturday 14 November.",
     );
@@ -162,7 +200,7 @@ describe('item 7: Today ends on a sentence', () => {
         words: 'Tuesday 17 November',
       }),
     ).toBe(
-      "That's the record for Saturday 14 November. Parliament next sits on Tuesday 17 November.",
+      "That's the record for Saturday 14 November. Parliament next sits Tuesday 17 November.",
     );
     expect(
       copy.todayEnding('Friday 23 October', {
@@ -170,7 +208,7 @@ describe('item 7: Today ends on a sentence', () => {
         words: 'Monday 26 October',
       }),
     ).toBe(
-      "That's the record for Friday 23 October. The House next sits on Monday 26 October.",
+      "That's the record for Friday 23 October. The House next sits Monday 26 October.",
     );
     for (const houses of ['both', 'house', 'senate'] as const)
       expect(
@@ -180,8 +218,8 @@ describe('item 7: Today ends on a sentence', () => {
 
   test('a bronze hairline, then one line the screen reader reads in one pass, above the independence line', async () => {
     const root = await foot(sitting);
-    const ending = host(root, 'today-ending')[0]!;
-    expect(flat(ending)).toMatchObject({
+    const block = host(root, 'today-ending')[0]!;
+    expect(flat(block)).toMatchObject({
       alignItems: 'center',
       gap: rhythm.block,
     });
@@ -196,12 +234,12 @@ describe('item 7: Today ends on a sentence', () => {
       accessibilityElementsHidden: true,
       importantForAccessibility: 'no-hide-descendants',
     });
-    const texts = ending.findAllByType(Text);
+    const texts = block.findAllByType(Text);
     expect(texts).toHaveLength(1);
     expect(texts[0]!.props).toMatchObject({
       variant: 'secondary',
       children:
-        "That's the record for Saturday 14 November. The Senate next sits on Monday 16 November.",
+        "That's the record for Saturday 14 November. The Senate next sits Monday 16 November.",
     });
     // Above the disclaimer and the correction link, which stay as they were.
     const order = root
@@ -216,33 +254,50 @@ describe('item 7: Today ends on a sentence', () => {
     expect(flat(host(root, 'today-foot')[0]!).gap).toBe(rhythm.group);
   });
 
-  test('with no calendar, the date alone; the calendar is read from its saved copy, not asked again', async () => {
-    const root = await foot(null);
-    expect(host(root, 'today-ending')[0]!.findByType(Text).props.children).toBe(
-      "That's the record for Saturday 14 November.",
-    );
-    expect(catalogs.sittingDays).toHaveBeenCalledWith();
-  });
-
-  test('a failed calendar read still ends the page', async () => {
-    jest.mocked(catalogs.sittingDays).mockRejectedValue(new Error('offline'));
-    const { root } = await render(
-      <TodayFoot ending={{ now: saturday, attempt: 0 }} />,
-    );
-    expect(host(root, 'today-ending')[0]!.findByType(Text).props.children).toBe(
+  test('with no calendar, the date alone', async () => {
+    expect(ending(await foot(null))).toBe(
       "That's the record for Saturday 14 November.",
     );
   });
 
-  test('nothing is drawn until the calendar answers, so the line never grows under the reader', async () => {
-    jest
-      .mocked(catalogs.sittingDays)
-      .mockReturnValue(new Promise(() => {}) as never);
-    const { root } = await render(
-      <TodayFoot ending={{ now: saturday, attempt: 0 }} />,
+  test('nothing is drawn until the calendar answers, then the whole sentence at once', async () => {
+    let answer!: (read: unknown) => void;
+    jest.mocked(catalogs.sittingDays).mockReturnValue(
+      new Promise((resolve) => {
+        answer = resolve;
+      }) as never,
     );
+    const { root } = await render(<Page />);
     expect(host(root, 'today-ending')).toHaveLength(0);
     expect(host(root, 'today-independence')).toHaveLength(1);
+    await act(async () => answer(answered(sitting).record));
+    expect(ending(root)).toBe(
+      "That's the record for Saturday 14 November. The Senate next sits Monday 16 November.",
+    );
+  });
+
+  test('one calendar read serves the sitting line and the closing line, and a pull revalidates both', async () => {
+    jest
+      .mocked(catalogs.sittingDays)
+      .mockResolvedValue(answered(sitting).record);
+    const r = await render(<Page />);
+    expect(catalogs.sittingDays).toHaveBeenCalledTimes(1);
+    expect(catalogs.sittingDays).toHaveBeenLastCalledWith(false);
+    expect(host(r.root, 'today-sitting')).not.toHaveLength(0);
+    expect(ending(r.root)).toMatch(/Monday 16 November\.$/);
+    // A pull: one revalidation, both lines from its answer.
+    jest.mocked(catalogs.sittingDays).mockResolvedValue(answered(null).record);
+    await act(async () => r.update(<Page attempt={1} />));
+    expect(catalogs.sittingDays).toHaveBeenCalledTimes(2);
+    expect(catalogs.sittingDays).toHaveBeenLastCalledWith(true);
+    expect(host(r.root, 'today-sitting')).toHaveLength(0);
+    expect(ending(r.root)).toBe("That's the record for Saturday 14 November.");
+  });
+
+  test('a failed calendar read still ends the page, with the date alone', async () => {
+    jest.mocked(catalogs.sittingDays).mockRejectedValue(new Error('aborted'));
+    const { root } = await render(<Page />);
+    expect(ending(root)).toBe("That's the record for Saturday 14 November.");
   });
 
   test('without an ending the foot is as it was', async () => {
@@ -359,6 +414,45 @@ describe('item 8: the bill plate’s timeline draws once per launch', () => {
     expect(timing).not.toHaveBeenCalled();
     act(() => mounted.splice(0).forEach((r) => r.unmount()));
     expect(rail((await plate()).root).transform).toEqual([{ scaleX: 0 }]);
+  });
+
+  describe('Today’s card draws only where the reader sees it arrive', () => {
+    // A phone at Large (Jest's default window is an accessibility size).
+    const window = Dimensions.get('window');
+    const screen = Dimensions.get('screen');
+    const atScale = (fontScale: number) =>
+      Dimensions.set({
+        window: { width: 402, height: 874, scale: 3, fontScale },
+        screen: { width: 402, height: 874, scale: 3, fontScale },
+      });
+    beforeEach(() => atScale(1));
+    afterEach(() => Dimensions.set({ window, screen }));
+    const card = (still?: boolean) =>
+      render(
+        <EditionCard
+          edition={block}
+          tier="fresh"
+          today={edition.date}
+          still={still}
+        />,
+      );
+    test('the top slot’s card draws', async () => {
+      expect(rail((await card()).root).transform).toEqual([{ scaleX: 0 }]);
+    });
+    test('the late slot’s card, below the fold, is finished and leaves the draw for the story', async () => {
+      finished((await card(true)).root);
+      act(() => mounted.splice(0).forEach((r) => r.unmount()));
+      const story = await plate({ story: true, testID: 'today-edition' });
+      expect(rail(story.root).transform).toEqual([{ scaleX: 0 }]);
+    });
+    test('at accessibility sizes the card is finished and leaves the draw for the story', async () => {
+      atScale(3.1);
+      finished((await card()).root);
+      act(() => mounted.splice(0).forEach((r) => r.unmount()));
+      atScale(1);
+      const story = await plate({ story: true, testID: 'today-edition' });
+      expect(rail(story.root).transform).toEqual([{ scaleX: 0 }]);
+    });
   });
 
   test('a plate seen finished under Reduce Motion has had its turn', async () => {

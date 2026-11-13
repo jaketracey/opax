@@ -1,5 +1,6 @@
 import { StyleSheet, View, useColorScheme } from 'react-native';
 import type { Block, EditionView } from '../../api/selectors';
+import { useAccessibilitySize } from '../../design/accessibility';
 import { Card } from '../../design/card';
 import { Icon } from '../../design/icon';
 import { LoadingStatus, Skeleton } from '../../design/states';
@@ -78,11 +79,20 @@ export function EditionCard({
   edition: block,
   tier,
   today,
+  still = false,
 }: {
   edition: Block<EditionView> | null;
   tier?: EditionTier;
   today?: Date | string;
+  /**
+   * The plate's timeline drawn finished, leaving its one draw this launch
+   * for the story: Today's late slot, below the fold.
+   */
+  still?: boolean;
 }) {
+  // At accessibility sizes the timeline sits far below the fold, so Today's
+  // card never spends the draw where it cannot be seen.
+  const large = useAccessibilitySize();
   const subject = useEditionSubject(
     block?.status === 'ready' ? block.data : null,
   );
@@ -160,6 +170,7 @@ export function EditionCard({
               edition={edition}
               tier={tier ?? editionTier(edition.date, today)}
               shownBelow={edition.paragraphs.slice(0, 1)}
+              still={still || large}
             />
             <View style={styles.body}>
               {edition.machineWritten ? (

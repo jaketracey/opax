@@ -50,8 +50,9 @@ export const copy = Object.freeze({
   /**
    * Today's last line, above the independence line (sweep 3, item 7): the
    * masthead's date ("Saturday 14 November") and, when the published
-   * sitting calendar says, the next sitting day and who sits. The whole
-   * wording is here, read and drawn as one line.
+   * sitting calendar says, the next sitting day and who sits, in the
+   * sitting line's form ("The Senate next sits Monday 16 November"). The
+   * whole wording is here, read and drawn as one line.
    */
   todayEnding: (
     day: string,
@@ -62,7 +63,7 @@ export const copy = Object.freeze({
       house: 'The House',
       senate: 'The Senate',
     };
-    const then = next ? ` ${who[next.houses]} next sits on ${next.words}.` : '';
+    const then = next ? ` ${who[next.houses]} next sits ${next.words}.` : '';
     return `That's the record for ${day}.${then}`;
   },
   deceasedNotice:

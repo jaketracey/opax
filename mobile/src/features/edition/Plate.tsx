@@ -56,7 +56,11 @@ export function Plate({
   shownBelow?: readonly string[];
   tier?: EditionTier;
   story?: boolean;
-  /** Drawn finished, with no motion: for an image of the plate. */
+  /**
+   * The timeline drawn finished, with no motion, leaving the edition's one
+   * draw this launch untouched: an image of the plate, or a plate the
+   * reader would not see arrive (Today's late slot, accessibility sizes).
+   */
   still?: boolean;
   photograph?: YearPicture;
   onTitleLayout?: (event: LayoutChangeEvent) => void;
@@ -421,7 +425,8 @@ function StageTimeline({
   const progress = useSharedValue(draws ? 0 : 1);
   const settle = useSharedValue(draws ? 0 : 1);
   useEffect(() => {
-    // An image of the plate is not the reader seeing it: its turn stays.
+    // A still plate (an image, a card below the fold) is not the reader
+    // seeing the line arrive: the turn stays for the next appearance.
     if (!still) timelineShown(drawKey);
     if (!draws) return;
     progress.set(

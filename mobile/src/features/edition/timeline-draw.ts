@@ -6,7 +6,9 @@ import { todayFixture } from '../today/launch-fixture';
  * item 8): its first appearance, on Today or the story, whichever comes
  * first. A plate the reader saw finished (Reduce Motion) has used its turn
  * too, so nothing draws on scroll back, on a return to Today or on the story
- * after the card. A still plate (an image of it) leaves the turn alone.
+ * after the card. A still plate (an image of it, Today's late slot or the
+ * card at accessibility sizes, all where the draw would not be seen)
+ * leaves the turn alone. Only Today's top slot and the story page draw.
  */
 const seen = new Set<string>();
 
