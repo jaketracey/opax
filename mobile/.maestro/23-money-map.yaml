@@ -153,25 +153,32 @@ name: 23 Native money map, held figures, original source and ranked list
     timeout: 30000
 - assertVisible:
     id: money-record-screen
-- assertVisible:
-    id: money-record-originals
 - scrollUntilVisible:
     element:
       id: money-focus-amount
     centerElement: true
     visibilityPercentage: 10
     timeout: 90000
-# One figure says the amount, its receipts and its year; all years beside it.
-- assertVisible: 69 million dollars, in 3,929 receipts, 2024–25
+# One figure says the amount, its disclosure records and year; all years beside it.
+- assertVisible: 69 million dollars, in 3,929 disclosure records, 2024–25
 - scrollUntilVisible:
     element:
       id: money-record-donations-all-years
     centerElement: true
     visibilityPercentage: 10
     timeout: 30000
-- assertVisible: 'All years, \$[0-9,]+ · 60,551 receipts · 1998–99 to 2025–26'
+- assertVisible: 'All years, \$[0-9,]+ · 60,551 disclosure records · 1998–99 to 2025–26'
 - takeScreenshot: ${EVIDENCE}/23-focus-amount
-# The source is above All years. Pull it clear of the bar before centring
+# Originals follows the money section and its 15 donor rows.
+- scrollUntilVisible:
+    element:
+      id: money-record-originals
+    direction: DOWN
+    centerElement: true
+    timeout: 120000
+- assertVisible:
+    id: money-record-originals
+# The source is above Originals. Pull it clear of the bar before centring
 # upwards: screen-bounds visibility alone includes the covered bar area.
 - swipe:
     start: 50%, 40%
@@ -342,16 +349,15 @@ name: 23 Native money map, held figures, original source and ranked list
       id: money-donors-all
     timeout: 30000
 # Parties: Labor first; each row pushes its record.
-- runFlow:
-    file: support/money-screen-scroll.yaml
-    env:
-      TARGET_ID: money-party-0
-# The helper stops as soon as the row enters the screen, which can leave it
-# under the tab bar, where a tap opens the Bills tab. Lift it clear first.
-- swipe:
-    start: 97%, 70%
-    end: 97%, 50%
-    duration: 600
+# Centre the row itself. An extra fixed swipe can push it under the nav bar.
+- scrollUntilVisible:
+    element:
+      id: money-party-0
+    direction: DOWN
+    centerElement: true
+    visibilityPercentage: 100
+    speed: 20
+    timeout: 120000
 - waitForAnimationToEnd
 - assertVisible:
     id: money-party-0
@@ -366,15 +372,14 @@ name: 23 Native money map, held figures, original source and ranked list
 - tapOn:
     id: BackButton
 # Public money: the contracts held by donors on the map.
-- runFlow:
-    file: support/money-screen-scroll.yaml
-    env:
-      TARGET_ID: money-public-contracts
-# Lift the row clear of the tab bar, as for the party rows above.
-- swipe:
-    start: 97%, 70%
-    end: 97%, 50%
-    duration: 600
+- scrollUntilVisible:
+    element:
+      id: money-public-contracts
+    direction: DOWN
+    centerElement: true
+    visibilityPercentage: 100
+    speed: 20
+    timeout: 120000
 - waitForAnimationToEnd
 - tapOn:
     id: money-public-contracts

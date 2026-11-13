@@ -325,6 +325,95 @@ test('Money map expands the industry sheet before scrolling to Unions', () => {
   });
 });
 
+test('the shared manual seat chooser accepts the scheme-link alert before waiting for the sheet', () => {
+  const [open, wait] = maestroSteps(
+    '.maestro/support/location-manual-seat.yaml',
+  );
+  expect(open.runFlow.when.notVisible).toEqual({ id: 'seat-sheet' });
+  expect(open.runFlow.commands).toEqual([
+    { openLink: 'opax://seat' },
+    { tapOn: { text: 'Open', optional: true } },
+  ]);
+  expect(wait.extendedWaitUntil.visible).toEqual({ id: 'seat-sheet' });
+});
+
+test('Ask sources match their accessible date and source label', () => {
+  const steps = maestroSteps('.maestro/30-ask.yaml');
+  const tap = steps.findIndex(
+    (step: any) => step.tapOn?.id === 'ask-answer-sources',
+  );
+  expect(steps[tap - 1].assertVisible).toEqual({
+    id: 'ask-answer-sources',
+    text: 'Answered .*Source: OPAX',
+  });
+});
+
+test('Ask people checks the selected tab before scrolling and the owning back button after the push', () => {
+  const steps = maestroSteps('.maestro/30-ask-people.yaml');
+  const selected = steps.findIndex(
+    (step: any) => step.assertVisible?.id === 'tab-ask',
+  );
+  const scroll = steps.findIndex((step: any) => step.scrollUntilVisible);
+  expect(steps[selected].assertVisible.selected).toBe(true);
+  expect(selected).toBeLessThan(scroll);
+  const expand = steps.findIndex(
+    (step: any) => step.tapOn?.id === 'ask-people-more',
+  );
+  expect(steps[expand - 1].scrollUntilVisible).toMatchObject({
+    element: { id: 'ask-people-more' },
+    centerElement: true,
+    visibilityPercentage: 100,
+  });
+  expect(steps.at(-1).assertVisible).toEqual({ id: 'BackButton', text: 'Ask' });
+  expect(
+    steps
+      .slice(scroll)
+      .some((step: any) => step.assertVisible?.id === 'tab-ask'),
+  ).toBe(false);
+});
+
+test('Money record checks the disclosure counts before scrolling down to Originals', () => {
+  const steps = maestroSteps('.maestro/23-money-map.yaml');
+  const originals = steps.findIndex(
+    (step: any) => step.assertVisible?.id === 'money-record-originals',
+  );
+  expect(steps[originals - 1].scrollUntilVisible).toMatchObject({
+    element: { id: 'money-record-originals' },
+    direction: 'DOWN',
+    centerElement: true,
+  });
+  const labels = steps
+    .slice(0, originals)
+    .flatMap((step: any) =>
+      typeof step.assertVisible === 'string' ? [step.assertVisible] : [],
+    );
+  expect(labels).toContain(
+    '69 million dollars, in 3,929 disclosure records, 2024–25',
+  );
+  expect(labels).toContain(
+    'All years, \\$[0-9,]+ · 60,551 disclosure records · 1998–99 to 2025–26',
+  );
+});
+
+test.each(['money-party-0', 'money-public-contracts'])(
+  'Money List centres %s before tapping without a fixed swipe',
+  (id) => {
+    const steps = maestroSteps('.maestro/23-money-map.yaml');
+    const tap = steps.findIndex((step: any) => step.tapOn?.id === id);
+    const scroll = steps.findIndex(
+      (step: any) => step.scrollUntilVisible?.element?.id === id,
+    );
+    expect(scroll).toBeLessThan(tap);
+    expect(steps[scroll].scrollUntilVisible).toMatchObject({
+      centerElement: true,
+      visibilityPercentage: 100,
+    });
+    expect(steps.slice(scroll + 1, tap).some((step: any) => step.swipe)).toBe(
+      false,
+    );
+  },
+);
+
 test('Money record source returns below the bar before its tap and waits for the original', () => {
   const steps = maestroSteps('.maestro/23-money-map.yaml');
   const allYears = steps.findIndex(

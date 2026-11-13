@@ -192,10 +192,13 @@ describe('iPad', () => {
     jest.isolateModules(() => {
       const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(true);
       try {
-        const adaptive =
-          require('../src/design/adaptive') as typeof import('../src/design/adaptive');
+        const adaptive = jest.requireActual<
+          typeof import('../src/design/adaptive')
+        >('../src/design/adaptive');
         const menu =
-          require('../src/design/menu') as typeof import('../src/design/menu');
+          jest.requireActual<typeof import('../src/design/menu')>(
+            '../src/design/menu',
+          );
         expect(adaptive.popoverWindow(null)).toBe(true);
         expect(adaptive.popoverWindow(phone)).toBe(true);
         menu.confirmAction('More for Grayndler', forget, 9);
