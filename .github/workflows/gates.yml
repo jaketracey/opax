@@ -152,3 +152,5 @@ jobs:
           else
             echo 'No portal Python loader tests in this commit.' >> "$GITHUB_STEP_SUMMARY"
           fi
+          # Profiles read this generated file; stale data must fail the PR.
+          python3 scripts/export_roster_list_parties.py --check

@@ -293,6 +293,27 @@ class SourceLabels(unittest.TestCase):
         V.fill_dated_parties([held], [])
         self.assertEqual(held["members"][0], labelled("Corin Ashdale", "One Nation"))
 
+    def test_without_the_dated_release_no_label_is_checked_or_changed(self):
+        # A previous run corrected this row; tonight the release is missing.
+        evidence = [release_term("Corin Ashdale", "Nationals", "2013-09-07", "2025-12-15"),
+                    service("Corin Ashdale", "Nationals", "2013-09-07", "2025-12-15", chamber="representatives")]
+        record = federal("federal-representatives-1", "2014-03-20", [labelled("Corin Ashdale", "One Nation")])
+        V.fill_dated_parties([record], evidence)
+        self.assertEqual(record["members"][0]["party"], "Nationals")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "scripts").mkdir()
+            (root / "scripts/roster_service.json").write_text(json.dumps({"service": [
+                {"name": "Corin Ashdale", "chamber": "representatives", "party": "Nationals",
+                 "start": "2013-09-07", "end": "2025-12-15"}]}))
+            missing = V.load_evidence(root, None)
+        self.assertFalse(missing.check_labels)
+        self.assertTrue(len(missing))  # other sources still load and still fill gaps
+        outcomes = V.fill_dated_parties([record], missing)
+        self.assertEqual(record["members"][0], labelled("Corin Ashdale", "One Nation"))
+        self.assertEqual(outcomes, {})
+        self.assertTrue(V.load_evidence(ROOT).check_labels)
+
     def test_same_party(self):
         self.assertTrue(V.same_party("ALP", "Labor"))
         self.assertTrue(V.same_party("LNP", "Nationals"))
@@ -304,8 +325,71 @@ class SourceLabels(unittest.TestCase):
         self.assertFalse(V.same_party("Independent", "Liberal"))
         self.assertFalse(V.same_party("SPK", "SPK"))
 
+class OneParliament(unittest.TestCase):
+    """Dated evidence never reaches across a general election (scripts/general_elections.json)."""
+
+    def test_a_wikidata_term_spanning_parliaments_is_confirmed_only_inside_the_list_s_parliament(self):
+        # Wikidata holds one open "term" from 1992; the official list is from 2026.
+        evidence = [term("Q900020", "Ivo Quarrington", "LNP", "1992-09-19", chamber="qld_la"),
+                    official("Ivo Quarrington", "LNP", "2026-06-02", chamber="qld_la")]
+        records = [division("qld-la-2005-05-01-1", "2005-05-01", [row("Ivo Quarrington")], "qld_la", "qld"),
+                   division("qld-la-2023-05-01-1", "2023-05-01", [row("Ivo Quarrington")], "qld_la", "qld"),
+                   division("qld-la-2025-05-01-1", "2025-05-01", [row("Ivo Quarrington")], "qld_la", "qld")]
+        got = fill(records, evidence)
+        self.assertEqual(got[("qld-la-2005-05-01-1", "Ivo Quarrington")], (None, "wikidata-unconfirmed"))
+        # 2023 is before the 26 Oct 2024 election; the 2026 list says nothing of it.
+        self.assertEqual(got[("qld-la-2023-05-01-1", "Ivo Quarrington")], (None, "wikidata-unconfirmed"))
+        self.assertEqual(got[("qld-la-2025-05-01-1", "Ivo Quarrington")], ("LNP", "filled"))
+
+    def test_a_mid_term_switch_already_in_wikidata_does_not_relabel_earlier_rows(self):
+        # Wikidata was updated in place to the new party; a list early in the
+        # same parliament shows the old one, a later list the new one.
+        evidence = [term("Q900021", "Una Blackwood", "Example Independents", "2023-03-25"),
+                    official("Una Blackwood", "Example Labour", "2023-04-01"),
+                    official("Una Blackwood", "Example Independents", "2026-09-25")]
+        records = [division("nsw-lc-2024-03-01-1", "2024-03-01", [row("Una Blackwood")]),
+                   division("nsw-lc-2026-09-25-1", "2026-09-25", [row("Una Blackwood")])]
+        got = fill(records, evidence)
+        self.assertNotEqual(got[("nsw-lc-2024-03-01-1", "Una Blackwood")][0], "Example Independents")
+        self.assertIsNone(got[("nsw-lc-2024-03-01-1", "Una Blackwood")][0])
+        # On the later list's own date the new party is the list's.
+        self.assertEqual(got[("nsw-lc-2026-09-25-1", "Una Blackwood")][0], "Example Independents")
+
+    def test_a_bracket_never_spans_a_general_election(self):
+        evidence = [official("Ivo Quarrington", "Example Labour", "2022-12-01", chamber="vic_la"),
+                    official("Ivo Quarrington", "Example Labour", "2026-09-09", chamber="vic_la"),
+                    official("Una Blackwood", "Example Labour", "2021-06-01", chamber="vic_la"),
+                    official("Una Blackwood", "Example Labour", "2023-06-01", chamber="vic_la")]
+        records = [division("vic-la-2025-06-01-1", "2025-06-01", [row("Ivo Quarrington")], "vic_la", "vic"),
+                   division("vic-la-2022-06-01-1", "2022-06-01", [row("Una Blackwood")], "vic_la", "vic")]
+        got = fill(records, evidence)
+        self.assertEqual(got[("vic-la-2025-06-01-1", "Ivo Quarrington")], ("Example Labour", "filled"))
+        # 2021 and 2023 straddle the 26 Nov 2022 election.
+        self.assertIsNone(got[("vic-la-2022-06-01-1", "Una Blackwood")][0])
+
+    def test_without_election_dates_bracket_and_wikidata_fail_closed(self):
+        evidence = V.Evidence([official("Ivo Quarrington", "Example Labour", "2023-04-01"),
+                               official("Ivo Quarrington", "Example Labour", "2026-09-25"),
+                               term("Q900022", "Ivo Quarrington", "Example Labour", "2023-03-25")], elections={})
+        records = [division("nsw-lc-2025-06-01-1", "2025-06-01", [row("Ivo Quarrington")])]
+        self.assertIsNone(fill(records, evidence)[("nsw-lc-2025-06-01-1", "Ivo Quarrington")][0])
+        # Before the first listed election is unknown territory too.
+        self.assertFalse(V.same_parliament(V.load_elections(), "nsw_lc", "1999-06-01", "2000-06-01"))
+
 
 class Loaders(unittest.TestCase):
+    def test_missing_sources_are_skipped_not_fatal(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            evidence = V.load_evidence(Path(tmp), None)
+            db = sqlite3.connect(":memory:")
+            db.execute("CREATE TABLE ext_state_roster (qid TEXT)")  # wrong shape: skipped, not fatal
+            self.assertEqual(list(V.load_evidence(Path(tmp), db)), [])
+        self.assertEqual(list(evidence), [])
+        self.assertEqual(evidence.elections, {})
+        records = [division("nsw-lc-2026-05-01-1", "2026-05-01", [row("Ivo Quarrington")])]
+        self.assertEqual(V.fill_dated_parties(records, evidence), {"no-match": 1})
+
+
     def test_wikidata_terms_from_ext_state_roster(self):
         db = sqlite3.connect(":memory:")
         db.execute("CREATE TABLE ext_state_roster (qid TEXT, state TEXT, chamber TEXT, full_name TEXT, given_name TEXT,"
@@ -380,6 +464,44 @@ class ExportIntegration(unittest.TestCase):
         self.assertEqual(cleared["divisions"][0]["party_tallies"][0]["party"], "Nationals")
         self.assertIn("One Nation", cleared["parties"])
         self.assertEqual(cleared["coverage"]["party_corrected_count"], 0)
+
+    def previous_with_fill(self, out):
+        evidence = [service("Ivo Quarrington", "Example Labour", "2023-03-25", "2027-03-27")]
+        record = division("nsw-lc-2026-05-01-1", "2026-05-01", [row("Ivo Quarrington"), row("Una Blackwood", "no")])
+        record.update(ayes=1, noes=1)
+        D.write_projection({record["key"]: record}, out, party_evidence=evidence)
+        return evidence
+
+    def test_a_newly_published_source_party_wins_over_last_run_s_fill(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            evidence = self.previous_with_fill(out)
+            # The new candidate loses a member (so the previous record is kept)
+            # but now publishes the source party for the filled one.
+            candidate = division("nsw-lc-2026-05-01-1", "2026-05-01", [dict(row("Ivo Quarrington"), party="Source Party")])
+            candidate.update(ayes=1, noes=1)
+            guarded = D.write_projection({candidate["key"]: candidate}, out, party_evidence=evidence)
+        record = guarded["nsw-lc-2026-05-01-1"]
+        self.assertTrue(record["_meta"]["refresh_retained"])
+        ivo = next(m for m in record["members"] if m["name"] == "Ivo Quarrington")
+        # Last run's fill is gone: the row now starts from the source party, which
+        # is then checked like any source label. The dated record covering the
+        # date names another party, so it is corrected, keeping the source label.
+        self.assertEqual(ivo["party"], "Example Labour")
+        self.assertEqual(ivo["party_source"], {"basis": "service", "url": LIST, "source_party": "Source Party"})
+        self.assertNotIn("party_fill", record["_meta"])
+        self.assertEqual(record["_meta"]["party_check"]["corrected"], 1)
+
+    def test_a_bills_only_run_keeps_previous_fills(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            self.previous_with_fill(out)
+            bills_only = division("nsw-lc-2026-05-01-1", "2026-05-01", [])
+            bills_only.update(ayes=1, noes=1)
+            bills_only["_meta"]["member_coverage"] = "unavailable"
+            guarded = D.write_projection({bills_only["key"]: bills_only}, out, carry=True, party_evidence=None)
+        ivo = next(m for m in guarded["nsw-lc-2026-05-01-1"]["members"] if m["name"] == "Ivo Quarrington")
+        self.assertEqual((ivo["party"], ivo["party_source"]["basis"]), ("Example Labour", "service"))
 
     def test_without_evidence_rows_are_unchanged(self):
         record = division("nsw-lc-2026-05-01-1", "2026-05-01", [row("Ivo Quarrington")])

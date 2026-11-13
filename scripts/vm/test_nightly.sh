@@ -56,7 +56,10 @@ new_sandbox() {
   # the files the nightly reads, from the real tree
   # Bills imports roster_identity, which in turn imports parli.ingest.speaker_names.
   # The division and vote exporters import division_rules (and through it parli.ingest.federal_affiliations) and
-  # corrections.apply; scripts/corrections/divisions.json is left out because the fixture DB has none of its records.
+  # corrections.apply; the division exporter imports vote_parties (and through it tvfy_refresh's party aliases),
+  # which reads the roster evidence files copied here and an empty electorate release written below; the fixture DB
+  # has no ext_state_roster, which is logged and skipped; scripts/corrections/divisions.json is left out because the
+  # fixture DB has none of its records.
   for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/vm/periodic_state.py scripts/export_bills.py scripts/roster_identity.py \
            scripts/vm/bills_refresh.sh scripts/vm/bills_guard.py scripts/vm/keep_if_unchanged.py \
            scripts/vm/divisions_refresh.sh scripts/vm/divisions_guard.py scripts/vm/mobile_votes_contract.py \
@@ -65,7 +68,7 @@ new_sandbox() {
            scripts/bills_registry/bills_stages.py \
            scripts/export_division_pages.py scripts/export_recent_votes.py scripts/export_votes.py \
            scripts/division_rules.py scripts/corrections/__init__.py scripts/corrections/apply.py parli/ingest/federal_affiliations.py \
-           scripts/vote_parties.py scripts/roster_state_evidence.json scripts/roster_service.json \
+           scripts/vote_parties.py scripts/general_elections.json scripts/roster_state_evidence.json scripts/roster_service.json \
            parli/ingest/tvfy_refresh.py parli/ingest/honest_http.py parli/ingest/state_rosters.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
            parli/__init__.py parli/arag.py parli/ingest/http.py parli/ingest/user-agent.json parli/ingest/__init__.py parli/ingest/speaker_names.py \

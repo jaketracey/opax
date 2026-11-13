@@ -28,7 +28,7 @@ test('roster-sourced labels are named as such, and unknown rows are counted in w
     { name: 'Casey Instance', vote: 'no' },
   ]), [], new Map());
   assert.deepEqual(partyLines(html), ['Example Party: aye 2']);
-  assert.match(text(html), /The division record gives no party for 1 of these members; their labels are the ones a dated parliamentary roster records for them on this date\./);
+  assert.match(text(html), /Party labels are those recorded for this division, except for 1 member the division record lists without a party: their labels are the ones a dated parliamentary roster records for them on this date\./);
   assert.match(text(html), /No party is recorded for 2 members on this date; they are not counted in any party line above\./);
   assert.doesNotMatch(html, /Unknown/);
 });
@@ -61,7 +61,7 @@ test('a source label from another period is replaced, said so, and only the date
   assert.deepEqual(partyLines(html), ['Example Party: aye 2', 'Other Party: no 1']);
   assert.match(text(html), /For 1 member, the division record gives a party not held on this date; the label shown is the party dated service records give for this date\./);
   // A correction is not a gap fill.
-  assert.doesNotMatch(html, /gives no party for/);
+  assert.doesNotMatch(html, /dated parliamentary roster/);
   assert.doesNotMatch(html, /Later Party/);
 });
 
@@ -73,5 +73,27 @@ test('a held-back label is counted with the unknown rows and never shown', () =>
   assert.deepEqual(partyLines(html), ['Example Party: aye 1']);
   assert.match(text(html), /No party is recorded for 1 member on this date; they are not counted in any party line above\. For 1 of them, the division record gives a party that dated records leave unclear for this date, so it is not shown\./);
   assert.doesNotMatch(html, /Later Party/);
+  assert.doesNotMatch(html, /Unknown/);
+});
+
+test('when every label came from a roster the page says so, not that the division recorded them', () => {
+  const { html } = renderDivisionAnswer(division([
+    { name: 'Morgan Fixture', vote: 'aye', party: 'Example Party', party_source: roster },
+    { name: 'Riley Sample', vote: 'no', party: 'Other Party', party_source: roster },
+  ]), [], new Map());
+  assert.doesNotMatch(html, /Party labels are those recorded for this division/);
+  assert.match(text(html), /The division record gives no parties\. Each label here is the one a dated parliamentary roster records for that member on this date\./);
+});
+
+test('party lines covering under half the members say so before the lines', () => {
+  const unknown = Array.from({ length: 5 }, (_, i) => ({ name: `Placeholder Member${i}`, vote: i % 2 ? 'no' : 'aye' }));
+  const { html } = renderDivisionAnswer(division([
+    { name: 'Morgan Fixture', vote: 'aye', party: 'Example Party', party_source: roster }, ...unknown,
+  ]), [], new Map());
+  const note = html.indexOf('These party lines cover only 1 of the 6 members listed. No party is recorded for the other 5 on this date.');
+  assert.ok(note > 0, 'the coverage note is on the page');
+  assert.ok(note < html.indexOf('<li>'), 'and comes before the party lines');
+  // Said once, not repeated after the lines.
+  assert.doesNotMatch(html, /not counted in any party line above/);
   assert.doesNotMatch(html, /Unknown/);
 });

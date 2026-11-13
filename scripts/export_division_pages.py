@@ -398,12 +398,18 @@ def write_projection(records, output, carry=False, strict=False, party_evidence=
 
     `carry` remains accepted for existing callers; the guard now always protects
     previously published evidence. The returned records include retained rows.
-    `party_evidence` (scripts/vote_parties.load_evidence) fills dated parties
+    `party_evidence` (scripts/vote_parties.load_evidence) refills dated parties
     for rows the source leaves without one and checks source labels against
-    them; None leaves rows as they are.
+    them, from the source labels each run; None (--from-bills) keeps the
+    previous fills and corrections as published.
     """
     output = Path(output)
     guarded = guard_projection(records, read_previous_projection(output), strict=strict)
+    if party_evidence is not None:
+        # Before source parties are copied in: a party the source now publishes
+        # must win over last run's roster fill, and a corrected or withheld
+        # label goes back to its source label before it is checked again.
+        vote_parties.clear_fills(guarded.values())
     # Enrich a retained snapshot only from matching dated source facts and votes.
     # Never substitute current-roster affiliations or discard its extra members.
     for key, record in guarded.items():
@@ -469,7 +475,9 @@ def main():
     published = bill_projection(args.bills)
     if args.from_bills:
         records = published
-        evidence = vote_parties.load_evidence(ROOT)
+        # No database, so no Wikidata terms: keep the previous fills as they are
+        # rather than recompute from part of the evidence.
+        evidence = None
     else:
         with closing(sqlite3.connect(f"file:{Path(args.db).resolve()}?mode=ro", uri=True)) as db:
             db.execute("PRAGMA query_only=ON")

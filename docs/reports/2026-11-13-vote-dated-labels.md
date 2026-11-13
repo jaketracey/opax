@@ -120,6 +120,10 @@ A reviewed service entry for each would hold these labels back on the next night
 
 **Recomputed each night.** Each run first restores the source label on every corrected or held row, and removes every fill, before checking again from the snapshot. Withdrawn evidence clears on the next run, and a rerun is byte-stable (tested).
 
+**Missing sources.** Every evidence source is optional, as im-vote-parties made it: a missing or unreadable one is skipped with one log line, and the nightly carries on. The electorate release is the dated record for federal labels, so if it does not load, the run logs one `WARNING` line and checks no source label at all. Every label stays as the source gives it, including any a previous night corrected, and the refresh does not fail. Gap fills still come from whatever other sources loaded (tested).
+
+**After merging im-vote-parties (fix-1).** Brackets and Wikidata confirmation now stop at a general election (`scripts/general_elections.json`), not after four years. Labels are compared in substance inside that rule too. The counts are unchanged: 11,218 labels replaced, none held back and 3,123 gap fills (dry run with `parli.db`).
+
 **Index.** `divisions/index.json` coverage gains `party_corrected_count` and `party_withheld_count`. `party_filled_count` now counts gap fills only. The run log prints all three.
 
 ### Result on the committed pages
@@ -135,7 +139,7 @@ A reviewed service entry for each would hold these labels back on the next night
 - **Rows that change:** 11,218, on 3,256 House divisions. In this dry run every changed party line is a House division.
 - **Rows that go unknown:** none on the committed data. The hold-back rule is tested with fixtures.
 - **Party lines that disappear:** One Nation from 1,799 divisions, United Australia Party from 1,894, Katter's Australian Party from 300, and Independent from 166. A Nationals line appears on 6 divisions where Joyce was the only Nationals member voting.
-- **Gap fills are unchanged:** all 31,841 unlabelled rows resolve exactly as they did before this change.
+- **Gap fills are unchanged:** all 31,841 unlabelled rows resolve exactly as they did before this change. With `parli.db`, 3,123 are filled, the same count as im-vote-parties.
 
 ### Before and after
 
@@ -195,7 +199,7 @@ A reviewed service entry for each would hold these labels back on the next night
 
 All test people are invented.
 
-- **`tests/test_vote_parties.py`:** 9 new tests (28 in total).
+- **`tests/test_vote_parties.py`:** 10 new tests (36 in total after the merge).
   - A member who changed party shows the old party on old dates and the new one after.
   - Naming variants are never rewritten (LNP and Liberal, Centre Alliance and NXT, ALP and Labor, "Liberal National Party").
   - Liberal and Nationals stay two parties.
@@ -203,11 +207,14 @@ All test people are invented.
   - No covering evidence, or two people with one name, keeps the label.
   - Senate rows are untouched without dated Senate evidence.
   - Corrections and holds are recomputed from the source label, and withdrawn evidence clears them.
+  - Without the dated release, no label is checked or changed, and earlier corrections go back to the source label.
   - `same_party` cases.
   - An export integration test: tallies follow the correction, reruns are byte-stable, and withdrawal clears.
-- **`portal/test/division-parties.test.mjs`:** 2 new tests (5 in total).
+- **`portal/test/division-parties.test.mjs`:** 2 new tests (7 in total after the merge).
   - Replaced-label wording, with no "gap fill" wording and no stale party.
   - A held label is counted in words and never shown.
-- **`scripts/vm/test_nightly.sh`:** the fixture sandbox now copies `vote_parties.py`, its evidence files and `tvfy_refresh`'s imports, and holds an empty electorate release. The exporter has imported `vote_parties` and read the release since im-vote-parties, so before this change the fixture import check failed, and with that fixed the sandboxed division export failed. The loader still fails loudly when the release is missing in a real run, because silently dropping the evidence would bring back the wrong labels.
+- **`scripts/vm/test_nightly.sh`:** the fixture sandbox now copies `vote_parties.py`, its evidence files and `tvfy_refresh`'s imports, and holds an empty electorate release. The exporter has imported `vote_parties` and read the release since im-vote-parties, so before this change the fixture import check failed, and with that fixed the sandboxed division export failed. A missing release in a real run is logged and leaves every source label unchanged (see "Missing sources").
 
-**Reproduce:** `python3 scripts/vote_parties.py --dry-run` prints every outcome by chamber, era, rule and source.
+The three dated-record leads (Goodenough, Quick and Johnson) and the missing dated Senate records go to the backlog as data tickets.
+
+**Reproduce:** `python3 scripts/vote_parties.py --dry-run [--db ~/.cache/autoresearch/parli.db]` prints every outcome by chamber, era, rule and source.

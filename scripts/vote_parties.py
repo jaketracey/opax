@@ -17,11 +17,15 @@ evidence the repo or the database already holds, and only for its own date:
                    date and one parliamentary group, up to its end date, or up
                    to the fetch date while the term is open, and only when an
                    official dated list later in the same term (on or after the
-                   division date) records the same party: Wikidata's group is
-                   not dated inside a term and lags party changes. Groups that
+                   division date, with no general election in between)
+                   records the same party, and no dated list in that
+                   parliament names another: Wikidata's group is not dated
+                   inside a term, lags party changes, and its "term" can span
+                   several parliaments. Groups that
                    name no single party ("Liberal-National Coalition") give none.
   bracket          the nearest dated list observations before and after the
-                   date name the same party, at most BRACKET_DAYS apart.
+                   date name the same party, with no general election for the
+                   chamber between them (scripts/general_elections.json).
 
 Identity, in this order, inside the row's own chamber: the person id, then the
 exact full name (or a listed alias), then a bare surname print only when that
@@ -69,7 +73,8 @@ sys.path.insert(0, str(ROOT))
 import division_rules as rules  # noqa: E402
 from parli.ingest.tvfy_refresh import PARTY_CANONICAL  # noqa: E402
 
-BRACKET_DAYS = 1461  # one four-year parliament; longer gaps can hide a switch and a return
+NAMESAKE_DAYS = 1461  # how near a dated list must be for its member to count as a possible namesake
+ELECTIONS = ROOT / "scripts/general_elections.json"
 RULES = ("pid", "full-name", "surname")
 SOURCES = ("release-term", "release-roster", "official-list", "service", "wikidata-term", "bracket")
 ISO = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -198,6 +203,11 @@ def official_evidence(root: Path) -> list[dict]:
                 out.append(entry("official-list", snapshot["chamber"], ("name", fold(member["name"])),
                                  [member["name"], *member.get("aliases", [])], member["party"],
                                  as_of, as_of, as_of, url=snapshot.get("source_url"), point=True))
+    return out
+
+
+def service_evidence(root: Path) -> list[dict]:
+    out = []
     service = json.loads((root / "scripts/roster_service.json").read_text(encoding="utf-8"))
     for row in [*service.get("service", []), *service.get("history", [])]:
         start, end = iso(row.get("start")), iso(row.get("end"))
@@ -227,9 +237,61 @@ def wikidata_evidence(db: sqlite3.Connection | None) -> list[dict]:
     return out
 
 
-def load_evidence(root: Path = ROOT, db: sqlite3.Connection | None = None, public: Path | None = None) -> list[dict]:
+def log(message: str) -> None:
+    print(f"[vote-parties] {message}", file=sys.stderr)
+
+
+def load_elections(path: Path = ELECTIONS) -> dict[str, list[str]]:
+    """Polling days by chamber; unreadable means none, and no evidence crosses a parliament."""
+    try:
+        chambers = json.loads(Path(path).read_text(encoding="utf-8"))["chambers"]
+        return {c: sorted(d for d in days if iso(d)) for c, days in chambers.items()}
+    except (OSError, ValueError, KeyError, TypeError, AttributeError) as e:
+        log(f"general elections unreadable ({type(e).__name__}); no bracket or Wikidata confirmation this run")
+        return {}
+
+
+class Evidence(list):
+    """Dated observations, plus the general elections that bound them.
+
+    `check_labels` is False when the electorate release did not load: the
+    release is the dated record for federal source labels, so without it no
+    source label is checked (all stay as the source gives them)."""
+    def __init__(self, items=(), elections=None, check_labels=True):
+        super().__init__(items)
+        self.elections = load_elections() if elections is None else elections
+        self.check_labels = check_labels
+
+
+def load_evidence(root: Path = ROOT, db: sqlite3.Connection | None = None, public: Path | None = None) -> Evidence:
+    """Every source is optional: a missing or unreadable one is logged and gives
+    nothing, so the division export never fails for want of evidence."""
     public = public or root / "portal/public"
-    return [*release_evidence(public), *official_evidence(root), *wikidata_evidence(db)]
+    out, release_loaded = [], False
+    for name, load in (("electorate release", lambda: release_evidence(public)),
+                       ("official lists", lambda: official_evidence(root)),
+                       ("service records", lambda: service_evidence(root)),
+                       ("Wikidata terms", lambda: wikidata_evidence(db))):
+        try:
+            out.extend(load())
+            release_loaded = release_loaded or name == "electorate release"
+        except (OSError, ValueError, KeyError, TypeError, AttributeError, ImportError, sqlite3.Error) as e:
+            log(f"{name} skipped ({type(e).__name__}: {e}); no party is filled from it")
+    if not release_loaded:
+        log("WARNING: the electorate release (the dated party record) did not load; "
+            "no source party label is checked or changed this run, all stay as the source gives them")
+    return Evidence(out, load_elections(root / "scripts/general_elections.json"), check_labels=release_loaded)
+
+
+def same_parliament(elections: dict, chamber: str, a: str, b: str) -> bool:
+    """No general election for the chamber falls after the earlier date and on or
+    before the later one. Dates before the first listed election are unknown
+    territory: fail closed."""
+    days = elections.get(chamber) or []
+    lo, hi = sorted((a, b))
+    if not days or lo < days[0]:
+        return False
+    return not any(lo < d <= hi for d in days)
 
 
 # ---- resolution -------------------------------------------------------------------------------
@@ -247,19 +309,26 @@ def covers(e: dict, day: str) -> bool:
 def may_sit(e: dict, day: str) -> bool:
     """Generous on purpose: anyone who might sit that day counts as a namesake."""
     if e["point"]:
-        return abs((Date.fromisoformat(e["start"]) - Date.fromisoformat(day)).days) <= BRACKET_DAYS
+        return abs((Date.fromisoformat(e["start"]) - Date.fromisoformat(day)).days) <= NAMESAKE_DAYS
     if e["start"] and e["start"] > day:
         return False
     return not e["end"] or day < e["end"] or (e["through"] is None and not e["start"])
 
 
-def wikidata_confirmed(term: dict, day: str, points: list[dict]) -> bool:
+def wikidata_confirmed(term: dict, day: str, points: list[dict], elections: dict) -> bool:
     """A Wikidata term's group is not dated inside the term, and it lags party
     changes (it still gave two Victorian members their pre-2023 parties in
-    September 2026). It counts only when an official dated list, later in the
-    same term and on or after the division date, records the same party."""
+    September 2026). A Wikidata "term" can also span several parliaments. It
+    counts only when an official dated list, later in the same term, on or
+    after the division date and with no general election in between, records
+    the same party; any dated list in that parliament naming another party
+    vetoes it."""
+    if any(p["source"] != "wikidata-term" and p["party"] != term["party"]
+           and same_parliament(elections, term["chamber"], p["start"], day) for p in points):
+        return False
     return any(p["source"] != "wikidata-term" and p["party"] == term["party"] and p["start"] >= day
                and p["start"] >= term["start"] and (not term["end"] or p["start"] < term["end"])
+               and same_parliament(elections, term["chamber"], day, p["start"])
                for p in points)
 
 
@@ -289,6 +358,9 @@ def people_of(entries) -> list[set[str]]:
 
 class Resolver:
     def __init__(self, evidence: list[dict]):
+        self.elections = getattr(evidence, "elections", None)
+        if self.elections is None:
+            self.elections = load_elections()
         self.by_chamber = defaultdict(list)
         self.by_pid = defaultdict(list)
         self.by_name = defaultdict(list)
@@ -345,8 +417,7 @@ class Resolver:
                 return "ambiguous-identity", None
         return rule, hits
 
-    @staticmethod
-    def party_on(hits: list[dict], day: str, same=None):
+    def party_on(self, hits: list[dict], day: str, same=None):
         """(party, source, url) or (None, reason, None).
 
         `same` decides when two labels are one party: exact by default (fills
@@ -354,11 +425,12 @@ class Resolver:
         same = same or (lambda a, b: a == b)
         agree = lambda parties: all(same(a, b) for a in parties for b in parties)
         found, unconfirmed = [], False
+        chamber = hits[0]["chamber"] if hits else None
         points = sorted((e for e in hits if e["point"] and e["party"]), key=lambda e: e["start"])
         for e in hits:
             if not e["party"] or not covers(e, day):
                 continue
-            if e["source"] == "wikidata-term" and not wikidata_confirmed(e, day, points):
+            if e["source"] == "wikidata-term" and not wikidata_confirmed(e, day, points, self.elections):
                 unconfirmed = True
                 continue
             found.append((e["party"], e["source"], e["url"]))
@@ -368,8 +440,9 @@ class Resolver:
             lo = [e for e in before if e["start"] == before[-1]["start"]]
             hi = [e for e in after if e["start"] == after[0]["start"]]
             parties = {e["party"] for e in lo + hi}
-            gap = (Date.fromisoformat(hi[0]["start"]) - Date.fromisoformat(lo[0]["start"])).days
-            if agree(parties) and gap <= BRACKET_DAYS:
+            # One parliament only: a party held at both ends of a term was held
+            # between them unless someone left and came back inside one term.
+            if agree(parties) and same_parliament(self.elections, chamber, lo[0]["start"], hi[0]["start"]):
                 found.append((hi[0]["party"], "bracket", hi[0]["url"]))
             elif not agree(parties):
                 return None, "conflicting", None
@@ -399,8 +472,9 @@ def voters_by_day(records) -> dict:
     return out
 
 
-def restore_source_labels(records) -> None:
-    """Undo a previous run: fills go, corrected and withheld rows get their source label back."""
+def clear_fills(records) -> None:
+    """Undo a previous run: fills go, and corrected or withheld rows get their
+    source label back. Parties the source gave are never lost."""
     for record in records:
         meta = record.get("_meta", {})
         meta.pop("party_fill", None)
@@ -415,6 +489,7 @@ def restore_source_labels(records) -> None:
             held = member.pop("party_withheld", None)
             if isinstance(held, dict) and held.get("source_party") and not member.get("party"):
                 member["party"] = held["source_party"]
+
 
 
 def check_label(resolver, house, day, member, voters) -> dict:
@@ -447,9 +522,11 @@ def resolve_records(records, evidence, apply=False, check_labels=True):
     are checked against it (check_label) when `check_labels`."""
     resolver = Resolver(evidence)
     records = list(records)
+    # Without the dated release no label is checked: keep the source labels.
+    check_labels = check_labels and getattr(evidence, "check_labels", True)
     if apply:
         # Recomputed every run: a previous fill or correction never outlives its evidence.
-        restore_source_labels(records)
+        clear_fills(records)
     voters = voters_by_day(records)
     for record in records:
         day, house = iso(record.get("date")), record.get("house")
@@ -521,7 +598,7 @@ def era(day) -> str:
 def dry_run(divisions: Path, evidence) -> dict:
     records = [json.loads(p.read_text(encoding="utf-8")) for p in sorted(divisions.glob("division-*.json"))]
     # Measure against the source labels, whatever an earlier export applied.
-    restore_source_labels(records)
+    clear_fills(records)
     out = Counter()
     samples = []
     for o in resolve_records(records, evidence):

@@ -28,10 +28,14 @@ A matched row takes a party only from evidence covering its date:
 | Release roster | A verified seat roster, on its own as-of date. |
 | Official list | An official chamber list in `roster_state_evidence.json`, on its own as-of date. |
 | Service record | A reviewed dated service entry in `roster_service.json`. |
-| Bracket | The nearest official observations before and after the date name the same party, at most four years apart. |
-| Wikidata term | An `ext_state_roster` term with a start date and one parliamentary group. It counts **only when an official list later in the same term, on or after the division date, records the same party.** |
+| Bracket | The nearest official observations before and after the date name the same party, with no general election for the chamber between them. |
+| Wikidata term | An `ext_state_roster` term with a start date and one parliamentary group. It counts **only when an official list later in the same term and the same parliament, on or after the division date, records the same party**, and no dated list in that parliament names another party. |
 
 All applicable sources must agree, and no official list inside a contributing term may disagree. Nothing carries forward past the latest evidence.
+
+**One parliament.** `scripts/general_elections.json` lists general election polling days by chamber. A Wikidata "term" can span several parliaments (one runs from 1982), so without this bound a 2026 list would confirm a party back decades: an invented 2005 Queensland division would read "LNP", three years before that party existed. A confirming list and a bracket must now sit in the same parliament as the division. A chamber with no listed elections, or a date before the first one, gets neither (fail closed). The election dates are polling days from the electoral commissions, entered by hand and not fetched. Spot-checking them is worth doing before merge.
+
+**What the bound cannot catch.** Suppose a member switches party mid-term, Wikidata is updated in place, and there is no dated list from before the switch. Then the later list confirms the new party back to the start of that parliament. When any earlier list in the parliament exists, it vetoes the fill (tested). No published row is in this position as far as the held evidence shows.
 
 **Why Wikidata needs confirming.** Wikidata's term group is not dated inside the term, and it lags changes. Checked against the official lists held, it still gave Moira Deeming (Liberal) and Darren Cheeseman (Labor) their old parties in September 2026. It also gave Stephen Andrew One Nation on the date the Queensland record lists him as Katter's Australian Party. Wikidata party membership with start and end qualifiers (P102) covers only two people per chamber in NSW and Victoria, so no new ingest was worth adding.
 
@@ -57,8 +61,8 @@ All applicable sources must agree, and no official list inside a contributing te
 | NSW Council | 4,741 | 0 | 0 | 0 | 212 | 0 | **212** | 0 | 1,369 | 3,134 | 26 | 0 |
 | Qld Assembly | 4 | 0 | 0 | 0 | 4 | 0 | **4** | 0 | 0 | 0 | 0 | 0 |
 | Vic Assembly | 1,177 | 0 | 0 | 0 | 306 | 7 | **313** | 233 | 330 | 300 | 1 | 0 |
-| Vic Council | 2,076 | 0 | 0 | 70 | 511 | 0 | **581** | 172 | 566 | 755 | 2 | 22 |
-| **Total** | **31,841** | **16,833** | **2,013** | **70** | **1,033** | **7** | **3,123** | **1,334** | **4,535** | **15,147** | **7,702** | **22** |
+| Vic Council | 2,076 | 0 | 0 | 70 | 511 | 0 | **581** | 172 | 566 | 755 | 2 | 0 |
+| **Total** | **31,841** | **16,833** | **2,013** | **70** | **1,033** | **7** | **3,123** | **1,334** | **4,535** | **15,147** | **7,702** | **0** |
 
 No row stayed unknown because of surname or same-name ambiguity: those rules found no case in the committed pages. The fixtures cover them.
 
@@ -150,7 +154,14 @@ These pages keep saying so, now as "No party is recorded for any of the 90 membe
 
 ## What stays unknown, and why
 
-**Evidence ends before the date (4,535 rows).** Most are divisions after 21 to 25 September 2026: NSW from October and November, Victoria from 10 September, and federal from 9 September. The evidence stops there, and nothing carries forward. These fill on the nightly once:
+**Evidence ends before the date (4,535 rows).** This includes 745 federal House rows that are presiding-officer periods in the release: Bruce Scott 494 and Ian Causley 250 as Deputy Speaker, and Milton Dick 1 as Speaker. An office period carries no party, so their rows stay unknown, and the reason label is misleading for them. The other 3,790 are divisions after the evidence ends:
+
+- NSW from late September to November 2026.
+- Victoria from 10 September.
+- 44 federal House rows after 9 September.
+- 567 Senate rows after the 4 September roster.
+
+The evidence stops there. The evidence stops there, and nothing carries forward. These fill on the nightly once:
 
 - a newer official list is committed;
 - the electorate release is refreshed; or
@@ -171,7 +182,7 @@ These pages keep saying so, now as "No party is recorded for any of the 90 membe
 - **NSW Assembly (929 rows):** has no official list, so Wikidata cannot be confirmed for it. A committed official NSW Assembly members list would confirm or veto these on the next nightly.
 - **Victoria (405 rows):** 386 fall after the 9 September roster. The other 19 are Moira Deeming and Darren Cheeseman, whose Wikidata group the roster contradicts.
 
-**Conflicting (22 rows).** Moira Deeming and Darren Cheeseman, where Wikidata's stale group disagrees with the official roster.
+**Conflicting (0 rows).** An earlier version of this table showed 22. That was a transcription error from a run before the Wikidata confirmation rule. Moira Deeming and Darren Cheeseman, whose stale Wikidata group disagrees with the official roster, are counted under Wikidata unconfirmed (19 rows).
 
 **Profiles.** 139 NSW Assembly profiles remain without a party because no official NSW Assembly list is held. The others are SA, Victorian and federal members not on any held list. All 257 single-name prints are left alone.
 
@@ -215,3 +226,16 @@ The federal division rows' existing parties come from an undated label: today's 
   - the roster-list file sync check.
 - `portal/test/roster-party.test.mjs` (3 new tests): a full-name profile gets a dated party; a single-name profile gets none; other chambers and split lists give none.
 - `portal/test/division-parties.test.mjs` (3 tests): roster labels are named as such, unknown rows are counted in words, and no "Unknown" party line appears.
+
+## Changes after review (13 November)
+
+- **Nightly test sandbox:** it now copies `vote_parties.py` and `general_elections.json`.
+- **Missing sources:** `load_evidence` skips a missing or unreadable source (release, lists, service records, Wikidata) with one log line, so the division export cannot fail on it.
+- **One parliament:** Wikidata confirmation and the bracket are bound to one parliament (above). Fills on the committed pages are unchanged at 3,123, because every filled row falls in the current parliament.
+- **Source parties win:** old fills are cleared before source parties are copied into retained records, so a newly published source party replaces last run's fill.
+- **`--from-bills` runs:** these keep the previous fills.
+- **CI:** it runs `scripts/export_roster_list_parties.py --check`.
+- **Division page wording:**
+  - The page says where labels came from when a roster supplied any.
+  - When party lines cover under half the members, it says so before the lines.
+- **Person page:** it dates the party chip ("parliamentary roster as at 25 Sep 2026").
