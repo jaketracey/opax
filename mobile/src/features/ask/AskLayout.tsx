@@ -31,7 +31,6 @@ import {
   rhythm,
   type Role,
 } from '../../design/tokens';
-import { AskEmptyState } from './AskIdle';
 import { KeyboardLift, type Obstacle } from './keyboard';
 
 /**
@@ -47,6 +46,7 @@ export function AskColumns({
   content,
   dock,
   sources,
+  empty,
   keyboard,
   keyboardVisible = keyboard > 0,
   ground,
@@ -54,6 +54,12 @@ export function AskColumns({
 }: {
   docked: boolean;
   content: ReactNode;
+  /**
+   * Docked only: what the conversation column shows over its empty paper
+   * when nothing is asked (AskEmptyState). Drawn in the room between the
+   * column's top and the composer band.
+   */
+  empty?: ReactNode;
   dock: ReactNode;
   sources: ReactNode;
   keyboard: number;
@@ -113,14 +119,23 @@ export function AskColumns({
       >
         {content}
         {/* After the scroll view, which stays the column's first child for
-            UIKit's large-title tracking; it takes no touches. */}
-        {docked ? (
-          <AskEmptyState
-            bottom={
-              (restTop !== null ? Math.max(0, columnHeight - restTop) : 0) +
-              (keyboardVisible ? keyboard : 0)
-            }
-          />
+            UIKit's large-title tracking. It has the room above the composer
+            band (and the keyboard) and takes no touches. */}
+        {docked && empty ? (
+          <View
+            pointerEvents="none"
+            testID="ask-empty-area"
+            style={[
+              styles.emptyArea,
+              {
+                bottom:
+                  (restTop !== null ? Math.max(0, columnHeight - restTop) : 0) +
+                  (keyboardVisible ? keyboard : 0),
+              },
+            ]}
+          >
+            {empty}
+          </View>
         ) : null}
         <SafeAreaView
           edges={docked ? [] : composerEdges}
@@ -354,6 +369,7 @@ const styles = StyleSheet.create({
   composerArea: { flex: 1, pointerEvents: 'box-none' },
   row: { flex: 1, flexDirection: 'row' },
   hidden: { display: 'none' },
+  emptyArea: { position: 'absolute', top: 0, left: 0, right: 0 },
   position: { position: 'absolute' },
   phoneDock: { position: 'absolute', left: 0, right: 0, bottom: 0 },
   dock: { width: '100%', alignSelf: 'center', paddingBottom: rhythm.tight },

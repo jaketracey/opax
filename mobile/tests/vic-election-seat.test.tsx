@@ -1,6 +1,7 @@
 import { mockVic, renderVic, resetVic, words } from './vic-election-render';
 import { StyleSheet } from 'react-native';
 import * as accessibility from '../src/design/accessibility';
+import { ValueRow } from '../src/design/rows';
 import { ContentUnavailable } from '../src/design/states';
 import Seat from '../src/features/vic-election/Seat';
 import { ElectionUnavailable } from '../src/features/vic-election/reads';
@@ -188,7 +189,20 @@ test.each([
           .map((node) => node.props.children)
           .filter((text, i, all) => all.indexOf(text) === i),
       ).toEqual([`Votes recorded in ${year}`, '12 for, 3 against', '15']);
-      expect(StyleSheet.flatten(row.props.style).flexDirection).toBe(
+      // It is the shared ValueRow, with the split as its detail; the pair
+      // sits beside the count, or over it at accessibility sizes.
+      expect(r.root.findByProps({ testID: 'vic-seat-votes' }).type).toBe(
+        ValueRow,
+      );
+      const content = row.find(
+        (node) =>
+          typeof node.type === 'string' &&
+          node !== row &&
+          node.findAll((child) => child.props.children === '15').length > 0 &&
+          node.findAll((child) => child.props.children === '12 for, 3 against')
+            .length > 0,
+      );
+      expect(StyleSheet.flatten(content.props.style).flexDirection).toBe(
         large ? 'column' : 'row',
       );
       // Said once on the page.

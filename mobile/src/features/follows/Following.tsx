@@ -64,7 +64,7 @@ export interface FollowEntry {
   ownMP: boolean;
 }
 export const WITHDRAWN_NOTE =
-  'These records were withdrawn or renamed. Search for them, or remove them.';
+  'These records were withdrawn or renamed. Search for them, or unfollow them.';
 export const CHECK_DOUBTED = "Couldn't check your list just now.";
 export interface FollowGroup {
   key: 'changed' | FollowKind | 'withdrawn';
@@ -87,15 +87,30 @@ const nameKey = (entry: FollowEntry) =>
 const withdrawn = (entry: FollowEntry) =>
   !entry.ownMP && entry.state?.status === 'missing';
 /**
- * Every follow reads as gone at once. One withdrawn record is news; a whole
- * list of them is a catalogue that arrived wrong or short (a reading is
- * "missing" when the record is absent from a catalogue that did load, so a
- * failed fetch never gets here, but a mismatched one does). The page then
- * says the check failed and offers it again, not eleven withdrawals.
+ * The kinds whose check is not believed: two or more follows of one kind,
+ * every one reading as gone. One withdrawn record is news; a whole kind of
+ * them is that kind's catalogue arriving wrong or short (a reading is
+ * "missing" when the record is absent from a catalogue that did load).
+ * Catalogues fail a kind at a time, so the rule is per kind: a sound bill
+ * beside eleven "withdrawn" people does not vouch for the people. The page
+ * says the check failed and offers it again. A kind in `believed` has been
+ * checked again with the same answer, and is taken at its word.
  */
-export function checkDoubted(entries: readonly FollowEntry[]) {
-  return (
-    entries.length > 1 && entries.every((e) => e.state?.status === 'missing')
+export function doubtedKinds(
+  entries: readonly FollowEntry[],
+  believed: readonly FollowKind[] = [],
+): Set<FollowKind> {
+  return new Set(
+    kindGroups
+      .map(([kind]) => kind)
+      .filter((kind) => {
+        const rows = entries.filter((e) => e.follow.kind === kind);
+        return (
+          !believed.includes(kind) &&
+          rows.length > 1 &&
+          rows.every((e) => e.state?.status === 'missing')
+        );
+      }),
   );
 }
 
@@ -159,6 +174,13 @@ export default function Following() {
   const params = useLocalSearchParams<{ edit?: string }>();
   const [refresh, setRefresh] = useState(0);
   const { follows, states, sources, refreshing } = useFollowStates(refresh);
+  // Kinds whose wholly-withdrawn reading came back the same from a second,
+  // clean check; and the check now under way, with what it was asked about.
+  const [believed, setBelieved] = useState<readonly FollowKind[]>([]);
+  const [asked, setAsked] = useState<{
+    at: number;
+    kinds: readonly FollowKind[];
+  } | null>(null);
   const own = useOwnMemberIds();
   const member = useSavedMember();
   const reduceMotion = useReduceMotion();
@@ -183,12 +205,27 @@ export default function Following() {
       ownMP: f.kind === 'person' && own.has(f.id),
     };
   });
-  // A list that reads as wholly withdrawn is not believed: its rows keep
+  // A kind that reads as wholly withdrawn is not believed: its rows keep
   // their places, unchecked, under one sentence and a retry.
-  const doubted = checkDoubted(read);
-  const entries: FollowEntry[] = doubted
-    ? read.map((e) => ({ ...e, state: { status: 'unavailable' as const } }))
-    : read;
+  const doubted = doubtedKinds(read, believed);
+  // The retry (or a pull) has finished. A clean read that says the same
+  // again is the answer: those records are gone, and the page stops
+  // offering a retry that changes nothing.
+  if (asked && asked.at === refresh && !refreshing) {
+    const same = asked.kinds.filter((kind) => doubted.has(kind));
+    setAsked(null);
+    if (same.length && sources && !sources.error && !sources.stale)
+      setBelieved([...believed, ...same]);
+  }
+  const checkAgain = () => {
+    setAsked({ at: refresh + 1, kinds: [...doubted] });
+    setRefresh(refresh + 1);
+  };
+  const entries: FollowEntry[] = read.map((e) =>
+    doubted.has(e.follow.kind)
+      ? { ...e, state: { status: 'unavailable' as const } }
+      : e,
+  );
   const going = new Set(leaving.map((e) => followKey(e.follow)));
   const live = new Set(entries.map((e) => followKey(e.follow)));
   const groups = followGroups([
@@ -256,7 +293,7 @@ export default function Following() {
 
   // The quiet state reads as watched: when the record was last checked.
   const checked =
-    !inEdit && !failedAll && !doubted && sources?.savedAt && !sources.error
+    !inEdit && !failedAll && !doubted.size && sources?.savedAt && !sources.error
       ? checkedText(sources.savedAt)
       : '';
 
@@ -266,10 +303,7 @@ export default function Following() {
       centred={follows !== null && count === 0}
       testID="follows-screen"
       refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={() => setRefresh((n) => n + 1)}
-        />
+        <RefreshControl refreshing={refreshing} onRefresh={checkAgain} />
       }
     >
       <RouteOptions
@@ -324,14 +358,14 @@ export default function Following() {
         <InlineError
           subject="changes"
           message="Changes couldn't be checked."
-          onRetry={() => setRefresh((n) => n + 1)}
+          onRetry={checkAgain}
           testID="follows-check-error"
         />
-      ) : doubted ? (
+      ) : doubted.size ? (
         <InlineError
           subject="follows"
           message={CHECK_DOUBTED}
-          onRetry={() => setRefresh((n) => n + 1)}
+          onRetry={checkAgain}
           testID="follows-check-doubted"
         />
       ) : null}
@@ -379,7 +413,10 @@ export default function Following() {
                           entry={entry}
                           // The heading says it once for the withdrawn
                           // group; a doubted check has nothing to say.
-                          hideStatus={group.key === 'withdrawn' || doubted}
+                          hideStatus={
+                            group.key === 'withdrawn' ||
+                            doubted.has(entry.follow.kind)
+                          }
                           onUnfollow={() => remove(entry)}
                         />
                       )}

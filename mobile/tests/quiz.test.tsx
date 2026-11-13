@@ -741,6 +741,18 @@ describe('sweep 3, item 6: a right answer lands', () => {
       expect(host(`quiz-answer-${right}-drawn`)).toHaveLength(1);
       expect(String(points().props.children)).toMatch(/^\+0 points/);
       expect(byID('quiz-points').props.accessibilityLabel).toBe(line);
+      // The final line holds the row's width, unseen and unspoken, with
+      // the counting figure laid over it: no wrap mid-count at large text.
+      expect(host('quiz-points-place')[0]!.props).toMatchObject({
+        children: line,
+        accessibilityElementsHidden: true,
+      });
+      expect(
+        StyleSheet.flatten(host('quiz-points-place')[0]!.props.style).opacity,
+      ).toBe(0);
+      expect(StyleSheet.flatten(points().props.style).position).toBe(
+        'absolute',
+      );
       expect(host(`quiz-progress-segment-${at}-fill`)).toHaveLength(1);
       expect(segment(at).backgroundColor).toBe(colors.ink);
       await act(async () => {

@@ -315,10 +315,12 @@ export function LinkRow({
 
 function ValueRowContent({
   label,
+  detail,
   value,
   accessibilitySize,
 }: {
   label: string;
+  detail?: string;
   value: string;
   accessibilitySize: boolean;
 }) {
@@ -343,13 +345,26 @@ function ValueRowContent({
       style={[styles.text, stacked ? styles.stacked : styles.inline]}
       onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
     >
-      <Text
-        wordSafe
-        variant="body"
-        style={stacked ? undefined : styles.valueLabel}
-      >
-        {label}
-      </Text>
+      {detail ? (
+        // The label with a quieter line under it; the value stays beside
+        // (or, stacked, under) the pair.
+        <View style={[styles.valueWords, stacked ? null : styles.valueLabel]}>
+          <Text wordSafe variant="body">
+            {label}
+          </Text>
+          <Text wordSafe variant="secondary">
+            {detail}
+          </Text>
+        </View>
+      ) : (
+        <Text
+          wordSafe
+          variant="body"
+          style={stacked ? undefined : styles.valueLabel}
+        >
+          {label}
+        </Text>
+      )}
       <Text
         wordSafe
         variant="strong"
@@ -377,11 +392,14 @@ function ValueRowContent({
 
 export function ValueRow({
   label,
+  detail,
   value,
   href,
   testID,
 }: {
   label: string;
+  /** A second, quieter line under the label: "6 for, 3 against". */
+  detail?: string;
   value: string;
   href?: Href;
   testID?: string;
@@ -394,6 +412,7 @@ export function ValueRow({
     <>
       <ValueRowContent
         label={label}
+        detail={detail}
         value={value}
         accessibilitySize={stacked}
       />
@@ -404,7 +423,9 @@ export function ValueRow({
   );
   const props = {
     accessible: true,
-    accessibilityLabel: spokenFigures(`${label}, ${value}`),
+    accessibilityLabel: spokenFigures(
+      `${label}, ${value}${detail ? `. ${detail}` : ''}`,
+    ),
     testID,
   };
   return href ? (
@@ -1433,6 +1454,7 @@ const styles = StyleSheet.create({
     flexBasis: 'auto',
     minWidth: '35%',
   },
+  valueWords: { gap: rhythm.line },
   value: { flexShrink: 0, textAlign: 'right' },
   stackedValue: { flexShrink: 0 },
   main: { flexGrow: 1, flexShrink: 1, gap: rhythm.line },

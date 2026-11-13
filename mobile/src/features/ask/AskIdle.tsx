@@ -4,7 +4,7 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { router } from 'expo-router';
 import { track } from '../../analytics';
 import { useReduceMotion } from '../../design/accessibility';
@@ -132,7 +132,16 @@ export function AskIdle({
   ];
   // Docked with nothing saved, the column's centred empty state carries the
   // line (AskEmptyState, drawn by AskColumns), so it is not said twice.
-  const centred = !showStarters && !recent.length;
+  // When that state has no room for its words (very large text, a
+  // keyboard), or the saved conversations could not be read, the line is
+  // here as on a phone.
+  const wordsCentred = useSyncExternalStore(
+    centredWords.subscribe,
+    centredWords.get,
+    centredWords.get,
+  );
+  const centred =
+    !showStarters && !recent.length && !readFailed && wordsCentred;
   return (
     <View style={styles.page} testID={`${testPrefix}-idle`}>
       {testPrefix === 'ask' && !centred ? (
@@ -221,21 +230,52 @@ function useAskIdle() {
   return !s.thread.length && !s.busy && !s.error && !s.clarify;
 }
 
+// Whether the centred state is drawing its words. AskIdle prints the line
+// itself whenever it is not, so the line is on the page exactly once.
+const centredWords = (() => {
+  let shown = true;
+  const listeners = new Set<() => void>();
+  return {
+    get: () => shown,
+    set(next: boolean) {
+      if (next === shown) return;
+      shown = next;
+      for (const listener of listeners) listener();
+    },
+    subscribe(listener: () => void) {
+      listeners.add(listener);
+      return () => {
+        listeners.delete(listener);
+      };
+    },
+  };
+})();
+
+const MARK = 96;
+const MARK_SCALE = 1.5;
+
 /**
  * The docked conversation column with nothing asked and nothing saved
  * (iPad, an unfolded Duo): the starters are in the pane beside it, so the
  * column would be one grey line over empty paper (sweep 3, item 5). The
  * mark, as a bronze hairline engraving, sits centred between the bar and
  * the composer with the idle line and one more sentence under it. No
- * control: the composer and the pane's starters are the ways in. It fades
- * out as the first question is sent (at once under Reduce Motion), and
- * goes at once when a saved conversation takes the column instead.
+ * control: the composer and the pane's starters are the ways in.
+ *
+ * AskColumns gives it the room above the composer band and the keyboard;
+ * it never draws outside that room or under the bar. It measures its words:
+ * when the mark and the words do not both fit (AX5, a keyboard up in
+ * landscape) the mark goes, and when the words alone do not fit the whole
+ * state goes and AskIdle prints the line in the scrolling page instead.
+ *
+ * It fades out as the first question is sent (at once under Reduce
+ * Motion), goes at once when a saved conversation takes the column, and
+ * is not shown beside a failed read of the saved conversations.
  */
 export function AskEmptyState({
-  bottom,
+  readFailed = false,
 }: {
-  /** The composer band's height (and the keyboard's), in the column. */
-  bottom: number;
+  readFailed?: boolean;
 }) {
   const idle = useAskIdle();
   const saved = useSyncExternalStore(
@@ -243,10 +283,11 @@ export function AskEmptyState({
     chatsSnapshot,
     chatsSnapshot,
   );
-  const empty = idle && !saved.chats.length;
+  const empty = idle && !saved.chats.length && !readFailed;
   const reduced = useReduceMotion();
   const top = useHeaderBottom();
   const margin = useScreenMargin();
+  const { fontScale } = useWindowDimensions();
   const [opacity] = useState(() => new Animated.Value(1));
   // Shown stays true while the state fades after a question is sent. A
   // saved conversation taking the column, or Reduce Motion, ends it at once.
@@ -269,32 +310,56 @@ export function AskEmptyState({
     });
     return () => fade.stop();
   }, [leaving, opacity]);
+  // The room under the bar, and the words' own height at this text size.
+  const [area, setArea] = useState<number | null>(null);
+  const [words, setWords] = useState<number | null>(null);
+  const room = area === null ? null : Math.max(0, area - top);
+  const measured = room !== null && words !== null;
+  const mark =
+    Math.round(MARK * Math.min(Math.max(fontScale, 1), MARK_SCALE)) +
+    rhythm.group;
+  const wordsFit = !measured || words <= room;
+  const markFits = measured && words + mark <= room;
+  useLayoutEffect(() => {
+    centredWords.set(!shown || wordsFit);
+    return () => centredWords.set(true);
+  }, [shown, wordsFit]);
   if (!shown) return null;
   return (
     <Animated.View
       pointerEvents="none"
+      onLayout={(event) => setArea(event.nativeEvent.layout.height)}
       style={[
-        StyleSheet.absoluteFill,
         styles.empty,
-        {
-          paddingTop: top,
-          paddingBottom: bottom,
-          paddingHorizontal: margin,
-          opacity,
-        },
+        { paddingTop: top, paddingHorizontal: margin, opacity },
       ]}
       // Leaving, it is already not the page: VoiceOver skips it.
       accessibilityElementsHidden={leaving}
       importantForAccessibility={leaving ? 'no-hide-descendants' : 'auto'}
       testID="ask-empty"
     >
-      <EngravedMark testID="ask-empty-mark" />
-      <View style={styles.emptyWords}>
+      {markFits ? (
+        <EngravedMark
+          size={MARK}
+          maxScale={MARK_SCALE}
+          testID="ask-empty-mark"
+        />
+      ) : null}
+      {/* Kept mounted to be measured; drawn once it is known to fit. */}
+      <View
+        onLayout={(event) => setWords(event.nativeEvent.layout.height)}
+        style={[styles.emptyWords, measured && wordsFit ? null : styles.unseen]}
+        accessibilityElementsHidden={!(measured && wordsFit)}
+        importantForAccessibility={
+          measured && wordsFit ? 'auto' : 'no-hide-descendants'
+        }
+        testID="ask-empty-words"
+      >
         <Text
           wordSafe
           variant="secondary"
           style={styles.centredText}
-          testID="ask-idle-line"
+          testID={measured && wordsFit ? 'ask-idle-line' : undefined}
         >
           {idleCopy.line}
         </Text>
@@ -314,11 +379,13 @@ export function AskEmptyState({
 const styles = StyleSheet.create({
   page: { gap: rhythm.section },
   empty: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     gap: rhythm.group,
     overflow: 'hidden',
   },
   emptyWords: { gap: rhythm.line, maxWidth: 420 },
+  unseen: { opacity: 0 },
   centredText: { textAlign: 'center' },
 });

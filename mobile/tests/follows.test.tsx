@@ -1186,7 +1186,7 @@ describe('Following', () => {
       ['Electorates', undefined],
       [
         'No longer in OPAX',
-        'These records were withdrawn or renamed. Search for them, or remove them.',
+        'These records were withdrawn or renamed. Search for them, or unfollow them.',
       ],
     ]);
     const foot = r.root.find(
@@ -1233,34 +1233,146 @@ describe('Following', () => {
     await act(async () => r.unmount());
   });
 
-  test('a list that reads as wholly withdrawn is a failed check, said once with a retry, not a withdrawal per row', async () => {
-    mock.followSources.mockResolvedValue(sources({ savedAt: Date.now() }));
-    await follow({ kind: 'bill', id: GONE_BILL, title: 'Withdrawn Bill 2020' });
-    await follow({ kind: 'electorate', id: GONE_SEAT, title: 'Batman' });
-    const r = await render();
-    const error = r.root.find(
+  const GONE_BILL_2 = 'au-federal-r0001';
+  const doubted = (r: TestRenderer.ReactTestRenderer) =>
+    r.root.find(
       (n) => n.props.testID === 'follows-check-doubted' && 'subject' in n.props,
     );
-    expect(error.props.message).toBe("Couldn't check your list just now.");
-    // The rows keep their kinds and their pages, with nothing under them.
-    expect(groupOrder(r)).toEqual(['Bills', 'Electorates']);
-    expect(has(r, 'follows-withdrawn')).toBe(false);
+  test('a kind that reads as wholly withdrawn is a failed check for that kind, said once with a retry; other kinds are untouched', async () => {
+    mock.followSources.mockResolvedValue(sources({ savedAt: Date.now() }));
+    await follow({ kind: 'bill', id: GONE_BILL, title: 'Withdrawn Bill 2020' });
+    await follow({
+      kind: 'bill',
+      id: GONE_BILL_2,
+      title: 'Withdrawn Bill 2021',
+    });
+    // A sound electorate beside them does not vouch for the bills, and one
+    // withdrawn electorate beside it is still believed.
+    await follow({ kind: 'electorate', id: GRAYNDLER, title: 'Grayndler' });
+    await follow({ kind: 'electorate', id: GONE_SEAT, title: 'Batman' });
+    const r = await render();
+    expect(doubted(r).props.message).toBe("Couldn't check your list just now.");
+    // The bills keep their group and their pages, with nothing under them.
     const bill = row(r, `follows-row-bill-${GONE_BILL}`).props;
     expect(bill.detail).toBeUndefined();
     expect(bill.accessibilityLabel).toBe('Withdrawn Bill 2020, bill.');
     expect(bill.href).toMatchObject({ pathname: '/bill/[key]' });
-    expect(words(r)).toContain('Withdrawn Bill 2020');
-    expect(words(r)).not.toMatch(/No longer in OPAX|Not checked yet/);
+    expect(words(r)).not.toContain('Not checked yet');
+    // The electorates are read as they are: one quiet, one withdrawn.
+    expect(row(r, `follows-row-electorate-${GRAYNDLER}`).props.detail).toMatch(
+      /^Nothing new since /,
+    );
+    const foot = r.root.find(
+      (n) => n.props.testID === 'follows-withdrawn' && 'header' in n.props,
+    );
+    expect(foot.findAllByType(LinkRow).map((n) => n.props.title)).toEqual([
+      'Batman',
+    ]);
     // "Checked today" would vouch for a check the page does not believe.
     expect(has(r, 'follows-checked')).toBe(false);
-    // Retry reads the catalogues again; a good read restores the list.
+    // Retry reads the catalogues again; a read that finds one of them
+    // restores the list.
     const reads = mock.followSources.mock.calls.length;
+    await unfollow(`bill:${GONE_BILL_2}`);
     await follow({ kind: 'bill', id: BILL, title: 'Fixture bill' });
-    await act(async () => error.props.onRetry());
+    await act(async () => doubted(r).props.onRetry());
     expect(mock.followSources.mock.calls.length).toBeGreaterThan(reads);
     expect(has(r, 'follows-check-doubted')).toBe(false);
-    expect(has(r, 'follows-withdrawn')).toBe(true);
+    expect(row(r, `follows-row-bill-${BILL}`).props.detail).toMatch(
+      /^Nothing new since /,
+    );
     await act(async () => r.unmount());
+  });
+
+  test('two follows that really were withdrawn: a retry that says the same is believed, and the retry goes', async () => {
+    mock.followSources.mockResolvedValue(sources({ savedAt: Date.now() }));
+    await follow({ kind: 'bill', id: GONE_BILL, title: 'Withdrawn Bill 2020' });
+    await follow({
+      kind: 'bill',
+      id: GONE_BILL_2,
+      title: 'Withdrawn Bill 2021',
+    });
+    const r = await render();
+    expect(has(r, 'follows-check-doubted')).toBe(true);
+    expect(has(r, 'follows-withdrawn')).toBe(false);
+    // A retry that fails proves nothing: the page still asks.
+    mock.followSources.mockRejectedValueOnce(new Error('broken'));
+    await act(async () => doubted(r).props.onRetry());
+    expect(has(r, 'follows-withdrawn')).toBe(false);
+    // A clean read with the same answer is the answer.
+    const again = r.root.findAll(
+      (n) =>
+        typeof n.props.onRetry === 'function' &&
+        /^follows-check-/.test(String(n.props.testID)),
+    )[0]!;
+    await act(async () => again.props.onRetry());
+    expect(has(r, 'follows-check-doubted')).toBe(false);
+    expect(has(r, 'follows-check-error')).toBe(false);
+    const foot = r.root.find(
+      (n) => n.props.testID === 'follows-withdrawn' && 'header' in n.props,
+    );
+    expect(foot.findAllByType(LinkRow).map((n) => n.props.title)).toEqual([
+      'Withdrawn Bill 2020',
+      'Withdrawn Bill 2021',
+    ]);
+    expect(row(r, `follows-row-bill-${GONE_BILL}`).props.href).toMatchObject({
+      pathname: '/results/[kind]',
+    });
+    await act(async () => r.unmount());
+  });
+
+  // Review P1: only a person the release does not hold is gone. A release
+  // mismatch or an identity needing review is a check that was not made.
+  const outOfStep = () =>
+    sources({
+      savedAt: Date.now(),
+      people: {
+        ...catalogs.people,
+        meta: { ...catalogs.people.meta, release_id: 'another-release' },
+      },
+    });
+  const needsReview = () => {
+    const twin = catalogs.people.people.find((p) => p.person_id === ALBANESE)!;
+    return sources({
+      savedAt: Date.now(),
+      people: { ...catalogs.people, people: [...catalogs.people.people, twin] },
+    });
+  };
+  test.each([
+    ['people records out of step between releases', outOfStep],
+    ['an identity that needs review (invalid-data)', needsReview],
+  ] as const)(
+    '%s: a followed person is unchecked, never "No longer in OPAX", beside a bill that reads fine',
+    async (_name, broken) => {
+      expect(
+        followState({ kind: 'person', id: ALBANESE, seen: null }, broken())
+          .status,
+      ).toBe('unavailable');
+      mock.followSources.mockResolvedValue(broken());
+      await follow({ kind: 'person', id: ALBANESE, title: 'Anthony Albanese' });
+      await follow({ kind: 'bill', id: BILL, title: 'Fixture bill' });
+      const r = await render();
+      expect(row(r, `follows-row-person-${ALBANESE}`).props.detail).toBe(
+        'Not checked yet',
+      );
+      expect(row(r, `follows-row-person-${ALBANESE}`).props.href).toMatchObject(
+        { pathname: expect.stringContaining('person') },
+      );
+      expect(has(r, 'follows-withdrawn')).toBe(false);
+      expect(words(r)).not.toContain('No longer in OPAX');
+      expect(row(r, `follows-row-bill-${BILL}`).props.detail).toMatch(
+        /^Nothing new since /,
+      );
+      await act(async () => r.unmount());
+    },
+  );
+  test('a person the release does not hold is still missing', () => {
+    expect(
+      followState(
+        { kind: 'person', id: 'person_000000000000000000000000', seen: null },
+        sources(),
+      ).status,
+    ).toBe('missing');
   });
 
   test('one withdrawn follow alone is believed', async () => {

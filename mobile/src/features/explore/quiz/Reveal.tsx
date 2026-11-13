@@ -115,16 +115,35 @@ export function Reveal({
             {response.grade}
           </Text>
           {right ? (
-            <Text
-              wordSafe
-              variant="strong"
-              tabular
-              // The figure in flight is never read out.
-              accessibilityLabel={pointsLine(response)}
-              testID="quiz-points"
-            >
-              {pointsLine({ ...response, gained })}
-            </Text>
+            // The final line holds the place (unseen while the figure is in
+            // flight), so "+0" growing to "+100 points" never changes the
+            // row's width or wraps mid-count at large text.
+            <View>
+              {counts ? (
+                <Text
+                  wordSafe
+                  variant="strong"
+                  tabular
+                  style={styles.unseen}
+                  accessibilityElementsHidden
+                  importantForAccessibility="no-hide-descendants"
+                  testID="quiz-points-place"
+                >
+                  {pointsLine(response)}
+                </Text>
+              ) : null}
+              <Text
+                wordSafe
+                variant="strong"
+                tabular
+                style={counts ? styles.over : undefined}
+                // The figure in flight is never read out.
+                accessibilityLabel={pointsLine(response)}
+                testID="quiz-points"
+              >
+                {pointsLine({ ...response, gained })}
+              </Text>
+            </View>
           ) : null}
         </View>
         {scored && !right ? (
@@ -147,6 +166,8 @@ export function Reveal({
 const styles = StyleSheet.create({
   block: { gap: rhythm.block },
   lines: { gap: rhythm.line },
+  unseen: { opacity: 0 },
+  over: { position: 'absolute', top: 0, left: 0, right: 0 },
   // The grade and a right answer's points share a baseline, and wrap onto
   // two lines at large text.
   grade: {
