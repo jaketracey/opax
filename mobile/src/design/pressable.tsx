@@ -7,6 +7,7 @@ import {
   type View,
 } from 'react-native';
 import { useHighTextContrast } from './accessibility';
+import { spokenFigures } from './format';
 import { rememberMenuAnchor } from './menu-anchor';
 import { accents, border, colors, androidControls, type Role } from './tokens';
 
@@ -32,6 +33,11 @@ export function Pressable({
   return (
     <Component
       {...props}
+      accessibilityLabel={
+        props.accessibilityLabel
+          ? spokenFigures(props.accessibilityLabel)
+          : undefined
+      }
       {...(Platform.OS === 'android' ? { ringed } : null)}
       ref={ref}
       onFocus={(event) => {

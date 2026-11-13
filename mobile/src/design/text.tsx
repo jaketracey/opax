@@ -13,6 +13,7 @@ import {
   type TextProps,
 } from 'react-native';
 import { useBoldText, useHighTextContrast } from './accessibility';
+import { spokenFigures } from './format';
 import { lightHighContrast, paletteFor } from './palette';
 import { bindRecordTitle, recordTitleRoles } from './record-title';
 import { useTextProbe } from './text-probe';
@@ -401,14 +402,16 @@ export function Text({
   // through the accessibility label), unless the caller set its own.
   const titleRole = recordTitleRoles.includes(variant);
   const bound = titleRole ? bindRecordTitle(given.children) : given.children;
+  const published = textContent(given.children);
+  const spoken = spokenFigures(given.accessibilityLabel ?? published);
   const props =
-    bound === given.children
+    bound === given.children &&
+    spoken === (given.accessibilityLabel ?? published)
       ? given
       : {
           ...given,
           children: bound,
-          accessibilityLabel:
-            given.accessibilityLabel ?? textContent(given.children),
+          accessibilityLabel: spoken,
         };
   const bold = useBoldText();
   const highContrast = useHighTextContrast();
@@ -657,6 +660,19 @@ export function Text({
       // Names and party abbreviations are read with Australian English rules.
       accessibilityLanguage="en-AU"
       {...probe.props}
+      accessibilityRole={
+        given.accessibilityRole ??
+        ([
+          'largeTitle',
+          'pageTitle',
+          'recordTitle',
+          'recordHeading',
+          'sectionTitle',
+          'subsectionTitle',
+        ].includes(variant)
+          ? 'header'
+          : undefined)
+      }
       ref={nativeText}
       onTextLayout={
         wordSafe || probe.enabled || onTextLayout ? onLayoutLines : undefined

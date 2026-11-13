@@ -109,7 +109,7 @@ export function moneyAccessibilityLabel(
  */
 export function spokenFigures(text: string): string {
   return text.replace(
-    /(-|\u2212)?\$(\d[\d,]*(?:\.\d+)?)(k|m|bn)\b/g,
+    /((?<![\w$])[-\u2212])?\$(\d[\d,]*(?:\.\d+)?)(k|m|bn)\b/g,
     (_, sign: string | undefined, amount: string, unit: string) =>
       `${sign ? 'minus ' : ''}${amount} ${
         unit === 'k' ? 'thousand' : unit === 'm' ? 'million' : 'billion'

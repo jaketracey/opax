@@ -34,50 +34,7 @@ jest.mock('../src/features/account/store', () => ({
   useAccount: () => ({ status: { signedIn: mockSignedIn } }),
 }));
 jest.mock('../src/design/primitives', () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const React = require('react');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { View } = require('react-native');
-  const basic = (p: Record<string, unknown>) =>
-    React.createElement(View, p, p.children);
-  return {
-    ...Object.fromEntries(
-      [
-        'Button',
-        'ChoiceChips',
-        'Disclosure',
-        'EmptyState',
-        'ErrorState',
-        'Field',
-        'Group',
-        'PadGrid',
-        'Heading',
-        'Icon',
-        'IconButton',
-        'ValueRow',
-        'LinkRow',
-        'LoadingState',
-        'Portrait',
-        'InsetGroup',
-        'KeyboardStableScreen',
-        'Section',
-        'Screen',
-        'SegmentedControl',
-        'StepButtons',
-        'Text',
-      ].map((k) => [k, basic]),
-    ),
-    Composer: (p: Record<string, unknown>) =>
-      React.createElement(
-        View,
-        null,
-        React.createElement(View, { ...p, onSubmit: undefined }),
-        React.createElement(View, {
-          testID: p.submitTestID,
-          onPress: p.onSubmit,
-        }),
-      ),
-  };
+  return jest.requireActual('../src/design/primitives');
 });
 const request = jest.mocked(native!.communityRequest);
 const reply = (v: unknown) => ({

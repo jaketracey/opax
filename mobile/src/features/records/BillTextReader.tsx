@@ -1,3 +1,4 @@
+import { LoadingStatus } from '../../design/states';
 import { RouteOptions } from '../../navigation/preview';
 import { SectionHeader } from '../../design/layout';
 import {
@@ -653,7 +654,7 @@ function Passage({
 /** The text area while a newly chosen version loads. */
 function TextSkeleton() {
   return (
-    <View
+    <LoadingStatus
       accessible
       accessibilityRole="progressbar"
       accessibilityLabel="Loading this version"
@@ -670,7 +671,7 @@ function TextSkeleton() {
           ]}
         />
       ))}
-    </View>
+    </LoadingStatus>
   );
 }
 
@@ -680,7 +681,7 @@ function BillTextSkeleton() {
     <View key={key} style={[styles.bar, { width, height }]} />
   );
   return (
-    <View
+    <LoadingStatus
       accessible
       accessibilityRole="progressbar"
       accessibilityLabel="Loading the bill text"
@@ -712,7 +713,7 @@ function BillTextSkeleton() {
           )}
         </View>
       </View>
-    </View>
+    </LoadingStatus>
   );
 }
 

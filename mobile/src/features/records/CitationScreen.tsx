@@ -1,3 +1,4 @@
+import { LoadingStatus } from '../../design/states';
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -186,7 +187,7 @@ export default function Citations() {
 /** The sheet's final shape while the record loads (records.md 3.3). */
 function CitationSkeleton() {
   return (
-    <View
+    <LoadingStatus
       accessible
       accessibilityRole="progressbar"
       accessibilityLabel="Loading citations"
@@ -218,7 +219,7 @@ function CitationSkeleton() {
           ))}
         </View>
       </View>
-    </View>
+    </LoadingStatus>
   );
 }
 

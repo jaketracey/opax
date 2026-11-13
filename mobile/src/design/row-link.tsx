@@ -32,6 +32,7 @@ import { haptic } from './haptics';
 import { showMenu } from './menu';
 import type { SFSymbol } from './icon';
 import { copy as words } from './copy';
+import { spokenFigures } from './format';
 
 export type RowMenuAction =
   | {
@@ -326,6 +327,11 @@ export function RowLink({
     <View
       {...semantics}
       {...accessibility}
+      accessibilityLabel={
+        child.props.accessibilityLabel
+          ? spokenFigures(child.props.accessibilityLabel)
+          : undefined
+      }
       testID={child.props.testID}
       collapsable={false}
       pointerEvents="box-none"

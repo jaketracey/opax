@@ -7,6 +7,7 @@ import {
 } from '../../api/report-decoders';
 import { recordClient } from '../../api/runtime';
 import { Group } from '../../design/primitives';
+import { useLoadingAnnouncement } from '../../design/states';
 import { formatCount, formatDate } from '../../design/format';
 import { Disclosure, Link, RuleGroup, Text } from './report-ui';
 
@@ -49,6 +50,7 @@ export function HearingTranscripts({
 }) {
   const [page, setPage] = useState(summary);
   const [loading, setLoading] = useState(false);
+  useLoadingAnnouncement(loading ? 'Loading hearing days' : null);
   const [failed, setFailed] = useState(false);
   const request = useRef<AbortController | null>(null);
   useEffect(() => () => request.current?.abort(), []);
@@ -156,7 +158,12 @@ export function HearingTranscripts({
       })}
       {page.next_offset !== null ? (
         loading ? (
-          <Text accessibilityRole="progressbar">Loading hearing days</Text>
+          <Text
+            accessibilityRole="progressbar"
+            accessibilityLiveRegion="polite"
+          >
+            Loading hearing days
+          </Text>
         ) : (
           <Link
             title={

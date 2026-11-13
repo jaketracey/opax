@@ -24,6 +24,7 @@ import {
   type DimensionValue,
   type StyleProp,
   type ViewStyle,
+  type ViewProps,
 } from 'react-native';
 import { ApiError } from '../api/errors';
 import { useAccessibilitySize, useReduceMotionSetting } from './accessibility';
@@ -78,11 +79,25 @@ export function errorMessage(
 
 function pageState(announcementsEnabled = true) {
   let announced = false;
+  let loadingAnnounced = false;
+  const contentAnnouncements = new Set<string>();
   const failures = new Set<symbol>();
   const offline = new Set<symbol>();
   const listeners = new Set<() => void>();
   const notify = () => listeners.forEach((listener) => listener());
   return {
+    loading(label: string) {
+      if (announcementsEnabled && !loadingAnnounced) {
+        loadingAnnounced = true;
+        AccessibilityInfo.announceForAccessibility(label);
+      }
+    },
+    unavailable(label: string) {
+      if (announcementsEnabled && !contentAnnouncements.has(label)) {
+        contentAnnouncements.add(label);
+        AccessibilityInfo.announceForAccessibility(label);
+      }
+    },
     subscribe(listener: () => void) {
       listeners.add(listener);
       return () => {
@@ -144,6 +159,52 @@ export function StatePageProvider({
     <StatePageContext.Provider value={page}>
       {children}
     </StatePageContext.Provider>
+  );
+}
+
+/** Android uses the live region; iOS announces once per page load, only
+ * while a screen reader is active. Late reads are cancelled on unmount. */
+export function useLoadingAnnouncement(label: string | null) {
+  useStatusAnnouncement(label, 'loading');
+}
+function useStatusAnnouncement(
+  label: string | null,
+  kind: 'loading' | 'unavailable',
+  scope: 'page' | 'episode' = 'page',
+) {
+  const page = usePageState();
+  useEffect(() => {
+    if (!label || (Platform.OS !== 'ios' && scope === 'page')) return;
+    let active = true;
+    void AccessibilityInfo.isScreenReaderEnabled().then(
+      (enabled) => {
+        if (active && enabled) {
+          if (scope === 'episode')
+            AccessibilityInfo.announceForAccessibility(label);
+          else page[kind](label);
+        }
+      },
+      () => undefined,
+    );
+    return () => {
+      active = false;
+    };
+  }, [label, page, kind, scope]);
+}
+
+/** The same native View and geometry as each placeholder, with shared status semantics. */
+export function LoadingStatus(
+  props: ViewProps & { accessibilityLabel: string },
+) {
+  useLoadingAnnouncement(props.accessibilityLabel);
+  return (
+    <View
+      {...props}
+      accessible
+      accessibilityRole="progressbar"
+      accessibilityState={{ ...props.accessibilityState, busy: true }}
+      accessibilityLiveRegion="polite"
+    />
   );
 }
 
@@ -432,7 +493,7 @@ function DetailSkeleton({
     </>
   );
   return (
-    <View
+    <LoadingStatus
       accessible
       accessibilityRole="progressbar"
       accessibilityLabel={label}
@@ -446,7 +507,7 @@ function DetailSkeleton({
       >
         {content}
       </View>
-    </View>
+    </LoadingStatus>
   );
 }
 
@@ -475,7 +536,7 @@ export function Skeleton({
     );
   if (shape === 'bill-header')
     return (
-      <View
+      <LoadingStatus
         accessible
         accessibilityRole="progressbar"
         accessibilityLabel={label}
@@ -527,11 +588,11 @@ export function Skeleton({
           </View>
           {bar(96, 32, onSunken, true)}
         </View>
-      </View>
+      </LoadingStatus>
     );
   const items = Array.from({ length: Math.max(0, count) }, (_, index) => index);
   return (
-    <View
+    <LoadingStatus
       accessible
       accessibilityRole="progressbar"
       accessibilityLabel={label}
@@ -591,7 +652,7 @@ export function Skeleton({
           ))
         )}
       </View>
-    </View>
+    </LoadingStatus>
   );
 }
 /** Screen supplies its own section gap, including adaptive-width boundaries. */
@@ -820,12 +881,16 @@ export function ContentUnavailable({
   symbol,
   title,
   body,
+  announcement,
   action,
   testID,
 }: {
   symbol: SFSymbol;
   title: string;
   body?: string;
+  /** Fixed announcement once per mounted episode, including on Android.
+   * Keeps changing search copy out of a live region. */
+  announcement?: string;
   action?: {
     label: string;
     onPress: () => void;
@@ -834,6 +899,14 @@ export function ContentUnavailable({
   };
   testID?: string;
 }) {
+  useStatusAnnouncement(
+    announcement ??
+      [phoneCopy(title), body ? phoneCopy(body) : null]
+        .filter(Boolean)
+        .join('. '),
+    'unavailable',
+    announcement === undefined ? 'page' : 'episode',
+  );
   const large = useAccessibilitySize();
   const layout = useLayout();
   const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
@@ -850,6 +923,7 @@ export function ContentUnavailable({
   return (
     <View
       testID={testID}
+      accessibilityLiveRegion={announcement === undefined ? 'polite' : 'none'}
       style={styles.unavailable}
       onLayout={(event) => setMeasuredWidth(event.nativeEvent.layout.width)}
     >
@@ -949,6 +1023,7 @@ function ErrorSentence({
         ref={sentenceRef}
         accessible
         accessibilityRole={alert ? 'alert' : undefined}
+        accessibilityLiveRegion={alert ? 'assertive' : undefined}
         accessibilityLabel={sentence}
         style={styles.errorSentence}
       >

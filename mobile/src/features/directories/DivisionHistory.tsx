@@ -509,6 +509,7 @@ export default function DivisionHistory() {
       <ContentUnavailable
         symbol="magnifyingglass"
         title={`No results for "${query}"`}
+        announcement="No results"
         body="Check the spelling or try a new search."
         testID="division-history-empty"
       />

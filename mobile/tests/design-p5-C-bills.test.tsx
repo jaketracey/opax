@@ -3,7 +3,13 @@ import { SectionHeader } from '../src/design/layout';
 import { SourceAffordance } from '../src/design/source';
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
-import { Platform, StyleSheet, View, useWindowDimensions } from 'react-native';
+import {
+  AccessibilityInfo,
+  Platform,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { router } from 'expo-router';
 import { Catalogs } from '../src/api/catalogs';
@@ -135,6 +141,49 @@ const texts = (root: ReactTestInstance): string[] =>
   root.children.flatMap((child) =>
     typeof child === 'string' ? [child] : texts(child),
   );
+
+test.each(['ios', 'android'] as const)(
+  '%s bill no-result typing announces once per episode',
+  async (platform) => {
+    jest.useFakeTimers();
+    const originalOS = Platform.OS;
+    Platform.OS = platform;
+    const reader = jest.spyOn(AccessibilityInfo, 'isScreenReaderEnabled');
+    const readerImplementation = reader.getMockImplementation()!;
+    reader.mockResolvedValue(true);
+    const announce = jest
+      .spyOn(AccessibilityInfo, 'announceForAccessibility')
+      .mockImplementation(() => {});
+    try {
+      const root = await render(<BillsList />);
+      announce.mockClear();
+      const search = () =>
+        mockScreens.findLast((options) => options.headerSearchBarOptions)!
+          .headerSearchBarOptions as {
+          onChangeText: (event: { nativeEvent: { text: string } }) => void;
+        };
+      const type = async (text: string) => {
+        await act(async () => search().onChangeText({ nativeEvent: { text } }));
+        await act(async () => jest.advanceTimersByTime(150));
+      };
+      for (const query of ['z', 'zz', 'zzz', 'zzzz']) await type(query);
+      expect(announce.mock.calls).toEqual([['No results']]);
+      expect(
+        host(root, 'bills-search-empty')[0]!.props.accessibilityLiveRegion,
+      ).toBe('none');
+      await type('');
+      announce.mockClear();
+      await type('zzzzz');
+      expect(announce.mock.calls).toEqual([['No results']]);
+      act(() => mounted.splice(0).forEach((tree) => tree.unmount()));
+    } finally {
+      reader.mockImplementation(readerImplementation);
+      announce.mockRestore();
+      Platform.OS = originalOS;
+      jest.useRealTimers();
+    }
+  },
+);
 
 test('the timeline reveals stages sharing dates even when every date is on the ruler', async () => {
   mockParams.key = 'au-federal-r7534';

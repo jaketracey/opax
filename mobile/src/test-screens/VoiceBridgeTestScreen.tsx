@@ -113,7 +113,11 @@ export default function VoiceBridgeTestScreen() {
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
     >
-      <Text testID="voice-bridge-test-title" style={styles.title}>
+      <Text
+        testID="voice-bridge-test-title"
+        accessibilityRole="header"
+        style={styles.title}
+      >
         Voice bridge fixture workbench
       </Text>
       <Text style={styles.text}>
@@ -126,7 +130,11 @@ export default function VoiceBridgeTestScreen() {
         <Text testID="voice-reason" style={styles.text}>
           Reason: {reason}
         </Text>
-        <Text testID="voice-error" style={styles.text}>
+        <Text
+          testID="voice-error"
+          accessibilityLiveRegion="polite"
+          style={styles.text}
+        >
           Error: {error}
         </Text>
         <Text testID="voice-auth" style={styles.text}>
@@ -255,7 +263,9 @@ export default function VoiceBridgeTestScreen() {
             },
           ),
       )}
-      <Text style={styles.title}>Transient transcript</Text>
+      <Text accessibilityRole="header" style={styles.title}>
+        Transient transcript
+      </Text>
       {turns.map((turn) => (
         <Text
           key={`${turn.role}-${turn.id}`}
@@ -265,7 +275,9 @@ export default function VoiceBridgeTestScreen() {
           {turn.role}: {turn.text}
         </Text>
       ))}
-      <Text style={styles.title}>Validated record sources</Text>
+      <Text accessibilityRole="header" style={styles.title}>
+        Validated record sources
+      </Text>
       {sources.map((source, index) => (
         <Text
           key={source.path}

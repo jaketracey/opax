@@ -1,6 +1,6 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { AccessibilityInfo, SectionList } from 'react-native';
+import { AccessibilityInfo, Platform, SectionList } from 'react-native';
 import { router } from 'expo-router';
 import { Button, LinkRow, Text } from '../src/design/primitives';
 import { RouteOptions } from '../src/navigation/preview';
@@ -185,6 +185,52 @@ test('an unchanged refresh keeps the page and needs no update action', async () 
     r.root.findAllByProps({ testID: 'division-history-updates' }),
   ).toHaveLength(0);
 });
+
+test.each(['ios', 'android'] as const)(
+  '%s no-result typing announces once per episode',
+  async (platform) => {
+    jest.useFakeTimers();
+    const originalOS = Platform.OS;
+    Platform.OS = platform;
+    const reader = jest.spyOn(AccessibilityInfo, 'isScreenReaderEnabled');
+    const readerImplementation = reader.getMockImplementation()!;
+    reader.mockResolvedValue(true);
+    const announce = jest
+      .spyOn(AccessibilityInfo, 'announceForAccessibility')
+      .mockImplementation(() => {});
+    try {
+      const r = await render(record());
+      announce.mockClear();
+      const options = () => r.root.findByType(RouteOptions).props.options;
+      const type = async (text: string) => {
+        await act(async () =>
+          options().headerSearchBarOptions.onChangeText({
+            nativeEvent: { text },
+          }),
+        );
+        await act(async () => jest.advanceTimersByTime(150));
+      };
+      for (const query of ['z', 'zz', 'zzz', 'zzzz']) await type(query);
+      expect(announce.mock.calls).toEqual([['No results']]);
+      const empty = r.root.find(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID === 'division-history-empty',
+      );
+      expect(empty.props.accessibilityLiveRegion).toBe('none');
+      await type('');
+      announce.mockClear();
+      await type('zzzzz');
+      expect(announce.mock.calls).toEqual([['No results']]);
+      await act(async () => r.unmount());
+    } finally {
+      reader.mockImplementation(readerImplementation);
+      announce.mockRestore();
+      Platform.OS = originalOS;
+      jest.useRealTimers();
+    }
+  },
+);
 
 test('search and filters match votes beyond the displayed page and reset pagination', async () => {
   jest.useFakeTimers();

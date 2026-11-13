@@ -1559,8 +1559,12 @@ describe('party', () => {
     expect(tile('party-figure-members')).toContain(formatCount(members));
     // The sections draw the same figures.
     expect(tile('party-current-count')).toContain(formatCount(members));
+    const figure = host(r, 'party-receipts-total')
+      .findAllByType(Text)
+      .find((node) => node.props.variant === 'figure')!.props.children;
+    expect([formatMoney(total), formatMoneyCompact(total)]).toContain(figure);
     expect(tile('party-receipts-total')).toContain(
-      moneyAccessibilityLabel(total),
+      moneyAccessibilityLabel(total, figure !== formatMoney(total)),
     );
     // The total once, exact or (at accessibility sizes) compact: never also
     // as a tile above the section.

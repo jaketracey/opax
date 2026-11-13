@@ -1133,13 +1133,13 @@ function ReceiptsTotal({
     .filter(Boolean)
     .join(', ');
   // At accessibility sizes the exact dollars would break inside the figure
-  // ("$1,120,198,70 / 4" at AX3): the compact sum is drawn, and VoiceOver
-  // still hears the exact amount.
+  // ("$1,120,198,70 / 4" at AX3). VoiceOver uses the same rounding as the
+  // compact sum drawn at these sizes.
   const compact = useAccessibilitySize() && Math.abs(node.total) >= 1e6;
   return (
     <View
       accessible
-      accessibilityLabel={`${moneyAccessibilityLabel(node.total)}, ${line}`}
+      accessibilityLabel={`${moneyAccessibilityLabel(node.total, compact)}, ${line}`}
       testID="party-receipts-total"
     >
       <Text wordSafe variant="figure" tone="moneyInk" tabular>

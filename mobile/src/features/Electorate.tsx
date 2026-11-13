@@ -921,7 +921,12 @@ function ElectionRow({
         ]}
       >
         <View style={styles.electionWords}>
-          <Text wordSafe variant="subsectionTitle" testID={`${testID}-title`}>
+          <Text
+            wordSafe
+            variant="subsectionTitle"
+            accessibilityRole="text"
+            testID={`${testID}-title`}
+          >
             {date ? `${summary.title} · ${date}` : summary.title}
           </Text>
           {summary.winner ? (

@@ -1,3 +1,4 @@
+/* global __dirname */
 // Node 24's V8 can segfault in GC (ClearStaleLeftTrimmedPointerVisitor) on a
 // stale Sparkplug frame slot: nodejs/node#62393. npm test runs Jest under
 // `node --no-sparkplug` (scripts/jest-retry.sh); a plain `npx jest` does not,
@@ -10,6 +11,11 @@ if (!process.execArgv.includes('--no-sparkplug'))
 
 module.exports = {
   preset: 'jest-expo',
+  globals: {
+    screenA11yInventory:
+      require('./tests/screen-a11y-inventory.cjs').screenInventory(__dirname),
+  },
+  reporters: ['default', '<rootDir>/tests/screen-a11y-reporter.cjs'],
   // A default in config lets an explicit CLI worker budget take precedence.
   maxWorkers: 2,
   // Bounds every synchronous child process a suite starts (see the file).

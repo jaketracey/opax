@@ -947,7 +947,11 @@ export function MonthPager({
         onPress={() => previous?.onPress()}
         testID={previousTestID}
       />
-      <Text variant="subsectionTitle" style={styles.shrink}>
+      <Text
+        variant="subsectionTitle"
+        accessibilityRole="text"
+        style={styles.shrink}
+      >
         {month}
       </Text>
       <IconButton

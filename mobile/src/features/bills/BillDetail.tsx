@@ -1,3 +1,4 @@
+import { LoadingStatus } from '../../design/states';
 import { RouteOptions } from '../../navigation/preview';
 import { useScreenReady } from '../../analytics/timing';
 import { Host, Menu, Button as SwiftButton } from '@expo/ui/swift-ui';
@@ -1080,7 +1081,7 @@ function SeededHead({ row }: { row: IndexRow }) {
 /** Below a seeded header: one element, "Loading the bill". */
 function SeededBodySkeleton() {
   return (
-    <View
+    <LoadingStatus
       accessible
       accessibilityRole="progressbar"
       accessibilityLabel="Loading the bill"
@@ -1088,7 +1089,7 @@ function SeededBodySkeleton() {
       testID="bill-loading"
     >
       <BodySkeleton />
-    </View>
+    </LoadingStatus>
   );
 }
 
