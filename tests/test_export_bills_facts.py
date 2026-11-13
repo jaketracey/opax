@@ -11,6 +11,7 @@ from scripts import export_bills as export
 
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT = json.loads((ROOT / 'portal/test/fixtures/portal-facts.json').read_text())
+DATED_SPONSORS = json.loads((ROOT / 'portal/test/fixtures/dated-sponsor-parties.json').read_text())
 
 
 class PublishedBillFacts(unittest.TestCase):
@@ -18,10 +19,11 @@ class PublishedBillFacts(unittest.TestCase):
         self.assertEqual(len(AUDIT['parties']), 585)
         index = json.loads((ROOT / 'portal/public/bills/index.json').read_text())
         parties = {row['key']: row['sponsor_party'] for row in index['bills']}
+        dated = {row['key']: row['published_party'] for row in DATED_SPONSORS['rows'] + DATED_SPONSORS['fills']}
         for row in AUDIT['parties']:
             with self.subTest(key=row['key'], raw=row['raw']):
                 self.assertEqual(export.sponsor_party_token(row['raw']), row['canonical'])
-                self.assertEqual(parties[row['key']], row['canonical'])
+                self.assertEqual(parties[row['key']], dated.get(row['key'], row['canonical']))
 
     def test_retained_label_repair_never_infers_missing_affiliations(self):
         with tempfile.TemporaryDirectory() as scratch:
@@ -71,6 +73,14 @@ class PublishedBillFacts(unittest.TestCase):
             self.assertEqual(row['sponsor_party'], bill['sponsor_party'])
             for party in [bill['sponsor_party'], *(s.get('party') for s in bill.get('sponsors', []))]:
                 self.assertTrue(party is None or party in export.PUBLISHED_PARTIES, (row['key'], party))
+
+    def test_browser_alias_table_is_generated_from_the_exporters_accepted_aliases(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            path = Path(scratch) / 'party-page.js'
+            source = ROOT / 'portal/public/party-page.js'
+            path.write_bytes(source.read_bytes())
+            export.write_sponsor_party_aliases(path)
+            self.assertEqual(path.read_bytes(), source.read_bytes())
 
     def test_reconciles_all_eight_tallies_from_the_reviewed_source_records(self):
         directory = ROOT / 'portal/public/divisions'
