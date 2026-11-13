@@ -17,8 +17,8 @@ export const failureCopy: Record<VoiceFailure, string> = {
   budgetClosed: 'Voice is closed for the rest of this month.',
   capacity: 'Voice is busy right now. Try again soon.',
   rateLimited: 'Too many tries. Wait a minute, then try again.',
-  callOpen:
-    'A call is still open on your account. End it there, then try again.',
+  // Only a 409 from /api/voice/start: the server is still ending the earlier call.
+  callOpen: 'Your earlier call is still ending. Try again in a minute.',
   network: couldntConnect,
   timeout: couldntConnect,
   policy: couldntConnect,
@@ -168,7 +168,7 @@ export function refusal(status: VoiceStatus | null): VoiceFailure | null {
   if (!status) return null;
   if (!status.enabled) return 'disabled';
   if (!status.signedIn) return 'signedOut';
-  if (status.activeSession) return 'callOpen';
+  // An open session is not a refusal: Start takes it over on the server.
   if (status.unlimited !== true && status.remainingSeconds <= 0)
     return 'allowanceExhausted';
   if (status.budgetOpen === false) return 'budgetClosed';
