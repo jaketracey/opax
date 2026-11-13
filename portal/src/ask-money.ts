@@ -80,14 +80,21 @@ function moneyContext(result:ReceiptTotals, years?:number[]) {
     :bounds.from!==null||bounds.to!==null?`${bounds.from===null?'earliest records':financialYear(bounds.from)} to ${bounds.to===null?'latest records':financialYear(bounds.to)}`
     :result.period||'No dated records'
   const coverage=!years&&selected!==result.period?` Matching recorded years: ${result.period||'none'}.`:''
-  return `**Financial years: ${selected}.**${coverage} ${result.by_donor.length.toLocaleString('en-AU')} ${result.by_donor.length===1?'receipt source':'receipt sources'} with matching receipts in Opax’s selected map. ${result.jurisdiction==='federal'?'Federal (AEC)':result.jurisdiction.toUpperCase()}. ${result.measure_label}; nominal Australian dollars.`
+  return `**Financial years: ${selected}.**${coverage} ${result.by_donor.length.toLocaleString('en-AU')} ${result.by_donor.length===1?'receipt source':'receipt sources'} with matching receipts in Opax’s selected map. ${result.jurisdiction==='federal'?'Federal (AEC)':result.jurisdiction.toUpperCase()}. ${result.measure_label.charAt(0).toUpperCase()+result.measure_label.slice(1)}; nominal Australian dollars.`
 }
 
-function partialMoneyComparison(rows:{name:string;total_aud:number;url:string}[],result:ReceiptTotals,note:string){
-  const answer=rows.map(r=>`${plain(r.name)} recorded ${aud(r.total_aud)} in ${result.measure_label}, ${result.period}.`).join(' ')+` ${note}\n\nThese figures are party-level totals for the matching records in OPAX’s published selection.\n\n${moneyMapLinks(result,rows[0].url,false)}`
+/** A row with its own measure_label is a side whose pairs have no receipt types:
+ * it keeps that label and period, and links its own map view. */
+function partialMoneyComparison(rows:{name:string;total_aud:number;url:string;measure_label?:string;period?:string|null}[],result:ReceiptTotals,note:string){
+  const own=rows.filter(r=>r.measure_label),shared=rows.filter(r=>!r.measure_label)
+  const named=own.length&&shared.length===1&&result.typed&&result.measure==='donations'
+  const links=[...(shared.length?[named?`[See ${plain(shared[0].name)} donations on the money map](${(()=>{const u=new URL(shared[0].url);u.searchParams.set('receipt','donations');return u.href})()})`:moneyMapLinks(result,shared[0].url,false)]:[]),...own.map(r=>`[See ${plain(r.name)} on the money map](${r.url})`)].join(' · ')
+  const answer=rows.map(r=>`${plain(r.name)} recorded ${aud(r.total_aud)} in ${r.measure_label??result.measure_label}, ${r.measure_label?r.period:result.period}.`).join(' ')+` ${note}\n\nThese figures are party-level totals for the matching records in OPAX’s published selection.\n\n${links}`
   const resource='receipt-comparison-held',url=rows[0].url
   return {answer,answer_status:'calculated',comparison_complete:false,money_ranking:true,measure:result.measure,measure_label:result.measure_label,coverage:result.period_coverage,citations:{[resource]:[[0,Array.from(answer).length]]},sources:[{resource,title:'Matching comparison records',href:url,url,kind:'receipt',snippet:answer,cited:true}]}
 }
+
+const typedFigures=(result:ReceiptTotals)=>result.measure==='donations'?'the donation figures':'figures for one receipt type'
 
 function heldMoneyComparison(result:ReceiptTotals,graph:ReceiptGraph,partyComparison:boolean,note:string){
   const from=result.selected_industries.length?result.selected_industries.map(i=>i.replaceAll('_',' ')).join(' or '):result.selected_donors.length?result.selected_donors[0]:'all receipts'
@@ -148,9 +155,9 @@ function comparedYearAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:stri
     const missing=years.filter(y=>!held.some(r=>r.year===y))
     const outside=missing.filter(y=>first!==undefined&&y<first||last!==undefined&&y>last)
     const untyped=missing.filter(y=>untypedYears.has(y)),absent=missing.filter(y=>!untypedYears.has(y))
-    const note=outside.length&&first!==undefined&&last!==undefined?`The published records run from ${financialYear(first)} to ${financialYear(last)}.`
-      :[absent.length?`The AEC records no matching receipts in ${absent.map(financialYear).join(' and ')}.`:'',
-        untyped.length?`The AEC data OPAX holds has no receipt-type breakdown for ${untyped.map(financialYear).join(' and ')}, so it is not compared with typed figures.`:''].filter(Boolean).join(' ')
+    const note=[outside.length&&first!==undefined&&last!==undefined?`The published records run from ${financialYear(first)} to ${financialYear(last)}.`
+        :absent.length?`The AEC records no matching receipts in ${absent.map(financialYear).join(' and ')}.`:'',
+      untyped.length?`The AEC data OPAX holds for ${untyped.map(financialYear).join(' and ')} doesn't split receipts by type, so it can't be set beside ${typedFigures(result)}.`:''].filter(Boolean).join(' ')
     if(held.length)return {...partialMoneyComparison(held.map(r=>({name:result.selected_parties[0]+' in '+financialYear(r.year),total_aud:r.total_aud,url:r.sources[0].url})),held[0],note),coverage:result.period_coverage,...(reading?{reading}:{})}
     if(result.receipts)return {...partialMoneyComparison([{name:result.selected_parties[0],total_aud:result.total_aud,url:result.sources[0].url}],result,note),coverage:result.period_coverage,...(reading?{reading}:{})}
     return heldMoneyComparison(result,graph,true,note)??clarify('Choose a held financial year in the [money map](/money) to compare the recorded figures.','evidence_gap')
@@ -204,7 +211,20 @@ function comparedMoneyAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:str
   // Absence from a selected export does not establish an actual zero.
   if(rows.some(r=>!r.receipts)){
     const held=rows.filter(r=>r.receipts>0)
-    return held.length?{...partialMoneyComparison(held.map(r=>({name:r.name,total_aud:r.total_aud,url:result.sources[0].url})),result,'One comparison side has matching records; the comparison needs records for both sides.'),money_question}:{...(heldMoneyComparison(result,graph,partyComparison,'The requested comparison needs matching records for both sides.')??{answer:'Choose a held period in the [money map](/money) for this comparison.',citations:{},sources:[],answer_status:'evidence_gap',money_ranking:true}),money_question}
+    const partyUrl=(name:string)=>{const url=new URL(result.sources[0].url);if(partyComparison)url.searchParams.set('party',graph.nodes.find(n=>n.kind==='party'&&n.label===name)?.id||name);return url.href}
+    // A side with no typed records may still hold records without a receipt-type
+    // breakdown: give its all-types total under its own label, not as like for like.
+    const untyped=partyComparison&&result.typed?rows.filter(r=>!r.receipts).flatMap(r=>{
+      const bounds=result.requested_years
+      const side=receiptAnswer(graph,query,result.jurisdiction,'https://opax.com.au',{party:r.name,...(bounds.from!==null?{from:String(bounds.from)}:{}),...(bounds.to!==null?{to:String(bounds.to)}:{})})
+      return side&&'type_breakdown' in side&&side.receipts>0?[{name:r.name,total_aud:side.total_aud,url:partyUrl(r.name),measure_label:side.measure_label,period:side.period}]:[]
+    }):[]
+    if(held.length&&untyped.length){
+      const names=untyped.map(r=>plain(r.name)).join(' and ')
+      const note=`The AEC data OPAX holds for ${names} doesn't split receipts by type, so ${untyped.length===1?'its total':'their totals'} can't be set beside ${typedFigures(result)} as like for like.`
+      return {...partialMoneyComparison([...held.map(r=>({name:r.name,total_aud:r.total_aud,url:partyUrl(r.name)})),...untyped],result,note),money_question}
+    }
+    return held.length?{...partialMoneyComparison(held.map(r=>({name:r.name,total_aud:r.total_aud,url:partyUrl(r.name)})),result,'One comparison side has matching records; the comparison needs records for both sides.'),money_question}:{...(heldMoneyComparison(result,graph,partyComparison,'The requested comparison needs matching records for both sides.')??{answer:'Choose a held period in the [money map](/money) for this comparison.',citations:{},sources:[],answer_status:'evidence_gap',money_ranking:true}),money_question}
   }
   const difference=Math.round((first.total_aud-second.total_aud)*100)/100
   const sector=result.selected_industries.map(i=>i.replaceAll('_',' ')).join(' and ')
@@ -539,7 +559,7 @@ export function calculatedMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph,qu
   answer+='\n\n'+caveat
   cite(start,'What these figures count',result.sources[0].url,caveat)
   const build=typeof graph.meta.generated==='string'?graph.meta.generated:'the published graph'
-  answer+=`\n\nSource: ${jurisdiction==='federal'?'AEC Transparency Register returns':disclosureRegister(jurisdiction)}, OPAX build of ${build}. ${moneyMapLinks(result,result.sources[0].url,true)} · [How OPAX counts money](/money/explain) · [Download the calculation data](https://opax.com.au${file})`
+  answer+=`\n\nSource: ${jurisdiction==='federal'?'AEC Transparency Register returns':disclosureRegister(jurisdiction)}, OPAX build of ${build}. ${moneyMapLinks(result,result.sources[0].url,ranked.length>1||fromDonors||allFlows)} · [How OPAX counts money](/money/explain) · [Download the calculation data](https://opax.com.au${file})`
   if(options.member)answer+=` · [${plain(options.member.name)}’s declared interests](${options.member.href})`
   const context=moneyContext(result)
   const money_question=fundingScopeQuestion({party:result.selected_parties[0],industry,

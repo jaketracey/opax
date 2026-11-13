@@ -95,7 +95,7 @@ test('accuracy and directness scores detect independent numeric and presentation
  assert.equal(wrong.accuracy,false);assert.equal(wrong.directness,3)
  const late=scoreMoneyRanking({...out,answer:'The record is incomplete. '+out.answer},expected,c,graph)
  assert.equal(late.directness,1)
- const noMap=scoreMoneyRanking({...out,answer:out.answer.replace(/\[See all receipt types on the money map\]\([^)]+\)/,'')},expected,c,graph)
+ const noMap=scoreMoneyRanking({...out,answer:out.answer.replace(/\[See (?:these donations|all receipt types) on the money map\]\([^)]+\)/g,'')},expected,c,graph)
  assert.equal(noMap.directness,1)
 })
 test('an exact current member resolves to party-level figures and their declared-interests page',async()=>{

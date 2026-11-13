@@ -115,7 +115,7 @@ export function scoreMoneyRanking(payload,expected,selection,graph){
  // Recipient rankings also carry donation-only amounts per financial year and in total.
  if(expected.typed&&!selection.party)for(const amount of donationAmounts(graph,selection))amounts.add(dollars(amount))
  for(const amount of answer.match(/\$\d+(?:,\d{3})*(?:\.\d{2})?/g)??[])check(amounts.has(amount),'unbound amount '+amount)
- const map=answer.match(/\[(?:See these|See all receipt types) on the money map\]\(([^)]+)\)/)?.[1]
+ const map=answer.match(/\[(?:See these(?: donations)?|See all receipt types) on the money map\]\(([^)]+)\)/)?.[1]
  check(!!map,'map link')
  if(map){const p=new URL(map,'https://opax.test').searchParams
   check(p.get('jur')==='federal'&&p.get('type')==='receipts','map jurisdiction/type')
