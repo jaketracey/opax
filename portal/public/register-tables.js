@@ -1,4 +1,4 @@
-import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=5fe413541f';
+import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=f055b6abe2';
 import {donorDisclosure, financialYear, receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=8c73ceafd6';
 import {interestHolder} from './interest-holder.js';
 
