@@ -51,7 +51,7 @@ export interface Division {
   source_url?: string; url?: string; stage?: string;
   party_tallies?: { party: string; votes: Record<string,number> }[];
   recorded_ayes?: number; recorded_noes?: number; unknown_party_count?: number;
-  members?: { name: string; person_id?: string; person_slug?: string; party?: string; vote: string; party_source?: { basis: string; url?: string | null } }[];
+  members?: { name: string; person_id?: string; person_slug?: string; party?: string; vote: string; party_source?: { basis: string; url?: string | null; source_party?: string }; party_withheld?: { source_party: string; reason?: string } }[];
   bills?: { key: string; title: string; url?: string }[];
 }
 interface Vote { question?: string; name?: string; title?: string; stage?: string; date?: string; vote?: string; division_slug?: string; source_url?: string }
@@ -373,24 +373,33 @@ function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>,
   const parties=d.party_tallies || [...new Set(members.filter(m=>m.party).map(m=>m.party!))].map(party=>({party,votes:Object.fromEntries([...new Set(members.filter(m=>m.party===party).map(m=>m.vote))].map(vote=>[vote,members.filter(m=>m.party===party && m.vote===vote).length]))}))
   const ayes=d.recorded_ayes ?? members.filter(m=>m.vote==='aye').length, noes=d.recorded_noes ?? members.filter(m=>m.vote==='no').length
   if(!members.length && !parties.length) return '<p>No per-member votes or party tallies here. See the original division record.</p>'
-  // Rows the division source lists without a party can take one from a dated roster (scripts/vote_parties.py).
-  const fromRoster=members.filter(m=>m.party && m.party_source).length
+  // Rows the division source lists without a party can take one from a dated roster, and a source label
+  // that dated records contradict for this date is replaced, or held back when they are unclear (scripts/vote_parties.py).
+  const fromRoster=members.filter(m=>m.party && m.party_source && !m.party_source.source_party).length
+  const corrected=members.filter(m=>m.party && m.party_source?.source_party).length
+  const withheld=members.filter(m=>!m.party && m.party_withheld).length
   const missing=d.unknown_party_count ?? members.filter(m=>!m.party).length
   const tallied=parties.reduce((n,{votes})=>n+Object.values(votes).reduce((a,b)=>a+b,0),0)
   const listed=members.length || tallied+missing
   const labelled=listed-missing
   const plural=(n: number)=>`${count(n)} ${n===1 ? 'member' : 'members'}`
-  const origin=!fromRoster ? 'Party labels are those recorded for this division, rather than current affiliations.'
+  // Federal Senate labels are never checked against dated records (none are held yet), and the source can
+  // give a senator's later party on every date: say so rather than claim they are dated.
+  const senate=d.house==='senate' && (d.jurisdiction ?? 'federal')==='federal'
+  const senateNote=' These are the division source’s labels and can show a senator’s later party rather than the one held on this date, because no dated Senate party records are held yet.'
+  const origin=!fromRoster ? (senate ? `Party labels are those given in the division record.${senateNote}` : 'Party labels are those recorded for this division, rather than current affiliations.')
     : fromRoster>=labelled ? 'The division record gives no parties. Each label here is the one a dated parliamentary roster records for that member on this date.'
-    : `Party labels are those recorded for this division, except for ${plural(fromRoster)} the division record lists without a party: their labels are the ones a dated parliamentary roster records for them on this date.`
-  let html=`<h3>How each party voted</h3><p>${origin}${ayes!==d.ayes || noes!==d.noes ? ` The member list is partial: ${ayes} recorded ayes and ${noes} recorded noes; the official tally above remains the source total.` : ''}</p>`
+    : `Party labels are those recorded for this division, except for ${plural(fromRoster)} the division record lists without a party: their labels are the ones a dated parliamentary roster records for them on this date.${senate ? senateNote.replace(' These are', ' The others are') : ''}`
+  const correctedNote=corrected ? ` For ${plural(corrected)}, the division record gives a party not held on this date; the label shown is the party dated service records give for this date.` : ''
+  const heldNote=withheld ? ` For ${count(withheld)} of them, the division record gives a party that dated records leave unclear for this date, so it is not shown.` : ''
+  let html=`<h3>How each party voted</h3><p>${origin}${correctedNote}${ayes!==d.ayes || noes!==d.noes ? ` The member list is partial: ${ayes} recorded ayes and ${noes} recorded noes; the official tally above remains the source total.` : ''}</p>`
   // Said before the lines when they describe a minority of the members, so a short list is not read as the whole vote.
   const minority=parties.length>0 && missing>0 && labelled*2<listed
-  if(minority) html+=`<p>These party lines cover only ${count(labelled)} of the ${plural(listed)} listed. No party is recorded for the other ${count(missing)} on this date.</p>`
+  if(minority) html+=`<p>These party lines cover only ${count(labelled)} of the ${plural(listed)} listed. No party is recorded for the other ${count(missing)} on this date.${heldNote}</p>`
   html+=parties.length ? `<ul>${parties.map(({party,votes})=>`<li>${partyLinks ? link(partyUrl(party),party) : escapeHtml(party)}: ${Object.entries(votes).map(([vote,n])=>`${human(vote)} ${n}`).join(', ')}</li>`).join('')}</ul>` : ''
   if(!parties.length && !missing) html+='<p>Party affiliation on the division date is not recorded in the member export.</p>'
   // Said in words, never as a party line: an "Unknown" total would read as a party.
-  if(missing && !minority) html+=`<p>${parties.length ? `No party is recorded for ${plural(missing)} on this date; they are not counted in any party line above.` : `No party is recorded for any of the ${plural(missing)} on this date.`}</p>`
+  if(missing && !minority) html+=`<p>${parties.length ? `No party is recorded for ${plural(missing)} on this date; they are not counted in any party line above.` : `No party is recorded for any of the ${plural(missing)} on this date.`}${heldNote}</p>`
   if(full) for(const side of [...new Set(members.map(m=>m.vote))]) {
     html+=`<h3>${side==='aye' ? 'Ayes' : side==='no' ? 'Noes' : human(side)}</h3><ul>${members.filter(m=>m.vote===side).map(m=>`<li>${link(personUrl(m.name),m.name)}${m.party ? ` (${escapeHtml(m.party)})` : ''} — ${escapeHtml(side)}</li>`).join('')}</ul>`
   }
