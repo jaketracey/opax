@@ -53,6 +53,12 @@ recorded in each file's `meta` block:
    calls "political donations"; all gifts are kept and the flag counts are in meta.
 8. A donor's industry is never shown as 'individual' when the resolver knows the
    entity as an organisation (export_money_graph.py rule 8).
+9. A party the shared grammar leaves out but the federal export selects in its own
+   right (export_money_graph.py rule 10: the Liberal Democratic Party and the
+   Libertarian Party, one party under two names) is read from the recipient name
+   when no recipient_party is set, under its current name, with node.aliases for
+   the former names. Its donor side is held back as in money.json
+   (DONOR_SIDE_HELD): the rows count in the party node only.
 
 This script is streamed to the database host over ssh stdin, so it cannot import
 its sibling; the shared constants below are a deliberate copy of
@@ -76,6 +82,24 @@ from pathlib import Path
 
 DB_PATH = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 TOP_DONORS = 250
+
+# Rule 9: a copy of parli.ingest.money_aec_extras _OWN_PARTIES / PARTY_RENAMED /
+# PARTY_FORMER_NAMES and export_money_graph.DONOR_SIDE_HELD (this file is streamed alone).
+OWN_PARTIES = [
+    (re.compile(r"\blibertarian\b", re.I), "Libertarian Party"),
+    (re.compile(r"\bliberal democrat(?:s|ic)?\b", re.I), "Liberal Democratic Party"),
+]
+PARTY_RENAMED = {"Liberal Democratic Party": "Libertarian Party"}
+PARTY_FORMER_NAMES = {"Libertarian Party": ["Liberal Democratic Party", "Liberal Democrats"]}
+DONOR_SIDE_HELD = {"Libertarian Party"}
+
+
+def own_party(name: str | None) -> str | None:
+    """Rule 9: the money-map party (current name) a name reads as, if it is one of OWN_PARTIES."""
+    for rx, canon in OWN_PARTIES:
+        if name and rx.search(name):
+            return PARTY_RENAMED.get(canon, canon)
+    return None
 
 NOT_SUMMED = (
     "State and federal returns are not summed: AEC returns already include "
@@ -637,7 +661,7 @@ def main() -> None:
     alias_to_entity, entities = load_canonical(db)
     exact_index = exact_alias_index(alias_to_entity)
 
-    rows = db.execute(
+    rows = [dict(r) for r in db.execute(
         """
         SELECT donor_name, recipient_party AS party, amount, financial_year,
                industry, donor_type, disclosure_type, is_political_donation, election
@@ -647,7 +671,23 @@ def main() -> None:
           AND amount > 0
         """,
         (jur,),
-    ).fetchall()
+    )]
+    # rule 9: a party set under a former name takes the current one; an unset party is
+    # read from the recipient name, for the parties OWN_PARTIES selects only.
+    for r in rows:
+        r["party"] = own_party(r["party"]) or r["party"]
+    has_recipient = "recipient" in {c[1] for c in db.execute("PRAGMA table_info(ext_donations)")}
+    for r in [] if not has_recipient else db.execute(
+            """SELECT donor_name, recipient, amount, financial_year, industry, donor_type, disclosure_type,
+                      is_political_donation, election
+               FROM ext_donations
+               WHERE jurisdiction = ? AND (recipient_party IS NULL OR recipient_party = '') AND amount > 0""",
+            (jur,)):
+        party = own_party(r["recipient"])
+        if party:
+            r = dict(r)
+            del r["recipient"]
+            rows.append({**r, "party": party})
     considered = len(rows)
 
     dropped_types = defaultdict(int)
@@ -685,7 +725,11 @@ def main() -> None:
     excluded = {"public_funding": 0, "party_internal": 0, "government_entity": 0}
     unresolved = set()
     rows_without_year = 0
+    held_rows = 0
     for r in rows:
+        if r["party"] in DONOR_SIDE_HELD:
+            held_rows += 1  # rule 9: the party node counts it below; no donor does
+            continue
         name = (r["donor_name"] or "").strip()
         if not name:
             continue
@@ -792,6 +836,7 @@ def main() -> None:
             "total": round(pt["total"]),
             "count": pt["count"],
             **year_fields(pt),
+            **({"aliases": list(PARTY_FORMER_NAMES[party])} if party in PARTY_FORMER_NAMES else {}),
         })
 
     eid_to_node: dict = {}
@@ -914,6 +959,7 @@ def main() -> None:
             "node_id_collisions": collisions,
             "party_rows_excluded_public_funding": party_excluded["public_funding"],
             "party_rows_excluded_government_entity": party_excluded["government_entity"],
+            "party_rows_donor_side_held": held_rows,
             "rows_dropped_by_disclosure_type": dict(dropped_types),
             "rows_dropped_election_duplicates": dropped_election or None,
             "political_donation_flag": flag_counts if jur == "qld" else None,

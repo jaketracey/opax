@@ -76,6 +76,17 @@ Methodology / exclusion rules (all documented in the output's `meta` block):
    `associatedTag`, the one line every surface shows beside the name. The same
    rule applies to every party; a branch or division of the party counts.
 
+10. A party the legacy `donations` table leaves unbucketed (recipient_canonical
+   empty) but the AEC extras grammar selects in its own right
+   (money_aec_extras.own_party: the Liberal Democratic Party and the Libertarian
+   Party, one party under two names) gets its node from the rows whose recipient
+   name reads as it, under its current name (money_aec_extras.current_party), with
+   node.aliases holding the former names. Its donor side is held back
+   (DONOR_SIDE_HELD): those rows count in the party node's total, count and
+   byYear only, never in a donor's total or as a flow, because adding them would
+   move the totals of donors already on the map. meta.party_rows_donor_side_held
+   counts them.
+
 Node ids are 'donor:' + norm_key(label). Two donors whose labels share a key
 (an entity and an unresolved look-alike) get distinct ids: the second takes
 '~<entity id>' (or '~2') and meta.node_id_collisions counts them, so an id
@@ -100,6 +111,8 @@ try:
                                           resolve_alias)
 except ModuleNotFoundError:
     from donor_disclosure import AEC_SOURCE_SQL, attach_donor_disclosures, exact_alias_index, resolve_alias
+
+from parli.ingest.money_aec_extras import PARTY_FORMER_NAMES
 
 import os
 import json
@@ -133,6 +146,11 @@ PARTY_WORD_RE = re.compile(
     r"\bnational party\b|\bdemocrats\b",
     re.I,
 )
+
+# Rule 10: parties whose donor side is held back. Their rows give the party node its
+# record total; donors' totals and flows leave them out until a review accepts the
+# donor moves (14 donors on the map gave to the Liberal Democratic Party).
+DONOR_SIDE_HELD = {"Libertarian Party"}
 
 # Rule 8: resolver kinds that are never a private person.
 NOT_A_PERSON = {"company", "association", "government", "party_unit", "union"}
@@ -277,18 +295,35 @@ def load_associated_register(db, alias_to_entity: dict, exact_index: dict) -> di
     if not have:
         sys.stderr.write("export_money_graph: no associated_entities table; no donor is flagged\n")
         return {}
-    # The party grammar the AEC extras loader uses for the same returns (Labor, Liberal, LNP, ...).
-    from parli.ingest.money_aec_extras import canon_party
+    # The party grammar the AEC extras loader uses for the same returns (Labor, Liberal, LNP, ...),
+    # under the money map's node name (a renamed party's former name reads as its current one).
+    from parli.ingest.money_aec_extras import canon_party, current_party
     reg: dict = defaultdict(lambda: defaultdict(lambda: defaultdict(set)))
     for name, party, fy in db.execute(
             "SELECT DISTINCT entity_name, associated_party, financial_year FROM associated_entities "
             "WHERE source = 'aec_assoc_entity'"):
-        canon = canon_party(party)
+        canon = current_party(canon_party(party))
         if not canon or not (name or "").strip():
             continue
         for key in {resolve_alias(name.strip(), alias_to_entity, exact_index), norm_key(name)} - {None, ""}:
             reg[key][canon][party.strip()].add(fy or "")
     return reg
+
+
+def own_party_recipients(db) -> dict:
+    """Rule 10: recipient spelling -> money-map party, for AEC rows with no canonical
+    recipient whose name reads as a party selected in its own right."""
+    from parli.ingest.money_aec_extras import current_party, own_party
+    out = {}
+    if "recipient" not in {r[1] for r in db.execute("PRAGMA table_info(donations)")}:
+        return out
+    for (recipient,) in db.execute(
+            f"SELECT DISTINCT recipient FROM donations WHERE (recipient_canonical IS NULL OR recipient_canonical = '') "
+            f"AND {AEC_SOURCE_SQL}"):
+        party = current_party(own_party(recipient))
+        if party:
+            out[recipient] = party
+    return out
 
 
 def _fy(fy: str) -> str:
@@ -604,13 +639,25 @@ def main() -> None:
     # rule 0: what the AEC filter leaves out, by source, for meta
     non_aec = {r[0] or "unknown": r[1] for r in db.execute(
         f"SELECT source, COUNT(*) {base} AND NOT ({AEC_SOURCE_SQL}) GROUP BY source")}
-    rows = db.execute(
+    rows = [dict(r) for r in db.execute(
         f"""
         SELECT donor_name, recipient_canonical AS party, amount, financial_year,
                industry, donor_type
         {base} AND {AEC_SOURCE_SQL}
         """
-    ).fetchall()
+    )]
+    # rule 10: rows to a party the table leaves unbucketed, under the party's current name.
+    own = own_party_recipients(db)
+    if own:
+        slots = ",".join("?" * len(own))
+        for r in db.execute(
+                f"""SELECT donor_name, recipient, amount, financial_year, industry, donor_type FROM donations
+                    WHERE (recipient_canonical IS NULL OR recipient_canonical = '')
+                      AND donation_type != 'flagged_review' AND amount > 0 AND {AEC_SOURCE_SQL}
+                      AND recipient IN ({slots})""", sorted(own)):
+            r = dict(r)
+            r["party"] = own[r.pop("recipient")]
+            rows.append(r)
     used_rows = len(rows)
 
     # Aggregate per canonical donor entity (rule 6).
@@ -618,7 +665,11 @@ def main() -> None:
     excluded = {"public_funding": 0, "party_internal": 0, "government_entity": 0}
     unresolved = set()
     rows_without_year = 0
+    held_rows = 0
     for r in rows:
+        if r["party"] in DONOR_SIDE_HELD:
+            held_rows += 1  # rule 10: the party node counts it below; no donor does
+            continue
         name = (r["donor_name"] or "").strip()
         if not name:
             continue
@@ -754,6 +805,8 @@ def main() -> None:
             "total": round(pt["total"]),
             "count": pt["count"],
             **year_fields(pt),
+            # rule 10: a renamed party answers to its former names.
+            **({"aliases": list(PARTY_FORMER_NAMES[party])} if party in PARTY_FORMER_NAMES else {}),
         })
 
     eid_to_node: dict = {}
@@ -875,6 +928,8 @@ def main() -> None:
             "node_id_collisions": collisions,
             "party_rows_excluded_public_funding": party_excluded["public_funding"],
             "party_rows_excluded_government_entity": party_excluded["government_entity"],
+            "party_rows_donor_side_held": held_rows,
+            "donor_side_held": sorted(DONOR_SIDE_HELD),
             "donor_nodes": len(picked),
             "donor_nodes_by_total": len(picked) - len(extras),
             "donors_via_public_money": len(extras),
