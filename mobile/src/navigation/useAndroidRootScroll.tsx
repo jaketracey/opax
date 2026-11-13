@@ -27,6 +27,9 @@ const titles: Record<string, string> = {
   search: 'Search',
   ask: 'Ask',
 };
+/** Root routes whose bar has leading items (Ask's history). */
+const leading = new Set(['ask']);
+const Untitled = () => null;
 type ScrollTarget = {
   scrollTo?: (options: { y: number; animated: boolean }) => void;
   scrollToOffset?: (options: { offset: number; animated: boolean }) => void;
@@ -47,7 +50,8 @@ export function useAndroidRootScroll(
   const setOptions = useSafeSetOptions();
   const state =
     Platform.OS === 'android' ? navigation?.getState?.() : undefined;
-  const title = route ? titles[route.name] : undefined;
+  const name = route?.name ?? '';
+  const title = titles[name];
   const root =
     Platform.OS === 'android' &&
     !!title &&
@@ -66,13 +70,17 @@ export function useAndroidRootScroll(
       if (applied.current === key) return;
       applied.current = key;
       setOptions({
-        headerTitle: collapsed ? title : '',
+        // Ask has leading bar items. With a leading item, the stack draws a
+        // string title as its own heading view, so an empty string left an
+        // empty heading in the toolbar. A title function that renders
+        // nothing adds no node at all.
+        headerTitle: collapsed ? title : leading.has(name) ? Untitled : '',
         headerTitleAlign: 'left',
         headerStyle: { backgroundColor: elevated ? colors.navyWash : ground },
         headerShadowVisible: elevated,
       });
     },
-    [root, title, ground, setOptions],
+    [root, title, name, ground, setOptions],
   );
   useLayoutEffect(() => {
     applied.current = '';
