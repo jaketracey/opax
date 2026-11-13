@@ -215,8 +215,10 @@ type SourceRegistry = {
   /** Each drawn line's text, with the lines that draw it in tree order. */
   lines: Map<string, number[]>;
   listeners: Set<() => void>;
-  next: number;
 };
+let lineIds = 0;
+/** Ids follow render order, which is tree order for blocks drawn together. */
+const nextLineId = () => ++lineIds;
 const SourceSectionContext = createContext<SourceRegistry | null>(null);
 
 /**
@@ -231,7 +233,6 @@ export function SourceSection({ children }: { children: ReactNode }) {
   const [registry] = useState<SourceRegistry>(() => ({
     lines: new Map(),
     listeners: new Set(),
-    next: 0,
   }));
   return (
     <SourceSectionContext.Provider value={registry}>
@@ -243,8 +244,7 @@ export function SourceSection({ children }: { children: ReactNode }) {
 /** Whether this line is the first in its section to say `text`. */
 function useFirstInSection(text: string | null): boolean {
   const registry = useContext(SourceSectionContext);
-  // Ids follow render order, which is tree order for blocks drawn together.
-  const [id] = useState(() => (registry ? ++registry.next : 0));
+  const [id] = useState(nextLineId);
   const subscribe = useCallback(
     (listener: () => void) => {
       if (!registry) return () => {};
