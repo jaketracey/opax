@@ -15,6 +15,7 @@ import { PadGrid } from '../src/design/adaptive';
 import {
   formatCount,
   formatMoney,
+  formatMoneyCompact,
   moneyAccessibilityLabel,
 } from '../src/design/format';
 import { Screen, Section } from '../src/design/layout';
@@ -1466,7 +1467,7 @@ describe('party', () => {
   const SECTIONS = [
     'party-figures',
     'party-figure-members',
-    'party-figure-receipts',
+    // In one column the receipts total is said once, in Receipts.
     'party-members',
     'party-members-all',
     'party-current-count',
@@ -1537,7 +1538,7 @@ describe('party', () => {
     await act(async () => r.unmount());
   });
 
-  test('the strip has two tiles, each the figure its section draws', async () => {
+  test('in one column the strip counts members and Receipts alone says the total', async () => {
     const r = await party('Labor');
     const data = views.Labor!.data!;
     const tiles = r.root.findAll(
@@ -1549,23 +1550,24 @@ describe('party', () => {
     );
     expect(
       [...new Set(tiles.map((t) => t.props.testID as string))].sort(),
-    ).toEqual(['party-figure-members', 'party-figure-receipts']);
+    ).toEqual(['party-figure-members']);
     const members = data.members.data!.currentCount;
     const total = data.receipts.data!.node.total;
     expect(members).toBeGreaterThan(0);
     expect(total).toBeGreaterThan(0);
     const tile = (id: string) => host(r, id).props.accessibilityLabel as string;
     expect(tile('party-figure-members')).toContain(formatCount(members));
-    // Drawn compact, said in words.
-    expect(tile('party-figure-receipts')).toContain(
-      moneyAccessibilityLabel(total, true),
-    );
     // The sections draw the same figures.
     expect(tile('party-current-count')).toContain(formatCount(members));
     expect(tile('party-receipts-total')).toContain(
       moneyAccessibilityLabel(total),
     );
-    expect(drawn(r)).toContain(formatMoney(total));
+    // The total once, exact or (at accessibility sizes) compact: never also
+    // as a tile above the section.
+    const times = (needle: string) => drawn(r).split(needle).length - 1;
+    expect(times(formatMoney(total)) + times(formatMoneyCompact(total))).toBe(
+      1,
+    );
     await act(async () => r.unmount());
   });
 
@@ -1718,6 +1720,19 @@ describe('party', () => {
     try {
       const pad = await party('Labor');
       const grids = pad.root.findAllByType(PadGrid);
+      // Receipts sits beside Debts, below the votes: the strip keeps its
+      // receipts tile at regular width.
+      expect(
+        pad.root
+          .findAll(
+            (n) =>
+              typeof n.type !== 'string' &&
+              /^party-figure-/.test(n.props.testID ?? '') &&
+              typeof n.props.value === 'string',
+          )
+          .map((n) => n.props.testID as string)
+          .filter((id, i, all) => all.indexOf(id) === i),
+      ).toEqual(['party-figure-members', 'party-figure-receipts']);
       expect(grids.map(sectionsIn)).toEqual([
         ['party-members', 'party-divisions'],
         ['party-receipts', 'party-debts-section'],

@@ -652,6 +652,94 @@ test('DivisionRow split can describe the member against their party, or remain t
     expect(strings(root).includes('Party voted against')).toBe(!!split);
   }
 });
+test.each([
+  ['Large', 1],
+  ['AX3', 2.643],
+  ['AX5', 3.571],
+])(
+  'DivisionRow words wrap inside the column at %s, never their own width (D9)',
+  (_size, fontScale) => {
+    size(fontScale, 375);
+    const root = render(
+      <DivisionRow
+        title="Treasury Laws Amendment (Strengthening Enforcement and Other Measures) Bill 2026"
+        meta="Limitation of debate · Senate · 20\u00a0Aug 2026"
+        outcome="Not agreed to"
+        ayes={31}
+        noes={36}
+        countsStyle="ayesNoes"
+        split={{ ayes: 0, noes: 25 }}
+        votesLine="Australian Labor Party: all 25 against"
+        bar={false}
+        href={href}
+        testID="row"
+      />,
+    ).root;
+    // The words' column takes the space beside the chevron: a zero basis and
+    // no minimum width, so Yoga wraps each line instead of overflowing it.
+    const words = row(root).findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        node.findAllByType(NativeText).length >= 3 &&
+        flat(node.props.style).flexGrow === 1 &&
+        flat(node.props.style).flexDirection !== 'row',
+    )[0]!;
+    expect(flat(words.props.style)).toMatchObject({
+      flexGrow: 1,
+      flexShrink: 1,
+      flexBasis: 0,
+      minWidth: 0,
+    });
+    // No text in the row is clamped to a line count.
+    for (const text of root.findAllByType(NativeText))
+      expect(text.props.numberOfLines ?? 0).toBe(0);
+    expect(strings(root)).toContain('Australian Labor Party: all 25 against');
+  },
+);
+test('DivisionRow draws its vote bar by default; a block vote can drop it', () => {
+  for (const bar of [undefined, true, false]) {
+    const root = render(
+      <DivisionRow
+        title="Example"
+        meta="Third reading"
+        outcome="Agreed to"
+        ayes={76}
+        noes={55}
+        countsStyle="ayesNoes"
+        href={href}
+        testID="row"
+        {...(bar === undefined ? {} : { bar })}
+      />,
+    ).root;
+    expect(
+      root.findAll(
+        (node) =>
+          typeof node.type === 'string' && node.props.testID === 'row-bar',
+      ),
+    ).toHaveLength(bar === false ? 0 : 1);
+    // Without a sentence the counts line is the default one.
+    expect(strings(root)).toContain('76 ayes, 55 noes');
+  }
+  const root = render(
+    <DivisionRow
+      title="Example"
+      meta="Third reading"
+      outcome="Agreed to"
+      ayes={76}
+      noes={55}
+      countsStyle="ayesNoes"
+      split={{ ayes: 20, noes: 5 }}
+      votesLine="Labor: 20 for, 5 against"
+      href={href}
+      testID="row"
+    />,
+  ).root;
+  expect(strings(root)).toContain('Labor: 20 for, 5 against');
+  expect(strings(root)).not.toContain('20 ayes, 5 noes');
+  expect(row(root).props.accessibilityLabel).toContain(
+    'Labor: 20 for, 5 against',
+  );
+});
 test.each([1, 1.786])(
   'money amounts use strong tabular ink, stacking at AX1+, scale=%s',
   (scale) => {

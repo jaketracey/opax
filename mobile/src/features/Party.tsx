@@ -20,7 +20,7 @@ import type { PartyPageRecord } from '../api/catalogs';
 import { nameKey } from '../api/ids';
 import type { PartyMember } from '../api/party-page';
 import { apiClient, catalogs, portraits } from '../api/runtime';
-import { useReduceMotion } from '../design/accessibility';
+import { useAccessibilitySize, useReduceMotion } from '../design/accessibility';
 import { useLayout } from '../design/adaptive';
 import { Disclosure } from '../design/disclosure';
 import {
@@ -59,7 +59,7 @@ import {
 } from '../navigation/routes';
 import type { PartySection } from '../navigation/routes/people';
 import { shareRecord } from '../navigation/share';
-import { stageTitle } from './bills/divisions';
+import { isProcedural, stageTitle } from './bills/divisions';
 import { chamberLabel } from './bills/filters';
 import { useCatalogRecord } from './bills/useCatalogRecord';
 import { CachedPortrait } from './CachedPortrait';
@@ -281,6 +281,9 @@ export function PartyPage({
         <Screen
           column="wide"
           testID="party-screen"
+          // A missing party sits at the same centre as every other missing
+          // record; the copy is its own.
+          centred={notAParty || (!!record && !record.data)}
           // "Not a party" makes no read, so a pull would spin forever.
           refreshControl={
             notAParty ? undefined : (
@@ -456,14 +459,20 @@ function PartyContent({
   // The strip: two tiles, each reading its section's figure.
   const receipts = view.receipts.data;
   const tiles: StatTileProps[] = [];
-  if (members && view.members.status !== 'error')
+  // A small party's members are listed by name in Members, so the count is
+  // not said again as a tile.
+  const named = !!members && namesMembers(members);
+  // In one column Receipts follows Members within a screen, so its total is
+  // said there once, not also as a tile above it.
+  const receiptsTile = layout.regular;
+  if (members && view.members.status !== 'error' && !named)
     tiles.push({
       value: formatCount(members.currentCount),
       label: members.currentCount === 1 ? 'sitting member' : 'sitting members',
       onPress: () => jump('members'),
       testID: 'party-figure-members',
     });
-  if (receipts && view.receipts.status !== 'error')
+  if (receipts && view.receipts.status !== 'error' && receiptsTile)
     tiles.push({
       value: formatMoneyCompact(receipts.node.total),
       label: 'disclosed receipts',
@@ -534,19 +543,23 @@ function PartyContent({
     >
       {(data) => (
         <View>
-          <LinkRow
-            title={counted(data.currentCount, 'sitting member')}
-            leading={
-              <View style={styles.faces}>
-                {newMembers ? <NewDot testID="party-members-new" /> : null}
-                <FaceStack portraits={faces} />
-              </View>
-            }
-            href={partyMembersRoute(label)}
-            accessibilityLabel={`${counted(data.currentCount, `sitting ${label} member`)}${newMembers ? '. New' : ''}`}
-            accessibilityHint={`Opens Parliamentarians filtered to ${label}`}
-            testID="party-current-count"
-          />
+          {namesMembers(data) ? (
+            <NamedMembers members={data.current} newMembers={newMembers} />
+          ) : (
+            <LinkRow
+              title={counted(data.currentCount, 'sitting member')}
+              leading={
+                <View style={styles.faces}>
+                  {newMembers ? <NewDot testID="party-members-new" /> : null}
+                  <FaceStack portraits={faces} />
+                </View>
+              }
+              href={partyMembersRoute(label)}
+              accessibilityLabel={`${counted(data.currentCount, `sitting ${label} member`)}${newMembers ? '. New' : ''}`}
+              accessibilityHint={`Opens Parliamentarians filtered to ${label}`}
+              testID="party-current-count"
+            />
+          )}
 
           {data.recorded.length ? (
             <Disclosure
@@ -787,27 +800,7 @@ function PartyContent({
             />
           ) : (
             <View>
-              {data.rows.slice(0, 10).map((row) => (
-                <PartyDivision key={rowKey(row)} row={row} label={label} />
-              ))}
-              {data.rows.length > 10 ? (
-                <Disclosure
-                  label={`Show all ${formatCount(data.rows.length)}`}
-                  testID="party-divisions-all"
-                >
-                  {() =>
-                    data.rows
-                      .slice(10)
-                      .map((row) => (
-                        <PartyDivision
-                          key={rowKey(row)}
-                          row={row}
-                          label={label}
-                        />
-                      ))
-                  }
-                </Disclosure>
-              ) : null}
+              <PartyVotes rows={data.rows} label={label} />
               <Text wordSafe variant="footnote">
                 {`From the ${formatCount(data.scanned)} most recent bills with recorded votes.`}
               </Text>
@@ -921,22 +914,176 @@ function PartyContent({
 type DivisionData = NonNullable<View_['divisions']['data']>['rows'][number];
 const rowKey = (row: DivisionData) => `${row.billKey}:${row.division.key}`;
 
+/** Parties with this many sitting members or fewer are named in Members. */
+export const NAMED_MEMBERS = 5;
+
+const uniqueMembers = (members: readonly PartyMember[]) => {
+  const seen = new Set<string>();
+  return members.filter((m) => {
+    if (seen.has(m.slug)) return false;
+    seen.add(m.slug);
+    return true;
+  });
+};
+
+/** Whether Members lists the sitting members by name rather than a count. */
+const namesMembers = (data: {
+  currentCount: number;
+  current: readonly PartyMember[];
+}) =>
+  data.currentCount > 0 &&
+  data.currentCount <= NAMED_MEMBERS &&
+  uniqueMembers(data.current).length === data.currentCount;
+
+/** A small party's sitting members, each by name, as Past members are. */
+function NamedMembers({
+  members,
+  newMembers,
+}: {
+  members: readonly PartyMember[];
+  newMembers: boolean;
+}) {
+  const people = uniqueMembers(members);
+  return (
+    <View testID="party-members-named">
+      {newMembers ? <NewDot testID="party-members-new" /> : null}
+      {people.map((member) => (
+        <PersonRow
+          key={member.slug}
+          name={member.name}
+          portrait={<CachedPortrait name={member.name} slug={member.slug} />}
+          place={
+            [member.place, chamberName(member.chamber, member.jurisdiction)]
+              .filter(Boolean)
+              .join(', ') || undefined
+          }
+          detail={recordedAs(member.recordedAs)}
+          href={personRoute(member.slug, member.name)}
+          testID={`party-sitting-${member.slug}`}
+          testDrawnName
+        />
+      ))}
+    </View>
+  );
+}
+
+const VOTES_SHOWN = 10;
+
+/**
+ * Recent votes: substantive divisions first, newest first; procedural
+ * motions folded under the same "Procedural votes (N)" the bill page uses.
+ */
+function PartyVotes({
+  rows,
+  label,
+}: {
+  rows: readonly DivisionData[];
+  label: string;
+}) {
+  const main = rows.filter((row) => !isProcedural(row.division.stage));
+  const procedural = rows.filter((row) => isProcedural(row.division.stage));
+  const draw = (list: readonly DivisionData[]) =>
+    list.map((row, i) => (
+      <PartyDivision
+        key={rowKey(row)}
+        row={row}
+        label={label}
+        which={which(row, [list[i - 1], list[i + 1]])}
+      />
+    ));
+  return (
+    <View>
+      {draw(main.slice(0, VOTES_SHOWN))}
+      {main.length > VOTES_SHOWN ? (
+        <Disclosure
+          label={`Show all ${formatCount(main.length)}`}
+          testID="party-divisions-all"
+        >
+          {() => draw(main.slice(VOTES_SHOWN))}
+        </Disclosure>
+      ) : null}
+      {procedural.length ? (
+        <Disclosure
+          label={`Procedural votes (${formatCount(procedural.length)})`}
+          testID="party-divisions-procedural"
+        >
+          {() => <View>{draw(procedural)}</View>}
+        </Disclosure>
+      ) : null}
+    </View>
+  );
+}
+
+/** Whether two rows would read the same: one bill, stage, chamber and day. */
+const sameMotion = (row: DivisionData, other: DivisionData | undefined) =>
+  !!other &&
+  other.billKey === row.billKey &&
+  (other.division.stage ?? '') === (row.division.stage ?? '') &&
+  other.division.date === row.division.date &&
+  other.division.house === row.division.house;
+
+/**
+ * What tells a row from a neighbour on the same bill, stage and day: its
+ * question when the neighbour's differs, otherwise the chamber's count (the
+ * export keeps two such divisions apart only when their counts differ).
+ */
+function which(
+  row: DivisionData,
+  neighbours: readonly (DivisionData | undefined)[],
+): string | null {
+  const twins = neighbours.filter((other) => sameMotion(row, other));
+  if (!twins.length) return null;
+  if (row.question && twins.every((other) => other!.question !== row.question))
+    return row.question;
+  return `Chamber: ${formatCount(row.division.ayes)} for, ${formatCount(row.division.noes)} against`;
+}
+
+/**
+ * The party's vote in words. A block vote is "Labor: all 25 against"; a
+ * split vote counts both sides, "Labor: 20 for, 5 against". One member
+ * voting is "Libertarian Party: 1 for".
+ */
+export function partyVoteLine(name: string, ayes: number, noes: number) {
+  if (ayes && noes)
+    return `${name}: ${formatCount(ayes)} for, ${formatCount(noes)} against`;
+  const n = ayes || noes;
+  const side = ayes ? 'for' : 'against';
+  return `${name}: ${n > 1 ? `all ${formatCount(n)}` : formatCount(n)} ${side}`;
+}
+
 /** One recent division with this party's members' votes in words. */
-function PartyDivision({ row, label }: { row: DivisionData; label: string }) {
+function PartyDivision({
+  row,
+  label,
+  which = null,
+}: {
+  row: DivisionData;
+  label: string;
+  /** A neighbour has the same bill, stage and day: which motion this is. */
+  which?: string | null;
+}) {
   const outcome =
     row.division.outcome === 'affirmative' ? 'Agreed to' : 'Not agreed to';
   const stage = stageTitle(row.division.stage) || 'Division';
+  const block = !(row.ayes && row.noes);
   return (
     <DivisionRow
       title={row.title}
-      // A division under a former name keeps it: "Liberal Democratic Party
-      // members", never the party's later name.
-      meta={`${stage} · ${chamberLabel(row.division.house)} · ${formatDate(row.division.date, 'short')}\n${row.recordedAs ?? label} members: ${formatCount(row.ayes)} for, ${formatCount(row.noes)} against`}
+      meta={[
+        `${stage} · ${chamberLabel(row.division.house)} · ${formatDate(row.division.date, 'short')}`,
+        which,
+      ]
+        .filter(Boolean)
+        .join('\n')}
       outcome={outcome}
       ayes={row.division.ayes}
       noes={row.division.noes}
       countsStyle="ayesNoes"
       split={{ ayes: row.ayes, noes: row.noes }}
+      // A division under a former name keeps it: "Liberal Democratic Party:
+      // 1 for", never the party's later name.
+      votesLine={partyVoteLine(row.recordedAs ?? label, row.ayes, row.noes)}
+      bar={!block}
       href={billRoute(row.billKey, undefined, {
         section: 'divisions',
         division: row.division.key,
@@ -968,6 +1115,10 @@ function ReceiptsTotal({
   ]
     .filter(Boolean)
     .join(', ');
+  // At accessibility sizes the exact dollars would break inside the figure
+  // ("$1,120,198,70 / 4" at AX3): the compact sum is drawn, and VoiceOver
+  // still hears the exact amount.
+  const compact = useAccessibilitySize() && Math.abs(node.total) >= 1e6;
   return (
     <View
       accessible
@@ -975,7 +1126,7 @@ function ReceiptsTotal({
       testID="party-receipts-total"
     >
       <Text wordSafe variant="figure" tone="moneyInk" tabular>
-        {formatMoney(node.total)}
+        {compact ? formatMoneyCompact(node.total) : formatMoney(node.total)}
       </Text>
       <Text wordSafe variant="secondary">
         {line}
