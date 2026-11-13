@@ -6,9 +6,15 @@
  * result carries any of the query's words (in its title, speaker or passage),
  * no register record matched by name, and the best match is not a strong
  * meaning match either, the page says so first ("No records mention ...") and
- * keeps the meaning-ranked records one tap away. A real paraphrase still shows:
- * the check only reorders what the reader sees first, and only when nothing
- * on the page contains a word of the query.
+ * keeps the meaning-ranked records one tap away.
+ *
+ * The check leans towards "mentions": a wrong "No records mention" hides real
+ * matches, while a missed one only leaves the old page. So the query and the
+ * passage are read the same way (curly quotes folded, punctuation a space,
+ * Labour as Labor), words are compared by stem ("taxes" finds "tax", "studies"
+ * finds "study"), and both are also compared with the spaces taken out
+ * ("robodebt" finds "Robo-debt", "NDIS" finds "N.D.I.S."). Every step is a
+ * linear scan: no backtracking pattern.
  */
 
 /** A meaning score (calibrated 0..1, src/index.ts calibrate) at or above this
@@ -21,24 +27,65 @@ const STOP = new Set(['the', 'and', 'for', 'are', 'was', 'were', 'has', 'have', 
   'what', 'who', 'why', 'how', 'when', 'where', 'which', 'did', 'does', 'about', 'said', 'say', 'into', 'over', 'its',
   'their', 'they', 'them', 'his', 'her', 'not', 'any', 'all', 'can', 'will', 'would', 'should', 'there', 'than'])
 
-const fold = (text: unknown): string => String(text ?? '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase()
+/** Plurals a suffix rule cannot reach. */
+const IRREGULAR: Record<string, string> = { women: 'woman', men: 'man', mice: 'mouse', children: 'child', people: 'person', geese: 'goose', feet: 'foot', teeth: 'tooth' }
 
-/** The words a record would have to contain: quoted phrases whole, else each
- *  word of three letters or more, cut to a stem so "affordable" finds "affordability". */
-export function mentionTerms(query: string): string[] {
-  const q = fold(query)
-  const phrases = [...q.matchAll(/"([^"]{2,})"/g)].map((m) => m[1].trim()).filter(Boolean)
-  if (phrases.length) return phrases
-  return [...new Set(q.split(/[^\p{L}\p{N}]+/u).filter((w) => w.length >= 3 && !STOP.has(w))
-    .map((w) => (w.length > 5 ? w.slice(0, Math.max(5, Math.ceil(w.length * 0.6))) : w)))]
+/** One reading for query and passage: compatibility forms (ﬁ), accents, case,
+ *  curly quotes and apostrophes folded; "Labour" read as "Labor"; every run of
+ *  anything but a letter or digit (a hyphen, a full stop, a newline) one space. */
+export function normaliseText(text: unknown): string {
+  return String(text ?? '').normalize('NFKC').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase()
+    .replace(/[‘’ʼ`']/g, '')
+    .replaceAll('labour', 'labor')
+    .replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
+}
+
+/** A word's stem, the same on both sides: "studies" and "study", "crises" and
+ *  "crisis", "taxes" and "tax", "houses" and "house" meet. */
+export function stem(word: string): string {
+  let w = IRREGULAR[word] ?? word
+  if (w.length > 4 && w.endsWith('ies')) return w.slice(0, -3) + 'y'
+  if (w.length > 4 && w.endsWith('is')) w = w.slice(0, -2)
+  else if (w.length > 4 && w.endsWith('es') && /(?:s|x|z|ch|sh)$/.test(w.slice(0, -2))) w = w.slice(0, -2)
+  else if (w.length > 3 && w.endsWith('s') && !w.endsWith('ss') && !w.endsWith('us')) w = w.slice(0, -1)
+  if (w.length > 4 && w.endsWith('e')) w = w.slice(0, -1)
+  return w
+}
+
+export interface MentionTerm { words: string[]; compact: string; phrase: boolean }
+
+/** The terms a record would have to hold: each quoted phrase whole, else each
+ *  word of three letters or more (and the letters of a dotted short form, N.D.I.S.). */
+export function mentionTerms(query: string): MentionTerm[] {
+  const folded = String(query ?? '').replace(/[“”„«»]/g, '"')
+  const phrases = [...folded.matchAll(/"([^"]{2,})"/g)].map((m) => normaliseText(m[1])).filter(Boolean)
+  if (phrases.length) return phrases.map((p) => { const words = p.split(' '); return { words: words.map(stem), compact: words.join(''), phrase: true } })
+  const words = normaliseText(folded).split(' ').filter(Boolean)
+  const terms: MentionTerm[] = [...new Set(words.filter((w) => w.length >= 3 && !STOP.has(w)))]
+    .map((w) => ({ words: [stem(w)], compact: w, phrase: false }))
+  if (words.length > 1 && words.every((w) => w.length === 1)) terms.push({ words: [words.join('')], compact: words.join(''), phrase: false })
+  return terms
 }
 
 interface MentionRow { title?: unknown; speaker?: unknown; snippet?: unknown; score?: unknown }
 
+/** A word matches a passage word with the same stem, or one that starts with
+ *  most of it ("affordable" and "affordability"). */
+const prefixOf = (s: string): string => (s.length > 5 ? s.slice(0, Math.max(5, Math.ceil(s.length * 0.6))) : s)
+
 /** True when a record's title, speaker or passage holds any of the terms. */
-export function mentions(row: MentionRow, terms: string[]): boolean {
-  const text = fold(`${row.title ?? ''} ${row.speaker ?? ''} ${row.snippet ?? ''}`)
-  return terms.some((term) => text.includes(term))
+export function mentions(row: MentionRow, terms: MentionTerm[]): boolean {
+  const words = normaliseText(`${row.title ?? ''} ${row.speaker ?? ''} ${row.snippet ?? ''}`).split(' ').filter(Boolean)
+  const stems = words.map(stem)
+  const stemLine = ` ${stems.join(' ')} `
+  const compact = words.join('')
+  return terms.some((term) => {
+    if (term.compact.length >= 3 && compact.includes(term.compact)) return true
+    if (term.phrase) return stemLine.includes(` ${term.words.join(' ')} `)
+    const [w] = term.words
+    const start = prefixOf(w)
+    return stems.some((s) => s === w || s.startsWith(start))
+  })
 }
 
 /**

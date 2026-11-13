@@ -2,18 +2,63 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
-import {mentionTerms, mentions, noRecordMentions, MEANING_FLOOR} from '../src/search-mention.ts';
+import {mentionTerms, mentions, noRecordMentions, normaliseText, stem, MEANING_FLOOR} from '../src/search-mention.ts';
 
 const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
 
-test('the words a record must hold: quoted phrases whole, else stems of the longer words', () => {
-  assert.deepEqual(mentionTerms('zzqxv plorthub'), ['zzqxv', 'plort']);
-  assert.deepEqual(mentionTerms('"housing affordability" now'), ['housing affordability']);
-  assert.deepEqual(mentionTerms('what did they say about the NDIS'), ['ndis']);
+test('query and passage are read the same way: stems, joined and dotted forms, quotes and hyphens', () => {
+  assert.deepEqual(mentionTerms('zzqxv plorthub').map(t => t.words[0]), ['zzqxv', 'plorthub']);
+  assert.deepEqual(mentionTerms('what did they say about the NDIS').map(t => t.compact), ['ndis']);
   assert.deepEqual(mentionTerms('of an'), []);
-  assert.ok(mentions({snippet: 'Housing was less affordable.'}, mentionTerms('affordability')));
-  assert.ok(mentions({speaker: 'Morgan Example'}, mentionTerms('morgan')));
-  assert.ok(mentions({title: 'Café policy'}, mentionTerms('cafe')));
+  assert.equal(mentionTerms('"housing affordability" now')[0].phrase, true);
+  for (const [a, b] of [['studies', 'study'], ['crises', 'crisis'], ['taxes', 'tax'], ['jobs', 'job'], ['women', 'woman'], ['mice', 'mouse'], ['houses', 'house'], ['policies', 'policy']])
+    assert.equal(stem(a), stem(b), `${a}/${b}`);
+  assert.equal(normaliseText('Labour’s ﬁnance, Robo-debt\nN.D.I.S.'), 'labors finance robo debt n d i s');
+});
+
+// The review's probes (13 Nov). "Must not fire": the passage does mention the query.
+const said = (query, passage) => mentions({ title: 'Debate', snippet: passage }, mentionTerms(query));
+const MENTIONED = [
+  ['studies', 'One study found it.'], ['study', 'Several studies found it.'],
+  ['crises', 'The housing crisis.'], ['crisis', 'A run of crises.'],
+  ['women', 'Every woman in the workforce.'], ['woman', 'Women in the workforce.'],
+  ['mice', 'A mouse plague.'], ['mouse', 'Mice ate the crop.'],
+  ['jobs', 'A job for every graduate.'], ['job', 'Jobs growth.'],
+  ['taxes', 'A tax on profits.'], ['tax', 'Taxes on profits.'],
+  ['robodebt', 'The Robo-debt scheme.'], ['robo-debt', 'The robodebt scheme.'],
+  ['NDIS', 'Funding for the N.D.I.S. this year.'], ['N.D.I.S.', 'The NDIS review.'],
+  ['Labor', 'The labour market.'], ['labour', 'The Labor government.'],
+  ['"climate change"', 'Action on climate-change now.'], ['"climate change"', 'Action on climate\nchange now.'],
+  ['“climate change”', 'Climate change, again.'],
+  ['"the minister’s statement"', "The minister's statement was tabled."],
+  ['"the minister\'s statement"', 'The minister’s statement was tabled.'],
+  ['café', 'The Cafe on the corner.'], ['Māori', 'Maori land.'], ['ﬁnance', 'Finance committee.'],
+  ['COVID-19', 'The covid 19 response.'], ['affordable', 'Housing affordability fell.'],
+];
+// "Fires": no record mentions the query.
+const NOT_MENTIONED = [
+  ['zzqxv plorthub', 'GovHubs in regional Victoria bring services together.'],
+  ['robodebt', 'Debt recovery and robotics in industry.'],
+  ['women', 'Men in the workforce.'],
+  ['"climate change"', 'A change in the climate of debate.'],
+  ['taxes', 'The budget for roads.'],
+];
+
+test('the review\'s probes: a passage that mentions the query is read as mentioning it', () => {
+  for (const [query, passage] of MENTIONED) assert.equal(said(query, passage), true, `${query} / ${passage}`);
+});
+
+test('the review\'s probes: a passage that does not mention the query is read as not mentioning it', () => {
+  for (const [query, passage] of NOT_MENTIONED) assert.equal(said(query, passage), false, `${query} / ${passage}`);
+  // Short words alone (NT, AI) never make the claim.
+  assert.deepEqual(mentionTerms('NT AI'), []);
+});
+
+test('the checks stay linear on long, punctuation-heavy text', () => {
+  const passage = '-'.repeat(200000) + ' x'.repeat(50000);
+  const started = Date.now();
+  said('"a b c d e f"', passage); said('zzqxv', passage);
+  assert.ok(Date.now() - started < 1500);
 });
 
 test('a meaning-only result set is flagged only when nothing mentions the query and nothing scores high', () => {
