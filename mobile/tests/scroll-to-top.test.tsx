@@ -88,6 +88,74 @@ test.each(['ios', 'android'] as const)(
   },
 );
 
+type Measured = (x: number, y: number, width: number, height: number) => void;
+/** A native scroll view whose top Fabric reports at `top` in the window. */
+const measuredAt = (top: number | null) => ({
+  scrollTo: jest.fn(),
+  measureInWindow: jest.fn((callback: Measured) => {
+    if (top !== null) callback(0, top, 402, 609);
+  }),
+});
+
+test.each([
+  // A tab root's translucent or large-title bar lies over a scroll view
+  // that starts at the window's top (Ask, Search).
+  ['under a translucent root bar', 0, -116],
+  // A pushed screen's opaque bar: react-native-screens lays the page out
+  // below it. Build 63, flow 48: the quiz's scroll view at [0,116], where
+  // -116 left a blank band the header's height above the question.
+  ['below a pushed opaque bar', 116, 0],
+  ['below the bar and a band above it', 160, 0],
+  ['partly under the bar', 50, -66],
+  // No synchronous reading (a detached view, a test double): as before.
+  ['with no reading', null, -116],
+] as const)(
+  'iOS: a scroll view %s rests below the part of the header over it',
+  (_case, top, y) => {
+    const platform = jest.replaceProperty(Platform, 'OS', 'ios');
+    try {
+      const scroll = measuredAt(top);
+      scrollToTop(scroll, 116);
+      expect(scroll.measureInWindow).toHaveBeenCalledTimes(1);
+      expect(scroll.scrollTo).toHaveBeenCalledWith({ y, animated: false });
+    } finally {
+      platform.restore();
+    }
+  },
+);
+
+test('iOS: a list responder is measured through its native scroll view', () => {
+  const platform = jest.replaceProperty(Platform, 'OS', 'ios');
+  try {
+    const native = measuredAt(116);
+    const responder = { scrollTo: jest.fn(), getNativeScrollRef: () => native };
+    scrollToTop(responder, 116, true);
+    expect(native.measureInWindow).toHaveBeenCalledTimes(1);
+    expect(responder.scrollTo).toHaveBeenCalledWith({ y: 0, animated: true });
+    // A reading that isn't a number is no reading.
+    const odd = {
+      scrollTo: jest.fn(),
+      measureInWindow: (callback: Measured) => callback(0, NaN, 0, 0),
+    };
+    scrollToTop(odd, 116);
+    expect(odd.scrollTo).toHaveBeenCalledWith({ y: -116, animated: false });
+  } finally {
+    platform.restore();
+  }
+});
+
+test('Android resets to zero without measuring', () => {
+  const platform = jest.replaceProperty(Platform, 'OS', 'android');
+  try {
+    const scroll = measuredAt(0);
+    scrollToTop(scroll, 116);
+    expect(scroll.scrollTo).toHaveBeenCalledWith({ y: 0, animated: false });
+    expect(scroll.measureInWindow).not.toHaveBeenCalled();
+  } finally {
+    platform.restore();
+  }
+});
+
 test.each([
   ['iPhone portrait', 'ios', false, 390, 844, 47, 91],
   ['Dynamic Island iPhone', 'ios', false, 402, 874, 62, 62 - 5 - 1 / 3 + 44],

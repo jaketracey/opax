@@ -1,6 +1,7 @@
+import { HeaderHeightContext } from 'expo-router/react-navigation';
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Keyboard } from 'react-native';
+import { Keyboard, ScrollView } from 'react-native';
 import { catalogs, recordSearch } from '../src/api/runtime';
 import {
   ContentUnavailable,
@@ -207,4 +208,46 @@ test('a repeated query parameter cannot crash a pushed results screen', async ()
   expect(view.root.findByType(ContentUnavailable).props.title).toBe(
     'No results',
   );
+});
+
+test('a scope change on pushed results starts at the resting top below the opaque bar', async () => {
+  // A pushed screen: react-native-screens lays it out below the stack's
+  // opaque bar, so its scroll view starts at the header's bottom and rests
+  // at 0, where -116 would hold the first result a header lower.
+  mockParams = { kind: 'people', q: 'housing' };
+  jest.mocked(catalogs.suggestionSourcesOnFocus).mockResolvedValue(ready());
+  const measure = jest
+    .spyOn(
+      ScrollView.prototype as unknown as {
+        measureInWindow: (callback: (x: number, y: number) => void) => void;
+      },
+      'measureInWindow',
+    )
+    .mockImplementation((callback) => callback(0, 116));
+  const scrollTo = jest
+    .spyOn(
+      ScrollView.prototype as unknown as { scrollTo: () => void },
+      'scrollTo',
+    )
+    .mockImplementation(() => undefined);
+  try {
+    let view!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      view = TestRenderer.create(
+        <HeaderHeightContext.Provider value={116}>
+          {withNavigationOptions(<ResultsScreen />, () => {})}
+        </HeaderHeightContext.Provider>,
+      );
+    });
+    scrollTo.mockClear();
+    await act(async () =>
+      view.root.findByType(ResultsView).props.onScope('bills'),
+    );
+    expect(view.root.findByType(ResultsView).props.scope).toBe('bills');
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+    expect(scrollTo).toHaveBeenLastCalledWith({ y: 0, animated: false });
+  } finally {
+    measure.mockRestore();
+    scrollTo.mockRestore();
+  }
 });

@@ -4,10 +4,12 @@ import { exploreScreens } from '../src/navigation/stack/explore';
 import { Picker, Slider } from '@expo/ui/swift-ui';
 import { router } from 'expo-router';
 import {
+  HeaderHeightContext,
   NavigationContext,
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { act } from 'react';
+import { ScrollView } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { useAccessibilitySize } from '../src/design/accessibility';
 import { Portrait } from '../src/design/people';
@@ -483,6 +485,92 @@ test('at accessibility sizes the footer flows after the content and the typed gu
   await press('quiz-confirm');
   expect(has('quiz-next')).toBe(true);
 });
+
+type MeasureInWindow = {
+  measureInWindow: (
+    callback: (x: number, y: number, width: number, height: number) => void,
+  ) => void;
+};
+type ScrollTo = {
+  scrollTo: (options: { y: number; animated: boolean }) => void;
+};
+
+test.each([
+  ['Large', false],
+  ['AX5', true],
+] as const)(
+  'at %s each new page starts at its resting top once drawn, and the action never covers an answer',
+  async (_size, large) => {
+    (useAccessibilitySize as jest.Mock).mockReturnValue(large);
+    // The quiz is pushed under the stack's opaque bar, which
+    // react-native-screens lays the page out below: build 63 measured the
+    // scroll view at [0,116] on an iPhone 17 Pro. Its resting top is 0.
+    const measure = jest
+      .spyOn(
+        ScrollView.prototype as unknown as MeasureInWindow,
+        'measureInWindow',
+      )
+      .mockImplementation((callback) => callback(0, 116, 402, 609));
+    const page = () =>
+      has('quiz-question')
+        ? (byID('quiz-question').props.accessibilityLabel as string)
+        : has('quiz-result')
+          ? 'result'
+          : has('quiz-start')
+            ? 'intro'
+            : 'none';
+    // Each reset, with the page drawn when it ran.
+    const resets: { page: string; y: number; animated: boolean }[] = [];
+    const scrollTo = jest
+      .spyOn(ScrollView.prototype as unknown as ScrollTo, 'scrollTo')
+      .mockImplementation(({ y, animated }) => {
+        resets.push({ page: page(), y, animated });
+      });
+    const top = (shown: string) => ({ page: shown, y: 0, animated: false });
+    const scroll = () =>
+      root().find(
+        (node) =>
+          node.type === ScrollView &&
+          node.props.testID === 'explore-quiz-screen',
+      );
+    // The prototype mocks are shared: restore them for the tests after.
+    try {
+      await mount(
+        <HeaderHeightContext.Provider value={116}>
+          <Quiz />
+        </HeaderHeightContext.Provider>,
+      );
+      expect(resets).toEqual([]);
+      await press('quiz-start');
+      const round = quizRounds.mixed[0]!;
+      // Not from the press, over the intro: once the question has drawn.
+      expect(resets).toEqual([top(round[0]!.prompt)]);
+      for (const [i, q] of round.entries()) {
+        // Below AX1 the action is pinned under the scroll view, never over
+        // its content; at AX sizes it flows after the answers.
+        expect(
+          scroll().findAll((node) => node.props.testID === 'quiz-confirm')
+            .length > 0,
+        ).toBe(large);
+        expect(footer()).toHaveLength(large ? 0 : 1);
+        await answer(q);
+        await press('quiz-confirm');
+        // The reveal stays where the reader is.
+        expect(resets).toHaveLength(i + 1);
+        await press('quiz-next');
+        expect(resets.at(-1)).toEqual(
+          top(i < 7 ? round[i + 1]!.prompt : 'result'),
+        );
+      }
+      await press('quiz-decks');
+      expect(resets.at(-1)).toEqual(top('intro'));
+      expect(resets).toHaveLength(10);
+    } finally {
+      measure.mockRestore();
+      scrollTo.mockRestore();
+    }
+  },
+);
 
 test('a failed save says so, once, with a way to try again', async () => {
   (quizStore.save as jest.Mock).mockRejectedValueOnce(new Error('disk'));

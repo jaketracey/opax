@@ -1,5 +1,7 @@
+import { HeaderHeightContext } from 'expo-router/react-navigation';
 import { act } from 'react';
 import {
+  ScrollView,
   StyleSheet,
   Text as NativeText,
   useWindowDimensions,
@@ -146,4 +148,41 @@ test('a sheet whose opener unmounted cannot change another Time machine', async 
   act(() => today.unmount());
   press(sheet, 'tm-years-2002');
   expect(search.root.findByType(YearHeader).props.year).toBe(2020);
+});
+
+test('a new year starts at its resting top, below the pushed opaque bar', async () => {
+  // Pushed like the quiz: react-native-screens lays the page out below the
+  // stack's opaque bar, so its scroll view starts at the header's bottom and
+  // rests at 0. -116 left a band the header's height above the year.
+  mockParams = { year: '2010' };
+  const measure = jest
+    .spyOn(
+      ScrollView.prototype as unknown as {
+        measureInWindow: (callback: (x: number, y: number) => void) => void;
+      },
+      'measureInWindow',
+    )
+    .mockImplementation((callback) => callback(0, 116));
+  const scrollTo = jest
+    .spyOn(
+      ScrollView.prototype as unknown as { scrollTo: () => void },
+      'scrollTo',
+    )
+    .mockImplementation(() => undefined);
+  try {
+    const view = await mount(
+      <HeaderHeightContext.Provider value={116}>
+        <TimeMachine />
+      </HeaderHeightContext.Provider>,
+    );
+    // The prototype mock keeps earlier tests' calls.
+    scrollTo.mockClear();
+    act(() => view.root.findByType(YearHeader).props.onYear(2001));
+    expect(view.root.findByType(YearHeader).props.year).toBe(2001);
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+    expect(scrollTo).toHaveBeenLastCalledWith({ y: 0, animated: false });
+  } finally {
+    measure.mockRestore();
+    scrollTo.mockRestore();
+  }
 });
