@@ -28,6 +28,19 @@ print(f"{day.day} {months[day.month - 1]} {day.year}")
 PYEOF
 }
 
+# Whole days from the shipped export's build day (Sydney) to $1; fails without a valid generated_at.
+evidence_age_days() {
+  "$PY" - portal/public/evidence/stats.json "$1" 2>/dev/null <<'PYEOF'
+import json, sys
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
+with open(sys.argv[1], encoding="utf-8") as stream:
+    stamp = json.load(stream)["generated_at"]
+built = datetime.fromisoformat(stamp.replace("Z", "+00:00")).astimezone(ZoneInfo("Australia/Sydney")).date()
+print((date.fromisoformat(sys.argv[2]) - built).days)
+PYEOF
+}
+
 # A GNU timeout duration (90m, 5h, 300s) in seconds: the builder's own budget matches the outer limit.
 evidence_seconds() {
   case $1 in
@@ -66,7 +79,8 @@ evidence_build_candidate() (
 )
 
 evidence_refresh() {
-  if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" = 1 ] || [ "${OPAX_NIGHTLY_SKIP_PERIODIC:-0}" = 1 ]; then
+  # The monthly evidence run (nightly.sh) skips acquisition so that this step runs alone.
+  if [ "${EVIDENCE_RUN:-0}" != 1 ] && { [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" = 1 ] || [ "${OPAX_NIGHTLY_SKIP_PERIODIC:-0}" = 1 ]; }; then
     log "evidence export skipped; catch-up retained"
     return 0
   fi
@@ -78,9 +92,13 @@ evidence_refresh() {
   local day reason started rc readiness readiness_limit bundle_paths build_stage path catch_up=() input_args=() paths=()
   day=${OPAX_TODAY:-$(TZ=Australia/Sydney date +%F)}
   [ ! -f "$EVIDENCE_PENDING" ] || catch_up=(--catch-up)
-  reason=$("$PY" scripts/vm/evidence_guard.py --date "$day" ${catch_up[@]+"${catch_up[@]}"}) || {
-    fail "cannot select evidence refresh cadence"; return 1;
-  }
+  if [ "${EVIDENCE_RUN:-0}" = 1 ]; then
+    reason="monthly rebuild"
+  else
+    reason=$("$PY" scripts/vm/evidence_guard.py --date "$day" ${catch_up[@]+"${catch_up[@]}"}) || {
+      fail "cannot select evidence refresh cadence"; return 1;
+    }
+  fi
   if [ "$reason" = skip ]; then
     log "evidence export skipped on $day: weekly on Sunday"
     return 0
@@ -144,10 +162,22 @@ evidence_refresh() {
       return 1
     fi
     if [[ $readiness == missing:* ]]; then
-      # No sidecars on this box: the shipped export stands until the rebuild-or-freeze
-      # decision (docs/reports/2026-11-13-evidence-layers.md). One info line, not a
-      # warning; catch-up is retained as before.
-      EVIDENCE_WAITING="evidence layers: snapshot $(evidence_snapshot_day); rebuild pending a decision"
+      # No standing sidecars: the layer is rebuilt as a whole by the monthly evidence
+      # run (nightly.sh), not exported from inputs kept between nights. One info
+      # line, not a warning; catch-up is retained as before.
+      local age built schedule="no rebuild scheduled (OPAX_EVIDENCE_MONTHLY is off)"
+      built="built $(evidence_snapshot_day)"
+      [ "$built" != "built date unknown" ] || built="build date unknown"
+      [ "${OPAX_EVIDENCE_MONTHLY:-0}" != 1 ] || schedule="rebuilt on the first Saturday of the month"
+      EVIDENCE_WAITING="evidence layers: $built; $schedule"
+      # With the monthly rebuild on, a layer older than one missed run is a failure the watchdog
+      # reports: the rebuild's own status is overwritten by the next nightly before the watchdog reads it.
+      if [ "${OPAX_EVIDENCE_MONTHLY:-0}" = 1 ] && age=$(evidence_age_days "$day") \
+          && [ "$age" -gt "${OPAX_EVIDENCE_STALE_DAYS:-40}" ]; then
+        EVIDENCE_WAITING="evidence layers: $built, $age days ago; the monthly rebuild has not published (runbook: Connections rebuild)"
+        fail "$EVIDENCE_WAITING"
+        return 1
+      fi
       log "$EVIDENCE_WAITING ($readiness)"
       return 0
     fi

@@ -438,7 +438,7 @@ else: print(json.dumps(report))
         self.inputs['additional'].unlink()
         for _ in range(2):
             result = self.run_refresh('ok')
-            self.assertIn('evidence layers: snapshot 8 Sep 2026; rebuild pending a decision (missing:', result)
+            self.assertIn('evidence layers: built 8 Sep 2026; no rebuild scheduled (OPAX_EVIDENCE_MONTHLY is off) (missing:', result)
             self.assertNotIn('waiting for inputs', result)
             self.assertIn(self.inputs['places'].name, result)
             self.assertIn(self.inputs['additional'].name, result)
@@ -452,10 +452,10 @@ else: print(json.dumps(report))
     def test_missing_inputs_with_an_undated_export_say_so_in_sydney_time(self):
         self.inputs['places'].unlink()
         result = self.run_refresh('ok')
-        self.assertIn('evidence layers: snapshot date unknown; rebuild pending a decision', result)
+        self.assertIn('evidence layers: build date unknown; no rebuild scheduled', result)
         self.date_shipped_export('2026-09-08T15:30:00Z')
         result = self.run_refresh('ok')
-        self.assertIn('evidence layers: snapshot 9 Sep 2026; rebuild pending a decision', result)
+        self.assertIn('evidence layers: built 9 Sep 2026; no rebuild scheduled', result)
         self.assertEqual(result.count('WARN:'), 0)
         self.assertTrue(self.pending.exists())
 
@@ -516,6 +516,42 @@ else: print(json.dumps(report))
                 budget.unlink(missing_ok=True)
                 self.run_refresh('ok', OPAX_EVIDENCE_BUILD='1', **({'OPAX_EVIDENCE_BUILD_TIMEOUT': limit} if limit else {}))
                 self.assertEqual(float(budget.read_text()), seconds)
+
+    def test_evidence_run_builds_and_exports_while_acquisition_is_skipped(self):
+        self.pending.parent.mkdir(parents=True, exist_ok=True)
+        (self.pipe / 'evidence-refresh-v1.initialized').touch()
+        # A Monday with no catch-up owed would skip; skipped acquisition would skip too.
+        self.assertIn('evidence export skipped; catch-up retained',
+                      self.run_refresh('ok', OPAX_TODAY='2026-10-12', OPAX_EVIDENCE_BUILD='1', OPAX_NIGHTLY_SKIP_REFRESH='1'))
+        result = self.run_refresh('ok', OPAX_TODAY='2026-10-12', OPAX_EVIDENCE_BUILD='1', OPAX_NIGHTLY_SKIP_REFRESH='1',
+                                  EVIDENCE_RUN='1')
+        self.assertIn('building a frozen evidence bundle (monthly rebuild)', result)
+        self.assertIn('evidence export (monthly rebuild)', result)
+        self.assertEqual((self.home / 'evidence-build.calls').read_text(), 'build\n')
+        self.assertTrue(self.active.exists())
+        self.assertFalse(self.pending.exists())
+
+    def test_missing_inputs_name_the_monthly_schedule_when_it_is_on(self):
+        self.inputs['places'].unlink()
+        result = self.run_refresh('ok', OPAX_EVIDENCE_MONTHLY='1')
+        self.assertIn('evidence layers: build date unknown; rebuilt on the first Saturday of the month', result)
+        self.assertEqual(result.count('WARN:'), 0)
+        self.assertNotIn('FAIL:', result)
+
+    def test_a_layer_older_than_one_missed_monthly_rebuild_fails_the_night(self):
+        self.date_shipped_export('2026-09-08T09:21:53.082961+00:00')
+        self.inputs['places'].unlink()
+        for today, stale in (('2026-10-18', False), ('2026-10-19', True)):
+            with self.subTest(today=today):
+                result = self.run_refresh('ok', OPAX_EVIDENCE_MONTHLY='1', OPAX_TODAY=today)
+                if stale:
+                    self.assertIn('FAIL: evidence layers: built 8 Sep 2026, 41 days ago; the monthly rebuild has not published', result)
+                else:
+                    self.assertIn('evidence layers: built 8 Sep 2026; rebuilt on the first Saturday of the month', result)
+                    self.assertNotIn('FAIL:', result)
+                self.assertTrue(self.pending.exists())
+        # Without the monthly schedule there is nothing to miss: an info line, as before.
+        self.assertNotIn('FAIL:', self.run_refresh('ok', OPAX_TODAY='2026-12-25'))
 
     def test_build_is_opt_in_and_default_ignores_active_bundle(self):
         self.active.write_text('{"old":"retained"}')
