@@ -82,19 +82,21 @@ name: 21a Talk signed out, consent, a live call, captions, report, and a call on
 - takeScreenshot: ${EVIDENCE}/21-ready
 - tapOn:
     id: talk-start
-# Consent is its own sheet; its two buttons are pinned under the text, so
-# they are in view at every size without scrolling.
+# Consent is its own sheet on Ask's shape: the "Machine-written" pill and
+# the words are on screen on arrival (sweep 2, item 1: at Large the old
+# pinned footer drew them under the buttons), and the buttons end the
+# scroll range.
 - extendedWaitUntil:
     visible:
       id: talk-consent-sheet
     timeout: 15000
 - assertVisible:
-    id: talk-agree
-- assertVisible:
-    id: talk-not-now
+    id: talk-consent-machine
 - takeScreenshot: ${EVIDENCE}/21-consent
-- tapOn:
-    id: talk-agree
+- runFlow:
+    file: support/talk-consent.yaml
+    env:
+      CONSENT_BUTTON: talk-agree
 - scrollUntilVisible:
     timeout: 60000
     element:

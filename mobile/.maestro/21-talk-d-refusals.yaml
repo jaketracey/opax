@@ -51,13 +51,10 @@ name: 21d Talk refusal states, voice disabled, the monthly budget closed and a d
 # sheet covers Start; tap Agree, then wait for the dropped connection.
 - tapOn:
     id: talk-start
-# The consent sheet's buttons are pinned, in view at every size.
-- extendedWaitUntil:
-    visible:
-      id: talk-agree
-    timeout: 15000
-- tapOn:
-    id: talk-agree
+- runFlow:
+    file: support/talk-consent.yaml
+    env:
+      CONSENT_BUTTON: talk-agree
 - scrollUntilVisible:
     timeout: 60000
     element:

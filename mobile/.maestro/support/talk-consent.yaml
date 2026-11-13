@@ -1,0 +1,18 @@
+appId: au.com.opax.app
+---
+# Talk's consent sheet on Ask's shape (sweep 2, item 1): the scroll view is
+# the sheet's root, capped at the sheet's height, and the two buttons are the
+# last things in its range. At Large they are on screen on arrival; at AX3
+# and AX5 they are reached by scrolling. The whole button must show before
+# the tap, not a sliver. CONSENT_BUTTON is talk-agree or talk-not-now.
+- extendedWaitUntil:
+    visible:
+      id: talk-consent-sheet
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: ${CONSENT_BUTTON}
+    visibilityPercentage: 100
+    timeout: 60000
+- tapOn:
+    id: ${CONSENT_BUTTON}
