@@ -1,5 +1,5 @@
 import { act } from 'react';
-import { SectionList } from 'react-native';
+import { SectionList, StyleSheet } from 'react-native';
 import {
   mockVic,
   renderVic,
@@ -11,6 +11,10 @@ import type { SearchBarProps } from 'react-native-screens';
 import { router } from 'expo-router';
 import { getPathFromState } from 'expo-router/react-navigation';
 import { ContentUnavailable } from '../src/design/states';
+import * as accessibility from '../src/design/accessibility';
+import { PartyLabel } from '../src/design/people';
+import { minimumTarget } from '../src/design/tokens';
+import { SeatRow } from '../src/features/vic-election/rows';
 import Hub from '../src/features/vic-election/Hub';
 import { Finder } from '../src/features/vic-election/Finder';
 import { ElectionUnavailable } from '../src/features/vic-election/reads';
@@ -365,3 +369,45 @@ test('finder failure keeps matching saved districts', async () => {
   expect(words(r)).toContain('Places couldn’t be searched.');
   expect(words(r)).toContain('Albert Park');
 });
+
+test.each([false, true])(
+  'a seat row draws its party on the member line (accessibility size %s)',
+  (large) => {
+    const size = jest
+      .spyOn(accessibility, 'useAccessibilitySize')
+      .mockReturnValue(large);
+    try {
+      const district = mockVic.overview.record!.data.districts.find(
+        (d) => d.slug === 'albert-park',
+      )!;
+      const r = renderVic(<SeatRow district={district} share={0.55} />);
+      const party = r.root.findByType(PartyLabel);
+      // Drawn only, as a row's party is: no 44 pt link box of its own to be
+      // centred half a line below the name, and the row stays one element.
+      expect(party.props.nested).toBe(true);
+      expect(party.props.linked).toBeUndefined();
+      const host = (test: (props: Record<string, unknown>) => boolean) =>
+        r.root.findAll((n) => n.type === 'View' && test(n.props));
+      expect(host((p) => p.accessible === true)).toHaveLength(1);
+      // Only the row itself keeps the 44 pt minimum.
+      expect(
+        host(
+          (p) =>
+            StyleSheet.flatten(p.style as never)?.minHeight === minimumTarget,
+        ),
+      ).toHaveLength(1);
+      // The name and party share one line, or at accessibility sizes the
+      // party takes its own line under the name.
+      const line = party.parent!;
+      const style = StyleSheet.flatten(line.props.style);
+      expect(words({ root: line } as never)).toContain(district.member.name);
+      expect(style).toMatchObject(
+        large
+          ? { flexDirection: 'column', alignItems: 'flex-start' }
+          : { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' },
+      );
+    } finally {
+      size.mockRestore();
+    }
+  },
+);
