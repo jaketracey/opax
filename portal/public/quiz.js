@@ -1,5 +1,5 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
-import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph} from './donor-disclosure.js?v=2e8209b6ec';
+import {loadDonorViewIndex} from './donor-views.js?v=a3bd4b7d12';
 import {subjectUrl} from './canonical-urls.js?v=6c889d487d';
 /*
  * The record quiz — a MindMaze-spirited quiz over OPAX's real data.
@@ -97,7 +97,10 @@ function industryLabel(key) {
 /* ----- shared context computed once per round ----- */
 
 export function makeQuizContext(data) {
-  const money = data.money || { nodes: [], edges: [], meta: {} };
+  // Donor and industry questions read each donor and flow through its typed cells
+  // (receiptGraph): each receipt once, from the party's own return, as on the donor
+  // page. Party nodes, and so the party questions, keep their own received totals.
+  const money = receiptGraph(data.money || { nodes: [], edges: [], meta: {} });
   const donors = money.nodes.filter(n=>n.kind === 'donor');
   const donorsById = new Map(donors.map((d) => [d.id, d]));
   const parties = money.nodes.filter((n) => n.kind === "party");

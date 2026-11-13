@@ -1,5 +1,5 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
-import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=2e8209b6ec';
+import {loadDonorViewIndex} from './donor-views.js?v=a3bd4b7d12';
 /**
  * OPAX Words per dollar — the site's thesis in one view: per industry, who
  * takes the money and who does the talking.
@@ -478,12 +478,16 @@ export function mountWordsDollars (container, opts = {}) {
     const stop = () => attempt.abort()
     aborter.signal.addEventListener('abort', stop, { once: true })
     try {
-      const [matrix, money] = await Promise.all([MATRIX_URL, MONEY_URL].map(
+      const [matrix, raw] = await Promise.all([MATRIX_URL, MONEY_URL].map(
         async (u) => {
           const res = await fetch(u, { signal: attempt.signal, cache:"no-cache" })
           if (!res.ok) throw new Error(`${u} → ${res.status}`)
           return res.json()
         }))
+      // Each flow read through its typed cells (receiptGraph), as on the donor and party pages.
+      const money = receiptGraph(raw)
+      const measured = receiptGraphScope(money)
+      if (measured && !fineEl.querySelector('.wd-measure')) fineEl.prepend(el('span', 'wd-measure', `Receipts: ${measured}. `))
 
       const privacy=await loadDonorViewIndex()
       const panels = pairings.map((p) => buildPanel(p, matrix, money, privacy))
