@@ -67,7 +67,7 @@
     "jpeg-js": "0.4.4",
     "leaflet": "1.9.4",
     "posthog-js": "^1.427.2",
-    "satori": "^0.12.2",
+    "satori": "^0.33.5",
     "yoga-wasm-web": "^0.3.3",
     "zod": "^4.6.7"
   }
