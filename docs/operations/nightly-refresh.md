@@ -129,7 +129,8 @@ Run the builder with `--source <live-db> --bundle-root <pipeline>/evidence-bundl
 The manual `--keep-audited-candidate` flag can retain a fully source-audited output
 that fails publication guards for review. It exits 3 with `CANDIDATE.json`, no
 `READY.json`, no activation and no public write. Automatic runs never use this flag.
-No publication guard is relaxed to admit a new corpus or a larger asset tree.
+The builder applies the same publication guard as the nightly (byte ceiling with stated
+headroom, excerpt rotation only for growing entities); it has no relaxed mode of its own.
 
 The optional nightly wrapper owns the daily/weekly locks while building and selects
 a candidate only after readiness. Its active pointer lives outside git and advances
@@ -845,10 +846,23 @@ GNU timeout/git tools suffice, so the export can run on the box once these input
 `pipeline/evidence-stage.<random>/export`, never over the shipped tree. The guard rejects
 incomplete/malformed output, inconsistent index/shard/stat totals, missing related IDs,
 invalid lookup entries, more than **2% loss** of either content or lookup shard counts or published entity/record
-connections, and **any lost public entity or excerpt ID** (including removal from its prior
-entity). Counts compare to HEAD, with exactly 98% allowed. The entire tree must stay at
-or below the smaller of HEAD's byte size and **163,453,646 bytes**; no automatic asset
-growth. The existing keep-if-unchanged semantics suppress timestamp-only changes in staging
+connections, **any lost public entity**, and **any lost excerpt ID** (including removal from
+its prior entity) except a rotation (below). Counts compare to HEAD, with exactly 98% allowed.
+
+*Byte ceiling (rule set 13 Nov 2026).* The tree on main when the rebuild was approved,
+**164,138,847 bytes**, plus **25% headroom**: the whole tree must stay at or below
+**205,173,558 bytes** (`SHIPPED_BYTES` and `HEADROOM_PERCENT` in `evidence_guard.py`). It is
+not tied to HEAD, so new entities, aliases and year buckets can grow the tree up to the
+ceiling; past it the export is held until a reviewed edit of those two numbers. Each file
+must also stay within Cloudflare's **25 MiB** static asset limit.
+
+*Excerpt rotation.* The exporter shows each entity's 12 newest excerpts. An old excerpt may
+leave that window only when its entity's record count grew, by no more excerpts than the
+count grew, the entity still shows at least as many excerpts, and the excerpt is no newer
+than every excerpt now shown (undated excerpts sort last). Any other excerpt that vanishes
+is a loss and holds the whole export.
+
+The existing keep-if-unchanged semantics suppress timestamp-only changes in staging
 before the budget check, and sweep the installed tree. Metadata must reconcile as well.
 Ambiguous lookup aliases keep unpublished candidate IDs alongside a published target,
 matching the exporter's existing protection against attaching the wrong entity.
@@ -861,7 +875,8 @@ groups continue, with a failed step recorded in the nightly status.
 export/audit/guard/install operation. `OPAX_EVIDENCE_TIMEOUT` defaults to **20 minutes**, plus
 GNU timeout's 60-second kill grace. After the final data gates, the log, status summary and
 commit message describe retained changes as `evidence: N changed shards, M records with
-text changed, F cleaned fields`. Shards include content and lookup JSON, excluding metadata.
+text changed, F cleaned fields`, with `, E new entities, R excerpts rotated out by newer
+records` appended when either is non-zero. Shards include content and lookup JSON, excluding metadata.
 Records are distinct retained excerpt IDs whose `text` changed; fields count changed `text`
 and `details.excerpt` display fields, including whole-word window rebuilding, entity decoding,
 whitespace and join repairs. New excerpt IDs do not count as cleaned old fields.
@@ -873,10 +888,8 @@ cap, not a timing claim. The old tree plus staging needs about 312 MiB, plus sid
 SQLite temporary space and guard memory. The first retained content diff may be broad.
 Sidecars absent or stale retain catch-up and report waiting as a warning; the night stays
 green if its other steps succeed. Provisioning may remain undecided indefinitely.
-The fixed byte ceiling can hold a correct export whose text expands. The exporter caps
-previews at 12 per entity: new records displacing any old excerpt also hold the whole export
-until retention policy or input changes receive review. Provisioning and the first timed run
-remain with the orchestrator; no production export was run to validate this lane.
+The byte ceiling can still hold a correct export once the tree outgrows its 25% headroom;
+re-baseline it by review, not automatically.
 
 ## How long it takes (measured on the VM)
 

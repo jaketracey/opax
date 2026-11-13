@@ -15,8 +15,15 @@ import tarfile
 
 ROOT = Path(__file__).resolve().parents[2]
 EVIDENCE = "portal/public/evidence"
-# The reviewed September tree: do not grow the asset allocation automatically.
-MAX_BYTES = 163_453_646
+# Byte ceiling for the public tree (rule set 13 Nov 2026 for the connections rebuild):
+# the tree on main when the rebuild was approved, 164,138,847 bytes, plus 25% headroom
+# for new entities, aliases and year buckets. Growth past it needs a reviewed
+# re-baseline of these two numbers, never an automatic one.
+SHIPPED_BYTES = 164_138_847
+HEADROOM_PERCENT = 25
+MAX_BYTES = SHIPPED_BYTES * (100 + HEADROOM_PERCENT) // 100
+# Cloudflare Workers static assets refuse any single file over 25 MiB.
+MAX_FILE_BYTES = 25 * 1024 ** 2
 MIN_PERCENT = 98
 CONTENT = re.compile(r"[0-9a-f]{2}\.json")
 LOOKUP = re.compile(r"lookup/[0-9a-f]{2}\.json")
@@ -47,7 +54,7 @@ def read_tree(directory: Path) -> dict[str, bytes]:
     return files
 
 
-def projection(files: dict[str, bytes]) -> tuple[dict, set[str], dict[tuple[str, str], tuple[str, str | None]]]:
+def projection(files: dict[str, bytes]) -> tuple[dict, dict[str, int], dict[tuple[str, str], tuple[str, str | None]], dict[tuple[str, str], str]]:
     if not METADATA <= files.keys() or any(
             name not in METADATA and not CONTENT.fullmatch(name) and not LOOKUP.fullmatch(name) for name in files):
         raise ValueError("missing metadata or unexpected evidence asset")
@@ -60,7 +67,7 @@ def projection(files: dict[str, bytes]) -> tuple[dict, set[str], dict[tuple[str,
     directory = {row["id"]: row for row in index["entities"]}
     if not directory or len(directory) != len(index["entities"]):
         raise ValueError("empty or duplicate entity directory")
-    entities, excerpts, total = set(), {}, 0
+    entities, excerpts, dates, total = {}, {}, {}, 0
     for name, raw in files.items():
         if not CONTENT.fullmatch(name):
             continue
@@ -71,8 +78,8 @@ def projection(files: dict[str, bytes]) -> tuple[dict, set[str], dict[tuple[str,
             if (not re.fullmatch(r"[0-9a-f]{24}", identity) or identity[:2] + ".json" != name
                     or identity in entities or entry["id"] != identity or identity not in directory):
                 raise ValueError("content shard identity mismatch")
-            entities.add(identity)
             records = entry["records"]
+            entities[identity] = records
             if (type(records) is not int or records <= 0 or records < len(entry["excerpts"])
                     or records != directory[identity]["records"]
                     or records != sum(entry["years"].values()) or records != sum(entry["source_kinds"].values())):
@@ -88,7 +95,8 @@ def projection(files: dict[str, bytes]) -> tuple[dict, set[str], dict[tuple[str,
                 if any(target not in directory for target in excerpt.get("links", {}).values()):
                     raise ValueError("missing related entity")
                 excerpts[key] = excerpt["text"], mirror
-    if (entities != set(directory) or len(entities) != stats["entities_with_connections"]
+                dates[key] = excerpt.get("date") if isinstance(excerpt.get("date"), str) else ""
+    if (entities.keys() != directory.keys() or len(entities) != stats["entities_with_connections"]
             or type(stats["published_record_matches"]) is not int or total != stats["published_record_matches"]):
         raise ValueError("evidence directory/record totals do not reconcile")
     for name, raw in files.items():
@@ -99,17 +107,45 @@ def projection(files: dict[str, bytes]) -> tuple[dict, set[str], dict[tuple[str,
             if not isinstance(rows, dict) or not rows or any(
                     not isinstance(ids, list) or not ids
                     or any(not isinstance(identity, str) or not re.fullmatch(r"[0-9a-f]{24}", identity) for identity in ids)
-                    or len(ids) != len(set(ids)) or not entities.intersection(ids) for ids in rows.values()):
+                    or len(ids) != len(set(ids)) or not entities.keys() & set(ids) for ids in rows.values()):
                 raise ValueError("invalid evidence lookup")
     links = json.loads(files["identity-links.json"])
     if not isinstance(links["links"], list) or not links["method"]:
         raise ValueError("invalid identity links")
-    return stats, entities, excerpts
+    return stats, entities, excerpts, dates
+
+
+def rotated(old_records: dict[str, int], records: dict[str, int], lost: set[tuple[str, str]],
+            old_dates: dict[tuple[str, str], str], dates: dict[tuple[str, str], str]) -> set[tuple[str, str]]:
+    """Excerpts that newer records pushed out of their entity's 12-excerpt window.
+
+    The exporter keeps each entity's newest excerpts, newest first. An old excerpt
+    may leave only when its entity's record count grew, by no more excerpts than it
+    grew, while the window stays at least as full, and only if it is no newer than
+    every excerpt now shown. Everything else that vanishes is still a loss.
+    """
+    by_entity: dict[str, list[tuple[str, str]]] = {}
+    for key in lost:
+        by_entity.setdefault(key[0], []).append(key)
+    shown: dict[str, list[str]] = {}
+    for key, date in dates.items():
+        shown.setdefault(key[0], []).append(date)
+    shown_before: dict[str, int] = {}
+    for key in old_dates:
+        shown_before[key[0]] = shown_before.get(key[0], 0) + 1
+    allowed = set()
+    for identity, keys in by_entity.items():
+        grew = records.get(identity, 0) - old_records.get(identity, 0)
+        window = shown.get(identity, [])
+        if (identity in records and grew >= len(keys) and len(window) >= shown_before[identity]
+                and all(old_dates[key] <= min(window) for key in keys)):
+            allowed.update(keys)
+    return allowed
 
 
 def compare(head: dict[str, bytes], current: dict[str, bytes]) -> str:
-    old_stats, old_entities, old_excerpts = projection(head)
-    stats, entities, excerpts = projection(current)
+    old_stats, old_entities, old_excerpts, old_dates = projection(head)
+    stats, entities, excerpts, dates = projection(current)
     for label, was, now in (
         ("content shards", sum(bool(CONTENT.fullmatch(n)) for n in head), sum(bool(CONTENT.fullmatch(n)) for n in current)),
         ("lookup shards", sum(bool(LOOKUP.fullmatch(n)) for n in head), sum(bool(LOOKUP.fullmatch(n)) for n in current)),
@@ -117,23 +153,33 @@ def compare(head: dict[str, bytes], current: dict[str, bytes]) -> str:
     ):
         if now * 100 < was * MIN_PERCENT:
             raise ValueError(f"{label} shrank beyond 2%: {was} -> {now}")
-    missing_entities, missing_excerpts = old_entities - entities, old_excerpts.keys() - excerpts.keys()
+    missing_entities = old_entities.keys() - entities.keys()
+    lost = old_excerpts.keys() - excerpts.keys()
+    rotations = rotated(old_entities, entities, lost, old_dates, dates)
+    missing_excerpts = lost - rotations
     if missing_entities or missing_excerpts:
         raise ValueError(f"evidence IDs vanished: {len(missing_entities)} entities, {len(missing_excerpts)} excerpts")
-    if any(old_excerpts[key][1] is not None and excerpts[key][1] is None for key in old_excerpts):
+    if any(old_excerpts[key][1] is not None and excerpts[key][1] is None for key in old_excerpts if key in excerpts):
         raise ValueError("existing evidence excerpt mirror vanished")
-    budget = min(MAX_BYTES, sum(map(len, head.values())))
+    largest = max(current, key=lambda name: len(current[name]))
+    if len(current[largest]) > MAX_FILE_BYTES:
+        raise ValueError(f"asset file too large: {largest} is {len(current[largest])} bytes > {MAX_FILE_BYTES}")
     size = sum(map(len, current.values()))
-    if size > budget:
-        raise ValueError(f"asset budget exceeded: {size} bytes > {budget}")
+    if size > MAX_BYTES:
+        raise ValueError(f"asset budget exceeded: {size} bytes > {MAX_BYTES}")
     changed_shards = sum(current.get(n) != head.get(n) for n in head.keys() | current.keys()
                          if CONTENT.fullmatch(n) or LOOKUP.fullmatch(n))
-    changed_records = {key[1] for key in old_excerpts if old_excerpts[key][0] != excerpts[key][0]}
+    kept = old_excerpts.keys() & excerpts.keys()
+    changed_records = {key[1] for key in kept if old_excerpts[key][0] != excerpts[key][0]}
     # Display fields on retained evidence rows: text and its optional excerpt mirror.
     # Window rebuilding, join repairs, entities and whitespace all count as cleaning.
-    cleaned = sum(a != b for key in old_excerpts for a, b in zip(old_excerpts[key], excerpts[key]))
-    return (f"evidence: {changed_shards} changed shards, {len(changed_records)} records with text changed, "
-            f"{cleaned} cleaned fields")
+    cleaned = sum(a != b for key in kept for a, b in zip(old_excerpts[key], excerpts[key]))
+    summary = (f"evidence: {changed_shards} changed shards, {len(changed_records)} records with text changed, "
+               f"{cleaned} cleaned fields")
+    added = len(entities.keys() - old_entities.keys())
+    if added or rotations:
+        summary += f", {added} new entities, {len(rotations)} excerpts rotated out by newer records"
+    return summary
 
 
 def check(directory: Path | None = None, repo: Path = ROOT) -> str:
