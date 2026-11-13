@@ -103,9 +103,11 @@ def prepare(evidence: Path) -> dict:
     return dict(schema_version=1, observations=observations)
 
 
-def export(directory: Path, generated: str, log: Path):
+def export(directory: Path, generated: str, log: Path, base_release: str | None = None):
     manifest = json.loads((directory / 'manifest.json').read_text())
-    release = directory / 'releases' / manifest['release_id']
+    if base_release and (len(base_release) != 16 or any(c not in '0123456789abcdef' for c in base_release)):
+        raise ValueError('Invalid base release')
+    release = directory / 'releases' / (base_release or manifest['release_id'])
     bundle = json.loads((release / 'reference.json').read_text())
     index = json.loads((release / 'index.json').read_text())
     protected = {e['electorate_id']: json.loads((release / (e['electorate_id'] + '.json')).read_text())
@@ -115,6 +117,8 @@ def export(directory: Path, generated: str, log: Path):
     catalog = json.loads((ROOT / 'portal/public/parliamentarians.json').read_text())['people']
     out, issues = join_state_members(bundle, [*wikidata_observations(held), *official], catalog=catalog)
     new = export_bundle(out, directory, generated=generated, preserved_details=protected)
+    exceptions = [e['representation_exception'] for e in out['electorates'] if e.get('representation_exception')]
+    (DATA / 'exceptions.json').write_text(json.dumps(dict(reviewed_as_of=generated, exceptions=sorted(exceptions, key=lambda e: (e['jurisdiction'], e['electorate']))), indent=2) + '\n')
     log.write_text(json.dumps(dict(before_release=manifest['release_id'], after_release=new['release_id'],
                                    issues=issues, issue_counts=dict(Counter(i['reason'] for i in issues))), indent=2) + '\n')
     print(json.dumps(dict(release_id=new['release_id'], issues=len(issues), protected_details=len(protected))))
@@ -135,6 +139,7 @@ def main():
     p.add_argument('--directory', type=Path, default=ROOT / 'portal/public/electorates')
     p.add_argument('--generated', required=True)
     p.add_argument('--log', type=Path, required=True)
+    p.add_argument('--base-release', help='Rebuild from a pinned local release rather than the current pointer')
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format='%(message)s')
     if args.command == 'fetch':
@@ -146,7 +151,7 @@ def main():
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(json.dumps(prepare(args.evidence), ensure_ascii=False, indent=2) + '\n')
     else:
-        export(args.directory, args.generated, args.log)
+        export(args.directory, args.generated, args.log, args.base_release)
 
 
 if __name__ == '__main__':

@@ -1,7 +1,8 @@
 import { vicElectionFooterHTML } from './vic-election.js?v=6642b187d4';
-import { personUrl, partyUrl } from './canonical-urls.js?v=d0a59455fd';
+import { personUrl, partyUrl } from './canonical-urls.js?v=a09af3bb43';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
+import { representationNote, representationGap } from './electorate-provenance.js';
 import { renderNotFound } from './not-found.js';
 import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=6d2e2e9cd8';
 import { pageMenuHTML as moreMenuHTML } from './page-actions-menu.js?v=8640c3d1ca';
@@ -13,7 +14,11 @@ export const escapeHTML = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '
 const esc = escapeHTML;
 const number = (n) => Number(n).toLocaleString('en-AU', { maximumFractionDigits: 1 });
 const date = (s) => s ? shortDate(s) : 'Unknown';
-const personURL = (p) => personUrl(p.name);
+const personURL = (p) => p.profile_link === false ? null : personUrl(p.name);
+const personNameHTML = (p, className = '') => personURL(p)
+  ? `<a${className ? ` class="${className}"` : ''} href="${esc(personURL(p))}">${esc(displayName(p.name))}</a>`
+  : `<span${className ? ` class="${className}"` : ''}>${esc(displayName(p.name))}</span>`;
+const provenanceHTML = (row) => esc(representationNote(row, date));
 const memberParty = (m) => Object.hasOwn(m, 'party_canonical') ? m.party_canonical : m.party;
 /** A roster name as a reader sees it: some service records set the whole name
  *  or the surname in capitals ("LEO McLEAY"). Mc/Mac/O' keep their own shape. */
@@ -28,7 +33,12 @@ export function validDate(s) { return /^\d{4}-\d{2}-\d{2}$/.test(s || '') && !Nu
 export function representationAt(detail, on) {
   if (!validDate(on)) return { status: 'unknown', members: [] };
   const rosters = (detail.rosters || []).filter((r) => r.as_of === on).sort((a, b) => (b.priority || 0) - (a.priority || 0));
-  if (rosters.length) return { status: rosters[0].complete ? 'verified' : 'partial', members: rosters[0].members, as_of: on };
+  if (rosters.length) {
+    const roster = rosters[0], source = detail.sources?.[roster.members[0]?.sources?.[0]];
+    return { status: roster.complete ? (roster.observation_only ? 'listed' : 'verified') : 'partial',
+      members: roster.members, as_of: on,
+      ...(roster.observation_only ? { representation_observation_only: true, representation_source: source?.label } : {}) };
+  }
   const terms = (detail.terms || []).filter((t) => t.start_precision === 'day' && t.start && t.start <= on &&
     ((t.end_precision === 'day' && t.end && on < t.end) || (t.end_precision === 'open' && t.observed_through && on <= t.observed_through)));
   const members = terms.map((t) => ({ ...t, party: t.party_periods?.find((p) => p.start && p.start <= on && (!p.end || on < p.end))?.party }));
@@ -36,7 +46,7 @@ export function representationAt(detail, on) {
 }
 export function findPerson(people, name) {
   const key = String(name).toLocaleLowerCase();
-  const matches = people.filter((p) => [p.name, ...(p.aliases || [])].some((n) => n.toLocaleLowerCase() === key));
+  const matches = people.filter((p) => p.profile_link !== false && [p.name, ...(p.aliases || [])].some((n) => n.toLocaleLowerCase() === key));
   return matches.length === 1 ? matches[0] : null;
 }
 // Recorded affiliations can be historical and can contain legacy labels.
@@ -78,7 +88,7 @@ export function personRepresentationRows(person, representations = [], electorat
   const recorded = representations.filter((r) => !seats.some((e) => e.url === recordedElectorate(r, electorates)?.url));
   return [
     current.length && [current.length === 1 ? 'Electorate' : 'Electorates', current.map((e) =>
-      `${link(e)}<small class="representation-note">Verified ${esc(date(e.as_of))}</small>`).join('<br>')],
+      `${link(e)}<small class="representation-note">${provenanceHTML(e)}</small>`).join('<br>')],
     historical.length && ['Representation history', historical.map(link).join('<br>') + '<small class="representation-note">Historical service records</small>'],
     recorded.length && ['Recorded representation', recorded.map((r) => recordedRepresentationHTML(r, electorates)).join('<br>') + '<small class="representation-note">Roster affiliation; may include past seats.</small>'],
   ].filter(Boolean);
@@ -104,7 +114,7 @@ export async function directorySpec({ photoUrlFor = () => null, partyChipHTML = 
       const holders = e.representatives || [];
       const src = holders[0]?.person?.name ? photoUrlFor(holders[0].person.name) : null;
       const face = src ? `<span class="el-face"><img src="${esc(src)}" alt="" loading="lazy" width="36" height="36"></span>` : '<span class="el-face el-face-blank" aria-hidden="true"></span>';
-      return `<li class="el-directory-row">${face}<div class="el-seat"><a class="el-name" href="${esc(e.url)}">${esc(e.name)}</a><span class="el-meta">${esc(JURISDICTIONS[e.jurisdiction])} · ${esc(CHAMBERS[e.chamber] || e.chamber)}${e.jurisdiction === 'federal' ? ` · ${esc(e.state_code.toUpperCase())}` : ''}${e.status === 'historical' ? ' · Historical' : ''}</span></div><div class="el-holders">${holders.length ? holders.map((m) => `<a href="${esc(personURL(m.person))}">${esc(m.person.name)}</a>${m.party ? ` · ${memberParty(m) ? `<a class="el-party" href="${partyUrl(memberParty(m))}">${partyChipHTML(m.party)}</a>` : `<span class="el-party">${partyChipHTML(m.party)}</span>`}` : ''}`).join('<br>') : 'Representation not yet verified'}${e.representation_as_of ? `<small>Verified ${esc(date(e.representation_as_of))}</small>` : ''}</div><span class="el-meta">${e.election_count ? `${e.election_count} election${e.election_count === 1 ? '' : 's'} recorded` : 'No election results yet'}</span></li>`;
+      return `<li class="el-directory-row">${face}<div class="el-seat"><a class="el-name" href="${esc(e.url)}">${esc(e.name)}</a><span class="el-meta">${esc(JURISDICTIONS[e.jurisdiction])} · ${esc(CHAMBERS[e.chamber] || e.chamber)}${e.jurisdiction === 'federal' ? ` · ${esc(e.state_code.toUpperCase())}` : ''}${e.status === 'historical' ? ' · Historical' : ''}</span></div><div class="el-holders">${holders.length ? holders.map((m) => `${personNameHTML(m.person)}${m.party ? ` · ${memberParty(m) ? `<a class="el-party" href="${partyUrl(memberParty(m))}">${partyChipHTML(m.party)}</a>` : `<span class="el-party">${partyChipHTML(m.party)}</span>`}` : ''}`).join('<br>') : esc(representationGap(e))}${e.representation_as_of ? `<small>${provenanceHTML(e)}</small>` : ''}</div><span class="el-meta">${e.election_count ? `${e.election_count} election${e.election_count === 1 ? '' : 's'} recorded` : 'No election results yet'}</span></li>`;
     },
     fineprint: `Coverage varies by parliament. A missing representative or result means the records do not confirm one yet. ABS state outlines use 2025 statistical geography. <a href="/electorates/manifest.json">Sources and reference downloads</a>.`,
   };
@@ -132,8 +142,7 @@ const portraitHTML = (name, photoUrlFor) => {
 };
 /** A person as a byline row: portrait, name, party label(s), one meta line. */
 function bylineHTML(p, parties, meta, photoUrlFor) {
-  const name = p ? displayName(p.name) : '';
-  const who = p ? `<a class="ui-byline-name" href="${esc(personURL(p))}">${esc(name)}</a>` : '<span class="ui-byline-name">Unresolved person</span>';
+  const who = p ? personNameHTML(p, 'ui-byline-name') : '<span class="ui-byline-name">Unresolved person</span>';
   return `<li class="ui-byline">${portraitHTML(p?.name, photoUrlFor)}<div><div class="ui-byline-who">${who}${parties ? ` ${parties}` : ''}</div>${meta ? `<span class="ui-byline-meta">${meta}</span>` : ''}</div></li>`;
 }
 function memberHTML(m, people, photoUrlFor) {
@@ -179,7 +188,7 @@ function censusHTML(d) {
    bylines; the census is one figure and a key/value list; the downloads and
    reference ID sit under ⋯ and in the representation sheet. */
 export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) {
-  const selected = on ? representationAt(detail, on) : { status: detail.representation_status, members: detail.representatives, as_of: detail.representation_as_of };
+  const selected = on ? representationAt(detail, on) : { ...detail, status: detail.representation_status, members: detail.representatives, as_of: detail.representation_as_of };
   const plural = Math.max(detail.capacity || 1, selected.members.length) > 1;
   const title = on ? `Representation on ${date(on)}` : `${detail.status === 'historical' ? 'Last recorded member' : 'Current member'}${plural ? 's' : ''}`;
   // The upper house a seat sits within represents its people too; any other relation is named as such.
@@ -198,7 +207,7 @@ export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) 
       { href: detail.detail_url, label: 'Download this electorate', detail: 'JSON, every record on this page with its sources' },
       { href: '/subject/electorate', label: 'All electorates' },
     ], 'More about this electorate')}</div></div>
-    <div class="el-intro"><section id="el-held" class="ui-section"><h2 class="ui-section-title">${esc(title)}</h2>${selected.status === 'conflicting' ? '<p class="ui-empty">The service records for this date conflict.</p>' : selected.members.length ? `<ul class="ui-list el-members" data-rule="none">${selected.members.map((m) => memberHTML(m, people, photoUrlFor)).join('')}</ul>` : `<p class="ui-empty">${selected.status === 'verified' ? 'Vacant at this observation.' : 'No confirmed representative for this date.'}</p>`}${on ? `<p class="el-latest"><a href="${esc(detail.url)}">Latest check</a></p>` : ''}
+    <div class="el-intro"><section id="el-held" class="ui-section"><h2 class="ui-section-title">${esc(title)}</h2>${selected.status === 'conflicting' ? '<p class="ui-empty">The service records for this date conflict.</p>' : selected.members.length ? `<ul class="ui-list el-members" data-rule="none">${selected.members.map((m) => memberHTML(m, people, photoUrlFor)).join('')}</ul>` : `<p class="ui-empty">${selected.status === 'verified' ? 'Vacant at this observation.' : esc(on ? representationGap({}) : representationGap(detail))}</p>`}${selected.representation_observation_only ? `<p class="representation-note">${provenanceHTML(selected)}</p>` : ''}${!on && selected.members.length && detail.representation_exception ? `<p class="ui-empty">${esc(representationGap(detail))}</p>` : ''}${on ? `<p class="el-latest"><a href="${esc(detail.url)}">Latest check</a></p>` : ''}
       ${sourceLineHTML({ updated: selected.as_of || '', dateLabel: 'As at', source: 'Electoral and parliamentary records',
         state: selected.status === 'partial' ? 'partial' : '',
         originals: originalsOf(held), licence: licences(held),

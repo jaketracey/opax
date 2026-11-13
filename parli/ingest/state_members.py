@@ -16,7 +16,7 @@ import unicodedata
 from collections import defaultdict
 from datetime import date, datetime, timezone
 from pathlib import Path
-from urllib.parse import urljoin, urlparse
+from urllib.parse import unquote, urljoin, urlparse
 from zoneinfo import ZoneInfo
 
 import requests
@@ -31,6 +31,12 @@ STATES = frozenset({'act', 'nsw', 'nt', 'qld', 'sa', 'tas', 'wa'})
 LOWER_HOUSES = {'act': 'act_la', 'nsw': 'nsw_la', 'nt': 'nt_la', 'qld': 'qld_la',
                 'sa': 'sa_ha', 'tas': 'tas_ha', 'wa': 'wa_la'}
 USER_AGENT = 'opax-improve-audit'
+DATA = Path(__file__).resolve().parents[2] / 'data/state-members'
+
+
+def state_reviews() -> dict:
+    """Pinned review decisions, never a live source lookup."""
+    return json.loads((DATA / 'reviews.json').read_text())
 
 
 def normalise_electorate(value: str | None) -> str:
@@ -104,12 +110,17 @@ def fetch_page(evidence: Path, state: str, url: str, label: str) -> Path | None:
 
 
 def source_observation(record: dict, label: str) -> dict:
-    """Keep the response instant and the Australian calendar date of observation."""
+    """A dated document keeps its own date; retrieval is recorded independently."""
     as_of = datetime.fromisoformat(record['fetched_at']).astimezone(ZoneInfo('Australia/Sydney')).date().isoformat()
+    document_date = re.search(r'as-at-(\d{1,2}-[A-Za-z]+-\d{4})', unquote(record['url']), re.I)
+    if document_date:
+        as_of = datetime.strptime(document_date[1], '%d-%B-%Y').date().isoformat()
+    source = dict(source_id=stable_id('source', record['url'] + ':' + record['sha256']),
+                  label=label, url=record['url'], fetched_at=record['fetched_at'], sha256=record['sha256'])
+    if document_date:
+        source['document_date'] = as_of
     return dict(jurisdiction=record['state'], as_of=as_of, basis='official_current_list',
-                sources=[dict(source_id=stable_id('source', record['url'] + ':' + record['sha256']),
-                              label=label, url=record['url'], fetched_at=record['fetched_at'],
-                              sha256=record['sha256'])])
+                sources=[source])
 
 
 def parse_act(raw: bytes) -> list[dict]:
@@ -146,8 +157,8 @@ def parse_sa(raw: bytes, *, statewide: str | None = None) -> list[dict]:
     data = json.loads(raw)
     members = []
     for row in data['memberContacts']:
-        name = f"{row.get('preferredName') or row['firstName']} {row['lastName']}"
-        legal = ' '.join(filter(None, [row['firstName'], row.get('otherName'), row['lastName']]))
+        name = ' '.join(f"{row.get('preferredName') or row['firstName']} {row['lastName']}".split())
+        legal = ' '.join(' '.join(filter(None, [row['firstName'], row.get('otherName'), row['lastName']])).split())
         url = f"https://www.parliament.sa.gov.au/Search/Member?type=member&id={row['pmId']}"
         members.append(dict(name=name, aliases=[legal] if legal != name else [],
                             party=row['politicalPartyName'], electorate=statewide or row['electorateName'],
@@ -194,12 +205,37 @@ def parse_tas(raw: bytes, directory: bytes, chamber: str) -> list[dict]:
     return members
 
 
+def nsw_assembly_evidence(bindings: list[dict], review: dict) -> dict:
+    """Prove the requested NSW rule without treating absent by-election data as none.
+
+    Rule (b) needs both a held seat win and a complete, dated by-election check.
+    An empty event list without coverage cannot prove that no by-election occurred.
+    """
+    cutoff = review['election_date']
+    on = bindings[0]['fetched_at'][:10]
+    starts = sorted({r['term_start'] for r in bindings if r.get('term_start') and cutoff <= r['term_start'] <= on})
+    if starts:
+        return dict(rule='a', election_date=cutoff, term_starts=starts)
+    check = review['by_election_check']
+    district = normalise_electorate(bindings[0].get('district'))
+    wins = [w for w in check.get('wins', []) if w['qid'] == bindings[0]['qid']
+            and normalise_electorate(w['electorate']) == district and w['poll_date'] == cutoff and w.get('source_url')]
+    complete = (check.get('coverage') == 'complete' and check.get('from') == cutoff
+                and check.get('through', '') >= on and bool(check.get('sources')))
+    events = [e for e in check.get('events', []) if normalise_electorate(e['electorate']) == district
+              and cutoff < e['poll_date'] <= on]
+    if wins and complete and not events:
+        return dict(rule='b', election_date=cutoff, wins=wins, by_election_check=check)
+    return dict(rule=None, reason='No post-election seat term, or held 2023 seat win with a complete by-election check.')
+
+
 def wikidata_observations(rows: list[dict]) -> list[dict]:
     """Collapse SPARQL bindings, keeping only dated open terms at the held fetch date.
 
     Open terms are observations on that date, never evidence of later service.
     Conflicting parties remain unknown, rather than choosing a party binding.
     """
+    review = state_reviews()['nsw_assembly']
     groups = defaultdict(list)
     for row in rows:
         if row['state'] not in STATES:
@@ -222,9 +258,12 @@ def wikidata_observations(rows: list[dict]) -> list[dict]:
                                 sha256=hashlib.sha256(canonical_json(bindings).encode()).hexdigest(),
                                 checksum_scope='OPAX ext_state_roster bindings, not the live Wikidata page')
             parties = {r['party'] for r in bindings if r.get('party')}
-            members.append(dict(name=bindings[0]['full_name'], electorate=district,
-                                party=next(iter(parties)) if len(parties) == 1 else None,
-                                source_key=qid, sources=[sid]))
+            member = dict(name=bindings[0]['full_name'], electorate=district,
+                          party=next(iter(parties)) if len(parties) == 1 else None,
+                          source_key=qid, sources=[sid])
+            if chamber == 'nsw_la':
+                member['current_evidence'] = nsw_assembly_evidence(bindings, review)
+            members.append(member)
         out.append(dict(jurisdiction=state, chamber=chamber, as_of=on, basis='held_wikidata_terms',
                         members=members, sources=list(sources.values())))
     return out
@@ -238,6 +277,7 @@ def join_state_members(bundle: dict, observations: list[dict], *, catalog: list[
     or multiple-seat claims are logged and omitted, never silently selected.
     """
     out = copy.deepcopy(bundle)
+    review = state_reviews()
     # This import is a reproducible current snapshot. Rebuild its observations
     # so a newer stale Wikidata term cannot shadow an older official list.
     state_seats = {e['electorate_id'] for e in out['electorates'] if e['jurisdiction'] in STATES}
@@ -299,6 +339,13 @@ def join_state_members(bundle: dict, observations: list[dict], *, catalog: list[
             if any(len(claims[key]) != 1 for key in members_by_key):
                 issue('member on multiple seats', observation, electorate=seat['name'], electorate_id=eid)
                 continue
+            if chamber == 'nsw_la' and observation['basis'] == 'held_wikidata_terms':
+                exclusion = next((r for r in review['nsw_assembly']['quarantined_electorates']
+                                  if normalise_electorate(r['electorate']) == normalise_electorate(seat['name'])), None)
+                if exclusion or any(m.get('current_evidence', {}).get('rule') not in ('a', 'b') for m in members_by_key.values()):
+                    issue('NSW current membership not proved', observation, electorate=seat['name'], electorate_id=eid,
+                          detail=exclusion['reason'] if exclusion else 'Neither NSW rule (a) nor rule (b) is proved by held data.')
+                    continue
             # Do not replace a newer recorded observation with older imported evidence.
             previous = [r for r in out['rosters'] if r['electorate_id'] == eid]
             if previous and max(r['as_of'] for r in previous) > on:
@@ -326,12 +373,20 @@ def join_state_members(bundle: dict, observations: list[dict], *, catalog: list[
                 person['sources'] = sorted(set(person['sources']) | set(member_sources))
             for name in keys:
                 names[(state, name_key(name))].add(pid)
+            link_review = next((r for r in review['profile_links']
+                                if r['legacy_person_id'] == people[pid].get('legacy_person_id')), None)
+            if link_review and link_review['decision'] == 'unlinked':
+                people[pid]['profile_link'] = False
+                people[pid]['profile_link_reason'] = link_review['reason']
             supplied_party = member.get('party')
-            members.append(dict(person_id=pid, party=supplied_party,
+            imported = dict(person_id=pid, party=supplied_party,
                                 party_canonical=canonical_party(party_label(supplied_party)) if supplied_party else None,
                                 sources=member_sources,
                                 source_url=next(s['url'] for s in observation['sources'] if s['source_id'] == member_sources[0]),
-                                basis=f'Current as at {on}', source_key=member['source_key']))
+                                basis=f'Listed as at {on}', source_key=member['source_key'])
+            if member.get('current_evidence'):
+                imported['current_evidence'] = member['current_evidence']
+            members.append(imported)
         if len({m['person_id'] for m in members}) != len(members):
             raise ValueError('Two source rows resolve to one person in a seat')
         roster = dict(roster_id=stable_id('roster', f'state-members:{on}:{eid}:{observation["basis"]}'),
@@ -354,9 +409,39 @@ def join_state_members(bundle: dict, observations: list[dict], *, catalog: list[
             current[key] = eid
     out['people'] = list(people.values())
     out['sources'] = list(sources.values())
+    apply_reviewed_exceptions(out, issues, review)
     refresh_state_coverage(out)
     validate(out)
     return out, issues
+
+
+def apply_reviewed_exceptions(bundle: dict, issues: list[dict], review: dict) -> None:
+    """Carry every reviewed gap onto the electorate, including partial member lists."""
+    refusals = {r['state']: r for r in json.loads((DATA / 'acquisition.json').read_text()) if r.get('refused')}
+    previous = {r['electorate_id']: r for r in json.loads((DATA / 'exceptions.json').read_text())['exceptions']}
+    for seat in bundle['electorates']:
+        if seat['jurisdiction'] not in STATES or seat.get('status') != 'current':
+            continue
+        roster = max((r for r in bundle['rosters'] if r['electorate_id'] == seat['electorate_id']),
+                     key=lambda r: (r['as_of'], r.get('priority', 0)), default=None)
+        count = len(roster['members']) if roster else 0
+        seat.pop('representation_exception', None)
+        if count >= seat['capacity']:
+            continue
+        refusal = refusals.get(seat['jurisdiction'])
+        if not refusal:
+            # A new source gap needs explicit review before it can be published.
+            raise ValueError(f'Unreviewed state member gap: {seat["name"]}')
+        reasons = [i.get('detail') or i['reason'] for i in issues if i.get('electorate_id') == seat['electorate_id']]
+        old = previous.get(seat['electorate_id'], {})
+        reason = '; '.join(dict.fromkeys(reasons)) or old.get('reason') or 'No eligible held current member list.'
+        seat['representation_exception'] = dict(
+            electorate_id=seat['electorate_id'], jurisdiction=seat['jurisdiction'], chamber=seat['chamber'],
+            electorate=seat['name'], expected_capacity=seat['capacity'], observed_members=count,
+            reason=reason, reviewed_as_of=review['reviewed_as_of'], source_url=refusal['url'],
+            http_status=refusal['status'], response_sha256=refusal['sha256'],
+            message=('The current member list is not held: the official list refused access.' if not count else
+                     'The complete current member list is not held: the official list refused access.'))
 
 
 def refresh_state_coverage(bundle: dict) -> None:

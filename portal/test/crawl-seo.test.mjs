@@ -15,8 +15,8 @@ const root = new URL('../public/',import.meta.url);
 const read = path => readFileSync(new URL(path,root),'utf8');
 const json = path => JSON.parse(read(path));
 const source = readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
-const compiled = await build({stdin:{contents:source+'\nexport {moneySubjectMeta,loadPartyLabels,loadPartyPages,loadDivisionSummaries,loadPeople,personMeta};',resolveDir:new URL('../src/',import.meta.url).pathname,sourcefile:'index.ts',loader:'ts'},metafile:true,bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'omit-renderer',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'renderer',namespace:'crawl-test'}));b.onLoad({filter:/.*/,namespace:'crawl-test'},()=>({contents:'export const renderOgPng = async()=>null; export const renderOgJpeg=renderOgPng;',loader:'js'}));}}]});
-const {default:worker,moneySubjectMeta,loadPartyLabels,loadPartyPages,loadDivisionSummaries,loadPeople,personMeta} = await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
+const compiled = await build({stdin:{contents:source+'\nexport {moneySubjectMeta,loadPartyLabels,loadPartyPages,loadDivisionSummaries,loadPeople,personMeta,electorateMeta};',resolveDir:new URL('../src/',import.meta.url).pathname,sourcefile:'index.ts',loader:'ts'},metafile:true,bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'omit-renderer',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'renderer',namespace:'crawl-test'}));b.onLoad({filter:/.*/,namespace:'crawl-test'},()=>({contents:'export const renderOgPng = async()=>null; export const renderOgJpeg=renderOgPng;',loader:'js'}));}}]});
+const {default:worker,moneySubjectMeta,loadPartyLabels,loadPartyPages,loadDivisionSummaries,loadPeople,personMeta,electorateMeta} = await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
 globalThis.HTMLRewriter = class { on(){return this;} transform(res){return res;} };
 const assetPaths = [];
 const env = {COMMUNITY_ORIGIN:'https://opax.com.au',ASSETS:{async fetch(req){
@@ -26,6 +26,31 @@ const env = {COMMUNITY_ORIGIN:'https://opax.com.au',ASSETS:{async fetch(req){
   return existsSync(file) ? new Response(readFileSync(file),{headers:{'content-type':path.endsWith('.json')?'application/json':'text/html'}}) : new Response('Not found',{status:404});
 }}};
 const get = (path,method='GET') => worker.fetch(new Request('https://opax.com.au'+path,{method}),env,{});
+
+test('electorate server summaries label observations and explain reviewed refusals', async () => {
+  const manifest = json('electorates/manifest.json');
+  const seats = json(manifest.index_url.slice(1)).electorates;
+  for (const chamber of ['nsw_la', 'qld_la', 'tas_lc']) {
+    const seat = seats.find(e => e.chamber === chamber && e.representatives.length);
+    const meta = await electorateMeta(seat.slug, new URL('https://opax.com.au' + seat.url), env);
+    const html = meta.prerender;
+    assert.match(html, /Listed as at \d{4}-\d{2}-\d{2}, from /);
+    assert.doesNotMatch(html, /\. Verified \d{4}/);
+    assert.ok(html.includes(seat.representation_as_of));
+  }
+  for (const chamber of ['nsw_la', 'nsw_lc', 'wa_la', 'nt_la']) {
+    const seat = seats.find(e => e.chamber === chamber && e.representation_exception);
+    const meta = await electorateMeta(seat.slug, new URL('https://opax.com.au' + seat.url), env);
+    const html = meta.prerender;
+    assert.match(html, /official list refused access/);
+  }
+  const people = await loadPeople(env);
+  const observed = people.people.find(p => p.rosterOnly?.provenance?.representation_observation_only);
+  assert.ok(observed);
+  const meta = await personMeta(observed.name, new URL('https://opax.com.au/subject/person/example'), env);
+  assert.match(meta.prerender, /Listed as at \d{4}-\d{2}-\d{2}, from /);
+  assert.doesNotMatch(meta.prerender, /\. Verified \d{4}/);
+});
 
 test('canonical party sitemap pages serve successfully and known aliases redirect to one page', async () => {
   const {readPartyPages} = await import('../public/party-page.js');
@@ -92,9 +117,9 @@ test('the server page shows the same parliamentarian count as the browser page',
   }
   // Counts from the published roster, divisions and dated state electorate lists.
   // Reference-only members contribute no speech count.
-  assert.equal(shown.Labor, 595);
+  assert.equal(shown.Labor, 577);
   assert.equal(shown.Liberal, 374);
-  assert.equal(shown.Greens, 64);
+  assert.equal(shown.Greens, 61);
 });
 
 test('an SA Council list-only profile is a sitting MLC with no Hansard held, not "0 speeches"', async () => {

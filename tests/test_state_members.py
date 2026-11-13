@@ -11,7 +11,7 @@ import pytest
 from parli.electorates import TABLES, canonical_json, export_bundle
 from parli.ingest.state_members import (
     LOWER_HOUSES, STATES, fetch_page, join_state_members, name_key, normalise_electorate,
-    parse_act, parse_sa, parse_tas, wikidata_observations,
+    parse_act, parse_sa, parse_tas, source_observation, wikidata_observations,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -79,7 +79,7 @@ def test_join_links_existing_profile_and_keeps_source_party_date_and_url():
     assert member['person_id'] == 'person_a'
     assert member['party'] == 'Source party label'
     assert member['source_url'] == 'https://www.parliament.nsw.gov.au/members'
-    assert member['basis'] == 'Current as at 2026-11-14'
+    assert member['basis'] == 'Listed as at 2026-11-14'
     assert not out['terms']  # No invented start dates.
 
 
@@ -267,7 +267,7 @@ def test_published_state_members_are_unique_dated_and_sourced_without_invented_t
             assert identity not in identities and name not in names
             identities.add(identity); names.add(name)
             assert ' ' in member['person']['name']
-            assert member['basis'] == 'Current as at ' + seat['representation_as_of']
+            assert member['basis'] == 'Listed as at ' + seat['representation_as_of']
             assert member['source_url'].startswith('https://')
             assert member['sources'] and all(s in detail['sources'] for s in member['sources'])
 
@@ -314,3 +314,100 @@ def test_offline_join_reproduces_published_reference_and_replays_exactly():
     for table, (key, _) in TABLES.items():
         out[table].sort(key=lambda row: row[key])
     assert canonical_json(out) == canonical_json(released)
+
+
+def test_nsw_stale_open_term_cannot_hide_a_null_district_by_election_winner():
+    # Hornsby shape: the old term remains open and the successor cannot join.
+    old = dict(qid='Q123', state='nsw', chamber='nsw_la', full_name='Alex Former',
+               district='Mt Example', party='A', term_start='2011-03-26', term_end=None,
+               fetched_at='2026-09-21T12:00:00Z')
+    winner = dict(old, qid='Q124', full_name='Sam Successor', district=None, term_start=None)
+    out, issues = join_state_members(fixture_bundle(), wikidata_observations([old, winner]))
+    assert not out['rosters']
+    assert any(i['reason'] == 'NSW current membership not proved' for i in issues)
+    assert out['electorates'][0]['representation_exception']['observed_members'] == 0
+
+
+def test_nsw_post_2023_term_qualifies_but_conflicting_open_terms_still_block_the_seat():
+    row = dict(qid='Q123', state='nsw', chamber='nsw_la', full_name='Alex Example',
+               district='Mt Example', party='A', term_start='2023-03-25', term_end=None,
+               fetched_at='2026-09-21T12:00:00Z')
+    out, _ = join_state_members(fixture_bundle(), wikidata_observations([row]))
+    assert out['rosters'][0]['members'][0]['current_evidence']['rule'] == 'a'
+    old = dict(row, qid='Q124', full_name='Sam Former', term_start='2011-03-26')
+    out, issues = join_state_members(fixture_bundle(), wikidata_observations([old, row]))
+    assert not out['rosters']
+    assert any(i['reason'] == 'roster exceeds capacity' for i in issues)
+
+
+def test_nsw_rule_b_needs_a_held_seat_win_and_complete_negative_by_election_check():
+    from parli.ingest.state_members import nsw_assembly_evidence
+    row = dict(qid='Q123', district='Mount Example', term_start='2011-03-26', fetched_at='2026-09-21')
+    review = dict(election_date='2023-03-25', by_election_check=dict(coverage='not_held', events=[], wins=[]))
+    assert nsw_assembly_evidence([row], review)['rule'] is None
+    check = dict(coverage='complete', **{'from': '2023-03-25'}, through='2026-09-21',
+                 sources=['https://example.test/held-by-election-register'], events=[],
+                 wins=[dict(qid='Q123', electorate='Mt Example', poll_date='2023-03-25', source_url='https://example.test/held-election')])
+    review['by_election_check'] = check
+    assert nsw_assembly_evidence([row], review)['rule'] == 'b'
+    check['events'] = [dict(electorate='Mt Example', poll_date='2024-10-19')]
+    assert nsw_assembly_evidence([row], review)['rule'] is None
+    check['events'] = []
+    check['through'] = '2026-01-01'
+    assert nsw_assembly_evidence([row], review)['rule'] is None
+
+
+def test_observation_export_is_listed_and_carries_its_source_to_person_rows(tmp_path):
+    out, _ = join_state_members(fixture_bundle(state='qld'), [observation(state='qld', on='2026-06-02')])
+    manifest = export_bundle(out, tmp_path, generated='2026-11-14')
+    release = tmp_path / 'releases' / manifest['release_id']
+    seat = json.loads((release / 'index.json').read_text())['electorates'][0]
+    assert seat['representation_status'] == 'listed'
+    assert seat['representation_source'] == 'Fixture current list'
+    person = json.loads((release / 'people.json').read_text())['people'][0]
+    assert person['electorates'][0]['representation_observation_only'] is True
+    assert person['electorates'][0]['representation_source'] == seat['representation_source']
+
+
+def test_dated_source_document_keeps_its_date_separate_from_retrieval():
+    result = source_observation(dict(state='tas', fetched_at='2026-11-13T20:30:00+00:00',
+        url='https://www.parliament.tas.gov.au/Mail-Merge-as-at-25-August-2026.xlsx', sha256='abc'), 'Fixture Council list')
+    assert result['as_of'] == '2026-08-25'
+    assert result['sources'][0]['fetched_at'] == '2026-11-13T20:30:00+00:00'
+    assert result['sources'][0]['document_date'] == '2026-08-25'
+
+
+def test_sa_names_collapse_all_source_whitespace():
+    raw = json.dumps(dict(memberContacts=[dict(pmId=1, firstName=' Alex ', preferredName=' Alex ',
+        lastName=' Example ', otherName=' Robin ', politicalPartyName='ALP', electorateName='Mount Example')])).encode()
+    member = parse_sa(raw)[0]
+    assert member['name'] == 'Alex Example'
+    assert member['aliases'] == ['Alex Robin Example']
+
+
+def test_published_review_decisions_and_nsw_evidence_are_enforced():
+    _, _, seats = published()
+    nsw = [e for e in seats if e['chamber'] == 'nsw_la']
+    named = [e for e in nsw if e['representatives']]
+    assert len(named) == 29
+    for seat in named:
+        for member in seat['representatives']:
+            assert member['current_evidence']['rule'] == 'a'
+            assert min(member['current_evidence']['term_starts']) >= '2023-03-25'
+    for name in ('Hornsby', 'Wahroonga', 'Epping'):
+        seat = next(e for e in nsw if e['name'] == name)
+        assert seat['representatives'] == [] and seat['representation_exception']['reason']
+    for seat in seats:
+        for member in seat['representatives']:
+            pid = member['person'].get('legacy_person_id')
+            if pid in ('qld_martin', 'qld_lee', 'qld_smith', 'sa_brown'):
+                assert member['person']['profile_link'] is False
+            if pid == 'qld_field':
+                assert member['person'].get('profile_link') is not False
+            if seat['chamber'] == 'tas_lc':
+                assert seat['representation_as_of'] == '2026-08-25'
+            if seat['jurisdiction'] in STATES:
+                assert member['person']['name'] == ' '.join(member['person']['name'].split())
+                assert seat['representation_status'] != 'verified'
+        if seat.get('representation_exception'):
+            assert 'official list refused access' in seat['representation_exception']['message']

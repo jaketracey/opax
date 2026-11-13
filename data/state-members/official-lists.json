@@ -703,10 +703,8 @@
       "chamber": "sa_lc",
       "members": [
         {
-          "name": "Cory  Bernardi",
-          "aliases": [
-            "Cory Bernardi"
-          ],
+          "name": "Cory Bernardi",
+          "aliases": [],
           "party": "Pauline Hanson's One Nation",
           "electorate": "South Australia",
           "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7377",
@@ -753,7 +751,7 @@
         {
           "name": "Heidi Girolamo",
           "aliases": [
-            "Heidi Margaret  Girolamo"
+            "Heidi Margaret Girolamo"
           ],
           "party": "Liberal",
           "electorate": "South Australia",
@@ -761,9 +759,9 @@
           "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6827"
         },
         {
-          "name": "Hilton  Gumbys",
+          "name": "Hilton Gumbys",
           "aliases": [
-            "Hilton  Jonas Gumbys"
+            "Hilton Jonas Gumbys"
           ],
           "party": "ALP",
           "electorate": "South Australia",
@@ -803,7 +801,7 @@
         {
           "name": "Benjamin Hood",
           "aliases": [
-            "Benjamin Robin  Hood"
+            "Benjamin Robin Hood"
           ],
           "party": "Liberal",
           "electorate": "South Australia",
@@ -821,9 +819,9 @@
           "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=3126"
         },
         {
-          "name": "Ian  Hunter",
+          "name": "Ian Hunter",
           "aliases": [
-            "Ian  Keith Hunter"
+            "Ian Keith Hunter"
           ],
           "party": "ALP",
           "electorate": "South Australia",
@@ -873,7 +871,7 @@
         {
           "name": "Carlos Quaremba",
           "aliases": [
-            "Carlos Leonel  Quaremba"
+            "Carlos Leonel Quaremba"
           ],
           "party": "Pauline Hanson's One Nation",
           "electorate": "South Australia",
@@ -891,7 +889,7 @@
           "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5412"
         },
         {
-          "name": "Melanie  Selwood",
+          "name": "Melanie Selwood",
           "aliases": [],
           "party": "Greens SA",
           "electorate": "South Australia",
@@ -1231,7 +1229,7 @@
     },
     {
       "jurisdiction": "tas",
-      "as_of": "2026-11-14",
+      "as_of": "2026-08-25",
       "basis": "official_current_list",
       "sources": [
         {
@@ -1239,7 +1237,8 @@
           "label": "Tasmanian Parliament current members: tas_lc",
           "url": "https://www.parliament.tas.gov.au/__data/assets/excel_doc/0016/110428/Mail-Merge-as-at-25-August-2026.xlsx",
           "fetched_at": "2026-11-13T20:31:12+00:00",
-          "sha256": "cd1336b4d54c3934576914f11919b3b6622b4c8a729676d65799bc947d361ee2"
+          "sha256": "cd1336b4d54c3934576914f11919b3b6622b4c8a729676d65799bc947d361ee2",
+          "document_date": "2026-08-25"
         },
         {
           "source_id": "source_a0ec46024f755ccd9ad42211",

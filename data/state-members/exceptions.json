@@ -2,6 +2,146 @@
   "reviewed_as_of": "2026-11-14",
   "exceptions": [
     {
+      "electorate_id": "el_301baeaa9ba85d758d405311",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Albury",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_ca70d03b558d5cb091378ae4",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Auburn",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_7168578b6d3f5ebfbe4a0c6f",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Ballina",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_5213bb921c6c5e1f98cb5353",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Barwon",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_9970250241b75f0ea6d8a893",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Bathurst",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_ccc3cd14c54e5a799d960ad4",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Bega",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_a74c555758f55b7d8117a6f2",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Blacktown",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_59bf378d243d58dd9631337a",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Blue Mountains",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_b3988875e38a554980d544d0",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Campbelltown",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_72a4298aa5235521bc7e42ee",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Canterbury",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
       "electorate_id": "el_a697dde7050d559cb85f0134",
       "jurisdiction": "nsw",
       "chamber": "nsw_la",
@@ -12,7 +152,92 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
       "http_status": 403,
-      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc"
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_e59c4c54df3b5b4896684bf8",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Cessnock",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_8a4d8cb2f7be5fa2a85007dd",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Charlestown",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_8245540bf83659ecb4380a9a",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Coffs Harbour",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_de86af996cc35d4fa84e87ee",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Coogee",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_05823962e2205226906a2e8f",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Cootamundra",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_f042189905b25cc88a039054",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Cronulla",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_c8e9773d6d09529db8d30660",
@@ -25,7 +250,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
       "http_status": 403,
-      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc"
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_c250656e744a59a292529435",
@@ -34,11 +260,82 @@
       "electorate": "Epping",
       "expected_capacity": 1,
       "observed_members": 0,
-      "reason": "Held dated open Wikidata terms name multiple people for this single-member seat. Official current list returned HTTP 403. Neither claim selected.",
+      "reason": "roster exceeds capacity",
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
       "http_status": 403,
-      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc"
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_dba05d77e52a543aaee11740",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Gosford",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_9619f66c8f6e592b9e19a3e5",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Goulburn",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_32481f6d5f955109996d2875",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Granville",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_d740c1f23cf452aa9961eca6",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Hawkesbury",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_3e7bb5a4131959c0b68be727",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Heffron",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_c039f59c90fd5e84b6c2b015",
@@ -51,7 +348,36 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
       "http_status": 403,
-      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc"
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_23df95622680575398b4e98a",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Hornsby",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_1ee27dfe0f875e468aa88e34",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Keira",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_d8685b270402545ba4425f0a",
@@ -64,7 +390,176 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
       "http_status": 403,
-      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc"
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_dfeb00a2db98511584e8adf2",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Kogarah",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_4f248112afe15edba22e3d50",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Lake Macquarie",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_41412caac7385c14b89ee452",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Lane Cove",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_fecc3dd0ac3f5583ae7823d0",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Lismore",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_a5ec7abf554156ceaf081fd3",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Londonderry",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_d25541a395b9599da97eaf9a",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Macquarie Fields",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_71973bb1b50750a1ad164db4",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Maitland",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_b1ce1b589d265e8391984362",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Manly",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_0fe09e84a5145246b36622f8",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Maroubra",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_3ca875a532635f169e26baae",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Miranda",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_9de963ec77285a4899e61acf",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Mount Druitt",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_a0b439c880dc5c50a38ebf81",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Murray",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_8065ced4c2125577a748d2f2",
@@ -77,7 +572,344 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
       "http_status": 403,
-      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc"
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The complete current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_cd8d45061edc5e37b43f2c3c",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Newcastle",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_d0301dfed43e5cd994acf910",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Newtown",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_c6a3fdbb4bc85ae488016708",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "North Shore",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_5da03fc8c1fe5cbca1bb047d",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Oatley",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_097e98d486e853b99f6fe9a0",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Orange",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_5a4bd896673a5190bd50ec89",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Port Stephens",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_46f80f69e201530d8fe793d0",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Prospect",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_5f61d7ce513351da939737fb",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Rockdale",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_1098ca88a9275c20ac203ec8",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Shellharbour",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_2e9090684cdb5a0da2478068",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Strathfield",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_8468be53d28d511abd0a19e7",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Summer Hill",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_459a3f6cd29e5f5e9eb36447",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Swansea",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_13634d112fb45a52b5d12f96",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Sydney",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_c9fda3709dca531083a45b2a",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Tamworth",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_c9e186b3ff475557a7a9049e",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Terrigal",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_aeee7728839d5c0fa87f2917",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "The Entrance",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_bf009a0253de5d819e905cee",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Tweed",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_68b2e65e2a2f52d1b7bcee1f",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Upper Hunter",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_319904dd1ce55079adf5a8ec",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Wagga Wagga",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_8d1f83eeedaf58f88c823a6f",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Wahroonga",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Current membership is disputed in the review request. The held seat term starts on 2023-03-25, but held evidence cannot resolve the concern and the official list refused access. No resignation or replacement is asserted.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_2bb259755389586baa611eef",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Wallsend",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_360895c4879c5a398005afaa",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Willoughby",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_1731250a800654b184e7ba5d",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Wollongong",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
+    },
+    {
+      "electorate_id": "el_cf615cafc4685424a8a35381",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "electorate": "Wyong",
+      "expected_capacity": 1,
+      "observed_members": 0,
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data.",
+      "reviewed_as_of": "2026-11-14",
+      "source_url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+      "http_status": 403,
+      "response_sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_5d1cdfc1f3675f03ae421ba7",
@@ -90,7 +922,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_2dafa6b60fa85b7c8db9bcd4",
@@ -103,7 +936,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_6cdb4653964a5afb967e0c55",
@@ -116,7 +950,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_9520ca50b56c54aa8c6c2ef2",
@@ -129,7 +964,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_f82d62f129b459f9849a6d9a",
@@ -142,7 +978,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_1dcd4141eef05855824ddb5a",
@@ -155,7 +992,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_8f786cdfbf6f5f5eacd500bb",
@@ -168,7 +1006,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_59fe05fee7fd5870a6b73373",
@@ -181,7 +1020,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_84e8973d29485da19a01096d",
@@ -194,7 +1034,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_6210f5d796d05aac8c68cf3a",
@@ -207,7 +1048,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_f68e3535bc515ac7a6713889",
@@ -220,7 +1062,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_8ea1a81aa28d53b49014c8d2",
@@ -233,7 +1076,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_8220eeb0ad945c989ab501de",
@@ -246,7 +1090,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_85077a4feb6b51559b949bc6",
@@ -259,7 +1104,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_cd47d5f121bf55fba3aab979",
@@ -272,7 +1118,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_42a4794bbc5e57198779d823",
@@ -285,7 +1132,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_6cb21ff04e685546b92fc212",
@@ -298,7 +1146,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_6ffc43d31d185d618cd8b4c5",
@@ -311,7 +1160,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_494201f4266d51b09730c84e",
@@ -324,7 +1174,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_6496b320cb635b9ca5f90361",
@@ -337,7 +1188,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_fd87c27bce0a50ca824fb892",
@@ -350,7 +1202,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_1bb6ccdff4f3507393122e8c",
@@ -363,7 +1216,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_1d619cc32b215382841bddc6",
@@ -376,7 +1230,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_4408a36b61645265a2355d4b",
@@ -389,7 +1244,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_42026a03cf9b5520b5aa96fa",
@@ -402,7 +1258,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://parliament.nt.gov.au/members",
       "http_status": 403,
-      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f"
+      "response_sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_58922adeeb985d62a1eebb78",
@@ -415,7 +1272,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_062dae888c7057e6a6229d1f",
@@ -428,7 +1286,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_031251c45b31593f8d3f98a8",
@@ -441,7 +1300,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_372a62d00b6d53f4b6906d31",
@@ -454,7 +1314,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_80783bef180250d5a3e35416",
@@ -467,7 +1328,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_3f0adde6aaf65466a577d571",
@@ -480,7 +1342,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_12b439ec17785dd19c61767d",
@@ -493,7 +1356,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_34b9e696e09e573fb887959f",
@@ -506,7 +1370,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_2b821f0439a3561184caab70",
@@ -519,7 +1384,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_3a9a3bfb2f155c5096a169a2",
@@ -532,7 +1398,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_9bea27fa729d5d80b0db9796",
@@ -545,7 +1412,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_647c61c3570e5165b366b603",
@@ -558,7 +1426,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_973706fdcda5540fbdfe3e41",
@@ -571,7 +1440,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_a5500b84ab4d5c32a502f231",
@@ -584,7 +1454,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_ef833c0263f658cda9db9d00",
@@ -597,7 +1468,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_92eff9a6272059fba94e4711",
@@ -610,7 +1482,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_22b746c4025c5cc5af34efa2",
@@ -623,7 +1496,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_91508aab41e9558393d43a00",
@@ -636,7 +1510,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_106c1f4f8efd523b90f447a7",
@@ -649,7 +1524,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_80290f8b031a51018b1e2151",
@@ -662,7 +1538,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_0c13041f7592554fb4877e22",
@@ -675,7 +1552,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_1a2f0be9d6405f2e8b490d07",
@@ -688,7 +1566,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_ccc4fed81a8b5047827d377b",
@@ -701,7 +1580,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_319dd88db0de5c77836b7913",
@@ -714,7 +1594,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_ea45feac75435f8ea1aebec8",
@@ -727,7 +1608,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_ce0db71f7a77537eb58c0226",
@@ -740,7 +1622,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_48ee2dc204955b29bcb31205",
@@ -753,7 +1636,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_6037b2ab0b065ad48064ff80",
@@ -766,7 +1650,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_c97396dd77bc5d48bb772770",
@@ -779,7 +1664,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_1ac871e687875dec8293795a",
@@ -792,7 +1678,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_be5f03f4e14355cea23385c0",
@@ -805,7 +1692,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_9ba4d614393e5221bb0aa09b",
@@ -818,7 +1706,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_ad07ab8c24d35f3bb1f7c3f8",
@@ -831,7 +1720,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_73ed29458c9f5a5ebfc72ad7",
@@ -844,7 +1734,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_10ea6579220753ebb833155a",
@@ -857,7 +1748,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_5db28b7788995b47af14b860",
@@ -870,7 +1762,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_90484d1b567357839800a685",
@@ -883,7 +1776,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_acf4301b2e625d738ab0d909",
@@ -896,7 +1790,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_c45a96b0e58c5ef58b93ed47",
@@ -909,7 +1804,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_12c0f1fb27975579aa6e32fe",
@@ -922,7 +1818,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_d5bab3bdc5d750169b34b119",
@@ -935,7 +1832,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_a70cafad61d95c86af813fb1",
@@ -948,7 +1846,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_7cb68fcfd69757ac85eeaae1",
@@ -961,7 +1860,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_ad689672783351e4be361a8a",
@@ -974,7 +1874,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_5016f69987c95aee88412f04",
@@ -987,7 +1888,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_2ec3b3941fd55f758478b979",
@@ -1000,7 +1902,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_3c30868860835d0ab2ea0c24",
@@ -1013,7 +1916,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_6451b8385ad85105b7ea79b0",
@@ -1026,7 +1930,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_1452585fc8b5504aaf393f59",
@@ -1039,7 +1944,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_f2649a7f8ab752ae93907b3a",
@@ -1052,7 +1958,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_d2a423774d0456409551b0a3",
@@ -1065,7 +1972,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_150027bd70755ab2aa3a09e5",
@@ -1078,7 +1986,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_58621aa5809957b2911b28ff",
@@ -1091,7 +2000,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_3c80ab3b6c5d5c6f8447b9f4",
@@ -1104,7 +2014,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_b8e97b5932d2533bb308ea1f",
@@ -1117,7 +2028,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_cd557ca1a91f5b9c81987943",
@@ -1130,7 +2042,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_e25990d812bb58a6ab0916c0",
@@ -1143,7 +2056,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_a3ea52b9df865bae986817df",
@@ -1156,7 +2070,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_5bf103d2509f5ac2b359d095",
@@ -1169,7 +2084,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     },
     {
       "electorate_id": "el_24546d80d24a56ff8be642bb",
@@ -1182,7 +2098,8 @@
       "reviewed_as_of": "2026-11-14",
       "source_url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
       "http_status": 403,
-      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb"
+      "response_sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+      "message": "The current member list is not held: the official list refused access."
     }
   ]
 }

@@ -51,6 +51,49 @@ test('ACT and Tasmanian multi-member pages render every current member and their
     }
   }
 });
+test('observed listings keep their date and source across directory, profile and person rows', async (t) => {
+  const { directorySpec, personRepresentationRows } = await import('../public/electorates.js');
+  t.mock.method(globalThis, 'fetch', async path => Response.json(JSON.parse(readFileSync(publicFile(path)))));
+  const spec = await directorySpec();
+  const people = JSON.parse(readFileSync(publicFile(manifest.people_url))).people;
+  for (const chamber of ['nsw_la', 'qld_la', 'tas_lc']) {
+    const seat = index.electorates.find(e => e.chamber === chamber && e.representatives.length);
+    const data = JSON.parse(readFileSync(publicFile(seat.detail_url)));
+    for (const html of [spec.row(seat), profileHTML(data)]) {
+      assert.match(html, /Listed as at .*?, from /);
+      assert.doesNotMatch(html, /Verified /);
+    }
+    const person = people.find(p => p.person_id === seat.representatives[0].person_id);
+    assert.match(personRepresentationRows(person)[0][1], /Listed as at .*?, from /);
+    assert.doesNotMatch(personRepresentationRows(person)[0][1], /Verified /);
+    assert.equal(representationAt(data, seat.representation_as_of).status, 'listed');
+  }
+});
+test('every reviewed member-list gap explains the refusal, including the partial Council', () => {
+  for (const seat of index.electorates.filter(e => e.representation_exception)) {
+    const data = JSON.parse(readFileSync(publicFile(seat.detail_url)));
+    const html = profileHTML(data);
+    assert.ok(html.includes(seat.representation_exception.message), seat.name);
+    assert.doesNotMatch(html, /Vacant at this observation/);
+  }
+});
+test('mixed surname profiles are unlinked; the scoped Field profile keeps its link', async () => {
+  const { JSDOM } = await import('jsdom');
+  const blocked = new Set(['qld_martin', 'qld_lee', 'qld_smith', 'sa_brown']);
+  const seen = new Set();
+  for (const seat of index.electorates) for (const member of seat.representatives) {
+    const pid = member.person.legacy_person_id;
+    if (!blocked.has(pid) && pid !== 'qld_field') continue;
+    seen.add(pid);
+    const data = JSON.parse(readFileSync(publicFile(seat.detail_url)));
+    const document = new JSDOM(profileHTML(data)).window.document;
+    const name = [...document.querySelectorAll('#el-held .ui-byline-name')].find(n => n.textContent === member.person.name);
+    assert.ok(name);
+    assert.equal(name.tagName, blocked.has(pid) ? 'SPAN' : 'A', pid);
+    if (blocked.has(pid)) assert.equal(findPerson([member.person], member.person.name), null);
+  }
+  assert.deepEqual([...seen].sort(), [...blocked, 'qld_field'].sort());
+});
 test('profile facts keep current and historical seats linked without duplicating recorded affiliations', async () => {
   const { personRepresentationRows, personElectorateLinksHTML } = await import('../public/electorates.js');
   const people = JSON.parse(readFileSync(publicFile(manifest.people_url))).people;

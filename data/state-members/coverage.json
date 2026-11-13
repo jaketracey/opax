@@ -1,5 +1,5 @@
 {
-  "release_id": "d2423b2d3f8ba6f6",
+  "release_id": "99e8ac162f6c3fdd",
   "jurisdictions": [
     {
       "jurisdiction": "act",
@@ -16,9 +16,9 @@
       "jurisdiction": "nsw",
       "electorates": 94,
       "filled_before": 0,
-      "filled_after": 89,
-      "members": 129,
-      "still_empty": 5,
+      "filled_after": 30,
+      "members": 70,
+      "still_empty": 64,
       "dates": [
         "2026-09-21",
         "2026-09-25"
@@ -63,6 +63,7 @@
       "members": 50,
       "still_empty": 0,
       "dates": [
+        "2026-08-25",
         "2026-11-14"
       ]
     },
@@ -90,8 +91,8 @@
       "electorates": 93,
       "member_places": 93,
       "filled_before": 0,
-      "filled_after": 88,
-      "unfilled": 5
+      "filled_after": 29,
+      "unfilled": 64
     },
     {
       "jurisdiction": "nt",

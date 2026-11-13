@@ -92,6 +92,8 @@ import { operatorAuthorized } from './operator-auth'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/party-page.js'
 import { referenceOnlyPeople } from '../public/roster-party.js'
+import { representationNote, representationGap } from '../public/electorate-provenance.js'
+import type { RepresentationProvenance } from '../public/electorate-provenance.js'
 import { NO_HANSARD_HELD } from '../public/held-back-transcripts.js'
 import {foldDonorName} from '../public/donor-entity.js'
 import { canonicalPageRedirect } from './canonical-origin'
@@ -4017,7 +4019,7 @@ interface Person {
   current?: boolean
   party_now?: string
   representation?: { electorate: string; jurisdiction: string; chamber: string; state?: string | null }[]
-  rosterOnly?: { asOf?: string; seats: string[] }
+  rosterOnly?: { asOf?: string; seats: string[]; provenance?: RepresentationProvenance }
 }
 interface PeopleData { generated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person>; addresses: Map<string, Person>; bySlug: Map<string, Person>; slugOf: Map<string, string>; formerSlugs: Map<string, Person> }
 
@@ -4163,7 +4165,7 @@ function loadPeople(env: Env): Promise<PeopleData> {
           party: seats[0].party || null, party_now: seats[0].party || undefined, current: true,
           representation: seats.map(e=>({electorate:e.name,jurisdiction:e.jurisdiction,chamber:e.chamber})), states: [...new Set(seats.map((e) => e.jurisdiction))],
           chambers: [...new Set(seats.map((e) => e.chamber))], first: null, last: null,
-          rosterOnly: { asOf: seats[0].as_of, seats: seats.map((e) => e.name) } })
+          rosterOnly: { asOf: seats[0].as_of, seats: seats.map((e) => e.name), provenance: seats[0] } })
       }
       return { generated: raw.meta?.generated ?? '', people: raw.people, ...personIndex(raw.people) }
     })
@@ -4999,11 +5001,13 @@ interface ElectorateSummary {
   electorate_id: string; slug: string; name: string; jurisdiction: string; chamber: string;
   state_code: string; status: string; url: string; detail_url: string;
   representation_as_of: string | null; election_count: number;
+  representation_observation_only?: boolean; representation_source?: string;
+  representation_exception?: { message: string };
   representatives: { person_id: string; party?: string; person: { name: string } }[];
 }
 interface ElectoratePerson {
   person_id: string; name: string; aliases: string[]; legacy_person_id?: string;
-  electorates: { current: boolean; name: string; jurisdiction: string; chamber: string; party?: string; as_of?: string; url: string }[];
+  electorates: (RepresentationProvenance & { current: boolean; name: string; jurisdiction: string; chamber: string; party?: string; as_of?: string; url: string })[];
 }
 let electorateMemo: Promise<{ generated: string; electorates: ElectorateSummary[]; people: ElectoratePerson[] }> | null = null
 function loadElectorates(env: Env) {
@@ -5026,8 +5030,8 @@ async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMet
     status: data ? 404 : 503, jsonLd: null, prerender: null,
   }
   const representation = e.representatives.length
-    ? `${e.representatives.map((m) => `${m.person.name}${m.party ? ` (${m.party})` : ''}`).join(', ')}. Verified ${e.representation_as_of}.`
-    : 'No verified representative for this electorate yet.'
+    ? `${e.representatives.map((m) => `${m.person.name}${m.party ? ` (${m.party})` : ''}`).join(', ')}. ${representationNote(e)}.${e.representation_exception ? ` ${representationGap(e)}` : ''}`
+    : e.representation_exception ? representationGap(e) : 'No verified representative for this electorate yet.'
   const house = chamberLabel(e.chamber)
   const facts = `${e.name}, ${e.jurisdiction === 'federal' ? `Federal ${house || 'Parliament'}` : house || `${STATE_NAMES[e.jurisdiction] ?? 'State parliament'}`}. ${representation} ${e.election_count} election ${e.election_count === 1 ? 'contest' : 'contests'} on record.`
   const canonical = `${SITE_ORIGIN}${e.url}`
@@ -5245,7 +5249,8 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const represented = [...new Set((p.representation ?? []).map(r => r.electorate))].join(', ')
   const who = [p.party, where, represented ? `recorded representation: ${represented}` : ''].filter(Boolean).join(', ')
   if (p.rosterOnly) {
-    const description = clip(`${display}, representative for ${p.rosterOnly.seats.join(', ')}${p.party ? ` (${p.party})` : ''}. Verified ${p.rosterOnly.asOf || 'in the parliamentary roster'}. No speech count for them yet.`)
+    const note = representationNote(p.rosterOnly.provenance || { as_of: p.rosterOnly.asOf })
+    const description = clip(`${display}, representative for ${p.rosterOnly.seats.join(', ')}${p.party ? ` (${p.party})` : ''}. ${note || 'Listed in the parliamentary roster'}. No speech count for them yet.`)
     return { title, description, canonical, ogType: 'profile', status: 200,
       jsonLd: { '@context': 'https://schema.org', '@type': 'Person', name: display, url: canonical, jobTitle: 'Parliamentarian' },
       prerender: prerenderBlock(display, description),

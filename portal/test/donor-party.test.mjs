@@ -259,7 +259,7 @@ test('real Liberal and Greens page lists count each person once and agree with t
   assert.deepEqual(directory.errors, []);
   const doc = new JSDOM(directory.html).window.document;
   // The complete dated state electorate lists add reference-only members.
-  for (const [slug, expected] of [['liberal', 374], ['greens', 64]]) {
+  for (const [slug, expected] of [['liberal', 374], ['greens', 61]]) {
     const row = doc.querySelector(`a[href="/subject/party/${slug}"]`).closest('li');
     const figure = [...row.querySelectorAll('.dir-fig')].find(n => n.textContent.includes('parliamentarians in the record'));
     assert.equal(figure.querySelector('b').textContent, String(expected));
