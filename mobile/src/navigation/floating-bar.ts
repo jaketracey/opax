@@ -11,11 +11,16 @@ import { rhythm, size } from '../design/tokens';
 import { glassBar } from './chrome';
 
 /**
- * Space at the foot of a tab page for iOS 26's floating tab bar. Pushed pages
- * (and roots once scrolling minimises the bar) show it as two floating
- * buttons, the current tab ("Today") and Search, which sit over the end of
+ * Space at the foot of a pushed tab page for iOS 26's floating tab bar. A
+ * pushed page (the daily edition, a record) shows the bar as two floating
+ * buttons, the current tab ("Today") and Search, which sat over the end of
  * the scroll content. A 44pt button plus a block gap keeps the last card's
  * text above them when the reader reaches the end of the page.
+ *
+ * A tab root needs none: its first scroll view sits under a transparent
+ * large-title bar with automatic insets, so UIKit's bottom inset is sized
+ * for the full tab bar, and stays so when scrolling minimises the bar to the
+ * same two buttons. Adding the foot there would leave a blank band.
  */
 export const floatingBarClearance = size.target + rhythm.block;
 
@@ -24,7 +29,9 @@ export const floatingBarClearance = size.target + rhythm.block;
  * also have an index route, so being first in a stack is insufficient.
  */
 export function isTabStack(
-  state: { routeNames?: readonly string[] } | undefined,
+  state:
+    | { routeNames?: readonly string[]; routes?: readonly { key: string }[] }
+    | undefined,
 ): boolean {
   return (
     !!state?.routeNames?.includes('bill/[key]') &&
@@ -33,10 +40,10 @@ export function isTabStack(
 }
 
 /**
- * The bottom clearance a scrolling page in a tab stack needs for the floating
+ * The bottom clearance a pushed page in a tab stack needs for the floating
  * Today and Search buttons: iOS 26 and later, on a phone whose tab bar sits
- * at the bottom. Sheets, split panes, iPad (whose bar is at the top) and a
- * vertical Duo bar beside the content need none, nor does Android.
+ * at the bottom. Tab roots, sheets, split panes, iPad (whose bar is at the
+ * top) and a vertical Duo bar beside the content need none, nor does Android.
  */
 export function useFloatingBarClearance(): number {
   const navigation = useContext(NavigationContext);
@@ -46,7 +53,8 @@ export function useFloatingBarClearance(): number {
   if (Platform.OS !== 'ios' || !glassBar() || isPad || inPane) return 0;
   if (edge !== 'unspecified') return 0;
   const state = route ? navigation?.getState() : undefined;
-  return isTabStack(state) ? floatingBarClearance : 0;
+  const pushed = !!state?.routes?.length && state.routes[0]?.key !== route?.key;
+  return isTabStack(state) && pushed ? floatingBarClearance : 0;
 }
 
 /**

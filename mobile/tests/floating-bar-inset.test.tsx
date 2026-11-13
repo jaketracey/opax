@@ -34,14 +34,32 @@ jest.mock(
 jest.mock('../src/design/useHeaderBottom', () => ({
   useHeaderBottom: () => 100,
 }));
+let mockPad = false;
+jest.mock('../src/design/adaptive', () => {
+  // A live getter: isPad is a module constant, read at each call.
+  return Object.defineProperty(
+    { ...jest.requireActual('../src/design/adaptive'), __esModule: true },
+    'isPad',
+    { enumerable: true, get: () => mockPad },
+  );
+});
+let mockPane: object | null = null;
+jest.mock('../src/design/split', () => ({
+  ...jest.requireActual('../src/design/split'),
+  useSplitPane: () => mockPane,
+}));
 
 const tabRoutes = ['index', 'edition', 'bill/[key]', 'explore/[tool]'];
 let mockRouteNames = tabRoutes;
 const mockRoute = { name: 'edition', key: 'edition-1' };
+let mockRoot = false;
 const mockNavigation = {
   setOptions: jest.fn(),
   getState: () => ({
-    routes: [{ name: 'index', key: 'today' }, mockRoute],
+    // A pushed page sits above its tab's root; a root is first.
+    routes: mockRoot
+      ? [mockRoute]
+      : [{ name: 'index', key: 'today' }, mockRoute],
     routeNames: mockRouteNames,
   }),
   addListener: () => () => {},
@@ -67,6 +85,9 @@ afterEach(() => {
   Object.defineProperty(Platform, 'OS', os);
   mockRouteNames = tabRoutes;
   mockBarEdge = 'unspecified';
+  mockRoot = false;
+  mockPad = false;
+  mockPane = null;
 });
 
 function InRoute({ children }: { children: ReactNode }) {
@@ -136,6 +157,44 @@ describe('floating Today and Search buttons', () => {
     mockRouteNames = tabRoutes;
     mockBarEdge = 'trailing';
     expect(footOf(page, 'page')).toBe(rhythm.section);
+  });
+
+  it('a tab root gets no foot: UIKit already insets it for the full bar', () => {
+    setPlatform('ios', 26);
+    mockRoot = true;
+    expect(footOf(page, 'page')).toBe(rhythm.section);
+  });
+
+  it('iPad and split panes get no foot', () => {
+    setPlatform('ios', 26);
+    const foot = () => {
+      const seen: ReturnType<typeof useFloatingBarFoot>[] = [];
+      function Probe() {
+        seen.push(useFloatingBarFoot());
+        return null;
+      }
+      let tree!: TestRenderer.ReactTestRenderer;
+      act(() => {
+        tree = TestRenderer.create(
+          <InRoute>
+            <Probe />
+          </InRoute>,
+        );
+      });
+      act(() => tree.unmount());
+      return seen.at(-1);
+    };
+    // The same pushed page on a phone does get it.
+    expect(foot()).toEqual({
+      paddingBottom: rhythm.section + floatingBarClearance,
+    });
+    // iPad draws its tab bar at the top.
+    mockPad = true;
+    expect(foot()).toBeNull();
+    mockPad = false;
+    // A split pane's detail column has no floating buttons over it.
+    mockPane = { selection: null };
+    expect(foot()).toBeNull();
   });
 
   it('list pages add the clearance to their own foot', () => {
