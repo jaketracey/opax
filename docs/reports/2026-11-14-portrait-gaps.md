@@ -2,9 +2,9 @@
 
 At base `b65d87783`, the folded roster has 1,565 profiles, 701 without a portrait
 mapping, including 34 marked current. Claire Clutterham already has a mapping in
-that base. This pass adds **97 mappings and 67 portrait files**. Afterwards,
-**604 profiles remain blank, including 30 marked current**. Existing mappings and
-portrait bytes are unchanged. Every new WebP has a JPEG twin.
+that base. This pass adds **92 mappings and 63 portrait files**. Afterwards,
+**609 profiles remain blank, including 30 marked current**. Existing mappings and
+portrait bytes from the base are unchanged. Every new WebP has a JPEG twin.
 
 ## Classification and result
 
@@ -16,10 +16,10 @@ Classes are disjoint and refer to the original 701 rows.
 |---|---:|---:|---:|
 | (a) Verified alias or print with an existing local portrait | 26 | 26 | 0 |
 | (b) Current-marked row with an identified Wikidata item and Commons image | 6 | 4 | 2 |
-| (c) Other row with a dated Wikidata match and Commons image | 93 | 67 | 26 |
+| (c) Other row with a dated Wikidata match and Commons image | 93 | 62 | 31 |
 | (d) Unresolved, ambiguous or unsafe print | 259 | 0 | 259 |
 | Identified through dated Wikidata service, but no P18 | 317 | 0 | 317 |
-| **Total** | **701** | **97** | **604** |
+| **Total** | **701** | **92** | **609** |
 
 Class (c) includes state members whose roster does not set `current`, as well as
 former members. It does not assert that everyone in that class has left parliament.
@@ -27,7 +27,7 @@ Class (d) includes mixed witness prints, committee-only records, contradictory
 chambers or full names, and candidates lacking dated evidence. No private witness
 names are reproduced here.
 
-[The mapping review](../../scripts/portrait_review_2026-11-14.json) records all 97
+[The mapping review](../../scripts/portrait_review_2026-11-14.json) records all 92
 added prints, their keys, Wikidata sources, speech years and dated P39 positions.
 The name or reviewed alias must agree, and dated service must cover the print's
 years in every house it speaks in. Surname candidates are counted even when they
@@ -64,11 +64,40 @@ that section is read only by the portrait check and cannot assign roster ids.
 | Marise Payne; James Milligan | The conservative provenance guard flags parliament references in image descriptions. Left for a separate provenance review, rather than treating a licence tag as sufficient. |
 | David Farley | The same group image excluded by the previous reviewed pass remains on P18. Its existing exclusion was retained without downloading it again. |
 
+### Provenance review
+
+The independent identity review agreed with all 26 local aliases and all 71
+Commons mappings in the first cut. The subsequent provenance review holds four
+new files, covering five prints, because Parliament@Work appears to redistribute
+official parliament portraits. A Commons licence tag does not clear that source.
+These WebPs, their JPEG twins, credits and mappings have been removed; the five
+prints remain blank:
+
+| Person and prints | Held file | Source evidence |
+|---|---|---|
+| Duncan Kerr: Kerr | `wd-Q15525005.webp` (`File:Duncan Kerr.jpg`) | Artist: Parliament @ Work |
+| Anna Burke: Anna Burke, Burke | `wd-Q4766888.webp` (`File:Anna Burke.jpg`) | Artist: Parliament@Work; credit: parliament.curriculum.edu.au |
+| Bruce Scott: Bruce Scott | `wd-Q4978267.webp` (`File:Bruce Scott.jpg`) | Artist: Parliament@Work; credit: parliament.curriculum.edu.au |
+| Harry Jenkins: Jenkins | `wd-Q5670053.webp` (`File:Harry Jenkins.jpg`) | Artist: Parliament @ Work |
+
+Two older portraits are **held for review**. Their existing files, mappings and
+credits are unchanged in this lane, as directed by the orchestrator:
+
+| Person | Existing file | Source evidence |
+|---|---|---|
+| Louise Asher | `wd-Q3263659.webp` (`File:Louise Asher.jpg`) | Artist: Parliament @ Work |
+| Kim Wells | `wd-Q6409556.webp` (`File:Kim Wells.jpg`) | Credit: parliament.curriculum.edu.au |
+
+The guard now rejects Parliament@Work names, with or without spaces, and
+parliament.curriculum.edu.au links in all four source metadata fields. The
+regression test includes plain, entity-escaped and HTML-split Parliament@Work
+image descriptions, plus the source host.
+
 YuNet excluded another 14 group images, affecting 19 candidate prints. The public
 figures are Adam Searle, Ben Carroll, Brent Mickelberg, Christine Couzens, Dennis
 Hood, Gary Maas, Liesl Tesch, Marlene Kairouz, Niall Blair, Nick Staikos, Susan
 Carter, Tim James, Trung Luu and Victor Dominello. Their shorter or alternate
-prints remain blank too. No group-image exclusion was overridden. All 67 retained
+prints remain blank too. No group-image exclusion was overridden. All 63 retained
 crops were inspected on contact sheets.
 
 The other current-marked gaps with no P18 are Alice Jordan-Baird, Alison Penfold,
@@ -97,16 +126,24 @@ one second apart, with a shared ignored ledger and a 300-request Commons budget.
 The first 403, 429 or challenge terminates the run and prevents the following
 pipeline stages from making more requests. In particular, 429 is never retried.
 
-New-file licences: CC BY-SA **33**, CC BY **23**, CC0 **4**, public domain **7**.
-The review JSON gives each version and jurisdiction. Full artist, credit and
+New-file licences: CC BY-SA **31**, CC BY **21**, CC0 **4**, public domain **7**.
+The review JSON gives each version and jurisdiction. Artist, credit and
 attribution values are retained without truncation, with Commons file and licence
 links in `photos/credits.json`. Crops retain their source licence. NC, ND and vague
 CC tags fail the licence check.
 
+The fix round uses cached metadata and image bytes and makes **zero additional
+network requests**. Repeated unknown-author text is collapsed; placeholder artists
+fall back to the attribution or credit. Melanie Selwood now credits the Australian
+Greens attribution. David Leyonhjelm uses the source credit while retaining the
+derivative-work author. Both cases have regression tests. Marsha Thomson's crop
+uses reviewed bounds on the cached source to remove the background heads while
+keeping her whole face. The bounds are pinned to the exact source file and size.
+
 The existing fetch and recrop scripts were run with `--new`. API thumbnails are
 cached as recrop sources, avoiding a second download and a Special:FilePath
 redirect. YuNet uses one thread. All new files are 200 by 200 WebP at quality 82,
-2,922-9,196 bytes (median 5,528 bytes).
+2,922-9,196 bytes (median 5,502 bytes).
 `npm run og:portraits` rebuilt JPEG twins. Asset stamps were rebuilt and checked;
 no entry-asset bytes changed. Search and crawl catalogues do not embed portrait
 keys. Their missing generated assets, report records and hubs were built locally
@@ -115,22 +152,23 @@ of this commit. No roster, live database, KB or production data was written.
 
 ## Validation
 
-* Python photo/roster gate: **211 passed, 14,184 subtests passed**.
-* Latest focused roster identity, candidate, transport and licence checks:
-  **22 passed, three subtests passed**.
+* Python photo/roster gate: **219 passed, 14,185 subtests passed** (615 seconds).
+* Latest focused roster identity, candidate, transport, licence and credit checks:
+  **26 passed, three subtests passed**.
 * Portal photo identity, person identity and OG portrait tests: **22 passed**.
 * Strict shipped-photo identity audit, asset stamp check and `git diff --check`:
-  **passed**. All 67 new files have the expected dimensions and JPEG twins.
+  **passed**. All 63 new files have the expected dimensions and JPEG twins.
 * `cd portal && npx tsc --noEmit`: **passed**, after generating the ignored local
   Worker types.
-* Full `npm test -- --test-concurrency=4`: **4,907 passed, 11 skipped, zero failed
-  or cancelled** (4,918 tests total).
+* Full `npm test -- --test-concurrency=4`: **4,918 passed, zero failed, skipped
+  or cancelled** (202 seconds).
 
 Commands use `nice -n 10`. The shared host exceeded load5 40 during earlier runs,
 so our tests were stopped. A fresh uninterrupted run uses `GOMAXPROCS=2` and
 `UV_THREADPOOL_SIZE=1`, retaining test concurrency four. Missing generated assets
-were built before the final run. No generated catalogue or unrelated growth
-changes are included.
+were built before the final run. The fix-round gates also use these worker limits;
+observed load5 stays below 40. No generated catalogue or unrelated growth changes
+are included.
 
 An additional shared-HTTP suite returned **50 passed, three failed** outside the
 portrait checks: repository-wide source-guard findings, existing direct-fetch

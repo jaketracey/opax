@@ -24,11 +24,11 @@ each jurisdiction they sat in): federal 755 / 946, NSW 133 / 288, VIC 109 / 245,
 QLD 33 / 121. Queensland is low because most QLD Hansard names are surname-only, and
 surname-only matches are held to a stricter test (below).
 
-### 2026-11-14 pass: portrait gaps (+67 files, +97 mappings)
+### 2026-11-14 pass: portrait gaps (+63 files, +92 mappings)
 
-The 701 unmapped roster profiles (34 marked current) are now 604 (30 current).
-Verified local aliases add 26 mappings; new Commons crops add four current and 67
-other mappings, sharing 67 new files. Every addition has a name or reviewed alias
+The 701 unmapped roster profiles (34 marked current) are now 609 (30 current).
+Verified local aliases add 26 mappings; new Commons crops add four current and 62
+other mappings, sharing 63 new files. Every addition has a name or reviewed alias
 and dated Wikidata P39 service agreeing with the print. The
 [audit report](reports/2026-11-14-portrait-gaps.md) gives the classification,
 withheld names, licences and gates; the
@@ -47,6 +47,10 @@ a 300-request Commons budget and immediate terminal refusal on 429. Fetch retain
 the API thumbnail for recrop, full attribution fields, and only explicit free
 licences; the parliament-source guard applies to every batch. Fourteen group
 images were discarded and all retained contact-sheet crops were inspected.
+Review also withheld four Parliament@Work files (five prints), extended the source
+guard to that redistribution site, cleaned placeholder artist credits and tightened
+Marsha Thomson's crop. Two older Parliament@Work files remain held for review
+without changes in this lane.
 
 ### 2026-11-13 pass: current members (+4 files)
 

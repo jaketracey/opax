@@ -27,6 +27,9 @@ ONLY=None   # --new: only this run's matches (wikidata_matches_new.json); source
 if "--new" in sys.argv:
     ONLY={f"wd-{m['qid']}" for m in json.load(open(WK/"wikidata_matches_new.json")).values()}
 S=source_http.Session(); S.headers["User-Agent"]=source_http.USER_AGENT
+# Reviewed bounds for this exact source: retain Thomson's whole face while
+# excluding the small background head and the chin above her hair.
+CROP_OVERRIDES={"wd-Q6773405": {"file":"File:Marsha Thomson.JPG", "size":(476,614), "box":(108,70,408,370)}}
 def fetch_src(key):
     f=credits[key]["file"][5:]; SRC.mkdir(exist_ok=True)
     r=S.get("https://commons.wikimedia.org/wiki/Special:FilePath/"+urllib.parse.quote(f), params={"width":"640"}, timeout=60)
@@ -56,7 +59,14 @@ for key in sorted(k for k in credits if k.startswith("wd-")):
     h,w=im.shape[:2]; fs=faces(im)
     if len(fs)>=2 and fs[1][3]>=0.6*fs[0][3]:
         log[key]="group"; dropped_keys.add(key); continue
-    if fs:
+    if key in CROP_OVERRIDES:
+        override=CROP_OVERRIDES[key]
+        if credits[key]["file"]!=override["file"] or (w,h)!=override["size"]:
+            raise ValueError(f"reviewed crop source changed: {key}")
+        left,top,right,bottom=override["box"]; side=right-left
+        assert bottom-top==side and 0<=left<right<=w and 0<=top<bottom<=h
+        log[key]="face-reviewed"
+    elif fs:
         x,y,fw,fh=fs[0]; side=int(min(max(fw,fh)*2.6, min(w,h))); cx=x+fw/2; cy=y+fh*0.45
         left=int(min(max(0,cx-side/2), w-side)); top=int(min(max(0,cy-side/2), h-side)); log[key]="face"
     else:

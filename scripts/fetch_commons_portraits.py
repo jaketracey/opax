@@ -12,6 +12,7 @@ from pathlib import Path
 import requests
 from PIL import Image, ImageDraw
 from scripts.wikidata_mpid_match import free_licence, parliament_source
+from scripts.portrait_credits import credit_text, portrait_artist
 W=Path(__file__).resolve().parents[1]; PH=W/"portal/public/photos"; SCR=W/"scripts"/"_photos_work"; SCR.mkdir(exist_ok=True)
 UA={"User-Agent":source_http.USER_AGENT}; S=source_http.Session(); S.headers.update(UA)
 import sys
@@ -37,8 +38,9 @@ for i in range(0,len(tl),50):
     for qid,t in chunk:
         p=norm.get(t) or {}
         ii=(p.get("imageinfo") or [{}])[0]; ext=ii.get("extmetadata",{})
-        g=lambda k: re.sub(r"<[^>]+>","",ext.get(k,{}).get("value","")).strip()
+        g=lambda k: credit_text(ext.get(k,{}).get("value",""))
         meta[qid]={"file":t,"thumb":ii.get("thumburl") or ii.get("url"),"page":ii.get("descriptionurl"),"licence":g("LicenseShortName"),"licence_url":g("LicenseUrl"),"artist":g("Artist"),"credit":g("Credit"),"attribution":g("Attribution"),"attribution_required":g("AttributionRequired"),"official_source":parliament_source(ext)}
+        meta[qid]["artist"]=portrait_artist(meta[qid]["artist"], meta[qid]["attribution"], meta[qid]["credit"])
     print(f"[meta] {min(i+50,len(tl))}/{len(tl)}", flush=True); time.sleep(1)
 lic=collections=__import__("collections").Counter(m["licence"] for m in meta.values()); print("[meta] licences:", lic.most_common(12), flush=True)
 json.dump(meta, open(SCR/"commons_metadata.json", "w"), ensure_ascii=False, indent=1)

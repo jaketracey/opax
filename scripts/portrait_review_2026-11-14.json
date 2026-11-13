@@ -6,7 +6,7 @@
     "current_missing": 34
   },
   "after": {
-    "missing": 604,
+    "missing": 609,
     "current_missing": 30
   },
   "classification": {
@@ -19,7 +19,7 @@
   "mapped_by_class": {
     "a": 26,
     "b": 4,
-    "c": 67
+    "c": 62
   },
   "requests": {
     "commons": 87,
@@ -27,17 +27,16 @@
     "refusals": 0,
     "model_downloads": 1
   },
-  "new_files": 67,
+  "new_files": 63,
   "new_file_licences": {
     "CC BY 2.0": 4,
     "CC BY 3.0": 3,
-    "CC BY 3.0 au": 4,
+    "CC BY 3.0 au": 2,
     "CC BY 4.0": 12,
     "CC BY-SA 2.0": 3,
     "CC BY-SA 2.5": 1,
     "CC BY-SA 2.5 au": 4,
     "CC BY-SA 3.0": 5,
-    "CC BY-SA 3.0 au": 2,
     "CC BY-SA 4.0": 18,
     "CC0": 4,
     "Public domain": 7
@@ -195,27 +194,6 @@
           [
             1989,
             2007
-          ]
-        ]
-      },
-      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
-    },
-    {
-      "name": "Anna Burke",
-      "key": "wd-Q4766888",
-      "class": "c",
-      "wikidata": "Q4766888",
-      "source_url": "https://www.wikidata.org/wiki/Q4766888",
-      "label": "Anna Burke",
-      "speech_years": [
-        1998,
-        2016
-      ],
-      "dated_positions": {
-        "representatives": [
-          [
-            1998,
-            2016
           ]
         ]
       },
@@ -394,27 +372,6 @@
       "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
     },
     {
-      "name": "Bruce Scott",
-      "key": "wd-Q4978267",
-      "class": "c",
-      "wikidata": "Q4978267",
-      "source_url": "https://www.wikidata.org/wiki/Q4978267",
-      "label": "Bruce Scott",
-      "speech_years": [
-        1998,
-        2016
-      ],
-      "dated_positions": {
-        "representatives": [
-          [
-            1990,
-            2016
-          ]
-        ]
-      },
-      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
-    },
-    {
       "name": "Buckingham",
       "key": "wd-Q13412180",
       "class": "a",
@@ -434,27 +391,6 @@
           [
             2023,
             null
-          ]
-        ]
-      },
-      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
-    },
-    {
-      "name": "Burke",
-      "key": "wd-Q4766888",
-      "class": "c",
-      "wikidata": "Q4766888",
-      "source_url": "https://www.wikidata.org/wiki/Q4766888",
-      "label": "Anna Burke",
-      "speech_years": [
-        2000,
-        2002
-      ],
-      "dated_positions": {
-        "representatives": [
-          [
-            1998,
-            2016
           ]
         ]
       },
@@ -1023,27 +959,6 @@
       "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
     },
     {
-      "name": "Jenkins",
-      "key": "wd-Q5670053",
-      "class": "c",
-      "wikidata": "Q5670053",
-      "source_url": "https://www.wikidata.org/wiki/Q5670053",
-      "label": "Harry Jenkins",
-      "speech_years": [
-        2002,
-        2003
-      ],
-      "dated_positions": {
-        "representatives": [
-          [
-            1986,
-            2013
-          ]
-        ]
-      },
-      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
-    },
-    {
       "name": "Jim Molan",
       "key": "wd-Q6196985",
       "class": "c",
@@ -1172,27 +1087,6 @@
           [
             1984,
             2001
-          ]
-        ]
-      },
-      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
-    },
-    {
-      "name": "Kerr",
-      "key": "wd-Q15525005",
-      "class": "c",
-      "wikidata": "Q15525005",
-      "source_url": "https://www.wikidata.org/wiki/Q15525005",
-      "label": "Duncan Kerr",
-      "speech_years": [
-        2000,
-        2005
-      ],
-      "dated_positions": {
-        "representatives": [
-          [
-            1987,
-            2010
           ]
         ]
       },
@@ -2170,5 +2064,54 @@
       },
       "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
     }
-  ]
+  ],
+  "provenance_review": {
+    "withheld_new": [
+      {
+        "key": "wd-Q15525005",
+        "label": "Duncan Kerr",
+        "prints": [
+          "Kerr"
+        ],
+        "reason": "Parliament@Work redistribution: likely official parliament portrait; source guard rejects it. WebP, JPEG, credit and mappings removed."
+      },
+      {
+        "key": "wd-Q4766888",
+        "label": "Anna Burke",
+        "prints": [
+          "Anna Burke",
+          "Burke"
+        ],
+        "reason": "Parliament@Work redistribution: likely official parliament portrait; source guard rejects it. WebP, JPEG, credit and mappings removed."
+      },
+      {
+        "key": "wd-Q4978267",
+        "label": "Bruce Scott",
+        "prints": [
+          "Bruce Scott"
+        ],
+        "reason": "Parliament@Work redistribution: likely official parliament portrait; source guard rejects it. WebP, JPEG, credit and mappings removed."
+      },
+      {
+        "key": "wd-Q5670053",
+        "label": "Harry Jenkins",
+        "prints": [
+          "Jenkins"
+        ],
+        "reason": "Parliament@Work redistribution: likely official parliament portrait; source guard rejects it. WebP, JPEG, credit and mappings removed."
+      }
+    ],
+    "older_held_for_review": [
+      {
+        "key": "wd-Q3263659",
+        "label": "Louise Asher",
+        "reason": "Pre-existing Parliament@Work source; held for review. Files, mappings and credit unchanged in this lane."
+      },
+      {
+        "key": "wd-Q6409556",
+        "label": "Kim Wells",
+        "reason": "Pre-existing Parliament@Work source; held for review. Files, mappings and credit unchanged in this lane."
+      }
+    ]
+  }
 }

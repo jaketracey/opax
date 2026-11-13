@@ -14,7 +14,7 @@ dropped as a group shot is not offered again. Also writes
 scripts/_photos_work/mpid_report.json with one line per member: the match, or why there is none.
 Honest UA (parli.ingest.http), one request a second."""
 
-import json, re, sys, time
+import html, json, re, sys, time
 from pathlib import Path
 from urllib.parse import quote, unquote
 
@@ -50,12 +50,14 @@ def plan(people, pm, pay):
 
 
 # Official portraits: the APH site (CC BY-NC-ND, whatever a Commons tag says), ParlInfo, the Parliamentary
-# Education Office, and every state and territory parliament's site. docs/PHOTOS.md, Licence handling.
+# Education Office, Parliament@Work redistributions, and every state and territory parliament's site.
+# docs/PHOTOS.md, Licence handling.
 PARLIAMENT_HOST = re.compile(r"(?<![a-z0-9-])(?:[a-z0-9-]+\.)*(?:aph\.gov\.au|peo\.gov\.au|parlinfo\.[a-z.]+|"
+                             r"parliament\.curriculum\.edu\.au|"
                              r"parliament\.(?:nsw|vic|qld|sa|wa|tas|nt|act)\.gov\.au|legassembly\.[a-z.]+)", re.I)
 PARLIAMENT_NAME = re.compile(r"\bParlInfo\b|Parliament of (?:Australia|New South Wales|Victoria|Queensland|South Australia|"
                              r"Western Australia|Tasmania)|Australian Parliament House|Department of Parliamentary Services|"
-                             r"(?:Northern Territory|ACT) Legislative Assembly", re.I)
+                             r"\bParliament\s*@\s*Work\b|(?:Northern Territory|ACT) Legislative Assembly", re.I)
 SOURCE_FIELDS = ("Credit", "Artist", "Attribution", "ImageDescription")
 FREE_LICENCE = re.compile(r"CC0(?: 1\.0)?|CC BY(?:-SA)? (?:1\.0|2\.[05]|3\.0|4\.0)(?: AU|AT|DE|FR|IGO|NZ|UK|US)?|Public domain|GFDL(?: 1\.[123])?|OGL v[123]\.0|No restrictions|Copyrighted free use", re.I)
 
@@ -69,8 +71,8 @@ def parliament_source(extmetadata):
     """The parliament site or body a Commons file's credit, author or description names, or None. Raw values are
     checked, HTML and all, so a link's address counts as much as its text."""
     for field in SOURCE_FIELDS:
-        value = str((extmetadata.get(field) or {}).get("value") or "")
-        hit = PARLIAMENT_HOST.search(value) or PARLIAMENT_NAME.search(value)
+        value = html.unescape(str((extmetadata.get(field) or {}).get("value") or ""))
+        hit = PARLIAMENT_HOST.search(value) or PARLIAMENT_NAME.search(re.sub(r"<[^>]+>", " ", value))
         if hit:
             return f"{field}: {hit.group(0)}"
     return None

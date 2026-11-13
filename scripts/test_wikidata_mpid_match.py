@@ -53,6 +53,14 @@ class ParliamentSource(unittest.TestCase):
                      ext(Credit="https://notaph.gov.au.example.org/x"), {}):
             self.assertIsNone(parliament_source(meta), meta)
 
+    def test_parliament_at_work_redistributions_are_refused(self):
+        for description in ("Portrait from Parliament @ Work", "Parliament@Work", "Parliament&nbsp;@&nbsp;Work",
+                            "Parliament <span>@</span> Work"):
+            self.assertIsNotNone(parliament_source(ext(ImageDescription=description)), description)
+        self.assertIsNotNone(parliament_source(ext(
+            Credit='<a href="https://www.parliament.curriculum.edu.au/parl.php3?ID=999">Image</a>'
+        )))
+
     def test_file_title(self):
         self.assertEqual(file_title("http://commons.wikimedia.org/wiki/Special:FilePath/Tessa%20Quill%20(2026).jpg"),
                          "File:Tessa Quill (2026).jpg")
