@@ -674,17 +674,19 @@ function MapMode({
   );
   // The map is drawn only between the card and the panel: no stroke above
   // the card or under the bar, and no name half under either (item 5.6).
-  // A fold gives the map its own side, with nothing over it to clip.
+  // A fold gives the map its own side, with nothing over it to clip. A
+  // regular width caps the card and panel to a column, so clipping the full
+  // width would blank the map beside them: only compact widths clip.
   const clip = useMemo(
     () =>
-      pose.folded
+      pose.folded || regular
         ? null
         : {
             top:
               topHeight > 0 ? (managed ? pose.controls.y : 0) + topHeight : 0,
             bottom: Math.max(0, insets.bottom - rhythm.tight),
           },
-    [pose.folded, topHeight, managed, pose.controls.y, insets.bottom],
+    [pose.folded, regular, topHeight, managed, pose.controls.y, insets.bottom],
   );
   // Android's Back closes the search, then the panel, then the focus.
   useEffect(() => {

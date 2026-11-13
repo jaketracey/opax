@@ -1827,17 +1827,18 @@ test.each([26, 27])(
   },
 );
 
+// Grants and Agencies draw their title in the page (sweep 2 item 11), since
+// the system large title cannot wrap; money-public-screens asserts that
+// heading ("the four public money pages set their titles at one size").
 test.each([
   ['leads', 'Leads', { headerLargeTitle: true }, true],
   ['money-donors', 'Donors', { headerLargeTitle: true }, false],
-  ['agencies', 'Government agencies', { headerLargeTitleEnabled: true }, false],
   [
     'connections',
     'Programs and places',
     { headerLargeTitleEnabled: true },
     false,
   ],
-  ['grants', 'Commonwealth grants', { headerLargeTitleEnabled: true }, false],
   [
     'grants-allocation',
     'Community funding',

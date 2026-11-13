@@ -104,6 +104,8 @@ interface Device {
   bottom: number;
   fontScale: number;
   duo?: 'folded' | 'open';
+  /** A regular-width window with no fold, like an iPad. */
+  regular?: boolean;
 }
 const AX5 = 3.571;
 const devices: Device[] = [
@@ -221,9 +223,11 @@ async function mount(device: Device) {
   setWindowTraitsOverride(
     device.duo === 'open'
       ? { horizontal: 'regular', vertical: 'regular', foldable: true }
-      : device.duo === 'folded'
-        ? { horizontal: 'compact', vertical: 'regular', verticalBars: true }
-        : { horizontal: 'compact', vertical: 'regular' },
+      : device.regular
+        ? { horizontal: 'regular', vertical: 'regular' }
+        : device.duo === 'folded'
+          ? { horizontal: 'compact', vertical: 'regular', verticalBars: true }
+          : { horizontal: 'compact', vertical: 'regular' },
   );
   resetAdaptiveDeviceForTests();
   let tree!: TestRenderer.ReactTestRenderer;
@@ -452,6 +456,28 @@ describe('sweep 2 item 5: the money map at every size', () => {
       );
       act(() => trees.pop()!.unmount());
     }
+  });
+
+  test('a regular width (iPad) does not clip the map beside its card column', async () => {
+    const iPad: Device = {
+      name: 'iPad Air 11-inch',
+      os: 'ios',
+      width: 820,
+      height: 1180,
+      stage: 1100,
+      bottom: 65,
+      fontScale: 1,
+      regular: true,
+    };
+    const root = await mount(iPad);
+    settle(root, iPad, { card: 260, peek: 180 });
+    expect(lastMap().clip).toBeNull();
+    act(() => trees.pop()!.unmount());
+    // The same screen at a compact width still clips.
+    const phone = { ...iPhone, fontScale: 1 };
+    const compact = await mount(phone);
+    settle(compact, phone, { card: 260, peek: 180 });
+    expect(lastMap().clip).not.toBeNull();
   });
 
   test('a capped card flashes its scroll indicator once when it runs past the cap (5.3)', async () => {

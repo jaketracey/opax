@@ -1,7 +1,8 @@
 import { associatedLine, donorAssociated } from '../../api/associated';
 import { RouteOptions } from '../../navigation/preview';
 import { useLocalSearchParams } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type RefObject } from 'react';
+import type { SearchBarCommands } from 'react-native-screens';
 import { View } from 'react-native';
 import { ApiError } from '../../api/errors';
 import { copy } from '../../design/copy';
@@ -52,13 +53,23 @@ export default function MoneyDonors() {
   const via = param(params.via) === 'map' ? 'map' : null;
   const { record, error, refreshing, refresh, retry } =
     useMoneyRecord(jurisdiction);
-  const [query, setQuery] = useState('');
+  // A missing donor record arrives with its name as the search (sweep 2).
+  const seeded = (param(params.q) ?? '').trim().slice(0, 120);
+  const [query, setQuery] = useState(seeded);
   const search = useListSearchBar({
     placeholder: 'Donors',
     onChangeText: setQuery,
     onSearchButtonPress: setQuery,
     onCancelButtonPress: () => setQuery(''),
   });
+  // The bar field opens prefilled with the arriving search.
+  useEffect(() => {
+    if (!seeded) return;
+    (search.ref as RefObject<SearchBarCommands | null>).current?.setText(
+      seeded,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const graph = record?.data ?? null;
   const filters = useMemo(
     () => (graph ? filtersFromParams(graph, params) : null),

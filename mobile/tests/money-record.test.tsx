@@ -856,7 +856,7 @@ test('sweep 2: one "More" group under Originals holds Wikipedia, leads and the m
   await act(async () => r.unmount());
 });
 
-test('sweep 2: a record not in the registers is centred, says why, and offers Search public money', async () => {
+test('sweep 2: a grant record not in the registers is centred, says why, and offers Search public money', async () => {
   const r = await render({ rid: 'abn:00000000000', name: 'Nobody Pty Ltd' });
   const missing = r.root.findByType(ContentUnavailable);
   expect(missing.props.title).toBe('Not in the latest grant records');
@@ -868,5 +868,28 @@ test('sweep 2: a record not in the registers is centred, says why, and offers Se
   expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/public-money' });
   const { Screen } = jest.requireActual('../src/design/layout');
   expect(r.root.findByType(Screen).props.centred).toBe(true);
+  await act(async () => r.unmount());
+});
+
+test('sweep 2: a donor not in the registers offers Search donors with its name', async () => {
+  const r = await render({ name: 'Marrowby Example Pty Ltd' });
+  const missing = r.root.findByType(ContentUnavailable);
+  expect(missing.props.title).toBe('Not in the latest donation records');
+  expect(missing.props.action.label).toBe('Search donors');
+  await act(async () => missing.props.action.onPress());
+  expect(mockRouter.push).toHaveBeenCalledWith({
+    pathname: '/money-donors',
+    params: { q: 'Marrowby Example Pty Ltd' },
+  });
+  await act(async () => r.unmount());
+});
+
+test('sweep 2: a contract record not in the registers keeps Search public money', async () => {
+  const r = await render({ rid: 's-not-a-supplier' });
+  const missing = r.root.findByType(ContentUnavailable);
+  expect(missing.props.title).toBe('Not in the latest contract records');
+  expect(missing.props.action.label).toBe('Search public money');
+  await act(async () => missing.props.action.onPress());
+  expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/public-money' });
   await act(async () => r.unmount());
 });

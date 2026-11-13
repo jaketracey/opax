@@ -61,6 +61,7 @@ import {
   agencyRoute,
   leadRoute,
   moneyItemRoute,
+  moneyDonorsRoute,
   moneyRecordRoute,
   publicMoneyRoute,
 } from '../../navigation/routes/public-money';
@@ -379,11 +380,22 @@ function Missing({
         title={`Not in the latest ${register} records`}
         body={body ?? missingBody}
         action={
-          action ?? {
-            label: 'Search public money',
-            onPress: () => router.push(publicMoneyRoute),
-            testID: 'money-node-missing-search',
-          }
+          action ??
+          (register === 'donation'
+            ? {
+                // The hub holds grants, contracts and agencies, not donors.
+                label: 'Search donors',
+                onPress: () =>
+                  router.push(
+                    moneyDonorsRoute(name?.trim() ? { q: name.trim() } : {}),
+                  ),
+                testID: 'money-node-missing-search',
+              }
+            : {
+                label: 'Search public money',
+                onPress: () => router.push(publicMoneyRoute),
+                testID: 'money-node-missing-search',
+              })
         }
         testID="money-node-missing"
       />

@@ -340,6 +340,23 @@ test('a donors search with no match keeps its caption over one plain line', asyn
   await act(async () => r.unmount());
 });
 
+test('sweep 2: donors opened from a missing record arrive searched for its name', async () => {
+  const named = graph.nodes.filter((n) => n.kind === 'donor');
+  const wanted = named[0]!.label;
+  Object.assign(mockParams, { q: wanted });
+  let r!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    r = TestRenderer.create(<MoneyDonors />);
+  });
+  const list = r.root.findByType(FlatList);
+  expect(list.props.data.length).toBeGreaterThan(0);
+  expect(list.props.data.length).toBeLessThan(named.length);
+  expect(list.props.data.map((n: { label: string }) => n.label)).toContain(
+    wanted,
+  );
+  await act(async () => r.unmount());
+});
+
 test('the complete donors list virtualises rows while retaining every named donor', async () => {
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
