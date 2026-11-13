@@ -102,6 +102,7 @@ import { expireVoiceSessions, voiceRoute } from './voice'
 import { voiceAsk } from './voice-ask'
 import { ASK_FALLBACK_FLOOR_MS, fallbackAllowanceMs, gatheredPayload, shortenedCaller, trustedCaller, type AskCaller } from './ask-caller-budget'
 import { appEdition } from './app-edition'
+import { appWidgetToday } from './app-widget'
 import { appVicElection } from './app-vic-election'
 import { appManifest } from './app-manifest'
 import { appJson } from './app-http'
@@ -7259,6 +7260,7 @@ export default {
     // Public app adapters use this Worker's journal/assets, before any staging
     // proxy or general retrieval dispatch. No composition callback is supplied.
     if (url.pathname.startsWith('/api/app/v1/edition/')) return communityResponse(await appEdition(request, env))
+    if (url.pathname === '/api/app/v1/widget/today') return communityResponse(await appWidgetToday(request, env))
     if (url.pathname === '/api/app/v1/manifest') return communityResponse(await appManifest(request, env))
     if (url.pathname === '/api/app/v1/vic-election' || url.pathname.startsWith('/api/app/v1/vic-election/')) return communityResponse(await appVicElection(request, env))
     if (url.pathname.startsWith('/api/app/')) return communityResponse(appJson(request, {error:'not_found'}, 404))

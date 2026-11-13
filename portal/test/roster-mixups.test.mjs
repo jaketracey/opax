@@ -61,8 +61,14 @@ test('SA two-house careers keep main’s parties, and dated mixed-era careers re
   assert.ok(profileAffiliations(people.get('Mark Latham')).some(r => r.party === 'Labor' && r.electorate === 'Werriwa'));
   assert.ok(profileAffiliations(people.get('Lynda Voltz')).some(r => r.chamber === 'nsw_lc' && r.party === 'Labor'));
   assert.ok(profileJurisdictions(people.get('Ros Spence')).representations.some(r => r.electorate === 'Yuroke'));
+  // Identity stays exactly main's. The speech count grows with every nightly
+  // (Ros Spence had 141 in main's export), so main's count is a floor: fewer
+  // means speeches moved to another record.
   for (const name of ['Ros Spence', 'Malinauskas', 'P.B. Malinauskas', 'V.A. Chapman', 'S.S. Marshall', 'A. Koutsantonis', 'Picton', 'C.J. Picton']) {
-    assert.deepEqual(people.get(name), mainRoster.people.find(p => p.name === name), name);
+    const {speeches, ...identity} = people.get(name);
+    const {speeches: floor, ...expected} = mainRoster.people.find(p => p.name === name);
+    assert.deepEqual(identity, expected, name);
+    assert.ok(Number.isInteger(floor) && Number.isInteger(speeches) && speeches >= floor, `${name}: ${speeches} speeches, main had ${floor}`);
   }
 });
 

@@ -82,3 +82,44 @@ export function beforeSend(event) {
   p.$current_url = `https://opax.com.au${p.$pathname}`;
   return event;
 }
+
+// Automated browsers (scripted Chrome, audits, crawlers that run JavaScript)
+// inflated every web metric. These checks read only fixed properties of the
+// browser itself, never anything a reader typed or any identifier, and the
+// result is either a drop or a single boolean.
+const AUTOMATION_UA = /HeadlessChrome|PhantomJS|SlimerJS|Lighthouse|Puppeteer|Playwright|Selenium|crawler|spider|\w*bot\//i;
+const zeroViewport = (win) => win.innerWidth === 0 || win.innerHeight === 0;
+// A hidden or prerendering page may not have laid out yet (Android WebViews,
+// background tabs), so its size only counts once it is on screen.
+const onScreen = (doc) => doc?.visibilityState === 'visible' && !doc.prerendering;
+// Clear signals: the event is not sent at all.
+export function automationReason(nav = {}, win = {}, doc) {
+  if (nav.webdriver === true) return 'webdriver';
+  if (AUTOMATION_UA.test(nav.userAgent || '')) return 'automation_ua';
+  try { if (nav.userAgentData?.brands?.some((b) => AUTOMATION_UA.test(b?.brand || ''))) return 'automation_ua'; } catch { /* optional API */ }
+  // A real tab on screen always has a viewport; undefined (not a browser) is not zero.
+  if (zeroViewport(win) && onScreen(doc)) return 'zero_viewport';
+  return null;
+}
+// Runs start() once if the visit can be measured: now, or for a zero viewport
+// while hidden or prerendering, when the page first comes on screen and still
+// shows no automation signal. webdriver and the user agent decide at once.
+export function whenMeasurable(nav, win, doc, start) {
+  if (automationReason(nav, win, doc)) return;
+  if (!zeroViewport(win) || onScreen(doc) || !doc?.addEventListener) return start();
+  let decided = false;
+  const check = () => {
+    if (decided || !onScreen(doc)) return;
+    decided = true;
+    if (!automationReason(nav, win, doc)) start();
+  };
+  doc.addEventListener('visibilitychange', check);
+  doc.addEventListener('prerenderingchange', check);
+}
+// Weaker signals, sent to PostHog as likely_bot so they can be filtered rather
+// than dropped: no languages (old headless), or a page left without a single
+// scroll, key, touch or pointer press.
+export function likelyBot(nav = {}, { leaving = false, interacted = true } = {}) {
+  if (Array.isArray(nav.languages) && nav.languages.length === 0) return true;
+  return leaving && !interacted;
+}
