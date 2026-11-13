@@ -1854,7 +1854,7 @@ async function openConnectionsPage(params, manageFocus) {
   if (status) status.textContent = "Opening the records…";
   if (manageFocus) $("connections-title")?.focus({ preventScroll: true });
   try {
-    const module = await import("/connections.js?v=phone-flow-20261113");
+    const module = await import("/connections.js?v=title-case-20261113");
     if (generation !== connectionsGeneration) return;
     connectionsPage = module.mountConnections($("connections-body"), {
       params,

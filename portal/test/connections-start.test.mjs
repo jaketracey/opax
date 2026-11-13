@@ -166,3 +166,44 @@ test('a wide screen keeps the first forty and no paging control; the phone list 
  assert.doesNotMatch(css,/#connection-list\s*\{[^}]*(?:max-height|overflow)/,'no inner scroller');
  assert.match(css,/#connection-detail:has\(> \.connection-detail-empty\) \{ position: static; order: -1; \}/,'the invitation sits above the list on a phone');
 });
+
+// Names filed in capitals, from the real evidence index (public records), in both directions:
+// acronyms, codes and numerals keep their capitals; ordinary words, short ones included, do not.
+test('names filed in capitals read in title case without breaking acronyms or short words', async () => {
+ const {displayName}=await import('../public/connections.js');
+ const cases=[
+  ['FREE TAFE & FREE APPRENTICESHIPS','Free TAFE & Free Apprenticeships'],
+  ['NAIDOC 2023','NAIDOC 2023'],
+  ['RFDS - RRMBS','RFDS - RRMBS'],
+  ['AURUKUN CCTV CONTRIBUTION','Aurukun CCTV Contribution'],
+  ['AP2.0 FIFA WC 2023 INF','AP2.0 FIFA WC 2023 Inf'],
+  ['RILIPO - ILUA','Rilipo - ILUA'],
+  ['ANZPAA NIFS CONTRIBUTIONS','ANZPAA NIFS Contributions'],
+  ['NEW MAPOON','New Mapoon'],
+  ['ST GEORGE','St George'],
+  ['MT COOLUM','Mt Coolum'],
+  ['EMU PARK','Emu Park'],
+  ['OLD TALGAI','Old Talgai'],
+  ['FIG TREE POCKET','Fig Tree Pocket'],
+  ['SOMERSET DAM','Somerset Dam'],
+  ['MOUNT ISA DC','Mount Isa DC'],
+  ['CLOSE THE GAP VET','Close the Gap VET'],
+  ['EQUIPPING TAFE FOR OUR FUTURE','Equipping TAFE for Our Future'],
+  ['NATIONAL PARTNERSHIP JOB TRAINER FUND','National Partnership Job Trainer Fund'],
+  ['EYE HEALTH','Eye Health'],
+  ['BACK TO WORK','Back to Work'],
+  ['STAGE VIII WORKS','Stage VIII Works'],
+  ['XIII COMMONWEALTH GAMES','XIII Commonwealth Games'],
+  ['COVID-19 SUPPORT','COVID-19 Support'],
+  ['SBP-BUS BOOST GRANTS','SBP-Bus Boost Grants'],
+  ['BAUHINIA, QLD','Bauhinia, QLD'],
+  ['VITAMIN D PROGRAM','Vitamin D Program'],
+  ["O'CONNOR PARK","O'Connor Park"],
+  ['MIX FM RADIO','Mix FM Radio'],
+  // Mixed case is the record's own spelling and passes through.
+  ['RILIPO Infrastructure - Torres Strait Island','RILIPO Infrastructure - Torres Strait Island'],
+  ['Department of Finance','Department of Finance'],
+  ['TAFE','TAFE'],
+ ];
+ for(const [from,to] of cases)assert.equal(displayName(from),to,from);
+});
