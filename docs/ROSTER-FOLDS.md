@@ -217,8 +217,14 @@ verify) into one person, after the surname folds. Every test must hold, else the
 - a row printed only in the federal House falls inside the dated House service of that id (one year either way);
 - no two rows hold different seats in one house in the same years.
 
-The person's row is the one with the most speeches (on a tie, the sitting member's), never a surname or tail print.
-It keeps its name, slug, id, party and status; speeches sum; houses, years and seats join; the other names go into
+The person's row is the one printed under the electorate release's primary name for the id, where a row carries
+it: Bob Baldwin, Tony Windsor and Katie Allen keep their public names and slugs although the formal "Robert",
+"Antony" and "Katrina" rows have more speeches (review of 13 November 2026). Where no row carries the release's
+name, and among spelling twins of it, the row with the most speeches holds (on a tie, the sitting member's); never a
+surname or tail print. Two holders differ from the release's name: David Tollner, whose release name "Dave Tollner"
+no row prints (main's row is David Tollner; the fold gives it `full` "Dave Tollner" from the surname print), and
+Yvette D’Ath, whose straight-apostrophe twin is the release's spelling (one slug, `yvette-dath`, either way). The
+holder keeps its name, slug, id, party and status; speeches sum; houses, years and seats join; the other names go into
 `prints` and, where they are full names, `aliases`; a print's members-register name fills an empty `full`. The
 Worker reads `prints` as it does for surname folds (speech searches, Ask scope, brief and topic counts), and
 `formerSlugs` in `portal/src/person-slug.ts` keeps every folded row's old address, its own slug or the suffixed slug
@@ -238,9 +244,9 @@ house agree in each group). The two prints whose names alone do not agree are re
 father left the House in 1990), and "Kevin Drum" (2016-2021) is Damian Drum, Member for Murray then Nicholls from
 2016 to 2022.
 
-At the next manual knowledge-base publish of roster profiles (`scripts/publish_grants_research.py`), the 9 folded
-rows that held a seat retire their roster-profile records and Robert Baldwin, Antony Windsor and Katrina Allen gain
-one (they took the seat of their folded print). Nothing was published by this change.
+At the next manual knowledge-base publish of roster profiles (`scripts/publish_grants_research.py`), the 6 folded
+spelling twins that held a seat retire their roster-profile records; no record is added or rewritten. Nothing was
+published by this change.
 
 | ID | Rows before (speeches, houses, years) | Retired slugs (301) | Class | Canonical (combined) | Moved |
 |---|---|---|---|---|---|
@@ -275,9 +281,9 @@ one (they took the seat of their folded print). Nothing was published by this ch
 | 10724 | Kelly O'Dwyer (691, House, 2011-2019); Kelly O’Dwyer (54, House, 2010-2011) | `kelly-odwyer-4b656c6c79204f20194477796572` | same person (spelling twin) | Kelly O'Dwyer `kelly-odwyer` (745) | 54 speeches |
 | 10747 | Deborah O'Neill (690, Senate, 2013-2026); Deb O'Neill (229, House, 2011-2013); Deborah O’Neill (45, House, 2010-2011) | `deb-oneill`, `deborah-oneill-4465626f726168204f20194e65696c6c` | same person (another given name or nickname, spelling twin) | Deborah O'Neill `deborah-oneill` (964) | 274 speeches + chamber, aliases |
 | 10729 | Bert Van Manen (641, House, 2010-2025); Bert van Manen (327, House, 2011-2022) | `bert-van-manen-426572742076616e204d616e656e` | same person (spelling twin) | Bert Van Manen `bert-van-manen` (968) | 327 speeches |
-| 10026 | Robert Baldwin (622, House, 2002-2011); Bob Baldwin (401, House, 1998-2016) | `bob-baldwin` | same person (another given name or nickname) | Robert Baldwin `robert-baldwin` (1,023) | 401 speeches + seat, aliases |
+| 10026 | Robert Baldwin (622, House, 2002-2011); Bob Baldwin (401, House, 1998-2016) | `robert-baldwin` | same person (another given name or nickname) | Bob Baldwin `bob-baldwin` (1,023), the release's name | 622 speeches + aliases |
 | 10152 | Mark Coulton (616, House, 2008-2025); Mark Maclean Coulton (31, House, 2021-2022) | `mark-maclean-coulton` | same person (middle names printed) | Mark Coulton `mark-coulton` (647) | 31 speeches |
-| 10676 | Antony Windsor (609, House, 2002-2011); Tony Windsor (120, House, 2011-2013) | `tony-windsor` | same person (another given name or nickname) | Antony Windsor `antony-windsor` (729) | 120 speeches + seat, aliases |
+| 10676 | Antony Windsor (609, House, 2002-2011); Tony Windsor (120, House, 2011-2013) | `antony-windsor` | same person (another given name or nickname) | Tony Windsor `tony-windsor` (729), the release's name | 609 speeches + years, aliases |
 | 10818 | Melissa Price (602, House, 2013-2026); Melissa Lee Price (13, House, 2021-2022) | `melissa-lee-price` | same person (middle names printed) | Melissa Price `melissa-price` (615) | 13 speeches + aliases |
 | 10728 | Ken O'Dowd (558, House, 2011-2022); Ken O’Dowd (13, House, 2010-2011) | `ken-odowd-4b656e204f2019446f7764` | same person (spelling twin) | Ken O'Dowd `ken-odowd` (571) | 13 speeches |
 | 10811 | Lucy Wicks (547, House, 2013-2021); Lucy Elizabeth Wicks (43, House, 2021-2022) | `lucy-elizabeth-wicks` | same person (middle names printed) | Lucy Wicks `lucy-wicks` (590) | 43 speeches + aliases |
@@ -294,7 +300,7 @@ one (they took the seat of their folded print). Nothing was published by this ch
 | 11001 | Allegra Spender (340, House, 2022-2026); Spender (44, House cttee, Joint cttee, 2025-2026) | `spender` | same person (surname print) | Allegra Spender `allegra-spender` (384) | 44 speeches + chamber |
 | 11006 | Nampijinpa Price (336, Senate cttee, Joint cttee, 2025-2026); Jacinta Nampijinpa Price (208, Senate, 2022-2026) | `nampijinpa-price` | same person (surname print) | Jacinta Nampijinpa Price `jacinta-nampijinpa-price` (544) | 336 speeches + chamber |
 | 10028 | Phillip Barresi (320, House, 2000-2007); Phil Barresi (70, House, 1998-1999) | `phil-barresi` | same person (another given name or nickname) | Phillip Barresi `phillip-barresi` (390) | 70 speeches + aliases |
-| 10928 | Katrina Allen (318, House, 2019-2021); Katie Allen (75, House, 2019-2022) | `katie-allen` | same person (another given name or nickname) | Katrina Allen `katrina-allen` (393) | 75 speeches + seat, aliases |
+| 10928 | Katrina Allen (318, House, 2019-2021); Katie Allen (75, House, 2019-2022) | `katrina-allen` | same person (another given name or nickname) | Katie Allen `katie-allen` (393), the release's name | 318 speeches + aliases |
 | 10921 | Libby Coker (280, House, House cttee, 2020-2026); Elizabeth Coker (121, House, 2019-2021) | `elizabeth-coker` | same person (another given name or nickname) | Libby Coker `libby-coker` (401) | 121 speeches + aliases |
 | 10922 | Pat Conaghan (268, House, House cttee, Joint cttee, 2019-2026); Patrick Conaghan (167, House, 2019-2021) | `patrick-conaghan` | same person (another given name or nickname) | Pat Conaghan `pat-conaghan` (435) | 167 speeches + aliases |
 | 10600 | Alex Somlyay (205, House, 1998-2011); Alexander Somlyay (11, House, 2011-2013) | `alexander-somlyay` | same person (another given name or nickname) | Alex Somlyay `alex-somlyay` (216) | 11 speeches + aliases |
