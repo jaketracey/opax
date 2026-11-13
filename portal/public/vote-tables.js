@@ -10,15 +10,15 @@ const sentence = value => { const text = String(value || '').replace(/_/g, ' ').
 const count = value => value == null || value === '' ? null : Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : null;
 const safeLink = value => typeof value === 'string' && /^(?:\/(?!\/)|https?:\/\/)/i.test(value) ? value : null;
 /* The Hansard heading's own prefix, in capitals: "BILLS - Treasury Laws
-   Amendment ...". Under BILLS and BUSINESS the rest is the record's name; the
-   other Senate headings keep their word, in sentence case ("Matters of urgency
-   - Taxation"). Older rows write "Bills - " in title case. Only these headings:
+   Amendment ...". Under BILLS the rest is the record's name; the other
+   headings keep their word, in sentence case ("Business - Rearrangement",
+   "Matters of urgency - Taxation"), as the older rows already read. Older rows write "Bills - " in title case. Only these headings:
    a title that opens with an acronym keeps it. */
 const HEADINGS = /^(BILLS|Bills|BUSINESS|DOCUMENTS|MATTERS OF URGENCY|MATTERS OF PUBLIC IMPORTANCE|COMMITTEES|MOTIONS|NOTICES|PETITIONS|STATEMENTS|REGULATIONS AND DETERMINATIONS)\s+[-–—]\s+(\S.*)$/;
 export function headingTitle(value) {
   const text = divisionPlain(value), heading = HEADINGS.exec(text);
   if (!heading) return text;
-  return /^(?:BILLS|Bills|BUSINESS)$/.test(heading[1]) ? heading[2] : `${sentence(heading[1])} - ${heading[2]}`;
+  return /^(?:BILLS|Bills)$/.test(heading[1]) ? heading[2] : `${sentence(heading[1])} - ${heading[2]}`;
 }
 const divisionLink = value => /^[a-z0-9][a-z0-9-]*$/.test(String(value || '')) ? `/doc/${String(value).startsWith('division-') ? value : `division-${value}`}` : null;
 

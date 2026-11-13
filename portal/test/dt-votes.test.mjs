@@ -93,7 +93,7 @@ test('table captions own their label and the hub boot survives the app-script re
 
 test('vote titles drop the Hansard heading prefix and keep acronyms; phone rows tell divisions apart', () => {
   assert.equal(headingTitle('BILLS - Treasury Laws Amendment (Fixture) Bill 2026 - Second Reading'), 'Treasury Laws Amendment (Fixture) Bill 2026 - Second Reading');
-  assert.equal(headingTitle('BUSINESS - Rearrangement'), 'Rearrangement');
+  assert.equal(headingTitle('BUSINESS - Rearrangement'), 'Business - Rearrangement', 'as the 4,409 older division rows read');
   assert.equal(headingTitle('MATTERS OF URGENCY - Taxation'), 'Matters of urgency - Taxation');
   assert.equal(headingTitle('AUKUS Submarine Bill 2026 - Third Reading'), 'AUKUS Submarine Bill 2026 - Third Reading');
   assert.equal(headingTitle('Bills - Australian Education Bill 2012; Second Reading, 4 Jun 2013'), 'Australian Education Bill 2012; Second Reading, 4 Jun 2013');
