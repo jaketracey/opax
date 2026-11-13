@@ -19,8 +19,8 @@
 // committed scripts/hubs/<jur>-election-<year>.json configs and the electorate
 // release's election dates). After it, the roster no longer says who sits.
 // It also lists the members of a chamber's latest dated official list, inside
-// the reviewed term window (officialListMembers), party or not: the NSW Council
-// has no verified electorate roster, so its sitting members were listed as former.
+// the reviewed term window (officialListMembers), party or not: the NSW and SA
+// Councils have no verified electorate roster, so their sitting members were listed as former.
 //
 // bills lists the bills a party's member sponsored, as the bills register records the sponsor's party
 // (sponsoredBills): the party pages' "Bills sponsored", and a page for a party the record names only there.
@@ -71,9 +71,11 @@ export function seatRosterMembers(people,electorates,elections={},reference=[]) 
  *  result) in the same shape. Most states publish no verified electorate roster for their upper house, and a
  *  member whose record carries a party (from that same list) was skipped there, so a sitting MLC was listed as
  *  former. The list says who sat on its date. It counts only when it is the chamber's latest, dated inside the
- *  chamber's reviewed current term (scripts/roster_service.json snapshot_party_windows: no window, no entries),
+ *  chamber's reviewed current term (scripts/roster_service.json snapshot_party_windows: no window, no entries;
+ *  its `end`, the next periodic election, stands in for next_election when no later election is recorded),
  *  and the person has no later dated service record that ends their service. Only an exact full name or listed
- *  alias, in a chamber the row sat in, matches; two parties or seats at that date give nothing. A person already
+ *  alias, or a reviewed Hansard print the list entry records (`prints`, "K.J. Maher"), in a chamber the row sat
+ *  in, matches; two parties or seats at that date give nothing. A person already
  *  listed from a seat roster in that chamber is not listed twice. */
 export function officialListMembers(people,observations,windows={},elections={},out={}) {
   const nextElection=(jur,asOf)=>(elections[jur] || []).filter(d=>ISO_DAY.test(d) && d>asOf).sort()[0] || null;
@@ -82,6 +84,11 @@ export function officialListMembers(people,observations,windows={},elections={},
   const latest={};
   for(const o of lists)if(!latest[o.chamber] || o.as_of>latest[o.chamber])latest[o.chamber]=o.as_of;
   const names=o=>[o.name,...(o.aliases || [])].map(rosterFold);
+  // A reviewed Hansard print the list entry records ("K.J. Maher": SA Hansard names its members only so), for
+  // this rule only: roster-party.js never reads `prints`, so a print gives no profile a party.
+  const listNames=o=>[...names(o),...(o.prints || []).map(rosterFold)];
+  // With no recorded election after the list, the window's reviewed end (the next periodic election) ends it.
+  const termEnd=(chamber,date)=>{const end=windows[chamber]?.end;return ISO_DAY.test(String(end || '')) && end>date ? end : null;};
   const listed=new Set(Object.values(out).flat().map(m=>`${rosterFold(m.name)}|${m.chamber}`));
   for(const p of people || []){
     const name=rosterFold(p.name);
@@ -89,14 +96,14 @@ export function officialListMembers(people,observations,windows={},elections={},
     for(const chamber of p.chambers || []){
       const date=latest[chamber],start=windows[chamber]?.start;
       if(!date || !ISO_DAY.test(String(start || '')) || date<start || listed.has(`${name}|${chamber}`))continue;
-      const hits=lists.filter(o=>o.chamber===chamber && o.as_of===date && names(o).includes(name));
+      const hits=lists.filter(o=>o.chamber===chamber && o.as_of===date && listNames(o).includes(name));
       if(!hits.length || new Set(hits.map(o=>o.party.trim())).size!==1 || new Set(hits.map(o=>rosterFold(o.electorate))).size!==1)continue;
       const left=(observations || []).some(o=>o?.basis==='service record' && o.chamber===chamber && String(o.as_of || '')>=date &&
         names(o).includes(name));
       if(left)continue;
       const o=hits[0];
       (out[o.party.trim()] ||= []).push({name:p.name,pid:p.pid || null,jurisdiction:o.jurisdiction || null,chamber,
-        electorate:o.electorate || null,as_of:date,next_election:nextElection(o.jurisdiction,date)});
+        electorate:o.electorate || null,as_of:date,next_election:nextElection(o.jurisdiction,date) || termEnd(chamber,date)});
       listed.add(`${name}|${chamber}`);
     }
   }
