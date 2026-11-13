@@ -1,6 +1,6 @@
 // Both URLs are content-stamped by scripts/stamp_assets.mjs.
 const stylesheet = '/app-banner.css?v=f3743e87ba'
-const script = '/app-banner.js?v=ebe7550a36'
+const script = '/app-banner.js?v=9829079d3e'
 
 export const APP_BANNER_HTML = `<div class="opax-app-banner" id="opax-app-banner">
   <div class="opax-app-banner-row">
@@ -10,9 +10,15 @@ export const APP_BANNER_HTML = `<div class="opax-app-banner" id="opax-app-banner
 </div>`
 
 /** The page's first tab stop, ahead of the banner: a keyboard reader skips the
- * banner and the masthead in one step. app-banner.js moves focus to the page's
- * title (its H1); without scripts the anchor still lands on index.html's main. */
-export const SKIP_LINK_HTML = '<a class="opax-skip-link" href="#main" data-skip-link>Skip to content</a>'
+ * banner and the masthead in one step. It points at the page's own main element,
+ * which the page names on its body (data-skip-target: index.html's "main",
+ * home's "hp-main", /press's "press-main", the map's "map"), so it works without
+ * scripts; app-banner.js then moves focus to the title (H1) inside it. */
+export function skipLinkHTML(target: string | null): string {
+  const id = /^[A-Za-z][\w-]*$/.test(target ?? '') ? target : 'main'
+  return `<a class="opax-skip-link" href="#${id}" data-skip-link>Skip to content</a>`
+}
+export const SKIP_LINK_HTML = skipLinkHTML('main')
 
 /** One response boundary covers asset pages and every Worker page. Policy and
  * community (including sign-in) pages stay clear for App Review. Audience and
@@ -26,9 +32,9 @@ export function withAppBanner(response: Response, url: URL): Response {
       // No defer or async: visibility is decided before the body can paint.
       el.prepend(`<link rel="stylesheet" href="${stylesheet}"><script src="${script}"></script>`, { html: true })
     } })
-    .on('body', { element(el) { el.prepend(SKIP_LINK_HTML + APP_BANNER_HTML, { html: true }) } })
-    // The page's own skip link (index.html) gives way to the one above, which comes first.
-    .on('a[href="#main"]:not([data-skip-link])', { element(el) { el.remove() } })
+    .on('body', { element(el) { el.prepend(skipLinkHTML(el.getAttribute('data-skip-target')) + APP_BANNER_HTML, { html: true }) } })
+    // Every page marks its own skip link data-skip; it gives way to the one above, which comes first.
+    .on('a[data-skip]', { element(el) { el.remove() } })
     .transform(response)
   const out = new Response(transformed.body, transformed)
   out.headers.delete('content-length')

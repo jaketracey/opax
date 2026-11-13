@@ -31,8 +31,8 @@
     <!-- After home.js in execution order; PostHog replays earlier events (analytics/index.js). -->
     <script src="/analytics.js?v=ee4b79c275" defer></script>
   </head>
-  <body class="hp-page">
-    <a class="hp-skip" href="#hp-main">Skip to content</a>
+  <body class="hp-page" data-skip-target="hp-main">
+    <a class="hp-skip" href="#hp-main" data-skip>Skip to content</a>
     <!-- site-header:start -->
 <header class="site-header">
   <div class="wrap masthead">

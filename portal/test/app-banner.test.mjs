@@ -37,10 +37,10 @@ test('the real Worker injects one banner above static and Worker-rendered page c
     const doc = dom.window.document;
     assert.equal(doc.querySelectorAll('#opax-app-banner').length, 1, path);
     // Skip to content is the first tab stop, ahead of the banner; the page's own copy gives way to it.
-    assert.equal(doc.body.firstElementChild.matches('a.opax-skip-link[href="#main"][data-skip-link]'), true, path);
+    assert.equal(doc.body.firstElementChild.matches('a.opax-skip-link[data-skip-link]'), true, path);
     assert.equal(doc.body.firstElementChild.textContent, 'Skip to content', path);
     assert.equal(doc.body.firstElementChild.nextElementSibling.id, 'opax-app-banner', path);
-    assert.equal(doc.querySelectorAll('a[href="#main"]').length, 1, path);
+    assert.equal(doc.querySelectorAll('a[data-skip], a[data-skip-link]').length, 1, path);
     assert.equal(doc.querySelector('#opax-app-banner a').href, 'https://apps.apple.com/au/app/opax/id6818756305');
     const entry = doc.querySelector('head script[src^="/app-banner.js?v="]');
     assert.ok(entry, path);
@@ -201,4 +201,18 @@ test('Skip to content moves focus to the title showing in main, ahead of the ban
   assert.equal(window.document.activeElement.id, 't');
   assert.equal(window.document.getElementById('t').getAttribute('tabindex'), '-1');
   dom.window.close();
+});
+
+test('every page has exactly one skip link, first, pointing at an element the page has', async () => {
+  for (const [path, target] of [['/', 'hp-main'], ['/press', 'press-main'], ['/map', 'map'], ['/subject/person/anthony-albanese', 'main'], ['/privacy', 'main']]) {
+    const response = await workerFetch(path);
+    assert.equal(response.status, 200, path);
+    const doc = new JSDOM(await response.text()).window.document;
+    const links = [...doc.querySelectorAll('a')].filter(a => /^Skip to content$/.test(a.textContent.trim()));
+    assert.equal(links.length, 1, path);
+    assert.equal(links[0].getAttribute('href'), `#${target}`, path);
+    assert.ok(doc.getElementById(target), `${path}: #${target} exists, so the link works without scripts`);
+    // The first tab stop: before the banner where there is one (privacy has none, for App Review).
+    assert.equal(doc.body.querySelector('a[href], button, input, select, textarea, summary'), links[0], path);
+  }
 });
