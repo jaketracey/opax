@@ -7,6 +7,7 @@ import {
   nonempty,
   nullable,
   object,
+  optional,
   shape,
   url,
   type Decoder,
@@ -19,7 +20,9 @@ import { calendarDayWords } from './day-words';
  * The line under Today's date, from the Parliament's published sitting
  * calendar (`/parliament/sitting-days.json`, docs/DATA-SITTING-DAYS.md):
  * "Parliament is sitting today", "The Senate is sitting today", "The House
- * is sitting today" or "Next sitting day: Monday 23 November". Decided by
+ * is sitting today", or the next day and who sits then ("Parliament next
+ * sits Monday 23 November", "The Senate next sits Monday 16 November").
+ * Decided by
  * rule in the calendar's own timezone. Anything the calendar does not say
  * (a missing or unreadable file, a day past `expires` or outside
  * `coverage`, no published next day) is no line, never a guess.
@@ -63,7 +66,10 @@ const timeZone: Decoder<string> = (v) => {
 const decodeSource = shape({
   publisher: nonempty,
   title: nonempty,
+  /** The calendar file itself (`.ics`). */
   url: https,
+  /** The Parliament's readable calendar page; the sheet opens it when present. */
+  page: optional(https),
   /** The calendar file's own publication date; null when not known. */
   published: nullable(calendarDay),
 });
@@ -181,12 +187,7 @@ export function sittingLine(file: SittingDays, now: Date): SittingLine | null {
   if (!publishedYear(file, yearOf(today))) return null;
   const listed = file.days.find((d) => d.date === today);
   if (listed) {
-    const kind: SittingKind =
-      listed.house && listed.senate
-        ? 'both'
-        : listed.senate
-          ? 'senate'
-          : 'house';
+    const kind = houses(listed);
     return {
       kind,
       text: sittingWords[kind],
@@ -202,17 +203,26 @@ export function sittingLine(file: SittingDays, now: Date): SittingLine | null {
   if (!next || !words || !publishedYear(file, yearOf(next.date))) return null;
   return {
     kind: 'next',
-    text: `Next sitting day: ${words}`,
+    text: `${nextWords[houses(next)]} ${words}`,
     today,
     day: next.date,
     years: [...new Set([yearOf(today), yearOf(next.date)])],
   };
 }
 
-const sittingWords: Record<Exclude<SittingKind, 'next'>, string> = {
+type Houses = Exclude<SittingKind, 'next'>;
+const houses = (day: SittingDay): Houses =>
+  day.house && day.senate ? 'both' : day.senate ? 'senate' : 'house';
+
+const sittingWords: Record<Houses, string> = {
   both: 'Parliament is sitting today',
   senate: 'The Senate is sitting today',
   house: 'The House is sitting today',
+};
+const nextWords: Record<Houses, string> = {
+  both: 'Parliament next sits',
+  senate: 'The Senate next sits',
+  house: 'The House next sits',
 };
 
 /** The sheet's "How this is chosen", word for word. */
@@ -223,7 +233,11 @@ export function sittingRule(file: Pick<SittingDays, 'timezone'>): string {
 
 /**
  * The line's source sheet: the publisher of each calendar year the line
- * rests on, its title and published date, opening the calendar itself.
+ * rests on, its title and published date. Each row opens the Parliament's
+ * readable calendar page when the file names one, else the calendar file
+ * (an `.ics`, which iOS offers to add to Calendar and Android downloads).
+ * Years that open the same page share one row. The sheet has no place for
+ * a second link, so the `.ics` is left out when a page is named.
  */
 export function sittingSources(
   file: SittingDays,
@@ -241,12 +255,23 @@ export function sittingSources(
     .filter((d): d is string => !!d)
     .sort()
     .pop();
-  const originals: SourceOriginal[] = sources.map((s) => ({
-    label: s.publisher,
-    url: s.url,
-    record: s.title,
-    asOf: s.published,
-  }));
+  const originals: SourceOriginal[] = [];
+  for (const s of sources) {
+    const url = s.page ?? s.url;
+    const same = originals.find((o) => o.url === url);
+    if (!same) {
+      originals.push({
+        label: s.publisher,
+        url,
+        record: s.title,
+        asOf: s.published,
+      });
+      continue;
+    }
+    same.record = `${same.record} and ${s.title}`;
+    if (s.published && (!same.asOf || s.published > String(same.asOf)))
+      same.asOf = s.published;
+  }
   const saved = record.stale && record.savedAt !== null;
   return {
     header: newest ? `Published ${formatDate(newest)}` : 'Date not published',
