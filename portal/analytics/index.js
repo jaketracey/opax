@@ -1,4 +1,8 @@
 import posthog from 'posthog-js/dist/module.no-external';
+// The window.onerror and unhandledrejection hooks. posthog-js loads them from
+// PostHog's servers unless they are already on the page; external loading is
+// off here, so they are bundled.
+import 'posthog-js/dist/exception-autocapture';
 import { cleanEvent, beforeSend, automationReason, likelyBot, whenMeasurable } from './privacy.mjs';
 
 // Public, write-only ingestion token for PostHog project 507367 (Opax).
@@ -26,7 +30,15 @@ if (['opax.com.au', 'www.opax.com.au'].includes(location.hostname)) whenMeasurab
       capture_pageview: false, // The router emits opax_view, including back/forward.
       capture_pageleave: true,
       autocapture: false,
-      capture_exceptions: false,
+      // Error reports: uncaught errors and unhandled rejections, never
+      // console.error. Set in full here so the project's "Exception
+      // autocapture" setting cannot change it (an object ignores the remote
+      // setting, and fields left out are off in posthog-js 1.427.2).
+      // before_send (privacy.mjs cleanException) scrubs every report.
+      capture_exceptions: { capture_unhandled_errors: true, capture_unhandled_rejections: true, capture_console_errors: false },
+      // Extension errors are dropped whatever the project setting says, and no
+      // exception steps (breadcrumbs) are kept or sent.
+      error_tracking: { captureExtensionExceptions: false, exception_steps: { enabled: false } },
       disable_session_recording: true,
       disable_surveys: true,
       disable_external_dependency_loading: true,

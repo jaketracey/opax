@@ -37,6 +37,18 @@ code that is an office (Speaker, President) or evidence that ends before the
 date all leave the row without a party. Nothing carries forward from the latest
 observation: a later division waits for later evidence.
 
+Rows the source does give a party are checked against the same evidence, because
+some sources (TheyVoteForYou's federal rows) give a member's latest party on every
+date: Katter's Australian Party on votes from before it existed. Parties are
+compared in substance (same_party): a naming variant (ALP and Labor, an LNP
+member the record files as Liberal or Nationals, NXT and Centre Alliance) is
+never rewritten. Where dated evidence covers the date and names a different
+party, the row takes the dated party and keeps the source label in
+party_source.source_party. Where the dated evidence conflicts, the label is held
+back (party_withheld) rather than shown from the wrong period. Where no dated
+evidence covers the date, or the identity is ambiguous, the source label stays.
+Corrections and holds are recomputed from the source label on every run.
+
 The nightly applies this inside scripts/export_division_pages.py, which reads
 ext_state_roster from the same read-only snapshot as the votes. Dry run against
 the committed pages:
@@ -59,6 +71,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT))
 import division_rules as rules  # noqa: E402
+from parli.ingest.tvfy_refresh import PARTY_CANONICAL  # noqa: E402
 
 NAMESAKE_DAYS = 1461  # how near a dated list must be for its member to count as a possible namesake
 ELECTIONS = ROOT / "scripts/general_elections.json"
@@ -102,6 +115,35 @@ def label(party) -> str | None:
     if not isinstance(party, str) or not party.strip() or rules.office_code(party):
         return None
     return ABBREVIATIONS.get(party.strip().casefold()) or rules.party_label(party)
+
+
+# Names PARTY_CANONICAL (the repo's party aliases) does not hold.
+EXTRA_ALIASES = {"liberal national party of queensland": "LNP", "liberal national": "LNP",
+                 "country liberal": "Country Liberal Party", "the greens": "Greens",
+                 "australian greens": "Greens", "national party of australia": "Nationals"}
+# One party in substance under two names. Liberal National Party (Queensland) and
+# Country Liberal Party (NT) members sit federally in the Liberal or the Nationals
+# party room, and dated records file them either way. Liberal and Nationals are
+# still two parties to each other.
+MERGED_PARTIES = {"LNP": frozenset({"Liberal", "Nationals"}),
+                  "Country Liberal Party": frozenset({"Liberal", "Nationals"})}
+
+
+def canonical_party(party) -> str | None:
+    """One name per party for comparison only; display labels stay as they are."""
+    text = label(party)
+    if not text:
+        return None
+    key = text.casefold()
+    return PARTY_CANONICAL.get(key) or EXTRA_ALIASES.get(key) or text
+
+
+def same_party(a, b) -> bool:
+    """Two labels name one party in substance (never an office code)."""
+    a, b = canonical_party(a), canonical_party(b)
+    if not a or not b:
+        return False
+    return a == b or b in MERGED_PARTIES.get(a, ()) or a in MERGED_PARTIES.get(b, ())
 
 
 def entry(source, chamber, ident, names, party, start, end=None, through=None, *, pids=(), url=None, point=False):
@@ -210,26 +252,36 @@ def load_elections(path: Path = ELECTIONS) -> dict[str, list[str]]:
 
 
 class Evidence(list):
-    """Dated observations, plus the general elections that bound them."""
-    def __init__(self, items=(), elections=None):
+    """Dated observations, plus the general elections that bound them.
+
+    `check_labels` is False when the electorate release did not load. The
+    release is the dated record for federal source labels, so the division
+    export then recomputes nothing and keeps the previous run's fills and
+    corrections as published (keep_published_parties)."""
+    def __init__(self, items=(), elections=None, check_labels=True):
         super().__init__(items)
         self.elections = load_elections() if elections is None else elections
+        self.check_labels = check_labels
 
 
 def load_evidence(root: Path = ROOT, db: sqlite3.Connection | None = None, public: Path | None = None) -> Evidence:
     """Every source is optional: a missing or unreadable one is logged and gives
     nothing, so the division export never fails for want of evidence."""
     public = public or root / "portal/public"
-    out = []
+    out, release_loaded = [], False
     for name, load in (("electorate release", lambda: release_evidence(public)),
                        ("official lists", lambda: official_evidence(root)),
                        ("service records", lambda: service_evidence(root)),
                        ("Wikidata terms", lambda: wikidata_evidence(db))):
         try:
             out.extend(load())
+            release_loaded = release_loaded or name == "electorate release"
         except (OSError, ValueError, KeyError, TypeError, AttributeError, ImportError, sqlite3.Error) as e:
             log(f"{name} skipped ({type(e).__name__}: {e}); no party is filled from it")
-    return Evidence(out, load_elections(root / "scripts/general_elections.json"))
+    if not release_loaded:
+        log("WARNING: the electorate release (the dated party record) did not load; "
+            "no party is recomputed this run: the previous fills and corrections are kept as published")
+    return Evidence(out, load_elections(root / "scripts/general_elections.json"), check_labels=release_loaded)
 
 
 def same_parliament(elections: dict, chamber: str, a: str, b: str) -> bool:
@@ -311,8 +363,15 @@ class Resolver:
         if self.elections is None:
             self.elections = load_elections()
         self.by_chamber = defaultdict(list)
+        self.by_pid = defaultdict(list)
+        self.by_name = defaultdict(list)
+        self.order = {id(e): i for i, e in enumerate(evidence)}
         for e in evidence:
             self.by_chamber[e["chamber"]].append(e)
+            for pid in e["pids"]:
+                self.by_pid[(e["chamber"], pid)].append(e)
+            for name in e["names"]:
+                self.by_name[(e["chamber"], name)].append(e)
 
     def match(self, chamber: str, day: str, name: str, pid, voters: set[str]):
         """(rule, entries) for one sitting identity, or (reason, None)."""
@@ -321,11 +380,11 @@ class Resolver:
         canonical = rules.canonical_person_id(pid)
         bare = canonical[5:] if canonical and canonical.startswith("tvfy_") else canonical
         if bare:
-            hits = [e for e in pool if bare in e["pids"] or canonical in e["pids"]]
+            hits = self._pid_hits(chamber, bare, canonical)
             if hits:
                 return self._one(hits, day, "pid")
         if len(key.split()) >= 2 and not re.search(r"\b[a-z]\.", key):
-            hits = [e for e in pool if key in e["names"]]
+            hits = list(self.by_name.get((chamber, key), ()))
             return self._one(hits, day, "full-name") if hits else ("no-match", None)
         if len(key.split()) == 1:
             others = {v for v in voters if v != key and surname(v) == key}
@@ -342,6 +401,15 @@ class Resolver:
             return self._one(hits, day, "surname")
         return "no-match", None
 
+    def _pid_hits(self, chamber, bare, canonical):
+        """Evidence naming either spelling of the person id, in evidence order, once each."""
+        seen, hits = set(), []
+        for e in [*self.by_pid.get((chamber, bare), ()), *self.by_pid.get((chamber, canonical), ())]:
+            if id(e) not in seen:
+                seen.add(id(e))
+                hits.append(e)
+        return sorted(hits, key=lambda e: self.order[id(e)])
+
     @staticmethod
     def _one(hits, day, rule):
         # Two distinct people in one identity scheme, both able to sit that day: ambiguous.
@@ -350,8 +418,13 @@ class Resolver:
                 return "ambiguous-identity", None
         return rule, hits
 
-    def party_on(self, hits: list[dict], day: str):
-        """(party, source, url) or (None, reason, None)."""
+    def party_on(self, hits: list[dict], day: str, same=None):
+        """(party, source, url) or (None, reason, None).
+
+        `same` decides when two labels are one party: exact by default (fills
+        keep the name the evidence uses), same_party when checking a source label."""
+        same = same or (lambda a, b: a == b)
+        agree = lambda parties: all(same(a, b) for a in parties for b in parties)
         found, unconfirmed = [], False
         chamber = hits[0]["chamber"] if hits else None
         points = sorted((e for e in hits if e["point"] and e["party"]), key=lambda e: e["start"])
@@ -370,9 +443,9 @@ class Resolver:
             parties = {e["party"] for e in lo + hi}
             # One parliament only: a party held at both ends of a term was held
             # between them unless someone left and came back inside one term.
-            if len(parties) == 1 and same_parliament(self.elections, chamber, lo[0]["start"], hi[0]["start"]):
-                found.append((parties.pop(), "bracket", hi[0]["url"]))
-            elif len(parties) > 1:
+            if agree(parties) and same_parliament(self.elections, chamber, lo[0]["start"], hi[0]["start"]):
+                found.append((hi[0]["party"], "bracket", hi[0]["url"]))
+            elif not agree(parties):
                 return None, "conflicting", None
         if not found:
             if unconfirmed:
@@ -382,13 +455,13 @@ class Resolver:
         parties = {p for p, _, _ in found}
         # A dated list inside a contributing term must agree with it.
         for e in hits:
-            if e["point"] and e["party"] and e["party"] not in parties and any(
+            if e["point"] and e["party"] and not any(same(e["party"], p) for p in parties) and any(
                     not h["point"] and h["party"] and covers(h, e["start"]) for h in hits if covers(h, day)):
                 return None, "conflicting", None
-        if len(parties) != 1:
+        if not agree(parties):
             return None, "conflicting", None
         order = {s: i for i, s in enumerate(SOURCES)}
-        party, source, url = min(found, key=lambda f: order[f[1]])
+        party, source, url = min(found, key=lambda f: (order[f[1]], f[0]))
         return party, source, url
 
 
@@ -401,29 +474,124 @@ def voters_by_day(records) -> dict:
 
 
 def clear_fills(records) -> None:
-    """Remove every party this module set (marked by party_source); source parties stay."""
+    """Undo a previous run: fills go, and corrected or withheld rows get their
+    source label back. Parties the source gave are never lost."""
     for record in records:
-        record.get("_meta", {}).pop("party_fill", None)
+        meta = record.get("_meta", {})
+        meta.pop("party_fill", None)
+        meta.pop("party_check", None)
         for member in record.get("members", []):
-            if member.pop("party_source", None):
+            fill = member.pop("party_source", None)
+            if fill:
+                if isinstance(fill, dict) and fill.get("source_party"):
+                    member["party"] = fill["source_party"]
+                else:
+                    member.pop("party", None)
+            held = member.pop("party_withheld", None)
+            if isinstance(held, dict) and held.get("source_party") and not member.get("party"):
+                member["party"] = held["source_party"]
+
+
+
+def keep_published_parties(record: dict, published: dict) -> None:
+    """Carry the previous run's fills, corrections and holds onto a fresh record.
+
+    Used when no party can be recomputed (the dated release is missing): a
+    night without evidence must not undo what earlier evidence established.
+    A row takes the published result only while its source label is the one
+    that result was made from; a row whose source label changed keeps the
+    new source label."""
+    key = lambda m: (fold(m.get("name")), m.get("vote"), rules.canonical_person_id(m.get("person_id")))
+    old = {}
+    for m in published.get("members", []):
+        old.setdefault(key(m), m)
+    counts = Counter()
+    for member in record.get("members", []):
+        prev = old.get(key(member))
+        if not prev:
+            continue
+        fill, held = prev.get("party_source"), prev.get("party_withheld")
+        if isinstance(fill, dict) and fill.get("source_party"):
+            if member.get("party") == fill["source_party"]:
+                member["party"], member["party_source"] = prev["party"], dict(fill)
+                counts["corrected"] += 1
+        elif isinstance(fill, dict):
+            if not member.get("party") and prev.get("party"):
+                member["party"], member["party_source"] = prev["party"], dict(fill)
+                counts["filled"] += 1
+        elif isinstance(held, dict) and held.get("source_party"):
+            if member.get("party") == held["source_party"]:
                 member.pop("party", None)
+                member["party_withheld"] = dict(held)
+                counts["withheld"] += 1
+    meta, old_meta = record.setdefault("_meta", {}), published.get("_meta", {})
+    meta.pop("party_fill", None)
+    meta.pop("party_check", None)
+    if counts["filled"] and old_meta.get("party_fill"):
+        meta["party_fill"] = {**old_meta["party_fill"], "filled": counts["filled"]}
+    if (counts["corrected"] or counts["withheld"]) and old_meta.get("party_check"):
+        meta["party_check"] = {**old_meta["party_check"], "corrected": counts["corrected"],
+                               "withheld": counts["withheld"]}
 
 
-def resolve_records(records, evidence, apply=False):
-    """Yield one outcome per row without a party; set it on the row when `apply`."""
+def check_label(resolver, house, day, member, voters) -> dict:
+    """A source label against dated evidence: keep, correct or hold back."""
+    source = member["party"]
+    out = {"rule": None, "source": None, "party": source, "source_party": source}
+    if rules.office_code(source) or not label(source):
+        return {**out, "reason": "label-not-a-party"}
+    rule, hits = resolver.match(house, day, member["name"], member.get("person_id"), voters)
+    if hits is None:
+        return {**out, "reason": "label-kept-" + rule}
+    out["rule"] = rule
+    party, how, url = resolver.party_on(hits, day, same=same_party)
+    if party is None:
+        if how == "conflicting":
+            return {**out, "party": None, "reason": "label-withheld-conflicting"}
+        return {**out, "reason": "label-kept-" + how}
+    out.update(source=how, url=url)
+    if not same_party(party, source):
+        return {**out, "party": party, "reason": "label-corrected"}
+    if label(party) != label(source):
+        return {**out, "reason": "label-kept-variant"}
+    return {**out, "reason": "label-agrees"}
+
+
+def resolve_records(records, evidence, apply=False, check_labels=True):
+    """Yield one outcome per row; set it on the row when `apply`.
+
+    Rows without a source party are filled from dated evidence. Rows with one
+    are checked against it (check_label) when `check_labels`."""
     resolver = Resolver(evidence)
     records = list(records)
+    # Without the dated release no label is checked: keep the source labels.
+    check_labels = check_labels and getattr(evidence, "check_labels", True)
     if apply:
-        # Recomputed every run: a previous fill never outlives its evidence.
+        # Recomputed every run: a previous fill or correction never outlives its evidence.
         clear_fills(records)
     voters = voters_by_day(records)
     for record in records:
         day, house = iso(record.get("date")), record.get("house")
-        filled = 0
+        filled = corrected = withheld = 0
         for member in record.get("members", []):
-            if member.get("party") or not str(member.get("name") or "").strip():
+            if not str(member.get("name") or "").strip():
                 continue
             outcome = {"record": record, "member": member, "rule": None, "source": None, "party": None}
+            if member.get("party"):
+                if not check_labels or not day:
+                    continue
+                outcome.update(check_label(resolver, house, day, member, voters[(house, record.get("date"))]))
+                if apply and outcome["reason"] == "label-corrected":
+                    member["party"] = outcome["party"]
+                    member["party_source"] = {"basis": outcome["source"], "url": outcome.get("url"),
+                                              "source_party": outcome["source_party"]}
+                    corrected += 1
+                elif apply and outcome["reason"] == "label-withheld-conflicting":
+                    member.pop("party", None)
+                    member["party_withheld"] = {"source_party": outcome["source_party"], "reason": "conflicting"}
+                    withheld += 1
+                yield outcome
+                continue
             if not day:
                 outcome["reason"] = "no-date"
                 yield outcome
@@ -450,10 +618,15 @@ def resolve_records(records, evidence, apply=False):
             record.setdefault("_meta", {})["party_fill"] = {
                 "rule": "dated-roster", "filled": filled,
                 "note": "Rows without a party in the division source take the party a dated roster records for that date."}
+        if apply and (corrected or withheld):
+            record.setdefault("_meta", {})["party_check"] = {
+                "rule": "dated-roster", "corrected": corrected, "withheld": withheld,
+                "note": "Source party labels that dated records contradict for this date are replaced by the dated "
+                        "party; labels the dated records leave unclear are held back."}
 
 
 def fill_dated_parties(records, evidence) -> Counter:
-    """Apply in place (used by export_division_pages.py); returns counts by outcome."""
+    """Fill and check in place (used by export_division_pages.py); returns counts by outcome."""
     return Counter(o["reason"] for o in resolve_records(records, evidence, apply=True))
 
 
@@ -466,6 +639,8 @@ def era(day) -> str:
 
 def dry_run(divisions: Path, evidence) -> dict:
     records = [json.loads(p.read_text(encoding="utf-8")) for p in sorted(divisions.glob("division-*.json"))]
+    # Measure against the source labels, whatever an earlier export applied.
+    clear_fills(records)
     out = Counter()
     samples = []
     for o in resolve_records(records, evidence):
@@ -473,8 +648,9 @@ def dry_run(divisions: Path, evidence) -> dict:
         office = "office" if o["member"].get("office") else "member"
         out[(r.get("jurisdiction"), r.get("house"), era(r.get("date")), office, o["rule"] or "-",
              o["source"] or "-", o["reason"])] += 1
-        if o["party"] and len(samples) < 400:
-            samples.append((r["slug"], o["member"]["name"], o["party"], o["source"], o["rule"]))
+        if o["reason"] in ("filled", "label-corrected", "label-withheld-conflicting") and len(samples) < 400:
+            samples.append((r["slug"], r.get("date"), o["member"]["name"], o.get("source_party"), o["party"],
+                            o["source"], o["rule"], o["reason"]))
     return {"rows": out, "samples": samples}
 
 
@@ -495,7 +671,10 @@ def main(argv=None):
     print("jurisdiction,chamber,era,row,rule,source,outcome,rows")
     for key, n in sorted(rows.items()):
         print(",".join(map(str, key)) + f",{n}")
-    print(f"total {sum(rows.values())}, filled {sum(n for k, n in rows.items() if k[-1] == 'filled')}")
+    total = Counter()
+    for key, n in rows.items():
+        total[key[-1]] += n
+    print("outcomes " + ", ".join(f"{k} {n}" for k, n in sorted(total.items())))
 
 
 if __name__ == "__main__":

@@ -80,7 +80,85 @@ export function beforeSend(event) {
   }
   p.$pathname = safePath(p.$pathname || p.$current_url || '/');
   p.$current_url = `https://opax.com.au${p.$pathname}`;
+  if (event.event === '$exception' && !cleanException(p)) return null;
   return event;
+}
+
+// Error reports ($exception). posthog-js builds them from uncaught errors and
+// unhandled rejections in the page. Only what helps find a bug in OPAX's own
+// code is kept: the error type, a cleaned message, stack frames (function,
+// file on opax.com.au, line and column) and a fingerprint. An error message
+// can quote whatever the code was handling, including a reader's search or
+// question, so quoted text, query strings and fragments are removed from it.
+const OWN_HOSTS = new Set(['opax.com.au', 'www.opax.com.au']);
+const EXTENSION_FILE = /^(?:chrome-extension|moz-extension|ms-browser-extension|safari-extension|safari-web-extension):/i;
+const HAS_SCHEME = /^[a-z][a-z0-9+.-]*:/i;
+const MECHANISMS = new Set(['generic', 'onunhandledrejection', 'onuncaughtexception', 'onconsole', 'middleware']);
+const LEVELS = new Set(['fatal', 'error', 'warning', 'log', 'info', 'debug']);
+const PLATFORMS = new Set(['web:javascript', 'node:javascript', 'hermes']);
+const MAX_MESSAGE = 200, MAX_EXCEPTIONS = 5, MAX_FRAMES = 50;
+const PLAIN_VALUE = /^(?:undefined|null|true|false|NaN|-?\d+(?:\.\d+)?)$/;
+export function cleanMessage(value) {
+  if (typeof value !== 'string') return '';
+  return value
+    .replace(/[\u0000-\u001f\u007f]+/g, ' ')
+    // posthog-js copies a rejected or thrown non-error value into the message.
+    .replace(/(captured with value: |captured as exception: )(.*)$/, (_, lead, rest) => lead + (PLAIN_VALUE.test(rest.trim()) ? rest.trim() : '<redacted>'))
+    .replace(/"[^"]*"|'[^']*'|`[^`]*`|“[^”]*”|‘[^’]*’/g, '<redacted>')
+    .replace(/["`“].*$/, '<redacted>') // an unclosed quote runs to the end
+    .replace(/[?#]\S+/g, '')
+    .replace(/%(?:3F|23)\S*/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, MAX_MESSAGE);
+}
+// The page's own scripts keep their path. An inline script reports the page's
+// address, which goes through the same path allowlist as page views.
+function ownFile(filename) {
+  try {
+    const url = new URL(filename);
+    if (!/^https?:$/.test(url.protocol) || !OWN_HOSTS.has(url.hostname)) return null;
+    return url.origin + (/^\/[\w./-]*\.m?js$/.test(url.pathname) ? url.pathname : safePath(url.pathname));
+  } catch { return null; }
+}
+function cleanFrame(frame) {
+  if (!frame || typeof frame !== 'object') return null;
+  const file = typeof frame.filename === 'string' ? ownFile(frame.filename) : null;
+  const fn = typeof frame.function === 'string' && /^[\w$.<>[\]/ ()?:@#-]{1,120}$/.test(frame.function) ? frame.function : '?';
+  const clean = { platform: PLATFORMS.has(frame.platform) ? frame.platform : 'web:javascript', function: fn, in_app: !!file && frame.in_app !== false };
+  if (file) clean.filename = file;
+  if (Number.isInteger(frame.lineno) && frame.lineno >= 0) clean.lineno = frame.lineno;
+  if (Number.isInteger(frame.colno) && frame.colno >= 0) clean.colno = frame.colno;
+  if (typeof frame.chunk_id === 'string' && /^[\w-]{1,64}$/.test(frame.chunk_id)) clean.chunk_id = frame.chunk_id;
+  return clean;
+}
+// Rewrites an $exception event's properties in place; false means drop it.
+export function cleanException(p) {
+  const list = Array.isArray(p.$exception_list) ? p.$exception_list.slice(0, MAX_EXCEPTIONS) : [];
+  if (!list.length) return false;
+  const framesOf = (e) => (Array.isArray(e?.stacktrace?.frames) ? e.stacktrace.frames : []);
+  const located = list.flatMap(framesOf).map((f) => f?.filename).filter((f) => typeof f === 'string' && HAS_SCHEME.test(f));
+  // Thrown in a browser extension, or only in other sites' scripts: not OPAX's to fix.
+  if (located.some((f) => EXTENSION_FILE.test(f))) return false;
+  if (located.length && !located.some(ownFile)) return false;
+  // A cross-origin script's error reaches the page as a bare "Script error.".
+  if (!located.length && list.every((e) => /^Script error\.?$/i.test(String(e?.value ?? '').trim()))) return false;
+  const level = LEVELS.has(p.$exception_level) ? p.$exception_level : 'error';
+  const fingerprint = typeof p.$exception_fingerprint === 'string' && /^[\w.:-]{1,128}$/.test(p.$exception_fingerprint) ? p.$exception_fingerprint : null;
+  const exceptions = list.map((e) => {
+    const clean = { type: typeof e?.type === 'string' && /^[A-Za-z_$][\w$.]{0,79}$/.test(e.type) ? e.type : 'Error', value: cleanMessage(e?.value) };
+    const m = e?.mechanism;
+    if (m && typeof m === 'object') clean.mechanism = { type: MECHANISMS.has(m.type) ? m.type : 'generic', handled: m.handled !== false, synthetic: m.synthetic === true };
+    const frames = framesOf(e).slice(-MAX_FRAMES).map(cleanFrame).filter(Boolean);
+    if (frames.length) clean.stacktrace = { type: 'raw', frames };
+    return clean;
+  });
+  // Exception steps, sources and any other SDK copy of the message go.
+  for (const key of Object.keys(p)) if (key.startsWith('$exception')) delete p[key];
+  p.$exception_list = exceptions;
+  p.$exception_level = level;
+  if (fingerprint) p.$exception_fingerprint = fingerprint;
+  return true;
 }
 
 // Automated browsers (scripted Chrome, audits, crawlers that run JavaScript)

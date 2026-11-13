@@ -204,6 +204,9 @@ export const MODULE_STAMPS = [
   ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],
   ['app.js', 'thenvsnow.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'], ['app.js', 'ask-steps.js'],
   ['home.js', 'home-data.js'], ['home.js', 'money-map.js'],
+  // The one not-found block's still wombat. The block's own module and stylesheet stay
+  // on the default module cache: two more immutable rules would pass _headers' 100.
+  ['not-found.js', 'wombat.js'],
 ]
 
 // Files stamped the same way that are not MODULE_STAMPS imports: a stylesheet

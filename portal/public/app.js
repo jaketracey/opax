@@ -6,7 +6,21 @@ const donorViewReady = import('/donor-views.js?v=da68cf9f9e').then(module => {
   ({donorRows,donorDisclosure,donorLabelHTML}=module);
   return module.loadDonorViewIndex();
 }).then(index => (donorViewIndex=index));
-const disclosedDonor = name => donorViewIndex.get(String(name).normalize('NFKC').replace(/[‘’ʼ`]/g,"'").replace(/\s+/g,' ').trim().toLowerCase()) || {label:name};
+const donorViewKey = name => String(name).normalize('NFKC').replace(/[‘’ʼ`]/g,"'").replace(/\s+/g,' ').trim().toLowerCase();
+const disclosedDonor = name => donorViewIndex.get(donorViewKey(name)) || {label:name};
+// The one not-found block (not-found.js), for an in-app link that lands on an empty address.
+let notFoundModule;
+const notFoundReady = () => notFoundModule ??= import('/not-found.js');
+async function showNotFound(container, kind, slug, { headingId, manageFocus = false, crumbs, isActive = () => true, extra = '' } = {}) {
+  const mod = await notFoundReady();
+  if (!isActive() || !container.isConnected) return null;
+  const heading = mod.renderNotFound(container, { kind, slug, headingId });
+  if (extra) container.insertAdjacentHTML('beforeend', extra);
+  document.title = `${mod.NOT_FOUND_KINDS[kind].title} · OPAX`;
+  if (crumbs) setCrumbs(crumbs);
+  if (manageFocus) heading?.focus();
+  return heading;
+}
 const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 /* OPAX portal — vanilla JS, no build step.
    The hash is the single source of truth for navigation; route() renders it. */
@@ -1842,7 +1856,7 @@ async function openConnectionsPage(params, manageFocus) {
   if (status) status.textContent = "Opening the records…";
   if (manageFocus) $("connections-title")?.focus({ preventScroll: true });
   try {
-    const module = await import("/connections.js?v=start-card-loading-20261019");
+    const module = await import("/connections.js?v=title-case-20261113");
     if (generation !== connectionsGeneration) return;
     connectionsPage = module.mountConnections($("connections-body"), {
       params,
@@ -2246,9 +2260,13 @@ const goHomeFresh = (e) => {
 };
 for (const el of document.querySelectorAll(".logo, .masthead-name a")) el.addEventListener("click", goHomeFresh);
 
+// Skip to content lands on the page's title: the H1 showing in the panel on screen.
 document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
   e.preventDefault();
-  document.querySelector("main").focus();
+  const main = document.querySelector("main");
+  const title = [...main.querySelectorAll("h1")].find((h) => h.getClientRects().length > 0);
+  if (title && !title.hasAttribute("tabindex")) title.setAttribute("tabindex", "-1");
+  (title || main).focus();
 });
 
 // --- quick search (masthead and drawer) -----------------------------------
@@ -6047,6 +6065,15 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       await renderRosterParty(name, key, body);
       return;
     }
+    if (!node && kind === "donor" && donorViewIndex.size && !donorViewIndex.has(donorViewKey(name))) {
+      // A name in no return (the donor index holds every published spelling): the
+      // not-found block. A name in any return keeps its page (Jake, 16 Oct).
+      reserveSubjectMap(false);
+      currentSubjectKey = null;
+      await showNotFound(body, "donor", name, { headingId: "subject-title", manageFocus: true,
+        crumbs: crumbsFor("/subject/donor", "Not found"), isActive: () => currentSubjectKey === null });
+      return;
+    }
     if (!node) {
       // A donor outside the money map's bounded selection: its own returns,
       // the state commissions' files and the record, under its exact spelling.
@@ -6330,18 +6357,15 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const holders = String(name).trim().includes(" ") ? [] :
       ((await loadSpeakersDir())?.bySurname.get(speakerKey(name)) || []).filter(([n]) => speakerKey(n) !== speakerKey(name));
     if (currentSubjectKey !== key) return;
-    document.title = `${name} · OPAX`;
-    subjectTag(body).innerHTML = `<span>No speeches in the record under this name</span>`;
-    box.innerHTML = entryRailHTML({
-      actions: [
-        actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for this name", { primary: true }),
-        actionBtn("entry", "/subject/person", "Browse parliamentarians"),
-      ],
-      extra: `${holders.length ? `<p class="entry-rail-head">People in the record with this surname</p>
-        <ul class="subject-list" role="list">${holders.map(([n, c]) => `<li><a ${entityHrefAttr(subjectHash("person", n))}>${esc(n)}</a> <span class="meta">${c.toLocaleString()} speeches</span></li>`).join("")}</ul>` : ""}
-        ${sourceLineHTML({ source: "Parliamentary Hansard", notes: ["The record names its speakers as the transcripts do, so a person may appear under a fuller or shorter form of this name. The search looks across every spelling."] })}`,
+    // No roster entry and no speech under the name: the not-found block, never a
+    // profile shell around the address (the Worker serves the same block).
+    currentSubjectKey = null;
+    await showNotFound(body, "person", subjectSegment || name, {
+      headingId: "subject-title", manageFocus: true, crumbs: crumbsFor("/subject/person", "Not found"),
+      isActive: () => currentSubjectKey === null && $("subject-body") === body,
+      extra: holders.length ? `<section class="not-found-holders"><h2 class="ui-section-title">People in the record with this surname</h2>
+        <ul class="subject-list" role="list">${holders.map(([n, c]) => `<li><a ${entityHrefAttr(subjectHash("person", n))}>${esc(n)}</a> <span class="meta">${c.toLocaleString()} speeches</span></li>`).join("")}</ul></section>` : "",
     });
-    revealGrid();
     return;
   }
   const q = encodeURIComponent(name);
@@ -7413,7 +7437,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=80e0207150").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=fa59925d1e").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -9389,16 +9413,9 @@ async function openBill(key, manageFocus) {
   if (billView !== view || generation !== billTextGeneration) return;
   clearPageLoader("bill-loader");
   if (!bill) {
-    body.innerHTML = `
-      <div class="subject-head">
-        <h1 id="bill-title" tabindex="-1">No bill with this identifier</h1>
-        <p class="subject-tag"><span>The register does not name <code>${esc(key)}</code>. It may not be
-          published yet, or the link may be old.</span></p>
-      </div>
-      <p class="action-row">${actionBtn("entry", "/bills", "Open the bill list", { primary: true })}
-        ${actionBtn("search", searchHash(key, {}), "Search the record")}</p>`;
-    if (manageFocus) $("bill-title")?.focus();
-    setCrumbs(crumbsFor("/bills", "Not found"));
+    // The register names no bill here: the not-found block, never the raw key.
+    await showNotFound(body, "bill", key, { headingId: "bill-title", manageFocus, crumbs: crumbsFor("/bills", "Not found"),
+      isActive: () => billView === view && generation === billTextGeneration });
     return;
   }
   bill.exportedAt = billsDate || "";
@@ -12761,13 +12778,14 @@ function refreshSearchPassageFolds() {
 
 /**
  * The count line: one line, beside the sort (concept 4). It says how many are
- * shown and how many were retrieved, and when retrieval hit its ceiling it
- * says the record holds more rather than implying the ceiling is the answer.
+ * shown and how many were retrieved; at retrieval's ceiling it calls them the
+ * closest records, so the ceiling never reads as the whole answer.
  * The filters are not repeated here: the chips under the search box carry them.
  */
 function resultsCountLine(s) {
   const n = s.total.toLocaleString();
-  const of = s.truncated ? `the ${n} strongest matches` : `${n} ${s.total === 1 ? "record" : "records"}`;
+  // At the retrieval ceiling the line says what the records are: the closest ones.
+  const of = s.truncated ? `${n} closest records` : `${n} ${s.total === 1 ? "record" : "records"}`;
   if (s.pageCount <= 1) return `${of[0].toUpperCase()}${of.slice(1)}`;
   const from = ((s.page - 1) * s.perPage + 1).toLocaleString();
   const to = Math.min(s.page * s.perPage, s.total).toLocaleString();
@@ -13087,6 +13105,9 @@ async function runSearchAnswer(q, f, key) {
 }
 
 let searchSeq = 0;
+// The search (its searchHash key) whose meaning-ranked records the reader opened
+// under "No records mention ..."; paging inside it keeps them open.
+let searchMeaningOpen = null;
 
 async function runSearch(page = 1) {
   const q = $("search-input").value.trim();
@@ -13132,6 +13153,8 @@ async function runSearch(page = 1) {
   $("search-results").replaceChildren();
   $("search-chips").hidden = true; // the examples step aside once a search runs
   $("search-empty").hidden = true;
+  if (fresh) searchMeaningOpen = null;
+  $("panel-search").classList.remove("is-meaning-closed");
   try {
     const data = await api(`/api/search-all?${searchQueryParams(q, f, page, sort)}`);
     if (mySeq !== searchSeq) return; // a newer search owns the results now
@@ -13164,9 +13187,14 @@ async function runSearch(page = 1) {
       hideLoader("search-wombat");
       $("search-status").classList.remove("visually-hidden");
       setStatus($("search-status"), data.warnings?.join(" ") || (data.matched_query ? `Showing records for “${data.matched_query}”.` : ""));
-      $("results-count").innerHTML = `<span class="results-count-main">${esc(resultsCountLine(lastSearch))}</span>${
-        lastSearch.truncated ? '<span class="results-count-note">The record holds more. </span>' : ""}`;
+      $("results-count").innerHTML = `<span class="results-count-main">${esc(resultsCountLine(lastSearch))}</span>`;
       $("results-bar").hidden = false;
+      // No record uses the query's words (the Worker's no_mention): say so first,
+      // with the recovery suggestions, and keep the closest records one tap away.
+      const noMention = Boolean(data.no_mention) && q !== "*";
+      if (noMention) renderSearchRecovery(q, f, searchRecoverySuggestions(q || f.speaker, data.suggestions),
+        { meaning: lastSearch.total, open: searchMeaningOpen === key, focus: fresh, key });
+      $("panel-search").classList.toggle("is-meaning-closed", noMention && searchMeaningOpen !== key);
       // The summary waits, collapsed, until the reader opens it.
       if (fresh) resetSearchAnswer(q || f.speaker);
       renderSearchDateRuler(lastSearch.years, q, f);
@@ -13217,7 +13245,7 @@ function searchSuggestionProperties(suggestions) {
   return { had_suggestion: kind !== "none", suggestion_kind: kind };
 }
 
-function renderSearchRecovery(q, f, suggestions = searchRecoverySuggestions(q || f.speaker)) {
+function renderSearchRecovery(q, f, suggestions = searchRecoverySuggestions(q || f.speaker), { meaning = 0, open = false, focus = true, key = null } = {}) {
   const box = $("search-empty");
   const filters = activeFilterSummary(f);
   const specs = filterChipSpecs(f);
@@ -13226,6 +13254,7 @@ function renderSearchRecovery(q, f, suggestions = searchRecoverySuggestions(q ||
   // "*" asks for everything under the filters (a party page's "Their speeches"): the filter found nothing, not the asterisk.
   const everything = q === "*";
   const title = everything ? (f.kind === "speech" ? "No speeches in the record for this filter" : "Nothing in the record for this filter")
+    : meaning ? `No records mention “${esc(q || f.speaker)}”`
     : `No matches for “${esc(q || f.speaker)}”`;
   const links = (kind) => suggestions.filter(s => s.kind === kind).map(s =>
     `<a class="ui-button" href="${esc(s.href)}">${esc(s.label)}${Number.isSafeInteger(s.count) && s.count >= 0 ? ` (${s.count.toLocaleString("en-AU")})` : ""}</a>`).join("");
@@ -13238,13 +13267,22 @@ function renderSearchRecovery(q, f, suggestions = searchRecoverySuggestions(q ||
     <div class="empty-actions" aria-label="Browse the record">${links("scope")}</div>
     <div class="empty-actions">${links("ask")}</div>
     <div class="empty-actions"><button type="button" class="ui-button" id="search-recovery-edit">${first ? `Remove ${esc(first.k.toLowerCase())} filter` : "Try fewer words"}</button>
-    <a class="ui-button" href="${esc(topicHref)}">${f.topic ? `Browse ${esc(TOPICS[f.topic] || f.topic)}` : "Browse topics"}</a></div>`;
+    <a class="ui-button" href="${esc(topicHref)}">${f.topic ? `Browse ${esc(TOPICS[f.topic] || f.topic)}` : "Browse topics"}</a></div>
+    ${meaning ? `<div class="search-meaning">
+      <h3 class="search-meaning-title"><button type="button" class="search-meaning-toggle" id="search-meaning-toggle" aria-expanded="${open}" aria-controls="search-results">Closest by meaning <span class="search-meaning-count">${esc(meaning.toLocaleString("en-AU"))} ${meaning === 1 ? "record" : "records"}</span></button></h3>
+      <p class="empty-lede">Records ranked by what they are about. None of them uses these words.</p></div>` : ""}`;
   $("search-recovery-edit").addEventListener("click", () => {
     if (first) clearSearchFilter(first.id);
     else { $("search-input").focus(); $("search-input").select(); }
   });
+  $("search-meaning-toggle")?.addEventListener("click", (e) => {
+    const opening = e.currentTarget.getAttribute("aria-expanded") !== "true";
+    e.currentTarget.setAttribute("aria-expanded", String(opening));
+    searchMeaningOpen = opening ? key : null;
+    $("panel-search").classList.toggle("is-meaning-closed", !opening);
+  });
   box.hidden = false;
-  $("search-suggestions-heading").focus();
+  if (focus) $("search-suggestions-heading").focus();
 }
 
 $("search-form").addEventListener("submit", (e) => {
@@ -13531,6 +13569,8 @@ async function openDocPage(slug, manageFocus) {
   if (currentDocSlug === slug && currentDoc) return;
   currentDocSlug = slug;
   currentDoc = null;
+  $("panel-doc").classList.remove("is-missing");
+  $("panel-doc").querySelector(":scope > .not-found-host")?.remove();
   $("doc-title").textContent = "Loading…";
   document.querySelector("#panel-doc .doc-portrait")?.remove();
   $("doc-meta").textContent = "";
@@ -13691,7 +13731,19 @@ async function openDocPage(slug, manageFocus) {
   } catch (err) {
     if (currentDocSlug !== slug) return;
     // A plain sentence and a retry, never the raw message (state rules).
-    if (err.message === "not found") setStatus($("doc-status"), "No document with this identifier. The link may be old, or the record may not be published yet.", true);
+    if (err.message === "not found") {
+      // Nothing at this address: the not-found block in place of the document's
+      // shell (not-found.css hides the shell while the panel is .is-missing).
+      setStatus($("doc-status"), "");
+      const host = document.createElement("div");
+      host.className = "not-found-host";
+      $("panel-doc").classList.add("is-missing");
+      $("panel-doc").prepend(host);
+      showNotFound(host, slug.startsWith("division-") ? "division" : "document", slug, {
+        manageFocus, crumbs: crumbsFor("/ask?view=search", "Not found"),
+        isActive: () => currentDocSlug === slug && host.isConnected });
+      return;
+    }
     else $("doc-status").innerHTML = `<span>This record could not load just now.</span> <a href="${esc(`/doc/${encodeURIComponent(slug)}`)}">Try again</a>`;
     $("doc-title").textContent = "Document unavailable";
   }

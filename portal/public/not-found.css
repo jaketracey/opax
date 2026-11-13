@@ -1,0 +1,19 @@
+/* not-found.css: the one block every empty address shows (not-found.js).
+   The house wombat standing still on its hairline, the title, one line, a
+   search field and one pill. Ink and bronze only: nothing failed, so nothing
+   is in the alarm colour. */
+.not-found { max-width: var(--size-readable, 40rem); padding: var(--space-heading, var(--sp-24)) 0 var(--space-group, var(--sp-48)); }
+/* The art's place is held before the module draws it, so the title never moves. */
+.not-found-art { min-height: 48px; margin: 0 0 var(--space-heading, var(--sp-24)); }
+.not-found-art .wb-wrap { margin: 0; }
+.not-found-art .wb-label { display: none; }
+.not-found h1 { margin: 0 0 var(--space-tight, var(--sp-12)); color: var(--ink); }
+.not-found-line { margin: 0 0 var(--space-block, var(--sp-24)); font: var(--type-body); color: var(--ink); }
+.not-found-search { display: flex; gap: var(--sp-8); align-items: center; max-width: 32rem; margin: 0; }
+.not-found-search .ui-input { flex: 1 1 auto; min-width: 0; }
+.not-found-search .ui-button { flex: 0 0 auto; }
+.not-found-more { margin: var(--space-block, var(--sp-24)) 0 0; }
+/* A page whose panel is markup in the shell (a document) keeps that markup for
+   the next record and hides it while the block stands in. */
+.panel.is-missing > :not(.not-found-host) { display: none; }
+.not-found-holders { max-width: var(--size-readable, 40rem); margin: 0 0 var(--space-group, var(--sp-48)); }
