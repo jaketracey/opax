@@ -79,6 +79,7 @@ import { associatedEntityRoute } from './money/record-routes';
 import { donorNodeFor } from './money/lookup';
 import { usePageActions } from './people/PageActions';
 import { partyTimingID } from './people/party-timing';
+import { createPartyPresentation } from './people/party-presentation';
 import {
   FundingError,
   FundingLoading,
@@ -201,16 +202,25 @@ export function PartyPage({
 }) {
   // "Independent" is a label, not a party: no page, no read.
   const notAParty = !isPartyLabel(input) && /^independent/i.test(input);
+  const presentation = useMemo(
+    () =>
+      Platform.OS === 'android' && input ? createPartyPresentation() : null,
+    [input],
+  );
   const load = useCallback(
     (
       refresh: boolean,
       publish: (record: PartyPageRecord) => void,
       signal?: AbortSignal,
-    ) =>
-      notAParty
-        ? new Promise<PartyPageRecord>(() => {})
-        : catalogs.partyPage(input, refresh, publish, signal),
-    [input, notAParty],
+    ) => {
+      if (notAParty) return new Promise<PartyPageRecord>(() => {});
+      return presentation
+        ? catalogs.partyPage(input, refresh, publish, signal, () =>
+            presentation.afterFrame(signal),
+          )
+        : catalogs.partyPage(input, refresh, publish, signal);
+    },
+    [input, notAParty, presentation],
   );
   const { record, error, refresh, retry, refreshing } = useCatalogRecord(load);
   const view = notAParty ? null : (record?.data ?? null);
@@ -301,6 +311,8 @@ export function PartyPage({
       ) : (
         <PartyContent
           view={view}
+          afterFrame={presentation?.afterFrame}
+          onTitleLayout={presentation?.didLayout}
           arrival={arrival}
           refreshing={refreshing}
           refresh={refresh}
@@ -358,15 +370,21 @@ export async function loadFaces(
   return found;
 }
 
-function useFaces(members: readonly PartyMember[]) {
+function useFaces(
+  members: readonly PartyMember[],
+  afterFrame?: (signal?: AbortSignal) => Promise<void>,
+) {
   const key = members.map((m) => `${m.jurisdiction}|${m.slug}`).join(',');
   const [faces, setFaces] = useState<{ key: string; uris: string[] }>();
   useEffect(() => {
     let active = true;
-    Promise.resolve()
-      .then(() => portraits?.list())
+    const controller = afterFrame ? new AbortController() : undefined;
+    const frame = afterFrame?.(controller?.signal) ?? Promise.resolve();
+    frame
+      .then(() => (active ? portraits?.list() : undefined))
       .catch(() => undefined)
       .then((listed) => {
+        if (!active) return [];
         const slugs = new Set(listed?.map((p) => p.slug));
         const names = new Set(listed?.map((p) => nameKey(p.name)));
         return loadFaces(
@@ -385,10 +403,11 @@ function useFaces(members: readonly PartyMember[]) {
       });
     return () => {
       active = false;
+      controller?.abort();
     };
     // `key` names the members; `members` is the same list.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key]);
+  }, [key, afterFrame]);
   return faces?.key === key
     ? faces.uris
     : Array.from({ length: Math.min(FACES, members.length) }, () => null);
@@ -396,12 +415,16 @@ function useFaces(members: readonly PartyMember[]) {
 
 function PartyContent({
   view,
+  afterFrame,
+  onTitleLayout,
   arrival,
   refreshing,
   refresh,
   retry,
 }: {
   view: View_;
+  afterFrame?: (signal?: AbortSignal) => Promise<void>;
+  onTitleLayout?: () => void;
   arrival?: PartySection;
   refreshing: boolean;
   refresh: () => void;
@@ -414,10 +437,10 @@ function PartyContent({
   const y = useRef<Partial<Record<PartySection, number>>>({});
   const headerBottom = useHeaderBottom();
   const reduceMotion = useReduceMotion();
-  const funding = usePartyFunding();
+  const funding = usePartyFunding(afterFrame);
   const layout = useLayout();
   const members = view.members.data;
-  const faces = useFaces(members?.current ?? []);
+  const faces = useFaces(members?.current ?? [], afterFrame);
 
   // A tile, a change row or `?section=` asks for a section.
   const [goTo, setGoTo] = useState<{
@@ -847,6 +870,7 @@ function PartyContent({
             testID="party"
             titleTestID="party-title"
             onTitleLayout={() => {
+              onTitleLayout?.();
               if (!titleTiming) setTitleTiming(partyTimingID());
             }}
           />

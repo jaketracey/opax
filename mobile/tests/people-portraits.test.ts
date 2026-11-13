@@ -119,3 +119,12 @@ test('surname routes and name-only lookups never fall through to the canonical f
   expect(cache.get).not.toHaveBeenCalled();
   expect((await reader.get({ slug: 'jess-walsh' }))?.info.key).toBe('10956');
 });
+
+test('the shared portrait listing retains the original English name order', async () => {
+  const rows = await service().reader.list();
+  expect(rows.length).toBeGreaterThan(0);
+  expect(rows).toEqual(
+    [...rows].sort((a, b) => a.name.localeCompare(b.name, 'en-AU')),
+  );
+  expect(new Set(rows.map((row) => row.info.key)).size).toBe(rows.length);
+});

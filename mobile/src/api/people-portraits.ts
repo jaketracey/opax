@@ -75,9 +75,8 @@ export class PeoplePortraits {
       if (!seen || name.length > seen.name.length)
         rows.set(info.key, { slug, name, info });
     }
-    return [...rows.values()].sort((a, b) =>
-      a.name.localeCompare(b.name, 'en-AU'),
-    );
+    const compare = new Intl.Collator('en-AU').compare;
+    return [...rows.values()].sort((a, b) => compare(a.name, b.name));
   }
   async get({
     slug,

@@ -27,9 +27,14 @@ export type Funding = Awaited<ReturnType<typeof peopleDepth.funding>>;
 const fy = (year: string) => formatFinancialYear(Number(year.slice(0, 4)));
 
 /** The AEC annual-returns read, shared by Each year's return and Debts. */
-export function usePartyFunding() {
+export function usePartyFunding(
+  afterFrame?: (signal?: AbortSignal) => Promise<void>,
+) {
   return useRead(
-    (signal?: AbortSignal) => peopleDepth.funding(signal),
+    (signal?: AbortSignal) =>
+      afterFrame
+        ? afterFrame(signal).then(() => peopleDepth.funding(signal))
+        : peopleDepth.funding(signal),
     'funding',
   );
 }

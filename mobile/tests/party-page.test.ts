@@ -592,3 +592,38 @@ test.each(['roster', 'people'] as const)(
     expect(view.divisions.data?.scanned).toBe(32);
   },
 );
+
+test('the screen can present the core before any optional catalogue work starts', async () => {
+  const reads: string[] = [];
+  const api = new Catalogs({
+    get: async (path, decoder) => {
+      reads.push(path);
+      return get(path, decoder);
+    },
+  });
+  let present!: () => void;
+  const presented = new Promise<void>((resolve) => {
+    present = resolve;
+  });
+  let published!: () => void;
+  const core = new Promise<void>((resolve) => {
+    published = resolve;
+  });
+  const pending = api.partyPage(
+    'Labor',
+    false,
+    () => published(),
+    undefined,
+    () => presented,
+  );
+  await core;
+  const optional = [
+    '/graph/money.json',
+    '/graph/aec-extras.json',
+    '/bills/index.json',
+  ];
+  expect(reads.filter((path) => optional.includes(path))).toEqual([]);
+  present();
+  await pending;
+  expect(reads).toEqual(expect.arrayContaining(optional));
+});
