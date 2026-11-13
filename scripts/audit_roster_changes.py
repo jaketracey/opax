@@ -21,7 +21,7 @@ from scripts import roster_accept
 from scripts import roster_fold
 from scripts.split_roster_witnesses import restored_scope
 
-CATEGORIES = ('witness split', 'mix-up corrected', 'witness-dominated', 'spans parliaments', 'alias normalisation', 'print folded')
+CATEGORIES = ('witness split', 'mix-up corrected', 'witness-dominated', 'spans parliaments', 'alias normalisation', 'print folded', 'id folded')
 
 
 def party_rows(rows, jurisdiction=None, party=None):
@@ -30,20 +30,37 @@ def party_rows(rows, jurisdiction=None, party=None):
                 [p.get('party'), *(p.get('parties') or [])]) for p in rows)
 
 
-def folds(before, after, reference):
-    """Surname prints the `after` roster folded into a person (scripts/roster_fold.py), each proven on the
-    baseline itself: the fold rule takes that print to that person there too. Returns {print: person} and
-    each person's expected row, the exact merge of their baseline row with their prints'."""
+def folds(before, after, reference, same=None):
+    """({print: person}, {person: expected row}): _folds() without its list of id folds."""
+    return _folds(before, after, reference, same)[:2]
+
+
+def _folds(before, after, reference, same=None):
+    """Prints the `after` roster folded into a person, each proven on the baseline itself. A surname print
+    (scripts/roster_fold.py decide) must be one the fold rule takes to that person there too; any other print is a
+    row that shared the person's verified id (fold_ids), and the id rule must hold for the person's baseline row and
+    those rows together. Returns {print: person}, each person's expected row (the exact merge of their baseline
+    row with their surname prints, then with their id's other rows, in name order as fold_ids merges them), and the
+    set of prints folded by id."""
     folded = {stub: q['name'] for q in after for stub in q.get('prints') or []}
     old = {p['name']: p for p in before}
     registry = roster_fold.registry_from_reference(reference)
-    expected = {}
+    expected, by_id = {}, defaultdict(list)
     for stub in [p['name'] for p in before if p['name'] in folded]:
         target, why = roster_fold.decide(old[stub], before, registry)
-        if target is None or target['name'] != folded[stub]:
+        if target is not None and target['name'] == folded[stub]:
+            expected[target['name']] = roster_fold.merge(expected.get(target['name']) or copy.deepcopy(old[target['name']]), old[stub])
+            continue
+        if not old[stub].get('pid') or folded[stub] not in old:
             raise ValueError(f'Unproven fold: {stub} into {folded[stub]} ({why or "the rule picks " + target["name"]})')
-        expected[target['name']] = roster_fold.merge(expected.get(target['name']) or copy.deepcopy(old[target['name']]), old[stub])
-    return folded, expected
+        by_id[folded[stub]].append(old[stub])
+    for person, rows in by_id.items():
+        base = expected.get(person) or copy.deepcopy(old[person])
+        why = roster_fold.id_problem([base, *rows], base, registry, same)
+        if why:
+            raise ValueError(f'Unproven id fold into {person}: {why}')
+        expected[person] = roster_fold.merge_ids(base, [copy.deepcopy(r) for r in sorted(rows, key=lambda r: r['name'])])
+    return folded, expected, {r['name'] for rows in by_id.values() for r in rows}
 
 
 def audit(before, after, reference, reviewed, accepted=None):
@@ -59,7 +76,7 @@ def audit(before, after, reference, reviewed, accepted=None):
         after = roster_accept.revert(after, accepted)
     old = {p['name']: p for p in before}
     new = {p['name']: p for p in after}
-    folded, merged = folds(before, after, reference)
+    folded, merged, by_id = _folds(before, after, reference)
     if len(old) != len(before) or len(new) != len(after) or old.keys() - folded.keys() != new.keys():
         raise ValueError('Printed names must remain unique and unchanged')
     records = profiles.dated_records(reference, reviewed)
@@ -68,8 +85,12 @@ def audit(before, after, reference, reviewed, accepted=None):
         if profiles.usable_alias(p['name']):prints[profiles.parts(p['name'])[-1]].append(p)
     changes = []
     for stub, person in folded.items():
-        changes.append(dict(name=stub, category='print folded', fields=['name'],
-                            reason=f'Surname print folded into {person}: one person by surname, party, houses, years and the members register'))
+        if stub not in by_id:
+            changes.append(dict(name=stub, category='print folded', fields=['name'],
+                                reason=f'Surname print folded into {person}: one person by surname, party, houses, years and the members register'))
+        else:
+            changes.append(dict(name=stub, category='id folded', fields=['name'],
+                                reason=f'Folded into {person}: the same verified person id, with agreeing names, a shared parliament, dated service and no second seat'))
     for name, p in old.items():
         if name in folded:continue
         q = new[name]
@@ -106,7 +127,7 @@ def markdown(result, before, after, baseline):
     for category, count in result['counts'].items():
         sample = [p['name'] for p in result['changes'] if p['category'] == category][:5]
         lines.append(f'| {category} | {count} | {", ".join(sample) or "—"} |')
-    lines += ['', f'**{result["changed"]} changed; {result.get("folded_people", 0)} people took folded surname prints (exact merges); {result["unchanged"]} exactly unchanged; zero clean record changed is required.**',
+    lines += ['', f'**{result["changed"]} changed; {result.get("folded_people", 0)} people took folded prints (exact merges); {result["unchanged"]} exactly unchanged; zero clean record changed is required.**',
               f'Reviewed re-export changes (scripts/roster_accept.json) are reverted before this comparison: {result["counts"].get("export accepted", 0)} records carry them, and {result.get("accepted_new_rows", 0)} accepted new rows are not compared with main.', '',
               'Categories are exclusive. Witness splits must exactly reproduce the shared scoped resolver, conserve aggregate counts, keep witnesses unattributed and enforce an own-house retrieval scope. This checks consistency with the resolver; correctness depends on the reviewed source evidence. Other changes retain the existing evidence categories.', '',
               '| Party rows / facet | Main | Split | Change |', '|---|---:|---:|---:|']

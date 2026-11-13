@@ -61,9 +61,26 @@ test('the shipped roster: Shoebridge is David Shoebridge, and every print is one
     assert.equal(names.has(print), false, `${print} is folded and still a row`);
     assert.equal(seen.has(print), false, `${print} is folded into two people`);
     seen.add(print);
-    assert.equal(print.includes(' '), false, `${print} is a surname print`);
+    // A surname print, or another printed name of one verified person (fold_ids, docs/ROSTER-FOLDS.md).
+    if (print.includes(' ')) assert.ok(p.pid, `${print} is a full-name print folded without a verified id`);
     assert.ok(p.name.includes(' '), `${p.name} is a full name`);
     // The apps' identity guard: a full-name row with senate_committee needs a pid.
     if (p.chambers.includes('senate_committee')) assert.ok(p.pid, `${p.name} took committee speeches without an id`);
+  }
+});
+
+test('the shipped roster: one row per verified person id, the other printed names folded into it', () => {
+  const people = JSON.parse(readFileSync(new URL('../public/parliamentarians.json', import.meta.url), 'utf8')).people;
+  const byId = new Map();
+  for (const p of people) if (p.pid) {
+    assert.equal(byId.has(p.pid), false, `${p.pid} is held by ${byId.get(p.pid)?.name} and ${p.name}`);
+    byId.set(p.pid, p);
+  }
+  // Public office holders the audit found split across two profiles (portal audit F2).
+  for (const [name, print] of [['Mark Butler', 'Mark Christopher Butler'], ['Bob Katter', 'Katter Bob Jnr'],
+    ['Bob Baldwin', 'Robert Baldwin'], ["Brendan O'Connor", 'Brendan O’Connor'], ["Deborah O'Neill", "Deb O'Neill"]]) {
+    const row = people.find(p => p.name === name);
+    assert.ok(row?.prints?.includes(print), `${print} is folded into ${name}`);
+    assert.equal(people.some(p => p.name === print), false, `${print} is no longer a row of its own`);
   }
 });

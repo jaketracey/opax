@@ -1,0 +1,3268 @@
+{
+ "meta": {
+  "rule": "Full-name profiles with no party of their own, matched by exact full name in their own chamber; the latest dated observation decides, and disagreement at that date gives no party.",
+  "sources": [
+   "scripts/roster_state_evidence.json",
+   "scripts/roster_service.json"
+  ]
+ },
+ "observations": [
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Kurrajong",
+   "jurisdiction": "act",
+   "name": "Andrew Barr",
+   "party": "Labor",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Yerrabi",
+   "jurisdiction": "act",
+   "name": "Andrew Braddock",
+   "party": "Greens",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Brindabella",
+   "jurisdiction": "act",
+   "name": "Caitlin Tough",
+   "party": "Labor",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Ginninderra",
+   "jurisdiction": "act",
+   "name": "Chiaka Barry",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Murrumbidgee",
+   "jurisdiction": "act",
+   "name": "Chris Steel",
+   "party": "Labor",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Brindabella",
+   "jurisdiction": "act",
+   "name": "Deborah Morris",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Murrumbidgee",
+   "jurisdiction": "act",
+   "name": "Ed Cocks",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Kurrajong",
+   "jurisdiction": "act",
+   "name": "Elizabeth Lee",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Murrumbidgee",
+   "jurisdiction": "act",
+   "name": "Fiona Carrick",
+   "party": "Independent",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Yerrabi",
+   "jurisdiction": "act",
+   "name": "James Milligan",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Murrumbidgee",
+   "jurisdiction": "act",
+   "name": "Jeremy Hanson CSC",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Ginninderra",
+   "jurisdiction": "act",
+   "name": "Jo Clay",
+   "party": "Greens",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Brindabella",
+   "jurisdiction": "act",
+   "name": "Laura Nuttall",
+   "party": "Greens",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Yerrabi",
+   "jurisdiction": "act",
+   "name": "Leanne Castley",
+   "party": "Independent",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Murrumbidgee",
+   "jurisdiction": "act",
+   "name": "Marisa Paterson",
+   "party": "Labor",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Brindabella",
+   "jurisdiction": "act",
+   "name": "Mark Parton",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Yerrabi",
+   "jurisdiction": "act",
+   "name": "Michael Pettersson",
+   "party": "Labor",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Ginninderra",
+   "jurisdiction": "act",
+   "name": "Peter Cain",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Kurrajong",
+   "jurisdiction": "act",
+   "name": "Rachel Stephen-Smith",
+   "party": "Labor",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Kurrajong",
+   "jurisdiction": "act",
+   "name": "Rebecca Vassarotti",
+   "party": "Greens",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Yerrabi",
+   "jurisdiction": "act",
+   "name": "Suzanne Orr",
+   "party": "Labor",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Brindabella",
+   "jurisdiction": "act",
+   "name": "Taimus Werner-Gibbings",
+   "party": "Labor",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Ginninderra",
+   "jurisdiction": "act",
+   "name": "Tara Cheyne",
+   "party": "Labor",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Kurrajong",
+   "jurisdiction": "act",
+   "name": "Thomas Emerson",
+   "party": "Independent",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-10-06",
+   "basis": "official list",
+   "chamber": "act_la",
+   "electorate": "Ginninderra",
+   "jurisdiction": "act",
+   "name": "Yvette Berry",
+   "party": "Labor",
+   "source_url": "https://www.parliament.act.gov.au/members/current"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Abigail Boyd",
+   "party": "Greens",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Aileen MacDonald",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Amanda Cohn",
+   "party": "Greens",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Anthony D’Adam",
+   "party": "Labor",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Ben Franklin",
+   "party": "Nationals",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Bob Nanva",
+   "party": "Labor",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Cameron Murphy",
+   "party": "Labor",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Cate Faehrmann",
+   "party": "Greens",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Chris Rath",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Courtney Houssos",
+   "party": "Labor",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Damien Tudehope",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Daniel Mookhey",
+   "party": "Labor",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Emily Suvaal",
+   "party": "Labor",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Emma Hurst",
+   "party": "Animal Justice Party",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [
+    "Jacqueline Amy Munro"
+   ],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Jacqui Munro",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Jeremy Buckingham",
+   "party": "Legalise Cannabis",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "John Graham",
+   "party": "Labor",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "John Ruddick",
+   "party": "Libertarian Party",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2019-02-28",
+   "basis": "service record",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Lynda Voltz",
+   "party": "Labor",
+   "source_url": "https://www.parliament.nsw.gov.au/members-and-electorates/members-and-ministers/members-details?memberId=42"
+  },
+  {
+   "aliases": [
+    "Mark Jared Banasiak"
+   ],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Mark Banasiak",
+   "party": "Shooters, Fishers and Farmers Party",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Mark Buttigieg",
+   "party": "Labor",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2023-03-02",
+   "basis": "service record",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Mark Latham",
+   "party": "One Nation",
+   "source_url": "https://www.parliament.nsw.gov.au/researchpapers/Documents/NSW2019_LegislativeCouncil.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2023-08-21",
+   "basis": "service record",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Mark Latham",
+   "party": "One Nation",
+   "source_url": "https://www.parliament.nsw.gov.au/researchpapers/Documents/2023-NSW-election-Analysis-of-results.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Mark Latham",
+   "party": "Independent",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Natalie Ward",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Natasha Maclaren-Jones",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Nichole Overall",
+   "party": "Nationals",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [
+    "Penelope Gail Sharpe"
+   ],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Penny Sharpe",
+   "party": "Labor",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [
+    "Peter Thomas Primrose"
+   ],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Peter Primrose",
+   "party": "Labor",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Rachel Merton",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Robert Borsak",
+   "party": "Shooters, Fishers and Farmers Party",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Rod Roberts",
+   "party": "Independent",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Rose Jackson",
+   "party": "Labor",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Sarah Kaine",
+   "party": "Labor",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Sarah Mitchell",
+   "party": "Nationals",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [
+    "Scott James Barrett"
+   ],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Scott Barrett",
+   "party": "Nationals",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Scott Farlow",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [
+    "Stephen Gingell Lawrence"
+   ],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Stephen Lawrence",
+   "party": "Labor",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Sue Higginson",
+   "party": "Greens",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Susan Carter",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Tania Mihailuk",
+   "party": "Independent",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Tara Moriarty",
+   "party": "Labor",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [
+    "Taylor Mitchell Martin"
+   ],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Taylor Martin",
+   "party": "Independent",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-09-25",
+   "basis": "official list",
+   "chamber": "nsw_lc",
+   "electorate": "New South Wales",
+   "jurisdiction": "nsw",
+   "name": "Wes Fang",
+   "party": "Nationals",
+   "source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf"
+  },
+  {
+   "aliases": [
+    "Aaron David Harper"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Thuringowa",
+   "jurisdiction": "qld",
+   "name": "Aaron Harper",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Townsville",
+   "jurisdiction": "qld",
+   "name": "Adam Baillie",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Hervey Bay",
+   "jurisdiction": "qld",
+   "name": "Adrian Tantari",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Ali Breeze King"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Pumicestone",
+   "jurisdiction": "qld",
+   "name": "Ali King",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Amanda Jane Camm"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Whitsunday",
+   "jurisdiction": "qld",
+   "name": "Amanda Camm",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Whitsunday",
+   "jurisdiction": "qld",
+   "name": "Amanda Camm",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Amanda Jane Stoker"
+   ],
+   "as_of": "2025-06-27",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Oodgeroo",
+   "jurisdiction": "qld",
+   "name": "Amanda Stoker",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/speeches/spk2025/Amanda_Stoker-Oodgeroo-20250627-097702262442.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Oodgeroo",
+   "jurisdiction": "qld",
+   "name": "Amanda Stoker",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "South Brisbane",
+   "jurisdiction": "qld",
+   "name": "Amy MacMahon",
+   "party": "Greens",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Andrew Cary Powell"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Glass House",
+   "jurisdiction": "qld",
+   "name": "Andrew Powell",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Glass House",
+   "jurisdiction": "qld",
+   "name": "Andrew Powell",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Warrego",
+   "jurisdiction": "qld",
+   "name": "Ann Leahy",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Warrego",
+   "jurisdiction": "qld",
+   "name": "Ann Leahy",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2023-12-30",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Inala",
+   "jurisdiction": "qld",
+   "name": "Annastacia Palaszczuk",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Pumicestone",
+   "jurisdiction": "qld",
+   "name": "Ariana Doolan",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "South Brisbane",
+   "jurisdiction": "qld",
+   "name": "Barbara O’Shea",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Barry Leonard O’Rourke"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Rockhampton",
+   "jurisdiction": "qld",
+   "name": "Barry O’Rourke",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Bart John Mellish"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Aspley",
+   "jurisdiction": "qld",
+   "name": "Bart Mellish",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Aspley",
+   "jurisdiction": "qld",
+   "name": "Bart Mellish",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Sandgate",
+   "jurisdiction": "qld",
+   "name": "Bisma Asif",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Barron River",
+   "jurisdiction": "qld",
+   "name": "Bree James",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Brent Andrew Mickelberg"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Buderim",
+   "jurisdiction": "qld",
+   "name": "Brent Mickelberg",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Buderim",
+   "jurisdiction": "qld",
+   "name": "Brent Mickelberg",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Brittany Louise Lauga"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Keppel",
+   "jurisdiction": "qld",
+   "name": "Brittany Lauga",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Bruce Mark Saunders"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Maryborough",
+   "jurisdiction": "qld",
+   "name": "Bruce Saunders",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Bryson Warwick Head"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Callide",
+   "jurisdiction": "qld",
+   "name": "Bryson Head",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Callide",
+   "jurisdiction": "qld",
+   "name": "Bryson Head",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Cameron Robert Dick"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Woodridge",
+   "jurisdiction": "qld",
+   "name": "Cameron Dick",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Woodridge",
+   "jurisdiction": "qld",
+   "name": "Cameron Dick",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Jordan",
+   "jurisdiction": "qld",
+   "name": "Charis Mullen",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Jordan",
+   "jurisdiction": "qld",
+   "name": "Charis Mullen",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Christopher Guy Whiting"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Bancroft",
+   "jurisdiction": "qld",
+   "name": "Chris Whiting",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Bancroft",
+   "jurisdiction": "qld",
+   "name": "Chris Whiting",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Christian Andrew Carr Rowan"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Moggill",
+   "jurisdiction": "qld",
+   "name": "Christian Rowan",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Moggill",
+   "jurisdiction": "qld",
+   "name": "Christian Rowan",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Colin Einar Boyce"
+   ],
+   "as_of": "2022-03-28",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Callide",
+   "jurisdiction": "qld",
+   "name": "Colin Boyce",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Corrine Patricia McMillan"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Mansfield",
+   "jurisdiction": "qld",
+   "name": "Corrine McMillan",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Mansfield",
+   "jurisdiction": "qld",
+   "name": "Corrine McMillan",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Craig Daryl Crawford"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Barron River",
+   "jurisdiction": "qld",
+   "name": "Craig Crawford",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Curtis Warren Pitt"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Mulgrave",
+   "jurisdiction": "qld",
+   "name": "Curtis Pitt",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Cynthia Lillian Lui"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Cook",
+   "jurisdiction": "qld",
+   "name": "Cynthia Lui",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Dale Raymond Last"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Burdekin",
+   "jurisdiction": "qld",
+   "name": "Dale Last",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Burdekin",
+   "jurisdiction": "qld",
+   "name": "Dale Last",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Daniel Gerard Purdie"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Ninderry",
+   "jurisdiction": "qld",
+   "name": "Dan Purdie",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Ninderry",
+   "jurisdiction": "qld",
+   "name": "Dan Purdie",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Ipswich West",
+   "jurisdiction": "qld",
+   "name": "Darren Zanow",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "David Frank Crisafulli"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Broadwater",
+   "jurisdiction": "qld",
+   "name": "David Crisafulli",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Broadwater",
+   "jurisdiction": "qld",
+   "name": "David Crisafulli",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "David Carl Janetzki"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Toowoomba South",
+   "jurisdiction": "qld",
+   "name": "David Janetzki",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Toowoomba South",
+   "jurisdiction": "qld",
+   "name": "David Janetzki",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Cook",
+   "jurisdiction": "qld",
+   "name": "David Kempton",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Hervey Bay",
+   "jurisdiction": "qld",
+   "name": "David Lee",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Deborah Kay Frecklington"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Nanango",
+   "jurisdiction": "qld",
+   "name": "Deb Frecklington",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Nanango",
+   "jurisdiction": "qld",
+   "name": "Deb Frecklington",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Dianne Elizabeth Farmer"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Bulimba",
+   "jurisdiction": "qld",
+   "name": "Di Farmer",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Bulimba",
+   "jurisdiction": "qld",
+   "name": "Di Farmer",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Donald Jon Brown"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Capalaba",
+   "jurisdiction": "qld",
+   "name": "Don Brown",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Rockhampton",
+   "jurisdiction": "qld",
+   "name": "Donna Kirkland",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Duncan Andrew Pegg"
+   ],
+   "as_of": "2021-06-09",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Stretton",
+   "jurisdiction": "qld",
+   "name": "Duncan Pegg",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Fiona Stuart Simpson"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Maroochydore",
+   "jurisdiction": "qld",
+   "name": "Fiona Simpson",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Maroochydore",
+   "jurisdiction": "qld",
+   "name": "Fiona Simpson",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Mirani",
+   "jurisdiction": "qld",
+   "name": "Glen Kelly",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Glenn James Butcher"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Gladstone",
+   "jurisdiction": "qld",
+   "name": "Glenn Butcher",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Gladstone",
+   "jurisdiction": "qld",
+   "name": "Glenn Butcher",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Ignazia Grace"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "McConnel",
+   "jurisdiction": "qld",
+   "name": "Grace Grace",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "McConnel",
+   "jurisdiction": "qld",
+   "name": "Grace Grace",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Burleigh",
+   "jurisdiction": "qld",
+   "name": "Hermann Vorster",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "James Paul Lister"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Southern Downs",
+   "jurisdiction": "qld",
+   "name": "James Lister",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Southern Downs",
+   "jurisdiction": "qld",
+   "name": "James Lister",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Stretton",
+   "jurisdiction": "qld",
+   "name": "James Martin",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Stretton",
+   "jurisdiction": "qld",
+   "name": "James Martin",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Mundingburra",
+   "jurisdiction": "qld",
+   "name": "Janelle Poole",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Jarrod Pieter Bleijie"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Kawana",
+   "jurisdiction": "qld",
+   "name": "Jarrod Bleijie",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Kawana",
+   "jurisdiction": "qld",
+   "name": "Jarrod Bleijie",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Jason Edward Hunt"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Caloundra",
+   "jurisdiction": "qld",
+   "name": "Jason Hunt",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Jennifer Ruth Howard"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Ipswich",
+   "jurisdiction": "qld",
+   "name": "Jennifer Howard",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Ipswich",
+   "jurisdiction": "qld",
+   "name": "Jennifer Howard",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Jessica Claire Pugh"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Mount Ommaney",
+   "jurisdiction": "qld",
+   "name": "Jess Pugh",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Mount Ommaney",
+   "jurisdiction": "qld",
+   "name": "Jess Pugh",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "James Edward Madden"
+   ],
+   "as_of": "2024-01-25",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Ipswich West",
+   "jurisdiction": "qld",
+   "name": "Jim Madden",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "James John McDonald"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Lockyer",
+   "jurisdiction": "qld",
+   "name": "Jim McDonald",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Lockyer",
+   "jurisdiction": "qld",
+   "name": "Jim McDonald",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "James Anthony Sullivan"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Stafford",
+   "jurisdiction": "qld",
+   "name": "Jimmy Sullivan",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Joan Ellen Pease"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Lytton",
+   "jurisdiction": "qld",
+   "name": "Joan Pease",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Lytton",
+   "jurisdiction": "qld",
+   "name": "Joan Pease",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Joseph Patrick Kelly"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Greenslopes",
+   "jurisdiction": "qld",
+   "name": "Joe Kelly",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Greenslopes",
+   "jurisdiction": "qld",
+   "name": "Joe Kelly",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Maryborough",
+   "jurisdiction": "qld",
+   "name": "John Barounis",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "John-Paul Honoré Langbroek"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Surfers Paradise",
+   "jurisdiction": "qld",
+   "name": "John-Paul Langbroek",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Surfers Paradise",
+   "jurisdiction": "qld",
+   "name": "John-Paul Langbroek",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Jonathan Mark Krause"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Scenic Rim",
+   "jurisdiction": "qld",
+   "name": "Jon Krause",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Scenic Rim",
+   "jurisdiction": "qld",
+   "name": "Jon Krause",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Jonty Maree Bush"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Cooper",
+   "jurisdiction": "qld",
+   "name": "Jonty Bush",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Cooper",
+   "jurisdiction": "qld",
+   "name": "Jonty Bush",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Julieanne Claire Gilbert"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Mackay",
+   "jurisdiction": "qld",
+   "name": "Julieanne Gilbert",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Caloundra",
+   "jurisdiction": "qld",
+   "name": "Kendall Hatcher",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Redcliffe",
+   "jurisdiction": "qld",
+   "name": "Kerri-Anne Dooley",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Kim Elizabeth Richards"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Redlands",
+   "jurisdiction": "qld",
+   "name": "Kim Richards",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Lachlan Lucas Millar"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Gregory",
+   "jurisdiction": "qld",
+   "name": "Lachlan Millar",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Lance Richard McCallum"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Bundamba",
+   "jurisdiction": "qld",
+   "name": "Lance McCallum",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Bundamba",
+   "jurisdiction": "qld",
+   "name": "Lance McCallum",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Currumbin",
+   "jurisdiction": "qld",
+   "name": "Laura Gerber",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Leanne Maree Linard"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Nudgee",
+   "jurisdiction": "qld",
+   "name": "Leanne Linard",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Nudgee",
+   "jurisdiction": "qld",
+   "name": "Leanne Linard",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Leeanne Margaret Enoch"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Algester",
+   "jurisdiction": "qld",
+   "name": "Leeanne Enoch",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Algester",
+   "jurisdiction": "qld",
+   "name": "Leeanne Enoch",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Leslie Alexander Walker"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Mundingburra",
+   "jurisdiction": "qld",
+   "name": "Les Walker",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Linus Patrick Power"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Logan",
+   "jurisdiction": "qld",
+   "name": "Linus Power",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Logan",
+   "jurisdiction": "qld",
+   "name": "Linus Power",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Stafford",
+   "jurisdiction": "qld",
+   "name": "Luke Richmond",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Margaret Nightingale"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Inala",
+   "jurisdiction": "qld",
+   "name": "Margie Nightingale",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Inala",
+   "jurisdiction": "qld",
+   "name": "Margie Nightingale",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Mark Craig Bailey"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Miller",
+   "jurisdiction": "qld",
+   "name": "Mark Bailey",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Miller",
+   "jurisdiction": "qld",
+   "name": "Mark Bailey",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Mark Andrew Boothman"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Theodore",
+   "jurisdiction": "qld",
+   "name": "Mark Boothman",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Theodore",
+   "jurisdiction": "qld",
+   "name": "Mark Boothman",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Mark Lionel Furner"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Ferny Grove",
+   "jurisdiction": "qld",
+   "name": "Mark Furner",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Ferny Grove",
+   "jurisdiction": "qld",
+   "name": "Mark Furner",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Mark Andrew Robinson"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Oodgeroo",
+   "jurisdiction": "qld",
+   "name": "Mark Robinson",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Mark Thomas Ryan"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Morayfield",
+   "jurisdiction": "qld",
+   "name": "Mark Ryan",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Morayfield",
+   "jurisdiction": "qld",
+   "name": "Mark Ryan",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Nicklin",
+   "jurisdiction": "qld",
+   "name": "Marty Hunt",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Meaghan Alana Jenkins Scanlon"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Gaven",
+   "jurisdiction": "qld",
+   "name": "Meaghan Scanlon",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Gaven",
+   "jurisdiction": "qld",
+   "name": "Meaghan Scanlon",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Melissa Fay McMahon"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Macalister",
+   "jurisdiction": "qld",
+   "name": "Melissa McMahon",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Macalister",
+   "jurisdiction": "qld",
+   "name": "Melissa McMahon",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Michael Craig Berkman"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Maiwar",
+   "jurisdiction": "qld",
+   "name": "Michael Berkman",
+   "party": "Greens",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Maiwar",
+   "jurisdiction": "qld",
+   "name": "Michael Berkman",
+   "party": "Greens",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Michael John Crandon"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Coomera",
+   "jurisdiction": "qld",
+   "name": "Michael Crandon",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Coomera",
+   "jurisdiction": "qld",
+   "name": "Michael Crandon",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Michael James Hart"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Burleigh",
+   "jurisdiction": "qld",
+   "name": "Michael Hart",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Michael Patrick Thomas Healy"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Cairns",
+   "jurisdiction": "qld",
+   "name": "Michael Healy",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Cairns",
+   "jurisdiction": "qld",
+   "name": "Michael Healy",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Michael Christopher De Brenni"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Springwood",
+   "jurisdiction": "qld",
+   "name": "Mick De Brenni",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Springwood",
+   "jurisdiction": "qld",
+   "name": "Mick De Brenni",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Thuringowa",
+   "jurisdiction": "qld",
+   "name": "Natalie Marr",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Nicholas Dametto"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Hinchinbrook",
+   "jurisdiction": "qld",
+   "name": "Nick Dametto",
+   "party": "Katter's Australian Party",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Mackay",
+   "jurisdiction": "qld",
+   "name": "Nigel Dalton",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Keppel",
+   "jurisdiction": "qld",
+   "name": "Nigel Hutton",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Nikki Anne Boyd"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Pine Rivers",
+   "jurisdiction": "qld",
+   "name": "Nikki Boyd",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Pine Rivers",
+   "jurisdiction": "qld",
+   "name": "Nikki Boyd",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Patrick Thomas Weir"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Condamine",
+   "jurisdiction": "qld",
+   "name": "Pat Weir",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Condamine",
+   "jurisdiction": "qld",
+   "name": "Pat Weir",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Peter Samuel Russo"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Toohey",
+   "jurisdiction": "qld",
+   "name": "Peter Russo",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Toohey",
+   "jurisdiction": "qld",
+   "name": "Peter Russo",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Raymond Alexander Stevens"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Mermaid Beach",
+   "jurisdiction": "qld",
+   "name": "Ray Stevens",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Mermaid Beach",
+   "jurisdiction": "qld",
+   "name": "Ray Stevens",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Redlands",
+   "jurisdiction": "qld",
+   "name": "Rebecca Young",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Robert Molhoek"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Southport",
+   "jurisdiction": "qld",
+   "name": "Rob Molhoek",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Southport",
+   "jurisdiction": "qld",
+   "name": "Rob Molhoek",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Robert Ignatius Katter"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Traeger",
+   "jurisdiction": "qld",
+   "name": "Robbie Katter",
+   "party": "Katter's Australian Party",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Traeger",
+   "jurisdiction": "qld",
+   "name": "Robbie Katter",
+   "party": "Katter's Australian Party",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Robert Clinton James Skelton"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Nicklin",
+   "jurisdiction": "qld",
+   "name": "Robert Skelton",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Rosslyn Mary Bates"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Mudgeeraba",
+   "jurisdiction": "qld",
+   "name": "Ros Bates",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Mudgeeraba",
+   "jurisdiction": "qld",
+   "name": "Ros Bates",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Capalaba",
+   "jurisdiction": "qld",
+   "name": "Russell Field",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Samuel Thomas O’Connor"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Bonney",
+   "jurisdiction": "qld",
+   "name": "Sam O’Connor",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Bonney",
+   "jurisdiction": "qld",
+   "name": "Sam O’Connor",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Sandra Leigh Bolton"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Noosa",
+   "jurisdiction": "qld",
+   "name": "Sandy Bolton",
+   "party": "Independent",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Noosa",
+   "jurisdiction": "qld",
+   "name": "Sandy Bolton",
+   "party": "Independent",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Scott James Stewart"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Townsville",
+   "jurisdiction": "qld",
+   "name": "Scott Stewart",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Gregory",
+   "jurisdiction": "qld",
+   "name": "Sean Dillon",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Shane Roderick King"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Kurwongbah",
+   "jurisdiction": "qld",
+   "name": "Shane King",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Kurwongbah",
+   "jurisdiction": "qld",
+   "name": "Shane King",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Shane Andrew Knuth"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Hill",
+   "jurisdiction": "qld",
+   "name": "Shane Knuth",
+   "party": "Katter's Australian Party",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Hill",
+   "jurisdiction": "qld",
+   "name": "Shane Knuth",
+   "party": "Katter's Australian Party",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Shannon Maree Fentiman"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Waterford",
+   "jurisdiction": "qld",
+   "name": "Shannon Fentiman",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Waterford",
+   "jurisdiction": "qld",
+   "name": "Shannon Fentiman",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Stephen Seymour James Andrew",
+    "Steve Andrew"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Mirani",
+   "jurisdiction": "qld",
+   "name": "Stephen Andrew",
+   "party": "Katter's Australian Party",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Stephen Andrew Bennett"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Burnett",
+   "jurisdiction": "qld",
+   "name": "Stephen Bennett",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Burnett",
+   "jurisdiction": "qld",
+   "name": "Stephen Bennett",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Steven James Minnikin"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Chatsworth",
+   "jurisdiction": "qld",
+   "name": "Steve Minnikin",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Chatsworth",
+   "jurisdiction": "qld",
+   "name": "Steve Minnikin",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Steven John Miles"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Murrumba",
+   "jurisdiction": "qld",
+   "name": "Steven Miles",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Murrumba",
+   "jurisdiction": "qld",
+   "name": "Steven Miles",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Stirling James Hinchliffe"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Sandgate",
+   "jurisdiction": "qld",
+   "name": "Stirling Hinchliffe",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Mulgrave",
+   "jurisdiction": "qld",
+   "name": "Terry James",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Timothy Leonard Mander"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Everton",
+   "jurisdiction": "qld",
+   "name": "Tim Mander",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Everton",
+   "jurisdiction": "qld",
+   "name": "Tim Mander",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Timothy James Nicholls"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Clayfield",
+   "jurisdiction": "qld",
+   "name": "Tim Nicholls",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Clayfield",
+   "jurisdiction": "qld",
+   "name": "Tim Nicholls",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Thomas Smith"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Bundaberg",
+   "jurisdiction": "qld",
+   "name": "Tom Smith",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Bundaberg",
+   "jurisdiction": "qld",
+   "name": "Tom Smith",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Anthony John Perrett"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Gympie",
+   "jurisdiction": "qld",
+   "name": "Tony Perrett",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Gympie",
+   "jurisdiction": "qld",
+   "name": "Tony Perrett",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Trevor John Watts"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Toowoomba North",
+   "jurisdiction": "qld",
+   "name": "Trevor Watts",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Toowoomba North",
+   "jurisdiction": "qld",
+   "name": "Trevor Watts",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Hinchinbrook",
+   "jurisdiction": "qld",
+   "name": "Wayde Chiesa",
+   "party": "LNP",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2026-06-02",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Ipswich West",
+   "jurisdiction": "qld",
+   "name": "Wendy Bourne",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf"
+  },
+  {
+   "aliases": [
+    "Yvette Maree D’Ath"
+   ],
+   "as_of": "2024-10-01",
+   "basis": "official list",
+   "chamber": "qld_la",
+   "electorate": "Redcliffe",
+   "jurisdiction": "qld",
+   "name": "Yvette D’Ath",
+   "party": "Labor",
+   "source_url": "https://documents.parliament.qld.gov.au/Explore/ParliamentaryRecord/full-record/57th%20Parliamentary%20Record.pdf"
+  },
+  {
+   "aliases": [
+    "Blair Ingram Boyer"
+   ],
+   "as_of": "2025-09-10",
+   "basis": "official list",
+   "chamber": "sa_ha",
+   "electorate": "Wright",
+   "jurisdiction": "sa",
+   "name": "Blair Boyer",
+   "party": "Labor",
+   "source_url": "https://education.parliament.sa.gov.au/wp-content/uploads/2025/09/House-of-Assembly-Chamber-Guide-10.9.25.pdf"
+  },
+  {
+   "aliases": [
+    "David Keith Bernard Basham"
+   ],
+   "as_of": "2022-05-19",
+   "basis": "official list",
+   "chamber": "sa_ha",
+   "electorate": "Finniss",
+   "jurisdiction": "sa",
+   "name": "David Basham",
+   "party": "Liberal",
+   "source_url": "https://hansardsearch.parliament.sa.gov.au/search/indicies/lh/55/1/memberindex/lh-20220519-15"
+  },
+  {
+   "aliases": [
+    "Frances Ellen Bedford"
+   ],
+   "as_of": "2020-02-19",
+   "basis": "official list",
+   "chamber": "sa_ha",
+   "electorate": "Florey",
+   "jurisdiction": "sa",
+   "name": "Frances Bedford",
+   "party": "Independent",
+   "source_url": "https://hansardsearch.parliament.sa.gov.au/daily/lh/2020-02-19/39"
+  },
+  {
+   "aliases": [
+    "Jonathan Peter Gee"
+   ],
+   "as_of": "2020-02-19",
+   "basis": "official list",
+   "chamber": "sa_ha",
+   "electorate": "Taylor",
+   "jurisdiction": "sa",
+   "name": "Jon Gee",
+   "party": "Labor",
+   "source_url": "https://www.parliament.sa.gov.au/Search/Member?id=4845&type=member"
+  },
+  {
+   "aliases": [
+    "Philip Nicholas McBride"
+   ],
+   "as_of": "2020-02-19",
+   "basis": "official list",
+   "chamber": "sa_ha",
+   "electorate": "MacKillop",
+   "jurisdiction": "sa",
+   "name": "Nick McBride",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.sa.gov.au/Search/Member?id=5383&type=member"
+  },
+  {
+   "aliases": [],
+   "as_of": "2025-09-10",
+   "basis": "official list",
+   "chamber": "sa_ha",
+   "electorate": "Frome",
+   "jurisdiction": "sa",
+   "name": "Penny Pratt",
+   "party": "Liberal",
+   "source_url": "https://education.parliament.sa.gov.au/wp-content/uploads/2025/09/House-of-Assembly-Chamber-Guide-10.9.25.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2020-05-01",
+   "basis": "official list",
+   "chamber": "sa_ha",
+   "electorate": "Newland",
+   "jurisdiction": "sa",
+   "name": "Richard Harvey",
+   "party": "Liberal",
+   "source_url": "https://www.ecsa.sa.gov.au/electoral-districts/electoral-district-profiles/newland"
+  },
+  {
+   "aliases": [
+    "Samuel Joel Telfer"
+   ],
+   "as_of": "2025-09-10",
+   "basis": "official list",
+   "chamber": "sa_ha",
+   "electorate": "Flinders",
+   "jurisdiction": "sa",
+   "name": "Sam Telfer",
+   "party": "Liberal",
+   "source_url": "https://education.parliament.sa.gov.au/wp-content/uploads/2025/09/House-of-Assembly-Chamber-Guide-10.9.25.pdf"
+  },
+  {
+   "aliases": [
+    "Susan Elizabeth Close"
+   ],
+   "as_of": "2024-04-15",
+   "basis": "official list",
+   "chamber": "sa_ha",
+   "electorate": "Port Adelaide",
+   "jurisdiction": "sa",
+   "name": "Susan Close",
+   "party": "Labor",
+   "source_url": "https://www.parliament.sa.gov.au/-/media/Project/Parliament/Documents/Members/Current-Ministry-55th-Parliament-as-at-15-Apr-2024.pdf"
+  },
+  {
+   "aliases": [
+    "Clare Michele Scriven"
+   ],
+   "as_of": "2021-09-01",
+   "basis": "official list",
+   "chamber": "sa_lc",
+   "electorate": "South Australia",
+   "jurisdiction": "sa",
+   "name": "Clare Scriven",
+   "party": "Labor",
+   "source_url": "https://www.parliament.sa.gov.au/-/media/Project/Parliament/Documents/Legislative-Council/statistical-summaries/Statistical-Summary---2020-2022.pdf"
+  },
+  {
+   "aliases": [
+    "Kyam Joseph Maher"
+   ],
+   "as_of": "2021-09-01",
+   "basis": "official list",
+   "chamber": "sa_lc",
+   "electorate": "South Australia",
+   "jurisdiction": "sa",
+   "name": "Kyam Maher",
+   "party": "Labor",
+   "source_url": "https://www.parliament.sa.gov.au/-/media/Project/Parliament/Documents/Legislative-Council/statistical-summaries/Statistical-Summary---2020-2022.pdf"
+  },
+  {
+   "aliases": [
+    "Jacqueline Michelle Ann Lensink"
+   ],
+   "as_of": "2021-09-01",
+   "basis": "official list",
+   "chamber": "sa_lc",
+   "electorate": "South Australia",
+   "jurisdiction": "sa",
+   "name": "Michelle Lensink",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.sa.gov.au/-/media/Project/Parliament/Documents/Legislative-Council/statistical-summaries/Statistical-Summary---2020-2022.pdf"
+  },
+  {
+   "aliases": [
+    "Robert Ivan Lucas"
+   ],
+   "as_of": "2021-09-01",
+   "basis": "official list",
+   "chamber": "sa_lc",
+   "electorate": "South Australia",
+   "jurisdiction": "sa",
+   "name": "Rob Lucas",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.sa.gov.au/-/media/Project/Parliament/Documents/Legislative-Council/statistical-summaries/Statistical-Summary---2020-2022.pdf"
+  },
+  {
+   "aliases": [
+    "Stephen Graham Wade"
+   ],
+   "as_of": "2021-09-01",
+   "basis": "official list",
+   "chamber": "sa_lc",
+   "electorate": "South Australia",
+   "jurisdiction": "sa",
+   "name": "Stephen Wade",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.sa.gov.au/-/media/Project/Parliament/Documents/Legislative-Council/statistical-summaries/Statistical-Summary---2020-2022.pdf"
+  },
+  {
+   "aliases": [],
+   "as_of": "2022-11-26",
+   "basis": "official list",
+   "chamber": "vic_la",
+   "electorate": "Gippsland South",
+   "jurisdiction": "vic",
+   "name": "Danny O'Brien",
+   "party": "Nationals",
+   "source_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/gippsland-south-district-results"
+  },
+  {
+   "aliases": [
+    "John Ormond Kennedy"
+   ],
+   "as_of": "2020-02-19",
+   "basis": "official list",
+   "chamber": "vic_la",
+   "electorate": "Hawthorn",
+   "jurisdiction": "vic",
+   "name": "John Kennedy",
+   "party": "Labor",
+   "source_url": "https://www.parliament.vic.gov.au/members/john-kennedy/"
+  },
+  {
+   "aliases": [],
+   "as_of": "2022-11-26",
+   "basis": "service record",
+   "chamber": "vic_la",
+   "electorate": "Yuroke",
+   "jurisdiction": "vic",
+   "name": "Ros Spence",
+   "party": "Labor",
+   "source_url": "https://www.parliament.vic.gov.au/members/ros-spence/"
+  }
+ ]
+}
