@@ -24,10 +24,19 @@ import { catalogs, yearPictures } from '../src/api/runtime';
 import { Card } from '../src/design/card';
 import { copy } from '../src/design/copy';
 import { FigureBlock } from '../src/design/record';
-import { SourceLine, SourceSheet } from '../src/design/source';
+import {
+  SourceAffordance,
+  SourceLine,
+  SourceSheet,
+} from '../src/design/source';
 import { bills, pinned, roster, slugs } from './pinned';
 
-import { BarSeries, StageTimeline, VoteSplit } from '../src/design/charts';
+import {
+  BarSeries,
+  ShareBar,
+  StageTimeline,
+  VoteSplit,
+} from '../src/design/charts';
 import { MachinePill } from '../src/design/labels';
 import { PersonRow } from '../src/design/people';
 import { bindRecordTitle } from '../src/design/record-title';
@@ -1013,6 +1022,60 @@ describe('the native edition reader', () => {
     expect(host(root, 'edition-fact-0')[0]!.findByType(BarSeries)).toBeTruthy();
     expect(host(root, 'edition-fact-1')).toHaveLength(1);
     expect(host(root, 'edition-fact-2')[0]!.findByType(VoteSplit)).toBeTruthy();
+  });
+  test('a grant edition draws a 50/50 share as one bar of two captioned halves, with its source line once', async () => {
+    const grant = {
+      ...edition,
+      kind: 'grant' as const,
+      facts: {
+        ...edition.facts,
+        figures: [
+          { value: '$10.0m', label: 'to an invented council' },
+          { value: '$20.0m', label: 'in the program' },
+        ],
+        bars: {
+          title: 'Closed, non-competitive',
+          items: [
+            { label: 'Closed non-competitive', pct: 50 },
+            { label: 'Everything else', pct: 50 },
+          ],
+          note: null,
+        },
+        events: [],
+        division: null,
+        order: [
+          { type: 'figure' as const, index: 0 },
+          { type: 'figure' as const, index: 1 },
+          { type: 'bars' as const, index: 0 },
+        ],
+      },
+    };
+    jest
+      .mocked(catalogs.todayEdition)
+      .mockResolvedValue({ ...ready, data: grant });
+    const { root } = await render(<EditionStory />);
+    // Parts of one whole: one bar, not two full-height columns on a 50% axis.
+    expect(root.findAllByType(BarSeries)).toHaveLength(0);
+    const share = root.findByType(ShareBar);
+    expect(
+      share.props.parts.map((part: { value: number }) => part.value),
+    ).toEqual([50, 50]);
+    const captions = [0, 1].map(
+      (index) =>
+        host(root, `edition-fact-2-share-caption-${index}`)[0]!.props.children,
+    );
+    expect(captions).toEqual(['50%', '50%']);
+    expect(
+      host(root, 'edition-fact-2-share-parts')[0]!.props.accessibilityLabel,
+    ).toBe('Closed non-competitive, 50%. Everything else, 50%.');
+    // Two figure cards and the chart carry the same line; it shows once.
+    const lines = root
+      .findAllByType(SourceAffordance)
+      .filter((line) =>
+        String(line.props.accessibilityLabel).includes('OPAX daily edition'),
+      );
+    expect(lines).toHaveLength(1);
+    expect(root.findAllByType(SourceLine).length).toBeGreaterThanOrEqual(3);
   });
   test('a withdrawn edition replaces saved prose after refresh', async () => {
     jest

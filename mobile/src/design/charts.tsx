@@ -555,8 +555,9 @@ function BarSeriesContent({
   sourceLine,
   tableTestID,
   emphasisFrom,
-  scaleGutter = false,
+  share = false,
   partialFrom,
+  values = 'latest',
 }: ChartProvenance & {
   data: readonly { label: string; value: number }[];
   ink: Accent | 'ink';
@@ -567,10 +568,11 @@ function BarSeriesContent({
   tableTestID?: string;
   emphasisFrom?: number;
   /**
-   * Scale values in their own column left of the bars, clear of every bar at
-   * any text size, rather than over the plot's trailing edge.
+   * Each value is a percentage of one whole (format adds the %). The scale
+   * runs 0 to 100%, so a 50% bar fills half the plot, not all of it. Parts
+   * that add up to the whole read better as one `ShareBar`.
    */
-  scaleGutter?: boolean;
+  share?: boolean;
   /**
    * Bars from this index hold a year whose returns are not all in yet: drawn
    * lighter, read "so far", with the caption placed under the last bar.
@@ -581,7 +583,11 @@ function BarSeriesContent({
   onSelect?: (index: number) => void;
   /** Minimum x-label stride; native measurements may require a larger step. */
   labels?: { every?: number };
-  /** Retained for callers; scale labels and the caption replace floating values. */
+  /**
+   * Which bars get a value caption under the plot: the latest (default), or
+   * every bar ('all'), as a short list of bars does. 'none' is retained for
+   * callers and captions the latest.
+   */
   values?: 'latest' | 'all' | 'none';
   height?: number;
 }) {
@@ -592,23 +598,24 @@ function BarSeriesContent({
   const { sizes, measure } = useTextMeasurements();
   const spark = variant === 'spark';
   const plotHeight = spark ? 24 : height;
-  const maximum = Math.max(
-    0,
-    ...data.map((item) => (Number.isFinite(item.value) ? item.value : 0)),
-  );
+  const maximum = share
+    ? 100
+    : Math.max(
+        0,
+        ...data.map((item) => (Number.isFinite(item.value) ? item.value : 0)),
+      );
   const scaleValues = [1, 0.5].map((fraction) => format(maximum * fraction));
   const scaleKey = (text: string) => `${fontScale}:scale:${text}`;
-  const gutter =
-    scaleGutter && !spark
-      ? Math.ceil(
-          Math.max(
-            0,
-            ...scaleValues.map((text) => sizes[scaleKey(text)]?.width ?? 0),
-          ),
-        ) +
-        1 +
-        rhythm.tight * 2
-      : 0;
+  const gutter = !spark
+    ? Math.ceil(
+        Math.max(
+          0,
+          ...scaleValues.map((text) => sizes[scaleKey(text)]?.width ?? 0),
+        ),
+      ) +
+      1 +
+      rhythm.tight * 2
+    : 0;
   const plotWidth = Math.max(0, width - gutter);
   const step = data.length ? plotWidth / data.length : 0;
   const partial = (index: number) =>
@@ -690,19 +697,17 @@ function BarSeriesContent({
               </Text>
             </View>
           ))}
-          {scaleGutter
-            ? scaleValues.map((text) => (
-                <View key={`scale:${text}`} style={styles.probe}>
-                  <Text
-                    variant="footnote"
-                    tabular
-                    onTextLayout={measure(scaleKey(text))}
-                  >
-                    {text}
-                  </Text>
-                </View>
-              ))
-            : null}
+          {scaleValues.map((text) => (
+            <View key={`scale:${text}`} style={styles.probe}>
+              <Text
+                variant="footnote"
+                tabular
+                onTextLayout={measure(scaleKey(text))}
+              >
+                {text}
+              </Text>
+            </View>
+          ))}
         </View>
       ) : null}
       {!showTable ? (
@@ -766,30 +771,21 @@ function BarSeriesContent({
                     variant="footnote"
                     tone="inkSoft"
                     tabular
-                    style={
-                      scaleGutter
-                        ? {
-                            position: 'absolute',
-                            left: 0,
-                            width: Math.max(0, gutter - rhythm.tight),
-                            // Centred on its gridline, inside the plot's height.
-                            top: Math.max(
-                              0,
-                              Math.min(
-                                plotHeight - height,
-                                plotHeight * (1 - fraction) - height / 2,
-                              ),
-                            ),
-                            textAlign: 'right',
-                          }
-                        : {
-                            position: 'absolute',
-                            right: 0,
-                            top: plotHeight * (1 - fraction),
-                            textAlign: 'right',
-                            backgroundColor: palette.paper,
-                          }
-                    }
+                    // In the gutter, never over a bar: centred on its
+                    // gridline, inside the plot's height.
+                    style={{
+                      position: 'absolute',
+                      left: 0,
+                      width: Math.max(0, gutter - rhythm.tight),
+                      top: Math.max(
+                        0,
+                        Math.min(
+                          plotHeight - height,
+                          plotHeight * (1 - fraction) - height / 2,
+                        ),
+                      ),
+                      textAlign: 'right',
+                    }}
                   >
                     {scaleValues[index]}
                   </Text>
@@ -848,7 +844,21 @@ function BarSeriesContent({
       ) : null}
       {!spark ? (
         <>
-          {latest && !showTable ? (
+          {values === 'all' && data.length > 1 && !showTable ? (
+            <View testID="bar-series-captions">
+              {data.map((item, index) => (
+                <Text
+                  key={`${item.label}:${index}`}
+                  variant="footnote"
+                  tone="inkSoft"
+                  tabular
+                  testID={`bar-series-caption-${index}`}
+                >
+                  {`${yearLabel(index)}: ${format(item.value)}`}
+                </Text>
+              ))}
+            </View>
+          ) : latest && !showTable ? (
             <Text
               variant="footnote"
               tone="inkSoft"
@@ -908,6 +918,137 @@ function BarSeriesContent({
     </View>
   );
 }
+/**
+ * Parts that add up to one whole: rounded percentages (the edition's bars
+ * slides) summing to 100, give or take each part's rounding.
+ */
+export function isPartOfWhole(values: readonly number[]): boolean {
+  if (
+    values.length < 2 ||
+    values.some((value) => !Number.isFinite(value) || value < 0 || value > 100)
+  )
+    return false;
+  const sum = values.reduce((total, value) => total + value, 0);
+  return Math.abs(sum - 100) <= Math.max(1, values.length / 2);
+}
+
+/** The first part takes the full ink; each later part is lighter. */
+const shareOpacity = [1, 0.5, 0.3, 0.18, 0.1];
+
+/**
+ * A share of a whole as one bar: every part a segment of the full width, and
+ * every part named with its value underneath, so two halves read as two
+ * halves rather than two full bars. VoiceOver hears each part and its value
+ * once ("Closed non-competitive, 50%. Everything else, 50%.").
+ */
+export function ShareBar({
+  parts,
+  ink,
+  format,
+  dateRange,
+  citation,
+  sourceLine,
+  testID = 'share-bar',
+}: ChartProvenance & {
+  parts: readonly { label: string; value: number }[];
+  ink: Accent | 'ink';
+  format: (value: number) => string;
+  sourceLine?: React.ReactNode | false;
+  testID?: string;
+}) {
+  const darkMode = useColorScheme() === 'dark';
+  const contrast = useIncreaseContrast();
+  const palette = darkMode
+    ? contrast
+      ? darkHighContrast
+      : dark
+    : contrast
+      ? lightHighContrast
+      : light;
+  const colour = palette[ink === 'ink' ? 'ink' : accents[ink].ink];
+  const opacity = (index: number) =>
+    shareOpacity[Math.min(index, shareOpacity.length - 1)]!;
+  const spoken = parts
+    .map((part) => `${part.label}, ${format(part.value)}`)
+    .join('. ');
+  return (
+    <View style={styles.chart} testID={testID}>
+      <View
+        accessible
+        accessibilityRole="image"
+        accessibilityLabel={`${spoken}.`}
+        testID={`${testID}-parts`}
+        style={styles.shareParts}
+      >
+        <View
+          style={[
+            styles.shareTrack,
+            { backgroundColor: palette.dividerSubtle },
+          ]}
+          testID={`${testID}-track`}
+        >
+          {parts.map((part, index) =>
+            part.value > 0 ? (
+              <View
+                key={`${part.label}:${index}`}
+                testID={`${testID}-segment-${index}`}
+                style={{
+                  width: `${Math.min(100, part.value)}%`,
+                  backgroundColor: colour,
+                  opacity: opacity(index),
+                  // A paper seam keeps neighbouring parts apart.
+                  borderLeftWidth: index ? 2 : 0,
+                  borderLeftColor: palette.paper,
+                }}
+              />
+            ) : null,
+          )}
+        </View>
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={styles.shareLegend}
+        >
+          {parts.map((part, index) => (
+            <View key={`${part.label}:${index}`} style={styles.shareRow}>
+              <View
+                style={[
+                  styles.shareSwatch,
+                  { backgroundColor: colour, opacity: opacity(index) },
+                ]}
+              />
+              <Text wordSafe variant="footnote" style={styles.tableCell}>
+                {part.label}
+              </Text>
+              <Text
+                variant="footnote"
+                tone="inkSoft"
+                tabular
+                testID={`${testID}-caption-${index}`}
+              >
+                {format(part.value)}
+              </Text>
+            </View>
+          ))}
+        </View>
+      </View>
+      {sourceLine === false
+        ? null
+        : (sourceLine ?? (
+            <SourceLine
+              asOf={dateRange.end}
+              citation={citation}
+              coverage={
+                formatDate(dateRange.start) === formatDate(dateRange.end)
+                  ? undefined
+                  : `${formatDate(dateRange.start)} to ${formatDate(dateRange.end)}`
+              }
+            />
+          ))}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   chart: { gap: rhythm.heading, alignSelf: 'stretch' },
   voteSplit: {
@@ -963,4 +1104,20 @@ const styles = StyleSheet.create({
     paddingVertical: rhythm.row,
   },
   tableCell: { flex: 1 },
+  shareParts: { gap: rhythm.heading },
+  shareTrack: {
+    height: 12,
+    borderRadius: radii.bar,
+    borderCurve: 'continuous',
+    overflow: 'hidden',
+    flexDirection: 'row',
+  },
+  shareLegend: { gap: rhythm.tight },
+  shareRow: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+  shareSwatch: {
+    width: 10,
+    height: 10,
+    borderRadius: 2,
+    borderCurve: 'continuous',
+  },
 });

@@ -334,7 +334,6 @@ function RegisterSection({
           dateRange={bars.dateRange}
           citation={bars.source}
           sourceLine={false}
-          scaleGutter
           partialFrom={bars.partialFrom}
         />
       ) : null}

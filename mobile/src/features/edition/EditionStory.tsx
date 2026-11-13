@@ -1,10 +1,16 @@
 import { RouteOptions } from '../../navigation/preview';
 
-import { Fragment, useRef } from 'react';
+import { useRef } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import type { EditionView } from '../../api/selectors';
 import { Card } from '../../design/card';
-import { BarSeries, StageTimeline, VoteSplit } from '../../design/charts';
+import {
+  BarSeries,
+  isPartOfWhole,
+  ShareBar,
+  StageTimeline,
+  VoteSplit,
+} from '../../design/charts';
 import { copy } from '../../design/copy';
 import { designFlags } from '../../design/flags';
 import { formatDate } from '../../design/format';
@@ -13,7 +19,7 @@ import { InsetGroup, Screen } from '../../design/layout';
 import { PersonRow } from '../../design/people';
 import { FigureBlock } from '../../design/record';
 import { BillRow, LinkRow, ValueRow } from '../../design/rows';
-import { SourceLine } from '../../design/source';
+import { SourceLine, SourceSection } from '../../design/source';
 import { ContentUnavailable, OfflineLine } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
@@ -282,8 +288,10 @@ function EditionFacts({
     ...(events.length ? [{ type: 'events' as const, index: 0 }] : []),
     ...(division ? [{ type: 'division' as const, index: 0 }] : []),
   ];
+  // Every card and chart here carries the edition's source line; the
+  // section shows it once, under the first.
   return (
-    <Fragment>
+    <SourceSection>
       {order.map((fact, index) => {
         const id = `edition-fact-${index}`;
         if (fact.type === 'figure') {
@@ -313,17 +321,33 @@ function EditionFacts({
                 <Text wordSafe variant="subsectionTitle">
                   {bars.title}
                 </Text>
-                <BarSeries
-                  data={bars.items.map((bar) => ({
-                    label: bar.label,
-                    value: bar.pct,
-                  }))}
-                  ink={editionInk(edition)}
-                  format={(value) => `${value}%`}
-                  tableTitle={bars.title}
-                  values="all"
-                  {...provenance}
-                />
+                {/* Bars slides are shares: parts of one whole read as one
+                    bar; overlapping shares keep a 0 to 100% scale. */}
+                {isPartOfWhole(bars.items.map((bar) => bar.pct)) ? (
+                  <ShareBar
+                    parts={bars.items.map((bar) => ({
+                      label: bar.label,
+                      value: bar.pct,
+                    }))}
+                    ink={editionInk(edition)}
+                    format={(value) => `${value}%`}
+                    testID={`${id}-share`}
+                    {...provenance}
+                  />
+                ) : (
+                  <BarSeries
+                    data={bars.items.map((bar) => ({
+                      label: bar.label,
+                      value: bar.pct,
+                    }))}
+                    ink={editionInk(edition)}
+                    format={(value) => `${value}%`}
+                    tableTitle={bars.title}
+                    share
+                    values="all"
+                    {...provenance}
+                  />
+                )}
                 {bars.note ? (
                   <Text wordSafe variant="footnote">
                     {bars.note}
@@ -345,7 +369,7 @@ function EditionFacts({
           </View>
         );
       })}
-    </Fragment>
+    </SourceSection>
   );
 }
 
