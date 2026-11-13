@@ -778,6 +778,11 @@ class ReviewedPartyPeriods(unittest.TestCase):
         self.assertIn(("representatives", "10525", "Labor", "1993-03-13", "2007-08-20"), accepted)  # Harry Quick
         self.assertIn(("representatives", "10342", "Independent", "2010-05-21", "2010-08-21"), accepted)  # Michael Johnson
         self.assertIn(("senate", "10350", "Nationals", "2005-07-01", "2013-08-09"), accepted)  # Barnaby Joyce
+        self.assertIn(("senate", "11007", "Labor", "2022-07-01", "2024-07-01"), accepted)  # Fatima Payman
+        self.assertIn(("senate", "11007", "Australia's Voice", "2025-07-22", "2026-09-18"), accepted)
+        self.assertIn(("senate", "10964", "Greens", "2021-09-14", "2025-03-27"), accepted)  # Dorinda Cox
+        self.assertIn(("senate", "10964", "Labor", "2025-07-24", "2026-08-20"), accepted)
+        self.assertIn(("senate", "10952", "Liberal", "2019-07-01", "2023-05-10"), accepted)  # Gerard Rennick
         self.assertFalse([e for e in evidence if e["source"] == "release-term" and "10525" in e["pids"]])
         self.assertEqual(evidence.frozen, frozenset())
         self.assertEqual(evidence.dated[("federal", "senate")]["from"], "2006-01-01")
@@ -881,6 +886,62 @@ class UndatedSenateChanges(unittest.TestCase):
                 missing = evidence_from(tmp, [release_term("Corin Ashdale", "Nationals", "2013-09-07")])
             D.write_projection(fresh(), out, party_evidence=missing)
             self.assertEqual((out / "division-federal-senate-1.json").read_bytes(), page)
+
+
+class ReviewedUndatedSenateRecords(unittest.TestCase):
+    # Invented: the Handbook gives Linnea Corbet one undated party (Labor) and the source labels every vote with
+    # her latest (Example Voice). A reviewed record dates Labor, a gap no source dates, then Example Voice.
+    CORBET = dict(senator("ZZ9", "Linnea Corbet", "99950", []), undated=["Labor"])
+    # Invented: Hollis Prior has the same kind of undated record and no reviewed one.
+    PRIOR = dict(senator("ZZ10", "Hollis Prior", "99951", []), undated=["Liberal"])
+    ACCEPT = {"name": "Linnea Corbet", "chamber": "senate", "pid": "99950", "checked": "2026-11-13",
+              "url": "https://example.test/record", "evidence": "fixture",
+              "periods": [{"party": "Labor", "start": "2022-07-01", "end": "2024-07-01"},
+                          {"party": "Example Voice", "start": "2025-07-22", "end": "2026-09-18"}]}
+
+    def evidence(self, tmp, people):
+        handbook_file(tmp, [self.CORBET, self.PRIOR])
+        (Path(tmp) / "scripts/roster_accept.json").write_text(json.dumps(
+            {"vote_party_periods": {"people": people, "holds": [], "renames": []}}))
+        return evidence_from(tmp)
+
+    def records(self):
+        rows = lambda: [labelled("Linnea Corbet", "Example Voice", "tvfy_99950"),
+                        labelled("Hollis Prior", "Example First", "tvfy_99951", "no")]
+        return [senate("federal-senate-1", "2023-03-01", rows()),   # inside the Labor period
+                senate("federal-senate-2", "2024-11-20", rows()),   # in the undated gap
+                senate("federal-senate-3", "2026-02-10", rows())]   # inside the Example Voice period
+
+    def test_a_reviewed_period_labels_each_division_by_date(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            evidence = self.evidence(tmp, [self.ACCEPT])
+        records = self.records()
+        got = fill(records, evidence)
+        self.assertEqual(got[("federal-senate-1", "Linnea Corbet")], ("Labor", "label-corrected"))
+        self.assertEqual(got[("federal-senate-3", "Linnea Corbet")][1], "label-agrees")
+        corbet = [r["members"][0] for r in records]
+        self.assertEqual([m["party"] for m in corbet], ["Labor", "Example Voice", "Example Voice"])
+        self.assertEqual(corbet[0]["party_source"]["basis"], "accepted-record")
+        self.assertEqual(corbet[0]["party_source"]["source_party"], "Example Voice")
+        self.assertNotIn("party_unchecked", corbet[0])
+        self.assertNotIn("party_unchecked", corbet[2])
+        # The gap no source dates keeps the source label and its mark.
+        self.assertEqual(corbet[1]["party_unchecked"]["reason"], "undated-change")
+        # A record with no reviewed period keeps today's behaviour on every date.
+        for r in records:
+            prior = r["members"][1]
+            self.assertEqual(prior["party"], "Example First")
+            self.assertEqual(prior["party_unchecked"]["reason"], "undated-change")
+            self.assertNotIn("party_source", prior)
+
+    def test_without_the_reviewed_record_every_date_keeps_the_source_label(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            evidence = self.evidence(tmp, [])
+        records = self.records()
+        got = fill(records, evidence)
+        for r in records:
+            self.assertEqual(got[(r["key"], "Linnea Corbet")], ("Example Voice", "label-kept-undated-change"))
+            self.assertEqual(r["members"][0]["party_unchecked"]["record_parties"], ["Labor"])
 
 
 class HoldsAndRenames(unittest.TestCase):
