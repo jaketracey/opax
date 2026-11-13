@@ -27,7 +27,12 @@ import { useSafeSetOptions } from './preview';
 import { useNamedBackTitle } from './useNamedBackOptions';
 import { useHeaderBottom } from '../design/useHeaderBottom';
 import { useReduceMotionSetting } from '../design/accessibility';
-import { colors, motion, textStyles } from '../design/tokens';
+import {
+  colors,
+  isAccessibilityCategory,
+  motion,
+  textStyles,
+} from '../design/tokens';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { useVerticalBarEdge } from '../../modules/opax-root-bar';
 import { useAdaptiveDevice } from '../design/adaptive';
@@ -40,6 +45,14 @@ export const TitleAnchorContext = createContext<
 // Mirrors the existing inline navigation ramp (17 pt to 23 pt). The device
 // reviewer must confirm this cap at AX5; this lane never boots a simulator.
 export const inlineTitleScaleCap = 23 / 17;
+/**
+ * At accessibility sizes UIKit draws each bar item's symbol larger: the
+ * share and More pair measured 114 pt at AX3 against 103 pt at Large
+ * (sweep 1, light-ax3/s1-person-02). Each trailing item reserves this
+ * much more, and the title keeps 8 pt clear of the items on each side.
+ */
+export const barItemGrowthAX = 6;
+export const barTitleClearanceAX = 8;
 /**
  * The widest a bar title may be between the bar's items: iOS 26
  * draws each item as a 44 pt glass circle 16 pt from the edge, and a group
@@ -55,20 +68,19 @@ export function barTitleWidth(
   trailingWidth?: number,
   backTitle?: string,
   measuredBackWidth?: number,
+  /** Extra width per trailing symbol item: `barItemGrowthAX` at AX sizes. */
+  itemGrowth = 0,
 ): number {
+  const items =
+    trailingWidth ??
+    44 + 60 * Math.max(0, trailing - 1) + itemGrowth * Math.max(0, trailing);
   if (backTitle === '') {
-    const room = Math.max(
-      0,
-      windowWidth -
-        (16 + 44 + 8) -
-        (16 + (trailingWidth ?? 44 + 60 * Math.max(0, trailing - 1)) + 8),
-    );
+    const room = Math.max(0, windowWidth - (16 + 44 + 8) - (16 + items + 8));
     return windowWidth >= 600 ? Math.min(room, windowWidth / 2) : room;
   }
   if (backTitle) {
     const leadingReserve = 16 + 48 + (measuredBackWidth ?? 0) + 20;
-    const trailingReserve =
-      16 + (trailingWidth ?? 44 + 60 * Math.max(0, trailing - 1)) + 20;
+    const trailingReserve = 16 + items + 20;
     const room = Math.max(0, windowWidth - leadingReserve - trailingReserve);
     return windowWidth >= 600 ? Math.min(room, windowWidth / 2) : room;
   }
@@ -80,7 +92,8 @@ export function barTitleWidth(
     const room = Math.max(0, windowWidth - 100 - trailingWidth - 2 * (16 + 8));
     return windowWidth >= 600 ? Math.min(room, windowWidth / 2) : room;
   }
-  const side = 16 + 44 + 60 * Math.max(0, trailing - 1) + 8;
+  const side =
+    16 + 44 + 60 * Math.max(0, trailing - 1) + itemGrowth * trailing + 8;
   const room = Math.max(0, windowWidth - 2 * side);
   return windowWidth >= 600 ? Math.min(room, windowWidth / 2) : room;
 }
@@ -151,6 +164,13 @@ export function BarTitle({
     adaptive || insets?.left !== insets?.right
       ? width - (insets?.left ?? 0) - (insets?.right ?? 0)
       : width;
+  // At AX sizes the bar's own text keeps its Large size while this title
+  // follows the inline ramp to 23 pt. Choose the retreat at the Large size,
+  // as every other size does, and let the drawn title shrink back towards
+  // it to fit: a title that fits at Large is shown at AX3 (sweep 1, 2.6).
+  const ax = isAccessibilityCategory(fontScale);
+  const growth = ax ? barItemGrowthAX : 0;
+  const clearance = ax ? 2 * barTitleClearanceAX : 0;
   const key = `${title}:${backTitle}:${fontScale}`;
   const [metrics, setMetrics] = useState<Record<string, number>>({});
   const measured = (text: string) => metrics[`${key}:${text}`];
@@ -159,12 +179,16 @@ export function BarTitle({
   const ready =
     candidates.every((text) => measured(text) !== undefined) &&
     (!backTitle || backWidth !== undefined);
-  const namedRoom = barTitleWidth(
-    safeWidth,
-    trailing,
-    trailingWidth,
-    backTitle,
-    backWidth,
+  const namedRoom = Math.max(
+    0,
+    barTitleWidth(
+      safeWidth,
+      trailing,
+      trailingWidth,
+      backTitle,
+      backWidth,
+      growth,
+    ) - clearance,
   );
   const [measurement, setMeasurement] = useState({
     key,
@@ -200,7 +224,11 @@ export function BarTitle({
   // Once visible, keep the full fallback and its room for this reveal.
   // Late native measurements take effect after the heading returns.
   const fallback = measurement.expired;
-  const minimalRoom = barTitleWidth(safeWidth, trailing, trailingWidth, '');
+  const minimalRoom = Math.max(
+    0,
+    barTitleWidth(safeWidth, trailing, trailingWidth, '', undefined, growth) -
+      clearance,
+  );
   const retreat = retreatBarTitle(
     title,
     namedRoom,
@@ -254,13 +282,25 @@ export function BarTitle({
       : namedRoom;
   return createElement(
     NativeView,
-    { style: { maxWidth: room } },
+    {
+      style: {
+        maxWidth: room + clearance,
+        paddingHorizontal: clearance / 2,
+      },
+    },
     createElement(
       Animated.Text,
       {
         numberOfLines: 1,
         ellipsizeMode: fallback ? 'tail' : 'clip',
         maxFontSizeMultiplier: inlineTitleScaleCap,
+        // Above Large, shrink towards the Large size the retreat measured.
+        ...(fontScale > 1 && !fallback
+          ? {
+              adjustsFontSizeToFit: true,
+              minimumFontScale: 1 / inlineTitleScaleCap,
+            }
+          : {}),
         accessibilityLabel: title,
         accessibilityElementsHidden: !visible,
         importantForAccessibility: visible ? 'auto' : 'no-hide-descendants',
@@ -293,7 +333,13 @@ export function BarTitle({
           {
             key: `${key}:${text}`,
             testID: 'bar-title-probe',
-            maxFontSizeMultiplier: inlineTitleScaleCap,
+            // The retreat is chosen at the Large size at every larger text
+            // size. Not by maxFontSizeMultiplier: RN's text measure cache
+            // ignores it, and would hand these probes the drawn title's
+            // layout (or the reverse). allowFontScaling is compared.
+            ...(fontScale > 1
+              ? { allowFontScaling: false }
+              : { maxFontSizeMultiplier: inlineTitleScaleCap }),
             style,
             onTextLayout: measure(text),
           },

@@ -22,6 +22,12 @@ const sizes: Record<DynamicTypeRamp, readonly number[]> = {
   caption1: [11, 11, 11, 12, 14, 16, 18, 22, 26, 32, 37, 43],
   caption2: [11, 11, 11, 11, 13, 15, 17, 20, 24, 29, 34, 40],
 };
+/**
+ * The XXXL body size over Large's (23 / 17): the cap for one-line chrome
+ * text that sits beside fixed-size controls, such as Ask's composer
+ * placeholder and the search field's (sweep 1, 2.1 and 2.5).
+ */
+export const chromeTextScaleCap = 23 / 17;
 const index: Record<ContentSizeCategory, number> = {
   xSmall: 0,
   small: 1,

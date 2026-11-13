@@ -58,6 +58,8 @@ import {
 } from '../src/navigation/stack/screen';
 import {
   BarTitle,
+  barItemGrowthAX,
+  barTitleClearanceAX,
   barTitleWidth,
   emptyBarTitle,
   inlineTitleScaleCap,
@@ -941,6 +943,62 @@ test('the tab layout records the selected tab for warm Money map links', () => {
 describe('bar titles keep their initial layout clear of the bar items', () => {
   const style = (view: TestRenderer.ReactTestRenderer) =>
     StyleSheet.flatten(view.root.findByType(Animated.Text).props.style);
+  // Jest's window reports fontScale 2 (AX2); these cases are about Large.
+  let restore: (() => void) | undefined;
+  beforeEach(() => {
+    const window = Dimensions.get('window');
+    const screen = Dimensions.get('screen');
+    Dimensions.set({
+      window: { ...window, fontScale: 1 },
+      screen: { ...screen, fontScale: 1 },
+    });
+    restore = () => Dimensions.set({ window, screen });
+  });
+  afterEach(() => restore?.());
+  test('at AX3 it keeps 8 pt clear of the larger items and shrinks to fit (sweep 1, 2.6)', () => {
+    const window = Dimensions.get('window');
+    Dimensions.set({
+      window: { ...window, fontScale: 2.643 },
+      screen: { ...Dimensions.get('screen'), fontScale: 2.643 },
+    });
+    const view = tree(
+      <BarTitle title="Interactive Gambling Bill" shown trailing={2} />,
+    );
+    try {
+      expect(style(view).maxWidth).toBe(
+        barTitleWidth(
+          window.width,
+          2,
+          undefined,
+          '',
+          undefined,
+          barItemGrowthAX,
+        ) -
+          2 * barTitleClearanceAX,
+      );
+      expect(
+        view.root.findAll(
+          (node) =>
+            typeof node.type === 'string' &&
+            StyleSheet.flatten(node.props.style)?.paddingHorizontal ===
+              barTitleClearanceAX,
+        ),
+      ).not.toHaveLength(0);
+      expect(view.root.findByType(Animated.Text).props).toMatchObject({
+        adjustsFontSizeToFit: true,
+        minimumFontScale: 1 / inlineTitleScaleCap,
+      });
+      // The retreat is measured at the Large size, the same as every size.
+      for (const probe of view.root.findAll(
+        (node) =>
+          node.props.testID === 'bar-title-probe' &&
+          typeof node.type !== 'string',
+      ))
+        expect(probe.props.allowFontScaling).toBe(false);
+    } finally {
+      act(() => view.unmount());
+    }
+  });
   test('at rest the title keeps its text and width, hidden only by opacity and accessibility', () => {
     const view = tree(
       <BarTitle title="Interactive Gambling Bill" shown={false} />,

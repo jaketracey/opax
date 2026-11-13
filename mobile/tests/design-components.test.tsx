@@ -298,7 +298,7 @@ describe('StatusCapsule', () => {
       ).toBeGreaterThanOrEqual(7);
     }
   });
-  test('hugs its word, and takes the full width (word-safe) at AX5', () => {
+  test('hugs its word at every size, wrapping within the page at AX5 (sweep 1, 2.4)', () => {
     const style = (fontScale: number) => {
       let s: Record<string, unknown> = {};
       atSize(fontScale, () => {
@@ -313,7 +313,11 @@ describe('StatusCapsule', () => {
       return s;
     };
     expect(style(1).alignSelf).toBe('flex-start');
-    expect(style(AX5).alignSelf).toBe('stretch');
+    // A stretched capsule at AX sizes drew a page-wide pill around one word.
+    expect(style(AX5)).toMatchObject({
+      alignSelf: 'flex-start',
+      maxWidth: '100%',
+    });
   });
 });
 

@@ -17,6 +17,7 @@ import { Icon } from '../../design/icon';
 import { InlineError } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
+import { chromeTextScaleCap } from '../../design/text-scale';
 import {
   colors,
   contentSizeCategory,
@@ -160,6 +161,7 @@ export function AskDock({
   const trailing = s.busy ? (
     <IconButton
       symbol="stop.circle.fill"
+      maxScale={chromeTextScaleCap}
       variant="primary"
       accessibilityLabel={composerCopy.stop}
       onPress={onStop}
@@ -168,6 +170,7 @@ export function AskDock({
   ) : empty && onTalk ? (
     <IconButton
       symbol="waveform"
+      maxScale={chromeTextScaleCap}
       accessibilityLabel={talkLabel}
       onPress={onTalk}
       testID="ask-talk"
@@ -175,6 +178,7 @@ export function AskDock({
   ) : (
     <IconButton
       symbol="arrow.up.circle.fill"
+      maxScale={chromeTextScaleCap}
       variant="primary"
       accessibilityLabel={composerCopy.send}
       disabled={empty || offline}
@@ -305,9 +309,10 @@ export function AskDock({
           testID="ask-input-error"
         />
       ) : null}
-      <View style={styles.row}>
+      <View style={[styles.row, empty ? styles.rowEmpty : null]}>
         <IconButton
           symbol="slider.horizontal.3"
+          maxScale={chromeTextScaleCap}
           selected={tags.length > 0}
           accessibilityLabel={
             tags.length
@@ -318,42 +323,67 @@ export function AskDock({
           onPress={onOptions}
           testID="ask-composer-options"
         />
-        <TextInput
-          ref={inputRef}
-          value={s.draft}
-          onChangeText={(text) => askSession.setDraft(text)}
-          placeholder={composerCopy.placeholder}
-          placeholderTextColor={colors.inkSoft}
-          accessibilityLabel={composerCopy.label}
-          multiline
-          scrollEnabled
-          maxLength={MAX}
-          returnKeyType="send"
-          submitBehavior="blurAndSubmit"
-          onSubmitEditing={() => {
-            if (!s.busy && !empty && !offline) onSend();
-          }}
-          allowFontScaling
-          style={[
-            styles.input,
-            { maxHeight },
-            Platform.OS === 'android'
-              ? {
-                  minHeight: Math.max(
-                    48,
-                    textStyles.body.lineHeight * fontScale + 22,
-                  ),
-                  maxHeight: Math.max(
-                    maxHeight,
-                    textStyles.body.lineHeight * fontScale + 22,
-                  ),
-                  textAlignVertical: 'top',
-                }
-              : null,
-          ]}
-          onLayout={(e) => setFieldHeight(e.nativeEvent.layout.height)}
-          testID="ask-question"
-        />
+        <View style={styles.field}>
+          <TextInput
+            ref={inputRef}
+            value={s.draft}
+            onChangeText={(text) => askSession.setDraft(text)}
+            // The placeholder is drawn below on one capped line; a native
+            // multiline placeholder scales without a cap and wraps, so at
+            // AX3 the empty composer took three lines (sweep 1, 2.1).
+            accessibilityHint={empty ? composerCopy.placeholder : undefined}
+            // Empty, the field sizes its one line to the placeholder; typed
+            // text keeps the reader's full size.
+            maxFontSizeMultiplier={empty ? chromeTextScaleCap : undefined}
+            accessibilityLabel={composerCopy.label}
+            multiline
+            scrollEnabled
+            maxLength={MAX}
+            returnKeyType="send"
+            submitBehavior="blurAndSubmit"
+            onSubmitEditing={() => {
+              if (!s.busy && !empty && !offline) onSend();
+            }}
+            allowFontScaling
+            style={[
+              styles.input,
+              { maxHeight },
+              Platform.OS === 'android'
+                ? {
+                    minHeight: Math.max(
+                      48,
+                      textStyles.body.lineHeight * fontScale + 22,
+                    ),
+                    maxHeight: Math.max(
+                      maxHeight,
+                      textStyles.body.lineHeight * fontScale + 22,
+                    ),
+                    textAlignVertical: 'top',
+                  }
+                : null,
+            ]}
+            onLayout={(e) => setFieldHeight(e.nativeEvent.layout.height)}
+            testID="ask-question"
+          />
+          {empty ? (
+            <View
+              pointerEvents="none"
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants"
+              style={styles.placeholder}
+            >
+              <Text
+                tone="inkSoft"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                maxFontSizeMultiplier={chromeTextScaleCap}
+                testID="ask-placeholder"
+              >
+                {composerCopy.placeholder}
+              </Text>
+            </View>
+          ) : null}
+        </View>
         {trailing}
       </View>
       {s.draft.length > 1800 ? (
@@ -451,6 +481,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   row: { flexDirection: 'row', alignItems: 'flex-end' },
+  // One line, empty: the symbols centre on the placeholder's line.
+  rowEmpty: { alignItems: 'center' },
+  field: { flex: 1 },
+  placeholder: {
+    position: 'absolute',
+    top: 11,
+    left: 0,
+    right: 0,
+  },
   input: {
     flex: 1,
     minHeight: minimumTarget,

@@ -517,10 +517,14 @@ export function SectionHeader({
       </Text>
     </Pressable>
   ) : null;
+  // At AX sizes the heading and its action share a row when both fit, and
+  // the action wraps under the heading when they do not (sweep 1, 2.2).
   const bandStyle = accessory
     ? styles.sectionHeadWrapping
     : stacked
-      ? styles.sectionHeadStacked
+      ? action
+        ? styles.sectionHeadStackedWrapping
+        : styles.sectionHeadStacked
       : styles.sectionHead;
   return (
     <View
@@ -533,7 +537,11 @@ export function SectionHeader({
     >
       <Heading
         level={level}
-        style={accessory ? styles.sectionHeadTitle : styles.grow}
+        style={
+          accessory || (stacked && action)
+            ? styles.sectionHeadTitle
+            : styles.grow
+        }
         testID={testID}
         onLayout={
           compact || (headingLayout && testID)
@@ -830,6 +838,14 @@ const styles = StyleSheet.create({
   },
   sectionHeadStacked: {
     gap: rhythm.line,
+    marginBottom: rhythm.heading - rhythm.block,
+  },
+  sectionHeadStackedWrapping: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    columnGap: rhythm.tight,
+    rowGap: rhythm.line,
     marginBottom: rhythm.heading - rhythm.block,
   },
   sectionHeadWrapping: {

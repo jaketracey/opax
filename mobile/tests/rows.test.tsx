@@ -23,6 +23,7 @@ import { FaceStack, PersonRow, Portrait } from '../src/design/people';
 import { RowLink, menuLeaves, rowMenus } from '../src/design/row-link';
 import {
   BillRow,
+  wordClamp,
   DivisionRow,
   LinkRow,
   MoneyRow,
@@ -825,7 +826,7 @@ test.each([2, 3] as const)(
     ).toBe(headerStyle.minHeight);
   },
 );
-test('section actions stack at AX1+ and keep a named 44 pt target', () => {
+test('section actions wrap after the title at AX1+ and keep a named 44 pt target', () => {
   size(1.786);
   const root = render(
     <SectionHeader
@@ -833,8 +834,14 @@ test('section actions stack at AX1+ and keep a named 44 pt target', () => {
       action={{ accessibilityLabel: 'See all bills', href }}
     />,
   ).root;
+  // Beside the title while both fit, below it only when they do not: a
+  // column put Today's "Bills" over a menu also reading Bills (sweep 1, 2.2).
   expect(flat(root.findByType(View).props.style)).toEqual({
-    gap: rhythm.line,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    columnGap: rhythm.tight,
+    rowGap: rhythm.line,
     marginBottom: rhythm.heading - rhythm.block,
   });
   expect(strings(root)).toEqual(['Bills', 'See all']);

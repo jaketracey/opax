@@ -38,6 +38,9 @@ import { chatsSnapshot } from '../src/features/ask/store';
 import { openAskOptions } from '../src/features/ask/Options';
 import { AskFailure, type StreamHandlers } from '../src/features/ask/stream';
 import { colors, rhythm, textStyles } from '../src/design/tokens';
+import { chromeTextScaleCap } from '../src/design/text-scale';
+import { Icon } from '../src/design/icon';
+import { Text } from '../src/design/text';
 import { designFlags } from '../src/design/flags';
 import * as ScrollTop from '../src/design/scroll-to-top';
 import { askRoute, conversationsRoute } from '../src/navigation/routes/ask';
@@ -1527,6 +1530,39 @@ describe('the composer at AX5 (ask.md 2.11)', () => {
     expect(field.props.allowFontScaling).toBe(true);
     expect(style.fontSize).toBe(textStyles.body.fontSize);
     expect(style.lineHeight).toBe(textStyles.body.lineHeight);
+    act(() => r.unmount());
+  });
+
+  test('empty, it is one capped placeholder line with its symbols on it; typed text is uncapped (sweep 1, 2.1)', () => {
+    act(() =>
+      Dimensions.set({
+        window: { ...original, width: 402, height: 874, fontScale: 2.643 },
+      }),
+    );
+    const { r, field } = dock();
+    // No native placeholder: a multiline one scales uncapped and wraps.
+    expect(field.props.placeholder).toBeUndefined();
+    expect(field.props.maxFontSizeMultiplier).toBe(chromeTextScaleCap);
+    expect(field.props.accessibilityHint).toBe('Ask about the public record');
+    const placeholder = r.root.find(
+      (n) => n.props.testID === 'ask-placeholder' && n.type === Text,
+    );
+    expect(placeholder.props).toMatchObject({
+      children: 'Ask about the public record',
+      numberOfLines: 1,
+      maxFontSizeMultiplier: chromeTextScaleCap,
+    });
+    for (const icon of r.root.findAllByType(Icon))
+      expect(icon.props.maxScale).toBe(chromeTextScaleCap);
+    act(() => askSession.setDraft('What did the committee find?'));
+    const typed = r.root.find(
+      (n) => n.props.testID === 'ask-question' && n.props.style !== undefined,
+    );
+    expect(typed.props.maxFontSizeMultiplier).toBeUndefined();
+    expect(
+      r.root.findAll((n) => n.props.testID === 'ask-placeholder'),
+    ).toHaveLength(0);
+    act(() => askSession.setDraft(''));
     act(() => r.unmount());
   });
 
