@@ -30,6 +30,14 @@ Publication rules (scripts/division_rules.py): presiding-officer codes are
 never published as a party, one label per party, placeholder questions are
 withheld, and divisions TheyVoteForYou marks as duplicates carry
 _meta.duplicate_of (they stay published for provenance).
+
+Coverage rules (scripts/division_coverage.py; docs/DIVISION-COVERAGE.md): an
+exact source-proved teller convention can reconcile the named count without
+changing a source total or discarding a voter. Held name tables can fill a
+missing name only after the same-division name table, dated chamber identity and seat
+agree. Every remaining mismatch discloses named and source counts.
+--refresh-coverage applies only these rules over the published snapshot. It
+never projects DB votes or recomputes party labels from the local database.
 """
 
 import argparse
@@ -49,6 +57,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from corrections.apply import apply as apply_corrections, load as load_corrections  # noqa: E402
 import division_rules as rules  # noqa: E402
+import division_coverage  # noqa: E402
 import vote_parties  # noqa: E402
 
 CORRECTIONS = "divisions"
@@ -132,17 +141,32 @@ def database_projection(db, published):
         if identity not in seen.setdefault(row["division_id"], set()):
             division["members"].append(member)
             seen[row["division_id"]].add(identity)
+    division_coverage.recover_table_members(db, divisions, person_slug)
     label_coverage(divisions)
     return divisions
 
 
-def label_coverage(divisions):
+def label_coverage(divisions, preserve_labels=False):
     for division in divisions.values():
         ayes = sum(m["vote"] == "aye" for m in division["members"])
         noes = sum(m["vote"] == "no" for m in division["members"])
+        meta = division["_meta"]
+        meta.pop("member_reconciliation", None)
+        meta.pop("member_tally", None)
+        if ayes != division["ayes"] or noes != division["noes"]:
+            meta["member_tally"] = {"named": [ayes, noes], "official": [division["ayes"], division["noes"]]}
+        proof = division_coverage.reconciliation(division)
+        if proof:
+            meta["member_reconciliation"] = proof
+            meta["member_coverage"] = "recorded"
+        # The writer preserves caller/source coverage outside the proved teller
+        # records. DB projection already computes its labels before the guard.
+        # This avoids promoting an explicitly incomplete or unverified snapshot.
+        if preserve_labels:
+            continue
         if not division["members"]:
             division["_meta"]["member_coverage"] = "unavailable"
-        elif ayes != division["ayes"] or noes != division["noes"]:
+        elif not division_coverage.complete(division):
             division["_meta"]["member_coverage"] = "partial"
         else:
             division["_meta"]["member_coverage"] = "recorded"
@@ -211,7 +235,7 @@ def member_counts(record):
 
 
 def coverage_rank(record):
-    """Validate completeness against the tally, rather than trust a label."""
+    """Validate totals or the exact source-proved teller convention."""
     counts = member_counts(record)
     if not counts["named_member_count"]:
         return 0
@@ -220,8 +244,7 @@ def coverage_rank(record):
         members = record.get("members", [])
         if any(not str(m.get("name") or "").strip() or not m.get("vote") for m in members):
             return 1
-        if sum(m.get("vote") == "aye" for m in members) == record.get("ayes") \
-                and sum(m.get("vote") == "no" for m in members) == record.get("noes"):
+        if division_coverage.complete(record):
             return 2
         return 1
     return 1 if coverage == "partial" else 0
@@ -469,10 +492,63 @@ def write_projection(records, output, carry=False, strict=False, party_evidence=
         candidate = records.get(record["key"])
         if candidate and candidate.get("_meta", {}).get("duplicate_of"):
             record["_meta"]["duplicate_of"] = candidate["_meta"]["duplicate_of"]
-    index = projection_index(guarded)
+    # Retained newer records also receive current coverage disclosures. The
+    # source facts and every prior named vote still pass the retention guard.
+    label_coverage(guarded, preserve_labels=True)
+    return write_payloads(guarded, output)
+
+
+COVERAGE_FIELDS = {"member_coverage", "member_reconciliation", "member_tally",
+                   "member_count", "named_member_count", "recorded_vote_count"}
+
+
+def check_coverage_changes(records, previous):
+    """Reject changed facts, prior votes, party fields or unrelated metadata.
+
+    Existing members must be byte-for-byte equal as JSON objects, including
+    blank, withheld and sourced parties. Added members may carry no party field.
+    The same check runs before publication and against a chosen Git base.
+    """
+    if records.keys() != previous.keys():
+        raise ValueError("Coverage refresh cannot change the division set")
+    for key, record in records.items():
+        old = previous[key]
+        validate_record(record, key)
+        facts = lambda d: {k: v for k, v in d.items() if k not in ("members", "_meta")}
+        if facts(record) != facts(old):
+            raise ValueError(f"Coverage refresh changed source facts for {key}")
+        clean_meta = lambda d: {k: v for k, v in d.get("_meta", {}).items() if k not in COVERAGE_FIELDS}
+        if clean_meta(record) != clean_meta(old):
+            raise ValueError(f"Coverage refresh changed unrelated metadata for {key}")
+        # Use multisets, preserving duplicate prior rows as well as every field.
+        encode = lambda m: json.dumps(m, sort_keys=True, ensure_ascii=False)
+        prior = Counter(encode(m) for m in old["members"])
+        current = Counter(encode(m) for m in record["members"])
+        if prior - current:
+            raise ValueError(f"Coverage refresh changed a prior member or party field for {key}")
+        additions = [json.loads(m) for m in (current - prior).elements()]
+        if any(any("party" in field for field in m) or not m.get("member_source") for m in additions):
+            raise ValueError(f"Coverage refresh added an unsourced member or party field for {key}")
+
+
+def refresh_coverage(db, output):
+    """Apply held-source recoveries to published records, preserving all parties."""
+    previous = read_previous_projection(Path(output))
+    records = deepcopy(previous)
+    division_coverage.recover_table_members(db, records, person_slug)
+    division_coverage.recover_speech_members(db, records, person_slug)
+    label_coverage(records)
+    for record in records.values():
+        record["_meta"].update(member_counts(record))
+    check_coverage_changes(records, previous)
+    return write_payloads(records, Path(output))
+
+
+def write_payloads(records, output):
+    index = projection_index(records)
     encode = lambda obj: (json.dumps(obj, ensure_ascii=False, separators=(",", ":"), sort_keys=True, allow_nan=False) + "\n").encode("utf-8")
     # Validate serialization of the complete set before creating staging files.
-    payloads = {f"{r['slug']}.json": encode(r) for r in guarded.values()}
+    payloads = {f"{r['slug']}.json": encode(r) for r in records.values()}
     payloads["index.json"] = encode(index)
     output.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix=".division-refresh-", dir=output) as staging:
@@ -490,7 +566,7 @@ def write_projection(records, output, carry=False, strict=False, party_evidence=
         target = output / "index.json"
         if not target.is_file() or target.read_bytes() != payloads["index.json"]:
             os.replace(staged / "index.json", target)
-    return guarded
+    return records
 
 
 def main():
@@ -502,9 +578,20 @@ def main():
     mode.add_argument("--from-bills", action="store_true")
     mode.add_argument("--refresh-parties", action="store_true",
                       help="Recheck the published snapshot using held dated evidence, without a DB or fetch")
+    mode.add_argument("--refresh-coverage", action="store_true",
+                      help="Update only coverage and sourced missing names over the published snapshot; preserve every party field")
     parser.add_argument("--strict-refresh", action="store_true", help="Refuse evidence regression before publishing any files")
     args = parser.parse_args()
-    published = {} if args.refresh_parties else bill_projection(args.bills)
+    published = {} if args.refresh_parties or args.refresh_coverage else bill_projection(args.bills)
+    if args.refresh_coverage:
+        with closing(sqlite3.connect(f"file:{Path(args.db).resolve()}?mode=ro", uri=True)) as db:
+            db.execute("PRAGMA query_only=ON")
+            db.execute("BEGIN")
+            records = refresh_coverage(db, args.out)
+        coverage = projection_index(records)["coverage"]
+        print(f"Coverage refresh: {len(records)} divisions; {coverage['member_coverage_counts']}; "
+              f"{coverage['member_count']} members; existing party fields unchanged.")
+        return
     if args.refresh_parties:
         records = read_previous_projection(args.out)
         evidence = vote_parties.load_evidence(ROOT)
@@ -520,7 +607,19 @@ def main():
             records = database_projection(db, published)
             # Wikidata terms from the same snapshot as the votes.
             evidence = vote_parties.load_evidence(ROOT, db)
-        publication_rules(records)
+            publication_rules(records)
+            # Some published NSW records are newer than ext_. Their held speech
+            # lists can still supply a missing name without replacing any fact
+            # or previously published named vote.
+            candidates = {key: d for key, d in records.items() if d.get('house') == 'nsw_lc'}
+            for path in sorted(args.out.glob('division-nsw-lc-*.json')):
+                old = json.loads(path.read_text(encoding='utf-8'))
+                key = old['key']
+                if key not in candidates or degradation_reason(candidates[key], old):
+                    candidates[key] = deepcopy(old)
+            for key in division_coverage.recover_speech_members(db, candidates, person_slug):
+                records[key] = candidates[key]
+            label_coverage(records)
     records = write_projection(records, args.out, carry=args.from_bills, strict=args.strict_refresh,
                                party_evidence=evidence, party_refresh=args.refresh_parties)
     coverage = projection_index(records)["coverage"]

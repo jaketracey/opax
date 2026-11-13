@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Measure NSW roll calls held in speeches.text; never acquire source data.
 
-A candidate needs exact chamber, day, topic and official side counts, a full
+A candidate needs exact chamber, day, topic and source side counts, a full
 printed list and every already held named vote. Exactly one held list must
 match. Each additional surname also needs a unique dated roster identity and
 an independently held official seat observation. This is not a counts-only or
@@ -116,7 +116,7 @@ def held_speech_tables(db, records, root=ROOT):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--db', type=Path, default=Path.home() / '.cache/autoresearch/parli.db')
-    parser.add_argument('--baseline', default='275d5852b')
+    parser.add_argument('--baseline', default='b65d87783')
     parser.add_argument('--out', type=Path, required=True)
     args = parser.parse_args()
     baseline = json.loads((ROOT / 'docs/evidence/division-coverage-baseline.json').read_text())

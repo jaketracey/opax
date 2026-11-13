@@ -4,6 +4,7 @@ import { memberResolutionNotes, resolveMember } from './member-records'
 import { clip, fold, siteUrl } from './record-common'
 import { inWindow, object, publishedResult, records, sourceUrl, validWindow, wordsMatch, type RecordRow } from './published-records'
 import { readToolAsset, ToolInputError, type ToolCitation, type ToolDefinition } from './types'
+import { divisionComplete, type DivisionCoverageRecord } from '../../public/division-markdown.js'
 
 const CHAMBERS = ['senate', 'representatives', 'nsw_la', 'nsw_lc', 'vic_la', 'vic_lc', 'qld_la', 'sa_ha', 'sa_lc', 'act_la', 'nt_la', 'wa_la', 'wa_lc', 'tas_ha', 'tas_lc']
 const KEY = /^(?:federal-(?:senate|representatives)|(?:nsw|vic|sa|qld|act|nt|wa|tas)-(?:la|lc|ha))-[a-z0-9-]+$/
@@ -85,7 +86,7 @@ export const tool: ToolDefinition = {
         counts[countKey]++
         const partyMembers = party ? members.filter(m => m.party === party) : []
         const aye = partyMembers.filter(m => m.vote === 'aye').length, no = partyMembers.filter(m => m.vote === 'no').length
-        const complete = object(d._meta).member_coverage === 'recorded' && members.filter(m => m.vote === 'aye').length === d.ayes && members.filter(m => m.vote === 'no').length === d.noes
+        const complete = divisionComplete(d as DivisionCoverageRecord)
         const majority = party && isDivisionParty(party) && aye + no >= 5 && complete ? direction(aye, no) : null
         const compared = !!majority && ['aye', 'no'].includes(vote), against = compared ? vote !== majority : null
         if (compared) { counts.party_comparisons++; if (against) counts.against_party_majority++ } else counts.party_comparison_unavailable++

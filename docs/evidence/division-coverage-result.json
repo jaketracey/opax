@@ -1,0 +1,820 @@
+{
+  "baseline_commit": "b82465653",
+  "divisions": 11075,
+  "before": {
+    "recorded": 7369,
+    "partial": 3706
+  },
+  "after": {
+    "recorded": 9120,
+    "partial": 1955
+  },
+  "members_before": 874489,
+  "members_after": 874521,
+  "unchanged_source_fact_records": 11075,
+  "existing_member_party_labels_changed": 0,
+  "existing_member_party_fields_changed": 0,
+  "party_tallies_changed": 0,
+  "lost_named_vote_records": [],
+  "new_partial_records": [],
+  "groups": {
+    "a: House, two tellers each side": {
+      "before": 688,
+      "after": 0
+    },
+    "a: Senate, one teller each side": {
+      "before": 975,
+      "after": 0
+    },
+    "a: one-sided teller counts": {
+      "before": 38,
+      "after": 0
+    },
+    "a: unequal teller counts": {
+      "before": 18,
+      "after": 0
+    },
+    "b: held Hansard list for a division absent from ext_": {
+      "before": 12,
+      "after": 0
+    },
+    "b: held Hansard list replaces conflicting extract": {
+      "before": 4,
+      "after": 0
+    },
+    "b: held NSW name table and dated roster": {
+      "before": 16,
+      "after": 0
+    },
+    "d: NSW source absent from DB": {
+      "before": 13,
+      "after": 13
+    },
+    "d: federal one name short": {
+      "before": 1498,
+      "after": 1498
+    },
+    "d: federal two names short": {
+      "before": 439,
+      "after": 439
+    },
+    "d: larger or mixed gap": {
+      "before": 5,
+      "after": 5
+    }
+  },
+  "recovered": [
+    {
+      "division": "nsw-lc-2025-11-27-2",
+      "date": "2025-11-27",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "ext_divisions.extra.table_names",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102504"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2025-11-27-3",
+      "date": "2025-11-27",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "ext_divisions.extra.table_names",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102504"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "aye"
+      }
+    },
+    {
+      "division": "nsw-lc-2025-11-27-5",
+      "date": "2025-11-27",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "ext_divisions.extra.table_names",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102506"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2025-11-27-6",
+      "date": "2025-11-27",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "ext_divisions.extra.table_names",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102506"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2025-11-27-7",
+      "date": "2025-11-27",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "ext_divisions.extra.table_names",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102506"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2025-12-23-19",
+      "date": "2025-12-23",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "ext_divisions.extra.table_names",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102591"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2025-12-23-20",
+      "date": "2025-12-23",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "held_speech_id": 1304599,
+          "held_speech_sha256": "3b6425142063025820eb6708d3d03eb879cd9e771115d323405808f88208fa26",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "matching": "chamber-date-topic-totals-held-votes",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "speeches.text",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102591"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2025-12-23-21",
+      "date": "2025-12-23",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "held_speech_id": 1304602,
+          "held_speech_sha256": "370b59c43a7ea6fba6124b93292d08cf05bddde56a43dee2de18658b6534814e",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "matching": "chamber-date-topic-totals-held-votes",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "speeches.text",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102591"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2025-12-23-22",
+      "date": "2025-12-23",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "held_speech_id": 1304603,
+          "held_speech_sha256": "4fd9f333dabb7457eda51edf94c0e97824c03d3f031e7269357ea3cbaf1fe573",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "matching": "chamber-date-topic-totals-held-votes",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "speeches.text",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102591"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2025-12-23-23",
+      "date": "2025-12-23",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "held_speech_id": 1304605,
+          "held_speech_sha256": "68fd0ebb98c21a6ca350844d6881c140154175e1f5f9b85b711919dce73890c9",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "matching": "chamber-date-topic-totals-held-votes",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "speeches.text",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102591"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2025-12-23-5",
+      "date": "2025-12-23",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "ext_divisions.extra.table_names",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102591"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2025-12-23-6",
+      "date": "2025-12-23",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "ext_divisions.extra.table_names",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102591"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-15-3",
+      "date": "2026-09-15",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "ext_divisions.extra.table_names",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105203"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-15-4",
+      "date": "2026-09-15",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "ext_divisions.extra.table_names",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105203"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-17-11",
+      "date": "2026-09-17",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "ext_divisions.extra.table_names",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105382"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "aye"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-17-2",
+      "date": "2026-09-17",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "ext_divisions.extra.table_names",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105370"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-17-4",
+      "date": "2026-09-17",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "ext_divisions.extra.table_names",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105373"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "aye"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-17-5",
+      "date": "2026-09-17",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "ext_divisions.extra.table_names",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105374"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "aye"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-17-8",
+      "date": "2026-09-17",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "ext_divisions.extra.table_names",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105380"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "aye"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-17-9",
+      "date": "2026-09-17",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "ext_divisions.extra.table_names",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105380"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-23-5",
+      "date": "2026-09-23",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "held_speech_id": 1323123,
+          "held_speech_sha256": "87bff4de808be20b849ca3c827d595043bea74690fa1132f4110bbbcccc791d7",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "matching": "chamber-date-topic-totals-held-votes",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "speeches.text",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105550"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "aye"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-24-13",
+      "date": "2026-09-24",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "held_speech_id": 1323563,
+          "held_speech_sha256": "6b0de6c36ff459bb1f9c7880a9d5660a990910b57ec6e45bb5b7580e8e9a000c",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "matching": "chamber-date-topic-totals-held-votes",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "speeches.text",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105617"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "aye"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-24-14",
+      "date": "2026-09-24",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "held_speech_id": 1323567,
+          "held_speech_sha256": "df2c28eefd55d06b521b46f139e21593109ce791bd10849b33478ebac0660581",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "matching": "chamber-date-topic-totals-held-votes",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "speeches.text",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105617"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "aye"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-24-15",
+      "date": "2026-09-24",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "held_speech_id": 1323570,
+          "held_speech_sha256": "64a07a76527b31f90630db5bc71970b75ce28d8fc954cd847a718d1f36371782",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "matching": "chamber-date-topic-totals-held-votes",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "speeches.text",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105617"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "aye"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-24-16",
+      "date": "2026-09-24",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "held_speech_id": 1323580,
+          "held_speech_sha256": "3ffad06f0860504c9f690c5129d18df354bfee5d35f9185b8cbfdb0a6987eeb8",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "matching": "chamber-date-topic-totals-held-votes",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "speeches.text",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105617"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "aye"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-24-18",
+      "date": "2026-09-24",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "held_speech_id": 1323609,
+          "held_speech_sha256": "ee6d51893abaed64c0bb8bdd6fc52a2e621348a943d05598bee7038d60d0b0e4",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "matching": "chamber-date-topic-totals-held-votes",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "speeches.text",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105625"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "aye"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-24-19",
+      "date": "2026-09-24",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "held_speech_id": 1323622,
+          "held_speech_sha256": "194de72111f6846b7e511ebcb7d143671e13ebbd574160dc918c01322d6d4779",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "matching": "chamber-date-topic-totals-held-votes",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "speeches.text",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105625"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-24-3",
+      "date": "2026-09-24",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "held_speech_id": 1323506,
+          "held_speech_sha256": "b7c3b3ebc8dac0b143cf26c33ba460c5b6f6ca66a535ed6d073599c0b43e323f",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "matching": "chamber-date-topic-totals-held-votes",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "speeches.text",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105613"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-24-4",
+      "date": "2026-09-24",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "held_speech_id": 1323512,
+          "held_speech_sha256": "03f6d523c3f65603934d4f82973c15fa67251787befdf1db41a5cc161216c0e1",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "matching": "chamber-date-topic-totals-held-votes",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "speeches.text",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105613"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-24-6",
+      "date": "2026-09-24",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "held_speech_id": 1323527,
+          "held_speech_sha256": "5e9b624f1ecbed77bdec26865f0f19a0f32da1ea662562900b1e4a5b15aa9f06",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "matching": "chamber-date-topic-totals-held-votes",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "speeches.text",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105617"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "no"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-24-7",
+      "date": "2026-09-24",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "held_speech_id": 1323537,
+          "held_speech_sha256": "cef7a32bac068536edd8f648208eddcd8ed51c76e0c7bec0e45c65c476b34497",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "matching": "chamber-date-topic-totals-held-votes",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "speeches.text",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105617"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "aye"
+      }
+    },
+    {
+      "division": "nsw-lc-2026-09-24-8",
+      "date": "2026-09-24",
+      "member": {
+        "member_source": {
+          "chamber": "nsw_lc",
+          "held_speech_id": 1323543,
+          "held_speech_sha256": "f83fc7adb2fbd003180421cfe82eaea79fe66754655cfcbd5b20635faeb20c77",
+          "identity_url": "https://www.wikidata.org/wiki/Q19873536",
+          "matching": "chamber-date-topic-totals-held-votes",
+          "printed": "Franklin",
+          "qid": "Q19873536",
+          "seat": "New South Wales",
+          "seat_source_url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "service_from": "2019-05-08",
+          "service_through": "2026-09-25",
+          "table": "speeches.text",
+          "url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-105617"
+        },
+        "name": "Ben Franklin",
+        "person_id": null,
+        "person_slug": "ben-franklin",
+        "vote": "aye"
+      }
+    }
+  ]
+}

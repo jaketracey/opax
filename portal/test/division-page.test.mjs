@@ -8,6 +8,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import { personUrl } from '../public/canonical-urls.js';
+import * as divisionMarkdown from '../public/division-markdown.js';
 
 const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
 
@@ -32,6 +33,8 @@ function fn(name) {
 function page(answers) {
   const calls = [];
   const context = {
+    divisionMarkdown,
+    partyChipHTML: party => `<span>${String(party)}</span>`,
     personUrl,
     calls,
     api: async (path) => {
@@ -124,4 +127,16 @@ test('when the record cannot be read the block is one plain line, and the counts
   const render = fn('renderDivisionDoc');
   assert.ok(render.indexOf('billSplitParts(entry)') < render.indexOf('loadDivisionNames(slug, d)'));
   assert.match(render, /ayes, \$\{noes\.toLocaleString\(\)\} noes/);
+});
+
+test('the member block discloses held and official counts for unresolved and reconciled lists', async () => {
+  const ctx = page({});
+  for (const [key, pattern] of [
+    ['federal-representatives-7575', /63 named ayes and 59 named noes.*official tally of 64 ayes and 59 noes/],
+    ['federal-senate-2858', /34 named ayes and 37 named noes.*33 ayes and 36 noes excludes those tellers/],
+  ]) {
+    const d = JSON.parse(readFileSync(new URL(`../public/divisions/division-${key}.json`, import.meta.url)));
+    const names = await ctx.loadDivisionNames(`division-${key}`, d);
+    assert.match(text(ctx.divisionMembersHTML(names, d)), pattern);
+  }
 });

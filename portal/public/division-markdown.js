@@ -109,3 +109,37 @@ export function renderDivisionMarkdown(text, depth = 0) {
   }
   return out;
 }
+
+/** A complete roll call can include explicitly sourced tellers that the source
+ * total excludes. Never infer this from an offset or the coverage label alone. */
+export function divisionComplete(d, named) {
+  const members = Array.isArray(d.members) ? d.members : [];
+  const counts = named || [members.filter(m => m?.vote === 'aye').length, members.filter(m => m?.vote === 'no').length];
+  const official = [d.ayes, d.noes];
+  if (counts.length !== 2 || !counts.every(Number.isInteger)) return false;
+  if (d._meta?.member_coverage !== 'recorded') return false;
+  if (counts.every((n, i) => n === official[i])) return true;
+  const proof = d._meta?.member_reconciliation;
+  return proof?.rule === 'source-excludes-tellers' &&
+    proof.key === d.key && proof.date === d.date && proof.house === d.house && proof.division_source_url === d.source_url &&
+    /^https:\/\/data\.openaustralia\.org\.au\/scrapedxml\//.test(proof.source_url || '') &&
+    typeof proof.gid === 'string' && /^[a-f0-9]{64}$/.test(proof.sha256 || '') &&
+    /^[a-f0-9]{64}$/.test(proof.member_sha256 || '') &&
+    Array.isArray(proof.tellers) && proof.tellers.length === 2 && proof.tellers.some(n => n > 0) &&
+    counts.every((n, i) => Number.isInteger(n) && proof.named?.[i] === n && proof.official?.[i] === official[i] &&
+      Number.isInteger(proof.tellers[i]) && proof.tellers[i] >= 0 && n - proof.tellers[i] === official[i]);
+}
+
+/** Plain text shared by the page, crawlable answer and tool response. */
+export function divisionCoverageNote(d, named) {
+  const members = Array.isArray(d.members) ? d.members : [];
+  const counts = named || [members.filter(m => m?.vote === 'aye').length, members.filter(m => m?.vote === 'no').length];
+  if (counts[0] === d.ayes && counts[1] === d.noes) return '';
+  const held = `${counts[0]} named ayes and ${counts[1]} named noes`;
+  const tally = `${d.ayes} ayes and ${d.noes} noes`;
+  if (divisionComplete(d, counts)) {
+    const [a, n] = d._meta.member_reconciliation.tellers;
+    return `The held list has ${held}, including ${a} aye teller${a === 1 ? '' : 's'} and ${n} no teller${n === 1 ? '' : 's'}. The They Vote For You tally of ${tally} excludes those tellers; all named votes are retained.`;
+  }
+  return `The member list is partial: ${held} are held, compared with the source tally of ${tally}.`;
+}

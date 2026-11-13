@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import { build } from 'esbuild';
 import { MockLanguageModelV4 } from 'ai/test';
 
@@ -92,6 +93,18 @@ function fixture(divisions = [division()]) {
   const env = { asset, TABLE_DB: {}, origin: 'https://opax.com.au' };
   return { divisions, assets, reads, asset, deps, env };
 }
+
+test('a sourced teller convention is complete in division lookup and quantified in its citation', async () => {
+  const d = JSON.parse(readFileSync(new URL('../public/divisions/division-federal-senate-2858.json', import.meta.url)));
+  const f = fixture([d]);
+  const result = await api.callTool(f.env, 'division', { division_id: d.key });
+  assert.equal(result.rows[0].coverage.complete, true);
+  assert.equal(result.rows[0].coverage.totals_match, false);
+  assert.equal(result.rows[0].coverage.named_ayes, 34);
+  assert.equal(result.rows[0].coverage.named_noes, 37);
+  assert.match(result.citations[0].text, /33 ayes and 36 noes excludes those tellers/);
+  assert.doesNotMatch(result.citations[0].text, /member list is partial/);
+});
 
 test('division is a shared registry tool with planner guidance distinct from member_votes', () => {
   const definition = api.getTool('division');

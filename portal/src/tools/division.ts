@@ -4,13 +4,14 @@ import { clip, fold, siteUrl, tableRows } from './record-common'
 import { aggregateDivisions, isDivisionParty, resolveDivisionParty, type DivisionSummary } from './division-aggregates'
 import { readToolAsset, type ToolArgs, type ToolDefinition, type ToolEnv, type ToolCitation } from './types'
 import { policyVotes } from './division-policy'
+import { divisionComplete, divisionCoverageNote, type DivisionCoverageRecord } from '../../public/division-markdown.js'
 
 interface Member { name: string; party?: string | null; vote: string }
 interface BillLink { key: string; title?: string }
 interface DivisionFile {
   key: string; slug?: string; name?: string; date: string; house?: string; jurisdiction?: string;
   result?: string; ayes?: number; noes?: number; source_url?: string; members?: Member[];
-  bills?: BillLink[]; _meta?: { member_coverage?: string };
+  bills?: BillLink[]; _meta?: DivisionCoverageRecord['_meta'];
 }
 interface Bill { key: string; title: string; short_title?: string; aliases?: string[]; divisions?: { key: string }[] }
 const ID_PATTERN = '^(division-)?(federal-(senate|representatives)|(nsw|vic|sa|qld|act|nt|wa|tas)-(la|lc|ha))-[a-z0-9-]+$'
@@ -54,7 +55,9 @@ function detailRow(env: ToolEnv, division: DivisionFile, args: ToolArgs) {
   const outcome = division.result === 'affirmative' ? 'passed' : division.result === 'negative' ? 'defeated' : ayes !== null && noes !== null ? ayes > noes ? 'passed' : 'defeated' : null
   const unknown_party_members = members.filter(m => !m.party).length
   const totals_match = ayes !== null && noes !== null && members.filter(m => m.vote === 'aye').length === ayes && members.filter(m => m.vote === 'no').length === noes
-  const coverage = { member_coverage: division._meta?.member_coverage ?? 'unavailable', complete: division._meta?.member_coverage === 'recorded' && totals_match, unknown_party_members }
+  const coverage = { member_coverage: division._meta?.member_coverage ?? 'unavailable', complete: divisionComplete(division), totals_match, unknown_party_members,
+    named_ayes: members.filter(m => m.vote === 'aye').length, named_noes: members.filter(m => m.vote === 'no').length,
+    note: divisionCoverageNote(division), reconciliation_source_url: division._meta?.member_reconciliation?.source_url ?? null }
   return {
     id: division.key, chamber: chamberOf(division), date: division.date.slice(0, 10), title: division.name ?? '', outcome, ayes, noes,
     members, party_majorities, crossed_floor, coverage,
@@ -78,6 +81,7 @@ function citation(row: Row, args: ToolArgs): ToolCitation {
   const rebels = args.party ? row.crossed_floor.filter(m => partyKey(String(m.party)) === partyKey(String(args.party))) : row.crossed_floor
   text += rebels.length ? ` Against their published party majority: ${rebels.map(m => `${m.name} (${m.party}) voted ${m.vote}, party majority ${m.party_vote}`).join('; ')}.` : ` No votes against an eligible party majority ${row.coverage.complete && !row.coverage.unknown_party_members ? 'were recorded' : 'were identified among the available party-labelled votes'}.`
   if (!row.coverage.complete) text += ' The member list is partial or unavailable.'
+  if (row.coverage.note) text += ' ' + row.coverage.note
   return { kind: 'record', text, url: row.url }
 }
 

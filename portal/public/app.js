@@ -33,7 +33,7 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 let voteTables;
 const voteTablesReady = import("/vote-tables.js?v=4e3aec806a").then(module => { voteTables = module; });
 let divisionMarkdown;
-const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
+const divisionMarkdownReady = import('/division-markdown.js?v=6d09c32fed').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=1e074743c9").then(module => { growthModules = module; });
@@ -13625,18 +13625,23 @@ async function loadDivisionNames(slug, d) {
 /** The "Who voted which way" block for loadDivisionNames' answer. Index names
  *  carry no person id, so they print as the record prints them, unlinked.
  *  Export names carry their party on the day: a dot and the short name. */
-function divisionMembersHTML(names, { ayes = 0, noes = 0 } = {}) {
+function divisionMembersHTML(names, division = {}) {
+  const { ayes = 0, noes = 0 } = division;
   const open = `<section class="ui-section division-block division-members" id="division-members" aria-labelledby="division-members-head">
       <h2 class="ui-section-title" id="division-members-head">Who voted which way</h2>`;
   if (!names || names.failed) {
     return `${open}<p class="ui-empty">The member list could not load just now; the counts and the party split are unaffected.</p></section>`;
   }
   if (names.text) return `${open}<div class="division-markdown">${billNoteHTML(names.text)}</div></section>`;
+  const coverageNote = divisionMarkdown.divisionCoverageNote(division, [names.aye.length, names.no.length]);
+  const tellerSource = division._meta?.member_reconciliation?.source_url;
+  const tellerLink = tellerSource && /^https:\/\/data\.openaustralia\.org\.au\/scrapedxml\//.test(tellerSource)
+    ? ` <a href="${esc(tellerSource)}" rel="noopener" target="_blank">Teller evidence</a>` : "";
   const who = (list) => list.map((m) => `<li>${m.slug
     ? `<a href="${personUrl(m.name)}">${esc(m.name)}</a>` : esc(m.name)}${m.party ? ` ${partyChipHTML(m.party)}` : ""}</li>`).join("");
   const sides = [["Ayes", names.aye, ayes], ["Noes", names.no, noes], ...(names.paired?.length ? [["Paired, not counted", names.paired, names.paired.length]] : [])];
-  return `${open}<div class="division-sides">${sides.map(([label, list, count]) => `<div>
-        <h3 class="division-side">${label} <span>${Number(count || list.length).toLocaleString()}</span></h3>
+  return `${open}${coverageNote ? `<p class="division-coverage">${esc(coverageNote)}${tellerLink}</p>` : ""}<div class="division-sides">${sides.map(([label, list, count]) => `<div>
+        <h3 class="division-side">${label} <span>${Number(count ?? list.length).toLocaleString()}</span></h3>
         ${list.length ? `<ul class="division-names" role="list">${who(list)}</ul>` : `<p class="division-none">None named.</p>`}</div>`).join("")}</div>
       ${names.missingParts ? `<p class="division-none">Part of this list could not load just now.</p>` : ""}
     </section>`;
@@ -13737,7 +13742,7 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   loadDivisionNames(slug, d).then((names) => {
     if (currentDocSlug !== slug) return; // the reader has moved on
     const slot = $("division-members");
-    if (slot) slot.outerHTML = divisionMembersHTML(names, { ayes, noes });
+    if (slot) slot.outerHTML = divisionMembersHTML(names, d);
   });
 }
 

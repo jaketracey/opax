@@ -8,7 +8,7 @@ import {sponsorPerson} from '../public/sponsor-person.js'
 import sponsorParties from '../public/facts/sponsor-parties.json' with {type:'json'}
 import {rosterSeatParty, rosterListParty, type RosterSeatParty, type RosterListObservation} from '../public/roster-party.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
-import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
+import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage, divisionCoverageNote, type DivisionCoverageRecord} from '../public/division-markdown.js'
 import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../public/datatable.js'
 import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import {chamberLabel, machineLabelHTML, partyLabelHTML} from '../public/party-page.js'
@@ -57,7 +57,7 @@ export interface Division {
   members?: { name: string; person_id?: string; person_slug?: string; party?: string; vote: string; party_source?: { basis: string; url?: string | null; source_party?: string }; party_withheld?: { source_party: string; reason?: string } }[];
   bills?: { key: string; title: string; url?: string }[];
   /** Set by the division export when the chamber's own dated party record covers this date (scripts/vote_parties.py). */
-  _meta?: { party_dated?: { record: string; from: string; through: string } };
+  _meta?: DivisionCoverageRecord['_meta'] & { party_dated?: { record: string; from: string; through: string } };
 }
 interface Vote { question?: string; name?: string; title?: string; stage?: string; date?: string; vote?: string; division_slug?: string; source_url?: string }
 interface Votes { name: string; jurisdiction: string; for?: Vote[]; against?: Vote[] }
@@ -487,7 +487,9 @@ function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>,
     : `Party labels are those recorded for this division, except for ${plural(fromRoster)} the division record lists without a party: their labels are the ones a dated parliamentary roster records for them on this date.${senate ? senateNote.replace(' These are', ' The others are') : house ? houseNote : ''}`
   const correctedNote=corrected ? ` For ${plural(corrected)}, the division record gives a party not held on this date; the label shown is the party dated service records give for this date.` : ''
   const heldNote=withheld ? ` For ${count(withheld)} of them, the division record gives a party that dated records leave unclear for this date, so it is not shown.` : ''
-  let html=`<h3>How each party voted</h3><p>${origin}${correctedNote}${ayes!==d.ayes || noes!==d.noes ? ` The member list is partial: ${ayes} recorded ayes and ${noes} recorded noes; the official tally above remains the source total.` : ''}</p>`
+  const coverageNote=divisionCoverageNote(d,[ayes,noes])
+  const tellerSource=d._meta?.member_reconciliation?.source_url
+  let html=`<h3>How each party voted</h3><p>${origin}${correctedNote}${coverageNote ? ` ${escapeHtml(coverageNote)}${tellerSource ? ` ${link(tellerSource,'Teller evidence','noopener noreferrer')}` : ''}` : ''}</p>`
   // Said before the lines when they describe a minority of the members, so a short list is not read as the whole vote.
   const minority=parties.length>0 && missing>0 && labelled*2<listed
   if(minority) html+=`<p>These party lines cover only ${count(labelled)} of the ${plural(listed)} listed. No party is recorded for the other ${count(missing)} on this date.${heldNote}</p>`
