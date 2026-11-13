@@ -5,7 +5,7 @@
    export moves the date with no code change. Why the September export still
    stands: docs/reports/2026-11-13-evidence-layers.md. */
 import { shortDate } from './format.js';
-import { sourceLineHTML } from './labels.js?v=75e6c65ff7';
+import { sourceLineHTML } from './labels.js?v=89dda4a520';
 
 const SYDNEY_DAY = new Intl.DateTimeFormat('en-CA', {timeZone: 'Australia/Sydney', year: 'numeric', month: '2-digit', day: '2-digit'});
 const SOURCES = 'Speeches, official releases and grant records';

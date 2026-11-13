@@ -5,13 +5,13 @@
    (/graph/party-members.json, scripts/build_party_index.mjs).
    Pure functions; app.js passes in its helpers. */
 
-import { PARTY_MAP, PARTY_NAMES } from './labels.js?v=75e6c65ff7';
-import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=e32f13c6c8';
+import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=89dda4a520';
+import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=c40e3d805e';
 
 // Server consumers use these re-exports too, keeping the stamped browser
 // dependencies and their identity tables to one copy in the Worker bundle.
-export * from './labels.js?v=75e6c65ff7';
-export * from './canonical-urls.js?v=e32f13c6c8';
+export * from './labels.js?v=89dda4a520';
+export * from './canonical-urls.js?v=c40e3d805e';
 
 const fold = value => String(value ?? '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
 /** The party URL's last segment; the same spelling as canonical-urls.js entitySlug. */
@@ -91,13 +91,17 @@ export function partyMembers(label, {roster = null, divisions = null, same = (a,
     if (!rows.has(id)) {
       const p = best.get(id);
       rows.set(id, {name: p?.name || fallback.name, pid: p?.pid || null, roster: p || null, current: false,
-        first: span.get(id)?.first ?? 9999, last: span.get(id)?.last ?? fallback.last ?? 0, divisions: 0});
+        first: span.get(id)?.first ?? 9999, last: span.get(id)?.last ?? fallback.last ?? 0, divisions: 0, labels: []});
     }
     return rows.get(id);
   };
+  // The party names each person was recorded under, as the records spell them: a renamed party's page
+  // labels a member with the name they sat under (partyMembersHTML), never only with its current one.
+  const recordedAs = (r, l) => { l = String(l ?? '').trim(); if (l && !r.labels.includes(l)) r.labels.push(l); };
   for (const p of people) {
     if (!memberPartyLabels(p).some(l => same(l, label))) continue;
     const r = row(idOf(p));
+    for (const l of memberPartyLabels(p)) if (same(l, label)) recordedAs(r, l);
     if (p.current && same(p.party_now || p.party, label)) r.current = true;
   }
   // A roster person with no party of their own, filed under the party a verified seat roster records
@@ -114,6 +118,7 @@ export function partyMembers(label, {roster = null, divisions = null, same = (a,
         || (m.reference ? (m.pid ? `pid:${m.pid}` : `name:${fold(m.name)}`) : null);
       if (!id) continue;
       const r = row(id, {name: m.name});
+      recordedAs(r, party);
       const stale = Boolean(m.next_election && today > m.next_election);
       r.seat_roster = {as_of: m.as_of || null, next_election: m.next_election || null, stale};
       if (r.roster?.current !== false && !stale) r.current = true;
@@ -146,7 +151,9 @@ export function partyMembers(label, {roster = null, divisions = null, same = (a,
       const id = m.slug
         ? byAddress.get(personAddresses.get(m.slug) || `/subject/person/${m.slug}`) || `slug:${m.slug}`
         : byName.get(fold(m.name)) || `name:${fold(m.name)}`;
-      row(id, {name: m.name, last: Number(String(m.last || '').slice(0, 4)) || 0}).divisions += m.divisions || 0;
+      const r = row(id, {name: m.name, last: Number(String(m.last || '').slice(0, 4)) || 0});
+      r.divisions += m.divisions || 0;
+      recordedAs(r, party);
     }
   }
   const list = [...rows.values()];
@@ -219,6 +226,7 @@ export function partyMembersHTML(label, members, h, {speechesHref = '', director
     // A seat-roster member's status is the roster's, on its date: said beside them unless the heading says it.
     const asAt = m.seat_roster?.as_of && !datedGroup ? `Parliamentary roster as at ${dayMonthYear(m.seat_roster.as_of)}` : '';
     const meta = [
+      recordedAsText(label, m.labels) ? h.esc(recordedAsText(label, m.labels)) : '',
       now && !h.same(now, label) ? `<span class="dir-muted">now</span> ${h.partyChipHTML(now)}` : '',
       where ? h.esc(where) : '',
       // Roster years where the roster has the person; else only the division records' last vote.
@@ -260,17 +268,25 @@ export function partyMembersHTML(label, members, h, {speechesHref = '', director
 /** Disclosed receipts a party holds in the state money files (no federal map node): one row per commission. */
 export function partyStateMoneyHTML(label, files, h) {
   const hits = files.flatMap(([jur, data]) => {
-    const node = (data?.nodes || []).find(n => n.kind === 'party' && h.same(n.label, label));
-    if (!node) return [];
-    const donors = (data.edges || []).filter(e => String(e.target) === node.id)
-      .map(e => [(data.nodes.find(n => n.id === e.source) || {}).label, e.total || 0]).filter(([n]) => n)
-      .sort((a, b) => b[1] - a[1]);
+    // A renamed party can hold a node under each name it lodged returns as: one row per commission,
+    // the names' figures combined, and the row says which name each part was lodged under.
+    const nodes = (data?.nodes || []).filter(n => n.kind === 'party' && h.same(n.label, label));
+    if (!nodes.length) return [];
+    const ids = new Set(nodes.map(n => n.id));
+    const totals = new Map();
+    for (const e of data.edges || []) {
+      if (!ids.has(e.target)) continue;
+      const name = (data.nodes.find(n => n.id === e.source) || {}).label;
+      if (name) totals.set(name, (totals.get(name) || 0) + (e.total || 0));
+    }
+    const donors = [...totals].sort((a, b) => b[1] - a[1]);
+    const node = nodes.length === 1 ? nodes[0] : combinedNode(nodes);
     return [{jur, node, meta: data.meta || {}, donors}];
   });
   if (!hits.length) return '';
   const items = hits.map(({jur, node, meta, donors}) => {
     const years = node.firstYear === node.lastYear ? String(node.firstYear || '') : `${node.firstYear}–${node.lastYear}`;
-    const detail = [`${h.fmtMoney(node.total || 0)} across ${(node.count || 0).toLocaleString()} disclosed gifts`, years, meta.sourceShort || ''].filter(Boolean).join(' · ');
+    const detail = [`${h.fmtMoney(node.total || 0)} across ${(node.count || 0).toLocaleString()} disclosed gifts`, years, meta.sourceShort || '', node.lodgedAs || ''].filter(Boolean).join(' · ');
     const top = donors.slice(0, 5).map(([name]) => h.donorNameHTML(name)).join(', ');
     return `<li><a class="source-title" href="${h.esc(h.moneyHref(jur))}">${h.esc(meta.jurisdictionLabel || h.jurisdictionLabel(jur))}</a>
       <span class="result-meta">${h.esc(detail)}</span>${top ? `<p class="snippet">Largest disclosed receipt sources: ${top}${donors.length > 5 ? `, and ${(donors.length - 5).toLocaleString()} more` : ''}.</p>` : ''}</li>`;
@@ -291,7 +307,7 @@ export function partyBills(label, divisions, same = (a, b) => identity(a) === id
   const seen = new Set(), out = [];
   for (const [party, bills] of Object.entries(divisions?.bills || {})) {
     if (!same(party, label)) continue;
-    for (const b of bills || []) if (b?.key && !seen.has(b.key)) { seen.add(b.key); out.push(b); }
+    for (const b of bills || []) if (b?.key && !seen.has(b.key)) { seen.add(b.key); out.push({...b, party}); }
   }
   return out.sort((a, b) => String(b.introduced || '').localeCompare(String(a.introduced || '')) || a.key.localeCompare(b.key));
 }
@@ -304,7 +320,7 @@ export function partyBillsHTML(label, bills, h, {updated = ''} = {}) {
   const row = b => {
     const raw = String(b.status || '').replace(/_/g, ' ');
     const status = BILL_STATUS[b.status] || raw.replace(/^./, c => c.toUpperCase());
-    const meta = [b.introduced ? `Introduced ${dayMonthYear(b.introduced)}` : '', status].filter(Boolean).join(' · ');
+    const meta = [b.introduced ? `Introduced ${dayMonthYear(b.introduced)}` : '', status, recordedAsText(label, [b.party], 'Sponsor recorded as')].filter(Boolean).join(' · ');
     return `<li><a class="source-title" href="/bill/${encodeURIComponent(b.key)}">${h.esc(b.title || b.key)}</a>${meta ? `<span class="result-meta">${h.esc(meta)}</span>` : ''}</li>`;
   };
   const shown = bills.slice(0, SHOWN), rest = bills.slice(SHOWN);
@@ -319,6 +335,67 @@ export function partyBillsHTML(label, bills, h, {updated = ''} = {}) {
 }
 
 const identity = label => PARTY_MAP[fold(label)]?.[1] || fold(label);
+/** A renamed party's entry (labels.js PARTY_RENAMES) for its current or a former name, or null. */
+function renameOf(label, renames = PARTY_RENAMES) {
+  const key = fold(label);
+  return renames.find(r => fold(r.name) === key || r.former.some(f => [f.name, ...(f.aliases || [])].some(n => fold(n) === key))
+    || (PARTY_MAP[key] && PARTY_MAP[key][1] === r.code)) || null;
+}
+/** The former name a label is, under a renamed party, or null. */
+function formerNameOf(label, renames = PARTY_RENAMES) {
+  const key = fold(label);
+  for (const r of renames) for (const f of r.former) if ([f.name, ...(f.aliases || [])].some(n => fold(n) === key)) return f;
+  return null;
+}
+/** "Recorded as Liberal Democratic Party": the former names a record of a renamed party carries.
+ *  Empty for a party never renamed and for a record under the current name. */
+export function recordedAsText(label, labels, lead = 'Recorded as', renames = PARTY_RENAMES) {
+  if (!renameOf(label, renames)) return '';
+  const names = [...new Set((labels || []).filter(l => formerNameOf(l, renames)).map(l => String(l).trim()))];
+  return names.length ? `${lead} ${names.join(' and ')}` : '';
+}
+/** The name history of a renamed party: its plain-English line and the registers' notices, or null. */
+export function partyHistory(label, renames = PARTY_RENAMES) {
+  const r = renameOf(label, renames);
+  return r ? {name: r.name, since: r.since || null, line: r.history, former: r.former.map(f => ({...f})), sources: r.sources || []} : null;
+}
+/** The history line under a renamed party's heading, with the registers' notices linked. */
+export function partyHistoryHTML(label, h, renames = PARTY_RENAMES) {
+  const history = partyHistory(label, renames);
+  if (!history) return '';
+  const links = history.sources.filter(s => /^https:\/\//.test(s.href || '')).map(s => `<a href="${h.esc(s.href)}" rel="noopener">${h.esc(s.label)}</a>`);
+  return `<p class="party-history" id="party-history">${h.esc(history.line)}${links.length ? ` Sources: ${links.join('; ')}.` : ''}</p>`;
+}
+/** Several nodes of one renamed party in one money file, as one: totals and counts summed, the years
+ *  spanned, and `lodgedAs` naming each name's part ("Lodged as Liberal Democrats $1,000; as Libertarian $2,000"). */
+function combinedNode(nodes) {
+  const years = nodes.flatMap(n => [n.firstYear, n.lastYear]).filter(Boolean).sort();
+  const parts = [...nodes].sort((a, b) => String(a.firstYear || '').localeCompare(String(b.firstYear || '')))
+    .map(n => `${n.label} ${Math.round(n.total || 0).toLocaleString('en-AU', {style: 'currency', currency: 'AUD', maximumFractionDigits: 0})}`);
+  return {...nodes[0], total: nodes.reduce((a, n) => a + (n.total || 0), 0), count: nodes.reduce((a, n) => a + (n.count || 0), 0),
+    firstYear: years[0], lastYear: years.at(-1), lodgedAs: `Lodged as ${parts.join('; as ')}`};
+}
+/** A renamed party's AEC annual-return rows (aec-extras.json `parties`) under every name it lodged as,
+ *  one row per year (figures summed where two names lodged for one year), with which name each year
+ *  was lodged under. `rows` are app.js partyReceiptsHTML's [year, receipts, ...] tuples. */
+export function partyReturns(label, parties, same = (a, b) => identity(a) === identity(b)) {
+  const names = Object.keys(parties || {}).filter(name => same(name, label));
+  const byYear = new Map(), lodged = [];
+  for (const name of names) {
+    const returns = parties[name]?.returns || [];
+    if (!returns.length) continue;
+    const years = returns.map(r => String(r[0] || '')).filter(Boolean).sort();
+    lodged.push({name, from: years[0], to: years.at(-1)});
+    for (const r of returns) {
+      const year = String(r[0] || '');
+      const prev = byYear.get(year);
+      byYear.set(year, prev ? prev.map((v, i) => i === 0 ? v : v == null && r[i] == null ? null : (Number(v) || 0) + (Number(r[i]) || 0)) : [...r]);
+    }
+  }
+  lodged.sort((a, b) => a.from.localeCompare(b.from));
+  const note = lodged.length > 1 ? `Returns lodged as ${lodged.map(l => `${l.name} (${l.from === l.to ? l.from : `${l.from} to ${l.to}`})`).join(' and as ')}, combined here.` : '';
+  return {rows: [...byYear.values()], names: lodged.map(l => l.name), note, entry: names.length === 1 ? parties[names[0]] : null};
+}
 export const isIndependent = label => identity(label) === 'IND';
 export const INDEPENDENTS_DESCRIPTION = 'Parliamentarians who sat without a party. Not a party organisation.';
 export const PARTY_MEMBER_SCOPE = 'Parliamentarian counts include current and former people recorded under the affiliation in the roster, a verified electorate roster or the divisions. Each person is counted once per affiliation, using their person ID where held.';
@@ -327,12 +404,13 @@ export const PARTY_MONEY_PATHS = ['/graph/money.json', '/graph/money.qld.json', 
 
 /** One page per party identity. The money map's spelling wins, then the existing
  * full canonical label, so roster and division aliases never add another page. */
-export function canonicalPartyPages({ money = [], roster = null, divisions = null } = {}) {
+export function canonicalPartyPages({ money = [], roster = null, divisions = null, renames = PARTY_RENAMES } = {}) {
   const parties = new Map();
   const add = (label, source, date) => {
     label = String(label ?? '').trim();
     if (!label || label.length > 120 || /^(?:null|undefined|PRES|DPRES|SPK|DSPK|CWM|CHAIR)$/i.test(label)) return;
-    const key = identity(label);
+    // A renamed party is one page under every name it was recorded as (labels.js PARTY_RENAMES).
+    const key = renameOf(label, renames) ? `rename:${renameOf(label, renames).code}` : identity(label);
     if (!parties.has(key)) parties.set(key, { label, aliases: [], money: false, roster: false, divisions: false, bills: false, lastmod: '' });
     const page = parties.get(key);
     if (!page.aliases.includes(label)) page.aliases.push(label);
@@ -349,6 +427,16 @@ export function canonicalPartyPages({ money = [], roster = null, divisions = nul
   // A sponsor's party the bills register records ("Rex Patrick Team"): its page lists the bills.
   for (const [label, bills] of Object.entries(divisions?.bills || {})) add(label, 'bills', (bills || []).map(b => b.introduced || '').sort().at(-1));
   return [...parties.values()].map(page => {
+    const rename = renameOf(page.label, renames);
+    // A renamed party's page carries its current name and address, whatever name the money file held;
+    // its former names stay aliases, each with the date it ended (`formerNames`).
+    if (rename) {
+      page.label = rename.name;
+      if (!page.aliases.some(l => fold(l) === fold(rename.name))) page.aliases.push(rename.name);
+      const formerNames = rename.former.map(f => ({name: f.name, until: f.until || null,
+        recorded: page.aliases.filter(l => [f.name, ...(f.aliases || [])].some(n => fold(n) === fold(l)))}));
+      return { ...page, name: rename.name, href: `/subject/party/${partySlug(rename.name)}`, since: rename.since || null, formerNames, history: rename.history };
+    }
     if (!page.money) page.label = page.aliases.find(label => fold(label) === fold(PARTY_NAMES[identity(label)]?.[1])) || page.label;
     return { ...page, name: partyDisplayName(page.label), href: partyUrl(page.label) };
   }).sort((a, b) => a.label.localeCompare(b.label, 'en-AU'));
@@ -366,8 +454,11 @@ export async function readPartyPages(read) {
 /** Accept source spellings and the existing label aliases, but return one page. */
 export function resolvePartyPage(segment, pages) {
   const want = fold(segment);
-  const alias = Object.keys(PARTY_MAP).find(label => partyUrl(label).split('/').at(-1) === want);
-  return pages.find(page => page.aliases.some(label => fold(label) === want || partyUrl(label).split('/').at(-1) === want)
+  // A former name's own slug ("liberal-democratic-party") names its party's page: partyUrl now
+  // writes the current address, so the raw slug is compared too, and the Worker answers it with a 301.
+  const slugs = label => [partyUrl(label).split('/').at(-1), partySlug(label)];
+  const alias = Object.keys(PARTY_MAP).find(label => slugs(label).includes(want));
+  return pages.find(page => page.aliases.some(label => fold(label) === want || slugs(label).includes(want))
     || page.href.split('/').at(-1) === want || identity(page.label) === identity(alias || segment)) || null;
 }
 
