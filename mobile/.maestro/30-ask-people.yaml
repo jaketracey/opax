@@ -9,6 +9,9 @@ name: 30 People in this answer shows each verified portrait and leaves people wi
     id: tab-ask
 - assertVisible:
     id: ask-screen
+- assertVisible:
+    id: tab-ask
+    selected: true
 - tapOn:
     id: ask-question
 - inputText: fixture people
@@ -25,13 +28,15 @@ name: 30 People in this answer shows each verified portrait and leaves people wi
     timeout: 180000
 - assertVisible: People in this answer
 # Three rows show; the rest are one tap away.
-- runFlow:
-    when:
-      visible:
-        id: ask-people-more
-    commands:
-      - tapOn:
-          id: ask-people-more
+- scrollUntilVisible:
+    element:
+      id: ask-people-more
+    direction: DOWN
+    centerElement: true
+    visibilityPercentage: 100
+    timeout: 60000
+- tapOn:
+    id: ask-people-more
 # TestFlight 8 Oct: every row here was a blank circle.
 - scrollUntilVisible:
     element:
@@ -60,5 +65,5 @@ name: 30 People in this answer shows each verified portrait and leaves people wi
       id: person-screen-title
     timeout: 60000
 - assertVisible:
-    id: tab-ask
-    selected: true
+    id: BackButton
+    text: Ask

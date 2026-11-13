@@ -1191,11 +1191,12 @@ function ListBody({
   );
   const record_ = (node: MoneyNode) =>
     moneyFocusRoute(node.id, jurisdiction, filters, node.label, 'map');
+  const partyWords = receiptSectionWords('party', graph, false);
   const partyRow = (node: MoneyNode, index: number) => (
     <PartyMoneyRow
       key={node.id}
       name={node.label}
-      detail={`${counted(node.count, 'receipt')} · ${moneyYears(node.firstYear, node.lastYear)}`}
+      detail={`${counted(node.count, partyWords.one, partyWords.many)} · ${moneyYears(node.firstYear, node.lastYear)}`}
       amount={node.total}
       href={record_(node)}
       testID={`money-party-${index}`}

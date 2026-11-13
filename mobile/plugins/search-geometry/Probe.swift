@@ -25,6 +25,25 @@ private enum OpaxSearchGeometryProbe {
     let r = view.convert(view.bounds, to: window)
     return ["x": r.minX, "y": r.minY, "width": r.width, "height": r.height]
   }
+  // Ignore hidden ancestors and clip to the actual window/scroll viewport.
+  // Insets describe scroll layout, not the opaque controls covering a reader.
+  static func visibleFrame(_ view: UIView?, _ window: UIWindow) -> CGRect? {
+    guard let view, view.window === window else { return nil }
+    var frame = view.convert(view.bounds, to: window).intersection(window.bounds)
+    var ancestor: UIView? = view
+    while let current = ancestor {
+      if current.isHidden || current.alpha <= 0.01 { return nil }
+      if current.clipsToBounds {
+        frame = frame.intersection(current.convert(current.bounds, to: window))
+      }
+      ancestor = current.superview
+    }
+    return frame.isNull || frame.isEmpty ? nil : frame
+  }
+  static func visibleRect(_ view: UIView?, _ window: UIWindow) -> [String: CGFloat] {
+    guard let r = visibleFrame(view, window) else { return [:] }
+    return ["x": r.minX, "y": r.minY, "width": r.width, "height": r.height]
+  }
   static func inset(_ value: UIEdgeInsets) -> [String: CGFloat] {
     ["top": value.top, "bottom": value.bottom, "left": value.left, "right": value.right]
   }
@@ -39,12 +58,20 @@ private enum OpaxSearchGeometryProbe {
     }
     let inScreen = views(screen)
     let field = all.compactMap { $0 as? UISearchTextField }.first { !$0.isHidden && $0.window != nil }
-    // Ask: the current question (asked or failed), its stage timeline and error.
+    // Ask: the current question (asked or failed), its progress line and error.
     let askQuestion = inScreen.last { ["ask-user-question", "ask-failed-question"].contains($0.accessibilityIdentifier ?? "") }
-    let askStages = inScreen.first { $0.accessibilityIdentifier == "ask-progress" }
+    let askProgress = inScreen.first { $0.accessibilityIdentifier == "ask-progress" }
     let askError = inScreen.first { ($0.accessibilityIdentifier ?? "").hasPrefix("ask-error-") }
     let nav = all.compactMap { $0 as? UINavigationBar }.first { !$0.isHidden && $0.window != nil && $0.convert($0.bounds, to: window).minX >= 0 }
     let large = nav.flatMap { views($0).first { String(describing: type(of: $0)).contains("LargeTitleView") } }
+    // In a conversation Ask uses an inline title. UIKit can retain the full
+    // 106 pt bar frame with its hidden large-title band; the visible controls
+    // end at the compact content view instead. Keep nav/largeTitle for diagnosis.
+    let navContent = nav.flatMap { views($0).first {
+      String(describing: type(of: $0)).contains("BarContentView") && visibleFrame($0, window) != nil
+    } }
+    let tab = all.compactMap { $0 as? UITabBar }.first { visibleFrame($0, window) != nil }
+    let askDock = all.last { $0.accessibilityIdentifier == "ask-dock" && visibleFrame($0, window) != nil }
     let data: [String: Any] = [
       "screen": screen.accessibilityIdentifier ?? "", "button": rect(field, window),
       "windowHeight": window.bounds.height,
@@ -52,6 +79,8 @@ private enum OpaxSearchGeometryProbe {
       "inset": inset(scroll.contentInset), "adjustedInset": inset(scroll.adjustedContentInset),
       "contentHeight": scroll.contentSize.height, "viewportHeight": scroll.bounds.height,
       "nav": rect(nav, window), "largeTitle": rect(large, window),
+      "navContent": visibleRect(navContent, window), "tab": visibleRect(tab, window),
+      "scrollFrame": visibleRect(scroll, window), "askDock": visibleRect(askDock, window),
       "firstLine": rect(views(screen).first { $0.accessibilityIdentifier == "search-input" }?.superview?.subviews.first ?? views(screen).first { $0.accessibilityIdentifier == "today-screen-message" }, window),
       "keyboardHeight": keyboardHeight,
       "editing": views(screen).contains { $0.isFirstResponder },
@@ -59,7 +88,7 @@ private enum OpaxSearchGeometryProbe {
       "results": views(screen).contains { ["search-cache-state", "search-count", "search-results-count"].contains($0.accessibilityIdentifier ?? "") },
       // The query field itself: an answered search collapses the form below it.
       "field": rect(field, window),
-      "askQuestion": rect(askQuestion, window), "askStages": rect(askStages, window), "askError": rect(askError, window),
+      "askQuestion": rect(askQuestion, window), "askProgress": rect(askProgress, window), "askError": rect(askError, window),
     ]
     guard let raw = try? JSONSerialization.data(withJSONObject: data, options: [.sortedKeys]), let text = String(data: raw, encoding: .utf8) else { return }
     if text == last { return }; last = text
