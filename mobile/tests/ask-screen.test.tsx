@@ -62,6 +62,7 @@ import { askReturnSnapshot, setAskReturn } from '../src/features/ask/return';
 import { fromWebPath } from '../src/navigation/external';
 import * as Duo from '../modules/opax-duo';
 import * as RootBar from '../modules/opax-root-bar';
+import * as BarAppearance from '../src/navigation/useRootBarAppearance';
 import {
   currentRule,
   resetAdaptiveDeviceForTests,
@@ -2248,10 +2249,17 @@ describe('the idle page at accessibility sizes', () => {
     }
   });
 
-  test.each([1, 2.643, 3.571])(
-    'a resting conversation at %s ends above the composer, hiding the stamp below it',
-    async (fontScale) => {
+  test.each([
+    ['phone Large', 1, false],
+    ['phone AX3', 2.643, false],
+    ['phone AX5', 3.571, false],
+    ['undocked iPad Large', 1, true],
+    ['undocked iPad AX5', 3.571, true],
+  ] as const)(
+    'a resting conversation on %s ends above the composer, hiding the stamp below it',
+    async (_device, fontScale, pad) => {
       const restore = await at(fontScale);
+      const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(pad);
       const handlers = new Map<string, Set<(event: unknown) => void>>();
       const listener = jest
         .spyOn(Keyboard, 'addListener')
@@ -2271,6 +2279,7 @@ describe('the idle page at accessibility sizes', () => {
         });
         await mount();
         await layOut();
+        expect(view!.root.findByType(AskColumns).props.docked).toBe(false);
         expect(scrollStyle().marginBottom).toBe(COLUMN - (AREA - COMPOSER));
         expect(contentStyle().paddingBottom).toBe(rhythm.section);
         act(() =>
@@ -2297,6 +2306,7 @@ describe('the idle page at accessibility sizes', () => {
         jest.mocked(askSession.snapshot).mockRestore();
         listener.mockRestore();
         measure.mockRestore();
+        idiom.mockRestore();
         restore();
       }
     },
@@ -2304,11 +2314,12 @@ describe('the idle page at accessibility sizes', () => {
 });
 
 test.each([
-  ['phone', 'unspecified', 393, 852],
-  ['Duo outer', 'trailing', 402, 678],
+  ['phone', 'unspecified', 393, 852, false],
+  ['Duo outer', 'trailing', 402, 678, false],
+  ['vertical iPad bar', 'leading', 402, 678, true],
 ] as const)(
   'AX5 %s: Ask reports the first scroll point through its RouteOptions owner and returns soft at rest',
-  async (_device, edge, width, height) => {
+  async (_device, edge, width, height, pad) => {
     const window = Dimensions.get('window');
     const barEdge = jest
       .spyOn(RootBar, 'useVerticalBarEdge')
@@ -2324,10 +2335,13 @@ test.each([
       value: 26,
     });
     const platform = jest.replaceProperty(Platform, 'OS', 'ios');
-    const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(false);
+    const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(pad);
+    const appearance = jest.spyOn(BarAppearance, 'useRootBarAppearance');
     const route = { key: 'ask-root', name: 'ask' };
     const navigation = {
-      setOptions: jest.fn(),
+      setOptions: jest.fn((options) => {
+        mockBar.options = { ...mockBar.options, ...options };
+      }),
       getState: () => ({
         index: 0,
         routes: [route],
@@ -2357,6 +2371,12 @@ test.each([
       );
     try {
       await mount(page(120));
+      expect(appearance.mock.calls.length).toBeGreaterThan(0);
+      expect(
+        appearance.mock.calls.every(
+          ([, options]) => options?.owner === 'options',
+        ),
+      ).toBe(true);
       expect(edges().at(-1)).toBe('soft');
       navigation.setOptions.mockClear();
       scrollTo(-120);
@@ -2376,12 +2396,30 @@ test.each([
       expect(edges()).toEqual(['hard']);
       scrollTo(-68);
       expect(edges()).toEqual(['hard', 'soft']);
+
+      openSavedConversation();
+      scrollTo(400);
+      expect(edges().at(-1)).toBe('hard');
+      await act(async () => barButton('New question')!.onPress());
+      // scrollToTop is mocked and emits no event. Idle must already be soft.
+      expect(byId('ask-idle').length).toBeGreaterThan(0);
+      expect(edges().at(-1)).toBe('soft');
+      await act(async () =>
+        view!.update(
+          withNavigationOptions(page(120), (options) => {
+            mockBar.options = options;
+          }),
+        ),
+      );
+      // A new header height must not re-read the previous thread's offset.
+      expect(edges().at(-1)).toBe('soft');
     } finally {
       await act(async () => {
         view?.unmount();
         view = null;
       });
       idiom.mockRestore();
+      appearance.mockRestore();
       barEdge.mockRestore();
       act(() => Dimensions.set({ window }));
       platform.restore();

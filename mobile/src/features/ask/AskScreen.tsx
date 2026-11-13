@@ -1,6 +1,6 @@
 import { AndroidFocusBack } from '../../navigation/AndroidFocusBack';
-import { RouteOptions, useSafeSetOptions } from '../../navigation/preview';
-import { useRootBarAppearance } from '../../navigation/useRootBarAppearance';
+import { RouteOptions } from '../../navigation/preview';
+import { useRootBarUnderBar } from '../../navigation/useRootBarAppearance';
 import { useAndroidRootScroll } from '../../navigation/useAndroidRootScroll';
 import { useScreenReady } from '../../analytics/timing';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -169,10 +169,7 @@ export default function AskScreen() {
     setUnderBar(scrollY.current + headerBottom > 1);
   }, [headerBottom]);
   useLayoutEffect(checkUnderBar, [checkUnderBar]);
-  useRootBarAppearance(useSafeSetOptions(), {
-    ground: colors[ground],
-    underBar,
-  });
+  useRootBarUnderBar(underBar);
   const column = useScreenColumn('readable');
   const { overlap: keyboard, visible: keyboardVisible } = useKeyboardOverlap(
     root,
@@ -321,6 +318,8 @@ export default function AskScreen() {
   }
   function newConversation() {
     if (askSession.newConversation()) {
+      scrollY.current = null;
+      setUnderBar(false);
       setInputError('');
       setTopRequest((n) => n + 1);
     }
@@ -363,7 +362,8 @@ export default function AskScreen() {
       keyboard={keyboard}
     />
   );
-  // A resting thread ends above the composer: its answer stamp must never
+  // An undocked iOS thread, including iPad in a narrow window, ends above
+  // the floating composer: its answer stamp must never
   // peek through the gap below it when the tab bar minimises. At
   // accessibility sizes the resting composer and the tab bar take about a
   // third of a short display (the folded Duo's 678 pt at AX5), and covered

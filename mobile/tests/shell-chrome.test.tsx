@@ -40,6 +40,7 @@ import {
 } from '../src/navigation/chrome';
 import { RouteOptions } from '../src/navigation/preview';
 import { RootBar } from '../modules/opax-root-bar';
+import { useRootBarUnderBar } from '../src/navigation/useRootBarAppearance';
 
 import {
   ExternalURLProbe,
@@ -2067,10 +2068,16 @@ describe('scroll edges on every bar shape', () => {
         scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
       });
     }));
-  test.each(['leading', 'trailing'] as const)(
-    'Duo Today on the %s rail leaves the map whole at rest and covers it from the first scroll point',
-    (edge) =>
+  test.each([
+    ['leading', false],
+    ['trailing', false],
+    ['leading', true],
+    ['trailing', true],
+  ] as const)(
+    'Today on the %s rail (isPad=%s) leaves the map whole at rest and covers it from the first scroll point',
+    (edge, pad) =>
       withGlass(() => {
+        const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(pad);
         mockBarEdge = edge;
         const { page, navigation } = fadePage('index', '(today)');
         const renderer = tree(page(100));
@@ -2087,6 +2094,7 @@ describe('scroll edges on every bar shape', () => {
           expect(edgeCalls(navigation)).toEqual(['hard', 'soft']);
         } finally {
           act(() => renderer.unmount());
+          idiom.mockRestore();
         }
       }),
   );
@@ -2132,3 +2140,27 @@ describe('scroll edges on every bar shape', () => {
       }
     }));
 });
+
+test('the scroll publisher never applies options or native backing', () =>
+  withGlass(() => {
+    const navigation = { setOptions: jest.fn() };
+    function Publisher({ underBar }: { underBar: boolean }) {
+      useRootBarUnderBar(underBar);
+      return null;
+    }
+    const page = (underBar: boolean) => (
+      <NavigationContext.Provider value={navigation as never}>
+        <Publisher underBar={underBar} />
+      </NavigationContext.Provider>
+    );
+    const renderer = tree(page(false));
+    try {
+      for (const value of [false, true, true, false])
+        act(() => renderer.update(page(value)));
+      expect(navigation.setOptions).not.toHaveBeenCalled();
+      expect(RootBar!.setSolid).not.toHaveBeenCalled();
+      expect(RootBar!.remove).not.toHaveBeenCalled();
+    } finally {
+      act(() => renderer.unmount());
+    }
+  }));

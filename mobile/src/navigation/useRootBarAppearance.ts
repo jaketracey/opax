@@ -44,6 +44,18 @@ function currentLargeTitle(navigation: object | undefined) {
   return !navigation || searchState(navigation).value.largeTitle !== false;
 }
 
+/** Report scroll state without owning or applying the bar's appearance. */
+export function useRootBarUnderBar(underBar: boolean, enabled = true) {
+  const navigation = useContext(NavigationContext);
+  useLayoutEffect(() => {
+    if (!navigation || !enabled) return;
+    const state = searchState(navigation);
+    if (state.value.underBar === underBar) return;
+    state.value = { ...state.value, underBar };
+    state.listeners.forEach((listener) => listener());
+  }, [navigation, enabled, underBar]);
+}
+
 /**
  * RouteOptions and Screen can be siblings. Share large-title ownership
  * from the actual route options, keyed by the route's navigation object.
@@ -77,7 +89,8 @@ export function useRootBarSearchOptions(
  * page has left rest, so the top edge turns hard from the first point of
  * scroll, the large-title collapse included, and soft again at rest (once
  * each way, never per frame). RouteOptions reads the scrolling view's report
- * from the shared route state when it owns the bar. iPad keeps the soft edge.
+ * from the shared route state when it owns the bar. Horizontal iPad bars
+ * keep the soft edge; a vertical bar follows its scrolling content.
  * The setter must be the shared useSafeSetOptions guard.
  */
 export function useRootBarAppearance(
@@ -141,19 +154,12 @@ export function useRootBarAppearance(
     (name === 'search' && rootOptions.largeTitle === false);
   const rootKey = root?.key;
   const identifier = rootKey ? `opax-root-bar-${rootKey}` : undefined;
-  useLayoutEffect(() => {
-    if (!navigation || !rootKey || owner !== 'screen') return;
-    const state = searchState(navigation);
-    if (state.value.underBar === underBar) return;
-    state.value = { ...state.value, underBar };
-    state.listeners.forEach((listener) => listener());
-  }, [navigation, rootKey, owner, underBar]);
+  useRootBarUnderBar(underBar, !!rootKey && owner === 'screen');
   const contentUnderBar = owner === 'screen' ? underBar : rootOptions.underBar;
   const hardEdge =
     !!contentUnderBar &&
     Platform.OS === 'ios' &&
-    !Platform.isPad &&
-    (verticalBar || hardEdgeRoots.includes(name));
+    (verticalBar || (!Platform.isPad && hardEdgeRoots.includes(name)));
 
   useLayoutEffect(() => {
     if (
