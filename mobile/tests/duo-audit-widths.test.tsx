@@ -293,6 +293,98 @@ describe('Public money on a Duo', () => {
   });
 });
 
+describe('folding and unfolding with a screen open', () => {
+  // The simulator cannot unfold, and Maestro's setOrientation leaves the
+  // outer display unrotated, so the fold is staged here: one mounted tree,
+  // its window and traits changed underneath it, and its scroll view
+  // measured again, as UIKit does when the scene moves between displays.
+  const at = (name: string) => poses.find((p) => p.name === name)!;
+  function move(
+    tree: TestRenderer.ReactTestRenderer,
+    testID: string,
+    p: Pose,
+  ) {
+    pose(p);
+    layOut(tree, testID, p);
+  }
+
+  test('an open Screen takes the unfolded column and gives it back on folding', () => {
+    pose(at('outer, folded'));
+    const tree = render(
+      <Screen testID="screen-fold" column="wide">
+        <Probe />
+      </Screen>,
+    );
+    layOut(tree, 'screen-fold', at('outer, folded'));
+    expect(probeOf(tree)).toMatchObject({ rule: 'phone', regular: false });
+    expect(Math.round(probeOf(tree).width)).toBe(354);
+
+    move(tree, 'screen-fold', at('inner, landscape'));
+    expect(probeOf(tree)).toMatchObject({
+      rule: 'phone-regular',
+      regular: true,
+    });
+    expect(Math.round(probeOf(tree).width)).toBe(807);
+
+    move(tree, 'screen-fold', at('inner, portrait'));
+    expect(Math.round(probeOf(tree).width)).toBe(605);
+
+    move(tree, 'screen-fold', at('outer, folded'));
+    expect(probeOf(tree)).toMatchObject({ rule: 'phone', regular: false });
+    expect(Math.round(probeOf(tree).width)).toBe(354);
+  });
+
+  test('the public money cards rearrange in place across the fold', () => {
+    const rowOf = (tree: TestRenderer.ReactTestRenderer) => {
+      const holds = (node: TestRenderer.ReactTestInstance, id: string) =>
+        node.findAll((child) => child.props.testID === id).length > 0;
+      const rows = tree.root.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          holds(node, 'hub-card-grants') &&
+          holds(node, 'hub-card-parties'),
+      );
+      return StyleSheet.flatten(rows[rows.length - 1]!.props.style) ?? {};
+    };
+    pose(at('outer, folded'));
+    const tree = render(<Hub />);
+    layOut(tree, 'money-hub', at('outer, folded'));
+    expect(rowOf(tree).flexDirection).not.toBe('row');
+    move(tree, 'money-hub', at('inner, landscape'));
+    expect(rowOf(tree).flexDirection).toBe('row');
+    move(tree, 'money-hub', at('inner, portrait'));
+    expect(rowOf(tree).flexDirection).not.toBe('row');
+    move(tree, 'money-hub', at('outer, folded'));
+    expect(rowOf(tree).flexDirection).not.toBe('row');
+  });
+
+  test('Ask’s composer keeps its sides to the screen through the fold', () => {
+    const edgesOf = (tree: TestRenderer.ReactTestRenderer) =>
+      tree.root
+        .findAllByType(SafeAreaView)
+        .map((node) => (node.props.edges ?? []) as string[]);
+    pose(at('outer, folded'));
+    const tree = render(
+      <AskColumns
+        docked={false}
+        content={<View />}
+        dock={<View />}
+        sources={null}
+        keyboard={0}
+        ground="sunken"
+      />,
+    );
+    const sides = () =>
+      edgesOf(tree).some((e) => e.includes('left') || e.includes('right'));
+    expect(sides()).toBe(false);
+    pose(at('inner, portrait'));
+    expect(sides()).toBe(false);
+    pose(at('outer, folded'));
+    expect(sides()).toBe(false);
+    expect(edgesOf(tree).some((e) => e.includes('bottom'))).toBe(true);
+  });
+});
+
 describe('Ask’s composer on a Duo', () => {
   // AskScreen wraps the columns in SidebarSafe, which pads the window's side
   // insets on iPad and an adaptive iPhone. The folded Duo's composer padded
