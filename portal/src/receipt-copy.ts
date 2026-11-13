@@ -17,4 +17,7 @@ export function receiptMeasureHeading(measure:string,finance=false,context:'rank
 export function receiptMeasurePhrase(measure:string):string {
   return measure==='other_receipts'?'other receipts (includes loans and other amounts)':measure==='subscriptions'?'subscriptions (membership and affiliation fees)':'disclosed receipts of all types'
 }
-export const receiptDollars=(n:number)=>new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',minimumFractionDigits:Number.isInteger(n)?0:2,maximumFractionDigits:2}).format(n)
+// Built once: a formatter costs about 0.1 ms, and one money answer formats a dozen or more amounts.
+const wholeDollars=new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',minimumFractionDigits:0,maximumFractionDigits:2})
+const centDollars=new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',minimumFractionDigits:2,maximumFractionDigits:2})
+export const receiptDollars=(n:number)=>(Number.isInteger(n)?wholeDollars:centDollars).format(n)

@@ -6,7 +6,7 @@ import {join, dirname} from 'node:path'
 import {build} from 'esbuild'
 import {JSDOM} from 'jsdom'
 import {runInNewContext} from 'node:vm'
-import {trimQuestionEnd, questionSpaces, wordsInOrder, comparisonParts} from '../src/question-text.mjs'
+import {trimQuestionEnd, shortTrailingMarks, questionSpaces, wordsInOrder, comparisonParts} from '../src/question-text.mjs'
 import {adverbsOnly} from '../src/research-claim-audit.mjs'
 import {selectedDonorFacts} from '../src/research-coherence.mjs'
 import {answerStyleChecks} from '../src/research-answer-style.mjs'
@@ -30,9 +30,18 @@ const seo=await load('../src/seo-content.ts','')
 const graph={meta:{generated:'2026-11-01'},nodes:[{id:'party:Labor',kind:'party',label:'Labor'},{id:'donor:example',kind:'donor',label:'Example Supplier',industry:'mining'}],edges:[{source:'donor:example',target:'party:Labor',total:1000,count:1,years:[[2020,1000,1]]}]}
 const assets={fetch:async()=>Response.json(graph)}
 const punctuation='!'.repeat(100_000), spaces='\t'.repeat(100_000), words='a and '.repeat(10_000)
+// Best of up to three runs. A real ReDoS on these 100,000-character inputs is slow every time, while one slow run
+// on a loaded machine is the scheduler (84.6 ms on the deploy runner, 13 Nov). A run over 2 s fails at once.
 async function fast(action) {
-  const start=performance.now(), result=await action(), elapsed=performance.now()-start
-  assert.ok(elapsed<50,`adversarial input took ${elapsed.toFixed(2)} ms`)
+  let best=Infinity, result
+  for (let run=0; run<3; run++) {
+    const start=performance.now()
+    result=await action()
+    const elapsed=performance.now()-start
+    best=Math.min(best,elapsed)
+    if (best<50||elapsed>2000) break
+  }
+  assert.ok(best<50,`adversarial input took ${best.toFixed(2)} ms (best of up to three runs)`)
   return result
 }
 
@@ -40,6 +49,10 @@ test('punctuation and whitespace scans retain the question and finish under 50 m
   assert.equal(await fast(()=>trimQuestionEnd('Who funds Labor?'+punctuation)),'Who funds Labor')
   assert.equal(await fast(()=>questionSpaces('who'+spaces+'funds Labor')),'who funds Labor')
   assert.equal(await fast(()=>trimQuestionEnd('?'.repeat(100_000)+'x')), '?'.repeat(100_000)+'x')
+  // The money parsers shorten a trailing run before normalising; whatever they trim afterwards is unchanged.
+  assert.equal(await fast(()=>shortTrailingMarks('Who funds Labor?'+punctuation)),'Who funds Labor?!')
+  for(const text of ['Labor ?!!!','Labor?.','Labor','!!!!','Labor ? ! ! !','And what about Labor?'+punctuation])
+    assert.equal(trimQuestionEnd(questionSpaces(shortTrailingMarks(text))),trimQuestionEnd(questionSpaces(text)))
 })
 
 test('industry grammar consumes long punctuation, spaces and repeated delimiters under 50 ms',async()=>{

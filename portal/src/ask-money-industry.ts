@@ -3,12 +3,12 @@ import type {RecordQuestion} from './ask-records'
 import {federalPartyRankingIntent} from './ask-money-family'
 import {isReceiptGraph, mentionedReceiptIndustries, receiptAnswer, receiptDonorChoices, receiptGraphForQuestion, unmatchedReceiptRankingScope} from './voice-money'
 import {calculatedMoneyAnswer,rankedMoneyAnswer,readingChoices,withReading} from './ask-money'
-import {trimQuestionEnd, questionSpaces} from './question-text.mjs'
+import {trimQuestionEnd, questionSpaces, shortTrailingMarks} from './question-text.mjs'
 import {splitPeriod} from './receipt-reading'
 
 /** Financial recipient questions must resolve before topic retrieval or cached prose. */
 export function industryMoneyIntent(question:string):{subject:string;recipient?:string;total:boolean;period:string}|null {
- let q=trimQuestionEnd(questionSpaces(question.normalize('NFKC')))
+ let q=trimQuestionEnd(questionSpaces(shortTrailingMarks(question).normalize('NFKC')))
  if(/\b(?:say|said|talk\w*|speak\w*|spoke|speeches?|votes?|voted|mentions?|why|influence|grants?|contracts?)\b/i.test(q))return null
  const suffix=/ ((?:in|during|for|since|from|before|after|until|through|between) (?:(?:FY|financial years?) ?)?(?:19|20)\d{2}.*)$/i.exec(q)
  const period=suffix?.[1]??''
