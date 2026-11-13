@@ -21,7 +21,7 @@ const overlayDonor=g=>g.nodes.find(n=>n.kind==='donor'&&n.contracts)
 const root=new URL('../',import.meta.url).pathname
 const built=await build({stdin:{contents:"export {partyDonations} from './src/agentic-tools'",resolveDir:root},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
 const {partyDonations}=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
-const depsFor=g=>({kb:async()=>{throw new Error('the follow-up gold needs no KB')},asset:async path=>path==='/graph/money.json'?structuredClone(g):null,origin:'https://opax.com.au'})
+const depsFor=g=>({kb:async()=>{throw new Error('the follow-up gold needs no KB')},asset:async path=>path==='/graph/money-receipts.json'?structuredClone(g):null,origin:'https://opax.com.au'})
 async function assertGold(g){
  for(const c of fixture.conversations)for(const [i,t] of c.turns.entries()){
   if(!t.tool_query)continue

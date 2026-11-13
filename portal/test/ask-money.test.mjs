@@ -87,9 +87,9 @@ test('implicit funding wording preserves scope restrictions and unknown qualifie
 });
 
 test('the live fossil-fuel ranking failure is corrected using all selected edges',async()=>{
- const r=await ask('Who receives the most disclosed receipts from fossil fuel donors?');
+ const r=await rankedMoneyAnswer({question:'Who receives the most disclosed receipts from fossil fuel donors?'},moneyAssets('uncapped'));
  // 13 Nov 2026: Liberal $957,000 to $807,000 and Labor $269,975 to $249,975: Linc Energy left the federal map at rank 251 when NIOA's two 2015-16 gifts of $20,000 to the Liberal Democratic Party (one on the party's return, one the donor's own) lifted NIOA into the top 250 (export rule 10); its fossil-fuel receipts left with it.
- assert.match(r.answer,/^\*\*Liberal\*\*/);assert.match(r.answer,/\| Liberal \| \$807,000 \| 75% \| \$2,773,580 \(mostly other receipts\) \|/);assert.match(r.answer,/\| Labor \| \$249,975 \| 23% \| \$3,708,132 \(mostly other receipts\) \|/);
+ assert.match(r.answer,/^\*\*Liberal\*\*/);assert.match(r.answer,/\| Liberal \| \$1,961,350 \| 56% \| \$5,409,009 \(mostly other receipts\) \|/);assert.match(r.answer,/\| Labor \| \$981,002 \| 28% \| \$6,776,642 \(mostly other receipts\) \|/);
  assert.equal(r.answer_status,'calculated');assert.match(r.answer,/These figures are party-level totals from recipient returns in OPAX’s published selection/);
  assert.ok(r.sources.some(s=>s.href.includes('industry=fossil_fuels')&&s.href.includes('party=party%3ALiberal')));
 });
@@ -763,7 +763,7 @@ test('a year comparison never sets a year without receipt types beside typed fig
   {source:'donor:example casino',target:'party:Labor',total:300,count:1,firstYear:2020,lastYear:2020,byYear:{2020:[300,1]},by_type:{donation_received:300},by_type_year:{'2020-21':{donation_received:[300,1]}}},
   {source:'donor:example betting',target:'party:Labor',total:500,count:2,firstYear:2021,lastYear:2021,byYear:{2021:[500,2]},by_type:{},by_type_year:{}}]};
  const base=moneyAssets('typed');
- const own={fetch:async request=>new URL(request.url).pathname==='/graph/money.json'?Response.json(synthetic):base.fetch(request)};
+ const own={fetch:async request=>new URL(request.url).pathname==='/graph/money-receipts.json'?Response.json(synthetic):base.fetch(request)};
  const r=await rankedMoneyAnswer({question:'How did gambling receipts to Labor change from 2020 to 2021?'},own);
  assert.equal(r.answer_status,'calculated');assert.equal(r.comparison_complete,false);
  assert.match(r.answer,/^Labor in 2020–21 recorded \$300 in donations received/);
@@ -779,7 +779,7 @@ test('a year left out for having no type breakdown keeps its reason beside the p
   {source:'donor:example casino',target:'party:Labor',total:300,count:1,firstYear:2025,lastYear:2025,byYear:{2025:[300,1]},by_type:{donation_received:300},by_type_year:{'2025-26':{donation_received:[300,1]}}},
   {source:'donor:example betting',target:'party:Labor',total:500,count:2,firstYear:2021,lastYear:2021,byYear:{2021:[500,2]},by_type:{},by_type_year:{}}]};
  const base=moneyAssets('typed');
- const own={fetch:async request=>new URL(request.url).pathname==='/graph/money.json'?Response.json(synthetic):base.fetch(request)};
+ const own={fetch:async request=>new URL(request.url).pathname==='/graph/money-receipts.json'?Response.json(synthetic):base.fetch(request)};
  const r=await rankedMoneyAnswer({question:'How did gambling receipts to Labor change from 2021 to 2030?'},own);
  assert.equal(r.answer_status,'calculated');assert.equal(r.comparison_complete,false);assert.doesNotMatch(r.answer,/\$500/);
  assert.match(r.answer,/The published records run from 2021–22 to 2025–26\. The AEC data OPAX holds for 2021–22 doesn't split receipts by type, so it can't be set beside the donation figures\./);

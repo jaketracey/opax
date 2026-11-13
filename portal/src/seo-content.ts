@@ -355,7 +355,7 @@ export function personHeadPrerender(html: string, p: Pick<Person,'name'|'full'|'
 export function homeMapFallbackHTML(graph: unknown): string {
   const head = receiptHeadline(graph)
   const lines = head.typed && head.total > 0
-    ? `<p>${escapeHtml(shortMoney(head.total))} in receipts from ${count(head.sources)} sources to ${count(head.parties)} parties.</p><p class="hp-map-scope">${escapeHtml(head.scope)}</p>`
+    ? `<p>${escapeHtml(shortMoney(head.total))} in receipts from ${count(head.sources)} sources to ${count(head.parties)} parties.</p><p class="hp-map-scope">${escapeHtml(head.scope)}. Totals are on the map, which shows only the largest donors.</p>`
     : '<p>Disclosed funding between donors and parties, from federal returns.</p>'
   return `<div id="prerender-money" class="hp-map-fallback">${lines}<p><a href="/money">Open the money map</a></p></div>`
 }
@@ -619,7 +619,7 @@ export async function renderMoneyAnswer(title: string, read: ReadAsset): Promise
     // receiptGraph): each receipt once, from the party's own return, every type;
     // no contracts, grants or other flows. The homepage card states the same line.
     const head=receiptHeadline(graph)
-    body+=`<h2>${label} disclosed receipts</h2><p>${currency(head.total)} from ${count(head.sources)} receipt sources, across ${count(head.pairs)} source-to-party totals on this map. ${parties.length} parties.${head.scope ? ` ${escapeHtml(head.scope)}.` : ''} Updated ${escapeHtml(graph.meta.generated)}. Coverage: ${escapeHtml(graph.meta.coverage || 'See the source')}. Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || label)}.</p><ul>${parties.map(p=>`<li>${link(partyUrl(p.label),p.label)}</li>`).join('')}</ul><p>${link(path,`${label} map data export`)}</p>`
+    body+=`<h2>${label} disclosed receipts</h2><p>${currency(head.total)} from ${count(head.sources)} receipt sources, across ${count(head.pairs)} source-to-party totals on the map, which shows only the largest donors. ${parties.length} parties.${head.scope ? ` ${escapeHtml(head.scope)}.` : ''} Updated ${escapeHtml(graph.meta.generated)}. Coverage: ${escapeHtml(graph.meta.coverage || 'See the source')}. Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || label)}.</p><ul>${parties.map(p=>`<li>${link(partyUrl(p.label),p.label)}</li>`).join('')}</ul><p>${link(path,`${label} map data export`)}</p>`
   }
   // The index's meta from its own small file (public/supplier-row-buckets.js), else the 7.6 MB index.
   type SuppliersMeta = {meta:{generated_at:string;total:number;contract_count:number;source:string;published_from:string;published_to:string}}

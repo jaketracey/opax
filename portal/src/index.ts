@@ -4206,7 +4206,7 @@ function moneyIndex<N extends { label: string; kind: string; aliases?: string[];
 }
 let moneyMemo: Promise<MoneyData> | null = null
 function loadMoney(env: Env): Promise<MoneyData> {
-  moneyMemo ??= Promise.all(MONEY_GRAPH_PATHS.map((p) => assetJson<MoneyFile<MoneyNode>>(env, p)))
+  moneyMemo ??= Promise.all(MONEY_GRAPH_PATHS.map((p) => assetJson<MoneyFile<MoneyNode>>(env, p === '/graph/money.json' ? '/graph/money-receipts.json' : p)))
     .then((files) => moneyIndex(files))
     .catch((err) => {
       moneyMemo = null

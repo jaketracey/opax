@@ -99,14 +99,14 @@ test('for the same map file the home line and the /money answer give one total, 
     : { meta: { generated_at: '2026-11-11', total: 1, contract_count: 1, source: 'AusTender', published_from: '2020', published_to: '2026' } };
   const answer = (await renderMoneyAnswer('Money map', read)).html;
   const federal = /<h2>Federal disclosed receipts<\/h2><p>([^<]*)<\/p>/.exec(answer)[1];
-  const [, dollars, sources] = /^\$([\d,]+) from (\d+) receipt sources, across 2 source-to-party totals on this map\. 2 parties\. /.exec(federal);
+  const [, dollars, sources] = /^\$([\d,]+) from (\d+) receipt sources, across 2 source-to-party totals on the map, which shows only the largest donors\. 2 parties\. /.exec(federal);
   const scope = /parties\. (All receipt types[^.]*)\./.exec(federal)[1];
 
   const doc = new JSDOM(homeMapFallbackHTML(graph)).window.document;
   const [line, scopeLine, link] = doc.querySelectorAll('#prerender-money.hp-map-fallback > p');
   assert.equal(line.textContent, `${shortMoney(Number(dollars.replace(/,/g, '')))} in receipts from ${sources} sources to 2 parties.`);
   assert.equal(line.textContent, '$1.5m in receipts from 2 sources to 2 parties.');
-  assert.equal(scopeLine.textContent, scope);
+  assert.equal(scopeLine.textContent, scope + '. Totals are on the map, which shows only the largest donors.');
   // The card's lede names the same years, not the file's wider coverage.
   assert.equal(homeMapSpan(graph), '2010–11 to 2021–22');
   assert.equal(homeMapSpan({ nodes: graph.nodes, edges: [] }), null);

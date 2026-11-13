@@ -20,7 +20,7 @@
     null
    ]
   },
-  "money": "federal AEC donation returns (portal/public/graph/money.json, top 250 donors); individual donors not named are aggregated, never ranked by name"
+  "money": "Uncapped AEC recipient returns (portal/public/graph/money-receipts.json), Donation Received only; public funding and loans excluded"
  },
  "coverage": {
   "speeches": 873200,
@@ -3450,43 +3450,39 @@
      "party": "Liberal",
      "top": [
       {
-       "name": "Westpac Banking Corporation",
-       "total_aud": 40608922,
-       "receipts": 433,
+       "name": "Pratt Holdings Pty Ltd",
+       "total_aud": 10034400,
+       "receipts": 60,
        "years": [
         1998,
         2024
+       ]
+      },
+      {
+       "name": "The 500 Club",
+       "total_aud": 7148196,
+       "receipts": 70,
+       "years": [
+        1999,
+        2021
        ]
       },
       {
        "name": "Vapold Pty Ltd",
-       "total_aud": 33999963,
-       "receipts": 43,
+       "total_aud": 6969513,
+       "receipts": 17,
        "years": [
         1999,
-        2024
-       ]
-      },
-      {
-       "name": "National Australia Bank",
-       "total_aud": 20896422,
-       "receipts": 182,
-       "years": [
-        1998,
-        2024
+        2017
        ]
       }
      ],
-     "donors_not_named": {
-      "donors": 58,
-      "total_aud": 59159890
-     },
      "query": {
-      "file": "portal/public/graph/money.json",
-      "select": "edges where target = party:Liberal, donor nodes after withholdIndividualDonors, sorted by total"
+      "file": "portal/public/graph/money-receipts.json",
+      "select": "uncapped recipient Donation Received flows to party:Liberal, sorted by amount"
      }
     },
-    "method": "federal gambling speeches by party (catalog), then donors to that party (money.json)",
+    "method": "federal gambling speeches by party (catalog), then donors to that party (uncapped recipient Donation Received flows)",
     "query": {
      "endpoint": "POST /catalog",
      "body": {
@@ -3571,40 +3567,36 @@
      "party": "Liberal",
      "top": [
       {
-       "name": "Westpac Banking Corporation",
-       "total_aud": 40608922,
-       "receipts": 433,
+       "name": "Pratt Holdings Pty Ltd",
+       "total_aud": 10034400,
+       "receipts": 60,
        "years": [
         1998,
         2024
+       ]
+      },
+      {
+       "name": "The 500 Club",
+       "total_aud": 7148196,
+       "receipts": 70,
+       "years": [
+        1999,
+        2021
        ]
       },
       {
        "name": "Vapold Pty Ltd",
-       "total_aud": 33999963,
-       "receipts": 43,
+       "total_aud": 6969513,
+       "receipts": 17,
        "years": [
         1999,
-        2024
-       ]
-      },
-      {
-       "name": "National Australia Bank",
-       "total_aud": 20896422,
-       "receipts": 182,
-       "years": [
-        1998,
-        2024
+        2017
        ]
       }
      ],
-     "donors_not_named": {
-      "donors": 58,
-      "total_aud": 59159890
-     },
      "query": {
-      "file": "portal/public/graph/money.json",
-      "select": "edges where target = party:Liberal, donor nodes after withholdIndividualDonors, sorted by total"
+      "file": "portal/public/graph/money-receipts.json",
+      "select": "uncapped recipient Donation Received flows to party:Liberal, sorted by amount"
      }
     },
     "query": {
@@ -3668,36 +3660,32 @@
     "kind": "money",
     "party": "Liberal",
     "names": [
-     "Labor",
+     "Liberal",
      "Liberal"
     ],
     "industry": {
      "industry": "gambling",
      "rows": [
       {
-       "party": "Labor",
-       "total_aud": 10763834
+       "party": "Liberal",
+       "total_aud": 2044652
       },
       {
-       "party": "Liberal",
-       "total_aud": 9024407
+       "party": "Labor",
+       "total_aud": 1686287
       },
       {
        "party": "Nationals",
-       "total_aud": 1558802
+       "total_aud": 371500
       },
       {
        "party": "LNP",
-       "total_aud": 530324
-      },
-      {
-       "party": "One Nation",
-       "total_aud": 3000
+       "total_aud": 50000
       }
      ],
      "query": {
-      "file": "portal/public/graph/money.json",
-      "select": "sum edge.total by target party where donor.industry = gambling"
+      "file": "portal/public/graph/money-receipts.json",
+      "select": "uncapped sum Donation Received by recipient party where donor.industry = gambling"
      }
     },
     "party_ranking": [
@@ -3718,8 +3706,8 @@
      335
     ],
     "amounts": [
-     10763834,
-     9024407
+     2044652,
+     1686287
     ]
    }
   },
@@ -3755,40 +3743,36 @@
      "party": "Liberal",
      "top": [
       {
-       "name": "Westpac Banking Corporation",
-       "total_aud": 40608922,
-       "receipts": 433,
+       "name": "Pratt Holdings Pty Ltd",
+       "total_aud": 10034400,
+       "receipts": 60,
        "years": [
         1998,
         2024
+       ]
+      },
+      {
+       "name": "The 500 Club",
+       "total_aud": 7148196,
+       "receipts": 70,
+       "years": [
+        1999,
+        2021
        ]
       },
       {
        "name": "Vapold Pty Ltd",
-       "total_aud": 33999963,
-       "receipts": 43,
+       "total_aud": 6969513,
+       "receipts": 17,
        "years": [
         1999,
-        2024
-       ]
-      },
-      {
-       "name": "National Australia Bank",
-       "total_aud": 20896422,
-       "receipts": 182,
-       "years": [
-        1998,
-        2024
+        2017
        ]
       }
      ],
-     "donors_not_named": {
-      "donors": 58,
-      "total_aud": 59159890
-     },
      "query": {
-      "file": "portal/public/graph/money.json",
-      "select": "edges where target = party:Liberal, donor nodes after withholdIndividualDonors, sorted by total"
+      "file": "portal/public/graph/money-receipts.json",
+      "select": "uncapped recipient Donation Received flows to party:Liberal, sorted by amount"
      }
     },
     "query": {
@@ -3868,47 +3852,51 @@
      "rows": [
       {
        "party": "United Australia Party",
-       "total_aud": 155465435
+       "total_aud": 61988301
       },
       {
        "party": "Liberal",
-       "total_aud": 17280120
+       "total_aud": 9870697
       },
       {
        "party": "Labor",
-       "total_aud": 7611596
-      },
-      {
-       "party": "Nationals",
-       "total_aud": 4589204
+       "total_aud": 2812030
       },
       {
        "party": "LNP",
-       "total_aud": 4091841
+       "total_aud": 2411248
       },
       {
-       "party": "Family First",
-       "total_aud": 300000
+       "party": "Nationals",
+       "total_aud": 2108525
+      },
+      {
+       "party": "Libertarian Party",
+       "total_aud": 250000
       },
       {
        "party": "Katter's Australian Party",
-       "total_aud": 201000
+       "total_aud": 170000
+      },
+      {
+       "party": "Family First",
+       "total_aud": 100000
       },
       {
        "party": "One Nation",
-       "total_aud": 30000
+       "total_aud": 2000
       }
      ],
      "query": {
-      "file": "portal/public/graph/money.json",
-      "select": "sum edge.total by target party where donor.industry = mining"
+      "file": "portal/public/graph/money-receipts.json",
+      "select": "uncapped sum Donation Received by recipient party where donor.industry = mining"
      }
     },
     "numbers": [
      4
     ],
     "amounts": [
-     155465435
+     61988301
     ],
     "speeches_since_2022": 4,
     "query": {

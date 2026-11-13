@@ -80,7 +80,7 @@ function moneyContext(result:ReceiptTotals, years?:number[]) {
     :bounds.from!==null||bounds.to!==null?`${bounds.from===null?'earliest records':financialYear(bounds.from)} to ${bounds.to===null?'latest records':financialYear(bounds.to)}`
     :result.period||'No dated records'
   const coverage=!years&&selected!==result.period?` Matching recorded years: ${result.period||'none'}.`:''
-  return `**Financial years: ${selected}.**${coverage} ${result.by_donor.length.toLocaleString('en-AU')} ${result.by_donor.length===1?'receipt source':'receipt sources'} with matching receipts in Opax’s selected map. ${result.jurisdiction==='federal'?'Federal (AEC)':result.jurisdiction.toUpperCase()}. ${result.measure_label.charAt(0).toUpperCase()+result.measure_label.slice(1)}; nominal Australian dollars.`
+  return `**Financial years: ${selected}.**${coverage} ${result.by_donor.length.toLocaleString('en-AU')} ${result.by_donor.length===1?'receipt source':'receipt sources'} with matching receipts ${result.jurisdiction==='federal'?'in Opax’s uncapped published receipt selection':'on the map, which shows only the largest donors'}. ${result.jurisdiction==='federal'?'Federal (AEC)':result.jurisdiction.toUpperCase()}. ${result.measure_label.charAt(0).toUpperCase()+result.measure_label.slice(1)}; nominal Australian dollars.`
 }
 
 /** A row with its own measure_label is a side whose pairs have no receipt types:
@@ -252,7 +252,7 @@ function comparedMoneyAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:str
     else params.set('industry',row.id)
     cite(`${row.name}: ${aud(row.total_aud)}`,'/money?'+params,`${row.name}: ${aud(row.total_aud)} across ${recordCount(row.receipts)}. Period: ${result.period}. Based on ${disclosureRegister(result.jurisdiction)} in this published selection.`,2)
   }
-  answer+='\n\nThese figures are party-level totals from the same financial-year selection on OPAX’s published money map.'
+  answer+='\n\nThese figures are party-level totals from the same financial-year selection in OPAX’s published receipts.'
   answer+=`\n\n${moneyMapLinks(result,result.sources[0].url,false)} · [How OPAX counts money](/money/explain) · [Download the calculation data](https://opax.com.au${file})`
   const money_facts=moneyFacts(money_question,partyComparison?'recipient party':'donor industry',context,rows,result.jurisdiction,result.selected_parties[0])
   if(money_facts){money_facts.measure=result.measure;money_facts.measure_label=result.measure_label}
@@ -502,7 +502,7 @@ export function calculatedMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph,qu
   }
   cite(0,'How OPAX counts money',result.sources[0].url,`${options.total?recipient:who.name}: ${aud(options.total?result.total_aud:who.total_aud)} in ${label}. Calculation grouped by ${fromDonors?'source':'recipient party'}. `+lead+tag(who))
   const second=options.total?`Largest sources: ${plain(who.name)} (${aud(who.total_aud)})${rows[1]?`, ${plain(rows[1].name)} (${aud(rows[1].total_aud)})`:''}.`:rows[1]?`${plain(rows[1].name)} follows on ${aud(rows[1].total_aud)}; the selection totals ${aud(result.total_aud)}.`:`The selection totals ${aud(result.total_aud)}.`
-  if(ranked.length>1||fromDonors||allFlows){const start=Array.from(answer).length;answer+=' '+second+(result.typed&&result.measure!=='receipts_all'?` The leader has ${aud(who.all_types_aud)} across all receipt types${who.other_receipts_aud>=who.all_types_aud/2?' (includes loans)':''}.`:'');cite(start,'Selection totals',result.sources[0].url,answer.slice(start))}
+  if(ranked.length>1||fromDonors||allFlows){const start=Array.from(answer).length;answer+=' '+second+(result.typed&&result.measure!=='receipts_all'?` The leader has ${aud(who.all_types_aud)} across all receipt types${who.other_receipts_aud>=who.all_types_aud/2?' (mostly other receipts)':''}.`:'');cite(start,'Selection totals',result.sources[0].url,answer.slice(start))}
   // Recipient rankings also show donation-only amounts (AEC "Donation Received"),
   // per financial year for a window of up to six years, and in total.
   const recipients=result.typed&&!fromDonors&&!allFlows
@@ -539,7 +539,7 @@ export function calculatedMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph,qu
     if(more){
       const rest=ranked.slice(rows.length),amount=rest.reduce((sum,r)=>sum+r.total_aud,0),records=rest.reduce((sum,r)=>sum+r.receipts,0),all=rest.reduce((sum,r)=>sum+r.all_types_aud,0),other=rest.reduce((sum,r)=>sum+r.other_receipts_aud,0)
       const start=Array.from(answer).length,includesLoans=''
-      answer+=`\n| Other ${fromDonors||allFlows?'sources':'parties'} (${more} more on the map) | ${aud(amount)}${includesLoans} | ${share(amount)} | ${result.typed&&result.measure!=='receipts_all'?aud(all)+(other>=all/2&&other>0?' (mostly other receipts)':''):records.toLocaleString('en-AU')} |${sumCells(rest)}`
+      answer+=`\n| Other ${fromDonors||allFlows?'sources':'parties'} (${more} more in the selection) | ${aud(amount)}${includesLoans} | ${share(amount)} | ${result.typed&&result.measure!=='receipts_all'?aud(all)+(other>=all/2&&other>0?' (mostly other receipts)':''):records.toLocaleString('en-AU')} |${sumCells(rest)}`
       cite(start,'Remaining sources',result.sources[0].url,`${aud(amount)} in ${measure_label}, ${period}; ${records} records across ${more} sources; share ${share(amount)}${result.typed&&result.measure!=='receipts_all'?`; all receipt types ${aud(all)}`:''}.`)
     }
     const start=Array.from(answer).length,includesLoans=''
@@ -552,7 +552,7 @@ export function calculatedMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph,qu
   if(industry){
     const named=result.by_donor.filter(d=>d.total_aud>0&&(!options.bankGrouping||/\bbank(?:ing)?\b/i.test(d.name))).slice(0,3)
     const start=Array.from(answer).length
-    answer+=`\n\nOPAX groups ${result.by_donor.length} sources as ${sector}-linked${options.bankGrouping?' (banks, insurers and investment firms)':''}; ${options.bankGrouping?'named banks':'the largest'}: `+named.map(d=>{const url=new URL(result.sources[0].url);url.searchParams.set('focus',d.id);return `[${plain(d.name)}](${url.href}) (${aud(d.total_aud)}${industry==='finance'&&result.measure==='receipts_all'?', includes loans':''})`}).join(', ')+'.'
+    answer+=`\n\nOPAX groups ${result.by_donor.length} sources as ${sector}-linked${options.bankGrouping?' (banks, insurers and investment firms)':''}; ${options.bankGrouping?'named banks':'the largest'}: `+named.map(d=>{const url=new URL(result.sources[0].url);url.searchParams.set('focus',d.id);return `[${plain(d.name)}](${url.href}) (${aud(d.total_aud)})`}).join(', ')+'.'
     cite(start,'Sources in this grouping',result.sources[0].url,answer.slice(start))
   }
   const caveat=result.typed?'These figures are party-level totals from recipient returns in OPAX’s published selection; amounts below each year’s disclosure threshold sit outside the register.':`These figures are party-level totals, including branches, for OPAX’s published ${jurisdiction==='federal'?'AEC':'disclosure'} selection; payments reported by both sides can appear twice.`

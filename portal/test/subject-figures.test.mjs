@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import {JSDOM} from 'jsdom';
-import {workerFetch} from '../test/helpers/worker-fetch.mjs';
-import {donorRecordsHTML} from './subject-figures.ts';
-import {loadDonorRecordsIndex,donorRecordsForName} from './donor-index.ts';
+import {workerFetch} from './helpers/worker-fetch.mjs';
+import {donorRecordsHTML} from '../src/subject-figures.ts';
+import {loadDonorRecordsIndex,donorRecordsForName} from '../src/donor-index.ts';
 import {foldDonorName} from '../public/donor-entity.js';
 import {shortMoney} from '../public/format.js';
 import {receiptScopeLabel} from '../public/donor-disclosure.js';
@@ -49,7 +49,7 @@ const mappedState = {...qld,id:'donor:wattle:qld',source_name:mappedName,label:m
 const assets = {
   '/graph/campaigners.json':{meta:{register_url:'https://example.test/register'},entities:[campaigner]},
   '/graph/donor-index.json':{donors:[federal,qld,reference,mappedFederal,{...mappedState,total:undefined,count:undefined}]},
-  ...Object.fromEntries(['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json','/graph/money.tas.json'].map(path => [path,{meta:{},nodes:[],edges:[]}])),
+  ...Object.fromEntries(['/graph/money-receipts.json','/graph/money.json','/graph/money.qld.json','/graph/money.vic.json','/graph/money.tas.json'].map(path => [path,{meta:{},nodes:[],edges:[]}])),
   '/graph/money.qld.json':{meta:{sourceShort:'ECQ'},nodes:[mappedState],edges:[]},
 };
 

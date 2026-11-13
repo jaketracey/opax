@@ -601,7 +601,14 @@ def contracts_nodes_edges(jur: str, per: dict, nodes: list, coverage: str = "") 
     return [hub], edges, meta
 
 
-def main() -> None:
+def main(argv=None) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--receipts-out', type=Path)
+    parser.add_argument('--industry-totals-out', type=Path)
+    args = parser.parse_args(argv or [])
+    if bool(args.receipts_out) != bool(args.industry_totals_out):
+        parser.error('--receipts-out and --industry-totals-out must be used together')
     db = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
     db.row_factory = sqlite3.Row
     alias_to_entity, entities = load_canonical(db)
@@ -934,9 +941,13 @@ def main() -> None:
     except ModuleNotFoundError:
         from aec_receipt_types import attach_receipt_types
     attach_receipt_types(db, out)
-    json.dump(attach_donor_disclosures(db,out,"federal"), sys.stdout, ensure_ascii=False, separators=(",", ":"))
+    out = attach_donor_disclosures(db, out, "federal")
+    if args.receipts_out:
+        from scripts.export_money_receipts import write_receipts
+        write_receipts(db, out, args.receipts_out, args.industry_totals_out)
+    json.dump(out, sys.stdout, ensure_ascii=False, separators=(",", ":"))
     sys.stdout.write("\n")
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])

@@ -21,6 +21,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import {moneyGold, MONEY_FILE} from './gold_money.mjs'
 import { computeElectorateGold } from './agentic_ask_electorates_gold.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -35,6 +36,28 @@ if (process.argv.includes('--electorates-only')) {
   snapshot.questions = [...computeElectorateGold(), ...snapshot.questions.filter((q) => q.category !== 'electorates')]
   fs.writeFileSync(OUT, JSON.stringify(snapshot, null, 1).replace(/[\u007f-\uffff]/g, (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, '0')}`) + '\n')
   process.stderr.write(`wrote four electorate cases from published JSON; zero KB or model calls\n`)
+  process.exit(0)
+}
+// Preserve all speech/vote expectations; refresh only local money facts, with no network.
+if (process.argv.includes('--money-only')) {
+  const snapshot = JSON.parse(fs.readFileSync(path.join(ROOT, 'portal/test/fixtures/agentic-ask-gold.json'), 'utf8'))
+  const facts = moneyGold(JSON.parse(fs.readFileSync(path.join(ROOT,MONEY_FILE),'utf8')))
+  for (const q of snapshot.questions.filter(q => q.category === 'money')) {
+    const expected = q.expected
+    if (expected.donors) expected.donors = facts.topDonors(expected.party)
+    if (expected.industry) {
+      expected.industry = facts.industryByParty(expected.industry.industry)
+      if (q.id === 'M03') { expected.names[0] = expected.industry.rows[0].party; expected.amounts = expected.industry.rows.slice(0,2).map(r => r.total_aud) }
+      if (q.id === 'M05') {
+        if (expected.party !== expected.industry.rows[0].party) throw Error('Mining leader changed; the stored speech count needs a separate audit')
+        expected.amounts = [expected.industry.rows[0].total_aud]
+      }
+    }
+    if (expected.method?.includes('money.json')) expected.method = expected.method.replace('money.json', 'uncapped recipient Donation Received flows')
+  }
+  snapshot.definitions.money = 'Uncapped AEC recipient returns (portal/public/graph/money-receipts.json), Donation Received only; public funding and loans excluded'
+  fs.writeFileSync(OUT, JSON.stringify(snapshot, null, 1).replace(/[\u007f-\uffff]/g, c => `\\u${c.charCodeAt(0).toString(16).padStart(4, '0')}`) + '\n')
+  process.stderr.write('refreshed five money cases offline; zero KB or model calls\n')
   process.exit(0)
 }
 const vars = Object.fromEntries(fs.readFileSync(path.join(ROOT, 'portal/.dev.vars'), 'utf8').split('\n')
@@ -183,29 +206,8 @@ function partyVotes(party, test) {
   return { divisions_voted: rows.length, all_aye: aye, all_no: no, split, not_present: absent, rows }
 }
 
-// ---- money (portal/public/graph/money.json, federal AEC returns) ----
-const MONEY = JSON.parse(fs.readFileSync(path.join(PUBLIC,'graph/money.json'),'utf8'))
-const NODE = new Map(MONEY.nodes.map((n) => [n.id, n]))
-function topDonors(party, n = 3) {
-  const edges = MONEY.edges.filter((e) => e.target === `party:${party}` && NODE.get(e.source)?.kind === 'donor')
-  const named = edges.sort((a, b) => b.total - a.total)
-  return {
-    party, top: named.slice(0, n).map((e) => ({ name: NODE.get(e.source).label, total_aud: e.total, receipts: e.count, years: [e.firstYear, e.lastYear] })),
-    query: { file: 'portal/public/graph/money.json', select: `edges where target = party:${party}, disclosed donor nodes, sorted by total` },
-  }
-}
-function industryByParty(industry) {
-  const sums = new Map()
-  for (const e of MONEY.edges) {
-    const d = NODE.get(e.source)
-    if (d?.kind !== 'donor' || d.industry !== industry || !e.target.startsWith('party:')) continue
-    sums.set(e.target.slice(6), (sums.get(e.target.slice(6)) ?? 0) + e.total)
-  }
-  return {
-    industry, rows: [...sums].map(([party, total_aud]) => ({ party, total_aud })).sort((a, b) => b.total_aud - a.total_aud),
-    query: { file: 'portal/public/graph/money.json', select: `sum edge.total by target party where donor.industry = ${industry}` },
-  }
-}
+// ---- uncapped donation-only money facts ----
+const {topDonors, industryByParty} = moneyGold(JSON.parse(fs.readFileSync(path.join(ROOT,MONEY_FILE),'utf8')))
 
 const TERM_47 = ['2022-07-26', '2025-03-28']
 const TERM_48 = ['2025-07-22', null]
@@ -325,7 +327,7 @@ add('C05', 'comparison', 'Compare how often Peter Dutton and Anthony Albanese sp
 add('M01', 'money', 'Who donated most to the party whose MPs made the most speeches about gambling?', async () => {
   const p = await rankParties([topic('gambling'), label('state', 'federal')], 3)
   const party = p.top[0].name
-  return { kind: 'money', party, names: [party], party_ranking: p.top, numbers: [p.top[0].count], donors: topDonors(party), method: 'federal gambling speeches by party (catalog), then donors to that party (money.json)', query: p.query }
+  return { kind: 'money', party, names: [party], party_ranking: p.top, numbers: [p.top[0].count], donors: topDonors(party), method: 'federal gambling speeches by party (catalog), then donors to that party (uncapped recipient Donation Received flows)', query: p.query }
 }, 'Federal speeches, because the money graph is federal AEC returns.')
 add('M02', 'money', 'Which donors gave the most to the party that made the most federal speeches about mining and energy?', async () => {
   const p = await rankParties([topic('mining-energy'), label('state', 'federal')], 3)
@@ -387,7 +389,7 @@ const out = {
     period: 'exact speech dates via /search created filter; decades via the decade label',
     parliaments: 'every parliament in the record unless the question names one (federal, NSW, Victoria, SA, Queensland, ACT)',
     terms: { '47th': TERM_47, '48th': TERM_48 },
-    money: 'federal AEC donation returns (portal/public/graph/money.json, top 250 donors); individual donors not named are aggregated, never ranked by name',
+    money: 'Uncapped AEC recipient returns (portal/public/graph/money-receipts.json), Donation Received only; public funding and loans excluded',
   },
   coverage: await coverage(),
   attribution_note: 'data-speaker-attribution-check (12 Oct 2026): 16,909 KB speech documents carry several speakers\' words under one MP (OpenAustralia legacy markup), mostly OpenAustralia-sourced federal House and Senate debate. Sample error rates: Wilkie 13.3%, Hanson-Young 20.0%, Bandt 3.3%, Katter 3.3%, Wong 3.3%. Committee-hearing and state records come from other parsers.',

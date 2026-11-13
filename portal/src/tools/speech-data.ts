@@ -340,7 +340,7 @@ interface MoneyEdge { source: string; target: string; total: number; count: numb
 interface MoneyGraph { nodes: MoneyNode[]; edges: MoneyEdge[] }
 /** Each flow read through its typed cells (each receipt once, from the party's own return), as on the donor and party pages. */
 async function money(deps: ToolDeps) {
-  const raw = await deps.asset('/graph/money.json') as MoneyGraph | null
+  const raw = await deps.asset('/graph/money-receipts.json') as MoneyGraph | null
   const g = receiptGraph(raw)
   if (!raw || !g?.nodes) throw new Error('money graph unavailable')
   return { g, raw }
@@ -395,7 +395,7 @@ export async function partyDonations(deps: ToolDeps, input: { party?: string | n
     if (!s) return { v: sumYears(e, from, to), s }
     return { v: measure === 'donations' ? s.donations : s.all, s }
   }
-  const notes = ['Federal AEC disclosed receipts, financial years 1998-99 to 2025-26, in the published selection of the 250 largest donors (so totals are lower bounds).',
+  const notes = ['Federal AEC disclosed receipts, financial years 1998-99 to 2025-26, in the uncapped published selection of eligible recipient returns.',
     measure === 'donations'
       ? 'Ranked by donations: receipts the party\'s return types as Donation Received. Other receipt types (other receipts, subscriptions and receipts with no type) are listed separately and are not called donations. OPAX does not match receipts to the debts a return declares, so no receipt is called a loan.'
       : !measure ? 'These totals cover every receipt type the records hold; this graph has no receipt-type breakdown.'
@@ -463,7 +463,7 @@ export async function partyDonations(deps: ToolDeps, input: { party?: string | n
         ...pf.map(p=>({kind:'export' as const,label:publicFundingLine(p.source,input.party!,p.amount_aud,p.period),value:p.amount_aud,url:mapUrl(input.party!)})),
         ...lending.map(l=>({kind:'record' as const,label:l.label,...(l.value ? {value:l.value} : {}),url:l.url}))],
       list: mapUrl(input.party, measure === 'donations' ? { receipt: 'donations' } : {}),
-      query: { file: '/graph/money.json', party: input.party, industry: input.industry ?? null, from, to, measure }, notes,
+      query: { file: '/graph/money-receipts.json', party: input.party, industry: input.industry ?? null, from, to, measure }, notes,
     }
   }
   if (input.industry) {
@@ -497,7 +497,7 @@ export async function partyDonations(deps: ToolDeps, input: { party?: string | n
       cite: [...rows.map((r) => ({ kind: 'export' as const, label: `${input.industry} ${measure === 'donations' ? 'donations' : 'receipt sources'} to ${r.party}`, value: r.total_aud, url: mapUrl(r.party, measure === 'donations' ? { receipt: 'donations' } : {}) })),
         ...other.map(r => ({ kind: 'export' as const, label: r.line, value: round(r.other_receipts_aud + r.subscriptions_aud + r.untyped_aud), url: mapUrl(r.party) }))],
       list: mapUrl(),
-      query: { file: '/graph/money.json', industry: input.industry, from, to, measure }, notes,
+      query: { file: '/graph/money-receipts.json', industry: input.industry, from, to, measure }, notes,
     }
   }
   return { tool: 'party_receipts', ok: false, error: 'party or industry is required', cite: [], notes: [] }

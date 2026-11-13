@@ -613,3 +613,37 @@ def test_a_reexported_public_funding_payer_keeps_its_typed_cell_and_its_label(tm
     out = subprocess.run(["node", "--input-type=module", "-e", script, root.as_uri(), json.dumps([edge, node])],
                          capture_output=True, text=True, check=True)
     assert json.loads(out.stdout) == [True, False, True, 0]
+
+
+def test_uncapped_money_export_is_independent_of_drawing_cap_and_keeps_receipt_rules(tmp_path):
+    from scripts.export_money_receipts import export_receipts
+    path = tmp_path / 'db'
+    db = database(path)
+    entries = {'Detailed Receipts.csv': [
+        annual(Value='1000', **{'Received From': 'Example Major Energy Ltd'}),
+        annual(Value='150', **{'Received From': 'Example Small Energy Ltd'}),
+        annual('Other Receipt', Value='900', **{'Received From': 'Example Small Energy Ltd'}),
+        annual('Loan', Value='800', **{'Received From': 'Example Small Energy Ltd'}),
+        annual('Public Funding', Value='700', **{'Received From': 'Example Opaque Payer'}),
+        annual(Value='600', **{'Received From': 'Electoral Commission Example'}),
+        annual(Value='500', **{'Received From': 'Labor Branch Example'}),
+    ], 'Donations Made.csv': [{'Financial Year': '2020-2021', 'Donor Name': 'Example Small Energy Ltd',
+                              'Donation Made To': 'Example Party', 'Value': '150'}]}
+    donations.process_zip(db, archive('AllAnnualData', entries), 'AllAnnualData')
+    load(db, 'AllElectionsData', {})
+    load(db, 'AllReferendumData', {})
+    db.execute("UPDATE donations SET recipient_canonical='Labor',industry='fossil_fuels'")
+    db.commit()
+    with mock.patch.object(exporter, 'TOP_DONORS', 1):
+        capped = export(path)
+    full, summary = export_receipts(db, capped)
+    no_donors = {**capped, 'nodes': [n for n in capped['nodes'] if n['kind'] == 'party'], 'edges': []}
+    _, with_no_map_edges = export_receipts(db, no_donors)
+    assert summary == with_no_map_edges
+    assert summary['industries']['fossil_fuels'] == {'Labor': 1150}
+    small = next(n for n in full['nodes'] if n['label'] == 'Example Small Energy Ltd')
+    assert small['by_type'] == {'donation_received': 150, 'loan': 800, 'other_receipt': 900}
+    assert small['by_type_year']['2020-21']['donation_received'] == [150, 1]
+    assert full['meta']['uncapped'] is True
+    assert not any(n['label'] in ('Example Opaque Payer', 'Electoral Commission Example', 'Labor Branch Example')
+                   and n.get('by_type', {}).get('donation_received') for n in full['nodes'])

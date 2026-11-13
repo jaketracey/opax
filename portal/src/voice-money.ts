@@ -73,7 +73,7 @@ function exactReceiptDonors(graph:ReceiptGraph, query:string) {
     const short=companyName(node.label)
     const phrases=new Set([normal(node.label),...[...(node.aliases||[]),...(node.lookup_names||[])].map(normal),...(short.length>=5&&shortCounts.get(short)===1?[short]:[])])
     for(const phrase of phrases) {
-      if(!phrase)continue
+      if(!phrase || scaffolding.has(phrase) || rankingWords.has(phrase))continue
       let start=q.indexOf(' '+phrase+' ')
       while(start>=0){matches.push({node,phrase,start,end:start+phrase.length+2});start=q.indexOf(' '+phrase+' ',start+1)}
     }
@@ -137,7 +137,7 @@ export function receiptJurisdiction(query:string): string | null {
 export async function receiptGraphForQuestion(query:string, load:(file:string)=>Promise<ReceiptGraph|null>, state?:string) {
   const direct=state || receiptJurisdiction(query)
   const read=async(jurisdiction:string)=>{
-    const file='/graph/'+(jurisdiction==='federal'?'money.json':`money.${jurisdiction}.json`)
+    const file='/graph/'+(jurisdiction==='federal'?'money-receipts.json':`money.${jurisdiction}.json`)
     const graph=await load(file)
     return graph?{graph:(graph),file,jurisdiction}:null
   }
@@ -374,7 +374,7 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
     read_query:query,
     ...(periodReading?{period_reading:periodReading}:{}),period_options:periodOptions,
     ...(scopeReading?{scope_reading:scopeReading}:{}),scope_options:scopeOptions,
-    scope:'Party-level totals for sources in the published OPAX money map.',
+    scope:graph.meta.uncapped?'Uncapped party-level totals from recipient returns.':'Party-level totals for sources on the map, which shows only the largest donors.',
     period_note:'Years use the first year of a financial year; election returns may use the polling year. Undated receipts are excluded when a year filter is requested. Dollar amounts are nominal, not inflation-adjusted.',
     coverage:graph.meta.coverage,methodology:graph.meta.methodology,generated:graph.meta.generated,
     sources:[{title:`${subject}: disclosed party receipts`,url},...(donationsUrl&&matching?[{title:`${subject}: donations received`,url:donationsUrl}]:[])],

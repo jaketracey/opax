@@ -1338,11 +1338,11 @@ async function mountDiscoveryMap(signal) {
   const current = () => generation === discoveryMapGeneration && root.isConnected && document.documentElement.dataset.panel === "discover";
   root.innerHTML = '<p role="status">Opening the money map…</p>';
   try {
-    const data = await loadMoneyData();
+    const data = await loadMoneyFile('federal');
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=716454ddbb");
+    const { mountMoneyMap } = await import("/money-map.js?v=3f185c0ece");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1473,11 +1473,10 @@ const MONEY_JURISDICTIONS = {
   tas: { label: "Tasmania", file: "/graph/money.tas.json" },
 };
 
-const moneyFiles = {}; // jurisdiction -> promise of the parsed export (federal shares loadMoneyData)
+const moneyFiles = {}; // jurisdiction -> promise of the capped drawing export
 function loadMoneyFile(jur) {
   const cfg = MONEY_JURISDICTIONS[jur];
   if (!cfg) return Promise.resolve(null);
-  if (jur === "federal") return loadMoneyData();
   // A failed load is not kept, so the page's "Try again" fetches again.
   moneyFiles[jur] ??= fetch(cfg.file,{cache:"no-cache"})
     .then((r) => (r.ok ? r.json() : null)).catch(() => null)
@@ -1597,11 +1596,11 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=19264f1e41');
+    const mod = await import('/money-explain.js?v=3d39dcc3ce');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
-      params, manageFocus, loadMoney: loadMoneyFile, loadAecExtras, loadBillsIndex, loadBill, loadAccess, loadFits, normName,
+      params, manageFocus, loadMoney: jur => jur === 'federal' ? fetch('/graph/money-receipts.json').then(r => { if (!r.ok) throw Error('Receipt data unavailable'); return r.json(); }) : loadMoneyFile(jur), loadAecExtras, loadBillsIndex, loadBill, loadAccess, loadFits, normName,
       partyName: partyAskName, electionYears: [...BALANCE_ELECTION_YEARS],
       onAddress(path) { if (current() && path !== location.pathname + location.search) replaceRoute(path); },
       // After syncPathMeta: on the landed URL it restores the Worker's generic title.
@@ -1727,7 +1726,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = MAP_DRAWING_HTML;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=716454ddbb"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=abd2e22b2b"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=3f185c0ece"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=abd2e22b2b"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1870,7 +1869,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=0acfa1911e");
+    const module = await import("/suppliers.js?v=e60198e8e0");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -3647,7 +3646,7 @@ addEventListener("hashchange", () => updateQuoteRail());
 
 // --- money answers ----------------------------------------------------------
 // "Who gives money to gambling?" deserves figures, not only quotes. The AEC
-// donations export already ships to every client (/graph/money.json), so a
+// uncapped receipt export supplies factual totals; the map has its own capped file, so a
 // money-intent question renders the structured answer INSTANTLY, while the
 // model composes the words alongside.
 
@@ -3657,11 +3656,16 @@ let moneyData = null;
 // party's own return, as on the donor and party pages. Every donor list on the
 // site reads its figures from here; party nodes are unchanged.
 let moneyReceipts = null;
+let moneyDonationReceipts = null;
+let moneyDonationScope = "";
 let moneyReceiptScope = "";
 let moneyDataPromise = null;
 function loadMoneyData() {
-  // The same parse the donor privacy index reads (donor-views.js), not a second download.
-  moneyDataPromise ??= import('/donor-views.js?v=9770cf1299').then((module) => module.loadMoneyGraph("/graph/money.json").then((d) => {
+  // Factual profiles and Ask share the uncapped parse. Map mounts load their capped file separately.
+  moneyDataPromise ??= import('/donor-views.js?v=9770cf1299').then((module) => module.loadMoneyGraph("/graph/money-receipts.json").then(async (d) => {
+    const {donationGraph} = await import("/money-receipts.js");
+    moneyDonationReceipts = donationGraph(d);
+    moneyDonationScope = module.receiptGraphScope(moneyDonationReceipts).replace(/^All receipt types/, "Donations only");
     moneyReceipts = module.receiptGraph(d);
     moneyReceiptScope = module.receiptGraphScope(moneyReceipts);
     return d;
@@ -3707,9 +3711,9 @@ function industryLabel(ind) {
 
 function renderMoneyPanel(ind) {
   const box = $("ask-money");
-  if (!moneyReceipts) { box.hidden = true; return; }
+  if (!moneyDonationReceipts) { box.hidden = true; return; }
   // A donor the parties' returns hold nothing from (only its own return does) is left out, as on the party page.
-  const donors = moneyReceipts.nodes.filter(
+  const donors = moneyDonationReceipts.nodes.filter(
     (n) => n.kind === "donor" && (n.industry === ind || n.group === ind) && hasPartyReceipts(n));
   if (!donors.length) { box.hidden = true; return; }
   const donorIds = new Set(donors.map((n) => n.id));
@@ -3719,7 +3723,7 @@ function renderMoneyPanel(ind) {
     Math.max(...donors.map((n) => n.lastYear || 0)),
   ];
   const byParty = new Map();
-  for (const e of moneyReceipts.edges) {
+  for (const e of moneyDonationReceipts.edges) {
     if (!donorIds.has(e.source)) continue;
     const party = String(e.target).replace(/^party:/, "");
     byParty.set(party, (byParty.get(party) || 0) + (e.total || 0));
@@ -3730,11 +3734,11 @@ function renderMoneyPanel(ind) {
   box.hidden = false;
   box.innerHTML = `
     <p class="kicker">The money: ${esc(industryLabel(ind))} (AEC disclosures)</p>
-    ${moneyReceiptScope ? `<p class="entry-scope">${esc(moneyReceiptScope)}</p>` : ""}
+    ${moneyDonationScope ? `<p class="entry-scope">${esc(moneyDonationScope)}. Uncapped recipient selection (AEC Donation Received)</p>` : ""}
     <div class="tiles">
       ${tile(fmtMoney(total), `received from ${industryLabel(ind)} sources`)}
       ${tile(String(donors.length), "receipt sources shown")}
-      ${tile(receipts.toLocaleString(), `disclosed receipt${receipts === 1 ? "" : "s"}`)}
+      ${tile(receipts.toLocaleString(), `disclosed donation${receipts === 1 ? "" : "s"}`)}
       ${tile(`${years[0]}–${years[1]}`, "years covered")}
     </div>
     <div class="money-charts">
@@ -3743,7 +3747,7 @@ function renderMoneyPanel(ind) {
     </div>
     <p class="fineprint">${esc(AEC_NOTE)}
       <a href="/money">Explore on the money map</a> ·
-      <a href="/graph/money.json">Download the data</a></p>`;
+      <a href="/graph/money-receipts.json">Download the data</a></p>`;
   // Blocks rise in sequence (kicker, each figure, each chart, the note); fresh
   // nodes on every render, so a second question replays it. Motion is CSS-side.
   box.querySelectorAll(":scope > :not(.tiles, .money-charts), :scope > .tiles > .tile, :scope > .money-charts > .chart").forEach((el, i) => {
@@ -4608,6 +4612,9 @@ async function mountSubjectMap(nodeId, label = "") {
   const key = currentSubjectKey;
   const el = $("subject-map");
   if (!el) return;
+  const drawing = await loadMoneyFile('federal').catch(() => null);
+  if (currentSubjectKey !== key) return;
+  if (!drawing?.nodes?.some(node => node.id === nodeId)) { reserveSubjectMap(false); return; }
   if (window.matchMedia(SUBJECT_MAP_CARD).matches) {
     el.outerHTML = `<a class="subject-map-card" id="subject-map" href="/money?${new URLSearchParams({ focus: nodeId })}">
       <span class="subject-map-card-title">${label ? `${esc(label)} on the money map` : "Open the money map"}</span>
@@ -4618,7 +4625,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=716454ddbb");
+    const { mountMoneyMap } = await import("/money-map.js?v=3f185c0ece");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
@@ -6180,12 +6187,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       subjectMentions(name, sections, "In parliament");
       return;
     }
-    // Rank runs over the donors the map picked by what they gave; a donor that
-    // is on the map for the public money it holds has no place in that order.
+    // Factual ranks use every eligible recipient receipt, independently of map admission.
     await donorViewReady;
     if (currentSubjectKey !== key) return;
     // A donor only its own return declares (hasPartyReceipts) has no each-gift-once figure, so no rank.
-    const donors = moneyData.nodes.filter((n) => n.kind === node.kind && !n.via && (n.kind === "party" || hasPartyReceipts(n)));
+    const donors = moneyData.nodes.filter((n) => n.kind === node.kind && (n.kind === "party" || hasPartyReceipts(n)));
     const isParty = node.kind === "party";
     // The money data's spelling of the name is the entry's; the trail follows it.
     if (node.label && node.label !== name) {
@@ -9917,7 +9923,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=19264f1e41"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=3d39dcc3ce"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=9770cf1299");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -9935,7 +9941,7 @@ document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 const GAMES = {
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=b70d70e779", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
-  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=db4edcfd64", mount: "mountQuiz" },
+  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=f720238809", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=98df9630e3", mount: "mountLedger" },
   grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=ec514c7dd9", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
@@ -15182,7 +15188,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=716454ddbb");
+    const { mountMoneyMap } = await import("/money-map.js?v=3f185c0ece");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",

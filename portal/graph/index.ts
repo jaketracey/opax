@@ -2023,6 +2023,7 @@ export async function mountMoneyMap(
     // The declared line gives nominal record figures, so it takes no inflation note.
     if (!declaredOnly) inflationFineprint(card)
 
+    el('p', 'mm-card-fine', card).textContent = 'Connections and their totals are on the map, which shows only the largest donors.'
     const listTitle = el('div', 'mm-card-section', card)
     const list = el('ul', 'mm-rows', card)
     if (node.kind === 'donor') {
@@ -2154,6 +2155,7 @@ export async function mountMoneyMap(
 
     const total = el('div', 'mm-card-total', card)
     total.textContent = formatMoney(edge.total ?? 0)
+    el('p', 'mm-card-fine', card).textContent = 'Totals are on the map, which shows only the largest donors.'
     const sub = el('div', 'mm-card-sub', card)
     const span = yearSpan(edge.firstYear ?? null, edge.lastYear ?? null)
     const donors = edge.count ?? 0
@@ -2198,6 +2200,7 @@ export async function mountMoneyMap(
     cardTag('Public money')
     const total = el('div', 'mm-card-total', card)
     total.textContent = formatMoney(edge.total ?? 0)
+    el('p', 'mm-card-fine', card).textContent = 'Totals are on the map, which shows only the largest donors.'
     const sub = el('div', 'mm-card-sub', card)
     const span = yearSpan(edge.firstYear ?? null, edge.lastYear ?? null)
     sub.textContent = `Across ${(edge.count ?? 0).toLocaleString()} grants${span ? ` · ${span}` : ''}`
@@ -2257,6 +2260,7 @@ export async function mountMoneyMap(
 
     const total = el('div', 'mm-card-total', card)
     total.textContent = formatMoney(edge.total ?? 0)
+    el('p', 'mm-card-fine', card).textContent = 'Totals are on the map, which shows only the largest donors.'
     const sub = el('div', 'mm-card-sub', card)
     const span = yearSpan(edge.firstYear ?? null, edge.lastYear ?? null)
     sub.textContent =
