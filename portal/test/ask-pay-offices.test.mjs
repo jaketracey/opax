@@ -143,3 +143,31 @@ test('the built file answers the questions that started this',async()=>{
  assert.ok(real.meta.sources.every(s=>/^F\d{4}L\d{5}$/.test(s.frl_id)&&/^F\d{4}C\d{5}$/.test(s.compilation_id)&&s.url.startsWith('https://www.legislation.gov.au/')));
  assert.ok(real.offices.every(r=>r.source&&r.clause&&(r.amount!=null||r.min!=null||r.max!=null)));
 });
+
+test('a possessive after an office is still the office',async()=>{
+ const ombudsman=await ask("What is the Commonwealth Ombudsman's salary?");
+ assert.match(lead(ombudsman),/^\*\*The Commonwealth Ombudsman is paid \$500,000 a year/);
+ assert.match(lead(await ask('What is the Commonwealth Ombudsman’s salary?')),/^\*\*The Commonwealth Ombudsman is paid/,'curly apostrophe');
+ assert.match(lead(await ask("What is Treasury's secretary paid?")),/^\*\*The Secretary to the Treasury is paid \$990,000 a year/);
+ const pm=pay.current.find(row=>row.post==='Prime Minister');
+ const both=await ask("Compare the Secretary of the Department of Finance's pay with the Prime Minister's");
+ assert.ok(lead(both).startsWith(`**The Secretary of the Department of Finance’s total remuneration is between $900,000 and $950,000 a year; the Prime Minister’s salary is ${aud(pm.salary)} a year.**`));
+});
+
+test('an MP salary inside an office range is said to fall within it, and a fixed rate below a range still overlaps nothing',async()=>{
+ const pm=pay.current.find(row=>row.post==='Prime Minister');
+ const kites=row({id:'secretary-kites',office:'Secretary of the Department of Kites',body:'Department of Kites',kind:'secretary',amount:null,min:pm.salary-10_000,max:pm.salary+10_000,classification:'Level 4',source:'secretaries',clause:'s 11, Tables 2A and 2B',keys:['kites']});
+ // A fixed rate stored without min/max: the overlap test must read its amount, not 0.
+ const inspector={...row({id:'office-chief-kite-inspector',office:'Chief Kite Inspector',kind:'full_time_office',amount:960_000,source:'full_time',clause:'s 10, Table 2A'}),min:null,max:null};
+ const local={'/pay.json':pay,'/pay-offices.json':{...FIXTURE,offices:[...FIXTURE.offices,kites,inspector]}};
+ const {paidAnswer:fresh}=await bundle('../src/ask-pay.ts','range');
+ const localAssets={fetch:async req=>Response.json(local[new URL(req.url).pathname])};
+ const r=await fresh({question:"Compare the Prime Minister's pay with the Kites secretary's"},localAssets);
+ assert.match(lead(r),/On these figures the Prime Minister’s salary falls within the range for the Secretary of the Department of Kites\./);
+ assert.doesNotMatch(lead(r),/more a year/);
+ // A fixed amount above a range's top does not overlap it.
+ const two=await fresh({question:'Is the Commonwealth Ombudsman paid more than the Kites secretary?'},localAssets);
+ assert.match(lead(two),/^\*\*The Secretary of the Department of Kites is paid more:/);
+ const overlap=await fresh({question:'Is the Finance secretary paid more than the Chief Kite Inspector?'},localAssets);
+ assert.match(lead(overlap),/^\*\*The Chief Kite Inspector is paid more: \$960,000 a year in total remuneration, against between \$900,000 and \$950,000 a year/,'a fixed amount above the range is not an overlap');
+});

@@ -32,6 +32,9 @@ const day = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en
 const ask = (q: string) => '/ask?q=' + encodeURIComponent(q)
 /** Must fold exactly as scripts/build_pay_offices.py fold() does: the aliases and keys are stored folded. */
 export const foldOffice = (s: string) => s.replace(/[’']/g, '').replace(/&/g, ' and ').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+/** A question, or an office title read against one: a possessive 's is dropped ("the Ombudsman's salary"),
+ *  so a name followed by 's is still the name. Stored aliases and keys are matched as they are. */
+const foldQuestion = (s: string) => foldOffice(s.replace(/(\w)['’]s\b/g, '$1'))
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
 // Words that make a pay question about Commonwealth offices in general.
@@ -50,7 +53,7 @@ interface Hit { row: OfficeRow; start: number; end: number }
 /** The offices a question names, longest match first, with where each was found
  *  in the folded question so the rest can be read for a parliamentary post. */
 export function officesNamed(question: string, data: OfficeData): { rows: OfficeRow[]; rest: string } {
-  const q = ` ${foldOffice(question.slice(0, 4000))} `
+  const q = ` ${foldQuestion(question.slice(0, 4000))} `
   const hits: Hit[] = []
   const find = (phrase: string, rows: OfficeRow[] | (() => OfficeRow[])) => {
     if (!phrase) return
@@ -70,7 +73,7 @@ export function officesNamed(question: string, data: OfficeData): { rows: Office
   const others = data.offices.filter(r => r.kind !== 'secretary' && r.kind !== 'peo_band')
   const bodies = new Map<string, OfficeRow[]>()
   for (const row of others) {
-    find(foldOffice(row.office), [row])
+    find(foldQuestion(row.office), [row])
     if (row.body) bodies.set(row.body, [...bodies.get(row.body) ?? [], row])
     else for (const alias of row.aliases) find(alias, [row])
   }
@@ -78,12 +81,12 @@ export function officesNamed(question: string, data: OfficeData): { rows: Office
   // unless the question names a role in it ("deputy chair of APRA").
   for (const [body, rows] of bodies) {
     const pick = () => {
-      const roles = rows.map(row => ({ row, role: foldOffice(row.office.slice(0, row.office.indexOf(', '))) })).filter(({ role }) => q.includes(` ${role} `))
+      const roles = rows.map(row => ({ row, role: foldQuestion(row.office.slice(0, row.office.indexOf(', '))) })).filter(({ role }) => q.includes(` ${role} `))
       if (roles.length) { const longest = Math.max(...roles.map(r => r.role.length)); return roles.filter(r => r.role.length === longest).map(r => r.row) }
       const heads = rows.filter(row => row.head)
       return (heads.length ? heads : rows).slice(0, 1)
     }
-    for (const phrase of new Set([foldOffice(body), ...rows.flatMap(row => row.aliases)])) find(phrase, pick)
+    for (const phrase of new Set([foldQuestion(body), ...rows.flatMap(row => row.aliases)])) find(phrase, pick)
   }
   hits.sort((a, b) => (b.end - b.start) - (a.end - a.start) || a.start - b.start)
   const taken: Hit[] = [], rows: OfficeRow[] = []
@@ -217,7 +220,7 @@ function compareOffices(rows: OfficeRow[], data: OfficeData) {
   const b = builder(data)
   const sorted = [...rows].sort((x, y) => top(y) - top(x)).slice(0, 6)
   const [a, c] = sorted
-  const overlap = (isRange(a) || isRange(c)) && (a.min ?? 0) <= (c.max ?? c.amount ?? 0)
+  const overlap = (isRange(a) || isRange(c)) && (a.min ?? a.amount ?? 0) <= (c.max ?? c.amount ?? 0)
   b.add(top(a) === top(c) && !isRange(a) && !isRange(c) ? `**${The(plain(a.office))} and ${the(plain(c.office))} are paid the same: ${paid(a)} in total remuneration.**`
     : overlap ? `**${The(plain(a.office))} is paid ${paid(a)} and ${the(plain(c.office))} ${paid(c)}, in total remuneration: the ranges overlap.**`
       : `**${The(plain(a.office))} is paid more: ${paid(a)} in total remuneration, against ${paid(c)} for ${the(plain(c.office))}.**`)
@@ -234,7 +237,9 @@ function compareWithParliament(row: OfficeRow, mp: ParliamentSide, data: OfficeD
   b.instrument(row)
   b.cite(mp.source.title, mp.source.url, `${post}${mp.holder ? ` (${mp.holder})` : ''}: ${aud(mp.salary)} a year in salary.`, mp.source.publisher)
   const more = top(row) > mp.salary
-  b.add(` On these figures ${more ? the(office) : phrase} is paid ${aud(Math.abs((row.amount ?? (more ? row.min! : row.max!)) - mp.salary))} more a year${isRange(row) ? ', at the nearer end of the range' : ''}.`)
+  const within = isRange(row) && (row.min ?? -Infinity) <= mp.salary && mp.salary <= (row.max ?? Infinity)
+  if (within) b.add(` On these figures ${phrase}’s salary falls within the range for ${the(office)}.`)
+  else b.add(` On these figures ${more ? the(office) : phrase} is paid ${aud(Math.abs((row.amount ?? (more ? row.min! : row.max!)) - mp.salary))} more a year${isRange(row) ? ', at the nearer end of the range' : ''}.`)
   b.add(` The two measure different things: total remuneration includes the employer superannuation contribution and benefits, while a parliamentarian’s salary does not include superannuation or the electorate allowance.`)
   b.add(`\n\n| Office | Holder | Measure | A year |\n| --- | --- | --- | ---: |`)
   b.add(`\n| ${post} | ${plain(mp.holder ?? '')} | salary | ${aud(mp.salary)} |`)
