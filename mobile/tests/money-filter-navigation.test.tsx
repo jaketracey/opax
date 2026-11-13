@@ -5,6 +5,7 @@ import { renderRouter } from 'expo-router/testing-library';
 import { store } from 'expo-router/build/global-state/router-store';
 import { Text as NativeText } from 'react-native';
 import { apiClient } from '../src/api/runtime';
+import { freezeSnapshot } from '../src/api/client';
 import MoneyScreen from '../src/features/money/MoneyScreen';
 import MoneyRecordScreen from '../src/features/money/MoneyRecord';
 import {
@@ -80,6 +81,18 @@ function findMoneyRoute(
   }
 }
 
+// Each test reads the 680 KB money graph twice (map, then record). Decode each
+// pinned file once per suite and freeze it as the real client does under Jest,
+// so a screen that edits a shared snapshot still fails here.
+const snapshots = new Map<string, unknown>();
+function decoded<T>(path: string, decode: (raw: unknown) => T): T {
+  if (!snapshots.has(path)) {
+    const value = decode(pinned(path));
+    freezeSnapshot(value);
+    snapshots.set(path, value);
+  }
+  return snapshots.get(path) as T;
+}
 let rendered: ReturnType<typeof renderRouter>;
 const map = () => rendered.UNSAFE_root.findByType(MoneyScreen);
 const sheet = () => rendered.UNSAFE_root.findByType(FilterSheet);
@@ -114,6 +127,27 @@ async function openFilters() {
   expect(rendered.getPathname()).toBe('/filters/money');
 }
 
+const answerFromPins = () =>
+  jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+    data: decoded(path, decode),
+    stale: false,
+    asOf: '2026-09-21',
+    savedAt: 1,
+  }));
+// The first render in a worker loads expo-router, the native stack and every
+// money and filter screen module, and decodes the graph: about 0.5 s alone and
+// several seconds on a loaded host. That is one-off setup, not the behaviour
+// under test, so it runs here under its own budget and each test keeps the
+// default 5 s for its own steps.
+beforeAll(async () => {
+  answerFromPins();
+  rendered = renderRouter(app);
+  await act(async () => router.push('/money'));
+  await act(async () => router.push('/filters/money'));
+  await act(async () => router.push('/money-record'));
+  await act(async () => rendered.unmount());
+}, 30_000);
+
 afterEach(async () => {
   await act(async () => rendered?.unmount());
   jest.useRealTimers();
@@ -122,12 +156,7 @@ afterEach(async () => {
 test.each(['push', 'native link'] as const)(
   'money filters survive a record, nested sheets, Back and native appearance after a %s',
   async (entry) => {
-    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
-      data: decode(pinned(path)),
-      stale: false,
-      asOf: '2026-09-21',
-      savedAt: 1,
-    }));
+    answerFromPins();
     rendered = renderRouter(app);
     if (entry === 'push') {
       await act(async () => router.push('/money'));
