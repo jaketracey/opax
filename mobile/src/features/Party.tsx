@@ -214,7 +214,9 @@ export function PartyPage({
       signal?: AbortSignal,
     ) => {
       if (notAParty) return new Promise<PartyPageRecord>(() => {});
-      return presentation
+      // Refresh replaces the record atomically, so it cannot wait for a
+      // title that an interrupted first load has not published yet.
+      return presentation && !refresh
         ? catalogs.partyPage(input, refresh, publish, signal, () =>
             presentation.afterFrame(signal),
           )

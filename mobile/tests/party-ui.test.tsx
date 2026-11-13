@@ -817,6 +817,32 @@ test('title and Members render before receipts, associations and splits settle',
   act(() => publish(view));
 });
 
+test('Android pull during the first load completes without waiting for an unpublished title', async () => {
+  const original = Platform.OS;
+  Platform.OS = 'android';
+  jest
+    .mocked(runtime.partyPage)
+    .mockImplementationOnce(() => new Promise(() => {}))
+    .mockImplementation((...args) => api.partyPage(...args));
+  const r = await render();
+  try {
+    expect(r.root.findAllByType(ProfileHeader)).toHaveLength(0);
+    await act(async () => {
+      r.root
+        .findAll((n) => !!n.props.refreshControl)[0]!
+        .props.refreshControl.props.onRefresh();
+      await jest.mocked(runtime.partyPage).mock.results.at(-1)!.value;
+    });
+    expect(r.root.findAllByType(ProfileHeader)).toHaveLength(1);
+    expect(
+      r.root.findAll((n) => n.props.refreshControl?.props.refreshing === true),
+    ).toHaveLength(0);
+  } finally {
+    act(() => r.unmount());
+    Platform.OS = original;
+  }
+});
+
 test.each(['pull', 'foreground'] as const)(
   '%s refresh of a saved record keeps loaded sections and disclosures mounted',
   async (trigger) => {
