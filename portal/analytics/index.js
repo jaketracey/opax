@@ -1,10 +1,9 @@
 import posthog from 'posthog-js/dist/module.no-external';
-import { cleanEvent, beforeSend, automationReason, likelyBot } from './privacy.mjs';
+import { cleanEvent, beforeSend, automationReason, likelyBot, whenMeasurable } from './privacy.mjs';
 
 // Public, write-only ingestion token for PostHog project 507367 (Opax).
 const TOKEN = 'phc_AsHnQM2UrGBubA5HU9sagkGbg8vqQLNXu3WjEhPRDejr';
-const enabled = ['opax.com.au', 'www.opax.com.au'].includes(location.hostname) && !automationReason(navigator, window);
-if (enabled) {
+if (['opax.com.au', 'www.opax.com.au'].includes(location.hostname)) whenMeasurable(navigator, window, document, () => {
   try {
     // Any scroll, key, touch or pointer press before the page is left. A page
     // left without one is sent as likely_bot, not dropped: readers can read
@@ -14,9 +13,9 @@ if (enabled) {
     for (const type of ['pointerdown', 'keydown', 'touchstart', 'scroll', 'wheel']) addEventListener(type, seen, { capture: true, passive: true, once: true });
     const filtered = (event) => {
       // Re-checked per event: SDK events ($pageleave) skip the router path.
-      if (!event || automationReason(navigator, window)) return null;
+      if (!event || automationReason(navigator, window, document)) return null;
       const clean = beforeSend(event);
-      if (clean) clean.properties.likely_bot = likelyBot(navigator, window, { leaving: clean.event === '$pageleave', interacted });
+      if (clean) clean.properties.likely_bot = likelyBot(navigator, { leaving: clean.event === '$pageleave', interacted });
       return clean;
     };
     posthog.init(TOKEN, {
@@ -59,4 +58,4 @@ if (enabled) {
     for (const detail of early) send(detail);
     addEventListener('opax:measured', ({ detail }) => send(detail));
   } catch { /* Offline, blocked storage or SDK failures must not break Opax. */ }
-}
+});

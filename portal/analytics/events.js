@@ -1,4 +1,4 @@
-import { cleanEvent, safePath, automationReason } from './privacy.mjs';
+import { cleanEvent, safePath, automationReason, whenMeasurable } from './privacy.mjs';
 import { askPageType } from '../public/growth-modules.js';
 /* --- OPAX events -------------------------------------------------------------
    The site is a single page app on real paths, so Tag Manager sees one page
@@ -10,14 +10,27 @@ import { askPageType } from '../public/growth-modules.js';
    what kind of thing happened, not what was asked. */
 (function () {
   // Do Not Track, or a clearly automated browser: nothing is measured or forwarded.
-  const optedOut = () => navigator.doNotTrack === '1' || window.doNotTrack === '1' || !!automationReason(navigator, window);
+  const optedOut = () => navigator.doNotTrack === '1' || window.doNotTrack === '1' || !!automationReason(navigator, window, document);
   // One privacy boundary for every producer, including async application outcomes.
   // Buffer early events so the GTM-delivered GA adapter can replay the first view.
   window.opaxAnalyticsPending = [];
   // PostHog (analytics.js) runs after the app's own scripts, so it replays from
   // its own log: GA's adapter empties opaxAnalyticsPending when it arrives.
   window.opaxAnalyticsLog = [];
+  // Until the visit is known to be measurable (a page hidden at load with no
+  // viewport yet), events wait here and are replayed once it comes on screen.
+  let held = [];
   addEventListener('opax:analytics', ({ detail }) => {
+    if (!held) return measure(detail);
+    held.push(detail);
+    if (held.length > 100) held.shift();
+  });
+  whenMeasurable(navigator, window, document, () => {
+    const early = held;
+    held = null;
+    for (const detail of early) measure(detail);
+  });
+  function measure(detail) {
     if (optedOut()) return;
     const properties = cleanEvent(detail?.event, detail?.event === "opax_ask_started"
       ? {...detail.properties, page_type: detail.properties?.page_type || askPageType(location.href)}
@@ -34,7 +47,7 @@ import { askPageType } from '../public/growth-modules.js';
       if (buffer.length > 100) buffer.shift();
     }
     dispatchEvent(new CustomEvent('opax:measured', { detail: measured }));
-  });
+  }
   const push = (event, params) => {
     try { dispatchEvent(new CustomEvent("opax:analytics", { detail: { event, properties: params } })); } catch { /* optional analytics */ }
   };
