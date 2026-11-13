@@ -2,7 +2,7 @@
 // with every record still labelled with the name it was made under (labels.js PARTY_RENAMES).
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync, readdirSync} from 'node:fs';
 import {build} from 'esbuild';
 import {Worker} from 'node:worker_threads';
 import {JSDOM} from 'jsdom';
@@ -217,6 +217,22 @@ test('search catalog: one party entry for the renamed party, found by its former
   assert.match(ldp[0].extra.aliases, /Liberal Democrats/);
   const invented = renamedPartyRecords(INVENTED);
   assert.deepEqual(invented.map(r => [r.key, r.href, r.extra.aliases]), [['party-rename:FIX', '/subject/party/fixture-freedom-party', 'Fixture Liberty Party Fixture Liberty']]);
+});
+
+test('built search catalog: one party record per party page, the Libertarian Party once, nothing titled Liberal Democratic Party', () => {
+  const manifest = readJson('/search-catalog/manifest.json');
+  const dir = new URL(`search-catalog/${manifest.version}/`, publicDir);
+  const parties = readdirSync(dir).filter(f => /^records-\d+\.json$/.test(f))
+    .flatMap(f => { const j = JSON.parse(readFileSync(new URL(f, dir), 'utf8')); return Array.isArray(j) ? j : j.records || Object.values(j); })
+    .filter(r => r?.kind === 'party');
+  assert.equal(parties.length, manifest.counts.party);
+  const hrefs = parties.map(r => r.href);
+  assert.equal(new Set(hrefs).size, hrefs.length, 'a party in several money files is one result');
+  const lib = parties.filter(r => r.href === '/subject/party/libertarian-party');
+  assert.equal(lib.length, 1);
+  assert.equal(lib[0].title, 'Libertarian Party');
+  assert.match(lib[0].snippet, /^Parties\. AEC: .*; QLD: .*; VIC: .*\. Each register's figure is its own; they are not added together\.$/);
+  assert.ok(!parties.some(r => /liberal democrat/i.test(r.title)));
 });
 
 test('money map node: an invented renamed party\'s own-return total, said under each name it was lodged as', () => {
