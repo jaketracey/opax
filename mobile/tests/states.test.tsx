@@ -1185,7 +1185,8 @@ describe('shared state kit', () => {
       );
       const row = r.root.find(
         (node) =>
-          node.props.testID === 'missing-action' && typeof node.type === 'string',
+          node.props.testID === 'missing-action' &&
+          typeof node.type === 'string',
       );
       expect(StyleSheet.flatten(row.props.style)).toMatchObject({
         flexDirection: 'row',

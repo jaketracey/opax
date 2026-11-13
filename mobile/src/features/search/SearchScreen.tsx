@@ -236,7 +236,9 @@ function SearchContent({
   // (sweep 2, item 8.1). The tab reset remounts the scroll view instead.
   const lastPhase = useRef(phase);
   const liveHeaderBottom = useRef(headerBottom);
-  liveHeaderBottom.current = headerBottom;
+  useEffect(() => {
+    liveHeaderBottom.current = headerBottom;
+  }, [headerBottom]);
   useEffect(() => {
     const was = lastPhase.current;
     lastPhase.current = phase;

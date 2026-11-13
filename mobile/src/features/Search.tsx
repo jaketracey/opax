@@ -11,10 +11,7 @@ import {
   useLayout,
 } from '../design/primitives';
 import { colors } from '../design/tokens';
-import {
-  RecordDetail,
-  RecordShare,
-} from './split/RecordDetail';
+import { RecordDetail, RecordShare } from './split/RecordDetail';
 import {
   encodeEntry,
   entryForRoute,

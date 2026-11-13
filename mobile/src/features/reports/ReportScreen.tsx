@@ -4,11 +4,7 @@ import { ScrollView, View, useWindowDimensions } from 'react-native';
 import { isReportSlug } from '../../api/official-report-policy';
 import type { OfficialReport } from '../../api/report-decoders';
 import { useRead } from '../../api/useRead';
-import {
-  Group,
-  Screen,
-  Skeleton,
-} from '../../design/primitives';
+import { Group, Screen, Skeleton } from '../../design/primitives';
 import { formatCount } from '../../design/format';
 import { rhythm } from '../../design/tokens';
 import { useHeaderBottom } from '../../design/useHeaderBottom';

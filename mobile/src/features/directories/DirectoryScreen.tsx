@@ -61,10 +61,7 @@ import {
   useSplitSelectionParams,
   type RecordEntry,
 } from '../split/entry';
-import {
-  RecordDetail,
-  RecordShare,
-} from '../split/RecordDetail';
+import { RecordDetail, RecordShare } from '../split/RecordDetail';
 import { loadDirectory, type DirectoryRecord } from './data';
 import {
   ElectorateDirectoryRow,

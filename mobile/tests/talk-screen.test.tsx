@@ -396,7 +396,9 @@ test('the consent sheet is a capped scroll view root that ends at its buttons', 
   const actions = ids.indexOf('talk-consent-actions');
   expect(actions).toBeGreaterThan(ids.indexOf('talk-consent-privacy'));
   expect(ids.indexOf('talk-agree')).toBeGreaterThan(actions);
-  expect(ids.indexOf('talk-not-now')).toBeGreaterThan(ids.indexOf('talk-agree'));
+  expect(ids.indexOf('talk-not-now')).toBeGreaterThan(
+    ids.indexOf('talk-agree'),
+  );
   expect(ids).not.toContain('talk-consent-footer');
 });
 
