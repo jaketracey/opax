@@ -1597,7 +1597,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=5010c0cd39');
+    const mod = await import('/money-explain.js?v=c980dd50b0');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -6271,8 +6271,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         ? { href: askHash(`What has parliament said about ${node.label}?`), label: "Ask what parliament said about this receipt source" }
         : { href: askHash(`What has parliament said about ${industryLabel(node.industry)}?`), label: "Ask what parliament said about this industry" };
     head.insertAdjacentHTML("beforeend", `<div class="page-actions entry-actions">
-      ${explainBtn(isParty ? { to: node.id } : { from: node.id },
-        isParty ? "Explain where the money comes from" : "Explain this money")}
+      ${reported ? explainBtn(isParty ? { to: node.id } : { from: node.id },
+        isParty ? "Explain where the money comes from" : "Explain this money") : "" /* nothing a party listed to explain: no $0 page */}
       ${moreMenuHTML([
         askAbout,
         { href: searchHash(`"${node.label}"`, {}), label: "Search mentions in the record" },
@@ -9905,7 +9905,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=5010c0cd39"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=c980dd50b0"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=c475b569bf");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
