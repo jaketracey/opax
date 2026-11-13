@@ -18,13 +18,13 @@ import { glassBar, largeTitleBar, scrollBar, tabRootGround } from './chrome';
 import { isTabStack } from './floating-bar';
 
 const roots = ['index', 'your-mp', 'bills', 'search', 'ask'];
-/** Roots whose Screen turns the top edge hard under scrolled text. */
-const hardEdgeRoots = ['index', 'search'];
+/** Pages whose scrolling view turns the top edge hard under scrolled text. */
+const hardEdgeRoots = ['index', 'search', 'ask', 'leads'];
 
 const searches = new WeakMap<
   object,
   {
-    value: { largeTitle?: boolean };
+    value: { largeTitle?: boolean; underBar?: boolean };
     listeners: Set<() => void>;
   }
 >();
@@ -42,6 +42,18 @@ function searchState(navigation: object) {
 // before its layout effects run. Never apply chrome from that stale read.
 function currentLargeTitle(navigation: object | undefined) {
   return !navigation || searchState(navigation).value.largeTitle !== false;
+}
+
+/** Report scroll state without owning or applying the bar's appearance. */
+export function useRootBarUnderBar(underBar: boolean, enabled = true) {
+  const navigation = useContext(NavigationContext);
+  useLayoutEffect(() => {
+    if (!navigation || !enabled) return;
+    const state = searchState(navigation);
+    if (state.value.underBar === underBar) return;
+    state.value = { ...state.value, underBar };
+    state.listeners.forEach((listener) => listener());
+  }, [navigation, enabled, underBar]);
 }
 
 /**
@@ -73,11 +85,12 @@ export function useRootBarSearchOptions(
  * their FlatList/ScrollView does not use Screen. The five tab roots and
  * explicit large-title lists opt in; record and inline screens keep the
  * stack's opaque bar. Scrolling belongs to UIKit, never JS collapse
- * thresholds. The one scroll-driven update is `underBar` from Screen: the
+ * thresholds. The one scroll-driven update is `underBar` from Screen or Ask: the
  * page has left rest, so the top edge turns hard from the first point of
  * scroll, the large-title collapse included, and soft again at rest (once
- * each way, never per frame). Today and Search on iPhone only; the iPad
- * roots and the RouteOptions owners keep the soft edge.
+ * each way, never per frame). RouteOptions reads the scrolling view's report
+ * from the shared route state when it owns the bar. Horizontal iPad bars
+ * keep the soft edge; a vertical bar follows its scrolling content.
  * The setter must be the shared useSafeSetOptions guard.
  */
 export function useRootBarAppearance(
@@ -93,7 +106,7 @@ export function useRootBarAppearance(
     disabled?: boolean;
     names?: readonly string[];
     owner?: 'screen' | 'options';
-    /** Screen's content has scrolled under the bar (iOS). */
+    /** The scrolling content has passed the bar's bottom edge (iOS). */
     underBar?: boolean;
   } = {},
 ) {
@@ -141,12 +154,12 @@ export function useRootBarAppearance(
     (name === 'search' && rootOptions.largeTitle === false);
   const rootKey = root?.key;
   const identifier = rootKey ? `opax-root-bar-${rootKey}` : undefined;
+  useRootBarUnderBar(underBar, !!rootKey && owner === 'screen');
+  const contentUnderBar = owner === 'screen' ? underBar : rootOptions.underBar;
   const hardEdge =
-    underBar &&
-    owner === 'screen' &&
+    !!contentUnderBar &&
     Platform.OS === 'ios' &&
-    !Platform.isPad &&
-    hardEdgeRoots.includes(name);
+    (verticalBar || (!Platform.isPad && hardEdgeRoots.includes(name)));
 
   useLayoutEffect(() => {
     if (
@@ -163,7 +176,12 @@ export function useRootBarAppearance(
             headerLargeTitleEnabled: true,
             unstable_nativeProps: { testID: identifier },
           }
-        : scrollBar(colour, solid, barEdge),
+        : scrollBar(
+            colour,
+            solid,
+            barEdge,
+            contentUnderBar === undefined ? undefined : hardEdge,
+          ),
     );
   }, [
     rootKey,
@@ -177,6 +195,7 @@ export function useRootBarAppearance(
     verticalBar,
     barEdge,
     hardEdge,
+    contentUnderBar,
   ]);
   // A coloured UIKit appearance hides large titles on iOS 26. Only the
   // accessibility fallback needs this native sibling. Header-height updates
@@ -247,4 +266,4 @@ export function useRootBarAppearance(
   return !!root;
 }
 
-const emptyOptions: { largeTitle?: boolean } = {};
+const emptyOptions: { largeTitle?: boolean; underBar?: boolean } = {};

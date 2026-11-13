@@ -22,7 +22,7 @@ name: 67 My MP entry points, one search row, save, replace, senator and a seat l
     index: 1
 - longPressOn:
     id: search-result-anthony-albanese
-- tapOn: Set Grayndler as my electorate
+- tapOn: 'Set Grayndler as my .*'
 - assertNotVisible: Replace .* with Grayndler\?
 - openLink: opax://your-mp
 - extendedWaitUntil:
@@ -64,7 +64,7 @@ name: 67 My MP entry points, one search row, save, replace, senator and a seat l
     timeout: 60000
 - longPressOn:
     id: search-result-tanya-plibersek
-- tapOn: Set Sydney as my electorate
+- tapOn: 'Set Sydney as my .*'
 - assertVisible: Replace Grayndler with Sydney\?
 - tapOn: Cancel
 # The saved electorate cannot offer to save itself again.
@@ -77,7 +77,7 @@ name: 67 My MP entry points, one search row, save, replace, senator and a seat l
     file: support/open-more.yaml
     env:
       NAME: Grayndler
-- assertNotVisible: Set Grayndler as my electorate
+- assertNotVisible: 'Set Grayndler as my .*'
 - tapOn:
     point: 10%, 80%
 - openLink: opax://seat

@@ -2,7 +2,9 @@ import { withNavigationOptions } from './navigation-options';
 import { useState } from 'react';
 import {
   HeaderHeightContext,
+  NavigationContext,
   NavigationContainerRefContext,
+  NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import {
@@ -59,6 +61,8 @@ import { useOpenAsk } from '../src/features/ask/open';
 import { askReturnSnapshot, setAskReturn } from '../src/features/ask/return';
 import { fromWebPath } from '../src/navigation/external';
 import * as Duo from '../modules/opax-duo';
+import * as RootBar from '../modules/opax-root-bar';
+import * as BarAppearance from '../src/navigation/useRootBarAppearance';
 import {
   currentRule,
   resetAdaptiveDeviceForTests,
@@ -2274,19 +2278,181 @@ describe('the idle page at accessibility sizes', () => {
     }
   });
 
-  test('a conversation keeps the full-height page with room for the composer', async () => {
-    const restore = await at(3.571);
-    try {
-      jest.spyOn(askSession, 'snapshot').mockReturnValue({
-        ...askSession.snapshot(),
-        thread: oneChat.chats[0]!.thread,
-      });
-      await mount();
-      await layOut();
-      expect(scrollStyle().marginBottom).toBeUndefined();
-    } finally {
-      jest.mocked(askSession.snapshot).mockRestore();
-      restore();
-    }
-  });
+  test.each([
+    ['phone Large', 1, false],
+    ['phone AX3', 2.643, false],
+    ['phone AX5', 3.571, false],
+    ['undocked iPad Large', 1, true],
+    ['undocked iPad AX5', 3.571, true],
+  ] as const)(
+    'a resting conversation on %s ends above the composer, hiding the stamp below it',
+    async (_device, fontScale, pad) => {
+      const restore = await at(fontScale);
+      const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(pad);
+      const handlers = new Map<string, Set<(event: unknown) => void>>();
+      const listener = jest
+        .spyOn(Keyboard, 'addListener')
+        .mockImplementation((name, handler) => {
+          const callbacks = handlers.get(name) ?? new Set();
+          callbacks.add(handler as (event: unknown) => void);
+          handlers.set(name, callbacks);
+          return { remove: () => callbacks.delete(handler) };
+        });
+      const measure = jest
+        .spyOn(View.prototype, 'measureInWindow')
+        .mockImplementation((callback) => callback(0, 0, 402, COLUMN));
+      try {
+        jest.spyOn(askSession, 'snapshot').mockReturnValue({
+          ...askSession.snapshot(),
+          thread: oneChat.chats[0]!.thread,
+        });
+        await mount();
+        await layOut();
+        expect(view!.root.findByType(AskColumns).props.docked).toBe(false);
+        expect(scrollStyle().marginBottom).toBe(COLUMN - (AREA - COMPOSER));
+        expect(contentStyle().paddingBottom).toBe(rhythm.section);
+        act(() =>
+          handlers.get('keyboardWillChangeFrame')!.forEach((handler) =>
+            handler({
+              endCoordinates: {
+                screenY: 400,
+                width: 402,
+                height: Dimensions.get('screen').height - 400,
+              },
+            }),
+          ),
+        );
+        expect(scrollStyle().marginBottom ?? 0).toBe(0);
+        expect(view!.root.findByType(PhoneDock).props.keyboardVisible).toBe(
+          true,
+        );
+        expect(contentStyle().paddingBottom).toBeGreaterThan(rhythm.section);
+        act(() =>
+          handlers.get('keyboardWillHide')!.forEach((handler) => handler({})),
+        );
+        expect(scrollStyle().marginBottom).toBe(COLUMN - (AREA - COMPOSER));
+      } finally {
+        jest.mocked(askSession.snapshot).mockRestore();
+        listener.mockRestore();
+        measure.mockRestore();
+        idiom.mockRestore();
+        restore();
+      }
+    },
+  );
 });
+
+test.each([
+  ['phone', 'unspecified', 393, 852, false],
+  ['Duo outer', 'trailing', 402, 678, false],
+  ['vertical iPad bar', 'leading', 402, 678, true],
+] as const)(
+  'AX5 %s: Ask reports the first scroll point through its RouteOptions owner and returns soft at rest',
+  async (_device, edge, width, height, pad) => {
+    const window = Dimensions.get('window');
+    const barEdge = jest
+      .spyOn(RootBar, 'useVerticalBarEdge')
+      .mockReturnValue(edge);
+    act(() =>
+      Dimensions.set({
+        window: { ...window, width, height, fontScale: 3.571 },
+      }),
+    );
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+    const platform = jest.replaceProperty(Platform, 'OS', 'ios');
+    const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(pad);
+    const appearance = jest.spyOn(BarAppearance, 'useRootBarAppearance');
+    const route = { key: 'ask-root', name: 'ask' };
+    const navigation = {
+      setOptions: jest.fn((options) => {
+        mockBar.options = { ...mockBar.options, ...options };
+      }),
+      getState: () => ({
+        index: 0,
+        routes: [route],
+        routeNames: ['ask', 'bill/[key]', 'explore/[tool]'],
+      }),
+      isFocused: () => true,
+      addListener: () => () => {},
+    };
+    const edges = () =>
+      navigation.setOptions.mock.calls
+        .map(([options]) => options.scrollEdgeEffects?.top)
+        .filter(Boolean);
+    const page = (height: number) => (
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <HeaderHeightContext.Provider value={height}>
+            <AskScreen />
+          </HeaderHeightContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
+    );
+    const scrollTo = (y: number) =>
+      act(() =>
+        view!.root.findByType(ScrollView).props.onScroll({
+          nativeEvent: { contentOffset: { y } },
+        }),
+      );
+    try {
+      await mount(page(120));
+      expect(appearance.mock.calls.length).toBeGreaterThan(0);
+      expect(
+        appearance.mock.calls.every(
+          ([, options]) => options?.owner === 'options',
+        ),
+      ).toBe(true);
+      expect(edges().at(-1)).toBe('soft');
+      navigation.setOptions.mockClear();
+      scrollTo(-120);
+      scrollTo(-121); // Pulling down is still at rest.
+      expect(edges()).toEqual([]);
+      scrollTo(-118); // Before UIKit reports a collapsed header.
+      expect(edges()).toEqual(['hard']);
+      scrollTo(0);
+      await act(async () =>
+        view!.update(
+          withNavigationOptions(page(68), (options) => {
+            mockBar.options = options;
+          }),
+        ),
+      );
+      scrollTo(400);
+      expect(edges()).toEqual(['hard']);
+      scrollTo(-68);
+      expect(edges()).toEqual(['hard', 'soft']);
+
+      openSavedConversation();
+      scrollTo(400);
+      expect(edges().at(-1)).toBe('hard');
+      await act(async () => barButton('New question')!.onPress());
+      // scrollToTop is mocked and emits no event. Idle must already be soft.
+      expect(byId('ask-idle').length).toBeGreaterThan(0);
+      expect(edges().at(-1)).toBe('soft');
+      await act(async () =>
+        view!.update(
+          withNavigationOptions(page(120), (options) => {
+            mockBar.options = options;
+          }),
+        ),
+      );
+      // A new header height must not re-read the previous thread's offset.
+      expect(edges().at(-1)).toBe('soft');
+    } finally {
+      await act(async () => {
+        view?.unmount();
+        view = null;
+      });
+      idiom.mockRestore();
+      appearance.mockRestore();
+      barEdge.mockRestore();
+      act(() => Dimensions.set({ window }));
+      platform.restore();
+      Object.defineProperty(Platform, 'Version', version);
+    }
+  },
+);

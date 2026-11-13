@@ -37,7 +37,7 @@ import {
 } from '../src/features/your-mp/RepresentativeRows';
 import { loadChoice } from '../src/features/your-mp/choice-store';
 import { resetSeatForTests } from '../src/features/your-mp/useSeat';
-import { menuTitle } from '../src/design/menu-title';
+import { menuTitle, plainMenuTitle } from '../src/design/menu-title';
 
 jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn(async () => null) },
@@ -420,29 +420,42 @@ test('election rows push the election screen, newest first', async () => {
   await act(async () => r.unmount());
 });
 
-test('the bar menu: no Set as my electorate is ever disabled; Ask drafts without sending', async () => {
-  load('Grayndler');
-  const r = await render(<Electorate />);
-  const items = menuItems();
-  const menu = items.find((i) => i.type === 'menu')!;
-  const labels = menu.menu!.items.map((i) => i.label);
-  expect(labels).toEqual([
-    'Set Grayndler as my electorate',
-    'View on a date',
-    'Ask about Grayndler',
-    'Copy link',
-    menuTitle('Open on opax.com.au'),
-  ]);
-  await act(async () =>
-    menu.menu!.items.find((i) => i.label === 'Ask about Grayndler')!.onPress(),
-  );
-  // The seat's name goes with it, for Ask's way back.
-  expect(mockOpenAsk).toHaveBeenCalledWith(
-    { question: 'What has parliament said about Grayndler?' },
-    'Grayndler',
-  );
-  await act(async () => r.unmount());
-});
+test.each([1, 3.571])(
+  'the bar menu at scale %s on the 402pt Duo keeps the full electorate label; Ask drafts without sending',
+  async (fontScale) => {
+    const dimensions = jest
+      .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
+      .mockReturnValue({ width: 402, height: 678, scale: 3, fontScale });
+    try {
+      load('Grayndler');
+      const r = await render(<Electorate />);
+      const items = menuItems();
+      const menu = items.find((i) => i.type === 'menu')!;
+      const labels = menu.menu!.items.map((i) => i.label);
+      expect(labels).toEqual([
+        menuTitle('Set Grayndler as my electorate'),
+        'View on a date',
+        'Ask about Grayndler',
+        'Copy link',
+        menuTitle('Open on opax.com.au'),
+      ]);
+      expect(plainMenuTitle(labels[0]!)).toBe('Set Grayndler as my electorate');
+      await act(async () =>
+        menu
+          .menu!.items.find((i) => i.label === 'Ask about Grayndler')!
+          .onPress(),
+      );
+      // The seat's name goes with it, for Ask's way back.
+      expect(mockOpenAsk).toHaveBeenCalledWith(
+        { question: 'What has parliament said about Grayndler?' },
+        'Grayndler',
+      );
+      await act(async () => r.unmount());
+    } finally {
+      dimensions.mockRestore();
+    }
+  },
+);
 
 test("no Set as my electorate when it is already the reader's seat", async () => {
   load('Grayndler');
@@ -867,7 +880,9 @@ test('a Victorian district shows its region row and the authorisation foot, and 
   const labels = menuItems()
     .find((i) => i.type === 'menu')!
     .menu!.items.map((i) => i.label);
-  expect(labels).not.toContain('Set Richmond as my electorate');
+  expect(labels.map(plainMenuTitle)).not.toContain(
+    'Set Richmond as my electorate',
+  );
   await act(async () => r.unmount());
 });
 

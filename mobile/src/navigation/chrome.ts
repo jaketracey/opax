@@ -56,9 +56,8 @@ export const glassBar = () =>
  * Protect the content edge where UIKit actually places the bar. A vertical
  * bar (the iPhone Duo's folded display) moves the tab items to the side rail,
  * but the title and the search field stay at the top with no large title to
- * collapse: a soft top edge there let scrolled text show through the glass
- * search field and hid the title (duo audit, finding 3). The top edge is hard
- * on vertical bars, roots included, unless the bar is solid ('hidden').
+ * collapse. Its top edge follows the page too: soft at rest so the masthead
+ * shows whole, hard under scrolled content, hidden behind a solid bar.
  * Phones, the unfolded Duo and iPad report 'unspecified' and keep `active`.
  */
 export function barScrollEdges(
@@ -68,7 +67,7 @@ export function barScrollEdges(
   return edge === 'unspecified'
     ? { top: active, bottom: 'soft' as const }
     : {
-        top: active === 'hidden' ? active : ('hard' as const),
+        top: active,
         bottom: 'soft' as const,
         left: edge === 'leading' ? active : ('soft' as const),
         right: edge === 'trailing' ? active : ('soft' as const),
@@ -129,6 +128,9 @@ export const scrollBar = (
   ground: ColorValue = colors.paper,
   solid = false,
   edge: VerticalBarEdge = 'unspecified',
+  // A vertical list without a scroll reporter retains its existing cover.
+  // Reporters supply false at rest, then true from the first scroll point.
+  underBar = edge !== 'unspecified',
 ) =>
   glassBar()
     ? solid
@@ -139,7 +141,10 @@ export const scrollBar = (
         }
       : {
           ...largeTitleBar(ground),
-          scrollEdgeEffects: barScrollEdges(edge, 'soft'),
+          scrollEdgeEffects: {
+            ...barScrollEdges(edge, 'soft'),
+            top: underBar ? ('hard' as const) : ('soft' as const),
+          },
         }
     : opaqueBar(ground);
 
