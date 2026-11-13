@@ -10,7 +10,59 @@ export type SourceTab = Exclude<TabSegment, '(ask)'>;
  * item reads ("Back to {name}"). The page itself stays on its tab's stack,
  * so switching back to the tab returns to it as it was.
  */
-export type AskReturn = { tab: SourceTab; name: string };
+export type AskReturn = {
+  tab: SourceTab;
+  name: string;
+  /**
+   * The back item's visible word: the kind of page or the tab ("Bill",
+   * "Today"), never the record's long name, which stays in its
+   * accessibility label (sweep 2 item 9). Defaults to the tab's name.
+   */
+  short?: string;
+};
+
+/** A page's kind word, by its route's first segment inside the tab. */
+const pageKinds: Readonly<Record<string, string>> = {
+  bill: 'Bill',
+  'bill-text': 'Bill',
+  'bill-text-contents': 'Bill',
+  'bill-list': 'Bills',
+  person: 'Profile',
+  party: 'Party',
+  electorate: 'Electorate',
+  topic: 'Topic',
+  topics: 'Topics',
+  doc: 'Record',
+  lead: 'Lead',
+  leads: 'Leads',
+  edition: 'Edition',
+  report: 'Report',
+  results: 'Search',
+  money: 'Money map',
+  'money-record': 'Money',
+  'money-node': 'Money',
+  'money-item': 'Money',
+  'public-money': 'Public money',
+  grants: 'Grants',
+  'largest-grants': 'Grants',
+  'grant-program': 'Grants',
+  agency: 'Agency',
+  agencies: 'Agencies',
+  directory: 'Directory',
+  members: 'Members',
+};
+
+/**
+ * The back item's short word for a page: its kind when the route names one,
+ * else the tab's own name (a tab's root, or a page with no kind here).
+ */
+export function shortReturnName(
+  tab: SourceTab,
+  segments: readonly string[],
+): string {
+  const page = segments[2];
+  return (page && pageKinds[page]) || sourceTabNames[tab];
+}
 
 /** The tab bar's own names, for a page that gives no name of its own. */
 export const sourceTabNames: Readonly<Record<SourceTab, string>> = {
