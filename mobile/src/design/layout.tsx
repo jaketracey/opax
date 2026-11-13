@@ -137,6 +137,11 @@ export function useScreenColumn(
 /** Half a point of rounding between UIKit's inset and the reported bar. */
 const underBarSlack = 1;
 const stickyFirst = [0];
+/**
+ * The lowest offset a drag has started from while Screen pins a band: the
+ * offset at rest, below the bar. Null until the reader first drags.
+ */
+export const PinnedRestContext = createContext<number | null>(null);
 
 /**
  * Screen's pinned band: it scrolls with the content until its top meets the
@@ -146,6 +151,12 @@ const stickyFirst = [0];
  * header (ScrollViewStickyHeader) with the stick point moved down by the
  * header's height; Fabric needs the same explicit value on each commit, or a
  * re-render would put the band back where the last commit left it.
+ *
+ * The header height alone is not enough: with Search's field active it still
+ * counts the hidden large title (about 240 pt over a 123 pt bar) until the
+ * page scrolls, which pushed the band below the count line at rest. So the
+ * band holds its place until the reader drags, and sticks no earlier than
+ * its own top margin past the offset that drag started from at rest.
  */
 function BarStickyHeader(props: {
   children?: ReactNode;
@@ -155,22 +166,23 @@ function BarStickyHeader(props: {
 }) {
   const { scrollAnimatedValue } = props;
   const headerBottom = useHeaderBottom();
+  const rest = useContext(PinnedRestContext);
   const [top, setTop] = useState<number | null>(null);
   const [latest, setLatest] = useState<number | null>(null);
   const translateY = useMemo(() => {
-    if (top === null)
+    if (top === null || rest === null)
       return scrollAnimatedValue.interpolate({
         inputRange: [-1, 0],
         outputRange: [0, 0],
       });
-    const stick = top - headerBottom;
+    const stick = Math.max(top - headerBottom, rest + top);
     return scrollAnimatedValue.interpolate({
       inputRange: [stick - 1, stick, stick + 1],
       outputRange: [0, 0, 1],
       extrapolateLeft: 'clamp',
       extrapolateRight: 'extend',
     });
-  }, [scrollAnimatedValue, top, headerBottom]);
+  }, [scrollAnimatedValue, top, headerBottom, rest]);
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | null = null;
     const id = translateY.addListener(({ value }) => {
@@ -298,6 +310,9 @@ export function Screen({
     if (!inPane && !nativeRoot) setOptions(opaqueBar(colors[ground]));
   }, [setOptions, ground, inPane, nativeRoot]);
   const pinnedHere = Platform.OS === 'ios' && !!pinned;
+  const [pinnedRest, setPinnedRest] = useState<number | null>(null);
+  // A new band (Search submitted again) learns its rest offset again.
+  if (!pinnedHere && pinnedRest !== null) setPinnedRest(null);
   const contentRoot = useRef<View>(null);
   const [anchorBottom, setAnchorBottom] = useState<number | null>(null);
   const titleScroll = useRef<TitleScrollHandler | null>(null);
@@ -343,123 +358,143 @@ export function Screen({
   return (
     <StatePageProvider refreshing={!!refreshControl?.props.refreshing}>
       <SidebarSafe style={[styles.screen, { backgroundColor: colors[ground] }]}>
-        <ScrollView
-          ref={targetRef}
-          testID={testID}
-          style={[styles.screen, { backgroundColor: colors[ground] }]}
-          contentInsetAdjustmentBehavior={contentInsetAdjustmentBehavior}
-          scrollToOverflowEnabled={scrollToOverflowEnabled}
-          alwaysBounceVertical={Platform.OS === 'ios'}
-          keyboardShouldPersistTaps="handled"
-          automaticallyAdjustKeyboardInsets
-          keyboardDismissMode="on-drag"
-          refreshControl={refreshControl}
-          contentContainerStyle={[
-            styles.content,
-            // Blank space on short pages must accept drags and refresh pulls.
-            { flexGrow: 1 },
-            content,
-            regular ? { gap: rhythmRegular.section } : null,
-          ]}
-          maintainVisibleContentPosition={maintainVisibleContentPosition}
-          onContentSizeChange={
-            clampScrollOnContentChange ? bounds.onContentSizeChange : undefined
-          }
-          onLayout={(event) => {
-            onLayout(event);
-            onPageLayout?.(event);
-            if (clampScrollOnContentChange) bounds.onLayout(event);
-          }}
-          onScroll={(event) => {
-            if (clampScrollOnContentChange) bounds.onScroll(event);
-            const y = event.nativeEvent.contentOffset.y;
-            scrollY.current = y;
-            checkUnderBar();
-            if (Platform.OS === 'android') androidRoot.onScroll(y);
-            if (titleScroll.current) titleScroll.current(y, anchorBottom);
-            else if (!inPane && barTitle) nativeTitle.onScroll(y);
-            onScroll?.(y);
-          }}
-          onScrollEndDrag={
-            clampScrollOnContentChange ? bounds.onScroll : undefined
-          }
-          onMomentumScrollEnd={
-            clampScrollOnContentChange ? bounds.onScroll : undefined
-          }
-          scrollEventThrottle={16}
-          stickyHeaderIndices={pinnedHere ? stickyFirst : undefined}
-          StickyHeaderComponent={pinnedHere ? BarStickyHeader : undefined}
-        >
-          {pinnedHere ? (
-            <View
-              testID="screen-pinned"
-              style={[
-                {
-                  // Full width, so rows scrolling under it never show at its
-                  // sides; its own content keeps the page margins.
-                  marginLeft: -(
-                    content.paddingLeft ?? content.paddingHorizontal
-                  ),
-                  marginRight: -(
-                    content.paddingRight ?? content.paddingHorizontal
-                  ),
-                  paddingLeft: content.paddingLeft ?? content.paddingHorizontal,
-                  paddingRight:
-                    content.paddingRight ?? content.paddingHorizontal,
-                  backgroundColor: colors[ground],
-                  // The content's own gap would stand between this band and
-                  // the content; it keeps a line's space instead.
-                  marginBottom:
-                    rhythm.line -
-                    (regular ? rhythmRegular.section : layout.sectionGap),
-                },
-              ]}
-            >
-              <RegionProvider value={inner}>
-                <SurfaceContext.Provider value={ground}>
-                  {pinned}
-                </SurfaceContext.Provider>
-              </RegionProvider>
-            </View>
-          ) : null}
-          <RegionProvider value={inner}>
-            <SurfaceContext.Provider value={ground}>
-              <TitleAnchorContext.Provider value={setContentAnchor}>
-                <TitleHeadingContext.Provider
-                  value={{
-                    setRef: setHeading,
-                    onLayout:
-                      Platform.OS === 'ios'
-                        ? nativeTitle.onTitleLayout
-                        : undefined,
-                  }}
-                >
-                  <TitleContentContext.Provider value={contentRoot}>
-                    <View
-                      ref={contentRoot}
-                      onLayout={onContentLayout}
-                      style={{
-                        gap: regular ? rhythmRegular.section : rhythm.section,
-                        ...(centred
-                          ? { flexGrow: 1, justifyContent: 'center' as const }
-                          : {}),
-                      }}
-                    >
-                      {bar}
-                      {androidRoot.title}
-                      {pinned && !pinnedHere ? pinned : null}
-                      <ScreenSectionGapContext.Provider
-                        value={regular ? rhythmRegular.section : rhythm.section}
+        <PinnedRestContext.Provider value={pinnedRest}>
+          <ScrollView
+            ref={targetRef}
+            testID={testID}
+            style={[styles.screen, { backgroundColor: colors[ground] }]}
+            contentInsetAdjustmentBehavior={contentInsetAdjustmentBehavior}
+            scrollToOverflowEnabled={scrollToOverflowEnabled}
+            alwaysBounceVertical={Platform.OS === 'ios'}
+            keyboardShouldPersistTaps="handled"
+            automaticallyAdjustKeyboardInsets
+            keyboardDismissMode="on-drag"
+            refreshControl={refreshControl}
+            contentContainerStyle={[
+              styles.content,
+              // Blank space on short pages must accept drags and refresh pulls.
+              { flexGrow: 1 },
+              content,
+              regular ? { gap: rhythmRegular.section } : null,
+            ]}
+            maintainVisibleContentPosition={maintainVisibleContentPosition}
+            onContentSizeChange={
+              clampScrollOnContentChange
+                ? bounds.onContentSizeChange
+                : undefined
+            }
+            onLayout={(event) => {
+              onLayout(event);
+              onPageLayout?.(event);
+              if (clampScrollOnContentChange) bounds.onLayout(event);
+            }}
+            onScroll={(event) => {
+              if (clampScrollOnContentChange) bounds.onScroll(event);
+              const y = event.nativeEvent.contentOffset.y;
+              scrollY.current = y;
+              checkUnderBar();
+              if (Platform.OS === 'android') androidRoot.onScroll(y);
+              if (titleScroll.current) titleScroll.current(y, anchorBottom);
+              else if (!inPane && barTitle) nativeTitle.onScroll(y);
+              onScroll?.(y);
+            }}
+            onScrollBeginDrag={
+              pinnedHere
+                ? (event) => {
+                    const y = event.nativeEvent.contentOffset.y;
+                    // At rest UIKit's inset makes the offset negative; a drag
+                    // that starts further down says nothing about the bar.
+                    if (y < 0)
+                      setPinnedRest((rest) =>
+                        rest === null ? y : Math.min(rest, y),
+                      );
+                  }
+                : undefined
+            }
+            onScrollEndDrag={
+              clampScrollOnContentChange ? bounds.onScroll : undefined
+            }
+            onMomentumScrollEnd={
+              clampScrollOnContentChange ? bounds.onScroll : undefined
+            }
+            scrollEventThrottle={16}
+            stickyHeaderIndices={pinnedHere ? stickyFirst : undefined}
+            StickyHeaderComponent={pinnedHere ? BarStickyHeader : undefined}
+          >
+            {pinnedHere ? (
+              <View
+                testID="screen-pinned"
+                style={[
+                  {
+                    // Full width, so rows scrolling under it never show at its
+                    // sides; its own content keeps the page margins.
+                    marginLeft: -(
+                      content.paddingLeft ?? content.paddingHorizontal
+                    ),
+                    marginRight: -(
+                      content.paddingRight ?? content.paddingHorizontal
+                    ),
+                    paddingLeft:
+                      content.paddingLeft ?? content.paddingHorizontal,
+                    paddingRight:
+                      content.paddingRight ?? content.paddingHorizontal,
+                    backgroundColor: colors[ground],
+                    // The content's own gap would stand between this band and
+                    // the content; it keeps a line's space instead.
+                    marginBottom:
+                      rhythm.line -
+                      (regular ? rhythmRegular.section : layout.sectionGap),
+                  },
+                ]}
+              >
+                <RegionProvider value={inner}>
+                  <SurfaceContext.Provider value={ground}>
+                    {pinned}
+                  </SurfaceContext.Provider>
+                </RegionProvider>
+              </View>
+            ) : null}
+            <RegionProvider value={inner}>
+              <SurfaceContext.Provider value={ground}>
+                <TitleAnchorContext.Provider value={setContentAnchor}>
+                  <TitleHeadingContext.Provider
+                    value={{
+                      setRef: setHeading,
+                      onLayout:
+                        Platform.OS === 'ios'
+                          ? nativeTitle.onTitleLayout
+                          : undefined,
+                    }}
+                  >
+                    <TitleContentContext.Provider value={contentRoot}>
+                      <View
+                        ref={contentRoot}
+                        onLayout={onContentLayout}
+                        style={{
+                          gap: regular ? rhythmRegular.section : rhythm.section,
+                          ...(centred
+                            ? { flexGrow: 1, justifyContent: 'center' as const }
+                            : {}),
+                        }}
                       >
-                        {anchorHeadings(withOffline(children, offline))}
-                      </ScreenSectionGapContext.Provider>
-                    </View>
-                  </TitleContentContext.Provider>
-                </TitleHeadingContext.Provider>
-              </TitleAnchorContext.Provider>
-            </SurfaceContext.Provider>
-          </RegionProvider>
-        </ScrollView>
+                        {bar}
+                        {androidRoot.title}
+                        {pinned && !pinnedHere ? pinned : null}
+                        <ScreenSectionGapContext.Provider
+                          value={
+                            regular ? rhythmRegular.section : rhythm.section
+                          }
+                        >
+                          {anchorHeadings(withOffline(children, offline))}
+                        </ScreenSectionGapContext.Provider>
+                      </View>
+                    </TitleContentContext.Provider>
+                  </TitleHeadingContext.Provider>
+                </TitleAnchorContext.Provider>
+              </SurfaceContext.Provider>
+            </RegionProvider>
+          </ScrollView>
+        </PinnedRestContext.Provider>
       </SidebarSafe>
     </StatePageProvider>
   );

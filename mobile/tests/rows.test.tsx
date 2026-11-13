@@ -3,7 +3,7 @@ import {
   HeaderHeightContext,
   NavigationContext,
 } from 'expo-router/react-navigation';
-import { act, type ReactElement, type ReactNode } from 'react';
+import { act, useContext, type ReactElement, type ReactNode } from 'react';
 import {
   Animated,
   Dimensions,
@@ -18,6 +18,7 @@ import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { Icon } from '../src/design/icon';
 import {
   InsetGroup,
+  PinnedRestContext,
   Screen,
   ScreenHeader,
   SectionHeader,
@@ -1435,41 +1436,91 @@ describe('Screen pins a band under the bar (sweep 1, item 1)', () => {
     );
     // It holds at the bar's bottom edge, not under the bar at the top.
     const Sticky = scroll.props.StickyHeaderComponent;
-    const offset = new Animated.Value(-100);
-    const sticky = render(
-      <HeaderHeightContext.Provider value={100}>
-        <Sticky scrollAnimatedValue={offset} onLayout={jest.fn()}>
-          <View />
-        </Sticky>
-      </HeaderHeightContext.Provider>,
-    ).root;
-    const header = sticky.find(
-      (n) =>
-        n.props.testID === 'screen-pinned-header' &&
-        typeof n.props.onLayout === 'function',
-    );
-    act(() =>
-      header.props.onLayout({ nativeEvent: { layout: { y: 16, height: 52 } } }),
-    );
-    const translate = () => {
-      const node = sticky.find(
-        (n) =>
-          n.props.testID === 'screen-pinned-header' &&
-          typeof n.type === 'string',
+    const sticky = (header: number, rest: number | null) => {
+      const offset = new Animated.Value(rest ?? -header);
+      const root = render(
+        <HeaderHeightContext.Provider value={header}>
+          <PinnedRestContext.Provider value={rest}>
+            <Sticky scrollAnimatedValue={offset} onLayout={jest.fn()}>
+              <View />
+            </Sticky>
+          </PinnedRestContext.Provider>
+        </HeaderHeightContext.Provider>,
+      ).root;
+      act(() =>
+        root
+          .find(
+            (n) =>
+              n.props.testID === 'screen-pinned-header' &&
+              typeof n.props.onLayout === 'function',
+          )
+          .props.onLayout({ nativeEvent: { layout: { y: 16, height: 52 } } }),
       );
-      const transform = flat(node.props.style).transform as {
-        translateY: number;
-      }[];
-      return transform[0]!.translateY;
+      return (y: number) => {
+        act(() => offset.setValue(y));
+        const node = root.find(
+          (n) =>
+            n.props.testID === 'screen-pinned-header' &&
+            typeof n.type === 'string',
+        );
+        const transform = flat(node.props.style).transform as {
+          translateY: number;
+        }[];
+        return transform[0]!.translateY;
+      };
     };
     // At rest (offset -100) and until its top meets the bar: it scrolls.
-    act(() => offset.setValue(-100));
-    expect(translate()).toBe(0);
-    act(() => offset.setValue(16 - 100));
-    expect(translate()).toBe(0);
+    const at = sticky(100, -100);
+    expect(at(-100)).toBe(0);
+    expect(at(16 - 100)).toBe(0);
     // Then it holds there.
-    act(() => offset.setValue(16 - 100 + 240));
-    expect(translate()).toBe(240);
+    expect(at(16 - 100 + 240)).toBe(240);
+    // Search's active field: the header still counts the hidden large title
+    // (240 pt) over a 123 pt bar. At rest the band stays under the field,
+    // above the count line, and sticks once its top reaches the bar.
+    const stale = sticky(240, -123);
+    expect(stale(-123)).toBe(0);
+    expect(stale(16 - 123)).toBe(0);
+    expect(stale(16 - 123 + 50)).toBe(50);
+    // Before the reader first drags, nothing moves it.
+    const undragged = sticky(240, null);
+    expect(undragged(-123)).toBe(0);
+    expect(undragged(300)).toBe(0);
+  });
+  test('the first drag from rest sets where the band sticks', () => {
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    // The provider wraps the scroll view, so the band (and its sticky
+    // header) reads it.
+    let rest: number | null | undefined;
+    function RestProbe() {
+      rest = useContext(PinnedRestContext);
+      return null;
+    }
+    const root = render(
+      <HeaderHeightContext.Provider value={240}>
+        <Screen testID="page" pinned={<RestProbe />}>
+          <View />
+        </Screen>
+      </HeaderHeightContext.Provider>,
+    ).root;
+    const drag = (y: number) =>
+      act(() =>
+        root
+          .find(
+            (node) =>
+              node.props.testID === 'page' &&
+              typeof node.props.onScrollBeginDrag === 'function',
+          )
+          .props.onScrollBeginDrag({ nativeEvent: { contentOffset: { y } } }),
+      );
+    expect(rest).toBeNull();
+    // A drag from further down says nothing about the bar.
+    drag(300);
+    expect(rest).toBeNull();
+    drag(-123);
+    expect(rest).toBe(-123);
+    drag(-40);
+    expect(rest).toBe(-123);
   });
   test('Android: the band is the first thing in the content and scrolls', () => {
     const root = band('android');
