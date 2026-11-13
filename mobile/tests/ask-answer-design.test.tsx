@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { act, type ReactNode } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Platform } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { confirmAction } from '../src/design/menu';
 import { CitationMark } from '../src/design/citation-mark';
 import { haptic } from '../src/design/haptics';
@@ -340,6 +340,30 @@ test('the answer text stays selectable and its marks still open on a tap; stream
   expect(
     renderer.root.findAllByProps({ testID: 'ask-selection-done' }),
   ).toHaveLength(0);
+});
+
+test('the answer’s ⋯ draws in a fixed 44 pt frame, so it stays on the foot’s line', () => {
+  // A content-sized host re-measured late after a width change (an iPhone
+  // Duo folding or rotating) and drew its glyph a line below its row.
+  const { renderer } = draw();
+  const menu = renderer.root.find(
+    (node) =>
+      typeof node.type === 'string' &&
+      node.props.swift === 'Menu' &&
+      node.props.label === 'Answer options',
+  );
+  let host = menu.parent;
+  while (
+    host &&
+    !(typeof host.type === 'string' && host.props.swift === 'Host')
+  )
+    host = host.parent;
+  expect(host).toBeTruthy();
+  expect(host!.props.matchContents).toBeUndefined();
+  expect(StyleSheet.flatten(host!.props.style)).toMatchObject({
+    width: 44,
+    height: 44,
+  });
 });
 
 test('Android enables text selection on demand and returns to citation taps', () => {

@@ -646,7 +646,7 @@ describe('Ask on Duo', () => {
       }
     },
   );
-  test('outer dock uses independent safe-area sides and the measured 320 by 560 content area', () => {
+  test('outer dock leaves the sides to the screen, keeps its bottom, and uses the measured 320 by 560 content area', () => {
     mockWidth = 380;
     mockHeight = 560;
     act(() => setWindowTraitsOverride(compact));
@@ -664,15 +664,15 @@ describe('Ask on Duo', () => {
         380,
       ),
     );
-    expect(
-      tree.root
-        .findAllByType(SafeAreaView)
-        .some(
-          (node) =>
-            JSON.stringify(node.props.edges) ===
-            JSON.stringify(['left', 'right', 'bottom']),
-        ),
-    ).toBe(true);
+    // AskScreen's SidebarSafe pads the rail's side once; padding it here as
+    // well drew the folded Duo's composer a whole rail short of the column.
+    const edges = tree.root
+      .findAllByType(SafeAreaView)
+      .map((node) => (node.props.edges ?? []) as string[]);
+    expect(edges.some((e) => e.includes('left') || e.includes('right'))).toBe(
+      false,
+    );
+    expect(edges.some((e) => e.includes('bottom'))).toBe(true);
     // Native safe-area layout: left 0, right 60, then the area's own measurement.
     act(() => {
       native(tree, 'ask-composer-bounds').props.onLayout({

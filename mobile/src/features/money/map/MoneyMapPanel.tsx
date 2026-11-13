@@ -12,7 +12,13 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
@@ -60,6 +66,13 @@ import {
 
 /** How much of the stage the panel takes when expanded. */
 const EXPANDED_SHARE = 0.58;
+/**
+ * A total's share of the resting row at the reader's default size. A compact
+ * figure ("$305.9bn") is one word that cannot wrap, so the share grows with
+ * the text size: at accessibility sizes each total takes its own line rather
+ * than clipping at the panel's edge (iPhone Duo folded, AX5: "$1.2b $305.").
+ */
+const FIGURE_BASIS = 120;
 const FLOWS = 15;
 
 export interface PanelFocus {
@@ -216,6 +229,8 @@ export function MoneyMapPanel({
   useEffect(() => {
     if (peek) onPeekHeight(peek);
   }, [peek, onPeekHeight]);
+  const { fontScale } = useWindowDimensions();
+  const figureBasis = FIGURE_BASIS * Math.max(1, fontScale);
   const figure = (
     value: number,
     label: string,
@@ -223,7 +238,7 @@ export function MoneyMapPanel({
     tone: 'moneyInk' | 'ink' = 'moneyInk',
   ) => (
     <View
-      style={styles.figure}
+      style={[styles.figure, { flexBasis: figureBasis }]}
       accessible
       accessibilityLabel={`${moneyAccessibilityLabel(value, true)}, ${label}`}
       testID={testID}
@@ -543,6 +558,6 @@ const styles = StyleSheet.create({
   },
   // The figures share the row and the Legend button hugs its end; only a
   // large type size wraps them.
-  figure: { gap: 2, flexGrow: 1, flexShrink: 1, flexBasis: 120 },
+  figure: { gap: 2, flexGrow: 1, flexShrink: 1 },
   legendButton: { marginLeft: 'auto', alignSelf: 'center' },
 });
