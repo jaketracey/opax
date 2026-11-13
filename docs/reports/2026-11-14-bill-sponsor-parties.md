@@ -7,25 +7,26 @@ Branch: `im/sponsor-dated`. The published bill files were read, never edited or 
 
 The published index contains 2,989 bills. Of these, 687 have a sponsor, party and introduction date. Each primary sponsor was matched in the bill's own chamber and checked on that date using `vote_parties.load_evidence` and `Resolver`: the current electorate release's party periods, the held Parliamentary Handbook Senate periods, and the same reviewed replacements and holds used by dated division labels. Intervals include their start and exclude their end; open periods stop at `through`. No current party or speech observation establishes a correction. The audit requires no database or network access.
 
-The scan reproduces the original **52 review cases**, using the existing `same_party` aliases before the two narrower naming conventions below. Another **20 textual disagreements** are already ordinary aliases (including LNP, Nick Xenophon Team/Centre Alliance and DLP). They are retained. A further **357** labels agree exactly with the record. **258** bills have no covering dated evidence and remain unchecked.
+The scan reproduces the original **52 review cases**, using the existing `same_party` aliases before the two narrower naming conventions below. Another **20 textual disagreements** are naming variants: 19 ordinary aliases are retained, while s1127 takes the reviewed Centre Alliance name from 10 April 2018. A further **357** labels agree exactly with the record. **258** bills have no covering dated evidence and remain unchecked.
 
 | Class | In the original 52 | In all 687 | Action |
 | --- | ---: | ---: | --- |
 | a: recorded affiliation change | 47 | 47 | Use the dated party |
-| b: naming convention | 5 | 25 including 20 ordinary aliases | Keep the source token |
+| b: naming convention | 5 | 25 including 19 ordinary aliases and one reviewed rename | Use the registered party or reviewed name; retain ordinary aliases |
 | c: no covering dated record | 0 | 258 | Keep the source token; listed below and in CSV |
 | Exact agreement | 0 | 357 | Keep the source token |
 
 These are comparisons against the held OPAX records, not a fresh acquisition of historical sources. The 52 is a review count, not 52 errors.
 
-The five class-b cases require identity and date as well as the labels:
+The naming rule is uniform: a person's own registered party beats Independent, whichever side holds it. The exporter holds an ownership table for the five personal parties in this audit and applies that one rule after resolving identity. Ownership is distinct from membership: Anning's former membership of KAP does not make it his own party, so his boundary correction remains Independent. No foundation date is inferred or invented for the Rex Patrick Team. Xenophon, Lambie, Bernardi and Katter take their own registered parties from the dated record; Patrick's four 2021 bills keep Rex Patrick Team from the source.
 
-- Four Rex Patrick bills in 2021 print `Rex Patrick Team`; the held Senate record calls his service `Independent` from 9 August 2020 through 30 June 2022. This is the registered team versus the parliamentary service label. The earlier Nick Xenophon Team/Centre Alliance period ends on 9 August 2020 and is not carried into these bills. Retain the source label only for pid `10903` in this independent service period.
-- Sam McMahon's `s1309` prints `Liberal`; the held Senate period says `Nationals`. Her accepted roster row explicitly records `Country Liberal Party` and the Handbook's `The Nationals` period from 18 May 2019 to 7 April 2022 (`scripts/roster_accept.json`, `Sam McMahon`). These are the CLP/party-room conventions already recognised by `same_party`, with an identity-specific bridge for this source's Liberal spelling. Retain it only for pid `10948` in that period. Liberal and Nationals remain distinct for every other person.
+McMahon's s1309 takes **Country Liberal Party**, the registered label in her accepted roster row (`scripts/roster_accept.json`, `Sam McMahon`). Both the source's Liberal and the held period's Nationals are its party-room variants. The bridge uses her resolved identity and the applicable dated period, without supplying new dates. Liberal and Nationals remain distinct for other people.
+
+The selected label then passes through `vote_parties.dated_name`: s1127 takes Centre Alliance from the reviewed 10 April 2018 rename. A pid may correct an existing label only when the printed surname agrees with its evidence. Blank labels may still be filled from a pid.
 
 ## All 52 review cases
 
-Every class-a case is listed individually. The dated label is normalised through the existing sponsor party-token map; source tokens are kept for class b.
+Every class-a case is listed individually. The dated label is normalised through the existing sponsor party-token map; class b follows the registered-party and dated-name rules above.
 
 | Bill key | Sponsor | Introduced | Source party | Dated party | Class | Result |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -69,7 +70,7 @@ Every class-a case is listed individually. The dated label is normalised through
 | au-federal-s1159 | BERNARDI, Sen Cory | 2018-11-28 | Independent | Australian Conservatives | a | Australian Conservatives |
 | au-federal-s1297 | PATRICK, Sen Rex | 2021-05-12 | Rex Patrick Team | Independent | b | Rex Patrick Team |
 | au-federal-s1307 | PATRICK, Sen Rex | 2021-06-24 | Rex Patrick Team | Independent | b | Rex Patrick Team |
-| au-federal-s1309 | MCMAHON, Sen Sam | 2021-08-04 | Liberal | Nationals | b | Liberal |
+| au-federal-s1309 | MCMAHON, Sen Sam | 2021-08-04 | Liberal | Nationals | b | Country Liberal Party |
 | au-federal-s1316 | PATRICK, Sen Rex | 2021-09-01 | Rex Patrick Team | Independent | b | Rex Patrick Team |
 | au-federal-s1321 | PATRICK, Sen Rex | 2021-10-20 | Rex Patrick Team | Independent | b | Rex Patrick Team |
 | au-federal-s1415 | VAN, Sen David | 2024-05-15 | Liberal | Independent | a | Independent |
@@ -82,30 +83,30 @@ Every class-a case is listed individually. The dated label is normalised through
 | au-federal-s984 | XENOPHON, Sen Nick | 2014-11-27 | Independent | Nick Xenophon Team | a | Nick Xenophon Team |
 | au-federal-s989 | LAMBIE, Sen Jacqui | 2014-12-02 | Palmer United Party | Independent | a | Independent |
 
-## Ordinary aliases retained outside the 52
+## Naming variants outside the 52
 
-| Bill key | Source token | Record label |
-| --- | --- | --- |
-| au-federal-r5512 | LNP | Liberal |
-| au-federal-r5558 | LNP | Nationals |
-| au-federal-r5628 | LNP | Nationals |
-| au-federal-r5902 | LNP | Nationals |
-| au-federal-r6731 | LNP | Nationals |
-| au-federal-r6822 | LNP | Nationals |
-| au-federal-r6848 | LNP | Nationals |
-| au-federal-r6910 | LNP | Liberal |
-| au-federal-r7000 | Liberal | LNP |
-| au-federal-r7001 | Liberal | LNP |
-| au-federal-r7261 | LNP | Liberal |
-| au-federal-r7262 | LNP | Nationals |
-| au-federal-r7362 | Liberal | LNP |
-| au-federal-r7511 | LNP | Nationals |
-| au-federal-r7535 | LNP | Nationals |
-| au-federal-s1127 | Nick Xenophon Team | Centre Alliance |
-| au-federal-s901 | DLP | Democratic Labor Party |
-| au-federal-s909 | DLP | Democratic Labor Party |
-| au-federal-s920 | DLP | Democratic Labor Party |
-| au-federal-s953 | DLP | Democratic Labor Party |
+| Bill key | Source token | Record label | Result |
+| --- | --- | --- | --- |
+| au-federal-r5512 | LNP | Liberal | LNP |
+| au-federal-r5558 | LNP | Nationals | LNP |
+| au-federal-r5628 | LNP | Nationals | LNP |
+| au-federal-r5902 | LNP | Nationals | LNP |
+| au-federal-r6731 | LNP | Nationals | LNP |
+| au-federal-r6822 | LNP | Nationals | LNP |
+| au-federal-r6848 | LNP | Nationals | LNP |
+| au-federal-r6910 | LNP | Liberal | LNP |
+| au-federal-r7000 | Liberal | LNP | Liberal |
+| au-federal-r7001 | Liberal | LNP | Liberal |
+| au-federal-r7261 | LNP | Liberal | LNP |
+| au-federal-r7262 | LNP | Nationals | LNP |
+| au-federal-r7362 | Liberal | LNP | Liberal |
+| au-federal-r7511 | LNP | Nationals | LNP |
+| au-federal-r7535 | LNP | Nationals | LNP |
+| au-federal-s1127 | Nick Xenophon Team | Centre Alliance | Centre Alliance |
+| au-federal-s901 | DLP | Democratic Labor Party | DLP |
+| au-federal-s909 | DLP | Democratic Labor Party | DLP |
+| au-federal-s920 | DLP | Democratic Labor Party | DLP |
+| au-federal-s953 | DLP | Democratic Labor Party | DLP |
 
 ## Gaps kept as published
 
@@ -188,7 +189,7 @@ The bill keys are also grouped below so the gaps can be reviewed without running
 
 ## Export and nightly path
 
-`fill_sponsor_parties` now checks both `sponsor_party` and each co-sponsor's `party` against bounded roster periods at introduction. It uses the existing party aliases, plus the two person/period-specific conventions above. Missing, conflicting, held or unreadable dated evidence retains a recognised source party. Empty source labels retain the existing speech/member timeline fallback after trying bounded service. `Australian Conservatives` is added to the allowed sponsor tokens because five corrected bills use that recorded party.
+`fill_sponsor_parties` now checks both `sponsor_party` and each co-sponsor's `party` against bounded roster periods at introduction. It uses the existing party aliases, the uniform ownership rule, the accepted regional registered label and reviewed dated renames. Missing, conflicting or held periods retain a recognised source party. An unreadable electorate release or Senate Handbook aborts the export before files are written, so an outage cannot revert corrected published labels. Empty source labels retain the existing speech/member timeline fallback after trying bounded service. `Australian Conservatives` is added to the allowed sponsor tokens because five corrected bills use that recorded party.
 
 The nightly already runs this exporter:
 
@@ -205,25 +206,42 @@ Reproduce the read-only measurement:
 python3 scripts/audit_bill_sponsor_parties.py > /tmp/bill-sponsor-parties.json
 ```
 
-## Verification
+## Verification and review round 1
 
-The new Gee `r7202` and Van `s1415` fixtures both failed against the original exporter at the base SHA (Nationals/Liberal versus Independent). Both assert the primary and first co-sponsor fields. The fixture suite also checks a retained LNP alias, no dated record, interval boundaries, open-period limits, internal gaps, conflicting periods, missing dates, wrong chambers, each co-sponsor, scoped naming conventions and missing evidence files.
+Initial implementation: `b6f050932ea486cb22a05105fa9a68db96605fee`, on the base SHA above. The independent review checked 13 class-a cases against held records and found their corrections correct. Review implementation: `bbf02f527fd480029fafee87206863293769c1d0`. This round addresses all seven requested changes without modifying published bill JSON.
 
-Final gates on the Mac, with system `python3` and Node 24:
+The original Gee r7202 and Van s1415 tests failed against the original exporter. Their test inputs now hard-code Nationals and Liberal, even when metadata is read from an already refreshed published file.
 
-| Check | Result |
+The next export is projected in memory with `scripts/audit_bill_sponsor_parties.py --project`. Both portal fixture suites consume that real resolver output. The 585-row portal facts fixture has 47 updated expectations: 44 class-a corrections, McMahon's registered label and two previously empty fields (r7006 and r7200) that bounded records fill as Liberal. Each changed row retains its original `source_canonical` for raw-label decoding. Python verifies both the current publication and the projected refreshed state. No expected affiliation was guessed.
+
+The derived party-page counts are NXT **21**, PUP **3** and Rex Patrick Team **4**. NXT is 7 + 15 class-a corrections - s1127's reviewed rename, rather than 22 once that separate review item is applied. Its newest bill is Banking Amendment (Rural Finance Reform) Bill 2018. The 687 existing eligible bills have 49 changed labels: 47 class-a corrections, McMahon's registered label and s1127's rename. The full projection additionally fills the two previously empty labels, for 51 primary-field changes.
+
+| Review item | Result and regression test |
 | --- | --- |
-| Gee and Van fixtures against the original exporter | Expected failure: both labels remained Nationals/Liberal |
-| `python3 -m unittest scripts.test_export_bills_sponsors` | Pass: 19 tests after the fix |
-| Exporter, refresh, division resolver and isolated-import regression command below | Pass: 174 tests |
-| `npx --no-install wrangler types` | Pass: ignored local runtime declarations generated |
+| 1. Future publication fixtures | Resolver-derived canonical fields and party-page counts. `PublishedBillFacts.test_real_audit_labels_use_the_exporters_own_decode_and_map`, portal `audited party labels survive the next dated export`, and `the next dated export: the three sponsor-only parties and their newest bills`. Reverting the facts fixture produces 47 failing Python subtests. |
+| 2. Fixed Gee/Van source labels | `test_source_fixtures_survive_an_already_refreshed_publication`; reverting to publication-supplied source labels makes it fail. |
+| 3. One registered-party rule | `test_own_registered_party_beats_independent_on_either_side`, `test_patrick_keeps_own_registered_team_without_an_invented_start`, and the Anning/other-owner negative tests. Restoring the previous checker causes five uniform-rule subtest failures. |
+| 4. McMahon registered label | `test_mcmahon_uses_registered_country_liberal_party`; the previous checker fails. |
+| 5. Reviewed rename | `test_s1127_uses_reviewed_centre_alliance_rename` and `test_reviewed_rename_boundary_is_inclusive`; the previous checker fails. |
+| 6. Outage flap | `test_missing_records_abort_instead_of_reverting_publications` and `test_loader_outages_abort_build_before_publication`; real loader failures abort the build with a clear error. Restoring the previous checker fails the outage regression. |
+| 7. Pid surname guard | `test_pid_cannot_correct_a_different_printed_surname`; a mismatch keeps an existing label but may fill a blank. The previous checker fails. |
+
+Final gates on the review implementation, with system `python3` and Node 24:
+
+| Gate | Result |
+| --- | --- |
+| Python regression command below | Pass: 184 tests |
 | From `portal/`, `npx tsc --noEmit` | Pass |
-| From `portal/`, `npm run build:search` | Pass: local generated prerequisites built |
-| From `portal/`, `OX_PORTAL_TEST_CONCURRENCY=4 jest-slot.sh npm test`, using the required absolute wrapper from the brief | Pass: 4,908 tests, 0 failures, 0 skipped; wrapper reported concurrency 4 |
-| Read-only audit, repeated after the final code change | Pass: identical results, 687 eligible bills and 52 original review cases |
-| In-memory export comparison over all 687 eligible published bills | Pass: exactly the 47 class-a bills change; 25 variants and 258 gaps retain their labels |
+| Targeted portal run through the required `jest-slot.sh`, with `OX_PORTAL_TEST_CONCURRENCY=4`, selecting the two refreshed-fixture tests | Pass: 403 tests, 0 failures; both named refreshed-fixture tests passed |
+| Full `jest-slot.sh npm test`, with `OX_PORTAL_TEST_CONCURRENCY=4` | Pass: 4,908 tests, 0 failures, 0 skipped; wrapper reported concurrency 4 |
+| Revert checks for all seven review items | Each rejects the previous behaviour, as listed above |
+| Read-only full sponsor projection | Pass: exactly 49 changed existing labels and 2 bounded fills; 51 primary-field changes |
 | `git diff --check` | Pass |
-| `git diff --exit-code -- portal/public/bills` | Pass: no published bill JSON changed |
+| Published bill JSON against the initial submission | Unchanged |
+
+The shared Mac slots were reserved before both portal runs. The reservations cleared normally; neither the reservations nor the shared wrapper were changed or bypassed.
+
+The Python regression command is:
 
 ```sh
 PYTHONPATH=tests python3 -m unittest \
@@ -234,6 +252,4 @@ PYTHONPATH=tests python3 -m unittest \
   scripts.vm.test_bills_refresh scripts.vm.test_fixture_imports test_vote_parties
 ```
 
-Setup findings were resolved before the final gates: the fresh worktree lacked the ignored Worker declarations and generated search/crawl/report assets (the initial portal run had 107 failures); the isolated exporter-import fixture needed the new resolver's dependencies; and the public sponsor-token allowlist needed regeneration for Australian Conservatives. `portal/public/facts/sponsor-parties.json` was generated from the enum without a database. The initial Python invocation also needed `PYTHONPATH=tests` to avoid an installed package named `tests`. The final regression command above passes. The one unrelated tracked growth file changed by the prerequisite build was restored before the final portal run.
-
-No simulator, xcodebuild, Android or SSH command was run. Dependencies were APFS-cloned from a Mac worktree with the same portal lockfile. No push, merge, deployment or nightly trigger was performed. Remaining work is integration by the orchestrator and a subsequent authorised full bill refresh; the 258 dated-record gaps remain unchanged and listed for review.
+No simulator, xcodebuild, Android or SSH command was run. Dependencies and ignored generated prerequisites were reused from the initial submission. No database, production writes, deployment or nightly trigger was used. Integration and a subsequent full refresh remain for the orchestrator. The 258 dated-record gaps remain unchanged and listed for review.

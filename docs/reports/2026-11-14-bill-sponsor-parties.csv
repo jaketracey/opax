@@ -371,7 +371,7 @@ au-federal-s1123,2018-02-07,"HANSON, Sen Pauline",10280,senate,One Nation,One Na
 au-federal-s1124,2018-02-15,"BERNARDI, Sen Cory",10038,senate,Independent,Australian Conservatives,Australian Conservatives,Australian Conservatives,a,corrected,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'G0D' and ROSTypeID eq 11,True
 au-federal-s1125,2018-03-27,"RICE, Sen Janet",10836,senate,Greens,,,Greens,c,no-match,,,False
 au-federal-s1126,2018-05-09,"LEYONHJELM, Sen David",10832,senate,Liberal Democratic Party,,,Liberal Democratic Party,c,no-match,,,False
-au-federal-s1127,2018-05-09,"PATRICK, Sen Rex",10903,senate,Nick Xenophon Team,Centre Alliance,Centre Alliance,Nick Xenophon Team,alias,alias,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '144292' and ROSTypeID eq 11,False
+au-federal-s1127,2018-05-09,"PATRICK, Sen Rex",10903,senate,Nick Xenophon Team,Centre Alliance,Centre Alliance,Centre Alliance,b,renamed,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '144292' and ROSTypeID eq 11,False
 au-federal-s1128,2018-05-09,"RICE, Sen Janet",10836,senate,Greens,,,Greens,c,no-match,,,False
 au-federal-s1129,2018-06-18,"RHIANNON, Sen Lee",10760,senate,Greens,,,Greens,c,no-match,,,False
 au-federal-s1130,2018-06-18,"STEELE-JOHN, Sen Jordon",10901,senate,Greens,,,Greens,c,no-dated-party,,,False
@@ -471,7 +471,7 @@ au-federal-s1300,2021-06-16,"WATERS, Sen Larissa",10764,senate,Greens,,,Greens,c
 au-federal-s1302,2021-06-16,"RICE, Sen Janet",10836,senate,Greens,,,Greens,c,no-match,,,False
 au-federal-s1307,2021-06-24,"PATRICK, Sen Rex",10903,senate,Rex Patrick Team,Independent,Independent,Rex Patrick Team,b,convention,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '144292' and ROSTypeID eq 11,True
 au-federal-s1308,2021-08-10,"RICE, Sen Janet",10836,senate,Greens,,,Greens,c,no-match,,,False
-au-federal-s1309,2021-08-04,"MCMAHON, Sen Sam",10948,senate,Liberal,Nationals,Nationals,Liberal,b,convention,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '282728' and ROSTypeID eq 11,True
+au-federal-s1309,2021-08-04,"MCMAHON, Sen Sam",10948,senate,Liberal,Nationals,Nationals,Country Liberal Party,b,convention,handbook-term,https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '282728' and ROSTypeID eq 11,True
 au-federal-s1311,2021-08-04,"GALLAGHER, Sen Katy",10838,senate,Labor,,,Labor,c,no-dated-party,,,False
 au-federal-s1312,2021-08-05,"KENEALLY, Sen Kristina",10906,senate,Labor,,,Labor,c,no-match,,,False
 au-federal-s1313,2021-08-12,"KENEALLY, Sen Kristina",10906,senate,Labor,,,Labor,c,no-match,,,False
