@@ -181,6 +181,56 @@ test('mentions read in sentence case and keep only rows whose passage names the 
   assert.equal(mentionNamesPerson({snippet:cut}, 'Alex Example', {shown:400}), true);
 });
 
+test('office aliases are complete titles, and a qualifier before an alias makes it someone else\'s', () => {
+  // An invented member, with real-shaped Handbook posts: Leader of the House and a long portfolio in 2008,
+  // Treasurer from 2022, member for Seaview throughout; recorded as Labor.
+  const aliases = mentionAliases({
+    party:'Labor',
+    electorates:[{name:'Seaview', chamber:'representatives', party:'Labor', periods:[{start:'1996-03-02', end:null}]}],
+    spells:[['2008-02-12','2010-09-14','Leader of the House, Minister for Infrastructure, Transport, Regional Development and Local Government',75,1],
+      ['2010-09-14','2013-06-27','Minister for Health and Minister for Ageing (Cabinet)',75,1],
+      ['2022-06-01',null,'Treasurer',60,1]],
+  });
+  const phrases = aliases.map(a => a.phrase);
+  assert.ok(phrases.includes('Minister for Infrastructure, Transport, Regional Development and Local Government'));
+  assert.ok(phrases.includes('Leader of the House'));
+  // "Minister for X and Minister for Y" splits only because both halves are titles in their own right.
+  assert.ok(phrases.includes('Minister for Health') && phrases.includes('Minister for Ageing'));
+  // Never a portfolio fragment.
+  for (const fragment of ['Transport', 'Regional Development and Local Government', 'Local Government']) assert.ok(!phrases.includes(fragment), fragment);
+  const ask = (snippet, date) => mentionNamesPerson({snippet, date}, 'Alex Example', {aliases});
+  // Control 1: another person's shadow office that shares a portfolio word.
+  assert.equal(ask('Warren Truss MP, the shadow minister for transport, has already underlined the principal reasons.', '2008-05-27'), false);
+  assert.equal(ask('Transport costs have increased.', '2008-05-27'), false);
+  // Control 2: a youth parliamentarian for the person's own seat.
+  assert.equal(ask('And a big thankyou to Tenzin for being the youth member for Seaview.', '2026-08-17'), false);
+  // Control 3: a former holder of the person's current office, with a party the person was not.
+  assert.equal(ask('The former Liberal Treasurer told the chamber.', '2026-08-12'), false);
+  assert.equal(ask('The Liberal Treasurer told the chamber.', '2026-08-12'), false);
+  // Other people: a state member, the speaker recalling their own time in a seat.
+  assert.equal(ask('The state member for Seaview opened the hospital.', '2026-08-12'), false);
+  assert.equal(ask('The Victorian member for Seaview opened the hospital.', '2026-08-12'), false);
+  assert.equal(ask('back then when I was the member for Seaview. I recall it clearly.', '2026-08-12'), false);
+  // Kept: the complete title on a date it was held, a same-party adjective, and a plain address.
+  assert.equal(ask('The Minister for Infrastructure, Transport, Regional Development and Local Government announced the funding.', '2009-03-01'), true);
+  assert.equal(ask('The Labor member for Seaview spoke on the bill.', '2026-08-12'), true);
+  assert.equal(ask('I thank my friend the member for Seaview for his contribution.', '2026-08-12'), true);
+  // A qualifier in an earlier appositive belongs to that phrase, not to the alias after the comma.
+  assert.equal(ask('a tribute to the previous minister, the member for Seaview, for her work', '2026-08-12'), true);
+  // One plainly addressed use is enough even when another is qualified.
+  assert.equal(ask('The former Treasurer was wrong, as the Treasurer said yesterday.', '2026-08-12'), true);
+});
+
+test('"the Prime Minister" is kept on a date the person held it, and not on one they did not', () => {
+  const aliases = mentionAliases({party:'Labor', spells:[['2019-05-27','2022-05-23','Leader of the Opposition',85,1], ['2022-05-23',null,'Prime Minister',160,1]]});
+  const ask = (snippet, date) => mentionNamesPerson({snippet, date}, 'Alex Example', {aliases});
+  assert.equal(ask('The Prime Minister told the chamber.', '2024-02-08'), true);
+  assert.equal(ask('The Prime Minister told the chamber.', '2021-02-08'), false);
+  assert.equal(ask('The Leader of the Opposition told the chamber.', '2021-02-08'), true);
+  assert.equal(ask('The former Australian Prime Minister told the chamber.', '2024-02-08'), false);
+  assert.equal(ask('The Deputy Prime Minister told the chamber.', '2024-02-08'), false);
+});
+
 test('a mention addressed to a seat or office the person held on its date is kept; anyone else\'s is not', () => {
   // An invented member: Seaview from 2010 to 2016, then Harbourside from 2016; Treasurer 2019 to 2022,
   // then Prime Minister. Seats and offices come from the dated records, never the current ones.

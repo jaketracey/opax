@@ -61,7 +61,7 @@ const splitSpeakers = person => attributionHelpers?.splitSpeakers(person) || [];
 const personScope = person => attributionHelpers?.personScope(person) || person?.speech_scope || null;
 const datedAffiliationParty = (row, person) => attributionHelpers?.datedAffiliationParty(row, person) || null;
 let heldBackHelpers;
-const heldBackReady = import('/held-back-transcripts.js?v=2b363d213c').then(module => { heldBackHelpers = module; });
+const heldBackReady = import('/held-back-transcripts.js?v=268cb1ecac').then(module => { heldBackHelpers = module; });
 
 let saDisplayHelpers;
 let saFullTextFlag = 'false';
@@ -4707,7 +4707,7 @@ async function personMentionAliases(name) {
     const seats = (reference?.people || []).filter((p) => [p.name, ...(p.aliases || [])].some((n) => String(n || "").trim().toLowerCase() === key));
     const payPerson = pay?.people?.[pay.names?.[payNameKey(name)]];
     // Two people of one name are not one person's seats.
-    return heldBackHelpers?.mentionAliases?.({ electorates: seats.length === 1 ? seats[0].electorates : [], spells: payPerson?.spells || [] }) || [];
+    return heldBackHelpers?.mentionAliases?.({ electorates: seats.length === 1 ? seats[0].electorates : [], spells: payPerson?.spells || [], party: payPerson?.party || "" }) || [];
   } catch { return []; }
 }
 
