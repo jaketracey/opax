@@ -96,7 +96,8 @@ test('vote titles drop the Hansard heading prefix and keep acronyms; phone rows 
   assert.equal(headingTitle('BUSINESS - Rearrangement'), 'Rearrangement');
   assert.equal(headingTitle('MATTERS OF URGENCY - Taxation'), 'Matters of urgency - Taxation');
   assert.equal(headingTitle('AUKUS Submarine Bill 2026 - Third Reading'), 'AUKUS Submarine Bill 2026 - Third Reading');
-  assert.equal(headingTitle('Bills - lower case is not a heading'), 'Bills - lower case is not a heading');
+  assert.equal(headingTitle('Bills - Australian Education Bill 2012; Second Reading, 4 Jun 2013'), 'Australian Education Bill 2012; Second Reading, 4 Jun 2013');
+  assert.equal(headingTitle('bills - only these two cases are headings'), 'bills - only these two cases are headings');
   const [vote] = votingRows([{title:'BILLS - Fixture Bill 2026 - Third Reading', date:'2026-03-01', vote:'aye'}]);
   assert.doesNotMatch(vote.title, /^BILLS\b/);
   const [division] = divisionRows([{title:'BILLS - Fixture Bill 2026 - Third Reading', date:'2026-03-01', house:'senate', ayes:30, noes:28}]);

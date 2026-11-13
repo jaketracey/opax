@@ -12,12 +12,13 @@ const safeLink = value => typeof value === 'string' && /^(?:\/(?!\/)|https?:\/\/
 /* The Hansard heading's own prefix, in capitals: "BILLS - Treasury Laws
    Amendment ...". Under BILLS and BUSINESS the rest is the record's name; the
    other Senate headings keep their word, in sentence case ("Matters of urgency
-   - Taxation"). Only these headings: a title that opens with an acronym keeps it. */
-const HEADINGS = /^(BILLS|BUSINESS|DOCUMENTS|MATTERS OF URGENCY|MATTERS OF PUBLIC IMPORTANCE|COMMITTEES|MOTIONS|NOTICES|PETITIONS|STATEMENTS|REGULATIONS AND DETERMINATIONS)\s+[-–—]\s+(\S.*)$/;
+   - Taxation"). Older rows write "Bills - " in title case. Only these headings:
+   a title that opens with an acronym keeps it. */
+const HEADINGS = /^(BILLS|Bills|BUSINESS|DOCUMENTS|MATTERS OF URGENCY|MATTERS OF PUBLIC IMPORTANCE|COMMITTEES|MOTIONS|NOTICES|PETITIONS|STATEMENTS|REGULATIONS AND DETERMINATIONS)\s+[-–—]\s+(\S.*)$/;
 export function headingTitle(value) {
   const text = divisionPlain(value), heading = HEADINGS.exec(text);
   if (!heading) return text;
-  return /^(?:BILLS|BUSINESS)$/.test(heading[1]) ? heading[2] : `${sentence(heading[1])} - ${heading[2]}`;
+  return /^(?:BILLS|Bills|BUSINESS)$/.test(heading[1]) ? heading[2] : `${sentence(heading[1])} - ${heading[2]}`;
 }
 const divisionLink = value => /^[a-z0-9][a-z0-9-]*$/.test(String(value || '')) ? `/doc/${String(value).startsWith('division-') ? value : `division-${value}`}` : null;
 
