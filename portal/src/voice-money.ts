@@ -180,7 +180,8 @@ const typedFinancialYear=(period:string):number|undefined=>{
 function receiptEdges(graph:ReceiptGraph):CalculationEdge[] {
   if(!hasReceiptTypes(graph))return graph.edges
   return graph.edges.flatMap((edge):CalculationEdge[]=>!Object.values(edge.by_type??{}).some(Number.isFinite)?[{...edge,untyped:true as const}]:Object.entries(edge.by_type??{}).flatMap(([type,total])=>{
-    if(!Number.isFinite(total))return []
+    // Public Funding is election funding, never a donor's receipt (A35): no total, ranking or line counts it.
+    if(!Number.isFinite(total)||type==='public_funding')return []
     const periods=Object.entries(edge.by_type_year??{}).flatMap(([period,types])=>{
       const cell=types[type]
       return cell&&Number.isFinite(cell[0])&&Number.isInteger(cell[1])&&cell[1]>=0?[{period,cell}]:[]

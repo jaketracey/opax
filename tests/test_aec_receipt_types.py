@@ -447,3 +447,35 @@ def test_public_funding_is_excluded_by_receipt_type_whatever_the_payer_is_called
     assert receipt_figures(flow) == {"total": 100.0, "count": 1, "firstYear": 2011, "lastYear": 2011, "typed": True}
     only = {"by_type": {"public_funding": 50000.0}, "by_type_year": {"2010-11": {"public_funding": [50000.0, 1]}}}
     assert receipt_figures(only) == {"total": 0, "count": 0, "firstYear": None, "lastYear": None, "typed": True}
+
+
+def test_a_reexported_public_funding_payer_keeps_its_typed_cell_and_its_label(tmp_path):
+    """A35 review P2: the next export must not leave a Public Funding-only payer with an empty
+    by_type and its old total, which turned the portal's label back into "declared on its own
+    donor return". The cell stays typed public_funding; no figure counts it."""
+    from scripts.export_interests import receipt_figures
+    path = tmp_path / "db"
+    db = database(path)
+    entries = [annual(Value="5000"),
+               annual("Public Funding", Value="900000", **{"Received From": "Zed Funding Body", "Financial Year": "2010-2011"})]
+    donations.process_zip(db, archive("AllAnnualData", {"Detailed Receipts.csv": entries}), "AllAnnualData")
+    load(db, "AllElectionsData", {})
+    load(db, "AllReferendumData", {})
+    db.execute("UPDATE donations SET recipient_canonical='Labor',industry='finance'")
+    db.commit()
+    graph = export(path)
+    edge = next(e for e in graph["edges"] if e["source"] == "donor:zed funding body")
+    node = next(n for n in graph["nodes"] if n["id"] == "donor:zed funding body")
+    assert edge["by_type"] == {"public_funding": 900000} and node["by_type"] == {"public_funding": 900000}
+    assert edge["by_type_year"] == {"2010-11": {"public_funding": [900000, 1]}}
+    assert receipt_figures(edge)["total"] == 0
+    # The uncapped report still counts it nowhere.
+    assert report(db, tmp_path, graph)["full_party_receipts_exclusions"].get("public_funding") == 1
+    # The portal's own rule, on the re-exported records.
+    root = Path(__file__).resolve().parents[1] / "portal" / "public" / "donor-disclosure.js"
+    script = ("const m=await import(process.argv[1]);const [e,n]=JSON.parse(process.argv[2]);"
+              "console.log(JSON.stringify([m.publicFundingOnly(e),m.hasPartyReceipts(e),m.notListedLine(n)===m.PUBLIC_FUNDING_ONLY,"
+              "m.receiptGraph({meta:{},nodes:[n,{id:e.target,kind:'party',label:'Labor'}],edges:[e]}).edges.length]))")
+    out = subprocess.run(["node", "--input-type=module", "-e", script, root.as_uri(), json.dumps([edge, node])],
+                         capture_output=True, text=True, check=True)
+    assert json.loads(out.stdout) == [True, False, True, 0]

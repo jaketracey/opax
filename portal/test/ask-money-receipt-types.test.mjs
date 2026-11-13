@@ -31,13 +31,14 @@ test('typed lifetime uses by_type amounts and period counts, never legacy fields
  const r=answer(g,'');assert.equal(r.total_aud,365.75);assert.equal(r.receipts,3)
  assert.equal(answer(g).total_aud,360.75)
 })
-test('every exported type contributes to all-types, including unknown and public_funding',()=>{
+// Public Funding is election funding, never a donor's receipt (A35 review P1): it is the one type all-types leaves out.
+test('every exported donor type contributes to all-types, including unknown; public_funding never does',()=>{
  const g=graph(),edge=g.edges[0]
  for(const type of ['subscription','public_funding','unspecified','unknown']){edge.by_type[type]=10;edge.by_type_year['2024-25'][type]=[10,1]}
  for(const period of ['', ' in 2024']){
-  const r=answer(g,period);assert.equal(r.total_aud,360.75);assert.equal(r.all_types_aud,12400.75)
+  const r=answer(g,period);assert.equal(r.total_aud,360.75);assert.equal(r.all_types_aud,12390.75)
   const all=receiptAnswer(g,'Who receives the most money from finance'+period+'?','federal','https://opax.test',{measure:'receipts_all'})
-  assert.equal(all.total_aud,12400.75);assert.equal(all.receipts,9)
+  assert.equal(all.total_aud,12390.75);assert.equal(all.receipts,8)
  }
 })
 test('missing donation cells contribute zero; untyped, grant and public-money edges stay outside typed sums',()=>{

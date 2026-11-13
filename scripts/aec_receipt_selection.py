@@ -25,6 +25,9 @@ class ReceiptSelection:
         another spelling on the map. Entity membership never overrides them.
         A receipt the return types as Public Funding is election funding, never
         a donor's money, whatever the payer's name is spelled as ("NSW Efa").
+        Totals pass its receipt_type and leave it out; the map export passes none,
+        so the edge keeps its typed public_funding cell and the portal can label
+        the payer as public funding (its JS holds the type apart from every figure).
         """
         if side != "recipient":
             return "not_recipient_side"
