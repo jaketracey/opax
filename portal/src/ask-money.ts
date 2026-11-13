@@ -1,11 +1,11 @@
 import {trimQuestionEnd, questionSpaces} from './question-text.mjs'
 import {federalPartyRankingQuestion,federalPartyRankingIntent,federalPartyRankingClarification,federalPartyRankingReading} from './ask-money-family'
-import {receiptMeasureLabel,receiptMeasureHeading,receiptDollars} from './receipt-copy'
+import {receiptMeasureLabel,receiptMeasureHeading,receiptMeasurePhrase,receiptDollars} from './receipt-copy'
 import type { RecordQuestion } from './ask-records'
 import type { MoneyFacts } from './ask-money-overview'
 import {fundingContinuation, fundingFollowUp, fundingNameChoice, fundingScopeQuestion, fundingUserTurns, periodChoices, samePeriodFundingComparison, type FundingSelection} from './ask-money-followup'
 import {financialYear, receiptPeriodQuery} from './receipt-period'
-import {latestReceiptYear, readReceiptPeriod} from './receipt-reading'
+import {earliestReceiptYear, latestReceiptYear, readReceiptPeriod} from './receipt-reading'
 import {questionKey, sameQuestion} from './question-key'
 import {isReceiptGraph, mentionedReceiptIndustries, moneyQuestion, receiptAnswer, receiptGraphForQuestion, unmatchedReceiptRankingScope, type ReceiptGraph} from './voice-money'
 import type {ReceiptFact} from './research-types'
@@ -113,22 +113,40 @@ function comparedYearAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:stri
   if(result.selected_parties.length!==1 || result.selected_industries.length>1 || (!result.selected_industries.length&&result.selected_donors.length>1)) {
     return clarify('Choose one recipient party and, optionally, one donor or industry for the year comparison. For example: “How did gambling receipts to Labor change from 2020 to 2021?”','needs_scope')
   }
-  const rows=years.map(year=>{
-    const one=receiptAnswer(graph,query,result.jurisdiction,'https://opax.com.au',{...input,from:String(year),to:String(year),measure:result.measure})
-    return one&&!('needs_scope' in one)&&!('needs_period' in one)?{year,...one}:null
+  // Both years use one measure: the lead measure when either year holds it
+  // (a year with none in that measure is $0 recorded), otherwise every
+  // receipt type, so the comparison stays inside the reading.
+  const yearRows=(measure:ReceiptTotals['measure'])=>years.map(year=>{
+    const one=receiptAnswer(graph,query,result.jurisdiction,'https://opax.com.au',{...input,from:String(year),to:String(year),measure})
+    return one&&!('needs_scope' in one)?{year,...one}:null
   })
+  let rows=yearRows(result.measure)
+  if(result.typed&&result.measure!=='receipts_all'&&rows.every(r=>!r?.receipts)){
+    const all=yearRows('receipts_all')
+    if(all.some(r=>r?.receipts))rows=all
+  }
   const [earlier,later]=rows
-  if(!earlier||!later||!earlier.receipts||!later.receipts) {
+  // A year with none in the measure is $0 recorded only inside the published years.
+  const first=earliestReceiptYear(graph),last=latestReceiptYear(graph)
+  const published=first!==undefined&&last!==undefined&&years.every(y=>y>=first&&y<=last)
+  if(!earlier||!later||(!earlier.receipts&&!later.receipts)||((!result.typed||!published)&&(!earlier.receipts||!later.receipts))) {
+    // Figures stay inside the stated years: the year that holds records, and the year that holds none.
     const held=[earlier,later].filter((r):r is NonNullable<typeof r>=>!!r&&r.receipts>0)
-    if(held.length)return {...partialMoneyComparison(held.map(r=>({name:result.selected_parties[0]+' in '+financialYear(r.year),total_aud:r.total_aud,url:r.sources[0].url})),held[0],'One requested financial year has matching records; the comparison needs records for both years.'),coverage:result.period_coverage,...(reading?{reading}:{})}
-    return heldMoneyComparison(result,graph,true,'The requested year comparison needs matching records for both years.')??clarify('Choose a held financial year in the [money map](/money) to compare the recorded figures.','evidence_gap')
+    const missing=years.filter(y=>!held.some(r=>r.year===y))
+    const outside=missing.filter(y=>first!==undefined&&y<first||last!==undefined&&y>last)
+    const note=outside.length&&first!==undefined&&last!==undefined?`The published records run from ${financialYear(first)} to ${financialYear(last)}.`
+      :`The AEC records no matching receipts in ${missing.map(financialYear).join(' and ')}.`
+    if(held.length)return {...partialMoneyComparison(held.map(r=>({name:result.selected_parties[0]+' in '+financialYear(r.year),total_aud:r.total_aud,url:r.sources[0].url})),held[0],note),coverage:result.period_coverage,...(reading?{reading}:{})}
+    if(result.receipts)return {...partialMoneyComparison([{name:result.selected_parties[0],total_aud:result.total_aud,url:result.sources[0].url}],result,note),coverage:result.period_coverage,...(reading?{reading}:{})}
+    return heldMoneyComparison(result,graph,true,note)??clarify('Choose a held financial year in the [money map](/money) to compare the recorded figures.','evidence_gap')
   }
   const fy=financialYear
   const party=plain(result.selected_parties[0])
   const from=result.selected_industries.length?` from ${plain(result.selected_industries[0].replaceAll('_',' '))} receipt sources`:result.selected_donors.length?` from ${plain(result.selected_donors[0])}`:''
   const difference=Math.round((later.total_aud-earlier.total_aud)*100)/100
-  let answer=difference?`**${party} received ${aud(Math.abs(difference))} ${difference>0?'more':'less'}${from} in ${fy(later.year)} than in ${fy(earlier.year)}** in ${result.measure_label}, ${result.period}.`
-    :`**${party} has the same disclosed total${from} in ${fy(earlier.year)} and ${fy(later.year)}** in ${result.measure_label}, ${result.period}.`
+  const label=later.measure_label
+  let answer=difference?`**${party} received ${aud(Math.abs(difference))} ${difference>0?'more':'less'}${from} in ${fy(later.year)} than in ${fy(earlier.year)}** in ${label}.`
+    :`**${party} has the same disclosed total${from} in ${fy(earlier.year)} and ${fy(later.year)}** in ${label}.`
   const citations:Record<string,number[][]>={}
   const sources:{resource:string;title:string;href:string;url:string;kind:string;snippet:string;cited:boolean;source?:string;dateLabel?:string}[]=[]
   const cite=(title:string,href:string,snippet:string,offset=0)=>{
@@ -299,7 +317,9 @@ export function withReading<T extends {answer:string;citations:Record<string,num
   const seen=new Set<string>()
   const followups=options.filter(o=>{
     const key=questionKey(o.question)
-    if(!key||sameQuestion(o.question,asked)||seen.has(key))return false
+    // An option that gives the answer already shown is not another reading.
+    const shown=(payload as {money_question?:string}).money_question
+    if(!key||sameQuestion(o.question,asked)||seen.has(key)||(shown&&key===questionKey(shown)))return false
     seen.add(key);return true
   }).slice(0,4)
   if(!reading&&!followups.length)return payload
@@ -391,6 +411,8 @@ export function calculatedMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph,qu
   const ranked=(allFlows?[...connections.values()]:fromDonors?result.by_donor:result.by_party)
     .map(r=>({...r,party:allFlows?(r as {party:string}).party:fromDonors?result.selected_parties[0]:r.name}))
     .sort((a,b)=>b.total_aud-a.total_aud||a.name.localeCompare(b.name,'en-AU'))
+    // A $0 row in the measure is not a place in the ranking.
+    .filter((r,_i,all)=>r.total_aud>0||!all.some(x=>x.total_aud>0))
   if(!ranked.length){
     if(!options.held&&(result.requested_years.from!==null||result.requested_years.to!==null)){
       const heldQuery=fundingScopeQuestion({party:result.selected_parties[0],industry:result.selected_industries[0],donor:result.selected_industries.length?undefined:result.selected_donors[0],from:null,to:null,mode:fromDonors?'donors':'parties'},jurisdiction)
@@ -417,8 +439,21 @@ export function calculatedMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph,qu
     :allFlows?`The largest source-to-party connection is **${plain(who.name)}: ${aud(who.total_aud)}**${'associated' in who&&who.associated?` (associated entity of ${recipient||who.party}, per AEC register)`:''}, ${label}.`
     :fromDonors?`The largest ${sector?sector+'-linked ':''}source to ${recipient||'parties'} is **${plain(who.name)}: ${aud(who.total_aud)}**${'associated' in who&&who.associated?` (associated entity of ${recipient||who.party}, per AEC register)`:''}, ${label}.`
     :`**${plain(who.name)}** leads parties receiving money from ${from}: **${aud(who.total_aud)}** in ${label}.`
-  if(ranked.length===1&&!fromDonors&&!allFlows)lead=`**${plain(who.name)}** is the only party receiving **${aud(who.total_aud)}** in ${label} from ${from}, across ${who.receipts.toLocaleString('en-AU')} records.`
+  if(ranked.length===1&&!fromDonors&&!allFlows)lead=`**${plain(who.name)}** is the only party receiving **${aud(who.total_aud)}** in ${label} from ${from}, across ${recordCount(who.receipts).replace(/^([\d,]+) disclosed receipt /,'$1 ')}.`
   if(options.member)lead=`AEC returns record this money at party level. **${plain(options.member.name)}’s party, ${recipient}**, received **${aud(result.total_aud)}** in ${label}.`
+  // When the AEC records no donations in the selection, the answer says so
+  // first, then ranks the receipts it does record under their own label.
+  const noDonations=result.typed&&result.measure!=='donations'&&!options.total&&!options.member
+  if(noDonations){
+    const bounds=result.requested_years
+    const window=bounds.from!==null&&bounds.to!==null?(bounds.from===bounds.to?`in ${financialYear(bounds.from)}`:`from ${financialYear(bounds.from)} to ${financialYear(bounds.to)}`)
+      :bounds.from!==null?`from ${financialYear(bounds.from)} onwards`:`in ${period}`
+    const phrase=receiptMeasurePhrase(result.measure)
+    const ranking=allFlows?`the largest source-to-party connection is **${plain(who.name)}: ${aud(who.total_aud)}**, ${period}`
+      :fromDonors?`the largest ${sector?sector+'-linked ':''}source to ${recipient||'parties'} is **${plain(who.name)}: ${aud(who.total_aud)}**${'associated' in who&&who.associated?` (associated entity of ${recipient||who.party}, per AEC register)`:''}, ${period}`
+      :`**${plain(who.name)}** received the most: **${aud(who.total_aud)}**, ${period}`
+    lead=`The AEC records no donations from ${allFlows?'any source':from} to ${recipient||'any party'} ${window}. In ${phrase}, ${ranking}.`
+  }
   if(options.held)lead='Held-period figures: '+lead
   const sources:{resource:string;title:string;href:string;url:string;kind:string;snippet:string;cited:boolean;source?:string;dateLabel?:string;date?:string;receipt?:ReceiptFact;coverage?:boolean}[]=[]
   const citations:Record<string,number[][]>={}
@@ -435,8 +470,8 @@ export function calculatedMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph,qu
   // per financial year for a window of up to six years, and in total.
   const recipients=result.typed&&!fromDonors&&!allFlows
   const bounds=result.requested_years
-  const yearCols=recipients&&bounds.from!==null&&bounds.to!==null&&bounds.to-bounds.from<=5?Array.from({length:bounds.to-bounds.from+1},(_,i)=>bounds.from!+i):[]
-  const donationsCol=recipients&&result.measure!=='donations'
+  const yearCols=recipients&&!noDonations&&bounds.from!==null&&bounds.to!==null&&bounds.to-bounds.from<=5?Array.from({length:bounds.to-bounds.from+1},(_,i)=>bounds.from!+i):[]
+  const donationsCol=recipients&&result.measure!=='donations'&&!noDonations
   const donated=(row:object)=>(row as {donations_aud?:number}).donations_aud??0
   const donatedIn=(row:object,year:number)=>(row as {donations_by_year?:Record<string,number>}).donations_by_year?.[year]??0
   if(donationsCol){
@@ -470,12 +505,14 @@ export function calculatedMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph,qu
       cite(start,'Remaining sources',result.sources[0].url,`${aud(amount)} in ${measure_label}, ${period}; ${records} records across ${more} sources; share ${share(amount)}${result.typed&&result.measure!=='receipts_all'?`; all receipt types ${aud(all)}`:''}.`)
     }
     const start=Array.from(answer).length,includesLoans=result.measure==='receipts_all'&&industry==='finance'?' (includes loans)':''
-    const allTotal=aud(result.all_types_aud)+(result.other_receipts_aud>=result.all_types_aud/2&&result.other_receipts_aud>0?' (includes loans)':'')
-    answer+=`\n| Total, ${ranked.length} ${fromDonors||allFlows?'sources':'parties'} | ${aud(result.total_aud)}${includesLoans} | 100% | ${result.typed&&result.measure!=='receipts_all'?allTotal:result.receipts.toLocaleString('en-AU')} |${sumCells(ranked)}`
-    cite(start,'Whole selection',result.sources[0].url,`${aud(result.total_aud)} in ${measure_label}, ${period}; ${result.receipts} records; share 100%; all receipt types ${aud(result.all_types_aud)}.`)
+    // The total sums the rows shown.
+    const shownAll=ranked.reduce((sum,r)=>sum+r.all_types_aud,0),shownOther=ranked.reduce((sum,r)=>sum+r.other_receipts_aud,0)
+    const allTotal=aud(Math.round(shownAll*100)/100)+(shownOther>=shownAll/2&&shownOther>0?' (includes loans)':'')
+    answer+=`\n| Total, ${ranked.length} ${fromDonors||allFlows?ranked.length===1?'source':'sources':ranked.length===1?'party':'parties'} | ${aud(result.total_aud)}${includesLoans} | 100% | ${result.typed&&result.measure!=='receipts_all'?allTotal:result.receipts.toLocaleString('en-AU')} |${sumCells(ranked)}`
+    cite(start,'Whole selection',result.sources[0].url,`${aud(result.total_aud)} in ${measure_label}, ${period}; ${ranked.length} ${fromDonors||allFlows?'sources':'parties'} with figures in this measure; ${result.receipts} records; share 100%; all receipt types ${aud(Math.round(shownAll*100)/100)}.`)
   }
   if(industry){
-    const named=result.by_donor.filter(d=>!options.bankGrouping||/\bbank(?:ing)?\b/i.test(d.name)).slice(0,3)
+    const named=result.by_donor.filter(d=>d.total_aud>0&&(!options.bankGrouping||/\bbank(?:ing)?\b/i.test(d.name))).slice(0,3)
     const start=Array.from(answer).length
     answer+=`\n\nOPAX groups ${result.by_donor.length} sources as ${sector}-linked${options.bankGrouping?' (banks, insurers and investment firms)':''}; ${options.bankGrouping?'named banks':'the largest'}: `+named.map(d=>{const url=new URL(result.sources[0].url);url.searchParams.set('focus',d.id);return `[${plain(d.name)}](${url.href}) (${aud(d.total_aud)}${industry==='finance'&&result.measure==='receipts_all'?', includes loans':''})`}).join(', ')+'.'
     cite(start,'Sources in this grouping',result.sources[0].url,answer.slice(start))

@@ -26,9 +26,14 @@ const ask=async question=>await federalPartyMoneyAnswer({question},assets)??awai
 const firstSentence=answer=>answer.match(/^.*?[.!?](?=\s|$)/s)?.[0]??answer
 const JAKE='Who receives the most funding from fossil fuel donors last few years since 2023'
 
-// Each answer leads with the top recipient and its amount from the published
-// graph, states the reading in one line, and offers the other readings.
+const secondSentence=answer=>answer.slice(firstSentence(answer).length).match(/^\s*.*?[.!?](?=\s|$)/s)?.[0]?.trim()??''
+const fy=y=>`${y}–${String((y+1)%100).padStart(2,'0')}`
+
+// The AEC records no donations from fossil fuel sources in these windows. Each
+// answer says so first, then ranks the receipts it does record under their own
+// label, states the reading in one line, and offers the other readings.
 for(const [question,reading,from,to] of [
+ ['Who receives the most donations from fossil fuel donors since 2023?','Reading “since 2023” as the 2022–23 to 2024–25 disclosure years.',2022,2024],
  [JAKE,'Reading “since 2023” as the 2022–23 to 2024–25 disclosure years.',2022,2024],
  ['Who receives the most funding from fossil fuel donors since 2023?','Reading “since 2023” as the 2022–23 to 2024–25 disclosure years.',2022,2024],
  ['Who receives the most funding from fossil fuel donors in the last few years?','Reading “in the last few years” as the last three published disclosure years, 2022–23 to 2024–25.',2022,2024],
@@ -38,15 +43,16 @@ for(const [question,reading,from,to] of [
  assert.equal(out?.answer_status,'calculated',question)
  const expected=graphRanking(graph,{industry:'fossil_fuels',from,to})
  const top=expected.rows[0],opening=firstSentence(out.answer)
- assert.ok(opening.startsWith(`**${top.name}**`),opening)
- assert.ok(opening.includes(dollars(top.cents)),opening)
+ assert.equal(expected.measure,'other_receipts')
+ assert.equal(opening,`The AEC records no donations from fossil fuels-linked sources to any party ${from===to?'in '+fy(from):`from ${fy(from)} to ${fy(to)}`}.`)
+ assert.equal(secondSentence(out.answer),`In other receipts (includes loans and other amounts), **${top.name}** received the most: **${dollars(top.cents)}**, ${expected.period}.`)
  assert.equal(out.money_reading,reading)
  // The reading is its own line, straight after the opening paragraph.
  assert.equal(out.answer.split('\n\n')[1],reading)
- // Ranked rows, donation-only amounts per year and in total, labelled.
+ // Ranked rows under their own label; no $0 donation columns.
  for(const row of expected.rows)assert.match(out.answer,new RegExp(`\\| ${row.name} \\| ${dollars(row.cents).replace('$','\\$')} \\|`))
- for(let y=from;y<=to;y++)assert.match(out.answer,new RegExp(`Donations ${y}–${String((y+1)%100).padStart(2,'0')}`))
- assert.match(out.answer,/Donations received \(AEC receipt type: Donation Received\): \$/)
+ assert.match(out.answer,/\| Recipient \| Other receipts \(includes loans and other amounts\) \| Share \|/)
+ assert.doesNotMatch(out.answer,/Donations \d{4}–\d{2}|\$0\b/)
  assert.match(out.measure_label,/AEC receipt type/)
  // Cited, with the money explorer filtered to the window it read.
  assert.ok(out.sources.length>1&&Object.keys(out.citations).length>0)
@@ -122,4 +128,56 @@ test('“Ask something else” and money follow-ups never repeat the question ju
   assert.ok(!picks.some(q=>sameQuestion(q,asked)),asked)
   assert.equal(new Set(picks.map(q=>questionKey(q))).size,picks.length,asked)
  }
+})
+
+test('where donations are recorded, the ranking leads with donations, per year and in total',async()=>{
+ const out=await ask('Who takes the most money from the gambling lobby since 2023?')
+ const expected=graphRanking(graph,{industry:'gambling',from:2022,to:2024}),top=expected.rows[0]
+ assert.equal(expected.measure,'donations')
+ assert.ok(firstSentence(out.answer).startsWith(`**${top.name}** leads parties receiving money from gambling-linked sources: **${dollars(top.cents)}** in donations received`),firstSentence(out.answer))
+ for(let y=2022;y<=2024;y++)assert.match(out.answer,new RegExp(`Donations ${fy(y)}`))
+ // A party with $0 in donations is not a place in the ranking.
+ assert.doesNotMatch(out.answer,/follows on \$0\b|\(\$0\)/)
+})
+
+test('the money eval scores a first sentence that ranks by money other than donations as a defect',async()=>{
+ const {scoreMoneyRanking}=await import('./money-ranking-eval.mjs')
+ const selection={industry:'fossil_fuels',from:2022,to:2024},expected=graphRanking(graph,selection)
+ const out=await ask(JAKE)
+ assert.deepEqual(scoreMoneyRanking(out,expected,selection,graph).errors,[])
+ // The shape the review caught: "Labor leads ... in other receipts" as the opening sentence.
+ const top=expected.rows[0]
+ const old={...out,answer:`**${top.name}** leads parties receiving money from fossil fuels-linked sources: **${dollars(top.cents)}** in ${out.measure_label}, ${expected.period}.`+out.answer.slice(firstSentence(out.answer).length+secondSentence(out.answer).length+1)}
+ const score=scoreMoneyRanking(old,expected,selection,graph)
+ assert.ok(score.errors.includes('first sentence ranks by non-donation money'),score.errors.join())
+ assert.equal(score.accuracy,false)
+})
+
+test('a reading is never offered back as its own follow-up',async()=>{
+ const out=await ask('Who gets the most from fossil fuels after 2022?')
+ assert.match(out.money_reading,/Reading “after 2022” as the 2022–23 to 2024–25 disclosure years\./)
+ assert.ok(!out.money_followups.some(f=>f.label==='2022–23 onwards'),out.money_followups.map(f=>f.label).join())
+ for(const f of out.money_followups)assert.notEqual(questionKey(f.question),questionKey(out.money_question))
+})
+
+test('a change since a year compares the first and last years of the stated reading',async()=>{
+ const out=await ask('How did fossil fuel receipts to Labor change since 2020?')
+ assert.equal(out.answer_status,'calculated')
+ assert.match(out.money_reading,/Reading “since 2020” as the 2019–20 to 2024–25 disclosure years\./)
+ assert.match(firstSentence(out.answer),/^\*\*Labor received \$[\d,]+ (?:more|less) from fossil fuels receipt sources in 2024–25 than in 2019–20\*\*/)
+ assert.doesNotMatch(out.answer,/Held-period|1998–99|needs matching records/)
+ for(const y of ['2019','2024'])assert.ok(out.sources.some(s=>s.href.includes(`from=${y}&to=${y}`)),y)
+})
+
+test('a question that names its donor or party is answered for it, with its period read',async()=>{
+ const santos=await ask('Which party got the most donations from Santos last year?')
+ assert.equal(santos.answer_status,'calculated')
+ assert.match(firstSentence(santos.answer),/^The AEC records no donations from Santos Limited to any party in 2024–25\.$/)
+ assert.match(secondSentence(santos.answer),/^In other receipts \(includes loans and other amounts\), \*\*\w+\*\* received the most: \*\*\$[\d,]+\*\*, 2024–25\.$/)
+ assert.match(santos.money_reading,/Reading “last year” as 2024–25/)
+ const labor=await ask('How have gambling donations to Labor changed in recent years?')
+ assert.equal(labor.answer_status,'calculated')
+ assert.match(firstSentence(labor.answer),/^\*\*Labor received \$[\d,]+ (?:more|less) from gambling receipt sources in 2024–25 than in 2022–23\*\* in donations received/)
+ assert.match(labor.money_reading,/Reading “in recent years” as the last three published disclosure years, 2022–23 to 2024–25\./)
+ assert.match(labor.answer,/\| 2022–23 \| \$0 \| 0 \|/)
 })
