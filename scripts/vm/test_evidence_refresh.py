@@ -24,6 +24,9 @@ spec.loader.exec_module(fixture)
 spec = importlib.util.spec_from_file_location('evidence_input_seed', FIXTURES / 'inputs.py')
 input_fixture = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(input_fixture)
+spec = importlib.util.spec_from_file_location('evidence_pin_budget', FIXTURES / 'pin_budget.py')
+pin_budget = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(pin_budget)
 
 DRIVER = '''
 set -uo pipefail
@@ -182,13 +185,73 @@ class GuardTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'record count shrank beyond 2%'):
                     guard.compare(self.head, new)
 
-    def test_fixed_budget_and_head_budget_both_apply(self):
-        with mock.patch.object(guard, 'MAX_BYTES', sum(map(len, self.head.values())) - 1):
+    def test_byte_ceiling_is_the_shipped_tree_plus_stated_headroom(self):
+        self.assertEqual(guard.MAX_BYTES, 205_173_558)  # 164,138,847 bytes on 13 Nov plus 25%.
+        size = sum(map(len, self.head.values()))
+        with mock.patch.object(guard, 'MAX_BYTES', size - 1):
             with self.assertRaisesRegex(ValueError, 'asset budget exceeded'):
                 guard.compare(self.head, self.head)
         new = copy.deepcopy(self.head)
-        new['identity-links.json'] += b' '  # valid JSON; one byte over HEAD.
-        with self.assertRaisesRegex(ValueError, 'asset budget exceeded'):
+        new['identity-links.json'] += b' ' * 64  # valid JSON; growth past HEAD within the ceiling.
+        guard.compare(self.head, new)
+        with mock.patch.object(guard, 'MAX_BYTES', size + 63):
+            with self.assertRaisesRegex(ValueError, 'asset budget exceeded'):
+                guard.compare(self.head, new)
+        largest = max(new, key=lambda name: len(new[name]))
+        with mock.patch.object(guard, 'MAX_FILE_BYTES', len(new[largest])):
+            guard.compare(self.head, new)
+        with mock.patch.object(guard, 'MAX_FILE_BYTES', len(new[largest]) - 1):
+            with self.assertRaisesRegex(ValueError, f'asset file too large: {largest} is'):
+                guard.compare(self.head, new)
+
+    def windowed(self, files, records, excerpts):
+        """Fixture 1 with the given record count and (id, date) excerpt window."""
+        files = copy.deepcopy(files)
+        doc = json.loads(files['aa.json'])
+        entry = next(iter(doc['entries'].values()))
+        text = entry['excerpts'][0]['text']
+        entry['excerpts'] = [dict(id=i, date=d, text=text, details={'excerpt': text}) for i, d in excerpts]
+        entry['records'] = entry['years']['2026'] = entry['source_kinds']['Parliamentary record'] = records
+        files['aa.json'] = json.dumps(doc, ensure_ascii=False).encode()
+        index = json.loads(files['index.json'])
+        index['entities'][0]['records'] = records
+        files['index.json'] = json.dumps(index).encode()
+        change_stats(files, published_record_matches=records + 100)
+        return files
+
+    def test_newer_records_may_rotate_old_excerpts_out_of_a_growing_window(self):
+        head = self.windowed(self.head, 100, [('e3', '2026-03-01'), ('e2', '2026-02-01'), ('e1', '2026-01-01')])
+        new = self.windowed(head, 102, [('e5', '2026-11-02'), ('e4', '2026-11-01'), ('e3', '2026-03-01')])
+        self.assertIn('0 new entities, 2 excerpts rotated out by newer records', guard.compare(head, new))
+        # Undated excerpts sort last, so they rotate out first.
+        undated = self.windowed(self.head, 100, [('e2', '2026-02-01'), ('e1', '')])
+        guard.compare(undated, self.windowed(undated, 101, [('e3', '2026-11-01'), ('e2', '2026-02-01')]))
+
+    def test_rotation_refuses_every_other_excerpt_loss(self):
+        head = self.windowed(self.head, 100, [('e3', '2026-03-01'), ('e2', '2026-02-01'), ('e1', '2026-01-01')])
+        cases = {
+            'records did not grow': self.windowed(head, 100, [('e4', '2026-11-01'), ('e3', '2026-03-01'), ('e2', '2026-02-01')]),
+            'more left than records grew': self.windowed(head, 101, [('e5', '2026-11-02'), ('e4', '2026-11-01'), ('e3', '2026-03-01')]),
+            'window shrank': self.windowed(head, 102, [('e4', '2026-11-01'), ('e3', '2026-03-01')]),
+            'newer excerpt left': self.windowed(head, 101, [('e4', '2026-11-01'), ('e2', '2026-02-01'), ('e1', '2026-01-01')]),
+            'records shrank': self.windowed(head, 99, [('e4', '2026-11-01'), ('e3', '2026-03-01'), ('e2', '2026-02-01')]),
+        }
+        for label, new in cases.items():
+            with self.subTest(label), self.assertRaisesRegex(ValueError, 'IDs vanished: 0 entities, [12] excerpts'):
+                guard.compare(head, new)
+
+    def test_growth_elsewhere_never_excuses_a_lost_entity(self):
+        new = copy.deepcopy(self.head)
+        doc = json.loads(new['bb.json'])
+        identity, entry = next(iter(doc['entries'].items()))
+        replacement = 'bb' + '1' * 22
+        entry['id'] = replacement
+        new['bb.json'] = json.dumps({'entries': {replacement: entry}}, ensure_ascii=False).encode()
+        index = json.loads(new['index.json'])
+        index['entities'][1]['id'] = replacement
+        new['index.json'] = json.dumps(index).encode()
+        new['lookup/bb.json'] = json.dumps({'fixture 2': [replacement]}).encode()
+        with self.assertRaisesRegex(ValueError, 'IDs vanished: 1 entities'):
             guard.compare(self.head, new)
 
     def test_invalid_mirrors_totals_and_lookup_ids_are_refused(self):
@@ -243,6 +306,7 @@ class RefreshTests(unittest.TestCase):
         for src, dest in (('export_stub.py', 'export_evidence_layers.py'), ('audit_stub.py', 'audit_evidence_export.py')):
             shutil.copyfile(FIXTURES / src, self.repo / 'scripts' / dest)
         fixture.seed(self.repo / guard.EVIDENCE)
+        pin_budget.pin(self.repo / 'scripts/vm/evidence_guard.py', self.repo / guard.EVIDENCE)
         self.env = dict(os.environ, HOME=str(self.home), OPAX_TODAY='2026-10-10',
                         OPAX_EVIDENCE_TIMEOUT='10s', OPAX_SYNC_KB='1',
                         GIT_AUTHOR_NAME='Fixture', GIT_AUTHOR_EMAIL='fixture@example.invalid',
