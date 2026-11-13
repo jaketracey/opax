@@ -224,7 +224,9 @@ export function MoneyMapPanel({
       accessibilityLabel={`${moneyAccessibilityLabel(value, true)}, ${label}`}
       testID={testID}
     >
-      <Text variant="tileFigure" tone={tone} tabular>
+      {/* A figure is one word: at accessibility sizes it steps down
+          rather than break ("$305.9b / n" at AX3). */}
+      <Text variant="tileFigure" tone={tone} tabular wordSafe>
         {formatMoneyCompact(value)}
       </Text>
       <Text variant="footnote" wordSafe>
@@ -338,7 +340,7 @@ export function MoneyMapPanel({
                 accessibilityLabel={`${moneyAccessibilityLabel(focus.node.amount, true)}, ${focusFigureLine(focus.node)}`}
                 testID="money-map-focus-figure"
               >
-                <Text variant="tileFigure" tone="moneyInk" tabular>
+                <Text variant="tileFigure" tone="moneyInk" tabular wordSafe>
                   {formatMoneyCompact(focus.node.amount)}
                 </Text>
                 <Text variant="footnote" wordSafe>

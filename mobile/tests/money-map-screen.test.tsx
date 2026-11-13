@@ -13,6 +13,11 @@ import { MoneyMapPanel } from '../src/features/money/map/MoneyMapPanel';
 import { MoneyMapControls } from '../src/features/money/map/MoneyMapControls';
 import { MoneyMapSearch } from '../src/features/money/map/MoneyMapSearch';
 import {
+  LABEL_MAX_SCALE,
+  MoneyMapLabels,
+} from '../src/features/money/map/MoneyMapLabels';
+import { Text as DesignText } from '../src/design/text';
+import {
   cameraAt,
   fitCamera,
   viewportCentre,
@@ -676,4 +681,63 @@ test('a subject without a page reads as one title line', async () => {
   expect(title.props.accessible).toBe(true);
   expect(title.props.accessibilityLabel).toMatch(/, Labor$/);
   act(() => panel.unmount());
+});
+
+// Dynamic Type: at AX3 a figure broke inside itself ("$305.9b / n") and a
+// name on the map outgrew its box ("Commonwealt / h").
+test('the panel figures step down rather than break, at rest and focused', async () => {
+  const r = await render();
+  const figureText = (id: string) =>
+    byTestID(r.root, id)!.findAllByType(DesignText)[0]!.props;
+  for (const id of ['money-map-total-donations', 'money-map-total-public'])
+    expect(figureText(id)).toMatchObject({
+      variant: 'tileFigure',
+      wordSafe: true,
+    });
+  await act(async () => stage().onFocus('party:Labor'));
+  await act(async () =>
+    r.update(withNavigationOptions(<MoneyScreen />, () => undefined)),
+  );
+  expect(figureText('money-map-focus-figure')).toMatchObject({
+    variant: 'tileFigure',
+    wordSafe: true,
+  });
+  act(() => r.unmount());
+});
+
+test('names on the map grow no further than their boxes', () => {
+  const value = <T,>(v: T) => ({ value: v }) as never;
+  let r!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    r = TestRenderer.create(
+      <MoneyMapLabels
+        slots={[
+          {
+            key: 'hub',
+            kind: 'name',
+            text: 'Commonwealth contracts',
+            sub: 'Public money',
+            ink: '#000000',
+            x: 0,
+            y: 0,
+            r: 4,
+          } as never,
+        ]}
+        tx={value(0)}
+        ty={value(0)}
+        k={value(1)}
+        fitK={value(1)}
+        allowed={value({ hub: 1 })}
+        width={402}
+      />,
+    );
+  });
+  const texts = r.root.findAllByType(DesignText);
+  expect(texts).toHaveLength(3);
+  for (const text of texts)
+    expect(text.props).toMatchObject({
+      wordSafe: true,
+      maxFontSizeMultiplier: LABEL_MAX_SCALE,
+    });
+  act(() => r.unmount());
 });
