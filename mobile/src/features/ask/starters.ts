@@ -41,11 +41,18 @@ export function sydneyDayIndex(date: Date | number): number {
     (Date.UTC(year!, month! - 1, day!) - Date.UTC(2026, 0, 1)) / DAY,
   );
 }
-/** `count` consecutive starters for the Sydney day of `date`, wrapping. */
+/** The day's set: four a day, in order (`starterRule`). */
+const DAILY = 4;
+/**
+ * The first `count` of the Sydney day's starters, wrapping. The day's set
+ * steps by four whatever the count, so a caller drawing fewer (a seat
+ * starter in one row, Today's two) shows a prefix of the same set, never a
+ * different one: two mounts on one day always agree.
+ */
 export function startersFor(date: Date | number, count: number): string[] {
   const length = starterList.length;
   if (count <= 0) return [];
-  const start = (((sydneyDayIndex(date) * count) % length) + length) % length;
+  const start = (((sydneyDayIndex(date) * DAILY) % length) + length) % length;
   return Array.from(
     { length: Math.min(count, length) },
     (_, i) => starterList[(start + i) % length]!,

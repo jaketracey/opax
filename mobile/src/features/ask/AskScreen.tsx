@@ -29,7 +29,7 @@ import { useReduceMotion } from '../../design/accessibility';
 import {
   RegionProvider,
   SidebarSafe,
-  sizeClassFor,
+  splitAllowed,
   useAdaptiveDevice,
   useLayout,
   useMeasuredRegion,
@@ -135,9 +135,9 @@ export default function AskScreen() {
   const [onRoom, room] = useMeasuredRegion();
   const outer = useLayout();
   const adaptive = useAdaptiveDevice();
+  // The sources pane joins at the split breakpoint, as every split does.
   const docked =
-    adaptive &&
-    sizeClassFor(room?.width ?? outer.width, outer.rule) === 'regular';
+    adaptive && splitAllowed(room?.width ?? outer.width, outer.rule);
   const headerBottom = useHeaderBottom(!idle && !docked);
   const column = useScreenColumn('readable');
   const { overlap: keyboard, visible: keyboardVisible } =
@@ -307,6 +307,7 @@ export default function AskScreen() {
     profiles,
     onAsk: (q) => void ask(q),
     readFailed,
+    offline,
   });
   const dock = (
     <AskDock
@@ -362,11 +363,15 @@ export default function AskScreen() {
       {androidRoot.title}
       <RegionProvider value={column.inner}>
         {idle ? (
+          // Docked, the list is split across the panes (specs/ask.md 2.8):
+          // the conversations here, the day's starters in the pane, so
+          // neither pane repeats the other.
           <AskIdle
             onAsk={(q) => void ask(q)}
             offline={offline}
             readFailed={readFailed}
-            starterCount={docked ? 3 : 4}
+            showStarters={!docked}
+            conversationCount={docked ? 8 : 3}
           />
         ) : (
           <AskThread
@@ -406,9 +411,14 @@ export default function AskScreen() {
               onNew: newConversation,
               onHistory: () => router.push(conversationsRoute),
             }),
-            // Only the idle list keeps a large title. Two panes stay inline.
+            // Only the idle list keeps a large title. On iPad two panes stay
+            // inline, as Bills' split does; a regular iPhone (Duo) keeps the
+            // large title beside its panes, as Bills and Today do there.
             ...(Platform.OS === 'ios'
-              ? { headerLargeTitleEnabled: idle && !docked }
+              ? {
+                  headerLargeTitleEnabled:
+                    idle && (!docked || outer.rule !== 'pad'),
+                }
               : null),
           }}
         />

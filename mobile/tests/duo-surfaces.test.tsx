@@ -523,6 +523,9 @@ describe('Ask on Duo', () => {
       .spyOn(ScrollView.prototype, 'scrollTo')
       .mockImplementation(() => {});
     const blur = jest.spyOn(TextInput.prototype, 'blur');
+    // Ask docks its sources pane from the 700 pt split breakpoint, so the
+    // regular window here is the unfolded Duo's region beside its tab rail.
+    mockWidth = 880;
     const tree = render(withNavigationOptions(<AskScreen />, () => {}));
     await act(async () => {});
     const thread = tree.root.findByProps({ testID: 'ask-thread' });
@@ -548,7 +551,7 @@ describe('Ask on Duo', () => {
     scrollTo.mockClear();
     blur.mockClear();
     for (const traits of [compact, regular]) {
-      mockWidth = traits === compact ? 380 : 626;
+      mockWidth = traits === compact ? 380 : 880;
       mockHeight = traits === compact ? 560 : 800;
       act(() => setWindowTraitsOverride(traits));
       act(() =>
