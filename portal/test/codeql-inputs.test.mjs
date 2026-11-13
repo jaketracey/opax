@@ -6,7 +6,7 @@ import {join, dirname} from 'node:path'
 import {build} from 'esbuild'
 import {JSDOM} from 'jsdom'
 import {runInNewContext} from 'node:vm'
-import {trimQuestionEnd, questionSpaces, wordsInOrder, comparisonParts} from '../src/question-text.mjs'
+import {trimQuestionEnd, shortTrailingMarks, questionSpaces, wordsInOrder, comparisonParts} from '../src/question-text.mjs'
 import {adverbsOnly} from '../src/research-claim-audit.mjs'
 import {selectedDonorFacts} from '../src/research-coherence.mjs'
 import {answerStyleChecks} from '../src/research-answer-style.mjs'
@@ -49,6 +49,10 @@ test('punctuation and whitespace scans retain the question and finish under 50 m
   assert.equal(await fast(()=>trimQuestionEnd('Who funds Labor?'+punctuation)),'Who funds Labor')
   assert.equal(await fast(()=>questionSpaces('who'+spaces+'funds Labor')),'who funds Labor')
   assert.equal(await fast(()=>trimQuestionEnd('?'.repeat(100_000)+'x')), '?'.repeat(100_000)+'x')
+  // The money parsers shorten a trailing run before normalising; whatever they trim afterwards is unchanged.
+  assert.equal(await fast(()=>shortTrailingMarks('Who funds Labor?'+punctuation)),'Who funds Labor?!')
+  for(const text of ['Labor ?!!!','Labor?.','Labor','!!!!','Labor ? ! ! !','And what about Labor?'+punctuation])
+    assert.equal(trimQuestionEnd(questionSpaces(shortTrailingMarks(text))),trimQuestionEnd(questionSpaces(text)))
 })
 
 test('industry grammar consumes long punctuation, spaces and repeated delimiters under 50 ms',async()=>{
