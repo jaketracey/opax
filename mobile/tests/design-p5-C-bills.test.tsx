@@ -226,6 +226,28 @@ describe('bill header (P1-3)', () => {
           node.type === LinkRow && node.props.testID === 'bill-read-text',
       );
       expect(text.props.title).toBe('Bill text');
+      // Sweep 1, item 9: Ask and Bill text are one group with a single rule
+      // between them and none above or below.
+      const group = host(root, 'bill-ask-and-text')[0]!;
+      const ruled = group.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          ['borderTopWidth', 'borderBottomWidth'].some(
+            (side) => (StyleSheet.flatten(node.props.style) ?? {})[side] > 0,
+          ),
+      );
+      expect(ruled.map((node) => node.props.testID)).toEqual([
+        'bill-read-text-row',
+      ]);
+      const rule = StyleSheet.flatten(ruled[0]!.props.style);
+      expect(rule.borderTopWidth).toBeGreaterThan(0);
+      expect(rule.borderBottomWidth ?? 0).toBe(0);
+      expect(StyleSheet.flatten(group.props.style) ?? {}).not.toHaveProperty(
+        'borderTopWidth',
+      );
+      expect(
+        group.findAll((n) => n.props.testID === 'bill-ask'),
+      ).not.toHaveLength(0);
       const ids = order(root);
       expect(ids.indexOf('bill-read-text')).toBeLessThan(
         ids.indexOf('bill-source'),

@@ -685,27 +685,31 @@ function BillPage({
     <>
       <Consultation view={view} />
       <Summary view={view} savedAt={savedAt} />
-      {onAsk ? (
-        <View style={styles.textRow}>
-          <Button
-            label="Ask about this bill"
-            variant="primary"
-            symbol={symbols.ask}
-            accessibilityLabel={`Ask about this bill: ${name}`}
-            accessibilityHint="Opens Ask with a question drafted"
-            onPress={onAsk}
-            testID="bill-ask"
+      {/* Ask and the bill text are one group: a single rule between them
+          and none around (sweep 1, item 9). */}
+      <View testID="bill-ask-and-text">
+        {onAsk ? (
+          <View style={styles.askRow}>
+            <Button
+              label="Ask about this bill"
+              variant="primary"
+              symbol={symbols.ask}
+              accessibilityLabel={`Ask about this bill: ${name}`}
+              accessibilityHint="Opens Ask with a question drafted"
+              onPress={onAsk}
+              testID="bill-ask"
+            />
+          </View>
+        ) : null}
+        <View style={onAsk ? styles.textRow : null} testID="bill-read-text-row">
+          <LinkRow
+            title="Bill text"
+            symbol="doc.text"
+            accessibilityHint="Opens the bill text"
+            onPress={() => bills.openText(identity.key, name)}
+            testID="bill-read-text"
           />
         </View>
-      ) : null}
-      <View style={styles.textRow}>
-        <LinkRow
-          title="Bill text"
-          symbol="doc.text"
-          accessibilityHint="Opens the bill text"
-          onPress={() => bills.openText(identity.key, name)}
-          testID="bill-read-text"
-        />
       </View>
       <KeyDates
         view={view}
@@ -2065,9 +2069,9 @@ const styles = StyleSheet.create({
   seedBlock: { gap: rhythm.line },
   seedPerson: { flexDirection: 'row', alignItems: 'center', gap: rhythm.line },
   seedPersonText: { flex: 1, gap: rhythm.tight },
+  askRow: { paddingBottom: rhythm.row },
   textRow: {
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: colors.dividerSubtle,
   },
   dates: { gap: rhythm.tight },

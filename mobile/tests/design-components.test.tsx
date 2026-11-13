@@ -676,7 +676,7 @@ describe('SourceLine and SourceSheet', () => {
       />,
     ).root;
     expect(textContent(nativeTexts(root)[0]!.props.children)).toBe(
-      'Saved 5 Oct 2026 · They Vote For You and 2 more · Divisions to 25 Sep 2026',
+      'Saved 5 Oct 2026 · They Vote For You and\u00a02\u00a0more · Divisions to 25 Sep 2026',
     );
   });
   test('an undated block says so: every figure stays dated', () => {

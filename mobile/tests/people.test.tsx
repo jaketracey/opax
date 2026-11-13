@@ -1124,7 +1124,22 @@ describe('profile', () => {
           n.props.testID === 'person-figure-votes' &&
           typeof n.props.label === 'string',
       ).props.label,
-    ).toBe('division voted in');
+    ).toBe('division');
+    // Sweep 1, item 9: every tile label fits one line at Large, with its
+    // chevron after the last word.
+    const labels = r.root
+      .findAll(
+        (n) =>
+          typeof n.type !== 'string' &&
+          /^person-figure-/.test(n.props.testID ?? '') &&
+          typeof n.props.label === 'string',
+      )
+      .map((n) => n.props.label as string);
+    expect(labels).toEqual(
+      expect.arrayContaining(['division', 'a year in pay']),
+    );
+    expect(labels).not.toContain('declared interests');
+    for (const label of labels) expect(label.length).toBeLessThanOrEqual(13);
     await act(async () => r.unmount());
   });
 
@@ -1931,9 +1946,7 @@ test.each(['ios', 'android'] as const)(
     const summary = r.root
       .findAllByType(LinkRow)
       .find((n) => n.props.testID === 'person-figure-votes')!;
-    expect(summary.props.title).toMatch(
-      /^[\d,]+ divisions voted in, \d{4} to \d{4}$/,
-    );
+    expect(summary.props.title).toMatch(/^[\d,]+ divisions, \d{4} to \d{4}$/);
     const more = r.root.findByType(MoreFromRecord);
     expect(
       more
