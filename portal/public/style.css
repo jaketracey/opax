@@ -898,11 +898,12 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
   }
 }
 
-/* Sample questions: plain links (concept 5), no label and no boxes, drawn as
+/* Sample questions: plain links (concept 5) under "Or start with", no boxes, drawn as
    the home page draws them (.hp-examples): one bronze link a row, body size,
    a 44px target on a phone or a touch screen. The growth modules on person
    and bill pages take the same list. */
 #ask-chips { margin-top: var(--space-heading); }
+.ask-samples-label { margin: 0 0 var(--space-line); font: var(--type-label); color: var(--ink-soft); }
 .ask-samples { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-line); }
 .ask-sample {
   display: inline-block; padding-block: var(--space-line);
@@ -4540,6 +4541,24 @@ html[data-panel="chat"] footer { display: none; }
   .money-area-nav { flex-wrap: nowrap; gap: var(--space-group); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; white-space: nowrap; }
   .money-area-nav::-webkit-scrollbar { display: none; }
   .money-area-nav a { flex: none; display: inline-flex; align-items: center; }
+  /* A clipped edge fades, so a cut word reads as "more this way". The fades
+     follow the strip's own scroll: none at the end it rests against, none at
+     all when every tab fits (an inactive timeline leaves both at 0). */
+  @supports (animation-timeline: scroll()) {
+    .money-area-nav {
+      mask-image: linear-gradient(to right, transparent, var(--ink) var(--area-fade-start), var(--ink) calc(100% - var(--area-fade-end)), transparent);
+      animation: area-nav-fade linear both; animation-timeline: scroll(self inline);
+    }
+  }
+}
+@property --area-fade-start { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --area-fade-end { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@keyframes area-nav-fade {
+  0% { --area-fade-start: 0px; --area-fade-end: var(--space-group); }
+  4%, 96% { --area-fade-start: var(--space-group); --area-fade-end: var(--space-group); }
+  100% { --area-fade-start: var(--space-group); --area-fade-end: 0px; }
+}
+@media (max-width: 800px) {
   /* The panels the toolbar opens scroll inside themselves on a phone. */
   .money-workspace-toolbar :is(.research-filter-panel, #money-journey-controls) { max-height: 65vh; max-height: 65dvh; overflow-y: auto; overscroll-behavior: contain; }
 }

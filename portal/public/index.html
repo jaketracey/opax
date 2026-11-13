@@ -157,7 +157,7 @@
              inside the field at any width; the wrapper takes the row rules the
              bare textarea used to. -->
         <div class="ask-field ui-input-wrap">
-          <textarea id="ask-input" name="q" class="grow-field ui-input" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false"></textarea>
+          <textarea id="ask-input" name="q" class="grow-field ui-input" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false" placeholder="Ask about a person, a bill or the money"></textarea>
           <button type="button" class="field-clear ui-button ui-icon-button" id="ask-clear" aria-label="Clear the question" data-variant="quiet"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button>
         </div>
         <button type="submit" class="ui-button" id="ask-submit" data-variant="primary">Ask the record</button>
@@ -211,15 +211,17 @@
            holds its line whether or not anything is set, so a chip arriving
            never shoves the answer below it down. -->
       <div id="ask-filter-chips" class="filter-chips" role="group" aria-label="Active filters"></div>
-      <!-- Sample questions as plain links, without a label (the home page's rule). -->
+      <!-- Sample questions as plain links, under one short label. -->
       <div id="ask-chips" hidden>
-        <div class="ask-samples" id="chip-row" role="group" aria-label="Sample questions"></div>
+        <p class="ask-samples-label" id="ask-samples-label">Or start with</p>
+        <div class="ask-samples" id="chip-row" role="group" aria-labelledby="ask-samples-label"></div>
       </div>
       <!-- A question, assembled: a shape to choose, slots to fill from the
            record's own names. It writes the question the free box would take,
            so everything after it (the address, the cache, the answer) is the
            same. app.js renders the sentence per shape (ASK_SHAPES). Closed by
-           default, as on the home page: the free box comes first. -->
+           default, as on the home page: the free box comes first. A phone
+           opens it (initAskBuilder), so the idle page is not blank paper. -->
       <details class="ask-guided" id="ask-guided">
       <summary>Build a question</summary>
       <section id="ask-builder" class="ask-builder" aria-labelledby="ask-builder-head">

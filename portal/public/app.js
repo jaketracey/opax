@@ -1122,10 +1122,8 @@ function showPanel(name) {
   // The conversation is a panel like any other, but it is also the docked
   // assistant: the loop above just hid it, so the dock puts it back.
   syncAssistant(name);
-  // On a phone the Money tabs scroll sideways: bring the open one fully into view.
-  const tabs = $(`panel-${name}`)?.querySelector(".money-area-nav");
-  const tab = tabs?.querySelector("[aria-current]");
-  if (tab && tabs.scrollWidth > tabs.clientWidth) tabs.scrollLeft += tab.getBoundingClientRect().left - tabs.getBoundingClientRect().left - (tabs.clientWidth - tab.offsetWidth) / 2;
+  // On a phone the Money tabs scroll sideways: bring the open one into view.
+  OpaxNavigation.revealCurrentTab($(`panel-${name}`)?.querySelector(".money-area-nav"));
   document.querySelector("main").classList.toggle("compact", name !== "ask");
   const statsLink = document.querySelector(".masthead-link");
   if (statsLink) {
@@ -10457,6 +10455,9 @@ function initAskBuilder() {
   const topics = $("ask-topics-list");
   for (const name of Object.values(TOPICS)) topics.appendChild(Object.assign(document.createElement("option"), { value: name }));
   renderAskBuilder();
+  // On a phone the builder starts open: with the free box, the starters and
+  // the builder, the idle page has something to do on its first screen.
+  if (matchMedia("(width < 700px)").matches && $("ask-guided")) $("ask-guided").open = true;
   $("ask-builder-form").addEventListener("submit", (e) => {
     e.preventDefault();
     const q = askBuilderQuestion();
