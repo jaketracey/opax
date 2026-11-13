@@ -19,6 +19,7 @@ import {
   formatMoney,
   formatMoneyCompact,
   moneyAccessibilityLabel,
+  spokenFigures,
   recordTitleStage,
 } from './format';
 import { EXTERNAL_GLYPH, Icon, type SFSymbol } from './icon';
@@ -403,7 +404,7 @@ export function ValueRow({
   );
   const props = {
     accessible: true,
-    accessibilityLabel: `${label}, ${value}`,
+    accessibilityLabel: spokenFigures(`${label}, ${value}`),
     testID,
   };
   return href ? (

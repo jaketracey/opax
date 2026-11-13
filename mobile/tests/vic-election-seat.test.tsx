@@ -63,6 +63,18 @@ test('candidate order, ballot numbers and plain unlinked names', () => {
     .findAllByProps({ testID: 'vic-seat-candidate-1' })
     .find((n) => typeof n.type === 'string')!;
   expect(independent.props.accessibilityLabel).toBe(`2. ${names[1]}.`);
+  const partyIndex = published.candidates.list.findIndex(
+    (candidate) => candidate.party && candidate.party !== 'Independent',
+  );
+  const partyCandidate = r.root
+    .findAllByProps({ testID: `vic-seat-candidate-${partyIndex}` })
+    .find((node) => typeof node.type === 'string')!;
+  expect(partyCandidate.props.accessibilityActions).toEqual([
+    {
+      name: 'openParty',
+      label: `Open ${published.candidates.list[partyIndex]!.party} party page`,
+    },
+  ]);
   expect(
     r.root.findAllByProps({ testID: 'vic-seat-candidates-none' }),
   ).toHaveLength(0);

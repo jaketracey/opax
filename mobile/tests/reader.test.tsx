@@ -26,6 +26,7 @@ import {
 } from '../src/design/primitives';
 import { useReduceMotion } from '../src/design/accessibility';
 import DocumentReader from '../src/features/records/DocumentReader';
+import Citations from '../src/features/records/CitationScreen';
 import { FindControls } from '../src/features/records/FindControls';
 import { ReaderList } from '../src/features/records/ReaderList';
 import {
@@ -152,6 +153,56 @@ beforeEach(() => {
   jest.mocked(catalogs.billFor).mockRejectedValue(new Error('none'));
   jest.mocked(records.document).mockResolvedValue(record(speech));
   jest.mocked(records.similar).mockResolvedValue(record([]) as never);
+});
+
+test.each(['ios', 'android'] as const)(
+  'Citation formats renders an accessible record on %s',
+  async (os) => {
+    const original = Platform.OS;
+    Platform.OS = os;
+    jest
+      .mocked(catalogs.corpus)
+      .mockResolvedValue(record({ version: 'fixture' }) as never);
+    jest.mocked(records.document).mockResolvedValue(
+      record({
+        slug: 'speech-1',
+        title: 'Synthetic speech about public records',
+        speaker: 'Alex Example',
+        url: 'https://example.com/record',
+        labels: { kind: 'speech', date: '2026-11-01' },
+        topics: [],
+        metadata: {},
+        summary: null,
+        text: 'A synthetic passage for testing.',
+      }),
+    );
+    try {
+      const view = await mount(<Citations />);
+      expect(
+        view.root
+          .findAllByProps({ testID: 'cite-title' })
+          .some((node) => node.props.accessibilityRole === 'header'),
+      ).toBe(true);
+      expect(
+        view.root.findAllByProps({ accessibilityLabel: 'Copy APA 7' }).length,
+      ).toBeGreaterThan(0);
+      await act(async () => view.unmount());
+    } finally {
+      Platform.OS = original;
+    }
+  },
+);
+
+test('Citation formats keeps an announced loading target while the record is pending', async () => {
+  jest
+    .mocked(catalogs.corpus)
+    .mockResolvedValue(record({ version: 'fixture' }) as never);
+  jest.mocked(records.document).mockReturnValue(new Promise(() => {}));
+  const view = await mount(<Citations />);
+  expect(
+    view.root.findAllByProps({ accessibilityLabel: 'Loading citations' })
+      .length,
+  ).toBeGreaterThan(0);
 });
 
 test.each(

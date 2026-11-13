@@ -452,6 +452,19 @@ test('outer controls and legend fit 320pt with independent safe edges and a shor
   act(() => panel.props.onExpanded(true));
   expect(panel.findByType(ScrollView).props.scrollEnabled).toBe(true);
   expect(tree.root.findByProps({ testID: 'money-map-legend' })).toBeDefined();
+  const referenceLabels = tree.root
+    .findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        node.props.accessibilityLabel?.startsWith('Reference '),
+    )
+    .map((node) => node.props.accessibilityLabel);
+  expect(referenceLabels).toHaveLength(3);
+  expect(
+    referenceLabels.every(
+      (label) => !label.includes('$') && label.includes('dollars'),
+    ),
+  ).toBe(true);
 });
 
 test.each([

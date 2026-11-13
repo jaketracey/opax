@@ -4223,6 +4223,7 @@ exports[`iOS design at font scale 1 MonthPager retains its iOS output 1`] = `
   </View>
   <Text
     accessibilityLanguage="en-AU"
+    accessibilityRole="header"
     allowFontScaling={true}
     dynamicTypeRamp="headline"
     maxFontSizeMultiplier={0}
@@ -7113,6 +7114,7 @@ exports[`iOS design at font scale 1 Tile retains its iOS output 1`] = `
           >
             <Text
               accessibilityLanguage="en-AU"
+              accessibilityRole="header"
               allowFontScaling={true}
               dynamicTypeRamp="headline"
               maxFontSizeMultiplier={0}
@@ -11822,6 +11824,7 @@ exports[`iOS design at font scale 2 MonthPager retains its iOS output 1`] = `
   </View>
   <Text
     accessibilityLanguage="en-AU"
+    accessibilityRole="header"
     allowFontScaling={true}
     dynamicTypeRamp="headline"
     maxFontSizeMultiplier={0}
@@ -14827,6 +14830,7 @@ exports[`iOS design at font scale 2 Tile retains its iOS output 1`] = `
           >
             <Text
               accessibilityLanguage="en-AU"
+              accessibilityRole="header"
               allowFontScaling={true}
               dynamicTypeRamp="headline"
               maxFontSizeMultiplier={0}

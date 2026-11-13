@@ -14,6 +14,7 @@ import {
 } from 'react';
 import {
   Pressable,
+  Platform,
   ScrollView,
   StyleSheet,
   useWindowDimensions,
@@ -295,6 +296,11 @@ export function MoneyMapPanel({
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={expanded ? 'Collapse details' : 'Expand details'}
+          accessibilityState={{ expanded }}
+          hitSlop={{
+            top: (Platform.OS === 'android' ? 48 : 44) / 2 - HANDLE / 2,
+            bottom: (Platform.OS === 'android' ? 48 : 44) / 2 - HANDLE / 2,
+          }}
           onPress={toggle}
           style={styles.handleRow}
           testID="money-map-handle"

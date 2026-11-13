@@ -2,7 +2,7 @@ import { StyleSheet, View, useColorScheme } from 'react-native';
 import type { Block, EditionView } from '../../api/selectors';
 import { Card } from '../../design/card';
 import { Icon } from '../../design/icon';
-import { Skeleton } from '../../design/states';
+import { LoadingStatus, Skeleton } from '../../design/states';
 import { SourceLine } from '../../design/source';
 import { Text } from '../../design/text';
 import { colors, minimumTarget, radii } from '../../design/tokens';
@@ -19,7 +19,7 @@ import { Plate } from './Plate';
 
 export function EditionSkeleton({ story = false }: { story?: boolean }) {
   return (
-    <View
+    <LoadingStatus
       testID={story ? 'edition-loading' : 'today-edition-loading'}
       accessibilityLabel="Loading the daily edition"
       accessible
@@ -47,7 +47,7 @@ export function EditionSkeleton({ story = false }: { story?: boolean }) {
           </View>
         </View>
       ) : null}
-    </View>
+    </LoadingStatus>
   );
 }
 

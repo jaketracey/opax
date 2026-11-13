@@ -102,7 +102,12 @@ export default function About() {
           style={styles.specimen}
           testID="about-machine-label"
         >
-          <MachinePill note={{ title: copy.machineWritten, body: [] }} />
+          <View
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+          >
+            <MachinePill note={{ title: copy.machineWritten, body: [] }} />
+          </View>
         </View>
         <Text wordSafe variant="body">
           {text.machineText}

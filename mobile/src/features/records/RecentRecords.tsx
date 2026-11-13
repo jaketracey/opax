@@ -1,3 +1,4 @@
+import { LoadingStatus } from '../../design/states';
 import { isAbortError } from '../../api/abort';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { NavigationContext } from 'expo-router/react-navigation';
@@ -255,7 +256,7 @@ function RecentSkeleton() {
     <View style={[styles.bar, { width, height }]} />
   );
   return (
-    <View
+    <LoadingStatus
       accessible
       accessibilityRole="progressbar"
       accessibilityLabel="Loading new records"
@@ -276,7 +277,7 @@ function RecentSkeleton() {
           </View>
         ))}
       </View>
-    </View>
+    </LoadingStatus>
   );
 }
 

@@ -431,11 +431,18 @@ test('clearing the focus collapses the panel, so the next focus starts at the pe
   await refresh();
   await act(async () => panel().onExpanded(true));
   expect(panel().expanded).toBe(true);
+  const handle = () =>
+    r.root
+      .findAllByProps({ testID: 'money-map-handle' })
+      .find((node) => typeof node.type === 'string')!;
+  expect(handle().props.accessibilityState).toEqual({ expanded: true });
+  expect(handle().props.hitSlop).toEqual({ top: 12, bottom: 12 });
   // The panel's own Clear.
   await act(async () => panel().onClear());
   await refresh();
   expect(stage().focus).toBeNull();
   expect(panel().expanded).toBe(false);
+  expect(handle().props.accessibilityState).toEqual({ expanded: false });
   // The stage's accessibility action.
   await act(async () => stage().onFocus('party:Labor'));
   await refresh();

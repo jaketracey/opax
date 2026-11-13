@@ -148,6 +148,9 @@ export function YearGallery({
                 // gallery is the one focus target: it names the photo, pages
                 // with swipes up and down, and opens it on activate.
                 key={p.file}
+                accessible={false}
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
                 onPress={() =>
                   router.push(explorePhotoRoute(String(year), pictureKey(p)))
                 }

@@ -979,12 +979,13 @@ describe('shared state kit', () => {
       );
       const progress = r.root.findAll(
         (node) =>
-          typeof node.type !== 'string' &&
+          typeof node.type === 'string' &&
           node.props.accessibilityRole === 'progressbar',
       );
       expect(progress).toHaveLength(1);
       expect(progress[0]!.props.accessibilityLabel).toBe('Loading new bills');
       expect(progress[0]!.props.accessibilityState.busy).toBe(true);
+      expect(progress[0]!.props.accessibilityLiveRegion).toBe('polite');
       expect(r.root.findAllByType(ActivityIndicator)).toHaveLength(0);
     },
   );

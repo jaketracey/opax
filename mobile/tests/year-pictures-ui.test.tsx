@@ -304,6 +304,17 @@ test('the Time machine opens on a year at once, with its menu, pager, voices and
     renderer.root.findAllByProps({ testID: 'tm-year-input' }),
   ).toHaveLength(0);
   const menu = renderer.root.findByProps({ testID: 'tm-year-menu' });
+  const gallery = renderer.root.findAllByProps({ testID: 'tm-gallery' })[0]!;
+  const photoTargets = gallery.findAll(
+    (node) =>
+      node.props.onPress &&
+      node.props.importantForAccessibility === 'no-hide-descendants',
+  );
+  expect(photoTargets.length).toBeGreaterThan(0);
+  for (const target of photoTargets) {
+    expect(target.props.accessible).toBe(false);
+    expect(target.props.accessibilityElementsHidden).toBe(true);
+  }
   expect(menu.props.accessibilityLabel).toBe('Year, 2025');
   expect(texts(renderer)).toContain('2025');
   const all = texts(renderer);

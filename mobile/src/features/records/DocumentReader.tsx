@@ -1,3 +1,4 @@
+import { LoadingStatus } from '../../design/states';
 import { isAbortError } from '../../api/abort';
 import { RouteOptions } from '../../navigation/preview';
 import type { NativeStackHeaderItem } from 'expo-router';
@@ -537,7 +538,7 @@ function findItems(find: Find): NativeStackHeaderItem[] {
 /** Bars in the header's final shape, then lines of text (records.md 2.5). */
 function ReaderSkeleton() {
   return (
-    <View
+    <LoadingStatus
       accessible
       accessibilityRole="progressbar"
       accessibilityLabel="Loading the record"
@@ -569,7 +570,7 @@ function ReaderSkeleton() {
           ))}
         </View>
       </View>
-    </View>
+    </LoadingStatus>
   );
 }
 function Bar({ width, height }: { width: `${number}%`; height: number }) {

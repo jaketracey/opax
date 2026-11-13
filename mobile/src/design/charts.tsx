@@ -19,7 +19,12 @@ import {
   type ReservedRegions,
 } from './fold';
 import { ReservedRegionArea, useReservedRegions } from './fold-area';
-import { formatCount, formatDate, type DateInput } from './format';
+import {
+  formatCount,
+  formatDate,
+  spokenFigures,
+  type DateInput,
+} from './format';
 import { dark, darkHighContrast, light, lightHighContrast } from './palette';
 import { SourceLine } from './source';
 import { Text } from './text';
@@ -648,7 +653,7 @@ function BarSeriesContent({
     partial(index) ? `${data[index]!.label} so far` : data[index]!.label;
   /** One year as a screen reader says it, on its bar or its table row. */
   const pointLabel = (index: number) =>
-    `${yearLabel(index)}, ${format(data[index]!.value)}`;
+    spokenFigures(`${yearLabel(index)}, ${format(data[index]!.value)}`);
   const keys = data.map(
     (item, index) =>
       `${fontScale}:${index}:${item.label}:${format(item.value)}`,
@@ -1146,7 +1151,9 @@ export function ShareRows({
           <View
             key={`${item.label}:${index}`}
             accessible
-            accessibilityLabel={`${item.label}, ${format(item.value)}`}
+            accessibilityLabel={spokenFigures(
+              `${item.label}, ${format(item.value)}`,
+            )}
             testID={`${testID}-row-${index}`}
             style={styles.shareRowsItem}
           >
