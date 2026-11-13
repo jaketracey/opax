@@ -112,3 +112,30 @@ export function federalPartyRankingClarification(intent:FederalPartyRankingInten
  const answer=intent.parties.length===1?`Do you mean the largest disclosed receipts to ${intent.parties[0]}?`:`Which party do you mean: ${intent.parties.join(' or ')}? I can rank their largest disclosed receipts.`
  return {answer,answer_status:'needs_scope' as const,money_ranking:true as const,citations:{},sources:[]}
 }
+
+/**
+ * Which receipts a money question ranks or sums (BACKLOG A34, hub default 13 Nov 2026).
+ * "donations": who gives, donates, funds, backs or is a donor counts only the AEC's Donation
+ * Received type; every other type is a labelled line beside the answer. "all_types": receipts,
+ * money from, paid, received, taken, loans and debts keep every type with its breakdown.
+ * An explicit receipts or payment noun wins over a giving verb ("what receipts did Westpac give");
+ * a giving verb wins over a receiving one ("donations Labor received"). Null when neither appears:
+ * the tool's own default (donations) then applies. Public funding is never a donor under either.
+ */
+export type ReceiptMeasureIntent='donations'|'all_types'
+const allTypesNouns=/\b(?:receipts?|payments?|paid|pays?|paying|loans?|lent|lend(?:s|ing)?|borrow(?:s|ed|ing|ings)?|debts?|ow(?:e|es|ed|ing)|all (?:the )?money|every receipt type|all receipt types|other receipts?|subscriptions?)\b/
+const givingWords=/\b(?:giv(?:e[sn]?|ing)|gave|donat(?:e[sd]?|ing|ions?)|donors?|contribut(?:e[sd]?|ing|ions?|ors?)|benefactors?)\b/
+const receivingWords=/\b(?:receiv(?:e[sd]?|ing)|money from|funds from|funding from|tak(?:e[sn]?|ing)|took|got|gets?|getting|income|revenue)\b/
+// The softer verbs of the ranking grammar above (funds, backs, supports, bankrolls, props up).
+const backingWords=new RegExp('\\b(?:'+verbs.slice(3,-1)+'|funders?|backers?|supporters?)\\b')
+export function receiptMeasureIntent(question:string):ReceiptMeasureIntent|null {
+ const q=normal(String(question??'')).replace(/\bpublic funding\b/g,' ').replace(/\b(?:money|funds|funding) from (?=(?:19|20)\d{2}\b)/g,'')
+ // The federal ranking route's own reading of a giving question (exactRankingQuestion) ranks donations
+ // first (voice-money receiptAnswer), so a follow-up resolved from it keeps that measure.
+ if(/^who has the most disclosed receipts to /.test(q))return 'donations'
+ if(allTypesNouns.test(q))return 'all_types'
+ if(givingWords.test(q))return 'donations'
+ if(receivingWords.test(q))return 'all_types'
+ if(backingWords.test(q))return 'donations'
+ return null
+}

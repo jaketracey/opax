@@ -1,4 +1,4 @@
-import {donorAssociatedTo,donorDisclosure,receiptGraph,receiptGraphScope,returnReference,type DonorDisclosureRecord} from '../../public/donor-disclosure.js'
+import {donorAssociatedTo,donorDisclosure,otherReceiptsLine,publicFundingLine,receiptFigures,receiptGraph,receiptGraphScope,receiptSplit,returnReference,type DonorDisclosureRecord,type ReceiptSplit} from '../../public/donor-disclosure.js'
 /**
  * Structured tools for Ask (docs/design/agentic-ask-2026-10.md).
  *
@@ -334,12 +334,14 @@ export async function memberVotes(deps: ToolDeps, input: { keyword: string; pers
 
 // ---------------------------------------------------------------- party_receipts
 interface MoneyNode extends DonorDisclosureRecord { id: string; label: string; kind: string; industry?: string; aliases?: string[]; jurisdiction?: string; total?: number; byYear?: Record<string, [number, number]> }
-interface MoneyEdge { source: string; target: string; total: number; count: number; byYear?: Record<string, [number, number]>; firstYear?: number; lastYear?: number }
+interface MoneyEdge { source: string; target: string; total: number; count: number; byYear?: Record<string, [number, number]>; firstYear?: number; lastYear?: number; by_type?: Record<string, number>; by_type_year?: Record<string, Record<string, [number, number]>>; typeCells?: Record<string, Record<string, [number, number]>> | null; grant?: boolean; flow?: string }
+interface MoneyGraph { nodes: MoneyNode[]; edges: MoneyEdge[] }
 /** Each flow read through its typed cells (each receipt once, from the party's own return), as on the donor and party pages. */
 async function money(deps: ToolDeps) {
-  const g = receiptGraph(await deps.asset('/graph/money.json') as { nodes: MoneyNode[]; edges: MoneyEdge[] } | null)
-  if (!g?.nodes) throw new Error('money graph unavailable')
-  return g
+  const raw = await deps.asset('/graph/money.json') as MoneyGraph | null
+  const g = receiptGraph(raw)
+  if (!raw || !g?.nodes) throw new Error('money graph unavailable')
+  return { g, raw }
 }
 // Disclosure names remain visible independently of resolver confidence.
 function sumYears(e: MoneyEdge, from?: number, to?: number): [number, number] {
@@ -348,15 +350,27 @@ function sumYears(e: MoneyEdge, from?: number, to?: number): [number, number] {
   for (const [y, [v, n]] of Object.entries(e.byYear ?? {})) { const yr = Number(y); if ((!from || yr >= from) && (!to || yr <= to)) { t += v; c += n } }
   return [t, c]
 }
-export async function partyDonations(deps: ToolDeps, input: { party?: string | null; industry?: string | null; from_year?: number; to_year?: number; since?: string; until?: string; limit?: number }): Promise<ToolResult> {
+/**
+ * What a party_receipts row ranks (Jake's hub default, A34). "donations": the AEC's Donation
+ * Received type only, for who gives, donates or funds; every other type is a labelled line
+ * beside the ranking. "all_types": every receipt type, for money from, receipts and paid, with
+ * each row's type breakdown. Public Funding is in neither: it is never a donor.
+ */
+export type ReceiptRankMeasure = 'donations' | 'all_types'
+export const receiptRankMeasure = (value: unknown): ReceiptRankMeasure => value === 'all_types' ? 'all_types' : 'donations'
+const round = (n: number) => Math.round(n * 100) / 100
+const typeBreakdown = (s: ReceiptSplit) => ({ donations_aud: round(s.donations[0]), other_receipts_aud: round(s.other[0]), subscriptions_aud: round(s.subscriptions[0]), untyped_aud: round(s.untyped[0]) })
+const fyLabel = (y: number) => `${y}-${String((y + 1) % 100).padStart(2, '0')}`
+export async function partyDonations(deps: ToolDeps, input: { party?: string | null; industry?: string | null; from_year?: number; to_year?: number; since?: string; until?: string; limit?: number; measure?: string | null }): Promise<ToolResult> {
   const origin = deps.origin ?? 'https://opax.com.au'
+  const measure = receiptRankMeasure(input.measure)
   const dated = !!(input.since || input.until), window = receiptYearWindow(input.since, input.until)
   if (window.error) {
     const coverage = { since: null, until: null, as_of: null, matched: false, requested_since: input.since, requested_until: input.until, note: window.error }
     return { tool: 'party_receipts', ok: true, data: { coverage, coverage_only: true }, coverage,
       cite: [{ kind: 'record', label: window.error, url: `${origin}/methods` }], notes: [window.error] }
   }
-  const g = await money(deps)
+  const { g, raw } = await money(deps)
   const node = new Map(g.nodes.map((n) => [n.id, n]))
   const from = dated ? window.from_year : Number(input.from_year) || undefined, to = dated ? window.to_year : Number(input.to_year) || undefined
   // The receipts map filtered to this selection: /money/party/<party> was never a page.
@@ -370,31 +384,78 @@ export async function partyDonations(deps: ToolDeps, input: { party?: string | n
     return `${origin}/money?${p}`
   }
   const limit = Math.min(Number(input.limit) || 5, 15)
-  const notes = ['Federal AEC disclosed receipts, financial years 1998-99 to 2025-26, in the published selection of the 250 largest donors (so totals are lower bounds).', 'These totals cover all receipt types: donations, loans and other receipts.', 'Party-level totals in the published selection.']
+  // A typed flow is split by AEC receipt type; a flow without typed cells (none on the federal graph) has no split and keeps its figure.
+  const split = (e: MoneyEdge) => receiptSplit(e, from ?? null, to ?? null)
+  const sized = (e: MoneyEdge): { v: [number, number]; s: ReceiptSplit | null } => {
+    const s = split(e)
+    if (!s) return { v: sumYears(e, from, to), s }
+    return { v: measure === 'donations' ? s.donations : s.all, s }
+  }
+  const notes = ['Federal AEC disclosed receipts, financial years 1998-99 to 2024-25, in the published selection of the 250 largest donors (so totals are lower bounds).',
+    measure === 'donations'
+      ? 'Ranked by donations: receipts the party\'s return types as Donation Received. Other receipt types (other receipts such as loans or interest, subscriptions and receipts with no type) are listed separately and are not called donations. OPAX holds no debt record matched to a receipt, so no receipt is called a loan.'
+      : 'Ranked by all receipt types: donations, other receipts (such as loans or interest), subscriptions and receipts with no type. Each row gives its type breakdown; only Donation Received is a donation.',
+    'Public funding is election funding, not a donation: it is never ranked as a donor.', 'Party-level totals in the published selection.']
   const scope = receiptGraphScope(g)
   if (scope) notes.push(`${scope}. Each receipt is counted once.`)
-  const coverage = { since: `${Math.max(from ?? 1998, 1998)}-07-01`, until: `${Math.min(to ?? 2025, 2025) + 1}-06-30`, as_of: null,
+  const coverage = { since: `${Math.max(from ?? 1998, 1998)}-07-01`, until: `${Math.min(to ?? 2024, 2024) + 1}-06-30`, as_of: null,
     ...(input.since ? { requested_since: input.since } : {}), ...(input.until ? { requested_until: input.until } : {}), note: notes[0] }
+  const measureLabel = measure === 'donations' ? 'donations' : 'receipts'
+  // Public Funding on this party's returns, by payer: read from the raw cells, since no donor flow carries it.
+  const publicFunding = (party: string) => raw.edges.flatMap(e => {
+    if (e.grant || e.flow || e.target !== `party:${party}` || !e.by_type) return []
+    const f = receiptFigures(e), years: number[] = []
+    let amount = 0, receipts = 0
+    for (const [slot, [d, n]] of Object.entries(f.publicFundingCells)) {
+      const y = Number(slot)
+      if ((from || to) && (!Number.isFinite(y) || from && y < from || to && y > to)) continue
+      amount += d; receipts += n
+      if (Number.isFinite(y)) years.push(y)
+    }
+    if (!receipts && !amount) return []
+    const label = node.get(e.source)?.label ?? raw.nodes.find(n => n.id === e.source)?.label ?? e.source
+    const period = years.length ? (Math.min(...years) === Math.max(...years) ? fyLabel(years[0]) : `${fyLabel(Math.min(...years))} to ${fyLabel(Math.max(...years))}`) : ''
+    return [{ source: label, amount_aud: round(amount), receipts, period }]
+  }).sort((a, b) => b.amount_aud - a.amount_aud)
   if (input.party) {
     const pid = `party:${input.party}`
     if (!node.has(pid)) return { tool: 'party_receipts', ok: false, error: `no party "${input.party}" in the money record; parties: ${g.nodes.filter((n) => n.kind === 'party').map((n) => n.label).join(', ')}`, cite: [], notes }
     const edges = g.edges.filter((e) => e.target === pid && node.get(e.source)?.kind === 'donor' && (!input.industry || node.get(e.source)?.industry === input.industry))
-    const sized = edges.map((e) => ({ e, v: sumYears(e, from, to) })).filter((x) => x.v[0] > 0)
-    const ranked = sized.sort((a,b)=>b.v[0]-a.v[0])
-    const rows = ranked.slice(0,limit).map(({e,v})=>{
-      const donor=node.get(e.source)!,view=donorDisclosure(donor)
-      const reference=(donor.returnReferences || []).find(ref=>(!from || Number(String(ref.year).slice(0,4))>=from) && (!to || Number(String(ref.year).slice(0,4))<=to))
+    const measured = edges.map((e) => ({ e, ...sized(e) }))
+    const ranked = measured.filter((x) => x.v[0] > 0).sort((a,b)=>b.v[0]-a.v[0])
+    const reference = (donor: MoneyNode) => (donor.returnReferences || []).find(ref=>(!from || Number(String(ref.year).slice(0,4))>=from) && (!to || Number(String(ref.year).slice(0,4))<=to))
+    const rows = ranked.slice(0,limit).map(({e,v,s})=>{
+      const donor=node.get(e.source)!,view=donorDisclosure(donor),ref=reference(donor)
       // An AEC associated entity of this party keeps its rank and carries the register's line (export rule 9).
       const associated=donorAssociatedTo(donor,input.party!)
-      return {donor:view.name,...(associated?{associated_entity:associated}:{}),href:view.href,id:e.source,return_reference:reference ? returnReference(reference) : view.reference,industry:donor.industry ?? null,total_aud:v[0],receipts:v[1]}
+      return {donor:view.name,...(associated?{associated_entity:associated}:{}),href:view.href,id:e.source,return_reference:ref ? returnReference(ref) : view.reference,industry:donor.industry ?? null,total_aud:v[0],receipts:v[1],
+        ...(measure === 'all_types' && s ? { by_type: typeBreakdown(s) } : {})}
     })
+    // Donations ranking: the sources an all-types ranking would have shown, with what they gave the
+    // party that the AEC does not class as donations, each as its own labelled line.
+    const ranks = new Set(rows.map(r => r.id))
+    // The window asked for, or with none the years of the receipts the line describes.
+    const span = (a: number, b: number) => a === b ? `financial year ${fyLabel(a)}` : `financial years ${fyLabel(a)} to ${fyLabel(b)}`
+    const linePeriod = (s: ReceiptSplit) => from || to ? span(from ?? 1998, to ?? 2024) : s.otherYears[0] != null ? span(s.otherYears[0], s.otherYears[1]!) : ''
+    const other = measure !== 'donations' ? [] : measured.filter(x => x.s && x.s.all[0] > 0).sort((a, b) => b.s!.all[0] - a.s!.all[0]).slice(0, limit)
+      .filter(x => x.s!.all[0] - x.s!.donations[0] > 0).map(({ e, s }) => {
+        const view = donorDisclosure(node.get(e.source)!)
+        return { donor: view.name, href: view.href, id: e.source, other_receipts_aud: round(s!.other[0]), subscriptions_aud: round(s!.subscriptions[0]), untyped_aud: round(s!.untyped[0]),
+          receipts: s!.other[1] + s!.subscriptions[1] + s!.untyped[1], in_ranking: ranks.has(e.source), line: otherReceiptsLine(view.name, input.party!, s, { also: ranks.has(e.source), period: linePeriod(s!) }) }
+      })
+    const pf = publicFunding(input.party)
     return {
       tool: 'party_receipts', ok: true,
-      data: {party:input.party,industry:input.industry ?? null,years:[from ?? null,to ?? null],rows:rows.map(({id:_id,...row})=>row),coverage},
+      data: {party:input.party,industry:input.industry ?? null,years:[from ?? null,to ?? null],measure,rows:rows.map(({id:_id,...row})=>row),
+        ...(other.length ? { other_receipts: other.map(({ id: _id, ...row }) => row) } : {}),
+        ...(pf.length ? { public_funding: pf } : {}), coverage},
       // A source with no public donor page opens the same map focused on it, never the AEC home page.
-      cite: [{kind:'export',label:`Disclosed receipts to ${input.party} (AEC returns)`,url:mapUrl(input.party)},...rows.map(r=>({kind:'export' as const,label:`${r.donor}${r.associated_entity ? ` (${r.associated_entity})` : ''} to ${input.party} — ${r.return_reference}`,value:r.total_aud,url:r.href ? new URL(r.href,origin).href : mapUrl(input.party!,{focus:r.id})}))],
+      cite: [{kind:'export',label:`Disclosed ${measureLabel} to ${input.party} (AEC returns)`,url:mapUrl(input.party, measure === 'donations' ? { receipt: 'donations' } : {})},
+        ...rows.map(r=>({kind:'export' as const,label:`${r.donor}${r.associated_entity ? ` (${r.associated_entity})` : ''} to ${input.party} — ${r.return_reference}`,value:r.total_aud,url:r.href ? new URL(r.href,origin).href : mapUrl(input.party!,{focus:r.id})})),
+        ...other.map(r=>({kind:'export' as const,label:r.line,value:round(r.other_receipts_aud+r.subscriptions_aud+r.untyped_aud),url:mapUrl(input.party!,{focus:r.id})})),
+        ...pf.map(p=>({kind:'export' as const,label:publicFundingLine(p.source,input.party!,p.amount_aud,p.period),value:p.amount_aud,url:mapUrl(input.party!)}))],
       list: mapUrl(input.party),
-      query: { file: '/graph/money.json', party: input.party, industry: input.industry ?? null, from, to }, notes,
+      query: { file: '/graph/money.json', party: input.party, industry: input.industry ?? null, from, to, measure }, notes,
     }
   }
   if (input.industry) {
@@ -402,15 +463,15 @@ export async function partyDonations(deps: ToolDeps, input: { party?: string | n
     for (const e of g.edges) {
       const d = node.get(e.source)
       if (d?.kind !== 'donor' || d.industry !== input.industry || !e.target.startsWith('party:')) continue
-      const v = sumYears(e, from, to), p = e.target.slice(6), s = sums.get(p) ?? [0, 0]
+      const v = sized(e).v, p = e.target.slice(6), s = sums.get(p) ?? [0, 0]
       sums.set(p, [s[0] + v[0], s[1] + v[1]])
     }
-    const rows = [...sums].map(([party, [t, c]]) => ({ party, total_aud: t, receipts: c })).filter((r) => r.total_aud > 0).sort((a, b) => b.total_aud - a.total_aud)
+    const rows = [...sums].map(([party, [t, c]]) => ({ party, total_aud: round(t), receipts: c })).filter((r) => r.total_aud > 0).sort((a, b) => b.total_aud - a.total_aud)
     return {
-      tool: 'party_receipts', ok: true, data: { industry: input.industry, years: [from ?? null, to ?? null], rows, coverage },
-      cite: rows.map((r) => ({ kind: 'export' as const, label: `${input.industry} receipt sources to ${r.party}`, value: r.total_aud, url: mapUrl(r.party) })),
+      tool: 'party_receipts', ok: true, data: { industry: input.industry, years: [from ?? null, to ?? null], measure, rows, coverage },
+      cite: rows.map((r) => ({ kind: 'export' as const, label: `${input.industry} ${measure === 'donations' ? 'donations' : 'receipt sources'} to ${r.party}`, value: r.total_aud, url: mapUrl(r.party, measure === 'donations' ? { receipt: 'donations' } : {}) })),
       list: mapUrl(),
-      query: { file: '/graph/money.json', industry: input.industry, from, to }, notes,
+      query: { file: '/graph/money.json', industry: input.industry, from, to, measure }, notes,
     }
   }
   return { tool: 'party_receipts', ok: false, error: 'party or industry is required', cite: [], notes: [] }
@@ -442,7 +503,7 @@ const dataSpecs: ToolSpec[] = [
   { name: 'speech_trend', description: 'Speech counts over time (by year, decade or federal term) with each period\'s share of topic-labelled speeches. Use for "is X debated more", "how has X changed".', input: { type: 'object', properties: { ...filterProps, by: { type: 'string', enum: ['year', 'decade', 'term'] }, from_year: { type: 'integer' }, to_year: { type: 'integer' } } }, run: (d, a) => speechTrend(d, a as TrendInput) },
   { name: 'find_people', description: 'Resolve a politician name, including typos, surname-first order, titles and common nicknames, to the indexed name, party, parliaments and years. Returns confidence-ranked candidates and one clear match in people. Equal matches require the returned clarification question; no_match means no person by that name is recorded. Dated service is returned per chamber and seat. Use service.start and service.end for first elected, entered, left or years served; years are speech coverage only. Empty service means dates are unavailable.', input: { type: 'object', properties: { name: { type: 'string', minLength: 2, maxLength: 120 } }, required: ['name'] }, run: (d, a) => findPeople(d, a as unknown as { name: string }) },
   { name: 'member_votes', description: 'Compatibility alias: delegates person histories to member_divisions and party title lookups to division. Prefer those dedicated tools and follow their continuation metadata. Follow the final cursor for a complete scanned history. For a specific division, its outcome, ayes/noes, a member\'s actual vote, party majorities or rebels, use division with exact date/chamber/title or division_id. Use division aggregate operations for period floor-crossing and party agreement.', input: { type: 'object', properties: { keyword: { type: 'string' }, person: { type: 'string' }, party: { type: 'string' }, since: { type: 'string' }, until: { type: 'string' }, limit: { type: 'integer', minimum: 1, maximum: 80 } }, required: ['keyword'] }, run: (d, a) => memberVotes(d, a as unknown as { keyword: string }) },
-  { name: 'party_receipts', description: 'Donor breakdown of disclosed receipts to a federal party, or receipt totals by party for one source industry (e.g. gambling, mining). Use money_totals for a party or donor total, rankings by total, or annual receipt trends. Only complete financial years are supported; from_year/to_year are FY starting years. Names follow source disclosure spelling; uncertain identity matches have no profile link.', input: { type: 'object', properties: { party: { type: 'string' }, industry: { type: 'string' }, from_year: { type: 'integer' }, to_year: { type: 'integer' }, since: { type: 'string' }, until: { type: 'string' }, limit: { type: 'integer', minimum: 1, maximum: 15 } } }, run: (d, a) => partyDonations(d, a as { party?: string }) },
+  { name: 'party_receipts', description: 'Donor breakdown of disclosed receipts to a federal party, or receipt totals by party for one source industry (e.g. gambling, mining). measure=donations (the default) ranks only AEC Donation Received, for who gives, donates, funds or is a donor; other receipt types come back as separate labelled lines (other_receipts) and must never be called donations or loans. measure=all_types ranks every receipt type with its breakdown, for money from, receipts or paid. Public funding is never a donor. Use money_totals for a party or donor total, rankings by total, or annual receipt trends. Only complete financial years are supported; from_year/to_year are FY starting years. Names follow source disclosure spelling; uncertain identity matches have no profile link.', input: { type: 'object', properties: { party: { type: 'string' }, industry: { type: 'string' }, from_year: { type: 'integer' }, to_year: { type: 'integer' }, since: { type: 'string' }, until: { type: 'string' }, limit: { type: 'integer', minimum: 1, maximum: 15 }, measure: { type: 'string', enum: ['donations', 'all_types'] } } }, run: (d, a) => partyDonations(d, a as { party?: string }) },
   { name: 'find_quotes', description: 'Compatibility alias for corpus_records with kind speech. Prefer corpus_records for original verified speech or release excerpts, detail and paging. A ranked sample of original excerpts; count with the complete speech-count tools.', input: { type: 'object', properties: { ...filterProps, query: { type: 'string', minLength: 2, maxLength: 250 }, limit: { type: 'integer', minimum: 1, maximum: 5 } }, required: ['query'] }, run: (d, a) => findQuotes(d, a as unknown as SpeechFilter & { query: string }) },
 ]
 
