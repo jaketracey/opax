@@ -39,7 +39,7 @@ const ISO_DAY=/^\d{4}-\d{2}-\d{2}$/;
 /** Party -> roster people whose only party is a verified seat roster's, with the roster's seat and date, and
  *  the first recorded election in that jurisdiction after the date (null when none is recorded).
  *  `elections` maps a jurisdiction to its election days. */
-export function seatRosterMembers(people,electorates,elections={},reference=[]) {
+export function seatRosterMembers(people,electorates,elections={},reference=[],windows={}) {
   const out={};
   const nextElection=(jur,asOf)=>(elections[jur] || []).filter(d=>ISO_DAY.test(d) && d>asOf).sort()[0] || null;
   // A sitting member with no roster row at all (referenceOnlyPeople): the Worker adds them to its roster, so
@@ -49,7 +49,9 @@ export function seatRosterMembers(people,electorates,elections={},reference=[]) 
     const seat=seats[0],party=typeof seat.party==='string' ? seat.party.trim() : '';
     if(!party || !ISO_DAY.test(String(seat.as_of || '')))continue;
     (out[party] ||= []).push({name:person.name,pid:person.legacy_person_id || person.person_id || null,jurisdiction:seat.jurisdiction || null,
-      chamber:seat.chamber || null,electorate:seat.name,as_of:seat.as_of,next_election:nextElection(seat.jurisdiction,seat.as_of),reference:true});
+      chamber:seat.chamber || null,electorate:seat.name,as_of:seat.as_of,
+      next_election:nextElection(seat.jurisdiction,seat.as_of) ||
+        (windows[seat.chamber]?.end > seat.as_of ? windows[seat.chamber].end : null),reference:true});
   }
   for(const p of people || []){
     if(p.party_now || p.party)continue;
@@ -129,9 +131,9 @@ function seatRosters(publicRoot) {
   const manifest=JSON.parse(readFileSync(join(publicRoot,'electorates','manifest.json'),'utf8'));
   const asset=url=>JSON.parse(readFileSync(join(publicRoot,...String(url).split('/').filter(Boolean)),'utf8'));
   const elections=recordedElections(manifest);
-  const seats=seatRosterMembers(people,asset(manifest.index_url).electorates,elections,asset(manifest.people_url).people);
-  const lists=JSON.parse(readFileSync(join(publicRoot,'data','roster-list-parties.json'),'utf8')).observations;
   const windows=JSON.parse(readFileSync(join(SCRIPTS,'roster_service.json'),'utf8')).snapshot_party_windows;
+  const seats=seatRosterMembers(people,asset(manifest.index_url).electorates,elections,asset(manifest.people_url).people,windows);
+  const lists=JSON.parse(readFileSync(join(publicRoot,'data','roster-list-parties.json'),'utf8')).observations;
   return officialListMembers(people,lists,windows,elections,seats);
 }
 

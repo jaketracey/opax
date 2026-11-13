@@ -1,0 +1,2369 @@
+{
+  "schema_version": 1,
+  "observations": [
+    {
+      "jurisdiction": "act",
+      "as_of": "2026-11-14",
+      "basis": "official_current_list",
+      "sources": [
+        {
+          "source_id": "source_89ab4718fa8655c08e9c51bc",
+          "label": "ACT Legislative Assembly current members",
+          "url": "https://www.parliament.act.gov.au/members/current",
+          "fetched_at": "2026-11-13T20:30:05+00:00",
+          "sha256": "fcefcb138fd7e45cdf83ecb84118390336ffd85982c89104d4ed861e53b59263"
+        }
+      ],
+      "chamber": "act_la",
+      "members": [
+        {
+          "name": "Andrew Barr",
+          "electorate": "Kurrajong",
+          "party": "Labor",
+          "source_key": "https://www.parliament.act.gov.au/members/current/barr",
+          "url": "https://www.parliament.act.gov.au/members/current/barr"
+        },
+        {
+          "name": "Chiaka Barry",
+          "electorate": "Ginninderra",
+          "party": "Liberal",
+          "source_key": "https://www.parliament.act.gov.au/members/current/barry",
+          "url": "https://www.parliament.act.gov.au/members/current/barry"
+        },
+        {
+          "name": "Yvette Berry",
+          "electorate": "Ginninderra",
+          "party": "Labor",
+          "source_key": "https://www.parliament.act.gov.au/members/current/berry",
+          "url": "https://www.parliament.act.gov.au/members/current/berry"
+        },
+        {
+          "name": "Andrew Braddock",
+          "electorate": "Yerrabi",
+          "party": "Green",
+          "source_key": "https://www.parliament.act.gov.au/members/current/braddock",
+          "url": "https://www.parliament.act.gov.au/members/current/braddock"
+        },
+        {
+          "name": "Peter Cain",
+          "electorate": "Ginninderra",
+          "party": "Liberals",
+          "source_key": "https://www.parliament.act.gov.au/members/current/cain",
+          "url": "https://www.parliament.act.gov.au/members/current/cain"
+        },
+        {
+          "name": "Fiona Carrick",
+          "electorate": "Murrumbidgee",
+          "party": "Independent",
+          "source_key": "https://www.parliament.act.gov.au/members/current/carrick",
+          "url": "https://www.parliament.act.gov.au/members/current/carrick"
+        },
+        {
+          "name": "Leanne Castley",
+          "electorate": "Yerrabi",
+          "party": "Independent",
+          "source_key": "https://www.parliament.act.gov.au/members/current/castley",
+          "url": "https://www.parliament.act.gov.au/members/current/castley"
+        },
+        {
+          "name": "Tara Cheyne",
+          "electorate": "Ginninderra",
+          "party": "Labor",
+          "source_key": "https://www.parliament.act.gov.au/members/current/cheyne",
+          "url": "https://www.parliament.act.gov.au/members/current/cheyne"
+        },
+        {
+          "name": "Jo Clay",
+          "electorate": "Ginninderra",
+          "party": "Green",
+          "source_key": "https://www.parliament.act.gov.au/members/current/clay",
+          "url": "https://www.parliament.act.gov.au/members/current/clay"
+        },
+        {
+          "name": "Ed Cocks",
+          "electorate": "Murrumbidgee",
+          "party": "Liberals",
+          "source_key": "https://www.parliament.act.gov.au/members/current/cocks",
+          "url": "https://www.parliament.act.gov.au/members/current/cocks"
+        },
+        {
+          "name": "Thomas Emerson",
+          "electorate": "Kurrajong",
+          "party": "Independent",
+          "source_key": "https://www.parliament.act.gov.au/members/current/emerson",
+          "url": "https://www.parliament.act.gov.au/members/current/emerson"
+        },
+        {
+          "name": "Jeremy Hanson",
+          "electorate": "Murrumbidgee",
+          "party": "Liberal",
+          "source_key": "https://www.parliament.act.gov.au/members/current/hanson",
+          "url": "https://www.parliament.act.gov.au/members/current/hanson"
+        },
+        {
+          "name": "Elizabeth Lee",
+          "electorate": "Kurrajong",
+          "party": "Liberal",
+          "source_key": "https://www.parliament.act.gov.au/members/current/lee",
+          "url": "https://www.parliament.act.gov.au/members/current/lee"
+        },
+        {
+          "name": "James Milligan",
+          "electorate": "Yerrabi",
+          "party": "Liberal",
+          "source_key": "https://www.parliament.act.gov.au/members/current/milligan",
+          "url": "https://www.parliament.act.gov.au/members/current/milligan"
+        },
+        {
+          "name": "Deborah Morris",
+          "electorate": "Brindabella",
+          "party": "Liberal",
+          "source_key": "https://www.parliament.act.gov.au/members/current/morris",
+          "url": "https://www.parliament.act.gov.au/members/current/morris"
+        },
+        {
+          "name": "Laura Nuttall",
+          "electorate": "Brindabella",
+          "party": "Green",
+          "source_key": "https://www.parliament.act.gov.au/members/current/nuttall",
+          "url": "https://www.parliament.act.gov.au/members/current/nuttall"
+        },
+        {
+          "name": "Suzanne Orr",
+          "electorate": "Yerrabi",
+          "party": "Labor",
+          "source_key": "https://www.parliament.act.gov.au/members/current/orr",
+          "url": "https://www.parliament.act.gov.au/members/current/orr"
+        },
+        {
+          "name": "Mark Parton",
+          "electorate": "Brindabella",
+          "party": "Liberal",
+          "source_key": "https://www.parliament.act.gov.au/members/current/parton",
+          "url": "https://www.parliament.act.gov.au/members/current/parton"
+        },
+        {
+          "name": "Marisa Paterson",
+          "electorate": "Murrumbidgee",
+          "party": "Labor",
+          "source_key": "https://www.parliament.act.gov.au/members/current/paterson",
+          "url": "https://www.parliament.act.gov.au/members/current/paterson"
+        },
+        {
+          "name": "Michael Pettersson",
+          "electorate": "Yerrabi",
+          "party": "Labor",
+          "source_key": "https://www.parliament.act.gov.au/members/current/pettersson",
+          "url": "https://www.parliament.act.gov.au/members/current/pettersson"
+        },
+        {
+          "name": "Chris Steel",
+          "electorate": "Murrumbidgee",
+          "party": "Labor",
+          "source_key": "https://www.parliament.act.gov.au/members/current/steel",
+          "url": "https://www.parliament.act.gov.au/members/current/steel"
+        },
+        {
+          "name": "Rachel Stephen-Smith",
+          "electorate": "Kurrajong",
+          "party": "Labor",
+          "source_key": "https://www.parliament.act.gov.au/members/current/stephen-smith",
+          "url": "https://www.parliament.act.gov.au/members/current/stephen-smith"
+        },
+        {
+          "name": "Caitlin Tough",
+          "electorate": "Brindabella",
+          "party": "Labor",
+          "source_key": "https://www.parliament.act.gov.au/members/current/tough",
+          "url": "https://www.parliament.act.gov.au/members/current/tough"
+        },
+        {
+          "name": "Rebecca Vassarotti",
+          "electorate": "Kurrajong",
+          "party": "Green",
+          "source_key": "https://www.parliament.act.gov.au/members/current/vassarotti",
+          "url": "https://www.parliament.act.gov.au/members/current/vassarotti"
+        },
+        {
+          "name": "Taimus Werner-Gibbings",
+          "electorate": "Brindabella",
+          "party": "Labor",
+          "source_key": "https://www.parliament.act.gov.au/members/current/werner-gibbings",
+          "url": "https://www.parliament.act.gov.au/members/current/werner-gibbings"
+        }
+      ]
+    },
+    {
+      "jurisdiction": "sa",
+      "as_of": "2026-11-14",
+      "basis": "official_current_list",
+      "sources": [
+        {
+          "source_id": "source_659eb71a6a4756549748e68f",
+          "label": "South Australian Parliament current members: sa_ha",
+          "url": "https://contact-details-api.parliament.sa.gov.au/api/HAMembersDetails",
+          "fetched_at": "2026-11-13T20:31:54+00:00",
+          "sha256": "36e0de2c1a004692909fb19c95471c879297d8e423a485dc0cc2fb82e09add11"
+        }
+      ],
+      "chamber": "sa_ha",
+      "members": [
+        {
+          "name": "James Agness",
+          "aliases": [
+            "James Peter Agness"
+          ],
+          "party": "ALP",
+          "electorate": "Light",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7340",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7340"
+        },
+        {
+          "name": "Sarah Andrews",
+          "aliases": [
+            "Sarah Emily Andrews"
+          ],
+          "party": "ALP",
+          "electorate": "Gibson",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6892",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6892"
+        },
+        {
+          "name": "Jack Batty",
+          "aliases": [
+            "Jack Andrew Batty"
+          ],
+          "party": "Liberal",
+          "electorate": "Bragg",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6982",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6982"
+        },
+        {
+          "name": "Lawrence Ben",
+          "aliases": [
+            "Lawrence Robert Ben"
+          ],
+          "party": "ALP",
+          "electorate": "Enfield",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7350",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7350"
+        },
+        {
+          "name": "Zoe Bettison",
+          "aliases": [
+            "Zoe Lee Bettison"
+          ],
+          "party": "ALP",
+          "electorate": "Ramsay",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=4623",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=4623"
+        },
+        {
+          "name": "Aria Bolkus",
+          "aliases": [
+            "Aria Christina Bolkus"
+          ],
+          "party": "ALP",
+          "electorate": "Colton",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7355",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7355"
+        },
+        {
+          "name": "Blair Boyer",
+          "aliases": [
+            "Blair Ingram Boyer"
+          ],
+          "party": "ALP",
+          "electorate": "Wright",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5389",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5389"
+        },
+        {
+          "name": "Geoff Brock",
+          "aliases": [
+            "Geoffrey Graeme Brock"
+          ],
+          "party": "Independent",
+          "electorate": "Stuart",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=3533",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=3533"
+        },
+        {
+          "name": "Michael Brown",
+          "aliases": [
+            "Michael Edison Brown"
+          ],
+          "party": "ALP",
+          "electorate": "Florey",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5387",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5387"
+        },
+        {
+          "name": "Nick Champion",
+          "aliases": [
+            "Nicholas David Champion"
+          ],
+          "party": "ALP",
+          "electorate": "Taylor",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6889",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6889"
+        },
+        {
+          "name": "Nadia Clancy",
+          "aliases": [
+            "Nadia Peace Clancy"
+          ],
+          "party": "ALP",
+          "electorate": "Elder",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6891",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6891"
+        },
+        {
+          "name": "Nat Cook",
+          "aliases": [
+            "Natalie Fleur Cook"
+          ],
+          "party": "Independent",
+          "electorate": "Hurtle Vale",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=4978",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=4978"
+        },
+        {
+          "name": "Alex Dighton",
+          "aliases": [
+            "Alexander Edward Dighton"
+          ],
+          "party": "ALP",
+          "electorate": "Black",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7235",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7235"
+        },
+        {
+          "name": "Travis Fatchen",
+          "aliases": [
+            "Travis Antony Fatchen"
+          ],
+          "party": "Independent",
+          "electorate": "Mount Gambier",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7354",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7354"
+        },
+        {
+          "name": "John Fulbrook",
+          "aliases": [
+            "John Paul Fulbrook"
+          ],
+          "party": "ALP",
+          "electorate": "Playford",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6898",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6898"
+        },
+        {
+          "name": "Katrine Hildyard",
+          "aliases": [
+            "Katrine Anne Hildyard"
+          ],
+          "party": "ALP",
+          "electorate": "Reynell",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=4846",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=4846"
+        },
+        {
+          "name": "Lucy Hood",
+          "aliases": [
+            "Lucy Penelope Hood"
+          ],
+          "party": "ALP",
+          "electorate": "Adelaide",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6895",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6895"
+        },
+        {
+          "name": "Eddie Hughes",
+          "aliases": [
+            "Edward Joseph Hughes"
+          ],
+          "party": "ALP",
+          "electorate": "Giles",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=4839",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=4839"
+        },
+        {
+          "name": "Ashton Hurn",
+          "aliases": [
+            "Ashton Morgan Hurn"
+          ],
+          "party": "Liberal",
+          "electorate": "Schubert",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6887",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6887"
+        },
+        {
+          "name": "Catherine Hutchesson",
+          "aliases": [
+            "Catherine Louise Hutchesson"
+          ],
+          "party": "ALP",
+          "electorate": "Waite",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6896",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6896"
+        },
+        {
+          "name": "Tom Koutsantonis",
+          "aliases": [
+            "Anastasios Koutsantonis"
+          ],
+          "party": "ALP",
+          "electorate": "West Torrens",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=633",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=633"
+        },
+        {
+          "name": "Peter Malinauskas",
+          "aliases": [
+            "Peter Bryden Malinauskas"
+          ],
+          "party": "ALP",
+          "electorate": "Croydon",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5084",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5084"
+        },
+        {
+          "name": "Matthew Marozzi",
+          "aliases": [
+            "Matthew John Marozzi"
+          ],
+          "party": "ALP",
+          "electorate": "Morialta",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7339",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7339"
+        },
+        {
+          "name": "Jenni Mitton",
+          "aliases": [
+            "Jennifer Ann Mitton"
+          ],
+          "party": "ALP",
+          "electorate": "Mawson",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7360",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7360"
+        },
+        {
+          "name": "Lou Nicholson",
+          "aliases": [
+            "Louise Helene Nicholson"
+          ],
+          "party": "Independent",
+          "electorate": "Finniss",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7341",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7341"
+        },
+        {
+          "name": "Cressida O'Hanlon",
+          "aliases": [
+            "Cressida Clytie O'Hanlon"
+          ],
+          "party": "ALP",
+          "electorate": "Dunstan",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7171",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7171"
+        },
+        {
+          "name": "David Paton",
+          "aliases": [
+            "David Rodney Paton"
+          ],
+          "party": "Pauline Hanson's One Nation",
+          "electorate": "Ngadjuri",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7349",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7349"
+        },
+        {
+          "name": "Rhiannon Pearce",
+          "aliases": [
+            "Rhiannon Kate Pearce"
+          ],
+          "party": "ALP",
+          "electorate": "King",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6894",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6894"
+        },
+        {
+          "name": "Chris Picton",
+          "aliases": [
+            "Christopher James Picton"
+          ],
+          "party": "ALP",
+          "electorate": "Kaurna",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=4841",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=4841"
+        },
+        {
+          "name": "Toby Priest",
+          "aliases": [
+            "Tobias Michael Priest"
+          ],
+          "party": "ALP",
+          "electorate": "Morphett",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7338",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7338"
+        },
+        {
+          "name": "Cheyne Rich",
+          "aliases": [
+            "Cheyne Christopher Rich"
+          ],
+          "party": "ALP",
+          "electorate": "Port Adelaide",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7336",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7336"
+        },
+        {
+          "name": "Jenn Roberts",
+          "aliases": [
+            "Jennifer Leigh Roberts"
+          ],
+          "party": "ALP",
+          "electorate": "Hartley",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7342",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7342"
+        },
+        {
+          "name": "Alice Rolls",
+          "aliases": [
+            "Alice Jane Rolls"
+          ],
+          "party": "ALP",
+          "electorate": "Unley",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7343",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7343"
+        },
+        {
+          "name": "Robert Roylance",
+          "aliases": [
+            "Robert Joseph Roylance"
+          ],
+          "party": "Pauline Hanson's One Nation",
+          "electorate": "Hammond",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7351",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7351"
+        },
+        {
+          "name": "Olivia Savvas",
+          "aliases": [
+            "Olivia Madison Savvas"
+          ],
+          "party": "ALP",
+          "electorate": "Newland",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6890",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6890"
+        },
+        {
+          "name": "Matt Schultz",
+          "aliases": [
+            "Matthew John Schultz"
+          ],
+          "party": "Independent",
+          "electorate": "Kavel",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7344",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7344"
+        },
+        {
+          "name": "Ella Shaw",
+          "aliases": [
+            "Ella Rose Shaw"
+          ],
+          "party": "ALP",
+          "electorate": "Elizabeth",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7359",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7359"
+        },
+        {
+          "name": "Meagan Spencer",
+          "aliases": [
+            "Meagan Ruth Spencer"
+          ],
+          "party": "ALP",
+          "electorate": "Torrens",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7345",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7345"
+        },
+        {
+          "name": "Jayne Stinson",
+          "aliases": [
+            "Jayne Marion Stinson"
+          ],
+          "party": "ALP",
+          "electorate": "Badcoe",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5376",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5376"
+        },
+        {
+          "name": "Joe Szakacs",
+          "aliases": [
+            "Joseph Karl Szakacs"
+          ],
+          "party": "ALP",
+          "electorate": "Cheltenham",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5571",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5571"
+        },
+        {
+          "name": "Josh Teague",
+          "aliases": [
+            "Joshua Baden Teague"
+          ],
+          "party": "Liberal",
+          "electorate": "Heysen",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5381",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5381"
+        },
+        {
+          "name": "Sam Telfer",
+          "aliases": [
+            "Samuel Joel Telfer"
+          ],
+          "party": "Liberal",
+          "electorate": "Flinders",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6888",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6888"
+        },
+        {
+          "name": "Chantelle Thomas",
+          "aliases": [
+            "Chantelle Marie Thomas"
+          ],
+          "party": "Pauline Hanson's One Nation",
+          "electorate": "Narungga",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7353",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7353"
+        },
+        {
+          "name": "Erin Thompson",
+          "aliases": [
+            "Erin Louise Thompson"
+          ],
+          "party": "ALP",
+          "electorate": "Davenport",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6893",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6893"
+        },
+        {
+          "name": "Jason Virgo",
+          "aliases": [
+            "Jason Wayne Virgo"
+          ],
+          "party": "Pauline Hanson's One Nation",
+          "electorate": "MacKillop",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7352",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7352"
+        },
+        {
+          "name": "Tim Whetstone",
+          "aliases": [
+            "Timothy John Whetstone"
+          ],
+          "party": "Liberal",
+          "electorate": "Chaffey",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=4339",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=4339"
+        },
+        {
+          "name": "David Wilkins",
+          "aliases": [
+            "David Graham Wilkins"
+          ],
+          "party": "ALP",
+          "electorate": "Lee",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7356",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7356"
+        }
+      ]
+    },
+    {
+      "jurisdiction": "sa",
+      "as_of": "2026-11-14",
+      "basis": "official_current_list",
+      "sources": [
+        {
+          "source_id": "source_8d80a360810a5665931a7c08",
+          "label": "South Australian Parliament current members: sa_lc",
+          "url": "https://contact-details-api.parliament.sa.gov.au/api/LCMembersDetails",
+          "fetched_at": "2026-11-13T20:34:18.969137+00:00",
+          "sha256": "da90f57e347b85e0eb1ea0e0a1e03e143cfccaa1236628927dd2e6a5aff3c9d2"
+        },
+        {
+          "source_id": "source_e9514215f74658ea80cd501d",
+          "label": "OPAX reviewed person identity mapping",
+          "url": "https://github.com/jaketracey/opax/blob/00150690c7c7b8b8f1888a29c805c0090d6cbcce/scripts/person_identity.json",
+          "sha256": "079c8392e11af9ed494673fb3fe049d89163f83255e8123ecb1d12528715b3ba",
+          "checksum_scope": "Retained OPAX reviewed identity configuration"
+        }
+      ],
+      "chamber": "sa_lc",
+      "members": [
+        {
+          "name": "Cory  Bernardi",
+          "aliases": [
+            "Cory Bernardi"
+          ],
+          "party": "Pauline Hanson's One Nation",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7377",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7377"
+        },
+        {
+          "name": "Emily Bourke",
+          "aliases": [
+            "Emily Sarah Bourke"
+          ],
+          "party": "ALP",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5413",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5413"
+        },
+        {
+          "name": "Nicola Centofanti",
+          "aliases": [
+            "Nicola Jane Centofanti"
+          ],
+          "party": "Liberal",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6706",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6706"
+        },
+        {
+          "name": "Mira El Dannawi",
+          "aliases": [],
+          "party": "ALP",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7122",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7122"
+        },
+        {
+          "name": "Sarah Game",
+          "aliases": [
+            "Sarah Leslie Game"
+          ],
+          "party": "Family First Party",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6929",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6929"
+        },
+        {
+          "name": "Heidi Girolamo",
+          "aliases": [
+            "Heidi Margaret  Girolamo"
+          ],
+          "party": "Liberal",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6827",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6827"
+        },
+        {
+          "name": "Hilton  Gumbys",
+          "aliases": [
+            "Hilton  Jonas Gumbys"
+          ],
+          "party": "ALP",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7380",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7380"
+        },
+        {
+          "name": "Justin Hanson",
+          "aliases": [
+            "Justin Eric Hanson"
+          ],
+          "party": "ALP",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5244",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5244"
+        },
+        {
+          "name": "Laura Henderson",
+          "aliases": [
+            "Laura Aberdeen Henderson"
+          ],
+          "party": "Liberal",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6928",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6928"
+        },
+        {
+          "name": "Rebecca Hewett",
+          "aliases": [
+            "Rebecca Jane Hewett"
+          ],
+          "party": "Pauline Hanson's One Nation",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7376",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7376"
+        },
+        {
+          "name": "Benjamin Hood",
+          "aliases": [
+            "Benjamin Robin  Hood"
+          ],
+          "party": "Liberal",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7056",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7056"
+        },
+        {
+          "name": "Dennis Hood",
+          "aliases": [
+            "Dennis Garry Edward Hood"
+          ],
+          "party": "Liberal",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=3126",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=3126"
+        },
+        {
+          "name": "Ian  Hunter",
+          "aliases": [
+            "Ian  Keith Hunter"
+          ],
+          "party": "ALP",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=3122",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=3122"
+        },
+        {
+          "name": "Jacqueline Lensink",
+          "aliases": [
+            "Jacqueline Michelle Ann Lensink"
+          ],
+          "party": "Liberal",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=2742",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=2742"
+        },
+        {
+          "name": "Kyam Maher",
+          "aliases": [
+            "Kyam Joseph Maher"
+          ],
+          "party": "ALP",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=4697",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=4697"
+        },
+        {
+          "name": "Reggie Martin",
+          "aliases": [
+            "Reggie Brian Martin"
+          ],
+          "party": "ALP",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6927",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6927"
+        },
+        {
+          "name": "Tung Ngo",
+          "aliases": [
+            "Tung The Ngo"
+          ],
+          "party": "ALP",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=4867",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=4867"
+        },
+        {
+          "name": "Carlos Quaremba",
+          "aliases": [
+            "Carlos Leonel  Quaremba"
+          ],
+          "party": "Pauline Hanson's One Nation",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7379",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7379"
+        },
+        {
+          "name": "Clare Scriven",
+          "aliases": [
+            "Clare Michele Scriven"
+          ],
+          "party": "ALP",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5412",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=5412"
+        },
+        {
+          "name": "Melanie  Selwood",
+          "aliases": [],
+          "party": "Greens SA",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7378",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=7378"
+        },
+        {
+          "name": "Robert Simms",
+          "aliases": [
+            "Robert Andrew Simms",
+            "R.A. Simms"
+          ],
+          "party": "Greens SA",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6802",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6802"
+        },
+        {
+          "name": "Russell Wortley",
+          "aliases": [
+            "Russell Paul Wortley"
+          ],
+          "party": "ALP",
+          "electorate": "South Australia",
+          "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=3125",
+          "url": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=3125"
+        }
+      ]
+    },
+    {
+      "jurisdiction": "tas",
+      "as_of": "2026-11-14",
+      "basis": "official_current_list",
+      "sources": [
+        {
+          "source_id": "source_d70511b17d245e078d7e0421",
+          "label": "Tasmanian Parliament current members: tas_ha",
+          "url": "https://www.parliament.tas.gov.au/__data/assets/excel_doc/0026/14597/HAMembers.xlsx",
+          "fetched_at": "2026-11-13T20:31:11+00:00",
+          "sha256": "60d4c194db29666042b9ae08681bb162ae7c1cf0cde5e0ba5be7fb15336dadcc"
+        },
+        {
+          "source_id": "source_00fb847fa242524ca961a229",
+          "label": "Tasmanian Parliament member directory",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers",
+          "fetched_at": "2026-11-13T20:30:39+00:00",
+          "sha256": "882a0a8184d4eb06c1b6526b058144c2db4abb798dd0860ab8d831a1ea6428bd"
+        }
+      ],
+      "chamber": "tas_ha",
+      "members": [
+        {
+          "name": "Eric Abetz",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "Franklin",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/eric-abetz",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/eric-abetz"
+        },
+        {
+          "name": "Bridget Archer",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "Bass",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/bridget-archer",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/bridget-archer"
+        },
+        {
+          "name": "Tabatha Badger",
+          "aliases": [],
+          "party": "Greens",
+          "electorate": "Lyons",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/tabatha-badger",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/tabatha-badger"
+        },
+        {
+          "name": "Guy Barnett",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "Lyons",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/guy-barnett",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/guy-barnett"
+        },
+        {
+          "name": "Vica Bayley",
+          "aliases": [],
+          "party": "Greens",
+          "electorate": "Clark",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/vica-bayley",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/vica-bayley"
+        },
+        {
+          "name": "Shane Broad",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Braddon",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/shane-broad",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/shane-broad"
+        },
+        {
+          "name": "Meg Brown",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Franklin",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/meg-brown",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/meg-brown"
+        },
+        {
+          "name": "Helen Burnet",
+          "aliases": [],
+          "party": "Independent",
+          "electorate": "Clark",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/helen-burnet",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/helen-burnet"
+        },
+        {
+          "name": "Jen Butler",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Lyons",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/jenna-butler",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/jenna-butler"
+        },
+        {
+          "name": "Carlo Di Falco",
+          "aliases": [],
+          "party": "Shooters, Fishers and Farmers",
+          "electorate": "Lyons",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/carlo-di-falco",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/carlo-di-falco"
+        },
+        {
+          "name": "Anita Dow",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Braddon",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/anita-dow",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/anita-dow"
+        },
+        {
+          "name": "Felix Ellis",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "Braddon",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/felix-ellis",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/felix-ellis"
+        },
+        {
+          "name": "Rob Fairs",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "Bass",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/rob-fairs",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/rob-fairs"
+        },
+        {
+          "name": "Michael Ferguson",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "Bass",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/michael-ferguson",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/michael-ferguson"
+        },
+        {
+          "name": "Janie Finlay",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Bass",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/janie-finlay",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/janie-finlay"
+        },
+        {
+          "name": "Craig Garland",
+          "aliases": [],
+          "party": "Independent",
+          "electorate": "Braddon",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/craig-garland",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/craig-garland"
+        },
+        {
+          "name": "Peter George",
+          "aliases": [],
+          "party": "Independent",
+          "electorate": "Franklin",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/peter-george",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/peter-george"
+        },
+        {
+          "name": "Jess Greene",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Bass",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/jess-greene",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/jess-greene"
+        },
+        {
+          "name": "Ella Haddad",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Clark",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/ella-haddad",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/ella-haddad"
+        },
+        {
+          "name": "Jane Howlett",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "Lyons",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/jane-howlett",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/jane-howlett"
+        },
+        {
+          "name": "Roger Jaensch",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "Braddon",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/roger-jaensch",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/roger-jaensch"
+        },
+        {
+          "name": "Kristie Johnston",
+          "aliases": [],
+          "party": "Independent",
+          "electorate": "Clark",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/kristie-johnston",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/kristie-johnston"
+        },
+        {
+          "name": "Brian Mitchell",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Lyons",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/brian-mitchell",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/brian-mitchell"
+        },
+        {
+          "name": "David O'Byrne",
+          "aliases": [
+            "David O’Byrne"
+          ],
+          "party": "Independent",
+          "electorate": "Franklin",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/david-obyrne",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/david-obyrne"
+        },
+        {
+          "name": "Madeleine Ogilvie",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "Clark",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/madeleine-ogilvie",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/madeleine-ogilvie"
+        },
+        {
+          "name": "Gavin Pearce",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "Braddon",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/gavin-pearce",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/gavin-pearce"
+        },
+        {
+          "name": "Jacqueline Petrusma",
+          "aliases": [
+            "Jacquie Petrusma"
+          ],
+          "party": "Liberal",
+          "electorate": "Franklin",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/jacquie-petrusma",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/jacquie-petrusma"
+        },
+        {
+          "name": "George Razay",
+          "aliases": [],
+          "party": "Independent",
+          "electorate": "Bass",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/george-razay",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/george-razay"
+        },
+        {
+          "name": "Jeremy Rockliff",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "Braddon",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/jeremy-rockliff",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/jeremy-rockliff"
+        },
+        {
+          "name": "Cecily Rosol",
+          "aliases": [],
+          "party": "Greens",
+          "electorate": "Bass",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/cecily-rosol",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/cecily-rosol"
+        },
+        {
+          "name": "Mark Shelton",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "Lyons",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/mark-shelton",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/mark-shelton"
+        },
+        {
+          "name": "Marcus Vermey",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "Clark",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/marcus-vermey",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/marcus-vermey"
+        },
+        {
+          "name": "Josh Willie",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Clark",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/josh-willie",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/josh-willie"
+        },
+        {
+          "name": "Dean Winter",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Franklin",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/dean-winter",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/dean-winter"
+        },
+        {
+          "name": "Rosalie Woodruff",
+          "aliases": [],
+          "party": "Greens",
+          "electorate": "Franklin",
+          "source_key": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/rosalie-woodruff",
+          "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers/rosalie-woodruff"
+        }
+      ]
+    },
+    {
+      "jurisdiction": "tas",
+      "as_of": "2026-11-14",
+      "basis": "official_current_list",
+      "sources": [
+        {
+          "source_id": "source_89f44ded8656543abc7fa96a",
+          "label": "Tasmanian Parliament current members: tas_lc",
+          "url": "https://www.parliament.tas.gov.au/__data/assets/excel_doc/0016/110428/Mail-Merge-as-at-25-August-2026.xlsx",
+          "fetched_at": "2026-11-13T20:31:12+00:00",
+          "sha256": "cd1336b4d54c3934576914f11919b3b6622b4c8a729676d65799bc947d361ee2"
+        },
+        {
+          "source_id": "source_a0ec46024f755ccd9ad42211",
+          "label": "Tasmanian Parliament member directory",
+          "url": "https://www.parliament.tas.gov.au/legislative-council/members",
+          "fetched_at": "2026-11-13T20:30:40+00:00",
+          "sha256": "aafa9cf62a503887169371401f753b89ee6323abc5644726df0c5a97b34e8e31"
+        }
+      ],
+      "chamber": "tas_lc",
+      "members": [
+        {
+          "name": "Rosemary Armitage",
+          "aliases": [],
+          "party": "IND",
+          "electorate": "Launceston",
+          "source_key": "https://www.parliament.tas.gov.au/legislative-council/members/rosemary-armitage",
+          "url": "https://www.parliament.tas.gov.au/legislative-council/members/rosemary-armitage"
+        },
+        {
+          "name": "Clare Glade-Wright",
+          "aliases": [],
+          "party": "IND",
+          "electorate": "Huon",
+          "source_key": "https://www.parliament.tas.gov.au/legislative-council/members/the-honourable-clare-glade-wright",
+          "url": "https://www.parliament.tas.gov.au/legislative-council/members/the-honourable-clare-glade-wright"
+        },
+        {
+          "name": "Nick Duigan",
+          "aliases": [],
+          "party": "LP",
+          "electorate": "Windermere",
+          "source_key": "https://www.parliament.tas.gov.au/legislative-council/members/nicholas-duigan",
+          "url": "https://www.parliament.tas.gov.au/legislative-council/members/nicholas-duigan"
+        },
+        {
+          "name": "Craig Farrell",
+          "aliases": [],
+          "party": "ALP",
+          "electorate": "Derwent",
+          "source_key": "https://www.parliament.tas.gov.au/legislative-council/members/craig-farrell",
+          "url": "https://www.parliament.tas.gov.au/legislative-council/members/craig-farrell"
+        },
+        {
+          "name": "Jo Palmer",
+          "aliases": [],
+          "party": "LP",
+          "electorate": "Rosevears",
+          "source_key": "https://www.parliament.tas.gov.au/legislative-council/members/joanne-palmer",
+          "url": "https://www.parliament.tas.gov.au/legislative-council/members/joanne-palmer"
+        },
+        {
+          "name": "Ruth Forrest",
+          "aliases": [],
+          "party": "IND",
+          "electorate": "Murchison",
+          "source_key": "https://www.parliament.tas.gov.au/legislative-council/members/ruth-forrest",
+          "url": "https://www.parliament.tas.gov.au/legislative-council/members/ruth-forrest"
+        },
+        {
+          "name": "Mike Gaffney",
+          "aliases": [
+            "Michael Gaffney"
+          ],
+          "party": "IND",
+          "electorate": "Mersey",
+          "source_key": "https://www.parliament.tas.gov.au/legislative-council/members/michael-gaffney",
+          "url": "https://www.parliament.tas.gov.au/legislative-council/members/michael-gaffney"
+        },
+        {
+          "name": "Casey Hiscutt",
+          "aliases": [],
+          "party": "IND",
+          "electorate": "Montgomery",
+          "source_key": "https://www.parliament.tas.gov.au/legislative-council/members/casey-hiscutt",
+          "url": "https://www.parliament.tas.gov.au/legislative-council/members/casey-hiscutt"
+        },
+        {
+          "name": "Kerry Vincent",
+          "aliases": [],
+          "party": "LP",
+          "electorate": "Prosser",
+          "source_key": "https://www.parliament.tas.gov.au/legislative-council/members/the-honourable-kerry-john-vincent",
+          "url": "https://www.parliament.tas.gov.au/legislative-council/members/the-honourable-kerry-john-vincent"
+        },
+        {
+          "name": "Sarah Lovell",
+          "aliases": [],
+          "party": "ALP",
+          "electorate": "Rumney",
+          "source_key": "https://www.parliament.tas.gov.au/legislative-council/members/sarah-lovell",
+          "url": "https://www.parliament.tas.gov.au/legislative-council/members/sarah-lovell"
+        },
+        {
+          "name": "Tania Rattray",
+          "aliases": [],
+          "party": "IND",
+          "electorate": "McIntyre",
+          "source_key": "https://www.parliament.tas.gov.au/legislative-council/members/tania-rattray",
+          "url": "https://www.parliament.tas.gov.au/legislative-council/members/tania-rattray"
+        },
+        {
+          "name": "Luke Edmunds",
+          "aliases": [],
+          "party": "ALP",
+          "electorate": "Pembroke",
+          "source_key": "https://www.parliament.tas.gov.au/legislative-council/members/luke-edmunds",
+          "url": "https://www.parliament.tas.gov.au/legislative-council/members/luke-edmunds"
+        },
+        {
+          "name": "Meg Webb",
+          "aliases": [],
+          "party": "IND",
+          "electorate": "Nelson",
+          "source_key": "https://www.parliament.tas.gov.au/legislative-council/members/megan-webb",
+          "url": "https://www.parliament.tas.gov.au/legislative-council/members/megan-webb"
+        },
+        {
+          "name": "Bec Thomas",
+          "aliases": [
+            "Rebecca Thomas"
+          ],
+          "party": "IND",
+          "electorate": "Elwick",
+          "source_key": "https://www.parliament.tas.gov.au/legislative-council/members/the-honourable-rebecca-thomas",
+          "url": "https://www.parliament.tas.gov.au/legislative-council/members/the-honourable-rebecca-thomas"
+        },
+        {
+          "name": "Cassy O'Connor",
+          "aliases": [],
+          "party": "GRN",
+          "electorate": "Hobart",
+          "source_key": "https://www.parliament.tas.gov.au/legislative-council/members/the-honourable-cassy-oconnor2",
+          "url": "https://www.parliament.tas.gov.au/legislative-council/members/the-honourable-cassy-oconnor2"
+        }
+      ]
+    },
+    {
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-06-02",
+      "basis": "official_current_list",
+      "sources": [
+        {
+          "source_id": "source_0fa9d5a5cd2454caa2e437f3",
+          "label": "OPAX held official qld_la member list, 2026-06-02",
+          "url": "https://documents.parliament.qld.gov.au/members/photosheet/MembersPhotoSheet.pdf",
+          "fetched_at": "2026-06-02",
+          "sha256": "11042cedb5d8aa4a88cf74b389ece2a9bd0327752e6710450f96d8bd99e66542",
+          "checksum_scope": "Retained source digest"
+        }
+      ],
+      "members": [
+        {
+          "name": "Janelle Poole",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Mundingburra",
+          "source_key": "held:qld:qld_la:Janelle Poole"
+        },
+        {
+          "name": "Steven Miles",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Murrumba",
+          "source_key": "held:qld:qld_la:Steven Miles"
+        },
+        {
+          "name": "Deb Frecklington",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Nanango",
+          "source_key": "held:qld:qld_la:Deb Frecklington"
+        },
+        {
+          "name": "Marty Hunt",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Nicklin",
+          "source_key": "held:qld:qld_la:Marty Hunt"
+        },
+        {
+          "name": "James Martin",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Stretton",
+          "source_key": "held:qld:qld_la:James Martin"
+        },
+        {
+          "name": "John-Paul Langbroek",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Surfers Paradise",
+          "source_key": "held:qld:qld_la:John-Paul Langbroek"
+        },
+        {
+          "name": "Mark Boothman",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Theodore",
+          "source_key": "held:qld:qld_la:Mark Boothman"
+        },
+        {
+          "name": "Natalie Marr",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Thuringowa",
+          "source_key": "held:qld:qld_la:Natalie Marr"
+        },
+        {
+          "name": "Dan Purdie",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Ninderry",
+          "source_key": "held:qld:qld_la:Dan Purdie"
+        },
+        {
+          "name": "Sandy Bolton",
+          "aliases": [],
+          "party": "Independent",
+          "electorate": "Noosa",
+          "source_key": "held:qld:qld_la:Sandy Bolton"
+        },
+        {
+          "name": "Leanne Linard",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Nudgee",
+          "source_key": "held:qld:qld_la:Leanne Linard"
+        },
+        {
+          "name": "Amanda Stoker",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Oodgeroo",
+          "source_key": "held:qld:qld_la:Amanda Stoker"
+        },
+        {
+          "name": "Peter Russo",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Toohey",
+          "source_key": "held:qld:qld_la:Peter Russo"
+        },
+        {
+          "name": "Trevor Watts",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Toowoomba North",
+          "source_key": "held:qld:qld_la:Trevor Watts"
+        },
+        {
+          "name": "David Janetzki",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Toowoomba South",
+          "source_key": "held:qld:qld_la:David Janetzki"
+        },
+        {
+          "name": "Adam Baillie",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Townsville",
+          "source_key": "held:qld:qld_la:Adam Baillie"
+        },
+        {
+          "name": "Nikki Boyd",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Pine Rivers",
+          "source_key": "held:qld:qld_la:Nikki Boyd"
+        },
+        {
+          "name": "Ariana Doolan",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Pumicestone",
+          "source_key": "held:qld:qld_la:Ariana Doolan"
+        },
+        {
+          "name": "Kerri-Anne Dooley",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Redcliffe",
+          "source_key": "held:qld:qld_la:Kerri-Anne Dooley"
+        },
+        {
+          "name": "Rebecca Young",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Redlands",
+          "source_key": "held:qld:qld_la:Rebecca Young"
+        },
+        {
+          "name": "Robbie Katter",
+          "aliases": [],
+          "party": "Katter's Australian Party",
+          "electorate": "Traeger",
+          "source_key": "held:qld:qld_la:Robbie Katter"
+        },
+        {
+          "name": "Ann Leahy",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Warrego",
+          "source_key": "held:qld:qld_la:Ann Leahy"
+        },
+        {
+          "name": "Shannon Fentiman",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Waterford",
+          "source_key": "held:qld:qld_la:Shannon Fentiman"
+        },
+        {
+          "name": "Amanda Camm",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Whitsunday",
+          "source_key": "held:qld:qld_la:Amanda Camm"
+        },
+        {
+          "name": "Leeanne Enoch",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Algester",
+          "source_key": "held:qld:qld_la:Leeanne Enoch"
+        },
+        {
+          "name": "Bart Mellish",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Aspley",
+          "source_key": "held:qld:qld_la:Bart Mellish"
+        },
+        {
+          "name": "Chris Whiting",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Bancroft",
+          "source_key": "held:qld:qld_la:Chris Whiting"
+        },
+        {
+          "name": "Bree James",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Barron River",
+          "source_key": "held:qld:qld_la:Bree James"
+        },
+        {
+          "name": "David Kempton",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Cook",
+          "source_key": "held:qld:qld_la:David Kempton"
+        },
+        {
+          "name": "Michael Crandon",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Coomera",
+          "source_key": "held:qld:qld_la:Michael Crandon"
+        },
+        {
+          "name": "Jonty Bush",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Cooper",
+          "source_key": "held:qld:qld_la:Jonty Bush"
+        },
+        {
+          "name": "Laura Gerber",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Currumbin",
+          "source_key": "held:qld:qld_la:Laura Gerber"
+        },
+        {
+          "name": "Nigel Hutton",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Keppel",
+          "source_key": "held:qld:qld_la:Nigel Hutton"
+        },
+        {
+          "name": "Shane King",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Kurwongbah",
+          "source_key": "held:qld:qld_la:Shane King"
+        },
+        {
+          "name": "Jim McDonald",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Lockyer",
+          "source_key": "held:qld:qld_la:Jim McDonald"
+        },
+        {
+          "name": "Linus Power",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Logan",
+          "source_key": "held:qld:qld_la:Linus Power"
+        },
+        {
+          "name": "Sam O’Connor",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Bonney",
+          "source_key": "held:qld:qld_la:Sam O’Connor"
+        },
+        {
+          "name": "David Crisafulli",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Broadwater",
+          "source_key": "held:qld:qld_la:David Crisafulli"
+        },
+        {
+          "name": "Brent Mickelberg",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Buderim",
+          "source_key": "held:qld:qld_la:Brent Mickelberg"
+        },
+        {
+          "name": "Di Farmer",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Bulimba",
+          "source_key": "held:qld:qld_la:Di Farmer"
+        },
+        {
+          "name": "Tim Mander",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Everton",
+          "source_key": "held:qld:qld_la:Tim Mander"
+        },
+        {
+          "name": "Mark Furner",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Ferny Grove",
+          "source_key": "held:qld:qld_la:Mark Furner"
+        },
+        {
+          "name": "Meaghan Scanlon",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Gaven",
+          "source_key": "held:qld:qld_la:Meaghan Scanlon"
+        },
+        {
+          "name": "Glenn Butcher",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Gladstone",
+          "source_key": "held:qld:qld_la:Glenn Butcher"
+        },
+        {
+          "name": "Joan Pease",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Lytton",
+          "source_key": "held:qld:qld_la:Joan Pease"
+        },
+        {
+          "name": "Melissa McMahon",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Macalister",
+          "source_key": "held:qld:qld_la:Melissa McMahon"
+        },
+        {
+          "name": "Nigel Dalton",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Mackay",
+          "source_key": "held:qld:qld_la:Nigel Dalton"
+        },
+        {
+          "name": "Michael Berkman",
+          "aliases": [],
+          "party": "Greens",
+          "electorate": "Maiwar",
+          "source_key": "held:qld:qld_la:Michael Berkman"
+        },
+        {
+          "name": "Tom Smith",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Bundaberg",
+          "source_key": "held:qld:qld_la:Tom Smith"
+        },
+        {
+          "name": "Lance McCallum",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Bundamba",
+          "source_key": "held:qld:qld_la:Lance McCallum"
+        },
+        {
+          "name": "Dale Last",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Burdekin",
+          "source_key": "held:qld:qld_la:Dale Last"
+        },
+        {
+          "name": "Hermann Vorster",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Burleigh",
+          "source_key": "held:qld:qld_la:Hermann Vorster"
+        },
+        {
+          "name": "Andrew Powell",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Glass House",
+          "source_key": "held:qld:qld_la:Andrew Powell"
+        },
+        {
+          "name": "Joe Kelly",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Greenslopes",
+          "source_key": "held:qld:qld_la:Joe Kelly"
+        },
+        {
+          "name": "Sean Dillon",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Gregory",
+          "source_key": "held:qld:qld_la:Sean Dillon"
+        },
+        {
+          "name": "Tony Perrett",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Gympie",
+          "source_key": "held:qld:qld_la:Tony Perrett"
+        },
+        {
+          "name": "Corrine McMillan",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Mansfield",
+          "source_key": "held:qld:qld_la:Corrine McMillan"
+        },
+        {
+          "name": "Fiona Simpson",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Maroochydore",
+          "source_key": "held:qld:qld_la:Fiona Simpson"
+        },
+        {
+          "name": "John Barounis",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Maryborough",
+          "source_key": "held:qld:qld_la:John Barounis"
+        },
+        {
+          "name": "Grace Grace",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "McConnel",
+          "source_key": "held:qld:qld_la:Grace Grace"
+        },
+        {
+          "name": "Stephen Bennett",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Burnett",
+          "source_key": "held:qld:qld_la:Stephen Bennett"
+        },
+        {
+          "name": "Michael Healy",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Cairns",
+          "source_key": "held:qld:qld_la:Michael Healy"
+        },
+        {
+          "name": "Bryson Head",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Callide",
+          "source_key": "held:qld:qld_la:Bryson Head"
+        },
+        {
+          "name": "Kendall Hatcher",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Caloundra",
+          "source_key": "held:qld:qld_la:Kendall Hatcher"
+        },
+        {
+          "name": "David Lee",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Hervey Bay",
+          "source_key": "held:qld:qld_la:David Lee"
+        },
+        {
+          "name": "Shane Knuth",
+          "aliases": [],
+          "party": "Katter's Australian Party",
+          "electorate": "Hill",
+          "source_key": "held:qld:qld_la:Shane Knuth"
+        },
+        {
+          "name": "Wayde Chiesa",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Hinchinbrook",
+          "source_key": "held:qld:qld_la:Wayde Chiesa"
+        },
+        {
+          "name": "Margie Nightingale",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Inala",
+          "source_key": "held:qld:qld_la:Margie Nightingale"
+        },
+        {
+          "name": "Ray Stevens",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Mermaid Beach",
+          "source_key": "held:qld:qld_la:Ray Stevens"
+        },
+        {
+          "name": "Mark Bailey",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Miller",
+          "source_key": "held:qld:qld_la:Mark Bailey"
+        },
+        {
+          "name": "Glen Kelly",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Mirani",
+          "source_key": "held:qld:qld_la:Glen Kelly"
+        },
+        {
+          "name": "Christian Rowan",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Moggill",
+          "source_key": "held:qld:qld_la:Christian Rowan"
+        },
+        {
+          "name": "Russell Field",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Capalaba",
+          "source_key": "held:qld:qld_la:Russell Field"
+        },
+        {
+          "name": "Steve Minnikin",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Chatsworth",
+          "source_key": "held:qld:qld_la:Steve Minnikin"
+        },
+        {
+          "name": "Tim Nicholls",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Clayfield",
+          "source_key": "held:qld:qld_la:Tim Nicholls"
+        },
+        {
+          "name": "Pat Weir",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Condamine",
+          "source_key": "held:qld:qld_la:Pat Weir"
+        },
+        {
+          "name": "Jennifer Howard",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Ipswich",
+          "source_key": "held:qld:qld_la:Jennifer Howard"
+        },
+        {
+          "name": "Wendy Bourne",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Ipswich West",
+          "source_key": "held:qld:qld_la:Wendy Bourne"
+        },
+        {
+          "name": "Charis Mullen",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Jordan",
+          "source_key": "held:qld:qld_la:Charis Mullen"
+        },
+        {
+          "name": "Jarrod Bleijie",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Kawana",
+          "source_key": "held:qld:qld_la:Jarrod Bleijie"
+        },
+        {
+          "name": "Mark Ryan",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Morayfield",
+          "source_key": "held:qld:qld_la:Mark Ryan"
+        },
+        {
+          "name": "Jess Pugh",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Mount Ommaney",
+          "source_key": "held:qld:qld_la:Jess Pugh"
+        },
+        {
+          "name": "Ros Bates",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Mudgeeraba",
+          "source_key": "held:qld:qld_la:Ros Bates"
+        },
+        {
+          "name": "Terry James",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Mulgrave",
+          "source_key": "held:qld:qld_la:Terry James"
+        },
+        {
+          "name": "Donna Kirkland",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Rockhampton",
+          "source_key": "held:qld:qld_la:Donna Kirkland"
+        },
+        {
+          "name": "Bisma Asif",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Sandgate",
+          "source_key": "held:qld:qld_la:Bisma Asif"
+        },
+        {
+          "name": "Jon Krause",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Scenic Rim",
+          "source_key": "held:qld:qld_la:Jon Krause"
+        },
+        {
+          "name": "Barbara O’Shea",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "South Brisbane",
+          "source_key": "held:qld:qld_la:Barbara O’Shea"
+        },
+        {
+          "name": "Cameron Dick",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Woodridge",
+          "source_key": "held:qld:qld_la:Cameron Dick"
+        },
+        {
+          "name": "James Lister",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Southern Downs",
+          "source_key": "held:qld:qld_la:James Lister"
+        },
+        {
+          "name": "Rob Molhoek",
+          "aliases": [],
+          "party": "LNP",
+          "electorate": "Southport",
+          "source_key": "held:qld:qld_la:Rob Molhoek"
+        },
+        {
+          "name": "Mick De Brenni",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Springwood",
+          "source_key": "held:qld:qld_la:Mick De Brenni"
+        },
+        {
+          "name": "Luke Richmond",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "Stafford",
+          "source_key": "held:qld:qld_la:Luke Richmond"
+        }
+      ]
+    },
+    {
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "sources": [
+        {
+          "source_id": "source_9544948bbecb590795923354",
+          "label": "OPAX held official nsw_lc member list, 2026-09-25",
+          "url": "https://www.parliament.nsw.gov.au/_media/documents/members-and-electorates/downloadable-lists/lc-list-of-members.pdf",
+          "fetched_at": "2026-09-25",
+          "sha256": "f6813008eacf0363a4ae14204531012e7d9f2f816ecc040cb207a070db6ab219",
+          "checksum_scope": "OPAX held transcription, not the raw PDF"
+        }
+      ],
+      "members": [
+        {
+          "name": "Mark Banasiak",
+          "aliases": [
+            "Mark Jared Banasiak"
+          ],
+          "party": "Shooters, Fishers and Farmers",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Mark Banasiak"
+        },
+        {
+          "name": "Scott Barrett",
+          "aliases": [
+            "Scott James Barrett"
+          ],
+          "party": "Nationals",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Scott Barrett"
+        },
+        {
+          "name": "Robert Borsak",
+          "aliases": [],
+          "party": "Shooters, Fishers and Farmers",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Robert Borsak"
+        },
+        {
+          "name": "Abigail Boyd",
+          "aliases": [],
+          "party": "Greens",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Abigail Boyd"
+        },
+        {
+          "name": "Jeremy Buckingham",
+          "aliases": [],
+          "party": "Legalise Cannabis",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Jeremy Buckingham"
+        },
+        {
+          "name": "Mark Buttigieg",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Mark Buttigieg"
+        },
+        {
+          "name": "Susan Carter",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Susan Carter"
+        },
+        {
+          "name": "Amanda Cohn",
+          "aliases": [],
+          "party": "Greens",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Amanda Cohn"
+        },
+        {
+          "name": "Anthony D’Adam",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Anthony D’Adam"
+        },
+        {
+          "name": "Cate Faehrmann",
+          "aliases": [],
+          "party": "Greens",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Cate Faehrmann"
+        },
+        {
+          "name": "Wes Fang",
+          "aliases": [],
+          "party": "Nationals",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Wes Fang"
+        },
+        {
+          "name": "Scott Farlow",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Scott Farlow"
+        },
+        {
+          "name": "Ben Franklin",
+          "aliases": [],
+          "party": "Nationals",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Ben Franklin"
+        },
+        {
+          "name": "John Graham",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:John Graham"
+        },
+        {
+          "name": "Sue Higginson",
+          "aliases": [],
+          "party": "Greens",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Sue Higginson"
+        },
+        {
+          "name": "Courtney Houssos",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Courtney Houssos"
+        },
+        {
+          "name": "Emma Hurst",
+          "aliases": [],
+          "party": "Animal Justice Party",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Emma Hurst"
+        },
+        {
+          "name": "Rose Jackson",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Rose Jackson"
+        },
+        {
+          "name": "Sarah Kaine",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Sarah Kaine"
+        },
+        {
+          "name": "Mark Latham",
+          "aliases": [],
+          "party": "Independent",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Mark Latham"
+        },
+        {
+          "name": "Stephen Lawrence",
+          "aliases": [
+            "Stephen Gingell Lawrence"
+          ],
+          "party": "Labor",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Stephen Lawrence"
+        },
+        {
+          "name": "Aileen MacDonald",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Aileen MacDonald"
+        },
+        {
+          "name": "Natasha Maclaren-Jones",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Natasha Maclaren-Jones"
+        },
+        {
+          "name": "Taylor Martin",
+          "aliases": [
+            "Taylor Mitchell Martin"
+          ],
+          "party": "Independent",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Taylor Martin"
+        },
+        {
+          "name": "Rachel Merton",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Rachel Merton"
+        },
+        {
+          "name": "Tania Mihailuk",
+          "aliases": [],
+          "party": "Independent",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Tania Mihailuk"
+        },
+        {
+          "name": "Sarah Mitchell",
+          "aliases": [],
+          "party": "Nationals",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Sarah Mitchell"
+        },
+        {
+          "name": "Daniel Mookhey",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Daniel Mookhey"
+        },
+        {
+          "name": "Tara Moriarty",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Tara Moriarty"
+        },
+        {
+          "name": "Jacqui Munro",
+          "aliases": [
+            "Jacqueline Amy Munro"
+          ],
+          "party": "Liberal",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Jacqui Munro"
+        },
+        {
+          "name": "Cameron Murphy",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Cameron Murphy"
+        },
+        {
+          "name": "Bob Nanva",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Bob Nanva"
+        },
+        {
+          "name": "Nichole Overall",
+          "aliases": [],
+          "party": "Nationals",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Nichole Overall"
+        },
+        {
+          "name": "Peter Primrose",
+          "aliases": [
+            "Peter Thomas Primrose"
+          ],
+          "party": "Labor",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Peter Primrose"
+        },
+        {
+          "name": "Chris Rath",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Chris Rath"
+        },
+        {
+          "name": "Rod Roberts",
+          "aliases": [],
+          "party": "Independent",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Rod Roberts"
+        },
+        {
+          "name": "John Ruddick",
+          "aliases": [],
+          "party": "Libertarian",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:John Ruddick"
+        },
+        {
+          "name": "Penny Sharpe",
+          "aliases": [
+            "Penelope Gail Sharpe"
+          ],
+          "party": "Labor",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Penny Sharpe"
+        },
+        {
+          "name": "Emily Suvaal",
+          "aliases": [],
+          "party": "Labor",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Emily Suvaal"
+        },
+        {
+          "name": "Damien Tudehope",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Damien Tudehope"
+        },
+        {
+          "name": "Natalie Ward",
+          "aliases": [],
+          "party": "Liberal",
+          "electorate": "New South Wales",
+          "source_key": "held:nsw:nsw_lc:Natalie Ward"
+        }
+      ]
+    }
+  ]
+}

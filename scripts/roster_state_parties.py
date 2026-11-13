@@ -34,6 +34,9 @@ def observations(bundle, state):
     seats = {s['electorate_id']: s for s in bundle.get('electorates', [])}
     sources = {s['source_id']: s for s in bundle.get('sources', [])}
     for roster in bundle.get('rosters', []):
+        # Current page observations must not revise reviewed speech-party history.
+        if roster.get('observation_only'):
+            continue
         seat = seats[roster['electorate_id']]
         official = [sources[s] for s in roster.get('sources', []) if s in sources
                     and not sources[s].get('label', '').startswith('OPAX existing')]

@@ -26,7 +26,12 @@ const cash = n => Number(n).toLocaleString('en-AU',{style:'currency',currency:'A
 // A grant worth $0.00 at source is published as 0 (search-hubs-008): say so, and never print $NaN for a missing value.
 export const grantValue = v => v === 0 ? '$0 (as published)' : v == null || v === '' || !Number.isFinite(Number(v)) ? 'Value not recorded' : cash(v);
 let canonicalPeople=new Map(), canonicalAliases=new Map(), peopleIndex={fullNames:new Map()};
-const personHref = n => { const slug=canonicalPeople.get(n) || canonicalAliases.get(personNameKey(n)); return slug ? '/subject/person/'+slug : personUrl(n); };
+const personHref = n => {
+ const registered=personUrl(n);
+ if(registered!=='/subject/person')return registered;
+ const slug=canonicalPeople.get(n) || canonicalAliases.get(personNameKey(n));
+ return slug ? '/subject/person/'+slug : registered;
+};
 // A minister's diary reaches a full-name alias only in the minister's own parliament.
 const ministerHref = m => { const n=m.page||m.name; return fullNameMatches(peopleIndex,n,m.jurisdiction) ? personHref(n) : personUrl(n); };
 const supplierHref = n => '/subject/supplier/'+encodeURIComponent(n);

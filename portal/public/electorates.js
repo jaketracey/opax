@@ -1,5 +1,5 @@
 import { vicElectionFooterHTML } from './vic-election.js?v=6642b187d4';
-import { personUrl, partyUrl } from './canonical-urls.js?v=bcc9a57bab';
+import { personUrl, partyUrl } from './canonical-urls.js?v=d0a59455fd';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
 import { renderNotFound } from './not-found.js';
@@ -14,6 +14,7 @@ const esc = escapeHTML;
 const number = (n) => Number(n).toLocaleString('en-AU', { maximumFractionDigits: 1 });
 const date = (s) => s ? shortDate(s) : 'Unknown';
 const personURL = (p) => personUrl(p.name);
+const memberParty = (m) => Object.hasOwn(m, 'party_canonical') ? m.party_canonical : m.party;
 /** A roster name as a reader sees it: some service records set the whole name
  *  or the surname in capitals ("LEO McLEAY"). Mc/Mac/O' keep their own shape. */
 export const displayName = (name) => String(name ?? '').replace(/\b(Mc|Mac|O['’])?([A-Z])([A-Z]+)\b/g, (_, pre = '', first, rest) => `${pre}${first}${rest.toLowerCase()}`);
@@ -95,7 +96,7 @@ export async function directorySpec({ photoUrlFor = () => null, partyChipHTML = 
       { key: 'chamber', label: 'Chamber', options: choices('chamber', CHAMBERS), test: (e, v) => e.chamber === v },
       { key: 'state', label: 'State', options: choices('state_code', JURISDICTIONS), test: (e, v) => e.state_code === v },
       { key: 'status', label: 'Status', options: [['current', 'Current'], ['historical', 'Historical']], test: (e, v) => e.status === v },
-      { key: 'party', label: 'Party at latest check', options: [...new Set(items.flatMap((e) => e.representatives.map((m) => m.party)).filter(Boolean))].sort().map((v) => [v, v]), test: (e, v) => e.representatives.some((m) => m.party === v) },
+      { key: 'party', label: 'Party at latest check', options: [...new Set(items.flatMap((e) => e.representatives.map(memberParty)).filter(Boolean))].sort().map((v) => [v, v]), test: (e, v) => e.representatives.some((m) => memberParty(m) === v) },
       { key: 'results', label: 'With election results', check: true, test: (e) => e.election_count > 0 },
     ],
     sorts: [['name', 'Name A–Z', (a, b) => a.name.localeCompare(b.name)], ['elections', 'Most elections', (a, b) => b.election_count - a.election_count || a.name.localeCompare(b.name)]],
@@ -103,7 +104,7 @@ export async function directorySpec({ photoUrlFor = () => null, partyChipHTML = 
       const holders = e.representatives || [];
       const src = holders[0]?.person?.name ? photoUrlFor(holders[0].person.name) : null;
       const face = src ? `<span class="el-face"><img src="${esc(src)}" alt="" loading="lazy" width="36" height="36"></span>` : '<span class="el-face el-face-blank" aria-hidden="true"></span>';
-      return `<li class="el-directory-row">${face}<div class="el-seat"><a class="el-name" href="${esc(e.url)}">${esc(e.name)}</a><span class="el-meta">${esc(JURISDICTIONS[e.jurisdiction])} · ${esc(CHAMBERS[e.chamber] || e.chamber)}${e.jurisdiction === 'federal' ? ` · ${esc(e.state_code.toUpperCase())}` : ''}${e.status === 'historical' ? ' · Historical' : ''}</span></div><div class="el-holders">${holders.length ? holders.map((m) => `<a href="${esc(personURL(m.person))}">${esc(m.person.name)}</a>${m.party ? ` · <a class="el-party" href="${partyUrl(m.party)}">${partyChipHTML(m.party)}</a>` : ''}`).join('<br>') : 'Representation not yet verified'}${e.representation_as_of ? `<small>Verified ${esc(date(e.representation_as_of))}</small>` : ''}</div><span class="el-meta">${e.election_count ? `${e.election_count} election${e.election_count === 1 ? '' : 's'} recorded` : 'No election results yet'}</span></li>`;
+      return `<li class="el-directory-row">${face}<div class="el-seat"><a class="el-name" href="${esc(e.url)}">${esc(e.name)}</a><span class="el-meta">${esc(JURISDICTIONS[e.jurisdiction])} · ${esc(CHAMBERS[e.chamber] || e.chamber)}${e.jurisdiction === 'federal' ? ` · ${esc(e.state_code.toUpperCase())}` : ''}${e.status === 'historical' ? ' · Historical' : ''}</span></div><div class="el-holders">${holders.length ? holders.map((m) => `<a href="${esc(personURL(m.person))}">${esc(m.person.name)}</a>${m.party ? ` · ${memberParty(m) ? `<a class="el-party" href="${partyUrl(memberParty(m))}">${partyChipHTML(m.party)}</a>` : `<span class="el-party">${partyChipHTML(m.party)}</span>`}` : ''}`).join('<br>') : 'Representation not yet verified'}${e.representation_as_of ? `<small>Verified ${esc(date(e.representation_as_of))}</small>` : ''}</div><span class="el-meta">${e.election_count ? `${e.election_count} election${e.election_count === 1 ? '' : 's'} recorded` : 'No election results yet'}</span></li>`;
     },
     fineprint: `Coverage varies by parliament. A missing representative or result means the records do not confirm one yet. ABS state outlines use 2025 statistical geography. <a href="/electorates/manifest.json">Sources and reference downloads</a>.`,
   };

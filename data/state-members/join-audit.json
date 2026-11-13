@@ -1,0 +1,1095 @@
+{
+  "before_release": "9e281b4ef4edbd38",
+  "after_release": "d2423b2d3f8ba6f6",
+  "issues": [
+    {
+      "reason": "roster exceeds capacity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Epping",
+      "electorate_id": "el_c250656e744a59a292529435"
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q111482817",
+      "name": "Chris Rath",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q111940431",
+      "name": "Scott Barrett",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q111972517",
+      "name": "Sue Higginson",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q113965085",
+      "name": "Aileen MacDonald",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117421502",
+      "name": "Susan Carter",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117689146",
+      "name": "Amanda Cohn",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117818820",
+      "name": "John Ruddick",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117837219",
+      "name": "Emily Suvaal",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117837222",
+      "name": "Rachel Merton",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q16186846",
+      "name": "Peter Primrose",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q19873536",
+      "name": "Ben Franklin",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q19879829",
+      "name": "Bronnie Taylor",
+      "electorate": "Legislative Council district of New South Wales"
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q27450715",
+      "name": "John Graham",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q29965792",
+      "name": "Taylor Martin",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q39743779",
+      "name": "Wes Fang",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q47524082",
+      "name": "Natalie Ward",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q5051778",
+      "name": "Cate Faehrmann",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q5605496",
+      "name": "Greg Donnelly",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q62960643",
+      "name": "Tara Moriarty",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q62961056",
+      "name": "Abigail Boyd",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q63153112",
+      "name": "Emma Hurst",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q63155097",
+      "name": "Rod Roberts",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q63155181",
+      "name": "Mark Buttigieg",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q71235827",
+      "name": "Sam Farraway",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q7164431",
+      "name": "Penny Sharpe",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q7342222",
+      "name": "Robert Borsak",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q7422611",
+      "name": "Sarah Mitchell",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q7683250",
+      "name": "Tania Mihailuk",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q982227",
+      "name": "Mark Latham",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130654928",
+      "name": "Sean Dillon",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130654935",
+      "name": "Bisma Asif",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130680796",
+      "name": "Donna Kirkland",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130680797",
+      "name": "Kerri-Anne Dooley",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130680801",
+      "name": "Kendall Morton",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130680803",
+      "name": "Bree James",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130680805",
+      "name": "Natalie Marr",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130680807",
+      "name": "Nigel Dalton",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130680809",
+      "name": "Nigel Hutton",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130680902",
+      "name": "Adam Baillie",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130713536",
+      "name": "Hermann Vorster",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130721639",
+      "name": "John Barounis",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130794308",
+      "name": "Ariana Doolan",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130878777",
+      "name": "Glen Kelly",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q131000591",
+      "name": "Barbara O'Shea",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q131127271",
+      "name": "David Lee",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q131175472",
+      "name": "Russell Field",
+      "electorate": null
+    },
+    {
+      "reason": "roster exceeds capacity",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Ipswich West",
+      "electorate_id": "el_97bf99d4a000533599735c3f"
+    },
+    {
+      "reason": "roster exceeds capacity",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Mulgrave",
+      "electorate_id": "el_e259ffd398635fd593f836de"
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_ha",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q111305122",
+      "name": "Ashton Hurn",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_ha",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q52074546",
+      "name": "Penny Pratt",
+      "electorate": "Frome"
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_ha",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q5534059",
+      "name": "Geoff Brock",
+      "electorate": "Frome"
+    },
+    {
+      "reason": "roster exceeds capacity",
+      "jurisdiction": "sa",
+      "chamber": "sa_ha",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Playford",
+      "electorate_id": "el_f3e9112205a0577e9d70c469"
+    },
+    {
+      "reason": "roster exceeds capacity",
+      "jurisdiction": "sa",
+      "chamber": "sa_ha",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Colton",
+      "electorate_id": "el_8c8889e1a73e5b1b8dde1398"
+    },
+    {
+      "reason": "roster exceeds capacity",
+      "jurisdiction": "sa",
+      "chamber": "sa_ha",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "MacKillop",
+      "electorate_id": "el_07529ce9e4a653b7bf8c8c2c"
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q108327458",
+      "name": "Heidi Girolamo",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q1383644",
+      "name": "Ian Hunter",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q16062407",
+      "name": "Tung Ngo",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q21066567",
+      "name": "Robert Simms",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q28839980",
+      "name": "Justin Hanson",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q50726965",
+      "name": "Emily Bourke",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q50727412",
+      "name": "Frank Pangallo",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q50727865",
+      "name": "Connie Bonaros",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q51743401",
+      "name": "Clare Scriven",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q52225394",
+      "name": "Reggie Martin",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q5258529",
+      "name": "Dennis Hood",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q54669952",
+      "name": "Laura Henderson",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q6202225",
+      "name": "Jing Lee",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q6450701",
+      "name": "Kyam Maher",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q6837123",
+      "name": "Michelle Lensink",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q7381884",
+      "name": "Russell Wortley",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q7681578",
+      "name": "Tammy Franks",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q7705045",
+      "name": "Terry Stephens",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q90334712",
+      "name": "Nicola Centofanti",
+      "electorate": null
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117006730",
+      "name": "Karen McKeown",
+      "electorate": "Penrith"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117193480",
+      "name": "Charishma Kaliyanda",
+      "electorate": "Liverpool"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117294364",
+      "name": "Liza Butler",
+      "electorate": "South Coast"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117294421",
+      "name": "Sally Quinnell",
+      "electorate": "Camden"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117294450",
+      "name": "Kylie Wilkinson",
+      "electorate": "East Hills"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117297956",
+      "name": "Richie Williamson",
+      "electorate": "Clarence"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117299394",
+      "name": "Nathan Hagarty",
+      "electorate": "Leppington"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117468562",
+      "name": "Jordan Lane",
+      "electorate": "Ryde"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117481176",
+      "name": "Michael Kemp",
+      "electorate": "Oxley"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130564406",
+      "name": "Jacqui Scruby",
+      "electorate": "Pittwater"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q16204977",
+      "name": "Alex Greenwich",
+      "electorate": "Sydney"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q18379290",
+      "name": "Jodie Harrison",
+      "electorate": "Charlestown"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q18394398",
+      "name": "Tim Crakanthorp",
+      "electorate": "Newcastle"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q19786996",
+      "name": "Eleni Petinos",
+      "electorate": "Miranda"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q19786997",
+      "name": "Adam Crouch",
+      "electorate": "Terrigal"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q19787028",
+      "name": "Hugh McDermott",
+      "electorate": "Prospect"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q29416938",
+      "name": "Felicity Wilson",
+      "electorate": "North Shore"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q41994089",
+      "name": "Stephen Bali",
+      "electorate": "Blacktown"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q41994666",
+      "name": "Steph Cooke",
+      "electorate": "Cootamundra"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q56599957",
+      "name": "Joe McGirr",
+      "electorate": "Wagga Wagga"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q6153070",
+      "name": "Janelle Saffin",
+      "electorate": "Lismore"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q62556393",
+      "name": "Marjorie O'Neill",
+      "electorate": "Coogee"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q62560379",
+      "name": "Helen Dalton",
+      "electorate": "Murray"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q62599511",
+      "name": "Justin Clancy",
+      "electorate": "Albury"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q7562979",
+      "name": "Sophie Cotsis",
+      "electorate": "Canterbury"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:Abigail Boyd",
+      "name": "Abigail Boyd",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:Mark Buttigieg",
+      "name": "Mark Buttigieg",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:Amanda Cohn",
+      "name": "Amanda Cohn",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:John Graham",
+      "name": "John Graham",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:Sue Higginson",
+      "name": "Sue Higginson",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:Mark Latham",
+      "name": "Mark Latham",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:Aileen MacDonald",
+      "name": "Aileen MacDonald",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:Rod Roberts",
+      "name": "Rod Roberts",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:Penny Sharpe",
+      "name": "Penny Sharpe",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-11-14",
+      "basis": "official_current_list",
+      "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6928",
+      "name": "Laura Henderson",
+      "electorate": "South Australia"
+    }
+  ],
+  "issue_counts": {
+    "roster exceeds capacity": 6,
+    "no electorate match": 68,
+    "ambiguous person identity; retained separate source identity": 35
+  }
+}

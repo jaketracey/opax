@@ -45,3 +45,95 @@ Exact normalised district matching below ignores case, apostrophe forms and hyph
 Person links require a unique full-name or reviewed-alias match within the same jurisdiction. Surname-only and ambiguous names cannot justify an identity join. The held roster QIDs can supply stable identities when the person catalog has no matching profile.
 
 State contest timelines remain outside this change. Empty state contest arrays describe missing coverage. State division party labels are also outside this change.
+
+## Delivery
+
+Published local release `d2423b2d3f8ba6f6`. The table uses the audit's electorate inventory, including upper houses. A filled electorate has at least one named member; the NSW Council is partial.
+
+| Jurisdiction | Electorates | Filled before | Filled after | Still empty | Reason |
+|---|---:|---:|---:|---:|---|
+| ACT | 5 | 0 | 5 | 0 | None |
+| NSW | 94 | 0 | 89 | 5 | Five Assembly seats lack an unambiguous held row; official list refused |
+| NT | 25 | 0 | 0 | 25 | Official list refused; no held roster |
+| QLD | 93 | 0 | 93 | 0 | None; retained the held official list date |
+| SA | 48 | 0 | 48 | 0 | None |
+| TAS | 20 | 0 | 20 | 0 | None |
+| WA | 60 | 0 | 0 | 60 | Official list refused; no held roster |
+
+Lower-house member places count every ACT and Tasmanian Assembly member separately:
+
+| Jurisdiction | Electorates | Member places | Filled before | Filled after | Unfilled, reviewed |
+|---|---:|---:|---:|---:|---:|
+| ACT | 5 | 25 | 0 | 25 | 0 |
+| NSW | 93 | 93 | 0 | 88 | 5 |
+| NT | 25 | 25 | 0 | 0 | 25 |
+| QLD | 93 | 93 | 0 | 93 | 0 |
+| SA | 47 | 47 | 0 | 47 | 0 |
+| TAS | 5 | 35 | 0 | 35 | 0 |
+| WA | 59 | 59 | 0 | 0 | 59 |
+
+The release names 366 members across 255 formerly empty electorates. Ninety electorates remain empty with reviewed exceptions. The separate NSW Council exception records 41 listed members against capacity 42; it does not assert a vacancy. All 327 lower-house electorates either have their required members or an exact reviewed exception. ACT has five members per electorate; Tasmania's Assembly has seven. The exceptions include no invented members or start dates.
+
+NSW's empty Assembly electorates are Castle Hill, Dubbo, Epping, Holsworthy and Kellyville. Epping has conflicting held open-term claims. The others have no matching eligible held term. WA and NT have no held roster in this local database.
+
+### Source observations
+
+- ACT, SA and Tasmania: official lists fetched on 14 November 2026 in Australia/Sydney, with UTC response instants and source SHA-256 digests retained. Every imported member has a full name, the supplied party label, electorate, house, observation date and source URL. A separate `party_canonical` uses existing OPAX rules for links and grouping; source labels are unchanged. ACT and Tasmania list every member of each multi-member electorate. SA includes both houses; Tasmania includes its Council divisions.
+- Queensland: the already-held official member photosheet observation of 2 June 2026, covering every Assembly electorate. It takes precedence over newer open Wikidata terms because those can still name former members. No fresh verification is claimed.
+- NSW Assembly: non-conflicting dated open terms from OPAX's held Wikidata roster, observed on 21 September 2026. Missing parties remain unknown. These observations are not a claim of fresh official verification.
+- NSW Council: the already-held official list dated 25 September 2026, retained as a partial observation.
+
+The main builder now imports the state observations. Database snapshots carry `ext_state_roster` when present, with pinned OPAX bindings available for offline replay. The standalone updater reads only local inputs, logs every unresolved electorate and identity join, and exports a reproducible release. Person links use existing unique full-name or reviewed-alias identities where available; ambiguous identities retain a distinct source identity rather than guessing. The public person-path index and party membership projection were rebuilt to include reference-only members. No speeches were attributed or legacy database records changed. The new rosters are explicitly marked `observation_only`, and the historical speech enrichment routines skip them.
+
+`data/state-members/join-audit.json` retains 109 join diagnostics: 35 ambiguous person identity; retained separate source identity, 68 no electorate match, 6 roster exceeds capacity. Many diagnostics concern superseded Wikidata rows, not gaps in the final official lists. All official member rows found an electorate.
+
+### Refusals
+
+All requests used User-Agent `opax-improve-audit`; acquisition was sequential and throttled. Refusal bodies and all successful raw responses are under `~/opax-work/evidence/im-state-members/`, outside the repository. Each refused jurisdiction was stopped without trying another endpoint or host.
+
+| Jurisdiction | Requested list | Result | Response SHA-256 |
+|---|---|---|---|
+| NSW | https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx | HTTP 403 | `85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc` |
+| QLD | https://www.parliament.qld.gov.au/Members/Current-Members | HTTP 403 | `1a857f35d68f91e3c6bc7302ec30dde4468a7aac38bc60055e6ac508fc8f6034` |
+| WA | https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat | HTTP 403 | `a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb` |
+| NT | https://parliament.nt.gov.au/members | HTTP 403 | `3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f` |
+
+Tasmania returned ordinary page-not-found responses before its linked current member directories and spreadsheets were fetched successfully. SA's Assembly page embeds its public contact directory; the directory configuration identifies the member-list API used here. No challenge was worked around.
+
+### Protected output
+
+All 96 Victorian and 184 federal electorate detail files are byte-identical to release `9e281b4ef4edbd38`, including their original immutable detail URLs. Their index summary bytes and exported person rows are identical too. The new release includes identical copies for consumers reading a single release. The Census tool reads those copies; its independent gold fixture changes only the release identifier.
+
+SHA-256 over each jurisdiction's canonical sorted mapping of detail filename to file SHA-256:
+
+- vic: `8b4e9f4d9a92351ccbfeba17ba80a793aa9f20d6bb815135b3a4fbaabbe08726`.
+- federal: `f7d1a4a05634db2e3dd9b862426a5fcbfdfdf84e97dffb46b0dba4bf7627f39c`.
+
+`data/state-members/parity.json` also records summary and person-row digests. `test_victorian_and_federal_detail_summary_and_people_bytes_are_unchanged` compares the actual bytes; export aborts if a protected detail differs.
+
+### Scope observations
+
+F20 remains open: the state electorate contest arrays are unchanged. Current-member lists do not supply election timelines or service start dates. F9 remains open: official current-list party labels vary by parliament and source, including abbreviations and branch names. This change preserves them and does not alter state division labels.
+
+### Acceptance and gates
+
+- Measurement before code: committed as `f824594e6515e7873ad3c59eec3e44992a10e8f2`; initial base `00150690c7c7b8b8f1888a29c805c0090d6cbcce`.
+- Dated joins and official gap filling: local release above, with all raw evidence retained outside the repository and reviewed exceptions for refused or unresolved seats. Full fresh official coverage of every jurisdiction is not achieved because NSW, Queensland, WA and NT refused acquisition.
+- Complete multi-member lists, exact normalisation, no duplicate current seats, sources and protected bytes: covered by Python tests and rendered portal checks.
+- No production writes, pushes, messages, APH/ParlInfo requests or SSH commands were made. Commits remain local on `im/state-members`.
+
+| Gate | Result |
+|---|---|
+| Initial `cat /proc/loadavg` | Five-minute load 6.96, below 40. New heavy checks waited when shared load exceeded 40. |
+| Roster/electorate Python checks on the final data and lookup rules | 192 passed, 77 subtests passed. Includes coverage/exceptions, normalisation, sources, multiple-seat rejection, offline replay, party-label preservation and protected bytes. |
+| Extended Python roster/replay suite | 283 passed, 14,198 subtests passed. Includes the large witness-split replay; current-only observations do not alter historical speech attribution. |
+| `npx tsc --noEmit` from `portal/` | Passed. Worker types were generated locally with `npx wrangler types`. |
+| `npm test -- --test-concurrency=4` from `portal/` | 4,906 passed, zero failed, one skipped, across 4,907 tests. |
+| Focused electorate, roster-party and directory regressions | 74 passed, zero skipped. Queensland interest-link checks also passed. |
+| `python3 scripts/vm/validate_data.py electorates` | Passed; release files match manifest digests. |
+| `node scripts/stamp_assets.mjs --check` | Passed. |
+| `git diff --check` | Passed. |
+
+Earlier trials identified missing generated Worker types and local assets, preserved-URL reader compatibility, party lookup consistency and current observations leaking into historical enrichment. These were corrected and rerun. An early Python trial also lost an intermediate release during cleanup; the successful replay held its inputs fixed. Raw logs remain outside the repository with the acquisition evidence.
+
+The remaining limitation is source access: NSW and Queensland retain the held observation dates above, while WA and NT remain empty. No refusal was bypassed. State timelines and division party labels remain outside scope; the division-party projection is unchanged.

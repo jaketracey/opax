@@ -24,6 +24,33 @@ test('ambiguous person names never auto-join', () => {
 const manifest = JSON.parse(readFileSync(new URL('../public/electorates/manifest.json', import.meta.url)));
 const publicFile = (path) => new URL(`../public${path}`, import.meta.url);
 const index = JSON.parse(readFileSync(publicFile(manifest.index_url)));
+test('a source-only member keeps the same identity in browser and server party counts', async () => {
+  const { partyMembers } = await import('../public/party-page.js');
+  const print = { name: 'Example', full: 'Alex Example', party: 'Labor', speeches: 12 };
+  const listed = { name: 'Alex Example', pid: 'source-fixture', party: 'Labor', current: true, speeches: 0 };
+  const divisions = { seat_rosters: { Labor: [{ name: listed.name, pid: listed.pid, reference: true,
+    as_of: '2026-11-14', jurisdiction: 'sa', chamber: 'sa_ha' }] } };
+  const browser = partyMembers('Labor', { roster: { people: [print] }, divisions });
+  const server = partyMembers('Labor', { roster: { people: [print, listed] }, divisions });
+  const ids = result => [...result.current, ...result.former].map(p => p.pid || p.name).sort();
+  assert.deepEqual(ids(browser), ids(server));
+  assert.ok(ids(browser).includes(listed.pid));
+  assert.equal(server.current.find(p => p.pid === listed.pid).roster.speeches, 0);
+});
+test('ACT and Tasmanian multi-member pages render every current member and their sources', async () => {
+  const { JSDOM } = await import('jsdom');
+  for (const seat of index.electorates.filter(e => ['act_la', 'tas_ha'].includes(e.chamber))) {
+    const data = JSON.parse(readFileSync(publicFile(seat.detail_url)));
+    const document = new JSDOM(profileHTML(data)).window.document;
+    const links = [...document.querySelectorAll('#el-held .ui-byline-name')];
+    assert.equal(links.length, seat.chamber === 'act_la' ? 5 : 7, seat.name);
+    assert.deepEqual(links.map(a => a.textContent).sort(), seat.representatives.map(m => m.person.name).sort());
+    for (const link of links) assert.match(link.getAttribute('href'), /^\/subject\/person\//);
+    for (const member of seat.representatives) {
+      assert.ok([...document.querySelectorAll('a[href]')].some(a => a.getAttribute('href') === member.source_url), member.person.name);
+    }
+  }
+});
 test('profile facts keep current and historical seats linked without duplicating recorded affiliations', async () => {
   const { personRepresentationRows, personElectorateLinksHTML } = await import('../public/electorates.js');
   const people = JSON.parse(readFileSync(publicFile(manifest.people_url))).people;

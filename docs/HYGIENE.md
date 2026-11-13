@@ -99,6 +99,13 @@ in the portal to the one holder of that surname in speakers.json, or lists the h
 What Wikidata lacks (a member elected in 2024 without a P39 statement) stays a surname
 until the roster is supplemented from the parliament's own member list.
 
+Current electorate pages also import dated observations through
+`parli.ingest.state_members` and `scripts/update_state_members.py`. Exact normalised
+electorate joins, official source transcriptions, refusal evidence and reviewed
+exceptions are documented in `data/state-members/README.md` and
+`docs/reports/2026-11-14-state-members.md`. These observations do not establish
+service start dates or change speech attribution or reviewed speech-party history.
+
 ## Probe
 
 The probe that sized this pass is in the session log for 2026-09-06 and is cheap to

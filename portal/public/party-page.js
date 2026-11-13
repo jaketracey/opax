@@ -6,12 +6,12 @@
    Pure functions; app.js passes in its helpers. */
 
 import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=6d2e2e9cd8';
-import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=bcc9a57bab';
+import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=d0a59455fd';
 
 // Server consumers use these re-exports too, keeping the stamped browser
 // dependencies and their identity tables to one copy in the Worker bundle.
 export * from './labels.js?v=6d2e2e9cd8';
-export * from './canonical-urls.js?v=bcc9a57bab';
+export * from './canonical-urls.js?v=d0a59455fd';
 
 const fold = value => String(value ?? '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
 /** The party URL's last segment; the same spelling as canonical-urls.js entitySlug. */
@@ -90,7 +90,7 @@ export function partyMembers(label, {roster = null, divisions = null, same = (a,
   const row = (id, fallback = {}) => {
     if (!rows.has(id)) {
       const p = best.get(id);
-      rows.set(id, {name: p?.name || fallback.name, pid: p?.pid || null, roster: p || null, current: false,
+      rows.set(id, {name: p?.name || fallback.name, pid: p?.pid || fallback.pid || null, roster: p || null, current: false,
         first: span.get(id)?.first ?? 9999, last: span.get(id)?.last ?? fallback.last ?? 0, divisions: 0, labels: []});
     }
     return rows.get(id);
@@ -114,10 +114,10 @@ export function partyMembers(label, {roster = null, divisions = null, same = (a,
     for (const m of members) {
       // A `reference` member has no roster row of their own (roster-party.js referenceOnlyPeople); the Worker
       // adds one under the same pid, the browser does not, so the entry stands in for it here.
-      const id = m.pid && best.has(`pid:${m.pid}`) ? `pid:${m.pid}` : byName.get(fold(m.name))
-        || (m.reference ? (m.pid ? `pid:${m.pid}` : `name:${fold(m.name)}`) : null);
+      const id = m.reference ? (m.pid ? `pid:${m.pid}` : `name:${fold(m.name)}`)
+        : m.pid && best.has(`pid:${m.pid}`) ? `pid:${m.pid}` : byName.get(fold(m.name));
       if (!id) continue;
-      const r = row(id, {name: m.name});
+      const r = row(id, {name: m.name, pid: m.pid});
       recordedAs(r, party);
       const stale = Boolean(m.next_election && today > m.next_election);
       r.seat_roster = {as_of: m.as_of || null, next_election: m.next_election || null, stale};

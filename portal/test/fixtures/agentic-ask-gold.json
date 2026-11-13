@@ -93,7 +93,7 @@
     "method": "Read published manifest and current electorate detail JSON; select 2021 Census numeric values, then exact extrema or named lookup; include every tie.",
     "query": {
      "manifest": "/electorates/manifest.json",
-     "release_id": "9e281b4ef4edbd38",
+     "release_id": "d2423b2d3f8ba6f6",
      "indicator": "median_income",
      "order": "asc",
      "jurisdiction": "federal",
@@ -138,7 +138,7 @@
     "method": "Read published manifest and current electorate detail JSON; select 2021 Census numeric values, then exact extrema or named lookup; include every tie.",
     "query": {
      "manifest": "/electorates/manifest.json",
-     "release_id": "9e281b4ef4edbd38",
+     "release_id": "d2423b2d3f8ba6f6",
      "indicator": "unemployment_rate",
      "order": "desc",
      "jurisdiction": "federal",
@@ -181,7 +181,7 @@
     "method": "Read published manifest and current electorate detail JSON; select 2021 Census numeric values, then exact extrema or named lookup; include every tie.",
     "query": {
      "manifest": "/electorates/manifest.json",
-     "release_id": "9e281b4ef4edbd38",
+     "release_id": "d2423b2d3f8ba6f6",
      "indicator": "median_age",
      "operation": "lookup",
      "electorate": "Corangamite",
@@ -301,7 +301,7 @@
     "method": "Read published manifest and current electorate detail JSON; select 2021 Census numeric values, then exact extrema or named lookup; include every tie.",
     "query": {
      "manifest": "/electorates/manifest.json",
-     "release_id": "9e281b4ef4edbd38",
+     "release_id": "d2423b2d3f8ba6f6",
      "indicator": "median_income",
      "jurisdiction": "vic",
      "chamber": "vic_la",

@@ -112,6 +112,7 @@ def dated_records(reference,reviewed,state_evidence=None):
                 'start':period['start'],'end':period.get('end'),'party':period.get('party'),
                 'source_url':next((sources[s].get('url') for s in t.get('sources',[]) if s in sources),None)})
     for roster in reference.get('rosters',[]):
+        if roster.get('observation_only'):continue
         # OPAX's old members snapshot is not dated service evidence.
         official=[sources[s] for s in roster.get('sources',[]) if s in sources
                   and not sources[s].get('label','').startswith('OPAX existing')]
@@ -202,6 +203,7 @@ def print_identity(person,records,reference,printed_people=()):
     candidates={}
     conflicting_names=committee_names(person,reference) if committees else []
     for roster in reference.get('rosters',[]):
+        if roster.get('observation_only'):continue
         e=seats[roster['electorate_id']]
         if e['jurisdiction'] not in person.get('states',[]) or e['chamber'] not in compatible['chambers']:continue
         for m in roster.get('members',[]):

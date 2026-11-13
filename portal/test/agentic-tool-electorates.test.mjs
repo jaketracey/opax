@@ -20,6 +20,20 @@ const stub = (assets = fixture.assets) => ({
   asset: async (path) => structuredClone(assets[path] ?? null),
 });
 
+test('preserved immutable detail links read their identical copy in the current release', async () => {
+  const assets = structuredClone(fixture.assets);
+  const entry = assets['/electorates/releases/deadbeef/index.json'].electorates[0];
+  entry.detail_url = `/electorates/releases/cafebabe/${entry.electorate_id}.json`;
+  const requested = [];
+  const result = await electorates({ ...stub(assets), asset: async path => {
+    requested.push(path);
+    return structuredClone(assets[path] ?? null);
+  } }, { indicator: 'median_age', operation: 'lookup', electorate: entry.name });
+  assert.equal(result.ok, true);
+  assert.ok(requested.includes(`/electorates/releases/deadbeef/${entry.electorate_id}.json`));
+  assert.ok(!requested.includes(entry.detail_url));
+});
+
 test('current ranking includes every cutoff tie, excludes null and historical values, and cites each figure', async () => {
   const r = await electorates(stub(), { indicator: 'median_income' });
   assert.equal(r.ok, true);
