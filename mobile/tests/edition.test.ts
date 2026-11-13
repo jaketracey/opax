@@ -385,6 +385,41 @@ describe('the edition selector', () => {
       division: null,
     });
   });
+  test("a bars slide's whole flag is the composer's: a boolean is kept, anything else is left out", () => {
+    const slides = decoded.edition.slides!;
+    const barsWith = (extra: Record<string, unknown>) =>
+      editionFor(
+        decodeEdition(
+          at(
+            ['edition', 'slides'],
+            [
+              slides[0],
+              {
+                type: 'bars',
+                kicker: 'Whose seats',
+                title: 'By the party holding the seat',
+                alt: 'a',
+                lines: [],
+                items: [
+                  { label: 'Labor-held', pct: 60 },
+                  { label: 'Coalition-held', pct: 30 },
+                ],
+                ...extra,
+              },
+              slides.at(-1),
+            ],
+          ),
+        ),
+      ).data!.facts.bars;
+    expect(barsWith({ whole: true })).toMatchObject({ whole: true });
+    expect(barsWith({ whole: false })).toMatchObject({ whole: false });
+    // An older slide, or a field it cannot read: no flag, and the slide still reads.
+    for (const extra of [{}, { whole: 'yes' }, { whole: 1 }, { whole: null }]) {
+      const bars = barsWith(extra);
+      expect(bars?.items).toHaveLength(2);
+      expect(bars).not.toHaveProperty('whole');
+    }
+  });
   test("a bill's attribution: its summary slide, else the caption's line, else the web's", () => {
     const own = decodeEdition(
       at(
