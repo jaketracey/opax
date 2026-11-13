@@ -1,5 +1,6 @@
 import { router, type Href } from 'expo-router';
-import { Pressable, StyleSheet } from 'react-native';
+import { useRef } from 'react';
+import { Platform, Pressable, StyleSheet, type View } from 'react-native';
 import { CitationBadge } from '../../design/citation-mark';
 import { Icon } from '../../design/icon';
 import { confirmAction } from '../../design/menu';
@@ -172,8 +173,10 @@ export function AskSuggestionRow({
   const leaves = (menu ?? []).flatMap((item) =>
     'items' in item ? item.items : [item],
   ) as Extract<RowMenuAction, { onPress: () => void }>[];
+  const row = useRef<View>(null);
   return (
     <Pressable
+      ref={row}
       accessibilityRole="button"
       accessibilityLabel={question}
       accessibilityHint={
@@ -196,7 +199,16 @@ export function AskSuggestionRow({
       onPress={offline ? undefined : onPress}
       onLongPress={
         leaves.length && !offline
-          ? () => confirmAction(question, leaves)
+          ? () =>
+              // Android anchors its menu to the row it came from; without
+              // a trigger it fell back to the top corner. iOS keeps its sheet.
+              confirmAction(
+                question,
+                leaves,
+                Platform.OS === 'android'
+                  ? (row.current ?? undefined)
+                  : undefined,
+              )
           : undefined
       }
       testID={testID}
