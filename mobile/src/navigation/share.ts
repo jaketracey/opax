@@ -1,5 +1,5 @@
 import type { NativeStackHeaderItem } from 'expo-router';
-import { Alert } from 'react-native';
+import { Alert, Platform, Share } from 'react-native';
 import { OpaxShare } from '../../modules/opax-share';
 import { track } from '../analytics';
 import type { ShareRecordType } from '../analytics/events';
@@ -85,6 +85,22 @@ export async function shareRecord({
   await OpaxShare.share({ url, title, ...(text ? { text } : {}) }).catch(() =>
     Alert.alert("Couldn't share this link"),
   );
+}
+
+/**
+ * Shares a source's own link (another site's page, not opax.com.au). On iOS
+ * it goes through OPAX's module, whose sheet always has a source where it is
+ * a popover: React Native's Share sets one on the iPad idiom only, which
+ * crashes in a regular-width iPhone window (the unfolded iPhone Duo).
+ */
+export async function shareSourceLink(url: string, title: string) {
+  if (Platform.OS === 'ios' && OpaxShare) {
+    await OpaxShare.share({ url, title, text: title, external: true }).catch(
+      () => undefined,
+    );
+    return;
+  }
+  await Share.share({ title, url, message: title }).catch(() => undefined);
 }
 
 export function questionShareURL(text: string, options: AskOptions): string {

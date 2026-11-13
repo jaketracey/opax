@@ -1,7 +1,6 @@
 import { RouteOptions } from '../../navigation/preview';
 import { useEffect, useState } from 'react';
 import {
-  ActionSheetIOS,
   Platform,
   Pressable,
   RefreshControl,
@@ -188,17 +187,11 @@ export default function Following() {
     const message = 'Today stops showing their changes.';
     const run = () => void save(clearFollows, 0);
     if (Platform.OS === 'ios')
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          title,
-          message,
-          options: ['Unfollow all', 'Cancel'],
-          destructiveButtonIndex: 0,
-          cancelButtonIndex: 1,
-        },
-        (index) => {
-          if (index === 0) run();
-        },
+      confirmAction(
+        title,
+        [{ title: 'Unfollow all', destructive: true, onPress: run }],
+        undefined,
+        message,
       );
     else
       confirmAction(`${title} ${message}`, [

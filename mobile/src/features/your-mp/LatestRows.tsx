@@ -1,5 +1,5 @@
 import type { Href } from 'expo-router';
-import { Pressable, Share, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { billName } from '../../api/bill-transforms';
 import type { BillIndex, PersonProfile } from '../../api/catalogs';
 import { useAccessibilitySize } from '../../design/accessibility';
@@ -15,7 +15,7 @@ import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
-import { trackShare } from '../../navigation/share';
+import { shareSourceLink, trackShare } from '../../navigation/share';
 import { billRoute, personRoute } from '../../navigation/routes';
 import {
   changeDate,
@@ -317,11 +317,7 @@ export function LatestRow({
           onPress: () => {
             // The source's own link: shared as an "other" record, never its URL.
             trackShare('record', record.url!);
-            void Share.share({
-              title: record.title,
-              url: record.url,
-              message: record.title,
-            }).catch(() => undefined);
+            void shareSourceLink(record.url!, record.title);
           },
         },
         {

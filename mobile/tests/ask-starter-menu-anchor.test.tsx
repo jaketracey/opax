@@ -17,7 +17,7 @@ afterEach(() => {
 });
 
 test.each(['android', 'ios'] as const)(
-  '%s starter row long press opens its menu (Android anchors it to the row)',
+  '%s starter row long press opens its menu from the row',
   (os) => {
     platform(os);
     const edit = jest.fn();
@@ -43,12 +43,12 @@ test.each(['android', 'ios'] as const)(
     const [title, actions, anchor] = jest.mocked(confirmAction).mock.calls[0]!;
     expect(title).toBe('What has parliament said about aged care?');
     expect(actions.map((a) => a.title)).toEqual(['Edit before asking']);
-    if (os === 'android') {
-      // The row itself is the trigger: the menu measures it and opens beside
-      // it, and focus returns to it. Without one it fell back to the corner.
-      expect(anchor).toBeTruthy();
-      expect(anchor).not.toEqual(expect.any(Number));
-    } else expect(anchor).toBeUndefined();
+    // The row itself is the trigger. Android's menu measures it and opens
+    // beside it, and focus returns to it (without one it fell back to the
+    // corner); an iOS popover (iPad, an unfolded iPhone Duo) points at it,
+    // and a compact iPhone's sheet ignores it.
+    expect(anchor).toBeTruthy();
+    expect(anchor).not.toEqual(expect.any(Number));
     act(() => r.unmount());
   },
 );

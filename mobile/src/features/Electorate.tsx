@@ -428,23 +428,31 @@ export function useElectorateMenu(
 /** Embedded panes (iPad, Talk) have no bar: the ⋯ items as one button. */
 function EmbeddedMenu({ seat, asof }: { seat: Seat; asof: string }) {
   const { share, menu } = useElectorateMenu(seat, asof);
+  // The button's own frame, so an iOS popover points at it.
+  const trigger = useRef<View>(null);
   return (
     <View style={{ alignItems: 'flex-end' }}>
-      <IconButton
-        symbol="ellipsis.circle"
-        accessibilityLabel={`More for ${seat.name}`}
-        testID="electorate-more"
-        onPress={() =>
-          confirmAction(seat.name, [
-            { title: copy.share, onPress: share },
-            ...menu.flatMap((item) =>
-              'items' in item
-                ? []
-                : [{ title: item.title, onPress: item.onPress }],
-            ),
-          ])
-        }
-      />
+      <View ref={trigger} collapsable={false}>
+        <IconButton
+          symbol="ellipsis.circle"
+          accessibilityLabel={`More for ${seat.name}`}
+          testID="electorate-more"
+          onPress={() =>
+            confirmAction(
+              seat.name,
+              [
+                { title: copy.share, onPress: share },
+                ...menu.flatMap((item) =>
+                  'items' in item
+                    ? []
+                    : [{ title: item.title, onPress: item.onPress }],
+                ),
+              ],
+              trigger.current ?? undefined,
+            )
+          }
+        />
+      </View>
     </View>
   );
 }

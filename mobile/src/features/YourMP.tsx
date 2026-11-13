@@ -2,13 +2,7 @@ import { RouteOptions } from '../navigation/preview';
 import { useScreenReady } from '../analytics/timing';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  ActionSheetIOS,
-  Platform,
-  RefreshControl,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Platform, RefreshControl, StyleSheet, View } from 'react-native';
 import type { BillIndex, Electorate } from '../api/catalogs';
 import { catalogs } from '../api/runtime';
 import { Card } from '../design/card';
@@ -191,20 +185,7 @@ export default function YourMP() {
     const run = () => void seat.forget().catch(() => undefined);
     const title = 'Forget your electorate?';
     const message = 'Today and Your MP stop showing your representatives.';
-    if (Platform.OS === 'ios')
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          title,
-          message,
-          options: ['Forget', 'Cancel'],
-          destructiveButtonIndex: 0,
-          cancelButtonIndex: 1,
-        },
-        (index) => {
-          if (index === 0) run();
-        },
-      );
-    else if (Platform.OS === 'android')
+    if (Platform.OS === 'ios' || Platform.OS === 'android')
       confirmAction(
         title,
         [{ title: 'Forget', destructive: true, onPress: run }],

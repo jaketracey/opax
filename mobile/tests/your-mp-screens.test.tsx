@@ -1182,7 +1182,8 @@ describe('Your MP tab', () => {
       title: 'Forget your electorate?',
       message: 'Today and Your MP stop showing your representatives.',
       options: ['Forget', 'Cancel'],
-      destructiveButtonIndex: 0,
+      // Through confirmAction, as every iOS confirmation.
+      destructiveButtonIndex: [0],
       cancelButtonIndex: 1,
     });
     expect(has(r, 'your-invitation')).toBe(true);

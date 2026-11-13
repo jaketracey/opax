@@ -222,6 +222,18 @@ export function currentRule(
 }
 
 /**
+ * Whether UIKit shows an action sheet in this window as a popover, which
+ * needs a source: on iPad, and in a horizontally regular iPhone window (the
+ * unfolded iPhone Duo). A compact phone window shows the sheet from the
+ * bottom and takes no source.
+ */
+export function popoverWindow(
+  traits: WindowTraits | null = traitsSnapshot.traits,
+): boolean {
+  return isPad || (Platform.OS === 'ios' && traits?.horizontal === 'regular');
+}
+
+/**
  * The window as analytics categories, read when an event is sent: the
  * window's size class under the current rule and whether it spans a fold.
  * Never its size, the device model or a measured region.

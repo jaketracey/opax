@@ -12,6 +12,8 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import { OpaxShare } from '../../modules/opax-share';
+import { popoverWindow } from './adaptive';
 import { Pressable } from './pressable';
 import { recentMenuAnchor, type MenuAnchor } from './menu-anchor';
 import { onKeyCommand } from './keyboard';
@@ -47,7 +49,26 @@ function present(next: Menu) {
   listeners.forEach((listener) => listener());
 }
 
-/** Android's anchored popup; iOS keeps its native action sheet. */
+/** The view an iOS sheet comes from: a React tag or a mounted view. */
+function anchorTag(anchor?: number | MenuAnchor | View): number | undefined {
+  if (typeof anchor === 'number') return anchor > 0 ? anchor : undefined;
+  if (anchor && typeof anchor === 'object' && 'measureInWindow' in anchor)
+    try {
+      return findNodeHandle(anchor) ?? undefined;
+    } catch {
+      // An unmounted trigger: the sheet comes from the middle instead.
+      return undefined;
+    }
+  // A point (Android's long press) names no view.
+  return undefined;
+}
+
+/**
+ * Android's anchored popup; iOS keeps its native action sheet. Where iOS
+ * shows that sheet as a popover (iPad, a regular-width iPhone window such as
+ * the unfolded iPhone Duo), it comes from `anchor` when that is a view, and
+ * from the middle of the screen otherwise; a popover with no source crashes.
+ */
 export function confirmAction(
   title: string,
   actions: readonly MenuAction[],
@@ -98,34 +119,49 @@ export function confirmAction(
     }
     return;
   }
+  // Phones in a compact window take no source: the sheet rises from the
+  // bottom whatever is passed.
+  const tag = popoverWindow() ? anchorTag(anchor) : undefined;
+  const options = [...actions.map((action) => action.title), 'Cancel'];
+  const destructive = actions.flatMap((action, index) =>
+    action.destructive ? [index] : [],
+  );
+  // React Native's own sheet sets a popover's source on the iPad idiom only,
+  // so iOS presents through OPAX's module, which always sets one.
+  const native =
+    Platform.OS === 'ios' && OpaxShare?.showActionSheet ? OpaxShare : null;
   const remove = onKeyCommand('list-escape', () => {
     remove();
-    ActionSheetIOS.dismissActionSheet();
+    if (native) void native.dismissActionSheet?.().catch(() => undefined);
+    else ActionSheetIOS.dismissActionSheet();
   });
+  const choose = (index: number) => {
+    remove();
+    actions[index]?.onPress();
+  };
+  if (native?.showActionSheet) {
+    void native
+      .showActionSheet({
+        title,
+        message,
+        options,
+        cancelButtonIndex: actions.length,
+        destructiveButtonIndices: destructive,
+        ...(tag ? { anchor: tag } : {}),
+      })
+      .then(choose, remove);
+    return;
+  }
   ActionSheetIOS.showActionSheetWithOptions(
     {
       title,
       message,
-      options: [...actions.map((action) => action.title), 'Cancel'],
+      options,
       cancelButtonIndex: actions.length,
-      ...(actions.some((action) => action.destructive)
-        ? {
-            destructiveButtonIndex: actions.flatMap((action, index) =>
-              action.destructive ? [index] : [],
-            ),
-          }
-        : {}),
-      ...(Platform.OS === 'ios' &&
-      Platform.isPad &&
-      typeof anchor === 'number' &&
-      anchor
-        ? { anchor }
-        : {}),
+      ...(destructive.length ? { destructiveButtonIndex: destructive } : {}),
+      ...(tag ? { anchor: tag } : {}),
     },
-    (index) => {
-      remove();
-      actions[index]?.onPress();
-    },
+    choose,
   );
 }
 

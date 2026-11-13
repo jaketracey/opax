@@ -6,10 +6,10 @@ import {
   methodsRoute,
 } from '../routes/reference';
 
-import { ActionSheetIOS, Linking, Platform } from 'react-native';
+import { Linking } from 'react-native';
 import { OpaxShare } from '../../../modules/opax-share';
 import { haptic } from '../../design/haptics';
-import * as AndroidMenu from '../../design/menu';
+import { confirmAction } from '../../design/menu';
 /** The 1.0 licence link: Sources and licences opened at one dataset. */
 const datasetLink = /^\/account\/sources\/?\?(?:[^#]*&)?dataset=([^&#]+)/;
 export const referencePaths = [
@@ -39,17 +39,5 @@ export async function openCorrection(): Promise<void> {
   } catch {
     /* Offer the address when there is no Mail handler. */
   }
-  if (Platform.OS === 'android')
-    AndroidMenu.showMenu(address, [{ title: 'Copy address', onPress: copy }]);
-  else
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        title: address,
-        options: ['Copy address', 'Cancel'],
-        cancelButtonIndex: 1,
-      },
-      (index) => {
-        if (index === 0) copy();
-      },
-    );
+  confirmAction(address, [{ title: 'Copy address', onPress: copy }]);
 }
