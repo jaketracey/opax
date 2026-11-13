@@ -2,6 +2,32 @@
 
 Swift core in its own `OpaxVoiceCore` module, with a local Expo wrapper. The W5 deletion extension is implemented against the Worker contract read from fetched `origin/main` at `46133089`. No production or staging endpoint is contacted by this lane.
 
+## Talk source contract (BACKLOG 11n)
+
+Checked read-only on the desktop portal source at `add1d7c73`: `voice-tools.ts`
+passes `ask_opax` through `voice-sources.ts` (`askOpaxResult`, `voiceSources`).
+Ask's response rows (`agentic-response.ts`, `ask-source-links.ts`, `ask-pay.ts`)
+are normalised by that Worker before either app receives them.
+
+| Worker source field | Swift / Kotlin and TypeScript bridge | Talk row |
+| --- | --- | --- |
+| `title` | `title` | Fallback title for older payloads |
+| `record_title` | `recordTitle` (optional) | Plain record title |
+| `speaker` | `speaker` (optional) | Speaker or publishing body below the title |
+| `date` | `date` (optional) | Day, month, year or short period label |
+| `type` | `type` (optional) | Display type, before the date |
+| `url` | Validated OPAX `path` | Record destination, never a tool endpoint |
+
+The Worker derives these labels from Ask's `title`, `speaker`, `date`, `kind`,
+`source`, `dateLabel`, publishing body and record link (`opax_url`, `href`, `url`
+or `slug`). Ask's citation IDs, snippets, `cited` and research metadata are not
+part of the voice bridge. `source_url` is a tool-level fallback, not another row.
+Null or absent labels remain optional; older title-and-link payloads still render.
+Talk uses Ask's `RecordRow`: type and date, record title, then speaker. Missing
+dates explicitly read "Date not published". Only `/ask?q=…` with a non-blank
+question and no `view` parameter is a calculated-record draft; generic Ask and
+Search links are refused. Opening that draft does not submit it.
+
 ## Expo wrapper
 
 `expo-module.config.json` autolinks two separate static pods: `ios/OpaxVoiceCore.podspec`

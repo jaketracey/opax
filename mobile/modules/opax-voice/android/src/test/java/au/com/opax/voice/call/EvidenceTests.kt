@@ -48,6 +48,21 @@ class EvidenceTests : SafeVoiceTest() {
     assertEquals("Correct last", model.turns.last().text)
   }
 
+  @Test fun askLinksAreOnlyQuestionDraftsNotGenericFallbacksOrSearch() {
+    for (path in listOf("/ask?q=Example+pay", "/ask?q=%2B", "/ask?q=Example#sources")) {
+      assertEquals(path, EvidenceModel.sourcePath(path))
+    }
+    val model = EvidenceModel()
+    for (path in listOf("/ask", "/ask#sources", "/ask?q=", "/ask?q=%20", "/ask?q=+", "/ask?q=&q=Example", "/ask?q=Example&view=search", "/ask?q=Example&view=", "/ask/?q=Example")) {
+      assertNull(path, EvidenceModel.sourcePath(path))
+      model.collect(JsonValue.parse(json(mapOf("title" to "Example pay", "url" to path))))
+    }
+    assertTrue(model.sources.isEmpty())
+    // ask_opax's no-record fallback uses source_url, never a source row.
+    model.collect(JsonValue.parse(json(mapOf("source_url" to "https://opax.com.au/ask", "sources" to emptyList<Any>()))))
+    assertTrue(model.sources.isEmpty())
+  }
+
   @Test fun standardReceiptAndClarificationToolShapes() {
     val model = EvidenceModel()
     val standard = json(mapOf("source_url" to "/doc/fixture", "sources" to listOf(mapOf("title" to "Fixture", "url" to "/doc/fixture")), "data" to emptyMap<String, Any>()))
@@ -72,6 +87,10 @@ class EvidenceTests : SafeVoiceTest() {
         "Example office pay: every step since 1999", null, "1999–2026", "Pay record"),
       VoiceSource("Example Office Determination 2025", "/doc/legal-700001", "Example Office Determination 2025", "Remuneration Tribunal", "2025-07-01", "Pay determination"),
     ), model.sources)
+    assertEquals(mapOf(
+      "title" to "Alex Example: Committees", "path" to "/doc/speech-500101", "recordTitle" to "Committees",
+      "speaker" to "Alex Example", "date" to "2001-06-21", "type" to "Speech",
+    ), VoiceBridgeValue.source(model.sources[0]))
   }
 
   @Test fun shippedTitleOnlySourcesDecodeAsBefore() {

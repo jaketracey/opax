@@ -226,12 +226,30 @@ test('a malformed label is left out without dropping the source', () => {
     ],
   });
 });
-test.each(['/asking', '/ask/fixture', '/api/ask'])(
-  'still refuses the near-miss path %s',
+test.each([
+  '/asking',
+  '/ask/fixture',
+  '/api/ask',
+  '/ask',
+  '/ask#sources',
+  '/ask?q=',
+  '/ask?q=%20',
+  '/ask?q=+',
+  '/ask?q=&q=Example',
+  '/ask?view=search&q=Example',
+  '/ask?q=Example&view=',
+  '/ask/?q=Example',
+])('still refuses the near-miss path %s', (path) =>
+  expect(
+    mapEvent({ type: 'sources', sources: [{ title: 'bad', path }] }),
+  ).toBeNull(),
+);
+test.each(['/ask?q=Example+pay', '/ask?q=%2B', '/ask?q=Example#sources'])(
+  'keeps an Ask record draft %s',
   (path) =>
     expect(
-      mapEvent({ type: 'sources', sources: [{ title: 'bad', path }] }),
-    ).toBeNull(),
+      mapEvent({ type: 'sources', sources: [{ title: 'Example pay', path }] }),
+    ).toEqual({ type: 'sources', sources: [{ title: 'Example pay', path }] }),
 );
 test('subscription filters payloads and cancels the native listener', () => {
   const remove = jest.fn();
