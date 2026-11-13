@@ -174,5 +174,5 @@ test('the privacy page says PostHog receives anonymous error reports and how the
     'Errors from browser extensions or other sites\' scripts are not sent', 'Google Analytics receives no error reports'])
     assert.ok(privacy.includes(fact), fact);
   assert.doesNotMatch(privacy, /never receive[^.]*error messages/);
-  assert.doesNotMatch(privacy, /—/);
+  assert.doesNotMatch(privacy, /\u2014/);
 });
