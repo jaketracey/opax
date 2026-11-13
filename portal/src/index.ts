@@ -1658,9 +1658,13 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   const t0 = Date.now()
   let answer = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
   mark('ask')
-  // A stall or an upstream error gets one lighter attempt before the reader hears about it;
-  // a spent model budget does not.
-  if (answer instanceof Response && !answer.headers.get(MODEL_BUDGET_HEADER) && (!firstBudget || firstBudget.remaining > 0)) answer = await askOnce(lighterAsk(body), ASK_SYNC_TIMEOUT_MS)
+  // A stall, an upstream error or a blank answer gets one lighter attempt before the reader hears about it;
+  // a spent model budget does not. A blank first answer keeps its retrieved records if the retry fails outright.
+  const blank = (a: AskAnswer | Response) => !(a instanceof Response) && !String(a.answer ?? '').trim()
+  if ((answer instanceof Response && !answer.headers.get(MODEL_BUDGET_HEADER) || blank(answer)) && (!firstBudget || firstBudget.remaining > 0)) {
+    const again = await askOnce(lighterAsk(body), ASK_SYNC_TIMEOUT_MS)
+    if (answer instanceof Response || !(again instanceof Response)) answer = again
+  }
   if (answer instanceof Response) return answer
   if (isRefusal(answer) && healthyRetrieval(answer) && Date.now() - t0 < ASK_RETRY_BUDGET_MS) {
     const again = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
