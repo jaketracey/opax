@@ -16,6 +16,8 @@ const axeSource=await readFile(require.resolve('axe-core/axe.min.js'),'utf8');
 const person=personUrl((await read('speakers.json'))[0][0]);
 const representative=[['Home','/'],['Money','/money'],['Person',person],['Search results','/ask?view=search&q=housing'],['Budget','/budget'],['Ask idle','/ask']];
 const audit=process.argv.includes('--audit');
+const keyboardOnly=process.argv.includes('--keyboard-only');
+const receiptName=keyboardOnly?'keyboard-results.json':audit?'audit-after.json':'browser-results.json';
 let pages=representative;
 if(audit) {
  const graph=await read('graph/money.json'),manifest=await read('electorates/manifest.json');
@@ -23,7 +25,7 @@ if(audit) {
  pages=[...representative,['Money map','/map'],['Bill','/bill/'+(await read('bills/index.json')).bills.find(b=>b.divisions>0).key],['Division','/doc/'+(await read('divisions/index.json')).divisions[0].slug],['Donor',donorDisclosure(graph.nodes.find(n=>n.kind==='donor')).href],['Labor','/subject/party/labor'],['Electorate','/subject/electorate/'+seats.find(s=>s.jurisdiction==='federal'&&s.representatives.length).slug],['Search empty','/ask?view=search&q=zzqxnonexistentaccessibilityterm'],['Connections','/connections'],['Budget year','/budget?year=2024-25'],['Time machine year','/explore?game=tm'],['404','/this-page-does-not-exist'],['Menu open','/']];
 }
 const browser=await chromium.launch({executablePath:process.env.OPAX_BROWSER_EXECUTABLE || '/usr/bin/google-chrome',headless:true,args:['--mute-audio','--disable-dev-shm-usage']});
-const evidence=[],blocked=new Set();
+const evidence=[],focusChecks=[],blocked=new Set();
 await mkdir(output,{recursive:true});
 async function context(width,theme='light',zoom=false) {
  const c=await browser.newContext({viewport:{width,height:zoom?480:960},deviceScaleFactor:zoom?2:1,colorScheme:theme,reducedMotion:'reduce',serviceWorkers:'block',bypassCSP:true});
@@ -45,12 +47,30 @@ async function load(page,path) {
  await page.evaluate(()=>document.fonts.ready);
 }
 async function resetTabs(page) {await page.evaluate(()=>{document.body.tabIndex=-1;document.body.focus();document.body.removeAttribute('tabindex');});}
-async function ring(page) {assert.ok(await page.evaluate(()=>{const e=document.activeElement,s=getComputedStyle(e),r=e.getBoundingClientRect();return r.width>0&&r.height>0&&(s.outlineStyle!=='none'&&parseFloat(s.outlineWidth)>=2||s.boxShadow!=='none');}),'Keyboard focus is visible');}
+async function ring(page) {
+ const focus=await page.evaluate(()=>{
+  const e=document.activeElement,s=getComputedStyle(e),r=e.getBoundingClientRect();
+  const rgb=value=>{const hex=/^#([0-9a-f]{6})$/i.exec(value.trim());return hex?[0,2,4].map(i=>parseInt(hex[1].slice(i,i+2),16)):value.match(/[\d.]+/g)?.map(Number);};
+  let bg;
+  for(let p=parseFloat(s.outlineOffset)<0?e:e.parentElement;p;p=p.parentElement) {
+   const colour=rgb(getComputedStyle(p).backgroundColor);
+   if(colour&&colour.length>=3&&(colour.length===3||colour[3]===1)){bg=colour;break;}
+  }
+  bg ||= rgb(getComputedStyle(document.documentElement).getPropertyValue('--paper'));
+  const luminance=c=>c.slice(0,3).map(v=>v/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4).reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0);
+  const fg=rgb(s.outlineColor),a=fg&&luminance(fg),b=bg&&luminance(bg);
+  return {width:innerWidth,theme:matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light',id:e.id,tag:e.tagName,outline:s.outlineColor,background:bg,visible:r.width>0&&r.height>0&&s.outlineStyle!=='none'&&parseFloat(s.outlineWidth)>=2,contrast:fg&&bg?(Math.max(a,b)+.05)/(Math.min(a,b)+.05):0};
+ });
+ focusChecks.push(focus);
+ assert.ok(focus.visible,'Keyboard focus is visible: '+JSON.stringify(focus));
+ assert.ok(focus.contrast>=3,'Focus ring clears 3:1: '+JSON.stringify(focus));
+}
+
 async function tabTo(page,selector,max=160) {
  for(let i=0;i<max;i++) {await page.keyboard.press('Tab');if(await page.evaluate(s=>document.activeElement.matches(s),selector)) {await ring(page);return;}}
  assert.fail('Tab did not reach '+selector);
 }
-async function keyboard(page,width) {
+async function keyboard(page,width,theme) {
  await load(page,'/');await resetTabs(page);
  if(width===390) {
   await tabTo(page,'#nav-open');await page.keyboard.press('Enter');
@@ -92,12 +112,12 @@ async function keyboard(page,width) {
  await tabTo(page,'.mm-root button[aria-label="Zoom in"]');await page.keyboard.press('Enter');
  await tabTo(page,'.mm-root button[aria-label="Zoom out"]');await page.keyboard.press('Enter');await ring(page);
  assert.equal(await canvas.getAttribute('tabindex'),'0');
- evidence.push({kind:'keyboard',width,menu:true,search:true,sort:true,map:true});
+ evidence.push({kind:'keyboard',width,theme,menu:true,search:true,sort:true,map:true});
 }
 try {
  for(const theme of ['light','dark']) for(const width of [390,1440]) {
   const c=await context(width,theme),page=await c.newPage();
-  for(const [name,path] of pages) {
+  for(const [name,path] of keyboardOnly?[]:pages) {
    await load(page,path);
    if(name==='Menu open') await page.locator(width===390?'#nav-open':'[data-nav-trigger]').first().click();
    await page.addScriptTag({content:axeSource});
@@ -108,24 +128,24 @@ try {
     return {violations:r.violations.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.map(n=>({target:n.target,html:n.html,failureSummary:n.failureSummary}))})),incomplete:r.incomplete.map(v=>({id:v.id,targets:v.nodes.map(n=>n.target)})),headings,h1:headings.filter(h=>h.level===1).length,skips:headings.filter((h,i)=>i&&h.level>headings[i-1].level+1),main:[...document.querySelectorAll('main')].filter(visible).length,bareLinks:[...document.querySelectorAll('a')].filter(visible).filter(e=>/^(read more|more|click here)$/i.test(e.getAttribute('aria-label')||e.textContent.trim())).map(e=>e.outerHTML),animations:document.getAnimations().filter(a=>a.playState==='running').map(a=>a.animationName),palette:{paper:getComputedStyle(document.documentElement).getPropertyValue('--paper'),scheme:getComputedStyle(document.documentElement).colorScheme}};
    });
    evidence.push({kind:'axe',name,path,theme,width,...result});
-   await writeFile(new URL(audit?'audit-after.json':'browser-results.json',output),JSON.stringify(evidence,null,2)+'\n');
+   await writeFile(new URL(receiptName,output),JSON.stringify(evidence,null,2)+'\n');
    assert.deepEqual(result.violations.filter(v=>['serious','critical'].includes(v.impact)),[],`${name} ${theme} ${width}: serious/critical axe findings`);
    assert.equal(result.h1,1,`${name}: one h1`);assert.deepEqual(result.skips,[],`${name}: heading order`);assert.equal(result.main,1,`${name}: main landmark`);assert.deepEqual(result.bareLinks,[],`${name}: link names`);assert.deepEqual(result.animations,[],`${name}: reduced motion`);
    console.log(`PASS axe ${theme} ${width} ${name}`);
   }
-  if(theme==='light') await keyboard(page,width);
+  if(theme==='light'||keyboardOnly) await keyboard(page,width,theme);
   await c.close();
  }
  // Browser zoom to 200% at 1440 physical pixels has a 720 CSS-pixel layout viewport.
- for(const theme of ['light','dark']) {
+ for(const theme of keyboardOnly?[]:['light','dark']) {
   const c=await context(720,theme,true),page=await c.newPage();
-  for(const [name,path] of pages) {
+  for(const [name,path] of keyboardOnly?[]:pages) {
    await load(page,path);if(name==='Menu open')await page.locator('#nav-open').click();
    const layout=await page.evaluate(()=>({viewport:innerWidth,document:document.documentElement.scrollWidth,body:document.body.scrollWidth}));
    evidence.push({kind:'zoom',name,path,theme,physicalWidth:1440,zoomPercent:200,...layout});
    assert.ok(layout.document<=layout.viewport&&layout.body<=layout.viewport,`${name} ${theme}: 200% zoom: ${JSON.stringify(layout)}`);
   }await c.close();
  }
- await writeFile(new URL(audit?'audit-after.json':'browser-results.json',output),JSON.stringify({evidence,blocked:[...blocked]},null,2)+'\n');
- console.log(`a11y-browser: ${pages.length*4} axe checks, 2 keyboard journeys and ${pages.length*2} zoom checks passed`);
+ await writeFile(new URL(receiptName,output),JSON.stringify({evidence,focusChecks,blocked:[...blocked]},null,2)+'\n');
+ console.log(`a11y-browser: ${keyboardOnly?0:pages.length*4} axe checks, ${keyboardOnly?4:2} keyboard journeys and ${keyboardOnly?0:pages.length*2} zoom checks passed`);
 } finally {await browser.close();}
