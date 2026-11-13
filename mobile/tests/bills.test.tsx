@@ -292,10 +292,10 @@ describe('Votes in parliament: the votes sit under the bill title (6.1)', () => 
     });
     mounted.push(r);
     const vote = host(r.root, 'division-history-au-federal-r7534-0')[0]!;
-    expect(texts(vote)).toContain('Amendments (Greens)');
+    expect(texts(vote)).toContain('Amendments');
     expect(texts(vote)).toContain('Senate · 19 Aug 2026 · under a time limit');
     expect(vote.props.accessibilityLabel).toMatch(
-      /^Amendments \(Greens\), Senate · 19 Aug 2026 · under a time limit, (Agreed to|Not agreed to), /,
+      /^Amendments, Senate · 19 Aug 2026 · under a time limit, (Agreed to|Not agreed to), /,
     );
     load.mockRestore();
   });
@@ -663,6 +663,25 @@ describe('loading a bill (4.3)', () => {
 });
 
 describe('the bill page', () => {
+  test('r7375 never presents its rejected amendment as a rejected second reading', async () => {
+    mockParams.key = 'au-federal-r7375';
+    mockParams.division = 'federal-senate-10192';
+    const record = await fixture.billFor(mockParams.key);
+    jest.mocked(runtime.billFor).mockResolvedValueOnce(record);
+    const ordered = orderDivisions(record.data.divisions.data!.rows);
+    const index = [...ordered.main, ...ordered.procedural].findIndex(
+      (d) => d.key === mockParams.division,
+    );
+    expect(index).toBeGreaterThanOrEqual(0);
+    const root = await render();
+    expect(texts(host(root, `bill-division-${index}-title`)[0]!)).toEqual([
+      'Limitation of debate',
+    ]);
+    const label = host(root, `bill-division-${index}-more`)[0]!.props
+      .accessibilityLabel;
+    expect(label).toMatch(/^Limitation of debate, Senate · .*Not agreed to,/);
+    expect(label).not.toMatch(/Second reading|under a time limit/);
+  });
   test.each([1, 3.571])(
     'the two final source lines sit together inside What became law at scale %s',
     async (fontScale) => {

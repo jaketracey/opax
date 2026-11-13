@@ -19,10 +19,20 @@ test.each([
   ['the bills be now read a second time.', 'Second reading'],
   ['the remaining stages of the bill be agreed to.', 'Remaining stages'],
   ['the amendments on sheet 1234 be agreed to.', 'Amendments'],
+  ['the amendment on sheet 1234 be agreed to.', 'Amendment'],
   [
-    'Australian Greens amendments (1) and (2) be agreed to.',
-    'Amendments (Greens)',
+    'the amendment to the motion that the bill be now read a second time be agreed to.',
+    'Amendment',
   ],
+  [
+    'the amendments to the motion that the bill be now read a third time be agreed to.',
+    'Amendments',
+  ],
+  [
+    'the opposition amendment (1) to Australian Greens amendment (2) be agreed to.',
+    'Amendment',
+  ],
+  ['Australian Greens amendments (1) and (2) be agreed to.', 'Amendments'],
   ['clause 43 stand as printed.', 'Clauses as printed'],
   // Later transcript references to amendments do not rename a clause vote.
   [
@@ -40,14 +50,14 @@ test.each([
   expect(isProcedural(stage, division.question)).toBe(false);
 });
 
-test('a Greens announcement names the mover when the question only says amendments', () => {
+test('an announcement never adds a mover to the title', () => {
   expect(
     divisionTitle({
       stage,
       question:
         'Morgan Reed I will now deal with the amendments circulated by the Australian Greens. The question now is that the amendments on sheet 1234 be agreed to.',
     }),
-  ).toBe('Amendments (Greens)');
+  ).toBe('Amendments');
 });
 
 test.each([
@@ -58,6 +68,10 @@ test.each([
   'Morgan Reed I will now deal with the remaining stages of the bill.',
   'The question is that the motion as moved be agreed to.',
   'Example Bill - Limitation of Debate - Review and lawful political expression',
+  'The question is that the time allotted for the remaining stages of the bill be extended.',
+  'The question is that the time for consideration of the remaining stages be extended.',
+  'The question is that part 4 stand as amended and section 59D stand as printed.',
+  'The majority voted against an amendment to the motion that the bill be now read a second time.',
 ])(
   'an unparsed time-limit question keeps its recorded title: %s',
   (question) => {
@@ -114,9 +128,70 @@ test.each([
     null,
   ],
   [null, null],
+  [
+    'The majority voted against an amendment to the question is that the bill be read a second time.',
+    null,
+  ],
+  [
+    'The majority voted for a motion to amend the bill so that the FWC can act.',
+    null,
+  ],
+  [
+    'The majority voted for a motion to read the bill. The party that introduced it is listed below.',
+    null,
+  ],
+  ['The question is that "', null],
+  [
+    'The question is that, in schedule 1, part 9 stand as printed.',
+    'That in schedule 1, part 9 stand as printed.',
+  ],
+  [
+    'The question is that item 3 of Sch. 1 and cl. 2 in Pt. 3 of Bill No. 1 stand as printed.',
+    'That item 3 of Sch. 1 and cl. 2 in Pt. 3 of Bill No. 1 stand as printed.',
+  ],
+  [
+    'The question is that "the amendments be agreed to." More transcript follows.',
+    'That the amendments be agreed to.',
+  ],
 ])('the party motion is one sentence or absent: %s', (question, motion) => {
   expect(divisionMotion(question)).toBe(motion);
 });
+
+test('a party motion above 240 characters is absent, never truncated into a different motion', () => {
+  const question = `The question is that the amendments ${'on sheet 1234 '.repeat(20)}be agreed to.`;
+  expect(divisionMotion(question)).toBeNull();
+  expect(divisionTitle({ stage, question })).toBe(stage);
+});
+
+test.each(['10190', '10192', '10193'])(
+  'r7375 %s votes on an amendment, not the reading quoted in its summary',
+  (key) => {
+    const bill = decodeBill(pinned('/bills/au-federal-r7375.json'));
+    const division = bill.divisions.find(
+      (d) => d.key === `federal-senate-${key}`,
+    )!;
+    expect(division.question).toContain('amendment');
+    expect(divisionMotion(division.question)).toBeNull();
+    expect(divisionTitle(division)).toBe('Limitation of debate');
+    expect(divisionMeta(division, where)).toBe(where);
+  },
+);
+
+test.each([
+  ['r7494', 'federal-representatives-10324'],
+  ['s1496', 'federal-senate-10578'],
+  ['s1496', 'federal-senate-10579'],
+])(
+  '%s %s never turns an explanatory relative clause into a motion',
+  (billKey, divisionKey) => {
+    const bill = decodeBill(pinned(`/bills/au-federal-${billKey}.json`));
+    expect(
+      divisionMotion(
+        bill.divisions.find((d) => d.key === divisionKey)!.question,
+      ),
+    ).toBeNull();
+  },
+);
 
 test('party and directory projections use the same vote presentation', () => {
   const bill = decodeBill(pinned('/bills/au-federal-r7534.json'));

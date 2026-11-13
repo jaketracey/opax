@@ -1471,26 +1471,24 @@ describe('sweep 2: a party page says each thing once', () => {
           noes: 30,
         },
       }));
-      jest
-        .mocked(runtime.partyPage)
-        .mockResolvedValueOnce({
-          ...view,
-          data: {
-            ...data,
-            divisions: {
-              ...data.divisions,
-              data: { ...data.divisions.data!, rows },
-            },
+      jest.mocked(runtime.partyPage).mockResolvedValueOnce({
+        ...view,
+        data: {
+          ...data,
+          divisions: {
+            ...data.divisions,
+            data: { ...data.divisions.data!, rows },
           },
-        });
+        },
+      });
       const r = await render();
       const main = rowsOf(r);
       expect(main.map((row) => row.props.meta)).toEqual([
         expect.stringMatching(
-          /^Amendments · .* · under a time limit\nThat the amendment on sheet 1234 be agreed to\.$/,
+          /^Amendment · .* · under a time limit\nThat the amendment on sheet 1234 be agreed to\.$/,
         ),
         expect.stringMatching(
-          /^Amendments · .* · under a time limit\nThat the amendment on sheet 5678 be agreed to\.$/,
+          /^Amendment · .* · under a time limit\nThat the amendment on sheet 5678 be agreed to\.$/,
         ),
       ]);
       press(r, 'party-divisions-procedural');

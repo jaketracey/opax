@@ -378,27 +378,39 @@ export function divisionMotion(
   question: string | null | undefined,
 ): string | null {
   const plain = questionPlain(question ?? '');
-  let put = questionPut(plain, plain.length).trim();
-  const explicit = put !== plain;
-  if (!explicit) {
+  let put: string;
+  if (/^the (?:majority|minority) voted\b/i.test(plain)) {
+    // Only the thing voted on can introduce a summary's motion. A later
+    // "that" may describe the bill or quote the motion being amended.
+    const summary =
+      /^the (?:majority|minority) voted (?:against|in favour of|for) (?:a|an|the) (?:motion|question)\s+(?:is\s+)?["'“‘]*that\s+(.+)/i.exec(
+        plain,
+      );
+    if (!summary) return null;
+    put = summary[1]!;
+  } else if (plain.match(QUESTION_PUT)) {
+    put = questionPut(plain, plain.length).trim();
+  } else {
     // A plain motion may carry a leading speaker label from Hansard.
-    put = put.replace(/^(?:[\p{Lu}][\p{L}'’\-]+\s+){1,5}(?=That\b)/u, '');
+    put = plain
+      .replace(/^[\s,;:.!?"'“”‘’]+/, '')
+      .replace(/^(?:[\p{Lu}][\p{L}'’\-]+\s+){1,5}(?=That\b)/u, '');
     if (!/^that\b/i.test(put)) return null;
-  } else if (
-    !plain.match(QUESTION_PUT) &&
-    /\bvoted (?:against|in favour of|for)\b/i.test(plain)
-  ) {
-    const that = /\bthat\s+(.+)/i.exec(put);
-    if (!that) return null;
-    put = that[1]!;
   }
-  put = put.replace(/^that\s+/i, '').trim();
-  const end = [...put.matchAll(/[.!?](?=\s|$)/g)].find(
+  put = put.replace(/^that\b/i, '').replace(/^[\s,;:.!?"'“”‘’]+/, '');
+  const end = [...put.matchAll(/[.!?](?=\s|["'”’](?:\s|$)|$)/g)].find(
     (mark) =>
-      !/\b(?:No|Nos|Dr|Mr|Mrs|Ms|Sen)\.$/i.test(put.slice(0, mark.index + 1)),
+      !/\b(?:Sch|cl|Pt|No|Nos|Dr|Mr|Mrs|Ms|Sen)\.$/i.test(
+        put.slice(0, mark.index + 1),
+      ),
   );
-  const sentence = (end ? put.slice(0, end.index + 1) : put).trim();
-  return sentence ? `That ${sentence.replace(/[.!?]$/, '')}.` : null;
+  const sentence = (end ? put.slice(0, end.index + 1) : put)
+    .trim()
+    .replace(/["'“”‘’]+$/, '')
+    .replace(/[.!?]$/, '')
+    .trim();
+  const motion = sentence ? `That ${sentence}.` : null;
+  return motion && motion.length <= 240 ? motion : null;
 }
 
 /**
@@ -412,9 +424,15 @@ function timeLimitedTitle(division: DivisionTitleRecord): string | null {
     ' ',
   );
   if (!UNDER_TIME_LIMIT.test(stage) || !division.question) return null;
-  const plain = questionPlain(division.question);
   const put = divisionMotion(division.question);
   if (!put) return null;
+  const subject = put.split(/\s+be\s+/i, 1)[0]!;
+  // An amendment to a reading motion is still an amendment, even when
+  // that motion's second/third reading is quoted later in the question.
+  const amendment = SUBSTANTIVE_QUESTION[3]!.exec(subject);
+  if (amendment)
+    return /\bamendments\b/i.test(amendment[0]) ? 'Amendments' : 'Amendment';
+  if (/\btime\b|\ballot/i.test(subject)) return null;
   const match = SUBSTANTIVE_QUESTION.findIndex((rule) => rule.test(put));
   switch (match) {
     case 0:
@@ -422,25 +440,11 @@ function timeLimitedTitle(division: DivisionTitleRecord): string | null {
     case 1:
       return /\bthird time\b/i.test(put) ? 'Third reading' : 'Second reading';
     case 2:
-      return 'Remaining stages';
-    case 3: {
-      // Use the motion itself, or the immediately preceding announcement
-      // of the amendments' mover, rather than any earlier debate.
-      const before = plain
-        .slice(0, plain.lastIndexOf(questionPut(plain).trim()))
-        .trim();
-      const announcement = before
-        .split(/[.!?]\s+/)
-        .slice(-2)
-        .join(' ');
-      const greens =
-        /\b(?:Australian )?Greens['’]? amendments?\b|\bamendments?[^.!?]{0,120}\b(?:Australian )?Greens\b/i;
-      return greens.test(put) || greens.test(announcement)
-        ? 'Amendments (Greens)'
-        : 'Amendments';
-    }
+      return /\btime\b|\ballot/i.test(put) ? null : 'Remaining stages';
     case 4:
-      return 'Clauses as printed';
+      // A mixed "as amended ... as printed" decision has no single title
+      // in this table. Keep its recorded stage rather than overstate it.
+      return /\bstand as amended\b/i.test(put) ? null : 'Clauses as printed';
     default:
       return null;
   }
