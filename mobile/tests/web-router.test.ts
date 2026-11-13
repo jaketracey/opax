@@ -34,6 +34,15 @@ const mobile = resolve(__dirname, '..');
 const portal = resolve(mobile, '../portal/public');
 const origin = 'https://opax.com.au';
 
+// The oracle runs in its own Node process so it models the browser with
+// Node's WHATWG URL and Fetch classes; the Jest environment swaps in its own
+// URL, the one the guard runs on here. It takes under a second for the whole
+// sweep and holds nothing open (stdin is the input and then closes; tsx's
+// parent socket is unref'd), so the two-minute limit only bounds a machine
+// stalled far past gate load. A timeout fails naming the command
+// (tests/child-timeout.js).
+const oracleTimeout = 120_000;
+
 function web(
   addresses: string[],
   sources: { app?: string; home?: string } = {},
@@ -48,6 +57,8 @@ function web(
         encoding: 'utf8',
         maxBuffer: 256 * 1024 * 1024,
         stdio: 'pipe',
+        timeout: oracleTimeout,
+        killSignal: 'SIGKILL',
       },
     ),
   ) as Outcome[];
@@ -446,6 +457,43 @@ describe('incoming links open in the tab the shell spec gives them', () => {
       '/(tabs)/(today)/party/labor',
     );
   });
+  test.each([true, false])(
+    'the Liberal Democratic Party’s old links open the Libertarian Party page in Today (cold %s)',
+    (initial) => {
+      // The web's 301s: one party, at its current name.
+      for (const path of [
+        'https://opax.com.au/subject/party/liberal-democratic-party',
+        'https://opax.com.au/subject/party/liberal-democrats',
+        'https://opax.com.au/subject/party/Liberal%20Democratic%20Party',
+        'https://opax.com.au/party/liberal-democratic-party',
+        'https://opax.com.au/subject/party/libertarian-party',
+        'opax://party/liberal-democratic-party',
+      ])
+        expect(redirectSystemPath({ path, initial })).toBe(
+          '/(tabs)/(today)/party/libertarian-party',
+        );
+      const { fromWebPath } = jest.requireActual<
+        typeof import('../src/navigation/external')
+      >('../src/navigation/external');
+      expect(fromWebPath('/subject/party/liberal-democratic-party')).toEqual({
+        pathname: '/party/[slug]',
+        params: { slug: 'libertarian-party', name: 'Libertarian Party' },
+      });
+      expect(
+        redirectSystemPath({
+          path: 'https://opax.com.au/subject/party/liberal-democratic-party?section=changes',
+          initial,
+        }),
+      ).toBe('/(tabs)/(today)/party/libertarian-party?section=changes');
+      // Other parties' links are unchanged.
+      expect(
+        redirectSystemPath({
+          path: 'https://opax.com.au/subject/party/labor',
+          initial,
+        }),
+      ).toBe('/(tabs)/(today)/party/labor');
+    },
+  );
   test.each([true, false])(
     'money pages and editions open in Today (cold %s)',
     (initial) => {

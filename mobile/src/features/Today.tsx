@@ -16,10 +16,6 @@ import { RefreshControl, StyleSheet, View } from 'react-native';
 import type { Block, EditionView, Electorate } from '../api/catalogs';
 import { catalogs } from '../api/runtime';
 import { useOffline } from '../api/useOffline';
-import { useAccessibilitySize } from '../design/accessibility';
-import { ReservedRegionArea, useReservedRegions } from '../design/fold-area';
-import { activeVerticalFold } from '../design/fold';
-import { useLayout } from '../design/adaptive';
 import { thisDevice } from '../design/device';
 import { Screen } from '../design/layout';
 import { ContentUnavailable } from '../design/states';
@@ -56,7 +52,6 @@ import { SittingLine } from './today/SittingLine';
 import {
   editionInSlot,
   launchCase,
-  todayColumns,
   todayOrder,
   type CachedEdition,
   type InvitationDates,
@@ -67,8 +62,9 @@ import { editionTier, sydneyDay, type SydneyDate } from './today/rules';
 import { SurfaceGrid } from './today/SurfaceGrid';
 import { SeatInvitation } from './today/SeatInvitation';
 import { TodayReports, useTodayReports } from './today/TodayBlock';
+import { TodayBody } from './today/TodayBody';
 import { VotesBlock } from './today/VotesBlock';
-import { StateSeatCard, YourMPCard } from './today/YourMPCard';
+import { StateSeatCard, stateSeatFor, YourMPCard } from './today/YourMPCard';
 import { saveChoice } from './your-mp/choice-store';
 import { savedSeatDirectory, useSeat } from './your-mp/useSeat';
 
@@ -313,11 +309,13 @@ export default function Today() {
                 attempt={attempt}
                 onRetry={retry}
               />
-              <StateSeatCard
-                directory={directory}
-                stateSeatIds={choice?.stateSeatIds ?? []}
-                today={today}
-              />
+              {stateSeatFor(directory, choice?.stateSeatIds ?? [], today) ? (
+                <StateSeatCard
+                  directory={directory}
+                  stateSeatIds={choice?.stateSeatIds ?? []}
+                  today={today}
+                />
+              ) : null}
             </SurfaceGrid>
           </View>
         );
@@ -468,63 +466,6 @@ export default function Today() {
   );
 }
 
-/** One column on iPhone; on iPad at 900 pt and wider, two columns 3:2. */
-function TodayBody({
-  order,
-  slot,
-}: {
-  order: NonNullable<ReturnType<typeof todayOrder>>;
-  slot: (name: TodaySlot) => ReactNode;
-}) {
-  const layout = useLayout();
-  const large = useAccessibilitySize();
-  if (
-    !layout.regular ||
-    layout.rule === 'phone-regular' ||
-    large ||
-    layout.width < 900
-  )
-    return <View style={styles.column}>{order.slots.map(slot)}</View>;
-  const { leading, trailing } = todayColumns(order);
-  return (
-    <View style={styles.column}>
-      <ReservedRegionArea>
-        <TodaySpread
-          leading={leading.map(slot)}
-          trailing={trailing.map(slot)}
-        />
-      </ReservedRegionArea>
-      {slot('foot')}
-    </View>
-  );
-}
-
-/** The iPad spread retains its 3:2 measure until a fold calls for an even split. */
-function TodaySpread({
-  leading,
-  trailing,
-}: {
-  leading: ReactNode;
-  trailing: ReactNode;
-}) {
-  const { width } = useLayout();
-  const { divisions } = useReservedRegions();
-  const fold = activeVerticalFold(divisions);
-  const gap = fold
-    ? Math.max(32, width - 2 * fold.x, 2 * (fold.x + fold.width) - width)
-    : 32;
-  return (
-    <View style={[styles.columns, { gap }]}>
-      <View style={[styles.column, fold ? styles.even : styles.leading]}>
-        {leading}
-      </View>
-      <View style={[styles.column, fold ? styles.even : styles.trailing]}>
-        {trailing}
-      </View>
-    </View>
-  );
-}
-
 /**
  * The edition's read: the cached copy first, revalidated on a pull. What
  * it answers is kept on the device for the next launch's order.
@@ -568,8 +509,4 @@ const styles = StyleSheet.create({
   column: { gap: rhythm.section },
   // The state seat block sits 16 pt under the federal block's line.
   seats: { gap: rhythm.block },
-  columns: { flexDirection: 'row', alignItems: 'flex-start', gap: 32 },
-  even: { flex: 1, minWidth: 0 },
-  leading: { flex: 3, minWidth: 0 },
-  trailing: { flex: 2, minWidth: 0 },
 });

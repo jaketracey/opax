@@ -10,7 +10,7 @@ import unittest
 import xml.etree.ElementTree as ET
 import zipfile
 
-from android_release import (NS, configured_version, debug_artifacts, sha256,
+from android_release import (NS, configured_version, debug_artifacts, sha256, shipped_source_maps,
                              verify_evidence, verify_identity, verify_ios_candidate, version_code)
 from release_support import ReleaseError
 
@@ -75,6 +75,22 @@ class AndroidReleaseTests(unittest.TestCase):
                 for flag in ('r8_enabled', 'native_symbols_enabled'):
                     with self.assertRaisesRegex(Exception, 'present but build evidence says disabled'):
                         debug_artifacts(archive, {'r8_enabled':flag != 'r8_enabled', 'native_symbols_enabled':flag != 'native_symbols_enabled'}, directory)
+
+    def test_source_map_check_skips_play_metadata_and_refuses_installed_maps(self):
+        # R8's mapping is Play metadata and passes; a map an APK would install fails.
+        play = 'BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map'
+        for extra, shipped in ((None, []), ('base/assets/index.android.bundle.map', True),
+                               ('base/root/META-INF/app.MAP', True), ('feature/assets/x.map', True)):
+            with self.subTest(extra=extra), tempfile.TemporaryDirectory() as d:
+                bundle = Path(d)/'candidate.aab'
+                with zipfile.ZipFile(bundle, 'w') as archive:
+                    archive.writestr('base/manifest/AndroidManifest.xml', 'fixture')
+                    archive.writestr(play, 'mapping')
+                    if extra: archive.writestr(extra, 'map')
+                with zipfile.ZipFile(bundle) as archive:
+                    self.assertEqual(shipped_source_maps(archive.namelist()), [extra] if shipped else [])
+        script = (Path(__file__).parent/'verify-play.py').read_text()
+        self.assertIn('assert not shipped_source_maps(entries), "Source map shipped in the AAB"', script)
 
     def test_configured_version_reads_a_literal_or_one_named_constant(self):
         with tempfile.TemporaryDirectory() as d:

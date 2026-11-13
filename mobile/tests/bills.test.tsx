@@ -12,7 +12,12 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { act } from 'react';
-import { Platform, StyleSheet, useWindowDimensions } from 'react-native';
+import {
+  LayoutAnimation,
+  Platform,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { billTimeline } from '../src/api/bill-transforms';
 import * as d from '../src/api/catalogs';
@@ -27,6 +32,7 @@ import {
   StatusCapsule,
 } from '../src/design/primitives';
 import { bindRecordTitle } from '../src/design/record-title';
+import { HeightReveal } from '../src/design/reveal';
 import BillDetail, {
   footSection,
   sameSourceLine,
@@ -823,6 +829,40 @@ describe('the bill page', () => {
     expect(host(root, 'bill-division-6-body')).toHaveLength(1);
     // "Show fewer" is on offer, since the rest were revealed.
     expect(host(root, 'bill-divisions-more')).toHaveLength(1);
+  });
+
+  test('a vote opens its party votes in place, and the further votes ease in below the first five', async () => {
+    // LayoutAnimation does nothing on iOS under Reanimated 4.5, so both
+    // jumped; each now opens and closes its own height (src/design/reveal.tsx).
+    const configure = jest.spyOn(LayoutAnimation, 'configureNext');
+    const root = await render();
+    const press = (testID: string) =>
+      act(async () =>
+        root
+          .find(
+            (node) =>
+              node.props.testID === testID &&
+              typeof node.props.onPress === 'function',
+          )
+          .props.onPress(),
+      );
+    const inReveal = (testID: string) =>
+      root
+        .findAllByType(HeightReveal)
+        .some((reveal) => host(reveal, testID).length > 0);
+    expect(host(root, 'bill-division-5')).toHaveLength(0);
+    await press('bill-division-0-more');
+    expect(host(root, 'bill-division-0-body')).toHaveLength(1);
+    expect(inReveal('bill-division-0-body')).toBe(true);
+    await press('bill-divisions-more');
+    expect(host(root, 'bill-division-5')).toHaveLength(1);
+    expect(inReveal('bill-division-5')).toBe(true);
+    // The first five stay where they are, outside the reveal.
+    expect(inReveal('bill-division-4')).toBe(false);
+    await press('bill-divisions-more');
+    expect(host(root, 'bill-division-5')).toHaveLength(0);
+    expect(configure).not.toHaveBeenCalled();
+    configure.mockRestore();
   });
 
   test('an opened vote says what its party rows rest on', async () => {

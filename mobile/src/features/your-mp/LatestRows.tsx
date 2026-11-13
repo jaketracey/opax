@@ -2,6 +2,7 @@ import type { Href } from 'expo-router';
 import { Pressable, Share, StyleSheet, View } from 'react-native';
 import { billName } from '../../api/bill-transforms';
 import type { BillIndex, PersonProfile } from '../../api/catalogs';
+import { useAccessibilitySize } from '../../design/accessibility';
 import { haptic } from '../../design/haptics';
 import { Icon, type SFSymbol } from '../../design/icon';
 import { RowLink, rowMenus, type RowMenuAction } from '../../design/row-link';
@@ -14,6 +15,7 @@ import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
+import { trackShare } from '../../navigation/share';
 import { billRoute, personRoute } from '../../navigation/routes';
 import {
   changeDate,
@@ -35,6 +37,13 @@ export interface LatestRecord extends FollowRecord {
 // A null holder is a register with no holder column (see registerHolderLine).
 type ActivityRecord = FollowRecord & { holders?: (string | null)[] };
 type DeclarationRecord = ActivityRecord & { holders: (string | null)[] };
+/**
+ * A register entry's words run to four lines, then end with an ellipsis; at
+ * accessibility sizes they run in full. Never cut by characters: a cut
+ * mid-name ("provided by Endeavou…") reads as the record's own text.
+ */
+export const REGISTER_TITLE_LINES = 4;
+
 const recordSymbols: Record<FollowRecord['kind'], SFSymbol> = {
   vote: symbols.vote,
   register: symbols.interests,
@@ -224,14 +233,13 @@ export function LatestRow({
   record,
   testID,
   onPress,
-  compact = false,
 }: {
-  compact?: boolean;
   record: LatestRecord;
   testID?: string;
   onPress?: () => void;
 }) {
   const cellStyle = useRowCellStyle();
+  const large = useAccessibilitySize();
   useRowInset(44);
   const date = changeDate(record.date, undefined, true);
   const detail = [record.detail, date].filter(Boolean).join(' · ');
@@ -270,11 +278,15 @@ export function LatestRow({
         <Text
           wordSafe
           variant={record.kind === 'register' ? 'recordText' : 'rowRecord'}
-          numberOfLines={record.kind === 'register' ? 3 : undefined}
+          numberOfLines={
+            record.kind === 'register' && !large
+              ? REGISTER_TITLE_LINES
+              : undefined
+          }
+          ellipsizeMode="tail"
+          testID={testID ? `${testID}-title` : undefined}
         >
-          {compact && record.kind === 'register' && record.title.length > 80
-            ? record.title.slice(0, 79).trimEnd() + '…'
-            : record.title}
+          {record.title}
         </Text>
         {record.holderLine ? (
           <Text wordSafe variant="secondary">
@@ -303,6 +315,8 @@ export function LatestRow({
           title: 'Share',
           symbol: 'square.and.arrow.up',
           onPress: () => {
+            // The source's own link: shared as an "other" record, never its URL.
+            trackShare('record', record.url!);
             void Share.share({
               title: record.title,
               url: record.url,
@@ -315,7 +329,9 @@ export function LatestRow({
           symbol: 'link',
           onPress: () => {
             void copyText(record.url!).then((copied) => {
-              if (copied) haptic('success');
+              if (!copied) return;
+              haptic('success');
+              trackShare('copy_link', record.url!);
             });
           },
         },
@@ -347,7 +363,6 @@ export function LatestRow({
 }
 ownsRowPadding(LatestRow);
 export interface LatestRowsProps {
-  compact?: boolean;
   records: readonly LatestRecord[];
   limit?: number;
   testID?: string;
@@ -358,7 +373,6 @@ export function LatestRows({
   records,
   limit = 5,
   testID = 'latest',
-  compact = false,
   onRowPress,
 }: LatestRowsProps) {
   return (
@@ -367,7 +381,6 @@ export function LatestRows({
         <LatestRow
           key={record.key}
           record={record}
-          compact={compact}
           testID={`${testID}-${i}`}
           onPress={onRowPress ? () => onRowPress(record) : undefined}
         />

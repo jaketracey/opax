@@ -326,7 +326,7 @@ function AgencyRecord({ params }: { params: AgencyParams }) {
             name,
             path: profile ? path : null,
             ask: profile
-              ? () => openAsk({ question: askAbout(profile.name) })
+              ? () => openAsk({ question: askAbout(profile.name) }, name)
               : null,
           }),
         }}

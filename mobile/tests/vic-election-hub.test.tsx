@@ -1,5 +1,5 @@
 import { act } from 'react';
-import { SectionList, StyleSheet } from 'react-native';
+import { Platform, SectionList, StyleSheet } from 'react-native';
 import {
   mockVic,
   renderVic,
@@ -14,6 +14,7 @@ import { ContentUnavailable } from '../src/design/states';
 import * as accessibility from '../src/design/accessibility';
 import { PartyLabel } from '../src/design/people';
 import { minimumTarget } from '../src/design/tokens';
+import * as titleOnScroll from '../src/navigation/useTitleOnScroll';
 import { SeatRow } from '../src/features/vic-election/rows';
 import Hub from '../src/features/vic-election/Hub';
 import { Finder } from '../src/features/vic-election/Finder';
@@ -473,3 +474,29 @@ test('finder results start at the page top below the header, from a scrolled hub
     jest.useRealTimers();
   }
 });
+
+test.each([
+  ['android', true, 'Vic election'],
+  ['android', false, 'Victorian election'],
+  ['ios', true, 'Victorian election'],
+] as const)(
+  'the bar title on %s (accessibility size %s) is %s; the route keeps the full title',
+  (os, accessible, bar) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
+    Object.defineProperty(Platform, 'OS', { configurable: true, value: os });
+    const size = jest
+      .spyOn(accessibility, 'useAccessibilitySize')
+      .mockReturnValue(accessible);
+    const hook = jest.spyOn(titleOnScroll, 'useTitleOnScroll');
+    try {
+      renderVic(<Hub />);
+      expect(hook).toHaveBeenLastCalledWith(expect.anything(), bar, {
+        routeTitle: 'Victorian election',
+      });
+    } finally {
+      hook.mockRestore();
+      size.mockRestore();
+      Object.defineProperty(Platform, 'OS', descriptor);
+    }
+  },
+);

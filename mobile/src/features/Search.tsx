@@ -44,7 +44,7 @@ export default function Search() {
 }
 
 function SearchSplit() {
-  const split = useLayout().regular;
+  const split = useLayout().split;
   const [selected, setSelected] = useState<RecordEntry | null>(null);
   const [entries, setEntries] = useState<RecordEntry[]>([]);
   const onRows = useCallback((rows: PaneRow[]) => {

@@ -8,6 +8,7 @@ import { isPad } from '../../design/adaptive';
 import { designFlags } from '../../design/flags';
 import { dispatchKeyCommand } from '../../design/keyboard';
 import { colors } from '../../design/tokens';
+import { noteSelectedTab } from '../../features/ask/return';
 import { requestSearchTabReset } from '../../features/search/tab-reset';
 import { AndroidTabs } from '../../navigation/AndroidTabs';
 import { setSelectedTab } from '../../navigation/link-tab';
@@ -31,9 +32,13 @@ export default function TabsLayout() {
     if (isPad) void OpaxIPad?.configureWordSafeSidebarLabels();
   }, []);
   // Warm Money map links open in the selected tab (navigation/link-tab.ts).
+  // Leaving the Ask tab ends Ask's way back to another tab's page.
   const segments = useSegments() as string[];
   const tab = segments[1];
-  useEffect(() => setSelectedTab(tab), [tab]);
+  useEffect(() => {
+    setSelectedTab(tab);
+    noteSelectedTab(tab);
+  }, [tab]);
   if (Platform.OS === 'android') return <AndroidTabs />;
   const searchRole =
     designFlags.searchTab &&

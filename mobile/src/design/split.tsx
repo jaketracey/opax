@@ -118,7 +118,7 @@ export interface SplitLayoutProps<T> {
   list: ReactNode;
   /** The selected item, or null for the empty state. */
   selected: T | null;
-  /** First available row, used only in a regular-width pane. */
+  /** First available row, used only while two panes are drawn. */
   initialSelection?: () => T | null;
   onSelect: (entry: T | null) => void;
   /** Draws an entry in the detail pane (the selection or a pushed entry). */
@@ -158,8 +158,9 @@ export interface SplitLayoutProps<T> {
 }
 
 /**
- * One stable list container across window resizes. On regular width the
- * detail and divider join it; on compact width the list fills the screen.
+ * One stable list container across window resizes. From the split
+ * breakpoint (`splitAllowed`) the detail and divider join it; below it the
+ * list fills the screen.
  */
 export function SplitLayout<T>(props: SplitLayoutProps<T>) {
   return (
@@ -189,8 +190,10 @@ function SplitContent<T>({
   testID,
 }: SplitLayoutProps<T>) {
   const layout = useLayout();
-  const first =
-    layout.regular && !selected ? (initialSelection?.() ?? null) : null;
+  // Two panes only from the split breakpoint (`splitAllowed`, 700pt on any
+  // device); a narrower regular phone draws the list alone, as on iPhone.
+  const twoPane = layout.split;
+  const first = twoPane && !selected ? (initialSelection?.() ?? null) : null;
   const effectiveSelection = selected ?? first;
   const selectedKey = effectiveSelection ? entryKey(effectiveSelection) : null;
   // A new selection starts the pane's stack again: a stack belongs to the
@@ -228,12 +231,12 @@ function SplitContent<T>({
 
   const navigation = useContext(NavigationContext);
   const route = useContext(NavigationRouteContext);
-  const previous = useRef({ regular: layout.regular, stack });
+  const previous = useRef({ regular: twoPane, stack });
   const pendingExpansion = useRef(false);
   useEffect(() => {
     const before = previous.current;
-    previous.current = { regular: layout.regular, stack };
-    if (!layout.regular) pendingExpansion.current = false;
+    previous.current = { regular: twoPane, stack };
+    if (!twoPane) pendingExpansion.current = false;
     else if (!before.regular) pendingExpansion.current = true;
     if (!navigation || !route || !entryRoute || !entryFromRoute) return;
     const parent = navigation.getParent();
@@ -242,12 +245,7 @@ function SplitContent<T>({
     const owner = state.routes.findIndex((item) => item.key === route.key);
     if (owner < 0 || state.type !== 'stack') return;
 
-    if (
-      before.regular &&
-      !layout.regular &&
-      ownsWindow() &&
-      navigation.isFocused()
-    ) {
+    if (before.regular && !twoPane && ownsWindow() && navigation.isFocused()) {
       // Add the mapped pane stack atomically, keeping every existing route
       // key, including the list's. A route below the top may be unmappable.
       const topRoute = before.stack.at(-1) && entryRoute(before.stack.at(-1)!);
@@ -281,7 +279,7 @@ function SplitContent<T>({
     const expand = () => {
       // Recovery belongs to a width transition. Ordinary route pushes in a
       // regular window retain their existing full-screen navigation.
-      if (!pendingExpansion.current || !layout.regular || !ownsWindow()) return;
+      if (!pendingExpansion.current || !twoPane || !ownsWindow()) return;
       const current = navigation.getState();
       const index = current.routes.findIndex((item) => item.key === route.key);
       if (index < 0 || current.index < index) return;
@@ -335,7 +333,7 @@ function SplitContent<T>({
       offFocus?.();
     };
   }, [
-    layout.regular,
+    twoPane,
     stack,
     navigation,
     route,
@@ -354,11 +352,11 @@ function SplitContent<T>({
     }, []),
   );
   useEffect(() => {
-    if (layout.regular && focused && !selected && first) onSelect(first);
-  }, [layout.regular, focused, selected, first, onSelect]);
+    if (twoPane && focused && !selected && first) onSelect(first);
+  }, [twoPane, focused, selected, first, onSelect]);
   const cursorMode = !!onOpenKey;
   const keyboard =
-    layout.regular && focused && !!keys && (!!entryForKey || cursorMode);
+    twoPane && focused && !!keys && (!!entryForKey || cursorMode);
   const [cursorState, setCursor] = useState<string | null>(null);
   // A cursor whose row has gone (a new search) is no cursor.
   const cursor =
@@ -445,7 +443,7 @@ function SplitContent<T>({
       ? splitPaneWidth(layout.width, large, layout.rule)
       : clampWidth(saved);
   const regions = useReservedRegions();
-  const fold = layout.regular ? activeVerticalFold(regions.divisions) : null;
+  const fold = twoPane ? activeVerticalFold(regions.divisions) : null;
   const sides = fold
     ? sidesOf(fold, { x: 0, y: 0, width: layout.width, height: layout.height })
     : null;
@@ -475,26 +473,26 @@ function SplitContent<T>({
       </View>
     ) : null;
   return (
-    <View style={styles.split} testID={layout.regular ? testID : undefined}>
+    <View style={styles.split} testID={twoPane ? testID : undefined}>
       <View
-        style={[styles.listPane, layout.regular ? { width } : styles.grow]}
+        style={[styles.listPane, twoPane ? { width } : styles.grow]}
         onLayout={onListLayout}
         testID={testID ? `${testID}-list` : undefined}
       >
-        <RegionProvider value={layout.regular ? listRegion : null}>
-          <ListPaneContext.Provider value={layout.regular}>
+        <RegionProvider value={twoPane ? listRegion : null}>
+          <ListPaneContext.Provider value={twoPane}>
             <CursorContext.Provider
-              value={layout.regular && cursorMode ? cursor : null}
+              value={twoPane && cursorMode ? cursor : null}
             >
               {list}
             </CursorContext.Provider>
           </ListPaneContext.Provider>
         </RegionProvider>
       </View>
-      {layout.regular ? (
+      {twoPane ? (
         <Divider width={width} onResize={resize} paused={!!fold} gap={gap} />
       ) : null}
-      {layout.regular ? (
+      {twoPane ? (
         <View
           style={styles.detailPane}
           onLayout={onDetailLayout}
@@ -636,32 +634,37 @@ function Divider({
         style={{ width: gap }}
       />
     );
+  // The 1pt slot is a plain view: off iPad, Hoverable draws its child alone
+  // and drops its style, and the line then drew at the split's leading edge
+  // (build 61 on iPhone Duo: no line between the panes).
   return (
-    <Hoverable effect="none" onHover={setHovered} style={styles.dividerWrap}>
-      <View
-        {...responder.panHandlers}
-        accessible
-        accessibilityRole="adjustable"
-        accessibilityLabel="List width"
-        accessibilityValue={{ text: `${Math.round(width)} points` }}
-        accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
-        onAccessibilityAction={(event: AccessibilityActionEvent) =>
-          onResize(
-            width +
-              (event.nativeEvent.actionName === 'increment' ? STEP : -STEP),
-          )
-        }
-        testID="split-divider"
-        style={styles.dividerHit}
-      >
+    <View style={styles.dividerWrap} testID="split-divider-slot">
+      <Hoverable effect="none" onHover={setHovered} style={styles.grow}>
         <View
-          style={[
-            styles.dividerLine,
-            active || hovered ? styles.dividerLineActive : null,
-          ]}
-        />
-      </View>
-    </Hoverable>
+          {...responder.panHandlers}
+          accessible
+          accessibilityRole="adjustable"
+          accessibilityLabel="List width"
+          accessibilityValue={{ text: `${Math.round(width)} points` }}
+          accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
+          onAccessibilityAction={(event: AccessibilityActionEvent) =>
+            onResize(
+              width +
+                (event.nativeEvent.actionName === 'increment' ? STEP : -STEP),
+            )
+          }
+          testID="split-divider"
+          style={styles.dividerHit}
+        >
+          <View
+            style={[
+              styles.dividerLine,
+              active || hovered ? styles.dividerLineActive : null,
+            ]}
+          />
+        </View>
+      </Hoverable>
+    </View>
   );
 }
 

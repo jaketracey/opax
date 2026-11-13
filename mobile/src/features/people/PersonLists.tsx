@@ -19,6 +19,7 @@ import { BlockSource, votesSource } from '../your-mp/Evidence';
 import { registerCategoryLabel, registerEntry } from '../your-mp/model';
 import type { EvidenceBlock } from '../your-mp/model';
 import { MemberVoteRow } from './MemberVoteRow';
+import { useFloatingBarFoot } from '../../navigation/floating-bar';
 
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
@@ -152,6 +153,7 @@ export function PersonVotes() {
     onCancelButtonPress: () => setQuery(''),
   });
   const { onLayout, content } = useScreenColumn('readable');
+  const foot = useFloatingBarFoot();
   const votes = load.status === 'ready' ? load.profile.blocks.votes : null;
   const v = votes?.data;
   const rows = v
@@ -204,7 +206,7 @@ export function PersonVotes() {
             style={styles.page}
             contentInsetAdjustmentBehavior="automatic"
             onLayout={onLayout}
-            contentContainerStyle={[styles.content, content]}
+            contentContainerStyle={[styles.content, content, foot]}
             data={rows}
             keyExtractor={(r, i) => `${r.position}-${r.name}-${r.stage}-${i}`}
             ListHeaderComponent={
@@ -279,6 +281,7 @@ export function PersonInterests() {
   const slug = one(params.slug) ?? '';
   const { load, retry } = useProfile(slug);
   const { onLayout, content } = useScreenColumn('readable');
+  const foot = useFloatingBarFoot();
   const interests =
     load.status === 'ready' ? load.profile.blocks.interests : null;
   const r = interests?.data;
@@ -323,7 +326,7 @@ export function PersonInterests() {
             contentInsetAdjustmentBehavior="automatic"
             stickySectionHeadersEnabled
             onLayout={onLayout}
-            contentContainerStyle={[styles.content, content]}
+            contentContainerStyle={[styles.content, content, foot]}
             sections={sections}
             keyExtractor={(e, i) => `${e.title}-${i}`}
             renderSectionHeader={({ section }) => (

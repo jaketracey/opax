@@ -68,6 +68,7 @@ jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn(async () => null) },
 }));
 jest.mock('../src/navigation/share', () => ({
+  trackShare: jest.fn(),
   canShare: true,
   shareRecord: jest.fn(),
   copyRecordLink: jest.fn(),
@@ -433,7 +434,7 @@ test('a speaker link in a source sheet drafts in Ask and never sends', async () 
   expect(router.back).toHaveBeenCalled();
   expect(router.navigate).toHaveBeenCalledWith(
     expect.objectContaining({
-      pathname: '/ask',
+      pathname: '/(tabs)/(ask)/ask',
       params: expect.objectContaining({
         question: expect.stringMatching(
           /^What did .+ say in parliament in \d{4}\?$/,

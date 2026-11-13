@@ -32,6 +32,25 @@ export function defaultMoneyFilters(graph: MoneyGraph): MoneyFilters {
     min: 0,
   };
 }
+/**
+ * How many filters differ from the defaults, for analytics: the year range,
+ * the industry choice and each switch or minimum count once. Never which values.
+ */
+export function moneyFilterCount(
+  graph: MoneyGraph,
+  filters: MoneyFilters,
+): number {
+  const initial = defaultMoneyFilters(graph);
+  return [
+    filters.from !== initial.from || filters.to !== initial.to,
+    filters.industry !== initial.industry,
+    filters.donations !== initial.donations,
+    filters.grants !== initial.grants,
+    filters.contracts !== initial.contracts,
+    filters.inflation !== initial.inflation,
+    filters.min !== initial.min,
+  ].filter(Boolean).length;
+}
 /** Port of portal/graph/index.ts windowFigures: undated disclosures stay in every window. */
 export function windowFigures<T extends MoneyFigures>(
   x: T,

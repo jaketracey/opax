@@ -16,13 +16,16 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { Catalogs } from '../src/api/catalogs';
+import { combinedPartyNode } from '../src/api/party-page';
 import { apiClient, catalogs as runtime } from '../src/api/runtime';
-import { moneyAccessibilityLabel } from '../src/design/format';
+import { formatCount, moneyAccessibilityLabel } from '../src/design/format';
 import { partyColors } from '../src/design/palette';
 import { PartyLabel, PersonRow, Portrait } from '../src/design/people';
 import { Screen, TitleAnchor } from '../src/design/layout';
 import { RegionProvider } from '../src/design/adaptive';
 import { SourceLine } from '../src/design/source';
+import { SourceContent } from '../src/features/sheets/SourceSheet';
+import { openOnWeb, openSource } from '../src/navigation/external';
 import { sheetPayload } from '../src/navigation/sheets';
 import { StatStrip } from '../src/design/record';
 import { ContentUnavailable } from '../src/design/states';
@@ -41,7 +44,6 @@ import {
   ProfileHeader,
 } from '../src/features/people/ProfileHeader';
 import { peopleScreens } from '../src/navigation/stack/people';
-import { openOnWeb } from '../src/navigation/external';
 import {
   moneyRecordRoute,
   partyRoute,
@@ -51,6 +53,7 @@ import {
 import { LinkRow, MoneyRow } from '../src/design/rows';
 import { pinned, slugs } from './pinned';
 import { describeWrappingColumns } from './wrapping-columns';
+import { accessibilityElements } from './a11y-tree';
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
   Link: Object.assign(({ children }: { children?: unknown }) => children, {
@@ -81,6 +84,8 @@ jest.mock('../src/navigation/external', () => ({
   openOnWeb: jest.fn(),
   openSource: jest.fn(),
   sourceUrl: (s: string) => s,
+  // The source sheet asks whether an original is an OPAX page.
+  fromWebPath: () => null,
 }));
 jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
   __esModule: true,
@@ -645,8 +650,10 @@ test('recorded members open native profiles; the total and every block have prov
     'party-divisions-source',
   ])
     expect(has(r, id)).toBe(true);
+  // VoiceOver hears the whole figure: the sum, the count and the years.
+  const node = view.data!.receipts.data!.node;
   expect(host(r, 'party-receipts-total').props.accessibilityLabel).toBe(
-    `${moneyAccessibilityLabel(view.data!.receipts.data!.node.total)}, disclosed`,
+    `${moneyAccessibilityLabel(node.total)}, disclosed, from ${formatCount(node.count)} donations and receipts, ${node.firstYear} to ${node.lastYear}`,
   );
   act(() => r.unmount());
 });
@@ -1092,4 +1099,318 @@ describe('the party header and Members faces (w5 polish)', () => {
     );
     expect(all).toHaveLength(6);
   });
+});
+
+describe('the Libertarian Party, formerly the Liberal Democratic Party', () => {
+  let ldp: Awaited<ReturnType<typeof api.partyPage>>;
+  beforeAll(async () => {
+    ldp = await api.partyPage('liberal-democratic-party');
+  });
+  beforeEach(() => {
+    jest.mocked(runtime.partyPage).mockResolvedValue(ldp);
+  });
+  // The host Text's own string.
+  const strings = (node: TestRenderer.ReactTestInstance) =>
+    [node.props.children].flat(Infinity).join('');
+  const ids = (r: TestRenderer.ReactTestRenderer) =>
+    r.root
+      .findAll((n) => typeof n.type === 'string' && n.props.testID)
+      .map((n) => n.props.testID as string);
+
+  test('the history line sits under the heading, its notices in the source sheet', async () => {
+    const r = await render('liberal-democratic-party');
+    expect(r.root.findByType(ProfileHeader).props.name).toBe(
+      'Libertarian Party',
+    );
+    expect(strings(host(r, 'party-history-text'))).toBe(
+      'Liberal Democratic Party (Liberal Democrats), renamed Libertarian Party. The AEC deregistered the Liberal Democratic Party on 19 July 2022 and registered the Libertarian Party on 12 January 2024.',
+    );
+    const order = ids(r);
+    expect(order.indexOf('party-history')).toBeGreaterThan(
+      order.indexOf('party-title'),
+    );
+    expect(order.indexOf('party-history')).toBeLessThan(
+      order.indexOf('party-figures'),
+    );
+    const line = r.root.find(
+      (n) =>
+        n.props.testID === 'party-history-source' &&
+        typeof n.props.onPress === 'function',
+    );
+    await act(async () => line.props.onPress());
+    const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+      params: { key: string };
+    };
+    const details = sheetPayload(params.key, 'source')!.details;
+    expect(details.originals).toEqual([
+      {
+        label:
+          'AEC notice deregistering the Liberal Democratic Party (19 July 2022)',
+        url: 'https://www.aec.gov.au/Parties_and_Representatives/Party_Registration/Deregistered_parties/files/statement-of-reasons-liberal-democratic-party-s137-deregistration-statement-of-reasons.pdf',
+      },
+      {
+        label: 'AEC notice registering the Libertarian Party (12 January 2024)',
+        url: 'https://www.aec.gov.au/Parties_and_Representatives/Party_Registration/Registration_Decisions/2024/Registration-approved-Notice-Libertarian-Party.pdf',
+      },
+    ]);
+    // Each notice opens in the in-app browser, like other source links.
+    let sheet!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      sheet = TestRenderer.create(
+        <SourceContent details={details} testID="history-sheet" />,
+      );
+    });
+    for (const [index, original] of details.originals!.entries()) {
+      act(() =>
+        sheet.root
+          .find(
+            (n) =>
+              n.props.testID === `history-sheet-original-${index}` &&
+              typeof n.props.onPress === 'function',
+          )
+          .props.onPress(),
+      );
+      expect(openSource).toHaveBeenLastCalledWith(original.url, original.label);
+    }
+    act(() => sheet.unmount());
+    act(() => r.unmount());
+  });
+
+  test('past members under the former name show “Recorded as” it', async () => {
+    const r = await render('liberal-democratic-party');
+    // One sitting member, under the current name.
+    expect(r.root.findByType(StatStrip).props.tiles).toContainEqual(
+      expect.objectContaining({ value: '1', label: 'sitting member' }),
+    );
+    expect(host(r, 'party-past-toggle')).toBeTruthy();
+    press(r, 'party-past-toggle');
+    const rows = r.root
+      .findAllByType(PersonRow)
+      .filter((row) => /^party-past-/.test(row.props.testID ?? ''));
+    expect(
+      rows.map((row) => [
+        row.props.name,
+        row.props.place,
+        row.props.detail,
+        row.props.href ?? null,
+      ]),
+    ).toEqual([
+      [
+        'David Leyonhjelm',
+        'Senate, 2014 to 2019',
+        'Recorded as Liberal Democratic Party',
+        // OPAX holds no profile for them: a row, not a link.
+        null,
+      ],
+      [
+        'Duncan Spender',
+        'Senate, 2019',
+        'Recorded as Liberal Democratic Party',
+        null,
+      ],
+    ]);
+    expect(drawn(r)).toContain('Recorded as Liberal Democratic Party');
+    act(() => r.unmount());
+  });
+
+  test('Android draws the same history line', async () => {
+    const original = Platform.OS;
+    Platform.OS = 'android';
+    try {
+      const r = await render('liberal-democratic-party');
+      expect(r.root.findAllByType(TitleAnchor)).toHaveLength(0);
+      expect(strings(host(r, 'party-history-text'))).toContain(
+        'renamed Libertarian Party',
+      );
+      expect(has(r, 'party-history-source')).toBe(true);
+      act(() => r.unmount());
+    } finally {
+      Platform.OS = original;
+    }
+  });
+
+  test('money lodged under two names draws one total and its “Lodged as” line', async () => {
+    // An invented pair; the page only draws what the record holds.
+    const base = view.data!;
+    const node = combinedPartyNode([
+      {
+        ...base.receipts.data!.node,
+        id: 'party:hrp',
+        label: 'Harbourside Reform Party',
+        total: 1000,
+        count: 4,
+        firstYear: 2016,
+        lastYear: 2019,
+        byYear: {},
+      },
+      {
+        ...base.receipts.data!.node,
+        id: 'party:hbp',
+        label: 'Harbourside Party',
+        total: 2000,
+        count: 2,
+        firstYear: 2019,
+        lastYear: 2020,
+        byYear: {},
+      },
+    ]);
+    jest.mocked(runtime.partyPage).mockResolvedValue({
+      stale: false,
+      data: {
+        ...base,
+        label: 'Harbourside Party',
+        members: {
+          ...base.members,
+          data: { current: [], recorded: [], currentCount: 0, sources: [] },
+        },
+        receipts: {
+          ...base.receipts,
+          data: {
+            node,
+            recordedAs: null,
+            rank: 1,
+            parties: 2,
+            donors: [],
+            byYear: [],
+          },
+        },
+        associated: { ...base.associated, data: null },
+        divisions: { ...base.divisions, data: null },
+      },
+    });
+    const r = await render('Harbourside Party');
+    expect(host(r, 'party-receipts-total').props.accessibilityLabel).toBe(
+      `${moneyAccessibilityLabel(3000)}, disclosed, from 6 donations and receipts, 2016 to 2020`,
+    );
+    expect(drawn(r)).toContain(
+      'disclosed, from 6 donations and receipts, 2016 to 2020',
+    );
+    expect(strings(host(r, 'party-receipts-lodged'))).toBe(
+      'Lodged as Harbourside Reform Party $1,000; as Harbourside Party $2,000',
+    );
+    expect(has(r, 'party-receipts-recorded')).toBe(false);
+    act(() => r.unmount());
+  });
+
+  test('other parties draw no history line and no past members', async () => {
+    jest.mocked(runtime.partyPage).mockResolvedValue(view);
+    const r = await render();
+    expect(has(r, 'party-history')).toBe(false);
+    expect(has(r, 'party-past-toggle')).toBe(false);
+    act(() => r.unmount());
+  });
+});
+
+describe('VoiceOver and Dynamic Type on a party page', () => {
+  const pages = ['Labor', 'liberal-democratic-party'] as const;
+  let records: Record<string, typeof view>;
+  beforeAll(async () => {
+    records = Object.fromEntries(
+      await Promise.all(
+        pages.map(async (name) => [name, await api.partyPage(name)] as const),
+      ),
+    );
+  });
+  test.each(
+    [1, 2.643, 3.571].flatMap((fontScale) =>
+      pages.map((name) => [name, fontScale] as const),
+    ),
+  )(
+    '%s at %s: every stop is labelled and nothing is cut short',
+    async (name, fontScale) => {
+      jest
+        .mocked(useWindowDimensions)
+        .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale });
+      jest.mocked(runtime.partyPage).mockResolvedValue(records[name]!);
+      const r = await render(name);
+      for (const id of ['party-past-toggle', 'party-recorded-toggle'])
+        if (has(r, id)) press(r, id);
+      const read = accessibilityElements(r.root);
+      expect(read.filter((e) => !e.label)).toEqual([]);
+      // Figures say compact sums in words, never "$1.1bn".
+      expect(read.filter((e) => /\$[\d.,]+(k|m|bn)\b/.test(e.label))).toEqual(
+        [],
+      );
+      const tile = read.find((e) => e.testID === 'party-figure-receipts');
+      if (tile)
+        expect(tile).toMatchObject({
+          role: 'button',
+          label: expect.stringMatching(
+            / (thousand|million|billion) dollars, disclosed receipts$/,
+          ),
+        });
+      // Every source line reads as a button that names its source.
+      const lines = read.filter((e) => /-source$/.test(e.testID ?? ''));
+      expect(lines.length).toBeGreaterThan(0);
+      for (const line of lines)
+        expect(line).toMatchObject({
+          role: 'button',
+          hint: 'Opens the sources',
+          label: expect.stringMatching(/, [A-Z]/),
+        });
+      if (name === 'liberal-democratic-party') {
+        // Heading, history line, its sources, then the figures, as drawn.
+        const at = (testID: string) =>
+          read.findIndex((e) => e.testID === testID);
+        const history = read.findIndex((e) =>
+          e.label.startsWith(
+            'Liberal Democratic Party (Liberal Democrats), renamed',
+          ),
+        );
+        expect(read[0]).toMatchObject({
+          role: 'header',
+          label: 'Libertarian Party',
+        });
+        expect(history).toBeGreaterThan(0);
+        expect(read[history + 1]).toMatchObject({
+          testID: 'party-history-source',
+          label: '12 Jan 2024, AEC party register',
+          role: 'button',
+        });
+        expect(at('party-figure-members')).toBeGreaterThan(history + 1);
+        expect(read[at('party-past-toggle')]).toMatchObject({
+          role: 'button',
+          label: 'Past members, 2',
+          state: { expanded: true },
+        });
+        expect(
+          read
+            .filter(
+              (e) =>
+                /^party-past-/.test(e.testID ?? '') &&
+                e.testID !== 'party-past-toggle',
+            )
+            .map((e) => e.label),
+        ).toEqual([
+          'David Leyonhjelm, Senate, 2014 to 2019, Recorded as Liberal Democratic Party',
+          'Duncan Spender, Senate, 2019, Recorded as Liberal Democratic Party',
+        ]);
+      }
+      // No text is cut short or held below the reader's size: a money row's
+      // two-line name (its full name is in its label) and portrait initials
+      // are the only limits.
+      const allowed = new Set([
+        ...r.root
+          .findAllByType(MoneyRow)
+          .flatMap((row) => row.findAllByType(NativeText)),
+        ...r.root
+          .findAllByType(Portrait)
+          .flatMap((portrait) => portrait.findAllByType(NativeText)),
+      ]);
+      expect(
+        r.root
+          .findAllByType(NativeText)
+          .filter(
+            (text) =>
+              !allowed.has(text) &&
+              (text.props.numberOfLines ||
+                (text.props.maxFontSizeMultiplier > 0 &&
+                  text.props.maxFontSizeMultiplier < fontScale)),
+          )
+          .map((text) => text.props.testID ?? text.props.children),
+      ).toEqual([]);
+      expect(describeWrappingColumns(r)).toEqual([]);
+      act(() => r.unmount());
+    },
+  );
 });

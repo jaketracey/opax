@@ -1,6 +1,10 @@
 import { LinkRow } from '../../design/primitives';
 import { titleSubject } from '../records/citations';
-import { metaString, type DocumentRecord } from '../records/model';
+import {
+  metaString,
+  recordHeadline,
+  type DocumentRecord,
+} from '../records/model';
 import { useOpenAsk } from './open';
 import { topics } from './topics';
 
@@ -59,7 +63,9 @@ export function DocumentAsk({ doc }: { doc: DocumentRecord }) {
     <LinkRow
       title="Ask about this"
       testID="doc-ask"
-      onPress={() => openAsk({ question: documentQuestion(doc) })}
+      onPress={() =>
+        openAsk({ question: documentQuestion(doc) }, recordHeadline(doc))
+      }
     />
   );
 }

@@ -18,6 +18,7 @@ import {
   largestRemainder,
   moneyAccessibilityLabel,
   savedText,
+  spokenFigures,
   staleText,
   votesAsAtText,
 } from '../src/design/format';
@@ -70,6 +71,22 @@ describe('counts and money (IOS-UX section 6)', () => {
     );
     expect(moneyAccessibilityLabel(507_000, true)).toBe('507 thousand dollars');
     expect(moneyAccessibilityLabel(-500)).toBe('minus 500 dollars');
+  });
+  test('a drawn figure says its compact sums in words, the rest as drawn', () => {
+    expect(spokenFigures('$1.1bn, disclosed receipts')).toBe(
+      '1.1 billion dollars, disclosed receipts',
+    );
+    expect(spokenFigures('$10.0m, to an invented council')).toBe(
+      '10.0 million dollars, to an invented council',
+    );
+    expect(spokenFigures('-$448k')).toBe('minus 448 thousand dollars');
+    for (const value of [1_100_000_000, 4_200_000, 507_000])
+      expect(spokenFigures(formatMoneyCompact(value))).toBe(
+        moneyAccessibilityLabel(value, true),
+      );
+    // Not compact money: left alone.
+    for (const drawn of ['193, sitting members', '42%', '$4,500', '10m away'])
+      expect(spokenFigures(drawn)).toBe(drawn);
   });
 });
 

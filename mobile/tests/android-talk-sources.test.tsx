@@ -10,6 +10,7 @@ import {
   resetTalk,
   takeChosenSource,
 } from '../src/features/talk/live';
+import { track } from '../src/analytics';
 
 jest.mock('../src/design/useHeaderBottom', () => ({
   useHeaderBottom: () => 0,
@@ -17,6 +18,10 @@ jest.mock('../src/design/useHeaderBottom', () => ({
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
   router: { back: jest.fn() },
+}));
+jest.mock('../src/analytics', () => ({
+  ...jest.requireActual('../src/analytics'),
+  track: jest.fn(),
 }));
 
 const source = {
@@ -76,6 +81,17 @@ test.each(['android', 'ios'] as const)(
     act(() => row.props.onPress());
     expect(takeChosenSource()).toEqual(source);
     expect(router.back).toHaveBeenCalledTimes(1);
+    // One source open from Talk's Sources sheet, never which source.
+    expect(jest.mocked(track).mock.calls).toEqual([
+      [
+        'opax_source_open',
+        {
+          from_section: 'other',
+          destination: 'app',
+          placement: 'talk_sources',
+        },
+      ],
+    ]);
   },
 );
 

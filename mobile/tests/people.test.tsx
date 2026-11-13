@@ -15,7 +15,6 @@ import { PadGrid } from '../src/design/adaptive';
 import {
   formatCount,
   formatMoney,
-  formatMoneyCompact,
   moneyAccessibilityLabel,
 } from '../src/design/format';
 import { Screen, Section } from '../src/design/layout';
@@ -102,7 +101,7 @@ jest.mock('../src/design/adaptive', () => {
     ...actual,
     useLayout: () => {
       const layout = actual.useLayout();
-      return pad() ? { ...layout, regular: true } : layout;
+      return pad() ? { ...layout, regular: true, split: true } : layout;
     },
   };
   Object.defineProperty(out, 'isPad', { get: pad, enumerable: true });
@@ -1557,7 +1556,10 @@ describe('party', () => {
     expect(total).toBeGreaterThan(0);
     const tile = (id: string) => host(r, id).props.accessibilityLabel as string;
     expect(tile('party-figure-members')).toContain(formatCount(members));
-    expect(tile('party-figure-receipts')).toContain(formatMoneyCompact(total));
+    // Drawn compact, said in words.
+    expect(tile('party-figure-receipts')).toContain(
+      moneyAccessibilityLabel(total, true),
+    );
     // The sections draw the same figures.
     expect(tile('party-current-count')).toContain(formatCount(members));
     expect(tile('party-receipts-total')).toContain(

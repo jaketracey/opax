@@ -3,6 +3,7 @@ import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Animated, Platform, SectionList, View } from 'react-native';
 import type { SearchBarCommands } from 'react-native-screens';
+import { useAccessibilitySize } from '../../design/accessibility';
 import { FigureBlock } from '../../design/record';
 import { Skeleton, OfflineLine } from '../../design/states';
 import { Text } from '../../design/text';
@@ -78,7 +79,12 @@ export default function Hub() {
       )
     : null;
   const titleRef = useRef<View>(null);
-  const title = useTitleOnScroll(titleRef, c.bar);
+  const accessible = useAccessibilitySize();
+  const title = useTitleOnScroll(
+    titleRef,
+    Platform.OS === 'android' && accessible ? c.barShort : c.bar,
+    { routeTitle: c.bar },
+  );
   const listRef =
     useRef<SectionList<{ key: string; element: ReactNode }, ElectionSection>>(
       null,

@@ -31,6 +31,7 @@ import { opaqueBar } from '../navigation/chrome';
 import { useAndroidRootScroll } from '../navigation/useAndroidRootScroll';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { useSafeSetOptions } from '../navigation/preview';
+import { useFloatingBarClearance } from '../navigation/floating-bar';
 import { useRootBarAppearance } from '../navigation/useRootBarAppearance';
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
 import { useAccessibilitySize } from './accessibility';
@@ -52,6 +53,7 @@ import type { DateInput } from './format';
 import { Icon } from './icon';
 import { useRefreshCommand } from './keyboard';
 import { RowLink } from './row-link';
+import { SourceSection } from './source';
 import {
   RowCellInsetContext,
   RowInsetContext,
@@ -185,6 +187,7 @@ export function Screen({
     contentInsetAdjustmentBehavior !== 'never',
   );
   const ground = grouped && designFlags.groupedSurfaces ? 'sunken' : 'paper';
+  const clearance = useFloatingBarClearance();
   const androidScroll = useRef<ScrollView>(null);
   const androidRoot = useAndroidRootScroll(androidScroll, colors[ground]);
   const setOptions = useSafeSetOptions();
@@ -259,6 +262,8 @@ export function Screen({
             { flexGrow: 1 },
             content,
             regular ? { gap: rhythmRegular.section } : null,
+            // The last block ends above the floating Today and Search buttons.
+            clearance ? { paddingBottom: rhythm.section + clearance } : null,
           ]}
           maintainVisibleContentPosition={maintainVisibleContentPosition}
           onContentSizeChange={
@@ -308,7 +313,22 @@ export function Screen({
                           : {}),
                       }}
                     >
-                      {bar}
+                      {bar ? (
+                        // The record starts just under its pane actions,
+                        // not a section gap below them (build 61 Bills).
+                        <View
+                          testID="screen-pane-bar"
+                          style={{
+                            marginBottom:
+                              rhythm.tight * 2 -
+                              (regular
+                                ? rhythmRegular.section
+                                : rhythm.section),
+                          }}
+                        >
+                          {bar}
+                        </View>
+                      ) : null}
                       {androidRoot.title}
                       <ScreenSectionGapContext.Provider
                         value={regular ? rhythmRegular.section : rhythm.section}
@@ -413,6 +433,7 @@ export function KeyboardStableScreen({
   const scroll = scrollRef ?? ownScroll;
   const keyboard = useStableKeyboard(scroll, keyboardTarget);
   const { onLayout, content, inner, bar } = useScreenColumn(column);
+  const clearance = useFloatingBarClearance();
   useRefreshCommand(
     refreshControl?.props.onRefresh,
     !!refreshControl?.props.refreshing,
@@ -434,6 +455,13 @@ export function KeyboardStableScreen({
             styles.content,
             content,
             keyboard.contentStyle,
+            // The last block ends above the floating Today and Search buttons.
+            clearance
+              ? {
+                  paddingBottom:
+                    keyboard.contentStyle.paddingBottom + clearance,
+                }
+              : null,
           ]}
           onLayout={(event) => {
             onLayout(event);
@@ -506,6 +534,7 @@ export function SectionHeader({
       testID={action.testID}
       style={({ pressed }) => [
         styles.sectionAction,
+        stacked ? null : styles.sectionActionWrapping,
         ...(compact && !stacked
           ? [{ marginVertical: -Math.max(0, minimumTarget - titleHeight) / 2 }]
           : []),
@@ -517,11 +546,18 @@ export function SectionHeader({
       </Text>
     </Pressable>
   ) : null;
+  // A heading never gives up width to its link or accessory: it keeps its
+  // own width (up to the whole line, wrapping only between words), and
+  // whatever is beside it moves under it when the two do not fit (a 300pt
+  // pane: "Conversations" with "See all conversations").
+  const wraps = !!accessory || (!!action && !stacked);
   const bandStyle = accessory
     ? styles.sectionHeadWrapping
     : stacked
       ? styles.sectionHeadStacked
-      : styles.sectionHead;
+      : wraps
+        ? styles.sectionHeadWrapping
+        : styles.sectionHead;
   return (
     <View
       style={
@@ -533,7 +569,7 @@ export function SectionHeader({
     >
       <Heading
         level={level}
-        style={accessory ? styles.sectionHeadTitle : styles.grow}
+        style={wraps ? styles.sectionHeadTitle : styles.grow}
         testID={testID}
         onLayout={
           compact || (headingLayout && testID)
@@ -586,7 +622,7 @@ export function Section({
         />
       ) : null}
       {action && !isAction ? (action as ReactNode) : null}
-      {children}
+      <SourceSection>{children}</SourceSection>
     </View>
   );
 }
@@ -649,6 +685,8 @@ export function InsetGroup({
         <Text
           wordSafe
           variant="groupHeader"
+          // A grouped list's section header, as UIKit's has the header trait.
+          accessibilityRole="header"
           style={{ marginBottom: rhythm.groupHeader }}
         >
           {header}
@@ -816,6 +854,8 @@ const styles = StyleSheet.create({
     borderRadius: radii.thumb,
     borderCurve: 'continuous',
   },
+  // On its own line, a long link wraps between words inside the column.
+  sectionActionWrapping: { maxWidth: '100%', flexShrink: 1 },
   insetGroup: {
     backgroundColor: colors.raised,
     borderRadius: radii.container,

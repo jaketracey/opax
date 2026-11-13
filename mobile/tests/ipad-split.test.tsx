@@ -37,6 +37,7 @@ jest.mock('../src/design/adaptive', () => {
       size: mockLayout.regular ? 'regular' : 'compact',
       regular: mockLayout.regular,
       wide: mockLayout.width >= 1100,
+      split: mockLayout.regular && mockLayout.width >= 700,
       width: mockLayout.width,
       height: 800,
       window: { width: mockLayout.width, height: 800 },

@@ -938,6 +938,12 @@ export interface EditionFacts {
     title: string;
     items: { label: string; pct: number }[];
     note: string | null;
+    /**
+     * The composer's word that the rows are parts of one whole. Absent when
+     * they are not, on editions from before the flag and on older cached
+     * projections.
+     */
+    whole?: boolean;
   } | null;
   /** The first timeline slide's dated events. */
   events: { date: string; text: string }[];
@@ -981,6 +987,7 @@ function editionFacts(slides: AppEdition['edition']['slides']): EditionFacts {
               pct: i.pct,
             })),
             note: bars.note?.trim() || null,
+            ...(typeof bars.whole === 'boolean' ? { whole: bars.whole } : {}),
           }
         : null,
     events:

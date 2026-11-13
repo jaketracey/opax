@@ -83,6 +83,7 @@ import {
   type PeopleRow,
 } from './model';
 import { directoryNotes } from './notes';
+import { useFloatingBarFoot } from '../../navigation/floating-bar';
 
 const titles: Record<DirectoryKind, string> = {
   person: 'Parliamentarians',
@@ -209,6 +210,7 @@ function DirectoryContent() {
 }
 function DirectoryView({ kind }: { kind: DirectoryKind }) {
   const adaptive = useAdaptiveDevice();
+  const foot = useFloatingBarFoot();
   const setSelectionParams = useSplitSelectionParams();
   const title = titles[kind];
   const load = useCallback(
@@ -307,7 +309,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
 
   // iPad regular width: list left, the record right, the selection in the
   // route (`/directory?kind=person&open=person:…`), as Bills does.
-  const split = useLayout().regular;
+  const split = useLayout().split;
   const selected = decodeEntry(params.open);
   const selectedKey = selected ? encodeEntry(selected) : null;
   const listRef = useRef<SectionList<Row, Section>>(null);
@@ -500,7 +502,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
         ref={listRef}
         testID={`directory-${kind}-screen`}
         style={styles.screen}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[styles.content, foot]}
         contentInsetAdjustmentBehavior="automatic"
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"

@@ -16,6 +16,7 @@ import { publishContents } from './contentsChannel';
 import { RecordLoadError } from './RecordLoadError';
 import { records } from './runtime';
 import { useRead } from './useRead';
+import { useFloatingBarFoot } from '../../navigation/floating-bar';
 
 /** Past this many sections the sheet gains a search field. */
 const SEARCH_FROM = 20;
@@ -59,6 +60,9 @@ export default function BillTextContents() {
     onSearchButtonPress: setQuery,
     onCancelButtonPress: () => setQuery(''),
   });
+  // The list has no foot padding of its own; on a tab page it ends above
+  // the floating Today and Search buttons.
+  const foot = useFloatingBarFoot(0);
   const needle = query.trim().toLocaleLowerCase('en-AU');
   const shown = needle
     ? sections.filter((section) =>
@@ -79,6 +83,7 @@ export default function BillTextContents() {
         <FlatList
           testID="bill-text-contents-screen"
           style={styles.list}
+          contentContainerStyle={foot}
           contentInsetAdjustmentBehavior="automatic"
           keyboardShouldPersistTaps="handled"
           data={shown}

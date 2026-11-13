@@ -25,6 +25,7 @@ import { presentSource } from '../../navigation/sheets';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { BlockSource } from '../your-mp/Evidence';
 import { pageActions } from './PageActions';
+import { useFloatingBarFoot } from '../../navigation/floating-bar';
 
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
@@ -64,6 +65,7 @@ export default function PartySources() {
     ],
   };
   const { onLayout, content } = useScreenColumn('readable');
+  const foot = useFloatingBarFoot();
   return (
     <>
       <RouteOptions
@@ -107,7 +109,7 @@ export default function PartySources() {
             contentInsetAdjustmentBehavior="automatic"
             stickySectionHeadersEnabled
             onLayout={onLayout}
-            contentContainerStyle={[styles.content, content]}
+            contentContainerStyle={[styles.content, content, foot]}
             sections={sections}
             keyExtractor={(d, i) => `${d.id}-${i}`}
             renderSectionHeader={({ section }) => (

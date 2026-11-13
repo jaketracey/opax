@@ -213,6 +213,8 @@ class SafetyTests(unittest.TestCase):
     def test_redaction_and_utf16_scan(self):
         with patch.dict(os.environ, {"APPLE_TEAM_ID": "TEST_VALUE_123", "ASC_KEY_PATH": "/dummy/key"}):
             self.assertNotIn("TEST_VALUE_123", redact("team=TEST_VALUE_123 /dummy/key"))
+        with patch.dict(os.environ, {"POSTHOG_CLI_API_KEY": "phx_SYNTHETIC_UPLOAD_KEY"}):
+            self.assertNotIn("phx_SYNTHETIC_UPLOAD_KEY", redact("key phx_SYNTHETIC_UPLOAD_KEY"))
         self.assertTrue(matches("sensitive".encode("utf-16-be"), "sensitive"))
 
     def test_private_key_multiline_command_output_is_redacted(self):
@@ -220,6 +222,16 @@ class SafetyTests(unittest.TestCase):
             log = Path(d) / "log"
             run_logged([sys.executable, "-c", "print('-----BEGIN ' + 'PRIVATE KEY-----'); print('keybytes'); print('-----END ' + 'PRIVATE KEY-----')"], log)
             self.assertNotIn("keybytes", log.read_text())
+
+    def test_build_steps_never_receive_the_symbol_upload_key(self):
+        with tempfile.TemporaryDirectory() as d, \
+             patch.dict(os.environ, {"POSTHOG_CLI_API_KEY": "phx_SYNTHETIC_UPLOAD_KEY"}):
+            log = Path(d) / "log"
+            show = [sys.executable, "-c", "import os; print(os.environ.get('POSTHOG_CLI_API_KEY', 'absent'))"]
+            run_logged(show, log, public_env=True)
+            self.assertEqual(log.read_text(), "absent\n")
+            run_logged(show, log)
+            self.assertEqual(log.read_text(), "[POSTHOG_CLI_API_KEY redacted]\n")
 
     def test_only_macho_signature_range_excluded(self):
         header = struct.pack("<8I", 0xfeedfacf, 0, 0, 0, 1, 16, 0, 0)
@@ -409,8 +421,12 @@ class ReleaseStepTests(unittest.TestCase):
                 for key in ("ASC_KEY_PATH", "ASC_KEY_ID", "ASC_ISSUER_ID"):
                     self.assertIn(self.values[key], cmd)
                 self.assertTrue(logged.call_args.kwargs["public_env"])
+                # Every archive writes its Hermes source map and chunk ID beside it.
+                self.assertIn("SOURCEMAP_FILE=" + str(out / "main.jsbundle.map"), cmd)
+                self.assertIn("OPAX_SYMBOLS_DIR=" + str(out), cmd)
                 step.run("export", mobile, out)
                 self.assertIn("-exportArchive", logged.call_args.args[0])
+                self.assertFalse(any(arg.startswith("SOURCEMAP_FILE=") for arg in logged.call_args.args[0]))
 
     def export_env(self, mobile, caller_path, tool_dirs=None):
         """Run the export step and return the environment handed to Popen."""
@@ -618,6 +634,60 @@ class ReleaseStepTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr.decode())
             self.assertIn("LOCKED", planted.read_text())
             self.assertNotIn("MUTATION", planted.read_text())
+
+
+class SourceMapTests(unittest.TestCase):
+    """The archive's composed Hermes map stays beside it, never in the app."""
+    chunk = "896a182b-d6a3-4253-bc6b-150f6ce96357"
+
+    def fixture(self, d):
+        root = Path(d)
+        app, evidence = root / "OPAX.xcarchive/Products/Applications/OPAX.app", root
+        app.mkdir(parents=True)
+        (app / "main.jsbundle").write_bytes(b"\xc6\x1f\xbc\x03 _posthogChunkIds " + self.chunk.encode())
+        (evidence / "main.jsbundle.map").write_text(json.dumps({
+            "version": 3, "sources": ["src/app/index.tsx"], "names": ["render"], "mappings": "AAAAA",
+            "x_hermes_function_offsets": {"0": [0]}}))
+        (evidence / "ios.chunk-id").write_text(self.chunk + "\n")
+        return app, evidence
+
+    def test_map_beside_the_archive_passes(self):
+        with tempfile.TemporaryDirectory() as d:
+            verify.verify_source_map(*self.fixture(d))
+
+    def test_missing_unreadable_or_packager_only_map_fails(self):
+        for change in ("missing", "not json", "no hermes offsets"):
+            with self.subTest(change=change), tempfile.TemporaryDirectory() as d:
+                app, evidence = self.fixture(d)
+                source_map = evidence / "main.jsbundle.map"
+                if change == "missing":
+                    source_map.unlink()
+                elif change == "not json":
+                    source_map.write_text("{")
+                else:
+                    source_map.write_text(json.dumps({"version": 3, "sources": ["a.js"], "mappings": "AAAA"}))
+                with self.assertRaises(ReleaseError):
+                    verify.verify_source_map(app, evidence)
+
+    def test_a_map_inside_the_app_fails(self):
+        for name in ("main.jsbundle.map", "assets/node_modules/lib/index.js.MAP"):
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as d:
+                app, evidence = self.fixture(d)
+                (app / name).parent.mkdir(parents=True, exist_ok=True)
+                (app / name).write_text("{}")
+                with self.assertRaises(ReleaseError):
+                    verify.verify_source_map(app, evidence)
+
+    def test_chunk_id_must_be_recorded_and_shipped(self):
+        for change in ("missing", "other bundle"):
+            with self.subTest(change=change), tempfile.TemporaryDirectory() as d:
+                app, evidence = self.fixture(d)
+                if change == "missing":
+                    (evidence / "ios.chunk-id").unlink()
+                else:
+                    (evidence / "ios.chunk-id").write_text("00000000-0000-4000-8000-000000000000\n")
+                with self.assertRaises(ReleaseError):
+                    verify.verify_source_map(app, evidence)
 
 
 class BundleAttackTests(unittest.TestCase):
@@ -1089,6 +1159,11 @@ class ProductionVoiceTests(unittest.TestCase):
         rows.append({"NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeDeviceID",
                      "NSPrivacyCollectedDataTypeLinked": False, "NSPrivacyCollectedDataTypeTracking": False,
                      "NSPrivacyCollectedDataTypePurposes": [analytics]})
+        # Crash reports add unlinked Crash Data; their Other Diagnostic Data is
+        # already in the label, linked, for App Functionality.
+        rows.append({"NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeCrashData",
+                     "NSPrivacyCollectedDataTypeLinked": False, "NSPrivacyCollectedDataTypeTracking": False,
+                     "NSPrivacyCollectedDataTypePurposes": [function]})
         return {"NSPrivacyTracking": False, "NSPrivacyCollectedDataTypes": rows,
             "NSPrivacyAccessedAPITypes": [{"NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
                                          "NSPrivacyAccessedAPITypeReasons": ["CA92.1"]}]}
@@ -1181,13 +1256,20 @@ class ProductionVoiceTests(unittest.TestCase):
 
     def test_analytics_types_alone_without_voice(self):
         analytics = "NSPrivacyCollectedDataTypePurposeAnalytics"
+        function = "NSPrivacyCollectedDataTypePurposeAppFunctionality"
         def manifest(**change):
             return {"NSPrivacyTracking": False, "NSPrivacyCollectedDataTypes": [
                 {"NSPrivacyCollectedDataType": "NSPrivacyCollectedDataType" + name,
                  "NSPrivacyCollectedDataTypeLinked": False, "NSPrivacyCollectedDataTypeTracking": False,
-                 "NSPrivacyCollectedDataTypePurposes": [analytics], **change}
-                for name in ("ProductInteraction", "DeviceID")]}
+                 "NSPrivacyCollectedDataTypePurposes": [purpose], **change}
+                for name, purpose in (("ProductInteraction", analytics), ("DeviceID", analytics),
+                                      ("CrashData", function), ("OtherDiagnosticData", function))]}
         verify.verify_collected_types(manifest(), False)
+        # Crash reports must be declared: the analytics types alone now fail.
+        without_crashes = manifest()
+        without_crashes["NSPrivacyCollectedDataTypes"] = without_crashes["NSPrivacyCollectedDataTypes"][:2]
+        with self.assertRaises(ReleaseError):
+            verify.verify_collected_types(without_crashes, False)
         for change in ({"NSPrivacyCollectedDataTypeLinked": True}, {"NSPrivacyCollectedDataTypeTracking": True},
                        {"NSPrivacyCollectedDataTypePurposes": [analytics, "NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising"]}):
             with self.subTest(change=change), self.assertRaises(ReleaseError):
@@ -1225,6 +1307,161 @@ class ProductionVoiceTests(unittest.TestCase):
             for marker in (b"DebugSyntheticEngineFactory", b"OPAXVoiceFixturePort", b"http://127.0.0.1:8923", b"test@example.invalid"):
                 binary.write_bytes(body + marker)
                 with self.subTest(marker=marker), self.assertRaises(ReleaseError): verify.verify_voice_native_code(app)
+
+
+class CrashSymbolKeyTests(unittest.TestCase):
+    """scripts/upload-crash-symbols.sh loads ~/.config/opax/posthog.env itself,
+    inside the upload only, and never prints the key. Every key here is invented;
+    a stub posthog-cli records its arguments and environment variable names,
+    never a value except the project and host, which are not secret."""
+    script = Path(__file__).resolve().parent / "upload-crash-symbols.sh"
+    chunk = "896a182b-d6a3-4253-bc6b-150f6ce96357"
+    key = "phx_INVENTED_UPLOAD_KEY_7f3a9c0d"
+    personal = "phx_INVENTED_PERSONAL_KEY_51d2e8aa"
+    host = "https://us.posthog.example"
+    skip_line = "Crash symbols: POSTHOG_CLI_API_KEY is not set; skipped the PostHog upload for ios 1.0.1 (40)."
+
+    def setUp(self):
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        root = Path(temp.name)
+        self.home = root / "home"
+        self.key_file = self.home / ".config/opax/posthog.env"
+        self.key_file.parent.mkdir(parents=True)
+        self.evidence = root / "evidence"
+        self.evidence.mkdir()
+        (self.evidence / "main.jsbundle.map").write_text(json.dumps({"version": 3, "sources": [], "mappings": ""}))
+        (self.evidence / "ios.chunk-id").write_text(self.chunk + "\n")
+        self.archive = root / "OPAX.xcarchive"
+        (self.archive / "dSYMs/OPAX.app.dSYM").mkdir(parents=True)
+        self.bin = root / "bin"
+        self.bin.mkdir()
+        self.calls = self.bin / "calls.jsonl"
+        stub = self.bin / "posthog-cli"
+        stub.write_text(f"#!{sys.executable}\n" + "\n".join((
+            "import json, os, sys",
+            "record = {'args': sys.argv[1:], 'names': sorted(os.environ),",
+            "          'project': os.environ.get('POSTHOG_CLI_PROJECT_ID'), 'host': os.environ.get('POSTHOG_CLI_HOST')}",
+            "with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'calls.jsonl'), 'a') as stream:",
+            "    stream.write(json.dumps(record) + '\\n')", "")))
+        stub.chmod(0o755)
+        # Another user's file: `id -u` answers a uid that owns nothing here.
+        self.foreign = root / "foreign"
+        self.foreign.mkdir()
+        (self.foreign / "id").write_text('#!/bin/sh\n[ "$1" = -u ] && { echo 4242; exit 0; }\nexec /usr/bin/id "$@"\n')
+        (self.foreign / "id").chmod(0o755)
+
+    def write_key_file(self, mode=0o600, body=None, **changes):
+        values = {"POSTHOG_PERSONAL_API_KEY": self.personal, "POSTHOG_CLI_TOKEN": self.key,
+                  "POSTHOG_HOST": self.host, "POSTHOG_CLI_API_KEY": self.key, "POSTHOG_PROJECT_ID": "507367", **changes}
+        self.key_file.write_text(body or "".join(f"export {name}={value}\n" for name, value in values.items()))
+        self.key_file.chmod(mode)
+
+    def env(self, path=(), **extra):
+        env = {name: value for name, value in os.environ.items() if not name.startswith("POSTHOG_")}
+        env.update(HOME=str(self.home), PATH=os.pathsep.join([*map(str, path), str(self.bin), env.get("PATH", "")]))
+        env.update(extra)
+        return env
+
+    def command(self, trace=False):
+        return ["bash", *(["-x"] if trace else []), str(self.script),
+                "ios", "1.0.1", "40", str(self.evidence), str(self.archive)]
+
+    def upload(self, trace=False, path=(), **extra):
+        return subprocess.run(self.command(trace), capture_output=True, text=True,
+                              env=self.env(path, **extra), timeout=120)
+
+    def stub_calls(self):
+        if not self.calls.exists():
+            return []
+        return [json.loads(line) for line in self.calls.read_text().splitlines()]
+
+    def assert_uploaded(self, result, host):
+        self.assertEqual(result.returncode, 0, result.stderr)
+        calls = self.stub_calls()
+        self.assertEqual([call["args"][:2] for call in calls], [["hermes", "upload"], ["dsym", "upload"]])
+        for call in calls:
+            self.assertEqual(call["project"], "507367")
+            self.assertEqual(call["host"], host)
+            self.assertIn("POSTHOG_CLI_API_KEY", call["names"])
+        self.assertTrue(result.stdout.splitlines()[-1].startswith("Crash symbols: uploaded ios 1.0.1 (40)"))
+        return calls
+
+    def assert_not_uploaded(self, result, code, line):
+        self.assertEqual(result.returncode, code, result.stderr)
+        output = (result.stdout + result.stderr).splitlines()
+        self.assertEqual(len(output), 1, output)
+        self.assertIn(line, output[0])
+        self.assertEqual(self.stub_calls(), [])
+
+    def needs_node(self):
+        if not shutil.which("node"):
+            self.skipTest("the upload stages the source map with node")
+
+    def test_a_private_key_file_uploads_to_the_opax_project(self):
+        self.needs_node()
+        self.write_key_file()
+        self.assert_uploaded(self.upload(), self.host)
+
+    def test_a_key_or_host_the_caller_set_wins_over_the_file(self):
+        self.needs_node()
+        # A preset key leaves the file unread, even a loose one.
+        self.write_key_file(mode=0o644)
+        calls = self.assert_uploaded(self.upload(POSTHOG_CLI_API_KEY="phx_INVENTED_CALLER_KEY"), None)
+        self.assertNotIn("POSTHOG_PERSONAL_API_KEY", calls[0]["names"])
+        self.calls.unlink()
+        self.write_key_file()
+        self.assert_uploaded(self.upload(POSTHOG_CLI_HOST="https://eu.posthog.example"), "https://eu.posthog.example")
+
+    def test_without_the_file_it_skips_with_one_line(self):
+        result = self.upload()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual((result.stdout + result.stderr).splitlines(), [self.skip_line])
+        self.assertEqual(self.stub_calls(), [])
+
+    def test_a_loose_or_foreign_key_file_is_refused(self):
+        for mode, path in ((0o644, ()), (0o640, ()), (0o600, (self.foreign,))):
+            with self.subTest(mode=oct(mode), foreign=bool(path)):
+                self.write_key_file(mode=mode)
+                self.assert_not_uploaded(self.upload(path=path), 0, "posthog.env must be mode 600 and yours; skipped")
+
+    def test_another_project_is_refused(self):
+        cases = (("the file's POSTHOG_PROJECT_ID", {"POSTHOG_PROJECT_ID": "999999"}, {}),
+                 ("the caller's POSTHOG_CLI_PROJECT_ID", {}, {"POSTHOG_CLI_PROJECT_ID": "999999"}),
+                 ("the file's POSTHOG_CLI_PROJECT_ID", {"POSTHOG_CLI_PROJECT_ID": "0507367"}, {}))
+        for label, in_file, from_caller in cases:
+            with self.subTest(label):
+                self.write_key_file(**in_file)
+                name = next(iter({**in_file, **from_caller}))
+                self.assert_not_uploaded(self.upload(**from_caller), 1, f"{name} is not the OPAX project (507367); refused")
+
+    def test_the_key_never_reaches_output_or_the_log(self):
+        self.needs_node()
+        secrets = (self.key, self.personal)
+        self.write_key_file()
+        # xtrace on from the start, as `bash -x` would run it during debugging.
+        result = self.upload(trace=True)
+        self.assert_uploaded(result, self.host)
+        for secret in secrets:
+            self.assertNotIn(secret, result.stdout + result.stderr)
+        # The silent load hides the file's own lines from a stderr trace, but a
+        # trace sent elsewhere (BASH_XTRACEFD) would not be: xtrace is off there.
+        for traced in (f". {self.key_file}", "HAVE_KEY="):
+            self.assertNotIn(traced, result.stderr)
+        # The release log: the parent never holds the key, so it cannot redact it.
+        self.assertFalse(any(secret in os.environ.values() for secret in secrets))
+        log = self.evidence / "crash-symbols.log"
+        run_logged(self.command(trace=True), log, env=self.env())
+        self.assertIn("Crash symbols: uploaded ios 1.0.1 (40)", log.read_text())
+        for secret in secrets:
+            self.assertNotIn(secret, log.read_text())
+        # A malformed file makes the shell name the stray word; that stays hidden.
+        self.calls.unlink()
+        self.write_key_file(body=f"export POSTHOG_PROJECT_ID=507367\nPOSTHOG_CLI_API_KEY= {self.key}\n")
+        result = self.upload(trace=True)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("could not load", result.stderr)
+        self.assertNotIn(self.key, result.stdout + result.stderr)
 
 
 from test_android_release import AndroidReleaseTests

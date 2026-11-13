@@ -1,3 +1,4 @@
+import { AndroidFocusBack } from '../../navigation/AndroidFocusBack';
 import { RouteOptions } from '../../navigation/preview';
 import { useAndroidRootScroll } from '../../navigation/useAndroidRootScroll';
 import { useScreenReady } from '../../analytics/timing';
@@ -29,7 +30,7 @@ import { useReduceMotion } from '../../design/accessibility';
 import {
   RegionProvider,
   SidebarSafe,
-  sizeClassFor,
+  splitAllowed,
   useAdaptiveDevice,
   useLayout,
   useMeasuredRegion,
@@ -56,6 +57,7 @@ import { AskThread } from './AskThread';
 import { useAskStageAnnouncement } from './AskStatus';
 import { askGround } from './ground';
 import type { Followup } from './model';
+import { useReturnFromAsk } from './open';
 import { openAskOptions, topics } from './Options';
 import { rosterProfiles, type AskPerson } from './people';
 import {
@@ -67,6 +69,7 @@ import {
   useAskScreenFocus,
   type AskScope,
 } from './session';
+import { useAskReturn } from './return';
 import { AskPaneProvider, useAskSources } from './SourcesPane';
 import { chatsSnapshot, loadChats, subscribeChats } from './store';
 import { useConversationAnchor } from './scroll-anchor';
@@ -104,6 +107,10 @@ export default function AskScreen() {
   );
   const account = useAccount();
   const signedIn = !!account.status?.signedIn;
+  // An arrival from another tab's page leaves a way back to it (4.2).
+  const askReturn = useAskReturn();
+  const returnFromAsk = useReturnFromAsk();
+  const goBack = useCallback(() => void returnFromAsk(), [returnFromAsk]);
   const params =
     useLocalSearchParams<Partial<Record<keyof AskScope | 'entry', string>>>();
   const reduceMotion = useReduceMotion();
@@ -135,9 +142,9 @@ export default function AskScreen() {
   const [onRoom, room] = useMeasuredRegion();
   const outer = useLayout();
   const adaptive = useAdaptiveDevice();
+  // The sources pane joins at the split breakpoint, as every split does.
   const docked =
-    adaptive &&
-    sizeClassFor(room?.width ?? outer.width, outer.rule) === 'regular';
+    adaptive && splitAllowed(room?.width ?? outer.width, outer.rule);
   const headerBottom = useHeaderBottom(!idle && !docked);
   const column = useScreenColumn('readable');
   const { overlap: keyboard, visible: keyboardVisible } =
@@ -307,6 +314,7 @@ export default function AskScreen() {
     profiles,
     onAsk: (q) => void ask(q),
     readFailed,
+    offline,
   });
   const dock = (
     <AskDock
@@ -362,11 +370,15 @@ export default function AskScreen() {
       {androidRoot.title}
       <RegionProvider value={column.inner}>
         {idle ? (
+          // Docked, the list is split across the panes (specs/ask.md 2.8):
+          // the conversations here, the day's starters in the pane, so
+          // neither pane repeats the other.
           <AskIdle
             onAsk={(q) => void ask(q)}
             offline={offline}
             readFailed={readFailed}
-            starterCount={docked ? 3 : 4}
+            showStarters={!docked}
+            conversationCount={docked ? 8 : 3}
           />
         ) : (
           <AskThread
@@ -405,13 +417,25 @@ export default function AskScreen() {
               signedIn,
               onNew: newConversation,
               onHistory: () => router.push(conversationsRoute),
+              back: askReturn
+                ? { name: askReturn.name, onPress: goBack }
+                : null,
             }),
-            // Only the idle list keeps a large title. Two panes stay inline.
+            // Only the idle list keeps a large title. On iPad two panes stay
+            // inline, as Bills' split does; a regular iPhone (Duo) keeps the
+            // large title beside its panes, as Bills and Today do there.
             ...(Platform.OS === 'ios'
-              ? { headerLargeTitleEnabled: idle && !docked }
+              ? {
+                  headerLargeTitleEnabled:
+                    idle && (!docked || outer.rule !== 'pad'),
+                }
               : null),
           }}
         />
+        {/* Android: system Back on Ask goes back to that page as well. */}
+        {Platform.OS === 'android' && askReturn ? (
+          <AndroidFocusBack active onBack={goBack} />
+        ) : null}
         <AskRevealContext.Provider value={revealClaim}>
           <SidebarSafe style={[styles.fill, groundStyle]}>
             {/* Keep the first-child chain intact for UIKit's large-title tracking.

@@ -104,14 +104,20 @@ export function useTodayDotsScroll() {
   return { scrollRef, scroll, expandedHeader };
 }
 
-/** Decorative only. Hidden at AX sizes so the title and first card have room. */
+/**
+ * Decorative only. Hidden at AX sizes so the title and first card have room,
+ * and on a regular phone (iPhone Duo): there the art fell under the large
+ * title and the date, and text is never drawn over it.
+ */
 export function AustraliaDots(props: {
   state: DotState | null;
   scroll: SharedValue<number>;
   expandedHeader: SharedValue<number>;
 }) {
   const { fontScale } = useWindowDimensions();
-  if (isAccessibilityCategory(fontScale)) return null;
+  const { rule } = useLayout();
+  if (isAccessibilityCategory(fontScale) || rule === 'phone-regular')
+    return null;
   return <DotField {...props} />;
 }
 

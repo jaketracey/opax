@@ -1,4 +1,4 @@
-import { type ComponentProps } from 'react';
+import { Children, type ComponentProps } from 'react';
 import { View } from 'react-native';
 import { PadGrid, useLayout, useMeasuredRegion } from '../../design/adaptive';
 import { ReservedRegionArea, useReservedRegions } from '../../design/fold-area';
@@ -8,7 +8,10 @@ import { rhythm } from '../../design/tokens';
 /** Local to these surfaces while the shared design layer belongs to foundation. */
 export function SurfaceGrid(props: ComponentProps<typeof PadGrid>) {
   const { regular } = useLayout();
-  if (!regular) return <>{props.children}</>;
+  // One card takes the whole width: a second column with nothing in it
+  // left half of a regular phone empty (Today, a Victorian seat in Nov 2026).
+  if (!regular || Children.toArray(props.children).length < 2)
+    return <>{props.children}</>;
   return (
     <ReservedRegionArea>
       <FoldGrid {...props} />

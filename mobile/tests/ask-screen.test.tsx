@@ -1,6 +1,9 @@
 import { withNavigationOptions } from './navigation-options';
 import { useState } from 'react';
-import { HeaderHeightContext } from 'expo-router/react-navigation';
+import {
+  HeaderHeightContext,
+  NavigationContainerRefContext,
+} from 'expo-router/react-navigation';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import {
   act,
@@ -13,6 +16,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import {
   AccessibilityInfo,
   ActivityIndicator,
+  BackHandler,
   Dimensions,
   InteractionManager,
   Keyboard,
@@ -49,9 +53,11 @@ import {
   takeFocusRequest,
 } from '../src/design/keyboard';
 import { useOpenAsk } from '../src/features/ask/open';
+import { askReturnSnapshot, setAskReturn } from '../src/features/ask/return';
 import { fromWebPath } from '../src/navigation/external';
 import * as Duo from '../modules/opax-duo';
 import {
+  currentRule,
   resetAdaptiveDeviceForTests,
   setWindowTraitsOverride,
 } from '../src/design/adaptive';
@@ -73,6 +79,9 @@ jest.mock('expo-router', () => ({
   },
   useLocalSearchParams: jest.fn(() => ({})),
   useSegments: () => ['(tabs)', '(today)'],
+  // As a focused screen: AndroidFocusBack's handler, while it is mounted.
+  useFocusEffect: (effect: () => void | (() => void)) =>
+    jest.requireActual('react').useEffect(effect, [effect]),
   router: {
     push: jest.fn(),
     navigate: jest.fn(),
@@ -153,9 +162,16 @@ jest.mock('../src/features/ask/Options', () => ({
   topics: { housing: 'Housing' },
   openAskOptions: jest.fn(),
 }));
+// The real pane only where a test draws both panes (`mockRealPane`).
+let mockRealPane = false;
 jest.mock('../src/features/ask/SourcesPane', () => ({
   AskPaneProvider: ({ children }: { children: unknown }) => children,
-  useAskSources: () => ({ context: null, onScroll: undefined, pane: null }),
+  useAskSources: (...args: unknown[]) =>
+    mockRealPane
+      ? jest
+          .requireActual('../src/features/ask/SourcesPane')
+          .useAskSources(...args)
+      : { context: null, onScroll: undefined, pane: null },
   useAskPane: () => null,
 }));
 
@@ -224,6 +240,7 @@ afterEach(async () => {
   jest.mocked(useSeat).mockReturnValue({ status: 'none' } as never);
   jest.mocked(catalogs.roster).mockRejectedValue(new Error('Offline'));
   mockDirectory.current = null;
+  setAskReturn(null);
 });
 async function mount(screen = <AskScreen />) {
   await act(async () => {
@@ -270,7 +287,8 @@ test.each([
       },
       clarify: { ...base, clarify: { question: 'A fixture question?' } },
     };
-    const docked = adaptive && width >= 560;
+    // Two panes from the 700pt split breakpoint, on any device.
+    const docked = adaptive && width >= 700;
     try {
       for (const [state, value] of Object.entries(states)) {
         snapshot.mockReturnValue(value);
@@ -284,8 +302,12 @@ test.each([
             );
           });
         expect(view!.root.findByType(AskColumns).props.docked).toBe(docked);
+        // Idle keeps the large title; docked, only a regular iPhone (Duo)
+        // keeps it, as its Bills and Today do. iPad's two panes are inline.
         expect(mockBar.options.headerLargeTitleEnabled).toBe(
-          os === 'ios' ? state === 'idle' && !docked : undefined,
+          os === 'ios'
+            ? state === 'idle' && (!docked || currentRule() !== 'pad')
+            : undefined,
         );
       }
     } finally {
@@ -884,6 +906,128 @@ test('Conversations hides with none saved; the bar keeps Conversations, New ques
       bar().unstable_headerRightItems().length,
   ).toBeLessThanOrEqual(3);
   expect(barButton('Talk')).toBeUndefined();
+});
+
+describe('the way back to the page an arrival came from (journeys/ask.md 4.2)', () => {
+  // The app's navigation container: the tab navigator holds Ask's tab.
+  const container = {
+    getRootState: () => ({
+      key: 'root',
+      routes: [
+        {
+          name: '(tabs)',
+          state: {
+            key: 'tabs',
+            index: 2,
+            routes: [
+              { name: '(today)' },
+              { name: '(search)' },
+              { name: '(ask)' },
+            ],
+          },
+        },
+      ],
+    }),
+    dispatch: jest.fn(),
+  };
+  const mountInApp = () =>
+    mount(
+      <NavigationContainerRefContext.Provider value={container as never}>
+        <AskScreen />
+      </NavigationContainerRefContext.Provider>,
+    );
+  const jumpBack = {
+    type: 'JUMP_TO',
+    target: 'tabs',
+    payload: { name: '(search)' },
+  };
+  beforeEach(() => container.dispatch.mockClear());
+
+  test('iOS: the bar leads with a back item named for the page, which switches back to its tab', async () => {
+    setAskReturn({ tab: '(search)', name: 'Sam Placeholder' });
+    await mountInApp();
+    const [back, history, ...rest] = bar().unstable_headerLeftItems();
+    expect(rest).toEqual([]);
+    expect(back).toMatchObject({
+      type: 'button',
+      label: 'Sam Placeholder',
+      accessibilityLabel: 'Back to Sam Placeholder',
+      testID: 'ask-back',
+      icon: { type: 'sfSymbol', name: 'chevron.backward' },
+      sharesBackground: false,
+    });
+    expect(history).toMatchObject({ label: 'Your conversations' });
+    await act(async () => (back as { onPress: () => void }).onPress());
+    expect(container.dispatch).toHaveBeenCalledTimes(1);
+    expect(container.dispatch).toHaveBeenCalledWith(jumpBack);
+    expect(askReturnSnapshot()).toBeNull();
+    expect(
+      bar()
+        .unstable_headerLeftItems()
+        .map((item) => item.label),
+    ).toEqual(['Your conversations']);
+  });
+
+  test('a visit by the Ask tab has no back item and leaves system Back alone', async () => {
+    const platform = jest.replaceProperty(Platform, 'OS', 'android');
+    const add = jest.spyOn(BackHandler, 'addEventListener');
+    try {
+      await mountInApp();
+      expect(add).not.toHaveBeenCalled();
+      expect(
+        bar()
+          .unstable_headerLeftItems()
+          .map((item) => item.label),
+      ).toEqual(['Your conversations']);
+    } finally {
+      add.mockRestore();
+      platform.restore();
+    }
+  });
+
+  test('Android: the navigation icon and system Back both go back to the page', async () => {
+    const platform = jest.replaceProperty(Platform, 'OS', 'android');
+    const listeners = new Set<() => boolean | null | undefined>();
+    const add = jest
+      .spyOn(BackHandler, 'addEventListener')
+      .mockImplementation((_event, handler) => {
+        listeners.add(handler);
+        return { remove: () => listeners.delete(handler) };
+      });
+    try {
+      setAskReturn({ tab: '(search)', name: 'Sam Placeholder' });
+      await mountInApp();
+      // Material's navigation icon, outermost in the app bar.
+      let header!: ReactTestRenderer;
+      act(() => {
+        header = create(
+          (
+            bar() as unknown as { headerLeft: () => React.ReactElement }
+          ).headerLeft(),
+        );
+      });
+      const icon = header.root.findAll(
+        (n) =>
+          n.props.testID === 'ask-back' &&
+          typeof n.props.onPress === 'function',
+      )[0]!;
+      expect(icon.props.accessibilityLabel).toBe('Back to Sam Placeholder');
+      expect(listeners.size).toBe(1);
+      let handled: boolean | null | undefined;
+      await act(async () => {
+        handled = [...listeners][0]!();
+      });
+      expect(handled).toBe(true);
+      expect(container.dispatch).toHaveBeenCalledWith(jumpBack);
+      expect(askReturnSnapshot()).toBeNull();
+      // Used once: Back on Ask is the tab bar's own again.
+      expect(listeners.size).toBe(0);
+      act(() => header.unmount());
+    } finally {
+      add.mockRestore();
+      platform.restore();
+    }
+  });
 });
 
 test('a deep-linked draft starts a new conversation and sends nothing', async () => {
@@ -1803,4 +1947,75 @@ test('while an answer runs, Options and Clear are unavailable; an arrival waitin
   expect(disabled('ask-composer-options')).toBe(false);
   expect(disabled('ask-options-clear')).toBe(false);
   await act(async () => finish(answer));
+});
+
+// Build 61 on an unfolded iPhone Duo drew Try asking and Conversations in
+// both panes, each with its own starter set (13 Nov, Jake's screenshots).
+test.each([
+  ['unfolded Duo, landscape beside the rail', 880, 669, true],
+  ['unfolded Duo, portrait over the floating tab bar', 669, 951, false],
+] as const)(
+  '%s: one Try asking and one Conversations list across the panes',
+  async (_name, width, height, docked) => {
+    const window = Dimensions.get('window');
+    const now = jest
+      .spyOn(Date, 'now')
+      .mockReturnValue(Date.parse('2026-11-13T04:00:00Z'));
+    jest.mocked(chatsSnapshot).mockImplementation(() => oneChat);
+    mockRealPane = true;
+    act(() => {
+      Dimensions.set({ window: { ...window, width, height } });
+      setWindowTraitsOverride({
+        horizontal: 'regular',
+        vertical: 'regular',
+        foldable: true,
+        verticalBars: docked,
+      });
+      resetAdaptiveDeviceForTests();
+    });
+    try {
+      await mount();
+      expect(view!.root.findByType(AskColumns).props.docked).toBe(docked);
+      const hostIds = (id: string) =>
+        view!.root.findAll(
+          (n) => typeof n.type === 'string' && n.props.testID === id,
+        );
+      const starterLists =
+        hostIds('ask-starters').length + hostIds('ask-pane-starters').length;
+      const conversationLists =
+        hostIds('ask-conversations').length +
+        hostIds('ask-pane-conversations').length;
+      expect(starterLists).toBe(1);
+      expect(conversationLists).toBe(1);
+      // Docked, the pane is the detail side: the day's starters; the
+      // conversations stay in the column with the composer.
+      expect(hostIds('ask-pane-starters')).toHaveLength(docked ? 1 : 0);
+      expect(hostIds('ask-conversations')).toHaveLength(1);
+      expect(hostIds('ask-pane-idle-list')).toHaveLength(docked ? 1 : 0);
+      const prefix = docked ? 'ask-pane' : 'ask';
+      const shown = [0, 1, 2, 3].map((i) =>
+        a11y(`${prefix}-starter-${i}`, 'accessibilityLabel'),
+      );
+      expect(shown).toEqual(startersFor(Date.parse('2026-11-13T04:00:00Z'), 4));
+      // A regular iPhone keeps the large title at idle, as its Bills does.
+      expect(mockBar.options.headerLargeTitleEnabled).toBe(true);
+    } finally {
+      await act(async () => {
+        view?.unmount();
+        view = null;
+        Dimensions.set({ window });
+        setWindowTraitsOverride(undefined);
+        resetAdaptiveDeviceForTests();
+      });
+      mockRealPane = false;
+      now.mockRestore();
+    }
+  },
+);
+
+test('a shorter starter list is the same day’s set, never a different one', () => {
+  const day = Date.parse('2026-11-13T04:00:00Z');
+  const four = startersFor(day, 4);
+  for (const count of [1, 2, 3])
+    expect(startersFor(day, count)).toEqual(four.slice(0, count));
 });

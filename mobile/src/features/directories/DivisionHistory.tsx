@@ -47,6 +47,7 @@ import { Heading } from '../../design/text';
 import { colors, layout, rhythm } from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { canonicalUrl, openOnWeb } from '../../navigation/external';
+import { trackShare } from '../../navigation/share';
 import { billRoute } from '../../navigation/routes';
 import { filtersRoute } from '../../navigation/routes/filters';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
@@ -61,6 +62,7 @@ import {
 import { divisionsFilterModel } from '../sheets/filter-models';
 import { loadDivisionHistory, type DivisionRecord } from './division-data';
 import type { DivisionRow as Division } from './model';
+import { useFloatingBarFoot } from '../../navigation/floating-bar';
 
 const PATH = '/bills?view=divisions';
 const TITLE = 'Votes in parliament';
@@ -279,6 +281,7 @@ export default function DivisionHistory() {
   } = useCatalogRecord(load);
   const list = useRef<SectionList<Division, HistorySection>>(null);
   const column = useScreenColumn();
+  const foot = useFloatingBarFoot();
   const [inset, setInset] = useState(0);
   const [text, setText] = useState('');
   const [query, setQuery] = useState('');
@@ -547,7 +550,9 @@ export default function DivisionHistory() {
                   symbol: 'link',
                   onPress: () => {
                     void copyText(canonicalUrl(PATH)).then((copied) => {
-                      if (copied) haptic('success');
+                      if (!copied) return;
+                      haptic('success');
+                      trackShare('copy_link', PATH);
                     });
                   },
                 },
@@ -577,7 +582,7 @@ export default function DivisionHistory() {
                 scrollEventThrottle={16}
                 testID="division-history-screen"
                 style={styles.screen}
-                contentContainerStyle={[styles.content, column.content]}
+                contentContainerStyle={[styles.content, column.content, foot]}
                 onLayout={column.onLayout}
                 contentInsetAdjustmentBehavior="automatic"
                 keyboardDismissMode="on-drag"

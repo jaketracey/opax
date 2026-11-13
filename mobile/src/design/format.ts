@@ -101,6 +101,22 @@ export function moneyAccessibilityLabel(
   return `${sign}${formatCount(Math.round(amount))} dollars`;
 }
 
+/**
+ * A drawn figure as VoiceOver and TalkBack should say it: each compact sum
+ * in words ("$1.1bn" is "1.1 billion dollars", "$448k" is "448 thousand
+ * dollars"), as `moneyAccessibilityLabel` says the ones the app formats
+ * itself. Anything else ("42%", "193") is left as drawn.
+ */
+export function spokenFigures(text: string): string {
+  return text.replace(
+    /(-|\u2212)?\$(\d[\d,]*(?:\.\d+)?)(k|m|bn)\b/g,
+    (_, sign: string | undefined, amount: string, unit: string) =>
+      `${sign ? 'minus ' : ''}${amount} ${
+        unit === 'k' ? 'thousand' : unit === 'm' ? 'million' : 'billion'
+      } dollars`,
+  );
+}
+
 /** A share of a whole, one decimal: "78.4%". Takes a percentage, not a fraction. */
 export function formatPercent(value: number, decimals = 1): string {
   if (!Number.isFinite(value)) return '';

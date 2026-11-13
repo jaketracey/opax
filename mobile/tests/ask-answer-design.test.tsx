@@ -30,7 +30,8 @@ import {
 } from '../src/features/ask/model';
 import type { AskPerson } from '../src/features/ask/people';
 import { copyText } from '../src/features/records/actions';
-import { shareRecord } from '../src/navigation/share';
+import { shareRecord, trackShare } from '../src/navigation/share';
+import { track } from '../src/analytics';
 import { presentSheet, presentSource } from '../src/navigation/sheets';
 
 jest.mock('expo-router', () => {
@@ -86,7 +87,12 @@ jest.mock('../src/navigation/sheets', () => ({
   presentSource: jest.fn(),
   presentSheet: jest.fn(),
 }));
+jest.mock('../src/analytics', () => ({
+  ...jest.requireActual('../src/analytics'),
+  track: jest.fn(),
+}));
 jest.mock('../src/navigation/share', () => ({
+  trackShare: jest.fn(),
   shareRecord: jest.fn().mockResolvedValue(undefined),
 }));
 jest.mock('../src/features/records/actions', () => ({
@@ -454,6 +460,11 @@ test('the foot is the dated Answered line and one answer menu', async () => {
   await act(async () => menuButton('Copy answer').props.onPress());
   expect(copyText).toHaveBeenCalledWith(expect.stringContaining(question.text));
   expect(haptic).toHaveBeenCalledWith('success');
+  // One opax_share of kind "answer", never the copied words.
+  expect(jest.mocked(trackShare).mock.calls).toEqual([['answer']]);
+  jest.mocked(copyText).mockResolvedValueOnce(false);
+  await act(async () => menuButton('Copy answer').props.onPress());
+  expect(trackShare).toHaveBeenCalledTimes(1);
   act(() => menuButton('Share question').props.onPress());
   expect(shareRecord).toHaveBeenCalledWith(
     expect.objectContaining({ path: '/ask', title: question.text }),
@@ -706,6 +717,21 @@ describe('the iPad pane is never empty', () => {
     expect(renderer.root.findByType(RecordDetail).props.entry.title).toBe(
       title,
     );
+    // The pane's record opened in place: one source open, placed, unnamed.
+    expect(
+      jest
+        .mocked(track)
+        .mock.calls.filter(([event]) => event === 'opax_source_open'),
+    ).toEqual([
+      [
+        'opax_source_open',
+        {
+          from_section: 'other',
+          destination: 'app',
+          placement: 'sources_pane',
+        },
+      ],
+    ]);
   });
   test('idle: Try asking, whose starters ask at once', () => {
     const { words, renderer, press } = drawPane([]);

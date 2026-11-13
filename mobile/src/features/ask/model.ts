@@ -1,5 +1,6 @@
 import type { Roster, Slugs } from '../../api/catalog-decoders';
 import { passageText, serverPassage } from '../../api/passage-text';
+import { followupKinds, type FollowupKind } from '../../analytics/events';
 // Contracts: portal/src/index.ts AskInput, askPayload, withAskedAs;
 // portal/public/app.js sendChat, trimTurn, filterChipSpecs and home.js.
 export type AskOptions = {
@@ -56,7 +57,13 @@ export type Source = {
   source?: string;
   answerRanges: Range[];
 };
-export type Followup = { question: string; evidence?: string; source?: string };
+/** `kind` is the server's coarse category for analytics, kept only from a fixed list. */
+export type Followup = {
+  question: string;
+  evidence?: string;
+  source?: string;
+  kind?: FollowupKind;
+};
 export type Answer = {
   answer: string;
   sources: Source[];
@@ -240,6 +247,9 @@ export function decodeFollowups(raw: unknown): Followup[] {
                     ? { evidence: v.evidence }
                     : {}),
                   ...(typeof v.source === 'string' ? { source: v.source } : {}),
+                  ...(followupKinds.includes(v.kind as FollowupKind)
+                    ? { kind: v.kind as FollowupKind }
+                    : {}),
                 },
               ]
             : [];

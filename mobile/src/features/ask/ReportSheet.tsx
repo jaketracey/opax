@@ -1,5 +1,5 @@
 import { RouteOptions } from '../../navigation/preview';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
   Linking,
@@ -15,6 +15,7 @@ import {
   useLocalSearchParams,
   type NativeStackHeaderItem,
 } from 'expo-router';
+import { track } from '../../analytics';
 import { useScreenMargin } from '../../design/adaptive';
 import { Button } from '../../design/controls';
 import { copy } from '../../design/copy';
@@ -75,10 +76,22 @@ export default function ReportSheet() {
           legacy,
         })
       : null;
+  // One report_opened per sheet with an answer to report.
+  const opened = useRef(false);
+  useEffect(() => {
+    if (!found || opened.current) return;
+    opened.current = true;
+    track('opax_answer_feedback', { surface: 'ask', action: 'report_opened' });
+  }, [found]);
   async function email() {
     if (!mail) return;
     try {
       await Linking.openURL(mail.url);
+      // Mail opened with the report; whether it was sent is never known.
+      track('opax_answer_feedback', {
+        surface: 'ask',
+        action: 'report_sent_mail',
+      });
       router.back();
     } catch {
       setNoMail(true);

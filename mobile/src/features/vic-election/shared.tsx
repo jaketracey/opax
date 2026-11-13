@@ -18,6 +18,7 @@ import { vicElectionRoute } from '../../navigation/routes/vic-election';
 import { vicCopy as c } from './copy';
 import type { Overview } from './decoders';
 import { ElectionUnavailable } from './reads';
+import { useFloatingBarFoot } from '../../navigation/floating-bar';
 
 export const shortDate = (d: string | number) => formatDate(d, 'short') ?? '';
 export const SectionTitle = ({ children }: { children: string }) => (
@@ -215,6 +216,7 @@ export function ElectionList({
   scrollToOverflowEnabled?: boolean;
 }) {
   const column = useScreenColumn();
+  const foot = useFloatingBarFoot();
   return (
     <StatePageProvider>
       <SidebarSafe style={styles.screen}>
@@ -226,6 +228,7 @@ export function ElectionList({
             contentContainerStyle={[
               column.content,
               { paddingBottom: rhythm.section },
+              foot,
             ]}
             onLayout={(e) => {
               column.onLayout(e);

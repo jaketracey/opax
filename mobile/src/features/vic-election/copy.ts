@@ -2,6 +2,12 @@
 export const vicCopy = {
   title: 'Victorian election 2026',
   bar: 'Victorian election',
+  /**
+   * Android's toolbar title is one line beside the search and More actions;
+   * at accessibility sizes the full bar title ends "Victorian ele…". The
+   * page heading below carries the full title.
+   */
+  barShort: 'Vic election',
   placeholder: 'Suburb, postcode or district',
   yourDistrict: 'Your district',
   stateDistrict: 'Your state district',

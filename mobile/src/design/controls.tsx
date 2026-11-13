@@ -487,7 +487,15 @@ export function FollowButton({
           up rather than jumping. The limit's Edit Following arrives with it. */}
       <HeightReveal reduceMotion={reduceMotion} testID={`${testID}-reveal`}>
         {message ? (
-          <Group gap={rhythm.tight} style={styles.followMessage}>
+          <Group
+            gap={rhythm.tight}
+            style={[
+              styles.followMessage,
+              // Android buttons start-align, so the limit's Edit Following
+              // would sit at the message's leading edge, off the centre line.
+              centre ? styles.followGroupCentred : null,
+            ]}
+          >
             <Animated.View style={{ opacity: confirmation ? opacity : 1 }}>
               <Text
                 wordSafe
@@ -1007,10 +1015,13 @@ export function IconButton({
   disabled = false,
   badge,
   testID,
+  ref,
 }: {
   symbol: SFSymbol;
   accessibilityLabel: string;
   onPress: () => void;
+  /** The button's view, for moving VoiceOver or TalkBack back to it. */
+  ref?: Ref<View>;
   variant?: IconButtonVariant;
   size?: keyof typeof iconButtonSizes;
   /** A toggled control (Captions, Mute): navy while on, said as selected. */
@@ -1027,6 +1038,7 @@ export function IconButton({
   return (
     <Hoverable effect={disabled ? 'none' : 'highlight'} cornerRadius={box / 2}>
       <Pressable
+        ref={ref}
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel}
         accessibilityState={{
@@ -1895,6 +1907,7 @@ const styles = StyleSheet.create({
   shrink: { flexShrink: 1 },
   hug: { alignSelf: 'flex-start' },
   followCentred: { alignSelf: 'center', alignItems: 'center' },
+  followGroupCentred: { alignItems: 'center' },
   followMessageCentred: { textAlign: 'center' },
   full: { alignSelf: 'stretch' },
   steps: {
@@ -2023,19 +2036,24 @@ const styles = StyleSheet.create({
   segmentInline: { flex: 1, flexBasis: 0 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.tight },
   field: { gap: rhythm.tight, alignSelf: 'stretch' },
+  // The title keeps its own width (a label never breaks inside a word:
+  // "Showin/g" on a 669pt Duo); the button moves under it when both do
+  // not fit on one line.
   menuRow: {
     alignSelf: 'stretch',
     minHeight: minimumTarget,
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
-    gap: rhythm.tight,
+    columnGap: rhythm.tight,
   },
   menuRowStacked: {
     flexDirection: 'column',
+    flexWrap: 'nowrap',
     alignItems: 'stretch',
     gap: rhythm.line,
   },
-  menuRowTitle: { flex: 1 },
+  menuRowTitle: { flexGrow: 1, flexShrink: 0, maxWidth: '100%' },
   groupedInput: { borderRadius: radii.container, borderCurve: 'continuous' },
   composerBody: {
     gap: 8,

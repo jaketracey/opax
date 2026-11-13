@@ -5,14 +5,24 @@ import * as RN from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import {
   BarSeries,
+  isPartOfWhole,
   latestBarCaption,
+  ShareBar,
+  shareRamp,
+  shareTint,
   StageTimeline,
   VoteSplit,
 } from '../src/design/charts';
 import { Button } from '../src/design/controls';
-import { light } from '../src/design/palette';
+import {
+  dark,
+  darkHighContrast,
+  light,
+  lightHighContrast,
+} from '../src/design/palette';
 import { SourceLine } from '../src/design/source';
 import { Text } from '../src/design/text';
+import { readAloud } from './a11y-tree';
 
 jest.mock('@shopify/react-native-skia', () => ({
   Canvas: require('react-native').View,
@@ -535,7 +545,7 @@ test('BarSeries thins again when measured AX labels grow', () => {
       .length,
   ).toBeLessThan(count);
 });
-test.each([undefined, 'latest', 'all', 'none'] as const)(
+test.each([undefined, 'latest', 'none'] as const)(
   'BarSeries values=%s controls visible values without squeezing columns',
   (values) => {
     const r = render(
@@ -613,6 +623,16 @@ test('the inline table has a visible heading and a matching Show as chart spoken
     variant: 'subsectionTitle',
     children: 'Monthly totals',
   });
+  // Each row is one stop, year and value, in the bar's own words.
+  const read = readAloud(r.root);
+  const at = read.indexOf('Monthly totals (header)');
+  expect(read.slice(at, at + 3)).toEqual([
+    'Monthly totals (header)',
+    'October, 5',
+    'November, 10',
+  ]);
+  expect(read).not.toContain('October');
+  expect(read).not.toContain('5');
 });
 
 test('a partial financial year is dated by its source, and a completed year has no invented qualifier', () => {
@@ -626,7 +646,7 @@ test('a partial financial year is dated by its source, and a completed year has 
     '2025–26: $290k',
   );
 });
-test('BarSeries scaleGutter keeps every scale value in its own column, clear of every bar', () => {
+test('BarSeries keeps every scale value in its own column, clear of every bar', () => {
   const r = render(
     <BarSeries
       {...proof}
@@ -634,7 +654,6 @@ test('BarSeries scaleGutter keeps every scale value in its own column, clear of 
       ink="ink"
       format={String}
       tableTitle="Years"
-      scaleGutter
     />,
   );
   // A wide value, as at the largest text sizes.
@@ -683,4 +702,188 @@ test('BarSeries partialFrom draws the unfinished year lighter and says "so far" 
   expect(
     r.root.findAllByProps({ accessibilityLabel: '2014 so far, 15' }).length,
   ).toBeGreaterThan(0);
+});
+
+test('BarSeries values="all" captions every bar in the caption style', () => {
+  const r = render(
+    <BarSeries
+      {...proof}
+      data={data}
+      ink="ink"
+      format={String}
+      tableTitle="Months"
+      values="all"
+    />,
+  );
+  measureSeries(r);
+  const captions = data.map(
+    (_, index) =>
+      r.root.findByProps({ testID: `bar-series-caption-${index}` }).props,
+  );
+  expect(captions.map((caption) => caption.children)).toEqual([
+    'October: 5',
+    'November: 10',
+  ]);
+  for (const caption of captions)
+    expect(caption).toMatchObject({
+      variant: 'footnote',
+      tone: 'inkSoft',
+      tabular: true,
+    });
+});
+
+const halves = [
+  { label: 'Closed non-competitive', value: 50 },
+  { label: 'Everything else', value: 50 },
+];
+const percent = (value: number) => `${value}%`;
+
+test('shares that add up to a whole are parts of one whole', () => {
+  expect(isPartOfWhole([50, 50])).toBe(true);
+  expect(isPartOfWhole([33, 33, 33])).toBe(true);
+  expect(isPartOfWhole([20, 20, 20, 20, 21])).toBe(true);
+  // One share, overlapping labels and relative bars are not.
+  expect(isPartOfWhole([60])).toBe(false);
+  expect(isPartOfWhole([40, 30, 25, 20])).toBe(false);
+  expect(isPartOfWhole([100, 60, 30])).toBe(false);
+});
+
+test('a 50/50 share is one bar of two halves, each captioned and spoken', () => {
+  const r = render(
+    <ShareBar {...proof} parts={halves} ink="money" format={percent} />,
+  );
+  const segments = [0, 1].map((index) =>
+    RN.StyleSheet.flatten(
+      r.root.findByProps({ testID: `share-bar-segment-${index}` }).props.style,
+    ),
+  );
+  // Each half fills half the track, not the whole plot.
+  expect(segments.map((segment) => segment.width)).toEqual(['50%', '50%']);
+  expect(
+    [0, 1].map(
+      (index) =>
+        r.root.findByProps({ testID: `share-bar-caption-${index}` }).props
+          .children,
+    ),
+  ).toEqual(['50%', '50%']);
+  const parts = r.root.findByProps({ testID: 'share-bar-parts' }).props;
+  expect(parts.accessible).toBe(true);
+  expect(parts.accessibilityLabel).toBe(
+    'Closed non-competitive, 50%. Everything else, 50%.',
+  );
+  // The second half is a lighter tint of the same ink, not a fade.
+  expect(segments[0]!.backgroundColor).not.toBe(segments[1]!.backgroundColor);
+  expect(segments[1]!.opacity).toBeUndefined();
+  expect(parts.accessibilityLabel).not.toMatch(/\u2014/);
+});
+
+test('BarSeries share runs its scale from 0 to 100%, in the gutter, with every bar captioned', () => {
+  const r = render(
+    <BarSeries
+      {...proof}
+      data={halves}
+      ink="money"
+      format={percent}
+      tableTitle="Closed, non-competitive"
+      share
+      values="all"
+    />,
+  );
+  measureSeries(r, 40, 36);
+  const scale = (fraction: number) =>
+    r.root.findByProps({ testID: `bar-series-scale-${fraction}` });
+  expect(scale(1).props.children).toBe('100%');
+  expect(scale(0.5).props.children).toBe('50%');
+  const bars = r.root
+    .findAllByType('Rect' as never)
+    .map((rect) => rect.props as { x: number; height: number })
+    .filter((rect) => rect.height > 1);
+  // A 50% share is half the 160pt plot.
+  expect(bars.map((bar) => bar.height)).toEqual([80, 80]);
+  for (const fraction of [1, 0.5]) {
+    const style = RN.StyleSheet.flatten(scale(fraction).props.style);
+    expect(style.left).toBe(0);
+    for (const bar of bars)
+      expect(bar.x).toBeGreaterThan(style.left + style.width);
+  }
+  expect(
+    [0, 1].map(
+      (index) =>
+        r.root.findByProps({ testID: `bar-series-caption-${index}` }).props
+          .children,
+    ),
+  ).toEqual(['Closed non-competitive: 50%', 'Everything else: 50%']);
+});
+
+function contrastRatio(a: string, b: string) {
+  const lum = (hex: string) => {
+    const [r, g, bl] = [1, 3, 5].map((at) => {
+      const c = parseInt(hex.slice(at, at + 2), 16) / 255;
+      return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r! + 0.7152 * g! + 0.0722 * bl!;
+  };
+  const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+  return (hi! + 0.05) / (lo! + 0.05);
+}
+
+test.each([
+  ['light', light, false],
+  ['dark', dark, false],
+  ['light, Increase Contrast', { ...light, ...lightHighContrast }, true],
+  ['dark, Increase Contrast', { ...dark, ...darkHighContrast }, true],
+] as const)(
+  'every part of a five-part share stays visible against paper (%s)',
+  (_, palette, contrast) => {
+    const ramp = shareRamp(contrast);
+    expect(ramp).toHaveLength(5);
+    for (const ink of ['moneyInk', 'votesInk', 'billsInk', 'ink'] as const) {
+      const ratios = ramp.map((weight) =>
+        contrastRatio(
+          shareTint(palette[ink]!, palette.paper, weight),
+          palette.paper,
+        ),
+      );
+      // Each part lighter than the one before, and the last still drawn.
+      ratios
+        .slice(1)
+        .forEach((ratio, index) => expect(ratio).toBeLessThan(ratios[index]!));
+      expect(ratios.at(-1)!).toBeGreaterThanOrEqual(contrast ? 1.6 : 1.33);
+    }
+  },
+);
+
+test('Increase Contrast steps the share tints less', () => {
+  const normal = shareRamp(false);
+  const strong = shareRamp(true);
+  strong
+    .slice(1)
+    .forEach((weight, index) =>
+      expect(weight).toBeGreaterThan(normal[index + 1]!),
+    );
+});
+
+test('the share track is an outline on paper, so a pale part never sinks into it', () => {
+  const r = render(
+    <ShareBar
+      {...proof}
+      parts={[20, 20, 20, 20, 20].map((value, index) => ({
+        label: `Part ${index + 1}`,
+        value,
+      }))}
+      ink="money"
+      format={percent}
+    />,
+  );
+  const track = RN.StyleSheet.flatten(
+    r.root.findByProps({ testID: 'share-bar-track' }).props.style,
+  );
+  expect(track.backgroundColor).toBe(light.paper);
+  expect(track.borderWidth).toBeGreaterThan(0);
+  const last = RN.StyleSheet.flatten(
+    r.root.findByProps({ testID: 'share-bar-segment-4' }).props.style,
+  );
+  expect(last.backgroundColor).toBe(
+    shareTint(light.moneyInk, light.paper, shareRamp(false).at(-1)!),
+  );
 });

@@ -24,10 +24,20 @@ import { catalogs, yearPictures } from '../src/api/runtime';
 import { Card } from '../src/design/card';
 import { copy } from '../src/design/copy';
 import { FigureBlock } from '../src/design/record';
-import { SourceLine, SourceSheet } from '../src/design/source';
+import {
+  SourceAffordance,
+  SourceLine,
+  SourceSheet,
+} from '../src/design/source';
 import { bills, pinned, roster, slugs } from './pinned';
+import { accessibilityElements, readAloud } from './a11y-tree';
 
-import { BarSeries, StageTimeline, VoteSplit } from '../src/design/charts';
+import {
+  BarSeries,
+  ShareBar,
+  StageTimeline,
+  VoteSplit,
+} from '../src/design/charts';
 import { MachinePill } from '../src/design/labels';
 import { PersonRow } from '../src/design/people';
 import { bindRecordTitle } from '../src/design/record-title';
@@ -64,7 +74,13 @@ import { shareRecord } from '../src/navigation/share';
 import RuleSheet from '../src/features/sheets/RuleSheet';
 import { sheetPayload } from '../src/navigation/sheets';
 import { menuTitle } from '../src/design/menu-title';
+import { track } from '../src/analytics';
+import { Screen } from '../src/design/layout';
 
+jest.mock('../src/analytics', () => ({
+  ...jest.requireActual('../src/analytics'),
+  track: jest.fn(),
+}));
 jest.mock('../src/api/runtime', () => ({
   catalogs: {
     todayEdition: jest.fn(),
@@ -121,6 +137,7 @@ jest.mock('../src/navigation/external', () => ({
 }));
 let mockCanShare = true;
 jest.mock('../src/navigation/share', () => ({
+  trackShare: jest.fn(),
   get canShare() {
     return mockCanShare;
   },
@@ -1042,6 +1059,163 @@ describe('the native edition reader', () => {
     expect(host(root, 'edition-fact-1')).toHaveLength(1);
     expect(host(root, 'edition-fact-2')[0]!.findByType(VoteSplit)).toBeTruthy();
   });
+  test('a grant edition draws a 50/50 share as one bar of two captioned halves, with its source line once', async () => {
+    const grant = {
+      ...edition,
+      kind: 'grant' as const,
+      facts: {
+        ...edition.facts,
+        figures: [
+          { value: '$10.0m', label: 'to an invented council' },
+          { value: '$20.0m', label: 'in the program' },
+        ],
+        bars: {
+          title: 'Closed, non-competitive',
+          items: [
+            { label: 'Closed non-competitive', pct: 50 },
+            { label: 'Everything else', pct: 50 },
+          ],
+          note: null,
+        },
+        events: [],
+        division: null,
+        order: [
+          { type: 'figure' as const, index: 0 },
+          { type: 'figure' as const, index: 1 },
+          { type: 'bars' as const, index: 0 },
+        ],
+      },
+    };
+    jest
+      .mocked(catalogs.todayEdition)
+      .mockResolvedValue({ ...ready, data: grant });
+    const { root } = await render(<EditionStory />);
+    // Parts of one whole: one bar, not two full-height columns on a 50% axis.
+    expect(root.findAllByType(BarSeries)).toHaveLength(0);
+    const share = root.findByType(ShareBar);
+    expect(
+      share.props.parts.map((part: { value: number }) => part.value),
+    ).toEqual([50, 50]);
+    const captions = [0, 1].map(
+      (index) =>
+        host(root, `edition-fact-2-share-caption-${index}`)[0]!.props.children,
+    );
+    expect(captions).toEqual(['50%', '50%']);
+    expect(
+      host(root, 'edition-fact-2-share-parts')[0]!.props.accessibilityLabel,
+    ).toBe('Closed non-competitive, 50%. Everything else, 50%.');
+    // Two figure cards and the chart carry the same line; it shows once.
+    const lines = root
+      .findAllByType(SourceAffordance)
+      .filter((line) =>
+        String(line.props.accessibilityLabel).includes('OPAX daily edition'),
+      );
+    expect(lines).toHaveLength(1);
+    expect(root.findAllByType(SourceLine).length).toBeGreaterThanOrEqual(3);
+  });
+  // The composer's flag decides. Without it, a member's topic labels and a
+  // topic's speakers are never parts of one whole (the composer never says
+  // so for them); an older grant or program slide is guessed from its numbers.
+  test.each([
+    ['grant', true, [55, 28, 11], 'share'],
+    ['politician', true, [40, 35, 25], 'share'],
+    ['grant', false, [100, 1], 'series'],
+    ['program', false, [40, 35, 25], 'series'],
+    ['topic', undefined, [100, 1], 'series'],
+    ['politician', undefined, [40, 35, 25], 'series'],
+    ['politician', undefined, [19, 12], 'series'],
+    ['grant', undefined, [60, 40], 'share'],
+    ['program', undefined, [10, 83, 7], 'share'],
+  ] as const)(
+    'a %s bars slide with whole=%s at %j draws a %s',
+    async (kind, whole, pcts, draws) => {
+      const base =
+        kind === 'politician'
+          ? person
+          : kind === 'topic'
+            ? { ...edition, kind, path: '/reports/housing' }
+            : { ...edition, kind };
+      const data = {
+        ...base,
+        facts: {
+          ...base.facts,
+          figures: [],
+          events: [],
+          division: null,
+          bars: {
+            title: 'Shares',
+            items: pcts.map((pct, i) => ({ label: `Part ${i + 1}`, pct })),
+            note: null,
+            ...(whole === undefined ? {} : { whole }),
+          },
+          order: [{ type: 'bars' as const, index: 0 }],
+        },
+      };
+      jest.mocked(catalogs.todayEdition).mockResolvedValue({ ...ready, data });
+      const { root } = await render(<EditionStory />);
+      const fact = host(root, 'edition-fact-0')[0]!;
+      expect(fact.findAllByType(ShareBar)).toHaveLength(
+        draws === 'share' ? 1 : 0,
+      );
+      expect(fact.findAllByType(BarSeries)).toHaveLength(
+        draws === 'share' ? 0 : 1,
+      );
+      const drawn =
+        draws === 'share'
+          ? fact.findByType(ShareBar).props.parts
+          : fact.findByType(BarSeries).props.data;
+      expect(drawn.map((part: { value: number }) => part.value)).toEqual(pcts);
+    },
+  );
+  test('with a chart before a figure, the one source line shown opens the full sheet', async () => {
+    const grant = {
+      ...edition,
+      kind: 'grant' as const,
+      path: '/money/grants/federal/recipient/R1?award=GA1',
+      facts: {
+        ...edition.facts,
+        figures: [{ value: '$10.0m', label: 'to an invented council' }],
+        bars: {
+          title: 'Topic labels',
+          items: [
+            { label: 'Health', pct: 60 },
+            { label: 'Roads', pct: 20 },
+          ],
+          note: null,
+        },
+        events: [],
+        division: null,
+        order: [
+          { type: 'bars' as const, index: 0 },
+          { type: 'figure' as const, index: 0 },
+        ],
+      },
+    };
+    jest
+      .mocked(catalogs.todayEdition)
+      .mockResolvedValue({ ...ready, data: grant });
+    const { root } = await render(<EditionStory />);
+    const shown = root
+      .findAllByType(SourceAffordance)
+      .filter((line) =>
+        String(line.props.accessibilityLabel).includes('OPAX daily edition'),
+      );
+    expect(shown).toHaveLength(1);
+    // The chart's line is the one kept, and it carries the figures' sheet.
+    expect(shown[0]!.props.testID).toBe('edition-fact-0-sources');
+    await press(root, 'edition-fact-0-sources');
+    const details = openedSourceDetails(root, 'edition-fact-0-sources');
+    expect(details.originals).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ label: 'OPAX daily edition' }),
+        expect.objectContaining({
+          label: 'GrantConnect',
+          record: 'record GA1',
+        }),
+      ]),
+    );
+    expect(details.rule).toEqual(expect.any(String));
+  });
   test('a withdrawn edition replaces saved prose after refresh', async () => {
     jest
       .mocked(catalogs.todayEdition)
@@ -1192,11 +1366,16 @@ test('AX5 plate detail stays below the title size and both stage ends share one 
     'today-edition-art-ends',
   ]) {
     const line = host(root, id)[0]!;
-    expect(line.props.maxFontSizeMultiplier).toBe(1.353);
-    expect(
-      Number(StyleSheet.flatten(line.props.style).fontSize) *
-        line.props.maxFontSizeMultiplier,
-    ).toBeLessThanOrEqual(titleSize);
+    // Android folds the 1.353 cap into the role's size and line height (RN
+    // would cap the size but not the leading), so the native cap is off and
+    // the drawn size is the folded size at the reader's scale.
+    expect(line.props.maxFontSizeMultiplier).toBe(0);
+    const style = StyleSheet.flatten(line.props.style);
+    const drawn = Number(style.fontSize) * window.fontScale;
+    expect(drawn).toBeLessThanOrEqual(titleSize);
+    expect(Number(style.lineHeight) * window.fontScale).toBeLessThan(
+      Number(style.fontSize) * window.fontScale * 2,
+    );
   }
   const ends = host(root, 'today-edition-art-ends')[0]!;
   expect(ends.props).toMatchObject({
@@ -1269,4 +1448,233 @@ test('AX5: a long first stage name wraps to a second line, never an ellipsis; de
         ),
     );
   expect(row).toBeDefined();
+});
+
+describe('the edition facts with VoiceOver, at Large, AX3 and AX5', () => {
+  const facts = (
+    bars: EditionView['facts']['bars'],
+    division: EditionView['facts']['division'] = { ayes: 80, noes: 60 },
+  ) => ({
+    ...edition,
+    kind: 'grant' as const,
+    facts: {
+      ...edition.facts,
+      figures: [{ value: '$10.0m', label: 'to an invented council' }],
+      bars,
+      division,
+      order: [
+        { type: 'figure' as const, index: 0 },
+        { type: 'bars' as const, index: 0 },
+        { type: 'events' as const, index: 0 },
+        { type: 'division' as const, index: 0 },
+      ],
+    },
+  });
+  const series = {
+    title: 'Topic labels',
+    items: [
+      { label: 'Health', pct: 60 },
+      { label: 'Roads', pct: 20 },
+    ],
+    note: null,
+    whole: false,
+  };
+  async function show(
+    fontScale: number,
+    bars: EditionView['facts']['bars'] = series,
+    division?: EditionView['facts']['division'],
+  ) {
+    Platform.OS = 'ios';
+    const window = { width: 390, height: 844, scale: 3, fontScale };
+    Dimensions.set({ window, screen: window });
+    jest
+      .mocked(catalogs.todayEdition)
+      .mockResolvedValue({ ...ready, data: facts(bars, division) });
+    const r = await render(<EditionStory />);
+    // Native text layout, as the chart's hidden probes would report it.
+    const line = textStyles.footnote.lineHeight * fontScale;
+    act(() =>
+      r.root
+        .findAll(
+          (node) =>
+            node.type === 'Text' &&
+            typeof node.props.onTextLayout === 'function',
+        )
+        .forEach((text) =>
+          text.props.onTextLayout({
+            nativeEvent: { lines: [{ width: 40 * fontScale, height: line }] },
+          }),
+        ),
+    );
+    act(() =>
+      host(r.root, 'bar-series-plot')[0]?.props.onLayout({
+        nativeEvent: { layout: { width: 358, height: 160 } },
+      }),
+    );
+    return { r, line };
+  }
+
+  test.each([1, 2.643, 3.571])(
+    'at %s a bars chart reads as its figures once, in the order drawn',
+    async (fontScale) => {
+      const { r } = await show(fontScale);
+      const read = accessibilityElements(r.root);
+      const at = (label: string) => read.findIndex((e) => e.label === label);
+      // Compact money in words; the chart's title is a heading.
+      expect(
+        at('10.0 million dollars, to an invented council'),
+      ).toBeGreaterThan(-1);
+      expect(read[at('Topic labels')]!.role).toBe('header');
+      // Each bar once as its figure; the scale and the captions are drawn,
+      // not read again.
+      expect(
+        read.filter((e) => /Health/.test(e.label)).map((e) => e.label),
+      ).toEqual(['Health, 60%']);
+      expect(read.filter((e) => /^(100|50)%$/.test(e.label))).toEqual([]);
+      // Figure, then the chart, then its table button, then the timeline.
+      const order = [
+        at('10.0 million dollars, to an invented council'),
+        at('Topic labels'),
+        at('Health, 60%'),
+        at('Roads, 20%'),
+        at('Show as table'),
+        at('Royal Assent, 18 Sep 2026, latest stage'),
+      ];
+      expect(order.every((index) => index > -1)).toBe(true);
+      expect([...order].sort((a, b) => a - b)).toEqual(order);
+      // The one source line reads as a button naming its source.
+      const line = read.find(
+        (e) => /OPAX daily edition/.test(e.label) && e.role,
+      )!;
+      expect(line).toMatchObject({
+        role: 'button',
+        hint: 'Opens the sources',
+      });
+      // The grouped Sources list has a heading too.
+      expect(read[at('Sources')]!.role).toBe('header');
+      // Every stop says something.
+      expect(read.filter((e) => !e.label.trim())).toEqual([]);
+    },
+  );
+
+  test.each([
+    [1, true],
+    [2.643, true],
+    [3.571, false],
+  ])(
+    'at %s the scale values never overlap (50%% drawn: %s), and no fact text is cut short',
+    async (fontScale, half) => {
+      const { r, line } = await show(fontScale);
+      const top = (id: string) =>
+        StyleSheet.flatten(host(r.root, id)[0]!.props.style).top as number;
+      expect(host(r.root, 'bar-series-scale-1')).toHaveLength(1);
+      expect(host(r.root, 'bar-series-scale-0.5')).toHaveLength(half ? 1 : 0);
+      if (half)
+        expect(top('bar-series-scale-0.5')).toBeGreaterThanOrEqual(
+          top('bar-series-scale-1') + line,
+        );
+      const factTexts = [0, 1, 2, 3].flatMap((index) =>
+        host(r.root, `edition-fact-${index}`).flatMap((fact) =>
+          fact.findAll((node) => node.type === 'Text'),
+        ),
+      );
+      expect(factTexts.length).toBeGreaterThan(0);
+      expect(
+        factTexts.filter(
+          (text) =>
+            text.props.numberOfLines ||
+            (text.props.maxFontSizeMultiplier > 0 &&
+              text.props.maxFontSizeMultiplier < fontScale),
+        ),
+      ).toEqual([]);
+    },
+  );
+
+  test.each([1, 3.571])(
+    'at %s a share of a whole reads as one image of its parts and values',
+    async (fontScale) => {
+      const { r } = await show(
+        fontScale,
+        {
+          title: 'Closed, non-competitive',
+          items: [
+            { label: 'Grants', pct: 42 },
+            { label: 'Everything else', pct: 58 },
+          ],
+          note: null,
+          whole: true,
+        },
+        null,
+      );
+      const read = readAloud(r.root);
+      const title = read.indexOf('Closed, non-competitive (header)');
+      expect(title).toBeGreaterThan(-1);
+      expect(read[title + 1]).toBe(
+        'Grants, 42%. Everything else, 58%. (image)',
+      );
+      expect(read.filter((label) => /42%/.test(label))).toHaveLength(1);
+      // The plate leads with the figure, its sum in words.
+      expect(read).toContain(
+        '10.0 million dollars, to an invented council, 4 October 2026',
+      );
+    },
+  );
+});
+
+describe('edition analytics', () => {
+  const sent = () =>
+    jest
+      .mocked(track)
+      .mock.calls.filter(([event]) => event === 'opax_edition')
+      .map(([, properties]) => properties);
+  const layout = (values: object) => ({
+    nativeEvent: { layout: { x: 0, y: 0, width: 390, height: 0, ...values } },
+  });
+
+  test('the story shown, its subject opened and its end reached, each as the action alone', async () => {
+    const r = await render(<EditionStory />);
+    expect(sent()).toEqual([{ action: 'open' }]);
+    // The subject row opens its page through RowLink (Android: its Pressable).
+    const subject = r.root.findAll(
+      (node) =>
+        node.props.testID === 'edition-subject' &&
+        typeof node.props.onPress === 'function',
+    )[0]!;
+    await act(async () => subject.props.onPress());
+    expect(sent()).toEqual([{ action: 'open' }, { action: 'story_open' }]);
+    // The end: an 800 pt viewport and a marker 2,000 pt down.
+    const screen = r.root.findByType(Screen);
+    act(() => screen.props.onLayout(layout({ height: 800 })));
+    act(() =>
+      host(r.root, 'edition-end')[0]!.props.onLayout(layout({ y: 2000 })),
+    );
+    act(() => screen.props.onScroll(1100));
+    expect(sent()).toHaveLength(2);
+    act(() => screen.props.onScroll(1250));
+    act(() => screen.props.onScroll(1600));
+    expect(sent()).toEqual([
+      { action: 'open' },
+      { action: 'story_open' },
+      { action: 'reached_end' },
+    ]);
+    // Nothing names the story or its subject.
+    expect(JSON.stringify(jest.mocked(track).mock.calls)).not.toContain(
+      edition.title,
+    );
+  });
+
+  test('a story that fits counts as read once laid out, and a missing edition sends nothing', async () => {
+    const r = await render(<EditionStory />);
+    const screen = r.root.findByType(Screen);
+    act(() =>
+      host(r.root, 'edition-end')[0]!.props.onLayout(layout({ y: 600 })),
+    );
+    act(() => screen.props.onLayout(layout({ height: 800 })));
+    expect(sent()).toEqual([{ action: 'open' }, { action: 'reached_end' }]);
+    jest.mocked(track).mockClear();
+    jest.mocked(catalogs.todayEdition).mockResolvedValue(missing);
+    const gone = await render(<EditionStory />);
+    expect(host(gone.root, 'edition-end')).toHaveLength(0);
+    expect(sent()).toEqual([]);
+  });
 });

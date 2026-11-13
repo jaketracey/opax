@@ -19,7 +19,8 @@ from urllib.parse import unquote, urlsplit
 
 sys.dont_write_bytecode = True
 from privacy_scan import scan as scan_binary_privacy
-from release_support import PRIVATE_NAMES, ReleaseError, load_credentials, matches, private_values, redact, scan_tracked
+from release_support import (JS_CHUNK_ID, JS_SOURCE_MAP, PRIVATE_NAMES, ReleaseError, load_credentials, matches,
+                             private_values, redact, scan_tracked)
 
 GUARDS = (
     "Route is outside the public catalog allow-list",
@@ -27,8 +28,9 @@ GUARDS = (
     "Cross-origin API requests are forbidden",
     "Redirects are not allowed for catalog data",
 )
-# PostHog is the one reviewed analytics SDK (docs/ANALYTICS.md): JS only, sending
-# to the embedded opax.com.au/ingest proxy. Every other SDK stays refused.
+# PostHog is the one reviewed analytics SDK (docs/ANALYTICS.md): the JS SDK and
+# its native crash plugin (scrubbed by its pinned privacy patch), sending to the
+# embedded opax.com.au/ingest proxy. Every other SDK stays refused.
 SDK_PATTERN = re.compile(rb"mixpanel|amplitude|segment\.com|(?-i:(?<![a-z]))sentry|appsflyer|"
                          rb"firebaseanalytics|appcenter|bugsnag|datadog|fbSDK|crashlytics|heapanalytics", re.I)
 SHIPPED_FRAMEWORKS = {"ExpoModulesJSI.framework", "hermesvm.framework", "ExpoFont.framework",
@@ -48,12 +50,15 @@ POSTHOG_SDK_HOSTS = {"us.i.posthog.com", "eu.i.posthog.com", "us-assets.i.postho
 # react-native-svg's feFunc "amplitude" attribute (SVG filter spec). The
 # Amplitude SDK is still refused by its hosts and any longer marker string.
 SDK_PATTERN_EXEMPT = {b"sentryuptimebot", b"amplitude"}
-POSTHOG_PACKAGES = {"node_modules/posthog-react-native", "node_modules/@posthog/core", "node_modules/@posthog/types"}
+POSTHOG_PACKAGES = {"node_modules/posthog-react-native", "node_modules/@posthog/core", "node_modules/@posthog/types",
+                    "node_modules/@posthog/react-native-plugin"}
 ANALYTICS_CONFIG = {"host": "https://opax.com.au/ingest",
                     "projectToken": "phc_AsHnQM2UrGBubA5HU9sagkGbg8vqQLNXu3WjEhPRDejr",
                     "environment": "production"}
 # What analytics adds to the privacy manifest: not linked, not tracking, Analytics.
 ANALYTICS_DATA_TYPES = ("ProductInteraction", "DeviceID")
+# Anonymous crash and error reports: not linked, not tracking, App Functionality.
+CRASH_DATA_TYPES = ("CrashData", "OtherDiagnosticData")
 ROUTE_KEY = re.compile(r"\./[A-Za-z0-9_(),@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
 # Skia 2.6.2 reads Reanimated's package.json version, so Metro includes its
 # pinned 4.5.1 sideEffects metadata. These eight exact dependency references
@@ -137,16 +142,19 @@ def verify_voice_info(info, enabled):
 
 
 def expected_privacy_types(voice_enabled):
-    """Type -> (linked, purposes): analytics' unlinked Analytics types, merged
-    with the voice label's linked App Functionality types when voice ships."""
+    """Type -> (linked, purposes): analytics' unlinked Analytics types and crash
+    reports' unlinked App Functionality types, merged with the voice label's
+    linked App Functionality types when voice ships (each purpose once)."""
+    function = "NSPrivacyCollectedDataTypePurposeAppFunctionality"
     expected = {"NSPrivacyCollectedDataType" + name: (False, ["NSPrivacyCollectedDataTypePurposeAnalytics"])
                 for name in ANALYTICS_DATA_TYPES}
+    expected.update({"NSPrivacyCollectedDataType" + name: (False, [function]) for name in CRASH_DATA_TYPES})
     if voice_enabled:
         for linked, names in ((True, VOICE_POLICY["linkedDataTypes"]), (False, VOICE_POLICY["unlinkedDataTypes"])):
             for name in names:
                 key = "NSPrivacyCollectedDataType" + name
                 was_linked, purposes = expected.get(key, (False, []))
-                expected[key] = (was_linked or linked, ["NSPrivacyCollectedDataTypePurposeAppFunctionality", *purposes])
+                expected[key] = (was_linked or linked, list(dict.fromkeys([function, *purposes])))
     return expected
 
 
@@ -513,6 +521,28 @@ def scene_delegate_linked(executable):
     return False
 
 
+def verify_source_map(app, evidence):
+    """Crash report symbols: the archive step's composed Hermes source map sits
+    beside the archive in the evidence folder, never in the app, and the
+    recorded chunk ID is the one the shipped bundle reports."""
+    shipped = sorted(str(p.relative_to(app)) for p in app.rglob("*") if p.is_file() and p.suffix.lower() == ".map")
+    require(not shipped, "No source map inside the app: " + ", ".join(shipped))
+    path = Path(evidence) / JS_SOURCE_MAP
+    require(path.is_file(), "Hermes source map written beside the archive (" + JS_SOURCE_MAP + ")")
+    try:
+        source_map = json.loads(path.read_bytes())
+    except ValueError:
+        source_map = None
+    require(isinstance(source_map, dict) and source_map.get("version") == 3 and bool(source_map.get("sources")) and
+            bool(source_map.get("mappings")) and "x_hermes_function_offsets" in source_map,
+            "Source map is React Native's composed Hermes map")
+    chunk_path = Path(evidence) / JS_CHUNK_ID
+    chunk_id = chunk_path.read_text().strip() if chunk_path.is_file() else ""
+    require(bool(re.fullmatch(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", chunk_id)) and
+            chunk_id.encode() in (app / "main.jsbundle").read_bytes(),
+            "Recorded chunk ID is the one in the shipped bundle")
+
+
 def framework_allowlist(app):
     frameworks = list(app.rglob("*.framework"))
     require({p.name for p in frameworks} == SHIPPED_FRAMEWORKS and
@@ -685,7 +715,7 @@ def verify_app(app, args):
         check(True, "production privacy types, no tracking, existing required reasons retained")
     else:
         verify_collected_types(privacy, False)
-        check(True, "app privacy manifest: analytics types only, no collected location or tracking")
+        check(True, "app privacy manifest: analytics and crash report types only, no collected location or tracking")
     binary_privacy = scan_binary_privacy(app,
         output=Path(args.output).with_name("privacy-scan-" + args.kind + ".json"),
         evidence_dir=Path(args.output).parent / ("privacy-symbols-" + args.kind))
@@ -740,6 +770,8 @@ def verify_app(app, args):
     check(True, "every shipping Expo route key is present in shipped JS")
     check(True, "no unshipped, development or workbench route keys in shipped JS")
     verify_voice_bundle(bundle, voice_enabled)
+    verify_source_map(app, Path(args.output).parent)
+    check(True, "composed Hermes source map and chunk ID kept beside the archive; no source map in the app")
     verify_no_camera_native_code(app)
     check(True, "no AVCapture references in any production Mach-O")
     if voice_enabled:
@@ -781,7 +813,7 @@ def verify_app(app, args):
               "bundled font licence notices")
     lock = json.loads(Path("package-lock.json").read_bytes())
     check({p for p in lock["packages"] if re.search(r"posthog", p, re.I)} == POSTHOG_PACKAGES,
-          "PostHog is the reviewed JS SDK only: no replay, native plugin or other PostHog package")
+          "PostHog is the reviewed JS SDK and native crash plugin only: no replay or other PostHog package")
     check(not re.search(r"node_modules/(?:@sentry/|@amplitude/|@segment/|@react-native-firebase/|"
                         r"firebase(?:/|$)|mixpanel|appcenter|react-native-appsflyer|"
                         r"react-native-adjust|expo-tracking-transparency|expo-insights|@bugsnag/|"

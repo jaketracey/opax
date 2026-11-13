@@ -49,7 +49,8 @@ import {
   decodeMatrix,
 } from '../src/features/reports/model';
 import rounds from '../src/features/explore/quiz-rounds.json';
-import { pinnedBytes } from './pinned';
+import { pinned, pinnedBytes } from './pinned';
+import { decodeMoneyGraph } from '../src/features/money/data';
 import { reportsFixture } from '../scripts/reports-fixture';
 const read = (path: string) =>
   JSON.parse(
@@ -485,9 +486,10 @@ test('every question names who produced its fact, and Hansard never publishes a 
 });
 
 test('every quiz link opens a native OPAX page, and Ask links only draft', () => {
+  const graph = decodeMoneyGraph(pinned('/graph/money.json'));
   const kinds = new Set<string>();
   for (const q of engineQuestions) {
-    const destination = quizDestination(q);
+    const destination = quizDestination(q, graph);
     expect(destination).not.toBeNull();
     if (!destination) continue;
     kinds.add(destination.kind);
@@ -499,17 +501,36 @@ test('every quiz link opens a native OPAX page, and Ask links only draft', () =>
     }
     const { original } = destination;
     expect(original.url.startsWith('/')).toBe(true);
-    const native = fromWebPath(original.url) as { pathname: string } | null;
-    const route = destination.route() as { pathname: string };
+    const native = fromWebPath(original.url) as {
+      pathname: string;
+      params?: Record<string, string>;
+    } | null;
+    const route = destination.route() as {
+      pathname: string;
+      params?: Record<string, string>;
+    };
     expect(native).not.toBeNull();
     expect(native!.pathname).toBe(route.pathname);
+    // A donor's record opens by its graph id, from the sheet and the route.
+    if (route.pathname === '/money-record') {
+      const node = graph.nodes.find((n) => n.id === route.params?.node);
+      expect(node?.kind).toBe('donor');
+      expect(native!.params?.node).toBe(node!.id);
+      expect(route.params).not.toHaveProperty('rid');
+    }
   }
   expect([...kinds].sort()).toEqual(['ask', 'original']);
-  const donor = quizDestination(byTemplate('money-donor-figure'));
-  expect(donor?.kind === 'original' && donor.route()).toMatchObject({
+  const donor = quizDestination(byTemplate('money-donor-figure'), graph);
+  expect(donor?.kind === 'original' && donor.route()).toEqual({
     pathname: '/money-record',
-    params: { rid: 'Anacta Strategies Pty Ltd', jur: 'federal' },
+    params: {
+      node: graph.nodes.find((n) => n.label === 'Anacta Strategies Pty Ltd')!
+        .id,
+      name: 'Anacta Strategies Pty Ltd',
+    },
   });
+  // No graph yet, or a name the graph doesn't hold: no row, not a dead link.
+  expect(quizDestination(byTemplate('money-donor-figure'), null)).toBeNull();
   const industry = quizDestination(byTemplate('money-industry-magnitude'));
   expect(industry?.kind === 'original' && industry.route()).toMatchObject({
     pathname: '/money',

@@ -1,5 +1,9 @@
 // samePartyLabel and PARTY_MAP labels ported from portal/public/app.js.
-import { resolveParty } from '../design/party';
+import {
+  partyRename,
+  resolveParty,
+  samePartyLabel as sameParty,
+} from '../design/party';
 import type {
   Manifest,
   PeopleCatalog,
@@ -24,10 +28,13 @@ const partyLabels: Record<string, string> = {
   jln: 'JLN',
 };
 export function samePartyLabel(a: string, b: string) {
+  // A renamed party's names are one party (labels.js PARTY_RENAMES): a
+  // rename is not a change of party, so never "formerly".
   const label = (party: string) =>
-    Object.hasOwn(partyLabels, String(party).toLowerCase())
+    partyRename(party)?.code ??
+    (Object.hasOwn(partyLabels, String(party).toLowerCase())
       ? partyLabels[String(party).toLowerCase()]
-      : String(party);
+      : String(party));
   return label(a) === label(b);
 }
 /**
@@ -262,7 +269,11 @@ export function partyReceiptsFor(party: string | null) {
   const node = resolved
     ? nodes.find(
         (n) =>
-          n.label === resolved || n.aliases.some((a: string) => a === resolved),
+          n.label === resolved ||
+          n.aliases.some((a: string) => a === resolved) ||
+          // A renamed party resolves to its current name, which the
+          // register may record under a former one.
+          (!!partyRename(resolved) && sameParty(n.label, resolved)),
       )
     : undefined;
   return {

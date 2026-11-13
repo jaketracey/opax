@@ -250,7 +250,15 @@ export function installKeyCommands(): boolean {
 // yet, so a request waits until that screen's field takes it.
 // 'ask-status' and 'ask-waiting' move VoiceOver (not the keyboard) to a
 // running answer's status line or to a tapped question's waiting line.
-export type FocusTarget = 'search' | 'ask' | 'ask-status' | 'ask-waiting';
+// 'money-map-focus' and 'money-map-search' move it to the money map panel's
+// new subject after a search result, and back to Search when search closes.
+export type FocusTarget =
+  | 'search'
+  | 'ask'
+  | 'ask-status'
+  | 'ask-waiting'
+  | 'money-map-focus'
+  | 'money-map-search';
 const pending = new Set<FocusTarget>();
 const focusListeners = new Map<FocusTarget, Set<() => void>>();
 

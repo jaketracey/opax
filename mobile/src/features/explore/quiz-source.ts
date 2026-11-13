@@ -1,5 +1,6 @@
 import { formatDate } from '../../design/format';
 import type { SourceDetails } from '../../design/source';
+import type { MoneyGraph } from '../money/data';
 import { quizDestination } from './quiz-links';
 import type { Question } from './quiz-model';
 
@@ -100,8 +101,9 @@ export function quizSourceNotes(q: Question): string[] {
 export function quizSourceDetails(
   q: Question,
   asOf: string,
+  graph?: MoneyGraph | null,
 ): SourceDetails & { citation: QuizPublisher } {
-  const destination = quizDestination(q);
+  const destination = quizDestination(q, graph);
   return {
     asOf,
     citation: quizPublisher(q),

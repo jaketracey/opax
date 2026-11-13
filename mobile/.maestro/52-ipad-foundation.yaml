@@ -71,7 +71,7 @@ name: 52 iPad foundation, Today grid, sidebar, Bills split view, rotation and a 
 - takeScreenshot: ${EVIDENCE}/52-bills-empty
 # The list filters on the device; selecting a row opens it in the pane.
 - tapOn:
-    text: Bills, sponsors and portfolios
+    text: Search bills
 - inputText: interactive gambling levy
 - extendedWaitUntil:
     visible:

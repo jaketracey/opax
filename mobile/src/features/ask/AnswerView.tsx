@@ -39,11 +39,12 @@ import { LinkRow } from '../../design/rows';
 import { SourceAffordance, type SourceDetails } from '../../design/source';
 import { Text } from '../../design/text';
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
-import { openSource } from '../../navigation/external';
+import type { SourcePlacement } from '../../analytics/events';
+import { openSource, trackSourceOpen } from '../../navigation/external';
 import { personRoute } from '../../navigation/routes';
 import { askReportRoute } from '../../navigation/routes/ask';
 import { resultsRoute } from '../../navigation/routes/search';
-import { shareRecord } from '../../navigation/share';
+import { shareRecord, trackShare } from '../../navigation/share';
 import { presentSource } from '../../navigation/sheets';
 import { CachedPortrait } from '../CachedPortrait';
 import { copyText } from '../records/actions';
@@ -183,8 +184,8 @@ export function AnswerView({
     () => (scoped ? [] : peopleInAnswer(data, profiles)),
     [data, profiles, scoped],
   );
-  const go = (href: string, title: string) =>
-    pane ? pane.open(href, title) : openAnswerLink(href);
+  const go = (href: string, title: string, placement?: SourcePlacement) =>
+    pane ? pane.open(href, title, placement) : openAnswerLink(href, placement);
   const cite = (numbers: number[], claim: Claim) => {
     const n = numbers[0]!;
     if (pane) {
@@ -207,8 +208,9 @@ export function AnswerView({
       },
     );
   const copyAnswer = async () => {
-    if (await copyText(answerCopyText(question, turn, legacy)))
-      haptic('success');
+    if (!(await copyText(answerCopyText(question, turn, legacy)))) return;
+    haptic('success');
+    trackShare('answer');
   };
   const shareQuestion = () =>
     void shareRecord({
@@ -372,11 +374,10 @@ export function AnswerView({
                 onPress={
                   mine
                     ? () => showCitation({ turn: key, n: i + 1 })
-                    : pane
-                      ? () => go(sourcePath(source), sourceTitle(source))
-                      : sourceRoute(source)
-                        ? undefined
-                        : () => go(sourcePath(source), sourceTitle(source))
+                    : pane || !sourceRoute(source)
+                      ? () =>
+                          go(sourcePath(source), sourceTitle(source), 'inline')
+                      : undefined
                 }
                 onShowPassage={
                   numbered
@@ -452,11 +453,14 @@ export function askSourceDetails({
   };
   const groups = citedSources(data.sources);
   const key = turnKey(chat, index);
+  // The phone's Sources sheet is its sources list, as the iPad pane is.
   const leave = (source: Source) => {
     router.back();
     const href = sourceRoute(source);
-    if (href) router.push(href);
-    else openAnswerLink(sourcePath(source));
+    if (href) {
+      router.push(href);
+      trackSourceOpen('app', 'sources_pane');
+    } else openAnswerLink(sourcePath(source), 'sources_pane');
   };
   const originals = groups.cited.filter((s) => s.url?.startsWith('https://'));
   const calculated = isCalculated(data);
@@ -560,7 +564,7 @@ export function askSourceDetails({
   };
 }
 async function openSourceUrl(source: Source) {
-  await openSource(source.url!, sourceTitle(source));
+  await openSource(source.url!, sourceTitle(source), 'sources_pane');
 }
 /** "Search OPAX for "{question}"": Ask's way back to Search (journeys/ask.md 14). */
 export function SearchOpaxRow({

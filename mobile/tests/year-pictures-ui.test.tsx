@@ -1,13 +1,9 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- jest.mock factories build inert host elements. */
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import {
-  Image,
-  LayoutAnimation,
-  Platform,
-  StyleSheet,
-  Text as NativeText,
-} from 'react-native';
+import { Image, Platform, StyleSheet, Text as NativeText } from 'react-native';
+import * as Reanimated from 'react-native-reanimated';
+import { HeightReveal, revealMotion } from '../src/design/reveal';
 import { colors } from '../src/design/tokens';
 import { router } from 'expo-router';
 import { Button, InlineError } from '../src/design/primitives';
@@ -111,6 +107,21 @@ jest.mock('../src/design/accessibility', () => ({
   useReduceMotion: () => mockReduceMotion,
   useAccessibilitySize: () => false,
 }));
+
+/** Lays out a collapsing preview's reveal, as a device would. */
+function layOutFrame(renderer: TestRenderer.ReactTestRenderer, height: number) {
+  const content = renderer.root
+    .findByType(HeightReveal)
+    .find(
+      (n) =>
+        typeof n.type === 'string' && typeof n.props.onLayout === 'function',
+    );
+  act(() =>
+    content.props.onLayout({
+      nativeEvent: { layout: { x: 0, y: 0, width: 320, height } },
+    }),
+  );
+}
 const texts = (r: TestRenderer.ReactTestRenderer) =>
   r.root
     .findAllByType(NativeText)
@@ -357,11 +368,13 @@ test('a failed archive image collapses its empty frame and keeps its caption and
   expect(yearPictures.get).toHaveBeenCalledWith(key, false);
   const image = renderer.root.findByType(Image);
   expect(image.props.source.uri).toBe(`file:///cache/${key}.webp`);
-  // Reduce Motion (this suite's default): the frame goes at once.
-  const layout = jest.spyOn(LayoutAnimation, 'configureNext');
+  // Reduce Motion (this suite's default): the frame goes at once, with no
+  // height animation, even once it has measured.
+  const heights = jest.spyOn(Reanimated, 'withTiming');
+  layOutFrame(renderer, 240);
   act(() => image.props.onError());
-  expect(layout).not.toHaveBeenCalled();
-  layout.mockRestore();
+  expect(heights).not.toHaveBeenCalled();
+  heights.mockRestore();
   expect(texts(renderer)).toContain(picture.caption);
   expect(texts(renderer)).toContain(`Photo: ${picture.credit}`);
   expect(texts(renderer)).not.toContain('Try again');
@@ -376,7 +389,7 @@ test('a failed archive image collapses its empty frame and keeps its caption and
 });
 
 test.each(['ios', 'android'])(
-  'on %s a failed archive frame collapses with a 200 ms ease-out so the content below slides up',
+  'on %s a failed archive frame closes its height over 200 ms so the content below slides up',
   async (os) => {
     jest.replaceProperty(Platform, 'OS', os as typeof Platform.OS);
     mockReduceMotion = false;
@@ -396,23 +409,38 @@ test.each(['ios', 'android'])(
             n.props.testID === `tm-photo-${key}-placeholder`,
         ).length > 0;
       expect(frame()).toBe(true);
-      const before: boolean[] = [];
-      const layout = jest
-        .spyOn(LayoutAnimation, 'configureNext')
-        .mockImplementation(() => before.push(frame()));
+      // The frame sits in a reveal from the start: no height animation, and
+      // nothing clipped, while it shows.
+      expect(
+        renderer.root
+          .findByType(HeightReveal)
+          .findAll(
+            (n) =>
+              typeof n.type === 'string' &&
+              n.props.testID === `tm-photo-${key}-placeholder`,
+          ),
+      ).toHaveLength(1);
+      layOutFrame(renderer, 240);
+      jest.useFakeTimers();
+      const heights: [number, boolean][] = [];
+      const timing = jest
+        .spyOn(Reanimated, 'withTiming')
+        .mockImplementation((to) => {
+          heights.push([to as number, frame()]);
+          return to;
+        });
       act(() => renderer.root.findByType(Image).props.onError());
-      // Configured while the 4:3 frame was still laid out, then the frame
-      // is removed in the animated commit.
-      expect(before).toEqual([true]);
+      // The height closes to 0 with the standard ease while the 4:3 frame is
+      // still drawn, and only then is the frame removed.
+      expect(heights).toEqual([[0, true]]);
+      expect(timing.mock.calls[0]![1]).toBe(revealMotion);
+      expect(frame()).toBe(true);
+      act(() => jest.advanceTimersByTime(revealMotion.duration));
       expect(frame()).toBe(false);
-      expect(layout.mock.calls[0]![0]).toMatchObject({
-        duration: 200,
-        update: { type: 'easeOut' },
-        delete: { type: 'easeOut', property: 'opacity' },
-      });
       expect(texts(renderer)).toContain(picture.caption);
     } finally {
       mockReduceMotion = true;
+      jest.useRealTimers();
       jest.restoreAllMocks();
       if (renderer) act(() => renderer.unmount());
     }
@@ -421,7 +449,7 @@ test.each(['ios', 'android'])(
 
 test('a viewer photo that fails inline never animates a collapse', async () => {
   mockReduceMotion = false;
-  const layout = jest.spyOn(LayoutAnimation, 'configureNext');
+  const heights = jest.spyOn(Reanimated, 'withTiming');
   let renderer!: TestRenderer.ReactTestRenderer;
   try {
     await act(async () => {
@@ -429,12 +457,14 @@ test('a viewer photo that fails inline never animates a collapse', async () => {
         <Picture file={manifest['2025']![0]!.file} failure="inline" />,
       );
     });
+    // Only a collapsing preview sits in a reveal.
+    expect(renderer.root.findAllByType(HeightReveal)).toHaveLength(0);
     act(() => renderer.root.findByType(Image).props.onError());
     expect(renderer.root.findAllByType(InlineError)).toHaveLength(1);
-    expect(layout).not.toHaveBeenCalled();
+    expect(heights).not.toHaveBeenCalled();
   } finally {
     mockReduceMotion = true;
-    layout.mockRestore();
+    heights.mockRestore();
     act(() => renderer.unmount());
   }
 });
@@ -448,7 +478,12 @@ test('an archive fetch failure also leaves no empty photo frame on Today', async
       <ArchiveCard year={2014} picture={picture} />,
     );
   });
-  expect(renderer.root.findByType(Picture).children).toHaveLength(0);
+  // No frame is drawn, not even an empty one.
+  expect(
+    renderer.root
+      .findByType(Picture)
+      .findAll((n) => typeof n.type === 'string'),
+  ).toHaveLength(0);
   expect(texts(renderer)).toContain(picture.caption);
   act(() => renderer.unmount());
 });

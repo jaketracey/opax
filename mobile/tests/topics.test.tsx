@@ -61,6 +61,7 @@ jest.mock('../src/api/runtime', () => ({
   },
 }));
 jest.mock('../src/navigation/share', () => ({
+  trackShare: jest.fn(),
   canShare: true,
   shareRecord: jest.fn(),
   shareHeaderItem: jest.fn(() => ({ type: 'button', label: 'Share' })),
@@ -433,10 +434,14 @@ describe('Topic page', () => {
       'Open on opax.com.au',
     ]);
     act(() => more.menu!.items[0]!.onPress());
-    expect(mockOpenAsk).toHaveBeenCalledWith({
-      question: 'What has parliament said about gambling this year?',
-      topic: 'gambling',
-    });
+    // The page's own name goes with it, for Ask's way back.
+    expect(mockOpenAsk).toHaveBeenCalledWith(
+      {
+        question: 'What has parliament said about gambling this year?',
+        topic: 'gambling',
+      },
+      'Gambling',
+    );
     expect(topicQuestion('gambling')).toBe(
       'What has parliament said about gambling this year?',
     );
