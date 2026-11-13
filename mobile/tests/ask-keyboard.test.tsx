@@ -23,6 +23,7 @@ import {
 } from '../src/design/adaptive';
 import { ReservedRegionsProvider } from '../src/design/fold-area';
 import { emptyReservedRegions, type ReservedRegions } from '../src/design/fold';
+import { rhythm } from '../src/design/tokens';
 import { AskColumns, liftObstacles } from '../src/features/ask/AskLayout';
 import {
   KeyboardFrames,
@@ -142,6 +143,13 @@ const docked = (height: number) => ({
     height,
   },
 });
+// iPad's floating keyboard, and the empty frame UIKit reports as it undocks.
+const floatingFrame = {
+  endCoordinates: { screenX: 60, screenY: 300, width: 320, height: 260 },
+};
+const emptyFrame = {
+  endCoordinates: { screenX: 0, screenY: 0, width: 0, height: 0 },
+};
 
 function render(element: () => ReactNode) {
   let tree!: TestRenderer.ReactTestRenderer;
@@ -243,9 +251,7 @@ describe('the keyboard end frame', () => {
     render(() => <Probe />);
     emit('keyboardWillChangeFrame', docked(336));
     expect(result).toEqual({ overlap: 336, visible: true });
-    emit('keyboardWillChangeFrame', {
-      endCoordinates: { screenX: 60, screenY: 300, width: 320, height: 260 },
-    });
+    emit('keyboardWillChangeFrame', floatingFrame);
     expect(result).toEqual({ overlap: 0, visible: false });
     emit('keyboardWillChangeFrame', docked(336));
     emit('keyboardWillHide');
@@ -321,6 +327,75 @@ describe('iOS: the composer rises with the keyboard', () => {
       expect(composer(tree).top).toBe(AREA - COMPOSER);
     },
   );
+
+  test('the band keeps its top padding at rest, so the composer’s height holds as the keyboard starts', () => {
+    const band = (keyboard: number) => {
+      const { tree } = render(columns({ keyboard }));
+      return StyleSheet.flatten(native(tree, 'ask-phone-dock').props.style);
+    };
+    const atRest = band(0);
+    const raised = band(253);
+    expect(atRest.paddingTop).toBe(rhythm.tight);
+    expect(raised.paddingTop).toBe(rhythm.tight);
+    // Only the colour behind it changes.
+    expect(atRest.backgroundColor).toBeUndefined();
+    expect(raised.backgroundColor).toBeDefined();
+  });
+
+  test('iPad’s floating keyboard lifts nothing; docked again, the composer rises', () => {
+    act(() => {
+      Dimensions.set({
+        window: { ...WINDOW, width: 1032, height: 1376 },
+        screen: { ...WINDOW, width: 1032, height: 1376 },
+      });
+    });
+    windowAreaHeight = 1376;
+    const { tree, rerender } = render(columns({ width: 1032 }));
+    layOut(tree, { width: 1032, height: 1376 });
+    rerender();
+    const ipadFloating = {
+      endCoordinates: { screenX: 300, screenY: 700, width: 320, height: 260 },
+    };
+    for (const frameEvent of [ipadFloating, emptyFrame]) {
+      emit('keyboardWillChangeFrame', frameEvent);
+      // keyboard-controller still reports the floating keyboard's height.
+      frame('onStart', 260);
+      frame('onMove', 260);
+      frame('onEnd', 260);
+      rerender();
+      expect(composer(tree).lift).toBe(0);
+    }
+    // Docked again: the frames lift it.
+    emit('keyboardWillChangeFrame', {
+      endCoordinates: {
+        screenX: 0,
+        screenY: 1376 - 398,
+        width: 1032,
+        height: 398,
+      },
+    });
+    frame('onMove', 398);
+    rerender();
+    expect(composer(tree).lift).toBe(-398);
+    // Undocking with the keyboard up drops it at once.
+    emit('keyboardWillChangeFrame', ipadFloating);
+    rerender();
+    expect(composer(tree).lift).toBe(0);
+    frame('onEnd', 260);
+    rerender();
+    expect(composer(tree).lift).toBe(0);
+  });
+
+  test('Reduce Motion: a floating keyboard’s destination lifts nothing either', () => {
+    mockReduceMotion = true;
+    const { tree, rerender } = render(columns());
+    layOut(tree, { width: WINDOW.width, height: AREA });
+    emit('keyboardWillChangeFrame', floatingFrame);
+    frame('onStart', 260);
+    frame('onEnd', 260);
+    rerender();
+    expect(composer(tree).lift).toBe(0);
+  });
 
   test('Reduce Motion: no animation, the composer takes the keyboard’s end position at once', () => {
     mockReduceMotion = true;

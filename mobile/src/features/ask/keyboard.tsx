@@ -40,6 +40,18 @@ export function dockedKeyboardTop(
 }
 
 /**
+ * True when an iOS keyboard frame leaves the bottom edge clear: iPad's
+ * floating keyboard, or the empty frame UIKit reports as it undocks. The
+ * settled overlap and KeyboardLift read the same frames the same way.
+ */
+function keyboardFloats(event: KeyboardEvent) {
+  return (
+    dockedKeyboardTop(event.endCoordinates, Dimensions.get('screen').height) ===
+    null
+  );
+}
+
+/**
  * How far the keyboard overlaps the bottom of `ref` once it has arrived, for
  * layout that settles once (the conversation's bottom room, the composer's
  * height cap, the band behind the composer). The composer itself follows the
@@ -82,14 +94,11 @@ export function useKeyboardOverlap(ref: RefObject<View | null>) {
   useEffect(() => {
     if (Platform.OS === 'android') return;
     const change = Keyboard.addListener('keyboardWillChangeFrame', (event) => {
-      const top = dockedKeyboardTop(
-        event.endCoordinates,
-        Dimensions.get('screen').height,
-      );
-      if (top === null) {
+      if (keyboardFloats(event)) {
         setOverlap(0);
         return;
       }
+      const top = event.endCoordinates.screenY;
       ref.current?.measureInWindow((_x, y, _w, height) =>
         setOverlap(Math.max(0, Math.round(y + height - top))),
       );
@@ -155,7 +164,8 @@ export function KeyboardFrames({ children }: { children: ReactNode }) {
  * frame on the UI thread, so the bar rises and falls with the keyboard and
  * follows an interactive dismissal under the finger. Layout stays at rest,
  * so nothing waits for React to commit. With Reduce Motion it takes the
- * keyboard's end position at once. iOS only (KeyboardFrames).
+ * keyboard's end position at once. iPad's floating keyboard lifts nothing.
+ * iOS only (KeyboardFrames).
  */
 export function KeyboardLift({
   area,
@@ -185,29 +195,42 @@ export function KeyboardLift({
   // The window's bottom edge to the area's bottom edge (the tab bar, the
   // home indicator).
   const gap = useSharedValue(0);
+  // iPad's floating keyboard covers nothing at the bottom edge, but
+  // keyboard-controller reports its height all the same. The last frame
+  // UIKit announced says which it is, as it does for the settled overlap. A
+  // docked keyboard is the default, so its rise never waits for JS.
+  const floating = useSharedValue(false);
   useKeyboardHandler(
     {
       // Where the keyboard is going: Reduce Motion goes there at once.
       onStart: (event) => {
         'worklet';
-        if (reduceMotion) keyboard.value = event.height;
+        if (reduceMotion) keyboard.value = floating.value ? 0 : event.height;
       },
       onMove: (event) => {
         'worklet';
-        if (!reduceMotion) keyboard.value = event.height;
+        if (!reduceMotion) keyboard.value = floating.value ? 0 : event.height;
       },
       // The reader drags it (an interactive dismissal): follow the finger.
       onInteractive: (event) => {
         'worklet';
-        keyboard.value = event.height;
+        keyboard.value = floating.value ? 0 : event.height;
       },
       onEnd: (event) => {
         'worklet';
-        keyboard.value = event.height;
+        keyboard.value = floating.value ? 0 : event.height;
       },
     },
     [reduceMotion],
   );
+  useEffect(() => {
+    const change = Keyboard.addListener('keyboardWillChangeFrame', (event) => {
+      const floats = keyboardFloats(event);
+      floating.value = floats;
+      if (floats) keyboard.value = 0;
+    });
+    return () => change.remove();
+  }, [floating, keyboard]);
   useEffect(() => {
     const measure = () =>
       area.current?.measureInWindow((_x, y, _w, height) => {

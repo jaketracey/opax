@@ -289,7 +289,12 @@ export function PhoneDock({
               paddingTop: rhythm.tight,
               backgroundColor: colors[ground],
             }
-          : null,
+          : positioned && keyboardTracked()
+            ? // iOS keeps the band's (clear) top padding at rest, so the
+              // composer's height does not change as the keyboard starts:
+              // only KeyboardLift moves it.
+              { paddingTop: rhythm.tight }
+            : null,
       ]}
       testID="ask-phone-dock"
     >
