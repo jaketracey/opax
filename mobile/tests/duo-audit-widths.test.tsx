@@ -299,11 +299,7 @@ describe('folding and unfolding with a screen open', () => {
   // its window and traits changed underneath it, and its scroll view
   // measured again, as UIKit does when the scene moves between displays.
   const at = (name: string) => poses.find((p) => p.name === name)!;
-  function move(
-    tree: TestRenderer.ReactTestRenderer,
-    testID: string,
-    p: Pose,
-  ) {
+  function move(tree: TestRenderer.ReactTestRenderer, testID: string, p: Pose) {
     pose(p);
     layOut(tree, testID, p);
   }
