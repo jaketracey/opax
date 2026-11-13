@@ -27,6 +27,7 @@ import {
   samePartyLabel,
 } from '../design/party';
 import { nameKey } from './ids';
+import { personPartyFor } from './party-transforms';
 import { formatMoney } from '../design/format';
 export { resolveParty } from '../design/party';
 
@@ -62,7 +63,12 @@ export function partyLabels(
           .filter((n) => n.kind === 'party')
           .flatMap((n) => [n.label, ...(n.aliases ?? [])]) ?? []),
         ...people.people.flatMap((p) => p.electorates.map((s) => s.party)),
-        ...roster.people.flatMap((p) => [p.party_now, p.party]),
+        ...roster.people.flatMap((p) => [
+          p.party_now,
+          p.party,
+          ...(p.parties ?? []),
+          ...(p.affiliations ?? []).map((a) => a.party),
+        ]),
       ].filter((p): p is string => isPartyLabel(p)),
     ),
   ];
@@ -121,6 +127,10 @@ export function partyMembers(
   }
   for (const p of partyMemberProfiles(roster, people, slugs, manifest)) {
     if (p.partyStatus !== 'unknown') continue;
+    const service = p.rosterRow?.affiliations?.filter((a) =>
+      sameMemberParty(a.party, label),
+    );
+    if (service?.length && service.every((a) => !!a.end)) continue;
     if (p.party && samePartyLabel(p.party, label)) {
       // A recorded seat now held by someone else rules out only its own
       // parliament and chamber: a former federal MP can sit in a state house
@@ -288,55 +298,230 @@ const recordedAs = (party: string | null | undefined) => {
   return former ? { recordedAs: former } : {};
 };
 
-/** A past member from the voting record, under a former name of the party. */
+/** Party-specific service from the roster, kept separate from voting years. */
+export type PartyService = NonNullable<
+  Roster['people'][number]['affiliations']
+>[number];
 export interface PartyPastMember {
+  personId: string;
   name: string;
   /** Their profile's slug, or null when OPAX holds no profile for them. */
   slug: string | null;
   jurisdiction: string;
   house: string;
-  /** First and last year of their recorded votes. */
+  /** First and last year of their recorded votes, not party service dates. */
   years: readonly number[];
+  periods?: PartyService[];
   recordedAs: string;
 }
 /**
- * Past members of a renamed party, from the voting record: everyone whose
- * record carries one of its former names ("Liberal Democratic Party"). Only
- * renamed parties list them: past members keep the label they sat under,
- * and the party page otherwise excludes former members. People the members
- * list already shows are left out.
+ * One row per person across voting records and every roster party. An ended
+ * affiliation or confirmed former status establishes past membership. Missing
+ * roster records retain the voting-record fallback; undated roster labels do
+ * not establish that a person left. Current membership is computed separately.
  */
 export function partyPastMembers(
   label: string,
   votes: Votes,
   slugs: Slugs,
-  shown: readonly { name: string }[] = [],
+  shown: readonly { name: string; slug?: string }[] = [],
+  roster?: Roster,
+  people?: PeopleCatalog,
 ): PartyPastMember[] {
-  const rename = partyRename(label);
-  if (!rename) return [];
-  const seen = new Set(shown.map((m) => nameKey(m.name)));
+  type Person = PeopleCatalog['people'][number];
+  type Row = Roster['people'][number];
+  const peopleById = new Map(
+    (people?.people ?? []).map((p) => [String(p.person_id), p]),
+  );
+  const peopleByLegacy = new Map(
+    (people?.people ?? []).flatMap((p) =>
+      p.legacy_person_id ? [[String(p.legacy_person_id), p] as const] : [],
+    ),
+  );
+  const peopleByName = new Map<string, Set<Person>>();
+  for (const p of people?.people ?? [])
+    for (const n of [p.name, ...p.aliases]) {
+      const matches = peopleByName.get(nameKey(n)) ?? new Set<Person>();
+      matches.add(p);
+      peopleByName.set(nameKey(n), matches);
+    }
+  const uniquePerson = (names: string[]) => {
+    const matches = new Set(
+      names.flatMap((n) => [...(peopleByName.get(nameKey(n)) ?? [])]),
+    );
+    return matches.size === 1 ? [...matches][0] : undefined;
+  };
+  const canonicalFor = (r: Row) => {
+    const direct = r.pid ? peopleByLegacy.get(r.pid) : undefined;
+    if (direct) return direct;
+    const named = uniquePerson([r.name, ...(r.full ? [r.full] : [])]);
+    return r.pid && named?.legacy_person_id && named.legacy_person_id !== r.pid
+      ? undefined
+      : named;
+  };
+  const idFor = (r: Row) =>
+    canonicalFor(r)?.person_id ??
+    (r.pid ? `roster:${r.pid}` : `name:${nameKey(r.full || r.name)}`);
+  const groups = new Map<string, Row[]>();
+  const idsByName = new Map<string, Set<string>>();
+  const idsByLegacy = new Map<string, string>();
+  for (const r of roster?.people ?? []) {
+    const id = idFor(r);
+    groups.set(id, [...(groups.get(id) ?? []), r]);
+    if (r.pid) idsByLegacy.set(r.pid, id);
+    for (const n of [r.name, ...(r.full ? [r.full] : [])]) {
+      const ids = idsByName.get(nameKey(n)) ?? new Set<string>();
+      ids.add(id);
+      idsByName.set(nameKey(n), ids);
+    }
+  }
+  const idByName = (name: string) => {
+    const ids = idsByName.get(nameKey(name));
+    return ids?.size === 1 ? [...ids][0] : undefined;
+  };
+  const hidden = new Set(
+    shown.map(
+      (m) =>
+        idByName(m.name) ??
+        uniquePerson([m.name])?.person_id ??
+        `name:${nameKey(m.name)}`,
+    ),
+  );
+  const hiddenSlugs = new Set(shown.flatMap((m) => (m.slug ? [m.slug] : [])));
   const slugByName = new Map(
     Object.entries(slugs.slugs).map(([slug, name]) => [nameKey(name), slug]),
   );
-  const rows: PartyPastMember[] = [];
-  for (const record of Object.values(votes.records)) {
-    const former = formerPartyName(record.party);
-    if (!former || partyRename(former) !== rename) continue;
-    const key = nameKey(record.name);
-    if (seen.has(key)) continue;
-    seen.add(key);
-    rows.push({
-      name: record.name,
-      slug: slugByName.get(key) ?? null,
-      jurisdiction: record.jurisdiction,
-      house: record.house,
-      years: record.years,
-      recordedAs: former,
+  const rows = new Map<string, PartyPastMember>();
+  const add = (id: string, vote?: Votes['records'][string]) => {
+    const group = groups.get(id) ?? [];
+    const r = [...group].sort(
+      (a, b) =>
+        Number(b.current === true) - Number(a.current === true) ||
+        Number(b.name.includes(' ')) - Number(a.name.includes(' ')),
+    )[0];
+    const person = r ? canonicalFor(r) : peopleById.get(id);
+    const periods = [
+      ...new Map(
+        group
+          .flatMap((p) => p.affiliations ?? [])
+          .filter((a) => sameMemberParty(a.party, label))
+          .map((a) => [
+            JSON.stringify([
+              a.party,
+              a.start,
+              a.end,
+              a.jurisdiction,
+              a.chamber,
+              a.electorate,
+            ]),
+            a,
+          ]),
+      ).values(),
+    ].sort((a, b) => (a.start ?? '').localeCompare(b.start ?? ''));
+    const sits =
+      person?.electorates.some(
+        (s) => s.current && s.party && sameMemberParty(s.party, label),
+      ) ||
+      group.some(
+        (p) =>
+          p.current === true &&
+          sameMemberParty(p.party_now || p.party || '', label),
+      );
+    const ended = periods.some((p) => !!p.end) && periods.every((p) => !!p.end);
+    const former =
+      personPartyFor(person?.electorates ?? [], r).partyStatus === 'former';
+    if (sits || ((r || person) && !ended && !former)) return;
+    const name = r?.full || r?.name || vote!.name;
+    const slug =
+      people && !person
+        ? null
+        : ([name, r?.name, person?.name, ...(person?.aliases ?? []), vote?.name]
+            .filter((n): n is string => !!n)
+            .filter((n) => {
+              const ids = idsByName.get(nameKey(n));
+              return !ids?.size || (ids.size === 1 && ids.has(id));
+            })
+            .map((n) => slugByName.get(nameKey(n)))
+            .find(Boolean) ?? null);
+    if (
+      hidden.has(id) ||
+      hidden.has(`name:${nameKey(name)}`) ||
+      (slug && hiddenSlugs.has(slug))
+    )
+      return;
+    const existing = rows.get(id);
+    const years = [
+      ...new Set([...(existing?.years ?? []), ...(vote?.years ?? [])]),
+    ].sort((a, b) => a - b);
+    const party =
+      periods[0]?.party ??
+      (vote?.party && sameMemberParty(vote.party, label)
+        ? vote.party
+        : group
+            .flatMap((p) => [p.party, ...(p.parties ?? [])])
+            .find((p) => p && sameMemberParty(p, label)));
+    const service = periods[0];
+    rows.set(id, {
+      personId: id,
+      name,
+      slug,
+      jurisdiction:
+        service?.jurisdiction ??
+        existing?.jurisdiction ??
+        vote?.jurisdiction ??
+        '',
+      house: service?.chamber ?? existing?.house ?? vote?.house ?? '',
+      years,
+      ...(periods.length ? { periods } : {}),
+      recordedAs: formerPartyName(party) ?? '',
     });
+  };
+  for (const [key, vote] of Object.entries(votes.records)) {
+    if (!vote.party || !sameMemberParty(vote.party, label)) continue;
+    const namedId = idByName(vote.name);
+    // Two different numeric IDs remain two people, even at the same name.
+    const compatibleName =
+      namedId &&
+      !(groups.get(namedId) ?? []).some(
+        (r) =>
+          r.pid && /^\d+$/.test(r.pid) && /^\d+$/.test(key) && r.pid !== key,
+      )
+        ? namedId
+        : undefined;
+    const namedPerson = uniquePerson([vote.name]);
+    const compatiblePerson =
+      namedPerson &&
+      !(
+        namedPerson.legacy_person_id &&
+        /^\d+$/.test(key) &&
+        namedPerson.legacy_person_id !== key
+      )
+        ? namedPerson
+        : undefined;
+    add(
+      idsByLegacy.get(key) ??
+        peopleByLegacy.get(key)?.person_id ??
+        compatibleName ??
+        compatiblePerson?.person_id ??
+        `vote:${key}`,
+      vote,
+    );
   }
-  return rows.sort(
+  for (const [id, group] of groups)
+    if (
+      group.some((r) =>
+        [
+          r.party,
+          ...(r.parties ?? []),
+          ...(r.affiliations ?? []).map((a) => a.party),
+        ].some((p) => p && sameMemberParty(p, label)),
+      )
+    )
+      add(id);
+  return [...rows.values()].sort(
     (a, b) =>
-      (a.years[0] ?? 0) - (b.years[0] ?? 0) ||
+      Number((a.periods?.[0]?.start ?? '').slice(0, 4) || a.years[0] || 0) -
+        Number((b.periods?.[0]?.start ?? '').slice(0, 4) || b.years[0] || 0) ||
       a.name.localeCompare(b.name, 'en-AU'),
   );
 }

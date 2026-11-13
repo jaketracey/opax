@@ -1312,11 +1312,11 @@ describe('the Libertarian Party, formerly the Liberal Democratic Party', () => {
     act(() => r.unmount());
   });
 
-  test('other parties draw no history line and no past members', async () => {
+  test('other parties draw past members without a rename history line', async () => {
     jest.mocked(runtime.partyPage).mockResolvedValue(view);
     const r = await render();
     expect(has(r, 'party-history')).toBe(false);
-    expect(has(r, 'party-past-toggle')).toBe(false);
+    expect(has(r, 'party-past-toggle')).toBe(true);
     act(() => r.unmount());
   });
 });
@@ -1398,7 +1398,8 @@ describe('VoiceOver and Dynamic Type on a party page', () => {
             .filter(
               (e) =>
                 /^party-past-/.test(e.testID ?? '') &&
-                e.testID !== 'party-past-toggle',
+                e.testID !== 'party-past-toggle' &&
+                e.testID !== 'party-past-source',
             )
             .map((e) => e.label),
         ).toEqual([
