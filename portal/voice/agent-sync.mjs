@@ -170,9 +170,12 @@ export async function readAgent(call, agentId, names = []) {
 /** The fetched state, saved before any write. Contents are never printed. */
 export function saveBackup(dir, agentId, state, now = new Date()) {
   mkdirSync(dir, {recursive: true, mode: 0o700})
-  const file = join(dir, `${agentId}-${now.toISOString().replace(/[:.]/g, '-')}.json`)
-  writeFileSync(file, JSON.stringify({agent_id: agentId, saved_at: now.toISOString(), ...state}, null, 1), {mode: 0o600, flag: 'wx'})
-  return file
+  const stamp = now.toISOString().replace(/[:.]/g, '-'), text = JSON.stringify({agent_id: agentId, saved_at: now.toISOString(), ...state}, null, 1)
+  // Never overwrite a backup: a second one in the same millisecond gets a number.
+  for (let n = 1; ; n++) {
+    const file = join(dir, `${agentId}-${stamp}${n > 1 ? '-' + n : ''}.json`)
+    try { writeFileSync(file, text, {mode: 0o600, flag: 'wx'}); return file } catch (error) { if (error?.code !== 'EEXIST' || n >= 100) throw error }
+  }
 }
 
 /**

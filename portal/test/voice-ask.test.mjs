@@ -9,7 +9,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {build} from 'esbuild';
-import {loadConfig,renderTools,planSync,formatPlan,parseArgs,differences,run,samePrompt,inSync} from '../voice/agent-sync.mjs';
+import {loadConfig,renderTools,planSync,formatPlan,parseArgs,differences,run,samePrompt,inSync,saveBackup} from '../voice/agent-sync.mjs';
 
 crypto.subtle.timingSafeEqual ??= timingSafeEqual;
 const folder=mkdtempSync(join(tmpdir(),'opax-voice-ask-test-'));
@@ -289,6 +289,11 @@ test('agent sync: a dry run reads only; the plan matches attached tools by name'
   assert.deepEqual(differences({a:{b:1}},{a:{b:1,c:2}}),[]);
   assert.ok(samePrompt('a\nb','a  \r\nb\n'));assert.ok(!samePrompt('a b','a  b'));
   assert.equal(planSync(loadConfig(),{conversation_config:{agent:{prompt:{}}}},[],{origin:p.origin}).problems.length,1);
+  // Two backups in the same millisecond (a failed apply and its quick re-run) both keep their own file.
+  const same=new Date('2026-11-13T00:03:17.512Z'),bdir=mkdtempSync(join(tmpdir(),'opax-voice-backup-'));
+  const first=saveBackup(bdir,'agent_x',{n:1},same),second=saveBackup(bdir,'agent_x',{n:2},same);
+  assert.notEqual(first,second);assert.equal(JSON.parse(readFileSync(first,'utf8')).n,1);assert.equal(JSON.parse(readFileSync(second,'utf8')).n,2);
+  assert.equal(statSync(second).mode&0o777,0o600);
 });
 
 test('agent sync --apply backs up first, attaches the tools, then re-checks to in sync; restore puts it back',async()=>{
