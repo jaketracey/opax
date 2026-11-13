@@ -10,7 +10,7 @@ const integer = (value, fallback) => Number.isSafeInteger(Number(value)) && Numb
 const number = value => value == null || value === '' || !Number.isFinite(Number(value)) ? null : Number(value);
 const collator = new Intl.Collator('en-AU', {numeric:true, sensitivity:'base'});
 const decimal = new Intl.NumberFormat('en-AU', {maximumFractionDigits:20});
-const money = new Intl.NumberFormat('en-AU', {style:'currency', currency:'AUD', minimumFractionDigits:2, maximumFractionDigits:20});
+const money = new Intl.NumberFormat('en-AU', {style:'currency', currency:'AUD', minimumFractionDigits:2, maximumFractionDigits:2});
 const text = value => Array.isArray(value) ? value.join('; ') : String(value ?? '');
 const members = value => [...new Set((Array.isArray(value) ? value : [value]).filter(v=>v != null && v !== '').map(text))];
 const pageQueries = new WeakMap();

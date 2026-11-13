@@ -31,14 +31,14 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=543bf0a704").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=f14a0a91a9").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=5682105c48").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=6fe318ff05').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=c8a69402d5').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=fae51a8e69').then(module => { askPerson = module; });
 let uiLabels;
@@ -1401,7 +1401,7 @@ async function renderDiscoveryPage(params, manageFocus) {
   slot.innerHTML = '<p role="status">Loading contracts…</p>';
   const seedNode = document.querySelector('#prerender [data-contracts-seed]');
   const seed = seedNode ? JSON.parse(seedNode.textContent) : null;
-  import('/contracts-table.js?v=019010cca9').then(async ({mountContractsTable}) => {
+  import('/contracts-table.js?v=e8d40dcf06').then(async ({mountContractsTable}) => {
     if (tableGeneration !== contractsTableGeneration) return;
     const handle = await mountContractsTable(slot, {seed: seed?.supplierId === null ? seed : undefined, signal: tableController.signal});
     if (tableGeneration === contractsTableGeneration) contractsTableHandle = handle; else handle.destroy();
@@ -1557,7 +1557,7 @@ async function openMoneyRecords(kind, params) {
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
     if (grants && !params.has('program') && !params.has('open') && !params.has('largest')) {
-      const mod = await import('/grants-table.js?v=8ae521f42e');
+      const mod = await import('/grants-table.js?v=6c195c4fb5');
       if (generation !== moneyRecordsGeneration) return;
       const controller = new AbortController();
       moneyRecordsHandle = {destroy() {controller.abort();}};
@@ -14336,9 +14336,13 @@ function renderStats(container, stats, topic, { speakers = true } = {}) {
   const don = stats.donations;
   let htmlOut = "";
   htmlOut += moneyWordsCharts(stats, { topic });
-  if (don?.top_donors?.length) htmlOut += barList(donorRows(don.top_donors,donorViewIndex), {
-    heading: "Largest receipt sources", fmt: fmtMoney,
-    linkTo: (nm) => subjectHash("donor", nm) });
+  // Ranked by each donor's record figure (scripts/build_report_sources.mjs): each
+  // receipt once, from the party's own return, linked to the record the map opens.
+  const sources = Array.isArray(don?.top_sources) && don.top_sources.length
+    ? don.top_sources.map((s) => [s.label, s.total, s.href]) : don?.top_donors;
+  if (sources?.length) htmlOut += barList(donorRows(sources,donorViewIndex), {
+    heading: "Largest receipt sources", fmt: fmtMoney, scope: don.top_sources_scope || "",
+    linkTo: (nm, _v, row) => row?.[2] || subjectHash("donor", nm) });
   if (speakers && stats.top_speakers?.length) htmlOut += barList(stats.top_speakers, {
     heading: "Most speeches on this topic", fmt: (v) => v.toLocaleString(),
     linkTo: (nm) => subjectHash("person", nm) });

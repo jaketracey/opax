@@ -73,6 +73,11 @@ test('paging clamps invalid and out-of-range pages; empty results have page one'
 test('formatting keeps compact money, exact decimals, grouped counts and UTC dates',()=>{
   assert.equal(formatCell(35400000000,{type:'money'}),'$35.4bn');
   assert.equal(formatCell(12450.75,{type:'money',format:'exact'}),'$12,450.75');
+  // A $m figure scaled to dollars carries binary noise (-34.3 * 1e9); exact money stops at cents
+  // (live /budget at 390 px read "-$34,299,999,999.999996"). The CSV keeps the raw value.
+  assert.equal(formatCell(-34.3*1e9,{type:'money',format:'exact'}),'-$34,300,000,000.00');
+  assert.equal(dataTableHTML({id:'cents',caption:'Cents',columns:[{key:'n',label:'Name',type:'text',primary:true},{key:'v',label:'Value',type:'money',format:'exact'}]},
+    applyQuery([{n:'Fixture row',v:0.1+0.2}],{columns:[{key:'n',type:'text'},{key:'v',type:'money'}]},{})).includes('$0.30000000000000004'),false);
   assert.equal(formatCell(-1250000,{type:'money'}),'−$1.3m');
   assert.equal(formatCell(21450000,{type:'money'}),'$21.5m');
   assert.equal(formatCell(1159,{type:'count'}),'1,159');

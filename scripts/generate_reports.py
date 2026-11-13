@@ -2583,6 +2583,9 @@ def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     stats_path = Path(__file__).resolve().parent / "report_stats.json"
     all_stats = json.loads(stats_path.read_text()) if stats_path.exists() else {}
+    # The largest receipt sources (stats.donations.top_donors, top_sources) are not
+    # in report_stats.json: scripts/build_report_sources.mjs ranks the money map's
+    # donors by their record figure, and build:release runs it after this.
 
     # --- one block at a time, everything else preserved --------------------
     if args.only:
