@@ -1,4 +1,4 @@
-import { applyQuery, dataTableHTML, mountDataTable, mountTableLoaders, parseQuery, pendingPage, serializeQuery } from './datatable.js?v=939d14e6a8';
+import { applyQuery, dataTableHTML, mountDataTable, mountTableLoaders, parseQuery, pendingPage, serializeQuery } from './datatable.js?v=5fe413541f';
 /** The contracts page's note under its title (index.html carries it word for
  *  word; the Worker prints it before scripts). From suppliers.json meta: AusTender
  *  notices, one per contract at its latest amendment ("Amendments are not added

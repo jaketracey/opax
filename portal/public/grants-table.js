@@ -1,9 +1,9 @@
-import {dataTableHTML, mountDataTable, pendingPage} from './datatable.js?v=939d14e6a8';
+import {dataTableHTML, mountDataTable, pendingPage} from './datatable.js?v=5fe413541f';
 
 export const GRANTS_COVERAGE = 'Federal award values are commitments, not payments; Queensland rows record expenditure. Names follow the published award records.';
 export const GRANTS_SEARCH_KEYS = ['recipient', 'program', 'agency'];
 
-/** @returns {import('./datatable.js?v=939d14e6a8').DataTableConfig} */
+/** @returns {import('./datatable.js?v=5fe413541f').DataTableConfig} */
 export function grantsTableConfig(params = new URLSearchParams()) {
   const jur = params.get('jur');
   return {

@@ -9,7 +9,7 @@ export function filterMoneyConnectionView(graph,params) {
 }
 
 /** Source names and amounts are preserved; only confident donor matches link.
- * @returns {import('./datatable.js?v=939d14e6a8').DataTableConfig} */
+ * @returns {import('./datatable.js?v=5fe413541f').DataTableConfig} */
 export function moneyConnectionsConfig(graph) {
   const nodes=new Map(graph.nodes.map(n=>[n.id,n]));
   const rows=[],types=new Set();

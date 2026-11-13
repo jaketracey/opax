@@ -1,6 +1,6 @@
 // Both URLs are content-stamped by scripts/stamp_assets.mjs.
-const stylesheet = '/app-banner.css?v=a0ae05eef7'
-const script = '/app-banner.js?v=9e81f9c36a'
+const stylesheet = '/app-banner.css?v=6a7d6f6e9c'
+const script = '/app-banner.js?v=9829079d3e'
 
 export const APP_BANNER_HTML = `<div class="opax-app-banner" id="opax-app-banner">
   <div class="opax-app-banner-row">
