@@ -157,7 +157,7 @@ test('a failed tool call at round 3 with passages held still gives a real answer
   assert.doesNotMatch(run.answer,/do not identify|selected facts|cannot establish/i)
   const prompt=JSON.stringify(m.doGenerateCalls[3].prompt)
   assert.ok(prompt.includes('ten times its value'),'the final call is given the passages research held')
-  assert.match(prompt,/for who, name the people and their roles/)
+  assert.match(prompt,/For a who question, name the people and their roles first/)
 })
 
 test('a count run that fails late keeps the facts it gathered, with no budget line',async()=>{
@@ -179,4 +179,21 @@ test('research that gathered nothing answers from general knowledge, and the not
   assert.equal(run.answered,true);assert.equal(f.plannerCalls,0)
   assert.match(run.answer,/Auditor-General later found/)
   assert.equal(run.qualitative.coverage.note,'OPAX’s records were not reached for this question, so this answer draws on general knowledge.')
+})
+
+// With no model call left, the passages research already holds answer in their own words, never nothing.
+for(const [name,options,second] of [
+  ['the wall clock',{wallMs:1500},()=>new Promise(()=>{})],
+  ['the spend cap',{inputPrice:5,outputPrice:15},reply([call('answer',{points:[{claim:'never reached'}]},'b')])],
+])test(`a stop at ${name} with passages held answers from them, cited`,async()=>{
+  const q='Who was responsible for the Leppington Triangle land purchase?'
+  const m=new MockLanguageModelV4({doGenerate:[reply([call('search',{query:'Leppington Triangle purchase'},'a')]),second]})
+  const f=loopDeps(m,options),run=await ask(q,f.deps)
+  assert.equal(run.answered,true);assert.equal(f.plannerCalls,0)
+  assert.equal(run.research.failure,undefined)
+  assert.match(run.answer,/Jordan Sample said “[^”]*ten times its value/)
+  assert.doesNotMatch(run.answer,/never reached/)
+  const ranges=Object.values(run.qualitative.citations).flat();assert.ok(ranges.length)
+  for(const [a,b] of ranges)assert.ok(a>=0&&b>a&&b<=Array.from(run.answer).length)
+  assert.equal(m.doGenerateCalls.length,name==='the spend cap'?1:2,'no final model call past a time or spend cap')
 })

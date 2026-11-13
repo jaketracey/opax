@@ -1,6 +1,7 @@
 import type {NamedScope} from './agentic-ask'
 import type {Passage,QualitativeAnswer} from './research-types'
 import {isPlaceNameMention} from './ask-person-slot'
+import {readableDate} from './tools/record-common'
 export interface AnswerCitation { id:string; quote:string; start:number; end:number }
 export interface AnswerDraft { text:string; citations:AnswerCitation[] }
 export interface AnswerPoint { claim:string; id?:string; quote?:string }
@@ -113,4 +114,19 @@ export function verifyResearchPoints(points:unknown,passages:Map<string,Passage>
  tally.points_in+=points.length;tally.mode=tally.points_kept?'points':'uncited'
  if(!kept.length)return null
  return {...verifyResearchAnswer(pointsDraft(kept),passages,question,named,positionQuery,roster,why),dropped:points.length-kept.length}
+}
+
+/** With no model call left (a time, token or spend stop), the passages research already holds answer in their own
+ * words: the passage most relevant to the question first, one per record, each a verbatim excerpt with its speaker,
+ * date and citation. */
+export function passagesAnswer(passages:Map<string,Passage>,question:string,limit=4):QualitativeAnswer|null {
+ const topic=contentWords(question)
+ const ranked=[...passages.values()].map(p=>{const excerpt=passageExcerpt(p.text,question,40);return {p,excerpt,score:(excerpt?.score??0)+[...contentWords(p.text)].filter(w=>topic.has(w)).length}})
+  .filter(c=>c.excerpt&&c.excerpt.text.trim().length>=20).sort((a,b)=>b.score-a.score||String(b.p.date??'').localeCompare(String(a.p.date??'')))
+ const chosen:typeof ranked=[]
+ for(const c of ranked)if(chosen.length<limit&&!chosen.some(x=>x.p.slug===c.p.slug))chosen.push(c)
+ if(!chosen.length)return null
+ const points=chosen.map(({p,excerpt})=>{const quote=excerpt!.text.trim(),lead=p.date?`On ${readableDate(p.date)}, `:'',who=p.speaker?.trim()
+  return {claim:`${lead}${who?`${who} said`:'the record says'} “${quote}”`.replace(/^the/,'The'),id:p.id,quote}})
+ return verifyResearchAnswer(pointsDraft(points),passages)
 }
