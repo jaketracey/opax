@@ -6,12 +6,16 @@ import {
   usePathValue,
   vec,
 } from '@shopify/react-native-skia';
-import { useEffect, useMemo } from 'react';
-import { Platform } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { AppState, Platform } from 'react-native';
 import {
+  cancelAnimation,
+  Easing,
   useDerivedValue,
   useFrameCallback,
   useSharedValue,
+  withRepeat,
+  withTiming,
   type SharedValue,
 } from 'react-native-reanimated';
 import { useIncreaseContrast } from '../../design/accessibility';
@@ -89,6 +93,33 @@ function orbColours(strong: boolean) {
     sweep: paint('navy', strong ? 0.9 : 0.3),
     edge: paint('navyRaised', strong ? 1 : 0.6),
   };
+}
+
+/**
+ * The resting orb breathes (sweep 1 item 10): scale 1.00 to 1.03 and the
+ * rings' opacity 0.6 to 1.0, one breath every 4 seconds, eased in and out,
+ * for as long as Talk sits idle. Never in a call, never under Reduce Motion,
+ * never while the app is in the background. No sound and no haptic.
+ */
+export const BREATH_SECONDS = 4;
+export const BREATH_SCALE = 0.03;
+export const BREATH_RING_LOW = 0.6;
+export function orbBreathes(
+  phase: OrbPhase,
+  reduceMotion: boolean,
+  appActive: boolean,
+): boolean {
+  return phase === 'rest' && !reduceMotion && appActive;
+}
+function useAppActive() {
+  const [active, setActive] = useState(AppState.currentState !== 'background');
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (state) =>
+      setActive(state === 'active'),
+    );
+    return () => subscription.remove();
+  }, []);
+  return active;
 }
 
 /**
@@ -177,6 +208,37 @@ export function VoiceOrb({
 
   const animated = phase !== 'rest' && !(reduceMotion && phase === 'listening');
   const androidSize = Platform.OS === 'android' ? size : 0;
+  // The idle breath runs on the UI thread as a repeating timing, so the
+  // frame loop above stays off at rest. `depth` eases the breath in and out
+  // of a call; `breath` is the loop (1 is the full breath, 0 the empty one).
+  const appActive = useAppActive();
+  const breathes = orbBreathes(phase, reduceMotion, appActive);
+  const breath = useSharedValue(1);
+  const depth = useSharedValue(0);
+  useEffect(() => {
+    if (!breathes) {
+      cancelAnimation(breath);
+      breath.set(1);
+      depth.set(reduceMotion ? 0 : withTiming(0, { duration: 300 }));
+      return;
+    }
+    depth.set(withTiming(1, { duration: 300 }));
+    breath.set(1);
+    breath.set(
+      withRepeat(
+        withTiming(0, {
+          duration: (BREATH_SECONDS * 1000) / 2,
+          easing: Easing.inOut(Easing.sin),
+        }),
+        -1,
+        true,
+      ),
+    );
+    return () => cancelAnimation(breath);
+  }, [breathes, reduceMotion, breath, depth]);
+  const breathTransform = useDerivedValue(() => [
+    { scale: 1 + BREATH_SCALE * breath.get() * depth.get() },
+  ]);
   useEffect(() => {
     code.set(phaseCode[phase]);
     calm.set(reduceMotion ? 1 : 0);
@@ -276,10 +338,12 @@ export function VoiceOrb({
   const sweepAlpha = useDerivedValue(() =>
     calm.get() > 0.5 ? 0 : arc.get() * 0.9,
   );
-  const ringsAlpha = useDerivedValue(() =>
-    calm.get() > 0.5 && arc.get() > 0.5
-      ? ringAlpha.get() * (0.55 + 0.45 * pulse.get())
-      : ringAlpha.get(),
+  const ringsAlpha = useDerivedValue(
+    () =>
+      (calm.get() > 0.5 && arc.get() > 0.5
+        ? ringAlpha.get() * (0.55 + 0.45 * pulse.get())
+        : ringAlpha.get()) *
+      (1 - (1 - BREATH_RING_LOW) * (1 - breath.get()) * depth.get()),
   );
   const centre = useMemo(() => vec(c, c), [c]);
   const highlight = useMemo(() => vec(c - 0.32 * R, c - 0.38 * R), [c, R]);
@@ -295,58 +359,60 @@ export function VoiceOrb({
       {Platform.OS === 'android' ? (
         <Circle cx={c} cy={c} r={size} color={paint('paper')} />
       ) : null}
-      <Circle cx={c} cy={c} r={R * EXTENT} opacity={halo}>
-        <RadialGradient
-          c={centre}
-          r={R * EXTENT}
-          colors={colours.halo}
-          positions={[0.45, 1]}
-        />
-      </Circle>
-      <Group opacity={ringsAlpha}>
-        <Path path={rings} style="stroke" strokeWidth={1}>
+      <Group transform={breathTransform} origin={centre}>
+        <Circle cx={c} cy={c} r={R * EXTENT} opacity={halo}>
           <RadialGradient
             c={centre}
             r={R * EXTENT}
-            colors={colours.rings}
-            positions={[0.48, 0.8, 1]}
-          />
-        </Path>
-      </Group>
-      <Path
-        path={sweep}
-        style="stroke"
-        strokeWidth={1.5}
-        strokeCap="round"
-        color={colours.sweep}
-        opacity={sweepAlpha}
-      />
-      <Group opacity={coreOpacity}>
-        <Circle cx={c} cy={c} r={coreRadius}>
-          <RadialGradient
-            c={highlight}
-            r={R * 1.7}
-            colors={colours.core}
-            positions={[0, 0.28, 0.68, 1]}
+            colors={colours.halo}
+            positions={[0.45, 1]}
           />
         </Circle>
+        <Group opacity={ringsAlpha}>
+          <Path path={rings} style="stroke" strokeWidth={1}>
+            <RadialGradient
+              c={centre}
+              r={R * EXTENT}
+              colors={colours.rings}
+              positions={[0.48, 0.8, 1]}
+            />
+          </Path>
+        </Group>
         <Path
-          path={rosette}
+          path={sweep}
           style="stroke"
-          strokeWidth={0.75}
-          color={colours.rosette}
+          strokeWidth={1.5}
+          strokeCap="round"
+          color={colours.sweep}
+          opacity={sweepAlpha}
         />
-        <Circle cx={c} cy={c} r={coreRadius} opacity={glow}>
-          <RadialGradient c={centre} r={R} colors={colours.glow} />
-        </Circle>
-        <Circle
-          cx={c}
-          cy={c}
-          r={coreRadius}
-          style="stroke"
-          strokeWidth={1}
-          color={colours.edge}
-        />
+        <Group opacity={coreOpacity}>
+          <Circle cx={c} cy={c} r={coreRadius}>
+            <RadialGradient
+              c={highlight}
+              r={R * 1.7}
+              colors={colours.core}
+              positions={[0, 0.28, 0.68, 1]}
+            />
+          </Circle>
+          <Path
+            path={rosette}
+            style="stroke"
+            strokeWidth={0.75}
+            color={colours.rosette}
+          />
+          <Circle cx={c} cy={c} r={coreRadius} opacity={glow}>
+            <RadialGradient c={centre} r={R} colors={colours.glow} />
+          </Circle>
+          <Circle
+            cx={c}
+            cy={c}
+            r={coreRadius}
+            style="stroke"
+            strokeWidth={1}
+            color={colours.edge}
+          />
+        </Group>
       </Group>
     </SizedCanvas>
   );
