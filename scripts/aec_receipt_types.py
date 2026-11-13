@@ -7,18 +7,21 @@ from scripts.aec_receipt_selection import load_selection
 from scripts.export_money_graph import PUBLIC_FUNDING_RE, load_associated_register, norm_key
 
 PARTY_RETURN_NOTE = (
-    "return_by_type and return_by_type_year on a federal party node count the party's own annual returns "
-    "(AEC Detailed Receipts, Political Party Return, every branch the party maps to), each receipt line once and "
-    "all receipt types, so a gift the donor also declared is never added twice. Left out: public funding "
+    "return_by_type and return_by_type_year on a federal party node count the itemised receipts in the party's own "
+    "annual returns (AEC Detailed Receipts, Political Party Return), each receipt line once and all receipt types, so a "
+    "gift the donor also declared is never added twice. A return is counted under the party its name reads as when "
+    "that party is on the map, otherwise under the existing recipient mapping (so Country Labor Party is counted with "
+    "Labor and Country Liberal Party (NT) on its own, as the AEC's Party Group has them). Left out: public funding "
     "(receipt type Public Funding, a public-funding or government payer name, or a payer the resolver knows as a "
     "government body), flagged data-quality outliers, blank or non-positive lines, and transfers within the party. "
-    "A transfer within the party is a line whose payer the resolver knows as a party unit, whose name reads as the "
-    "same party as the recipient, and which is not on the AEC associated-entity register: that money was already "
-    "counted when the paying branch received it, so it is left out rather than keyed. Associated entities "
-    "(for example an investment company the party owns) and other parties' branches are counted. "
-    "party_return_transfers gives what was left out per party as [AUD, lines]. Unlike the legacy total, count and "
-    "byYear, these fields hold no donor-side declarations; unlike by_type on a party node, they are not capped to "
-    "donors drawn on the map. Amounts under the disclosure threshold are not itemised by the AEC and are not here."
+    "A line is a transfer within the party only if the payer's own returns are counted in the same node: the payer "
+    "is a party unit, the same rule places it in this node, and it is not on the AEC associated-entity register. "
+    "That money was counted when the paying branch received it, so it is left out rather than keyed; "
+    "party_return_transfers gives it per party as [AUD, lines]. A payer whose returns are counted in another node, "
+    "or in none, is counted as a receipt, as are associated entities. Amounts under the disclosure threshold are not "
+    "itemised by the AEC and are not here, so these figures are well below the AEC's Total Receipts. A node with no "
+    "counted line has no return fields. Unlike the legacy total, count and byYear, these fields hold no donor-side "
+    "declarations; unlike by_type on a party node, they are not capped to donors drawn on the map."
 )
 
 
@@ -106,24 +109,46 @@ def attach_receipt_types(db, graph):
     return graph
 
 
-def party_return_exclusion(selection, register, donor, recipient, amount, period, receipt_type, recipient_kind):
-    """Why one party-return line stays out of return_by_type, or None when it counts."""
+def party_node(selection, parties, name):
+    """The party node whose total counts this filer's returns.
+
+    A party return is counted under the party its name reads as (the AEC
+    extras grammar, canon_party) when that party is on the map, otherwise under
+    the existing recipient mapping. The AEC's own Party Group agrees for the
+    three filers where the two differ: Country Labor Party is grouped with
+    Labor, The ACT Greens with the Greens, and Country Liberal Party (NT) with
+    no other party. The same function places a payer, so "the payer's own
+    returns are counted in this node" is one test.
+    """
+    read = canon_party(name)
+    if read and "party:" + read in parties:
+        return "party:" + read
+    mapped = selection.recipient_party.get(name)
+    return "party:" + mapped if mapped else None
+
+
+def party_return_exclusion(selection, register, parties, donor, recipient, amount, period, receipt_type, recipient_kind):
+    """(node, why the line stays out of return_by_type or None when it counts)."""
     if not donor or not recipient or not amount or amount <= 0:
-        return "blank_or_nonpositive"
-    party = selection.recipient_party.get(recipient) if recipient_kind == "political_party" else None
-    if not party:
-        return "nonparty_or_unmapped_recipient"
+        return None, "blank_or_nonpositive"
+    node = party_node(selection, parties, recipient) if recipient_kind == "political_party" else None
+    if not node:
+        return None, "nonparty_or_unmapped_recipient"
+    if node not in parties:
+        return node, "party_not_on_map"
     if (donor, recipient, period_key(period), amount) in selection.flagged:
-        return "flagged_review"
+        return node, "flagged_review"
     entity = selection.entity(donor)
     kind = selection.entity_kinds.get(entity)
     if normal_type(receipt_type) == "public_funding" or PUBLIC_FUNDING_RE.search(donor) \
             or PUBLIC_FUNDING_RE.search(norm_key(donor)) or kind == "government":
-        return "public_funding"
-    if kind == "party_unit" and canon_party(donor) == party \
+        return node, "public_funding"
+    # A transfer within the party: a party unit whose own returns this node
+    # already counts, and not an associated entity (those file no party return).
+    if kind == "party_unit" and party_node(selection, parties, donor) == node \
             and not ({entity, norm_key(donor)} - {None, ""}) & register.keys():
-        return "party_transfer"
-    return None
+        return node, "party_transfer"
+    return node, None
 
 
 def attach_party_returns(db, graph, selection):
@@ -135,10 +160,7 @@ def attach_party_returns(db, graph, selection):
     for donor, recipient, amount, period, kind, recipient_kind in db.execute(
             "SELECT donor_name,recipient,amount,financial_year,receipt_type,recipient_kind FROM aec_receipt_records "
             "WHERE record_side='recipient' AND source_file='Detailed Receipts.csv'"):
-        reason = party_return_exclusion(selection, register, donor, recipient, amount, period, kind, recipient_kind)
-        node = "party:" + selection.recipient_party[recipient] if reason not in ("blank_or_nonpositive", "nonparty_or_unmapped_recipient") else None
-        if node and node not in parties:
-            reason = "party_not_on_map"
+        node, reason = party_return_exclusion(selection, register, parties, donor, recipient, amount, period, kind, recipient_kind)
         if reason:
             counts["excluded_" + reason] += 1
             if reason == "party_transfer":
@@ -148,6 +170,9 @@ def attach_party_returns(db, graph, selection):
         add_receipt(cells[node], kind, period, amount)
         counts["exported_rows"] += 1
     for node_id, node in parties.items():
+        # A node with no counted line gets no fields, so readers keep its record total, never $0.
+        if node_id not in cells:
+            continue
         fields = receipt_fields(cells[node_id])
         node["return_by_type"], node["return_by_type_year"] = fields["by_type"], fields["by_type_year"]
     return dict(sorted(counts.items())), {k[6:]: [round(v[0], 2), v[1]] for k, v in sorted(transfers.items())}

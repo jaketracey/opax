@@ -275,3 +275,52 @@ def test_party_return_counts_each_line_once_without_public_funding_or_branch_tra
     assert meta["party_return_counts"]["exported_rows"] == 4
     assert "transfers within the party" in meta["party_return_note"]
     assert all("return_by_type" not in n for n in graph["nodes"] if n["kind"] != "party")
+
+
+def test_party_return_transfer_needs_the_payers_own_returns_in_the_same_node(tmp_path):
+    from parli.ingest import money_aec_extras
+    from scripts import aec_receipt_types
+    path = tmp_path / "db"
+    db = database(path)
+    # Invented names. "Example Party Rural Wing" files its own return and has no
+    # recipient mapping (as Country Labor had): its name reads as Example Party,
+    # so its returns join that node and its payment to the party is a transfer.
+    # "Sister Party Office" reads as a party with no node: its returns are counted
+    # nowhere, so its payment is a receipt. "Example Party (North)" is mapped to
+    # Example Party but reads as North Party, which is on the map (as the CLP is).
+    party, rural, sister, north = "Example Party", "Example Party Rural Wing", "Sister Party Office", "Example Party (North)"
+    line = lambda donor, recipient, kind, value: annual(kind, Value=str(value), **{"Received From": donor, "Recipient Name": recipient})
+    entries = {"Detailed Receipts.csv": [
+        line("Example Mining Ltd", party, "Donation Received", 1000),
+        line(rural, party, "Other Receipt", 2000),  # payer's returns in this node: transfer
+        line(sister, party, "Other Receipt", 300),  # payer's returns in no node: counted
+        line("Example Farms Ltd", rural, "Donation Received", 50),  # the wing's own receipt joins the party
+        line("Example Grocer Ltd", north, "Donation Received", 70),  # counted under North Party
+        line("North Party Branch", north, "Other Receipt", 40),  # North Party's own unit: transfer there
+        line(rural, north, "Other Receipt", 9),  # another node's unit: counted
+        line("Example Mining Ltd", "North Party NT", "Donation Received", 5),
+    ], "Donations Made.csv": [{"Financial Year": "2020-2021", "Donor Name": "Example Mining Ltd", "Donation Made To": "Quiet Party", "Value": "80"}]}
+    donations.process_zip(db, archive("AllAnnualData", entries), "AllAnnualData")
+    load(db, "AllElectionsData", {})
+    load(db, "AllReferendumData", {})
+    db.execute("UPDATE donations SET industry='mining', recipient_canonical=CASE recipient "
+               "WHEN ? THEN ? WHEN ? THEN ? WHEN 'North Party NT' THEN 'North Party' WHEN 'Quiet Party' THEN 'Quiet Party' END",
+               (party, party, north, party))
+    db.executescript("CREATE TABLE ext_donor_entities(entity_id,canonical_name,kind);"
+                     "CREATE TABLE ext_donor_aliases(alias_raw,entity_id,confidence,method);")
+    for eid, name in (("rural", rural), ("sister", sister), ("north-branch", "North Party Branch")):
+        db.execute("INSERT INTO ext_donor_entities VALUES (?,?,'party_unit')", (eid, name))
+        db.execute("INSERT INTO ext_donor_aliases VALUES (?,?,1,'exact')", (name, eid))
+    db.commit()
+
+    def canon(name):
+        low = (name or "").lower()
+        return "North Party" if "north" in low else party if "example party" in low else "Sister Party" if "sister party" in low else None
+    with mock.patch.object(aec_receipt_types, "canon_party", canon), mock.patch.object(money_aec_extras, "canon_party", canon):
+        graph = export(path)
+    nodes = {n["label"]: n for n in graph["nodes"] if n["kind"] == "party"}
+    assert nodes[party]["return_by_type"] == {"donation_received": 1050, "other_receipt": 300}
+    assert nodes["North Party"]["return_by_type"] == {"donation_received": 75, "other_receipt": 9}
+    assert "return_by_type" not in nodes["Quiet Party"], "a node with no counted line keeps its record total"
+    assert graph["meta"]["receipt_types"]["party_return_transfers"] == {party: [2000, 1], "North Party": [40, 1]}
+    assert "only if the payer's own returns are counted in the same node" in graph["meta"]["receipt_types"]["party_return_note"]
