@@ -6,7 +6,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
-import { mapFallbackHTML, mapSourceHTML } from '../public/home-data.js';
+import { mapSourceHTML } from '../public/home-data.js';
+import { receiptHeadline } from '../public/money-explain.js';
+import { shortMoney } from '../public/format.js';
+import { homeMapFallbackHTML, mapDonorsPhrase, renderMoneyAnswer } from '../src/seo-content.ts';
 import { loadWorker, offline } from './worker-harness.mjs';
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8');
@@ -66,22 +69,59 @@ test('/map loads the site faces and opens its totals in the site source line', (
 
 // ---- 8. Pages that settle --------------------------------------------------
 
+// Typed edges (the federal file since #338): the older `total` also holds the
+// donor's own declaration of the same gift, so a plain sum of it double counts.
+const typedEdge = (source, target, rows) => ({
+  source, target, total: 2 * rows.reduce((sum, [, , dollars]) => sum + dollars, 0),
+  by_type: Object.fromEntries(rows.map(([, type, dollars]) => [type, dollars])),
+  by_type_year: Object.fromEntries(rows.map(([period, type, dollars, n]) => [period, { [type]: [dollars, n] }])),
+});
 const graph = {
-  meta: { coverage: 'financial years 1998-99 to 2025-26' },
-  nodes: [{ id: 'd1', kind: 'donor' }, { id: 'd2', kind: 'donor' }, { id: 'd3', kind: 'donor' }, { id: 'p1', kind: 'party' }, { id: 'p2', kind: 'party' }, { id: 'g', kind: 'grantor' }],
-  edges: [{ source: 'd1', target: 'p1', total: 1_200_000 }, { source: 'd2', target: 'p2', total: 300_000 }, { source: 'd2', target: 'p1', total: 50_000 },
-    { source: 'g', target: 'd1', total: 9e9, grant: true }, { source: 'd3', target: 'p1', total: 7e9, flow: 'contracts' }],
+  meta: { generated: '2026-11-11', coverage: 'financial years 1998-99 to 2025-26', source: 'AEC' },
+  nodes: [{ id: 'd1', kind: 'donor', label: 'Example Holdings' }, { id: 'd2', kind: 'donor', label: 'Sample Union' }, { id: 'd3', kind: 'donor', label: 'Quiet Trust' },
+    { id: 'p1', kind: 'party', label: 'Labor' }, { id: 'p2', kind: 'party', label: 'Liberal' }, { id: 'g', kind: 'grantor', label: 'Grants' }],
+  edges: [typedEdge('d1', 'p1', [['2019-20', 'Donation', 1_000_000, 2], ['2021-22', 'Loan', 200_000, 1]]),
+    typedEdge('d2', 'p2', [['2010-11', 'Other receipt', 300_000, 3]]),
+    { source: 'd3', target: 'p1', total: 80_000, by_type: {}, by_type_year: {} },
+    { source: 'g', target: 'd1', total: 9e9, grant: true }, { source: 'd1', target: 'p2', total: 7e9, flow: 'contracts' }],
 };
 
-test('the home map fallback is one short line and a link, counting donor-to-party receipts only', () => {
-  const html = mapFallbackHTML(graph);
-  const doc = new JSDOM(html).window.document;
-  const [line, link] = doc.querySelectorAll('#prerender-money.hp-map-fallback > p');
-  assert.equal(line.textContent, '$1.6m from 2 donors to 2 parties in federal returns, 1998–99 to 2025–26.');
-  assert.ok(line.textContent.length <= 110, 'three lines at most in a 350 px card');
-  assert.equal(link.querySelector('a').getAttribute('href'), '/money');
+test('the money headline is read through receiptGraph: typed cells, every receipt type, the span they report', () => {
+  const head = receiptHeadline(graph);
+  assert.deepEqual({ ...head }, { total: 1_500_000, receipts: 6, pairs: 2, sources: 2, parties: 2, firstYear: 2010, lastYear: 2021, typed: true,
+    scope: 'All receipt types, 2010-11 to 2021-22, as the parties reported them in federal returns' });
+  // Not the plain sum of the older totals (3,000,000), and no grant or contract flows.
+  assert.equal(receiptHeadline({ nodes: graph.nodes, edges: graph.edges.slice(3) }).total, 0);
+});
+
+test('for the same map file the home line and the /money answer give one total, one source count and one span', async () => {
+  const read = async (path) => path.startsWith('/graph/') ? graph
+    : { meta: { generated_at: '2026-11-11', total: 1, contract_count: 1, source: 'AusTender', published_from: '2020', published_to: '2026' } };
+  const answer = (await renderMoneyAnswer('Money map', read)).html;
+  const federal = /<h2>Federal disclosed receipts<\/h2><p>([^<]*)<\/p>/.exec(answer)[1];
+  const [, dollars, sources] = /^\$([\d,]+) from (\d+) receipt sources, across 2 source-to-party totals on this map\. 2 parties\. /.exec(federal);
+  const scope = /parties\. (All receipt types[^.]*)\./.exec(federal)[1];
+
+  const doc = new JSDOM(homeMapFallbackHTML(graph)).window.document;
+  const [line, scopeLine, link] = doc.querySelectorAll('#prerender-money.hp-map-fallback > p');
+  assert.equal(line.textContent, `${shortMoney(Number(dollars.replace(/,/g, '')))} in receipts from ${sources} sources to 2 parties.`);
+  assert.equal(line.textContent, '$1.5m in receipts from 2 sources to 2 parties.');
+  assert.equal(scopeLine.textContent, scope);
   assert.equal(link.textContent, 'Open the money map');
-  assert.match(mapFallbackHTML(null), /Disclosed funding between donors and parties[^<]*<\/p><p><a href="\/money">Open the money map/);
+  assert.equal(link.querySelector('a').getAttribute('href'), '/money');
+  // A file without typed cells has no scope to state: the plain sentence and the link.
+  assert.match(homeMapFallbackHTML({ nodes: graph.nodes, edges: [{ source: 'd3', target: 'p1', total: 5 }] }),
+    /^<div id="prerender-money" class="hp-map-fallback"><p>Disclosed funding between donors and parties, from federal returns\.<\/p><p><a href="\/money">Open the money map<\/a><\/p><\/div>$/);
+});
+
+test('/map says who it draws from the file it draws, never a fixed count', () => {
+  assert.doesNotMatch(mapHtml, /top \d+ donors|\b250\b/);
+  assert.match(mapHtml, /Who funds Australian politics: <span id="map-donors">the largest disclosed donors<\/span> and the parties/);
+  const meta = { donor_nodes_by_total: 2, donors_via_public_money: 1, public_money_floor: 50_000_000 };
+  assert.equal(mapDonorsPhrase({ nodes: graph.nodes, meta }), '3 donors (the 2 largest by lifetime total, and 1 more holding $50,000,000 or more in Commonwealth contracts and grants)');
+  // Counts that do not add up to the drawn nodes are not repeated: the drawn count alone.
+  assert.equal(mapDonorsPhrase({ nodes: graph.nodes, meta: { ...meta, donors_via_public_money: 4 } }), '3 donors');
+  assert.equal(mapDonorsPhrase({ nodes: [] }), 'the largest disclosed donors');
 });
 
 test('the home fallback is not clipped: it fills the card as a centred field, and the old long answer is gone', () => {
@@ -177,10 +217,15 @@ test('the Worker writes the person head, the /money boot field, the home fallbac
 
     const home = await (await h.fetch('/')).text();
     const card = new JSDOM(home).window.document.getElementById('hp-money-map');
-    assert.match(card.querySelector('.hp-map-fallback > p').textContent, /^\$[\d.]+(?:bn|m) from [\d,]+ donors to \d+ parties in federal returns/);
+    const published = JSON.parse(readFileSync(new URL('../public/graph/money.json', import.meta.url), 'utf8'));
+    assert.equal(card.querySelector('.hp-map-fallback').outerHTML, homeMapFallbackHTML(published));
+    const headline = receiptHeadline(published);
+    assert.ok(money.includes(`$${headline.total.toLocaleString('en-AU')} from ${headline.sources} receipt sources`), 'the /money answer states the same figures');
     assert.doesNotMatch(card.innerHTML, /<h2>/);
 
     const map = await (await h.fetch('/map')).text();
     assert.match(map, /<div class="ui-sheet"><div id="crawl-facts"><section id="prerender"/);
+    const drawn = published.nodes.filter((n) => n.kind === 'donor').length;
+    assert.ok(map.includes(`Who funds Australian politics: <span id="map-donors">${drawn} donors (the ${published.meta.donor_nodes_by_total} largest by lifetime total`), '/map counts the donors it draws');
   } finally { restore(); }
 });

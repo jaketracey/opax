@@ -144,8 +144,7 @@ import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { navGates, pageTrail, trail } from './nav-model.mjs'
 import { EMPTY_REPORTS_INDEX, REPORTS_INDEX, appUserAgent, reportDataPath, reportsAppData, reportsEnabled, reportsPath } from './reports-gate'
-import { mapFallbackHTML } from '../public/home-data.js'
-import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, personHeadPrerender, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, agencyTopSuppliers, type AgencyTopSuppliers, type Division, type ReadAsset } from './seo-content'
+import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, personHeadPrerender, homeMapFallbackHTML, mapDonorsPhrase, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, agencyTopSuppliers, type AgencyTopSuppliers, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { AGENCY_TOP_SUPPLIERS_PATH, type AgencyTopRow } from '../public/agency-top-suppliers.js'
 import { SUPPLIER_ID_RE, supplierRowsPath } from '../public/supplier-row-buckets.js'
@@ -7280,10 +7279,12 @@ export default {
     if(url.pathname==='/map' && ['GET','HEAD'].includes(request.method)) {
       const shell=await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/map.html`))
       const facts=await sharedMoneyAnswer('Money map',<T>(path:string)=>assetJson<T>(env,path))
+      // Who the map draws, counted from the file it draws (seo-content.ts mapDonorsPhrase).
+      const donors=await assetJson<Parameters<typeof mapDonorsPhrase>[0]>(env,'/graph/money.json').then(mapDonorsPhrase).catch(()=>null)
       const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/map`,title:'Money map · OPAX'})).replace(/</g,'\\u003c')
-      const out=new HTMLRewriter().on('div#crawl-facts',{element(el){el.setInnerContent(facts.html,{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(shell)
+      const out=new HTMLRewriter().on('div#crawl-facts',{element(el){el.setInnerContent(facts.html,{html:true})}}).on('span#map-donors',{element(el){if(donors)el.setInnerContent(donors)}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(shell)
       const headers=new Headers(out.headers);headers.delete('content-length')
-      if(shell.ok){const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',shell.headers.get('etag'),facts.html,schema]);headers.set('etag',etag);const unchanged=notModified(request,etag,headers);if(unchanged)return communityResponse(unchanged)}
+      if(shell.ok){const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',shell.headers.get('etag'),facts.html,schema,donors]);headers.set('etag',etag);const unchanged=notModified(request,etag,headers);if(unchanged)return communityResponse(unchanged)}
       return communityResponse(new Response(request.method==='HEAD' ? null : out.body,{status:out.status,headers}))
     }
     const entry = await pageEntry(request, env.ASSETS)
@@ -7291,9 +7292,9 @@ export default {
       if (/^\/search\/?$/.test(url.pathname)) entry.headers.set('x-robots-tag', url.search ? 'noindex' : 'all')
       if(entry.status===200 && url.pathname==='/') {
         const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/`,title:SITE_TITLE,description:SITE_DESCRIPTION})).replace(/</g,'\\u003c')
-        // The map card's fallback: figures from the federal map file and a link to
-        // /money, which carries the full money answer (home-data.js mapFallbackHTML).
-        const moneyHtml=await assetJson<Parameters<typeof mapFallbackHTML>[0]>(env,'/graph/money.json').then(mapFallbackHTML).catch(()=>null)
+        // The map card's fallback: the /money answer's federal figures and a link to
+        // /money, which carries the full answer (seo-content.ts homeMapFallbackHTML).
+        const moneyHtml=await assetJson<unknown>(env,'/graph/money.json').then(homeMapFallbackHTML).catch(()=>null)
         // The menus read the published optional sections off the page (navigation.js).
         const gates=navGates(env)
         // The home page's Reports block goes with the reports (src/reports-gate.ts).

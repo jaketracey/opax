@@ -137,6 +137,33 @@ export function receiptGraph(graph) {
   return out;
 }
 
+/**
+ * A whole graph's receipts in one line, read through receiptGraph: what a
+ * page states as the map's headline (the /money answer, the homepage map
+ * card). `total` and `receipts` sum every donation edge from a receipt
+ * source to a party; `pairs` counts those edges and `sources` their
+ * distinct senders. `scope` is receiptScopeLabel's line, with the span the
+ * typed cells report, or '' for a graph without typed cells (the state graphs).
+ */
+export function receiptHeadline(graph) {
+  const read = receiptGraph(graph) || { nodes: [], edges: [] };
+  const nodes = read.nodes || [];
+  const senders = new Set(nodes.filter((n) => n.kind === 'donor').map((n) => n.id));
+  const edges = (read.edges || []).filter((e) => isDonation(e) && senders.has(e.source));
+  const { total, count } = sumEdges(edges);
+  let firstYear = null, lastYear = null;
+  for (const e of edges) {
+    if (Number.isInteger(e.firstYear)) firstYear = firstYear === null ? e.firstYear : Math.min(firstYear, e.firstYear);
+    if (Number.isInteger(e.lastYear)) lastYear = lastYear === null ? e.lastYear : Math.max(lastYear, e.lastYear);
+  }
+  const typed = edges.length > 0 && edges.every((e) => e.typed);
+  return {
+    total, receipts: count, pairs: edges.length, sources: new Set(edges.map((e) => e.source)).size,
+    parties: nodes.filter((n) => n.kind === 'party').length, firstYear, lastYear, typed,
+    scope: typed ? receiptScopeLabel({ typed, firstYear, lastYear }) : '',
+  };
+}
+
 /** What a flow's figures count, on its own line (receiptScopeLabel); empty for a state graph. */
 export function flowScope(flow) {
   if (!flow.edges.length || !flow.edges.every((e) => e.typed)) return '';

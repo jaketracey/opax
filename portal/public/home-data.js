@@ -1,7 +1,7 @@
 import {subjectUrl} from './canonical-urls.js?v=e32f13c6c8';
 /* Homepage adapters: source exports, never editorial selections. Each block's
    figures carry the date of the export they came from, in its source line. */
-import {shortDate, shortMoney} from './format.js';
+import {shortDate} from './format.js';
 import {partyLabelHTML, statusLabelHTML, sourceLineHTML, coverageLineHTML} from './labels.js?v=75e6c65ff7';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const count = value => Number(value).toLocaleString('en-AU');
@@ -123,23 +123,6 @@ export function declarationsSourceHTML(meta, refresh = null) {
 export function mapSpan(meta) {
   const m = /(\d{4})-(\d{2})\s+to\s+(\d{4})-(\d{2})/.exec(String(meta?.coverage || ''));
   return m ? `${m[1]}–${m[2]} to ${m[3]}–${m[4]}` : '';
-}
-/** The map card before its script draws the map, and for a reader without
- *  one: three short lines from the federal map file and a link, never the
- *  whole money answer clipped mid-sentence. Receipts are donor-to-party
- *  totals only (no grant or contract flows), as the money answer counts them. */
-export function mapFallbackHTML(graph) {
-  const nodes = Array.isArray(graph?.nodes) ? graph.nodes : [];
-  const donors = new Set(nodes.filter(n => n.kind === 'donor').map(n => n.id));
-  const parties = nodes.filter(n => n.kind === 'party').length;
-  const receipts = (Array.isArray(graph?.edges) ? graph.edges : []).filter(e => donors.has(e.source) && !e.grant && !e.flow);
-  const total = receipts.reduce((sum, e) => sum + (Number(e.total) || 0), 0);
-  const givers = new Set(receipts.map(e => e.source)).size;
-  const span = mapSpan(graph?.meta);
-  const line = givers && parties && total
-    ? `${shortMoney(total)} from ${count(givers)} donors to ${count(parties)} parties in federal returns${span ? `, <span class="hp-map-span">${esc(span)}</span>` : ''}.`
-    : 'Disclosed funding between donors and parties, from federal returns.';
-  return `<div id="prerender-money" class="hp-map-fallback"><p>${line}</p><p><a href="/money">Open the money map</a></p></div>`;
 }
 export function mapSourceHTML(meta, refresh = null) {
   const span = mapSpan(meta);

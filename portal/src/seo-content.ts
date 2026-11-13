@@ -1,7 +1,8 @@
 import {supplierContractsHTML} from '../public/contracts-table.js'
 import {decodeHTMLStrict} from 'entities'
 import {donorDisclosure,donorLabelHTML,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
-import { shortDate } from '../public/format.js'
+import { shortDate, shortMoney } from '../public/format.js'
+import { receiptHeadline } from '../public/money-explain.js'
 import { personUrl, partyUrl } from '../public/party-page.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
 import sponsorParties from '../public/facts/sponsor-parties.json' with {type:'json'}
@@ -341,6 +342,35 @@ export function personHeadPrerender(html: string, p: Pick<Person,'name'|'full'|'
   return html.replace(/<section id="prerender" class="wrap"><h1>[\s\S]*?<\/h1>/, `<section id="prerender" class="wrap subject-person">${head}`)
 }
 
+/**
+ * The homepage map card before its script draws the map, and for a reader
+ * without one: the federal map's receipts in the /money answer's own figures
+ * (receiptHeadline), its scope line, and a link, never the whole money answer
+ * clipped mid-sentence. A file without typed cells gets the plain sentence.
+ */
+export function homeMapFallbackHTML(graph: unknown): string {
+  const head = receiptHeadline(graph)
+  const lines = head.typed && head.total > 0
+    ? `<p>${escapeHtml(shortMoney(head.total))} in receipts from ${count(head.sources)} sources to ${count(head.parties)} parties.</p><p class="hp-map-scope">${escapeHtml(head.scope)}</p>`
+    : '<p>Disclosed funding between donors and parties, from federal returns.</p>'
+  return `<div id="prerender-money" class="hp-map-fallback">${lines}<p><a href="/money">Open the money map</a></p></div>`
+}
+
+/**
+ * Who the federal map draws, counted from the file itself: every donor node,
+ * and, where the export says how it chose them (meta.donor_nodes_by_total,
+ * meta.donors_via_public_money, meta.public_money_floor), the two groups.
+ * /map's intro carries this in place of a fixed "top 250".
+ */
+export function mapDonorsPhrase(graph: {nodes?: {kind?: string}[]; meta?: Record<string, unknown>} | null | undefined): string {
+  const donors = (graph?.nodes || []).filter(n => n.kind === 'donor').length
+  if (!donors) return 'the largest disclosed donors'
+  const top = graph?.meta?.donor_nodes_by_total, extra = graph?.meta?.donors_via_public_money, floor = graph?.meta?.public_money_floor
+  if (typeof top === 'number' && typeof extra === 'number' && extra > 0 && top + extra === donors && typeof floor === 'number' && floor > 0)
+    return `${count(donors)} donors (the ${count(top)} largest by lifetime total, and ${count(extra)} more holding ${currency(floor)} or more in Commonwealth contracts and grants)`
+  return `${count(donors)} donors`
+}
+
 /** The roster row a bill's printed sponsor opens: public/sponsor-person.js, never a surname print. */
 export function sponsorFor(b: Bill, people: Person[]): Person | null {
   return b.sponsor ? sponsorPerson(b.sponsor, b.sponsor_person_id, people) : null
@@ -541,10 +571,11 @@ export async function renderMoneyAnswer(title: string, read: ReadAsset): Promise
   for(const [path,label] of [['/graph/money.json','Federal'],['/graph/money.qld.json','Queensland'],['/graph/money.vic.json','Victoria']]) {
     const graph=await read<MoneyGraph & {meta:{generated:string}}>(path)
     const parties=graph.nodes.filter(n=>n.kind==='party')
-    // Count donation edges, excluding public contracts, grants and other flow kinds.
-    const ids=new Set(graph.nodes.filter(n=>n.kind==='donor').map(n=>n.id))
-    const receipts=graph.edges.filter(e=>ids.has(e.source) && !e.grant && !e.flow)
-    body+=`<h2>${label} disclosed receipts</h2><p>${currency(receipts.reduce((sum,e)=>sum+e.total,0))} across ${count(receipts.length)} donor-to-party totals on this map. ${parties.length} parties. Updated ${escapeHtml(graph.meta.generated)}. Coverage: ${escapeHtml(graph.meta.coverage || 'See the source')}. Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || label)}.</p><ul>${parties.map(p=>`<li>${link(partyUrl(p.label),p.label)}</li>`).join('')}</ul><p>${link(path,`${label} map data export`)}</p>`
+    // The map's receipts by the shared rule (money-explain.js receiptHeadline over
+    // receiptGraph): each receipt once, from the party's own return, every type;
+    // no contracts, grants or other flows. The homepage card states the same line.
+    const head=receiptHeadline(graph)
+    body+=`<h2>${label} disclosed receipts</h2><p>${currency(head.total)} from ${count(head.sources)} receipt sources, across ${count(head.pairs)} source-to-party totals on this map. ${parties.length} parties.${head.scope ? ` ${escapeHtml(head.scope)}.` : ''} Updated ${escapeHtml(graph.meta.generated)}. Coverage: ${escapeHtml(graph.meta.coverage || 'See the source')}. Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || label)}.</p><ul>${parties.map(p=>`<li>${link(partyUrl(p.label),p.label)}</li>`).join('')}</ul><p>${link(path,`${label} map data export`)}</p>`
   }
   // The index's meta from its own small file (public/supplier-row-buckets.js), else the 7.6 MB index.
   type SuppliersMeta = {meta:{generated_at:string;total:number;contract_count:number;source:string;published_from:string;published_to:string}}

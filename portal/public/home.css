@@ -95,7 +95,7 @@
   box-sizing: border-box; height: 100%; padding: var(--space-group); background: var(--paper-sunken);
 }
 .hp-map-fallback p { margin: 0; max-width: 36ch; font: var(--type-body); color: var(--ink-soft); }
-.hp-map-fallback .hp-map-span { white-space: nowrap; }
+.hp-map-fallback .hp-map-scope { font: var(--type-fine); }
 .hp-map-fallback a { display: inline-flex; align-items: center; min-height: var(--size-target); font: var(--type-control); }
 .hp-money-map > .ui-button { margin: 0 var(--space-group); }
 .hp-money-map :is(h2, h3) { font: var(--type-subheading); }
