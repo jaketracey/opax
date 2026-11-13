@@ -490,10 +490,12 @@ export function resolvePartyPage(segment, pages) {
   // A former name's own slug ("liberal-democratic-party") names its party's page: partyUrl now
   // writes the current address, so the raw slug is compared too, and the Worker answers it with a 301.
   const slugs = label => [partyUrl(label).split('/').at(-1), partySlug(label)];
+  const exact = pages.find(page => page.href.split('/').at(-1) === wantSlug)
+    || pages.find(page => page.aliases.some(label => fold(label) === want || slugs(label).includes(wantSlug)));
+  if (exact) return exact;
   const sponsor = Object.keys(SPONSOR_PARTY_ALIASES).find(label => fold(label) === want || partySlug(label) === wantSlug);
   const alias = sponsor ? SPONSOR_PARTY_ALIASES[sponsor] : Object.keys(PARTY_MAP).find(label => slugs(label).includes(wantSlug));
-  return pages.find(page => page.aliases.some(label => fold(label) === want || slugs(label).includes(wantSlug))
-    || page.href.split('/').at(-1) === wantSlug || identity(page.label) === identity(alias || segment)) || null;
+  return pages.find(page => identity(page.label) === identity(alias || segment)) || null;
 }
 
 export function partyPageCoverage(page) {

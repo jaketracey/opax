@@ -6,7 +6,7 @@ import {readPartyPages, resolvePartyPage, partySlug} from '../public/party-page.
 import {workerFetch} from './helpers/worker-fetch.mjs';
 
 const pages = await readPartyPages(async path => JSON.parse(readFileSync(new URL('../public' + path, import.meta.url))));
-// The nine party aliases lost when sponsor labels were normalised.
+// The nine party aliases lost when sponsor labels were normalised, plus the independent label.
 const aliases = [
   ['alp', 'labor'],
   ['liberal-party-of-australia', 'liberal'],
@@ -17,6 +17,7 @@ const aliases = [
   ['country-liberals-northern-territory', 'country-liberal-party'],
   ['democratic-labor-party-dlp', 'dlp'],
   ['democratic-labor-party', 'dlp'],
+  ['independent-member', 'independent'],
 ];
 
 for (const [alias, canonical] of aliases) {
@@ -33,6 +34,19 @@ for (const [alias, canonical] of aliases) {
     assert.equal(landed.headers.get('location'), null);
   });
 }
+
+test('exact party page slugs and source aliases take priority over sponsor aliases in either source order', () => {
+  const federal = {label: 'Greens', href: '/subject/party/greens', aliases: ['Greens']};
+  const statePages = [
+    {label: 'Queensland Greens', href: '/subject/party/queensland-greens', aliases: ['Queensland Greens']},
+    {label: 'Fixture State Greens', href: '/subject/party/fixture-state-greens', aliases: ['Queensland Greens']},
+  ];
+  for (const state of statePages) for (const order of [[federal, state], [state, federal]]) {
+    assert.equal(resolvePartyPage('queensland-greens', order), state);
+    assert.equal(resolvePartyPage('Queensland Greens', order), state);
+  }
+  assert.equal(resolvePartyPage('queensland-greens', [federal]), federal, 'the sponsor alias remains a fallback');
+});
 
 test('browser navigation from an old sponsor slug replaces it with the canonical party route', async () => {
   for (const [alias, canonical] of [['alp', 'labor'], ['democratic-labor-party', 'dlp']]) {

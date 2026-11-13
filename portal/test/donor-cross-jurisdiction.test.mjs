@@ -48,6 +48,14 @@ test('jurisdiction keys retain figures and evidence even when a confirmed entity
   }
 });
 
+test('repeated source names and folded aliases merge each commission return reference once', () => {
+  for (const records of [[federal, qld], [qld, federal]]) {
+    const repeated = records.map(r => ({...r, name, aliases: [name, name.toUpperCase()], lookup_names: [name, name.toLowerCase()]}));
+    const index = donorLookup(repeated);
+    assert.deepEqual(index.get(foldDonorName(name)).returnReferences, records.flatMap(r => r.returnReferences));
+  }
+});
+
 for (const records of [[federal, qld], [qld, federal]]) {
   test(`hydrated profile retains federal and off-map state figures (${records[0].jurisdiction} first)`, async () => {
     const result = await render(records);
@@ -61,6 +69,7 @@ for (const records of [[federal, qld], [qld, federal]]) {
     assert.equal(own.querySelectorAll('.tile span')[1].textContent, 'receipts');
     assert.match(own.textContent, /Other Receipt/);
     const state = doc.querySelector('#state-money');
+    assert.equal(state.querySelector('h3').textContent, 'Also disclosed to state commissions');
     assert.match(state.textContent, /Queensland/);
     assert.ok(state.textContent.includes(`${shortMoney(qld.total)} across 2 disclosed gifts`));
     assert.equal(state.querySelectorAll('li').length, 1);
@@ -76,6 +85,7 @@ test('a state-only profile labels each commission and never repeats its figure',
   const dom = new JSDOM(result.html), text = dom.window.document.body.textContent;
   assert.match(text, /Queensland/);
   assert.match(text, /Victoria/);
+  assert.equal(dom.window.document.querySelector('#state-money h3').textContent, 'Disclosed to state commissions');
   assert.equal(text.split(shortMoney(qld.total)).length - 1, 1);
   assert.equal(text.split(shortMoney(6700)).length - 1, 1);
   dom.window.close();

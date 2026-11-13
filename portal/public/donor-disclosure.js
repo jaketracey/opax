@@ -59,16 +59,21 @@ export function donorDisplayText(record, fallback) {
 }
 export function donorLookup(records) {
   const index=new Map();
-  for(const record of records || [])for(const name of [record.source_name,record.label,record.name,...record.aliases || [],...record.lookup_names || []].filter(Boolean)){
-    const folded=foldDonorName(name);
-    for(const key of [folded,...(record.jurisdiction?[record.jurisdiction+':'+folded]:[])]){
-      const prior=index.get(key);
-      // Even a confirmed entity has separate figures for each commission. The
-      // unscoped name links the disclosure spelling; scoped keys keep its figures.
-      const sameConfirmedEntity=prior?.match?.entity_id && prior.match.entity_id===record.match?.entity_id && confidentDonorMatch(prior) && confidentDonorMatch(record);
-      if(sameConfirmedEntity && prior.jurisdiction===record.jurisdiction)index.set(key,prior);
-      else if(prior && (prior.id!==record.id || prior.source_name!==record.source_name || prior.jurisdiction!==record.jurisdiction))index.set(key,{label:name,...(sameConfirmedEntity?{match:prior.match}:{}),returnReferences:[...prior.returnReferences || [],...record.returnReferences || []]});
-      else index.set(key,record);
+  for(const record of records || []){
+    const names=new Set();
+    for(const name of [record.source_name,record.label,record.name,...record.aliases || [],...record.lookup_names || []].filter(Boolean)){
+      const folded=foldDonorName(name);
+      if(names.has(folded))continue;
+      names.add(folded);
+      for(const key of [folded,...(record.jurisdiction?[record.jurisdiction+':'+folded]:[])]){
+        const prior=index.get(key);
+        // Even a confirmed entity has separate figures for each commission. The
+        // unscoped name links the disclosure spelling; scoped keys keep its figures.
+        const sameConfirmedEntity=prior?.match?.entity_id && prior.match.entity_id===record.match?.entity_id && confidentDonorMatch(prior) && confidentDonorMatch(record);
+        if(sameConfirmedEntity && prior.jurisdiction===record.jurisdiction)index.set(key,prior);
+        else if(prior && (prior.id!==record.id || prior.source_name!==record.source_name || prior.jurisdiction!==record.jurisdiction))index.set(key,{label:name,...(sameConfirmedEntity?{match:prior.match}:{}),returnReferences:[...prior.returnReferences || [],...record.returnReferences || []]});
+        else index.set(key,record);
+      }
     }
   }
   return index;
