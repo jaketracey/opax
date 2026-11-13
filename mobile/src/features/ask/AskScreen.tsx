@@ -171,10 +171,8 @@ export default function AskScreen() {
   useLayoutEffect(checkUnderBar, [checkUnderBar]);
   useRootBarUnderBar(underBar);
   const column = useScreenColumn('readable');
-  const { overlap: keyboard, visible: keyboardVisible } = useKeyboardOverlap(
-    root,
-    `${room?.width}x${room?.height}`,
-  );
+  const { overlap: keyboard, visible: keyboardVisible } =
+    useKeyboardOverlap(root);
   const anchor = useConversationAnchor(
     scroll,
     `${outer.rule}:${outer.width}:${outer.height}:${room?.width}:${docked}`,
