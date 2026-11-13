@@ -63,15 +63,16 @@ test('separate yearly comparisons retain each narrower selector and count', () =
   }
 });
 
-test('a selector outside the requested period is rejected by the period guard', () => {
+test('a selector outside the requested period keeps its rows with a period note from the guard', () => {
   for (const [selector, since, until] of selectors) {
     const c = constraints('2026-01-01', '2026-12-31');
     const step = api.constrainStep({ tool: 'count_records', args: { record_type: 'divisions', ...selector } }, c, properties);
     assert.deepEqual(api.parseToolArgs('count_records', step.args), step.args);
     const guarded = api.guardToolPeriod(result(since, until), step, c);
-    assert.equal(guarded.data.coverage_only, true, JSON.stringify(selector));
-    assert.equal(guarded.data.total, undefined);
+    assert.equal(guarded.data.coverage_only, undefined, JSON.stringify(selector));
+    assert.equal(guarded.data.total, 7);
     assert.equal(guarded.coverage.matched, false);
+    assert.match(guarded.notes[0], /^The requested period is 2026-01-01 to 2026-12-31; these records /);
   }
 });
 

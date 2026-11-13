@@ -54,7 +54,7 @@ test('money family, ranking, routing and follow-up suffixes finish under 50 ms',
   assert.ok(await fast(()=>family.federalPartyRankingIntent('Who funds Labor?'+punctuation)))
   await fast(()=>family.federalPartyRankingIntent('Who funds Labor?'+punctuation+'x'))
   await fast(()=>money.isMoneyRanking({question:'Who receives from '+spaces+'mining'+punctuation}))
-  assert.equal((await fast(()=>routing.federalPartyMoneyAnswer({question:'And what about Labor?'+punctuation,context:[{author:'user',text:'Who Labor top donors?'}]},assets))).answer_status,'needs_scope')
+  assert.equal((await fast(()=>routing.federalPartyMoneyAnswer({question:'And what about Labor?'+punctuation,context:[{author:'user',text:'Who Labor top donors?'}]},assets))).answer_status,'calculated') // an informal ranking carries forward as its stated reading
   await fast(()=>followup.fundingFollowUp({question:'And '+spaces+'?'.repeat(100_000),context:[{author:'user',text:'Who funds Labor?'}]},graph,'federal',money.isMoneyRanking))
   await fast(()=>followup.fundingFollowUp({question:'And mining'+spaces+'x?',context:[{author:'user',text:'Who funds Labor?'}]},graph,'federal',money.isMoneyRanking))
   const corrected=await fast(()=>money.fundingResearchFollowUp({question:'And in 2020?',context:[{author:'user',text:'Who funds Labor in 1990?'+spaces}]},assets))

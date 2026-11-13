@@ -1,6 +1,7 @@
 import {receiptMeasureLabel,receiptDollars} from './receipt-copy'
 import {donorAssociatedTo,donorDisclosure,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
-import {financialYear, receiptPeriodQuery, separateReceiptYears} from './receipt-period'
+import {financialYear, receiptPeriodQuery} from './receipt-period'
+import {latestReceiptYear, readReceiptPeriod, type PeriodOption} from './receipt-reading'
 
 type Node = DonorDisclosureRecord & { id:string; label:string; kind:string; industry?:string; group?:string; aliases?:string[] }
 export type ReceiptEdge = { by_type?:Record<string,number>; by_type_year?:Record<string,Record<string,[number,number]>>; source:string; target:string; total:number; count:number; flow?:string; grant?:boolean; firstYear?:number; lastYear?:number; byYear?:Record<string,number[]> }
@@ -21,7 +22,7 @@ const aliases:Record<string,string[]> = {
   pharmacy:['pharmacy','pharmaceutical','pharma'], tech:['technology','tech'], media:['media'],
   agriculture:['agriculture','agricultural','farming'], hospitality:['hospitality','hotels'],
 }
-const scaffolding = new Set('how much how many money political donations donation funding funded fund funds receipts receipt gave given give has have did does do from to the a an of for in on by and or all total totals industry industries sector government parties party over years year between since before after flowed flow show me please federal australian australia queensland qld victoria vic tasmania tas'.split(' '))
+const scaffolding = new Set('how much how many money political donations donation funding funded fund funds receipts receipt gave given give has have did does do from to the a an of for in on by and or all total totals industry industries sector government parties party over years year between since before after flowed flow show me please fy federal australian australia queensland qld victoria vic tasmania tas'.split(' '))
 const contains = (q:string, phrase:string) => (' '+q+' ').includes(' '+normal(phrase)+' ')
 const receiptPartyNames = (party:Node):string[] => [party.label,...(party.aliases||[]),
   ...(party.label==='Labor'?['ALP']:[]),
@@ -92,6 +93,9 @@ function exactReceiptDonors(graph:ReceiptGraph, query:string) {
 }
 const rankingWords = new Set('who which what are is was were be been being gets get got getting takes take took taking receives receive received receiving gives giving donates donate donated donating donors donor sources source contributors contribution contributions largest biggest most top more less higher lower compare comparison compared versus vs than both either these those each with financial nominal aud dollars dollar amount amounts disclosed published recorded records record shown included selected selection lifetime across throughout during up until through starting ending between lobby lobbies to whom s change changed changes increase increased increases decrease decreased decreases grew growth rose fell'.split(' '))
 
+// Broad words the calculator reads as one grouping (stated with the answer).
+const readAs:Record<string,string[]>={fossil_fuels:['energy','energy companies','energy sector','energy industry','energy producers']}
+
 /** A recognised name must not hide an unrecognised qualifier or a second name.
  * Only consume names used by the calculation, plus the question's grammar.
  * This is deliberately conservative: a clarification is safer than a partial sum.
@@ -108,7 +112,7 @@ export function unmatchedReceiptRankingScope(graph:ReceiptGraph, query:string, s
     const unique=short.length>=5&&shortCounts.get(short)===1
     return [n.label,...(n.aliases||[]),...(unique?[short]:[])]
   })
-  for(const industry of selected.selected_industries) phrases.push(industry.replaceAll('_',' '),...(aliases[industry]||[]))
+  for(const industry of selected.selected_industries) phrases.push(industry.replaceAll('_',' '),...(aliases[industry]||[]),...(readAs[industry]||[]))
   for(const party of graph.nodes.filter(n=>n.kind==='party'&&(partyFilter||selected.selected_parties.includes(n.label)))) {
     phrases.push(...receiptPartyNames(party))
   }
@@ -191,26 +195,59 @@ function receiptEdges(graph:ReceiptGraph):CalculationEdge[] {
   }))
 }
 
+/** Lifetime disclosed receipts to one party, used only to order same-name choices. */
+function receiptTotalTo(graph:ReceiptGraph,partyId:string) {
+  return graph.edges.reduce((sum,e)=>sum+(!e.flow&&!e.grant&&e.target===partyId&&Number.isFinite(e.total)?e.total:0),0)
+}
+
 /** Sum only donor-to-party receipt edges; node totals and public-money flows never enter the sum. */
 export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:string, origin:string, filters: {party?:string; from?:string; to?:string; compareYears?:boolean; measure?:ReceiptMeasure} = {}) {
   if(lendingQuestion(query))return {needs_scope:true,answer:jurisdiction==='federal'?'The published records cannot establish how much was lent. Federal debt records report balances owed at 30 June, not new lending, and name only the latest year’s largest creditors. Mixed receipt totals cannot establish loan amounts.':'The receipt records cannot establish how much was lent; a separate record identifying loans and their basis is needed.',sources:jurisdiction==='federal'?[{title:'AEC debt records: balance owed at 30 June; latest year only',url:origin+'/graph/aec-extras.json'}]:[],jurisdiction}
   if(!Array.isArray(graph.nodes)||!Array.isArray(graph.edges)) return null
-  const periodQuery=receiptPeriodQuery(query)
-  if(periodQuery.error)return {needs_period:true,answer:periodQuery.error,sources:[],jurisdiction}
+  // The question's own period is read into an explicit financial-year window;
+  // the reading is stated with the answer and the other readings are offered.
+  const latest=latestReceiptYear(graph)
+  const read=readReceiptPeriod(query,latest,{compare:!!filters.compareYears||!!(filters.from&&filters.to)})
+  let periodReading=read.reading,periodOptions:PeriodOption[]=read.options
+  let periodQuery=receiptPeriodQuery(read.query)
+  if(periodQuery.error) {
+    // A period these records cannot place: answer across every published year and say so.
+    periodQuery={query:periodQuery.query.replace(/\b(?:(?:19|20)\d{2}(?:\s*[/–—‑-]\s*\d{2,4})?|calendar|quarters?|months?|weeks?|days?|halves|half|ending|ended|financial|fiscal|fy)\b/gi,' ').replace(/\s+/g,' ').trim()}
+    periodReading='Reading this across all published financial years, because these records are grouped by financial year.'
+    periodOptions=latest===undefined?[]:[{label:`${financialYear(latest)} only`,from:latest,to:latest}]
+  }
   query=periodQuery.query
-  if(separateReceiptYears(query)&&!filters.compareYears&&!(filters.from&&filters.to)) return {needs_period:true,answer:'Choose one financial year or a continuous range using “from … to …”. Separate years cannot be pooled without including the years between them.',sources:[],jurisdiction}
+  // A broad word with one natural grouping in this map is read as that
+  // grouping, and the reading is stated with the answer.
+  let scopeReading:string|undefined
+  const scopeOptions:{label:string;party?:string}[]=[]
+  const groupings=new Set(graph.nodes.filter(n=>n.kind==='donor').map(n=>n.industry))
+  if(!exactReceiptDonors(graph,normal(query)).nodes.length) {
+    if(/\b(?:banks|banking)\b/i.test(query)&&groupings.has('finance'))
+      scopeReading='Reading banks as the finance grouping in this map, which also holds insurers and investment firms.'
+    else if(/\benergy\b/i.test(query)&&!mentionedReceiptIndustries(query).includes('fossil_fuels')&&groupings.has('fossil_fuels')) {
+      query=query.replace(/\b(?:the\s+)?energy(?:\s+(?:companies|sector|industry|lobby|producers))?\b/gi,'fossil fuels')
+      scopeReading='Reading energy as the fossil fuels grouping, which holds the energy producers in this map.'
+    }
+  }
   const q=normal(query), nodes=new Map(graph.nodes.map(n=>[n.id,n]))
   let industries=mentionedReceiptIndustries(query,[...new Set(graph.nodes.filter(n=>n.kind==='donor').map(n=>n.industry).filter((v):v is string=>!!v))])
   const named=exactReceiptDonors(graph,q)
   if(named.ambiguous)return {needs_scope:true,donor_query:named.ambiguous,answer:'Which organisation do you mean? Matching names in this map include '+receiptDonorChoices(graph,named.ambiguous).map(n=>n.label).join('; ')+'. Please use the full organisation name.',sources:[],jurisdiction}
   const exactDonors=named.nodes
 
-  if(!exactDonors.length && /\benergy\b/.test(q) && !industries.includes('fossil_fuels')) return {needs_scope:true,answer:'Energy can include fossil fuels and renewables. Please name the industry or company you want to compare.',sources:[],jurisdiction}
   if(exactDonors.length) industries=[]
   const donors=exactDonors.length?exactDonors:graph.nodes.filter(n=>n.kind==='donor' && industries.includes(n.industry||''))
   const namedParties=exactReceiptParties(graph,named.partyQuery??q)
   if(!filters.party&&namedParties.unavailable)return {needs_scope:true,answer:`${namedParties.unavailable} is not a recipient party in this map. Choose the matching jurisdiction or a party listed in this map. No total has been calculated.`,sources:[],jurisdiction}
-  if(!filters.party&&namedParties.ambiguous)return {needs_scope:true,answer:'That name matches more than one recipient party in this map. Please use the full party name so separate records are not combined.',sources:[],jurisdiction}
+  // A name shared by several recipient parties: answer for the party with
+  // the most disclosed receipts, say so, and offer the others.
+  if(!filters.party&&namedParties.ambiguous&&namedParties.nodes.length>1) {
+    const ranked=[...namedParties.nodes].sort((a,b)=>receiptTotalTo(graph,b.id)-receiptTotalTo(graph,a.id)||a.label.localeCompare(b.label,'en-AU'))
+    namedParties.nodes=[ranked[0]]
+    scopeReading=`That name matches ${ranked.map(n=>n.label).join(' and ').replace(/ and (?=.* and )/g,', ')} in this map; this answer is for ${ranked[0].label}, the party with the most disclosed receipts.`
+    scopeOptions.push(...ranked.slice(1).map(n=>({label:n.label,party:n.label})))
+  }
   const partyFilter=filters.party
   const parties=partyFilter?graph.nodes.filter(n=>n.kind==='party'&&normal(n.label)===normal(partyFilter)):namedParties.nodes
   const all=/^who are the top donors by disclosed receipts/.test(q) || /\b(?:all|total) (?:political )?(?:receipts|donations|party funding)\b/.test(q) || /^(?:who donates the most(?: money)?(?: to who(?:m)?)?|(?:who are the )?(?:biggest|largest|top) political donors)$/.test(q)
@@ -220,12 +257,9 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
     if(receiptDonorChoices(graph,fragment).length)return {needs_scope:true,donor_query:fragment,answer:'Matching names in this map include '+receiptDonorChoices(graph,fragment).map(n=>n.label).join('; ')+'. Please use the full organisation name so separate records are not combined.',sources:[],jurisdiction}
   }
   if(!donors.length&&!parties.length&&!all) return null
-  // Ambiguous relative periods cannot silently become lifetime totals.
-  if(!filters.from && !filters.to && /\b(?:last|past|recent|recently|latest|this year|last year|decade)\b/.test(q)) return {needs_period:true,answer:'Choose the financial years for this comparison so I can give the right subtotal.',sources:[],jurisdiction}
   const years=[...query.matchAll(/\b(?:19|20)\d{2}\b/g)].map(m=>Number(m[0]))
   let from:number|undefined,to:number|undefined
-  if(years.length>2) return {needs_period:true,answer:'Please choose one start and end financial year.',sources:[],jurisdiction}
-  if(years.length===2) { from=Math.min(...years);to=Math.max(...years) }
+  if(years.length>=2) { from=Math.min(...years);to=Math.max(...years) }
   if(years.length===1) {
     if(/\b(?:since|from|after)\s+(?:19|20)\d{2}\b/.test(q)) from=years[0]+(/\bafter\s+(?:19|20)\d{2}\b/.test(q)?1:0)
     else if(/\b(?:before|until|through)\s+(?:19|20)\d{2}\b/.test(q)) to=years[0]-(/\bbefore\s+(?:19|20)\d{2}\b/.test(q)?1:0)
@@ -234,7 +268,7 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   if(filters.from && /^\d{4}$/.test(filters.from)) from=Number(filters.from)
   if(filters.to && /^\d{4}$/.test(filters.to)) to=Number(filters.to)
   const donorIds=new Set(donors.map(n=>n.id)),partyIds=new Set(parties.map(n=>n.id))
-  const totals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],total_aud:number,receipts:number,all_types_aud:number,other_receipts_aud:number}>()
+  const totals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],total_aud:number,receipts:number,all_types_aud:number,other_receipts_aud:number,donations_aud:number,donations_by_year:Record<string,number>}>()
   const donorTotals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],associated?:string,total_aud:number,receipts:number,all_types_aud:number,other_receipts_aud:number}>()
   const industryTotals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],total_aud:number,receipts:number,all_types_aud:number,other_receipts_aud:number}>()
   // One row per donor-to-party pair: typed edges are split by receipt type above and merged back here.
@@ -277,8 +311,16 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
     allCents+=allAmount;otherCents+=otherAmount
     if(!selected){amount=0;receipts=0}
     matching++;cents+=amount;count+=receipts
-    const previous=totals.get(party.id)||{id:party.id,name:party.label,total_aud:0,receipts:0,all_types_aud:0,other_receipts_aud:0}
+    const previous=totals.get(party.id)||{id:party.id,name:party.label,total_aud:0,receipts:0,all_types_aud:0,other_receipts_aud:0,donations_aud:0,donations_by_year:{}}
     previous.all_types_aud+=allAmount/100;previous.other_receipts_aud+=otherAmount/100;previous.total_aud+=amount/100;previous.receipts+=receipts;totals.set(party.id,previous)
+    // Donation-only amounts (AEC "Donation Received") per financial year and in total.
+    if(typed&&edge.receipt_type==='donation_received') {
+      previous.donations_aud+=allAmount/100
+      for(const [year,value] of Object.entries(edge.byYear||{})) {
+        const y=Number(year);if((from!==undefined||to!==undefined)&&(y<(from??0)||y>(to??9999))||!Number.isFinite(value[0]))continue
+        previous.donations_by_year[year]=Math.round(((previous.donations_by_year[year]??0)+value[0])*100)/100
+      }
+    }
     const donorTotal=donorTotals.get(donor.id)||{id:donor.id,name:donor.label,href:donorDisclosure(donor).href,return_reference:returnReference((donor.returnReferences || []).find(ref=>!from || Number(String(ref.year).slice(0,4))>=from && (!to || Number(String(ref.year).slice(0,4))<=to)) || donor.returnReferences?.[0] || {}),total_aud:0,receipts:0,all_types_aud:0,other_receipts_aud:0}
     // The AEC register line rides only on receipts to the party the register ties the donor to (export rule 9).
     const associated=donorAssociatedTo(donor,party.label)
@@ -304,19 +346,24 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   const period=[fiscalPeriod,...eventPeriods].filter(Boolean).join('; ')||null
   const amount=receiptDollars(cents/100),measure_label=receiptMeasureLabel(measure,industries[0]??(exactDonors.length===1?exactDonors[0].industry:undefined))
   return {
-    answer:matching?`${subject}: ${amount} in ${measure_label}, financial years ${period}, across ${count.toLocaleString('en-AU')} records.`:`OPAX holds ${subject} receipts in other financial years. Explore the [money map](${url}) to choose a held period.`,
+    answer:[periodReading,scopeReading].filter(Boolean).map(r=>r+' ').join('')+(matching?`${subject}: ${amount} in ${measure_label}, financial years ${period}, across ${count.toLocaleString('en-AU')} records.`:`OPAX holds ${subject} receipts in other financial years. Explore the [money map](${url}) to choose a held period.`),
     period_coverage: { since: Number.isFinite(first) ? `${first}-01-01` : null, until: Number.isFinite(last) ? `${last}-12-31` : null,
       as_of: typeof graph.meta.generated === 'string' ? graph.meta.generated.slice(0, 10) : null,
       requested_since: from === undefined ? undefined : `${from}-01-01`, requested_until: to === undefined ? undefined : `${to}-12-31`,
       matched: matching > 0, basis: 'financial_year_start', note: 'Years identify financial years by starting year, not calendar-year totals; only matching recorded receipts in the published selection.' },
     measure,measure_label,typed,all_types_aud:allCents/100,other_receipts_aud:otherCents/100,total_aud:cents/100,receipts:count,period,requested_years:{from:from??null,to:to??null},jurisdiction,subject,
-    by_party:[...totals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100,all_types_aud:Math.round(t.all_types_aud*100)/100,other_receipts_aud:Math.round(t.other_receipts_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
+    by_party:[...totals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100,all_types_aud:Math.round(t.all_types_aud*100)/100,other_receipts_aud:Math.round(t.other_receipts_aud*100)/100,donations_aud:Math.round(t.donations_aud*100)/100,
+      // Per-year donations travel only for a bounded window, where answers show them.
+      donations_by_year:from!==undefined&&to!==undefined?t.donations_by_year:{}})).sort((a,b)=>b.total_aud-a.total_aud),
     by_donor:[...donorTotals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100,all_types_aud:Math.round(t.all_types_aud*100)/100,other_receipts_aud:Math.round(t.other_receipts_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
     by_industry:[...industryTotals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100,all_types_aud:Math.round(t.all_types_aud*100)/100,other_receipts_aud:Math.round(t.other_receipts_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
     flows:[...flows.values()].sort((a,b)=>b.total_aud-a.total_aud),
     selected_donors:donors.map(d=>d.label),
     selected_parties:parties.map(p=>p.label),
     selected_industries:industries,
+    read_query:query,
+    ...(periodReading?{period_reading:periodReading}:{}),period_options:periodOptions,
+    ...(scopeReading?{scope_reading:scopeReading}:{}),scope_options:scopeOptions,
     scope:'Party-level totals for sources in the published OPAX money map.',
     period_note:'Years use the first year of a financial year; election returns may use the polling year. Undated receipts are excluded when a year filter is requested. Dollar amounts are nominal, not inflation-adjusted.',
     coverage:graph.meta.coverage,methodology:graph.meta.methodology,generated:graph.meta.generated,

@@ -1,6 +1,6 @@
-import {guardAnswerAttribution} from './fixtures/ask-attribution.mjs';
+import {withoutSaLabel} from './fixtures/ask-attribution.mjs';
 import {speechPresentation, joinMixedSpeakers} from '../src/mixed-speakers.ts';
-const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; context.guardAnswerAttribution ??= guardAnswerAttribution; return baseVM(code, context, options); };
+const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; context.withoutSaLabel ??= withoutSaLabel; return baseVM(code, context, options); };
 import * as passageText from '../src/passage-text.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -22,7 +22,7 @@ const scopeBundle=await build({entryPoints:[new URL('../src/ask-scope.ts',import
 const scopeHelpers=await import('data:text/javascript;base64,'+Buffer.from(scopeBundle.outputFiles[0].text).toString('base64'));
 const payBundle=await build({entryPoints:[new URL('../src/ask-pay.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
 const payHelpers=await import('data:text/javascript;base64,'+Buffer.from(payBundle.outputFiles[0].text).toString('base64'));
-const worker={...passageText,isWitness,...records,...evidenceHelpers,...scopeHelpers,mentionsPay:payHelpers.mentionsPay};
+const worker={...passageText,isWitness,...records,...evidenceHelpers,...scopeHelpers,mentionsPay:payHelpers.mentionsPay,mentionsOfficePay:payHelpers.mentionsOfficePay};
 runInNewContext(ts.transpile(code),worker);
 const plain=value=>JSON.parse(JSON.stringify(value));
 

@@ -36,7 +36,8 @@ test('documented-position prompt answers before distinct supporting points witho
  assert.match(prompt.user,/each in a complete paraphrased sentence/);
  assert.match(prompt.user,/Use that person’s explicit speaking turns/);
  assert.match(prompt.user,/response coverage note, only when the answer depends on them/);
- assert.match(prompt.user,/return this sentence: This selection does not establish their position on that topic/);
+ assert.match(prompt.user,/When the passages hold no position on that exact topic, give the closest position they do record and say so in one line/);
+ assert.doesNotMatch(prompt.user,/return (?:ONLY )?this sentence/);
 });
 
 test('vote-selection notes describe the boundary separately from unchanged vote rows',async()=>{

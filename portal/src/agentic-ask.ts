@@ -1,7 +1,6 @@
 import {ASK_EVIDENCE_RULES} from './ask-writing-rules'
 import { extractAskConstraints, constrainStep, type AskConstraints } from './ask-constraints'
 import {federalPartyMoneyAnswer,publicPartyMoneyAnswer} from './ask-money-routing'
-import {claimMeasureConsistent,guardClaimMeasures} from './ask-claim-measures'
 import { researchPhaseWallMs } from './research-time'
 import { ASK_HARD_WALL_MS, ASK_ANSWER_TARGET_MS, ASK_MAX_TOOL_CALLS, ASK_TOOL_WALL_MS, ASK_MAX_MODEL_USD, ASK_FALLBACK_RESERVE_USD, reserveQuestionTurn } from './ask-budgets'
 import { researchTurnReservationUsd, unmeteredResearchBudget } from './research-budget'
@@ -32,7 +31,7 @@ import type { AnswerTally } from './research-evidence'
 import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ReceiptFact, type ResearchResult } from './research-types'
 
 import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION } from './research-writing'
-import { CAUSAL } from './research-coherence.mjs'
+import { leadWithModelAnswer } from './research-answer-shape'
 
 export const AGENTIC_PROMPT_VERSION = `agentic-ask-11-topic-scope/${ANSWER_WRITING_VERSION}`
 export const AGENTIC_BUDGET_MS = ASK_HARD_WALL_MS
@@ -289,17 +288,14 @@ export function sourceLinks(results: ToolResult[]): SourceLinks {
   return { lists: ok.flatMap(r => r.list ? [r.list] : []), related }
 }
 const NUMBER_WORD = /\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundreds?|thousands?|millions?|billions?|trillions?|hundredth|thousandth|millionth|billionth|trillionth|half|halves|quarter|quarters|dozen|dozens|twice|thrice|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|twelfth|\w+teenth|\w+tieth)\b/i
-/** Defensive boundary for any future connective prose. No model-authored
- * numeric characters or number words are accepted, including citation ids,
- * dates, percentages and money.
- * Only the deterministic renderer may introduce them. No placeholders are
- * supported: answers currently consist entirely of bound tool-row templates. */
+/** Connective prose from the planner sits beside the deterministic tool-row templates, which carry every figure: a
+ * prose sentence with its own number would only repeat or contradict a row, so it is left out. */
 export function verifyComposition(text: string, _facts: Fact[], _question = ''): { prose: string; cited: number[]; dropped: number } {
   const sentences = String(text ?? '').replace(/\s+/g, ' ').trim().split(/(?<=[.!?\]])\s+(?=[A-Z"'(])/)
   const kept: string[] = []; let dropped = 0
   for (const sentence of sentences) {
     if (!sentence.trim()) continue
-    if (!claimMeasureConsistent(sentence,[]) || /\p{N}/u.test(sentence) || NUMBER_WORD.test(sentence) || CAUSAL.test(sentence) || /^based on\b/i.test(sentence)) { dropped++; continue }
+    if (/\p{N}/u.test(sentence) || NUMBER_WORD.test(sentence) || /^based on\b/i.test(sentence)) { dropped++; continue }
     kept.push(sentence)
   }
   return { prose: kept.join(' '), cited: [], dropped }
@@ -343,7 +339,7 @@ export function selectAnswerFacts(facts: Fact[], scope: NamedScope, peakYear = f
 }
 
 // --------------------------------------------------------------- named scope
-export interface NamedScope { people: string[]; parties: string[]; bills: string[]; ambiguous: boolean; unresolved: boolean; resolvedQuestion?: string; partyClarification?: true; partyClarificationReason?: 'identity' | 'party' | 'form'; correctedParty?: true }
+export interface NamedScope { people: string[]; parties: string[]; bills: string[]; ambiguous: boolean; unresolved: boolean; otherMatches?: string[]; resolvedQuestion?: string; partyClarification?: true; partyClarificationReason?: 'identity' | 'party' | 'form'; correctedParty?: true }
 /** Exact roster/list matching, with a unique surname allowed. Longest names
  * win over surnames inside another full name. Never ask the model to identify
  * the entities it must retain. */
@@ -356,7 +352,7 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
     .replace(/\bquick\s+(?:check|question|one|note)\b/gi, ' ')
   const q = ` ${normaliseQuestion(publicQuestion)} `
   const mentions = (name: string) => !!name && q.includes(` ${normaliseQuestion(name)} `)
-  const exported = (roster as { people?: { name: string; party?: string; party_now?: string }[] } | null)?.people ?? []
+  const exported = (roster as { people?: { name: string; party?: string; party_now?: string; current?: boolean; speeches?: number }[] } | null)?.people ?? []
   // A bare indexed surname is an alias, not a full identity that may hide other people.
   const fullSurnames=new Set(exported.filter(p=>typeof p.name==='string'&&p.name.trim().includes(' ')).map(p=>normaliseQuestion(p.name).split(' ').at(-1)!))
   const records=exported.filter(p=>typeof p.name==='string'&&(p.name.trim().includes(' ')||!fullSurnames.has(normaliseQuestion(p.name))))
@@ -388,7 +384,7 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
     if (!p.name.trim().includes(' ') && (!capitalised(p.name.trim()) || !personalSurname(normaliseQuestion(p.name)))) continue
     if (unmatched.includes(name)) { people.push(p.name); unmatched = unmatched.split(name).join(' ~ ') }
   }
-  let ambiguous = false
+  const ambiguous = false, otherMatches: string[] = []
   const remainder = unmatched
   const surnames = new Map<string, Set<string>>()
   for (const p of records) {
@@ -403,7 +399,10 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
     const before = remainder.slice(0, remainder.indexOf(` ${surname} `)).trim().split(' ').at(-1) ?? ''
     const given = [...names].some(name => normaliseQuestion(name).split(' ').slice(0, -1).includes(before))
     if (before && before !== '~' && !namePrefixes.has(before) && !given) continue
-    if (names.size === 1) people.push([...names][0]); else ambiguous = true
+    // A surname several people share answers about the most likely one: a current office holder first, then the one
+    // with the most records. The others are named under the answer so the reader can ask again.
+    const likely = [...names].map(name => records.find(p => p.name === name)!).sort((a, b) => Number(!!b.current) - Number(!!a.current) || (b.speeches ?? 0) - (a.speeches ?? 0))
+    people.push(likely[0].name); otherMatches.push(...likely.slice(1).map(p => p.name))
   }
   const parties = Object.entries(aliases).filter(([, names]) => names.some(mentions)).map(([name]) => name)
     .filter(name => name !== 'Liberal' || !mentions('Liberal National Party'))
@@ -450,7 +449,7 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
     let length = 0
     return span.trim().split(/\s+/).some(word => { length = isUnknown(word) ? length + 1 : 0; return length >= 2 })
   })
-  return { people: resolvedPeople, parties, bills, ambiguous, unresolved: unresolvedGrammar || unresolvedSpan, ...(resolvedQuestion ? { resolvedQuestion } : {}) }
+  return { people: resolvedPeople, parties, bills, ambiguous, unresolved: unresolvedGrammar || unresolvedSpan, ...(resolvedQuestion ? { resolvedQuestion } : {}), ...(otherMatches.length ? { otherMatches: [...new Set(otherMatches)].filter(name => !resolvedPeople.includes(name)) } : {}) }
 }
 /** Public roster resolution is bounded and precedes planning and cache reads. */
 export async function resolveNamedScope(question: string, deps: ToolDeps, ms = 4_000, filters: Record<string, unknown> = {}): Promise<NamedScope> {
@@ -504,6 +503,8 @@ export interface AgenticDeps extends ToolDeps {
 }
 export interface StepEvent { id: number; label: string; arg?: string; state: 'running' | 'done' | 'failed' | 'error'; ms?: number; tool?: string; round?: number; results?: number }
 export interface AgenticPayload {
+  /** Internal: a shared surname was answered for the first name; the others are named under the answer. */
+  other_matches?: string[]
   answered: boolean
   reason?: 'declined' | 'no_supported_claim' | 'grounding_failed'
   answer: string
@@ -627,7 +628,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const input={question,period,facts:sheet,constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined}}
     const writingMs=Math.max(0,Math.min(8000,Math.min(budgetMs, deps.research.writingWallMs ?? budgetMs)-(Date.now()-started)))
     const written = await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs),writingMs,deps.signal).catch(()=>proseFallback(input))
-    const complete=run.passage_answer ? appendWrittenPoints(written,run.passage_answer) : written
+    const complete=run.passage_answer ? leadWithModelAnswer(appendWrittenPoints(written,run.passage_answer) as unknown as Record<string,unknown>,run.passage_answer) as unknown as QualitativeAnswer : written
     run.answer=complete.answer;run.qualitative=complete;run.answer_source='model'
     run.tokens=stats.tokens;run.cost_usd=stats.costUsd ?? run.cost_usd
     run.timings.compose_ms+=Date.now()-started-run.timings.total_ms;run.timings.total_ms=Date.now()-started
@@ -638,21 +639,16 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const primary=(signal?:AbortSignal)=>runAgenticAttempt(question,{...deps,signal},deps.research?loopProgress:progress,budgetMs,period,filters,resolvedScope,started)
     const run = await (reserveEnabled?bounded(primary,selectionLeft(),deps.signal):primary(deps.signal))
     if (deps.research && !isElectorateDataQuestion(question) && !run.answered) throw new ResearchError(run.reason === 'no_supported_claim' ? 'no_supported_claim' : 'grounding', { rounds: run.research?.rounds ?? 0, tokens: run.tokens, turns: run.research?.turns, ...(run.cost_usd != null ? { costUsd: run.cost_usd } : {}) })
-    const complete=completeLookup(await writeRun(run))
-    if(complete.qualitative){
-      const original=complete.qualitative
-      const checked=guardClaimMeasures(complete.qualitative as unknown as Record<string,unknown>) as unknown as QualitativeAnswer
-      complete.answer=checked.answer;complete.qualitative=checked
-      if(complete.research&&checked!==original)complete.research.sources=checked.sources.map(s=>({title:s.title,url:s.url,kind:s.kind,...(s.date?{date:s.date}:{}),...(s.speaker?{speaker:s.speaker}:{})}))
-    }
-    return complete
+    return otherMatchLine(completeLookup(await writeRun(run)))
   }
   catch (error) {
     if (!deps.research) throw error
     const failure = error instanceof ResearchError ? error : new ResearchError(deps.signal?.aborted ? 'aborted' : error instanceof Error && error.name === 'TimeoutError' ? 'timeout' : 'error')
     await deps.onResearchFailure?.(failure)
     if (deps.signal?.aborted) throw error
-    if (failure.reason === 'spend' || (failure.stats.reservedCostUsd ?? 0) + ASK_FALLBACK_RESERVE_USD > ASK_MAX_MODEL_USD) return { ...lookupPayload({ answer: 'Research reached its per-question budget before the requested answer could be established.', answer_decision: 'limitation', citations: {}, sources: [] }), tokens: failure.stats.tokens, cost_usd: failure.stats.costUsd ?? null, events: attempted, research_failure: 'spend', research: { mode: 'loop', rounds: failure.stats.rounds, trail: researchTrail(attempted, []), sources: [], failure: 'spend', turns: failure.stats.turns, reserved_cost_usd: failure.stats.reservedCostUsd } }
+    // Research already wrote from whatever it gathered (or from general knowledge) before throwing; past the spend cap
+    // nothing more can be written, and the response says it is unanswered rather than showing a budget line.
+    if (failure.reason === 'spend' || (failure.stats.reservedCostUsd ?? 0) + ASK_FALLBACK_RESERVE_USD > ASK_MAX_MODEL_USD) return { ...lookupPayload({ answer: '', citations: {}, sources: [] }), answered: false, reason: 'declined', answer_source: 'none', tokens: failure.stats.tokens, cost_usd: failure.stats.costUsd ?? null, events: attempted, research_failure: 'spend', research: { mode: 'loop', rounds: failure.stats.rounds, trail: researchTrail(attempted, []), sources: [], failure: 'spend', turns: failure.stats.turns, reserved_cost_usd: failure.stats.reservedCostUsd } }
     if (deps.researchShadow || failure.reason === 'timeout' || !classifyAgentic(question).shape) {
       const steps = attempted.map(event => ({ tool: event.tool ?? 'search', args: {}, ok: event.state === 'done', ms: event.ms ?? 0, label: event.label }))
       return completeLookup({ answered: false, reason: 'declined', answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period,
@@ -682,8 +678,16 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (failure.stats.costUsd != null) fallback.cost_usd = (fallback.cost_usd ?? 0) + failure.stats.costUsd
     fallback.timings.total_ms = Date.now() - started
     fallback.research_failure = failure.reason
-    return completeLookup(await writeRun(fallback))
+    return otherMatchLine(completeLookup(await writeRun(fallback)))
   }
+}
+/** One line under an answer about a shared surname names the other people it could mean, so the reader can ask again. */
+export function otherMatchLine(run: AgenticPayload): AgenticPayload {
+  const { other_matches: others, ...rest } = run
+  if (!others?.length || !rest.answered || !rest.answer.trim() || rest.qualitative?.answer_decision === 'refusal') return rest
+  const line = `If you meant ${others.slice(0, 3).join(' or ')}, ask again with the full name.`
+  const answer = rest.answer.trimEnd() + '\n\n' + line
+  return { ...rest, answer, ...(rest.qualitative ? { qualitative: { ...rest.qualitative, answer: rest.qualitative.answer.trimEnd() + '\n\n' + line } } : {}) }
 }
 async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: Progress, budgetMs: number, period: Period, filters: Record<string, unknown>, resolvedScope?: NamedScope, primaryStarted=Date.now()): Promise<AgenticPayload> {
   // Speculative extras (the early committee check) end with their attempt: a dropped or failed run leaves no lookup behind.
@@ -702,7 +706,8 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   const results: ToolResult[] = [], steps: AgenticPayload['steps'] = [], events: StepEvent[] = []
   let researched: ResearchResult | undefined
   let executionSignal = deps.signal
-  const base = (over: Partial<AgenticPayload>): AgenticPayload => ({ answered: false, answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period, facts: [], notes: [], steps, events, tokens, cost_usd: cost, over_budget: !left(), version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`,
+  let otherMatches: string[] = []
+  const base = (over: Partial<AgenticPayload>): AgenticPayload => ({ ...(otherMatches.length ? { other_matches: otherMatches } : {}), answered: false, answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period, facts: [], notes: [], steps, events, tokens, cost_usd: cost, over_budget: !left(), version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`,
     ...(researched?.constraints?{answer_scope:researched.constraints}:{}),
     ...(deps.plannerTrail ? { research: { mode: 'planner', rounds: 1, trail: researchTrail(events, steps), sources: [] } as ResearchPayload } : {}),
     ...(researched ? { research: { mode: 'loop', rounds: researched.rounds, reserved_cost_usd:researched.reservedCostUsd, trail: researchTrail(events, steps), sources: [], turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input) } as ResearchPayload } : {}),
@@ -713,7 +718,8 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   if (!electorateData) {
     try { named = resolvedScope ?? await resolveNamedScope(question, deps, Math.min(4_000, left()), filters) }
     catch { return base({ reason: 'declined' }) }
-    if(named.partyClarification||named.ambiguous&&deps.research){const answer=named.partyClarification?(named.partyClarificationReason==='form'?'Which party do you mean? Please name the party directly so I can check the records for your question.':named.partyClarificationReason==='identity'?"Which party do you mean? Please give the person's full name so I can identify their current party.":"Which party do you mean? This person's current roster affiliation does not identify a political party."):'Please give the full name of the person you mean so I can distinguish their records.';return base({answered:true,answer,answer_source:'template',cost_usd:0,research:{mode:'loop',rounds:0,trail:[],sources:[],turns:[],tokens:{input:0,output:0},cost_usd:0},qualitative:{answer,answer_decision:'clarification',citations:{},sources:[],answer_status:'uncited'}})}
+    if(named.partyClarification){const answer=(named.partyClarificationReason==='form'?'Which party do you mean? Please name the party directly so I can check the records for your question.':named.partyClarificationReason==='identity'?"Which party do you mean? Please give the person's full name so I can identify their current party.":"Which party do you mean? This person's current roster affiliation does not identify a political party.");return base({answered:true,answer,answer_source:'template',cost_usd:0,research:{mode:'loop',rounds:0,trail:[],sources:[],turns:[],tokens:{input:0,output:0},cost_usd:0},qualitative:{answer,answer_decision:'clarification',citations:{},sources:[],answer_status:'uncited'}})}
+    otherMatches = named.otherMatches ?? []
     if (!deps.research && (named.unresolved || named.ambiguous || named.bills.length)) return base({ reason: 'declined' })
   }
   const usage = (out: { tokens?: { input: number; output: number }; costUsd?: number }) => {

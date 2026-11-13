@@ -27,7 +27,7 @@ test('the prompt hands over the figures and forbids working any out', () => {
   const prompt = moneyOverviewPrompt(facts);
   assert.match(prompt, /\$9,013,973/);
   assert.match(prompt, /Gap between Liberal and Labor: \$487,287/);
-  assert.match(prompt, /copied exactly from the supplied evidence/);
+  assert.match(prompt, /Every number taken from a record is copied exactly from it/);
   assert.match(prompt, /Arithmetic belongs to the calculator/);
   assert.match(prompt, /Measure label: disclosed receipts, all types/);
 });

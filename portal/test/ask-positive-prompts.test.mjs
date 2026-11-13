@@ -10,5 +10,5 @@ for(const [name,prompt]of Object.entries(prompts))test(name+' carries one shared
  const outside=prompt.replace(api.ASK_EVIDENCE_RULES,'')
  assert.ok((outside.match(/\b(?:do not|never|must not|cannot)\b/gi)??[]).length<=3)
  assert.match(prompt,/Arithmetic belongs to the calculator/)
- assert.match(prompt,/Protect private personal information/)
+ assert.match(prompt,/name the people they name/)
 })

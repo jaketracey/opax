@@ -15,8 +15,7 @@ const call=(toolName,args,toolCallId='fake')=>({type:'tool-call',toolName,toolCa
 const reply=calls=>({content:calls,finishReason:{unified:'tool-calls',raw:'tool_calls'},usage:{inputTokens:{total:10,noCache:10,cacheRead:0,cacheWrite:0},outputTokens:{total:5,text:5,reasoning:0}},providerMetadata:{openrouter:{usage:{cost:(10*0.66+5*1.98)/1e6}}},warnings:[]});
 const writtenReply=()=>({...reply([]),content:[{type:'text',text:JSON.stringify({sentences:[{text:'Taylor Example recorded 87 chamber speeches labelled gambling in NSW.',facts:[1]}]})}],finishReason:{unified:'stop',raw:'stop'}});
 const counted=()=>new MockLanguageModelV4({doGenerate:[reply([call('count_speeches',countArgs)]),reply([call('finish',{facts:[1]})]),writtenReply()]});
-// A failed draft over an off-topic passage leaves nothing usable, so the loop really falls back (repair contract: a
-// usable verified passage would answer in its own words instead).
+// A draft citing an unbound passage over an off-topic passage: since the minimum checks it answers, uncited.
 let passageText=text;
 const qualitative=(bad=false)=>(passageText=bad?'The committee adjourned until Tuesday morning.':text,new MockLanguageModelV4({doGenerate:[reply([call('search',{query:'housing'})]),...Array.from({length:bad?2:1},()=>reply([call('answer',{text,citations:[{id:bad?'unbound/t/body/0':id,quote:text,start:0,end:text.length}]})]))]}));
 let plannerCalls=0,ordinaryCalls=0,quota=0,modelQuota=0;
@@ -60,8 +59,8 @@ test('route counts use templates; app decoders accept loop JSON, SSE, and fallba
 test('ordinary and non-speech questions go through qualitative search/answer in route mode',async()=>{
  h.env.RESEARCH_LOOP='route';for(const kind of ['speech','all','bill'])for(const stream of [false,true]){globalThis.__researchModel=qualitative();const before=ordinaryCalls,response=await post('What does the record say about housing affordability?',stream,{kind}),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);assert.equal(body.research.mode,'loop',JSON.stringify(logs.filter(r=>r.kind==='research_loop_fallback')));assert.equal(body.answer,text);assert.deepEqual(body.citations,{[id]:[[0,text.length]]});assert.equal(body.sources[0].resource,resource);assert.equal(body.research.sources[0].kind,'speech');assert.equal(body.research.sources[0].date,'2023-05-01');assert.equal(ordinaryCalls,before);await flush();}
 });
-test('failed qualitative repair preserves its trail but cannot publish an uncited fallback in JSON or SSE',async()=>{
- h.env.RESEARCH_LOOP='route';for(const stream of [false,true]){globalThis.__researchModel=qualitative(true);const before=ordinaryCalls,plans=plannerCalls,response=await post('What does the record say about housing affordability?',stream),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);assert.equal(body.research.mode,'planner');assert.match(body.answer,/available records do not establish an answer/);assert.deepEqual(body.citations,{});assert.deepEqual(body.sources,[]);assert.equal(ordinaryCalls,before+1);assert.equal(plannerCalls,plans);assert.deepEqual(body.research.trail.map(t=>t.round),[1,2,3]);await flush();}
+test('a draft citing an unbound passage publishes from the loop, uncited, in JSON and SSE, with no fallback call',async()=>{
+ h.env.RESEARCH_LOOP='route';for(const stream of [false,true]){globalThis.__researchModel=qualitative(true);const before=ordinaryCalls,plans=plannerCalls,response=await post('What does the record say about housing affordability?',stream),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);assert.equal(body.research.mode,'loop');assert.equal(body.answer,text);assert.deepEqual(body.citations,{});assert.equal(body.answer_status,'uncited');assert.equal(ordinaryCalls,before);assert.equal(plannerCalls,plans);assert.deepEqual(body.research.trail.map(t=>t.round),[1,2]);await flush();}
 });
 test('stepped old-path failures retain their executed research trail in ordinary fallback',async()=>{
  h.env.RESEARCH_LOOP='off';const fetchFixture=globalThis.fetch;globalThis.fetch=(input,init)=>new URL(input).pathname.endsWith('/catalog')?Promise.resolve(new Response('fixture unavailable',{status:503})):fetchFixture(input,init);
@@ -107,12 +106,12 @@ test('authenticated loop and old overrides serve JSON/SSE with usage and never r
   assert.deepEqual(reads,[]);assert.deepEqual(writes,[]);
  }finally{globalThis.caches=previousCaches;delete h.env.GENERATION_CACHE;}
 });
-test('old override includes ordinary JSON/SSE consumption and loop fallback includes both attempts',async()=>{
+test('old override includes ordinary JSON/SSE consumption; the loop override answers from the loop alone',async()=>{
  h.env.RESEARCH_LOOP='shadow';const ordinary='What does the record say about housing affordability?';
  for(const stream of [false,true])for(const override of ['old','loop']){
   globalThis.__researchModel=qualitative(true);const response=await evalPost(override,stream,ordinary),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);
-  assert.equal(body.research.mode,'planner');assert.equal(response.headers.get('cache-control'),'no-store');
-  assert.deepEqual(body.research.tokens,override==='old'?{input:13,output:7}:{input:43,output:22});
+  assert.equal(body.research.mode,override==='old'?'planner':'loop');assert.equal(response.headers.get('cache-control'),'no-store');
+  assert.deepEqual(body.research.tokens,override==='old'?{input:13,output:7}:{input:20,output:10});
   const wanted=(body.research.tokens.input*0.66+body.research.tokens.output*1.98)/1e6;assert.ok(Math.abs(body.research.cost_usd-wanted)<1e-12);
   await flush();
  }
@@ -165,7 +164,7 @@ test('shadow skips unmetered requests, samples at default 0.2, and fails closed 
 });
 test('failed shadow inference never invokes a second planner',async()=>{
  h.env.RESEARCH_LOOP='shadow';const fake=new MockLanguageModelV4({doGenerate:()=>{throw Error('fixture provider failure')}});globalThis.__researchModel=fake;const before=plannerCalls;
- await(await post()).text();await flush();assert.equal(plannerCalls,before+1);assert.equal(fake.doGenerateCalls.length,1);assert.equal(logs.findLast(r=>r.kind==='research_loop_shadow').loop.failure,'error');
+ await(await post()).text();await flush();assert.equal(plannerCalls,before+1);assert.equal(fake.doGenerateCalls.length,2,'a failed provider gets one final answer call, which fails too');assert.equal(logs.findLast(r=>r.kind==='research_loop_shadow').loop.failure,'error');
 });
 test('route money and pay calculations are chosen by the agent in JSON and SSE',async()=>{
  const fixtures=h.env.ASSETS;h.env.ASSETS=realAssets;h.env.RESEARCH_LOOP='route';
@@ -212,7 +211,6 @@ test('every ordinary fallback carries exactly one failure code and one compact l
   ['error',()=>{globalThis.__researchModel=new MockLanguageModelV4({doGenerate:()=>{throw Error('fixture failure')}})}],
   // Searches that find nothing citable keep only search active, so eight empty rounds exhaust the qualitative turns.
   ['steps',()=>{const fixture=globalThis.fetch;globalThis.fetch=(input,init)=>new URL(input).pathname.endsWith('/find')?Promise.resolve(Response.json({resources:{}})):fixture(input,init);globalThis.__researchModel=new MockLanguageModelV4({doGenerate:Array.from({length:9},(_,i)=>reply([call('search',{query:'housing '+i})]))})}],
-  ['grounding',()=>{globalThis.__researchModel=qualitative(true)}],
   ['tokens',()=>{h.env.RESEARCH_LOOP_TOKENS='1';globalThis.__researchModel=qualitative()}],
   ['limiter',()=>{let calls=0;h.env.MODEL_LIMITER={limit:async()=>({success:++calls>1})};globalThis.__researchModel=qualitative()}],
  ]){const limiter=h.env.MODEL_LIMITER,fetchFixture=globalThis.fetch;configure();const before=logs.filter(r=>r.kind==='research_loop_fallback').length,plans=plannerCalls;
@@ -243,13 +241,15 @@ test('failed research constrains ordinary money and senator fallbacks before cal
   await flush()
  }}finally{h.env.ASSETS=assets;h.env.MODEL_LIMITER=limiter}
 });
-test('a cached ordinary fallback replay never emits wrong-period answer text',async()=>{
+test('a cached ordinary fallback replay with a wrong period keeps its answer and adds a coverage note',async()=>{
  h.env.RESEARCH_LOOP='route';const previousCaches=globalThis.caches,limiter=h.env.MODEL_LIMITER;
  const cached={answer:'The current salary is $622,102.',sources:[{resource:'current-pay',href:'https://example.org/pay',kind:'pay',cited:true,date:'2026-10-19'}],citations:{'current-pay':[[0,32]]}}
  let hits=0;globalThis.caches={default:{match:async k=>{if(new URL(k.url).pathname.includes('/ask/')){hits++;return Response.json(cached)}},put:async()=>{}}};h.env.MODEL_LIMITER={limit:async()=>({success:false})}
  try{
   const response=await h.fetch('/api/ask?stream=1',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question:'What was the salary record in 2005?',kind:'speech'})})
-  const raw=await response.text();assert.equal(hits,1);assert.match(raw,/cached/);assert.match(raw,/coverage_only/);assert.doesNotMatch(raw,/622,102/);await flush()
+  const raw=await response.text();assert.equal(hits,1);assert.match(raw,/cached/);const done=JSON.parse(raw.match(/event: done\ndata: (.+)/)[1])
+  // Minimum checks: the answer is never replaced; the coverage note says the records may not cover the period.
+  assert.equal(done.answer,cached.answer);assert.equal(done.coverage.matched,false);assert.match(done.coverage.note,/^These records may not cover 2005-01-01 to 2005-12-31/);await flush()
  }finally{globalThis.caches=previousCaches;h.env.MODEL_LIMITER=limiter}
 });
 test('missing and invalid statute catalogues never force ACT into the actual search request',async()=>{

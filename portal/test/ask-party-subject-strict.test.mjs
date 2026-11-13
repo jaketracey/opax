@@ -48,15 +48,16 @@ for(const [label,question,decision] of cases)for(const sse of [false,true])for(c
   payload={answer,answer_decision:'answer',answer_scope:scope,sources:[{resource:'speech-1',kind:'speech',speaker:'Pauline Hanson',snippet:'I support the bill.',cited:true}],citations:{'speech-1/t/body/0':[[0,answer.length]]}}
  }else{
   assert.deepEqual(named.people,[]);assert.deepEqual(named.parties,['One Nation']);assert.equal(named.partyClarification,undefined)
-  const answer='Avery Example received $161,787.'
-  payload={answer,answer_decision:'answer',answer_scope:scope,sources:structuredClone(hanson.payload.sources).map(s=>({...s,cited:true})),citations:{'fact-1/t/body/0':[[0,answer.length]]}}
+  // Minimum checks: no ranking reconstruction; the money rule removes only the sentence whose figure the cited receipt holds for someone else.
+  const first='Westpac Banking Corporation gave One Nation $161,787.',answer=first+' Avery Example received $126,996.'
+  payload={answer,answer_decision:'answer',answer_scope:scope,sources:structuredClone(hanson.payload.sources).map(s=>({...s,cited:true})),citations:{'fact-1/t/body/0':[[0,first.length]],'fact-2/t/body/0':[[first.length+1,answer.length]]}}
  }
  if(fallback)payload={...payload,research:{mode:'planner',failure:'grounding'}}
  const headers={...(cache?{'x-opax-cache':'HIT'}:{}),...(sse?{'content-type':'text/event-stream'}:{})},response=sse?new Response('event: done\ndata: '+JSON.stringify(payload)+'\n\n',{headers}):Response.json(payload,{headers}),wire=await(await api.withAnswerLanguage(response,question)).text(),out=sse?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
  if(decision==='clarification'){
   assert.equal(out.answer,payload.answer);assert.equal(out.answer_decision,'clarification');assert.deepEqual(out.citations,{});assert.doesNotMatch(out.answer,/Westpac|161,787|provided the most/)
  }else if(decision==='person'){assert.equal(out.answer,payload.answer);assert.ok(out.citations['speech-1/t/body/0'])}
- else{assert.match(out.answer,/^Westpac Banking Corporation.*\$161,787.*1998-99 to 2025-26/);assert.ok(Object.keys(out.citations).length)}
+ else{assert.equal(out.answer,'Westpac Banking Corporation gave One Nation $161,787.');assert.deepEqual(Object.keys(out.citations),['fact-1/t/body/0'])}
 })
 for(const alias of ['Avery Example','Avery Display','avery-example'])test(`full roster name/display/slug resolves: ${alias}`,()=>{
  const r={people:[{name:'Avery Example',full:'Avery Display',slug:'avery-example',party_now:'Greens'}]}

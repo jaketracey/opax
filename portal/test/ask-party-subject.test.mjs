@@ -2,7 +2,6 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import {build} from 'esbuild'
-import {auditPayload} from '../src/research-claim-audit.mjs'
 const b=await build({stdin:{contents:"export {extractNamedScope,inferPeriod,runAgentic} from './src/agentic-ask';export * from './src/ask-constraints';export * from './src/research-grounding';export * from './src/research-response';export * from './src/research-writing';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm'})
 const api=await import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'))
 const roster=JSON.parse(fs.readFileSync(new URL('../public/parliamentarians.json',import.meta.url)))
@@ -23,28 +22,33 @@ test('party mapping uses arbitrary current roster entries and never a historical
  assert.deepEqual(n.people,[]);assert.deepEqual(n.parties,['Greens'])
 })
 const hanson=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-pauline.json',import.meta.url)))
-for(const sse of [false,true])for(const cache of [false,true])for(const fallback of [false,true])test(`resolved party repair JSON/SSE cache/fallback: ${sse}/${cache}/${fallback}`,async()=>{
- const named=api.extractNamedScope(question,roster,null),scope=api.extractAskConstraints(question,api.inferPeriod(question),named),answer='Avery Example received $161,787.',payload={answer,answer_decision:'answer',answer_scope:scope,sources:structuredClone(hanson.payload.sources).map(s=>({...s,cited:true})),citations:{'fact-1/t/body/0':[[0,answer.length]]},...(fallback?{research:{mode:'planner'}}:{})}
+// Minimum checks: no ranking reconstruction; the money rule removes only the sentence whose figure the cited
+// receipt holds for someone else, and the correct sentence beside it stays.
+const donorAnswer=scope=>{const first='Westpac Banking Corporation gave One Nation $161,787.',answer=first+' Avery Example received $126,996.'
+ return {answer,answer_decision:'answer',answer_scope:scope,sources:structuredClone(hanson.payload.sources).map(s=>({...s,cited:true})),citations:{'fact-1/t/body/0':[[0,first.length]],'fact-2/t/body/0':[[first.length+1,answer.length]]}}}
+for(const sse of [false,true])for(const cache of [false,true])for(const fallback of [false,true])test(`resolved party money rule JSON/SSE cache/fallback: ${sse}/${cache}/${fallback}`,async()=>{
+ const named=api.extractNamedScope(question,roster,null),scope=api.extractAskConstraints(question,api.inferPeriod(question),named),payload={...donorAnswer(scope),...(fallback?{research:{mode:'planner'}}:{})}
  const headers={...(cache?{'x-opax-cache':'HIT'}:{}),...(sse?{'content-type':'text/event-stream'}:{})},response=sse?new Response('event: done\ndata: '+JSON.stringify(payload)+'\n\n',{headers}):Response.json(payload,{headers})
  const wire=await(await api.withAnswerLanguage(response,question)).text(),out=sse?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
- assert.match(out.answer.split('\n')[0],/Westpac.*\$161,787/);assert.match(out.answer,/across financial years 1998-99 to 2025-26/);assert.ok(Object.keys(out.citations).length)
+ assert.equal(out.answer,'Westpac Banking Corporation gave One Nation $161,787.');assert.deepEqual(Object.keys(out.citations),['fact-1/t/body/0'])
 })
 const coverageQuestion='Who gave the most money to One Nation in 1990?'
 const bad='The requested period is 1990-01-01 to 1990-12-31. This tool covers an unknown start to an unknown end, as of an unknown date. Coverage dates unavailable. It cannot establish the answer for the requested period; no current figures have been substituted.'
 const coverageSources=[{resource:'fact-1',kind:'record',cited:true,url:'/money/party/One%20Nation',snippet:bad},{resource:'coverage',kind:'record',cited:true,url:'/money/party/One%20Nation',snippet:'Federal AEC donation returns, financial years 1998-99 to 2025-26, in the published selection of the 250 largest donors (so totals are lower bounds).'}]
 const expected="OPAX's federal donation records start in 1998-99, so they can't show who gave the most money to One Nation in 1990."
-for(const sse of [false,true])for(const cache of [false,true])for(const fallback of [false,true])test(`plain known coverage on JSON/SSE cache/fallback: ${sse}/${cache}/${fallback}`,async()=>{
+// Minimum checks: a limitation answer is kept (no coverage rewrite); tidying still removes the repeat and tool talk.
+for(const sse of [false,true])for(const cache of [false,true])for(const fallback of [false,true])test(`known coverage limitation kept once on JSON/SSE cache/fallback: ${sse}/${cache}/${fallback}`,async()=>{
  const answer='- '+bad+'\n- '+bad,payload={answer,answer_decision:'limitation',sources:coverageSources,citations:{'fact-1/t/body/0':[[2,answer.length]]},...(fallback?{research:{mode:'planner'}}:{})}
  const headers={...(cache?{'x-opax-cache':'HIT'}:{}),...(sse?{'content-type':'text/event-stream'}:{})},response=sse?new Response('event: done\ndata: '+JSON.stringify(payload)+'\n\n',{headers}):Response.json(payload,{headers})
  const wire=await(await api.withAnswerLanguage(response,coverageQuestion)).text(),out=sse?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
- assert.equal(out.answer,expected);assert.deepEqual(auditPayload(coverageQuestion,out).findings,[]);assert.deepEqual(Object.keys(out.citations),['coverage/t/body/0','fact-1/t/body/0']);assert.equal(out.answer_decision,'limitation')
+ assert.equal(out.answer.match(/The requested period is 1990-01-01 to 1990-12-31\./g).length,1);assert.doesNotMatch(out.answer,/\btool\b/);assert.ok(out.citations['fact-1/t/body/0']);assert.equal(out.answer_decision,'limitation')
 })
 test('coverage fallback uses the known start once, without implementation language',()=>{
  const out=api.proseFallback({question:coverageQuestion,period:api.inferPeriod(coverageQuestion),facts:coverageSources.map((source,i)=>({id:i+1,text:source.snippet,coverage:true,source}))})
  assert.equal(out.answer,expected);assert.doesNotMatch(out.answer,/unknown|tool|lookup|covers an/)
  const c=api.extractAskConstraints(coverageQuestion,api.inferPeriod(coverageQuestion),{people:[],parties:['One Nation'],bills:[],ambiguous:false,unresolved:false})
  const result=api.guardToolPeriod({tool:'party_donations',ok:true,data:{rows:[]},cite:[],notes:[coverageSources[1].snippet]},{tool:'party_donations',args:{party:'One Nation'}},c)
- assert.equal(result.coverage.since,'1998-07-01');assert.doesNotMatch(result.cite[0].label,/unknown start|unknown end|unknown date|tool/)
+ assert.equal(result.coverage.since,'1998-07-01');assert.equal(result.coverage.matched,false);assert.match(result.notes[0],/^The requested period is 1990-01-01 to 1990-12-31; these records (?:start on|cover) 1998-07-01/);assert.doesNotMatch(result.notes[0],/unknown start|unknown end|unknown date|tool/)
 })
 test('a calculated party owner now requires an explicit party',()=>{
  const q='Who donated most to the party of the federal MP who made the most speeches about housing?',n=api.extractNamedScope(q,roster,null)
@@ -60,9 +64,9 @@ test('two full identities sharing a surname, or conflicting current party entrie
  }
 })
 for(const q of ['Top donors to PHON',"Who does Pauline Hanson's One Nation take the most money from?"])test(`One Nation party aliases share the ranking allowlist: ${q}`,()=>{
- const named=api.extractNamedScope(q,roster,null),scope=api.extractAskConstraints(q,api.inferPeriod(q),named),answer='Avery Example received $161,787.'
- const out=api.groundAnswerPayload({answer,answer_decision:'answer',answer_scope:scope,sources:structuredClone(hanson.payload.sources).map(s=>({...s,cited:true})),citations:{'fact-1/t/body/0':[[0,answer.length]]}},q)
- assert.deepEqual(named.people,[]);assert.deepEqual(named.parties,['One Nation']);assert.match(out.answer,/^Westpac Banking Corporation.*\$161,787.*1998-99 to 2025-26/)
+ const named=api.extractNamedScope(q,roster,null),scope=api.extractAskConstraints(q,api.inferPeriod(q),named)
+ const out=api.groundAnswerPayload(donorAnswer(scope),q)
+ assert.deepEqual(named.people,[]);assert.deepEqual(named.parties,['One Nation']);assert.equal(out.answer,'Westpac Banking Corporation gave One Nation $161,787.')
 })
 test('donation coverage does not replace an unrelated scope refusal',()=>{
  for(const q of ['Who earned the highest salary in 1990?','Who gave the most money to One Nation in Queensland disclosures in 1990?']){
@@ -72,10 +76,9 @@ test('donation coverage does not replace an unrelated scope refusal',()=>{
  }
 })
 test('all ranking dimensions read the roster-resolved subject, preserving the rest of the question',()=>{
- const q="Who gives the most money to Victoria Example's party?",n=api.extractNamedScope(q,{people:[{name:'Victoria Example',party_now:'One Nation'}]},null),scope=api.extractAskConstraints(q,api.inferPeriod(q),n),answer='Avery Example received $161,787.'
- assert.equal(scope.jurisdiction,undefined)
- const out=api.groundAnswerPayload({answer,answer_decision:'answer',answer_scope:scope,sources:structuredClone(hanson.payload.sources).map(s=>({...s,cited:true})),citations:{'fact-1/t/body/0':[[0,answer.length]]}},q)
- assert.match(out.answer,/^Westpac Banking Corporation.*\$161,787.*1998-99 to 2025-26/)
+ const q="Who gives the most money to Victoria Example's party?",n=api.extractNamedScope(q,{people:[{name:'Victoria Example',party_now:'One Nation'}]},null),scope=api.extractAskConstraints(q,api.inferPeriod(q),n)
+ assert.equal(scope.jurisdiction,undefined);assert.equal(scope.party,'One Nation')
+ assert.equal(api.groundAnswerPayload(donorAnswer(scope),q).answer,'Westpac Banking Corporation gave One Nation $161,787.')
 })
 for(const extra of [{answered:false},{answer_decision:'refusal'},{answer_decision:'clarification'},{answer_status:'moderated'}])test(`coverage explanation cannot replace a protected decision: ${JSON.stringify(extra)}`,()=>{
  const answer='The requested period needs clarification before I can answer.'

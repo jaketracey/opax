@@ -1,0 +1,152 @@
+[
+  {
+    "id": "event-01",
+    "kind": "event",
+    "question": "Who was responsible for robodebt?"
+  },
+  {
+    "id": "event-02",
+    "kind": "event",
+    "question": "Who was responsible for the sports rorts controversy?"
+  },
+  {
+    "id": "event-03",
+    "kind": "event",
+    "question": "Who was responsible for the commuter car park grants controversy?"
+  },
+  {
+    "id": "event-04",
+    "kind": "event",
+    "question": "Who designed and implemented the NDIS rollout?"
+  },
+  {
+    "id": "event-05",
+    "kind": "event",
+    "question": "Who negotiated and announced AUKUS?"
+  },
+  {
+    "id": "event-06",
+    "kind": "event",
+    "question": "Who led the campaigns for and against the Voice referendum?"
+  },
+  {
+    "id": "event-07",
+    "kind": "event",
+    "question": "What did the 2021 Parliament House workplace review find and who led it?"
+  },
+  {
+    "id": "event-08",
+    "kind": "event",
+    "question": "Who was responsible for the Leppington Triangle land purchase?"
+  },
+  {
+    "id": "event-09",
+    "kind": "event",
+    "question": "Who was responsible for the hotel quarantine failures in Victoria in 2020?"
+  },
+  {
+    "id": "event-10",
+    "kind": "event",
+    "question": "Who established the National Anti-Corruption Commission?"
+  },
+  {
+    "id": "event-11",
+    "kind": "event",
+    "question": "Who made the decision to cancel the 2026 Commonwealth Games in Victoria?"
+  },
+  {
+    "id": "event-12",
+    "kind": "event",
+    "question": "Who was involved in the East West Link cancellation in Victoria?"
+  },
+  {
+    "id": "why-01",
+    "kind": "why",
+    "question": "Why did the government introduce robodebt?"
+  },
+  {
+    "id": "why-02",
+    "kind": "why",
+    "question": "Why did Australia choose AUKUS nuclear-powered submarines?"
+  },
+  {
+    "id": "why-03",
+    "kind": "why",
+    "question": "Why did the Voice referendum fail?"
+  },
+  {
+    "id": "why-04",
+    "kind": "why",
+    "question": "Why did Victoria cancel the 2026 Commonwealth Games?"
+  },
+  {
+    "id": "why-05",
+    "kind": "why",
+    "question": "Why did the government establish the NDIS?"
+  },
+  {
+    "id": "why-06",
+    "kind": "why",
+    "question": "Why did the government end the cashless debit card?"
+  },
+  {
+    "id": "what-happened-01",
+    "kind": "what-happened",
+    "question": "What happened with the robodebt Royal Commission?"
+  },
+  {
+    "id": "what-happened-02",
+    "kind": "what-happened",
+    "question": "What happened with the sports grants program?"
+  },
+  {
+    "id": "what-happened-03",
+    "kind": "what-happened",
+    "question": "What happened with the commuter car park grants program?"
+  },
+  {
+    "id": "what-happened-04",
+    "kind": "what-happened",
+    "question": "What happened with the Leppington Triangle purchase?"
+  },
+  {
+    "id": "what-happened-05",
+    "kind": "what-happened",
+    "question": "What happened with the 2021 Parliament House workplace review recommendations?"
+  },
+  {
+    "id": "what-happened-06",
+    "kind": "what-happened",
+    "question": "What happened with the Murray-Darling Basin Plan?"
+  },
+  {
+    "id": "identity-01",
+    "kind": "identity",
+    "question": "Who is Anthony Albanese?"
+  },
+  {
+    "id": "identity-02",
+    "kind": "identity",
+    "question": "Who is Scott Morrison?"
+  },
+  {
+    "id": "identity-03",
+    "kind": "identity",
+    "question": "Who is Katy Gallagher?"
+  },
+  {
+    "id": "identity-04",
+    "kind": "identity",
+    "question": "Who is Penny Wong?"
+  },
+  {
+    "id": "identity-05",
+    "kind": "identity",
+    "question": "Who is Jacinta Allan?"
+  },
+  {
+    "id": "identity-06",
+    "kind": "identity",
+    "question": "Who is David Pocock?"
+  }
+]

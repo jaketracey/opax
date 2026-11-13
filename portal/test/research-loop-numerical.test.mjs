@@ -30,13 +30,14 @@ test('a year-by-year trend finish keeps every selected year and the leaders, not
   for(const year of ['2015','2022','2026'])assert.match(out.answer,new RegExp(`${year}: 100 `));
   assert.match(out.answer,/Taylor Example: 100/);
 });
-test('one invalid lookup argument is answered with its reason and may be corrected; a second ends the run',async()=>{
+test('an invalid lookup argument is answered with its reason and may be corrected; a second does not end research',async()=>{
   const good={topic:'gambling',group_by:'speaker',since:'2015-01-01'};
   const fixed=await run(trendQuestion,[reply([call('count_speeches',{...good,topic:'gambling-reform'},'a')]),reply([call('count_speeches',good,'b')]),reply([call('finish',{facts:[1]},'c')])]);
   assert.equal(fixed.out.answered,true);assert.equal(fixed.out.research.mode,'loop');
   const sent=JSON.stringify(fixed.model.doGenerateCalls[1].prompt);assert.match(sent,/topic must be one of gambling/);
   const twice=await run(trendQuestion,[reply([call('count_speeches',{...good,limit:99},'a')]),reply([call('count_speeches',{...good,topic:'bets'},'b')]),reply([call('finish',{facts:[1]},'c')])]);
-  assert.equal(twice.failures[0].reason,'malformed_args');assert.notEqual(twice.out.research.mode,'loop');
+  // Both invalid calls were answered with their reason; research went on to the finish turn (which named no gathered fact).
+  assert.equal(twice.model.doGenerateCalls.length>=3,true);assert.notEqual(twice.failures[0]?.reason,'malformed_args')
 });
 test('null and empty optional arguments count as unset',async()=>{
   const {out,failures}=await run(trendQuestion,[reply([call('count_speeches',{topic:'gambling',group_by:'speaker',since:'2015-01-01',party:null,speaker:'',state:null},'a')]),reply([call('finish',{facts:[1]},'b')])]);
