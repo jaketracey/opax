@@ -3,7 +3,8 @@ import { cloneElement } from 'react';
 import type { NavigationState } from 'expo-router/react-navigation';
 import { routeSheetOptions } from '../../features/sheets/frame';
 import { isAccessibilityCategory } from '../../design/tokens';
-import { PixelRatio } from 'react-native';
+import { PixelRatio, Platform } from 'react-native';
+import { AndroidReadingHeader } from '../AndroidReadingHeader';
 import { setSheetSegments } from '../sheets';
 import { hasSourcePreview, isProduction } from '../../design/environment';
 import { communityHome } from '../../features/community/entry';
@@ -65,7 +66,19 @@ export function rootScreens(chrome: NativeStackNavigationOptions = {}) {
             citation: name === 'citation',
             accessible: isAccessibilityCategory(PixelRatio.getFontScale()),
           }),
-          ...(name === 'licences' ? { presentation: 'modal' as const } : {}),
+          ...(name === 'licences'
+            ? {
+                presentation: 'modal' as const,
+                // Android route sheets hide the native bar and draw their own;
+                // Sources and licences has no frame of its own, so a deep link
+                // (`opax://licences`) showed no title and no close, with the
+                // statement under the status bar. It gets the Licence sheet's
+                // bar: the close action and title below the status bar.
+                ...(Platform.OS === 'android'
+                  ? { headerShown: true, header: AndroidReadingHeader }
+                  : {}),
+              }
+            : {}),
           title,
         })}
       />

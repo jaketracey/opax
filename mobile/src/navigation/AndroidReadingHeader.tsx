@@ -7,7 +7,10 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { Text } from '../design/text';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import { Icon } from '../design/icon';
 import { symbols } from '../design/symbols';
 import { colors, rhythm, textStyles } from '../design/tokens';
@@ -22,7 +25,16 @@ export function AndroidReadingHeader({
   navigation,
   options,
   back,
-}: NativeStackHeaderProps) {
+  windowInsets = false,
+}: NativeStackHeaderProps & {
+  /**
+   * Pad from the window's insets rather than measuring natively. A full-screen
+   * dialog in a tab stack (Ask's Options, the filters) has a native safe area
+   * view that reads a zero top inset, so its bar drew under the status bar.
+   */
+  windowInsets?: boolean;
+}) {
+  const insets = useSafeAreaInsets();
   const largeText = useWindowDimensions().fontScale >= 2;
   const rootItems = !options.headerLeft
     ? options.unstable_headerRightItems?.({ canGoBack: !!back })
@@ -78,24 +90,39 @@ export function AndroidReadingHeader({
         : options.title}
     </Text>
   );
-  return (
+  const content = largeText ? (
+    <View style={styles.large}>
+      <View style={styles.actions}>
+        {leading}
+        <View style={{ flex: 1 }} />
+        {right}
+      </View>
+      {heading}
+    </View>
+  ) : (
+    <View style={styles.row}>
+      {leading}
+      {heading}
+      {right}
+    </View>
+  );
+  return windowInsets ? (
+    <View
+      testID="android-header-window-insets"
+      style={[
+        styles.bar,
+        {
+          paddingTop: insets.top,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+        },
+      ]}
+    >
+      {content}
+    </View>
+  ) : (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.bar}>
-      {largeText ? (
-        <View style={styles.large}>
-          <View style={styles.actions}>
-            {leading}
-            <View style={{ flex: 1 }} />
-            {right}
-          </View>
-          {heading}
-        </View>
-      ) : (
-        <View style={styles.row}>
-          {leading}
-          {heading}
-          {right}
-        </View>
-      )}
+      {content}
     </SafeAreaView>
   );
 }
