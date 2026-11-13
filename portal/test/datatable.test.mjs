@@ -208,3 +208,30 @@ test('legacy query adapters remove keys only after the shared raw URL guard',asy
     mounted.destroy();
   }
 });
+
+test('stacked under 700 px, the clipped header sort buttons leave the tab order and come back at 700 px',async ()=>{
+  const {JSDOM} = await import('jsdom');
+  const dom = new JSDOM(`<!doctype html><html><head></head><body><div id="t">${dataTableHTML(config,applyQuery(rows,config,{}))}</div></body></html>`,{url:'https://opax.test/table'});
+  const listeners = new Set(), media = {matches:true,addEventListener:(_type,fn)=>listeners.add(fn),removeEventListener:(_type,fn)=>listeners.delete(fn)};
+  dom.window.matchMedia = query => { assert.equal(query,'(width < 700px)'); return media; };
+  const root = dom.window.document.querySelector('[data-datatable]');
+  const sorts = () => [...root.querySelectorAll('thead [data-sort]')];
+  const handle = mountDataTable(root,config);
+  await new Promise(setImmediate);
+  assert.ok(sorts().length,'the header has sort buttons');
+  assert.ok(sorts().every(b=>b.getAttribute('tabindex')==='-1'),'no hidden sort button takes focus on a phone');
+  assert.ok(root.querySelector('select[data-sort-select]'),'the visible sort select stays');
+  assert.ok(sorts().every(b=>b.textContent.trim()),'header labels stay readable');
+  media.matches = false; for (const fn of listeners) fn();
+  assert.ok(sorts().every(b=>!b.hasAttribute('tabindex')),'at 700 px the header sorts again');
+  handle.destroy();
+  assert.equal(listeners.size,0,'destroy stops listening');
+  // A table that keeps its own grid (phone:false) never hides its header buttons.
+  const off = {...config,phone:false};
+  const dom2 = new JSDOM(`<!doctype html><html><head></head><body>${dataTableHTML(off,applyQuery(rows,off,{}))}</body></html>`,{url:'https://opax.test/table'});
+  dom2.window.matchMedia = () => ({...media,matches:true});
+  const root2 = dom2.window.document.querySelector('[data-datatable]');
+  const h2 = mountDataTable(root2,off); await new Promise(setImmediate);
+  assert.ok([...root2.querySelectorAll('thead [data-sort]')].every(b=>!b.hasAttribute('tabindex')));
+  h2.destroy(); dom.window.close(); dom2.window.close();
+});

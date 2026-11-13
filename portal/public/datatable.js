@@ -459,6 +459,16 @@ export function mountDataTable(el, config) {
   const canonical=doc.head.querySelector('link[rel="canonical"]'), canonicalURL=canonical?.href;
   const requestLinks=new Map([...doc.querySelectorAll?.('a[href]') || []].map(link=>[link,link.getAttribute('href')]));
 
+  // Stacked under 700 px, the header row is clipped for screen readers only; its
+  // sort buttons leave the tab order there (the sort select does their job), so
+  // focus never lands on a control no one can see. They come back at 700 px.
+  const narrow = win.matchMedia?.('(width < 700px)');
+  function syncSortTabs() {
+    const hide = Boolean(narrow?.matches) && root.dataset.phone === 'stack';
+    for (const button of root.querySelectorAll('thead [data-sort]')) {
+      if (hide) button.setAttribute('tabindex','-1'); else button.removeAttribute('tabindex');
+    }
+  }
   function replaceURL(url) {
     win.history.replaceState(win.history.state,'',url); lastURL=String(url);
   }
@@ -510,6 +520,7 @@ export function mountDataTable(el, config) {
     root.append(...section.childNodes);
     if (status) { root.querySelector('.dt-footer').prepend(status); status.textContent = message; }
     mountTableLoaders(root);
+    syncSortTabs();
     for (const detail of root.querySelectorAll('details[data-panel]')) if (open.includes(detail.dataset.panel)) detail.open = true;
     if (focused) for (const field of root.querySelectorAll('[data-focus]')) if (field.dataset.focus === focused) {
       field.focus({preventScroll:true});
@@ -704,6 +715,8 @@ export function mountDataTable(el, config) {
   function popstate() { captureURL(); void refresh(); }
   root.addEventListener('click',click); root.addEventListener('change',change); root.addEventListener('input',input); root.addEventListener('submit',submit); root.addEventListener('keydown',keydown);
   win.addEventListener('popstate',popstate);
+  narrow?.addEventListener?.('change',syncSortTabs);
+  syncSortTabs();
   captureURL();
   void refresh();
   return {destroy() {
@@ -711,6 +724,7 @@ export function mountDataTable(el, config) {
     root.removeAttribute('aria-busy'); root.removeAttribute('data-dt-stale');
     for (const [event,listener] of [['click',click],['change',change],['input',input],['submit',submit],['keydown',keydown]]) root.removeEventListener(event,listener);
     win.removeEventListener('popstate',popstate);
+    narrow?.removeEventListener?.('change',syncSortTabs);
     setRobots(doc,root,false);
   }};
 }
