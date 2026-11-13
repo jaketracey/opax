@@ -326,8 +326,17 @@ export default function AskScreen() {
       keyboard={keyboard}
     />
   );
+  // iPhone: the idle list's large title reserves its band in the scroll
+  // view's adjusted inset, and that inset outlived the switch to the inline
+  // title: at rest an open thread's question sat about 70 pt under the bar
+  // (sweep 1, 7.1). A thread gets a fresh native scroll view, which takes
+  // the inline bar's inset; a new conversation gets a fresh one at rest
+  // under the expanded title, as Search does.
+  const scrollKey =
+    Platform.OS === 'ios' && !docked ? (idle ? 'idle' : 'thread') : 'ask';
   const content = (
     <ScrollView
+      key={scrollKey}
       ref={scroll}
       testID="ask-screen"
       style={[styles.fill, groundStyle]}
@@ -352,6 +361,8 @@ export default function AskScreen() {
       scrollEventThrottle={16}
       contentContainerStyle={[
         styles.content,
+        // An open thread's question starts 8 pt under the bar at rest.
+        Platform.OS === 'ios' && !idle ? styles.threadContent : null,
         column.content,
         // Room for the docked composer (and the keyboard under it).
         {
@@ -511,4 +522,5 @@ function useKeyboardOverlap(ref: RefObject<View | null>) {
 const styles = StyleSheet.create({
   fill: { flex: 1 },
   content: { paddingTop: rhythm.block, gap: rhythm.section },
+  threadContent: { paddingTop: rhythm.heading },
 });

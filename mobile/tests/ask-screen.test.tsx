@@ -306,6 +306,30 @@ test.each([
   },
 );
 
+test('a thread starts in a fresh scroll view, its question 8 pt under the inline bar (sweep 1, 7.1)', async () => {
+  jest
+    .mocked(client.askPost)
+    .mockResolvedValueOnce(answer)
+    .mockResolvedValueOnce({ questions: [] });
+  await mount(<AskScreen />);
+  const scrollView = () =>
+    view!.root.find(
+      (n) => n.props.testID === 'ask-screen' && n.type === ScrollView,
+    );
+  const idle = scrollView().instance;
+  expect(
+    StyleSheet.flatten(scrollView().props.contentContainerStyle).paddingTop,
+  ).toBe(rhythm.block);
+  await type('A fixture question?');
+  await press('ask-submit');
+  // The idle view's adjusted inset kept the large title's band, about 70 pt
+  // above the question at rest; a new native view takes the inline inset.
+  expect(scrollView().instance).not.toBe(idle);
+  expect(
+    StyleSheet.flatten(scrollView().props.contentContainerStyle).paddingTop,
+  ).toBe(rhythm.heading);
+});
+
 test.each(['before', 'after'] as const)(
   'send pins below the compact bar when fallback frames run %s the turn layout and native height arrives late',
   async (frameOrder) => {
