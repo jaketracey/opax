@@ -1,8 +1,10 @@
 import { router } from 'expo-router';
 import { useNavigation, usePreventRemove } from 'expo-router/react-navigation';
 import { act } from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { Keyboard, Platform, StyleSheet } from 'react-native';
 import TestRenderer from 'react-test-renderer';
+import { codeFigureCeiling } from '../src/design/controls';
+import { Screen } from '../src/design/layout';
 import { confirmAction } from '../src/design/menu';
 import {
   Button,
@@ -937,6 +939,84 @@ describe('Sign in by code', () => {
     for (let i = 0; i < 5; i++) await press(renderer, 'account-sign-in');
     expect(mocked.consumeCode).toHaveBeenCalledTimes(5);
     expect(refusal(renderer)).toBe(refusalCopy.codeFailed);
+  });
+  // Build 61 at AX5: the code drew at 79 pt (22 pt x 3.571) and its first
+  // digit scrolled out of the 370 pt field. The figures now stop growing at
+  // the size where all eight fit; AX3 (2.643) is under that and unchanged.
+  test('all eight code digits fit the field at AX5; smaller sizes draw as before', async () => {
+    mockFontScale = 3.571;
+    const renderer = await codeStep();
+    const input = () =>
+      renderer.root.find(
+        (node) =>
+          node.type === 'TextInput' &&
+          node.props.testID === 'account-sign-in-code',
+      );
+    // No ceiling until the field's width is known.
+    expect(input().props.maxFontSizeMultiplier).toBe(0);
+    await act(async () =>
+      input().props.onLayout({ nativeEvent: { layout: { width: 370 } } }),
+    );
+    const ceiling = input().props.maxFontSizeMultiplier;
+    expect(ceiling).toBeGreaterThan(2.643);
+    expect(ceiling).toBeLessThan(3.571);
+    // Eight figures at the measured advance (0.64 em) fit inside the padding.
+    const size = 22 * Math.min(ceiling, 3.571);
+    expect(8 * 0.64 * size).toBeLessThanOrEqual(370 - 2 * 17);
+    expect(codeFigureCeiling(370, 8)).toBe(ceiling);
+    expect(codeFigureCeiling(0, 8)).toBe(0);
+    expect(codeFigureCeiling(370)).toBe(0);
+    // Never below the base size, however narrow the field.
+    expect(codeFigureCeiling(60, 8)).toBe(1);
+    // The deletion field is plain text: no ceiling, and no measuring.
+    const deletion = await render(
+      <DeleteCode challenge={issueChallenge(challengeId)} />,
+    );
+    const deletionInput = deletion.root.find(
+      (node) =>
+        node.type === 'TextInput' &&
+        node.props.testID === 'account-deletion-code',
+    );
+    expect(deletionInput.props.maxFontSizeMultiplier).toBe(0);
+    expect(deletionInput.props.onLayout).toBeUndefined();
+  });
+  // Build 61 at AX3 and AX5: a code against a challenge this session never
+  // issued (or one past 15 minutes or five tries) answered with the keyboard
+  // still up, and the error drew behind it. Every refusal hides it now, and
+  // the screen scrolls the error into view.
+  test('a refused code hides the keyboard and reveals its error', async () => {
+    const dismiss = jest.spyOn(Keyboard, 'dismiss');
+    const reveal = jest.fn(() => () => {});
+    const renderer = await render(
+      <CodeStep
+        email={email}
+        challenge="b62-local"
+        onSignedIn={jest.fn()}
+        reveal={reveal}
+      />,
+    );
+    await type(renderer, 'account-sign-in-code', '76543210');
+    expect(mocked.consumeCode).not.toHaveBeenCalled();
+    expect(refusal(renderer)).toBe(refusalCopy.codeFailed);
+    expect(dismiss).toHaveBeenCalledTimes(1);
+    expect(reveal).toHaveBeenCalledTimes(1);
+    // A server refusal is revealed the same way.
+    mocked.consumeCode.mockResolvedValueOnce({ ok: false, error: 'network' });
+    const sent = await codeStep();
+    await type(sent, 'account-sign-in-code', '01234567');
+    expect(refusal(sent)).toBe(refusalCopy.network);
+    expect(dismiss).toHaveBeenCalledTimes(2);
+    dismiss.mockRestore();
+  });
+  test('the code screen gives its scroll view to the error reveal', async () => {
+    mockParams = { email, challenge: issueChallenge(challengeId) };
+    const renderer = await render(<SignInCodeScreen />);
+    const screen = renderer.root.findByType(Screen);
+    expect(screen.props.scrollRef).toEqual({ current: expect.anything() });
+    expect(typeof screen.props.onScroll).toBe('function');
+    expect(typeof renderer.root.findByType(CodeStep).props.reveal).toBe(
+      'function',
+    );
   });
   test('Sign in waits for all 8 digits', async () => {
     const renderer = await codeStep();

@@ -1447,6 +1447,32 @@ export function SwitchRow({
   );
 }
 
+/**
+ * One tabular SF figure's advance, in ems, with room to spare: build 61
+ * measured 0.62 to 0.64 em in the sign-in code field at AX3 and AX5.
+ */
+const FIGURE_EM = 0.66;
+/** UITextField's caret and the margin it keeps before scrolling the text. */
+const CARET_ROOM = 4;
+
+/**
+ * The `code` variant's text-size ceiling (a `maxFontSizeMultiplier`), so a
+ * code of `figures` digits fits a field `width` wide. 0 is no ceiling: the
+ * width is not known yet, or no length was given. At AX5 the eight-digit
+ * sign-in code drew at 79 pt and its first digit scrolled out of the field
+ * (build 61); now the figures stop growing at the size that fits, and every
+ * smaller size, AX3 included, draws as before.
+ */
+export function codeFigureCeiling(width: number, figures?: number): number {
+  if (!figures || width <= 0) return 0;
+  const room =
+    width - 2 * (styles.input.paddingHorizontal + styles.input.borderWidth);
+  const fits =
+    (room - CARET_ROOM) /
+    (figures * FIGURE_EM * textStyles.tileFigure.fontSize);
+  return Math.max(1, fits);
+}
+
 /** A labelled text field with optional hint, error and required marker. */
 export function Field({
   label,
@@ -1456,6 +1482,7 @@ export function Field({
   grouped = false,
   labelHidden = false,
   variant = 'text',
+  codeLength,
   testID,
   inputRef,
   ...input
@@ -1470,6 +1497,8 @@ export function Field({
   grouped?: boolean;
   labelHidden?: boolean;
   variant?: 'text' | 'code';
+  /** The `code` variant's length: its figures shrink so all of them fit. */
+  codeLength?: number;
   testID?: string;
   /** The text input itself, to focus it from a keyboard shortcut. */
   inputRef?: RefObject<TextInput | null>;
@@ -1477,6 +1506,7 @@ export function Field({
   const ownRef = useRef<TextInput>(null);
   const ref = inputRef ?? ownRef;
   const [focused, setFocused] = useState(false);
+  const [width, setWidth] = useState(0);
   const disabled = input.editable === false;
   const description = [error ? `Error: ${error}` : null, hint]
     .filter(Boolean)
@@ -1536,6 +1566,15 @@ export function Field({
           setFocused(false);
           input.onBlur?.(event);
         }}
+        // Only the code variant measures itself; a text field is unchanged.
+        onLayout={
+          variant === 'code'
+            ? (event) => {
+                setWidth(event.nativeEvent.layout.width);
+                input.onLayout?.(event);
+              }
+            : input.onLayout
+        }
         // A one-time code never shows the clear button: at AX3 it took
         // the first digit's room while focused. Backspace still deletes.
         clearButtonMode={
@@ -1544,7 +1583,9 @@ export function Field({
             : 'while-editing'
         }
         allowFontScaling
-        maxFontSizeMultiplier={0}
+        maxFontSizeMultiplier={
+          variant === 'code' ? codeFigureCeiling(width, codeLength) : 0
+        }
         // Faint text is for raised surfaces only; a disabled field is sunken.
         placeholderTextColor={disabled ? colors.inkSoft : colors.inkFaint}
         style={[
