@@ -83,13 +83,13 @@ function namedPeople(line:string,exclude:string[]):string[] {
 }
 const firstSentence=(text:string)=>sentenceParts(text)[0]?.text??''
 const subjectOf=(sentence:string)=>{const m=/^(?:[-*]\s*)?((?:[A-Z][\w’'-]*|of|into|the|for|on|and)(?:\s+(?:[A-Z][\w’'-]*|of|into|the|for|on|and)){1,9})(?=,\s|\s+(?:is|was|are|were)\s)/.exec(sentence);return m?m[1]:''}
-/** The second sentence of an opening says again who or what the first is: the same subject, then "is a/the" or an
+/** The second sentence of an opening says again who or what the first is: the same subject, then "is", "was" or an
  * apposition (a role, an office, establishment details). */
 export function restatesOpening(first:string,second:string):boolean {
   const a=subjectOf(first),b=subjectOf(second)
   if(!a||a.split(/\s+/).length<2||a.toLowerCase()!==b.toLowerCase())return false
   const rest=(s:string,subject:string)=>s.replace(/^(?:[-*]\s*)?/,'').slice(subject.length)
-  const described=(tail:string)=>/^,\s|^\s+(?:is|was|are|were)\s+(?:a|an|the)\s/i.test(tail)
+  const described=(tail:string)=>/^,\s|^\s+(?:is|was|are|were)\s/i.test(tail)
   return described(rest(first,a))&&described(rest(second,b))
 }
 /** Merge a restated identity sentence into the opening: "X is a Victorian Labor politician who represents Y" after
@@ -106,49 +106,56 @@ function mergedRestatement(first:string,second:string):string|null {
 /** The model's direct answer leads an answer that also carries record facts or written record prose; the record prose
  * follows as context, then the model's other points. For a who question about people (not "who is X?") the lead is the
  * model's first point that names someone beyond its speaker and the record context, with the lines that continue it
- * from the same source. An opening the record prose restates is said once: an uncited restatement goes, a cited
- * identity sentence keeps only what it adds. A count or money question keeps its calculated record lead. Every
+ * from the same source. The record's opening is said once: a model point restating it goes, unless it is the cited
+ * lead, when the record sentence keeps only what it adds. A count or money question keeps its calculated record lead. Every
  * kept line moves with its citations. */
 export function leadWithModelAnswer<T extends Record<string,unknown>>(payload:T,points:{answer?:unknown;citations?:unknown}|undefined,question=''):T {
   if(typeof payload.answer!=='string'||typeof points?.answer!=='string')return payload
   const answer=payload.answer,pointText=points.answer
   const chars=Array.from(answer),entries=Object.entries(payload.citations??{}) as [string,unknown][]
-  // Lines of the composed answer, in code points, marked as the model's points or record prose.
-  type Line={a:number;b:number;text:string;point:boolean}
+  const cites=(a:number,b:number)=>entries.filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(r=>Array.isArray(r)&&r[0]<b&&r[1]>a)).map(([id])=>id)
+  // Record facts and their coverage are cited as fact-N or coverage; the model's points cite passages, or nothing.
+  const recordId=(id:string)=>/^(?:fact-\d+|coverage)(?:\/|$)/.test(id)
+  // Lines of the composed answer, in code points. A line is the model's point when it cites only passages (the writer
+  // may have worded a passage line itself) or, uncited, is one of the model's own lines; anything else is record prose.
+  type Line={i:number;a:number;b:number;text:string;point:boolean;ids:string[]}
   const lines:Line[]=[]
   for(const m of answer.matchAll(/[^\n]+/g)){
     const text=m[0].trim();if(!text)continue
-    const a=Array.from(answer.slice(0,m.index)).length+Array.from(m[0]).length-Array.from(m[0].trimStart()).length
-    lines.push({a,b:a+Array.from(text).length,text,point:pointText.includes(text.replace(/^[-*]\s*/,''))})
+    const a=Array.from(answer.slice(0,m.index)).length+Array.from(m[0]).length-Array.from(m[0].trimStart()).length,b=a+Array.from(text).length,ids=cites(a,b)
+    lines.push({i:lines.length,a,b,text,ids,point:ids.length?ids.every(id=>!recordId(id)):pointText.includes(text.replace(/^[-*]\s*/,''))})
   }
   const firstPoint=lines.findIndex(l=>l.point)
   // Nothing to lead past: no record prose before the points.
   if(firstPoint<=0)return payload
-  const record=lines.slice(0,firstPoint),rest=lines.slice(firstPoint)
+  const lastPoint=lines.length-1-[...lines].reverse().findIndex(l=>l.point)
+  const record=lines.filter(l=>!l.point&&l.i<lastPoint),modelLines=lines.filter(l=>l.point)
   if(QUANTITATIVE_QUESTION.test(question)&&/\$?\d/.test(firstSentence(record[0].text)))return payload
-  const sourcesOf=(l:Line)=>new Set(entries.filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(r=>Array.isArray(r)&&r[0]<l.b&&r[1]>l.a)).map(([id])=>id.split('/')[0]))
-  const dropped=new Set<Line>()
-  let rewrite:string|null=null
-  const lead0=rest[0],opening=firstSentence(lead0.text),recordOpening=firstSentence(record[0].text)
-  if(restatesOpening(opening,recordOpening)){
-    if(!sourcesOf(lead0).size)dropped.add(lead0)
-    else{const merged=mergedRestatement(opening,recordOpening);if(merged)rewrite=merged}
-  }
-  const candidates=rest.filter(l=>l.point&&!dropped.has(l))
+  const sourcesOf=(l:Line)=>new Set(l.ids.map(id=>id.split('/')[0]))
+  // The record's opening (an inquiry's dates and commissioner, a person's seat) is said once: a model point that
+  // restates it goes when uncited or when the record sentence carries the citation; a cited lead keeps only what it adds.
+  const recordOpening=firstSentence(record[0].text),recordCited=record[0].ids.length>0
+  const restating=new Set(modelLines.filter(l=>restatesOpening(firstSentence(l.text),recordOpening)))
+  const candidates=modelLines.filter(l=>!restating.has(l)||l.ids.length>0)
   if(!candidates.length)return payload
   let lead=candidates[0]
   if(question&&peopleQuestion(question)){
     const sources=(Array.isArray(payload.sources)?payload.sources:[]) as {speaker?:string}[]
     const exclude=[question,...record.map(l=>l.text),...sources.map(s=>s.speaker??'')].map(t=>t.toLowerCase()).filter(Boolean)
-    const naming=(l:Line)=>{const speaker=/^(?:[-*]\s*)?(?:[A-Z][\w’'-]*\s+){0,3}?([A-Z][a-z’'-]+\s+[A-Z][a-z’'-]+)\s+(?:told|said|asked|moved|stated)\b/.exec(l.text)?.[1]?.toLowerCase();return namedPeople(l.text,speaker?[...exclude,speaker]:exclude).length>0}
+    const naming=(l:Line)=>{const speaker=/^(?:[-*]\s*)?(?:[A-Z][\w’'-]*\s+){0,3}?([A-Z][a-z’'-]+\s+[A-Z][a-z’'-]+)\s+(?:told|said|asked|moved|stated)\b/.exec(l.text)?.[1]?.toLowerCase();return !restating.has(l)&&namedPeople(l.text,speaker?[...exclude,speaker]:exclude).length>0}
     if(!naming(lead))lead=candidates.find(naming)??lead
   }
+  let rewrite:string|null=null
+  if(restating.has(lead)){const merged=mergedRestatement(firstSentence(lead.text),recordOpening);if(merged)rewrite=merged}
+  const dropped=new Set([...restating].filter(l=>l!==lead&&(!l.ids.length||recordCited)))
   // Lines after the lead that continue it from the same source ("The same speech records…") stay with it.
   const block=[lead]
-  for(let i=rest.indexOf(lead)+1;i<rest.length;i++){const l=rest[i],own=sourcesOf(lead),next=sourcesOf(l);if(!l.point||!next.size||![...next].every(id=>own.has(id)))break;block.push(l)}
-  const inBlock=new Set(block)
-  // Record prose keeps its own line breaks (a fact list stays a list); the points around it are paragraphs.
-  const pieces:[number,number][]=[[block[0].a,block[block.length-1].b],[record[0].a,record[record.length-1].b],...rest.filter(l=>!inBlock.has(l)&&!dropped.has(l)).map(l=>[l.a,l.b] as [number,number])]
+  for(let i=lead.i+1;i<lines.length;i++){const l=lines[i],own=sourcesOf(lead),next=sourcesOf(l);if(!l.point||!next.size||![...next].every(id=>own.has(id)))break;block.push(l)}
+  const moved=new Set([...block,...dropped])
+  // Record prose keeps its own line breaks where its lines were adjacent (a fact list stays a list); the points
+  // around it are paragraphs. Record lines after the last point (coverage notes) stay last.
+  const runs=(group:Line[])=>{const out:[number,number][]=[];let prev:Line|undefined;for(const l of group){if(prev&&prev.i===l.i-1&&out.length)out[out.length-1][1]=l.b;else out.push([l.a,l.b]);prev=l}return out}
+  const pieces:[number,number][]=[[block[0].a,block[block.length-1].b],...runs(record),...modelLines.filter(l=>!moved.has(l)).map(l=>[l.a,l.b] as [number,number]),...runs(lines.filter(l=>!l.point&&l.i>lastPoint))]
   const citations:Record<string,[number,number][]>={}
   let written=''
   for(const [a,b] of pieces){

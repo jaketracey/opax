@@ -91,3 +91,16 @@ test('a what question still leads with the model’s first point, then the recor
   assert.equal(out.answer,'- The review found one in three staff had been sexually harassed.\n\n- The review reported on 30 November 2021 with 28 recommendations.\n\n- Pat Example said the recommendations should all be adopted.')
   assert.match(cited(out,'speech-2/t/body/0')[0],/^Pat Example said/)
 })
+
+test('robodebt, second run: a passage line the writer placed among the record facts still leads, the restated inquiry goes',()=>{
+  // As composed: the writer's record prose (with one passage line inside it), then the model's points.
+  const fixture=stored['event-01-run2'],lines=linesOf(fixture)
+  const payload={...join(lines),sources:fixture.sources},points={answer:lines.slice(4).map(l=>l.text).join('\n'),citations:{}}
+  const out=api.leadWithModelAnswer(payload,points,fixture.question)
+  const [first]=sentences(out.answer)
+  assert.match(first,/Scott Morrison/,first)
+  for(const date of ['18 August 2022','7 July 2023'])assert.equal(out.answer.split(date).length-1,1,date)
+  assert.doesNotMatch(out.answer,/was the inquiry that established responsibility/)
+  assert.match(cited(out,'fact-22/t/body/0')[0],/^The Royal Commission into the Robodebt Scheme was established by Letters Patent/)
+  assert.match(cited(out,'speech-1594111/t/body/0-648')[0],/^Mark Dreyfus told the House/)
+})

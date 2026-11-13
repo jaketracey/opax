@@ -249,5 +249,139 @@
     "speaker": "Jacinta Allan"
    }
   ]
+ },
+ "event-01-run2": {
+  "question": "Who was responsible for robodebt?",
+  "answer": "The Royal Commission into the Robodebt Scheme was established by Letters Patent on 18 August 2022 and its final report, dated 7 July 2023, was produced under Royal Commissioner Catherine Holmes AC SC.\n\nZali Steggall told the House on 11 March 2026 that the National Anti-Corruption Commission investigation into the robodebt referrals found two public officials engaged in serious corrupt conduct, while four others, including former prime minister Scott Morrison, were cleared.\n\nThe Royal Commission's report set out 57 recommendations (56 numbered, 1 printed without a number) and it made no findings of criminal or civil liability.\n\nRecommendation 10.1, at page 19, states that Services Australia should design its policies and processes with a primary emphasis on the recipients it is meant to serve.\n\nThe Royal Commission into the Robodebt Scheme was the inquiry that established responsibility; it was a Commonwealth royal commission established by Letters Patent on 18 August 2022 and conducted by Royal Commissioner Catherine Holmes AC SC, reporting on 7 July 2023.\n\nThe scheme itself was a 2015 budget measure of the former Coalition government, found unlawful by the Federal Court in late 2019, and the report recorded that the government of the time 'continued to illegally raise debts'.\n\nMark Dreyfus told the House on 10 October 2024 that the royal commission concluded the former Liberal government's scheme was a 'crude and cruel mechanism, neither fair nor legal'.\n\nThe Royal Commissioner, Catherine Holmes AC SC, said the scheme 'made many people feel like criminals' and was a costly failure of public administration.\n\nStephen Bates told the House on 8 August 2023 that statements made by the former Prime Minister and member for Cook on robodebt 'have subsequently been shown to be false by the Royal Commission into the Robodebt Scheme'.\n\nThe commission's report made 57 recommendations, including that Services Australia design its policies with primary emphasis on the recipients it is meant to serve.",
+  "citations": {
+   "fact-22/t/body/0": [
+    [
+     0,
+     200
+    ]
+   ],
+   "fact-23/t/body/0": [
+    [
+     0,
+     200
+    ]
+   ],
+   "fact-24/t/body/0": [
+    [
+     0,
+     200
+    ]
+   ],
+   "speech-1201173/t/body/0-643": [
+    [
+     202,
+     478
+    ]
+   ],
+   "fact-28/t/body/0": [
+    [
+     480,
+     634
+    ]
+   ],
+   "coverage/t/body/0": [
+    [
+     480,
+     634
+    ]
+   ],
+   "fact-30/t/body/0": [
+    [
+     636,
+     804
+    ]
+   ],
+   "speech-1553201/t/body/0-646": [
+    [
+     806,
+     1073
+    ],
+    [
+     1075,
+     1298
+    ],
+    [
+     1859,
+     2023
+    ]
+   ],
+   "speech-1594111/t/body/0-648": [
+    [
+     1300,
+     1480
+    ],
+    [
+     1482,
+     1635
+    ]
+   ],
+   "speech-1553591/t/body/165-815": [
+    [
+     1637,
+     1857
+    ]
+   ]
+  },
+  "sources": [
+   {
+    "resource": "fact-22",
+    "kind": "record",
+    "title": "Royal Commission into the Robodebt Scheme: \"established by Letters Patent on 18 August 2022\" (Report of the Royal Commission into the Robodebt Scheme, page 11)."
+   },
+   {
+    "resource": "fact-23",
+    "kind": "record",
+    "title": "Royal Commission into the Robodebt Scheme commissioners as Report of the Royal Commission into the Robodebt Scheme names them: Catherine Holmes AC SC (Royal Commissioner)."
+   },
+   {
+    "resource": "fact-24",
+    "kind": "record",
+    "title": "Report of the Royal Commission into the Robodebt Scheme (dated 7 July 2023)."
+   },
+   {
+    "resource": "fact-28",
+    "kind": "count",
+    "title": "Royal Commission into the Robodebt Scheme: 57 recommendations (56 numbered, 1 printed without a number) loaded from its published report (OPAX projection, snapshot 2026-11-12T10:32:17+00:00)."
+   },
+   {
+    "resource": "coverage",
+    "kind": "record",
+    "title": "Coverage of the selected records"
+   },
+   {
+    "resource": "fact-30",
+    "kind": "record",
+    "title": "Royal Commission into the Robodebt Scheme, Report of the Royal Commission into the Robodebt Scheme, recommendation 10.1 (page 19): \"Services Australia design its policies and processes with a primary emphasis on the recipients it is meant to serve. That should entail: • avoiding language and conduct which reinforces feelings of stigma and shame associated with the receipt of government support when it is needed • facilitating easy and efficient engagement with options of online, in person and telephone communication which is sensitive to the particular circumstances of the customer cohort, including itinerant lifestyles, lack of access to technology, lack of digital literacy and the particular difficulties rural and remote living • explaining processes in clear terms and plain language in communication to customers, and acting with sensitivity to financial and other forms of stress expe…"
+   },
+   {
+    "resource": "speech-1553201",
+    "kind": "speech",
+    "title": "Kate Thwaites — PRIVATE MEMBERS' BUSINESS — 2023-08-07",
+    "speaker": "Kate Thwaites"
+   },
+   {
+    "resource": "speech-1594111",
+    "kind": "speech",
+    "title": "Mark Dreyfus — QUESTIONS WITHOUT NOTICE — 2024-10-10",
+    "speaker": "Mark Dreyfus"
+   },
+   {
+    "resource": "speech-1201173",
+    "kind": "speech",
+    "title": "Zali Steggall — Adjournment — 2026-03-11",
+    "speaker": "Zali Steggall"
+   },
+   {
+    "resource": "speech-1553591",
+    "kind": "speech",
+    "title": "Stephen Bates — PRIVILEGE — 2023-08-08",
+    "speaker": "Stephen Bates"
+   }
+  ]
  }
 }
