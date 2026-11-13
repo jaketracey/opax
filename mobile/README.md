@@ -243,6 +243,11 @@ The build prints its path, elapsed seconds and disk size. Once finished, prune
 from that DerivedData, keeping the app. `qa-static` evaluates both configs,
 checks the resolved dependency tree and scans source transport boundaries.
 The e2e build additionally checks the generated plist and embedded bundle.
+Expo Router 57.0.24 has a version and hash pinned navigation queue patch in
+`patches/privacy-patches.json`, replayed by postinstall and prebuild. Queued
+actions publish a new external-store snapshot, while an empty flush keeps the
+snapshot stable. `tests/android-navigation-queue.test.ts` checks this contract
+and the real router emitter's link and Back dispatch.
 `scripts/check-release-bundle.sh` exports iOS production JS through the build
 gate, prebuilds production and verifies native ATS, then scans the shipped JS for
 loopback/fixture origins and mandatory allow-list/origin/redirect guards. SDK 57's dormant Metro/SSR URL
