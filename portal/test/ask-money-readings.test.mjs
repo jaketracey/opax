@@ -22,6 +22,8 @@ const assets={fetch:async req=>{
  try{return new Response(await readFile(new URL('../public'+path,import.meta.url)))}catch{return new Response('',{status:404})}
 }}
 // The Worker's order (src/index.ts): the party/industry route, then the ranking route.
+// Names and amounts are matched literally inside a table row.
+const escapeRegExp=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
 const ask=async question=>await federalPartyMoneyAnswer({question},assets)??await rankedMoneyAnswer({question},assets)
 const firstSentence=answer=>answer.match(/^.*?[.!?](?=\s|$)/s)?.[0]??answer
 const JAKE='Who receives the most funding from fossil fuel donors last few years since 2023'
@@ -50,7 +52,7 @@ for(const [question,reading,from,to] of [
  // The reading is its own line, straight after the opening paragraph.
  assert.equal(out.answer.split('\n\n')[1],reading)
  // Ranked rows under their own label; no $0 donation columns.
- for(const row of expected.rows)assert.match(out.answer,new RegExp(`\\| ${row.name} \\| ${dollars(row.cents).replace('$','\\$')} \\|`))
+ for(const row of expected.rows)assert.match(out.answer,new RegExp(`\\| ${escapeRegExp(row.name)} \\| ${escapeRegExp(dollars(row.cents))} \\|`))
  assert.match(out.answer,/\| Recipient \| Other receipts \(includes loans and other amounts\) \| Share \|/)
  assert.doesNotMatch(out.answer,/Donations \d{4}–\d{2}|\$0\b/)
  assert.match(out.measure_label,/AEC receipt type/)
