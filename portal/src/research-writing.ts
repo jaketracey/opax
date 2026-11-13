@@ -1,5 +1,5 @@
 import {ASK_EVIDENCE_RULES} from './ask-writing-rules'
-import {RECEIPTS_WRITING_RULE} from './receipt-copy'
+import {RECEIPTS_WRITING_RULE,industryModifier} from './receipt-copy'
 /** Tools supply evidence; only checked, newly written prose reaches an Ask reader. */
 import type { Fact, Period } from './agentic-ask'
 import { atomsFromText, claimIdentity, claimClauses, normalClaim, numberValue, metricAt, proseClaimKeys, censusField, sentenceFragment, type ClaimAtom } from './research-claims'
@@ -349,7 +349,7 @@ function scopeGaps(input:WritingInput):string[] {
     const asked=askedPeriod(input)
     notes.push(`These are totals across ${receipt.period}, not ${/^\d{4}$/.test(asked)?asked+' amounts':'amounts for '+asked}.`)
   }
-  if(receipt.filter&&!questionIndustry(input.question))notes.push(`These rows cover ${receipt.filter.replaceAll('_',' ')} sources only.`)
+  if(receipt.filter&&!questionIndustry(input.question))notes.push(`These rows cover ${industryModifier(receipt.filter)} sources only.`)
   for(const gap of rankingScopeGaps(input.question,{source:row,party:receipt.party,period:receipt.period,entity_type:sourceMetadata(row).entity_type??'donor'},input.constraints??{})){
     const wanted=jurisdictionNames[String(gap.wanted)],have=jurisdictionNames[String(gap.have)]
     if(gap.dimension==='jurisdiction')notes.push(wanted&&have?`These are ${have} records, not ${wanted} records.`:'OPAX could not confirm which jurisdiction these records cover.')

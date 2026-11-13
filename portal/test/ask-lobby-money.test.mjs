@@ -17,7 +17,7 @@ const monetaryFigure=/\$\s*\d|\b\d[\d,.]*\s*(?:AUD|dollars?|million|billion)\b/i
 // Typed (published): donations lead, with every receipt type beside them.
 const typedLead=/^[^.!?]*\$[\d,]+[^.!?]*donations received \(AEC receipt type: Donation Received\)/
 test('industry questions lead with labelled ranked amounts and bypass speech research',async()=>{
- const leads={gambling:'**Liberal** leads parties receiving money from gambling-linked sources: **$1,093,352**',mining:'**United Australia Party** leads parties receiving money from mining-linked sources: **$61,625,526**',banks:'**Liberal** has received **$14,402,567** from finance-linked sources',unions:'**Labor** leads parties receiving money from unions-linked sources: **$67,541,836**',tobacco:'**Liberal** leads parties receiving money from tobacco-linked sources: **$1,243,865**'}
+ const leads={gambling:'**Liberal** leads parties receiving money from gambling-linked sources: **$1,093,352**',mining:'**United Australia Party** leads parties receiving money from mining-linked sources: **$61,625,526**',banks:'**Liberal** has received **$14,402,567** from finance-linked sources',unions:'**Labor** leads parties receiving money from union-linked sources: **$67,541,836**',tobacco:'**Liberal** leads parties receiving money from tobacco-linked sources: **$1,243,865**'}
  for(const q of questions.filter(q=>q.kind==='money')){
   const out=await localAsk(api,q.question,{onResearch:()=>assert.fail('Money uses the calculator')})
   assert.equal(out.answer_status,'calculated');assert.equal(out.measure,'donations');assert.match(out.answer,typedLead)
@@ -67,7 +67,7 @@ test('a donor return reference keeps an untyped bank figure labelled as all rece
 test('union receipts name affiliation fees in the lead measure',async()=>{
  // Typed (published): union donations lead; affiliation fees sit in the all-types column.
  const out=await localAsk(api,'Who receives the most union money?')
- assert.equal(out.answer_status,'calculated');assert.match(out.answer,/^\*\*Labor\*\* leads parties receiving money from unions-linked sources: \*\*\$67,541,836\*\* in donations received/)
+ assert.equal(out.answer_status,'calculated');assert.match(out.answer,/^\*\*Labor\*\* leads parties receiving money from union-linked sources: \*\*\$67,541,836\*\* in donations received/)
  assert.match(out.answer,/\| Labor \| \$67,541,836 \| 96% \| \$181,802,496 \(includes loans\) \|/)
  // Untyped fallback: the mixed total names affiliation fees in the lead measure.
  const legacy=await localAsk(api,'Who receives the most union money?',{money:'untyped'})

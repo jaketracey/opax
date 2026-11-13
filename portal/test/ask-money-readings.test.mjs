@@ -44,7 +44,7 @@ for(const [question,reading,from,to] of [
  const expected=graphRanking(graph,{industry:'fossil_fuels',from,to})
  const top=expected.rows[0],opening=firstSentence(out.answer)
  assert.equal(expected.measure,'other_receipts')
- assert.equal(opening,`The AEC records no donations from fossil fuels-linked sources to any party ${from===to?'in '+fy(from):`from ${fy(from)} to ${fy(to)}`}.`)
+ assert.equal(opening,`The AEC records no donations from fossil fuel-linked sources to any party ${from===to?'in '+fy(from):`from ${fy(from)} to ${fy(to)}`}.`)
  assert.equal(secondSentence(out.answer),`In other receipts (includes loans and other amounts), **${top.name}** received the most: **${dollars(top.cents)}**, ${expected.period}.`)
  assert.equal(out.money_reading,reading)
  // The reading is its own line, straight after the opening paragraph.
@@ -147,7 +147,7 @@ test('the money eval scores a first sentence that ranks by money other than dona
  assert.deepEqual(scoreMoneyRanking(out,expected,selection,graph).errors,[])
  // The shape the review caught: "Labor leads ... in other receipts" as the opening sentence.
  const top=expected.rows[0]
- const old={...out,answer:`**${top.name}** leads parties receiving money from fossil fuels-linked sources: **${dollars(top.cents)}** in ${out.measure_label}, ${expected.period}.`+out.answer.slice(firstSentence(out.answer).length+secondSentence(out.answer).length+1)}
+ const old={...out,answer:`**${top.name}** leads parties receiving money from fossil fuel-linked sources: **${dollars(top.cents)}** in ${out.measure_label}, ${expected.period}.`+out.answer.slice(firstSentence(out.answer).length+secondSentence(out.answer).length+1)}
  const score=scoreMoneyRanking(old,expected,selection,graph)
  assert.ok(score.errors.includes('first sentence ranks by non-donation money'),score.errors.join())
  assert.equal(score.accuracy,false)
@@ -164,7 +164,7 @@ test('a change since a year compares the first and last years of the stated read
  const out=await ask('How did fossil fuel receipts to Labor change since 2020?')
  assert.equal(out.answer_status,'calculated')
  assert.match(out.money_reading,/Reading “since 2020” as the 2019–20 to 2024–25 disclosure years\./)
- assert.match(firstSentence(out.answer),/^\*\*Labor received \$[\d,]+ (?:more|less) from fossil fuels receipt sources in 2024–25 than in 2019–20\*\*/)
+ assert.match(firstSentence(out.answer),/^\*\*Labor received \$[\d,]+ (?:more|less) from fossil fuel receipt sources in 2024–25 than in 2019–20\*\*/)
  assert.doesNotMatch(out.answer,/Held-period|1998–99|needs matching records/)
  for(const y of ['2019','2024'])assert.ok(out.sources.some(s=>s.href.includes(`from=${y}&to=${y}`)),y)
 })

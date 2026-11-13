@@ -1,6 +1,6 @@
 import {trimQuestionEnd, questionSpaces} from './question-text.mjs'
 import {federalPartyRankingQuestion,federalPartyRankingIntent,federalPartyRankingClarification,federalPartyRankingReading} from './ask-money-family'
-import {receiptMeasureLabel,receiptMeasureHeading,receiptMeasurePhrase,receiptDollars,UNTYPED_RECEIPTS_LABEL} from './receipt-copy'
+import {receiptMeasureLabel,receiptMeasureHeading,receiptMeasurePhrase,receiptDollars,UNTYPED_RECEIPTS_LABEL,industryModifier} from './receipt-copy'
 import type { RecordQuestion } from './ask-records'
 import type { MoneyFacts } from './ask-money-overview'
 import {fundingContinuation, fundingFollowUp, fundingNameChoice, fundingScopeQuestion, fundingUserTurns, periodChoices, samePeriodFundingComparison, type FundingSelection} from './ask-money-followup'
@@ -164,7 +164,7 @@ function comparedYearAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:stri
   }
   const fy=financialYear
   const party=plain(result.selected_parties[0])
-  const from=result.selected_industries.length?` from ${plain(result.selected_industries[0].replaceAll('_',' '))} receipt sources`:result.selected_donors.length?` from ${plain(result.selected_donors[0])}`:''
+  const from=result.selected_industries.length?` from ${plain(industryModifier(result.selected_industries[0]))} receipt sources`:result.selected_donors.length?` from ${plain(result.selected_donors[0])}`:''
   const difference=Math.round((later.total_aud-earlier.total_aud)*100)/100
   const label=later.measure_label
   let answer=difference?`**${party} received ${aud(Math.abs(difference))} ${difference>0?'more':'less'}${from} in ${fy(later.year)} than in ${fy(earlier.year)}** in ${label}.`
@@ -227,7 +227,7 @@ function comparedMoneyAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:str
     return held.length?{...partialMoneyComparison(held.map(r=>({name:r.name,total_aud:r.total_aud,url:partyUrl(r.name)})),result,'One comparison side has matching records; the comparison needs records for both sides.'),money_question}:{...(heldMoneyComparison(result,graph,partyComparison,'The requested comparison needs matching records for both sides.')??{answer:'Choose a held period in the [money map](/money) for this comparison.',citations:{},sources:[],answer_status:'evidence_gap',money_ranking:true}),money_question}
   }
   const difference=Math.round((first.total_aud-second.total_aud)*100)/100
-  const sector=result.selected_industries.map(i=>i.replaceAll('_',' ')).join(' and ')
+  const sector=result.selected_industries.map(industryModifier).join(' and ')
   const subject=partyComparison?(sector?` from ${plain(sector)} receipt sources`:result.selected_donors.length?` from ${plain(result.subject)}`:''):(result.selected_parties.length?` to ${plain(result.selected_parties[0])}`:' to parties')
   let answer=difference?`**${plain(first.name)} ${partyComparison?'received':'accounted for'} ${aud(difference)} more${subject} than ${plain(second.name)}** in ${result.measure_label}, ${result.period}.`:`**${plain(first.name)} and ${plain(second.name)} have the same disclosed total${subject}** in ${result.measure_label}, ${result.period}.`
   const citations:Record<string,number[][]>={}
@@ -465,7 +465,7 @@ export function calculatedMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph,qu
   }
   const rows=ranked.slice(0,fromDonors||allFlows?options.topTen?10:5:10),who=rows[0]
   const recipient=plain(result.selected_parties.join(' and ')),industry=result.selected_industries[0]
-  const sector=industry?.replaceAll('_',' '),from=sector?`${sector}-linked sources`:plain(result.subject)
+  const sector=industry&&industryModifier(industry),from=sector?`${sector}-linked sources`:plain(result.subject)
   const leadIndustry=industry??graph.nodes.find(n=>n.id===who.id)?.industry
   // Pairs the typed export holds without receipt types keep their own label.
   const labelFor=(industry?:string)=>'type_breakdown' in result?UNTYPED_RECEIPTS_LABEL:receiptMeasureLabel(result.measure,industry)

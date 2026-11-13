@@ -20,3 +20,6 @@ export function receiptMeasurePhrase(measure:string):string {
   return measure==='other_receipts'?'other receipts (includes loans and other amounts)':measure==='subscriptions'?'subscriptions (membership and affiliation fees)':'disclosed receipts of all types'
 }
 export const receiptDollars=(n:number)=>new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',minimumFractionDigits:Number.isInteger(n)?0:2,maximumFractionDigits:2}).format(n)
+/** An industry grouping key as a modifier before a noun: "fossil fuel-linked", "union donors", "waste management sources". */
+const INDUSTRY_MODIFIERS:Record<string,string>={fossil_fuels:'fossil fuel',unions:'union',parties:'party'}
+export const industryModifier=(industry:string)=>INDUSTRY_MODIFIERS[industry]??industry.replaceAll('_',' ')
