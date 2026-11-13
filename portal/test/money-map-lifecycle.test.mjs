@@ -52,7 +52,7 @@ function harness({withoutSignal=false,delayedResearch=false,delayedData=false}={
     $:element,moneyMapHandle:null,moneyResearch:null,readMoneyFilters,
     MONEY_JURISDICTIONS:{federal:{file:'/graph/money.json'},qld:{file:'/graph/money.qld.json'}},
     renderMoneySwitch:jur=>element('money-jur').textContent=jur,
-    loadMoneyFile:async jur=>{if(delayedData && jur==='federal'){started.resolve();await pending.promise;}return graphs[jur];},moneyFineprintHTML:jur=>jur,askHash:()=>'',replaceRoute(){},matchMedia:()=>({matches:false}),
+    loadMoneyFile:async jur=>{if(delayedData && jur==='federal'){started.resolve();await pending.promise;}return graphs[jur];},moneyFineprintHTML:jur=>jur,askHash:()=>'',replaceRoute(){},matchMedia:()=>({matches:false}),requestAnimationFrame:fn=>setTimeout(fn,0),
   };
   runInNewContext(research.outputFiles[0].text,context);
   context.exports=context.module.exports;

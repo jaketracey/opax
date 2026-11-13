@@ -294,6 +294,23 @@
 .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > h1,
 .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > h1 + p { display: block; }
 @media (max-width: 860px) { .spa-booting.spa-boot-compact:not(.spa-routed) #main { padding-top: var(--sp-16); } }
+/* A person's answer opens in the app's own header (seo-content.ts
+   personHeadPrerender): portrait circle, name and meta line, laid out as the
+   app lays them out, so the app fills the head in place. */
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > .subject-head { display: block; }
+@media (min-width: 701px) { .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > .subject-head:has(.subject-portrait) { display: grid; } }
+/* On a phone the routed page sits flush under its crumb line (nav.css): no
+   top padding and no margin over the portrait. The boot head does the same. */
+@media (width < 700px) {
+  .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #main:has(> #prerender > .subject-head) { padding-top: 0; }
+  .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > .subject-head > .subject-portrait { margin-top: 0; }
+}
+/* /money while the app boots: the map card's place under the title, saying
+   what is coming, as the card itself does once the page has routed. */
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender[data-boot-field]::after {
+  content: attr(data-boot-field); display: grid; place-items: center; height: min(72vh, 720px); min-height: 440px;
+  margin-top: var(--space-group); border-radius: var(--radius-md); background: var(--paper-sunken); font: var(--type-fine); color: var(--ink-soft);
+}
 /* A person's record stays unseen while its head settles (app.js revealGrid). */
 .subject-grid.is-settling { visibility: hidden; }
 #prerender { padding-bottom: var(--sp-24); }
@@ -1512,6 +1529,16 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 }
 @keyframes answer-skeleton { from { background-position: 120% 0; } to { background-position: -80% 0; } }
 @media (prefers-reduced-motion: reduce) { .answer-skeleton i { animation: none; } }
+/* Content that takes a skeleton's place fades in over the standard duration
+   rather than snapping in: each block a page appends where its bars stood
+   runs this once, as it is inserted. The bars themselves, and any block still
+   holding one, do not. Nothing moves under reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  :is(#bill-body, #subject-sections, #subject-infobox, #bill-text-slot) > :not(.answer-skeleton, .subject-skel, :has(.answer-skeleton)) {
+    animation: settle-in var(--duration-standard) var(--ease-standard) both;
+  }
+}
+@keyframes settle-in { from { opacity: 0; } to { opacity: 1; } }
 /* The search overview streams in one point at a time: each fades up as it
    lands, and a single shorter bar keeps the shape of what is still coming. */
 .summary-point.stream-in { animation: summary-fade var(--duration-gentle) var(--ease-standard) both; }
@@ -4439,6 +4466,17 @@ html[data-panel="chat"] footer { display: none; }
 /* The year range and inflation switch float on the map's own paper: no edge. */
 #money-map-root .mm-scrub { border-color: transparent; }
 .money-map-status { margin: 0; padding: var(--space-heading) var(--space-block); }
+/* The card while the map loads (app.js MAP_DRAWING_HTML): sunken paper and one
+   fine line, centred, over the whole plate until the first frame. */
+#money-map-root { position: relative; }
+.map-drawing {
+  position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; margin: 0;
+  border-radius: inherit; background: var(--paper-sunken); font: var(--type-fine); color: var(--ink-soft);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .map-drawing { transition: opacity var(--duration-standard) var(--ease-standard); }
+}
+.map-drawing.is-done { opacity: 0; pointer-events: none; }
 #panel-money .journey-choice-empty { padding-top: var(--space-block); }
 
 #panel-search .search-record-kind { font-weight: var(--weight-strong); color: var(--navy); }

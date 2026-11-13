@@ -144,7 +144,8 @@ import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { navGates, pageTrail, trail } from './nav-model.mjs'
 import { EMPTY_REPORTS_INDEX, REPORTS_INDEX, appUserAgent, reportDataPath, reportsAppData, reportsEnabled, reportsPath } from './reports-gate'
-import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, agencyTopSuppliers, type AgencyTopSuppliers, type Division, type ReadAsset } from './seo-content'
+import { mapFallbackHTML } from '../public/home-data.js'
+import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, personHeadPrerender, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, agencyTopSuppliers, type AgencyTopSuppliers, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { AGENCY_TOP_SUPPLIERS_PATH, type AgencyTopRow } from '../public/agency-top-suppliers.js'
 import { SUPPLIER_ID_RE, supplierRowsPath } from '../public/supplier-row-buckets.js'
@@ -4800,9 +4801,10 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         const identity={...profiles?.by_name[foldName(p.name)],...profiles?.people[p.pid || '']}
           const query = guardTableURL(voteTableConfig(p.pid || ''),url).query
         const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,url.searchParams))
-        meta.prerender = content.html + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '')
-        if(content.description) meta.description=clip(content.description)
         const photos=await loadPhotos(env).catch(()=>null)
+        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name)})
+        meta.prerender = head + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '')
+        if(content.description) meta.description=clip(content.description)
         personIdentity={...identity,portraitId:photoIdFor(photos,p.name)}
         if(meta.jsonLd?.['@type']==='Person') {
           // The person's own party, else the one a verified seat roster records for them (seo-content personParty).
@@ -4837,6 +4839,8 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       },url.searchParams))
     } else if(route.kind==='static' && ['money','connections','explore'].includes(route.page)) {
       meta.prerender=(await sharedMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description)
+      // The boot frame draws the map card's place with this line (style.css data-boot-field).
+      if(route.page==='money') meta.prerender=meta.prerender.replace('<section id="prerender"','<section id="prerender" data-boot-field="Drawing the map"')
       if(route.page==='money')meta.prerender+=await renderMoneyConnectionsTable(url,read).catch(()=> '')
     } else if (route.kind === 'static' && route.page === 'money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest')) {
       const hadState = Boolean(url.search)
@@ -7287,8 +7291,9 @@ export default {
       if (/^\/search\/?$/.test(url.pathname)) entry.headers.set('x-robots-tag', url.search ? 'noindex' : 'all')
       if(entry.status===200 && url.pathname==='/') {
         const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/`,title:SITE_TITLE,description:SITE_DESCRIPTION})).replace(/</g,'\\u003c')
-        const money=await sharedMoneyAnswer('Public money',<T>(path:string)=>assetJson<T>(env,path)).catch(()=>null)
-        const moneyHtml=money ? money.html.replace('id="prerender"','id="prerender-money"').replace('<h1>','<h2>').replace('</h1>','</h2>') : null
+        // The map card's fallback: figures from the federal map file and a link to
+        // /money, which carries the full money answer (home-data.js mapFallbackHTML).
+        const moneyHtml=await assetJson<Parameters<typeof mapFallbackHTML>[0]>(env,'/graph/money.json').then(mapFallbackHTML).catch(()=>null)
         // The menus read the published optional sections off the page (navigation.js).
         const gates=navGates(env)
         // The home page's Reports block goes with the reports (src/reports-gate.ts).

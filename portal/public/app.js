@@ -1288,7 +1288,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=6494696c46");
+    const { mountMoneyMap } = await import("/money-map.js?v=4034856668");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1597,6 +1597,19 @@ async function openLargestGrants(month, manageFocus) {
   }
 }
 let moneyMapGeneration = 0;
+/* A map card while its module and data load: a sunken field that says what is
+   coming (the server's boot frame shows the same field), in place of an empty
+   plate with live controls. It goes once the map has drawn its first frame. */
+const MAP_DRAWING_HTML = `<p class="map-drawing" role="status">Drawing the map</p>`;
+function settleMapDrawing(root) {
+  const field = root.querySelector(":scope > .map-drawing");
+  if (!field) return;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return field.remove();
+    field.classList.add("is-done");
+    setTimeout(() => field.remove(), 260);
+  }));
+}
 let moneyMapSetup = null;
 let moneyJourneys = null;
 let moneyJourneyModule = null;
@@ -1657,14 +1670,15 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   if (moneyMapHandle) { moneyMapHandle.destroy(); moneyMapHandle = null; moneyMapJur = null; }
   const root = $("money-map-root");
   root.classList.remove("show-key");
-  root.innerHTML = `<p class="ui-status-line money-map-status" role="status">Loading the map…</p>`;
+  root.innerHTML = MAP_DRAWING_HTML;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=6494696c46"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=e78e757b51"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=4034856668"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=e78e757b51"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
-    root.textContent = "";
+    // The "Drawing the map" field stays over the card until the map's first frame.
+    for (const child of [...root.children]) if (!child.classList.contains("map-drawing")) child.remove();
     const research = await researchModule.mountMapResearch($('money-research'), data, {
       signal: setup.signal, isCurrent,
       resultsContainer: $('money-research-results'),
@@ -1689,6 +1703,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
     });
     if (!isCurrent()) { handle.destroy(); return; }
     moneyMapHandle = handle;
+    settleMapDrawing(root);
     const legend = root.querySelector('.mm-legend');
     if (legend) {
       legend.id = 'money-map-key';
@@ -1801,7 +1816,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=05753e59c5");
+    const module = await import("/suppliers.js?v=e9978da6fd");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -4525,7 +4540,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=6494696c46");
+    const { mountMoneyMap } = await import("/money-map.js?v=4034856668");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
@@ -14999,7 +15014,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=6494696c46");
+    const { mountMoneyMap } = await import("/money-map.js?v=4034856668");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",

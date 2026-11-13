@@ -10,7 +10,7 @@ import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
 import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../public/datatable.js'
 import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
-import {chamberLabel, machineLabelHTML} from '../public/party-page.js'
+import {chamberLabel, machineLabelHTML, partyLabelHTML} from '../public/party-page.js'
 import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML} from '../public/held-back-transcripts.js'
 import {divisionTableConfig, voteTableConfig, personVoteKeys, personVoteRecords, divisionRows, votingRows, voteTablePage, voteTableHTML} from '../public/vote-tables.js'
 import type {Query} from '../public/datatable.js'
@@ -310,6 +310,35 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   const owned = sponsored?.sponsored[p.pid || p.name] || []
   if (owned.length) body += `<h2>Bills sponsored</h2><ul>${owned.slice(0,30).map(key=>`<li>${link(`/bill/${key}`,bills?.bills.find(b=>b.key===key)?.title || key)}</li>`).join('')}</ul>`
   return {html:answerBlock(display,description,body),description,party:party || undefined}
+}
+
+/**
+ * A person answer's title set in the app's own header (app.js subjectSkeleton
+ * and the person tag line): the 112 px portrait circle, the name, and one meta
+ * line with the party dot, the seat, the house and the parliament. The app's
+ * header then fills this in place instead of replacing a bare title, so the
+ * name does not drop down the page when the portrait arrives. The answer's
+ * summary sentence stays as the paragraph after the head.
+ */
+const PARLIAMENT_NAMES: Record<string,string> = {federal:'Federal', nsw:'New South Wales', vic:'Victoria', qld:'Queensland', sa:'South Australia', wa:'Western Australia', tas:'Tasmania', act:'ACT', nt:'Northern Territory'}
+export function personHeadPrerender(html: string, p: Pick<Person,'name'|'full'|'current'|'states'|'chambers'|'representation'|'speech_scope'>, opts: {party?: string; portraitId?: string | null}): string {
+  const display = p.full && p.speech_scope ? p.full : p.name
+  const portrait = opts.portraitId
+    ? `<img class="subject-portrait" src="/photos/${encodeURIComponent(opts.portraitId)}.webp" alt="${/^\d+$/.test(opts.portraitId) ? 'Official portrait' : 'Portrait'} of ${escapeHtml(display)}" width="112" height="112">`
+    : '<span class="subject-portrait subject-portrait-blank" aria-hidden="true"></span>'
+  const seats = [...new Set((p.representation || []).map(r => r.electorate).filter(Boolean))]
+  const house = p.chambers.length === 1 ? chamberLabel(p.chambers[0]) : ''
+  const word = p.current && seats.length ? (/senate|council/i.test(house) ? 'Senator for ' : /representatives|assembly/i.test(house) ? 'Member for ' : '') : ''
+  const parliament = p.states.map(s => PARLIAMENT_NAMES[s] || '').filter(Boolean)
+  const parts = [
+    opts.party ? partyLabelHTML(opts.party, {full: true}) : '',
+    seats.length ? `<span>${escapeHtml(word + seats.join(', '))}</span>` : '',
+    p.chambers.length ? `<span>${escapeHtml(p.chambers.map(c => chamberLabel(c) || c).join(' ·\u00a0'))}</span>` : '',
+    parliament.length ? `<span>${escapeHtml(parliament.join(' ·\u00a0'))}</span>` : '',
+  ].filter(Boolean)
+  const tag = parts.map((part, i) => i ? `<span class="subject-tag-next">${part}</span>` : part).join('') || '<span>From the parliamentary record</span>'
+  const head = `<div class="subject-head">${portrait}<h1>${escapeHtml(display)}</h1><p class="subject-tag">${tag}</p></div>`
+  return html.replace(/<section id="prerender" class="wrap"><h1>[\s\S]*?<\/h1>/, `<section id="prerender" class="wrap subject-person">${head}`)
 }
 
 /** The roster row a bill's printed sponsor opens: public/sponsor-person.js, never a surname print. */

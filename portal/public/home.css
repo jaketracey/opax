@@ -88,6 +88,15 @@
   border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); background: var(--paper-raised);
 }
 .hp-money-map > p { padding: var(--space-group); }
+/* Before the map draws (and without scripts): a short line and the link,
+   centred in the card's paper rather than a long answer cut off mid-sentence. */
+.hp-map-fallback {
+  display: grid; align-content: center; justify-items: start; gap: var(--space-tight);
+  box-sizing: border-box; height: 100%; padding: var(--space-group); background: var(--paper-sunken);
+}
+.hp-map-fallback p { margin: 0; max-width: 36ch; font: var(--type-body); color: var(--ink-soft); }
+.hp-map-fallback .hp-map-span { white-space: nowrap; }
+.hp-map-fallback a { display: inline-flex; align-items: center; min-height: var(--size-target); font: var(--type-control); }
 .hp-money-map > .ui-button { margin: 0 var(--space-group); }
 .hp-money-map :is(h2, h3) { font: var(--type-subheading); }
 .hp-map-side { grid-area: side; min-width: 0; padding-top: calc(var(--sp-64) + var(--sp-4)); }
@@ -160,6 +169,9 @@
   .hp-browse-list li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
   .hp-browse-list a { padding-block: var(--space-row); }
   .hp-money-map { height: 350px; }
+  /* A phone's card is the fitted still and a link to the full map: the zoom
+     stack took a quarter of 350 px and pushed the scene off centre. */
+  .hp-money-map .mm-zoom { display: none; }
   .hp-report-grid { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 1000px), (pointer: coarse) {
