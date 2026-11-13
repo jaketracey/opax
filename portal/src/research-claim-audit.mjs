@@ -1,5 +1,6 @@
 // Pure selected-evidence audit, shared by the final boundary and the offline report.
 import {PERSON_PATHS} from '../public/party-page.js'
+import {sentenceEndAt} from './sentence-bounds.mjs'
 const norm=s=>String(s??'').normalize('NFKC').toLowerCase().replace(/[‘’]/g,"'").replace(/[^\p{L}\p{N}]+/gu,' ').trim()
 // This generated index binds public parliamentarians.json names and their canonical slugs.
 const rosterPeople=new Map(Object.entries(PERSON_PATHS.exact).flatMap(([name,path])=>[[norm(name),path],[norm(path.split('/').at(-1)),path]]))
@@ -28,7 +29,7 @@ export function sentenceParts(value){
   if(protectedText.some(q=>i>=q.at&&i<q.end)||unclosed>=0&&i>=unclosed)continue
   const c=text[i]
   if(c==='\n'){push(i);start=i+1;continue}
-  if(/[.!?]/.test(c)&&/^\s+[A-Z“"]/.test(text.slice(i+1)))push(i+1)
+  if(sentenceEndAt(text,i)&&/\s/.test(text[i+1]??''))push(i+1)
  }
  push(text.length);return out
 }

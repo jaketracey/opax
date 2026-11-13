@@ -810,9 +810,21 @@ async function copyText(text, label) {
   if (label) showCopied(label);
 }
 
-/** A copied link is counted with the sort of record it points to, never the link. */
+/** A copied link is counted with the sort of record it points to, never the
+ *  link. Only an OPAX link counts: an https://opax.com.au address or a
+ *  root-relative OPAX path. Any other text copied is not a shared link. */
 function countCopiedLink(text) {
+  if (!isOpaxLink(text)) return;
   trackOutcome("opax_share", { kind: "copy_link", record_type: shareRecordType(text) });
+}
+
+function isOpaxLink(text) {
+  if (typeof text !== "string" || /\s/.test(text)) return false;
+  if (/^\/(?![/\\])/.test(text)) return true;
+  try {
+    const url = new URL(text);
+    return url.protocol === "https:" && url.host === "opax.com.au";
+  } catch { return false; }
 }
 
 /** The coarse sort of record a copied OPAX link points to: person, party, bill,
