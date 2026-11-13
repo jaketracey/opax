@@ -295,17 +295,22 @@ could carry them and fails if any reaches the payload;
 `tests/analytics-sdk.test.ts` runs the real SDK's handlers end to end.
 
 **Symbols.** Production bundles carry PostHog's chunk ID
-(`mobile/metro.config.js`), which JS frames report. `scripts/release-ios.sh`
-keeps the composed Hermes source map and the chunk ID in the release evidence
-folder, then runs `scripts/upload-crash-symbols.sh`, which uploads the source
-map and the archive's dSYMs with `posthog-cli` (0.20 or later). It needs a
+(`mobile/metro.config.js`), which JS frames report. Every release archive
+writes the composed Hermes source map and the chunk ID beside it, in the
+release evidence folder (`main.jsbundle.map`, `ios.chunk-id`; see
+`IOS-RELEASE.md`), and the verifier refuses an archive without them or with a
+map inside the app. `scripts/release-ios.sh` then runs
+`scripts/upload-crash-symbols.sh`, which uploads that map and the archive's
+dSYMs with `posthog-cli` (0.20 or later). It needs a
 personal API key with the `error_tracking:write` scope in
 `POSTHOG_CLI_API_KEY`; without one it logs a single skip line. The key is
 redacted from release logs and never reaches a build step. Releases resolve
 per event from `$app_namespace`, `$app_version` and `$app_build`. For Android
 the script also uploads the R8 mapping under posthog-android's map ID
 (`au.com.opax.app@<versionName>+<versionCode>`); it is not wired into
-`build-play.sh` while Android sends nothing.
+`build-play.sh` while Android sends nothing. Gradle writes the Android map to
+`android/app/build/generated/sourcemaps/react/release/index.android.bundle.map`,
+and `verify-play.py` refuses any `.map` in the AAB.
 
 The privacy manifest declares Product Interaction and Device ID, not linked,
 not used for tracking, purpose Analytics, and Crash Data and Other Diagnostic
