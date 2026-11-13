@@ -151,6 +151,16 @@ export function partyRename(label) {
 export function partyFormerName(label) {
   return FORMER_NAMES.get(renameFold(label))?.former || null;
 }
+/** The name a party's money was recorded under, for money whose last financial year starts
+ *  in `lastFy` (2018 = 2018-19). A renamed party's figures that all end before its new name
+ *  was registered keep the former name: {name: 'Liberal Democratic Party', now: 'Libertarian Party'}.
+ *  Otherwise {name: label, now: null}. PR 344: a record keeps the name it had at the time. */
+export function partyNameForPeriod(label, lastFy) {
+  const rename = partyRename(label);
+  if (!rename || renameFold(label) !== renameFold(rename.name) || !Number.isInteger(lastFy)) return { name: label, now: null };
+  const former = rename.former.at(-1);
+  return `${lastFy + 1}-06-30` < rename.since ? { name: former.name, now: rename.name } : { name: label, now: null };
+}
 for (const r of PARTY_RENAMES) for (const f of r.former) for (const name of [f.name, ...(f.aliases || [])]) PARTY_ALIASES[name] = r.code;
 // Expand aliases into the existing map so every consumer uses one identity table.
 const partyByCode = {};

@@ -5,7 +5,7 @@
    (/graph/party-members.json, scripts/build_party_index.mjs).
    Pure functions; app.js passes in its helpers. */
 
-import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=8d287e0533';
+import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=fcb2a1091c';
 import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=bcc9a57bab';
 // sponsor-party-aliases:begin
 // Generated from scripts/export_bills.py SPONSOR_PARTY_TOKENS.
@@ -55,7 +55,7 @@ const SPONSOR_PARTY_ALIASES = {
 
 // Server consumers use these re-exports too, keeping the stamped browser
 // dependencies and their identity tables to one copy in the Worker bundle.
-export * from './labels.js?v=8d287e0533';
+export * from './labels.js?v=fcb2a1091c';
 export * from './canonical-urls.js?v=bcc9a57bab';
 
 const fold = value => String(value ?? '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
@@ -248,12 +248,13 @@ export function partySpeechLabel(label, {indexed = null, roster = null, same = (
 }
 
 const SHOWN = 12;
+export const PARTY_NO_MEMBERS = "No members recorded in OPAX's roster for this party.";
 /** The Members block: portrait rows as the people directory draws them, sitting members first.
  *  `h` carries app.js's esc, photoUrlFor, personUrl, partyChipHTML, yearSpan, stateName, sourceLineHTML. */
-export function partyMembersHTML(label, members, h, {speechesHref = '', directoryHref = '', updated = ''} = {}) {
+export function partyMembersHTML(label, members, h, {speechesHref = '', speechSummary = '', directoryHref = '', updated = ''} = {}) {
   const independent = isIndependent(label);
   const total = members.current.length + members.former.length;
-  if (!total) return '';
+  if (!total) return `<section class="party-members" id="party-members"><h3 class="subject-section-title">Members</h3><p>${h.esc(PARTY_NO_MEMBERS)}</p></section>`;
   // Seat-roster members after a later election: not known to sit, not known to have left.
   const rostered = members.former.filter(m => m.seat_roster?.stale);
   const former = members.former.filter(m => !m.seat_roster?.stale);
@@ -299,6 +300,7 @@ export function partyMembersHTML(label, members, h, {speechesHref = '', director
     .map(day => group(`On the parliamentary roster as at ${dayMonthYear(day)}`, rostered.filter(m => m.seat_roster.as_of === day))).join('');
   return `<section class="party-members" id="party-members">
     <div class="entry-section-head"><h3 class="subject-section-title">${independent ? 'Parliamentarians' : 'Members'}</h3>${speechesHref ? `<a href="${h.esc(speechesHref)}">Their speeches</a>` : ''}</div>
+    ${speechSummary ? `<p class="ui-section-note">${h.esc(speechSummary)}</p>` : ''}
     ${members.current.length || rostered.length
       ? group(independent ? 'Sitting parliamentarians' : 'Sitting members', members.current) + rosteredGroups + group(independent ? 'Former parliamentarians' : 'Former members', former)
       : group('', former)}
@@ -419,6 +421,20 @@ function combinedNode(nodes) {
     .map(n => `${n.label} ${Math.round(n.total || 0).toLocaleString('en-AU', {style: 'currency', currency: 'AUD', maximumFractionDigits: 0})}`);
   return {...nodes[0], total: nodes.reduce((a, n) => a + (n.total || 0), 0), count: nodes.reduce((a, n) => a + (n.count || 0), 0),
     firstYear: years[0], lastYear: years.at(-1), lodgedAs: `Lodged as ${parts.join('; as ')}`};
+}
+/** A renamed party's money-map node: the part of its own-return total lodged under each name
+ *  (money.json `return_by_name`, {name: [AUD, lines, first year, last year]}), oldest first, as one line:
+ *  "Liberal Democratic Party $1.8m in 34 receipts, 2013-14 to 2022-23; Libertarian Party ...".
+ *  Empty when the node has one name or no split. */
+export function partyLodgedAsText(node, fmtMoney) {
+  const parts = Object.entries(node?.return_by_name || {})
+    .filter(([, cell]) => Array.isArray(cell) && Number(cell[1]) > 0)
+    .sort((a, b) => String(a[1][2] || '').localeCompare(String(b[1][2] || '')));
+  if (parts.length < 2) return '';
+  return parts.map(([name, [amount, lines, first, last]]) => {
+    const span = !first ? '' : first === last || !last ? `, ${first}` : `, ${first} to ${last}`;
+    return `${name} ${fmtMoney(Number(amount) || 0)} in ${Number(lines).toLocaleString('en-AU')} ${Number(lines) === 1 ? 'receipt' : 'receipts'}${span}`;
+  }).join('; ');
 }
 /** A renamed party's AEC annual-return rows (aec-extras.json `parties`) under every name it lodged as,
  *  one row per year (figures summed where two names lodged for one year), with which name each year

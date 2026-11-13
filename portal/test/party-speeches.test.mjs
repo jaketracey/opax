@@ -77,7 +77,7 @@ const publishedMembers = JSON.parse(readFileSync(new URL('../public/graph/party-
 const aliasMembers = {...publishedMembers, parties: {...publishedMembers.parties, "Pauline Hanson's One Nation Party": aliasEntry["Pauline Hanson's One Nation Party"]}};
 
 test('client: a party with speeches links them under the indexed label (the alias case)', {timeout: 60000}, async () => {
-  const files = {'/graph/party-speeches.json': {version: 1, parties: {'One Nation': 7, Labor: 11}}, '/graph/party-members.json': aliasMembers};
+  const files = {'/graph/party-speeches.json': {version: 1, generated:'2026-10-16', parties: {'One Nation': 7, Labor: 11}}, '/graph/party-members.json': aliasMembers};
   // The division records' spelling: the page keeps its title, the search gets the index's label.
   const alias = new JSDOM((await renderEntry("/subject/party/pauline-hansons-one-nation-party", files)).html).window.document;
   const button = [...alias.querySelectorAll('a')].find(a => a.textContent.trim() === 'Their speeches');
@@ -89,6 +89,8 @@ test('client: a party with speeches links them under the indexed label (the alia
   const link = [...labor.querySelectorAll('#party-members a')].find(a => a.textContent.trim() === 'Their speeches');
   assert.ok(link, 'the Members link');
   assert.equal(partyOf(link), 'Labor');
+  assert.match(labor.querySelector('#party-members').textContent, /11 speeches in the record, as of 16 Oct 2026/);
+  assert.match(alias.querySelector('#party-members').textContent, /7 speeches in the record, as of 16 Oct 2026/);
 });
 
 test('server: a party page promises what its members said only where the record holds speeches', {timeout: 60000}, async () => {
@@ -109,6 +111,9 @@ test('server: a party page promises what its members said only where the record 
     assert.ok(![...reason.doc.querySelectorAll('a')].some(a => a.textContent.trim() === 'Their speeches'));
     const labor = await page('/subject/party/labor');
     assert.match(labor.description, /speeches in the record/);
+    assert.match(labor.prerender.textContent, /speech count as of 16 Oct 2026/);
+    const voice = await page('/subject/party/australias-voice');
+    assert.match(voice.prerender.textContent, /281 speeches in the record \(speech count as of 16 Oct 2026\)/);
     assert.match(labor.prerender.textContent, /What its members said, and who paid\./);
   } finally { restore(); }
 });

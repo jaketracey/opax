@@ -44,9 +44,8 @@ The nightly only brings new records in and publishes them.
   2d  evidence: export_evidence_layers.py to fresh staging, then audit_evidence_export.py
         Sunday plus first-run catch-up; matching source DB + four complete sidecars, all read-only; no KB access.
         Retention/count/asset guards, timestamp suppression, then install; capped at 20 min + 60 s kill grace.
-        Optional OPAX_EVIDENCE_BUILD=1 first builds a matching frozen bundle (90 min cap), with
-        source-owner locks and a reserved SQLite write lock, without source data writes. Leave off
-        until a supervised current-corpus candidate passes every existing publication guard.
+        The inputs are rebuilt by the monthly connections rebuild on its own boot (below), not here;
+        on other nights this step finds no standing sidecars and logs one info line.
    3  bills: export_bills.py --fill-briefs, then verify_bill_briefs.py (no brief lost vs HEAD),
         recheck bill retention and keep_if_unchanged; any failure puts the bills group back to HEAD
   3b  export_division_pages.py and export_recent_votes.py: Worker SEO projections from the refreshed
@@ -66,6 +65,12 @@ The nightly only brings new records in and publishes them.
       someone is logged in / connected over ssh
 10:30 Sydney   EventBridge Scheduler "opax-refresh-stop-backstop" stops the instance if still up
 
+First Saturday of the month only (see "Connections rebuild"):
+11:00 Sydney   EventBridge Scheduler "opax-refresh-evidence-start" starts the instance again
+   ▼  run-nightly.sh sees that morning's nightly status (date today, run "nightly") and runs
+      nightly.sh with OPAX_EVIDENCE_RUN=1: no acquisition; build the evidence bundle from the live
+      parli.db, export, audit, guard, portal gate, commit, push; status run "evidence"; power off
+
 the push (portal/ changed) ──► .github/workflows/deploy.yml
       npm ci · build:release (search/social/grants-map/analytics/voice, stamps, photos, privacy)
       npm test (Node 24) · wrangler types + tsc · `npm run deploy:built`
@@ -74,7 +79,7 @@ the push (portal/ changed) ──► .github/workflows/deploy.yml
                nightly-status branch; a red run (GitHub emails the owner) means the chain broke
 ```
 
-With `OPAX_EVIDENCE_BUILD=1`, unexpected bundle build, receipt validation or newly built input readiness failures fail nightly status and the refresh watchdog; timeouts and publication guard refusals need investigation in `evidence-build.log`. The previous public evidence and active bundle remain in place, and the pending marker keeps the next run due. Source writer locks and busy WAL checkpoints explicitly return 75 and defer with a warning. With building disabled, missing or mismatched existing sidecars still warn and wait for matching inputs.
+With `OPAX_EVIDENCE_BUILD=1`, unexpected bundle build, receipt validation or newly built input readiness failures fail nightly status and the refresh watchdog; timeouts and publication guard refusals need investigation in `evidence-build.log`. The previous public evidence stays in place (the build has already dropped the old bundle, see "Connections rebuild"; the published tree is in git), and the pending marker keeps the next run due. Source writer locks and busy WAL checkpoints explicitly return 75 and defer with a warning. With building disabled, missing or mismatched existing sidecars still warn and wait for matching inputs.
 
 **`corpus.json` is stamped every night.** `refresh.checked_at` is written when it is more than 12 hours
 old, and always when anything else is being pushed. That makes every nightly commit change
@@ -152,7 +157,7 @@ Resource counts, collected rows and published supplier rows remain separate meas
 | Cost model | on for the refresh (1–2 h) only; the disk (about 40 GB used) is kept while it is stopped |
 | Access | SSH key `~/.ssh/opax-refresh.pem` (on the Mac and the desktop), user `ubuntu`, security group SSH only from the home IP |
 | Public IP | **changes at every stop/start**: `scripts/vm/ec2.sh ip` (or `aws ec2 describe-instances --region ap-southeast-2 --instance-ids i-0d725823966c827b9 --query 'Reservations[0].Instances[0].PublicIpAddress' --output text`) |
-| Schedules | EventBridge Scheduler `opax-refresh-start` (03:15 Australia/Sydney) and `opax-refresh-stop-backstop` (10:30), role `opax-refresh-scheduler` (may only start/stop this instance). Created disabled: enable them after the first successful manual nightly |
+| Schedules | EventBridge Scheduler `opax-refresh-start` (03:15 Australia/Sydney), `opax-refresh-stop-backstop` (10:30) and `opax-refresh-evidence-start` (11:00 on the first Saturday of the month, `cron(0 11 ? * SAT#1 *)`, created 13 Nov 2026), role `opax-refresh-scheduler` (may only start/stop this instance). Created disabled: enable them after the first successful manual nightly |
 | Shared account | the AWS account holds unrelated instances. Nothing here touches any resource other than the opax-refresh ones; `scripts/vm/ec2.sh` only names this instance |
 
 **Disk is the tight resource** (58 GB): `parli.db` is 29 GB, the caches 3 GB, the Python environment 1.5 GB, the
@@ -891,13 +896,95 @@ green if its other steps succeed. Provisioning may remain undecided indefinitely
 The byte ceiling can still hold a correct export once the tree outgrows its 25% headroom;
 re-baseline it by review, not automatically.
 
+## Connections rebuild (monthly evidence run)
+
+The connections layer (`portal/public/evidence`, the `/connections` pages, profile "Across the record" panels and
+the connection tools) is rebuilt as a whole from the live `parli.db` once a month. Decided 13 Nov 2026 (rebuild,
+not freeze; [the diagnosis](../reports/2026-11-13-evidence-layers.md)). The first rebuild, a supervised run on
+13 Nov 2026, was **not published**: the publication guard held it because 226 entity IDs and 1,822
+excerpts vanished ([the hold report](../reports/2026-11-13-connections-rebuild-hold.md)). Leave the schedule
+off until a rebuild passes the guard; until then every rebuild would hold the same way.
+
+**What runs.** `scripts/vm/build_evidence_bundle.py` builds four sidecars in order (primary mentions, places,
+identity decisions, additional mentions), copies the four source tables it needs into the bundle, verifies
+the databases, exports, runs the full source audit and applies the publication guard. It holds
+`BEGIN IMMEDIATE` on `parli.db` for the whole build, so no source writer can run beside it. The nightly's
+evidence step then exports from the bundle again into staging, audits and guards it and installs it; the
+portal gate, corpus manifest, commit, push, bundle activation and status follow as on any night.
+
+**Measured, 13 Nov 2026** (t4g.large; 1,626,175 speeches, 22,505 releases, 230,007 grants; the scans
+are CPU-bound on one core, about 1.7 µs per character of speech text):
+
+| Builder stage | Time |
+| --- | --- |
+| primary mentions (first speech scan) | 2 h 58 min (10,714 s) |
+| places | 7 min (428 s) |
+| identity decisions | 40 s |
+| additional mentions (second scan) | 1 h 11 min (4,287 s) |
+| copy of the source tables | 4 min 37 s (277 s) |
+| export | 13 min 38 s (818 s) |
+| full source audit | 8 min 25 s (505 s) |
+| **whole build** (`receipt.json` `seconds`) | **5 h 7 min (18,442 s)** |
+
+The nightly's evidence step then exports and audits again from the bundle (about 22 min, from the export
+and audit rows above), and the portal gate takes about 15 to 23 min.
+
+**Why its own boot.** About 5 h 7 min with parli.db frozen does not fit beside acquisition, nor in the
+03:15 boot's window (6 h nightly limit, 10:30 backstop, 11:00 freshness watchdog). So:
+
+- EventBridge `opax-refresh-evidence-start`, `cron(0 11 ? * SAT#1 *)` Australia/Sydney, same role, target,
+  retry policy and window as `opax-refresh-start`, starts the box at 11:00 on the first Saturday. Saturday
+  has no weekly, monthly or FRL group, and the morning's nightly has finished by then (it ends by 09:15 at
+  the latest; the backstop stops the box at 10:30).
+- `run-nightly.sh` (with `OPAX_EVIDENCE_MONTHLY=1` in `~/.config/opax/nightly.env`) treats a first-Saturday
+  boot as the rebuild when `pipeline/nightly-last.json` is dated today and its `run` is `nightly`. The 03:15
+  boot finds no status for today and runs the nightly; a boot after the rebuild (`run` `evidence`) runs
+  an ordinary nightly, never a second rebuild.
+- The rebuild is `nightly.sh` with `OPAX_EVIDENCE_RUN=1`: `OPAX_NIGHTLY_SKIP_REFRESH=1` (no daily refresh,
+  bills, divisions or Senate video; periodic groups stay owed) and `OPAX_EVIDENCE_BUILD=1`.
+- Limits: the build budget `OPAX_EVIDENCE_BUILD_TIMEOUT` (default 7 h on the rebuild, about 37% over the measured build, now passed to
+  the builder as `--timeout-seconds`; before 13 Nov the builder kept its own 90 minutes whatever the
+  variable said), the export/audit/guard limit `OPAX_EVIDENCE_TIMEOUT` (45 min on the rebuild, about twice the measured 22 min), the
+  whole run `OPAX_EVIDENCE_RUN_LIMIT` (8 h 30 min, `510m`, `run-nightly.sh`: build plus export plus gate with room to spare; expected about 6 h), and the unit's `TimeoutStartSec=9h`
+  outside all of them. ExecStopPost powers the box off as after any night.
+- The build grows with the corpus (about linearly in speech text). Re-measure from the rebuild's
+  `receipt.json` stage seconds and raise the budgets before they bind.
+
+**Disk.** A bundle is about 12.75 GB, 11.9 GiB (sidecars 3.9 GB, the 8.7 GB copy of the source tables and the 0.17 GB export). The box keeps one bundle between
+rebuilds, the published one (`pipeline/evidence-bundle-active.json` names it). The build first drops it and its
+pointer (`evidence_bundle_state.py prepare`; receipts stay in `pipeline/evidence-bundle-history`), so the disk
+never holds two. Peak use during a build was 15.8 GiB above the starting use on 13 Nov (19.3 GiB free at the lowest, during the export), against 35.1 GiB free before it; the builder also
+keeps 5 GiB plus 1 GiB free. The published tree itself is in git.
+
+**Alerting.** The rebuild publishes its own status (`run: evidence`) to `nightly-status`, but Sunday's
+nightly overwrites it before the watchdog reads it. So with `OPAX_EVIDENCE_MONTHLY=1`, the evidence step
+fails the night once the shipped export is more than 40 days old (`OPAX_EVIDENCE_STALE_DAYS`): one missed
+rebuild turns the watchdog red on the next Sunday after that. On other nights the status says `evidence
+layers: built <day>; rebuilt on the first Saturday of the month`.
+
+**Turning it on (after the code is on main and on the box).**
+1. Install the unit with its 9 h bound (bootstrap's step, by hand):
+   `sed -e "s|@USER@|ubuntu|g" -e "s|@REPO@|$HOME/opax|g" -e "s|@HOME@|$HOME|g" ~/opax/scripts/vm/systemd/opax-nightly.service | sudo tee /etc/systemd/system/opax-nightly.service >/dev/null && sudo systemctl daemon-reload`
+2. Add `OPAX_EVIDENCE_MONTHLY=1` to `~/.config/opax/nightly.env`.
+3. Enable the schedule: `aws scheduler update-schedule --region ap-southeast-2 --cli-input-json file://<get-schedule output with State ENABLED>`
+   (the update replaces the whole definition: keep Name, GroupName, expression, timezone, window, target, description).
+
+**Turning it off.** Disable `opax-refresh-evidence-start` first (otherwise its boot runs a second ordinary nightly),
+then remove `OPAX_EVIDENCE_MONTHLY`. To delete it: `aws scheduler delete-schedule --region ap-southeast-2
+--name opax-refresh-evidence-start --group-name default`.
+
+**By hand.** `OPAX_EVIDENCE_RUN=1 ~/opax/scripts/vm/run-nightly.sh` in a held maintenance window runs one
+rebuild with its limits (close SSH sessions or keep `hold` until it ends). For a supervised measurement without
+publication, run the builder alone with `--keep-audited-candidate` (see "Building missing evidence inputs").
+
 ## How long it takes (measured on the VM)
 
 | Night | Steps | Time |
 | --- | --- | --- |
 | Every night | daily refresh (Hansards, votes, links, KB push when new rows) | Previous ~17 min quiet-night measurement included a ~9 min bill step (2026-09-29); that bill work now follows the separate cadence below. A large push adds up to `OPAX_PUSH_TIMEOUT` (2 h) |
 | Mornings after sitting dates, Sundays, first-run catch-up | current-parliament bill fetch + full static export, then existing brief fill/verify | **Estimated 9–12 min** healthy-source addition; acquisition + export capped at **20 min + 60 s kill grace**. Estimate uses 296 current-parliament bills (~300 requests, >=7.1 min at 0.7/s), the earlier ~9 min bill-step measurement and 1–3 min export headroom; no live timing in this lane |
-| Sunday and evidence catch-up | complete evidence export + full source audit + retention/budget guard + installation | **Full runtime unmeasured**; capped at **20 min + 60 s kill grace**, with elapsed seconds logged; text-only desktop normalization took 29.985 s |
+| First Saturday, 11:00 boot: connections rebuild | evidence bundle build (four sidecars, source copy, export, audit, guard), then export/audit/guard again from the bundle, the portal gate, commit and push | Measured 13 Nov 2026: build 5 h 7 min, export/audit again ~22 min, gate ~15–23 min; about 6 h in all. Limits: build 7 h, export 45 min, whole run 8 h 30 min inside the unit's 9 h |
+| Sunday and evidence catch-up | readiness probe only (no standing sidecars): one info line, or a failure once the layer is over 40 days old with the monthly rebuild on | seconds |
 | Every night, additional federal interests | fresh indexes, changed HTML/PDFs, cached PDF parsing/OCR, then export | ~5–10 min warm; `STEP_TIMEOUT=45m` for `interests_federal`, plus GNU timeout's 60-second kill grace |
 | Sunday: weekly | loaders 30 min (lobbyists 22 min, `frl_acts` 3 min, ABN-linked `contract_suppliers` 7 min, ACNC/ATO 1 min once loaded) + exports 8 min (`x_speakers` and `x_people` a speeches scan each, ~3 min) | ~40 min |
 | First Sunday: monthly, on top | `qld_contracts` 7 min, `diaries_qld` 10-13 min, IPEA 2 min, `speaker_hygiene` 11 min (a full `speeches` read), `grant_recipients` 4 min, exports 5 min | ~40 min |
@@ -906,8 +993,10 @@ re-baseline it by review, not automatically.
 
 A first-Sunday night conservatively budgets about 20 + 40 + 40 + 5 min plus a push of up to 2 h,
 and up to 45 min (plus 60-second kill grace) for interests: budget roughly 5 h, which is why the
-unit limit is 6 h (`TimeoutStartSec=6h`) and the EventBridge stop backstop is at 10:30 (moved from 08:00 on 2026-09-29; a run that
-starts at 03:15 and uses the whole limit ends at 09:15). The freshness watchdog (11:00) reads `corpus.json`'s `checked_at`, which
+nightly's limit is 6 h and the EventBridge stop backstop is at 10:30 (moved from 08:00 on 2026-09-29; a run that
+starts at 03:15 and uses the whole limit ends at 09:15). Since 13 Nov 2026 that 6 h is `run-nightly.sh`'s
+`timeout` (`OPAX_NIGHTLY_LIMIT`); the unit's `TimeoutStartSec=9h` is the outer bound for the monthly
+connections rebuild's boot, which has its own limit (see "Connections rebuild"). The freshness watchdog (11:00) reads `corpus.json`'s `checked_at`, which
 the nightly stamps near the end of the run: a Sunday run that ends after 11:00 would look stale to it. Runs measured with the
 loaders competing for the disk and CPU with a backfill were up to twice as slow.
 

@@ -35,7 +35,7 @@ test('real exporter gambling ranking matches independent reconciliation and igno
   assert.equal(out.answer_status,'calculated');assert.equal(out.measure,'donations')
   assert.match(out.answer,/^\*\*Liberal\*\*.*\$1,093,352.*donations received/)
   for(const [name,amount]of [['Liberal','1,093,352'],['Labor','1,067,066'],['Nationals','258,500'],['LNP','50,000']])assert.ok(out.answer.includes(`| ${name} | $${amount} |`))
-  assert.match(out.answer,/\| Total, 4 parties \| \$2,468,918 \| 100% \| \$8,668,512 \(includes loans\) \|/)
+  assert.match(out.answer,/\| Total, 4 parties \| \$2,468,918 \| 100% \| \$8,668,512 \(mostly other receipts\) \|/)
   assert.equal(out.money_facts.measure,'donations');assert.equal(out.money_facts.measure_label,out.measure_label)
  }
 })
@@ -47,7 +47,7 @@ test('typed remaining sources sum Other Receipt before qualifying their all-type
  const all=sum(ranked,'allCents')-sum(expected.rows,'allCents'),other=sum(ranked,'otherCents')-sum(expected.rows,'otherCents')
  assert.ok(other>=all/2&&other>0,'real finance remainder exercises the qualifier')
  const row=out.answer.split('\n').find(l=>l.startsWith('| Other sources'))
- assert.ok(row.endsWith(`$${(all/100).toLocaleString('en-AU')} (includes loans) |`),row)
+ assert.ok(row.endsWith(`$${(all/100).toLocaleString('en-AU')} (mostly other receipts) |`),row)
 })
 test('typed comparison headings name donations in party and financial-year renderers',async()=>{
  for(const question of ['Who gets more gambling money, Labor or Liberal?','How did gambling money to Labor change from 2020 to 2021?']){
@@ -76,7 +76,7 @@ test('typed oracle catches incorrect labels, periods, secondary amounts and loan
   {...out,measure_label:'disclosed receipts, all types'},
   {...out,answer:out.answer.replaceAll('1998–99 to 2024–25','2000–01 to 2024–25')},
   {...out,answer:out.answer.replaceAll('$3,538,879','$3,538,880')},
-  {...out,answer:out.answer.replace(/(\| Liberal[^\n]+) \(includes loans\)/,'$1')},
+  {...out,answer:out.answer.replace(/(\| Liberal[^\n]+) \(mostly other receipts\)/,'$1')},
  ])assert.equal(scoreMoneyRanking(defect,expected,c,typedGraph).accuracy,false)
 })
 test('an empty requested period shows explicitly held-period figures and retains unmatched requested coverage',async()=>{

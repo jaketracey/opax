@@ -7,7 +7,7 @@ import { personNameKey, personUrl, partyUrl } from '../portal/public/canonical-u
 import { PARTY_RENAMES } from '../portal/public/labels.js';
 import { recordPathIndex } from '../portal/public/record-paths.js';
 import { personSlug, personIndex, fullNameMatches } from '../portal/src/person-slug.ts';
-import {donorDisclosure,donorLookup,receiptFigures,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY} from '../portal/public/donor-disclosure.js';
+import {donorDisclosure,donorLookup,receiptFigures,receiptScopeLabel,hasPartyReceipts,notListedLine} from '../portal/public/donor-disclosure.js';
 import {foldDonorName} from '../portal/public/donor-entity.js';
 import { moneyFlowType } from '../portal/public/money-records.js';
 import { auditComplete } from '../portal/public/audit.js';
@@ -100,9 +100,10 @@ export function donorSearchRecord(jur, node) {
  const disclosure=donorDisclosure(node), f=receiptSnippet(node);
  // Off the map a federal figure is the record total, donor and party returns together, and says so.
  const scope=f.typed ? f.scope : jur==='federal' ? ' '+receiptScopeLabel(f)+'.' : '';
- // A donor only its own return declares has no each-gift-once figure (hasPartyReceipts): a labelled line, never $0.
+ // A donor only its own return declares, or one listed only as public funding, has no each-gift-once
+ // figure (hasPartyReceipts): a labelled line (notListedLine), never $0.
  return {key:jur+':'+node.id,kind:'donor',title:disclosure.name,href:disclosure.href,
-  snippet:node.kind==='reference' ? node.source_note || '' : !hasPartyReceipts(node) ? `${industrySentence(node.industry)}${DONOR_DECLARED_ONLY}.`
+  snippet:node.kind==='reference' ? node.source_note || '' : !hasPartyReceipts(node) ? `${industrySentence(node.industry)}${notListedLine(node)}.`
    : `${industrySentence(node.industry)}${cash(f.total)} in disclosed political receipts across ${f.count.toLocaleString()} records.${scope}`,
   extra:{aliases:[...(node.aliases||[]),...(node.lookup_names||[]),node.abn||''].join(' '),from:f.firstYear,to:f.lastYear,state:jur,source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(f.firstYear,f.lastYear),url:disclosure.returns[0]?.url || null,...(node.source_note?{source_note:node.source_note}:{})}};
 }
@@ -128,12 +129,33 @@ async function main() {
  const identity=personIndex(roster.people); peopleIndex=identity; canonicalPeople=identity.slugOf; canonicalAliases=new Map([...identity.addresses].map(([name,p])=>[name,identity.slugOf.get(p.name)]));
  for(const p of roster.people) add('person:'+p.name,'person',p.full||p.name,personHref(p.name),`${p.party_now||p.party||''}. ${(p.states||[]).join(', ')}. ${personSpeechCount(p)}${p.representation?.length?' Recorded representation: '+p.representation.map(r=>`${r.electorate}${r.state?', '+r.state:''}, ${r.jurisdiction}, ${r.chamber}`).join('; ')+'. Roster affiliations may include past seats and do not establish current tenure.':''}`,{aliases:[...new Set([p.name,...(p.aliases||[]),...(Object.hasOwn(PERSON_SEARCH_ALIASES,p.name)?PERSON_SEARCH_ALIASES[p.name]:[])])].join(' '),from:p.first,to:p.last,state:p.states,parties:[p.party_now||p.party||''],speakers:[p.name],source:'Parliamentarian directory',dateLabel:p.speech_scope?'':(p.roster_only?'Recorded service: ':p.speech_count_basis?'Transcript years: ':'')+period(p.first,p.last)});
  const donorRecords=[];
- for(const [jur,file] of [['federal','money.json'],['qld','money.qld.json'],['vic','money.vic.json'],['tas','money.tas.json']]) {
-  const graph=await read('graph/'+file), byId=new Map(graph.nodes.map(n=>[n.id,n]));
+ // One search entry per party page: a party in several money files (federal, QLD, VIC) is one result, its
+ // snippet giving each register's figure separately, never summed (money.qld.json meta.not_summed).
+ const moneyFiles=[['federal','money.json'],['qld','money.qld.json'],['vic','money.vic.json'],['tas','money.tas.json']];
+ const graphs=new Map();
+ for(const [jur,file] of moneyFiles) graphs.set(jur,await read('graph/'+file));
+ const partyPages=new Map();
+ for(const [jur] of moneyFiles) for(const n of graphs.get(jur).nodes.filter(n=>n.kind==='party')) {
+  const href='/subject/party/'+personSlug(n.label), source=jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`;
+  const page=partyPages.get(href) || partyPages.set(href,{key:jur+':'+n.id,label:n.label,aliases:new Set(),parts:[],states:[],from:n.firstYear,to:n.lastYear}).get(href);
+  for(const a of n.aliases||[]) page.aliases.add(a);
+  page.parts.push({jur,source,line:`${cash(n.total||0)} in disclosed political receipts across ${(n.count||0).toLocaleString()} records`});
+  page.states.push(jur);
+  page.from=Math.min(page.from||n.firstYear,n.firstYear||page.from); page.to=Math.max(page.to||0,n.lastYear||0);
+ }
+ // Added where its first node stood (the federal one when there is one), so its place among equal scores is unchanged.
+ const addPartyPage=page=>{
+  const [first]=page.parts, snippet=page.parts.length===1 ? `Parties. ${first.line}.`
+   : `Parties. ${page.parts.map(p=>`${p.jur==='federal'?'AEC':p.jur.toUpperCase()}: ${p.line}`).join('; ')}. Each register's figure is its own; they are not added together.`;
+  add(page.key,'party',page.label,'/subject/party/'+personSlug(page.label),snippet,{aliases:[...page.aliases].join(' '),from:page.from,to:page.to,state:page.states,parties:[page.label],
+   source:page.parts.length===1?first.source:page.parts.map(p=>p.source.replace(' disclosure records','')).join(', ')+' disclosure records',dateLabel:period(page.from,page.to)});
+ };
+ for(const [jur] of moneyFiles) {
+  const graph=graphs.get(jur), byId=new Map(graph.nodes.map(n=>[n.id,n]));
   donorRecords.push(...graph.nodes.filter(n=>n.kind==='donor').map(n=>({...n,jurisdiction:jur})));
   for(const n of graph.nodes.filter(n=>n.kind==='donor'||n.kind==='party')) {
    if(n.kind==='donor'){const r=donorSearchRecord(jur,n);add(r.key,r.kind,r.title,r.href,r.snippet,r.extra);continue;}
-   add(jur+':'+n.id,n.kind==='donor'?'donor':'party',n.label,n.kind==='party'?'/subject/party/'+personSlug(n.label):donorDisclosure(n).href,`${industrySentence(n.industry)}${cash(n.total||0)} in disclosed political receipts across ${(n.count||0).toLocaleString()} records.`,{aliases:[...(n.aliases||[]),n.abn||''].join(' '),from:n.firstYear,to:n.lastYear,state:jur,parties:n.kind==='party'?[n.label]:[],source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(n.firstYear,n.lastYear)});
+   addPartyPage(partyPages.get('/subject/party/'+personSlug(n.label)));  // once: add() keeps the first key
   }
   for(const [i,e] of graph.edges.entries()) {
    const a=byId.get(e.source),b=byId.get(e.target), flow=moneyFlowType(e,byId); if(!a||!b||!flow)continue;
@@ -150,7 +172,7 @@ async function main() {
  }
  // A renamed party (labels.js PARTY_RENAMES) is one search entry under its current name, found by every
  // former name, at its one page. A party the money map holds already has its entry above.
- for(const r of renamedPartyRecords(PARTY_RENAMES)) if(!ids.has(r.key)) add(r.key,'party',r.title,r.href,r.snippet,r.extra);
+ for(const r of renamedPartyRecords(PARTY_RENAMES)) if(!ids.has(r.key) && !partyPages.has(r.href)) add(r.key,'party',r.title,r.href,r.snippet,r.extra);
  for(const node of (await read('graph/donor-index.json')).donors || []){const r=donorSearchRecord(node.jurisdiction || 'federal',node);add(r.key,r.kind,r.title,r.href,r.snippet,r.extra);}
  const suppliers=await read('suppliers.json');
  // a supplier with no counted contract (every notice cancelled at source or held for review) keeps its page, not a search entry

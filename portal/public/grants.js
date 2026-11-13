@@ -1,6 +1,6 @@
 import {hydrateRecordCore} from './record-core.js';
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=8c73ceafd6';
-import {loadDonorViewIndex} from './donor-views.js?v=c475b569bf';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=dffa19bbff';
+import {loadDonorViewIndex} from './donor-views.js?v=9770cf1299';
 import {subjectUrl} from './canonical-urls.js?v=bcc9a57bab';
 import {programKey, resolveProgram, resolveProgramId} from './facts/grant-programs.js?v=5b8dddc342';
 import { kindLabel } from './record-core-content.js'
@@ -57,7 +57,7 @@ export {programKey, resolveProgram, resolveProgramId};
  */
 
 import { shortMoney as fmtMoney } from './format.js'
-import { sourceLineHTML } from './labels.js?v=8d287e0533'
+import { sourceLineHTML } from './labels.js?v=fcb2a1091c'
 
 /** Text into the source line's HTML fields (labels.js escapes only its own text fields). */
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) =>
@@ -1792,7 +1792,7 @@ export function mountGrants (container, opts = {}) {
   }
 
   function renderProgramDetail (td, r, p) {
-    const coreActive = hydrateRecordCore('program',p,{jurisdiction:state.jur})
+    const coreActive = hydrateRecordCore('program',p,{jurisdiction:state.jur,recipientIds:recipientIndex()})
     if (!coreActive) td.id = "program-records"
     const notes = p.notes || null
     const progNotes = notes && notes.programs && notes.programs[state.jur] ? notes.programs[state.jur][p.id] : null

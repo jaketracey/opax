@@ -205,10 +205,10 @@ test('voice lending questions cannot reuse mixed receipt totals',async()=>{
  const receipt=await runVoiceTool('search_records',{query:'How much money from Westpac Banking Corporation to Labor?'},env,async()=>{throw Error('Unexpected network retrieval')});
  assert.equal(receipt.data.measure,'donations');assert.equal(receipt.data.total_aud,875018);assert.equal(receipt.data.all_types_aud,47331887);
  assert.match(receipt.data.answer,/^Westpac Banking Corporation: \$875,018 in donations received \(AEC receipt type: Donation Received\), financial years 1998–99 to 2024–25, across 35 records\./);
- // Untyped fallback: without receipt types the same question shows the mixed total, labelled as including loans.
+ // Untyped fallback: without receipt types the same question shows the mixed total, labelled by its types, never as loans (A34 review).
  const legacy=await runVoiceTool('search_records',{query:'How much money from Westpac Banking Corporation to Labor?'},{...env,ASSETS:moneyAssets('untyped')},async()=>{throw Error('Unexpected network retrieval')});
  assert.equal(legacy.data.measure,'receipts_all');assert.equal(legacy.data.total_aud,42540985);
- assert.match(legacy.data.answer,/disclosed receipts, all types, including bank loans to the party/);
+ assert.match(legacy.data.answer,/disclosed receipts, all types \(donations, subscriptions and other receipts\)/);
 });
 
 test('voice uses the shared family calculator, with its entire table and citations',async()=>{

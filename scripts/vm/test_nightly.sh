@@ -686,6 +686,28 @@ rm -f "$HOME/.config/opax/skip-nightly"
 FAKE_MODE=ok run_nightly
 check "without the file it runs the nightly" bash -c "git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q '^Nightly refresh'"
 
+echo "== 12b. run-nightly.sh: the monthly connections rebuild is the first-Saturday boot after that morning's nightly"
+new_sandbox s12b
+LAST="$HOME/.cache/autoresearch/pipeline/nightly-last.json"
+# a builder that records its arguments and fails: the dispatch and the budget are under test, not the build
+printf 'import os, pathlib, sys\npathlib.Path(os.environ["HOME"], "build.argv").write_text(" ".join(sys.argv[1:]))\nsys.exit(1)\n' \
+  > "$REPO/scripts/vm/build_evidence_bundle.py"
+printf 'OPAX_MIN_FREE_GB=0\nOPAX_SETTLE_SECONDS=0\nOPAX_EVIDENCE_MONTHLY=1\n' > "$HOME/.config/opax/nightly.env"
+rm -f "$LAST"
+OPAX_TODAY=2026-11-07 FAKE_MODE=ok run_nightly
+check "first Saturday, no status yet today (the 03:15 boot): the ordinary nightly" bash -c "! grep -q 'connections rebuild' '$SB/run.out' && [ ! -f '$HOME/build.argv' ] && python3 -c 'import json; assert json.load(open(\"$LAST\"))[\"run\"]==\"nightly\"'"
+printf '{"date":"2026-11-14","run":"nightly"}\n' > "$LAST"
+OPAX_TODAY=2026-11-14 FAKE_MODE=ok run_nightly
+check "second Saturday after its nightly: still the ordinary nightly" bash -c "! grep -q 'connections rebuild' '$SB/run.out' && [ ! -f '$HOME/build.argv' ]"
+printf '{"date":"2026-11-07","run":"evidence"}\n' > "$LAST"
+OPAX_TODAY=2026-11-07 FAKE_MODE=ok run_nightly
+check "first Saturday after the rebuild already ran: no second rebuild" bash -c "! grep -q 'connections rebuild' '$SB/run.out' && [ ! -f '$HOME/build.argv' ]"
+printf '{"date":"2026-11-07","run":"nightly"}\n' > "$LAST"
+OPAX_TODAY=2026-11-07 FAKE_MODE=ok run_nightly
+check "first Saturday after its nightly (the 11:00 boot): the monthly connections rebuild" bash -c "grep -q 'starting the monthly connections rebuild' '$SB/run.out' && grep -q 'evidence run: no acquisition' '$SB/run.out'"
+check "the rebuild skips acquisition and builds with its own budget, not the 90-minute default" bash -c "grep -q 'not running daily_refresh.sh' '$SB/run.out' && grep -q 'building a frozen evidence bundle (monthly rebuild)' '$SB/run.out' && grep -q -- '--timeout-seconds 25200' '$HOME/build.argv'"
+check "a failed rebuild publishes a failed status marked as the evidence run" bash -c "[ '$NRC' -eq 1 ] && python3 -c 'import json; s=json.load(open(\"$LAST\")); assert s[\"run\"]==\"evidence\" and s[\"status\"]==\"failed\", s' && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'bundle build failed'"
+
 echo "== 13. poweroff-if-idle.sh: updates then power off when idle; stays up for hold, a login or an ssh connection"
 new_sandbox s13
 PO="$REPO/scripts/vm/poweroff-if-idle.sh"
@@ -1284,10 +1306,10 @@ new_sandbox evidence_missing
 rm "$HOME/.cache/autoresearch/evidence-places.sqlite"
 OPAX_TODAY=2026-10-10 nightly
 check "missing sidecars keep the night green and skip export/staging" bash -c "[ '$NRC' -eq 0 ] && [ ! -f '$HOME/evidence.calls' ] && ! find '$HOME/.cache/autoresearch/pipeline' -maxdepth 1 -name 'evidence-stage.*' | grep -q . && git -C '$REPO' diff --quiet HEAD -- portal/public/evidence"
-check "missing sidecars are one info line naming them, not a warning; status names the snapshot" bash -c "[ \$(grep -c 'WARN: evidence' '$SB/nightly.out') -eq 0 ] && grep -q 'evidence layers: snapshot date unknown; rebuild pending a decision (missing: .*evidence-places.sqlite' '$SB/nightly.out' && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"status\"]==\"ok\" and not d[\"failures\"] and \"evidence layers: snapshot date unknown; rebuild pending a decision\" in d[\"summary\"] and not any(w.startswith(\"evidence\") for w in d.get(\"warnings\", []))'"
+check "missing sidecars are one info line naming them, not a warning; status names the snapshot" bash -c "[ \$(grep -c 'WARN: evidence' '$SB/nightly.out') -eq 0 ] && grep -q 'evidence layers: build date unknown; no rebuild scheduled (OPAX_EVIDENCE_MONTHLY is off) (missing: .*evidence-places.sqlite' '$SB/nightly.out' && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"status\"]==\"ok\" and not d[\"failures\"] and \"evidence layers: build date unknown; no rebuild scheduled\" in d[\"summary\"] and not any(w.startswith(\"evidence\") for w in d.get(\"warnings\", []))'"
 check "waiting retains catch-up and publishes the rest" bash -c "[ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q 'New Member'"
 OPAX_TODAY=2026-10-10 nightly
-check "missing inputs on the next night still succeed without exporting" bash -c "[ '$NRC' -eq 0 ] && [ ! -f '$HOME/evidence.calls' ] && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && [ \$(grep -c 'WARN: evidence' '$SB/nightly.out') -eq 0 ] && grep -q 'rebuild pending a decision' '$SB/nightly.out'"
+check "missing inputs on the next night still succeed without exporting" bash -c "[ '$NRC' -eq 0 ] && [ ! -f '$HOME/evidence.calls' ] && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && [ \$(grep -c 'WARN: evidence' '$SB/nightly.out') -eq 0 ] && grep -q 'build date unknown; no rebuild scheduled' '$SB/nightly.out'"
 
 new_sandbox evidence_mismatch
 python3 - "$HOME/.cache/autoresearch/parli.db" <<'PYEOF'

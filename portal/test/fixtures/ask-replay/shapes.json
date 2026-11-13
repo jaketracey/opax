@@ -98,6 +98,7 @@
     "since": "string",
     "until": "string"
    },
+   "receiptMeasure": "string",
    "stateGovernment": "boolean",
    "superlative": "string",
    "trend": "boolean"
@@ -133,9 +134,7 @@
       "evidenceId": "string",
       "metric": "string",
       "period": {
-       "label": "string",
-       "since": "string",
-       "until": "string"
+       "label": "string"
       },
       "unit": "string",
       "value": "string"

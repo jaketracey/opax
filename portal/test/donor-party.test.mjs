@@ -5,7 +5,7 @@ import {runInNewContext} from 'node:vm';
 import {Worker} from 'node:worker_threads';
 import ts from 'typescript';
 import {JSDOM} from 'jsdom';
-import {donorLabelHTML,donorLookup,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY} from '../public/donor-disclosure.js';
+import {donorLabelHTML,donorLookup,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine} from '../public/donor-disclosure.js';
 import {foldDonorName,MONEY_GRAPHS} from '../public/donor-entity.js';
 import {partyLabels,partyMembers,partyMembersHTML,partySlug,partyStateMoneyHTML,resolvePartyLabel} from '../public/party-page.js';
 
@@ -23,7 +23,7 @@ async function donorsDirectory(files, indexRecords) {
   const index = donorLookup(indexRecords);
   const disclosed = name => index.get(foldDonorName(name)) || {label: name};
   const context = {
-    donorViewReady: Promise.resolve(), donorViewIndex: index, receiptGraph, receiptGraphScope, receiptScopeLabel, hasPartyReceipts, DONOR_DECLARED_ONLY,
+    donorViewReady: Promise.resolve(), donorViewIndex: index, receiptGraph, receiptGraphScope, receiptScopeLabel, hasPartyReceipts, DONOR_DECLARED_ONLY, notListedLine,
     loadMoneyFile: async jur => files[jur] || null, loadAccess: async () => ({donors: {}}), loadFits: async () => ({}),
     normName: new Function('x', fnSource('normName').replace(/^function normName\(x\) \{|\}$/g, '')),
     byNumDesc: () => () => 0, byName: () => 0, moneyFor: () => 0, STATE_NOT_SUMMED: '', AEC_NOTE: '', esc,
@@ -157,8 +157,10 @@ test('a minor party outside the money map: its one member, under the full name, 
   assert.ok([...doc.querySelectorAll('a')].some(a => a.textContent === 'Their speeches'));
   assert.equal(doc.querySelectorAll('h4').length, 0, 'nobody sitting: no subheadings, and no "Sitting members (0)"');
   assert.doesNotMatch(doc.body.textContent, /\(0\)|Not available|not recorded/i);
-  // A party with nobody in the record draws no Members block at all, and no state money draws nothing.
-  assert.equal(partyMembersHTML('Nobody Party', partyMembers('Nobody Party', {roster, divisions}), helpers), '');
+  // A missing roster is stated plainly; a party without state money has no money block.
+  const empty = new JSDOM(partyMembersHTML('Nobody Party', partyMembers('Nobody Party', {roster, divisions}), helpers)).window.document;
+  assert.equal(empty.querySelector('#party-members p').textContent, "No members recorded in OPAX's roster for this party.");
+  assert.equal(empty.querySelectorAll('li.dir-row').length, 0);
   assert.equal(partyStateMoneyHTML('Fixture First Party', [['qld', {nodes: [], edges: []}]], helpers), '');
 });
 
@@ -226,7 +228,8 @@ test('A4b: the real app gives a sponsor-only party its page: the name and its sp
   const first = doc.querySelector('#party-sponsored-bills li a');
   assert.equal(first.textContent, 'Australian Federal Integrity Commission Bill 2021');
   assert.equal(first.getAttribute('href'), '/bill/au-federal-s1321');
-  assert.ok(!doc.querySelector('#party-members'), 'no members block: the record names no member under this label');
+  assert.equal(doc.querySelector('#party-members p').textContent, "No members recorded in OPAX's roster for this party.");
+  assert.equal(doc.querySelectorAll('#party-members li.dir-row').length, 0);
   assert.doesNotMatch(doc.body.textContent, /Party not found/);
 });
 

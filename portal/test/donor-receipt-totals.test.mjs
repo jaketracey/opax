@@ -24,7 +24,10 @@ const legacyOnly = {source: 'donor:older', target: 'party:Labor', total: 50, cou
 test('receiptFigures counts each typed receipt once, all receipt types, and never the legacy cells', () => {
   const f = receiptFigures(edge);
   assert.deepEqual(f, {total: 140, count: 2, firstYear: 2020, lastYear: 2021, byYear: {2020: 100, 2021: 40},
-    cells: {2020: [100, 1], 2021: [40, 1]}, undated: [0, 0], byType: {donation_received: 100, other_receipt: 40}, typed: true});
+    cells: {2020: [100, 1], 2021: [40, 1]}, undated: [0, 0], byType: {donation_received: 100, other_receipt: 40}, typed: true,
+    // Each cell keeps its AEC receipt type (A34); Public Funding, held apart, is never a donor's money (A35).
+    typeCells: {2020: {donation_received: [100, 1]}, 2021: {other_receipt: [40, 1]}}, typeCounts: {donation_received: 1, other_receipt: 1},
+    publicFunding: [0, 0], publicFundingCells: {}});
   // An empty typed object is zero eligible receipts, not a fallback.
   assert.equal(receiptFigures({...edge, by_type: {}, by_type_year: {}}).total, 0);
 });
@@ -32,7 +35,7 @@ test('receiptFigures counts each typed receipt once, all receipt types, and neve
 test('a graph without typed cells keeps its figures and says what they count', () => {
   const f = receiptFigures(legacyOnly);
   assert.deepEqual(f, {total: 50, count: 2, firstYear: 2004, lastYear: 2005, byYear: {2004: 20, 2005: 30},
-    cells: {2004: [20, 1], 2005: [30, 1]}, undated: [0, 0], byType: null, typed: false});
+    cells: {2004: [20, 1], 2005: [30, 1]}, undated: [0, 0], byType: null, typed: false, typeCells: null, typeCounts: null, publicFunding: [0, 0], publicFundingCells: {}});
   assert.match(receiptScopeLabel(f), /both donor and party, so a gift can appear twice/);
 });
 
@@ -58,8 +61,11 @@ test('in the released graph, each donor page figure matches the map card for the
   assert.equal(Math.round(own.total), 19572876);
   assert.equal(own.count, 120);
   assert.equal(receiptScopeLabel(own), 'All receipt types, 1998-99 to 2024-25, as the parties reported them in federal returns');
+  // Every published receipt type counts but Public Funding, which is never a donor's money (NSW Efa to the Greens).
   for (const e of graph.edges) if (e.by_type) {
-    assert.equal(receiptFigures(e).total, Object.values(e.by_type).reduce((a, b) => a + b, 0), `${e.source} → ${e.target}`);
+    const {public_funding: pf = 0, ...donor} = e.by_type;
+    assert.equal(receiptFigures(e).total, Object.values(donor).reduce((a, b) => a + b, 0), `${e.source} → ${e.target}`);
+    assert.equal(receiptFigures(e).publicFunding[0], pf, `${e.source} → ${e.target} public funding`);
   }
 });
 

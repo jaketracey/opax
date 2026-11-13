@@ -724,6 +724,12 @@ test('server donor page: a donor no party return lists says so and what its own 
     }
     assert.ok(main.includes(declared),`${label}: ${main.slice(0,400)}`);
   }
+  // Public Funding only (A35): on the party's return as public funding, never the declared-only line.
+  const efa=await get('/subject/donor/'+encodeURIComponent('NSW Efa'));
+  for(const text of [efa.match(/<meta name="description" content="([^"]*)"/)[1],stripTags(efa.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)[1])]){
+    assert.ok(text.includes("public funding, which is election funding, not a donation"),text.slice(0,300));
+    assert.doesNotMatch(text,/No party return lists|own donor returns? declares?|\$0(?![\d.,])/);
+  }
   const pratt=await get('/subject/donor/'+encodeURIComponent('Pratt Holdings Pty Ltd'));
   const description=pratt.match(/<meta name="description" content="([^"]*)"/)[1];
   assert.match(description,/disclosed political .*donor, \$[\d.]+m across [\d,]+ receipts/);

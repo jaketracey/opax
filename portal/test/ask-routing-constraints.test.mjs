@@ -131,8 +131,8 @@ test('FY donations use starting-year buckets and never include the following fin
  const deps={asset:async()=>graph,kb:async()=>({})},properties=api.TOOL_SPECS.find(t=>t.name==='party_receipts').input.properties
  for(const question of ['donations in FY2023-24','donations from 1 July 2023 to 30 June 2024','donations from 2023-07-01 to 2024-06-30'])for(const args of [{party:'Labor'},{industry:'mining'}]){
   const c=constraints(question),planned={tool:'party_receipts',args:{...args,from_year:1998,to_year:2025}}
-  const step=api.constrainStep(planned,c,properties),scoped=api.periodPlan({shape:'money',steps:[planned]},c.period,{}).steps[0]
-  assert.deepEqual(step.args,scoped.args,question);assert.equal(step.args.from_year,2023);assert.equal(step.args.to_year,2023)
+  const step=api.constrainStep(planned,c,properties),scoped=api.periodPlan({shape:'money',steps:[planned]},c.period,{},c).steps[0]
+  assert.deepEqual(step.args,scoped.args,question);assert.equal(step.args.from_year,2023);assert.equal(step.args.to_year,2023);assert.equal(step.args.measure,'donations',question)
   const result=await api.partyDonations(deps,step.args),guarded=api.guardToolPeriod(result,step,c)
   assert.equal(result.data.rows[0].total_aud,200,question);assert.equal(guarded.data.coverage_only,undefined)
   assert.deepEqual([guarded.coverage.since,guarded.coverage.until],['2023-07-01','2024-06-30'])

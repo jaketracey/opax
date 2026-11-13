@@ -4,6 +4,7 @@ import {RECEIPTS_WRITING_RULE,industryModifier} from './receipt-copy'
 import type { Fact, Period } from './agentic-ask'
 import { atomsFromText, claimIdentity, claimClauses, normalClaim, numberValue, metricAt, proseClaimKeys, censusField, sentenceFragment, type ClaimAtom } from './research-claims'
 import { withoutSaPlaceholder } from '../public/sa-hansard.js'
+import { partyReturns } from '../public/donor-disclosure.js'
 import type { QualitativeAnswer, ReceiptFact } from './research-types'
 import { plainAnswerPayload, rewriteAnswerPayload } from './research-language'
 import { repairDonorRanking,selectedDonorFacts,answerDecision,donorRankingAsked } from './research-coherence.mjs'
@@ -269,8 +270,9 @@ function onTopic(fact:WritingFact,input:WritingInput):boolean {
 /** What was found that can stand as an answer to this question, whatever its wording. */
 export const foundFacts=(input:WritingInput)=>input.facts.filter(f=>usableFact(f)&&onTopic(f,input)&&!outsideRequest(f,input))
 const receiptLine=(r:ReceiptFact)=>{
+  if(r.aside)return finish(r.aside)
   const place=jurisdictionNames[r.jurisdiction??''],span=yearsIn(r.period).length?'financial years '+r.period:''
-  return `${r.party} disclosed ${dollars(r.amount)} in receipts from ${r.source} (${[place&&place+' disclosures',span].filter(Boolean).join('; ')}).`
+  return `${r.party} disclosed ${dollars(r.amount)} in ${r.measure==='donations'?'donations':'receipts'} from ${r.source} (${[place&&place+' disclosures',span].filter(Boolean).join('; ')}).`
 }
 function factLine(text:string):string {
   text=clean(text).replace(/\s+[—–]\s+[^—–]*https?:\/\/\S*\s*$/,'').replace(/https?:\/\/\S+/g,'').trim()
@@ -374,6 +376,9 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
   // Context records are retrieval aids, never selected calculation facts.
   input={...input,facts:input.facts.filter(f=>!/^USER_CONTEXT_/i.test(f.source.resource))}
   input={...input,facts:input.facts.filter(f=>f.coverage||f.metadata||!outsideRequest(f,input))}
+  // A lending question's note and declared debts (party_receipts lending) come first, before any receipt figure.
+  const lending=input.facts.filter(f=>f.source.receipt?.measure==='declared_debts')
+  if(lending.length)input={...input,facts:[...lending,...input.facts.filter(f=>!lending.includes(f))]}
   const transcript = transcriptLines(input)
   if (transcript) return { ...assemble(transcript, input), answer_decision: 'answer' }
   // A page pointer under an order is not a listing or a quotation to paste into prose.
@@ -413,13 +418,17 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
   }
   const donors=repairDonorRanking(input.question,input.facts.map(f=>f.source),input.constraints)
   const donorEvidence=input.facts.some(f=>f.source.receipt)
+  // Labelled lines beside a donations ranking (party_receipts): receipts the AEC does not class as
+  // donations, and public funding. Said in their own words after the ranking, never ranked.
+  const asides=(party?:string,source?:string)=>input.facts.filter(f=>f.source.receipt?.aside&&(!party||key(f.source.receipt.party)===key(party))&&(!source||key(f.source.receipt.source)===key(source)))
+  const asideLines=(facts:WritingFact[])=>facts.slice(0,6).map(f=>({text:finish(f.source.receipt!.aside!),facts:[f.id]}))
   // Dates that could not be confirmed cannot carry a ranking or the requested period.
   if(input.facts.some(f=>f.text.includes(UNCONFIRMED_PERIOD))){const list=factList(input);if(list)return list}
   // Parties ranked on one industry's total: the tool's own ranking, read from its rows.
   const totals=input.facts.flatMap(f=>f.source.receipt?.aggregate?[{f,r:f.source.receipt}]:[]).filter(({f},i,all)=>all.findIndex(x=>x.f.source.resource===f.source.resource)===i).sort((a,b)=>b.r.amount-a.r.amount)
   if(totals.length>1&&RANKING_WORDS.test(input.question)&&totals[0].r.filter===questionIndustry(input.question)&&!scopeGaps(input).length){
     const [top,...rest]=totals,coverage=coverageSentence(input)
-    return assemble([{text:`${top.r.party} received the most disclosed receipts from ${top.r.source}, with ${dollars(top.r.amount)} across financial years ${top.r.period} in OPAX’s published selection.`,facts:[top.f.id]},...rest.slice(0,7).map(({f,r})=>({text:`- ${r.party} received ${dollars(r.amount)}.`,facts:[f.id]})),...(coverage?[coverage]:[])],input)
+    return assemble([{text:`${top.r.party} received the most ${top.r.measure==='donations'?'donations':'disclosed receipts'} from ${top.r.source}, with ${dollars(top.r.amount)} across financial years ${top.r.period} in OPAX’s published selection.`,facts:[top.f.id]},...rest.slice(0,7).map(({f,r})=>({text:`- ${r.party} received ${dollars(r.amount)}.`,facts:[f.id]})),...(coverage?[coverage]:[])],input)
   }
   // A ranking we cannot stand behind is withheld, not the receipts: show them as found and say why.
   const unranked=(text?:string)=>{
@@ -432,13 +441,21 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
     const selected=selectedDonorFacts(input.question,input.facts.map(f=>f.source),input.constraints)
     const named=selected.filter(r=>{const first=r.name.split(/\s+/)[0];return key(input.question).includes(key(r.name))||first.length>=4&&new RegExp('\\b'+first.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b','i').test(input.question)&&selected.filter(x=>x.name.split(/\s+/)[0].toLowerCase()===first.toLowerCase()).length===1})
     if(named.length===1&&named[0].period){
-      const row=named[0],text=`${row.name}${row.associated?` (${row.associated})`:''} provided ${row.amount} in disclosed funding to ${row.party} across financial years ${row.period} in OPAX’s published selection.`,line={text,facts:input.facts.filter(f=>f.source.resource===row.source.resource).map(f=>f.id)},coverage=coverageSentence(input)
-      return assemble([line,...(coverage?[coverage]:[])],input)
+      const row=named[0],given=row.measure==='donations'?`gave ${row.amount} in donations`:`provided ${row.amount} in disclosed funding`
+      const text=`${row.name}${row.associated?` (${row.associated})`:''} ${given} to ${row.party} across financial years ${row.period} in OPAX’s published selection.`,line={text,facts:input.facts.filter(f=>f.source.resource===row.source.resource).map(f=>f.id)},coverage=coverageSentence(input)
+      return assemble([line,...asideLines(asides(row.party,row.name)),...(coverage?[coverage]:[])],input)
+    }
+    // A named source that gave no donations in the selection, only receipts of another type: say so, then what it gave.
+    const namedAside=asides().filter(f=>f.source.receipt!.measure==='other_receipts'&&key(input.question).includes(key(f.source.receipt!.source)))
+    if(!named.length&&namedAside.length===1){
+      const r=namedAside[0].source.receipt!,coverage=coverageSentence(input)
+      const [first,last]=r.period.split(' to ')
+      return assemble([{text:`${partyReturns(r.party)} list no donations from ${r.source} in ${!last||first===last?'financial year '+first:'financial years '+r.period}.`,facts:[namedAside[0].id]},...asideLines(namedAside),...(coverage?[coverage]:[])],input)
     }
     // How much, with no one source named: the figures found, largest first, never a sum OPAX did not publish.
     const listed=selected.filter(r=>r.period)
     if(listed.length){
-      const lines:WrittenSentence[]=listed.slice(0,8).map((r,i)=>({text:`${i?'- ':''}${r.party} disclosed ${r.amount} in receipts from ${r.name}${r.associated?` (${r.associated})`:''}${i===0?' across financial years '+r.period+' in OPAX’s published selection':''}.`,facts:input.facts.filter(f=>f.source.resource===r.source.resource).map(f=>f.id)}))
+      const lines:WrittenSentence[]=listed.slice(0,8).map((r,i)=>({text:`${i?'- ':''}${r.party} disclosed ${r.amount} in ${r.measure==='donations'?'donations':'receipts'} from ${r.name}${r.associated?` (${r.associated})`:''}${i===0?' across financial years '+r.period+' in OPAX’s published selection':''}.`,facts:input.facts.filter(f=>f.source.resource===r.source.resource).map(f=>f.id)}))
       if(listed.length>1)lines.push({text:'OPAX lists the sources it found here rather than one combined total.',facts:listed.flatMap(r=>input.facts.filter(f=>f.source.resource===r.source.resource).map(f=>f.id))})
       const coverage=coverageSentence(input);if(coverage)lines.push(coverage)
       return assemble(lines,input)
@@ -446,8 +463,15 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
   }
   if(donors.length && donors.every(r=>r.period)) {
     const resources=new Set(donors.map(row=>row.source.resource))
-    input={...input,facts:input.facts.filter(f=>resources.has(f.source.resource)||f.coverage&&rankingCoverageMatches(input.question,f.source,donors,input.constraints))}
-    const lines:WrittenSentence[]=donors.slice(0,5).map((r,i)=>({text:`${i===0?'':'- '}${/\.(?=\s+[A-Z])|\b[A-Z]\.[A-Z]\./.test(r.name)?'“'+r.name+'”':r.name}${r.associated?` (${r.associated})`:''} ${i===0?'provided the most disclosed funding'+(new RegExp('\\b'+r.party+'\\b','i').test(r.source.snippet??'')?' to '+r.party:''):'provided disclosed funding'}: ${r.amount}${i===0?' across financial years '+r.period+' in OPAX’s published selection':''}.`,facts:input.facts.filter(f=>f.source.resource===r.source.resource).map(f=>f.id)}))
+    // A donations ranking (party_receipts measure=donations) says so, and is followed by its labelled asides.
+    // A lending question's note and declared debts (measure declared_debts) lead, whatever the ranking counts.
+    const lendingAsides=asides(donors[0].party).filter(f=>f.source.receipt!.measure==='declared_debts')
+    const donated=donors.every(r=>r.measure==='donations'),beside=[...lendingAsides,...(donated?asides(donors[0].party).filter(f=>!lendingAsides.includes(f)):[])]
+    input={...input,facts:input.facts.filter(f=>resources.has(f.source.resource)||beside.includes(f)||f.coverage&&rankingCoverageMatches(input.question,f.source,donors,input.constraints))}
+    const lead=(r:typeof donors[number])=>donated?'gave the most in donations':'provided the most disclosed funding'
+    const lines:WrittenSentence[]=donors.slice(0,5).map((r,i)=>({text:`${i===0?'':'- '}${/\.(?=\s+[A-Z])|\b[A-Z]\.[A-Z]\./.test(r.name)?'“'+r.name+'”':r.name}${r.associated?` (${r.associated})`:''} ${i===0?lead(r)+(new RegExp('\\b'+r.party+'\\b','i').test(r.source.snippet??'')?' to '+r.party:''):donated?'gave donations':'provided disclosed funding'}: ${r.amount}${i===0?' across financial years '+r.period+' in OPAX’s published selection':''}.`,facts:input.facts.filter(f=>f.source.resource===r.source.resource).map(f=>f.id)}))
+    lines.push(...asideLines(beside.filter(f=>!lendingAsides.includes(f))))
+    if(lendingAsides.length)lines.unshift(...asideLines(lendingAsides))
     const coverage=coverageSentence(input);if(coverage)lines.push(coverage)
     return assemble(lines,input)
   }

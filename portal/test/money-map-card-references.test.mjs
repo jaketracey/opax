@@ -215,6 +215,20 @@ for(const [id,label,declared] of DECLARED_CARDS)test(`subject map card: ${label}
   }finally{handle.destroy()}
 });
 
+// Public Funding only (A35): NSW Efa is on the Greens' return as public funding. The card says that, never
+// the declared-only line (#351) and never a donor declaration.
+test('subject map card: a Public Funding payer says so, never the declared-only line, $0 or a declaration',async()=>{
+  const {handle,view,card,text}=await subjectCard('donor:nsw efa');
+  try{
+    assert.ok(text.includes('NSW Efa'),'the subject card is open');
+    assert.ok(text.includes("Listed on the party's return as public funding, which is election funding, not a donation."),text);
+    assert.doesNotMatch(text,/No party return lists|declare|not receipts a party reported/);
+    assert.doesNotMatch(text,ZERO);
+    assert.equal(card.querySelector('.mm-card-total'),null,'no headline figure');
+    assert.deepEqual(view.edges.filter(e=>e.source==='donor:nsw efa'),[],'no flow on the map');
+  }finally{handle.destroy()}
+});
+
 test('subject map card: a donor the parties list keeps its total, receipts and rows; a flow only it declares is a note, not a $0 row',async()=>{
   const pratt=await subjectCard('donor:pratt');
   try{
@@ -232,7 +246,9 @@ test('subject map card: a donor the parties list keeps its total, receipts and r
     const rows=[...allianz.card.querySelectorAll('.mm-rows li')].map(li=>li.textContent);
     assert.equal(rows.length,3,rows.join(' | '));
     assert.ok(rows.every(r=>!r.includes('LNP')),'the LNP flow no party return lists is not a $0 row');
-    assert.ok(allianz.text.includes('Not counted above: its own donor returns declare $67,798 to LNP across 18 records (2011-12 to 2022-23), which no party return lists.'));
+    // 13 Nov 2026: Allianz's own 2018-19 declaration of $500 to the Liberal Democratic Party joins the note, under the name it was made to (#344):
+    // the Libertarian Party was registered on 12 January 2024, after that year ended. The party's return lists no such receipt.
+    assert.ok(allianz.text.includes('Not counted above: its own donor returns declare $68,298 to federal parties across 19 records: LNP $67,798 (2011-12 to 2022-23); the Liberal Democratic Party (now the Libertarian Party) $500 (2018-19), which no party return lists.'), allianz.text);
   }finally{allianz.handle.destroy()}
 });
 
@@ -244,8 +260,10 @@ test('the full map draws no donor-to-party flow at $0: every flow no party retur
     const flows=view.edges.filter(e=>!e.grant&&!e.flow&&String(e.source).startsWith('donor:'));
     assert.ok(flows.length>500);
     assert.deepEqual(flows.filter(e=>!(e.total>0)).map(e=>`${e.source} -> ${e.target}`),[]);
-    const dropped=publishedGraph.edges.filter(e=>!e.grant&&!e.flow&&e.by_type&&!Object.keys(e.by_type).length);
-    assert.equal(dropped.length,131);
+    // The 140 donor-declared-only flows, and the one Public Funding-only flow (NSW Efa to the Greens), which is never a donor's (A35).
+    // 13 Nov 2026: 131 to 140 donor-declared-only flows, the nine to the Libertarian Party that only the donor's own return declares (Ancora, Australian Energy Producers, Chevron, Australian Hotels Association, IAG, IT Alliance, Deloitte, Allianz, Sanofi), export rule 10.
+    const dropped=publishedGraph.edges.filter(e=>!e.grant&&!e.flow&&e.by_type&&!Object.keys(e.by_type).filter(k=>k!=='public_funding').length);
+    assert.equal(dropped.length,141);
     assert.equal(view.edges.length,publishedGraph.edges.length-dropped.length);
   }finally{handle.destroy()}
 });
