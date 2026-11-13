@@ -25,7 +25,8 @@ name: 30 Ask about drafts from records; each starts a new conversation, sends no
     file: support/open-more.yaml
     env:
       NAME: 'Anthony Albanese'
-- tapOn: Ask about their speeches
+# The person's More menu says "Ask about <name>" (native menu items take no id).
+- tapOn: Ask about Anthony Albanese
 - extendedWaitUntil:
     visible:
       id: ask-question
@@ -77,8 +78,11 @@ name: 30 Ask about drafts from records; each starts a new conversation, sends no
     id: ask-status
 # A running answer survives an arrival: the draft waits, marked as a new
 # conversation, and the composer's button stays Stop until it completes.
+# Clear any options left from an earlier draft before the slow question. The
+# electorate draft carries none, so there may be no Clear to tap.
 - tapOn:
     id: ask-options-clear
+    optional: true
 - tapOn:
     id: ask-question
 - eraseText: 200
@@ -96,20 +100,25 @@ name: 30 Ask about drafts from records; each starts a new conversation, sends no
       id: bill-title
     timeout: 60000
 - takeScreenshot: ${EVIDENCE}/30-bill-entry
-- runFlow:
-    file: support/open-more.yaml
-    env:
-      NAME: 'Interactive Gambling.*'
-- tapOn: Ask about this.*
+# On iOS the bill's Ask is a button on the page, not a ⋯ item (the floating
+# tab bar covered a bottom toolbar).
+- scrollUntilVisible:
+    element:
+      id: bill-ask
+    centerElement: true
+    speed: 20
+    timeout: 30000
+- tapOn:
+    id: bill-ask
 - extendedWaitUntil:
     visible:
       id: ask-draft-new-conversation
     timeout: 15000
 - assertVisible: Starts a new conversation.*
+# Stop is the running answer. Its stage line (ask-status) gives way to the
+# text 24 s in, which this arrival can outlast, so it is not checked here.
 - assertVisible:
     id: ask-stop
-- assertVisible:
-    id: ask-status
 - takeScreenshot: ${EVIDENCE}/30-bill-draft-while-running
 - extendedWaitUntil:
     visible:

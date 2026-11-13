@@ -133,7 +133,10 @@ name: 13 Today front page, its native records and dated original sources
     notVisible:
       id: bill-source-sheet-original-0
     timeout: 15000
-- tapOn: Today
+# A long bill title leaves the back button a bare chevron, and the minimised
+# tab bar shows no "Today" text, so go back by the button's id.
+- tapOn:
+    id: BackButton
 - assertVisible:
     id: today-screen
 - scrollUntilVisible:
