@@ -502,9 +502,13 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
       const ranking=/most|highest|largest|top|biggest/i.test(input.question), industry=/\b(mining|gambling|property|finance|unions|fossil fuels)\b/i.exec(input.question)?.[1]
       // Donor evidence cannot regain ranking permission through the generic money renderer.
       const leader=unique[0], giving=/\b(?:gave|donated|provided)\b/i.test(input.question),target=giving?/\bto (Labor|Liberal|Greens|Nationals)\b/i.exec(input.question)?.[1]:undefined, subject=industry?industry+' funding':/contract/i.test(input.question)?'contract value':/grant/i.test(input.question)?'grant funding':'disclosed funding'
+      // A money total states its period as its record does ("financial year 2022-23"): the cited record must hold the
+      // period the sentence gives, or the money check removes the sentence and the ranking loses its leader.
+      const recorded=/\bin financial years? ((?:19|20)\d{2}[-–]\d{2}(?: to (?:19|20)\d{2}[-–]\d{2})?)\b/.exec(leader.f.text)?.[1]
+      const when=recorded?` in financial year${/ to /.test(recorded)?'s':''} ${recorded}`:period?' in '+period:''
       if(!ranking){for(const row of unique)lines.push({text:`${row===leader&&period?'In '+period+', ':''}${row.name} recorded ${row.amount}${row.tail?' '+clean(row.tail).replace(/[.;]+$/,''):''}.`,facts:[row.f.id]})}
-      else {lines.push({text:ranking?`${leader.name} ${giving?'provided':'received'} the most ${subject}${target?' to '+target:''}${period?' in '+period:''}, with ${leader.amount}.`:`${period?'In '+period+', ':''}${leader.name} recorded ${leader.amount}.`,facts:[leader.f.id,...(periodFact?[periodFact.id]:[])]})
-      if(unique.length>1)lines.push({text:(ranking?'The runners-up were ':'The other records were ')+unique.slice(1).map(r=>`${r.name} with ${r.amount}`).join(', ')+'.',facts:unique.slice(1).map(r=>r.f.id)})}
+      else {lines.push({text:ranking?`${leader.name} ${giving?'provided':'received'} the most ${subject}${target?' to '+target:''}${when}, with ${leader.amount}.`:`${period?'In '+period+', ':''}${leader.name} recorded ${leader.amount}.`,facts:[leader.f.id,...(periodFact?[periodFact.id]:[])]})
+      if(unique.length>1)lines.push({text:(ranking?unique.length>2?'The runners-up were ':'The runner-up was ':unique.length>2?'The other records were ':'The other record was ')+unique.slice(1).map(r=>`${r.name} with ${r.amount}`).join(', ')+'.',facts:unique.slice(1).map(r=>r.f.id)})}
       for(const row of rows.filter(r=>!eligible.includes(r)))lines.push({text:`${row.name} recorded ${row.amount}${row.tail?' '+clean(row.tail).replace(/[.;]+$/,''):''}.`,facts:[row.f.id]})
     }
     if(!rows.length)for(const f of available.slice(0,/each year|by year|year-by-year|trend|over time/i.test(input.question)?30:Math.min(30,Number(/top (\d+)/i.exec(input.question)?.[1])||8))) {
