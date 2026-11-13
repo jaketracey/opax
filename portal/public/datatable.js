@@ -291,7 +291,9 @@ const href = (value,config) => {
    figure is the first money or count column and the meta every other visible
    column; columns left out of a list stay in the grid at 700 px and up and in
    the CSV. Each part is one visible column, a pair read as "1998 to 2024"
-   (`to`), a count with its unit (`unit`), or a value after a word (`label`). */
+   (`to`), a count with its unit (`unit`), a value after a word (`label`), a
+   value with a second column after a word (`then`), and values to leave out
+   (`omit`). */
 const phoneEntries = (list, columns) => (Array.isArray(list) ? list : [])
   .map(entry => typeof entry === 'string' ? {key:entry} : entry && typeof entry === 'object' && typeof entry.key === 'string' ? entry : null)
   .filter(entry => entry && columns.some(c => c.key === entry.key));
@@ -310,11 +312,15 @@ function phonePart(entry, row, config) {
   const from = formatCell(row[entry.key], column), to = end ? formatCell(row[end.key], end) : '';
   // A span of years or dates that starts and ends together is one; a count of 30 to 30 is two.
   const value = from && to && (from !== to || !['year','date'].includes(column.type)) ? `${from} to ${to}` : from || to;
-  if (!value) return '';
+  // A value the reader learns nothing from on every row ("Not recorded") is left out of the line.
+  if (!value || Array.isArray(entry.omit) && entry.omit.includes(value)) return '';
   const unit = Array.isArray(entry.unit) ? entry.unit[number(row[entry.key]) === 1 ? 0 : 1] : '';
-  const text = esc([typeof entry.label === 'string' ? entry.label : '', value, unit && !end ? unit : ''].filter(Boolean).join(' '));
+  // `then`: a second column read after a word ("Passed as at 3 Mar 2026"); its absence is said, never silent.
+  const next = entry.then && typeof entry.then.key === 'string' ? config.columns.find(c => c.key === entry.then.key) : null;
+  const after = next ? formatCell(row[next.key], next) || `${next.label.toLowerCase()} not recorded` : '';
+  const text = esc([typeof entry.label === 'string' ? entry.label : '', value, unit && !end ? unit : '', after && entry.then.word, after].filter(Boolean).join(' '));
   const target = column.href ? href(column.href(row),config) : null;
-  const name = end ? `${column.label} to ${end.label}` : column.label;
+  const name = end ? `${column.label} to ${end.label}` : next ? `${column.label}, ${next.label}` : column.label;
   return `<span class="dt-sr">${esc(name)}: </span>${target ? `<a href="${esc(target)}">${text}</a>` : text}`;
 }
 function phoneLineHTML(layout, row, config) {
