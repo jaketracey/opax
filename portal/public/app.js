@@ -6152,7 +6152,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const rank = donors.sort((a, b) => rankTotal(b) - rankTotal(a)).findIndex((n) => n.id === node.id) + 1;
     // The party's table counts each receipt once, as the donor page does, and says so (partyMoneyData's scope).
     const partyMoney=isParty ? registerTables.partyMoneyData(moneyData,node.id) : null;
-    const partyTable=partyMoney ? registerTables.registerTableHTML(registerTables.partyMoneyTableConfig(partyMoney.rows,undefined,undefined,undefined,{party:node.label,jurisdiction:'federal'})) : '';
+    // While the map draws no donor to a party (its donor side held, export rule 10), the section says so, never an empty table.
+    const partyTable=!partyMoney ? '' : partyMoney.rows.length ? registerTables.registerTableHTML(registerTables.partyMoneyTableConfig(partyMoney.rows,undefined,undefined,undefined,{party:node.label,jurisdiction:'federal'}))
+      : '<p class="entry-scope">The money map draws no donor to this party, so no donor rows are listed. The figures below count its own returns.</p>';
     const flowRows = [...counter.entries()].sort((a,b)=>b[1]-a[1]).slice(0,10);
     // Identity once (principle 3): the title, then one meta line with the
     // party's own dot and full name (or the donor's industry) and its years.
@@ -6224,8 +6226,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     box.innerHTML = entryRailHTML();
     const rail = isParty ? PARTY_RAIL : DONOR_RAIL;
     sections.insertAdjacentHTML("beforeend", `<section id="entry-flows" data-accent="money" data-rail-figure="${esc(fmtMoney((own ? own.total : node.total) || 0))}">
-      ${isParty ? `<h3 class="subject-section-title">Where it came from</h3>${partyMoney?.scope ? `<p class="entry-scope">${esc(partyMoney.scope)}</p>` : ""}${partyMoney?.rows.length ? partyTable
-        : `<p class="entry-scope">The money map draws no donor to this party, so no donor rows are listed. The figures below count its own returns.</p>`}` : barList(flowRows, {
+      ${isParty ? `<h3 class="subject-section-title">Where it came from</h3>${partyMoney?.scope ? `<p class="entry-scope">${esc(partyMoney.scope)}</p>` : ""}${partyTable}` : barList(flowRows, {
         fmt: fmtMoney,
         heading: isParty ? "Where it came from" : "Where the money went",
         scope: donorScope,

@@ -25,6 +25,7 @@ const RECIPIENT_NAMES: Record<string, string> = {
   'Country Liberal Party': 'the Country Liberal Party', 'One Nation': "Pauline Hanson's One Nation",
   'United Australia Party': 'the United Australia Party', 'Family First': 'the Family First Party',
   "Katter's Australian Party": "Katter's Australian Party", 'Centre Alliance': 'Centre Alliance',
+  'Libertarian Party': 'the Libertarian Party',
 }
 function resolve(nodes: MoneyNode[], name: string, kind: string): MoneyNode[] {
   const wanted = key(name)
