@@ -150,3 +150,52 @@ test('the audit rejects a production origin before loading any browser tooling',
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /production audits are forbidden/);
 });
+
+test('Lantern comparisons reject either non-loopback origin before loading browser tooling', () => {
+  for (const key of ['OPAX_LANTERN_MAIN','OPAX_LANTERN_BRANCH']) {
+    const result = spawnSync(process.execPath, [new URL('../../scripts/audit_web_vitals_lantern.mjs', import.meta.url).pathname], {
+      env: {...process.env, [key]: 'https://opax.com.au'}, encoding: 'utf8',
+    });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /Lantern audits require loopback HTTP origins/);
+  }
+});
+
+test('disclosure helpers load without building the identity index until a consumer needs it',async()=>{
+  let indexes=0;
+  const index=new Map([['fixture',{label:'Fixture Organisation'}]]);
+  const start=app.indexOf('function lazyReady('),end=app.indexOf('const donorViewKey');
+  const context={load:async()=>({loadDonorViewIndex:async()=>{indexes++;return index;}})};
+  const state=runInNewContext(app.slice(start,end).replace(/\bimport\(/g,'load(')+';({helpers:donorHelpersReady,ready:donorViewReady})',context);
+  await state.helpers;
+  assert.equal(indexes,0,'an unrelated route must not build the donor index');
+  const results=await Promise.all([state.ready,state.ready]);
+  assert.equal(indexes,1);assert.equal(results[0],index);assert.equal(results[1],index);
+});
+
+test('receipt projection yields before publishing the same cached graph to view consumers',async()=>{
+  let release;const gate=new Promise(resolve=>release=resolve),graph=Object.freeze({nodes:Object.freeze([]),edges:Object.freeze([])});
+  let projections=0,yields=0,identityReady;
+  const identity=new Promise(resolve=>identityReady=resolve);
+  const start=app.indexOf('function loadMoneyData('),end=app.indexOf('\n}',start)+2;
+  const context={moneyDataPromise:null,moneyData:null,moneyReceipts:null,moneyReceiptScope:'',donorViewReady:identity,yieldMainThread:()=>{yields++;return gate;},
+    load:async()=>({loadMoneyGraph:async()=>graph,receiptGraph:data=>{assert.equal(data,graph);projections++;return {receiptMeasure:true};},receiptGraphScope:()=> 'Fixture receipt scope'})};
+  const load=runInNewContext(app.slice(start,end).replace(/\bimport\(/g,'load(')+';loadMoneyData',context);
+  const first=load(),second=load();assert.equal(first,second);
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(projections,0,'money consumers retain the donor identity gate');
+  identityReady();await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(projections,1);assert.equal(yields,1);assert.equal(context.moneyData,null);
+  release();assert.equal(await first,graph);assert.equal(await second,graph);assert.equal(context.moneyData,graph);
+});
+
+test('main-thread yielding uses the scheduler or an actual timer fallback',async()=>{
+  const start=app.indexOf('function yieldMainThread('),end=app.indexOf('\n}',start)+2;
+  let scheduled=0;
+  const native=runInNewContext(app.slice(start,end)+';yieldMainThread',{scheduler:{yield:async()=>{scheduled++;}}});
+  await native();assert.equal(scheduled,1);
+  let timer;
+  const fallback=runInNewContext(app.slice(start,end)+';yieldMainThread',{setTimeout:fn=>{timer=fn;}});
+  let finished=false;const pending=fallback().then(()=>{finished=true;});
+  await Promise.resolve();assert.equal(finished,false);timer();await pending;assert.equal(finished,true);
+});

@@ -5,6 +5,10 @@ function lazyReady(load) {
   return { then(resolve, reject) { return (promise ??= load()).then(resolve, reject); } };
 }
 
+function yieldMainThread() {
+  return globalThis.scheduler?.yield ? globalThis.scheduler.yield() : new Promise(resolve => setTimeout(resolve, 0));
+}
+
 let donorRows = (rows,_index,limit=Infinity) => [...(rows || [])].sort((a,b)=>b[1]-a[1]).slice(0,limit);
 let donorViewIndex = new Map();
 let donorDisclosure = record => ({name:typeof record==='string'?record:record?.label || '',href:null,reference:''});
@@ -13,10 +17,13 @@ let receiptGraph = graph => graph, receiptGraphScope = () => '', receiptScopeLab
 // Until donor-views.js loads: a donor with no figure at all is left out, as hasPartyReceipts leaves out
 // a donor the parties' returns list nothing from (donor-disclosure.js).
 let hasPartyReceipts = (x) => Boolean(x?.total || x?.count), DONOR_DECLARED_ONLY = '', notListedLine = () => DONOR_DECLARED_ONLY;
-const donorViewReady = import('/donor-views.js?v=9770cf1299').then(module => {
+const donorHelpersReady = import('/donor-views.js?v=9770cf1299').then(module => {
   ({donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);
-  return module.loadDonorViewIndex();
-}).then(index => (donorViewIndex=index));
+  return module;
+});
+// The disclosure helpers remain available everywhere; only consumers of the
+// identity index pay for downloading, parsing and indexing its records.
+const donorViewReady = lazyReady(() => donorHelpersReady.then(module => module.loadDonorViewIndex()).then(index => (donorViewIndex=index)));
 const donorViewKey = name => String(name).normalize('NFKC').replace(/[‘’ʼ`]/g,"'").replace(/\s+/g,' ').trim().toLowerCase();
 const disclosedDonor = name => donorViewIndex.get(donorViewKey(name)) || {label:name};
 // The one not-found block (not-found.js), for an in-app link that lands on an empty address.
@@ -2396,8 +2403,13 @@ for (const id of ["ask-input", "search-input"]) {
     width = entry.contentRect.width;
     requestAnimationFrame(fit);
   }).observe(field);
-  document.fonts.ready.then(fit);
-  fit();
+  // FontFaceSet.ready and field measurements can force style and layout.
+  // Let the boot task finish before fitting, still before the next paint.
+  requestAnimationFrame(() => {
+    if (!field.isConnected) return;
+    document.fonts.ready.then(fit);
+    fit();
+  });
 }
 
 // The ask box after an answer. The answered question stays in the box (the
@@ -3680,9 +3692,12 @@ let moneyReceiptScope = "";
 let moneyDataPromise = null;
 function loadMoneyData() {
   // The same parse the donor privacy index reads (donor-views.js), not a second download.
-  moneyDataPromise ??= import('/donor-views.js?v=9770cf1299').then((module) => module.loadMoneyGraph("/graph/money.json").then((d) => {
+  moneyDataPromise ??= import('/donor-views.js?v=9770cf1299').then((module) => Promise.all([module.loadMoneyGraph("/graph/money.json"), donorViewReady]).then(async ([d]) => {
     moneyReceipts = module.receiptGraph(d);
     moneyReceiptScope = module.receiptGraphScope(moneyReceipts);
+    // Do not combine receipt projection and the dependent view's DOM work
+    // into one microtask. The same cached graph is published after yielding.
+    await yieldMainThread();
     return d;
   }))
     .then((d) => (moneyData = d)).catch(() => null)
@@ -6235,8 +6250,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const reported = isParty || hasPartyReceipts(node);
     const declaredOnlyLine = notListedLine(node) || "The parties' returns list no receipt from it";
     const donorScope = isParty ? "" : ownScope;
-    const rankTotal = (n) => (isParty ? partyReturnFigures(n) : receiptFigures(n)).total || 0;
-    const rank = donors.sort((a, b) => rankTotal(b) - rankTotal(a)).findIndex((n) => n.id === node.id) + 1;
+    // Receipt projections walk every year/type cell. Compute each once per
+    // ranking, rather than again for every sort comparison. Keep ties stable.
+    const rankTotals = new Map(donors.map(n => [n, (isParty ? partyReturnFigures(n) : receiptFigures(n)).total || 0]));
+    const rank = donors.sort((a, b) => rankTotals.get(b) - rankTotals.get(a)).findIndex((n) => n.id === node.id) + 1;
     // The party's table counts each receipt once, as the donor page does, and says so (partyMoneyData's scope).
     const partyMoney=isParty ? registerTables.partyMoneyData(moneyData,node.id) : null;
     const partyTable=partyMoney ? registerTables.registerTableHTML(registerTables.partyMoneyTableConfig(partyMoney.rows,undefined,undefined,undefined,{party:node.label,jurisdiction:'federal'})) : '';
@@ -6672,7 +6689,12 @@ function wireGrowthAsk(root) {
       form.requestSubmit();
     }
   });
-  const observer = new ResizeObserver(() => requestAnimationFrame(fit));
+  let width = -1;
+  const observer = new ResizeObserver(([entry]) => {
+    if (entry.contentRect.width === width) return;
+    width = entry.contentRect.width;
+    requestAnimationFrame(() => { if (form.isConnected) fit(); });
+  });
   observer.observe(field);
   const cleanup = () => {
     if (form.isConnected) return;
@@ -6680,8 +6702,13 @@ function wireGrowthAsk(root) {
     removeEventListener("opax:route", cleanup);
   };
   addEventListener("opax:route", cleanup);
-  document.fonts.ready.then(fit);
-  fit();
+  // Keep the page's DOM construction and its first field measurement in
+  // separate tasks. A height change must not feed back into another fit.
+  requestAnimationFrame(() => {
+    if (!form.isConnected) return;
+    document.fonts.ready.then(() => { if (form.isConnected) fit(); });
+    fit();
+  });
   form?.addEventListener("submit", event => {
     event.preventDefault();
     const question = form.querySelector('[name="q"]').value.trim();
@@ -11035,6 +11062,7 @@ function prefetchAskFollowups(ask) {
 // conversation's `updated` clock: the newer write wins.
 
 let chatThread = []; // {role: 'user'|'answer', text, sources?, next?, askedAs?}
+let chatRestoreRequest = 0;
 let chatKind = "all";
 // A conversation may be held with ONE speaker's record rather than the whole
 // corpus: a person page's "Ask about their speeches" opens one, and the name
@@ -11159,7 +11187,19 @@ function savedSpeaker(chat) {
   return typeof chat?.speaker === "string" ? chat.speaker.trim() : "";
 }
 
-function openSavedChat(id) {
+// A pending policy load must not restore a departed page or a closed dock.
+function chatRestoreCurrent() {
+  const route = routeRequest, surface = document.documentElement.dataset.chat;
+  return () => route === routeRequest && surface === document.documentElement.dataset.chat && !$("panel-chat").hidden;
+}
+async function chatPolicyReady(current = chatRestoreCurrent()) {
+  try { await saDisplayReady; } catch { return false; }
+  return current();
+}
+
+async function openSavedChat(id) {
+  const requested = ++chatRestoreRequest;
+  if (!await chatPolicyReady() || requested !== chatRestoreRequest) return;
   const store = chatStoreRead();
   const chat = store.chats.find((c) => c.id === id);
   if (!chat || chatBusy) return;
@@ -11280,6 +11320,7 @@ async function chatSyncPush() {
 // On opening the chat: pull the account's conversations and push any this
 // browser has that the account lacks or holds older. Last write wins.
 async function chatSyncPull() {
+  const current = chatRestoreCurrent();
   if (!(await chatAccount())) { renderChatHistory(); return; }
   let remote;
   try { remote = (await api("/api/community/chats")).chats || []; } catch { return; }
@@ -11304,8 +11345,10 @@ async function chatSyncPull() {
   }
   if (changed) {
     chatStoreWrite();
-    const active = activeChat(false);
-    if (active && active.thread !== chatThread && !chatBusy) { chatThread = active.thread; chatKind = active.kind; chatSpeaker = savedSpeaker(active); renderChatThread(); requestChatFollowups(); }
+    if (await chatPolicyReady(current)) {
+      const active = activeChat(false);
+      if (active && active.thread !== chatThread && !chatBusy) { chatThread = active.thread; chatKind = active.kind; chatSpeaker = savedSpeaker(active); renderChatThread(); requestChatFollowups(); }
+    }
   }
   renderChatHistory();
 }
@@ -11316,6 +11359,7 @@ async function chatSyncPull() {
 // conversation would be taking away the thing the dock exists to avoid. On
 // /chat the empty Ask box IS the fresh start, so that view still goes there.
 function startNewConversation() {
+  chatRestoreRequest++;
   chatAbort?.abort();
   chatFollowAbort?.abort();
   const store = chatStoreRead();
@@ -11340,7 +11384,10 @@ function startNewConversation() {
 $("chat-new")?.addEventListener("click", startNewConversation);
 $("dock-new")?.addEventListener("click", startNewConversation);
 
-function initChat(manageFocus) {
+async function initChat(manageFocus) {
+  const requested = ++chatRestoreRequest;
+  const current = chatRestoreCurrent();
+  if (!await chatPolicyReady(current) || requested !== chatRestoreRequest) return;
   if (!chatThread.length) loadChatSession();
   // The waiting state's pieces, warmed now so a question's first frame does
   // not wait on a module fetch.
@@ -11391,6 +11438,7 @@ function initChat(manageFocus) {
   // scroll the document to its end instead. Double-rAF so route()'s
   // scroll-to-top settles first.
   requestAnimationFrame(() => requestAnimationFrame(() => {
+    if (!current() || requested !== chatRestoreRequest) return;
     scrollChatToEnd();
     if (manageFocus) $("chat-input").focus({ preventScroll: true });
   }));
@@ -11877,6 +11925,10 @@ async function sendChat(question, carry) {
   const myAbort = new AbortController();
   chatAbort = myAbort;
   chatBusy = true;
+  if (!await chatPolicyReady() || chatAbort !== myAbort || myAbort.signal.aborted) {
+    if (chatAbort === myAbort) chatBusy = false;
+    return;
+  }
   // Everything before this question travels as context for the retrieval.
   // A user turn travels as the question the record was actually asked: the
   // money path's resolved question, or the Worker's standalone rewrite of a
@@ -12202,6 +12254,7 @@ function openDock() {
 
 function closeDock({ restoreFocus = true } = {}) {
   if (!dockOpen) return;
+  chatRestoreRequest++;
   dockOpen = false;
   document.documentElement.dataset.chat = "";
   if (!chatIsPage()) $("panel-chat").hidden = true;

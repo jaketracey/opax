@@ -23,7 +23,9 @@ function page() {
   window.eval(`
     const $ = (id) => document.getElementById(id);
     const store = { chats: [], active: null };
-    let chatThread = [], chatKind = 'all', chatSpeaker = '', chatAskOnArrival = null;
+    let chatThread = [], chatKind = 'all', chatSpeaker = '', chatAskOnArrival = null, chatRestoreRequest = 0;
+    const chatRestoreCurrent = () => () => true;
+    const chatPolicyReady = async () => true;
     const sent = [];
     const routes = [];
     window.__sent = sent; window.__routes = routes; window.__thread = () => chatThread;

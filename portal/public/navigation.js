@@ -205,6 +205,7 @@
    *  strip. Runs again once the web fonts have loaded, since they change the
    *  tabs' widths. Never scrolls the page itself. */
   function revealCurrentTab(nav) {
+    if (!nav?.isConnected) return;
     const centre = () => {
       const tab = nav?.querySelector('[aria-current]');
       if (!tab || !nav.isConnected || nav.scrollWidth <= nav.clientWidth) return;
