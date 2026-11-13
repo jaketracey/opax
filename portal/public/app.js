@@ -34,7 +34,7 @@ const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=b080de058e").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=3beb5b4ebc').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=8ae6339861').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=fae51a8e69').then(module => { askPerson = module; });
 let uiLabels;
@@ -1304,7 +1304,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=6494696c46");
+    const { mountMoneyMap } = await import("/money-map.js?v=7ca6ed22e2");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -4539,7 +4539,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=6494696c46");
+    const { mountMoneyMap } = await import("/money-map.js?v=7ca6ed22e2");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
@@ -6115,17 +6115,19 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     if (currentSubjectKey !== key) return;
     // One measure for every donor figure on this page, the map card's: the
     // parties' own returns, all receipt types (receiptFigures says why).
-    const { receiptFigures, receiptScopeLabel } = registerTables;
+    const { receiptFigures, receiptScopeLabel, partyReturnFigures, partyReturnScopeLabel } = registerTables;
     const counter = new Map();
     for (const e of flows) {
       const other = String(isParty ? e.source : e.target).replace(/^(donor|party):/, "");
       const label = (moneyData.nodes.find((n) => n.id === (isParty ? e.source : e.target)) || {}).label || other;
       counter.set(label, (counter.get(label) || 0) + receiptFigures(e).total);
     }
-    const own = isParty ? null : receiptFigures(node);
-    const donorScope = own ? receiptScopeLabel(own) : "";
-    // A party keeps its own received total (it includes transfers and says so).
-    const rankTotal = (n) => (isParty ? n.total : receiptFigures(n).total) || 0;
+    // A party's headline is its own returns, each receipt line once (partyReturnFigures);
+    // its by_type cells only sum the donors drawn on the map.
+    const own = isParty ? partyReturnFigures(node) : receiptFigures(node);
+    const ownScope = isParty ? partyReturnScopeLabel(own) : receiptScopeLabel(own);
+    const donorScope = isParty ? "" : ownScope;
+    const rankTotal = (n) => (isParty ? partyReturnFigures(n) : receiptFigures(n)).total || 0;
     const rank = donors.sort((a, b) => rankTotal(b) - rankTotal(a)).findIndex((n) => n.id === node.id) + 1;
     // The party's table counts each receipt once, as the donor page does, and says so (partyMoneyData's scope).
     const partyMoney=isParty ? registerTables.partyMoneyData(moneyData,node.id) : null;
@@ -6157,14 +6159,16 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const entryFacts = [
       [isParty ? "Received (disclosed)" : "Received by parties (disclosed)", `<b>${esc(fmtMoney((own ? own.total : node.total) || 0))}</b>`],
       ["Receipts counted", esc(((own ? own.count : node.count) || 0).toLocaleString())],
-      !isParty && ["Measured as", esc(donorScope)],
+      ["Measured as", esc(ownScope)],
       node.via === "public_money"
         ? ["On the map for", `${esc(fmtMoney(node.publicMoney || 0))} in Commonwealth contracts and grants`]
         : ["Rank", esc(`#${rank} of ${donors.length} ${isParty ? "parties" : "disclosed receipt sources"}`)],
       !isParty && fitsInfoRow(fits, "by_entity", node.label),
       aliasRow,
     ];
-    const entryNote = `${esc(AEC_NOTE)}${isParty ? " The received total includes internal party transfers; the donor amounts below exclude them." : ""}`;
+    const entryNote = `${esc(AEC_NOTE)}${!isParty ? "" : own.typed
+      ? " The donor amounts below are the donors on the money map."
+      : " The received total includes internal party transfers; the donor amounts below exclude them."}`;
     if (!isParty) head.insertAdjacentHTML("beforeend", sourceLineHTML({
       updated: moneyData.meta?.generated || "", source: "AEC annual returns", state: "totals are a floor",
       originals: [{ label: "AEC Transparency Register", href: "https://transparency.aec.gov.au/" },
@@ -15035,7 +15039,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=6494696c46");
+    const { mountMoneyMap } = await import("/money-map.js?v=7ca6ed22e2");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",

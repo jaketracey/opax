@@ -228,3 +228,203 @@ def test_graph_and_uncapped_report_share_per_name_exclusions_for_an_on_map_entit
     assert len(held) == 6
     assert sum(float(r['Value']) for r in held) == 1135207
     assert sum(float(r['Value']) for r in held if r['Receipt Type']=='Donation Received') == 175000
+
+
+def test_party_return_counts_each_line_once_without_public_funding_or_branch_transfers(tmp_path):
+    from parli.ingest import money_aec_extras
+    from scripts import aec_receipt_types
+    path = tmp_path / "db"
+    db = database(path)
+    # Invented party and payers. A gift the donor also declared (Donations Made)
+    # must count once; public funding and the party's own branch stay out.
+    party, payer = "Example Party", "Example Mining Ltd"
+    branch, holdings, other = "Example Party Northern Branch", "Example Party Holdings Pty Ltd", "Other Party Federal Office"
+    line = lambda donor, kind, value: annual(kind, Value=str(value), **{"Received From": donor, "Recipient Name": party})
+    entries = {"Detailed Receipts.csv": [
+        line(payer, "Donation Received", 1000), line("Example Bank Ltd", "Other Receipt", 500),
+        line("Australian Electoral Commission", "Public Funding", 7000),  # public funding by name and type
+        line("Example Treasury Trust", "Public Funding", 300),  # public funding by type only
+        line(branch, "Other Receipt", 2000),  # a transfer within the party
+        line(holdings, "Other Receipt", 4000),  # the party's associated entity: counted
+        line(other, "Other Receipt", 600),  # another party's office: counted
+    ], "Donations Made.csv": [{"Financial Year": "2020-2021", "Donor Name": payer, "Donation Made To": party, "Value": "1000"}]}
+    donations.process_zip(db, archive("AllAnnualData", entries), "AllAnnualData")
+    load(db, "AllElectionsData", {})
+    load(db, "AllReferendumData", {})
+    db.execute("UPDATE donations SET recipient_canonical=?,industry='mining'", (party,))
+    db.executescript("CREATE TABLE ext_donor_entities(entity_id,canonical_name,kind);"
+                     "CREATE TABLE ext_donor_aliases(alias_raw,entity_id,confidence,method);")
+    for eid, name in (("example-branch", branch), ("example-holdings", holdings), ("other-office", other)):
+        db.execute("INSERT INTO ext_donor_entities VALUES (?,?,'party_unit')", (eid, name))
+        db.execute("INSERT INTO ext_donor_aliases VALUES (?,?,1,'exact')", (name, eid))
+    db.execute("INSERT INTO associated_entities(entity_name,associated_party,financial_year,source) VALUES (?,?,'2020-21','aec_assoc_entity')",
+               (holdings, party))
+    db.commit()
+    canon = lambda name: party if "example party" in (name or "").lower() else "Other Party" if "other party" in (name or "").lower() else None
+    with mock.patch.object(aec_receipt_types, "canon_party", canon), mock.patch.object(money_aec_extras, "canon_party", canon):
+        graph = export(path)
+    node = next(n for n in graph["nodes"] if n["id"] == "party:" + party)
+    assert node["return_by_type"] == {"donation_received": 1000, "other_receipt": 5100}
+    assert node["return_by_type_year"] == {"2020-21": {"donation_received": [1000, 1], "other_receipt": [5100, 3]}}
+    # The legacy total still holds the donor's own declaration of the same gift.
+    assert node["total"] > sum(node["return_by_type"].values())
+    meta = graph["meta"]["receipt_types"]
+    assert meta["party_return_transfers"] == {party: [2000, 1]}
+    assert meta["party_return_counts"]["excluded_public_funding"] == 2
+    assert meta["party_return_counts"]["excluded_party_transfer"] == 1
+    assert meta["party_return_counts"]["exported_rows"] == 4
+    assert "transfers within the party" in meta["party_return_note"]
+    assert all("return_by_type" not in n for n in graph["nodes"] if n["kind"] != "party")
+
+
+def test_party_return_transfer_needs_the_payers_own_returns_in_the_same_node(tmp_path):
+    from parli.ingest import money_aec_extras
+    from scripts import aec_receipt_types
+    path = tmp_path / "db"
+    db = database(path)
+    # Invented names. "Example Party Rural Wing" files its own return and has no
+    # recipient mapping (as Country Labor had): its name reads as Example Party,
+    # so its returns join that node and its payment to the party is a transfer.
+    # "Sister Party Office" reads as a party with no node: its returns are counted
+    # nowhere, so its payment is a receipt. "Example Party (North)" is mapped to
+    # Example Party but reads as North Party, which is on the map (as the CLP is).
+    party, rural, sister, north = "Example Party", "Example Party Rural Wing", "Sister Party Office", "Example Party (North)"
+    line = lambda donor, recipient, kind, value: annual(kind, Value=str(value), **{"Received From": donor, "Recipient Name": recipient})
+    entries = {"Detailed Receipts.csv": [
+        line("Example Mining Ltd", party, "Donation Received", 1000),
+        line(rural, party, "Other Receipt", 2000),  # payer's returns in this node: transfer
+        line(sister, party, "Other Receipt", 300),  # payer's returns in no node: counted
+        line("Example Farms Ltd", rural, "Donation Received", 50),  # the wing's own receipt joins the party
+        line("Example Grocer Ltd", north, "Donation Received", 70),  # counted under North Party
+        line("North Party Branch", north, "Other Receipt", 40),  # North Party's own unit: transfer there
+        line(rural, north, "Other Receipt", 9),  # another node's unit: counted
+        line("Example Mining Ltd", "North Party NT", "Donation Received", 5),
+    ], "Donations Made.csv": [{"Financial Year": "2020-2021", "Donor Name": "Example Mining Ltd", "Donation Made To": "Quiet Party", "Value": "80"}]}
+    donations.process_zip(db, archive("AllAnnualData", entries), "AllAnnualData")
+    load(db, "AllElectionsData", {})
+    load(db, "AllReferendumData", {})
+    db.execute("UPDATE donations SET industry='mining', recipient_canonical=CASE recipient "
+               "WHEN ? THEN ? WHEN ? THEN ? WHEN 'North Party NT' THEN 'North Party' WHEN 'Quiet Party' THEN 'Quiet Party' END",
+               (party, party, north, party))
+    db.executescript("CREATE TABLE ext_donor_entities(entity_id,canonical_name,kind);"
+                     "CREATE TABLE ext_donor_aliases(alias_raw,entity_id,confidence,method);")
+    for eid, name in (("rural", rural), ("sister", sister), ("north-branch", "North Party Branch")):
+        db.execute("INSERT INTO ext_donor_entities VALUES (?,?,'party_unit')", (eid, name))
+        db.execute("INSERT INTO ext_donor_aliases VALUES (?,?,1,'exact')", (name, eid))
+    db.commit()
+
+    def canon(name):
+        low = (name or "").lower()
+        return "North Party" if "north" in low else party if "example party" in low else "Sister Party" if "sister party" in low else None
+    with mock.patch.object(aec_receipt_types, "canon_party", canon), mock.patch.object(money_aec_extras, "canon_party", canon):
+        graph = export(path)
+    nodes = {n["label"]: n for n in graph["nodes"] if n["kind"] == "party"}
+    assert nodes[party]["return_by_type"] == {"donation_received": 1050, "other_receipt": 300}
+    assert nodes["North Party"]["return_by_type"] == {"donation_received": 75, "other_receipt": 9}
+    assert "return_by_type" not in nodes["Quiet Party"], "a node with no counted line keeps its record total"
+    assert graph["meta"]["receipt_types"]["party_return_transfers"] == {party: [2000, 1], "North Party": [40, 1]}
+    assert "only if the payer's own returns are counted in the same node" in graph["meta"]["receipt_types"]["party_return_note"]
+
+
+def test_party_return_counts_flagged_gifts_spelling_variant_entities_payroll_and_unions(tmp_path):
+    from parli.ingest import money_aec_extras
+    from scripts import aec_receipt_types
+    path = tmp_path / "db"
+    db = database(path)
+    party, rival = "Example Party", "Rival Party"
+    line = lambda donor, value, kind="Other Receipt", recipient=party: annual(kind, Value=str(value), **{"Received From": donor, "Recipient Name": recipient})
+    entries = {"Detailed Receipts.csv": [
+        line("Example Minerals Pty Ltd", 5000, "Donation Received"),  # flagged as an outlier elsewhere, a real gift here
+        line("Example Party Holdings", 400),  # associated entity, spelt unlike the AEC return
+        line("Example Party - NATIONAL", 300),  # the party's own office with a branch label: transfer
+        line("ECSA", 70),  # public money by abbreviation
+        line("Deputy Commissioner of Taxation", 60),  # a tax refund
+        line("Example Commission Agents Pty Ltd", 50),  # a company named Commission: counted
+        line("Parliament of NSW", 40),  # payroll levies, a government payer: counted
+        line("Parliament of Ruritania", 30),  # a foreign parliament: still government money
+        line("Example Shire Employees Union", 20),  # a union the resolver calls government: counted
+        line("Example Retail Ltd", 10, "Donation Received", rival),
+    ]}
+    donations.process_zip(db, archive("AllAnnualData", entries), "AllAnnualData")
+    load(db, "AllElectionsData", {})
+    load(db, "AllReferendumData", {})
+    db.execute("UPDATE donations SET industry='mining', recipient_canonical=CASE recipient WHEN ? THEN ? ELSE ? END", (rival, rival, party))
+    db.execute("UPDATE donations SET donation_type='flagged_review' WHERE donor_name='Example Minerals Pty Ltd'")
+    db.executescript("CREATE TABLE ext_donor_entities(entity_id,canonical_name,kind);"
+                     "CREATE TABLE ext_donor_aliases(alias_raw,entity_id,confidence,method);"
+                     "CREATE TABLE IF NOT EXISTS ext_aec_returns(entity_name,source_file);")
+    for eid, name, kind in (("holdings", "Example Party Holdings", "party_unit"), ("office", "Example Party - NATIONAL", "party_unit"),
+                            ("nsw", "Parliament of NSW", "government"), ("ruritania", "Parliament of Ruritania", "government"),
+                            ("shire-union", "Example Shire Employees Union", "government")):
+        db.execute("INSERT INTO ext_donor_entities VALUES (?,?,?)", (eid, name, kind))
+        db.execute("INSERT INTO ext_donor_aliases VALUES (?,?,1,'exact')", (name, eid))
+    db.execute("INSERT INTO ext_aec_returns VALUES ('Example Party Holding Pty. Limited as Trustee for the Example Party Trust',"
+               "'Associated Entity Returns.csv')")
+    db.commit()
+
+    def canon(name):  # reads the branch label as another party, as canon_party read " - NATIONAL"
+        name = name or ""
+        return rival if name.endswith("- NATIONAL") or "rival" in name.lower() else party if "example party" in name.lower() else None
+    with mock.patch.object(aec_receipt_types, "canon_party", canon), mock.patch.object(money_aec_extras, "canon_party", canon):
+        graph = export(path)
+    node = next(n for n in graph["nodes"] if n["id"] == "party:" + party)
+    assert node["return_by_type"] == {"donation_received": 5000, "other_receipt": 400 + 50 + 40 + 20}
+    assert graph["meta"]["receipt_types"]["party_return_transfers"] == {party: [300, 1]}
+    assert graph["meta"]["receipt_types"]["party_return_counts"]["excluded_public_funding"] == 3
+    assert "Payments made through parliament and council payrolls are counted as receipts" in graph["meta"]["receipt_types"]["party_return_note"]
+    # The shared outlier flag still holds for the capped map cells.
+    assert graph["meta"]["receipt_types"]["counts"]["excluded_flagged_review"] == 1
+
+
+def test_party_return_public_money_matches_whole_words():
+    from scripts.aec_receipt_types import party_return_public
+    for name in ("ECSA", "EFA", "ACT Election Commission", "Australian Electoral Commisssion", "Deputy Commissioner of Taxation",
+                 "Australian Government Solicitor", "DCIS Northern Territory Government", "Special Minister of State"):
+        assert party_return_public(name, None, "Other Receipt"), name
+    for name in ("Example Commission Agents Pty Ltd", "Efacon Pty Ltd", "Ecsaw Holdings", "Commonwealth Example Bank",
+                 "Legislative Assembly of Queensland", "Brisbane City Council", "Example Workers Union"):
+        assert not party_return_public(name, None, "Other Receipt"), name
+    assert party_return_public("Example Workers Union", "union", "Public Funding"), "the receipt type still decides"
+
+
+def test_without_ext_aec_returns_the_pinned_names_still_count_an_associated_entity(tmp_path, capsys):
+    from parli.ingest import money_aec_extras
+    from scripts import aec_receipt_types
+    path = tmp_path / "db"
+    db = database(path)
+    party, holdings = "Example Party", "Example Party Holdings"  # spelt unlike the AEC return
+    entries = {"Detailed Receipts.csv": [
+        annual("Other Receipt", Value="400", **{"Received From": holdings, "Recipient Name": party}),
+        annual("Donation Received", Value="100", **{"Received From": "Example Retail Ltd", "Recipient Name": party})]}
+    donations.process_zip(db, archive("AllAnnualData", entries), "AllAnnualData")
+    load(db, "AllElectionsData", {})
+    load(db, "AllReferendumData", {})
+    db.execute("UPDATE donations SET industry='retail', recipient_canonical=?", (party,))
+    db.executescript("CREATE TABLE ext_donor_entities(entity_id,canonical_name,kind);"
+                     "CREATE TABLE ext_donor_aliases(alias_raw,entity_id,confidence,method);"
+                     "DROP TABLE IF EXISTS ext_aec_returns;")
+    db.execute("INSERT INTO ext_donor_entities VALUES ('holdings',?,'party_unit')", (holdings,))
+    db.execute("INSERT INTO ext_donor_aliases VALUES (?,'holdings',1,'exact')", (holdings,))
+    db.commit()
+    canon = lambda name: party if "example party" in (name or "").lower() else None
+    pinned = lambda: ["Example Party Holding Pty. Limited as Trustee for the Example Party Trust"]
+    with mock.patch.object(aec_receipt_types, "canon_party", canon), mock.patch.object(money_aec_extras, "canon_party", canon), \
+            mock.patch.object(aec_receipt_types, "pinned_associated_names", pinned):
+        graph = export(path)
+    node = next(n for n in graph["nodes"] if n["id"] == "party:" + party)
+    assert node["return_by_type"] == {"donation_received": 100, "other_receipt": 400}
+    meta = graph["meta"]["receipt_types"]
+    assert meta["party_return_transfers"] == {}
+    assert meta["party_return_associated_names"] == "pinned"
+    assert "aec_associated_entity_names.json" in meta["party_return_note"]
+    assert "WARNING no ext_aec_returns table" in capsys.readouterr().err
+
+
+def test_the_pinned_associated_names_are_the_party_owned_entities_that_decide_a_line():
+    from scripts.aec_receipt_types import entity_keys, pinned_associated_names
+    names = pinned_associated_names()
+    assert len(names) == len(set(names)) and names == sorted(names)
+    shorts = {entity_keys(n)[1] for n in names}
+    for payer in ("Labor Resources Pty Ltd", "ALP Holdings", "Labor Services & Holdings Trust", "Labor Campaign Investment Pty Ltd",
+                  "National Free Enterprise Foundation", "Pilliwinks as trustee for the National Party Foundation Trust"):
+        assert entity_keys(payer)[1] in shorts, payer
