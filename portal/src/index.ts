@@ -62,7 +62,7 @@ import { sydneyDay } from '../public/hubs-data.js'
 import { senateVideoPage } from './video-archive'
 import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionFooterHTML } from '../public/vic-election.js'
 import { vicElectionPage, type VicElection } from './vic-election'
-import { vicElectionEnabled, vicElectionPublicationPath, vicElectionDiscovery, vicElectionLlms, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP } from '../public/vic-election.js'
+import { vicElectionEnabled, vicElectionPublicationPath, vicElectionDiscovery, vicElectionLlms, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP, VIC_ELECTION_CACHE } from '../public/vic-election.js'
 import { AUDIT_ID } from '../public/audit.js'
 import { runIndexNow, INDEXNOW_CRON } from './indexnow'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
@@ -6132,6 +6132,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   headers.delete('content-length')
   headers.set('content-type', 'text/html; charset=utf-8')
   headers.set('x-robots-tag', noindex ? 'noindex' : 'all')
+  if (route.kind === 'hub' && route.hub === 'vic-election') headers.set('cache-control',meta.status === 200 ? VIC_ELECTION_CACHE : 'no-store')
   if (meta.status === 200) {
     const etag = await htmlValidator([env.CF_VERSION_METADATA?.id ?? '', shell.headers.get('etag'), route.kind, noindex, image, imageAlt, meta])
     headers.set('etag', etag)
