@@ -4,9 +4,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {divisionKind, divisionRows, divisionGroupSentences, billDivisionsTablesHTML, voteScopeLine} from '../public/vote-tables.js';
+import {runInNewContext} from 'node:vm';
+import {divisionKind, divisionIdentity, divisionRows, divisionGroupSentences, billDivisionsTablesHTML, voteScopeLine} from '../public/vote-tables.js';
 import {interestShownNote} from '../public/register-tables.js';
-import {speechSpanLine, mentionTitleCase, mentionNamesPerson} from '../public/held-back-transcripts.js';
+import {speechSpanLine, mentionTitleCase, mentionNamesPerson, mentionAliases} from '../public/held-back-transcripts.js';
 import {mostDividedLine} from '../public/home-data.js';
 import {heldSinceLine, profileHTML} from '../public/electorates.js';
 import {latestReturnLine} from '../public/party-page.js';
@@ -51,6 +52,36 @@ test('the limitation-of-debate sentence counts the rows it sits above, split agr
   assert.equal(divisionGroupSentences(one, 'procedure')[0],
     'On 2 Mar 2026 the House of Representatives voted once on procedure for this bill, such as business motions or suspending standing orders, and the question was not agreed.');
   assert.deepEqual(divisionGroupSentences(one, 'limitation'), []);
+});
+
+test('two divisions on one day with identical tallies are both shown and both counted', () => {
+  // federal-senate-10701 and -10702 on the Interactive Gambling Amendment (Gambling Reform) Bill 2026:
+  // different questions, Senate divisions 6 and 7 of 19 Aug 2026, both 11 ayes to 24 noes.
+  const pair = [
+    {key:'federal-senate-10701', date:'2026-08-19', house:'senate', stage:'Limitation of debate', outcome:'negative', ayes:11, noes:24,
+      url:'https://theyvoteforyou.org.au/divisions/senate/2026-08-19/6', question:'Sheet 4005 amendment'},
+    {key:'federal-senate-10702', date:'2026-08-19', house:'senate', stage:'Limitation of debate', outcome:'negative', ayes:11, noes:24,
+      url:'https://theyvoteforyou.org.au/divisions/senate/2026-08-19/7', question:'Second reading amendment'},
+  ];
+  assert.notEqual(divisionIdentity(pair[0]), divisionIdentity(pair[1]));
+  const rows = divisionRows(pair, true);
+  assert.equal(rows.length, 2);
+  assert.equal(divisionGroupSentences(rows, 'limitation')[0],
+    'On 19 Aug 2026 the Senate voted 2 times on this bill under a limitation of debate, a time limit set on the debate: 0 agreed, 2 not agreed.');
+  // One division recorded twice (same chamber, day and number) is one row.
+  assert.equal(divisionRows([pair[0], {...pair[0], key:'repeat-record'}], true).length, 1);
+  // No identity at all: kept, never merged on tally.
+  assert.equal(divisionRows([{date:'2026-08-19', stage:'Second reading', ayes:1, noes:2}, {date:'2026-08-19', stage:'Second reading', ayes:1, noes:2}], true).length, 2);
+  // The browser's own bill dedupe uses the same identity.
+  const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
+  const code = app.slice(app.indexOf('function billDedupeDivisions('), app.indexOf('/* The record writes its questions as'));
+  const {billDedupeDivisions} = runInNewContext(code + ';({billDedupeDivisions})', {voteTables:{divisionIdentity}, billQuestionParts:() => ({head:'x'})});
+  const deduped = billDedupeDivisions([...pair, {...pair[1], key:'repeat-of-7'}], {});
+  assert.equal(deduped.divisions.length, 2);
+  assert.equal(deduped.collapsed, 1);
+  // And the server render counts both.
+  const html = renderBillAnswer({key:'au-federal-r7520', title:'Fixture Bill 2026', divisions:pair, sources:[]}, [], new Map(), [], {}).html;
+  assert.match(html, /voted 2 times on this bill under a limitation of debate, a time limit set on the debate: 0 agreed, 2 not agreed\./);
 });
 
 test('a bill page states the sentence above the divisions and folds the limitation rows apart from the rest', () => {
@@ -108,9 +139,25 @@ test('the vote block says how many of the whole count its table holds', () => {
 test('declared interests explain a table shorter than its count', () => {
   const register = {total:28, buckets:{memberships:{count:17, items:Array(6).fill({})}, liabilities:{count:2, items:Array(2).fill({})}, other:{count:9, items:Array(6).fill({})}}};
   assert.equal(interestShownNote(register, 14, 'https://www.aph.gov.au/register.pdf'),
-    'The 14 most recent entries are listed here, up to 6 in each category. All 28 are in <a href="https://www.aph.gov.au/register.pdf" rel="noopener" target="_blank">the register ↗︎</a>.');
-  assert.equal(interestShownNote(register, 14, 'javascript:alert(1)'), 'The 14 most recent entries are listed here, up to 6 in each category. All 28 are in the register.');
+    '14 entries are listed here, up to 6 in each category. All 28 are in <a href="https://www.aph.gov.au/register.pdf" rel="noopener" target="_blank">the register ↗︎</a>.');
+  assert.equal(interestShownNote(register, 14, 'javascript:alert(1)'), '14 entries are listed here, up to 6 in each category. All 28 are in the register.');
   assert.equal(interestShownNote({...register, total:14}, 14), '');
+});
+
+test('the interests note claims no order across categories (a full category can hold back a newer entry)', () => {
+  // The shape of the reviewer's case, under an invented senator: travel's six places hold entries newer
+  // than 15 Feb 2026, so a 15 Feb travel entry is left out while a 7 Jan superannuation entry is listed.
+  const travel = ['2026-06-01','2026-05-01','2026-04-20','2026-04-01','2026-03-15','2026-03-01'].map(date => ({date, description:'Travel'}));
+  const register = {total:19, buckets:{
+    travel:{count:7, items:travel},
+    other:{count:6, items:[{date:'2026-01-07', description:'Superannuation fund'}, ...Array(5).fill({date:'2025-12-01', description:'Other'})]},
+    gifts:{count:6, items:Array(2).fill({date:'2025-11-01', description:'Gift'})},
+  }};
+  const shown = Object.values(register.buckets).reduce((n, b) => n + b.items.length, 0);
+  assert.equal(shown, 14);
+  const note = interestShownNote(register, shown);
+  assert.equal(note, '14 entries are listed here, up to 6 in each category. All 19 are in the register.');
+  assert.doesNotMatch(note, /most recent|newest|latest/);
 });
 
 test('the speech span says where the record stops, and only a sitting member is told later speeches are missing', () => {
@@ -125,13 +172,46 @@ test('mentions read in sentence case and keep only rows whose passage names the 
   assert.equal(mentionTitleCase('BILLS - Treasury Laws Amendment Bill 2026'), 'Bills - Treasury Laws Amendment Bill 2026');
   assert.equal(mentionTitleCase('NDIS FUNDING'), 'NDIS funding');
   assert.equal(mentionTitleCase('Questions without notice'), 'Questions without notice');
-  assert.equal(mentionNamesPerson({snippet:'The member for Grayndler, Mr Example, said'}, 'Alex Example'), true);
+  assert.equal(mentionNamesPerson({snippet:'The member for Seaview, Mr Example, said'}, 'Alex Example'), true);
   assert.equal(mentionNamesPerson({snippet:'Senator Other spoke on the motion.'}, 'Alex Example'), false);
   assert.equal(mentionNamesPerson({snippet:'An Examplesson report'}, 'Alex Example'), false);
   // A name cut off where the row's passage ends is not one the reader sees.
   const cut = `${'x'.repeat(205)} refer to Alex Example and more`;
   assert.equal(mentionNamesPerson({snippet:cut}, 'Alex Example'), false);
-  assert.equal(mentionNamesPerson({snippet:cut}, 'Alex Example', 400), true);
+  assert.equal(mentionNamesPerson({snippet:cut}, 'Alex Example', {shown:400}), true);
+});
+
+test('a mention addressed to a seat or office the person held on its date is kept; anyone else\'s is not', () => {
+  // An invented member: Seaview from 2010 to 2016, then Harbourside from 2016; Treasurer 2019 to 2022,
+  // then Prime Minister. Seats and offices come from the dated records, never the current ones.
+  const aliases = mentionAliases({
+    electorates:[{name:'Seaview', chamber:'representatives', periods:[{start:'2010-08-21', end:'2016-07-02'}]},
+      {name:'Harbourside', chamber:'representatives', periods:[{start:'2016-07-02', end:null}]},
+      {name:'New South Wales', chamber:'senate', periods:[{start:'2000-01-01', end:null}]}],
+    spells:[['2010-08-21','2019-05-27','Member of Parliament',0,1], ['2019-05-27','2022-05-23','Treasurer (Cabinet)',60,1],
+      ['2022-05-23',null,'Leader of the House, Prime Minister',160,1]],
+  });
+  const ask = (snippet, date) => mentionNamesPerson({snippet, date}, 'Alex Example', {aliases});
+  // An electorate-addressed passage on a date the person held the seat: kept.
+  assert.equal(ask('The member for Harbourside said in this place last week that', '2026-08-12'), true);
+  assert.equal(ask('As the member for Seaview told the House,', '2014-03-01'), true);
+  // A different member's electorate: rejected.
+  assert.equal(ask('The member for Riverbend said in this place last week that', '2026-08-12'), false);
+  // An electorate the person held only later: rejected for an earlier passage.
+  assert.equal(ask('The member for Harbourside said', '2014-03-01'), false);
+  // And one they held only earlier: rejected for a later passage.
+  assert.equal(ask('The member for Seaview said', '2026-08-12'), false);
+  // An office held on the day counts; one held by someone else that day, or a qualified title, does not.
+  assert.equal(ask('The Prime Minister told the chamber', '2024-02-08'), true);
+  assert.equal(ask('The Prime Minister told the chamber', '2020-02-08'), false);
+  assert.equal(ask('The Treasurer told the chamber', '2020-02-08'), true);
+  assert.equal(ask('The Treasurer told the chamber', '2024-02-08'), false);
+  assert.equal(ask('The Deputy Prime Minister told the chamber', '2024-02-08'), false);
+  assert.equal(ask('The former Prime Minister told the chamber', '2024-02-08'), false);
+  // A shared upper-house seat and the generic posts identify nobody.
+  assert.deepEqual(aliases.map(a => a.phrase).sort(), ['Leader of the House', 'Prime Minister', 'Treasurer', 'member for Harbourside', 'member for Seaview']);
+  // No date, no dated alias.
+  assert.equal(ask('The member for Harbourside said', ''), false);
 });
 
 const hubs = {weeks:[

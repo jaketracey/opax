@@ -50,7 +50,9 @@ test('division titles use stage and date, missing counts stay unknown, and hubs 
   assert.equal(rows[0].ayes,0); assert.equal(rows[0].noes,null);
   assert.equal(rows[0].href,'/doc/division-fixture-one');
   assert.equal(rows.length,2);
-  assert.equal(divisionRows(divisions,true).length,1);
+  // Two divisions with the same day, stage and tally are still two; only one division's repeated records fold.
+  assert.equal(divisionRows(divisions,true).length,2);
+  assert.equal(divisionRows([...divisions, {...divisions[0]}],true).length,2);
   assert.equal(divisionRows([{key:'fixture-three', ayes:'invalid'}])[0].ayes,null);
 });
 

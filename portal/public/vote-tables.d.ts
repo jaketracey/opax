@@ -6,6 +6,7 @@ export function voteScopeLine(shown: number, total: number, recorded?: boolean):
 export function voteTableConfig(person: string | string[], caption?: string): DataTableConfig;
 export function personVoteKeys(name: string, personId?: string, votes?: Record<string,unknown> | null): string[];
 export function personVoteRecords(keys?: string[], votes?: Record<string,unknown> | null, recentData?: object | null): {rows: object[]; recorded: boolean};
+export function divisionIdentity(division?: object | null): string;
 export function divisionRows(divisions?: object[], deduplicate?: boolean): Row[];
 export function divisionKind(division?: object | null): 'limitation' | 'procedure' | 'bill';
 export function divisionGroupSentences(rows?: Row[], kind?: 'limitation' | 'procedure'): string[];

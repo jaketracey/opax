@@ -31,14 +31,14 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=8faee7102a").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=a408142529").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=a3b722e085").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=2c48b25881').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=135b3fe80e').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=fae51a8e69').then(module => { askPerson = module; });
 let uiLabels;
@@ -61,7 +61,7 @@ const splitSpeakers = person => attributionHelpers?.splitSpeakers(person) || [];
 const personScope = person => attributionHelpers?.personScope(person) || person?.speech_scope || null;
 const datedAffiliationParty = (row, person) => attributionHelpers?.datedAffiliationParty(row, person) || null;
 let heldBackHelpers;
-const heldBackReady = import('/held-back-transcripts.js?v=82f6b59268').then(module => { heldBackHelpers = module; });
+const heldBackReady = import('/held-back-transcripts.js?v=2b363d213c').then(module => { heldBackHelpers = module; });
 
 let saDisplayHelpers;
 let saFullTextFlag = 'false';
@@ -1597,7 +1597,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=978d3753ea');
+    const mod = await import('/money-explain.js?v=9408ccff82');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -4424,7 +4424,7 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
   const {rows: registerRows} = projection?.rows ? projection : registerTables.interestTableData(data);
   const registerConfig = registerTables.interestTableConfig(registerRows);
   const registerHTML = registerTables.registerTableHTML(registerConfig);
-  // "28 entries" above 14 rows: the file keeps each category's newest entries (register-tables.js).
+  // "28 entries" above 14 rows: the file keeps up to six entries per category (register-tables.js).
   const shownNote = registerTables.interestShownNote(data, registerRows.length, base);
   const added = Number(data.alterations?.added) || 0;
   const deleted = Number(data.alterations?.deleted) || 0;
@@ -4697,14 +4697,30 @@ function goodMentions(results, limit = 3) {
   return results.filter((r) => mentionTitle(r) && !isRosterPassage(r.snippet)).slice(0, limit);
 }
 
+/** A person's dated seats (the electorate service periods) and offices (pay.json's Handbook spells),
+ *  matched by exact name or alias; [] when neither file knows them. */
+async function personMentionAliases(name) {
+  try {
+    const [reference, pay] = await Promise.all([
+      loadElectorateModule().then((m) => m.loadPeople()).catch(() => null), loadPay()]);
+    const key = String(name || "").trim().toLowerCase();
+    const seats = (reference?.people || []).filter((p) => [p.name, ...(p.aliases || [])].some((n) => String(n || "").trim().toLowerCase() === key));
+    const payPerson = pay?.people?.[pay.names?.[payNameKey(name)]];
+    // Two people of one name are not one person's seats.
+    return heldBackHelpers?.mentionAliases?.({ electorates: seats.length === 1 ? seats[0].electorates : [], spells: payPerson?.spells || [] }) || [];
+  } catch { return []; }
+}
+
 async function subjectMentions(name, container, heading, moneyContext = false, { person = false } = {}) {
   try {
     const [data, roster] = await Promise.all([
       api(`/api/search?${new URLSearchParams({ q: `"${name}"`, top_k: person ? "12" : "6" })}`), loadParliamentarians()]);
     if (!data.results?.length) return;
     // On a person page: three rows that read as debates, or no block at all.
-    // A person's mentions are rows whose passage names them (held-back-transcripts.js mentionNamesPerson).
-    const rows = person ? goodMentions(data.results.filter((r) => heldBackHelpers?.mentionNamesPerson ? heldBackHelpers.mentionNamesPerson(r, name) : true))
+    // A person's mentions are rows whose passage names them, by surname or by a seat or office they
+    // held on the passage's date (held-back-transcripts.js mentionNamesPerson, mentionAliases).
+    const aliases = person ? await personMentionAliases(name) : [];
+    const rows = person ? goodMentions(data.results.filter((r) => heldBackHelpers?.mentionNamesPerson ? heldBackHelpers.mentionNamesPerson(r, name, { aliases }) : true))
       : data.results.slice(0, 5);
     if (!rows.length) return;
     fillDatedMentionParties(rows, roster);
@@ -9283,7 +9299,9 @@ function billQuestionParts(division, bill) {
 function billDedupeDivisions(divisions, bill) {
   const groups = new Map();
   for (const d of divisions || []) {
-    const k = [d.date, String(d.stage || "").toLowerCase(), d.ayes, d.noes].join("|");
+    // One division's records share its chamber, day and number (vote-tables.js divisionIdentity);
+    // equal tallies on one day are different divisions and both stay.
+    const k = voteTables.divisionIdentity(d) || `row:${groups.size}`;
     if (!groups.has(k)) groups.set(k, []);
     groups.get(k).push(d);
   }
@@ -9383,8 +9401,8 @@ function billDivisionsHTML(bill) {
         `Ayes and noes are each division's own totals. Party is each member's recorded affiliation, not a
           reconstruction of who they sat with on the day, and a member the record does not name is counted but
           not attributed. Only formal divisions leave a per-member record.`,
-        collapsed ? `The source records some divisions more than once; ${collapsed} row${collapsed === 1 ? "" : "s"}
-          identical in day, stage and counts ${collapsed === 1 ? "is" : "are"} shown here once.` : "",
+        collapsed ? `The source records some divisions more than once; ${collapsed} repeated record${collapsed === 1 ? "" : "s"}
+          of the same division ${collapsed === 1 ? "is" : "are"} shown here once.` : "",
         "A division's title is its recorded stage. Open a division for its count on They Vote For You and the question put, in the record's words.",
         rows.some((r) => r.kind !== "bill") ? "Votes under limitation of debate and votes on procedure are grouped by the stage the record files them under, not by reading the question. A vote under limitation of debate can be on an amendment or a reading, put when the time set for the debate ran out." : "",
       ],
@@ -9930,7 +9948,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=978d3753ea"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=9408ccff82"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=9770cf1299");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }

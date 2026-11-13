@@ -51,13 +51,51 @@ export function mentionTitleCase(title) {
   return String(title || '').split(/(\s+[-–—]\s+)/).map((part, i) => i % 2 ? part : sentencePart(part)).join('');
 }
 
+const foldMention = value => String(value || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[‘’ʼ`]/g, "'").toLowerCase();
+const escapeRegExp = value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const within = (date, start, end) => Boolean(date) && (!start || date >= start) && (!end || date <= end);
+// A title after one of these is someone else's office ("the Shadow Treasurer", "the former Prime Minister").
+const NOT_THE_HOLDER = /(?:shadow|deputy|assistant|acting|former|then|next|future)\s+$/;
+const GENERIC_POSTS = new Set(['member of parliament', 'senator']);
+
+/**
+ * The dated ways a passage can address a person besides their surname, from verified records only:
+ * "member for <seat>" for each single-member seat in its service periods (electorates people.json),
+ * and each office in its Parliamentary Handbook spells (pay.json `spells`, "Prime Minister",
+ * "Treasurer"), each with the dates it was held. Upper-house seats are shared by a state's senators,
+ * so they never identify one person.
+ */
+export function mentionAliases({ electorates = [], spells = [] } = {}) {
+  const aliases = [];
+  for (const seat of electorates || []) {
+    if (!seat?.name || /senate|_lc$/.test(String(seat.chamber || ''))) continue;
+    for (const period of seat.periods || []) aliases.push({ phrase: `member for ${seat.name}`, start: period?.start || '', end: period?.end || '' });
+  }
+  for (const spell of spells || []) {
+    const [start, end, post] = Array.isArray(spell) ? spell : [spell?.start, spell?.end, spell?.post];
+    for (const office of String(post || '').split(/,\s+(?=[A-Z])/)) {
+      const title = office.replace(/\s*\([^)]*\)\s*$/, '').trim();
+      if (title && !GENERIC_POSTS.has(title.toLowerCase())) aliases.push({ phrase: title, start: start || '', end: end || '' });
+    }
+  }
+  return aliases;
+}
+
 /** A mention row names the person when the passage the row shows (its first `shown` characters, as the
- *  row prints it) carries their surname as a whole word: a hit on a heading, another speaker's name, or
- *  a name cut off at the end of the shown passage is not a mention a reader can see. */
-export function mentionNamesPerson(row, name, shown = 220) {
-  const fold = value => String(value || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[‘’ʼ`]/g, "'").toLowerCase();
-  const surname = fold(name).trim().split(/\s+/).at(-1);
-  if (!surname || surname.length < 2) return false;
-  const escaped = surname.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return new RegExp(`(^|[^\\p{L}'])${escaped}($|[^\\p{L}])`, 'u').test(fold(String(row?.snippet || '').slice(0, shown)));
+ *  row prints it) carries their surname as a whole word, or addresses them by a seat or office from
+ *  `aliases` (mentionAliases) that they held on the passage's date. A title held by someone else on
+ *  that date, a later seat, a heading or another speaker's name, or a name cut off where the shown
+ *  passage ends is not a mention of them a reader can see. */
+export function mentionNamesPerson(row, name, { shown = 220, aliases = [] } = {}) {
+  const passage = foldMention(String(row?.snippet || '').slice(0, shown));
+  const word = phrase => new RegExp(`(^|[^\\p{L}'])${escapeRegExp(foldMention(phrase))}($|[^\\p{L}])`, 'u');
+  const surname = foldMention(name).trim().split(/\s+/).at(-1);
+  if (surname && surname.length >= 2 && word(surname).test(passage)) return true;
+  const date = /^\d{4}-\d{2}-\d{2}/.exec(String(row?.date || ''))?.[0];
+  if (!date) return false;
+  return aliases.some(alias => {
+    if (!alias?.phrase || !within(date, alias.start, alias.end)) return false;
+    const found = word(alias.phrase).exec(passage);
+    return Boolean(found) && !NOT_THE_HOLDER.test(passage.slice(0, found.index + found[1].length));
+  });
 }
