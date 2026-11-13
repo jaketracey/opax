@@ -52,6 +52,11 @@ try {
         await page.locator('.agency-map.mm-root').waitFor({state:'visible'});
         await page.getByText('Open the connections map',{exact:true}).click();
       } else if (path.startsWith('/subject/topic/')) {
+        // The arc keeps its heading and summary; only its duplicated list is gone.
+        await page.locator('.topic-arc .topic-arc-heading').waitFor({state:'visible'});
+        assert.equal(await page.getByText('The arc of this debate',{exact:true}).filter({visible:true}).count(),1);
+        assert.equal(await page.locator('.topic-arc .topic-arc-voices').count(),1);
+        assert.equal(await page.locator('.topic-arc a',{hasText:'Search the full debate'}).count(),1);
         await core.locator('select').selectOption('oldest');
         assert.equal(await core.locator('[data-record-title]').first().innerText(),'Example debate 25');
       } else {

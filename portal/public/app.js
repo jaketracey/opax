@@ -6898,7 +6898,13 @@ async function renderTopicArc(slug, phrase, key, mount) {
     }
     const {hydrateRecordCore} = await import('/record-core.js');
     if (!active()) return;
-    if (hydrateRecordCore('topic',data,{slug})) { mount.remove(); return true; }
+    if (hydrateRecordCore('topic',data,{slug})) {
+      // The server table is the one speech list; the arc keeps its summary only.
+      mount.innerHTML = `<div class="topic-arc-head ui-section-head"><h3 class="topic-arc-heading ui-section-title">The arc of this debate</h3></div>
+        ${topicArcVoicesHTML(results, 0)}
+        <div class="topic-arc-footer"><a href="${esc(searchHash(phrase, { topic: slug }, 1, 'newest'))}">Search the full debate</a></div>`;
+      return true;
+    }
     const briefs = {};
     const attempted = new Set();
     let order = "newest", visible = 30, revision = 0;
