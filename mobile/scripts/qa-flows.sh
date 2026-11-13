@@ -78,6 +78,10 @@ if selector == '--all-android':
     selected=[p['path'] for p in plan if p['run']]
 elif selector.startswith('.maestro/'):
     selected=[selector.removeprefix('.maestro/')]
+elif any(pathlib.Path(p['path']).stem == selector for p in plan):
+    # An exact name selects that flow only: 28-welcome never also means
+    # 28-welcome-ax5. A flow that does not run on Android stays unsupported.
+    selected=[p['path'] for p in plan if p['run'] and pathlib.Path(p['path']).stem == selector]
 else:
     selected=[p['path'] for p in plan if p['run'] and re.match(re.escape(selector)+r'-', pathlib.Path(p['path']).name)]
 if not selected or any(not (root/p).is_file() for p in selected):

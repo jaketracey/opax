@@ -579,3 +579,40 @@ test.each(['android', 'ios'] as const)(
     }
   },
 );
+
+test('Android Ask root leaves no empty heading in the bar until its title collapses', () => {
+  platform('android');
+  const setOptions = jest.fn();
+  const navigation = {
+    getState: () => ({
+      key: 'ask-stack',
+      routeNames: ['ask', 'bill/[key]'],
+      routes: [{ key: 'ask-root', name: 'ask' }],
+    }),
+    getParent: () => undefined,
+    setOptions,
+  };
+  const scroll = { current: { scrollTo: jest.fn() } };
+  let bridge!: ReturnType<typeof useAndroidRootScroll>;
+  function Harness() {
+    bridge = useAndroidRootScroll(scroll);
+    return bridge.title;
+  }
+  render(
+    <NavigationContext.Provider value={navigation as never}>
+      <NavigationRouteContext.Provider value={{ key: 'ask-root', name: 'ask' }}>
+        <Harness />
+      </NavigationRouteContext.Provider>
+    </NavigationContext.Provider>,
+  );
+  // Ask's bar has a leading History item, so the stack would draw a string
+  // title, even an empty one, as a heading view. A title that renders
+  // nothing adds no node.
+  const idle = setOptions.mock.lastCall![0].headerTitle;
+  expect(typeof idle).toBe('function');
+  expect(idle()).toBeNull();
+  act(() => bridge.onScroll(56));
+  expect(setOptions).toHaveBeenLastCalledWith(
+    expect.objectContaining({ headerTitle: 'Ask' }),
+  );
+});

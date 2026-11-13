@@ -47,6 +47,8 @@ const special = new Set(Object.keys(specialReasons));
 const notApplicable = (name) => {
   if (/^(52-|53-|54-|55b-|56-|57b-)/.test(name))
     return 'iPad split panes, presentation or viewport; no Android tablet parity claim';
+  if (/^(28-welcome|28-welcome-ax5|28c-welcome-not-now)\.yaml$/.test(name))
+    return 'iOS-only: the OPAXWelcomeTour launch argument opens the welcome on iOS; Android ignores it and has no launch-argument path';
   if (name === 'release-community-hidden.yaml')
     return 'Production-only hidden-Community check needs a production binary; e2e deliberately includes fixture routes';
   return null;

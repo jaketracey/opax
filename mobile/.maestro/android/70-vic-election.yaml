@@ -43,7 +43,14 @@ name: 70 Victorian election on Android
 - assertNotVisible: Share
 - assertVisible:
     id: vic-election-screen
-- tapOn: Suburb, postcode or district
+# The finder is the bar's native SearchView: collapsed to an icon until
+# tapped, and its hint carries leading spaces, so open it by resource id.
+- tapOn:
+    id: '.*:id/(search_src_text|search_button)'
+- extendedWaitUntil:
+    visible:
+      id: '.*:id/search_src_text'
+    timeout: 15000
 - inputText: '3350'
 - hideKeyboard
 - extendedWaitUntil:
@@ -63,7 +70,17 @@ name: 70 Victorian election on Android
 - assertVisible: Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.
 - takeScreenshot: ${EVIDENCE}/70-android-district
 - pressKey: Back
-- pressKey: Back
+- assertVisible:
+    id: vic-election-screen
+# Leave the search as iOS does with Cancel or Close. Android has neither:
+# its SearchView offers "Navigate up" (collapse) and "Clear query" (the X).
+- runFlow:
+    when:
+      visible:
+        id: '.*:id/search_src_text'
+    commands:
+      - tapOn:
+          text: '^(Navigate up|Clear query)$'
 - openLink: opax:///vic-election/southern-metropolitan
 - extendedWaitUntil:
     visible: Southern Metropolitan Region
@@ -85,9 +102,13 @@ name: 70 Victorian election on Android
 - takeScreenshot: ${EVIDENCE}/70-android-hub-foot
 
 - openLink: opax:///vic-election?fixture=today
-- extendedWaitUntil:
-    visible: Election day is today
-    timeout: 30000
+# The link can reopen the hub already on screen, still scrolled to its
+# foot: scroll back up to the status.
+- scrollUntilVisible:
+    element:
+      text: Election day is today
+    direction: UP
+    timeout: 90000
 - assertVisible: Polls are open from 8 am to 6 pm.
 - takeScreenshot: ${EVIDENCE}/70-android-election-day
 - openLink: opax://today
@@ -100,9 +121,13 @@ name: 70 Victorian election on Android
 - assertVisible: Polls are open from 8 am to 6 pm
 - takeScreenshot: ${EVIDENCE}/70-android-today-election-day
 - openLink: opax:///vic-election?fixture=closed
-- extendedWaitUntil:
-    visible: Voting has closed
-    timeout: 30000
+# The link can reopen the hub already on screen, still scrolled to its
+# foot: scroll back up to the status.
+- scrollUntilVisible:
+    element:
+      text: Voting has closed
+    direction: UP
+    timeout: 90000
 - assertNotVisible:
     id: vic-election-days
 - assertNotVisible: Key dates
