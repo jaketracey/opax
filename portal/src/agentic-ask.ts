@@ -1,6 +1,7 @@
 import {ASK_EVIDENCE_RULES} from './ask-writing-rules'
 import { extractAskConstraints, constrainStep, type AskConstraints } from './ask-constraints'
 import {federalPartyMoneyAnswer,publicPartyMoneyAnswer} from './ask-money-routing'
+import { routedPayAnswer } from './ask-pay-route'
 import { researchPhaseWallMs } from './research-time'
 import { ASK_HARD_WALL_MS, ASK_ANSWER_TARGET_MS, ASK_MAX_TOOL_CALLS, ASK_TOOL_WALL_MS, ASK_MAX_MODEL_USD, ASK_FALLBACK_RESERVE_USD, reserveQuestionTurn } from './ask-budgets'
 import { researchTurnReservationUsd, unmeteredResearchBudget } from './research-budget'
@@ -582,7 +583,8 @@ export function researchTrail(events: StepEvent[], steps: AgenticPayload['steps'
     ...(event.arg ? { arg: event.arg } : {}), ...(event.results != null ? { results: event.results } : {}), ms: event.ms ?? 0, ok: event.state === 'done' }))
 }
 /** Loop failures retain the old planner, inside the original request deadline. */
-export async function runAgentic(question: string, deps: AgenticDeps, progress: Progress = async () => {}, budgetMs = AGENTIC_BUDGET_MS, period = inferPeriod(question), filters: Record<string, unknown> = {}, resolvedScope?: NamedScope): Promise<AgenticPayload> {
+/** `kind` is the reader's record filter: a speech-only search is not given a calculated pay answer. */
+export async function runAgentic(question: string, deps: AgenticDeps, progress: Progress = async () => {}, budgetMs = AGENTIC_BUDGET_MS, period = inferPeriod(question), filters: Record<string, unknown> = {}, resolvedScope?: NamedScope, kind?: string): Promise<AgenticPayload> {
   const started = Date.now()
   const lookup = await bounded(signal => exactRecordLookup(question, { ...deps, signal, ...(deps.withSignal?.(signal) ?? {}) }, period, resolvedScope), Math.min(4_000, budgetMs), deps.signal).catch(() => null)
   const lookupPayload = (qualitative: QualitativeAnswer): AgenticPayload => ({ answered: true, answer: qualitative.answer, answer_source: 'template', shape: classifyAgentic(question).shape, period, facts: [], notes: [], steps: [], events: [], timings: { plan_ms: Date.now() - started, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started }, tokens: { input: 0, output: 0 }, cost_usd: 0, over_budget: false, version: AGENTIC_PROMPT_VERSION, qualitative: { ...qualitative, answer_scope: { period } }, answer_scope: { period }, research: { mode: 'loop', rounds: 0, trail: [], sources: qualitative.sources.map(s => ({ title: s.title, url: s.url, kind: s.kind })) } })
@@ -601,6 +603,14 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   const assets={fetch:async(request:Request)=>{const data=await deps.asset(new URL(request.url).pathname);return data?Response.json(data):new Response('',{status:404})}} as Fetcher
   const calculated=await federalPartyMoneyAnswer({...filters,question} as import('./ask-records').RecordQuestion,assets)
   if(calculated)return {answered:true,answer:calculated.answer,answer_source:'template',shape:'money',period,facts:[],notes:[],steps:[],events:[],timings:{plan_ms:0,tools_ms:0,compose_ms:0,total_ms:0},tokens:{input:0,output:0},cost_usd:0,over_budget:false,version:AGENTIC_PROMPT_VERSION,qualitative:publicPartyMoneyAnswer(calculated) as unknown as QualitativeAnswer}
+  // A set rate (a parliamentarian, a departmental secretary, a statutory office) is calculated, not researched:
+  // paid_answer answers first, as on the ordinary Ask path. Reported pay goes on to annual_reports in the loop.
+  const paid=await routedPayAnswer({...filters,...(kind?{kind}:{}),question} as import('./ask-records').RecordQuestion,{asset:deps.asset,origin:deps.origin,signal:deps.signal}).catch(()=>null)
+  if(paid){
+    const ms=Date.now()-started,event:StepEvent={...stepEvent({tool:'paid_answer',args:{}},1),tool:'paid_answer',round:1,results:1,ms,state:'done'}
+    return {answered:true,answer:String(paid.answer),answer_source:'template',shape:classifyAgentic(question).shape,period,facts:[],notes:[],steps:[{tool:'paid_answer',args:{},ok:true,ms}],events:[event],timings:{plan_ms:0,tools_ms:ms,compose_ms:0,total_ms:ms},tokens:{input:0,output:0},cost_usd:0,over_budget:false,version:AGENTIC_PROMPT_VERSION,qualitative:paid as unknown as QualitativeAnswer,
+      research:{mode:'loop',rounds:0,trail:researchTrail([event],[{tool:'paid_answer',args:{},ok:true,ms}]),sources:(paid as unknown as QualitativeAnswer).sources.map(s=>({title:s.title,url:s.url,kind:s.kind}))}}
+  }
   const reserveEnabled=!!deps.research?.write&&(deps.research.writingWallMs??budgetMs)>=1000
   const selectionLeft=()=>Math.max(1,(deps.research?.write?researchPhaseWallMs(Math.min(budgetMs,deps.research.writingWallMs??budgetMs)):budgetMs)-(Date.now()-started))
   const attempted: StepEvent[] = []
@@ -628,7 +638,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const input={question,period,facts:sheet,constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined}}
     const writingMs=Math.max(0,Math.min(8000,Math.min(budgetMs, deps.research.writingWallMs ?? budgetMs)-(Date.now()-started)))
     const written = await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs),writingMs,deps.signal).catch(()=>proseFallback(input))
-    const complete=run.passage_answer ? leadWithModelAnswer(appendWrittenPoints(written,run.passage_answer) as unknown as Record<string,unknown>,run.passage_answer) as unknown as QualitativeAnswer : written
+    const complete=run.passage_answer ? leadWithModelAnswer(appendWrittenPoints(written,run.passage_answer) as unknown as Record<string,unknown>,run.passage_answer,question) as unknown as QualitativeAnswer : written
     run.answer=complete.answer;run.qualitative=complete;run.answer_source='model'
     run.tokens=stats.tokens;run.cost_usd=stats.costUsd ?? run.cost_usd
     run.timings.compose_ms+=Date.now()-started-run.timings.total_ms;run.timings.total_ms=Date.now()-started

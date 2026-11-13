@@ -1,0 +1,124 @@
+{
+ "id": "why",
+ "question": "Why was the National Anti-Corruption Commission established?",
+ "input": {
+  "kind": "speech"
+ },
+ "model": [
+  {
+   "tool_calls": [
+    {
+     "name": "search",
+     "args": {
+      "query": "National Anti-Corruption Commission integrity"
+     }
+    }
+   ]
+  },
+  {
+   "tool_calls": [
+    {
+     "name": "answer",
+     "args": {
+      "points": [
+       {
+        "claim": "The National Anti-Corruption Commission was established to give the Commonwealth a standing body able to investigate serious or systemic corruption, after years of debate about gaps in federal integrity oversight."
+       },
+       {
+        "claim": "Jordan Sample told the Senate the commission would investigate \"serious or systemic corruption across the Commonwealth public sector\", including ministers and their staff.",
+        "id": "77777777777777777777777777777777/t/body/0-157",
+        "quote": "serious or systemic corruption across the Commonwealth public sector"
+       },
+       {
+        "claim": "The Albanese Government had promised it at the 2022 election, and the commission began operating on 1 July 2023."
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "services": [
+  {
+   "path": "/find",
+   "match": [
+    "National"
+   ],
+   "response": {
+    "resources": {
+     "77777777777777777777777777777777": {
+      "slug": "speech-910007",
+      "title": "National Anti-Corruption Commission Bill 2022",
+      "origin": {
+       "created": "2022-09-28T00:00:00Z",
+       "collaborators": [
+        "Jordan Sample"
+       ]
+      },
+      "extra": {
+       "metadata": {
+        "kind": "speech"
+       }
+      },
+      "fields": {
+       "body": {
+        "paragraphs": {
+         "77777777777777777777777777777777/t/body/0-157": {
+          "text": "This commission will have the power to investigate serious or systemic corruption across the Commonwealth public sector, including ministers and their staff."
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "path": "/slug/speech-910007",
+   "response": {
+    "id": "77777777777777777777777777777777",
+    "title": "National Anti-Corruption Commission Bill 2022",
+    "origin": {
+     "created": "2022-09-28T00:00:00Z",
+     "collaborators": [
+      "Jordan Sample"
+     ]
+    },
+    "extra": {
+     "metadata": {
+      "date": "2022-09-28"
+     }
+    },
+    "data": {
+     "texts": {
+      "body": {
+       "value": {
+        "body": "This commission will have the power to investigate serious or systemic corruption across the Commonwealth public sector, including ministers and their staff."
+       }
+      }
+     }
+    },
+    "usermetadata": {
+     "classifications": [
+      {
+       "labelset": "kind",
+       "label": "speech"
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "assets": {},
+ "expect": {
+  "answered": true,
+  "includes": [
+   "serious or systemic corruption",
+   "1 July 2023"
+  ],
+  "citations": 1,
+  "cited": [
+   "77777777777777777777777777777777"
+  ]
+ }
+}
