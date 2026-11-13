@@ -2258,9 +2258,13 @@ const goHomeFresh = (e) => {
 };
 for (const el of document.querySelectorAll(".logo, .masthead-name a")) el.addEventListener("click", goHomeFresh);
 
+// Skip to content lands on the page's title: the H1 showing in the panel on screen.
 document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
   e.preventDefault();
-  document.querySelector("main").focus();
+  const main = document.querySelector("main");
+  const title = [...main.querySelectorAll("h1")].find((h) => h.getClientRects().length > 0);
+  if (title && !title.hasAttribute("tabindex")) title.setAttribute("tabindex", "-1");
+  (title || main).focus();
 });
 
 // --- quick search (masthead and drawer) -----------------------------------

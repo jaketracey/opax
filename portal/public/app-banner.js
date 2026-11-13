@@ -21,6 +21,20 @@
     sync();
     try { localStorage.setItem(key, '1'); } catch { /* still dismissed for this page */ }
   });
+  // Skip to content (the Worker writes it first in the body, ahead of this banner):
+  // focus the page's title, the H1 showing in main, else main itself.
+  document.addEventListener('click', event => {
+    const link = event.target instanceof Element && event.target.closest('a[data-skip-link]');
+    if (!link || event.defaultPrevented) return;
+    const main = document.querySelector('main');
+    const shown = h => h.getClientRects().length > 0;
+    const target = [...(main || document).querySelectorAll('h1')].find(shown) || main;
+    if (!target) return;
+    event.preventDefault();
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    target.focus();
+    target.scrollIntoView({ block: 'start' });
+  });
   // Legacy hash links and the SPA's history navigation can open policy pages.
   addEventListener('hashchange', sync);
   addEventListener('popstate', sync);
