@@ -228,3 +228,50 @@ def test_graph_and_uncapped_report_share_per_name_exclusions_for_an_on_map_entit
     assert len(held) == 6
     assert sum(float(r['Value']) for r in held) == 1135207
     assert sum(float(r['Value']) for r in held if r['Receipt Type']=='Donation Received') == 175000
+
+
+def test_party_return_counts_each_line_once_without_public_funding_or_branch_transfers(tmp_path):
+    from parli.ingest import money_aec_extras
+    from scripts import aec_receipt_types
+    path = tmp_path / "db"
+    db = database(path)
+    # Invented party and payers. A gift the donor also declared (Donations Made)
+    # must count once; public funding and the party's own branch stay out.
+    party, payer = "Example Party", "Example Mining Ltd"
+    branch, holdings, other = "Example Party Northern Branch", "Example Party Holdings Pty Ltd", "Other Party Federal Office"
+    line = lambda donor, kind, value: annual(kind, Value=str(value), **{"Received From": donor, "Recipient Name": party})
+    entries = {"Detailed Receipts.csv": [
+        line(payer, "Donation Received", 1000), line("Example Bank Ltd", "Other Receipt", 500),
+        line("Australian Electoral Commission", "Public Funding", 7000),  # public funding by name and type
+        line("Example Treasury Trust", "Public Funding", 300),  # public funding by type only
+        line(branch, "Other Receipt", 2000),  # a transfer within the party
+        line(holdings, "Other Receipt", 4000),  # the party's associated entity: counted
+        line(other, "Other Receipt", 600),  # another party's office: counted
+    ], "Donations Made.csv": [{"Financial Year": "2020-2021", "Donor Name": payer, "Donation Made To": party, "Value": "1000"}]}
+    donations.process_zip(db, archive("AllAnnualData", entries), "AllAnnualData")
+    load(db, "AllElectionsData", {})
+    load(db, "AllReferendumData", {})
+    db.execute("UPDATE donations SET recipient_canonical=?,industry='mining'", (party,))
+    db.executescript("CREATE TABLE ext_donor_entities(entity_id,canonical_name,kind);"
+                     "CREATE TABLE ext_donor_aliases(alias_raw,entity_id,confidence,method);")
+    for eid, name in (("example-branch", branch), ("example-holdings", holdings), ("other-office", other)):
+        db.execute("INSERT INTO ext_donor_entities VALUES (?,?,'party_unit')", (eid, name))
+        db.execute("INSERT INTO ext_donor_aliases VALUES (?,?,1,'exact')", (name, eid))
+    db.execute("INSERT INTO associated_entities(entity_name,associated_party,financial_year,source) VALUES (?,?,'2020-21','aec_assoc_entity')",
+               (holdings, party))
+    db.commit()
+    canon = lambda name: party if "example party" in (name or "").lower() else "Other Party" if "other party" in (name or "").lower() else None
+    with mock.patch.object(aec_receipt_types, "canon_party", canon), mock.patch.object(money_aec_extras, "canon_party", canon):
+        graph = export(path)
+    node = next(n for n in graph["nodes"] if n["id"] == "party:" + party)
+    assert node["return_by_type"] == {"donation_received": 1000, "other_receipt": 5100}
+    assert node["return_by_type_year"] == {"2020-21": {"donation_received": [1000, 1], "other_receipt": [5100, 3]}}
+    # The legacy total still holds the donor's own declaration of the same gift.
+    assert node["total"] > sum(node["return_by_type"].values())
+    meta = graph["meta"]["receipt_types"]
+    assert meta["party_return_transfers"] == {party: [2000, 1]}
+    assert meta["party_return_counts"]["excluded_public_funding"] == 2
+    assert meta["party_return_counts"]["excluded_party_transfer"] == 1
+    assert meta["party_return_counts"]["exported_rows"] == 4
+    assert "transfers within the party" in meta["party_return_note"]
+    assert all("return_by_type" not in n for n in graph["nodes"] if n["kind"] != "party")

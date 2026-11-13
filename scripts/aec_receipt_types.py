@@ -2,7 +2,24 @@
 from collections import defaultdict
 
 from parli.ingest.aec_receipts import FILES, normal_type, period_key
+from parli.ingest.money_aec_extras import canon_party
 from scripts.aec_receipt_selection import load_selection
+from scripts.export_money_graph import PUBLIC_FUNDING_RE, load_associated_register, norm_key
+
+PARTY_RETURN_NOTE = (
+    "return_by_type and return_by_type_year on a federal party node count the party's own annual returns "
+    "(AEC Detailed Receipts, Political Party Return, every branch the party maps to), each receipt line once and "
+    "all receipt types, so a gift the donor also declared is never added twice. Left out: public funding "
+    "(receipt type Public Funding, a public-funding or government payer name, or a payer the resolver knows as a "
+    "government body), flagged data-quality outliers, blank or non-positive lines, and transfers within the party. "
+    "A transfer within the party is a line whose payer the resolver knows as a party unit, whose name reads as the "
+    "same party as the recipient, and which is not on the AEC associated-entity register: that money was already "
+    "counted when the paying branch received it, so it is left out rather than keyed. Associated entities "
+    "(for example an investment company the party owns) and other parties' branches are counted. "
+    "party_return_transfers gives what was left out per party as [AUD, lines]. Unlike the legacy total, count and "
+    "byYear, these fields hold no donor-side declarations; unlike by_type on a party node, they are not capped to "
+    "donors drawn on the map. Amounts under the disclosure threshold are not itemised by the AEC and are not here."
+)
 
 
 def receipt_cells():
@@ -67,6 +84,7 @@ def attach_receipt_types(db, graph):
     for node in graph["nodes"]:
         if node["kind"] in ("donor", "party"):
             node.update(receipt_fields(by_node[node["id"]]))
+    party_counts, transfers = attach_party_returns(db, graph, selection)
     years = sorted({period_key(r[0]) for r in db.execute(
         "SELECT DISTINCT financial_year FROM aec_receipt_records WHERE source_file='Detailed Receipts.csv'") if r[0]})
     graph["meta"]["receipt_types"] = {
@@ -81,5 +99,55 @@ def attach_receipt_types(db, graph):
         "selection": "aec_receipt_selection.ReceiptSelection.exclusion is shared with the uncapped report: recipient-side positive itemised party receipts, exact recipient mapping, no reviewed outliers, government/party-unit entities or public-funding/party-name donor spellings. Map edge membership is the additional cap.",
         "donation_type": "donation_received",
         "counts": dict(counts),
+        "party_return_note": PARTY_RETURN_NOTE,
+        "party_return_counts": party_counts,
+        "party_return_transfers": transfers,
     }
     return graph
+
+
+def party_return_exclusion(selection, register, donor, recipient, amount, period, receipt_type, recipient_kind):
+    """Why one party-return line stays out of return_by_type, or None when it counts."""
+    if not donor or not recipient or not amount or amount <= 0:
+        return "blank_or_nonpositive"
+    party = selection.recipient_party.get(recipient) if recipient_kind == "political_party" else None
+    if not party:
+        return "nonparty_or_unmapped_recipient"
+    if (donor, recipient, period_key(period), amount) in selection.flagged:
+        return "flagged_review"
+    entity = selection.entity(donor)
+    kind = selection.entity_kinds.get(entity)
+    if normal_type(receipt_type) == "public_funding" or PUBLIC_FUNDING_RE.search(donor) \
+            or PUBLIC_FUNDING_RE.search(norm_key(donor)) or kind == "government":
+        return "public_funding"
+    if kind == "party_unit" and canon_party(donor) == party \
+            and not ({entity, norm_key(donor)} - {None, ""}) & register.keys():
+        return "party_transfer"
+    return None
+
+
+def attach_party_returns(db, graph, selection):
+    """The party's whole return, each line once: new fields beside the capped by_type cells."""
+    parties = {n["id"]: n for n in graph["nodes"] if n["kind"] == "party"}
+    register = load_associated_register(db, selection.aliases, selection.exact)
+    cells, counts = defaultdict(receipt_cells), defaultdict(int)
+    transfers = defaultdict(lambda: [0.0, 0])
+    for donor, recipient, amount, period, kind, recipient_kind in db.execute(
+            "SELECT donor_name,recipient,amount,financial_year,receipt_type,recipient_kind FROM aec_receipt_records "
+            "WHERE record_side='recipient' AND source_file='Detailed Receipts.csv'"):
+        reason = party_return_exclusion(selection, register, donor, recipient, amount, period, kind, recipient_kind)
+        node = "party:" + selection.recipient_party[recipient] if reason not in ("blank_or_nonpositive", "nonparty_or_unmapped_recipient") else None
+        if node and node not in parties:
+            reason = "party_not_on_map"
+        if reason:
+            counts["excluded_" + reason] += 1
+            if reason == "party_transfer":
+                transfers[node][0] += amount
+                transfers[node][1] += 1
+            continue
+        add_receipt(cells[node], kind, period, amount)
+        counts["exported_rows"] += 1
+    for node_id, node in parties.items():
+        fields = receipt_fields(cells[node_id])
+        node["return_by_type"], node["return_by_type_year"] = fields["by_type"], fields["by_type_year"]
+    return dict(sorted(counts.items())), {k[6:]: [round(v[0], 2), v[1]] for k, v in sorted(transfers.items())}
