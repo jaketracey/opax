@@ -6425,7 +6425,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     head.insertAdjacentHTML('beforeend', `<p class="person-caveat">Only own-house speeches within the reviewed service dates in the ${esc(roster.speech_scope.state.toUpperCase())} parliamentary chamber are attributed here. <a ${entityHrefAttr(hasEntityId(roster.name) ? subjectHash('person', roster.name) + "?attribution=unattributed" : null)}>Witness testimony and other unattributed records printed as ${esc(roster.name)}</a>.</p>`);
   }
   // What the speech count leaves out is said in the speeches section, the part of the page it qualifies.
-  const speechNotes = heldBackHelpers.heldBackTranscriptsHTML(roster?.pid, heldBackCounts)
+  const speechNotes = heldBackHelpers.noHansardHeldHTML(roster)
+    + heldBackHelpers.heldBackTranscriptsHTML(roster?.pid, heldBackCounts)
     + heldBackHelpers.chairRoleTranscriptsHTML(roster?.pid, chairRoleCounts);
   const witness = !roster && speeches.length > 0 &&
     speeches.every((r) => r.speaker_type === "witness" || (isCommitteeChamber(r.chamber) && r.person_id == null));

@@ -12,7 +12,7 @@ import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, b
 import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../public/datatable.js'
 import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import {chamberLabel, machineLabelHTML, partyLabelHTML} from '../public/party-page.js'
-import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML} from '../public/held-back-transcripts.js'
+import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML, noHansardHeldHTML} from '../public/held-back-transcripts.js'
 import {divisionTableConfig, voteTableConfig, personVoteKeys, personVoteRecords, divisionRows, votingRows, voteTablePage, voteTableHTML} from '../public/vote-tables.js'
 import type {Query} from '../public/datatable.js'
 import {personVideos, videoSectionHTML, type VideoRow} from '../public/video-card.js'
@@ -30,6 +30,8 @@ interface Person {
   name: string; full?: string; pid?: string; party?: string | null; party_now?: string | null;
   current?: boolean; states: string[]; chambers: string[]; speeches?: number | null;
   speech_scope?: unknown;
+  /** A list-only profile: no speeches attributed (public/held-back-transcripts.js noHansardHeldHTML). */
+  roster_only?: boolean;
   representation?: { electorate: string; jurisdiction: string; chamber: string }[];
 }
 interface Seat {
@@ -270,7 +272,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   }
   body += `</ul>${original(profileUrl)}<p>${link('/parliamentarians.json','Parliamentarian data (JSON)')}. Recorded representation can include historical seats; affiliation with no current-roster flag is not verified as current or former.</p>`
   // The notes on what the speech count leaves out sit with the speeches, never in the head.
-  body += heldBackTranscriptsHTML(p.pid, heldBackCounts) + chairRoleTranscriptsHTML(p.pid, chairRoleCounts)
+  body += noHansardHeldHTML(p) + heldBackTranscriptsHTML(p.pid, heldBackCounts) + chairRoleTranscriptsHTML(p.pid, chairRoleCounts)
   // The Senate's own video of a first speech, matched to this roster row by the fetcher; nothing when there is none.
   body += videoSectionHTML('First speech',personVideos(video?.videos,slugs.get(p.name),p),{id:'ssr-first-speech',note:'Video published by the Senate Public Information Office on YouTube.',after:`<p class="video-more">${link('/video/senate?kind=first-speech','All first speeches')}</p>`})
   if (!p.speech_scope) {

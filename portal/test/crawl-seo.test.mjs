@@ -15,8 +15,8 @@ const root = new URL('../public/',import.meta.url);
 const read = path => readFileSync(new URL(path,root),'utf8');
 const json = path => JSON.parse(read(path));
 const source = readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
-const compiled = await build({stdin:{contents:source+'\nexport {moneySubjectMeta,loadPartyLabels,loadPartyPages,loadDivisionSummaries,loadPeople};',resolveDir:new URL('../src/',import.meta.url).pathname,sourcefile:'index.ts',loader:'ts'},metafile:true,bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'omit-renderer',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'renderer',namespace:'crawl-test'}));b.onLoad({filter:/.*/,namespace:'crawl-test'},()=>({contents:'export const renderOgPng = async()=>null; export const renderOgJpeg=renderOgPng;',loader:'js'}));}}]});
-const {default:worker,moneySubjectMeta,loadPartyLabels,loadPartyPages,loadDivisionSummaries,loadPeople} = await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
+const compiled = await build({stdin:{contents:source+'\nexport {moneySubjectMeta,loadPartyLabels,loadPartyPages,loadDivisionSummaries,loadPeople,personMeta};',resolveDir:new URL('../src/',import.meta.url).pathname,sourcefile:'index.ts',loader:'ts'},metafile:true,bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'omit-renderer',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'renderer',namespace:'crawl-test'}));b.onLoad({filter:/.*/,namespace:'crawl-test'},()=>({contents:'export const renderOgPng = async()=>null; export const renderOgJpeg=renderOgPng;',loader:'js'}));}}]});
+const {default:worker,moneySubjectMeta,loadPartyLabels,loadPartyPages,loadDivisionSummaries,loadPeople,personMeta} = await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
 globalThis.HTMLRewriter = class { on(){return this;} transform(res){return res;} };
 const assetPaths = [];
 const env = {COMMUNITY_ORIGIN:'https://opax.com.au',ASSETS:{async fetch(req){
@@ -97,6 +97,16 @@ test('the server page shows the same parliamentarian count as the browser page',
   assert.equal(shown.Labor, 496);
   assert.equal(shown.Liberal, 346);
   assert.equal(shown.Greens, 51);
+});
+
+test('an SA Council list-only profile is a sitting MLC with no Hansard held, not "0 speeches"', async () => {
+  // Hilton Gumbys: on the SA Legislative Council list dated 2026-11-13, no SA Hansard in OPAX after 2023 (A27).
+  const meta = await personMeta('Hilton Gumbys', new URL('https://opax.com.au/subject/person/hilton-gumbys'), env);
+  assert.equal(meta.status, 200);
+  assert.match(meta.description, /No Hansard held for this period\./);
+  assert.match(meta.description, /Recorded service: 2026\./);
+  assert.match(meta.description, /MLC/);
+  assert.doesNotMatch(meta.description, /former|0 speeches/);
 });
 
 test('sitemap index and every type file have export lastmod, unique canonical URLs and accurate counts',async()=>{
