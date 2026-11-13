@@ -602,6 +602,71 @@ def revert(people, accept):
     return out
 
 
+def rebase_folds(accept, installed, folded, folds):
+    """{record name: new groups or None} for rows a review folded into one person (scripts/roster_fold.py fold_ids):
+    `installed` is the roster before the fold, `folded` after it, `folds` {person: [names folded into them]}.
+
+    Each group on the person or on a row they took moves to the person, one group per evidence, holding
+    [the merge of the reverted rows, the merge of the installed rows] for every field those groups touched. The
+    merge is field by field, so revert() still restores the merge of the reviewed baseline (what
+    scripts/audit_roster_changes.py proves against main) and every installed value is still a reviewed one. A field
+    the merge makes equal on both sides is dropped, and so is a group left empty; the folded rows' records go
+    (None). Corpus values stay under their corpus rule (a sum of counts that only rose still only rises), and a
+    moved catalog-aliases group is checked by its rule against the person's prints (roster_source_profiles)."""
+    from scripts import roster_fold
+    records = accept.get("records", {})
+    reverted = {p["name"]: p for p in revert(installed, accept)}
+    now = {p["name"]: p for p in folded}
+    changes = {}
+    for person, others in folds.items():
+        others = sorted(others)
+        base = roster_fold.merge_ids(copy.deepcopy(reverted[person]), [copy.deepcopy(reverted[n]) for n in others])
+        merged = now[person]
+        by_evidence = {}
+        for name in [person, *others]:
+            for g in records.get(name, []):
+                entry = by_evidence.setdefault(g["evidence"], {"evidence": g["evidence"], "fields": {}})
+                entry["fields"].update(dict.fromkeys(g["fields"]))
+                for k in ("url", "checked", "note"):
+                    if g.get(k) and k not in entry:
+                        entry[k] = g[k]
+        groups = []
+        for entry in by_evidence.values():
+            entry["fields"] = {f: [base.get(f), merged.get(f)] for f in entry["fields"] if base.get(f) != merged.get(f)}
+            if entry["fields"]:
+                groups.append(entry)
+        for name in others:
+            if name in records:
+                changes[name] = None
+        if groups or person in records:
+            changes[person] = groups or None
+    return changes
+
+
+def edit_records(text, changes):
+    """The accept list's text with only the named records' lines rewritten ({name: groups}) or removed (None), so a
+    review diff shows just them. A record new to the list takes the line of the first removed record."""
+    lines = text.split("\n")
+    start = lines.index('  "records": {')
+    end = next(i for i in range(start + 1, len(lines)) if lines[i] == "  },")
+    body = []
+    pending = [n for n, v in changes.items() if v is not None and f'    {json.dumps(n, ensure_ascii=False)}: ' not in text]
+    for line in lines[start + 1:end]:
+        name = json.loads(line.split(": ", 1)[0])
+        if name not in changes:
+            body.append(line.rstrip(","))
+        elif changes[name] is not None:
+            body.append(f"    {json.dumps(name, ensure_ascii=False)}: {json.dumps(changes[name], ensure_ascii=False)}")
+        elif pending:
+            new = pending.pop(0)
+            body.append(f"    {json.dumps(new, ensure_ascii=False)}: {json.dumps(changes[new], ensure_ascii=False)}")
+    if pending:
+        raise ValueError("records with nowhere to go: " + ", ".join(pending))
+    out = "\n".join([*lines[:start + 1], ",\n".join(body), *lines[end:]])
+    json.loads(out)
+    return out
+
+
 def ordered(people):
     """Speeches descending, as the export writes them; a stable sort, so an unchanged roster keeps its order."""
     return sorted(people, key=lambda p: -(p.get("speeches") or 0))

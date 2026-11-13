@@ -20,15 +20,20 @@ def _roster_names():
     people = json.loads((Path(__file__).resolve().parents[1] / 'portal/public/parliamentarians.json').read_text())['people']
     full_names, surnames, name_tokens = set(), set(), set()
     for person in people:
-        for value in (person.get('full'), person.get('name')):
+        # A row's prints (scripts/roster_fold.py) are names the record prints that person under: keep them,
+        # as scripts/build_passage_names.mjs does.
+        prints = person.get('prints')
+        for value in (person.get('full'), person.get('name'), *(prints or ())):
             name_tokens.update(token.lower() for token in _SPACE.split(_TITLES.sub('', value or '').strip(_WHITESPACE)) if token)
-        name = _SPACE.sub(' ', person.get('full') or person.get('name') or '')
-        name = _TITLES.sub('', name).strip(_WHITESPACE)
-        parts = name.split(' ')
-        if sum(char.isalpha() for char in parts[-1]) >= 2:
-            surnames.add(parts[-1])
-        if len(parts) >= 2 and sum(char.isalpha() for char in parts[0]) >= 2 and any(char.islower() for char in parts[0]):
-            full_names.add(name)
+        values = [person.get('full') or person.get('name'), *([person.get('name')] if prints is not None else []), *(prints or ())]
+        for value in dict.fromkeys(values):
+            name = _SPACE.sub(' ', value or '')
+            name = _TITLES.sub('', name).strip(_WHITESPACE)
+            parts = name.split(' ')
+            if sum(char.isalpha() for char in parts[-1]) >= 2:
+                surnames.add(parts[-1])
+            if len(parts) >= 2 and sum(char.isalpha() for char in parts[0]) >= 2 and any(char.islower() for char in parts[0]):
+                full_names.add(name)
     longest = lambda values: sorted(values, key=lambda value: (-len(value), value))
     return dict(full_names=longest(full_names), surnames=longest(surnames), name_tokens=longest(name_tokens),
                 honorifics=['Senator', 'Mrs', 'Mr', 'Ms', 'Dr'],
