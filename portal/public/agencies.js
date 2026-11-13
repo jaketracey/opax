@@ -1,6 +1,6 @@
 import {hydrateRecordCore} from './record-core.js';
 import {donorLabelHTML} from './donor-disclosure.js?v=8c73ceafd6';
-import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, plural, procurementSourceHTML, procurementRailHTML, slowNotice, statsHTML, withheldHTML } from './suppliers.js?v=49bfba239e';
+import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, plural, procurementSourceHTML, procurementRailHTML, slowNotice, statsHTML, withheldHTML } from './suppliers.js?v=c620df4931';
 import { procurementGraph } from './procurement-data.js';
 import { shortMoney } from './format.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
