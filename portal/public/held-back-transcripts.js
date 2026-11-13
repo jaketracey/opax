@@ -1,10 +1,11 @@
+import { shortDate } from './format.js';
 /** Counts are keyed by the roster's verified person ID, never by a name. Both notes sit with the
  *  person's speeches, the section they qualify, never in the page head. */
 export function heldBackTranscriptsHTML(personId, counts) {
   const count = personId == null ? 0 : counts?.[String(personId)];
   if (!Number.isSafeInteger(count) || count <= 0) return '';
   const one = count === 1;
-  const text = `${count.toLocaleString('en-AU')} earlier transcript${one ? '' : 's'} also record${one ? 's' : ''} this member, alongside other speakers. ${one ? 'It joins' : 'They join'} these speeches once each speaker’s words are separated.`;
+  const text = `${count.toLocaleString('en-AU')} earlier transcript${one ? '' : 's'} record${one ? 's' : ''} this member alongside other speakers and ${one ? 'is' : 'are'} not counted here.`;
   return `<p class="person-held-back fineprint"><a href="/methods#speaker-attribution">${text}</a></p>`;
 }
 
@@ -22,4 +23,41 @@ export const NO_HANSARD_HELD = 'No Hansard held for this period.';
 export function noHansardHeldHTML(person) {
   if (!person?.roster_only) return '';
   return `<p class="person-no-hansard fineprint">${NO_HANSARD_HELD} This profile comes from the parliament’s member list; no speeches in the record are attributed to them.</p>`;
+}
+
+/** Where a person's speeches in the record stop, said plainly above the list: "Speeches in the record
+ *  run to 11 Sep 2024." A sitting member whose newest speech is more than 120 days before `today`
+ *  (YYYY-MM-DD) gets a second sentence, because the gap is the record's, not the member's silence.
+ *  '' without a dated speech. */
+export function speechSpanLine(latest, { current = false, today = '' } = {}) {
+  const day = /^\d{4}-\d{2}-\d{2}/.exec(String(latest || ''))?.[0];
+  if (!day || Number.isNaN(Date.parse(day))) return '';
+  const line = `Speeches in the record run to ${shortDate(day)}.`;
+  const now = /^\d{4}-\d{2}-\d{2}$/.test(today) ? Date.parse(today) : NaN;
+  return current && Number.isFinite(now) && (now - Date.parse(day)) / 86_400_000 > 120
+    ? `${line} Later speeches are not yet in the record.` : line;
+}
+
+/* Mentions on a person page. Hansard sets debate headings in capitals ("STATEMENTS BY SENATORS",
+   "BILLS - Treasury Laws Amendment ..."); a row title reads in sentence case. Only a part set wholly in
+   capitals changes, and the short acronyms the record uses keep their capitals. */
+const KEEP_CAPS = new Set(['ABC', 'ACT', 'ADF', 'AFP', 'ASIO', 'AUKUS', 'COVID-19', 'GST', 'NBN', 'NDIS', 'NSW', 'NT', 'QLD', 'SA', 'SBS', 'TAS', 'UN', 'US', 'USA', 'UK', 'VIC', 'WA', 'II', 'III', 'IV']);
+const sentencePart = part => {
+  if (!/[A-Z]/.test(part) || /[a-z]/.test(part)) return part;
+  const lower = part.toLowerCase().replace(/[A-Za-z0-9-]+/g, word => KEEP_CAPS.has(word.toUpperCase()) ? word.toUpperCase() : word);
+  return lower.replace(/^(\W*)([a-z])/, (_, lead, c) => lead + c.toUpperCase());
+};
+export function mentionTitleCase(title) {
+  return String(title || '').split(/(\s+[-–—]\s+)/).map((part, i) => i % 2 ? part : sentencePart(part)).join('');
+}
+
+/** A mention row names the person when the passage the row shows (its first `shown` characters, as the
+ *  row prints it) carries their surname as a whole word: a hit on a heading, another speaker's name, or
+ *  a name cut off at the end of the shown passage is not a mention a reader can see. */
+export function mentionNamesPerson(row, name, shown = 220) {
+  const fold = value => String(value || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[‘’ʼ`]/g, "'").toLowerCase();
+  const surname = fold(name).trim().split(/\s+/).at(-1);
+  if (!surname || surname.length < 2) return false;
+  const escaped = surname.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`(^|[^\\p{L}'])${escaped}($|[^\\p{L}])`, 'u').test(fold(String(row?.snippet || '').slice(0, shown)));
 }

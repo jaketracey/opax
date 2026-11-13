@@ -3,7 +3,7 @@ import {loadDonorViewIndex} from './donor-views.js?v=9770cf1299';
 let donorIndex=new Map();
 loadDonorViewIndex().then(index=>{donorIndex=index});
 import { personUrl, partyUrl } from './canonical-urls.js?v=bcc9a57bab';
-import { hydrateCollections, hydrateLatest, hydrateSitting, industryGroups, mapSourceHTML, refreshInfo } from '/home-data.js?v=433480f736';
+import { hydrateCollections, hydrateLatest, hydrateMostDivided, hydrateSitting, industryGroups, mapSourceHTML, refreshInfo } from '/home-data.js?v=5dfc8b72cd';
 
 // The homepage and research workspace have separate document lifecycles.
 const legacyRoute = location.href.split('#')[1] || '';
@@ -506,6 +506,7 @@ OpaxQuickSearch.attach($('drawer-q'), $('drawer-sugg'), {idPrefix:'ds', source:h
 
 // Whether parliament sits today, above the title: from the published calendar, or no line.
 hydrateSitting();
+hydrateMostDivided();
 // Reports and the footer's coverage line now; new bills and declarations when
 // their block nears the screen. The page ships with dated rows to fall back on.
 hydrateCollections();

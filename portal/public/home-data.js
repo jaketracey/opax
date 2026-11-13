@@ -180,10 +180,47 @@ export function sittingLine(calendar, today) {
   const next = days.filter(d => d.date > today && d.date <= last).sort((a, b) => a.date.localeCompare(b.date))[0];
   return next ? { href: '/sitting', text: `Next sitting day: ${longDay(next.date)}` } : null;
 }
+/* The bill most divided on in the last completed sitting week, from the sitting hubs' own division list
+   (hubs/index.json, scripts/build_hubs.mjs). A bill division's heading is "BILLS - <bill>; <stage>"; other
+   headings (business, motions) are not bills and are not counted. Two bills level on the count are both
+   named; more than two, or a top count under two, and there is no line: a fact by rule, never a pick. */
+const BILL_HEADING = /^bills\s+[-–—]\s+(.+)$/i;
+export function mostDividedLine(hubs, today) {
+  if (!ISO_DAY.test(today || '') || !Array.isArray(hubs?.weeks)) return null;
+  const week = hubs.weeks.filter(w => w && ISO_DAY.test(w.start || '') && ISO_DAY.test(w.end || '') && w.end < today && Array.isArray(w.divisions) && w.divisions.length)
+    .sort((a, b) => b.start.localeCompare(a.start))[0];
+  if (!week) return null;
+  const counts = new Map(), seen = new Set();
+  for (const d of week.divisions) {
+    if (!d || (d.jurisdiction && d.jurisdiction !== 'federal') || seen.has(d.key)) continue;
+    seen.add(d.key);
+    const heading = BILL_HEADING.exec(String(d.title || d.name || '').trim());
+    if (!heading) continue;
+    const parts = heading[1].split(/;\s*/).map(p => p.trim()).filter(Boolean);
+    const bill = (parts.length > 1 ? parts.slice(0, -1) : parts).join('; ');
+    if (bill) counts.set(bill, (counts.get(bill) || 0) + 1);
+  }
+  const ranked = [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'en'));
+  const top = ranked[0]?.[1] || 0;
+  const leaders = ranked.filter(([, n]) => n === top);
+  if (top < 2 || leaders.length > 2) return null;
+  const names = leaders.map(([name]) => name);
+  return { href: `/sitting/${week.start}`,
+    text: `Most divisions last sitting week: ${names.join(' and ')}, ${top}${names.length > 1 ? ' each' : ''}` };
+}
+
 /** Fills the line above the home page's title; it stays hidden when the calendar is missing or out of range. */
 export async function hydrateSitting(slot = document.querySelector('#hp-sitting'), today = sydneyToday()) {
   if (!slot) return;
   const line = sittingLine(await read('/parliament/sitting-days.json').catch(() => null), today);
+  if (!line) { slot.hidden = true; slot.innerHTML = ''; return; }
+  slot.innerHTML = `<a href="${esc(line.href)}">${esc(line.text)}</a>`;
+  slot.hidden = false;
+}
+/** The line under the sitting line: hidden when the hubs are missing or no bill leads the last week. */
+export async function hydrateMostDivided(slot = document.querySelector('#hp-most-divided'), today = sydneyToday()) {
+  if (!slot) return;
+  const line = mostDividedLine(await read('/hubs/index.json').catch(() => null), today);
   if (!line) { slot.hidden = true; slot.innerHTML = ''; return; }
   slot.innerHTML = `<a href="${esc(line.href)}">${esc(line.text)}</a>`;
   slot.hidden = false;

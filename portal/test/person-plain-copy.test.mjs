@@ -77,6 +77,6 @@ test('party and donor headers say the years of their returns, not "Active"', () 
 test('the transcript notes sit with the speeches, not in the head', () => {
   const from = source.indexOf('const speechNotes =');
   const person = source.slice(from, source.indexOf('renderPersonFirstSpeech(name', from));
-  assert.match(person, /renderPersonSpeeches\(speechSpeaker, speeches, chambers, sections, \{ scope: speechScope, notes: speechNotes \}\)/);
+  assert.match(person, /renderPersonSpeeches\(speechSpeaker, speeches, chambers, sections, \{ scope: speechScope, notes: speechNotes, current: roster\?\.current === true \}\)/);
   assert.doesNotMatch(source, /head\.insertAdjacentHTML\('beforeend', heldBackHelpers/);
 });
