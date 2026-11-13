@@ -951,7 +951,9 @@ export interface EditionFacts {
   line: string | null;
   /** Each number slide's figure and label, in the run's order. */
   figures: { value: string; label: string }[];
-  /** The first bars slide: its title, rows (rounded shares) and note. */
+  /** All bars slides in published order. Older cached projections omit it. */
+  barGroups?: NonNullable<EditionFacts['bars']>[];
+  /** The first bars slide, also retained for older cached projections. */
   bars: {
     title: string;
     items: { label: string; pct: number }[];
@@ -982,7 +984,19 @@ export interface EditionFacts {
 function editionFacts(slides: AppEdition['edition']['slides']): EditionFacts {
   const all = slides ?? [];
   const cover = all.find((s) => s.type === 'cover');
-  const bars = all.find((s) => s.type === 'bars' && s.items?.length);
+  const bars = all.filter((s) => s.type === 'bars' && s.items?.length);
+  const barGroups = bars.flatMap<NonNullable<EditionFacts['bars']>>((s) =>
+    s.type === 'bars' && s.items
+      ? [
+          {
+            title: s.title.trim(),
+            items: s.items.map((i) => ({ label: i.label.trim(), pct: i.pct })),
+            note: s.note?.trim() || null,
+            ...(typeof s.whole === 'boolean' ? { whole: s.whole } : {}),
+          },
+        ]
+      : [],
+  );
   const timeline = all.find((s) => s.type === 'timeline' && s.events?.length);
   const division = all.find(
     (s) =>
@@ -999,7 +1013,8 @@ function editionFacts(slides: AppEdition['edition']['slides']): EditionFacts {
   const order = all.flatMap<NonNullable<EditionFacts['order']>[number]>((s) => {
     if (s.type === 'number' && s.value?.trim() && s.label?.trim())
       return [{ type: 'figure' as const, index: figureIndex++ }];
-    if (s === bars) return [{ type: 'bars' as const, index: 0 }];
+    const barIndex = bars.indexOf(s);
+    if (barIndex >= 0) return [{ type: 'bars' as const, index: barIndex }];
     if (s === timeline) return [{ type: 'events' as const, index: 0 }];
     if (s === division) return [{ type: 'division' as const, index: 0 }];
     return [];
@@ -1013,18 +1028,8 @@ function editionFacts(slides: AppEdition['edition']['slides']): EditionFacts {
         ? [{ value: s.value.trim(), label: s.label.trim() }]
         : [],
     ),
-    bars:
-      bars?.type === 'bars' && bars.items
-        ? {
-            title: bars.title.trim(),
-            items: bars.items.map((i) => ({
-              label: i.label.trim(),
-              pct: i.pct,
-            })),
-            note: bars.note?.trim() || null,
-            ...(typeof bars.whole === 'boolean' ? { whole: bars.whole } : {}),
-          }
-        : null,
+    bars: barGroups[0] ?? null,
+    ...(barGroups.length > 1 ? { barGroups } : {}),
     events:
       timeline?.type === 'timeline' && timeline.events
         ? timeline.events.map((e) => ({

@@ -339,7 +339,13 @@ function EditionFacts({
   edition: EditionView;
   provenance: ReturnType<typeof editionSources>;
 }) {
-  const { figures, bars, events, division } = edition.facts;
+  const {
+    figures,
+    bars: firstBars,
+    barGroups,
+    events,
+    division,
+  } = edition.facts;
   const provenance = {
     dateRange: { start: edition.date, end: edition.date },
     citation: 'OPAX daily edition',
@@ -353,7 +359,10 @@ function EditionFacts({
   };
   const order = edition.facts.order ?? [
     ...figures.map((_, index) => ({ type: 'figure' as const, index })),
-    ...(bars ? [{ type: 'bars' as const, index: 0 }] : []),
+    ...(barGroups ?? (firstBars ? [firstBars] : [])).map((_, index) => ({
+      type: 'bars' as const,
+      index,
+    })),
     ...(events.length ? [{ type: 'events' as const, index: 0 }] : []),
     ...(division ? [{ type: 'division' as const, index: 0 }] : []),
   ];
@@ -363,6 +372,8 @@ function EditionFacts({
     <SourceSection>
       {order.map((fact, index) => {
         const id = `edition-fact-${index}`;
+        const bars =
+          barGroups?.[fact.index] ?? (fact.index === 0 ? firstBars : null);
         if (fact.type === 'figure') {
           const figure = figures[fact.index];
           if (!figure) return null;

@@ -1,3 +1,4 @@
+import followFixture from './fixtures/follows-50.json';
 import { vicElectionFixture } from './vic-election-fixture';
 // Offline, data-only server. No Worker import, proxy, fetch, email or model path.
 import { createVoiceFixture } from './voice-fixture';
@@ -253,8 +254,9 @@ if (dataMode === 'changed') {
 const peopleFixtures = JSON.parse(
   responseBytes(snapshot, '/people-fixtures').toString(),
 ) as { responses: Record<string, unknown> };
-const edition =
-  editionMode === 'politician'
+const edition = process.env.OPAX_FIXTURE_EDITION_FILE
+  ? readFileSync(process.env.OPAX_FIXTURE_EDITION_FILE)
+  : editionMode === 'politician'
     ? readFileSync(join(__dirname, 'fixtures/edition-politician.json'))
     : responseBytes(snapshot, editionPath);
 const editionDate = decodeEdition(JSON.parse(edition.toString())).date;
@@ -267,6 +269,19 @@ const roster = JSON.parse(
 const people = JSON.parse(
   files.get(manifest.people_url)!.toString(),
 ) as PeopleCatalog;
+// Opt-in only. The fixture uses canonical identities from the pinned people
+// catalog. Android cannot read the iOS Settings launch-argument seed.
+const followSeed = process.env.OPAX_FIXTURE_FOLLOWS ?? 'none';
+if (!['none', '50'].includes(followSeed))
+  throw new Error('OPAX_FIXTURE_FOLLOWS must be none or 50');
+files.set(
+  '/__fixture/follows',
+  Buffer.from(
+    JSON.stringify(
+      followSeed === '50' ? followFixture : { version: 1, follows: [] },
+    ),
+  ),
+);
 // OPAX's public slug contract; highest speech count owns colliding spellings.
 const slugOf = (name: string) =>
   name
@@ -401,7 +416,10 @@ export const server = createServer(async (request, response) => {
     // Verify the many static bill-history blobs lazily at the fixture boundary.
     if (!body && Object.hasOwn(directorySnapshot.files, url.pathname))
       body = directoryBytes(url.pathname);
-    let cacheControl = 'public, max-age=300';
+    let cacheControl =
+      url.pathname === '/__fixture/follows'
+        ? 'no-store'
+        : 'public, max-age=300';
     const isEdition = url.pathname === editionPath;
     if (
       isEdition &&

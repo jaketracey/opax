@@ -40,7 +40,8 @@ const inheritedResolver = config.resolver.resolveRequest;
 // welcome tour's launch argument and the electorate outline probe, and the
 // Account and Talk entries use a single release switch below.
 const productionStubs = [
-  path.join(__dirname, 'src/features/follows/launch-fixture'),
+  'src/api/follow-fixture-path',
+  'src/features/follows/launch-fixture',
   'src/design/text-probe',
   'src/features/today/launch-fixture',
   'src/features/people/party-timing',

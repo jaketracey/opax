@@ -190,7 +190,7 @@ async function readFollows(): Promise<Follow[]> {
   ]);
   newest = { slot: copy.slot, generation: copy.generation };
   topicNewest = { slot: topics.slot, generation: topics.generation };
-  const seed = copy.value == null ? seededFollows() : null;
+  const seed = copy.value == null ? await seededFollows() : null;
   primaryEntries = seed ?? copy.value?.follows ?? [];
   savedCount =
     typeof copy.value?.count === 'number' &&

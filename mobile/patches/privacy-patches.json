@@ -141,5 +141,18 @@
         "after": "9afceb8c5d08c2609f88128c928a0e714163dd3a3fd5d87704883ed9f748c807"
       }
     ]
+  },
+  {
+    "package": "expo-router",
+    "version": "57.0.24",
+    "patch": "expo-router+57.0.24-navigation-queue.patch",
+    "sha256": "1f704fc3f2b908604195c600bc56b4a59f8f697f539bd49920b271df22ef976f",
+    "files": [
+      {
+        "path": "build/global-state/routingQueue.js",
+        "before": "548065661580e3d66a4e720d34fc502b2077bea9780c94cb2b53dd7ffb22cab8",
+        "after": "68dde30df20968b20352840edb6d4728783f80559db6fa17924c280e641b6f3e"
+      }
+    ]
   }
 ]

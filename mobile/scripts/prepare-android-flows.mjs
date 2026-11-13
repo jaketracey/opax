@@ -90,6 +90,8 @@ const nativeSearchHints = new Set([
 ]);
 const nativeSearch = { id: '.*:id/search_src_text' };
 function selector(v) {
+  if (v === 'Search bills')
+    return { id: '.*:id/(search_src_text|search_button)' };
   if (v === 'Profile sources') return 'Sources';
   if (v === 'Privacy policy-device') return { id: 'about-privacy-device' };
   if (nativeSearchHints.has(v)) return { ...nativeSearch };
@@ -281,7 +283,9 @@ function command(v, relative) {
     out.tapOn =
       text === 'Select All'
         ? { text: '^Select (All|all)$' }
-        : text === 'Ask about their speeches'
+        : text === 'Ask about their speeches' ||
+            (text === 'Ask about Anthony Albanese' &&
+              relative === '30-ask-entry-points.yaml')
           ? // Android's More menu names the person ("Ask about <name>").
             { text: '^Ask about (their speeches|.+)$' }
           : text === 'Name' && relative === '43-money-agencies.yaml'
