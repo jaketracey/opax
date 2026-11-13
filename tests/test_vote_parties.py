@@ -813,3 +813,46 @@ class HandbookBuild(unittest.TestCase):
                 self.assertEqual(len(calls), 1)
                 self.assertTrue(calls[0].startswith("https://handbookapi.aph.gov.au/api/"))
             self.assertFalse((Path(tmp) / "cache").exists())  # nothing cached from a refused run
+
+
+class UndatedSenateChanges(unittest.TestCase):
+    # Invented: the Handbook gives Sorrel Ainsley one undated party; the source gives a later one on every date.
+    AINSLEY = dict(senator("ZZ6", "Sorrel Ainsley", "99800", []), undated=["Labor"])
+    # Invented: an undated record that agrees with the source says nothing.
+    BEXLEY = dict(senator("ZZ7", "Tobin Bexley", "99801", []), undated=["Greens"])
+
+    def records(self):
+        return [senate("federal-senate-1", "2023-03-01", [labelled("Sorrel Ainsley", "Example Voice", "tvfy_99800"),
+                                                         labelled("Tobin Bexley", "Greens", "tvfy_99801", "no")])]
+
+    def test_a_label_the_undated_record_contradicts_is_kept_and_marked(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            handbook_file(tmp, [self.AINSLEY, self.BEXLEY])
+            evidence = evidence_from(tmp)
+        records = self.records()
+        got = fill(records, evidence)
+        self.assertEqual(got[("federal-senate-1", "Sorrel Ainsley")], ("Example Voice", "label-kept-undated-change"))
+        self.assertEqual(got[("federal-senate-1", "Tobin Bexley")][1], "label-kept-no-match")
+        ainsley, bexley = records[0]["members"]
+        self.assertEqual(ainsley["party"], "Example Voice")
+        self.assertEqual(ainsley["party_undated"], {"source_party": "Example Voice", "record_parties": ["Labor"]})
+        self.assertNotIn("party_undated", bexley)
+        # Recomputed every run: without the undated record the mark goes.
+        fill(records, V.Evidence([], elections={}))
+        self.assertNotIn("party_undated", records[0]["members"][0])
+
+    def test_the_mark_is_kept_on_a_night_without_the_senate_file(self):
+        def fresh():
+            record = self.records()[0]
+            return {record["key"]: record}
+        with tempfile.TemporaryDirectory() as tmp:
+            handbook_file(tmp, [self.AINSLEY, self.BEXLEY])
+            out = Path(tmp) / "divisions"
+            D.write_projection(fresh(), out, party_evidence=evidence_from(tmp))
+            page = (out / "division-federal-senate-1.json").read_bytes()
+            self.assertIn(b"party_undated", page)
+            (Path(tmp) / "scripts/handbook_party_service.json").unlink()
+            with redirect_stderr(io.StringIO()):
+                missing = evidence_from(tmp, [release_term("Corin Ashdale", "Nationals", "2013-09-07")])
+            D.write_projection(fresh(), out, party_evidence=missing)
+            self.assertEqual((out / "division-federal-senate-1.json").read_bytes(), page)

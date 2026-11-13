@@ -31,7 +31,10 @@ out, so those rows keep the source label. A record with an end but no start is
 the person's first party and runs from the start of their service
 (ServiceHistory_Start: Jacqui Lambie's Palmer United period). An open period runs
 to the end of the person's service, or to the fetch date while they still sit.
-A record that names no party is left out. Party names stay as the Handbook spells them in
+A record that names no party is left out. The parties of records with neither date
+are kept in `undated`: they date nothing, but one that differs from a row's source
+label shows the senator changed party on a date the Handbook does not give
+(vote_parties keeps that row's label and marks it party_undated). Party names stay as the Handbook spells them in
 `handbook_party`; `party` is the label the division pages use (PARTY_NAMES).
 """
 from __future__ import annotations
@@ -195,12 +198,14 @@ def build(raw: dict, members: list[dict]) -> dict:
         pid, basis = handbook.match_person(ind, members)
         if not pid:
             unmatched.append(f"{ind.get('DisplayName')} ({ind['PHID']}): {basis}")
-        periods = []
+        periods, undated = [], []
         for row in sorted(by_phid.get(str(ind["PHID"]), []), key=lambda r: (str(r.get("DateStart1")), r.get("OBY") or 0)):
             start, stop = day(row.get("DateStart1")), day(row.get("DateEnd1"))
             if not start and stop:
                 start = day(ind.get("ServiceHistory_Start"))
             name = str(row.get("Value1") or "").strip()
+            if name and not start and not stop:
+                undated.append(PARTY_NAMES.get(name, name))
             if not start or not name:
                 continue
             label = PARTY_NAMES.get(name)
@@ -212,7 +217,7 @@ def build(raw: dict, members: list[dict]) -> dict:
         people.append({"phid": str(ind["PHID"]), "pid": pid, "match": basis if pid else None,
                        "name": names_of(ind, member_by_pid.get(pid))[0] if names_of(ind, member_by_pid.get(pid)) else ind.get("DisplayName"),
                        "names": names_of(ind, member_by_pid.get(pid)), "current": current,
-                       "service_end": end, "periods": periods})
+                       "service_end": end, "periods": periods, "undated": sorted(set(undated))})
     people.sort(key=lambda p: (p["name"], p["phid"]))
     return {"source": "Parliamentary Handbook API, records of service (ROSTypeID 11, parliamentary party)",
             "url": HANDBOOK + f"recordsofservice?$filter=ROSTypeID eq {PARTY_TYPE}",
@@ -221,7 +226,7 @@ def build(raw: dict, members: list[dict]) -> dict:
             "from": FIRST_YEAR,
             "note": ("Party periods for every senator whose service reaches 2006 or later. `from` to `fetched` is the dated range: Senate divisions inside it are checked against these records. A period runs from start "
                      "to the day before end; an open period runs to `through` (the end of service, or the fetch "
-                     "date while the senator still sits). A record with neither date is left out; one with only an end runs from the start of service. Built by "
+                     "date while the senator still sits). A record with neither date gives no period (its party is listed in `undated`); one with only an end runs from the start of service. Built by "
                      "scripts/build_handbook_parties.py; read by scripts/vote_parties.py."),
             "people": people}, unmatched, sorted(unlabelled)
 

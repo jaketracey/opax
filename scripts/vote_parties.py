@@ -17,6 +17,11 @@ evidence the repo or the database already holds, and only for its own date:
                    scripts/build_handbook_parties.py): start <= date < end, or
                    an open period up to the end of service. The federal Senate
                    only: it is the dated record for Senate source labels.
+                   A senator's undated Handbook party ("undated") dates
+                   nothing; where it differs from the source label and no
+                   dated period covers the date, the label is kept and marked
+                   party_undated, because the senator changed party on a date
+                   no record held gives (the page says so).
   release-roster   a verified seat roster in the release, on its as_of date.
   official-list    an official chamber list in scripts/roster_state_evidence.json,
                    on its as_of date.
@@ -93,6 +98,8 @@ ELECTIONS = ROOT / "scripts/general_elections.json"
 RULES = ("pid", "full-name", "surname")
 SOURCES = ("accepted-record", "release-term", "handbook-term", "release-roster", "official-list", "service", "wikidata-term", "bracket")
 ISO = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+# Kept source labels that no dated period covers: an undated record naming another party marks them.
+UNDATED_KEPT = ("label-kept-no-match", "label-kept-no-dated-party", "label-kept-evidence-ends-before-date")
 HANDBOOK = ROOT / "scripts/handbook_party_service.json"
 ACCEPT = ROOT / "scripts/roster_accept.json"
 SENATE = ("federal", "senate")
@@ -264,6 +271,20 @@ def handbook_evidence(path: Path) -> list[dict]:
     return out
 
 
+def handbook_undated(path: Path) -> dict:
+    """{("senate", pid or folded name): undated Handbook parties} for senators who have any."""
+    doc = json.loads(Path(path).read_text(encoding="utf-8"))
+    out = {}
+    for person in doc.get("people") or []:
+        parties = [label(p) for p in person.get("undated") or [] if label(p)]
+        if not parties:
+            continue
+        for key in [person.get("pid"), *(fold(n) for n in [person.get("name"), *(person.get("names") or [])])]:
+            if key:
+                out[("senate", str(key))] = parties
+    return out
+
+
 def accepted_periods(path: Path) -> list[dict]:
     """Reviewed per-record party periods (scripts/roster_accept.json, "vote_party_periods")."""
     doc = json.loads(Path(path).read_text(encoding="utf-8")).get("vote_party_periods") or {}
@@ -355,13 +376,25 @@ class Evidence(list):
     federal Senate without the Handbook file): only those records keep what was
     published, and the rest are recomputed. `dated` maps a (jurisdiction,
     house) to the dated range of its own party record: a record inside it is
-    marked _meta.party_dated, so its page can say its labels were checked."""
-    def __init__(self, items=(), elections=None, check_labels=True, frozen=(), dated=None):
+    marked _meta.party_dated, so its page can say its labels were checked.
+    `undated` maps (chamber, person id or folded name) to a person's undated
+    parties in that chamber's record (undated_change)."""
+    def __init__(self, items=(), elections=None, check_labels=True, frozen=(), dated=None, undated=None):
         super().__init__(items)
+        self.undated = dict(undated or {})
         self.elections = load_elections() if elections is None else elections
         self.check_labels = check_labels
         self.frozen = frozenset(frozen)
         self.dated = dict(dated or {})
+
+    def undated_change(self, house: str, member: dict) -> list[str] | None:
+        """The undated record parties when none is the source label's party: a change no record dates."""
+        pid = rules.canonical_person_id(member.get("person_id"))
+        pid = pid[5:] if pid and pid.startswith("tvfy_") else pid
+        parties = self.undated.get((house, str(pid))) or self.undated.get((house, fold(member.get("name"))))
+        if parties and not any(same_party(p, member.get("party")) for p in parties):
+            return parties
+        return None
 
     def dated_range(self, record: dict) -> dict | None:
         rng = self.dated.get((record.get("jurisdiction"), record.get("house")))
@@ -390,9 +423,10 @@ def load_evidence(root: Path = ROOT, db: sqlite3.Connection | None = None, publi
             log(f"{name} skipped ({type(e).__name__}: {e}); no party is filled from it")
     release_loaded = "electorate release" in loaded
     frozen = set()
-    dated = {}
+    dated, undated = {}, {}
     if "Senate party records" in loaded:
         dated[SENATE] = handbook_range(root / "scripts/handbook_party_service.json")
+        undated = handbook_undated(root / "scripts/handbook_party_service.json")
     if not release_loaded:
         log("WARNING: the electorate release (the dated party record) did not load; "
             "no party is recomputed this run: the previous fills and corrections are kept as published")
@@ -406,7 +440,7 @@ def load_evidence(root: Path = ROOT, db: sqlite3.Connection | None = None, publi
     except (OSError, ValueError, TypeError, AttributeError) as e:
         log(f"accepted party records skipped ({type(e).__name__}: {e}); none is applied")
     return Evidence(out, load_elections(root / "scripts/general_elections.json"), check_labels=release_loaded,
-                    frozen=frozen, dated=dated)
+                    frozen=frozen, dated=dated, undated=undated)
 
 
 def same_parliament(elections: dict, chamber: str, a: str, b: str) -> bool:
@@ -613,6 +647,7 @@ def clear_fills(records) -> None:
                     member["party"] = fill["source_party"]
                 else:
                     member.pop("party", None)
+            member.pop("party_undated", None)
             held = member.pop("party_withheld", None)
             if isinstance(held, dict) and held.get("source_party") and not member.get("party"):
                 member["party"] = held["source_party"]
@@ -636,6 +671,9 @@ def keep_published_parties(record: dict, published: dict) -> None:
         prev = old.get(key(member))
         if not prev:
             continue
+        undated = prev.get("party_undated")
+        if isinstance(undated, dict) and member.get("party") == undated.get("source_party"):
+            member["party_undated"] = dict(undated)
         fill, held = prev.get("party_source"), prev.get("party_withheld")
         if isinstance(fill, dict) and fill.get("source_party"):
             if member.get("party") == fill["source_party"]:
@@ -721,6 +759,15 @@ def resolve_records(records, evidence, apply=False, check_labels=True):
                     member.pop("party", None)
                     member["party_withheld"] = {"source_party": outcome["source_party"], "reason": "conflicting"}
                     withheld += 1
+                elif outcome["reason"] in UNDATED_KEPT and getattr(evidence, "undated_change", None):
+                    # No dated period covers the date, and the chamber's record names another party
+                    # without a date: the label stays, marked as possibly from another period.
+                    parties = evidence.undated_change(house, member)
+                    if parties:
+                        outcome["reason"] = "label-kept-undated-change"
+                        if apply:
+                            member["party_undated"] = {"source_party": outcome["source_party"],
+                                                       "record_parties": parties}
                 yield outcome
                 continue
             if not day:
