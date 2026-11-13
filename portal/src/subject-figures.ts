@@ -1,7 +1,6 @@
 import {shortMoney} from '../public/format.js'
 import {sourceLineHTML} from '../public/party-page.js'
 import {donorDisclosure,receiptScopeLabel,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
-import {foldDonorName} from '../public/donor-entity.js'
 import {escapeHtml as esc,safeHref} from './seo-content.ts'
 
 /** The asset's years columns, also used by app.js renderCampaignerEntry. */
@@ -18,14 +17,6 @@ export function campaignerReturnsHTML(name: string, rows: CampaignerYear[], regi
   return `<h2>The money on the returns</h2><div class="table-scroll"><table data-campaigner-returns><caption>Every year on the return</caption><thead><tr><th scope="col">Year</th><th scope="col">The money on the returns</th></tr></thead><tbody>${body}</tbody></table></div>
     <p class="fineprint">These are the totals ${esc(name)} put on its own annual returns to the AEC. Receipts are what it took in and payments what it spent; neither is a donation to or from a party, and a party named on a return neither gave nor received this money. A blank column is a line the return left empty, not a nil figure, and amounts under the disclosure threshold are never itemised, so every number is a floor. Debts are balances owed at 30 June, not new borrowing.</p>
     ${sourceLineHTML({source:'AEC Transparency Register',originals:href ? [{href,label:'Open the register'}] : [],licence:'CC BY 4.0'})}`
-}
-
-/** Keep the original records: donorLookup's unscoped collision has no figures.
- * Name matches stay separate, including within a jurisdiction; no identity or sum is inferred. */
-export function donorRecordsForName(records: DonorDisclosureRecord[], name: string): DonorDisclosureRecord[] {
-  const key = foldDonorName(name)
-  return records.filter(record => [record.source_name,record.label,record.name,...record.aliases || [],...record.lookup_names || []]
-    .some(value => value && foldDonorName(value) === key))
 }
 
 const sources: Record<string,[string,string]> = {

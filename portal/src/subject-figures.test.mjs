@@ -5,6 +5,8 @@ import {runInNewContext} from 'node:vm';
 import {JSDOM} from 'jsdom';
 import {workerFetch} from '../test/helpers/worker-fetch.mjs';
 import {donorRecordsHTML} from './subject-figures.ts';
+import {loadDonorRecordsIndex,donorRecordsForName} from './donor-index.ts';
+import {foldDonorName} from '../public/donor-entity.js';
 import {shortMoney} from '../public/format.js';
 import {receiptScopeLabel} from '../public/donor-disclosure.js';
 
@@ -50,6 +52,32 @@ const assets = {
   ...Object.fromEntries(['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json','/graph/money.tas.json'].map(path => [path,{meta:{},nodes:[],edges:[]}])),
   '/graph/money.qld.json':{meta:{sourceShort:'ECQ'},nodes:[mappedState],edges:[]},
 };
+
+test('the donor records index is built once across two calls, with no name reads during lookup',async()=>{
+  let fetches=0,nameReads=0;
+  const first={...federal,label:'Banksia Records Label Example',name:'Banksia Records Name Example',
+    get source_name(){nameReads++;return donorName;},
+    aliases:[donorName,donorName.toUpperCase(),'Banksia Records Alias Example'],lookup_names:['Banksia Records Lookup Example']};
+  const records=[first,qld];
+  const plainRecords=records.map(r=>({...r}));
+  nameReads=0;
+  const source={async fetch(){fetches++;const response=new Response();response.json=async()=>({donors:records});return response;}};
+  const a=loadDonorRecordsIndex(source),b=loadDonorRecordsIndex(source);
+  assert.equal(a,b,'concurrent calls share the build promise');
+  const index=await a;
+  assert.equal(await b,index);
+  assert.equal(fetches,1);
+  assert.equal(nameReads,1,'the record was visited by one index build');
+  for(const name of [donorName,'BANKSIA RECORDS EXAMPLE PTY LTD',first.label,first.name,...first.aliases,...first.lookup_names,'Unknown Example']){
+    const actual=donorRecordsForName(index,name);
+    const expected=plainRecords.filter(r=>[r.source_name,r.label,r.name,...r.aliases || [],...r.lookup_names || []]
+      .some(value=>value && foldDonorName(value)===foldDonorName(name)));
+    assert.deepEqual(actual.map(r=>r.id),expected.map(r=>r.id),'same records in source order for '+name);
+  }
+  assert.equal(nameReads,1,'map lookups never reread record names');
+  assert.deepEqual(donorRecordsForName(index,donorName).map(r=>r.id),[first.id,qld.id],'aliases do not duplicate records');
+  assert.equal(donorRecordsForName(index,donorName)[0],first,'the original record is retained');
+});
 
 test('campaigner server HTML contains every annual row with the browser words and amounts',async()=>{
   const response = await workerFetch('/subject/campaigner/'+encodeURIComponent(campaigner.name),{},{},{assets});

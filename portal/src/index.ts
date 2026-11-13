@@ -5,8 +5,8 @@ import {CONTRACTS_COVERAGE,contractsHubHTML} from '../public/contracts-table.js'
 import {suppliersTableHTML} from '../public/suppliers-table.js'
 import {partyMoneyResponse} from './party-money-table'
 import {interestRegisterResponse} from './interest-register'
-import {loadDonorIndex,loadDonorRecords} from './donor-index'
-import {campaignerReturnsHTML,donorRecordsForName,donorRecordsHTML,type CampaignerYear} from './subject-figures'
+import {loadDonorIndex,loadDonorRecordsIndex,donorRecordsForName} from './donor-index'
+import {campaignerReturnsHTML,donorRecordsHTML,type CampaignerYear} from './subject-figures'
 import {donorDisclosure,donorLabelHTML,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
@@ -4123,8 +4123,8 @@ interface CampaignerRaw {
 interface CampaignerFigure { amount: number; year: string }
 
 /**
- * Summary figures for metadata and sitemap rows, with the annual rows retained
- * for readers of the server HTML.
+ * Summary figures for metadata and sitemap rows. Keep the annual rows (about
+ * 510 KB for the catalogue) in isolate memory for readers of the server HTML.
  */
 interface Campaigner {
   name: string
@@ -5583,7 +5583,8 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     if (!disclosureRecord) return unknownSubjectMeta('donor', Boolean(index))
     // A map node in one jurisdiction must not hide index-only figures in another.
     // Keep the map's measure for its own jurisdiction, and each other record's scope.
-    offMapRecords = donorRecordsForName(await loadDonorRecords(env.ASSETS).catch(()=>[]),name)
+    const recordsIndex = await loadDonorRecordsIndex(env.ASSETS).catch(()=>null)
+    offMapRecords = (recordsIndex ? donorRecordsForName(recordsIndex,name) : [])
       .filter(record => (record.jurisdiction || 'federal') !== node?.jurisdiction)
     display = disclosureRecord ? donorDisclosure(disclosureRecord).name : name
   }
