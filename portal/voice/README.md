@@ -109,9 +109,10 @@ npm run voice:agent -- --agent <agent_id> --apply    # back up, then apply, then
    fails, the script lists the tools it created (not attached) and updated, and
    the agent is unchanged. The update carries `tool_ids` and never the
    deprecated inline `prompt.tools`: ElevenLabs refuses a body with both
-   (`400 both_tools_and_tool_ids_provided`, even when `tools` is an empty list)
-   and its [agent tools deprecation guide](https://elevenlabs.io/docs/eleven-agents/customization/tools/agent-tools-deprecation)
-   says POST and PATCH reject any request carrying `prompt.tools`. Inline
+   (`400 both_tools_and_tool_ids_provided`, staging 13 November 2026) and its
+   [agent tools deprecation guide](https://elevenlabs.io/docs/eleven-agents/customization/tools/agent-tools-deprecation)
+   says POST and PATCH reject any request carrying `prompt.tools`, so the key
+   is left out rather than sent as an empty list. Inline
    entries the agent also has as tool ids or built-in tools are left alone; a
    configured name is replaced by its tool id; any other inline entry would be
    dropped, so the plan raises a PROBLEM and `--apply` is refused until it is

@@ -93,7 +93,7 @@ export function planSync(config, agent, attached, {origin, secretId, workspace =
   // tool id; anything else would be dropped, so it is a problem.
   const builtIn = Object.entries(prompt.built_in_tools && typeof prompt.built_in_tools === 'object' ? prompt.built_in_tools : {}).filter(([, v]) => v)
   const attachedNames = new Set(attached.map(t => t.tool_config?.name))
-  const covered = t => attachedIds.has(t?.id) || attachedNames.has(t?.name) || builtIn.some(([key, v]) => key === t?.name || v.name === t?.name)
+  const covered = t => attachedIds.has(t?.id) || (typeof t?.name === 'string' && (attachedNames.has(t.name) || builtIn.some(([key, v]) => key === t.name || v.name === t.name)))
   const inlineMatched = inline.filter(covered).map(t => t.name)
   const inlineReplaced = inline.filter(t => !covered(t) && names.has(t?.name)).map(t => t.name)
   const inlineOnly = inline.filter(t => !covered(t) && !names.has(t?.name)).map(t => t?.name ?? '(unnamed)')
@@ -179,8 +179,9 @@ export function saveBackup(dir, agentId, state, now = new Date()) {
 }
 
 /**
- * The agent PATCH body: the fetched prompt with `changes`, without the deprecated prompt.tools (the provider rejects
- * it next to tool_ids, even as an empty list, and the deprecation guide says any request carrying it is rejected).
+ * The agent PATCH body: the fetched prompt with `changes`, without the deprecated prompt.tools. The provider refused
+ * it next to tool_ids (staging, 13 Nov), and its deprecation guide says POST and PATCH reject any request carrying
+ * it, so the key is left out rather than sent as an empty list.
  */
 export function agentUpdate(fetchedPrompt, changes) {
   const {tools: _deprecated, ...prompt} = {...fetchedPrompt, ...changes}

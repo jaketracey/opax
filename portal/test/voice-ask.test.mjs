@@ -364,7 +364,7 @@ test('agent sync sends tool_ids and never prompt.tools (staging 400 on 13 Nov); 
     const fetched=(await p.call('GET','/v1/convai/agents/agent_x')).conversation_config.agent.prompt;
     assert.ok(fetched.tools.length>=7);
     await assert.rejects(p.call('PATCH','/v1/convai/agents/agent_x',{conversation_config:{agent:{prompt:{...fetched,tool_ids:[...before,'tool_stage_ask_opax']}}}}),/-> 400: .*both_tools_and_tool_ids_provided/);
-    await assert.rejects(p.call('PATCH','/v1/convai/agents/agent_x',{conversation_config:{agent:{prompt:{...fetched,tools:[],tool_ids:before}}}}),/both_tools_and_tool_ids_provided/,'an empty list is still both');
+    await assert.rejects(p.call('PATCH','/v1/convai/agents/agent_x',{conversation_config:{agent:{prompt:{...fetched,tools:[],tool_ids:before}}}}),/both_tools_and_tool_ids_provided/,'the fake, like the deprecation guide, refuses an empty list too');
     p.calls.length=0;p.patches.length=0;
     const out=quiet();
     assert.equal(await run({agent:'agent_x',origin:p.origin,apply:true},{call:p.call,log:out.log,backupDir:dir}),0,out.lines.join('\n'));
@@ -407,6 +407,9 @@ test('agent sync: inline prompt.tools absent, empty or matching attached tools i
   // Anything else only inline would be dropped by an update without prompt.tools: refused before any write.
   const orphan=planSync(config,agent({tools:[{name:'legacy_lookup',type:'webhook'}]}),attached,{origin});
   assert.match(orphan.problems.join('\n'),/legacy_lookup is only in the deprecated prompt\.tools[\s\S]*apply refused/);
+  // An unnamed inline entry is never taken for an unnamed attached tool.
+  const unnamed=planSync(config,agent({tools:[{type:'webhook'}]}),[...attached,{id:'tool_odd',tool_config:{type:'system'}}],{origin});
+  assert.match(unnamed.problems.join('\n'),/\(unnamed\) is only in the deprecated prompt\.tools/);
 });
 
 test('agent sync never reuses another environment\'s tool and fails the check when the provider differs',async()=>{
