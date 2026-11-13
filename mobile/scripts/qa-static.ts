@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import assert from 'node:assert/strict';
 import { formatA11yIssue, scanA11yTree } from './a11y-static';
 import { scanSource } from './source-boundary';
+import { layoutAnimationIssues } from './layout-animation-policy';
 import { scanSecrets } from './secret-boundary';
 import { boundaryFiles } from './boundary-files';
 import { scanSwift } from './swift-boundary';
@@ -273,6 +274,18 @@ for (const path of boundary.javascript) {
     `Transport boundary: ${path}`,
   );
 }
+// LayoutAnimation is inert on iOS under Reanimated 4.5: content that comes
+// and goes uses HeightReveal (scripts/layout-animation-policy.ts).
+assert.deepEqual(
+  layoutAnimationIssues(
+    boundary.javascript
+      .filter((path) => path.startsWith(sourceRoot))
+      .map((path) => ({ path, content: readFileSync(path, 'utf8') })),
+    sourceRoot,
+  ),
+  [],
+  'LayoutAnimation outside scripts/layout-animation-policy.ts',
+);
 for (const path of boundary.swift)
   assert.deepEqual(
     scanSwift(path, readFileSync(path, 'utf8')),
