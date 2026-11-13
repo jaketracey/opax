@@ -2,7 +2,7 @@ import {trimQuestionEnd, questionSpaces} from './question-text.mjs'
 import type {RecordQuestion} from './ask-records'
 import {rankedMoneyAnswer, fundingResearchFollowUp} from './ask-money'
 import {fundingContinuation, fundingUserTurns} from './ask-money-followup'
-import {federalPartyRankingQuestion,federalPartyRankingIntent,federalPartyRankingClarification} from './ask-money-family'
+import {federalPartyRankingQuestion,federalPartyRankingIntent,federalPartyRankingClarification,federalPartyRankingReading} from './ask-money-family'
 import {industryMoneyAnswer} from './ask-money-industry'
 export {federalPartyRankingQuestion,federalPartyRankingIntent} from './ask-money-family'
 
@@ -13,20 +13,26 @@ export async function federalPartyMoneyAnswer(input:RecordQuestion,assets:Fetche
  if(industry)return {...industry,money_route:'federal-party-ranking-v1'}
  if(input.state&&input.state!=='federal')return null
  const intent=federalPartyRankingIntent(input.question??'')
+ if(intent?.uncertain&&intent.parties.length===1){
+  // Calculated for the natural reading, which the answer states.
+  const read=await rankedMoneyAnswer({...input,kind:'all'},assets)
+  if(read)return {...read,money_route:'federal-party-ranking-v1'} as PartyMoneyAnswer
+ }
  if(intent?.uncertain)return {...federalPartyRankingClarification(intent),money_route:'federal-party-ranking-v1'}
  const direct=intent?.question??null
  const prior=fundingUserTurns(input)
  if(!intent&&fundingContinuation(input.question??'')&&prior.length){
   const unresolved=federalPartyRankingIntent(prior[prior.length-1])
-  if(unresolved?.uncertain){
+  if(unresolved?.uncertain&&unresolved.parties.length>1){
    const fragment=trimQuestionEnd(questionSpaces(input.question??'').replace(/^(?:and )?(?:(?:what|how) about )/i,'').replace(/^and /i,''))
    const party=federalPartyRankingIntent('Who funds '+fragment+'?')
    const period=/^(?:in|during|for|since|from|before|after|until|through|between)\s+(?:19|20)\d{2}(?:[–-]\d{2})?(?:\s+(?:to|and|through)\s+(?:19|20)\d{2}(?:[–-]\d{2})?)?$/i.test(fragment)
    if(party||period)return {...federalPartyRankingClarification(party??unresolved),money_route:'federal-party-ranking-v1'}
   }
  }
- if(!direct&&(!fundingContinuation(input.question??'')||!prior.some(q=>federalPartyRankingQuestion(q))))return null
- const context=Array.isArray(input.context)?input.context.map(turn=>turn&&typeof turn.text==='string'&&(turn.author==='user'||turn.author==='question')?{...turn,text:federalPartyRankingQuestion(turn.text)??turn.text}:turn):undefined
+ // An earlier informal party ranking carries forward as the reading it was answered with.
+ if(!direct&&(!fundingContinuation(input.question??'')||!prior.some(q=>federalPartyRankingReading(q))))return null
+ const context=Array.isArray(input.context)?input.context.map(turn=>turn&&typeof turn.text==='string'&&(turn.author==='user'||turn.author==='question')?{...turn,text:federalPartyRankingReading(turn.text)??turn.text}:turn):undefined
  let scoped:RecordQuestion={...input,kind:'all',context,question:direct&&/\btop\s+10\b/i.test(input.question??'')?input.question:direct??input.question}
  if(!direct){
   // Resolve the continuation's intent before interpreting its record filters.
