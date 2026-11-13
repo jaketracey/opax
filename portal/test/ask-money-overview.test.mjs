@@ -20,16 +20,16 @@ const facts = {
     { name: 'Labor', amount: '$8,526,686', records: '743 disclosed receipt records' },
   ],
   derived: ['Gap between Liberal and Labor: $487,287', 'Everything below Liberal, added together: $8,526,686', "Liberal's share of the shown total ($17,540,659): 51%"],
-  limits: ['These are party receipts, not personal payments to politicians.'],
+  measure:'receipts_all',measure_label:'disclosed receipts, all types (donations, loans and other receipts)',
 };
 
 test('the prompt hands over the figures and forbids working any out', () => {
   const prompt = moneyOverviewPrompt(facts);
   assert.match(prompt, /\$9,013,973/);
   assert.match(prompt, /Gap between Liberal and Labor: \$487,287/);
-  assert.match(prompt, /copied from THE FIGURES above, character for character/);
-  assert.match(prompt, /Work nothing out/);
-  assert.match(prompt, /not personal payments to politicians/);
+  assert.match(prompt, /Every number taken from a record is copied exactly from it/);
+  assert.match(prompt, /Arithmetic belongs to the calculator/);
+  assert.match(prompt, /Measure label: disclosed receipts, all types/);
 });
 
 test('an opening that only restates the sheet is kept', () => {
@@ -69,7 +69,7 @@ test('a calculated ranking carries a sheet whose figures match its own table', a
   }
   assert.ok(result.money_facts.derived.some((line) => /^Gap between .+: \$[\d,]+$/.test(line)), 'the gap between the top two is worked out for the model');
   assert.ok(result.money_facts.derived.every((line) => !/\.$/.test(line)), 'the sheet gives values to write from, never ready-made sentences');
-  assert.ok(result.money_facts.limits.length >= 3);
+  assert.equal(result.money_facts.measure,result.measure);assert.equal(result.money_facts.measure_label,result.measure_label);
   // The sheet is the model's, never the reader's: the route strips it.
   assert.equal(result.money_overview, undefined);
 });

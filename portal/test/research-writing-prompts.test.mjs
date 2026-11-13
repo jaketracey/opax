@@ -20,7 +20,7 @@ const {memberVotes,findQuotes,countSpeeches}=await import('data:text/javascript;
 test('ordinary answer prompt starts with the requested answer and prevents tool echoes and repeated figures',()=>{
  const {prompt}=buildAskBody({question:'Which party received the most disclosed receipts?'},{records:[{kind:'receipt',amount:20000}],coverage:'Published returns only.',total:1});
  assert.match(prompt.user,/first sentence must answer the question with the requested name, figure, date or outcome/);
- assert.match(prompt.user,/Do not restate the question/);
+ assert.match(prompt.user,/Give the supported part first/);
  assert.match(prompt.user,/Use plain prose for the substantive answer/);
  assert.match(prompt.user,/State each fact once/);
  assert.match(prompt.user,/each figure one supporting citation at the claim/);
@@ -32,11 +32,12 @@ test('ordinary answer prompt starts with the requested answer and prevents tool 
 test('documented-position prompt answers before distinct supporting points without repeating the takeaway',()=>{
  const {prompt}=buildAskBody({question:'What did Example Member propose about housing?',speaker:'Example Member',kind:'speech'});
  assert.match(prompt.user,/first sentence answers the question with the person’s name and documented position, date or outcome/);
- assert.match(prompt.user,/without a preamble or question restatement/);
- assert.match(prompt.user,/do not repeat the takeaway in a bullet/);
- assert.match(prompt.user,/never raw tool rows/);
+ assert.match(prompt.user,/distinct concrete policy positions/);
+ assert.match(prompt.user,/each in a complete paraphrased sentence/);
+ assert.match(prompt.user,/Use that person’s explicit speaking turns/);
  assert.match(prompt.user,/response coverage note, only when the answer depends on them/);
- assert.match(prompt.user,/return ONLY this sentence: This selection does not establish their position on that topic/);
+ assert.match(prompt.user,/When the passages hold no position on that exact topic, give the closest position they do record and say so in one line/);
+ assert.doesNotMatch(prompt.user,/return (?:ONLY )?this sentence/);
 });
 
 test('vote-selection notes describe the boundary separately from unchanged vote rows',async()=>{

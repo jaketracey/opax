@@ -9,7 +9,7 @@ import { clip } from './record-common'
 
 export const search: ToolDefinition = {
   name: 'search', evidenceKind: 'passages',
-  description: 'Search verified original Hansard excerpts. Compatibility entry for corpus_records with kind speech; prefer corpus_records for speech and release search, original detail and paging. Ranked samples cannot establish counts or absence. Ask adds its question scope and citation IDs around the same retrieval capability.',
+  description: 'Search verified original Hansard excerpts. Compatibility entry for corpus_records with kind speech; prefer corpus_records for speech and release search, original detail and paging. Use complete scoped counting tools for counts and whole-period absence. Ask adds its question scope and citation IDs around the same retrieval capability.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     query: { type: 'string', minLength: 2, maxLength: 300 }, limit: { type: 'integer', minimum: 1, maximum: 8 },
     party: { type: 'string', minLength: 2, maxLength: 60 },

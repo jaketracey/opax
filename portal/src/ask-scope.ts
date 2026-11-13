@@ -1,3 +1,4 @@
+import {ASK_EVIDENCE_RULES} from './ask-writing-rules'
 import {trimQuestionEnd, questionSpaces} from './question-text.mjs'
 import type { RecordQuestion } from './ask-records'
 import { isMoneyRanking } from './ask-money'
@@ -62,7 +63,7 @@ function namedPositionRequest(question: string): {subject:string;topic:string} |
   const stance = stanceRequest(question)
   return stance && !/^(?:he|she|they|his|her|their)$/i.test(stance.subject) ? stance : undefined
 }
-export const POSITION_GROUNDING = 'When asked what a politician would or might say, explain their documented position in the third person. Do not roleplay them, write a fictional quote, or predict their response. Start with what their recorded statements support, with dates and citations. Distinguish their own statements from another speaker describing them. If the record does not establish their position on this topic, say so rather than inferring it from their party or another topic. For a named politician position question, give a short takeaway followed by up to three concrete policy positions or proposals, each with its own citation. Prefer specific proposals over rhetorical attacks. Keep it under 180 words. Do not spend space summarising ministerial replies; exclude them from the position summary. Attribute criticism and claimed effects to the politician. Do not repeat illustrative population counts, economic forecasts or attack statistics unless the user requests those figures. For an actual proposed policy retain its specified duration, limit or amount exactly. Never confuse arrivals with net migration or departures. Include a source date when provided, and never describe an old statement as a current promise. '
+export const POSITION_GROUNDING = ASK_EVIDENCE_RULES + 'Explain the politician’s documented position in the third person, with dates and citations to their own words on the exact topic. Give a short takeaway followed by up to three distinct concrete policy positions or proposals, under 180 words. Attribute arguments and claimed effects to the politician. Keep proposals’ eligibility, duration, limits and amounts together. Describe old statements in past tense with their dates. Distinguish arrivals, departures and net migration by the source’s measure. When a position needs further evidence, state the topic and records searched and the next useful lookup. '
 
 const REFERENTIAL = /^(?:and\b|what about\b|how about\b)|^(?:what|how|why|when|did|does|has|would)\b.*\b(?:he|she|they|his|her|their|it|that)\b/i
 // "Is that all?" names nothing: its subject is the previous question's. The

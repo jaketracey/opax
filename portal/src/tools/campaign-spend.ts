@@ -37,7 +37,7 @@ export async function campaignSpend(env: ToolEnv, args: ToolArgs): Promise<Struc
 
 export const tool: ToolDefinition = {
   name: 'campaign_spend',
-  description: 'Recorded government campaign advertising costs. Pass the campaign name and financial year, optionally advertiser and jurisdiction. Prefer exact campaign names over longer partial matches. Returns the published amount for each named cost category with GST basis and campaign period. Never sum category rows into a campaign total; say plainly when no amount is recorded.',
+  description: 'Recorded government campaign advertising costs. Pass the campaign name and financial year, optionally advertiser and jurisdiction. Prefer exact campaign names over longer partial matches. Returns the published amount for each named cost category with GST basis and campaign period. Keep each published cost category separate and report its recorded amount or availability.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     campaign: { type: 'string', minLength: 2, maxLength: 200 }, entity: { type: 'string', minLength: 2, maxLength: 160 },
     financial_year: { type: 'string', pattern: '^\\d{4}-\\d{2}$' }, jurisdiction: { type: 'string', enum: ['vic', 'nsw', 'qld', 'sa', 'wa', 'tas', 'nt', 'act', 'federal'] },

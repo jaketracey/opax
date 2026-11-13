@@ -2,9 +2,8 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { build } from 'esbuild'
-import { MockLanguageModelV4 } from 'ai/test'
 
-const built = await build({ stdin: { contents: "export * from './src/ask-exact-lookup'; export * from './src/ask-constraints'; export {runAgentic, inferPeriod, extractNamedScope} from './src/agentic-ask'; export {createResearch} from './src/research-loop'; export {agenticAskPayload} from './src/agentic-response'; export {groundAnswerPayload} from './src/research-grounding';", resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'browser', format: 'esm', external: ['node:*'] })
+const built = await build({ stdin: { contents: "export * from './src/ask-exact-lookup'; export * from './src/ask-constraints'; export {runAgentic, inferPeriod, extractNamedScope} from './src/agentic-ask'; export {agenticAskPayload} from './src/agentic-response'; export {groundAnswerPayload} from './src/research-grounding';", resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'browser', format: 'esm', external: ['node:*'] })
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'))
 const emptyScope = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
 const json = path => JSON.parse(readFileSync(new URL('../public' + path, import.meta.url)))
@@ -22,23 +21,14 @@ const latestDivision = divisionDates().at(-1)
 assert.ok(divisionDates()[0] === '2006-02-07' && latestDivision >= '2026-10-29', 'the divisions index covers 2006-02-07 to at least 2026-10-29')
 assert.ok(pay.meta.from === '1999-12-07' && /^\d{4}-\d{2}-\d{2}$/.test(pay.meta.as_of) && pay.meta.as_of >= '2026-10-19', 'the pay records run from 1999-12-07 to at least 2026-10-19')
 
-test('an absent full bill title cannot be replaced by a related fuel bill', async () => {
-  const q = 'Who introduced the Rural Postcode Equity (Fuel Rebate) Bill 2017?'
-  const out = await lookup(q)
-  assert.match(out.answer.answer, /^OPAX has no record of a bill by that name:/)
-  assert.doesNotMatch(out.answer.answer, /Petroleum and Other Fuels Reporting/)
-  const run = await api.runAgentic(q, deps())
-  const body = api.agenticAskPayload(run, q)
-  assert.equal(run.tokens.input, 0)
-  assert.equal(body.answer_decision, 'limitation')
-  assert.match(body.answer, /^OPAX has no record/)
-  assert.equal(body.sources.filter(s => s.cited).length, 1)
+test('an absent full bill title is not replaced by a related fuel bill; it falls through to the agent', async () => {
+  assert.equal(await lookup('Who introduced the Rural Postcode Equity (Fuel Rebate) Bill 2017?'), null)
 })
 
 test('bill title matching preserves the year and accepts an unambiguous title without it', async () => {
   assert.equal(await lookup(`What is the status of the ${passed.title}?`), null)
   assert.equal(await lookup(`What is the status of the ${passed.title.replace(/ 2013$/, '')}?`), null)
-  assert.match((await lookup(`What is the status of the ${passed.title.replace(/2013$/, '2014')}?`)).answer.answer, /^OPAX has no record/)
+  assert.equal(await lookup(`What is the status of the ${passed.title.replace(/2013$/, '2014')}?`), null, 'a different year is not the indexed bill')
   assert.equal(await lookup('Who introduced the Victorian Example Infrastructure Bill 2020?'), null, 'the federal index cannot establish state absence')
 })
 
@@ -54,45 +44,28 @@ test('a wrong introduction date is corrected from the indexed lifecycle field', 
   assert.match(out.answer.answer, /was introduced on 2026-09-17, not 2026-09-18\.$/)
 })
 
-test('missing division dates, including dates before coverage, state absence without claiming no event happened', async () => {
-  for (const q of ['What divisions were held in federal parliament on 2 September 2012?', 'How many divisions did the Senate hold in 1987?', 'How did the House vote on the Mabo response legislation in December 1993?']) {
-    const out = await lookup(q)
-    assert.match(out.answer.answer, /^OPAX has no recorded (?:federal|Senate|House) divisions /)
-    const dates = divisionDates(chamberOf(q))
-    assert.ok(out.answer.answer.includes(`recorded divisions cover ${dates[0]} to ${dates.at(-1)}.`), out.answer.answer)
-    assert.doesNotMatch(out.answer.answer, /zero|no divisions were held|never happened/i)
-  }
+test('missing division dates, including dates before coverage, fall through to the agent', async () => {
+  for (const q of ['What divisions were held in federal parliament on 2 September 2012?', 'How many divisions did the Senate hold in 1987?', 'How did the House vote on the Mabo response legislation in December 1993?'])
+    assert.equal(await lookup(q), null, q)
 })
 
-test('future requests give no prediction or neighbouring record and carry the latest recorded date', async () => {
-  for (const q of ['How will Vanessa Bleyer vote on the next budget?', 'What will Dan Tehan declare in the register of interests next year?', 'Who won the 2091 federal election?', 'Which bills received royal assent in December 2091?', 'How much did Labor receive in disclosed donations in 2091-92?']) {
-    const run = await api.runAgentic(q, deps())
-    assert.match(run.answer, /^OPAX has no record yet of the requested future event\./)
-    if (/\bbills\b/.test(q)) assert.match(run.answer, new RegExp('latest recorded bill status is dated ' + bills.bills.map(b => b.status_as_of).filter(Boolean).sort().at(-1)))
-    else assert.ok(run.answer.includes(`latest recorded division is dated ${latestDivision}.`), run.answer)
-    assert.equal(run.qualitative.answer_decision, 'limitation')
-    assert.equal(run.cost_usd, 0)
-  }
-  const payRun = await api.runAgentic('What will the Prime Minister be paid in 2091?', deps())
-  assert.ok(payRun.answer.includes(`pay records run to ${pay.meta.as_of}.`), payRun.answer)
+test('future requests fall through to the agent instead of a fixed no-record answer', async () => {
+  for (const q of ['How will Vanessa Bleyer vote on the next budget?', 'What will Dan Tehan declare in the register of interests next year?', 'Who won the 2091 federal election?', 'Which bills received royal assent in December 2091?', 'How much did Labor receive in disclosed donations in 2091-92?', 'What will the Prime Minister be paid in 2091?'])
+    assert.equal(await lookup(q), null, q)
   assert.equal(await lookup('What protections will be introduced by the housing bill?'), null, 'published proposals are not predictions of events')
 })
 
-test('unavailable indexes never establish absence and future dates stay explicitly unknown', async () => {
+test('unavailable indexes never establish absence', async () => {
   const d = deps({ asset: async () => null })
   assert.equal(await lookup('Who introduced the Example Infrastructure Bill 2020?', d), null)
   assert.equal(await lookup('Which electorate does Ingrid Penhaligon MP represent?', d), null)
   assert.equal(await lookup('How did the House vote on 2 September 2012?', d), null)
-  const out = await lookup('Who will win the next election?', d)
-  assert.match(out.answer.answer, /latest recorded date could not be verified/)
-  assert.doesNotMatch(out.answer.answer, /2026-/)
+  assert.equal(await lookup('Who will win the next election?', d), null)
 })
 
 test('full person slots do not substitute a real person sharing the first name', async () => {
   for (const q of ['Which electorate does Ingrid Penhaligon MP represent?', "what's on Ingrid Vandermolen's interests register", "what's Ingrid Pemberley mp paid", 'Ingrid Marchbanks declared interests?', 'What did Ingrid Brightwater say about the Budget Savings (Omnibus) Bill 2016?']) {
-    const out = await lookup(q)
-    assert.match(out.answer.answer, /^OPAX has no record of a parliamentarian named Ingrid /)
-    assert.doesNotMatch(out.answer.answer, /Stitt|Western Metropolitan|supplier|contract/i)
+    assert.equal(await lookup(q), null, q)
   }
   const q = 'What did Albo say about housing?', scope = { ...emptyScope, people: ['Anthony Albanese'] }
   assert.equal(await lookup(q, deps(), scope), null, 'respect the identity already resolved by the name resolver')
@@ -173,22 +146,6 @@ test('a checked party correction stays first after the writer and preserves cita
   assert.match(api.groundAnswerPayload(body, q).answer, /^Dorinda Cox is recorded as Labor, not Liberal\./)
 })
 
-const call = (toolName, args) => ({ type: 'tool-call', toolName, toolCallId: toolName, input: JSON.stringify(args) })
-const reply = content => ({ content, finishReason: { unified: 'tool-calls', raw: 'tool_calls' }, usage: { inputTokens: { total: 10, noCache: 10, cacheRead: 0, cacheWrite: 0 }, outputTokens: { total: 5, text: 5, reasoning: 0 } }, warnings: [] })
-const context = (q, d) => ({ deps: d, period: api.inferPeriod(q), named: emptyScope, signal: new AbortController().signal,
-  progress: async () => {}, scope: step => step, execute: (_step, _round, action) => action(d) })
-test('the loop can state a missing person after an empty lookup instead of asking for a known full name again', async () => {
-  const model = new MockLanguageModelV4({ doGenerate: [reply([call('find_people', { name: 'Taylor Unrecorded' })]), reply([call('decline', { reason: 'no_record' })]), reply([call('find_people', { name: 'Unrecorded Taylor' })]), reply([call('decline', { reason: 'no_record' })])] })
-  const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) } }), { write: undefined })
-  const q = 'Which electorate does Taylor Unrecorded MP represent?'
-  // A missing roster is a tool failure, while an available empty roster establishes an empty lookup.
-  const run = await research(q, context(q, deps({ asset: async path => path === '/parliamentarians.json' ? { people: [] } : null })))
-  assert.equal(run.qualitative.answer, 'OPAX has no record of a parliamentarian by that name.')
-  assert.equal(run.qualitative.answer_decision, 'limitation')
-  assert.equal(model.doGenerateCalls.length, 4)
-  assert.match(JSON.stringify(model.doGenerateCalls[2].prompt), /empty lookup is not absence/i)
-})
-
 test('the exact absence check respects fuzzy names, ambiguous names and register-only members', async () => {
   assert.equal(await lookup('Which electorate does Anthony Albanes MP represent?'), null)
   const q = "What is on Bree James's interests register?"
@@ -196,17 +153,6 @@ test('the exact absence check respects fuzzy names, ambiguous names and register
   assert.equal(await lookup(q, d), null)
   const ambiguous = deps({ asset: async path => path === '/parliamentarians.json' ? { people: [{ name: 'John Smith', pid: '1' }, { name: 'Joan Smith', pid: '2' }] } : null })
   assert.equal(await lookup('What did Jonn Smith say about housing?', ambiguous, emptyScope), null)
-})
-
-test('an ambiguous name cannot authorise a no-record terminal answer', async () => {
-  const model = new MockLanguageModelV4({ doGenerate: [reply([call('find_people', { name: 'Jonn Smith' })]), reply([call('decline', { reason: 'no_record' })]), reply([call('decline', { reason: 'ambiguous' })])] })
-  const research = api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) } })
-  const q = 'What did Jonn Smith say about housing?'
-  const d = deps({ asset: async path => path === '/parliamentarians.json' ? { people: [{ name: 'John Smith', pid: '1' }, { name: 'Joan Smith', pid: '2' }] } : null })
-  const run = await research(q, context(q, d))
-  assert.equal(run.qualitative.answer_decision, 'clarification')
-  assert.doesNotMatch(run.qualitative.answer, /no record/i)
-  assert.equal(model.doGenerateCalls.length, 3)
 })
 
 test('empty count windows within dated coverage remain available to count_records', async () => {

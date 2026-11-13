@@ -26,7 +26,7 @@ const contractCite = (env: ToolEnv, r: Record<string, unknown>): ToolCitation =>
 
 export const tool: ToolDefinition = {
   name: 'contracts',
-  description: 'Commonwealth government contracts (AusTender): who got a contract and supplier totals. With agency: the agency\'s contract total and its largest suppliers by total contract value. To find which department gives a supplier the most contracts, pass supplier and group_by: agency, never the supplier name as agency. Returns buying agencies ranked by value or count, with ties. With supplier alone: totals, buying agencies and largest contracts. With query: the largest contracts matching the words. Contract values as published, not payments.',
+  description: 'Commonwealth government contracts (AusTender): who got a contract and supplier totals. With agency: the agency\'s contract total and its largest suppliers by total contract value. To find which department gives a supplier the most contracts, pass the supplier in supplier and choose group_by: agency. Returns buying agencies ranked by value or count, with ties. With supplier alone: totals, buying agencies and largest contracts. With query: the largest contracts matching the words. Contract values as published, not payments.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     agency: { type: 'string', minLength: 2, maxLength: 160, description: 'Buying agency, e.g. "Department of Defence" or "Defence".' },
     supplier: { type: 'string', minLength: 2, maxLength: 160, description: 'Supplier name, e.g. "Thales Australia".' },

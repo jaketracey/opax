@@ -1,7 +1,7 @@
-import {guardAnswerAttribution} from './fixtures/ask-attribution.mjs';
+import {withoutSaLabel} from './fixtures/ask-attribution.mjs';
 import {speechPresentation, joinMixedSpeakers} from '../src/mixed-speakers.ts';
 import {pressHeadlineAndText, pressTitle} from '../src/press-title.ts';
-const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; context.pressHeadlineAndText ??= pressHeadlineAndText; context.pressTitle ??= pressTitle; context.guardAnswerAttribution ??= guardAnswerAttribution; return baseVM(code, context, options); };
+const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; context.pressHeadlineAndText ??= pressHeadlineAndText; context.pressTitle ??= pressTitle; context.withoutSaLabel ??= withoutSaLabel; return baseVM(code, context, options); };
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
