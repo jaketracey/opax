@@ -796,6 +796,7 @@ function download(filename, mime, text) {
  *  moves nothing, and a polite live region announces "Copied". A second press
  *  while it shows restarts the moment instead of taking "Copied" for the label. */
 async function copyText(text, label) {
+  countCopiedLink(text);
   try {
     await navigator.clipboard.writeText(text);
   } catch {
@@ -803,6 +804,28 @@ async function copyText(text, label) {
     return;
   }
   if (label) showCopied(label);
+}
+
+/** A copied link is counted with the sort of record it points to, never the link. */
+function countCopiedLink(text) {
+  trackOutcome("opax_share", { kind: "copy_link", record_type: shareRecordType(text) });
+}
+
+/** The coarse sort of record a copied OPAX link points to: person, party, bill,
+ *  electorate, doc, money or other. Never which one. */
+function shareRecordType(text) {
+  let path;
+  try { path = new URL(text, "https://opax.com.au").pathname; } catch { return "other"; }
+  const [first, second] = path.split("/").filter(Boolean);
+  if (first === "subject") {
+    if (second === "person" || second === "party" || second === "electorate") return second;
+    if (["donor", "supplier", "recipient", "agency"].includes(second)) return "money";
+    return "other";
+  }
+  if (first === "bill") return "bill";
+  if (first === "doc") return "doc";
+  if (first === "money") return "money";
+  return "other";
 }
 
 const COPIED = "Copied";

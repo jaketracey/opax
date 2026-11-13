@@ -12,7 +12,9 @@ const fields = {
   opax_money_view: ['view'],
   opax_map_action: ['action', 'filter', 'format', 'row_count'],
   opax_journey: ['action', 'lens', 'step', 'step_count'],
-  opax_source_open: ['from_section'],
+  opax_source_open: ['from_section', 'placement'],
+  opax_share: ['kind', 'record_type'],
+  opax_press: ['action'],
   opax_ask_started: ['from_section', 'page_type'],
   opax_module_click: ['module', 'page_type', 'position'],
   opax_ask_completed: ['from_section', 'duration_ms', 'source_count', 'has_answer', 'is_overview_intent'],
@@ -25,12 +27,23 @@ const fields = {
   table_filter: ['table_id', 'page_type'],
   table_export: ['table_id', 'page_type'],
 };
+// Properties that take one of a fixed set of words; anything else is dropped.
+// A shared link says what sort of record it was (record_type), never which.
+const CHOICES = {
+  opax_source_open: { placement: ['inline', 'sources_pane', 'talk_sources', 'other'] },
+  opax_share: { kind: ['record', 'question', 'answer', 'copy_link'], record_type: ['person', 'party', 'bill', 'electorate', 'doc', 'money', 'other'] },
+  opax_press: { action: ['asset_download', 'boilerplate_copy'] },
+};
+// Pages with no record in their address, counted by name rather than as
+// "/other". Their sub-pages (a sitting day, an audit report) stay "/other".
+const STATIC_PAGES = 'press|today|sitting|budget|privacy|support|audit|estimates|instruments';
+const KNOWN_PATH = new RegExp(String.raw`^\/(?:$|ask(?:\/|$)|chat(?:\/|$)|search(?:\/|$)|money(?:\/|$)|map(?:\/|$)|discover(?:\/|$)|connections\.html$|reports(?:\/|$)|explore(?:\/|$)|doc(?:\/|$)|subject(?:\/|$)|declared(?:\/|$)|about(?:\/|$)|methods(?:\/|$)|stats(?:\/|$)|expenses(?:\/|$)|bills?(?:\/|$)|(?:${STATIC_PAGES})\/?$)`);
 export function safePath(value) {
   try {
     const url = new URL(value, 'https://opax.com.au');
     const path = url.hash.startsWith('#/') ? url.hash.slice(1).split('?')[0] : url.pathname;
     // Unknown paths can contain arbitrary reader input; never collect them.
-    if (!/^\/(?:$|ask(?:\/|$)|chat(?:\/|$)|search(?:\/|$)|money(?:\/|$)|map(?:\/|$)|discover(?:\/|$)|connections\.html$|reports(?:\/|$)|explore(?:\/|$)|doc(?:\/|$)|subject(?:\/|$)|declared(?:\/|$)|about(?:\/|$)|methods(?:\/|$)|stats(?:\/|$)|expenses(?:\/|$)|bills?(?:\/|$))/.test(path)) return '/other';
+    if (!KNOWN_PATH.test(path)) return '/other';
     return path;
   } catch { return '/other'; }
 }
@@ -46,6 +59,8 @@ export function cleanEvent(event, props = {}) {
       if (key === 'kind' && ['speech', 'vote', 'recent', 'compare', 'detail'].includes(value)) clean[key] = value;
       continue;
     }
+    const choices = CHOICES[event]?.[key];
+    if (choices) { if (choices.includes(value)) clean[key] = value; continue; }
     if (key === 'is_overview_intent') { if (typeof value === 'boolean') clean[key] = value; continue; }
     if (key === 'page_path') clean[key] = safePath(value);
     else if (typeof value === 'number' && Number.isFinite(value)) clean[key] = value;
