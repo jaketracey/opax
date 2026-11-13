@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {existsSync,readFileSync} from 'node:fs';
 import {readFile} from 'node:fs/promises';
 import {build} from 'esbuild';
 import {JSDOM} from 'jsdom';
@@ -13,6 +13,21 @@ import {pythonSkip,runPython} from './helpers/python.mjs';
 
 const options={maxBuffer:32*1024*1024};
 const skip=pythonSkip(['openpyxl']);
+// The catalogue is a build output (npm run build:search), absent in a fresh
+// checkout. Same contract as pythonSkip: skip with a reason locally, fail in CI.
+const catalogueSkip=()=>{
+ const dir=new URL('../public/search-catalog/',import.meta.url),manifestUrl=new URL('manifest.json',dir);
+ let missing=!existsSync(manifestUrl);
+ if(!missing){
+  const manifest=JSON.parse(readFileSync(manifestUrl,'utf8'));
+  for(let shard=0;!missing&&shard<Math.ceil(manifest.count/manifest.recordShardSize);shard++)
+   missing=!existsSync(new URL(`${manifest.version}/records-${shard}.json`,dir));
+ }
+ if(!missing)return false;
+ const reason='search catalogue unavailable: run npm run build:search';
+ if(process.env.CI)throw new Error(`${reason} (CI is set, so this fails instead of skipping)`);
+ return reason;
+};
 const verifyOriginals=process.env.OPAX_GFS_VERIFY_ORIGINALS==='1';
 const fixture=skip?null:JSON.parse(runPython(['tests/fixtures/abs_gfs_public_outputs.py',...(verifyOriginals?['--verify-originals']:[])],options));
 const hub=fixture?.asset,sourceRows=hub?[...hub.rows,...hub.function_rows]:[];
@@ -72,7 +87,7 @@ test('SSR cards, table amounts and hydration use original cells even where diagn
  }
 });
 
-test('built search catalogue and authenticated local /mcp never expose GFS reconciliation records or sums',{skip},async()=>{
+test('built search catalogue and authenticated local /mcp never expose GFS reconciliation records or sums',{skip:skip||catalogueSkip()},async()=>{
  const manifest=JSON.parse(await readFile(new URL('../public/search-catalog/manifest.json',import.meta.url)));
  let records=0;
  for(let shard=0;shard<Math.ceil(manifest.count/manifest.recordShardSize);shard++){
