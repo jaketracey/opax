@@ -87,6 +87,8 @@ const nativeSearchHints = new Set([
   'Party name',
   'Member.s name',
   'Datasets and publishers',
+  // iOS bar placeholder since the Duo bills pass (f7a303bde).
+  'Search bills',
 ]);
 const nativeSearch = { id: '.*:id/search_src_text' };
 function selector(v) {
@@ -281,7 +283,8 @@ function command(v, relative) {
     out.tapOn =
       text === 'Select All'
         ? { text: '^Select (All|all)$' }
-        : text === 'Ask about their speeches'
+        : text === 'Ask about their speeches' ||
+            /^Ask about [A-Z][\w'’-]+( [A-Z][\w'’-]+)+$/u.test(text)
           ? // Android's More menu names the person ("Ask about <name>").
             { text: '^Ask about (their speeches|.+)$' }
           : text === 'Name' && relative === '43-money-agencies.yaml'
