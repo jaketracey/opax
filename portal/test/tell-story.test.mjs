@@ -3,6 +3,7 @@
 // date here is pinned; nothing reads the clock.
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { JSDOM } from 'jsdom';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import {divisionKind, divisionIdentity, divisionRows, divisionGroupSentences, billDivisionsTablesHTML, voteScopeLine} from '../public/vote-tables.js';
@@ -20,7 +21,7 @@ const gamblingDivisions = [
   ...OUTCOMES.map((outcome, i) => ({key:`senate-2026-08-19-${i + 1}`, date:'2026-08-19', house:'senate', stage:'Limitation of debate', outcome, ayes:10 + i, noes:30 - i})),
   {key:'senate-2026-08-19-20', date:'2026-08-19', house:'senate', stage:'In committee', outcome:'negative', ayes:11, noes:29},
 ];
-const textOf = html => html.replace(/<script[\s\S]*?<\/script>/g, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+const textOf = html => { const d = new JSDOM(html).window.document; d.querySelectorAll("script,style").forEach(n => n.remove()); return d.body.textContent.replace(/\s+/g, " ").trim(); };
 
 test('a division is grouped by the stage or heading the record files it under, never by its question', () => {
   assert.equal(divisionKind({stage:'Limitation of debate'}), 'limitation');
