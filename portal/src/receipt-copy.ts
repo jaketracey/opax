@@ -1,6 +1,8 @@
 /** Input labels describe the calculator's measure; model prose stays intact. */
 export const RECEIPTS_WRITING_RULE = 'Call each federal total by the measure label supplied with it, and keep its source, recipient, period and amount together in one sentence.'
 
+/** Legacy totals for donor-to-party pairs the typed AEC export holds without any receipt-type cells. */
+export const UNTYPED_RECEIPTS_LABEL='all receipt types (no type breakdown in the AEC data OPAX holds)'
 export function receiptMeasureLabel(measure:string,industry?:string):string {
   if(measure==='donations')return 'donations received (AEC receipt type: Donation Received)'
   if(measure==='other_receipts')return 'other receipts (AEC receipt type: Other Receipt, which includes loans)'

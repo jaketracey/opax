@@ -1,11 +1,11 @@
-import {receiptMeasureLabel,receiptDollars} from './receipt-copy'
+import {receiptMeasureLabel,receiptDollars,UNTYPED_RECEIPTS_LABEL} from './receipt-copy'
 import {donorAssociatedTo,donorDisclosure,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {financialYear, receiptPeriodQuery} from './receipt-period'
 import {latestReceiptYear, readReceiptPeriod, type PeriodOption} from './receipt-reading'
 
 type Node = DonorDisclosureRecord & { id:string; label:string; kind:string; industry?:string; group?:string; aliases?:string[] }
 export type ReceiptEdge = { by_type?:Record<string,number>; by_type_year?:Record<string,Record<string,[number,number]>>; source:string; target:string; total:number; count:number; flow?:string; grant?:boolean; firstYear?:number; lastYear?:number; byYear?:Record<string,number[]> }
-type CalculationEdge=ReceiptEdge&{receipt_type?:string;typed_periods?:string[]}
+type CalculationEdge=ReceiptEdge&{receipt_type?:string;typed_periods?:string[];untyped?:true}
 export type ReceiptMeasure = 'donations'|'receipts_all'|'other_receipts'|'subscriptions'
 export type ReceiptGraph = { meta:Record<string,unknown>; nodes:Node[]; edges:ReceiptEdge[] }
 export function isReceiptGraph(data:Record<string,unknown>): data is Record<string,unknown>&ReceiptGraph {
@@ -174,10 +174,12 @@ const typedFinancialYear=(period:string):number|undefined=>{
   return match&&Number(match[2])===(Number(match[1])+1)%100?Number(match[1]):undefined
 }
 
-/** Adapt exporter cells to the calculator; every typed amount comes from by_type. */
+/** Adapt exporter cells to the calculator; every typed amount comes from by_type.
+ * A pair the typed export holds without any type cells keeps its legacy total,
+ * marked untyped, so the calculator can fall back to it when nothing else matches. */
 function receiptEdges(graph:ReceiptGraph):CalculationEdge[] {
   if(!hasReceiptTypes(graph))return graph.edges
-  return graph.edges.flatMap(edge=>Object.entries(edge.by_type??{}).flatMap(([type,total])=>{
+  return graph.edges.flatMap((edge):CalculationEdge[]=>!Object.values(edge.by_type??{}).some(Number.isFinite)?[{...edge,untyped:true as const}]:Object.entries(edge.by_type??{}).flatMap(([type,total])=>{
     if(!Number.isFinite(total))return []
     const periods=Object.entries(edge.by_type_year??{}).flatMap(([period,types])=>{
       const cell=types[type]
@@ -273,15 +275,20 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   const industryTotals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],total_aud:number,receipts:number,all_types_aud:number,other_receipts_aud:number}>()
   // One row per donor-to-party pair: typed edges are split by receipt type above and merged back here.
   const flows=new Map<string,{donor_id:string,donor:string,donor_href:string|null,return_reference:string,party_id:string,party:string,associated?:string,total_aud:number,receipts:number,all_types_aud:number,other_receipts_aud:number}>()
-  const eligible=receiptEdges(graph).filter(edge=>{
+  const candidates=receiptEdges(graph).filter(edge=>{
     const donor=nodes.get(edge.source),party=nodes.get(edge.target)
     if(edge.flow||edge.grant||donor?.kind!=='donor'||party?.kind!=='party'||(donors.length&&!donorIds.has(donor.id))||(parties.length&&!partyIds.has(party.id))||(industries.length&&!donors.length))return false
     if(from===undefined&&to===undefined)return Number.isFinite(edge.total)&&Number.isFinite(edge.count)&&!!(edge.total||edge.count)
     return Object.entries(edge.byYear??{}).some(([year,value])=>Number(year)>=(from??0)&&Number(year)<=(to??9999)&&Number.isFinite(value[0])&&Number.isFinite(value[1])&&!!(value[0]||value[1]))
   })
-  const typed=hasReceiptTypes(graph)
+  // On the typed export, pairs without type cells count only when every matching
+  // pair lacks them: the answer then gives their legacy total, labelled as such.
+  const typedCandidates=candidates.filter(edge=>!edge.untyped)
+  const typeFallback=hasReceiptTypes(graph)&&candidates.length>0&&!typedCandidates.length
+  const eligible=typeFallback?candidates:typedCandidates
+  const typed=hasReceiptTypes(graph)&&!typeFallback
   const has=(type:string)=>eligible.some(edge=>edge.receipt_type===type)
-  const measure:ReceiptMeasure=filters.measure??(typed?(has('donation_received')?'donations':has('other_receipt')?'other_receipts':has('subscription')?'subscriptions':'receipts_all'):'receipts_all')
+  const measure:ReceiptMeasure=typeFallback?'receipts_all':filters.measure??(typed?(has('donation_received')?'donations':has('other_receipt')?'other_receipts':has('subscription')?'subscriptions':'receipts_all'):'receipts_all')
   const selectedType=({donations:'donation_received',other_receipts:'other_receipt',subscriptions:'subscription'} as Record<string,string>)[measure]
   let cents=0,count=0,allCents=0,otherCents=0,first=Infinity,last=-Infinity,matching=0
   const eventPeriods=new Set<string>()
@@ -341,23 +348,25 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   if(from!==undefined)params.set('from',String(from))
   if(to!==undefined)params.set('to',String(to))
   const url=origin+'/money?'+params
+  // Donation-led answers also link the map's Donation-only view of the same selection.
+  const donationsUrl=typed&&measure==='donations'?origin+'/money?'+new URLSearchParams([...params,['receipt','donations']]):undefined
   const subject=industries.length?industries.map(i=>i.replaceAll('_',' ')).join(' and '):donors.length?donors.map(n=>n.label).slice(0,3).join(', '):parties.map(n=>n.label).join(', ')||'all donors shown'
   const fiscalPeriod=Number.isFinite(first)?first===last?financialYear(first):`${financialYear(first)} to ${financialYear(last)}`:null
   const period=[fiscalPeriod,...eventPeriods].filter(Boolean).join('; ')||null
-  const amount=receiptDollars(cents/100),measure_label=receiptMeasureLabel(measure,industries[0]??(exactDonors.length===1?exactDonors[0].industry:undefined))
+  const amount=receiptDollars(cents/100),measure_label=typeFallback?UNTYPED_RECEIPTS_LABEL:receiptMeasureLabel(measure,industries[0]??(exactDonors.length===1?exactDonors[0].industry:undefined))
   return {
-    answer:[periodReading,scopeReading].filter(Boolean).map(r=>r+' ').join('')+(matching?`${subject}: ${amount} in ${measure_label}, financial years ${period}, across ${count.toLocaleString('en-AU')} records.`:`OPAX holds ${subject} receipts in other financial years. Explore the [money map](${url}) to choose a held period.`),
+    answer:[periodReading,scopeReading].filter(Boolean).map(r=>r+' ').join('')+(matching?`${subject}: ${amount} in ${measure_label}, financial years ${period}, across ${count.toLocaleString('en-AU')} records.`:from===undefined&&to===undefined?`OPAX holds no matching ${subject} receipts in its published records. Explore the [money map](${url}) to see what it holds.`:`OPAX holds ${subject} receipts in other financial years. Explore the [money map](${url}) to choose a held period.`),
     period_coverage: { since: Number.isFinite(first) ? `${first}-01-01` : null, until: Number.isFinite(last) ? `${last}-12-31` : null,
       as_of: typeof graph.meta.generated === 'string' ? graph.meta.generated.slice(0, 10) : null,
       requested_since: from === undefined ? undefined : `${from}-01-01`, requested_until: to === undefined ? undefined : `${to}-12-31`,
       matched: matching > 0, basis: 'financial_year_start', note: 'Years identify financial years by starting year, not calendar-year totals; only matching recorded receipts in the published selection.' },
-    measure,measure_label,typed,all_types_aud:allCents/100,other_receipts_aud:otherCents/100,total_aud:cents/100,receipts:count,period,requested_years:{from:from??null,to:to??null},jurisdiction,subject,
+    measure,measure_label,typed,...(typeFallback?{type_breakdown:false as const}:{}),all_types_aud:allCents/100,other_receipts_aud:otherCents/100,total_aud:cents/100,receipts:count,period,requested_years:{from:from??null,to:to??null},jurisdiction,subject,
     by_party:[...totals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100,all_types_aud:Math.round(t.all_types_aud*100)/100,other_receipts_aud:Math.round(t.other_receipts_aud*100)/100,donations_aud:Math.round(t.donations_aud*100)/100,
       // Per-year donations travel only for a bounded window, where answers show them.
       donations_by_year:from!==undefined&&to!==undefined?t.donations_by_year:{}})).sort((a,b)=>b.total_aud-a.total_aud),
     by_donor:[...donorTotals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100,all_types_aud:Math.round(t.all_types_aud*100)/100,other_receipts_aud:Math.round(t.other_receipts_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
     by_industry:[...industryTotals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100,all_types_aud:Math.round(t.all_types_aud*100)/100,other_receipts_aud:Math.round(t.other_receipts_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
-    flows:[...flows.values()].sort((a,b)=>b.total_aud-a.total_aud),
+    flows:[...flows.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100,all_types_aud:Math.round(t.all_types_aud*100)/100,other_receipts_aud:Math.round(t.other_receipts_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
     selected_donors:donors.map(d=>d.label),
     selected_parties:parties.map(p=>p.label),
     selected_industries:industries,
@@ -367,6 +376,6 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
     scope:'Party-level totals for sources in the published OPAX money map.',
     period_note:'Years use the first year of a financial year; election returns may use the polling year. Undated receipts are excluded when a year filter is requested. Dollar amounts are nominal, not inflation-adjusted.',
     coverage:graph.meta.coverage,methodology:graph.meta.methodology,generated:graph.meta.generated,
-    sources:[{title:`${subject}: disclosed party receipts`,url}],
+    sources:[{title:`${subject}: disclosed party receipts`,url},...(donationsUrl&&matching?[{title:`${subject}: donations received`,url:donationsUrl}]:[])],
   }
 }
