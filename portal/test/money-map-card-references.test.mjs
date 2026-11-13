@@ -215,6 +215,20 @@ for(const [id,label,declared] of DECLARED_CARDS)test(`subject map card: ${label}
   }finally{handle.destroy()}
 });
 
+// Public Funding only (A35): NSW Efa is on the Greens' return as public funding. The card says that, never
+// the declared-only line (#351) and never a donor declaration.
+test('subject map card: a Public Funding payer says so, never the declared-only line, $0 or a declaration',async()=>{
+  const {handle,view,card,text}=await subjectCard('donor:nsw efa');
+  try{
+    assert.ok(text.includes('NSW Efa'),'the subject card is open');
+    assert.ok(text.includes("Listed on the party's return as public funding, which is election funding, not a donation."),text);
+    assert.doesNotMatch(text,/No party return lists|declare|not receipts a party reported/);
+    assert.doesNotMatch(text,ZERO);
+    assert.equal(card.querySelector('.mm-card-total'),null,'no headline figure');
+    assert.deepEqual(view.edges.filter(e=>e.source==='donor:nsw efa'),[],'no flow on the map');
+  }finally{handle.destroy()}
+});
+
 test('subject map card: a donor the parties list keeps its total, receipts and rows; a flow only it declares is a note, not a $0 row',async()=>{
   const pratt=await subjectCard('donor:pratt');
   try{
@@ -244,8 +258,9 @@ test('the full map draws no donor-to-party flow at $0: every flow no party retur
     const flows=view.edges.filter(e=>!e.grant&&!e.flow&&String(e.source).startsWith('donor:'));
     assert.ok(flows.length>500);
     assert.deepEqual(flows.filter(e=>!(e.total>0)).map(e=>`${e.source} -> ${e.target}`),[]);
-    const dropped=publishedGraph.edges.filter(e=>!e.grant&&!e.flow&&e.by_type&&!Object.keys(e.by_type).length);
-    assert.equal(dropped.length,131);
+    // The 131 donor-declared-only flows, and the one Public Funding-only flow (NSW Efa to the Greens), which is never a donor's (A35).
+    const dropped=publishedGraph.edges.filter(e=>!e.grant&&!e.flow&&e.by_type&&!Object.keys(e.by_type).filter(k=>k!=='public_funding').length);
+    assert.equal(dropped.length,132);
     assert.equal(view.edges.length,publishedGraph.edges.length-dropped.length);
   }finally{handle.destroy()}
 });

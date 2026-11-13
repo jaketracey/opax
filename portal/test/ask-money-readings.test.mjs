@@ -47,13 +47,13 @@ for(const [question,reading,from,to] of [
  const top=expected.rows[0],opening=firstSentence(out.answer)
  assert.equal(expected.measure,'other_receipts')
  assert.equal(opening,`The AEC records no donations from fossil fuel-linked sources to any party ${from===to?'in '+fy(from):`from ${fy(from)} to ${fy(to)}`}.`)
- assert.equal(secondSentence(out.answer),`In other receipts (includes loans and other amounts), **${top.name}** received the most: **${dollars(top.cents)}**, ${expected.period}.`)
+ assert.equal(secondSentence(out.answer),`In other receipts (amounts other than donations or subscriptions), **${top.name}** received the most: **${dollars(top.cents)}**, ${expected.period}.`)
  assert.equal(out.money_reading,reading)
  // The reading is its own line, straight after the opening paragraph.
  assert.equal(out.answer.split('\n\n')[1],reading)
  // Ranked rows under their own label; no $0 donation columns.
  for(const row of expected.rows)assert.match(out.answer,new RegExp(`\\| ${escapeRegExp(row.name)} \\| ${escapeRegExp(dollars(row.cents))} \\|`))
- assert.match(out.answer,/\| Recipient \| Other receipts \(includes loans and other amounts\) \| Share \|/)
+ assert.match(out.answer,/\| Recipient \| Other receipts \| Share \|/)
  assert.doesNotMatch(out.answer,/Donations \d{4}–\d{2}|\$0\b/)
  assert.match(out.measure_label,/AEC receipt type/)
  // Cited, with the money explorer filtered to the window it read.
@@ -175,7 +175,7 @@ test('a question that names its donor or party is answered for it, with its peri
  const santos=await ask('Which party got the most donations from Santos last year?')
  assert.equal(santos.answer_status,'calculated')
  assert.match(firstSentence(santos.answer),/^The AEC records no donations from Santos Limited to any party in 2024–25\.$/)
- assert.match(secondSentence(santos.answer),/^In other receipts \(includes loans and other amounts\), \*\*\w+\*\* received the most: \*\*\$[\d,]+\*\*, 2024–25\.$/)
+ assert.match(secondSentence(santos.answer),/^In other receipts \(amounts other than donations or subscriptions\), \*\*\w+\*\* received the most: \*\*\$[\d,]+\*\*, 2024–25\.$/)
  assert.match(santos.money_reading,/Reading “last year” as 2024–25/)
  const labor=await ask('How have gambling donations to Labor changed in recent years?')
  assert.equal(labor.answer_status,'calculated')

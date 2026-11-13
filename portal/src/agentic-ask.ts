@@ -143,7 +143,7 @@ export function plannerPrompt(): { system: string; user: string } {
     '- Select the dedicated capability described in the tool catalogue. For vote histories use the authoritative archive reader and follow its paging; count words using the same person, party and period. Compatibility aliases are for old clients.',
     '- One recorded division, its outcome, party vote, named member vote or floor crossers -> division, preserving exact date and chamber and passing title words, bill or division_id. Use lookup for who crossed the floor on one division and select its named dissenters, not the number of matching divisions. Outcome questions need the result and recorded ayes/noes, without floor-crossing commentary unless asked. A year in a bill title is not the division date. Floor crossing over a period -> division operation floor_crossing; party agreement -> operation party_agreement with party and other_party. member_votes only summarises a keyword sample across several divisions.',
     '- A later step can use an earlier result: "$1" is the top name from step 1 (a speaker or party), "$1.party" is that person\'s party. To get a speaker\'s party use find_people("$1") then "$2.party".',
-    '- Money: summed federal receipts, rankings by total and annual receipt trends -> money_totals, with financial_year or FY starting years in from_year/to_year. party_receipts(party) lists donors to a party; party_receipts(industry) gives an industry\'s totals by party. Member expense totals -> member_expenses with the requested calendar or financial year. Industries: gambling, mining, fossil_fuels, finance, property, unions, health, hospitality, media, tech.',
+    '- Money: summed federal receipts, rankings by total and annual receipt trends -> money_totals, with financial_year or FY starting years in from_year/to_year. party_receipts(party) lists donors to a party by donations (AEC Donation Received; other receipt types are separate labelled lines, described as other receipts); party_receipts(industry) gives an industry\'s totals by party. measure=all_types for money from, receipts or paid. Member expense totals -> member_expenses with the requested calendar or financial year. Industries: gambling, mining, fossil_fuels, finance, property, unions, health, hospitality, media, tech.',
     '- If the record cannot answer (party by state parliament other than federal or qld, a topic outside the list with no other route), set shape "unanswerable" and give the reason.',
     `- At most ${AGENTIC_MAX_STEPS} steps.`,
     '',
@@ -262,11 +262,34 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
     } else if (r.tool === 'party_receipts') {
       const years = (d.years as (number | null)[] | undefined) ?? [], fy = (year: number) => `${year}-${String(year + 1).slice(-2)}`
       const period = `${fy(years[0] ?? 1998)} to ${fy(years[1] ?? 2025)}`, industry = typeof d.industry === 'string' ? d.industry : undefined
+      // What each row counts (party_receipts measure): donations (AEC Donation Received) or every receipt type.
+      const donations = d.measure === 'donations', word = donations ? 'donations' : 'receipts'
+      const measured = donations ? { measure: 'donations', measure_label: 'donations' } : d.measure === 'all_types' ? { measure: 'receipts_all', measure_label: 'all receipt types' } : {}
       if (d.party) {
-        ;(d.rows as { donor: string; associated_entity?: string; total_aud: number; return_reference?: string; industry?: string | null }[]).forEach((row, i) => add(`${d.party} disclosed $${row.total_aud.toLocaleString('en-AU')} in receipts from ${row.donor}${row.associated_entity ? ` (${row.associated_entity})` : ''} (federal disclosures; financial years ${period})${row.return_reference ? " — "+row.return_reference : ""}`, r.cite[i + 1], entities,
-          { receipt: { party: String(d.party), source: row.donor, amount: row.total_aud, period, jurisdiction: 'federal', ...(row.associated_entity ? { associated: row.associated_entity } : {}), ...(row.industry ? { industry: row.industry } : {}), ...(industry ? { filter: industry } : {}) } }))
-      } else (d.rows as { party: string; total_aud: number }[]).forEach((row, i) => add(`${row.party} disclosed $${row.total_aud.toLocaleString('en-AU')} in receipts from ${d.industry} sources (federal disclosures; financial years ${period})`, r.cite[i], [`party:${row.party}`],
-        { receipt: { party: row.party, source: `${d.industry} sources`, amount: row.total_aud, period, jurisdiction: 'federal', aggregate: true, ...(industry ? { industry, filter: industry } : {}) } }))
+        const rows = d.rows as { donor: string; associated_entity?: string; total_aud: number; return_reference?: string; industry?: string | null }[]
+        rows.forEach((row, i) => add(`${d.party} disclosed $${row.total_aud.toLocaleString('en-AU')} in ${word} from ${row.donor}${row.associated_entity ? ` (${row.associated_entity})` : ''} (federal disclosures; financial years ${period})${row.return_reference ? " — "+row.return_reference : ""}`, r.cite[i + 1], entities,
+          { receipt: { party: String(d.party), source: row.donor, amount: row.total_aud, period, jurisdiction: 'federal', ...measured, ...(row.associated_entity ? { associated: row.associated_entity } : {}), ...(row.industry ? { industry: row.industry } : {}), ...(industry ? { filter: industry } : {}) } }))
+        // Labelled lines beside the ranking (aside): what the AEC does not class as donations, and public
+        // funding. Each keeps its own citation and never enters a ranking (research-coherence donorRows).
+        const other = (d.other_receipts as { donor: string; other_receipts_aud: number; subscriptions_aud: number; untyped_aud: number; line: string }[] | undefined) ?? []
+        other.forEach((row, i) => { const cite = r.cite[rows.length + 1 + i]; if (cite) add(cite.label, cite, entities,
+          { receipt: { party: String(d.party), source: row.donor, amount: row.other_receipts_aud + row.subscriptions_aud + row.untyped_aud, period, jurisdiction: 'federal', measure: 'other_receipts', measure_label: 'receipts the AEC does not class as donations', aside: cite.label } }) })
+        const pf = (d.public_funding as { source: string; amount_aud: number; period: string }[] | undefined) ?? []
+        pf.forEach((row, i) => { const cite = r.cite[rows.length + 1 + other.length + i]; if (cite) add(cite.label, cite, entities,
+          { receipt: { party: String(d.party), source: row.source, amount: row.amount_aud, period: row.period || period, jurisdiction: 'federal', measure: 'public_funding', measure_label: 'public funding', aside: cite.label } }) })
+        // A lending question's note and declared debts: what the returns say about loans, beside the ranking.
+        const lending = (d.lending as string[] | undefined) ?? []
+        lending.forEach((_line, i) => { const cite = r.cite[rows.length + 1 + other.length + pf.length + i]; if (cite) add(cite.label, cite, entities,
+          { receipt: { party: String(d.party), source: `${d.party} returns`, amount: Number(cite.value) || 0, period, jurisdiction: 'federal', measure: 'declared_debts', measure_label: 'debts the returns declare', aside: cite.label } }) })
+      } else {
+        const rows = d.rows as { party: string; total_aud: number }[]
+        rows.forEach((row, i) => add(`${row.party} disclosed $${row.total_aud.toLocaleString('en-AU')} in ${word} from ${d.industry} sources (federal disclosures; financial years ${period})`, r.cite[i], [`party:${row.party}`],
+          { receipt: { party: row.party, source: `${d.industry} sources`, amount: row.total_aud, period, jurisdiction: 'federal', aggregate: true, ...measured, ...(industry ? { industry, filter: industry } : {}) } }))
+        // A donations ranking's labelled lines: the industry's other receipts to each party, never ranked.
+        const other = (d.other_receipts as { party: string; other_receipts_aud: number; subscriptions_aud: number; untyped_aud: number }[] | undefined) ?? []
+        other.forEach((row, i) => { const cite = r.cite[rows.length + i]; if (cite) add(cite.label, cite, [`party:${row.party}`],
+          { receipt: { party: row.party, source: `${d.industry} sources`, amount: row.other_receipts_aud + row.subscriptions_aud + row.untyped_aud, period, jurisdiction: 'federal', aggregate: true, measure: 'other_receipts', measure_label: 'receipts the AEC does not class as donations', aside: cite.label, ...(industry ? { industry, filter: industry } : {}) } }) })
+      }
     } else if (r.tool === 'find_people') {
       const p = (d.people as { name: string; party: string | null; service?: ServicePeriod[] }[])[0]
       if (p) add(`${p.name}: ${p.party ?? 'party not recorded'}`, { ...r.cite[0], kind: 'person' })
@@ -547,6 +570,9 @@ export async function bounded<T>(work: (signal: AbortSignal) => Promise<T>, ms: 
 export function periodPlan(plan: Plan, period: Period, filters: Record<string, unknown>, constraints?: AskConstraints): Plan {
   return { ...plan, steps: plan.steps.map(s => {
     if (constraints && ['declared_interests', 'find_records', 'public_finances'].includes(s.tool)) return constrainStep(s, constraints, TOOL_SPECS.find(t => t.name === s.tool)!.input.properties as Record<string, unknown>)
+    // The question decides what a donor figure counts (A34), on the planner path as in the research loop.
+    if (s.tool === 'party_receipts' && constraints?.receiptMeasure) s = { ...s, args: { ...s.args, measure: constraints.receiptMeasure } }
+    if (s.tool === 'party_receipts' && constraints?.lending) s = { ...s, args: { ...s.args, lending: true } }
     if (s.tool === 'party_receipts' && (period.since || period.until)) {
       const { since: _s, until: _u, from_year: _f, to_year: _t, ...args } = s.args
       const years = receiptYearWindow(period.since, period.until)

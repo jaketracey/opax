@@ -23,11 +23,15 @@ export function createAnswerWriter(options: ResearchOptions) {
     const ground=(payload:QualitativeAnswer)=>{const {research:_found,...checked}=groundAnswerPayload({...withRecordedChambers(payload),research:{pre_writer_sources:found}},input.question);return checked as unknown as QualitativeAnswer}
     // Exact record findings have a complete prose answer without a writing turn, unless that prose is only a limit.
     if(recordAnswerLines(input)||receiptWritingLines(input)||completeMoneySelection(input)){const exact=proseFallback(input);if(exact.answer_decision!=='limitation')return ground(exact)}
+    // No receipt is ever said to be lent (A34 review): the AEC types none as a loan, and OPAX matches none to a
+    // declared debt. A draft that uses a lending word outside the facts' own text gives way to the facts-only version.
+    const lendingWord=/\b(?:lent|lends?|lending|loan(?:s|ed)?|borrow(?:s|ed|ing)?)\b/i
+    const saysLent=(answer:string)=>input.facts.some(f=>f.source.receipt)&&lendingWord.test(input.facts.reduce((rest,f)=>rest.split(f.text).join(' '),answer))
     let lastDraft:QualitativeAnswer|null=null
     // A stopped writer keeps what it wrote; with nothing written, the facts are rendered as recorded.
     const fallback=():QualitativeAnswer=>{
       stats.coherence={...stats.coherence,fallback:true}
-      if(lastDraft&&lastDraft.answer.trim()){const checked=ground(lastDraft);return {...checked,coherence:{...checked.coherence,fallback:true}}}
+      if(lastDraft&&lastDraft.answer.trim()&&!saysLent(lastDraft.answer)){const checked=ground(lastDraft);return {...checked,coherence:{...checked.coherence,fallback:true}}}
       const facts=proseFallback(input)
       return ground({...facts,coherence:{...facts.coherence,fallback:true}})
     }, credits=options.creditCooldown ?? researchCreditCooldown
@@ -96,6 +100,8 @@ export function createAnswerWriter(options: ResearchOptions) {
         researchTrace('writer.verify', {question:input.question,raw,verified})
         if(!verified){if(pass===0&&remainingMs-(Date.now()-startedWriting)>=500){prompt=writingPrompt(input);continue}return fallback()}
         researchTrace('writer.audit',{question:input.question,counts:auditPayload(input.question,verified).counts})
+        // Checked on the draft as written: grounding may drop the sentence and leave nothing in its place.
+        if(lastDraft&&saysLent(lastDraft.answer)&&!saysLent(required.answer))return ground(required)
         return withRequired(ground(verified))
       }catch(error){
         if(isResearchCreditError(error)){credits.exhaust();receipt=0;stats.usageUnknown=false;if(turn)Object.assign(turn,{input:0,output:0,cost_usd:0})}

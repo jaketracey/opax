@@ -1,8 +1,8 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,hasPartyReceipts,receiptGraph,receiptScopeLabel} from './donor-disclosure.js?v=8c73ceafd6';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,receiptGraph,receiptScopeLabel} from './donor-disclosure.js?v=dffa19bbff';
 // receiptGraph is shared with every money page (donor-disclosure.js); re-exported for the tests that read it here.
 export {receiptGraph};
-import {loadDonorViewIndex} from './donor-views.js?v=c475b569bf';
-import {partyReturnFigures, industryName} from './register-tables.js?v=c8a69402d5';
+import {loadDonorViewIndex} from './donor-views.js?v=9770cf1299';
+import {partyReturnFigures, industryName} from './register-tables.js?v=ba98f7415d';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph
@@ -537,6 +537,8 @@ export function narrative(flow, { partyName = (l) => l } = {}) {
   const to = party ? partyName(party.label) : 'political parties';
   const when = span(flow);
   const yearsWithMoney = flow.dated.length;
+  // Public Funding only (NSW Efa): on the party's return, as public funding, never a donor's declaration (A35).
+  if (!count && !total && kind === 'donor' && publicFundingOnly(donor)) return [`${PUBLIC_FUNDING_ONLY}, so OPAX does not count it as a donor.`];
   if (!count && !total) return [kind === 'donor' && hasPartyReceipts(donor) === false
     ? 'No party return lists a receipt from this donor. What its own donor returns declare is not counted here: OPAX counts each gift once, from the party’s own return.'
     : 'No disclosed money matches this flow.'];

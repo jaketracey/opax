@@ -20,7 +20,8 @@ export function protectedDecision(payload) {const decision=answerDecision(payloa
 function donorRows(question,sources=[],requireRanking=true,constraints={}) {
   sources=Array.isArray(sources)?sources.filter(s=>s&&typeof s==='object'):[]
   if((requireRanking&&!DONOR_RANKING.test(question))||!(/donor|donat|giv|gave|funding|disclos|receipts?/i.test(question)||wordsInOrder(question,'take','money')||wordsInOrder(question,'money','from'))||/\bwhich Smith\b/i.test(question))return []
-  const rows=sources.flatMap(source=>{const r=source.receipt;return r?[{name:r.source,party:r.party,amount:'$'+r.amount.toLocaleString('en-AU'),value:r.amount,period:r.period,filter:r.filter,aggregate:r.aggregate,...(r.associated?{associated:r.associated}:{}),source}]:[]})
+  // A labelled aside (other receipts, public funding) stands beside a ranking and is never part of one.
+  const rows=sources.flatMap(source=>{const r=source.receipt;return r&&!r.aside?[{name:r.source,party:r.party,amount:'$'+r.amount.toLocaleString('en-AU'),value:r.amount,period:r.period,filter:r.filter,aggregate:r.aggregate,...(r.measure?{measure:r.measure}:{}),...(r.associated?{associated:r.associated}:{}),source}]:[]})
   for(const row of rows)row.entity_type=sourceMetadata(row.source).entity_type??'donor'
   const scoped=rows.filter(r=>rankingScopeMatches(question,r,constraints))
   return scoped.filter((r,i)=>scoped.findIndex(x=>x.name===r.name&&x.party===r.party&&x.value===r.value)===i).sort((a,b)=>b.value-a.value)

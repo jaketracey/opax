@@ -28,8 +28,15 @@ async function assertGold(g){
   const label=`${c.id} turn ${i+1}: ${t.standalone}`
   const r=await partyDonations(depsFor(g),{...t.tool_query,limit:15})
   assert.equal(r.ok,true,label)
-  const rows=r.data.rows
-  if(t.rows.length)assert.deepEqual(rows.slice(0,t.rows.length),t.rows,label)
+  // Every gold question asks who gives, gave or donated, so each ranks AEC Donation Received only (A34).
+  assert.equal(r.data.measure,'donations',label)
+  // A turn about one named source checks that source's donation row, wherever it ranks.
+  const rows=t.named_donor?r.data.rows.filter(row=>row.donor===t.named_donor):r.data.rows
+  if(t.rows.length||t.named_donor)assert.deepEqual(t.named_donor?rows:rows.slice(0,t.rows.length),t.rows,label)
+  // Sources the old all-types gold ranked are not hidden: each is its own labelled line, never a donation.
+  for(const o of t.other_receipts??[])assert.deepEqual((r.data.other_receipts??[]).find(x=>x.donor===o.donor),o,`${label}: ${o.donor} other receipts`)
+  if(t.public_funding)assert.deepEqual(r.data.public_funding,t.public_funding,`${label}: public funding`)
+  for(const p of r.data.public_funding??[])assert.ok(!r.data.rows.some(row=>row.donor===p.source),`${label}: ${p.source} is public funding, never a donor row`)
   if(t.eligible_rows?.length)assert.deepEqual(rows,t.eligible_rows,label)
   if(t.decision==='decline'&&t.period)assert.equal(rows.length,0,`${label} (${t.gold_limitation||'no rows in the period'})`)
  }
@@ -101,16 +108,16 @@ test('every gold turn is exactly what the party_receipts tool answers from the l
  await assertGold(overlay)
  // a donation figure the gold relies on cannot move unnoticed
  const moved=structuredClone(graph);const first=fixture.conversations[0].turns[0]
- const edge=moved.edges.find(e=>e.target===`party:${first.tool_query.party}`&&moved.nodes.find(n=>n.id===e.source)?.label===first.rows[0].donor)
+ const edge=moved.edges.find(e=>e.target===`party:${first.tool_query.party}`&&[moved.nodes.find(n=>n.id===e.source)?.label,moved.nodes.find(n=>n.id===e.source)?.source_name].includes(first.rows[0].donor))
  assert.ok(edge,'the first gold row is a donation edge in the live graph')
  // party_receipts reads the typed cells (each receipt once, from the party's own return), so move one of those
  assert.ok(edge.by_type_year,'the first gold row has typed receipt cells')
- for(const year in edge.by_type_year){for(const kind in edge.by_type_year[year]){edge.by_type_year[year][kind][0]+=1;edge.by_type[kind]+=1;break}break}
+ for(const year in edge.by_type_year){const cell=edge.by_type_year[year].donation_received;if(cell){cell[0]+=1;edge.by_type.donation_received+=1;break}}
  await assert.rejects(()=>assertGold(moved))
 })
 test('follow-up population has ten tool-derived two/three turn conversations',()=>{
  assert.equal(fixture.conversations.length,10)
- for(const c of fixture.conversations){assert.ok(c.turns.length>=2&&c.turns.length<=3);for(const t of c.turns){assert.ok(t.question&&t.standalone);assert.ok(t.context_all.length);if(t.decision==='answer')assert.ok(t.rows.length||t.novel_from_previous&&t.eligible_rows.length)}}
+ for(const c of fixture.conversations){assert.ok(c.turns.length>=2&&c.turns.length<=3);for(const t of c.turns){assert.ok(t.question&&t.standalone);assert.ok(t.context_all.length);if(t.decision==='answer')assert.ok(t.rows.length||t.novel_from_previous&&t.eligible_rows.length||t.other_receipts?.length);if(t.gold_change)assert.match(t.gold_change,/^A34\/A35, 13 Nov 2026: .*\b(?:Donation Received|Other Receipt|Public Funding)\b/)}}
 })
 test('conversation requests carry resolved questions and minimal source metadata exactly as sendChat',()=>{
  const thread=[];recordConversationTurn(thread,'what about Labor?',{answer:'A supported answer.',asked_as:'Who gives the most to Labor?',sources:[{resource:'a'.repeat(32),slug:'speech-1',kind:'speech',cited:true,speaker:'Private field not carried',snippet:'not sent'}]})
@@ -118,7 +125,7 @@ test('conversation requests carry resolved questions and minimal source metadata
  recordConversationTurn(thread,'and in 2019?',{answer:'A calculation.',asked_as:'Generic rewrite',money_ranking:true,money_question:'Who gave most to Labor in 2019?',sources:[]});assert.equal(clientConversationRequest(thread).context[2].text,'Who gave most to Labor in 2019?')
 })
 test('follow-up grading catches a lost entity, changed amount and a decline converted into ranking',()=>{
- const turn=fixture.conversations[0].turns[1],r=turn.rows[0],text=`${r.donor} provided the most disclosed funding to Labor: $${r.total_aud.toLocaleString('en-AU')}.`,source={resource:'fact-1',kind:'export',cited:true,snippet:`Donor: ${r.donor} — $${r.total_aud.toLocaleString('en-AU')}.`,title:'Selected Labor receipts'}
+ const turn=fixture.conversations[0].turns[1],r=turn.rows[0],text=`${r.donor}${r.associated_entity?` (${r.associated_entity})`:''} gave the most in donations to Labor: $${r.total_aud.toLocaleString('en-AU')}.`,source={resource:'fact-1',kind:'export',cited:true,snippet:`Donor: ${r.donor} — $${r.total_aud.toLocaleString('en-AU')}.`,title:'Selected Labor receipts'}
  const p={answer:text,asked_as:turn.standalone,citations:{'fact-1/t/body/0':[[0,text.length]]},sources:[source]}
  assert.equal(gradeFollowUp(turn,p).pass,true);assert.equal(gradeFollowUp(turn,{...p,asked_as:'Who gives most to One Nation?'}).context,'fail');assert.equal(gradeFollowUp(turn,{...p,answer:text.replace(r.total_aud.toLocaleString('en-AU'),'1')}).owners_figures,'fail');assert.equal(gradeFollowUp({...turn,decision:'decline',rows:[]},p).declines,'fail')
 })

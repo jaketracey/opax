@@ -17,6 +17,9 @@ export interface ReceiptFact {
   industry?: string; filter?: string
   /** A sum across many sources, not one source's receipts. */
   aggregate?: boolean
+  /** A labelled line beside a ranking (receipts the AEC does not class as donations, or public
+   *  funding), in its own words. Never ranked and never called a donation. */
+  aside?: string
 }
 export interface ResearchPayload {
   reserved_cost_usd?: number

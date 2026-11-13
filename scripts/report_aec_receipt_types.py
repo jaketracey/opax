@@ -61,7 +61,7 @@ def report(db, cache, graph):
     for donor, recipient, amount, fy, kind in db.execute(
         "SELECT donor_name,recipient,amount,financial_year,receipt_type FROM aec_receipt_records "
         "WHERE record_side='recipient' AND recipient_kind='political_party'"):
-        reason = selection.exclusion(donor, recipient, amount, fy, "political_party")
+        reason = selection.exclusion(donor, recipient, amount, fy, "political_party", receipt_type=kind)
         if reason:
             excluded[reason] += 1
             continue
@@ -86,7 +86,8 @@ def report(db, cache, graph):
         tag = source.get("industry")
         if tag not in graph_buckets or target["kind"] != "party":
             continue
-        graph_buckets[tag]["all_types"][target["label"]] += sum(e.get("by_type", {}).values())
+        # Public Funding stays as its own cell on the map (A35); like the uncapped side, no total counts it.
+        graph_buckets[tag]["all_types"][target["label"]] += sum(v for k, v in e.get("by_type", {}).items() if k != "public_funding")
         graph_buckets[tag]["donation_only"][target["label"]] += e.get("by_type", {}).get("donation_received", 0)
     return {"fetches": [], "cached_archives": inventory, "annual_detailed_rows_by_type_and_financial_year": rows_by_year,
             "recipient_kinds": kinds,

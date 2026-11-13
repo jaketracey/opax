@@ -1,4 +1,4 @@
-import {donorDisclosure,donorLookup,hasPartyReceipts,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
+import {donorDisclosure,donorLookup,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {partyUrl} from '../public/canonical-urls.js'
 // ---------------------------------------------------------------------------
 // OPAX Money Map - public entry.
@@ -318,7 +318,8 @@ export function windowFigures<T extends YearFigures>(
 const RECEIPT_EVENT_YEARS: Record<string, number> = { 'braddon by-election': 2018, 'wentworth by-election': 2018, 'eden-monaro by-election': 2020, 'fadden by-election': 2023 }
 
 function typedReceiptFigures<T extends YearFigures>(x: T, lo: number, hi: number, cpi: boolean, measure: ReceiptMeasure): T {
-  const wanted = (kind: string) => measure === 'all_types' || kind === 'donation_received'
+  // Public Funding is election funding, never a donor's money, under either measure (A35).
+  const wanted = (kind: string) => kind !== 'public_funding' && (measure === 'all_types' || kind === 'donation_received')
   const bounded = Number.isFinite(lo) || Number.isFinite(hi)
   let total = 0, count = 0
   let firstYear: number | null = null, lastYear: number | null = null
@@ -394,7 +395,8 @@ export function declaredOnlyFlows(raw: MoneyGraph, donorId: string): DeclaredFlo
   const parties = new Map(raw.nodes.filter(n => n.kind === 'party').map(n => [n.id, n.label]))
   const rows: DeclaredFlow[] = []
   for (const e of raw.edges) {
-    if (e.source !== donorId || e.grant || e.flow || !parties.has(e.target) || hasPartyReceipts(e) || !(e.total > 0)) continue
+    // Public Funding on the party's return is not a donor's declaration (A35): its own line says what it is.
+    if (e.source !== donorId || e.grant || e.flow || !parties.has(e.target) || hasPartyReceipts(e) || publicFundingOnly(e) || !(e.total > 0)) continue
     rows.push({ party: parties.get(e.target)!, total: e.total, count: e.count ?? 0, firstYear: e.firstYear ?? null, lastYear: e.lastYear ?? null })
   }
   return rows.sort((a, b) => b.total - a.total || a.party.localeCompare(b.party))
@@ -1989,7 +1991,8 @@ export async function mountMoneyMap(
     // A party heads its card with its whole return when the file has it (partyReturnWindow).
     const headline = node.kind === 'party' && node.partyReturn ? node.partyReturn : node
     if (declaredOnly) {
-      el('p', 'mm-card-sub mm-card-declared', card).textContent = NO_PARTY_RETURN
+      // A payer whose only receipt is Public Funding (NSW Efa) is listed on the party's return, as public funding.
+      el('p', 'mm-card-sub mm-card-declared', card).textContent = publicFundingOnly(node) ? PUBLIC_FUNDING_ONLY + '.' : NO_PARTY_RETURN
       if (declared.length) {
         el('p', 'mm-card-fine', card).textContent = `Its ${declaredFlowsText(declared)}. `
           + "These are the donor's declarations, not receipts a party reported, so the map's figures, which count each gift once from the party's own return, leave them out."
