@@ -103,7 +103,7 @@ test('every citation URL the Ask tools build is a page the Worker serves', async
 })
 
 test('the check itself fails on a path the router does not serve', async () => {
-  assert.deepEqual(await unserved([origin + '/money/party/Labor']), [origin + '/money/party/Labor -> 404 Page not found · OPAX'])
+  assert.deepEqual(await unserved([origin + '/money/party/Labor']), [origin + '/money/party/Labor -> 404 Nothing at this address · OPAX'])
 })
 
 test('party receipts cite the receipts map filtered to the party (and industry, and years), never /money/party', async () => {

@@ -6,7 +6,21 @@ const donorViewReady = import('/donor-views.js?v=da68cf9f9e').then(module => {
   ({donorRows,donorDisclosure,donorLabelHTML}=module);
   return module.loadDonorViewIndex();
 }).then(index => (donorViewIndex=index));
-const disclosedDonor = name => donorViewIndex.get(String(name).normalize('NFKC').replace(/[‘’ʼ`]/g,"'").replace(/\s+/g,' ').trim().toLowerCase()) || {label:name};
+const donorViewKey = name => String(name).normalize('NFKC').replace(/[‘’ʼ`]/g,"'").replace(/\s+/g,' ').trim().toLowerCase();
+const disclosedDonor = name => donorViewIndex.get(donorViewKey(name)) || {label:name};
+// The one not-found block (not-found.js), for an in-app link that lands on an empty address.
+let notFoundModule;
+const notFoundReady = () => notFoundModule ??= import('/not-found.js');
+async function showNotFound(container, kind, slug, { headingId, manageFocus = false, crumbs, isActive = () => true, extra = '' } = {}) {
+  const mod = await notFoundReady();
+  if (!isActive() || !container.isConnected) return null;
+  const heading = mod.renderNotFound(container, { kind, slug, headingId });
+  if (extra) container.insertAdjacentHTML('beforeend', extra);
+  document.title = `${mod.NOT_FOUND_KINDS[kind].title} · OPAX`;
+  if (crumbs) setCrumbs(crumbs);
+  if (manageFocus) heading?.focus();
+  return heading;
+}
 const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 /* OPAX portal — vanilla JS, no build step.
    The hash is the single source of truth for navigation; route() renders it. */
@@ -20,7 +34,7 @@ const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=b080de058e").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=583d840b52').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=3beb5b4ebc').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=fae51a8e69').then(module => { askPerson = module; });
 let uiLabels;
@@ -225,7 +239,7 @@ const BALANCE_COALITION = new Set(["Liberal", "Nationals", "LNP", "Country Liber
 const BALANCE_ELECTION_YEARS = new Set([1998, 2001, 2004, 2007, 2010, 2013, 2016, 2019, 2022, 2025]);
 
 /** Print a donor's federal disclosure history as a two-sided ledger. */
-function donorBalanceHTML(flows) {
+function donorBalanceHTML(flows, scope = "") {
   const source = "https://transparency.aec.gov.au/";
   const byYear = new Map();
   const totals = { coalition: 0, labor: 0, other: 0 };
@@ -235,11 +249,13 @@ function donorBalanceHTML(flows) {
     const fallback = String(edge.target || "").replace(/^party:/, "");
     const party = moneyData.nodes.find((n) => n.id === edge.target)?.label || fallback;
     const group = BALANCE_COALITION.has(party) ? "coalition" : party === "Labor" ? "labor" : "other";
-    totals[group] += Number(edge.total) || 0;
+    // The same figures as "Where the money went" and the map card (receiptFigures).
+    const figures = registerTables.receiptFigures(edge);
+    totals[group] += figures.total;
     if (group === "other") otherNames.add(party);
-    for (const [yearText, cell] of Object.entries(edge.byYear || {})) {
+    for (const [yearText, cell] of Object.entries(figures.byYear)) {
       const year = Number(yearText);
-      const value = Math.max(0, Number(Array.isArray(cell) ? cell[0] : cell) || 0);
+      const value = Math.max(0, Number(cell) || 0);
       if (!Number.isFinite(year) || value <= 0) continue;
       if (!byYear.has(year)) byYear.set(year, { year, coalition: 0, labor: 0, other: 0, otherNames: new Set() });
       const row = byYear.get(year);
@@ -290,6 +306,7 @@ function donorBalanceHTML(flows) {
 
   return `<section class="donor-balance" id="donor-balance" aria-labelledby="donor-balance-heading">
     <h3 class="subject-section-title" id="donor-balance-heading">The balance, year by year</h3>
+    ${scope ? `<p class="entry-scope">${esc(scope)}</p>` : ""}
     <div class="tiles balance-tiles">
       <div class="tile"><b>${srcFigure(fmtMoney(totals.coalition), `Total to Coalition parties ${fmtMoney(totals.coalition)}, AEC source`)}</b><span>to Coalition parties</span></div>
       <div class="tile"><b>${srcFigure(fmtMoney(totals.labor), `Total to Labor ${fmtMoney(totals.labor)}, AEC source`)}</b><span>to Labor</span></div>
@@ -304,7 +321,7 @@ function donorBalanceHTML(flows) {
     ${sourceLineHTML({ source: "AEC annual returns", state: "totals are a floor",
       originals: [{ label: "AEC Transparency Register", href: source }],
       notes: [`Bars are scaled to the largest single-side year for this donor (${esc(groupLabel[scaleGroup])}, ${scaleRow.year}). Coalition parties are the Liberal Party, the Nationals, the LNP and the Country Liberal Party summed${otherText}. Election years are marked.`,
-        "Disclosure returns as aggregated in the money map."],
+        "Disclosure returns as aggregated in the money map. Each year is a financial year, shown by the year it starts."],
       licence: AEC_LICENCE })}
   </section>`;
 }
@@ -1542,7 +1559,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=6773d74aed');
+    const mod = await import('/money-explain.js?v=b8c6aeb5b2');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1561,7 +1578,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=641cb4b2ac');
+    const mod = await import('/grant-recipient.js?v=167a1bad76');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1841,7 +1858,7 @@ async function openConnectionsPage(params, manageFocus) {
   if (status) status.textContent = "Opening the records…";
   if (manageFocus) $("connections-title")?.focus({ preventScroll: true });
   try {
-    const module = await import("/connections.js?v=start-card-loading-20261019");
+    const module = await import("/connections.js?v=title-case-20261113");
     if (generation !== connectionsGeneration) return;
     connectionsPage = module.mountConnections($("connections-body"), {
       params,
@@ -2245,9 +2262,13 @@ const goHomeFresh = (e) => {
 };
 for (const el of document.querySelectorAll(".logo, .masthead-name a")) el.addEventListener("click", goHomeFresh);
 
+// Skip to content lands on the page's title: the H1 showing in the panel on screen.
 document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
   e.preventDefault();
-  document.querySelector("main").focus();
+  const main = document.querySelector("main");
+  const title = [...main.querySelectorAll("h1")].find((h) => h.getClientRects().length > 0);
+  if (title && !title.hasAttribute("tabindex")) title.setAttribute("tabindex", "-1");
+  (title || main).focus();
 });
 
 // --- quick search (masthead and drawer) -----------------------------------
@@ -3841,7 +3862,7 @@ function actionBtn(icon, href, label, { external = false, primary = false } = {}
  *  Its look in an action column lives in money-explain.css, linked once here. */
 function explainBtn(query, label, { primary = false } = {}) {
   if (!document.querySelector("link[data-money-explain]")) {
-    const sheet = Object.assign(document.createElement("link"), { rel: "stylesheet", href: "/money-explain.css?v=7738084ea5" });
+    const sheet = Object.assign(document.createElement("link"), { rel: "stylesheet", href: "/money-explain.css?v=9d581f0740" });
     sheet.dataset.moneyExplain = "";
     document.head.append(sheet);
   }
@@ -6047,6 +6068,15 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       await renderRosterParty(name, key, body);
       return;
     }
+    if (!node && kind === "donor" && donorViewIndex.size && !donorViewIndex.has(donorViewKey(name))) {
+      // A name in no return (the donor index holds every published spelling): the
+      // not-found block. A name in any return keeps its page (Jake, 16 Oct).
+      reserveSubjectMap(false);
+      currentSubjectKey = null;
+      await showNotFound(body, "donor", name, { headingId: "subject-title", manageFocus: true,
+        crumbs: crumbsFor("/subject/donor", "Not found"), isActive: () => currentSubjectKey === null });
+      return;
+    }
     if (!node) {
       // A donor outside the money map's bounded selection: its own returns,
       // the state commissions' files and the record, under its exact spelling.
@@ -6074,7 +6104,6 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     // Rank runs over the donors the map picked by what they gave; a donor that
     // is on the map for the public money it holds has no place in that order.
     const donors = moneyData.nodes.filter((n) => n.kind === node.kind && !n.via);
-    const rank = donors.sort((a, b) => (b.total || 0) - (a.total || 0)).findIndex((n) => n.id === node.id) + 1;
     const isParty = node.kind === "party";
     // The money data's spelling of the name is the entry's; the trail follows it.
     if (node.label && node.label !== name) {
@@ -6082,15 +6111,25 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     }
     if (currentSubjectKey !== key) return;
     const flows = moneyData.edges.filter((e) => (isParty ? e.target : e.source) === node.id);
+    await registerTablesReady;
+    if (currentSubjectKey !== key) return;
+    // One measure for every donor figure on this page, the map card's: the
+    // parties' own returns, all receipt types (receiptFigures says why).
+    const { receiptFigures, receiptScopeLabel } = registerTables;
     const counter = new Map();
     for (const e of flows) {
       const other = String(isParty ? e.source : e.target).replace(/^(donor|party):/, "");
       const label = (moneyData.nodes.find((n) => n.id === (isParty ? e.source : e.target)) || {}).label || other;
-      counter.set(label, (counter.get(label) || 0) + (e.total || 0));
+      counter.set(label, (counter.get(label) || 0) + receiptFigures(e).total);
     }
-    await registerTablesReady;
-    if (currentSubjectKey !== key) return;
-    const partyTable=isParty ? registerTables.registerTableHTML(registerTables.partyMoneyTableConfig(registerTables.partyMoneyData(moneyData,node.id).rows,undefined,undefined,undefined,{party:node.label,jurisdiction:'federal'})) : '';
+    const own = isParty ? null : receiptFigures(node);
+    const donorScope = own ? receiptScopeLabel(own) : "";
+    // A party keeps its own received total (it includes transfers and says so).
+    const rankTotal = (n) => (isParty ? n.total : receiptFigures(n).total) || 0;
+    const rank = donors.sort((a, b) => rankTotal(b) - rankTotal(a)).findIndex((n) => n.id === node.id) + 1;
+    // The party's table counts each receipt once, as the donor page does, and says so (partyMoneyData's scope).
+    const partyMoney=isParty ? registerTables.partyMoneyData(moneyData,node.id) : null;
+    const partyTable=partyMoney ? registerTables.registerTableHTML(registerTables.partyMoneyTableConfig(partyMoney.rows,undefined,undefined,undefined,{party:node.label,jurisdiction:'federal'})) : '';
     const flowRows = [...counter.entries()].sort((a,b)=>b[1]-a[1]).slice(0,10);
     // Identity once (principle 3): the title, then one meta line with the
     // party's own dot and full name (or the donor's industry) and its years.
@@ -6099,7 +6138,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     subjectTag(body).innerHTML = [
       isParty ? partyChipHTML(node.label, { full: true })
         : `<span>${esc(sentenceCase(industryLabel(node.industry || "")) || "Receipt source")}</span>`,
-      node.firstYear ? `<span class="entry-active">${esc(returnsSpan(node.firstYear, node.lastYear))}</span>` : "",
+      (own?.firstYear ?? node.firstYear) ? `<span class="entry-active">${esc(returnsSpan(own?.firstYear ?? node.firstYear, own?.lastYear ?? node.lastYear))}</span>` : "",
     ].filter(Boolean).join(" · ");
     const head = body.querySelector(".subject-head");
     const aliasRow = !isParty && (node.aliases || []).length > 0 && ["Also disclosed as", (() => {
@@ -6116,8 +6155,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     // one source line sit with "Where it came from", so the page says the
     // map's date once (principle 4).
     const entryFacts = [
-      [isParty ? "Received (disclosed)" : "Received by parties (disclosed)", `<b>${esc(fmtMoney(node.total || 0))}</b>`],
-      ["Receipts counted", esc((node.count || 0).toLocaleString())],
+      [isParty ? "Received (disclosed)" : "Received by parties (disclosed)", `<b>${esc(fmtMoney((own ? own.total : node.total) || 0))}</b>`],
+      ["Receipts counted", esc(((own ? own.count : node.count) || 0).toLocaleString())],
+      !isParty && ["Measured as", esc(donorScope)],
       node.via === "public_money"
         ? ["On the map for", `${esc(fmtMoney(node.publicMoney || 0))} in Commonwealth contracts and grants`]
         : ["Rank", esc(`#${rank} of ${donors.length} ${isParty ? "parties" : "disclosed receipt sources"}`)],
@@ -6152,10 +6192,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     box.classList.add("entry-rail");
     box.innerHTML = entryRailHTML();
     const rail = isParty ? PARTY_RAIL : DONOR_RAIL;
-    sections.insertAdjacentHTML("beforeend", `<section id="entry-flows" data-accent="money" data-rail-figure="${esc(fmtMoney(node.total || 0))}">
-      ${isParty ? `<h3 class="subject-section-title">Where it came from</h3>${partyTable}` : barList(flowRows, {
+    sections.insertAdjacentHTML("beforeend", `<section id="entry-flows" data-accent="money" data-rail-figure="${esc(fmtMoney((own ? own.total : node.total) || 0))}">
+      ${isParty ? `<h3 class="subject-section-title">Where it came from</h3>${partyMoney?.scope ? `<p class="entry-scope">${esc(partyMoney.scope)}</p>` : ""}${partyTable}` : barList(flowRows, {
         fmt: fmtMoney,
         heading: isParty ? "Where it came from" : "Where the money went",
+        scope: donorScope,
         linkTo: (nm) => subjectHash(isParty ? "donor" : "party", nm),
         // The donor's split is already on the map card beside it; on a wide screen the
         // bar list under the map says it twice, so it shows only where the map is small.
@@ -6175,7 +6216,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       })}
     </section>`);
     if (isParty) registerTables.hydrateRegisterTables(sections.querySelector("#entry-flows"));
-    if (!isParty) sections.insertAdjacentHTML("beforeend", donorBalanceHTML(flows));
+    if (!isParty) sections.insertAdjacentHTML("beforeend", donorBalanceHTML(flows, donorScope));
     if (!isParty) {
       const evidenceSlot = document.createElement('section');
       evidenceSlot.id = 'entry-evidence';
@@ -6319,18 +6360,15 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const holders = String(name).trim().includes(" ") ? [] :
       ((await loadSpeakersDir())?.bySurname.get(speakerKey(name)) || []).filter(([n]) => speakerKey(n) !== speakerKey(name));
     if (currentSubjectKey !== key) return;
-    document.title = `${name} · OPAX`;
-    subjectTag(body).innerHTML = `<span>No speeches in the record under this name</span>`;
-    box.innerHTML = entryRailHTML({
-      actions: [
-        actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for this name", { primary: true }),
-        actionBtn("entry", "/subject/person", "Browse parliamentarians"),
-      ],
-      extra: `${holders.length ? `<p class="entry-rail-head">People in the record with this surname</p>
-        <ul class="subject-list" role="list">${holders.map(([n, c]) => `<li><a ${entityHrefAttr(subjectHash("person", n))}>${esc(n)}</a> <span class="meta">${c.toLocaleString()} speeches</span></li>`).join("")}</ul>` : ""}
-        ${sourceLineHTML({ source: "Parliamentary Hansard", notes: ["The record names its speakers as the transcripts do, so a person may appear under a fuller or shorter form of this name. The search looks across every spelling."] })}`,
+    // No roster entry and no speech under the name: the not-found block, never a
+    // profile shell around the address (the Worker serves the same block).
+    currentSubjectKey = null;
+    await showNotFound(body, "person", subjectSegment || name, {
+      headingId: "subject-title", manageFocus: true, crumbs: crumbsFor("/subject/person", "Not found"),
+      isActive: () => currentSubjectKey === null && $("subject-body") === body,
+      extra: holders.length ? `<section class="not-found-holders"><h2 class="ui-section-title">People in the record with this surname</h2>
+        <ul class="subject-list" role="list">${holders.map(([n, c]) => `<li><a ${entityHrefAttr(subjectHash("person", n))}>${esc(n)}</a> <span class="meta">${c.toLocaleString()} speeches</span></li>`).join("")}</ul></section>` : "",
     });
-    revealGrid();
     return;
   }
   const q = encodeURIComponent(name);
@@ -7402,7 +7440,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=38f9860eff").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=f422337d4b").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -9378,16 +9416,9 @@ async function openBill(key, manageFocus) {
   if (billView !== view || generation !== billTextGeneration) return;
   clearPageLoader("bill-loader");
   if (!bill) {
-    body.innerHTML = `
-      <div class="subject-head">
-        <h1 id="bill-title" tabindex="-1">No bill with this identifier</h1>
-        <p class="subject-tag"><span>The register does not name <code>${esc(key)}</code>. It may not be
-          published yet, or the link may be old.</span></p>
-      </div>
-      <p class="action-row">${actionBtn("entry", "/bills", "Open the bill list", { primary: true })}
-        ${actionBtn("search", searchHash(key, {}), "Search the record")}</p>`;
-    if (manageFocus) $("bill-title")?.focus();
-    setCrumbs(crumbsFor("/bills", "Not found"));
+    // The register names no bill here: the not-found block, never the raw key.
+    await showNotFound(body, "bill", key, { headingId: "bill-title", manageFocus, crumbs: crumbsFor("/bills", "Not found"),
+      isActive: () => billView === view && generation === billTextGeneration });
     return;
   }
   bill.exportedAt = billsDate || "";
@@ -9766,7 +9797,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=6773d74aed"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=b8c6aeb5b2"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=da68cf9f9e");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -12751,13 +12782,14 @@ function refreshSearchPassageFolds() {
 
 /**
  * The count line: one line, beside the sort (concept 4). It says how many are
- * shown and how many were retrieved, and when retrieval hit its ceiling it
- * says the record holds more rather than implying the ceiling is the answer.
+ * shown and how many were retrieved; at retrieval's ceiling it calls them the
+ * closest records, so the ceiling never reads as the whole answer.
  * The filters are not repeated here: the chips under the search box carry them.
  */
 function resultsCountLine(s) {
   const n = s.total.toLocaleString();
-  const of = s.truncated ? `the ${n} strongest matches` : `${n} ${s.total === 1 ? "record" : "records"}`;
+  // At the retrieval ceiling the line says what the records are: the closest ones.
+  const of = s.truncated ? `${n} closest records` : `${n} ${s.total === 1 ? "record" : "records"}`;
   if (s.pageCount <= 1) return `${of[0].toUpperCase()}${of.slice(1)}`;
   const from = ((s.page - 1) * s.perPage + 1).toLocaleString();
   const to = Math.min(s.page * s.perPage, s.total).toLocaleString();
@@ -13077,6 +13109,9 @@ async function runSearchAnswer(q, f, key) {
 }
 
 let searchSeq = 0;
+// The search (its searchHash key) whose meaning-ranked records the reader opened
+// under "No records mention ..."; paging inside it keeps them open.
+let searchMeaningOpen = null;
 
 async function runSearch(page = 1) {
   const q = $("search-input").value.trim();
@@ -13122,6 +13157,8 @@ async function runSearch(page = 1) {
   $("search-results").replaceChildren();
   $("search-chips").hidden = true; // the examples step aside once a search runs
   $("search-empty").hidden = true;
+  if (fresh) searchMeaningOpen = null;
+  $("panel-search").classList.remove("is-meaning-closed");
   try {
     const data = await api(`/api/search-all?${searchQueryParams(q, f, page, sort)}`);
     if (mySeq !== searchSeq) return; // a newer search owns the results now
@@ -13154,9 +13191,14 @@ async function runSearch(page = 1) {
       hideLoader("search-wombat");
       $("search-status").classList.remove("visually-hidden");
       setStatus($("search-status"), data.warnings?.join(" ") || (data.matched_query ? `Showing records for “${data.matched_query}”.` : ""));
-      $("results-count").innerHTML = `<span class="results-count-main">${esc(resultsCountLine(lastSearch))}</span>${
-        lastSearch.truncated ? '<span class="results-count-note">The record holds more. </span>' : ""}`;
+      $("results-count").innerHTML = `<span class="results-count-main">${esc(resultsCountLine(lastSearch))}</span>`;
       $("results-bar").hidden = false;
+      // No record uses the query's words (the Worker's no_mention): say so first,
+      // with the recovery suggestions, and keep the closest records one tap away.
+      const noMention = Boolean(data.no_mention) && q !== "*";
+      if (noMention) renderSearchRecovery(q, f, searchRecoverySuggestions(q || f.speaker, data.suggestions),
+        { meaning: lastSearch.total, open: searchMeaningOpen === key, focus: fresh, key });
+      $("panel-search").classList.toggle("is-meaning-closed", noMention && searchMeaningOpen !== key);
       // The summary waits, collapsed, until the reader opens it.
       if (fresh) resetSearchAnswer(q || f.speaker);
       renderSearchDateRuler(lastSearch.years, q, f);
@@ -13207,7 +13249,7 @@ function searchSuggestionProperties(suggestions) {
   return { had_suggestion: kind !== "none", suggestion_kind: kind };
 }
 
-function renderSearchRecovery(q, f, suggestions = searchRecoverySuggestions(q || f.speaker)) {
+function renderSearchRecovery(q, f, suggestions = searchRecoverySuggestions(q || f.speaker), { meaning = 0, open = false, focus = true, key = null } = {}) {
   const box = $("search-empty");
   const filters = activeFilterSummary(f);
   const specs = filterChipSpecs(f);
@@ -13216,6 +13258,7 @@ function renderSearchRecovery(q, f, suggestions = searchRecoverySuggestions(q ||
   // "*" asks for everything under the filters (a party page's "Their speeches"): the filter found nothing, not the asterisk.
   const everything = q === "*";
   const title = everything ? (f.kind === "speech" ? "No speeches in the record for this filter" : "Nothing in the record for this filter")
+    : meaning ? `No records mention “${esc(q || f.speaker)}”`
     : `No matches for “${esc(q || f.speaker)}”`;
   const links = (kind) => suggestions.filter(s => s.kind === kind).map(s =>
     `<a class="ui-button" href="${esc(s.href)}">${esc(s.label)}${Number.isSafeInteger(s.count) && s.count >= 0 ? ` (${s.count.toLocaleString("en-AU")})` : ""}</a>`).join("");
@@ -13228,13 +13271,22 @@ function renderSearchRecovery(q, f, suggestions = searchRecoverySuggestions(q ||
     <div class="empty-actions" aria-label="Browse the record">${links("scope")}</div>
     <div class="empty-actions">${links("ask")}</div>
     <div class="empty-actions"><button type="button" class="ui-button" id="search-recovery-edit">${first ? `Remove ${esc(first.k.toLowerCase())} filter` : "Try fewer words"}</button>
-    <a class="ui-button" href="${esc(topicHref)}">${f.topic ? `Browse ${esc(TOPICS[f.topic] || f.topic)}` : "Browse topics"}</a></div>`;
+    <a class="ui-button" href="${esc(topicHref)}">${f.topic ? `Browse ${esc(TOPICS[f.topic] || f.topic)}` : "Browse topics"}</a></div>
+    ${meaning ? `<div class="search-meaning">
+      <h3 class="search-meaning-title"><button type="button" class="search-meaning-toggle" id="search-meaning-toggle" aria-expanded="${open}" aria-controls="search-results">Closest by meaning <span class="search-meaning-count">${esc(meaning.toLocaleString("en-AU"))} ${meaning === 1 ? "record" : "records"}</span></button></h3>
+      <p class="empty-lede">Records ranked by what they are about. None of them uses these words.</p></div>` : ""}`;
   $("search-recovery-edit").addEventListener("click", () => {
     if (first) clearSearchFilter(first.id);
     else { $("search-input").focus(); $("search-input").select(); }
   });
+  $("search-meaning-toggle")?.addEventListener("click", (e) => {
+    const opening = e.currentTarget.getAttribute("aria-expanded") !== "true";
+    e.currentTarget.setAttribute("aria-expanded", String(opening));
+    searchMeaningOpen = opening ? key : null;
+    $("panel-search").classList.toggle("is-meaning-closed", !opening);
+  });
   box.hidden = false;
-  $("search-suggestions-heading").focus();
+  if (focus) $("search-suggestions-heading").focus();
 }
 
 $("search-form").addEventListener("submit", (e) => {
@@ -13501,6 +13553,8 @@ async function openDocPage(slug, manageFocus) {
   if (currentDocSlug === slug && currentDoc) return;
   currentDocSlug = slug;
   currentDoc = null;
+  $("panel-doc").classList.remove("is-missing");
+  $("panel-doc").querySelector(":scope > .not-found-host")?.remove();
   $("doc-title").textContent = "Loading…";
   document.querySelector("#panel-doc .doc-portrait")?.remove();
   $("doc-meta").textContent = "";
@@ -13661,7 +13715,19 @@ async function openDocPage(slug, manageFocus) {
   } catch (err) {
     if (currentDocSlug !== slug) return;
     // A plain sentence and a retry, never the raw message (state rules).
-    if (err.message === "not found") setStatus($("doc-status"), "No document with this identifier. The link may be old, or the record may not be published yet.", true);
+    if (err.message === "not found") {
+      // Nothing at this address: the not-found block in place of the document's
+      // shell (not-found.css hides the shell while the panel is .is-missing).
+      setStatus($("doc-status"), "");
+      const host = document.createElement("div");
+      host.className = "not-found-host";
+      $("panel-doc").classList.add("is-missing");
+      $("panel-doc").prepend(host);
+      showNotFound(host, slug.startsWith("division-") ? "division" : "document", slug, {
+        manageFocus, crumbs: crumbsFor("/ask?view=search", "Not found"),
+        isActive: () => currentDocSlug === slug && host.isConnected });
+      return;
+    }
     else $("doc-status").innerHTML = `<span>This record could not load just now.</span> <a href="${esc(`/doc/${encodeURIComponent(slug)}`)}">Try again</a>`;
     $("doc-title").textContent = "Document unavailable";
   }
@@ -13987,7 +14053,7 @@ function columnChart(pairs, { fmt = String, heading, note, noteHTML, linkTo }) {
  *  reads as the category. Only used where nothing else claims the label. */
 function barList(rows, {
   fmt = String, heading, linkTo, partyDots = false, term = null, detail = null,
-  className = "", maxValue = null, marker = null,
+  className = "", maxValue = null, marker = null, scope = "",
 }) {
   const max = maxValue ?? Math.max(...rows.map(([, v]) => v), 1);
   const items = rows.map((row) => {
@@ -14014,10 +14080,12 @@ function barList(rows, {
       <span class="barrow-value">${esc(fmt(v))}${sub !== null && sub !== undefined ? `<small>${esc(sub)}</small>` : ""}${markerLabel ? `<span class="visually-hidden">; ${esc(markerLabel)}</span>` : ""}</span>
     </div>`;
   }).join("");
-  return `<figure class="chart${className ? ` ${esc(className)}` : ""}"><figcaption>${esc(heading)}</figcaption>${items}</figure>`;
+  // `scope` says what the figures count, on its own line under the heading.
+  return `<figure class="chart${className ? ` ${esc(className)}` : ""}"><figcaption>${esc(heading)}</figcaption>${scope ? `<p class="entry-scope">${esc(scope)}</p>` : ""}${items}</figure>`;
 }
 
 const fmtIndustries = (list) => list.map((i) => i.replace(/_/g, " ")).join(", ");
+
 
 const AEC_NOTE =
   "AEC disclosure data: donations under the disclosure threshold are not reported " +

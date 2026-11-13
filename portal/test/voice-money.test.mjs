@@ -230,6 +230,54 @@ test('voice recognises plural, contracted, misspelled and uncertain family reque
   assert.equal(out.data.money_route,'federal-party-ranking-v1');assert.ok(['calculated','needs_scope'].includes(out.data.answer_status));
  }
 });
+
+test('donation-led calculator results also carry the Donation-only map link for the same selection',()=>{
+ const result=receiptAnswer(typedMoney(),'gambling to Labor in 2021','federal','https://opax.test');
+ assert.equal(result.measure,'donations');assert.equal(result.sources.length,2);
+ const all=new URL(result.sources[0].url),donations=new URL(result.sources[1].url);
+ assert.equal(all.searchParams.get('receipt'),null);assert.equal(donations.searchParams.get('receipt'),'donations');
+ for(const key of ['jur','type','industry','party','from','to'])assert.equal(donations.searchParams.get(key),all.searchParams.get(key),key);
+ assert.equal(donations.searchParams.get('industry'),'gambling');assert.equal(donations.searchParams.get('party'),'party:Labor');assert.equal(donations.searchParams.get('from'),'2021');
+ // Untyped data has no Donation-only view to link.
+ assert.equal(receiptAnswer(untypedMoney(),'gambling','federal','https://opax.test').sources.length,1);
+});
+
+test('pairs without receipt types fall back to their legacy total only when every matching pair lacks them',()=>{
+ const real=typedMoney(),clp=real.edges.filter(e=>e.target==='party:Country Liberal Party'&&!e.flow&&!e.grant);
+ assert.ok(clp.length&&clp.every(e=>!Object.keys(e.by_type??{}).length));
+ const result=receiptAnswer(real,'Who donates the most to Country Liberal Party?','federal','https://opax.test');
+ assert.equal(result.typed,false);assert.equal(result.type_breakdown,false);assert.equal(result.measure,'receipts_all');
+ assert.equal(result.measure_label,'all receipt types (no type breakdown in the AEC data OPAX holds)');
+ assert.equal(result.total_aud,Math.round(clp.reduce((s,e)=>s+e.total,0)*100)/100);assert.equal(result.sources.length,1);
+ assert.match(result.answer,/all receipt types \(no type breakdown in the AEC data OPAX holds\)/);
+ // A selection with typed pairs leaves the untyped pair out, as before.
+ const mixed={meta:{receipt_types:{available:true,schema:1,donation_type:'donation_received'}},nodes:[
+  {id:'d1',kind:'donor',label:'Example Quarry'},{id:'d2',kind:'donor',label:'Example Ferry'},{id:'p',kind:'party',label:'Labor'}],edges:[
+  {source:'d1',target:'p',total:500,count:2,by_type:{donation_received:300},by_type_year:{'2020-21':{donation_received:[300,1]}}},
+  {source:'d2',target:'p',total:900,count:3,by_type:{},by_type_year:{}}]};
+ const typed=receiptAnswer(mixed,'Labor','federal','https://opax.test');
+ assert.equal(typed.typed,true);assert.equal('type_breakdown' in typed,false);assert.equal(typed.total_aud,300);assert.equal(typed.all_types_aud,300);
+});
+
+test('an all-years question with no matching receipts does not point to other financial years',()=>{
+ const none=answer('Example Casino Liberal');
+ assert.equal(none.receipts,0);assert.doesNotMatch(none.answer,/other financial years/);assert.match(none.answer,/OPAX holds no matching Example Casino receipts in its published records/);
+ assert.match(answer('Example Casino Liberal 2025').answer,/receipts in other financial years/);
+});
+
+test('merged donor-to-party flows are rounded to the cent like the other groupings',()=>{
+ const noisy={meta:{},nodes:[{id:'d',kind:'donor',label:'Example Quarry'},{id:'p',kind:'party',label:'Labor'}],
+  edges:[{source:'d',target:'p',total:1234.5600000001,count:1,firstYear:2020,lastYear:2020,byYear:{2020:[1234.5600000001,1]}}]};
+ const result=receiptAnswer(noisy,'Example Quarry','federal','https://opax.test');
+ assert.deepEqual(result.flows.map(f=>[f.total_aud,f.all_types_aud,f.other_receipts_aud]),[[1234.56,1234.56,0]]);
+ assert.equal(result.by_donor[0].total_aud,1234.56);
+ // Two typed cells for one pair merge into one flow, still on the cent.
+ const typed={meta:{receipt_types:{available:true,schema:1,donation_type:'donation_received'}},nodes:noisy.nodes,
+  edges:[{source:'d',target:'p',total:0,count:0,by_type:{donation_received:0.1,other_receipt:0.2},by_type_year:{'2020-21':{donation_received:[0.1,1],other_receipt:[0.2,1]}}}]};
+ const merged=receiptAnswer(typed,'Example Quarry','federal','https://opax.test');
+ assert.equal(merged.flows.length,1);assert.equal(merged.flows[0].all_types_aud,0.3);
+});
+
 test('voice find_connections says the day the connections run to, and claims none for an undated export',async()=>{
  const entities=[{id:'ab'+'0'.repeat(22),name:'Example Harbour Program',kind:'program',records:12}];
  let index={meta:{generated_at:'2026-09-08T09:21:53+00:00'},entities};

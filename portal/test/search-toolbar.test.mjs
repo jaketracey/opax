@@ -7,11 +7,13 @@ const read = name => readFileSync(new URL(`../public/${name}`, import.meta.url),
 const app = read('app.js');
 const sync = app.slice(app.indexOf('function syncSearchReadBar()'), app.indexOf('\nfunction setSearchReadMode('));
 
-test('brief availability stays in the results summary, outside the actions', () => {
+test('brief availability is the Briefs toggle\'s own hint, not part of the count line', () => {
   const html = read('index.html');
-  const toolbar = html.slice(html.indexOf('id="results-bar"'), html.indexOf('id="search-sort-picker"'));
-  assert.ok(toolbar.includes('id="search-brief-status"'));
-  assert.ok(toolbar.indexOf('id="search-brief-status"') < toolbar.indexOf('class="results-actions"'));
+  const summary = html.slice(html.indexOf('class="results-summary"'), html.indexOf('class="results-actions"'));
+  assert.ok(!summary.includes('id="search-brief-status"'), 'the count line says only the count');
+  const readbar = html.slice(html.indexOf('id="search-readbar"'), html.indexOf('id="search-sort-picker"'));
+  assert.ok(readbar.indexOf('id="search-read-briefs"') < readbar.indexOf('id="search-brief-status"'));
+  assert.match(readbar, /id="search-read-briefs"[^>]*aria-describedby="search-brief-status"/);
 });
 
 test('shared segments preserve whole labels and their intrinsic width', () => {

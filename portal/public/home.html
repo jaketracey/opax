@@ -17,9 +17,9 @@
     <!-- The two faces home.css declares, fetched with the stylesheets rather than after them. -->
     <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/merriweather-normal-latin.woff2" />
     <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/public-sans-normal-latin.woff2" />
-    <script src="/events.js?v=23b9609819" defer></script>
+    <script src="/events.js?v=c5146d1d07" defer></script>
     <script src="/gtm.js?v=0764911f84" defer></script>
-    <link rel="stylesheet" href="/style.css?v=29f3bc167b" />
+    <link rel="stylesheet" href="/style.css?v=f3514583ef" />
     <link rel="stylesheet" href="/ui-controls.css?v=ce29178242" />
     <link rel="stylesheet" href="/ui-source.css?v=78ddb8fc1b" />
     <link rel="stylesheet" href="/home.css?v=739104c172" />
@@ -29,10 +29,10 @@
     <script type="module" id="hp-navigation" src="/navigation.js?v=5a97b288b9"></script>
     <script type="module" src="/home.js?v=628b452390"></script>
     <!-- After home.js in execution order; PostHog replays earlier events (analytics/index.js). -->
-    <script src="/analytics.js?v=6c136f0190" defer></script>
+    <script src="/analytics.js?v=dbad81cb8b" defer></script>
   </head>
-  <body class="hp-page">
-    <a class="hp-skip" href="#hp-main">Skip to content</a>
+  <body class="hp-page" data-skip-target="hp-main">
+    <a class="hp-skip" href="#hp-main" data-skip>Skip to content</a>
     <!-- site-header:start -->
 <header class="site-header">
   <div class="wrap masthead">
