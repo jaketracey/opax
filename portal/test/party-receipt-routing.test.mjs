@@ -139,9 +139,9 @@ test('ranked_money rows carry their direction and amounts as data',async()=>{
  const question='Who gives the most money to Labor?'
  const calculated=await api.federalPartyMoneyAnswer({question},assets)
  assert.match(calculated.sources[0].snippet,/grouped by source/);assert.doesNotMatch(calculated.sources[0].snippet,/donors during/)
- // Typed: the SDA leads Labor on donations ($11,793,085); untyped, Westpac leads on all receipt types.
+ // Typed: the SDA leads Labor on donations ($11,808,585); untyped, Westpac leads on all receipt types.
  assert.equal(donorRanking(question,calculated.sources)[0].name,'Shop, Distributive and Allied Employees Association')
- const row=calculated.sources.find(s=>s.receipt);assert.equal(row.receipt.party,'Labor');assert.equal(row.receipt.source,'Shop, Distributive and Allied Employees Association');assert.equal(row.receipt.amount,11793085);assert.equal(row.receipt.jurisdiction,'federal');assert.equal(row.receipt.measure,'donations');assert.match(calculated.sources[0].snippet,/donations received \(AEC receipt type: Donation Received\)/)
+ const row=calculated.sources.find(s=>s.receipt);assert.equal(row.receipt.party,'Labor');assert.equal(row.receipt.source,'Shop, Distributive and Allied Employees Association');assert.equal(row.receipt.amount,11808585);assert.equal(row.receipt.jurisdiction,'federal');assert.equal(row.receipt.measure,'donations');assert.match(calculated.sources[0].snippet,/donations received \(AEC receipt type: Donation Received\)/)
  const legacy=await api.federalPartyMoneyAnswer({question},untypedAssets)
  assert.equal(donorRanking(question,legacy.sources)[0].name,'Westpac Banking Corporation')
  const legacyRow=legacy.sources.find(s=>s.receipt);assert.equal(legacyRow.receipt.source,'Westpac Banking Corporation');assert.match(legacy.sources[0].snippet,/disclosed receipts, all types/)
