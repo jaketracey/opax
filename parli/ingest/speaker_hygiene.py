@@ -379,9 +379,10 @@ def main() -> None:
         else:
             db.execute("ALTER TABLE speeches ADD COLUMN speaker_type TEXT")
             db.commit()
-    if 'identity' in loops and not args.dry_run:
+    skipped_identities = set()
+    if 'identity' in loops:
         from parli.ingest.speaker_identity import ensure_members
-        ensure_members(db)
+        skipped_identities = ensure_members(db, dry_run=args.dry_run)
         db.commit()
     members = Members(db)
     stats: Counter = Counter()
@@ -389,7 +390,7 @@ def main() -> None:
 
     if 'identity' in loops:
         from parli.ingest.speaker_identity import identity_changes
-        for sid, pid, clean, reason, old_pid, old_clean in identity_changes(db):
+        for sid, pid, clean, reason, old_pid, old_clean in identity_changes(db, skipped_person_ids=skipped_identities):
             changes[sid] = (pid, clean, reason, old_pid, old_clean, None)
             stats['identity_repaired'] += 1
 

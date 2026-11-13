@@ -47,10 +47,9 @@ def test_source_rules_reject_contradictory_seats_dates_houses_and_witnesses():
     assert identity_for(dict(martin, date='2020-03-04')) is None
 
 
-def test_nightly_repair_reuses_catalogue_ids_queues_all_89_and_is_idempotent():
+def repair_db(path=':memory:'):
     import sqlite3
-    from parli.ingest.speaker_identity import apply_identities
-    db = sqlite3.connect(':memory:')
+    db = sqlite3.connect(path)
     db.row_factory = sqlite3.Row
     db.execute('CREATE TABLE members (person_id PRIMARY KEY, full_name, first_name, last_name, state, '
                'chamber, electorate, entered_house, left_house)')
@@ -58,6 +57,14 @@ def test_nightly_repair_reuses_catalogue_ids_queues_all_89_and_is_idempotent():
     db.execute('CREATE TABLE speeches (' + ','.join(fields) + ')')
     db.executemany('INSERT INTO speeches VALUES (' + ','.join('?' for _ in fields) + ')',
                    [[r[k] for k in fields] for r in ROWS])
+    db.execute('CREATE TABLE ext_ingest_log (table_name, source, rows_loaded, rows_deleted, loaded_at, notes)')
+    db.commit()
+    return db
+
+
+def test_nightly_repair_reuses_catalogue_ids_queues_all_89_and_is_idempotent():
+    from parli.ingest.speaker_identity import apply_identities
+    db = repair_db()
     assert apply_identities(db) == 89
     assert apply_identities(db) == 0
     assert db.execute('SELECT COUNT(*) FROM ext_kb_patch_queue').fetchone()[0] == 89
@@ -68,9 +75,43 @@ def test_nightly_repair_reuses_catalogue_ids_queues_all_89_and_is_idempotent():
     for row in db.execute('SELECT * FROM speeches'):
         assert holds_seat(row['person_id'], row['chamber'], row['date'])
         original = next(r for r in ROWS if r['speech_id'] == row['speech_id'])
-        for field in fields:
+        for field in ROWS[0]:
             if field not in ('person_id', 'speaker_name_clean'):
                 assert row[field] == original[field]
+
+
+@pytest.mark.parametrize('conflicting_index', [0, 1])
+@pytest.mark.parametrize('runner', ['linker', 'hygiene', 'hygiene-dry-run'])
+def test_member_conflict_skips_only_that_identity_and_logs_it(conflicting_index, runner, tmp_path, monkeypatch, caplog):
+    from parli.ingest.speaker_identity import IDENTITIES, apply_identities
+    path = tmp_path / 'repair.db'
+    db = repair_db(path)
+    conflict = IDENTITIES[conflicting_index]
+    db.execute('INSERT INTO members (person_id, full_name, chamber, electorate) VALUES (?,?,?,?)',
+               (conflict['person_id'], 'Conflicting catalogue record', 'senate', conflict['seat']))
+    db.commit()
+    dry_run = runner == 'hygiene-dry-run'
+    expected = 0 if dry_run else sum(r['person_id'] != conflict['old_person_id'] for r in ROWS)
+    if runner == 'linker':
+        assert apply_identities(db) == expected
+        assert apply_identities(db) == 0
+    else:
+        from parli.ingest.speaker_hygiene import main
+        monkeypatch.setattr('sys.argv', ['speaker_hygiene', '--db', str(path), '--loops', 'identity']
+                            + (['--dry-run'] if dry_run else []))
+        main()
+    assert f"Skipping reviewed House identity {conflict['person_id']}" in caplog.text
+    assert db.execute('SELECT full_name, chamber FROM members WHERE person_id=?',
+                      (conflict['person_id'],)).fetchone()[:] == ('Conflicting catalogue record', 'senate')
+    assert db.execute('SELECT COUNT(*) FROM ext_kb_patch_queue').fetchone()[0] == expected
+    assert db.execute('SELECT COUNT(*) FROM ext_committee_relinks').fetchone()[0] == expected
+    assert db.execute('SELECT COUNT(*) FROM members').fetchone()[0] == (1 if dry_run else 2)
+    for row in db.execute('SELECT * FROM speeches'):
+        original = next(r for r in ROWS if r['speech_id'] == row['speech_id'])
+        if dry_run or original['person_id'] == conflict['old_person_id']:
+            assert dict(row) == original
+        else:
+            assert holds_seat(row['person_id'], row['chamber'], row['date'])
 
 
 def test_reviewed_profile_changes_hold_if_the_raw_export_or_review_moves():
