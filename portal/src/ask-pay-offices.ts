@@ -25,6 +25,9 @@ export interface OfficeData {
 }
 /** What ask-pay.ts found on the parliamentary side of a comparison. */
 export interface ParliamentSide { label: string; phrase: string; holder?: string; salary: number; source: { title: string; url: string; publisher: string } }
+/** The highest agency-head total remuneration a body's annual report published (annual_reports agency_heads):
+ *  what was actually paid, shown beside the set rates when a question could mean either. */
+export interface ReportedHead { name: string; position: string; body: string; total: number; year: string; url: string }
 
 const aud = (n: number) => new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(n)
 const plain = (s: string) => s.replace(/[|\n\r\[\]*]/g, ' ').replace(/\s+/g, ' ').trim()
@@ -40,8 +43,9 @@ const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 // Words that make a pay question about Commonwealth offices in general.
 const GENERAL = /\b(?:agency\s+heads?|heads?\s+of\s+(?:an?\s+|the\s+)?(?:government\s+|commonwealth\s+|federal\s+)?(?:agenc(?:y|ies)|departments?|bodies)|(?:departmental|department)\s+secretar(?:y|ies)|secretar(?:y|ies)\s+of\s+(?:a\s+|the\s+)?departments?|(?:senior\s+)?public\s+servants?|bureaucrats?|mandarins?|statutory\s+(?:office(?:rs?|\s+holders?)?|officers?|appointees?)|(?:full[- ]time\s+)?public\s+office(?:\s+holders?)?|secretaries|principal\s+executive\s+offices?|PEO\s+(?:pay\s+)?bands?)\b/i
 export const PARLIAMENTARY_SECRETARY = /\bparliamentary\s+secretar|\bassistant\s+ministers?\b/i
-// What was said, or what a body's annual report shows, is not the instrument's rate.
-const NOT_THE_RATE = /\b(?:say|said|says|speech(?:es)?|spoke|debate[ds]?|vot(?:e|ed|es|ing)|donat\w*|donors?|annual\s+reports?|actual(?:ly)?|reported|bonus(?:es)?)\b/i
+// What was said, or what a body's annual report shows, is not the instrument's rate. "Total remuneration"
+// asked for is the figure each body reports (annual_reports), not the Tribunal's rate.
+const NOT_THE_RATE = /\b(?:say|said|says|speech(?:es)?|spoke|debate[ds]?|vot(?:e|ed|es|ing)|donat\w*|donors?|annual\s+reports?|actual(?:ly)?|reported|bonus(?:es)?|total\s+remuneration)\b/i
 const BANDS = /\bprincipal\s+executive\s+offices?\b|\bPEO\b/i
 
 export function generalOfficeQuestion(question: string): boolean {
@@ -106,13 +110,13 @@ function builder(data: OfficeData) {
   let answer = ''
   const citations: Record<string, number[][]> = {}
   const sources: Source[] = []
-  const cite = (title: string, href: string, snippet: string, publisher: string, offset = 0) => {
+  const cite = (title: string, href: string, snippet: string, publisher: string, offset = 0, dateLabel = `As at ${day(data.meta.as_of)}`, date = data.meta.as_of) => {
     const end = Array.from(answer).length - offset
     const again = sources.find(row => row.href === href)
     if (again) { citations[again.resource].push([end - 1, end]); if (!again.snippet.includes(plain(snippet))) again.snippet = plain(`${again.snippet} ${snippet}`).slice(0, 1800); return }
     const resource = `pay-${sources.length}`
     citations[resource] = [[end - 1, end]]
-    sources.push({ resource, title, href, url: href, kind: 'pay', snippet: plain(snippet).slice(0, 1800), cited: true, source: publisher, dateLabel: `As at ${day(data.meta.as_of)}`, date: data.meta.as_of })
+    sources.push({ resource, title, href, url: href, kind: 'pay', snippet: plain(snippet).slice(0, 1800), cited: true, source: publisher, dateLabel, ...(date ? { date } : {}) })
   }
   /** Cite the determination that sets a row's rate, with the row's own clause. */
   const instrument = (row: OfficeRow, offset = 0) => {
@@ -144,10 +148,12 @@ function measureNote(data: OfficeData): string {
 function coverage(data: OfficeData): string {
   return `Coverage: Commonwealth departmental secretaries, full-time statutory offices and specified statutory offices, from the Tribunal’s current determinations on the Federal Register of Legislation (${data.meta.sources.map(s => s.frl_id).join(', ')}). Actual pay, including any performance pay, is reported in each body’s annual report. Not covered: ${data.meta.not_covered.join(' ')}`
 }
-function finish(b: ReturnType<typeof builder>, data: OfficeData, next: { label: string; href: string }[]) {
+/** What an office pay answer is, so a caller can add what the annual reports show to an agency-head ranking. */
+export type OfficeShape = 'head_ranking' | 'ranking' | 'office' | 'compare' | 'parliament' | 'bands'
+function finish(b: ReturnType<typeof builder>, data: OfficeData, next: { label: string; href: string }[], shape: OfficeShape) {
   b.add(`\n\n${coverage(data)}`)
   const asOf = data.meta.as_of
-  return { ...b.done(), answer_status: 'calculated', pay_answer: true, money_context: measureNote(data), pay_next: next,
+  return { ...b.done(), answer_status: 'calculated', pay_answer: true, office_shape: shape, money_context: measureNote(data), pay_next: next,
     coverage: { since: asOf, until: asOf, as_of: asOf, matched: true }, scope: { state: 'federal' } }
 }
 
@@ -164,7 +170,7 @@ const bandsLine = (data: OfficeData) => {
   return e ? ` Heads of bodies in the Principal Executive Office structure are paid within a band their employing body applies, and the top band (${e.classification!.replace('PEO ', '')}) starts at ${aud(e.min!)} with no upper limit, so some of them may be paid more.` : ''
 }
 
-function rankingAnswer(question: string, data: OfficeData) {
+function rankingAnswer(question: string, data: OfficeData, reported?: ReportedHead) {
   const secretariesOnly = /secretar/i.test(question) && !/\bagenc|public\s+serv|statutory|bureaucrat|public\s+office|commissioner/i.test(question)
   const wide = /statutory|public\s+office/i.test(question)
   const pool = rankedOffices(data, (row: OfficeRow) => row.kind !== 'peo_band' && (secretariesOnly ? row.kind === 'secretary' : wide || row.head)) as OfficeRow[]
@@ -178,6 +184,15 @@ function rankingAnswer(question: string, data: OfficeData) {
   b.instrument(first)
   const next = rows.slice(1, 3)
   if (next.length) b.add(` ${lowest ? 'Next lowest' : 'Next'} ${next.length === 1 ? 'is' : 'are'} ${next.map(row => `${the(plain(row.office))} (${officeRate(row)})`).join(' and ')}.`)
+  // "Highest paid agency head" can mean the set rate or what was paid: the set rate leads, and one line says what
+  // the annual reports show, which can differ and includes company heads whose pay the Tribunal does not set.
+  const headRanking = !secretariesOnly && !lowest
+  if (headRanking) {
+    b.add(reported
+      ? ` Total remuneration reported in annual reports can differ from these set rates, and includes company heads the Tribunal does not pay: the highest an agency head’s annual report published for ${plain(reported.year)} is ${aud(reported.total)}, for ${plain(reported.name)} (${plain(reported.position)}, ${plain(reported.body)}).`
+      : ' Total remuneration reported in annual reports can differ from these set rates.')
+    if (reported) b.cite(`${plain(reported.body)} annual report ${plain(reported.year)}`, reported.url, `${plain(reported.name)}, ${plain(reported.position)}, ${plain(reported.body)}: total remuneration ${aud(reported.total)} in ${plain(reported.year)}, as published in the annual report.`, 'Transparency Portal (Department of Finance)', 0, `Reported for ${plain(reported.year)}`, '')
+  }
   const ranged = pool.filter(isRange)
   const levels = [...new Set(ranged.map(r => r.classification))].map((level, i) => { const r = ranged.find(x => x.classification === level)!; const n = ranged.filter(x => x.classification === level).length; return `${n}${i ? '' : ` ${n === 1 ? 'secretary' : 'secretaries'}`} at ${level} (${officeRate(r)})` })
   b.add(`\n\n${measureNote(data)} ${pool.length} ${secretariesOnly ? 'departmental secretaries' : wide ? 'offices' : 'heads of departments and agencies'} ranked by the top of their rate.`)
@@ -187,7 +202,7 @@ function rankingAnswer(question: string, data: OfficeData) {
   return finish(b, data, [
     ...(secretariesOnly ? [{ label: 'Who is the highest paid agency head?', href: ask('Who is the highest paid agency head?') }] : [{ label: 'Top 10 highest paid departmental secretaries', href: ask('Top 10 highest paid departmental secretaries') }]),
     { label: 'Who is the highest paid politician?', href: ask('Who is the highest paid politician?') },
-  ])
+  ], headRanking ? 'head_ranking' : 'ranking')
 }
 
 function holderLine(row: OfficeRow): string {
@@ -213,7 +228,7 @@ function officeAnswer(row: OfficeRow, data: OfficeData) {
   return finish(b, data, [
     { label: 'Who is the highest paid agency head?', href: ask('Who is the highest paid agency head?') },
     { label: 'Who is the highest paid politician?', href: ask('Who is the highest paid politician?') },
-  ])
+  ], 'office')
 }
 
 function compareOffices(rows: OfficeRow[], data: OfficeData) {
@@ -227,7 +242,7 @@ function compareOffices(rows: OfficeRow[], data: OfficeData) {
   b.instrument(a); b.instrument(c)
   b.add(`\n\n${measureNote(data)}`)
   table(b, data, sorted, false)
-  return finish(b, data, [{ label: 'Who is the highest paid agency head?', href: ask('Who is the highest paid agency head?') }])
+  return finish(b, data, [{ label: 'Who is the highest paid agency head?', href: ask('Who is the highest paid agency head?') }], 'compare')
 }
 
 function compareWithParliament(row: OfficeRow, mp: ParliamentSide, data: OfficeData) {
@@ -249,7 +264,7 @@ function compareWithParliament(row: OfficeRow, mp: ParliamentSide, data: OfficeD
   return finish(b, data, [
     { label: `What is ${the(office)} paid?`, href: ask(`What is ${the(office)} paid?`) },
     { label: 'Who is the highest paid politician?', href: ask('Who is the highest paid politician?') },
-  ])
+  ], 'parliament')
 }
 
 function bandsAnswer(data: OfficeData) {
@@ -260,14 +275,14 @@ function bandsAnswer(data: OfficeData) {
   b.add(` The employing body sets each holder’s pay within the band, and the Minister assigns each office to a band.`)
   b.add(`\n\n${measureNote(data)}`)
   table(b, data, bands, false)
-  return finish(b, data, [{ label: 'Who is the highest paid agency head?', href: ask('Who is the highest paid agency head?') }])
+  return finish(b, data, [{ label: 'Who is the highest paid agency head?', href: ask('Who is the highest paid agency head?') }], 'bands')
 }
 
 export interface OfficeIntent { ranking: boolean; amount: boolean; compared: boolean; payWords: boolean }
 
 /** A calculated answer about the offices the Tribunal pays, or null. `parliament`
  *  reads the rest of the question for a parliamentarian or post to compare with. */
-export function officePayAnswer(question: string, data: OfficeData, intent: OfficeIntent, parliament: (rest: string) => ParliamentSide | null) {
+export function officePayAnswer(question: string, data: OfficeData, intent: OfficeIntent, parliament: (rest: string) => ParliamentSide | null, reported?: ReportedHead) {
   if (!intent.payWords || NOT_THE_RATE.test(question) || question.length > 4000) return null
   const { rows, rest } = officesNamed(question, data)
   const general = generalOfficeQuestion(question)
@@ -279,7 +294,7 @@ export function officePayAnswer(question: string, data: OfficeData, intent: Offi
     return officeAnswer(rows[0], data)
   }
   if (BANDS.test(question) && !intent.ranking) return bandsAnswer(data)
-  if (intent.ranking || intent.compared || intent.amount || /\btop\s+\d/i.test(question)) return rankingAnswer(question, data)
+  if (intent.ranking || intent.compared || intent.amount || /\btop\s+\d/i.test(question)) return rankingAnswer(question, data, reported)
   return null
 }
 

@@ -47,11 +47,15 @@ export async function withPlannerResearch(response: Response, previous?: Researc
   return mapResearchResponse(response, payload => plannerPayload(payload, previous))
 }
 
+/** A pay answer the calculator wrote (paid_answer): every figure, sentence and table row comes from the pay data with its
+ *  instrument cited, so it is shown as written, as on the ordinary path, rather than re-checked as model prose. */
+export const calculatedPayAnswer = (payload: Record<string, unknown>): boolean => payload.pay_answer === true && payload.answer_status === 'calculated'
+
 /** One guard covers JSON, streamed fallbacks and cached payloads. */
 export async function withAnswerLanguage(response: Response,question?:string,askedAs?:string): Promise<Response> {
   return mapResearchResponse(response, payload=>{
     payload=ensureAnswerText(payload,question)
-    if(!question){const out=displayAnswerPayload(ensureAnswerText(plainAnswerPayload(payload)));return askedAs?{...out,asked_as:askedAs}:out}
+    if(!question||calculatedPayAnswer(payload)){const out=displayAnswerPayload(ensureAnswerText(plainAnswerPayload(payload)));return askedAs?{...out,asked_as:askedAs}:out}
     const prepared=protectedDecision(payload)?payload:normaliseWrittenPayload(payload,question)
     const out=displayAnswerPayload(ensureAnswerText(normaliseCoveragePayload(groundAnswerPayload(prepared,question),question),question))
     return askedAs?{...out,asked_as:askedAs}:out

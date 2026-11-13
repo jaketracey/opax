@@ -36,7 +36,7 @@ const aud=n=>'$'+n.toLocaleString('en-AU');
 test('the highest paid agency head is ranked, ranges shown as ranges, every source cited and linked to the FRL',async()=>{
  const r=await ask('Who is the highest paid agency head?');
  assert.equal(r.answer_status,'calculated');assert.equal(r.pay_answer,true);
- assert.equal(lead(r),'**The Secretary of the Department of the Prime Minister and Cabinet is the highest paid agency head: $1,000,000 a year in total remuneration.** Next are the Secretary to the Treasury ($990,000) and the Chair of the Australian Lighthouse Authority ($960,000).');
+ assert.equal(lead(r),'**The Secretary of the Department of the Prime Minister and Cabinet is the highest paid agency head: $1,000,000 a year in total remuneration.** Next are the Secretary to the Treasury ($990,000) and the Chair of the Australian Lighthouse Authority ($960,000). Total remuneration reported in annual reports can differ from these set rates.');
  const rows=r.answer.split('\n').filter(line=>/^\| \d+ \|/.test(line));
  assert.deepEqual(rows.map(line=>line.split(' | ')[1]),['Secretary of the Department of the Prime Minister and Cabinet','Secretary to the Treasury','Chair, Australian Lighthouse Authority','Secretary of the Department of Finance','Secretary of the Department of Lighthouses and Weather','Commonwealth Ombudsman']);
  assert.ok(rows[3].endsWith('| Level 3 | $900,000 to $950,000 |'));
