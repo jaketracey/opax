@@ -15,7 +15,8 @@ import { ContentUnavailable, SkeletonCrossfade } from '../src/design/states';
 import { PartyLabel, PersonRow } from '../src/design/people';
 import { Heading, Text } from '../src/design/text';
 import { Screen, SectionHeader } from '../src/design/layout';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { HeaderHeightContext } from 'expo-router/react-navigation';
 import Members from '../src/features/your-mp/Members';
 import Election from '../src/features/your-mp/Election';
 import { chooseElectorateDate } from '../src/features/directories/ElectorateDateSheet';
@@ -906,6 +907,43 @@ test('not found and failure states', async () => {
   );
   expect(has(r, 'electorate-retry')).toBe(true);
   await act(async () => r.unmount());
+});
+
+test('a missing electorate under the glass bar centres with the other not-found pages', async () => {
+  // Sweep 2 lane A: only this route's bar is glass (iOS 26 and later), so
+  // the page runs under it and the centred block sat half the bar's height
+  // (58 pt) low on the device. The block is padded by the bar.
+  const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+  const padding = async (version: number) => {
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: version,
+    });
+    mockParams.id = 'el_000000000000000000000000';
+    const r = await render(
+      <HeaderHeightContext.Provider value={116}>
+        <Electorate />
+      </HeaderHeightContext.Provider>,
+    );
+    const block = r.root.find(
+      (node) =>
+        node.props.testID === 'electorate-not-found' &&
+        typeof node.type !== 'string',
+    );
+    expect(
+      block.findAllByType(ContentUnavailable).map((n) => n.props.testID),
+    ).toEqual(['electorate-error']);
+    const value = StyleSheet.flatten(block.props.style).paddingBottom;
+    await act(async () => r.unmount());
+    return value;
+  };
+  try {
+    expect(await padding(26)).toBe(116);
+    // An opaque bar (iOS 18.4 to 25) sits above the page: nothing to lift.
+    expect(await padding(18)).toBe(0);
+  } finally {
+    Object.defineProperty(Platform, 'Version', descriptor);
+  }
 });
 
 test('loading draws a skeleton, never empty copy', async () => {

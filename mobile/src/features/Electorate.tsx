@@ -21,6 +21,7 @@ import type { Electorate as Seat } from '../api/catalogs';
 import { ApiError } from '../api/errors';
 import { catalogs } from '../api/runtime';
 import { formatDate } from '../design/format';
+import { useHeaderBottom } from '../design/useHeaderBottom';
 import { Icon } from '../design/icon';
 import { confirmAction } from '../design/menu';
 import { chamberName, jurisdictionName } from '../design/parliament';
@@ -53,7 +54,7 @@ import {
 } from '../design/row-padding';
 import { symbols } from '../design/symbols';
 import { minimumTarget, rhythm } from '../design/tokens';
-import { headerItems, pageItems } from '../navigation/chrome';
+import { glassBar, headerItems, pageItems } from '../navigation/chrome';
 import { openOnWeb } from '../navigation/external';
 import {
   directoryRoute,
@@ -243,28 +244,39 @@ function ElectorateContent({
     setAttempt((n) => n + 1);
   };
   const scroll = useRef<ScrollView>(null);
+  const headerBottom = useHeaderBottom();
   const identity = loaded?.view.identity.data;
   const offline = failure?.code === 'offline' || failure?.code === 'timeout';
   // A missing seat takes the shared not-found pattern (sweep 2, item 2) on a
   // page of its own, like the members and topic pages: centred on paper,
-  // nothing to refresh. Centring the loading page instead drew the block
-  // 57 pt below the other six on the device.
+  // nothing to refresh. Of those pages only this route has a glass bar
+  // (iOS 26 and later), so its page runs under the bar: the centred column grows to the
+  // whole window while UIKit insets it by the bar, and the block sat half
+  // the bar's height (58 pt) below the other six on the device. Padding the
+  // block by the bar lifts it that half.
   if (!loaded && failure?.code === 'not-found')
     return (
       <>
         {embedded ? null : <ElectorateBar loaded={null} asof={asof} />}
         <Screen centred testID="electorate-screen">
-          <ContentUnavailable
-            symbol="map"
-            title="This electorate isn’t in OPAX"
-            body="It may have been renamed or abolished."
-            action={{
-              label: 'Search electorates',
-              onPress: () => router.navigate(directoryRoute('electorate')),
-              testID: 'electorate-not-found-search',
+          <View
+            testID="electorate-not-found"
+            style={{
+              paddingBottom: !embedded && glassBar() ? headerBottom : 0,
             }}
-            testID="electorate-error"
-          />
+          >
+            <ContentUnavailable
+              symbol="map"
+              title="This electorate isn’t in OPAX"
+              body="It may have been renamed or abolished."
+              action={{
+                label: 'Search electorates',
+                onPress: () => router.navigate(directoryRoute('electorate')),
+                testID: 'electorate-not-found-search',
+              }}
+              testID="electorate-error"
+            />
+          </View>
         </Screen>
       </>
     );
