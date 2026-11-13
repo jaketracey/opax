@@ -1,3 +1,4 @@
+import { ApiError } from '../../api/errors';
 import { isPartialCatalog } from '../../api/validation';
 import type { Catalogs } from '../../api/catalogs';
 import { catalogSources, personId, profileFor } from '../../api/catalogs';
@@ -116,8 +117,13 @@ function personFingerprint(id: string, sources: FollowSources) {
       expenses: sources.expenses ?? undefined,
       bills: sources.bills ?? undefined,
     });
-  } catch {
-    return null;
+  } catch (error) {
+    // Only a person the release does not hold is gone. Records out of step
+    // between releases, or an identity that needs review, are a check that
+    // could not be made: never "No longer in OPAX" for a fetch problem.
+    return error instanceof ApiError && error.code === 'not-found'
+      ? null
+      : undefined;
   }
   const identity = profile.blocks.identity.data!;
   const markers: Fingerprint = {};

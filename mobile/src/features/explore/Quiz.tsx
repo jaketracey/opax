@@ -152,7 +152,7 @@ export default function Quiz({
     if (mode === 'single') {
       const scored = scoreAnswer(q, draft!, 0);
       setSingleResponse(scored.response);
-      announce(scored.response, q.fact);
+      announce(scored.response, q.fact, false);
       return;
     }
     const current = quizSession.current();
@@ -166,7 +166,7 @@ export default function Quiz({
       streak: scored.streak,
       best: Math.max(current.best, scored.streak),
     });
-    announce(scored.response, q.fact);
+    announce(scored.response, q.fact, true);
   };
   const persist = (done: QuizRound) => {
     const next: QuizRecord = {
@@ -285,6 +285,7 @@ export default function Quiz({
             index={round.index}
             total={round.round.length}
             points={round.points}
+            results={round.answers.map((given) => given.correct)}
           />
         ) : null}
         {(mode === 'round' || mode === 'single') && q ? (
@@ -342,8 +343,19 @@ export default function Quiz({
   );
 }
 
-function announce(response: QuizResponse, fact: string) {
-  AccessibilityInfo.announceForAccessibility(`${response.grade}. ${fact}`);
+/**
+ * One announcement per answer. A right answer in a round says its points
+ * with the grade ("Correct, plus 100 points."), since the figure on screen
+ * is still counting; then the fact.
+ */
+function announce(response: QuizResponse, fact: string, scored: boolean) {
+  const points =
+    scored && response.correct
+      ? `, plus ${formatCount(response.gained)} points`
+      : '';
+  AccessibilityInfo.announceForAccessibility(
+    `${response.grade}${points}. ${fact}`,
+  );
 }
 
 /** Reports the content column's width, so the footer capsule lines up. */

@@ -40,7 +40,7 @@ import clarify from '../scripts/fixtures/ask-clarify.json';
 import { catalogs, client } from '../src/api/runtime';
 import { arriveInAsk, askSession } from '../src/features/ask/session';
 import { reconcileChats, syncSubmittedChat } from '../src/features/ask/sync';
-import { chatsSnapshot } from '../src/features/ask/store';
+import { chatsSnapshot, loadChats } from '../src/features/ask/store';
 import { openAskOptions } from '../src/features/ask/Options';
 import { AskFailure, type StreamHandlers } from '../src/features/ask/stream';
 import { colors, rhythm, textStyles } from '../src/design/tokens';
@@ -70,6 +70,9 @@ import {
 } from '../src/design/adaptive';
 import { ReservedRegionsProvider } from '../src/design/fold-area';
 import { AskColumns } from '../src/features/ask/AskLayout';
+import { idleCopy } from '../src/features/ask/AskIdle';
+import { EngravedMark } from '../src/design/engraving';
+import * as accessibility from '../src/design/accessibility';
 import { AskThread } from '../src/features/ask/AskThread';
 import { emptyReservedRegions } from '../src/design/fold';
 
@@ -2456,3 +2459,265 @@ test.each([
     }
   },
 );
+
+// Sweep 3, item 5: docked with nothing asked and nothing saved, the
+// conversation column was one grey line over empty paper (iPad, build 63).
+describe('the docked conversation column with nothing asked', () => {
+  const hosts = (id: string) =>
+    view!.root.findAll(
+      (n) => typeof n.type === 'string' && n.props.testID === id,
+    );
+  const said = (id: string) => hosts(id).map((n) => String(n.props.children));
+  async function at(
+    width: number,
+    height: number,
+    traits: Parameters<typeof setWindowTraitsOverride>[0],
+    pad: boolean,
+    run: () => Promise<void>,
+  ) {
+    const window = Dimensions.get('window');
+    const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(pad);
+    act(() => {
+      Dimensions.set({ window: { ...window, width, height } });
+      setWindowTraitsOverride(traits);
+      resetAdaptiveDeviceForTests();
+    });
+    try {
+      await run();
+    } finally {
+      await act(async () => {
+        view?.unmount();
+        view = null;
+        Dimensions.set({ window });
+        setWindowTraitsOverride(undefined);
+        resetAdaptiveDeviceForTests();
+      });
+      idiom.mockRestore();
+    }
+  }
+  /**
+   * The column, the room the empty state is given above a composer band of
+   * `band` points (keyboard included), and the words' own measured height.
+   */
+  async function layOut(column: number, band: number, wordsHeight: number) {
+    const event = (height: number, y = 0) => ({
+      nativeEvent: { layout: { x: 0, y, width: 500, height } },
+    });
+    await act(async () => {
+      hosts('ask-conversation-column')[0]!.props.onLayout(event(column));
+      hosts('ask-composer-bounds')[0]!.props.onLayout(event(column));
+      hosts('ask-composer-position')[0]!.props.onLayout(
+        event(Math.min(band, 90), column - band),
+      );
+      hosts('ask-empty')[0]?.props.onLayout(event(column - band));
+      hosts('ask-empty-words')[0]?.props.onLayout(event(wordsHeight));
+    });
+  }
+  const pad = { horizontal: 'regular', vertical: 'regular' } as const;
+  const duo = { ...pad, foldable: true } as const;
+
+  test.each([
+    ['iPad, portrait', 834, 1194, pad, true],
+    ['iPad, landscape', 1194, 834, pad, true],
+    [
+      'unfolded Duo, landscape',
+      880,
+      669,
+      { ...duo, verticalBars: true },
+      false,
+    ],
+  ] as const)(
+    '%s: the mark, the line and one more sentence, centred between the bar and the composer',
+    async (_name, width, height, traits, isPad) => {
+      await at(width, height, traits, isPad, async () => {
+        await mount();
+        expect(view!.root.findByType(AskColumns).props.docked).toBe(true);
+        await layOut(height, 90, 60);
+        const empty = hosts('ask-empty');
+        expect(empty).toHaveLength(1);
+        // The mark as an engraving at 96 pt, decorative.
+        const mark = view!.root.findByType(EngravedMark);
+        expect(mark.props.size).toBe(96);
+        expect(hosts('ask-empty-mark')[0]!.props).toMatchObject({
+          accessible: false,
+          accessibilityElementsHidden: true,
+        });
+        // The existing line, once (not also top-left), then the sentence.
+        expect(said('ask-idle-line')).toEqual([idleCopy.line]);
+        expect(said('ask-empty-own')).toEqual([
+          'Ask in your own words. Every answer lists the records it used.',
+        ]);
+        expect(
+          hosts('ask-empty-words')[0]!.props.accessibilityElementsHidden,
+        ).toBe(false);
+        // No control, and no touches taken from the column under it.
+        expect(empty[0]!.props.pointerEvents).toBe('none');
+        expect(
+          empty[0]!.findAll((n) => typeof n.props.onPress === 'function'),
+        ).toHaveLength(0);
+        // Centred in the room AskColumns gives it: from the column's top
+        // (less the bar, its own top padding) to the composer band's top.
+        expect(
+          StyleSheet.flatten(hosts('ask-empty-area')[0]!.props.style),
+        ).toMatchObject({ position: 'absolute', top: 0, bottom: 90 });
+        const style = StyleSheet.flatten(empty[0]!.props.style);
+        expect(style).toMatchObject({
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        });
+        expect(style.paddingTop).toBeGreaterThan(0);
+        // The scroll view is still the column's first child.
+        const first = hosts('ask-conversation-column')[0]!
+          .children[0] as ReactTestInstance;
+        expect(
+          first.findAllByType(ScrollView).length +
+            Number(first.type === ScrollView),
+        ).toBeGreaterThan(0);
+      });
+    },
+  );
+
+  // Review P2: at AX5, or with the keyboard up in iPad landscape, the mark
+  // (144 pt) and two sentences do not fit; they spilled under the bar and
+  // the composer.
+  test('AX5 with the keyboard up: the mark goes when it does not fit, and the whole state when the words do not', async () => {
+    const window = Dimensions.get('window');
+    try {
+      await at(1194, 834, pad, true, async () => {
+        act(() =>
+          Dimensions.set({
+            window: { ...Dimensions.get('window'), fontScale: 3.12 },
+          }),
+        );
+        await mount();
+        // Nothing measured yet: nothing drawn that could spill.
+        expect(hosts('ask-empty-mark')).toHaveLength(0);
+        expect(
+          StyleSheet.flatten(hosts('ask-empty-words')[0]!.props.style).opacity,
+        ).toBe(0);
+        // Keyboard down: 834 less the bar and a 90 pt composer. The words
+        // (300 pt at AX5) and the mark (144 + 24) both fit.
+        await layOut(834, 90, 300);
+        expect(hosts('ask-empty-mark')).toHaveLength(1);
+        // Keyboard up (the area shrinks): the words fit, the mark does not.
+        await layOut(834, 90 + 330, 300);
+        expect(hosts('ask-empty-mark')).toHaveLength(0);
+        expect(said('ask-idle-line')).toEqual([idleCopy.line]);
+        expect(
+          StyleSheet.flatten(hosts('ask-empty-words')[0]!.props.style).opacity,
+        ).not.toBe(0);
+        // Less room than the words need: the state draws nothing, VoiceOver
+        // skips it, and the line is back in the scrolling page, once.
+        await layOut(834, 90 + 420, 300);
+        expect(hosts('ask-empty-mark')).toHaveLength(0);
+        expect(
+          StyleSheet.flatten(hosts('ask-empty-words')[0]!.props.style).opacity,
+        ).toBe(0);
+        expect(hosts('ask-empty-words')[0]!.props).toMatchObject({
+          accessibilityElementsHidden: true,
+          importantForAccessibility: 'no-hide-descendants',
+        });
+        expect(said('ask-idle-line')).toEqual([idleCopy.line]);
+        expect(
+          hosts('ask-idle')[0]!.findAll(
+            (n) => n.props.testID === 'ask-idle-line',
+          ).length,
+        ).toBeGreaterThan(0);
+        // Room again: centred again, and still said once.
+        await layOut(834, 90, 300);
+        expect(hosts('ask-empty-mark')).toHaveLength(1);
+        expect(said('ask-idle-line')).toEqual([idleCopy.line]);
+        expect(
+          hosts('ask-idle')[0]!.findAll(
+            (n) => n.props.testID === 'ask-idle-line',
+          ),
+        ).toHaveLength(0);
+      });
+    } finally {
+      act(() => Dimensions.set({ window }));
+    }
+  });
+
+  test('saved conversations that could not be read: the error stands alone, with the line, and no centred state', async () => {
+    jest.mocked(loadChats).mockRejectedValueOnce(new Error('disk'));
+    await at(834, 1194, pad, true, async () => {
+      await mount();
+      expect(hosts('ask-conversations-failed').length).toBeGreaterThan(0);
+      expect(hosts('ask-empty')).toHaveLength(0);
+      expect(said('ask-idle-line')).toEqual([idleCopy.line]);
+    });
+  });
+
+  test('unfolded Duo, portrait (669 by 951) is one pane: the starters fill it and there is no empty state', async () => {
+    await at(669, 951, { ...duo, verticalBars: false }, false, async () => {
+      await mount();
+      expect(view!.root.findByType(AskColumns).props.docked).toBe(false);
+      expect(hosts('ask-empty')).toHaveLength(0);
+      expect(said('ask-idle-line')).toEqual([idleCopy.line]);
+      expect(hosts('ask-starters')).toHaveLength(1);
+    });
+  });
+
+  test('the phone is unchanged: the line over Try asking, no mark', async () => {
+    await mount();
+    expect(hosts('ask-empty')).toHaveLength(0);
+    expect(view!.root.findAllByType(EngravedMark)).toHaveLength(0);
+    expect(said('ask-idle-line')).toEqual([idleCopy.line]);
+    expect(hosts('ask-starters')).toHaveLength(1);
+  });
+
+  test('with a saved conversation the column has its list, and the line stays top-left', async () => {
+    jest.mocked(chatsSnapshot).mockImplementation(() => oneChat);
+    await at(834, 1194, pad, true, async () => {
+      await mount();
+      expect(hosts('ask-empty')).toHaveLength(0);
+      expect(said('ask-idle-line')).toEqual([idleCopy.line]);
+      expect(hosts('ask-conversations')).toHaveLength(1);
+    });
+  });
+
+  test.each([
+    ['fades out as the first question is sent', false],
+    ['goes at once under Reduce Motion', true],
+  ] as const)('it %s', async (_name, reduced) => {
+    const reduce = jest
+      .spyOn(accessibility, 'useReduceMotion')
+      .mockReturnValue(reduced);
+    const base = askSession.snapshot();
+    const snapshot = jest.spyOn(askSession, 'snapshot').mockReturnValue(base);
+    try {
+      await at(834, 1194, pad, true, async () => {
+        await mount();
+        expect(hosts('ask-empty')).toHaveLength(1);
+        jest.useFakeTimers();
+        try {
+          snapshot.mockReturnValue({ ...base, busy: true });
+          await act(async () => {
+            view!.update(
+              withNavigationOptions(<AskScreen />, (options) => {
+                mockBar.options = options;
+              }),
+            );
+          });
+          // Leaving, it is still drawn (fading) but no longer read out.
+          expect(hosts('ask-empty')).toHaveLength(reduced ? 0 : 1);
+          if (!reduced)
+            expect(hosts('ask-empty')[0]!.props).toMatchObject({
+              accessibilityElementsHidden: true,
+              importantForAccessibility: 'no-hide-descendants',
+            });
+          await act(async () => {
+            jest.advanceTimersByTime(1000);
+          });
+          expect(hosts('ask-empty')).toHaveLength(0);
+        } finally {
+          jest.useRealTimers();
+        }
+      });
+    } finally {
+      snapshot.mockRestore();
+      reduce.mockRestore();
+    }
+  });
+});

@@ -78,15 +78,14 @@ export function MemberRecord({
             />
           ) : null}
           {m.votes ? (
-            <>
-              <ValueRow
-                label={c.votes(record.data.division_end.slice(0, 4))}
-                value={String(m.votes.count)}
-              />
-              <Text wordSafe variant="secondary" tone="inkSoft">
-                {c.voteCounts(m.votes.ayes, m.votes.noes)}
-              </Text>
-            </>
+            // One row: the count, with its split as the label's detail
+            // (it was a loose line between this row and Recent votes).
+            <ValueRow
+              testID="vic-seat-votes"
+              label={c.votes(record.data.division_end.slice(0, 4))}
+              detail={c.voteCounts(m.votes.ayes, m.votes.noes)}
+              value={String(m.votes.count)}
+            />
           ) : null}
           {m.recent_votes.length ? (
             <Block>

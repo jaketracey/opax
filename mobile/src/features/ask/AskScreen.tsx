@@ -53,7 +53,7 @@ import { AskRevealContext, announceAnswer } from './AnswerView';
 import { AskDock } from './AskDock';
 import { AskColumns } from './AskLayout';
 import { ReservedRegionArea } from '../../design/fold-area';
-import { AskIdle } from './AskIdle';
+import { AskEmptyState, AskIdle } from './AskIdle';
 import { AskThread } from './AskThread';
 import { useAskStageAnnouncement } from './AskStatus';
 import { askGround } from './ground';
@@ -508,6 +508,7 @@ export default function AskScreen() {
                       content={content}
                       dock={dock}
                       sources={docked ? sources.pane : null}
+                      empty={<AskEmptyState readFailed={readFailed} />}
                       keyboard={keyboard}
                       keyboardVisible={keyboardVisible}
                       ground={ground}

@@ -9,10 +9,14 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { act } from 'react';
-import { ScrollView } from 'react-native';
+import { AccessibilityInfo, ScrollView, StyleSheet } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import { useAccessibilitySize } from '../src/design/accessibility';
+import {
+  useAccessibilitySize,
+  useReduceMotionSetting,
+} from '../src/design/accessibility';
 import { Portrait } from '../src/design/people';
+import { colors } from '../src/design/tokens';
 import Quiz from '../src/features/explore/Quiz';
 import {
   formatGuess,
@@ -78,6 +82,8 @@ jest.mock('../src/navigation/share', () => ({
 jest.mock('../src/design/accessibility', () => ({
   ...jest.requireActual('../src/design/accessibility'),
   useAccessibilitySize: jest.fn(() => false),
+  // Not yet known, as before iOS answers: nothing moves unless a test says.
+  useReduceMotionSetting: jest.fn(() => null),
 }));
 
 let renderer: TestRenderer.ReactTestRenderer | null = null;
@@ -154,6 +160,7 @@ beforeEach(() => {
   mockRecord = null;
   jest.spyOn(Math, 'random').mockReturnValue(0);
   (useAccessibilitySize as jest.Mock).mockReturnValue(false);
+  (useReduceMotionSetting as jest.Mock).mockReturnValue(null);
 });
 afterEach(() => {
   if (renderer) act(() => renderer!.unmount());
@@ -527,6 +534,19 @@ test.each([
         resets.push({ page: page(), y, animated });
       });
     const top = (shown: string) => ({ page: shown, y: 0, animated: false });
+    // VoiceOver follows each reset: focus goes to the new question's prompt
+    // (promptRef), the element drawn when the page lands at its top.
+    const isPrompt = (target: unknown) =>
+      root()
+        .findAll((node) => node.props.testID === 'quiz-question')
+        .some((node) => node.instance === target);
+    // Each focus move, and whether it went to the prompt then on screen.
+    const focused: boolean[] = [];
+    const focus = jest
+      .spyOn(AccessibilityInfo, 'sendAccessibilityEvent')
+      .mockImplementation((target, type) => {
+        if (type === 'focus') focused.push(isPrompt(target));
+      });
     const scroll = () =>
       root().find(
         (node) =>
@@ -545,6 +565,7 @@ test.each([
       const round = quizRounds.mixed[0]!;
       // Not from the press, over the intro: once the question has drawn.
       expect(resets).toEqual([top(round[0]!.prompt)]);
+      expect(focused).toEqual([true]);
       for (const [i, q] of round.entries()) {
         // Below AX1 the action is pinned under the scroll view, never over
         // its content; at AX sizes it flows after the answers.
@@ -561,6 +582,8 @@ test.each([
         expect(resets.at(-1)).toEqual(
           top(i < 7 ? round[i + 1]!.prompt : 'result'),
         );
+        // One focus move per question; the result announces itself instead.
+        expect(focused).toEqual(Array(Math.min(i + 2, 8)).fill(true));
       }
       await press('quiz-decks');
       expect(resets.at(-1)).toEqual(top('intro'));
@@ -568,6 +591,7 @@ test.each([
     } finally {
       measure.mockRestore();
       scrollTo.mockRestore();
+      focus.mockRestore();
     }
   },
 );
@@ -607,4 +631,164 @@ test('a portrait choice insets its text by the size the portrait draws', () => {
   expect(sizes.length).toBeGreaterThan(0);
   expect(new Set(sizes)).toEqual(new Set([choicePortrait.drawn]));
   act(() => renderer.unmount());
+});
+
+describe('sweep 3, item 6: a right answer lands', () => {
+  const round = quizRounds.mixed[0]!;
+  // The round's first single-choice question; the ones before it are
+  // answered right on the way, so it carries a streak.
+  const at = round.findIndex((q) =>
+    ['mc', 'tf', 'higher-lower'].includes(q.kind),
+  );
+  const q = round[at]!;
+  const right = q.options!.findIndex((o) => o.correct);
+  const wrong = q.options!.findIndex((o) => !o.correct);
+  const reach = async () => {
+    await mount(<Quiz />);
+    await press('quiz-start');
+    for (let i = 0; i < at; i++) {
+      await answer(round[i]!);
+      await press('quiz-confirm');
+      await press('quiz-next');
+    }
+  };
+  const host = (id: string) =>
+    root().findAll(
+      (node) => typeof node.type === 'string' && node.props.testID === id,
+    );
+  const segment = (i: number) =>
+    StyleSheet.flatten(host(`quiz-progress-segment-${i}`)[0]!.props.style);
+  const points = () => host('quiz-points')[0]!;
+  /** The grade's own line: the row that wraps, set on a shared baseline. */
+  const gradeLine = () =>
+    root().find(
+      (node) =>
+        typeof node.type === 'string' &&
+        StyleSheet.flatten(node.props.style)?.alignItems === 'baseline' &&
+        node.findAll((child) => child.props.testID === 'quiz-grade').length > 0,
+    );
+  const besideGrade = () =>
+    gradeLine().findAll((node) => node.props.testID === 'quiz-points').length >
+    0;
+  const multiplier = Math.min(at + 1, 4);
+  const line = `+${100 * multiplier} points${multiplier > 1 ? ` · streak ×${multiplier}` : ''}`;
+
+  test('still: the points sit beside the grade in ink, the segment is bronze, and VoiceOver hears them once', async () => {
+    const said = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
+    await reach();
+    expect(segment(at).backgroundColor).toBe(colors.ink);
+    said.mockClear();
+    await press(`quiz-answer-${right}`);
+    await press('quiz-confirm');
+    // Beside the grade, in ink with tabular figures; not the grey line.
+    expect(byID('quiz-points').props).toMatchObject({
+      variant: 'strong',
+      tabular: true,
+      children: line,
+      accessibilityLabel: line,
+    });
+    expect(besideGrade()).toBe(true);
+    expect(StyleSheet.flatten(gradeLine().props.style)).toMatchObject({
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    });
+    // Reduce Motion not yet known: the final state, nothing in flight.
+    expect(host(`quiz-answer-${right}-drawn`)).toHaveLength(0);
+    expect(host(`quiz-progress-segment-${at}-fill`)).toHaveLength(0);
+    expect(segment(at).backgroundColor).toBe(colors.bronzeInk);
+    expect(said).toHaveBeenCalledTimes(1);
+    expect(said).toHaveBeenCalledWith(
+      `${q.kind === 'order' ? 'Correct order' : 'Correct'}, plus ${100 * multiplier} points. ${q.fact}`,
+    );
+    // The segment keeps its bronze once the round moves on.
+    await press('quiz-next');
+    expect(segment(at).backgroundColor).toBe(colors.bronzeInk);
+    expect(segment(at + 1).backgroundColor).toBe(colors.ink);
+  });
+
+  test('a wrong answer stays quiet: the grey line under the grade, no bronze, no points spoken', async () => {
+    (useReduceMotionSetting as jest.Mock).mockReturnValue(false);
+    const said = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
+    await reach();
+    said.mockClear();
+    await press(`quiz-answer-${wrong}`);
+    await press('quiz-confirm');
+    expect(byID('quiz-points').props).toMatchObject({
+      variant: 'secondary',
+      children: '+0 points',
+    });
+    expect(besideGrade()).toBe(false);
+    expect(segment(at).backgroundColor).toBe(colors.ink);
+    expect(host(`quiz-progress-segment-${at}-fill`)).toHaveLength(0);
+    expect(
+      root().findAll((node) => /-drawn$/.test(String(node.props.testID))),
+    ).toHaveLength(0);
+    expect(said).toHaveBeenCalledTimes(1);
+    expect(said).toHaveBeenCalledWith(`Not this time. ${q.fact}`);
+    await press('quiz-next');
+    expect(segment(at).backgroundColor).toBe(colors.inkSoft);
+  });
+
+  test('with motion allowed the check draws, the points count up from nothing and the segment fills, once', async () => {
+    (useReduceMotionSetting as jest.Mock).mockReturnValue(false);
+    await reach();
+    jest.useFakeTimers();
+    try {
+      await press(`quiz-answer-${right}`);
+      await press('quiz-confirm');
+      // In flight: the stroke in place of the symbol, the count at its
+      // start (spoken as its end), the bronze sweeping over the ink.
+      expect(host(`quiz-answer-${right}-drawn`)).toHaveLength(1);
+      expect(String(points().props.children)).toMatch(/^\+0 points/);
+      expect(byID('quiz-points').props.accessibilityLabel).toBe(line);
+      // The final line holds the row's width, unseen and unspoken, with
+      // the counting figure laid over it: no wrap mid-count at large text.
+      expect(host('quiz-points-place')[0]!.props).toMatchObject({
+        children: line,
+        accessibilityElementsHidden: true,
+      });
+      expect(
+        StyleSheet.flatten(host('quiz-points-place')[0]!.props.style).opacity,
+      ).toBe(0);
+      expect(StyleSheet.flatten(points().props.style).position).toBe(
+        'absolute',
+      );
+      expect(host(`quiz-progress-segment-${at}-fill`)).toHaveLength(1);
+      expect(segment(at).backgroundColor).toBe(colors.ink);
+      await act(async () => {
+        jest.advanceTimersByTime(1000);
+      });
+      // Landed: the same final state as the still reveal.
+      expect(host(`quiz-answer-${right}-drawn`)).toHaveLength(0);
+      expect(byID('quiz-points').props.children).toBe(line);
+      expect(host(`quiz-progress-segment-${at}-fill`)).toHaveLength(0);
+      expect(segment(at).backgroundColor).toBe(colors.bronzeInk);
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  test('Reduce Motion: the final state at once, no movement', async () => {
+    (useReduceMotionSetting as jest.Mock).mockReturnValue(true);
+    await reach();
+    await press(`quiz-answer-${right}`);
+    await press('quiz-confirm');
+    expect(host(`quiz-answer-${right}-drawn`)).toHaveLength(0);
+    expect(byID('quiz-points').props.children).toBe(line);
+    expect(host(`quiz-progress-segment-${at}-fill`)).toHaveLength(0);
+    expect(segment(at).backgroundColor).toBe(colors.bronzeInk);
+  });
+
+  test('a round resumed on an answered question is still, with its bronze kept', async () => {
+    (useReduceMotionSetting as jest.Mock).mockReturnValue(false);
+    await reach();
+    await press(`quiz-answer-${right}`);
+    await press('quiz-confirm');
+    act(() => renderer!.unmount());
+    await mount(<Quiz resume />);
+    expect(host(`quiz-answer-${right}-drawn`)).toHaveLength(0);
+    expect(byID('quiz-points').props.children).toBe(line);
+    expect(host(`quiz-progress-segment-${at}-fill`)).toHaveLength(0);
+    expect(segment(at).backgroundColor).toBe(colors.bronzeInk);
+  });
 });

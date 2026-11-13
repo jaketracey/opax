@@ -2,7 +2,7 @@ import { RouteOptions } from '../../navigation/preview';
 
 import { useRef } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
-import type { EditionView } from '../../api/selectors';
+import { editionStoryFold, type EditionView } from '../../api/selectors';
 import { Card } from '../../design/card';
 import {
   isPartOfWhole,
@@ -92,7 +92,15 @@ export function EditionStory() {
       (edition.facts.order?.some((fact) => fact.type === 'figure') ?? true)) ||
     (!!edition?.facts.bars &&
       (edition.facts.order?.some((fact) => fact.type === 'bars') ?? true));
-  const prose = edition ? storyParagraphs(edition) : [];
+  // The post's paragraphs, then the caveats folded to where they apply: a
+  // line the chart's note repeats goes, and the record years join the
+  // figure's label (sweep 3, item 12). The plate still reads the unfolded
+  // paragraphs, so its detail line is as it was.
+  const paragraphs = edition ? storyParagraphs(edition) : [];
+  const story = edition
+    ? editionStoryFold(paragraphs, edition.facts)
+    : { paragraphs, figures: [] };
+  const prose = story.paragraphs;
   const affects = edition?.facts.affects ?? null;
   const offline =
     block?.error?.code === 'offline' || block?.error?.code === 'timeout';
@@ -160,7 +168,7 @@ export function EditionStory() {
               <Plate
                 edition={edition}
                 story
-                shownBelow={prose}
+                shownBelow={paragraphs}
                 testID="edition-plate"
                 titleRef={titleRef}
                 onTitleLayout={title.onTitleLayout}
@@ -206,7 +214,11 @@ export function EditionStory() {
                 ) : null}
               </View>
             </View>
-            <EditionFacts edition={edition} provenance={source} />
+            <EditionFacts
+              edition={edition}
+              figures={story.figures}
+              provenance={source}
+            />
             {destination ? (
               <RowOpenListener.Provider value={openStory}>
                 <InsetGroup testID="edition-subject-group">
@@ -334,18 +346,15 @@ function barsAreWhole(
 
 function EditionFacts({
   edition,
+  figures,
   provenance: source,
 }: {
   edition: EditionView;
+  /** The edition's figures, the first labelled with the record's years. */
+  figures: EditionView['facts']['figures'];
   provenance: ReturnType<typeof editionSources>;
 }) {
-  const {
-    figures,
-    bars: firstBars,
-    barGroups,
-    events,
-    division,
-  } = edition.facts;
+  const { bars: firstBars, barGroups, events, division } = edition.facts;
   const provenance = {
     dateRange: { start: edition.date, end: edition.date },
     citation: 'OPAX daily edition',
