@@ -52,6 +52,7 @@ import {
 } from './today/launch-fixture';
 import { Masthead, useNow } from './today/Masthead';
 import { MoreToExplore } from './today/MoreToExplore';
+import { SittingLine } from './today/SittingLine';
 import {
   editionInSlot,
   launchCase,
@@ -443,6 +444,7 @@ export default function Today() {
       <Masthead
         now={now}
         offlineSavedAt={offlineAt ?? null}
+        sitting={<SittingLine now={now} attempt={attempt} />}
         mark={
           seat.status !== 'loading' ? (
             <AustraliaDots

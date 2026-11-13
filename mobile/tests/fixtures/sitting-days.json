@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "published": "2026-11-13",
+  "timezone": "Australia/Sydney",
+  "coverage": {
+    "first": "2026-01-01",
+    "last": "2026-12-31"
+  },
+  "expires": "2026-12-31",
+  "note": "Dates are calendar days in Australia/Sydney. A date inside coverage that is not listed in days is a day neither house sits. Outside coverage, or after expires, sitting is unknown. The Parliament can change its calendar; this file is rebuilt from the published calendar.",
+  "years": [
+    {
+      "year": 2026,
+      "status": "published",
+      "sitting_days": {
+        "house": 68,
+        "senate": 57,
+        "either": 72
+      },
+      "source": {
+        "publisher": "Parliament of Australia",
+        "title": "Parliamentary Sittings 2026",
+        "url": "https://static.aph.gov.au/-/media/05_About_Parliament/58_Sitting_Calendars/2026/Parliamentary_Sittings_2026.ics",
+        "page": "https://www.aph.gov.au/About_Parliament/Sitting_Calendar",
+        "published": "2026-09-14",
+        "retrieved": "2026-11-13",
+        "sha256": "8a70acf67467c5069b38596d43b24ecad0e30b4e002b7c7fbf4de39f5dd49a03"
+      }
+    },
+    {
+      "year": 2027,
+      "status": "not_published",
+      "checked": "2026-11-13",
+      "url": "https://static.aph.gov.au/-/media/05_About_Parliament/58_Sitting_Calendars/2027/Parliamentary_Sittings_2027.ics"
+    }
+  ],
+  "days": [
+    {
+      "date": "2026-10-12",
+      "house": true,
+      "senate": true
+    },
+    {
+      "date": "2026-10-13",
+      "house": true,
+      "senate": true
+    },
+    {
+      "date": "2026-10-14",
+      "house": true,
+      "senate": true
+    },
+    {
+      "date": "2026-10-15",
+      "house": true,
+      "senate": true
+    },
+    {
+      "date": "2026-10-26",
+      "house": true,
+      "senate": false
+    },
+    {
+      "date": "2026-10-27",
+      "house": true,
+      "senate": false
+    },
+    {
+      "date": "2026-10-28",
+      "house": true,
+      "senate": false
+    },
+    {
+      "date": "2026-10-29",
+      "house": true,
+      "senate": false
+    },
+    {
+      "date": "2026-11-16",
+      "house": false,
+      "senate": true
+    },
+    {
+      "date": "2026-11-17",
+      "house": false,
+      "senate": true
+    },
+    {
+      "date": "2026-11-18",
+      "house": false,
+      "senate": true
+    },
+    {
+      "date": "2026-11-19",
+      "house": false,
+      "senate": true
+    },
+    {
+      "date": "2026-11-23",
+      "house": true,
+      "senate": true
+    },
+    {
+      "date": "2026-11-24",
+      "house": true,
+      "senate": true
+    },
+    {
+      "date": "2026-11-25",
+      "house": true,
+      "senate": true
+    },
+    {
+      "date": "2026-11-26",
+      "house": true,
+      "senate": true
+    }
+  ]
+}

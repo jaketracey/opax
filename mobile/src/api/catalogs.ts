@@ -7,6 +7,11 @@ import {
   decodeRecentDivisions,
   type RecentDivisions,
 } from '../features/today/votes';
+import {
+  decodeSittingDays,
+  sittingDaysPath,
+  type SittingDays,
+} from '../features/today/sitting';
 import type { Manifest } from './catalog-decoders';
 import * as decode from './catalog-decoders';
 import {
@@ -874,6 +879,29 @@ export class Catalogs {
         stale: false,
         savedAt: null,
       };
+    }
+  }
+  /**
+   * The federal sitting calendar behind the line under Today's date
+   * (`/parliament/sitting-days.json`). Saved like every catalog, so the last
+   * copy that passed the decoder answers offline (marked stale). A file
+   * that is not there (404), was never saved, or fails the strict decoder
+   * with nothing good saved is null: no line, never an error on Today.
+   */
+  async sittingDays(
+    refresh = false,
+    signal?: AbortSignal,
+  ): Promise<RecordResult<SittingDays> | null> {
+    try {
+      return await this.client.get(
+        sittingDaysPath,
+        decodeSittingDays,
+        refresh,
+        { signal },
+      );
+    } catch {
+      throwIfAborted(signal);
+      return null;
     }
   }
   /**
