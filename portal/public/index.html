@@ -9,7 +9,7 @@
 <!-- Google Tag Manager (container GTM-PNDM87LW). The loader and the site's
      own dataLayer events live in /gtm.js so no inline script is needed. -->
 <script src="/spa-entry.js?v=6d1168d62e"></script>
-<script src="/events.js?v=f0ccfb4510" defer></script>
+<script src="/events.js?v=840b990bf3" defer></script>
 <script src="/gtm.js?v=0764911f84" defer></script>
 <!-- Home page values. On a real path (/subject/person/slug, /reports/gambling)
      the Worker rewrites these per route; app.js keeps canonical and og:url in
@@ -1494,7 +1494,7 @@
     <section id="panel-privacy" class="panel policy-page" hidden aria-labelledby="privacy-title">
       <div class="ui-page-head">
       <h1 id="privacy-title">What OPAX collects and who receives it</h1>
-      <p class="ui-page-meta">Last updated 10 October 2026. This page covers the OPAX website and the
+      <p class="ui-page-meta">Last updated 13 November 2026. This page covers the OPAX website and the
       OPAX app for iPhone, iPad and Android.</p>
       <p class="ui-lede">The Open Parliamentary Accountability Exchange (OPAX) publishes the public
       record of Australian politics. Reading it needs no account. This page sets out what the OPAX
@@ -1507,9 +1507,10 @@
         <li>Reading the record needs no account, on the website or in the app.</li>
         <li>Every request reaches OPAX's servers with your IP address, which is used to limit
         request rates and refuse abusive traffic.</li>
-        <li>The website counts visits with Google Analytics and PostHog. They receive your IP
-        address and details of your browser, but never the words you type or the answers you get.
-        The app has no analytics.</li>
+        <li>The website counts visits with Google Analytics and PostHog, and sends PostHog
+        anonymous error reports when a page goes wrong. They receive your IP address and details
+        of your browser, but never the words you type or the answers you get. The app has no
+        analytics.</li>
         <li>Questions, searches of the record's documents and search summaries go to the services
         that search the record and write answers. OPAX adds no account details to them.</li>
         <li>An account holds your email address and whatever you choose to write or save. Your
@@ -1622,9 +1623,15 @@
       search terms and fragments removed, and a fixed list of events: a question or search
       started, finished or failed, with its duration and result counts; a source opened; a
       download; a link followed to another site; and similar actions. They never receive
-      question text, search words, answers, page titles, postcodes or error messages. Campaign
+      question text, search words, answers, page titles or postcodes. Campaign
       tags in a link are kept only as a plain source, medium and campaign name; other tags and
       advertising click identifiers are dropped.</p>
+      <p>PostHog also receives anonymous error reports when something on a page goes wrong in your
+      browser. A report gives the kind of error, a shortened error message and the place in
+      OPAX's own code where it happened. Before a report is sent, any quoted text is removed from
+      the message, and search terms and fragments are removed from any address in it. Errors from
+      browser extensions or other sites' scripts are not sent. Google Analytics receives no error
+      reports.</p>
       <p>With each event, both services also receive details your browser shares, such as your
       browser and its version, operating system, device type, screen and window size, language
       and time zone. PostHog also receives the domain of the site that linked you to OPAX, but
@@ -2099,6 +2106,6 @@
 <script src="/ui-source.js?v=d594622c13" defer></script>
 <script src="/app.js?v=f1c343254c" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
-<script src="/analytics.js?v=6c136f0190" defer></script>
+<script src="/analytics.js?v=dbad81cb8b" defer></script>
 </body>
 </html>
