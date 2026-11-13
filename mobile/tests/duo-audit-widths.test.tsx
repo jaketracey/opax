@@ -11,6 +11,8 @@ import {
 } from '../src/design/adaptive';
 import { Screen } from '../src/design/layout';
 import Hub from '../src/features/money-public/Hub';
+import { AskColumns } from '../src/features/ask/AskLayout';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 /**
  * iPhone Duo audit (im-duo-audit, 13 Nov): the regions a screen's content
@@ -288,5 +290,54 @@ describe('Public money on a Duo', () => {
 
   test('the folded outer display keeps its single column', () => {
     expect(hub(at('outer, folded')).flexDirection).not.toBe('row');
+  });
+});
+
+describe('Ask’s composer on a Duo', () => {
+  // AskScreen wraps the columns in SidebarSafe, which pads the window's side
+  // insets on iPad and an adaptive iPhone. The folded Duo's composer padded
+  // its 80pt rail a second time: 258pt wide in a 354pt column (capture
+  // duo-outer-large op-05-ask), its placeholder on two lines.
+  function edges(keyboard: number) {
+    const tree = render(
+      <AskColumns
+        docked={false}
+        content={<View />}
+        dock={<View />}
+        sources={null}
+        keyboard={keyboard}
+        ground="sunken"
+      />,
+    );
+    // The composer's own area: the safe-area view that pads anything.
+    const all = tree.root
+      .findAllByType(SafeAreaView)
+      .map((node) => (node.props.edges ?? []) as string[]);
+    return {
+      sides: all.some((e) => e.includes('left') || e.includes('right')),
+      both: all.some((e) => e.includes('left') && e.includes('right')),
+      bottom: all.some((e) => e.includes('bottom')),
+    };
+  }
+
+  test('the folded Duo leaves the rail side to the screen and keeps the bottom', () => {
+    pose(poses[0]!);
+    expect(edges(0)).toEqual({ sides: false, both: false, bottom: true });
+    // Over the keyboard nothing pads.
+    expect(edges(300)).toEqual({ sides: false, both: false, bottom: false });
+  });
+
+  test('an ordinary iPhone, with no SidebarSafe above, still pads both sides', () => {
+    act(() => {
+      const size = { width: 932, height: 430, scale: 3, fontScale: 1 };
+      Dimensions.set({ window: size, screen: size });
+      setWindowTraitsOverride({
+        horizontal: 'regular',
+        vertical: 'compact',
+        foldable: false,
+      });
+    });
+    expect(edges(0)).toEqual({ sides: true, both: true, bottom: true });
+    expect(edges(300)).toEqual({ sides: true, both: true, bottom: false });
   });
 });
