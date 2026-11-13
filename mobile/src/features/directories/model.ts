@@ -27,7 +27,7 @@ import {
 } from '../../api/portrait-index';
 import { formatCount } from '../../design/format';
 import { chamberName, jurisdictionName } from '../../design/parliament';
-import { isPartyLabel } from '../../design/party';
+import { currentPartyName, isPartyLabel } from '../../design/party';
 import type { PartyFile } from './party-file';
 import { stageTitle } from '../bills/divisions';
 export { partyName } from '../../api/party-page';
@@ -468,7 +468,10 @@ export function partyRows(
     manifest.data,
   );
   const rows = new Map<string, PartyRow>();
-  const get = (name: string) => {
+  // A renamed party is one row, at its current name, whatever name a file
+  // records it under.
+  const get = (label: string) => {
+    const name = currentPartyName(label);
     let p = rows.get(name);
     if (!p)
       rows.set(
@@ -478,14 +481,19 @@ export function partyRows(
     return p;
   };
   for (const [jur, file] of Object.entries(files))
-    for (const n of file.parties)
-      get(n.label).money[jur] = {
+    for (const n of file.parties) {
+      const row = get(n.label);
+      // Two names in one file: the larger node, as the party page's
+      // receipts read it (partyMoney). Totals are never added together.
+      if ((row.money[jur]?.total ?? -1) >= n.total) continue;
+      row.money[jur] = {
         total: n.total,
         source:
           file.meta.sourceShort ??
           (jur === 'federal' ? 'AEC returns' : jur.toUpperCase()),
         asAt: file.meta.generated,
       };
+    }
   for (const { seats } of sitting) for (const seat of seats) get(seat.party);
   for (const p of roster.data.people)
     if (
