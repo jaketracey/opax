@@ -33,8 +33,8 @@ export function defaultMoneyFilters(graph: MoneyGraph): MoneyFilters {
   };
 }
 /**
- * How many filters differ from the defaults, for analytics: the years count
- * once and every industry chosen counts once. Never which values.
+ * How many filters differ from the defaults, for analytics: the year range,
+ * the industry choice and each switch or minimum count once. Never which values.
  */
 export function moneyFilterCount(
   graph: MoneyGraph,
