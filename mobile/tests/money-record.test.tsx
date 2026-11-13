@@ -210,8 +210,10 @@ test('a party record: originals last, the window figure, all years beside it, an
     .findAllByType(MoneyRow)
     .filter((x) => /^money-focus-flow-\d+$/.test(x.props.testID));
   expect(flows.length).toBeGreaterThan(0);
-  // One number style down the list.
-  expect(flows.every((x) => x.props.compact)).toBe(true);
+  // The record's rule: compact from $1 million, exact below it, as a
+  // donor's party rows (sweep 2 item 6.3).
+  for (const x of flows)
+    expect(x.props.compact).toBe(Math.abs(x.props.amount) >= 1_000_000);
   // The heading says what the figure counts: all receipts, not donations only.
   const section = r.root.find(
     (x) => x.props.testID === 'money-record-donations' && x.type === RN.View,
@@ -684,5 +686,187 @@ test('"Open in the money map" shows only when the reader did not come from the m
     .findAllByType(MoneyRow)
     .find((x) => x.props.testID === 'money-focus-flow-0')!;
   expect(other.props.href.params.via).toBeUndefined();
+  await act(async () => r.unmount());
+});
+
+// ---------------------------------------------------------------- sweep 2
+
+/** A synthetic donor graph: one donor, the parties it gave to, by year. */
+async function renderGraph(
+  donor: { label: string; total: number; count: number; years: number[] },
+  parties: { label: string; total: number }[],
+  params: Record<string, string> = {},
+) {
+  const yearOf = (year: number, total: number, count: number) => ({
+    [String(year)]: [total, count] as [number, number],
+  });
+  const at = donor.years[donor.years.length - 1]!;
+  const graph = {
+    meta: { generated: '2026-11-10', coverage: '2023–25', source: 'AEC' },
+    nodes: [
+      {
+        id: 'donor:example',
+        kind: 'donor',
+        label: donor.label,
+        group: 'other',
+        industry: 'other',
+        total: donor.total,
+        count: donor.count,
+        firstYear: donor.years[0],
+        lastYear: at,
+        byYear: yearOf(at, donor.total, donor.count),
+      },
+      // Another year on the map, so a window of one year is narrowed.
+      {
+        id: 'donor:earlier',
+        kind: 'donor',
+        label: 'Earlier Example Pty Ltd',
+        group: 'other',
+        industry: 'other',
+        total: 10,
+        count: 1,
+        firstYear: 2023,
+        lastYear: 2023,
+        byYear: yearOf(2023, 10, 1),
+      },
+      ...parties.map((p) => ({
+        id: `party:${p.label}`,
+        kind: 'party',
+        label: p.label,
+        group: 'party',
+        industry: 'party',
+        total: p.total,
+        count: 1,
+        firstYear: at,
+        lastYear: at,
+        byYear: yearOf(at, p.total, 1),
+      })),
+    ],
+    edges: [
+      ...parties.map((p) => ({
+        source: 'donor:example',
+        target: `party:${p.label}`,
+        total: p.total,
+        count: 1,
+        firstYear: at,
+        lastYear: at,
+        byYear: yearOf(at, p.total, 1),
+      })),
+      {
+        source: 'donor:earlier',
+        target: `party:${parties[0]!.label}`,
+        total: 10,
+        count: 1,
+        firstYear: 2023,
+        lastYear: 2023,
+        byYear: yearOf(2023, 10, 1),
+      },
+    ],
+  };
+  jest.mocked(apiClient.get).mockImplementation(async (_path, decode) => ({
+    data: decode(graph),
+    stale: false,
+    asOf: '2026-11-10',
+    savedAt: 1,
+  }));
+  return render({ node: 'donor:example', ...params });
+}
+
+test('sweep 2: one donation is "1 donation"; the window note says what it shows', async () => {
+  const r = await renderGraph(
+    { label: 'Example Estate Pty Ltd', total: 1000, count: 1, years: [2024] },
+    [{ label: 'Labor', total: 1000 }],
+    { from: '2024', to: '2024' },
+  );
+  const allYears = r.root
+    .findAllByType(ValueRow)
+    .find((x) => x.props.testID === 'money-record-donations-all-years')!;
+  expect(allYears.props.value).toMatch(/ · 1 donation · /);
+  const note = r.root.findByProps({ testID: 'money-record-window' });
+  expect(note.props.children).toBe('Showing 2024–25');
+  await act(async () => r.unmount());
+});
+
+test('sweep 2: the head is one block, the window note inside it at the tight rhythm', async () => {
+  const r = await renderGraph(
+    { label: 'Example Estate Pty Ltd', total: 1000, count: 1, years: [2024] },
+    [{ label: 'Labor', total: 1000 }],
+    { from: '2024', to: '2024' },
+  );
+  const { Group } = jest.requireActual('../src/design/layout');
+  const head = r.root
+    .findAllByType(Group)
+    .filter(
+      (g) =>
+        g.findAllByProps({ testID: 'money-focus-name' }).length > 0 &&
+        g.findAllByProps({ testID: 'money-record-window' }).length > 0,
+    );
+  expect(head.length).toBeGreaterThan(0);
+  expect(head.at(-1)!.props.gap).toBe(8);
+  await act(async () => r.unmount());
+});
+
+test('sweep 2: a donor’s party rows are compact from $1 million and largest first within each group', async () => {
+  const r = await renderGraph(
+    {
+      label: 'Example Holdings Pty Ltd',
+      total: 64_925_046,
+      count: 4,
+      years: [2024],
+    },
+    [
+      { label: 'Liberal National Party of Queensland', total: 222_070 },
+      { label: 'Australian Labor Party', total: 55_227_183 },
+      { label: 'Nationals', total: 7_476_793 },
+      { label: 'Liberal', total: 2_000_000 },
+    ],
+  );
+  const rows = r.root
+    .findAllByType(LinkRow)
+    .filter((x) => /^money-focus-flow-\d+$/.test(x.props.testID ?? ''));
+  const shown = rows.map((x) => [x.props.title, x.props.value]);
+  expect(shown).toEqual([
+    ['Australian Labor Party', '$55.2m'],
+    ['Nationals', '$7.5m'],
+    ['Liberal', '$2m'],
+    ['Liberal National Party of Queensland', '$222,070'],
+  ]);
+  // VoiceOver keeps exact dollars.
+  expect(rows[1]!.props.accessibilityLabel).not.toMatch(/7\.5/);
+  await act(async () => r.unmount());
+});
+
+test('sweep 2: one "More" group under Originals holds Wikipedia, leads and the map, each with its symbol', async () => {
+  const r = await renderGraph(
+    { label: 'Example Pty Ltd', total: 1000, count: 1, years: [2024] },
+    [{ label: 'Labor', total: 1000 }],
+  );
+  const more = r.root.find(
+    (x) => x.props.testID === 'money-record-more' && x.props.header,
+  );
+  expect(more.props.header).toBe('More');
+  const ids = more
+    .findAllByType(LinkRow)
+    .map((x) => [x.props.testID, x.props.symbol]);
+  expect(ids).toEqual([
+    ['money-record-wikipedia', symbols.search],
+    ['money-record-map', symbols.money],
+  ]);
+  expectOriginalsLast(r);
+  await act(async () => r.unmount());
+});
+
+test('sweep 2: a record not in the registers is centred, says why, and offers Search public money', async () => {
+  const r = await render({ rid: 'abn:00000000000', name: 'Nobody Pty Ltd' });
+  const missing = r.root.findByType(ContentUnavailable);
+  expect(missing.props.title).toBe('Not in the latest grant records');
+  expect(missing.props.body).toBe(
+    'It may be in an earlier release, or under another name.',
+  );
+  expect(missing.props.action.label).toBe('Search public money');
+  await act(async () => missing.props.action.onPress());
+  expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/public-money' });
+  const { Screen } = jest.requireActual('../src/design/layout');
+  expect(r.root.findByType(Screen).props.centred).toBe(true);
   await act(async () => r.unmount());
 });
