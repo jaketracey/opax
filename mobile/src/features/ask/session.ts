@@ -157,8 +157,10 @@ async function sendDraftNow({ status = true }: { status?: boolean } = {}) {
     if (status) takeFocusRequest('ask-status');
   }
   if (!error) return;
-  // A refused send (the Person check) leaves the question to edit.
-  requestFocus('ask');
+  // A refused send (the Person check) leaves the question to edit. Focus the
+  // composer only while Ask is on screen: a hidden Ask must not raise the
+  // keyboard over the screen the reader went to.
+  if (status) requestFocus('ask');
   AccessibilityInfo.announceForAccessibilityWithOptions(error, {
     queue: true,
   });
