@@ -84,6 +84,12 @@ import { hasParliamentaryMembership, type ProfileView } from './your-mp/model';
 import { useIsMyMember } from './your-mp/useIsMyMember';
 import { useSetAsMyElectorate } from './your-mp/useSetAsMyElectorate';
 import { perfMark, useDrawnMark } from '../perf/probe';
+import {
+  forgetProfile,
+  rememberedProfile,
+  rememberProfile,
+  sameLoaded,
+} from './people/profile-memo';
 
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
@@ -233,9 +239,14 @@ export function ProfileScreen({
   arrival?: ProfileArrival;
   embedded?: boolean;
 }) {
+  // A profile already read this session draws on the first frame; the read
+  // below still runs and redraws only if the record changed (PF4).
   const [load, setLoad] = useState<Load>(() => {
-    perfMark('profile-render', 'loading');
-    return { status: 'loading' };
+    const remembered = rememberedProfile(slug);
+    perfMark('profile-render', remembered ? 'memo' : 'loading');
+    return remembered
+      ? { status: 'ready', ...remembered }
+      : { status: 'loading' };
   });
   useScreenReady('/person/[slug]', load.status !== 'loading', !embedded);
   const [attempt, setAttempt] = useState(0);
@@ -244,9 +255,15 @@ export function ProfileScreen({
     let active = true;
     loadProfile(slug)
       .then((loaded) => {
+        if (loaded) rememberProfile(slug, loaded);
+        else forgetProfile(slug);
         if (!active) return;
-        setLoad(
-          loaded ? { status: 'ready', ...loaded } : { status: 'not-found' },
+        setLoad((was) =>
+          !loaded
+            ? { status: 'not-found' }
+            : was.status === 'ready' && sameLoaded(was, loaded)
+              ? was
+              : { status: 'ready', ...loaded },
         );
       })
       .catch((e: { code?: string }) => {
