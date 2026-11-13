@@ -346,7 +346,16 @@ test('the node redirect preserves every incoming parameter in the current tab', 
   act(() => view.unmount());
 });
 test('money-record keeps the working node screen as a pushed Money record page', () => {
-  expect(MoneyRecord).toBe(MoneyRecordScreen);
+  // The route draws the screen keyed on its record, so a link to another
+  // record starts at its own top (sweep 2, item 11).
+  jest.mocked(useLocalSearchParams).mockReturnValue({ node: 'party:Labor' });
+  let view!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    view = TestRenderer.create(React.createElement(MoneyRecord));
+  });
+  const screen = view.root.findByType(MoneyRecordScreen);
+  expect(screen.parent).toBe(view.root);
+  act(() => view.unmount());
   const registration = publicMoneyScreens().find(
     (screen) => screen.props.name === 'money-record',
   )!;
