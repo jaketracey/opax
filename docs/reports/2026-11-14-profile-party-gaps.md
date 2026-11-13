@@ -1,6 +1,6 @@
 # Person-profile party gaps, 14 November 2026 (audit F8, P2)
 
-Implementation: `e0584b22cd9096e80436563e6b3a83ccc7bee48a`. Baseline: `00150690c` on `im/party-gaps`, branched from `origin/main`. All measurements use the local read-only SQLite snapshot, the committed exports and a local Wrangler on `127.0.0.1:8918`. No production requests, SSH, production writes, messages or push. Counts and the complete per-profile classification are in [the audit ledger](2026-11-14-profile-party-gaps.json); public source facts are in [the reviewed evidence](../../scripts/roster_party_evidence.json).
+Implementation: `e0584b22cd9096e80436563e6b3a83ccc7bee48a`. Baseline: `00150690c` on `im/party-gaps`, branched from `origin/main`. All measurements use the local read-only SQLite snapshot, the committed exports and a local Wrangler on `127.0.0.1:8918`. No production requests, SSH, production writes or messages. Counts and the complete per-profile classification are in [the audit ledger](2026-11-14-profile-party-gaps.json); public source facts are in [the reviewed evidence](../../scripts/roster_party_evidence.json).
 
 ## Measurement
 
@@ -102,4 +102,44 @@ Acceptance review:
 - (d): **two** explicitly sourced Independent records; blanks are never converted by default.
 - Tests: full-name/house/date joins, conflicting identities and parties, `T Smith` and `Katter` refusals, dated switches, partial histories, source-only replay and raw/rendered count guards all pass.
 
-The remaining **430** gaps require additional identity, party or date evidence within the source restrictions. No production action, remote publication or device run was performed. The local Wrangler was stopped after verification.
+The remaining **430** gaps require additional identity, party or date evidence within the source restrictions. No production action or device run was performed. The local Wrangler was stopped after verification.
+
+
+## Review correction, 14 November 2026
+
+Correction implementation: `c421a078288a683193e5c9a22ee70b1331b79400`. The review authorises publishing `im/party-gaps` to origin after the gates. This correction uses the held cache only, with no new source requests. The source input hashes are unchanged. [Evidence](../../scripts/roster_party_evidence.json), [builder](../../scripts/build_roster_party_evidence.py).
+
+| Review item | Result | Regression that detects the reverted fault |
+| --- | --- | --- |
+| 1. Open membership end | James Griffin has `end: null` and `through: 2026-11-14`; the observation is displayed without an end date. | Python `test_open_membership_has_observation_but_no_end`; portal `an open membership renders an observation while a closed service keeps its end` |
+| 2. Observation wording | Jihad Dib reads `service record 2023-03-25, observed through 2026-09-21`. The helper keeps `service_end` separate from `service_through`; server and browser use the observation wording. | Portal `a partial source party reaches server and app with its service dates` |
+| 3. Council district | The generic Council district label is empty, while real Council regions remain available. | Python `test_generic_council_district_is_empty_but_real_regions_remain` and builder integration test |
+| 4. Council end | Bronnie Taylor's held, non-deprecated P39 Council statement has the exact start `2015-03-28` and end `2024-09-16`. The exported affiliation closes on that date. A different house or start cannot supply it. | Python `test_builder_uses_held_term_end_and_cleans_council_district` and `test_held_service_end_requires_same_position_and_exact_start` |
+| 5. Year-only end | A year-only membership end uses 1 January as its exclusive boundary. A 2025 end therefore labels no day after 31 December 2024. Year-only starts retain the conservative 31 December bound. | Python `test_year_only_membership_end_never_widens_the_period` |
+
+The source for the Council end is held Wikidata statement `Q19879829$3fd85273-4dc0-78f4-8d94-4e0b0eaa336b`, from the same cached response already hashed in the evidence. No last-speech date is used as a service end. [Source identity](https://www.wikidata.org/wiki/Q19879829), [extracted statement and dates](../../scripts/roster_party_evidence.json).
+
+The isolated regression checks restore each fault in memory and observe an assertion failure. Both the helper's observation-as-end fault and the server's old end-date wording are detected independently. The working source files are unchanged by those checks. [Python regressions](../../scripts/test_roster_party_gaps.py), [portal regressions](../../portal/test/profile-party-gaps.test.mjs).
+
+Compared with the original baseline, the export still changes exactly **34** profiles, solely in `party`, `parties` and `affiliations`. This correction changes **two** of those exported profiles and their existing accept groups; unrelated accept groups are unchanged. The local SQL replay reproduces all **34** reviewed profiles. Profile and speech counts remain **1,565** and **669,898**. The table above and the complete audit ledger are unchanged: raw blanks **616 → 586**, HTML gaps **464 → 430**. A fresh local crawl covers **1,567** profiles with **zero** errors; direct local HTML checks also verify all three named examples. [Roster](../../portal/public/parliamentarians.json), [accept list](../../scripts/roster_accept.json), [unchanged ledger](2026-11-14-profile-party-gaps.json).
+
+Correction output is retained in ignored `dev/party-gaps/review-*.log` files. The correction started at load5 **21.56**. The Python roster, wrapper and portal gates started at **16.15**, **15.32** and **37.50**, respectively, all below **40**. Running gates finish if load subsequently rises. Load5 rose above 40 during the portal run; no further gates started until it fell below 40 again.
+
+| Correction gate or check | Result |
+| --- | --- |
+| Full Python roster selection listed above | **276 passed, 14,219 subtests passed**, 123.32 seconds |
+| Isolated export-wrapper suite, original deadlines | **4 passed, 5 subtests passed**, 557.60 seconds |
+| Focused portal party/profile suites | **15 passed** |
+| `npx tsc --noEmit` from `portal/` | **Pass** |
+| `npm test -- --test-concurrency=4` from `portal/` | **4,908 passed; zero failures; zero skips**, 355.37 seconds |
+| Accept-list check | **876 applied groups; zero problems** |
+| Asset-stamp check | **Pass** |
+| Real local SQL export replay | **34/34** reviewed profiles match |
+| Fresh local HTML crawl and app-data parity | **1,567** profiles, **430** gaps, **zero** errors; unchanged ledger |
+| Direct local HTML checks | **Pass** for Griffin, Dib and Taylor; local Wrangler stopped |
+| Isolated fault restoration | **Five review items detected** by assertion failures; control passes |
+| Original-baseline profile/count/field comparison | **34** changed profiles; party fields only; names and speech counts preserved |
+
+An initial focused portal invocation used an unavailable `tsx` loader and exited before running tests. The repository's normal `node --test` command passes the focused suites; no dependency or deadline was changed.
+
+Final `git diff --check` passes. The correction and validation report are committed locally before the authorised branch push. No production action or message was sent; the local Wrangler is stopped.
