@@ -1,5 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import { act } from 'react';
+import * as RN from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import type { RecordResult } from '../src/api/client';
 import { apiClient } from '../src/api/runtime';
@@ -23,7 +24,6 @@ import {
 import MoneyRecordScreen, {
   contractsCaveat,
   grantsCaveat,
-  individualsNote,
 } from '../src/features/money/MoneyRecord';
 import { bothRegistersCaveat } from '../src/features/money/records';
 import {
@@ -52,7 +52,6 @@ jest.mock('@shopify/react-native-skia', () => {
 const mockParams: Record<string, string> = {};
 const mockRouter = { push: jest.fn(), replace: jest.fn(), navigate: jest.fn() };
 const mockNavigation = { setParams: jest.fn() };
-let mockOptions: Record<string, unknown> = {};
 jest.mock('expo-router', () => {
   const React = jest.requireActual<typeof import('react')>('react');
   const Native =
@@ -74,12 +73,7 @@ jest.mock('expo-router', () => {
     useRouter: () => mockRouter,
     useNavigation: () => mockNavigation,
     useSegments: () => [],
-    Stack: {
-      Screen: ({ options }: { options: Record<string, unknown> }) => {
-        mockOptions = options;
-        return null;
-      },
-    },
+    Stack: { Screen: () => null },
   };
 });
 
@@ -88,7 +82,6 @@ type RawNode = {
   kind: string;
   label: string;
   flow?: string;
-  withheld?: boolean;
   grants?: { rid?: string };
   contracts?: { rid?: string };
 };
@@ -171,7 +164,6 @@ async function renderDonor(label: string, aliases: string[] = []) {
 beforeEach(() => {
   jest.clearAllMocks();
   forgetMoneyGraphs();
-  mockOptions = {};
   jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
     data: decode(pinned(path)),
     stale: false,
@@ -191,7 +183,7 @@ test('a party record: originals last, the window figure, all years beside it, an
   });
   const amount = figure(r, 'money-focus-amount');
   expect(amount.props.ink).toBe('money');
-  expect(amount.props.label).toMatch(/^in [\d,]+ receipts, 2024–25$/);
+  expect(amount.props.label).toMatch(/^in [\d,]+ disclosure records, 2024–25$/);
   expect(amount.props.caveat).toMatch(/^Totals are a minimum/);
   expect(amount.props.citation.originals).toEqual([
     expect.objectContaining({ url: 'https://transparency.aec.gov.au/' }),
@@ -212,6 +204,18 @@ test('a party record: originals last, the window figure, all years beside it, an
     .findAllByType(MoneyRow)
     .filter((x) => /^money-focus-flow-\d+$/.test(x.props.testID));
   expect(flows.length).toBeGreaterThan(0);
+  // One number style down the list.
+  expect(flows.every((x) => x.props.compact)).toBe(true);
+  // The heading says what the figure counts: all receipts, not donations only.
+  const section = r.root.find(
+    (x) => x.props.testID === 'money-record-donations' && x.type === RN.View,
+  );
+  expect(
+    section.findAll((x) => x.props.title === 'Money received').length,
+  ).toBeGreaterThan(0);
+  expect(
+    section.findAll((x) => x.props.title === 'Donations to parties'),
+  ).toHaveLength(0);
   expect(flows[0]!.props.href).toEqual(
     expect.objectContaining({
       pathname: '/money-record',
@@ -227,8 +231,8 @@ test('a party record: originals last, the window figure, all years beside it, an
 });
 
 test.each([
-  [1, 'receipt'],
-  [2, 'receipts'],
+  [1, 'disclosure record'],
+  [2, 'disclosure records'],
 ])(
   'a party with %i receipts uses the matching count noun',
   async (count, noun) => {
@@ -279,7 +283,7 @@ describe.each([
   ['party', { node: 'party:Labor' }, 'money-focus-amount'],
   [
     'donor',
-    { node: raw.nodes.find((n) => n.kind === 'donor' && !n.withheld)!.id },
+    { node: raw.nodes.find((n) => n.kind === 'donor')!.id },
     'money-focus-amount',
   ],
   [
@@ -350,7 +354,7 @@ test('a grants hub puts originals after the grants and recipients', async () => 
 
 test('a donor in three registers: side by side, never summed, under one caveat', async () => {
   const donor = raw.nodes.find(
-    (n) => n.kind === 'donor' && n.grants && n.contracts && !n.withheld,
+    (n) => n.kind === 'donor' && n.grants && n.contracts,
   )!;
   const r = await render({ node: donor.id });
   expect(
@@ -456,34 +460,21 @@ test('the Wikipedia action encodes the donor name and opens the in-app browser',
   await act(async () => r.unmount());
 });
 
-test('an individual donor has no Wikipedia action', async () => {
+test('an individual donor is named, with its originals, but no Wikipedia action', async () => {
   const r = await renderDonor('Alex Example');
   expect(
     r.root.findAll((x) => x.props.testID === 'money-record-wikipedia'),
   ).toHaveLength(0);
   expect(figure(r, 'money-focus-amount')).toBeDefined();
   expect(
-    r.root.findAll((x) => x.props.testID === 'money-withheld-note'),
-  ).not.toHaveLength(0);
-  await act(async () => r.unmount());
-});
-
-test('the individual donors aggregate has no originals, no share and the privacy note', async () => {
-  const withheld = raw.nodes.find((n) => n.withheld);
-  if (!withheld) return;
-  const r = await render({ node: withheld.id });
+    r.root.findAll((x) => x.props.children === 'Alex Example').length,
+  ).toBeGreaterThan(0);
   expect(
-    r.root
-      .findAllByType(Text)
-      .find((x) => x.props.testID === 'money-withheld-note')!.props.children,
-  ).toBe(individualsNote);
+    r.root.findAll((x) => x.props.testID === 'money-withheld-note'),
+  ).toHaveLength(0);
   expect(
     r.root.findAll((x) => x.props.testID === 'money-record-originals'),
-  ).toHaveLength(0);
-  expect(mockOptions.unstable_headerRightItems).toBeUndefined();
-  expect(
-    r.root.findAll((x) => x.props.testID === 'money-record-wikipedia'),
-  ).toHaveLength(0);
+  ).not.toHaveLength(0);
   await act(async () => r.unmount());
 });
 

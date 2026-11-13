@@ -394,6 +394,9 @@ const styles = StyleSheet.create({
   fixedTitle: {
     fontFamily: fonts.serifBold,
     fontWeight: '700',
+    // a11y-ok(raw-font-size): from AX1 up the edition card's title holds
+    // 34 pt (recordHeading's AX1 size) by design, so a long record name
+    // stays under half the screen at AX5 (Today spec, refinement 3).
     fontSize: 34,
     lineHeight: 44,
     color: colors.onBand,

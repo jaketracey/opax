@@ -5,7 +5,14 @@ import React, { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { Redirect, Stack, useLocalSearchParams } from 'expo-router';
+import {
+  DarkTheme,
+  DefaultTheme,
+  Redirect,
+  Stack,
+  ThemeProvider,
+  useLocalSearchParams,
+} from 'expo-router';
 import SharedLayout, {
   unstable_settings,
 } from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/_layout';
@@ -16,6 +23,7 @@ import TalkLayout from '../src/app/talk/_layout';
 import SeatLayout from '../src/app/seat/_layout';
 import WelcomeLayout from '../src/app/welcome/_layout';
 import * as routes from '../src/navigation/routes';
+import { navigationTheme } from '../src/navigation/theme';
 import LegacyMoneyNode from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/money-node';
 import MoneyRecord from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/money-record';
 import MoneyRecordScreen from '../src/features/money/MoneyRecord';
@@ -44,6 +52,9 @@ jest.mock('expo-router', () => {
   Stack.Protected = Protected;
   return {
     Stack,
+    ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
+    DarkTheme: { dark: true },
+    DefaultTheme: { dark: false },
     Redirect: () => null,
     useLocalSearchParams: jest.fn(),
     useRootNavigationState: () => ({ key: 'root' }),
@@ -108,6 +119,29 @@ test.each([
     }
   },
 );
+// The theme's `dark` flag becomes every native bar's interface style. The
+// default light theme kept pushed-page bars and sheet headers cream in dark
+// mode (build 61 sweep), so the root follows the system scheme; release
+// builds are light-only and keep the default theme.
+test('the root stack sits in a navigation theme that follows the scheme', () => {
+  expect(navigationTheme('dark')).toBe(DarkTheme);
+  expect(navigationTheme('light')).toBe(DefaultTheme);
+  expect(navigationTheme('unspecified')).toBe(DefaultTheme);
+  expect(navigationTheme(undefined)).toBe(DefaultTheme);
+  let tree!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    tree = TestRenderer.create(React.createElement(RootLayout));
+  });
+  try {
+    const theme = tree.root.findByType(ThemeProvider);
+    // The jest scheme is light.
+    expect(theme.props.value).toBe(DefaultTheme);
+    expect(theme.findAllByType(Stack).length).toBe(1);
+    expect(tree.root.findAllByType(Stack).length).toBe(1);
+  } finally {
+    act(() => tree.unmount());
+  }
+});
 const sharedFolder = '(tabs)/(today,your-mp,bills,search,ask)';
 const layouts = {
   shared: SharedLayout,

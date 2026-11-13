@@ -65,7 +65,7 @@ import {
 } from '../../navigation/routes/public-money';
 import { resultsRoute } from '../../navigation/routes/search';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
-import { donorNotNamed, isOrganisationDonor } from '../../privacy/donorEntity';
+import { isOrganisationDonor } from '../../privacy/donorEntity';
 import { leadsAbout } from '../leads/model';
 import type {
   MoneyFigures,
@@ -86,7 +86,6 @@ import {
 import { moneyPartyGroups, PartyDot, PartyMoneyRow } from './parts';
 import {
   bothRegistersCaveat,
-  donationsCaveat,
   filtersFromParams,
   industryDonors,
   industryLabel,
@@ -96,7 +95,10 @@ import {
   moneyProfile,
   moneyYears,
   param,
+  partialYearFrom,
   publicMoneySource,
+  receiptSectionWords,
+  typedReceiptsScope,
   type MoneyParams,
 } from './records';
 import { moneyNotes, moneyShortSource, moneySourceDetails } from './sources';
@@ -300,6 +302,7 @@ function RegisterSection({
     tableTitle: string;
     dateRange: { start: string; end: string };
     source: string;
+    partialFrom?: number;
   } | null;
   children?: ReactNode;
 }) {
@@ -331,6 +334,8 @@ function RegisterSection({
           dateRange={bars.dateRange}
           citation={bars.source}
           sourceLine={false}
+          scaleGutter
+          partialFrom={bars.partialFrom}
         />
       ) : null}
       {children}
@@ -515,7 +520,6 @@ function NodeRecord({ params, id }: { params: MoneyParams; id: string }) {
     return <LoadState name={name} error={error} retry={retry} />;
   if (!node) {
     const narrowed = !isAllYears(graph, filters) || !!filters.industry;
-    const donor = id.startsWith('donor:');
     return (
       <Page title={name}>
         <ContentUnavailable
@@ -525,7 +529,6 @@ function NodeRecord({ params, id }: { params: MoneyParams; id: string }) {
               ? `${name} isn’t on the map in this view`
               : 'This donor isn’t on the map'
           }
-          body={donor && !name ? donorNotNamed : undefined}
           action={
             narrowed
               ? {
@@ -666,10 +669,18 @@ function NodeBody({
     ink: 'money' | 'ink',
     title: string,
     source: string,
+    returns = false,
   ) => {
     const data = byYearBars(figures);
     return data.length
       ? {
+          // AEC returns for a year are published the February after it ends.
+          partialFrom: returns
+            ? partialYearFrom(
+                graph,
+                data.map((d) => d.year),
+              )
+            : undefined,
           data: data.map((d) => ({
             label: moneyYears(d.year, d.year),
             value: d.value,
@@ -685,7 +696,8 @@ function NodeBody({
   // ---- party
   if (node.kind === 'party') {
     const donors = flows.slice(0, 15);
-    const line = `in ${counted(node.count, 'receipt')}, ${years}`;
+    const words = receiptSectionWords('party', graph, false);
+    const line = `in ${counted(node.count, words.one, words.many)}, ${years}`;
     return (
       <Page
         title={node.label}
@@ -703,22 +715,31 @@ function NodeBody({
           </Text>
         ) : null}
         <RegisterSection
-          title="Donations to parties"
+          title={words.title}
           testID="money-record-donations"
           figure={{
             value: node.total,
             label: line,
             ink: 'money',
-            caveat: donationsCaveat,
+            caveat: words.caveat,
             source: donorSource('money-source'),
             testID: 'money-focus-amount',
           }}
-          allYears={allYears(full, 'receipts')}
-          bars={bars(node, 'money', 'Receipts by year', shortSource)}
+          allYears={allYears(full, words.many)}
+          bars={bars(node, 'money', words.barsTitle, shortSource, true)}
         >
           {donors.length ? (
             <View testID="money-focus-flows">
               <SectionHeader title="Largest donors" level={3} />
+              {donors.every(({ edge }) => edge.typed) ? (
+                <Text
+                  wordSafe
+                  variant="footnote"
+                  testID="money-focus-flows-scope"
+                >
+                  {typedReceiptsScope}
+                </Text>
+              ) : null}
               {donors.map(({ edge, other }, index) => (
                 <MoneyRow
                   key={other.id}
@@ -730,6 +751,7 @@ function NodeBody({
                     .filter(Boolean)
                     .join(' · ')}
                   amount={edge.total}
+                  compact
                   href={pushRecord(other)}
                   testID={`money-focus-flow-${index}`}
                 />
@@ -812,6 +834,7 @@ function NodeBody({
                   .filter(Boolean)
                   .join(' · ')}
                 amount={edge.total}
+                compact
                 href={pushRecord(other)}
                 testID={`money-focus-flow-${index}`}
               />
@@ -829,49 +852,48 @@ function NodeBody({
       </Page>
     );
   }
-  // ---- a donor (or the "Individual donors" aggregate)
+  // ---- a donor
   const parties = moneyPartyGroups(
     flows.filter(({ other }) => other.kind === 'party'),
     ({ other }) => other.label,
   );
   const partyCount = parties.main.length + parties.other.length;
+  const donorWords = receiptSectionWords('donor', graph, !!node.typed);
   const grants = filters.grants ? node.grants : undefined;
   const contracts = filters.contracts ? node.contracts : undefined;
   const sections = [filters.donations, !!grants, !!contracts].filter(
     Boolean,
   ).length;
-  const originals: SourceOriginal[] = node.withheld
-    ? []
-    : [
-        {
-          label: `AEC Transparency Register · returns for ${node.label}`,
-          url: graph.meta.source_url ?? AEC_REGISTER,
-        },
-        ...(associated
-          ? [
-              {
-                label: 'AEC register of associated entities',
-                url: associated.url,
-              },
-            ]
-          : []),
-        ...(grants
-          ? [
-              {
-                label: `GrantConnect · awards to ${node.label}`,
-                url: GRANTCONNECT,
-              },
-            ]
-          : []),
-        ...(contracts
-          ? [
-              {
-                label: `AusTender · contracts with ${node.label}`,
-                url: AUSTENDER,
-              },
-            ]
-          : []),
-      ];
+  const originals: SourceOriginal[] = [
+    {
+      label: `AEC Transparency Register · returns for ${node.label}`,
+      url: graph.meta.source_url ?? AEC_REGISTER,
+    },
+    ...(associated
+      ? [
+          {
+            label: 'AEC register of associated entities',
+            url: associated.url,
+          },
+        ]
+      : []),
+    ...(grants
+      ? [
+          {
+            label: `GrantConnect · awards to ${node.label}`,
+            url: GRANTCONNECT,
+          },
+        ]
+      : []),
+    ...(contracts
+      ? [
+          {
+            label: `AusTender · contracts with ${node.label}`,
+            url: AUSTENDER,
+          },
+        ]
+      : []),
+  ];
   const partyRow = ({ edge, other }: (typeof flows)[number], index: number) => (
     <PartyMoneyRow
       key={other.id}
@@ -936,7 +958,7 @@ function NodeBody({
   return (
     <Page
       title={node.label}
-      share={node.withheld ? null : share}
+      share={share}
       refreshing={refreshing}
       onRefresh={refresh}
     >
@@ -960,18 +982,18 @@ function NodeBody({
       ) : null}
       {filters.donations ? (
         <RegisterSection
-          title="Donations to parties"
+          title={donorWords.title}
           testID="money-record-donations"
           figure={{
             value: node.total,
             label: `disclosed to ${counted(partyCount, 'party', 'parties')}, ${years}`,
             ink: 'money',
-            caveat: donationsCaveat,
+            caveat: donorWords.caveat,
             source: donorSource('money-source'),
             testID: 'money-focus-amount',
           }}
-          allYears={allYears(full, 'donations')}
-          bars={bars(node, 'money', 'Donations by year', shortSource)}
+          allYears={allYears(full, donorWords.many)}
+          bars={bars(node, 'money', donorWords.barsTitle, shortSource, true)}
         >
           {partyCount ? (
             <View testID="money-focus-flows">
@@ -994,28 +1016,22 @@ function NodeBody({
       {grants ? publicSection('grants', grants, full.grants) : null}
       {contracts ? publicSection('contracts', contracts, full.contracts) : null}
       <Originals rows={originals} />
-      {node.withheld ? (
-        <Text wordSafe variant="footnote" testID="money-withheld-note">
-          {individualsNote}
-        </Text>
-      ) : (
-        <More>
-          {node.kind === 'donor' && isOrganisationDonor(node) ? (
-            <LinkRow
-              title="Find on Wikipedia"
-              external={{
-                url: `https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(node.label)}`,
-                label: `Find ${node.label} on Wikipedia`,
-              }}
-              accessibilityLabel={`Find ${node.label} on Wikipedia`}
-              accessibilityHint="Opens in the browser"
-              testID="money-record-wikipedia"
-            />
-          ) : null}
-          <LeadRows name={node.label} />
-          {!fromMap ? <MapRow node={node} jurisdiction={jurisdiction} /> : null}
-        </More>
-      )}
+      <More>
+        {node.kind === 'donor' && isOrganisationDonor(node) ? (
+          <LinkRow
+            title="Find on Wikipedia"
+            external={{
+              url: `https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(node.label)}`,
+              label: `Find ${node.label} on Wikipedia`,
+            }}
+            accessibilityLabel={`Find ${node.label} on Wikipedia`}
+            accessibilityHint="Opens in the browser"
+            testID="money-record-wikipedia"
+          />
+        ) : null}
+        <LeadRows name={node.label} />
+        {!fromMap ? <MapRow node={node} jurisdiction={jurisdiction} /> : null}
+      </More>
     </Page>
   );
 }

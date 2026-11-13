@@ -7,10 +7,40 @@ import { RowLink } from '../../design/row-link';
 import { useRowHighlight } from '../../design/row-padding';
 import { Text } from '../../design/text';
 import { useAccessibilitySize } from '../../design/accessibility';
-import { formatDate } from '../../design/format';
+import { formatDate, unbroken } from '../../design/format';
 import { minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
 import { NewDot } from '../follows/NewDot';
+
+/**
+ * A division on several bills is published as one name, the bills' titles
+ * joined by ", " ("Treasury Laws Amendment (Tax Reform No. 1) Bill 2026,
+ * Income Tax Rates Amendment (Tax Reform No. 1) Bill 2026"). Split only at
+ * a top-level comma where every part is a bill's title, so a comma inside a
+ * title's brackets never splits it. One bill gives one part.
+ */
+export function combinedBills(name: string): string[] {
+  const parts: string[] = [];
+  let depth = 0;
+  let start = 0;
+  for (let i = 0; i < name.length; i++) {
+    const c = name[i];
+    if (c === '(') depth++;
+    else if (c === ')') depth = Math.max(0, depth - 1);
+    else if (c === ',' && depth === 0 && name[i + 1] === ' ') {
+      parts.push(name.slice(start, i).trim());
+      start = i + 2;
+    }
+  }
+  parts.push(name.slice(start).trim());
+  const bill = /\bBills? \d{4}$/;
+  return parts.length > 1 && parts.every((part) => bill.test(part))
+    ? parts
+    : [name];
+}
+
+/** A bill's short name: its title without the closing "Bill 2026". */
+const shortBillName = (title: string) => title.replace(/\s+Bills? \d{4}$/, '');
 
 /**
  * One member's position on one named bill at one stage (people.md 2.1):
@@ -40,7 +70,20 @@ export function MemberVoteRow({
   const stacked = useAccessibilitySize();
   const highlight = useRowHighlight();
   const status = position === 'for' ? 'Voted for' : 'Voted against';
-  const meta = date ? `${stage} · ${formatDate(date, 'short')}` : stage;
+  // A combined division leads with its first bill and names the second in
+  // the meta line, so it never reads the same as its neighbour, which is
+  // often the first bill alone (sweep 1, item 9). The date never breaks.
+  const [title, second, ...others] = combinedBills(name);
+  const companion = second
+    ? `with ${shortBillName(second)}${others.length ? ` and ${others.length} more` : ''}`
+    : null;
+  const meta = [
+    stage,
+    companion,
+    date ? unbroken(formatDate(date, 'short')) : null,
+  ]
+    .filter(Boolean)
+    .join(' · ');
   // The row's own label replaces its children's, so the dot's "New" is said here.
   const spoken = `${status}. ${name}. ${date ? `${stage}, ${formatDate(date)}` : stage}${isNew ? '. New' : ''}`;
   const select =
@@ -57,7 +100,7 @@ export function MemberVoteRow({
           <StatusCapsule status={status} hidden />
         </View>
         <Text wordSafe variant="rowRecord">
-          {name}
+          {title}
         </Text>
         <Text wordSafe variant="secondary">
           {meta}

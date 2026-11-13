@@ -132,6 +132,8 @@ export function useAndroidRootScroll(
         }}
         style={{
           fontFamily: interfaceFonts.sansSemiBold,
+          // a11y-ok(raw-font-size): stands in for the native large title on
+          // Android root screens (28/36 sp) and follows the system font size.
           fontSize: 28,
           lineHeight: 36,
           color: colors.ink,

@@ -14,6 +14,7 @@ import {
   industryLabel,
   latestCompleteYear,
   param,
+  partiesFigureWords,
   type MoneyParams,
 } from './records';
 import { yearExtent } from './view';
@@ -157,6 +158,7 @@ export function moneyFiltersModel(
     annualReturnYears: latest === null ? [] : [latest],
     industries,
     dollarsYear: CPI_REFERENCE_YEAR,
+    donationsLabel: partiesFigureWords(graph).title,
   });
   // defineModel again, so Reset, "N filters" and isDefault know `min`.
   return defineModel({

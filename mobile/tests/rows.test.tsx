@@ -46,6 +46,7 @@ import {
 } from '../src/design/selection';
 import { SourceLine } from '../src/design/source';
 import { colors, minimumTarget, radii, rhythm } from '../src/design/tokens';
+import { menuTitle } from '../src/design/menu-title';
 
 jest.mock('../src/features/follows/store', () => ({
   useFollows: () => [],
@@ -707,7 +708,7 @@ test('every builder gives iOS the exact native menu leaves as accessibility acti
     const leaves = menuLeaves(menu);
     expect(
       root.findAllByType(Link.MenuAction).map((node) => node.props.title),
-    ).toEqual(leaves.map((item) => item.title));
+    ).toEqual(leaves.map((item) => menuTitle(item.title)));
     expect(
       host(root, 'row').props.accessibilityActions.map(
         (action: { name: string }) => action.name,

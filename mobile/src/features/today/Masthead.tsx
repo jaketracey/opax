@@ -11,30 +11,8 @@ import { OfflineLine } from '../../design/states';
 import { Text } from '../../design/text';
 import { isAccessibilityCategory, rhythm } from '../../design/tokens';
 import { androidDotScale, dotHeight, dotWidth } from './australia-dots-model';
+import { dayWords, deviceDayWords } from './day-words';
 
-const weekdays = [
-  'Sunday',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-];
-const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
 /** "Sunday 8 November": the Sydney calendar day of an instant. */
 export function mastheadDate(now: Date): string {
   try {
@@ -47,12 +25,11 @@ export function mastheadDate(now: Date): string {
     const n = (type: string) =>
       Number(parts.find((p) => p.type === type)?.value);
     const day = new Date(Date.UTC(n('year'), n('month') - 1, n('day')));
-    if (!Number.isNaN(day.getTime()))
-      return `${weekdays[day.getUTCDay()]} ${day.getUTCDate()} ${months[day.getUTCMonth()]}`;
+    if (!Number.isNaN(day.getTime())) return dayWords(day);
   } catch {
     /* Fall through to the device calendar. */
   }
-  return `${weekdays[now.getDay()]} ${now.getDate()} ${months[now.getMonth()]}`;
+  return deviceDayWords(now);
 }
 
 const msToSydneyMidnight = (now: Date) => {
@@ -92,21 +69,25 @@ export function useNow(): Date {
 
 /**
  * Slot 0 under the large title: the date line ("Sunday 8 November", plain
- * text, not a header), then, only when the last revalidation failed for
- * network reasons, the page's one offline line with the oldest saved date
- * among the blocks drawn. No rule under it. `today-screen-message` names
- * the first line for the journeys.
+ * text, not a header), the sitting line when the published calendar can
+ * say it, then, only when the last revalidation failed for network
+ * reasons, the page's one offline line with the oldest saved date among
+ * the blocks drawn. No rule under it. `today-screen-message` names the
+ * first line for the journeys.
  */
 export function Masthead({
   now,
   offlineSavedAt,
   mark,
+  sitting,
 }: {
   now: Date;
   /** Set when offline: the oldest saved date among the drawn blocks. */
   offlineSavedAt?: DateInput | null;
   /** Absolute decorative art, behind the date and the native large title. */
   mark?: ReactNode;
+  /** The sitting line under the date (`SittingLine`); draws nothing when unknown. */
+  sitting?: ReactNode;
 }) {
   const { fontScale } = useWindowDimensions();
   const androidArt =
@@ -134,6 +115,7 @@ export function Masthead({
           {date}
         </>
       )}
+      {sitting}
       {offlineSavedAt !== undefined && offlineSavedAt !== null ? (
         <OfflineLine savedAt={offlineSavedAt} testID="today-offline" />
       ) : null}

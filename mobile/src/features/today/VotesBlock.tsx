@@ -3,11 +3,10 @@ import { InsetGroup } from '../../design/layout';
 import { rowMenus, useRowFollow } from '../../design/row-link';
 import { DivisionRow } from '../../design/rows';
 import { Skeleton } from '../../design/states';
-import { formatDate } from '../../design/format';
 import { billRoute, divisionHistoryRoute } from '../../navigation/routes';
 import { votesSources } from './sources';
 import { blockState, reportOf, TodayBlock, useTodayRead } from './TodayBlock';
-import { recentReadingVotes, type ReadingVote } from './votes';
+import { recentReadingVotes, voteMeta, type ReadingVote } from './votes';
 
 /**
  * How parliament voted (today.md 5.8): three second- and third-reading
@@ -77,13 +76,11 @@ function VoteRow({ vote, index }: { vote: ReadingVote; index: number }) {
   return (
     <DivisionRow
       title={vote.name}
-      meta={[vote.stageWords, vote.chamberWords, formatDate(vote.date, 'short')]
-        .filter(Boolean)
-        .join(' · ')}
+      meta={voteMeta(vote)}
       outcome={vote.outcomeWord}
       ayes={vote.ayes}
       noes={vote.noes}
-      countsStyle="votes"
+      countsStyle="ayesNoes"
       href={billRoute(vote.bill_key, undefined, {
         division: vote.division_key,
       })}

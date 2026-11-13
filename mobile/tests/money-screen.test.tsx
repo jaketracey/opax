@@ -5,7 +5,6 @@ import TestRenderer from 'react-test-renderer';
 import { apiClient } from '../src/api/runtime';
 import MoneyScreen, {
   donorCaption,
-  individualDonorsLine,
   moneySummary,
 } from '../src/features/money/MoneyScreen';
 import MoneyDonors from '../src/features/money/MoneyDonors';
@@ -162,11 +161,11 @@ test('the List view: donors first with the cut stated, parties in the money orde
       }),
     }),
   );
-  // Private individuals are one footnote, never a row.
-  expect(byTestID(r, Text, 'money-individual-donors')!.props.children).toMatch(
-    /^[\d,]+ individual donors?, \$[\d.]+[mkbn]*, not named\.$/,
+  // Every donor is a row under its own name: no footnote, no aggregate.
+  expect(byTestID(r, Text, 'money-individual-donors')).toBeUndefined();
+  expect(donors.some((x) => /individual donors/i.test(x.props.name))).toBe(
+    false,
   );
-  expect(donors.some((x) => /individual/i.test(x.props.name))).toBe(false);
   // Parties: Labor, the Coalition, then "Other parties" alphabetically.
   const parties = r.root
     .findAllByType(LinkRow)
@@ -198,7 +197,7 @@ test('the List view: donors first with the cut stated, parties in the money orde
       params: expect.objectContaining({ jurisdiction: 'federal' }),
     }),
   );
-  const named = graph.nodes.filter((n) => n.kind === 'donor' && !n.withheld);
+  const named = graph.nodes.filter((n) => n.kind === 'donor');
   expect(all.props.action.accessibilityLabel).toBe(
     `See all ${named.length} donors`,
   );
@@ -290,15 +289,14 @@ test('summary, caption and footnote helpers state the cut in plain words', () =>
   const all = defaultMoneyFilters(graph);
   // All years states the returns' span, not the later public-money years.
   expect(moneySummary(graph, all)).toBe(
-    'Donations to parties, 1998–99 to 2025–26, and public money to donors on the map',
+    'Money to parties, 1998–99 to 2025–26, and public money to donors on the map',
   );
   expect(donorCaption(graph, { ...all, from: 2024, to: 2024 })).toBe(
     'Largest in 2024–25 among the 250 largest donors since 1998–99',
   );
   expect(
     moneySummary(graph, { ...all, from: 2024, to: 2024, industry: 'unions' }),
-  ).toBe('Donations to parties in 2024–25, union donors only');
-  expect(individualDonorsLine([])).toBeNull();
+  ).toBe('Money to parties in 2024–25, union donors only');
 });
 
 test('every push from the map carries via=map', async () => {
@@ -325,7 +323,7 @@ test('a donors search with no match keeps its caption over one plain line', asyn
       }),
     );
   });
-  const named = graph.nodes.filter((n) => n.kind === 'donor' && !n.withheld);
+  const named = graph.nodes.filter((n) => n.kind === 'donor');
   await act(async () =>
     (
       mockOptions.headerSearchBarOptions as {
@@ -348,11 +346,8 @@ test('the complete donors list virtualises rows while retaining every named dono
     r = TestRenderer.create(<MoneyDonors />);
   });
   const list = r.root.findByType(FlatList);
-  const named = graph.nodes.filter((n) => n.kind === 'donor' && !n.withheld);
+  const named = graph.nodes.filter((n) => n.kind === 'donor');
   expect(list.props.data).toHaveLength(named.length);
-  expect(
-    list.props.data.every((n: { withheld?: boolean }) => !n.withheld),
-  ).toBe(true);
   const mounted = r.root.findAllByType(MoneyRow);
   expect(mounted.length).toBeGreaterThan(0);
   expect(mounted.length).toBeLessThan(named.length);
@@ -373,7 +368,7 @@ test.each([
     });
     const expected = rankedDonors(
       moneyView(graph, filtersFromParams(graph, mockParams)),
-    ).filter((n) => !n.withheld);
+    );
     const actual: { id: string }[] = r.root.findByType(FlatList).props.data;
     expect(actual.length).toBe(expected.length);
     expect(actual.every((node, i) => node.id === expected[i]?.id)).toBe(true);
@@ -398,10 +393,10 @@ test('the donors page states an industry window in plain words', async () => {
 
 test('the List view counts one receipt and one donor in the singular', async () => {
   const raw = structuredClone(pinned('/graph/money.json')) as {
-    nodes: { id: string; kind: string; withheld?: boolean; count: number }[];
+    nodes: { id: string; kind: string; count: number }[];
     edges: { source: string; target: string }[];
   };
-  const keep = raw.nodes.find((n) => n.kind === 'donor' && !n.withheld)!;
+  const keep = raw.nodes.find((n) => n.kind === 'donor')!;
   const dropped = new Set(
     raw.nodes
       .filter((n) => n.kind === 'donor' && n.id !== keep.id)

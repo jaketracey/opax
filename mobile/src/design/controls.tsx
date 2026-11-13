@@ -14,7 +14,6 @@ import {
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { router } from 'expo-router';
 import {
-  useCallback,
   useEffect,
   useRef,
   useState,
@@ -39,7 +38,7 @@ import {
 } from 'react-native';
 import type { FollowKind } from '../features/follows/store';
 import { useAccessibilitySize, useReduceMotion } from './accessibility';
-import { animateResize } from './disclosure';
+import { HeightReveal } from './reveal';
 import { Hoverable, columns, useLayout } from './adaptive';
 import { haptic } from './haptics';
 import { Icon, type SFSymbol } from './icon';
@@ -388,20 +387,9 @@ export function FollowButton({
   const [bounce, setBounce] = useState(false);
   const [busy, setBusy] = useState(false);
   const [limitReached, setLimitReached] = useState(false);
-  const [message, setMessageNow] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
   const marked = useRef(false);
   const reduceMotion = useReduceMotion();
-  const shownMessage = useRef<string | null>(null);
-  // Every message (first follow, limit, save error) takes its own height
-  // only while shown; the content below slides rather than jumps.
-  const setMessage = useCallback(
-    (next: string | null) => {
-      if (next !== shownMessage.current) animateResize(reduceMotion);
-      shownMessage.current = next;
-      setMessageNow(next);
-    },
-    [reduceMotion],
-  );
   const opacity = useAnimatedValue(1);
   const [confirmation, setConfirmation] = useState(false);
   useEffect(() => {
@@ -427,7 +415,7 @@ export function FollowButton({
       }
     });
     return () => animation.stop();
-  }, [confirmation, opacity, reduceMotion, setMessage]);
+  }, [confirmation, opacity, reduceMotion]);
   useEffect(() => {
     if (!current) marked.current = false;
     else if (!marked.current) {
@@ -492,29 +480,36 @@ export function FollowButton({
     />
   );
   return (
-    <Group gap={rhythm.tight} style={centre ? styles.followCentred : undefined}>
+    <View style={centre ? styles.followCentred : undefined}>
       {centre ? <View style={styles.followCentred}>{button}</View> : button}
-      {message ? (
-        <Animated.View style={{ opacity: confirmation ? opacity : 1 }}>
-          <Text
-            wordSafe
-            variant="footnote"
-            testID={`${testID}-message`}
-            style={centre ? styles.followMessageCentred : undefined}
-          >
-            {message}
-          </Text>
-        </Animated.View>
-      ) : null}
-      {limitReached ? (
-        <Button
-          label="Edit Following"
-          variant="plain"
-          onPress={() => router.push('/follows?edit=1')}
-          testID={`${testID}-edit-following`}
-        />
-      ) : null}
-    </Group>
+      {/* Every message (first follow, limit, save error) takes its own
+          height only while shown, and the content below eases down and back
+          up rather than jumping. The limit's Edit Following arrives with it. */}
+      <HeightReveal reduceMotion={reduceMotion} testID={`${testID}-reveal`}>
+        {message ? (
+          <Group gap={rhythm.tight} style={styles.followMessage}>
+            <Animated.View style={{ opacity: confirmation ? opacity : 1 }}>
+              <Text
+                wordSafe
+                variant="footnote"
+                testID={`${testID}-message`}
+                style={centre ? styles.followMessageCentred : undefined}
+              >
+                {message}
+              </Text>
+            </Animated.View>
+            {limitReached ? (
+              <Button
+                label="Edit Following"
+                variant="plain"
+                onPress={() => router.push('/follows?edit=1')}
+                testID={`${testID}-edit-following`}
+              />
+            ) : null}
+          </Group>
+        ) : null}
+      </HeightReveal>
+    </View>
   );
 }
 
@@ -1462,6 +1457,32 @@ export function SwitchRow({
   );
 }
 
+/**
+ * One tabular SF figure's advance, in ems, with room to spare: build 61
+ * measured 0.62 to 0.64 em in the sign-in code field at AX3 and AX5.
+ */
+const FIGURE_EM = 0.66;
+/** UITextField's caret and the margin it keeps before scrolling the text. */
+const CARET_ROOM = 4;
+
+/**
+ * The `code` variant's text-size ceiling (a `maxFontSizeMultiplier`), so a
+ * code of `figures` digits fits a field `width` wide. 0 is no ceiling: the
+ * width is not known yet, or no length was given. At AX5 the eight-digit
+ * sign-in code drew at 79 pt and its first digit scrolled out of the field
+ * (build 61); now the figures stop growing at the size that fits, and every
+ * smaller size, AX3 included, draws as before.
+ */
+export function codeFigureCeiling(width: number, figures?: number): number {
+  if (!figures || width <= 0) return 0;
+  const room =
+    width - 2 * (styles.input.paddingHorizontal + styles.input.borderWidth);
+  const fits =
+    (room - CARET_ROOM) /
+    (figures * FIGURE_EM * textStyles.tileFigure.fontSize);
+  return Math.max(1, fits);
+}
+
 /** A labelled text field with optional hint, error and required marker. */
 export function Field({
   label,
@@ -1471,6 +1492,7 @@ export function Field({
   grouped = false,
   labelHidden = false,
   variant = 'text',
+  codeLength,
   testID,
   inputRef,
   ...input
@@ -1485,6 +1507,8 @@ export function Field({
   grouped?: boolean;
   labelHidden?: boolean;
   variant?: 'text' | 'code';
+  /** The `code` variant's length: its figures shrink so all of them fit. */
+  codeLength?: number;
   testID?: string;
   /** The text input itself, to focus it from a keyboard shortcut. */
   inputRef?: RefObject<TextInput | null>;
@@ -1492,6 +1516,7 @@ export function Field({
   const ownRef = useRef<TextInput>(null);
   const ref = inputRef ?? ownRef;
   const [focused, setFocused] = useState(false);
+  const [width, setWidth] = useState(0);
   const disabled = input.editable === false;
   const description = [error ? `Error: ${error}` : null, hint]
     .filter(Boolean)
@@ -1551,6 +1576,15 @@ export function Field({
           setFocused(false);
           input.onBlur?.(event);
         }}
+        // Only the code variant measures itself; a text field is unchanged.
+        onLayout={
+          variant === 'code'
+            ? (event) => {
+                setWidth(event.nativeEvent.layout.width);
+                input.onLayout?.(event);
+              }
+            : input.onLayout
+        }
         // A one-time code never shows the clear button: at AX3 it took
         // the first digit's room while focused. Backspace still deletes.
         clearButtonMode={
@@ -1559,7 +1593,9 @@ export function Field({
             : 'while-editing'
         }
         allowFontScaling
-        maxFontSizeMultiplier={0}
+        maxFontSizeMultiplier={
+          variant === 'code' ? codeFigureCeiling(width, codeLength) : 0
+        }
         // Faint text is for raised surfaces only; a disabled field is sunken.
         placeholderTextColor={disabled ? colors.inkSoft : colors.inkFaint}
         style={[
@@ -1837,6 +1873,9 @@ const segmentPadding = Math.max(
 const segmentInset = rhythm.line - segmentPadding;
 
 const styles = StyleSheet.create({
+  // The gap Follow's message had in its group, inside the reveal so it opens
+  // and closes with the line.
+  followMessage: { paddingTop: rhythm.tight },
   // Pills, as iOS draws text buttons (D1: things you press); a 12pt corner
   // once the label can wrap (accessibility sizes), so a two-line label is
   // not a lozenge.

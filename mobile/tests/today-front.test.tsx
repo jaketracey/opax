@@ -8,14 +8,14 @@ import {
   recentDeclarationsFor,
 } from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
-import { formatDate } from '../src/design/format';
+import { formatDate, unbroken } from '../src/design/format';
 import { InsetGroup } from '../src/design/layout';
 import { Tile } from '../src/design/card';
 import { Button } from '../src/design/controls';
 import { SeatInvitation } from '../src/features/today/SeatInvitation';
 import { SurfaceContext } from '../src/design/row-padding';
 import { Icon } from '../src/design/icon';
-import { PersonRow } from '../src/design/people';
+import { PartyLabel, PersonRow, Portrait } from '../src/design/people';
 import { symbols } from '../src/design/symbols';
 import { rhythm } from '../src/design/tokens';
 import { PageFoot } from '../src/design/record';
@@ -30,6 +30,8 @@ import {
   LONG_ENTRY,
   declarationsForRoute,
   entryPreview,
+  DECLARANT_PORTRAIT,
+  PREVIEW_LINES,
 } from '../src/features/today/DeclarationRow';
 import { TodayFoot } from '../src/features/today/Foot';
 import { Masthead, mastheadDate } from '../src/features/today/Masthead';
@@ -402,7 +404,7 @@ describe('Just declared', () => {
     const { root } = render(one());
     expect(host(root, 'today-declaration-person-0-name')).not.toHaveLength(0);
     expect(strings(host(root, 'today-declaration-change-0')[0]!)).toBe(
-      `${item.category} · ${registerChangeLabel(item.kind)} ${changeDate(item.date)}`,
+      `${item.category} · ${unbroken(`${registerChangeLabel(item.kind)} ${changeDate(item.date)}`)}`,
     );
     expect(hrefs(root)).toContainEqual(declarationsForRoute(item.name));
     expect(declarationsForRoute(item.name)).toEqual({
@@ -411,6 +413,61 @@ describe('Just declared', () => {
     });
     expect(strings(root)).not.toMatch(/The entry in full|\bMore\b/);
   });
+  // Sweep 1, item 3: portrait, then "Name · party" on one line beside it,
+  // the item 8 pt under, three lines at most, then the meta line. Party
+  // text has one style in the list, whether or not it has a party page.
+  test.each(['Liberal', 'Independent'])(
+    '%s: the declarant reads name and party on one line, the item 8 pt under it',
+    (party) => {
+      jest.mocked(useWindowDimensions).mockReturnValue(standard);
+      const { root } = render(
+        one({ ...item, party, profileSlug: 'susan-mcdonald' }),
+      );
+      const portrait = root.findByType(Portrait);
+      expect(portrait.props.size).toBe(DECLARANT_PORTRAIT);
+      expect(DECLARANT_PORTRAIT).toBe(40);
+      const identity = host(root, 'today-declaration-identity-0')[0]!;
+      expect(StyleSheet.flatten(identity.props.style)).toMatchObject({
+        flexDirection: 'row',
+        minHeight: DECLARANT_PORTRAIT,
+      });
+      const label = root.findByType(PartyLabel);
+      expect(label.props.linked).toBe(false);
+      // Drawn in the label's own ink, never a link's navy.
+      const partyText = host(root, 'today-declaration-party-0-link')[0]!;
+      expect(partyText.props.onPress).toBeUndefined();
+      expect(partyText.props.accessibilityRole).toBeUndefined();
+      const ink = (
+        StyleSheet.flatten(partyText.props.style) as { color?: string }
+      ).color;
+      expect(ink).toBe(
+        (
+          StyleSheet.flatten(
+            host(root, 'today-declaration-change-0')[0]!.props.style,
+          ) as { color?: string }
+        ).color,
+      );
+      // The name and party are one line's children; the item follows it.
+      expect(
+        identity.findAll(
+          (n) =>
+            typeof n.type === 'string' &&
+            n.props.testID === 'today-declaration-person-0-name',
+        ),
+      ).not.toHaveLength(0);
+      const words = host(root, 'today-declaration-text-0')[0]!;
+      let column = identity.parent!;
+      while (column.type !== 'View') column = column.parent!;
+      const gap = (StyleSheet.flatten(column.props.style) as { gap: number })
+        .gap;
+      const marginTop = (
+        StyleSheet.flatten(words.props.style) as { marginTop: number }
+      ).marginTop;
+      expect(gap + marginTop).toBe(8);
+      expect(words.props.numberOfLines).toBe(PREVIEW_LINES);
+      expect(PREVIEW_LINES).toBe(3);
+    },
+  );
   test.each([1, 3.571])(
     'each declaration has one link, one chevron and padded content at font scale %s',
     (fontScale) => {
@@ -459,14 +516,27 @@ describe('Just declared', () => {
         while (column.type !== 'View') column = column.parent!;
         return column;
       };
-      expect(columnOf(name)).toBe(columnOf(words));
-      expect(columnOf(meta)).toBe(columnOf(words));
+      // Name and party share one line, whose column is the words' column.
+      const identity = host(root, 'today-declaration-identity-0')[0]!;
+      expect(columnOf(name) === identity).toBe(true);
+      expect(columnOf(identity) === columnOf(words)).toBe(true);
+      expect(columnOf(meta) === columnOf(words)).toBe(true);
       expect(columnOf(columnOf(words)).props.accessibilityElementsHidden).toBe(
         true,
       );
+      // Only the entry's words are clamped, to three lines, and only at
+      // Large: names, party and meta are never cut.
       expect(
-        root.findAll((node) => node.props.numberOfLines !== undefined),
-      ).toHaveLength(0);
+        root
+          .findAll(
+            (node) =>
+              typeof node.type === 'string' &&
+              node.props.numberOfLines !== undefined,
+          )
+          .map((node) => [node.props.testID, node.props.numberOfLines]),
+      ).toEqual(
+        fontScale === 1 ? [['today-declaration-text-0', PREVIEW_LINES]] : [],
+      );
       act(() => row.props.onAccessibilityTap());
       expect(router.push).toHaveBeenLastCalledWith(
         declarationsForRoute(item.name),
@@ -500,7 +570,7 @@ describe('Just declared', () => {
       for (const index of items.keys()) {
         const meta = host(root, `today-declaration-change-${index}`)[0]!;
         expect(strings(meta)).toBe(
-          'Sponsored travel or hospitality · added 9 Oct',
+          'Sponsored travel or hospitality · added\u00a09\u00a0Oct',
         );
         const lineHeight =
           StyleSheet.flatten(meta.props.style).lineHeight * fontScale;

@@ -136,7 +136,7 @@ name: 23 Native money map, held figures, original source and ranked list
 - extendedWaitUntil:
     visible:
       id: money-view-summary
-      text: Donations to parties in 2024–25, union donors only
+      text: Money to parties in 2024–25, union donors only
     timeout: 30000
 # The focus action invokes the same callback as a tap on a node: it pushes
 # the node's money record.
@@ -224,7 +224,7 @@ name: 23 Native money map, held figures, original source and ranked list
 - extendedWaitUntil:
     visible:
       id: money-view-summary
-      text: Donations to parties in 2024–25, union donors only
+      text: Money to parties in 2024–25, union donors only
     timeout: 30000
 # The List view: Donors first, with the cut in its caption.
 - runFlow:
@@ -294,7 +294,7 @@ name: 23 Native money map, held figures, original source and ranked list
 - extendedWaitUntil:
     visible:
       id: money-view-summary
-      text: Donations to parties, .*, and public money to donors on the map
+      text: Money to parties, .*, and public money to donors on the map
     timeout: 30000
 - runFlow:
     file: support/money-screen-scroll.yaml
@@ -303,16 +303,15 @@ name: 23 Native money map, held figures, original source and ranked list
 - assertVisible:
     id: money-donor-caption
     text: The 250 largest donors since 1998–99, largest first
-# Individual donors are one footnote under the list, never a row.
+# Every donor is a row under its own name, down to the last of the 20.
 - runFlow:
     file: support/money-screen-scroll.yaml
     env:
-      TARGET_ID: money-individual-donors
+      TARGET_ID: money-donor-19
 - assertVisible:
-    id: money-individual-donors
-    text: '100 individual donors, \$147\.4m, not named\.'
+    id: money-donor-19
 - takeScreenshot: ${EVIDENCE}/23-list-all-years
-# See all is above the footnote. Centre it on the way back up so its
+# See all is above the last row. Centre it on the way back up so its
 # 44-point action does not stop under the navigation bar.
 - scrollUntilVisible:
     element:

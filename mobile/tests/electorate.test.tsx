@@ -37,6 +37,7 @@ import {
 } from '../src/features/your-mp/RepresentativeRows';
 import { loadChoice } from '../src/features/your-mp/choice-store';
 import { resetSeatForTests } from '../src/features/your-mp/useSeat';
+import { menuTitle } from '../src/design/menu-title';
 
 jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn(async () => null) },
@@ -391,6 +392,24 @@ test('election rows push the election screen, newest first', async () => {
   expect(router.push).toHaveBeenCalledWith(winner.props.href);
 
   expect(has(r, 'election-expand-0')).toBe(false);
+  // Sweep 1 item 8: the date is on the title's line and never breaks; the
+  // result line is the winner's share after preferences from the AEC file.
+  const line = (id: string) =>
+    r.root.find((n) => n.props.testID === id && n.type === Text).props.children;
+  expect(line('election-row-0-title')).toBe(
+    '2025 federal election · 3\u00a0May\u00a02025',
+  );
+  expect(line('election-row-0-result')).toBe('66.9% after preferences');
+  expect(firstRow.props.accessibilityLabel).toContain(
+    '66.9% after preferences',
+  );
+  // The state locator sits beside the outline and is hidden from VoiceOver.
+  const locator = r.root.find(
+    (n) =>
+      n.props.testID === 'electorate-locator' && typeof n.type === 'string',
+  );
+  expect(locator.props.accessibilityElementsHidden).toBe(true);
+  expect(locator.props.importantForAccessibility).toBe('no-hide-descendants');
   await act(async () => r.unmount());
 });
 
@@ -405,7 +424,7 @@ test('the bar menu: no Set as my electorate is ever disabled; Ask drafts without
     'View on a date',
     'Ask about Grayndler',
     'Copy link',
-    'Open on opax.com.au',
+    menuTitle('Open on opax.com.au'),
   ]);
   await act(async () =>
     menu.menu!.items.find((i) => i.label === 'Ask about Grayndler')!.onPress(),
@@ -429,7 +448,7 @@ test("no Set as my electorate when it is already the reader's seat", async () =>
     'View on a date',
     'Ask about Grayndler',
     'Copy link',
-    'Open on opax.com.au',
+    menuTitle('Open on opax.com.au'),
   ]);
   // No disabled item anywhere in the menu.
   expect(

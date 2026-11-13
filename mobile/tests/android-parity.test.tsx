@@ -378,8 +378,9 @@ describe('Android reading header', () => {
       expect(flat(title.props.style)).toMatchObject({
         flex: 0,
         fontSize: 22,
-        lineHeight: 28,
       });
+      // The sectionTitle role's 28, with the design Text's rounding nudge.
+      expect(flat(title.props.style).lineHeight).toBeCloseTo(28, 2);
       expect(title.props.numberOfLines).toBeUndefined();
       expect(pressable(renderer, 'header-back').props.accessibilityLabel).toBe(
         'Navigate up',

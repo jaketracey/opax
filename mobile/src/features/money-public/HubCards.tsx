@@ -25,7 +25,7 @@ import { presentSource } from '../../navigation/sheets';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import type { MoneyGraph } from '../money/data';
 import { useMoneyRecord } from '../money/hooks';
-import { partyDonationsTotal } from '../money/records';
+import { partiesFigureWords, partyDonationsTotal } from '../money/records';
 import { defaultMoneyFilters } from '../money/view';
 import type { GrantIndex } from './data';
 import {
@@ -84,7 +84,7 @@ export function grantsFigure(index: GrantIndex, words = 'Commonwealth grants') {
 }
 
 /**
- * Donations disclosed to every party on the federal graph: the party nodes'
+ * Money received by every party on the federal graph: the party nodes'
  * totals, which cover every cleaned receipt except public funding (not the
  * 400 donors the map holds). The money map's donations figure at default
  * filters is the same sum. A year from the data's latest complete year
@@ -98,15 +98,16 @@ export function partyDonations(graph: MoneyGraph) {
       : '';
   const key = latest.slice(0, 4);
   const range = /(\d{4}-\d{2}) to (\d{4}-\d{2})/.exec(graph.meta.coverage);
+  const { hubLine } = partiesFigureWords(graph);
   if (key && parties.some((p) => p.byYear?.[key]))
     return {
       value: partyDonationsTotal(graph, { from: Number(key), to: Number(key) })
         .total,
-      line: `disclosed to political parties in ${formatFinancialYear(Number(key))}`,
+      line: `${hubLine} in ${formatFinancialYear(Number(key))}`,
     };
   return {
     value: partyDonationsTotal(graph, defaultMoneyFilters(graph)).total,
-    line: `disclosed to political parties${range ? `, ${fyRange(range[1]!, range[2]!)}` : ''}`,
+    line: `${hubLine}${range ? `, ${fyRange(range[1]!, range[2]!)}` : ''}`,
   };
 }
 

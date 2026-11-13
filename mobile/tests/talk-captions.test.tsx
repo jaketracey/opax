@@ -172,8 +172,15 @@ test('in a call with captions hidden from ⋯, the large orb is on the stage and
   expect(has('talk-captions-list')).toBe(true);
   expect(orbs()).toEqual([72]);
   // Hide captions through the ⋯ menu.
+  // Sweep 1 item 10: on iOS ⋯ is the leading item and Done the only
+  // trailing one, so UIKit centres "Talk to OPAX" as on the other sheets.
+  expect(
+    (mockOptions.unstable_headerRightItems as () => { label?: string }[])().map(
+      (item) => item.label,
+    ),
+  ).toEqual(['Done']);
   const items = (
-    mockOptions.unstable_headerRightItems as () => {
+    mockOptions.unstable_headerLeftItems as () => {
       type: string;
       menu?: { items: { label: string; onPress: () => void }[] };
     }[]

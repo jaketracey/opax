@@ -15,6 +15,7 @@ import { openOnWeb } from '../src/navigation/external';
 import { exploreWebPath, hubInStack } from '../src/navigation/routes/explore';
 import { copyRecordLink, shareRecord } from '../src/navigation/share';
 import { exploreToolTitle } from '../src/navigation/stack/explore';
+import { menuTitle } from '../src/design/menu-title';
 
 let mockState: { routes: { name: string }[] } = { routes: [] };
 jest.mock('expo-router', () => {
@@ -159,7 +160,7 @@ test('every Explore screen gets Share and one menu: Copy link, then Open on opax
   });
   expect(
     items[1].menu.items.map((item: { label: string }) => item.label),
-  ).toEqual(['Copy link', 'Open on opax.com.au']);
+  ).toEqual(['Copy link', menuTitle('Open on opax.com.au')]);
   items[1].menu.items[0].onPress();
   expect(copyRecordLink).toHaveBeenCalledWith('/explore?game=quiz&q=q1');
   items[1].menu.items[1].onPress();

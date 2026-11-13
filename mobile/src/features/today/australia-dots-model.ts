@@ -19,6 +19,21 @@ export const androidDotScale = 0.75;
 export const dotFadeDistance = 90;
 export const dotCrossfadeSeconds = 0.9;
 
+/**
+ * How the dots arrive (sweep 1 item 11): the first draw in a session fades
+ * in over `motion.duration.crossfade` with no movement; a later mount (a
+ * return visit, a refresh) shows them at once, as does Reduce Motion. While
+ * the Reduce Motion setting is still unknown the art waits, hidden.
+ */
+export type DotArrival = 'fade' | 'shown' | 'wait';
+export function dotArrival(
+  arrivedThisSession: boolean,
+  reduceMotion: boolean | null,
+): DotArrival {
+  if (arrivedThisSession || reduceMotion === true) return 'shown';
+  return reduceMotion === null ? 'wait' : 'fade';
+}
+
 export function electorateDotState(
   seat: Pick<Electorate, 'state_code'> | null,
 ): DotState | null {

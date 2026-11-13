@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
 import {
   AccessibilityInfo,
   Keyboard,
@@ -128,15 +128,23 @@ export function EmailStep({
  * Sign in, step 2 (5.3): the eight-digit code, which signs in by itself when
  * complete, and a resend that counts down in its own label. Back is "Use a
  * different email".
+ *
+ * Every refusal hides the keyboard, so the error and Send a new code are in
+ * view and a tap on the field selects the old code to type over. `reveal`
+ * (the screen's `useScrollReveal`) then scrolls the error up if it is still
+ * below the fold: at AX3 and AX5 an expired code's error drew behind the
+ * keyboard (build 61).
  */
 export function CodeStep({
   email,
   challenge: initial,
   onSignedIn,
+  reveal,
 }: {
   email: string;
   challenge: string | null;
   onSignedIn: (outcome: SignInOutcome) => void;
+  reveal?: (target: RefObject<View | null>) => () => void;
 }) {
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState<'resend' | 'verify' | null>(null);
@@ -145,6 +153,11 @@ export function CodeStep({
   // Autofill and a tap can land in one frame, before `busy` renders.
   const inFlight = useRef(false);
   const challenge = useCodeChallenge(initial);
+  const errorView = useRef<View>(null);
+  useEffect(
+    () => (error && reveal ? reveal(errorView) : undefined),
+    [error, reveal],
+  );
 
   // Only a confirmed exchange for this attempt signs in and labels the
   // account with this address; status the exchange returned says which.
@@ -179,13 +192,15 @@ export function CodeStep({
 
   async function verify(value: string) {
     if (inFlight.current) return;
+    // Before any answer, as a sent code always did: a refused or expired
+    // code then never leaves its error behind the keyboard.
+    Keyboard.dismiss();
     if (value.length !== CODE_LENGTH)
       return setError(refusalCopy.codeIncomplete);
     // A code past 15 minutes or five tries is not sent, which also spares the
     // address's daily attempts; it gets the same answer as any refused code.
     if (!challenge.challenge || challenge.gate() !== 'open')
       return setError(refusalCopy.codeFailed);
-    Keyboard.dismiss();
     inFlight.current = true;
     setBusy('verify');
     setError(null);
@@ -215,6 +230,7 @@ export function CodeStep({
           grouped
           label={accountCopy.code}
           variant="code"
+          codeLength={CODE_LENGTH}
           value={code}
           onChangeText={changeCode}
           testID="account-sign-in-code"
@@ -238,7 +254,9 @@ export function CodeStep({
             : accountCopy.codeSent(email)}
         </Text>
         {error ? (
-          <ErrorState message={error} testID="account-code-error" />
+          <View ref={errorView} collapsable={false}>
+            <ErrorState message={error} testID="account-code-error" />
+          </View>
         ) : null}
       </View>
       <Button

@@ -93,8 +93,6 @@ class CallTests : SafeVoiceTest() {
     val cases = listOf(
       signedStatus(signedIn = false) to VoiceFailure.signedOut, signedStatus(enabled = false) to VoiceFailure.disabled,
       signedStatus(remaining = 0) to VoiceFailure.allowanceExhausted, signedStatus(budget = false) to VoiceFailure.budgetClosed,
-      signedStatus(active = "reserved") to VoiceFailure.callOpen, signedStatus(active = "connecting") to VoiceFailure.callOpen,
-      signedStatus(active = "active") to VoiceFailure.callOpen,
     )
     for ((status, refusal) in cases) {
       val rig = Rig.make()
@@ -104,6 +102,17 @@ class CallTests : SafeVoiceTest() {
       assertEquals(0, rig.permission.count)
       assertEquals(0, rig.http.count(AuthRoute.voiceStart))
       eventually { rig.recorder.hasError(refusal) }
+      rig.close()
+    }
+  }
+
+  @Test fun openSessionStillReachesStartSoTheServerTakesItOver() = test {
+    for (active in listOf("reserved", "connecting", "active")) {
+      val rig = Rig.make()
+      rig.http.configure(status = signedStatus(active = active))
+      rig.live()
+      assertEquals(1, rig.http.count(AuthRoute.voiceStart))
+      assertFalse(rig.recorder.hasError(VoiceFailure.callOpen))
       rig.close()
     }
   }

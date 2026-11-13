@@ -466,6 +466,26 @@ test('allowance and unknown budget are taken from status, never inferred from a 
       budgetOpen: false,
       activeSession: { state: 'active', expiresAt: null },
     }),
-  ).toBe('callOpen');
+  ).toBe('allowanceExhausted');
   expect(refusal(null)).toBeNull();
+});
+test('an open session never refuses Start: the server takes the earlier call over', () => {
+  for (const state of ['reserved', 'connecting', 'active'] as const)
+    expect(
+      refusal({ ...status, activeSession: { state, expiresAt: null } }),
+    ).toBeNull();
+  const open = { state: 'active' as const, expiresAt: 1234 };
+  expect(refusal({ ...status, enabled: false, activeSession: open })).toBe(
+    'disabled',
+  );
+  expect(refusal({ ...status, signedIn: false, activeSession: open })).toBe(
+    'signedOut',
+  );
+  expect(refusal({ ...status, budgetOpen: false, activeSession: open })).toBe(
+    'budgetClosed',
+  );
+  // A 409 from Start is the one place callOpen is said.
+  expect(failureCopy.callOpen).toBe(
+    'Your earlier call is still ending. Try again in a minute.',
+  );
 });

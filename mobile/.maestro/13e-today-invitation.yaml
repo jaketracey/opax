@@ -152,15 +152,19 @@ name: 13e Today's invitation to choose a seat, by name, by location, and after N
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-- assertNotVisible:
-    id: today-invitation
+# Order, not geometry (as 28c): with Bills centred the next card is always
+# partly in view, so check the invitation comes after Bills rather than off
+# screen.
 - scrollUntilVisible:
     element:
       id: today-invitation
     timeout: 90000
     visibilityPercentage: 10
-    centerElement: true
     speed: 20
+- assertVisible:
+    id: today-invitation
+    below:
+      id: today-bills
 - takeScreenshot: ${EVIDENCE}/13e-not-now-after-bills
 # Day 8: back in its own slot at the top.
 - launchApp:

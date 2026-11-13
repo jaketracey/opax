@@ -161,6 +161,20 @@ export function candidateRows(record: ElectionRecord): CandidateRow[] {
     .map((x) => x.row);
 }
 
+/**
+ * The winner's two-candidate share as a row's result line ("66.9% after
+ * preferences"), only when the record carries both finalists' counts and
+ * names one winner; null otherwise, so a row never shows a guessed result.
+ */
+export function winnerResult(record: ElectionRecord): string | null {
+  const elected = record.candidates.filter((c) => c.elected);
+  if (elected.length !== 1) return null;
+  const after = candidateRows(record).find(
+    (row) => row.elected && row.after,
+  )?.after;
+  return after ? `${after} after preferences` : null;
+}
+
 /** Census indicators in the electorate page's label order. */
 export const censusIndicators: Record<
   string,

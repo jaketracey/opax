@@ -294,3 +294,44 @@ test('an unreadable or foreign agreement asks again', async () => {
   expect(shown(sheet, 'ask-consent')).toBe(true);
   expect(client.askPost).not.toHaveBeenCalled();
 });
+
+// Build 61 at AX5: the uncapped scroll view ran below the sheet, its range
+// ended at "Answers can be wrong…", and Continue never came on screen. The
+// scroll view is now capped at the space the sheet can use, so its range
+// ends at the buttons; at Large the cap does nothing and the sheet is as it
+// was.
+test('the consent scroll view is capped at the sheet and ends at both buttons', async () => {
+  /* eslint-disable @typescript-eslint/no-require-imports */
+  const { ScrollView, StyleSheet } = require('react-native');
+  const { SHEET_HEADER } = require('../src/features/sheets/fitted');
+  const { rhythm } = require('../src/design/tokens');
+  /* eslint-enable @typescript-eslint/no-require-imports */
+  await ask('Who spoke on housing?');
+  // The jest window is 750 pt tall unless a test sets one.
+  const { height } = jest
+    .requireActual('react-native')
+    .Dimensions.get('window');
+  const scroll = sheet!.root.findByType(ScrollView);
+  expect(scroll.props.testID).toBe('ask-consent');
+  expect(StyleSheet.flatten(scroll.props.style).maxHeight).toBe(
+    height - metrics.insets.top - SHEET_HEADER,
+  );
+  // Large is unchanged: the same insets, gaps and foot as build 61.
+  expect(scroll.props.contentInsetAdjustmentBehavior).toBe('automatic');
+  expect(StyleSheet.flatten(scroll.props.contentContainerStyle)).toMatchObject({
+    gap: rhythm.group,
+    paddingTop: rhythm.block,
+    paddingBottom: rhythm.block + metrics.insets.bottom,
+  });
+  // The buttons are the last thing in the scroll range, Not now at the end.
+  const hosts = scroll.findAll(
+    (n) => typeof n.type === 'string' && typeof n.props.testID === 'string',
+  );
+  const ids = hosts.map((n) => n.props.testID as string);
+  const actions = ids.indexOf('ask-consent-actions');
+  expect(actions).toBeGreaterThan(ids.indexOf('ask-consent-privacy'));
+  expect(ids.indexOf('ask-consent-continue')).toBeGreaterThan(actions);
+  expect(ids.indexOf('ask-consent-not-now')).toBeGreaterThan(
+    ids.indexOf('ask-consent-continue'),
+  );
+});

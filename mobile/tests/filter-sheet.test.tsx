@@ -648,7 +648,7 @@ test('money groups the three Show switches separately from inflation and its foo
   )!;
   expect(show.props.header).toBe('Show');
   expect(show.findAllByType(SwitchRow).map((node) => node.props.label)).toEqual(
-    ['Donations to parties', 'Grants to donors', 'Contracts to donors'],
+    ['Money to parties', 'Grants to donors', 'Contracts to donors'],
   );
   expect(
     inflation.findAllByType(SwitchRow).map((node) => node.props.label),

@@ -53,6 +53,9 @@ const staticPaths = new Set([
   '/evidence/index.json',
   // How parliament voted on Today (data lane D1). Absent until it ships.
   '/divisions/recent.json',
+  // The sitting line under Today's date: the Parliament's published sitting
+  // calendar as dated House and Senate flags (docs/DATA-SITTING-DAYS.md).
+  '/parliament/sitting-days.json',
 
   '/access.json',
   '/search-catalog/manifest.json',

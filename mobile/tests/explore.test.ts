@@ -55,8 +55,10 @@ const read = (path: string) =>
   JSON.parse(
     readFileSync(resolve(__dirname, '../../portal/public/' + path), 'utf8'),
   );
-test('quiz record links never open private donor profiles and search opens submitted results', () => {
-  expect(quizRecordPath('/subject/donor/Jane%20Citizen')).toBeNull();
+test('quiz record links open every donor, and search opens submitted results', () => {
+  expect(quizRecordPath('/subject/donor/Jane%20Citizen')).toBe(
+    '/subject/donor/Jane%20Citizen',
+  );
   expect(quizRecordPath('/subject/donor/Maurice%20Blackburn%20Pty%20Ltd')).toBe(
     '/subject/donor/Maurice%20Blackburn%20Pty%20Ltd',
   );
@@ -486,11 +488,8 @@ test('every quiz link opens a native OPAX page, and Ask links only draft', () =>
   const kinds = new Set<string>();
   for (const q of engineQuestions) {
     const destination = quizDestination(q);
-    if (!destination) {
-      // Only a donor the organisation gate withholds has no record row.
-      expect(quizRecordPath(q.link.href)).toBeNull();
-      continue;
-    }
+    expect(destination).not.toBeNull();
+    if (!destination) continue;
     kinds.add(destination.kind);
     if (destination.kind === 'ask') {
       expect(destination.draft.question).toMatch(/\?$/);

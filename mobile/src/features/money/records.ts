@@ -126,6 +126,99 @@ export const moneyYearNote =
 /** The one caveat every donations figure carries. */
 export const donationsCaveat =
   "Totals are a minimum: donations under the disclosure threshold aren't published.";
+/** What a typed figure counts (data.ts typedReceipts), as the web says it. */
+export const typedReceiptsScope =
+  'All receipt types, as the parties reported them in federal returns.';
+/**
+ * What a party's own total counts on a graph whose notes say so: the older
+ * all-record cells, which add the donor's declaration of a gift to the
+ * party's, and the party's internal transfers (meta.party_totals_note).
+ */
+export const partyRecordsScope =
+  'All receipt types in party and donor returns, so one gift can appear twice. Includes transfers within the party.';
+
+/**
+ * The words for a money page's AEC section, so the heading, the figure line,
+ * the caveat and the bars say what the figure counts. A party's figure is its
+ * whole return in disclosure records: loans and other receipts as well as
+ * donations. A donor's is money to parties: every receipt type when typed,
+ * else the donations register as before.
+ */
+export function receiptSectionWords(
+  kind: 'party' | 'donor',
+  graph: MoneyGraph,
+  typed: boolean,
+) {
+  if (kind === 'party') {
+    const flagged = graph.meta.receipt_types !== undefined;
+    return {
+      title: 'Money received',
+      one: 'disclosure record',
+      many: 'disclosure records',
+      caveat: flagged
+        ? `${partyRecordsScope} ${thresholdCaveat}`
+        : donationsCaveat,
+      barsTitle: 'Money received by year',
+    };
+  }
+  return typed
+    ? {
+        title: 'Money to parties',
+        one: 'receipt',
+        many: 'receipts',
+        caveat: `${typedReceiptsScope} ${thresholdCaveat}`,
+        barsTitle: 'Money to parties by year',
+      }
+    : {
+        title: 'Donations to parties',
+        one: 'donation',
+        many: 'donations',
+        caveat: donationsCaveat,
+        barsTitle: 'Donations by year',
+      };
+}
+const thresholdCaveat =
+  "It's a minimum: amounts under the disclosure threshold aren't published.";
+
+/**
+ * The words for the parties' summed figure (partyDonationsTotal) wherever it
+ * stands alone: the map's summary and list figure, its Show toggle and the
+ * hub's Parties card. A federal party's total is every receipt type but
+ * public funding (meta.party_totals_note), the figure each party's own
+ * section calls "Money received"; a state graph's is its register's
+ * donations or gifts, and keeps its words.
+ */
+export function partiesFigureWords(graph: MoneyGraph) {
+  const federal =
+    !graph.meta.jurisdiction || graph.meta.jurisdiction === 'federal';
+  return federal
+    ? {
+        title: 'Money to parties',
+        line: 'received by parties',
+        hubLine: 'received by political parties',
+      }
+    : {
+        title: 'Donations to parties',
+        line: 'disclosed to parties',
+        hubLine: 'disclosed to political parties',
+      };
+}
+
+/**
+ * The first of `years` (as graph keys, sorted) whose annual returns were not
+ * all published by the graph's date, so its bar holds only part of the year;
+ * undefined when every year is complete.
+ */
+export function partialYearFrom(
+  graph: MoneyGraph,
+  years: number[],
+): number | undefined {
+  const complete = latestCompleteYear(graph);
+  if (complete === null) return undefined;
+  const index = years.findIndex((year) => year > complete);
+  return index < 0 ? undefined : index;
+}
+
 /** Under public money beside donations (the map, a lead). */
 export const publicMoneyCaveat =
   "Shown beside donations, never added to them. It doesn't show that one led to the other.";
@@ -199,7 +292,7 @@ export function latestCompleteYear(graph: MoneyGraph): number | null {
 }
 
 /**
- * Donations to parties in a window: the party nodes' own receipts (every
+ * Money to parties in a window: the party nodes' own receipts (every
  * cleaned row but public funding), one computation shared with the hub's
  * Parties card. Party receipts cannot be split by industry, so with an
  * industry filter the figure is the donor-to-party flows from that

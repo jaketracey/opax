@@ -24,6 +24,7 @@ import { divisionHistoryRoute } from '../src/navigation/routes/bills';
 import { pinned, slugs } from './pinned';
 import { filterStore } from '../src/features/sheets/filter-model';
 import * as sharing from '../src/navigation/share';
+import { menuTitle } from '../src/design/menu-title';
 
 // Design pass 5, lane C (bills): the bill header's actions (P1-3), the
 // shared bill row (P2-8), a lapsed bill's last stop (P2-9), the list's
@@ -169,6 +170,35 @@ test('the timeline reveals stages sharing dates even when every date is on the r
     'Third reading',
   );
 });
+test('How it moved has one source line: the ruler draws no date-range caption (sweep 1, item 9)', async () => {
+  mockParams.key = 'au-federal-r7534';
+  const record = await fixture.billFor(mockParams.key);
+  mock.billFor.mockResolvedValue({
+    ...record,
+    data: {
+      ...record.data,
+      keyDates: {
+        ...record.data.keyDates,
+        data: [
+          { stage: 'Introduced', date: '2026-08-17', house: 'representatives' },
+          { stage: 'Third reading', date: '2026-08-19', house: 'senate' },
+          { stage: 'Royal assent', date: '2026-08-26', house: null },
+        ],
+      },
+    },
+  });
+  const root = await render(<BillDetail />);
+  const section = host(root, 'bill-key-dates')[0]!;
+  expect(host(section, 'stage-timeline')).toHaveLength(1);
+  expect(host(section, 'stage-timeline-caption')).toHaveLength(0);
+  expect(texts(section).join(' ')).not.toMatch(/\d{4} to \d{1,2} \w+ \d{4}/);
+  // VoiceOver still hears every stage with its full date.
+  const ruler = host(section, 'bill-dates-ruler')[0]!;
+  expect(ruler.props.accessibilityLabel).toContain('17 August 2026');
+  expect(ruler.props.accessibilityLabel).toContain('26 August 2026');
+  // The section's dated source line is the one line under it.
+  expect(host(section, 'bill-dates-source')).not.toHaveLength(0);
+});
 /** The bar's trailing items, from the newest Stack.Screen options. */
 function barItems() {
   const options = mockScreens.findLast(
@@ -226,6 +256,28 @@ describe('bill header (P1-3)', () => {
           node.type === LinkRow && node.props.testID === 'bill-read-text',
       );
       expect(text.props.title).toBe('Bill text');
+      // Sweep 1, item 9: Ask and Bill text are one group with a single rule
+      // between them and none above or below.
+      const group = host(root, 'bill-ask-and-text')[0]!;
+      const ruled = group.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          ['borderTopWidth', 'borderBottomWidth'].some(
+            (side) => (StyleSheet.flatten(node.props.style) ?? {})[side] > 0,
+          ),
+      );
+      expect(ruled.map((node) => node.props.testID)).toEqual([
+        'bill-read-text-row',
+      ]);
+      const rule = StyleSheet.flatten(ruled[0]!.props.style);
+      expect(rule.borderTopWidth).toBeGreaterThan(0);
+      expect(rule.borderBottomWidth ?? 0).toBe(0);
+      expect(StyleSheet.flatten(group.props.style) ?? {}).not.toHaveProperty(
+        'borderTopWidth',
+      );
+      expect(
+        group.findAll((n) => n.props.testID === 'bill-ask'),
+      ).not.toHaveLength(0);
       const ids = order(root);
       expect(ids.indexOf('bill-read-text')).toBeLessThan(
         ids.indexOf('bill-source'),
@@ -246,7 +298,7 @@ describe('bill header (P1-3)', () => {
     expect(menu.menu!.items.map((item) => item.label)).toEqual([
       'Copy link',
       'Open on the Parliament website',
-      'Open on opax.com.au',
+      menuTitle('Open on opax.com.au'),
     ]);
   });
 });

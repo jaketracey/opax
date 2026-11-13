@@ -24,6 +24,11 @@ export const askRoute = (
     entry: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
   },
 });
+/**
+ * Ask in the Ask tab's own stack. A tapped question switches there
+ * (`useAskNow`); `askRoute` alone resolves to the browsing tab's copy.
+ */
+export const askTabPath = '/(tabs)/(ask)/ask' as const;
 export const askConsentRoute = { pathname: '/consent' as const };
 export const conversationsRoute = { pathname: '/conversations' as const };
 /** `source`: a cited source's number, when reported from `/citation`. */

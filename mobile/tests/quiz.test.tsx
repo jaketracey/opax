@@ -177,7 +177,7 @@ test('the intro promises sources, explains the deck, and hides past play on firs
   expect(byID('quiz-start').props.disabled).toBeFalsy();
   const picker = root().findByType(Picker);
   await act(async () => picker.props.onSelectionChange('money'));
-  expect(texts()).toContain('Donations to parties, and who gives them');
+  expect(texts()).toContain('Money to parties, and who gives it');
   await act(async () => picker.props.onSelectionChange('words'));
   expect(texts()).toContain('What parliament talks about, and who speaks');
   expect(byID('quiz-as-at').props.citation).toBe('OPAX quiz questions');

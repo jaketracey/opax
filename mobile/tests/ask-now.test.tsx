@@ -154,8 +154,9 @@ it('a Today starter opens Ask and asks its question at once', async () => {
   expect(takeFocusRequest('ask')).toBe(false);
   await act(async () => finish(answer('An answer from the record.')));
   await flush();
+  // It switches to the Ask tab (build 61, bug 3; tests/ask-now-tab.test.tsx).
   expect(router.navigate).toHaveBeenCalledWith(
-    expect.objectContaining({ pathname: '/ask' }),
+    expect.objectContaining({ pathname: '/(tabs)/(ask)/ask' }),
   );
   expect(asked()).toEqual([first]);
   const s = askSession.snapshot();

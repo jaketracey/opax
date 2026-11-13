@@ -8,22 +8,28 @@ import {
   AccessibilityInfo,
   Animated,
   ActionSheetIOS,
-  LayoutAnimation,
   Platform,
   ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
 import TestRenderer from 'react-test-renderer';
+import * as Reanimated from 'react-native-reanimated';
 import * as c from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
 import { Button, FollowButton } from '../src/design/controls';
+import { revealMotion } from '../src/design/reveal';
 import { Card, Text } from '../src/design/primitives';
 import { LinkRow } from '../src/design/rows';
 import { StatusCapsule } from '../src/design/labels';
 import { Portrait } from '../src/design/people';
 import { rhythm } from '../src/design/tokens';
-import { currentKeys } from '../src/features/follows/changes';
+import {
+  changeDate,
+  checkedText,
+  currentKeys,
+  quietText,
+} from '../src/features/follows/changes';
 import Following, {
   NOTHING_FOLLOWED,
   NOTHING_FOLLOWED_TITLE,
@@ -51,6 +57,7 @@ import {
   type Follow,
 } from '../src/features/follows/store';
 import { catalogs, index } from './pinned';
+import { menuTitle } from '../src/design/menu-title';
 
 const mockDisk = new Map<string, string>();
 // Interrupts the Nth file change from now (1-based; 0 never), as a crash or
@@ -907,9 +914,10 @@ describe('Following', () => {
     const r = await render();
     expect(groupOrder(r)).toEqual(['People', 'Bills', 'Electorates']);
     expect(has(r, 'follows-count')).toBe(false);
-    // No dot and no follow date on an unchanged row.
-    expect(row(r, `follows-row-electorate-${GRAYNDLER}`).props.detail).toBe(
-      undefined,
+    // No dot on an unchanged row; its line says nothing is new (sweep 1
+    // item 6), never a change.
+    expect(row(r, `follows-row-electorate-${GRAYNDLER}`).props.detail).toMatch(
+      /^Nothing new since \d{1,2} [A-Z][a-z]{2}$/,
     );
     mock.followSources.mockResolvedValue(changedSources());
     await act(async () =>
@@ -1015,7 +1023,7 @@ describe('Following', () => {
     };
     expect(more.menu.items.map((i) => i.label)).toEqual([
       'Mark all as seen',
-      'Open on opax.com.au',
+      menuTitle('Open on opax.com.au'),
     ]);
     expect(has(r, 'follows-unfollow-all')).toBe(false);
     await act(async () => bar().at(-1)!.onPress!());
@@ -1071,6 +1079,64 @@ describe('Following', () => {
     );
     await act(async () => r.unmount());
   });
+
+  // Sweep 1 item 6: a quiet row says the app looked, and when.
+  test('a checked follow with nothing new says since when; the list says when it was checked', async () => {
+    const checkedAt = new Date();
+    checkedAt.setHours(11, 17, 0, 0);
+    mock.followSources.mockResolvedValue(
+      sources({ savedAt: checkedAt.getTime() }),
+    );
+    await follow({ kind: 'bill', id: BILL, title: 'Fixture bill' });
+    const followed = new Date();
+    const r = await render();
+    expect(row(r, `follows-row-bill-${BILL}`).props.detail).toBe(
+      `Nothing new since ${changeDate(followed.getTime())}`,
+    );
+    const checked = r.root.find(
+      (n) => n.props.testID === 'follows-checked' && n.type === Text,
+    );
+    expect(checked.props.children).toBe('Checked today, 11:17\u00a0am');
+    // A change still shows its change line, not the quiet one.
+    mock.followSources.mockResolvedValue(changedSources());
+    const control = () =>
+      r.root.findByType(ScrollView).props.refreshControl.props;
+    await act(async () => control().onRefresh());
+    expect(row(r, `follows-row-bill-${BILL}`).props.detail).not.toMatch(
+      /^Nothing new/,
+    );
+    await act(async () => r.unmount());
+  });
+});
+
+describe('quiet follow lines (sweep 1 item 6)', () => {
+  test('since the last change seen, else the day followed', () => {
+    const followedAt = new Date(2026, 10, 12, 9).getTime();
+    expect(quietText({ followedAt, seenAt: null }, 2026)).toBe(
+      'Nothing new since 12 Nov',
+    );
+    expect(
+      quietText(
+        { followedAt, seenAt: new Date(2026, 10, 13, 8).getTime() },
+        2026,
+      ),
+    ).toBe('Nothing new since 13 Nov');
+    expect(quietText({ followedAt, seenAt: null }, 2027)).toBe(
+      'Nothing new since 12 Nov 2026',
+    );
+  });
+  test('the check time reads today, yesterday or the date, with a 12-hour clock', () => {
+    const now = new Date(2026, 10, 13, 15, 0);
+    expect(checkedText(new Date(2026, 10, 13, 11, 17).getTime(), now)).toBe(
+      'Checked today, 11:17\u00a0am',
+    );
+    expect(checkedText(new Date(2026, 10, 12, 21, 2).getTime(), now)).toBe(
+      'Checked yesterday, 9:02\u00a0pm',
+    );
+    expect(checkedText(new Date(2026, 10, 10, 0, 5).getTime(), now)).toBe(
+      'Checked 10 Nov, 12:05\u00a0am',
+    );
+  });
 });
 
 describe('delight follow moments', () => {
@@ -1092,6 +1158,36 @@ describe('delight follow moments', () => {
       r = TestRenderer.create(element);
     });
     return r;
+  }
+  // The message's reveal measures its content, then animates its own height
+  // (src/design/reveal.tsx): LayoutAnimation does nothing on iOS under
+  // Reanimated 4.5, so the rows below jumped (build 61, bug 4).
+  function layOut(
+    r: TestRenderer.ReactTestRenderer,
+    testID: string,
+    height: number,
+  ) {
+    const content = r.root.find(
+      (n) =>
+        n.props.testID === `${testID}-reveal-content` &&
+        typeof n.props.onLayout === 'function',
+    );
+    act(() =>
+      content.props.onLayout({
+        nativeEvent: { layout: { x: 0, y: 0, width: 320, height } },
+      }),
+    );
+  }
+  // Each height animation: its target, and what the reveal draws as it starts.
+  function heightAnimations<T>(drawn: () => T) {
+    const calls: [number, T][] = [];
+    const timing = jest
+      .spyOn(Reanimated, 'withTiming')
+      .mockImplementation((to) => {
+        calls.push([to as number, drawn()]);
+        return to;
+      });
+    return { calls, timing };
   }
   test.each(['ios', 'android'] as const)(
     '%s fresh first follow renders once, holds four seconds, then fades; fourth never renders',
@@ -1125,21 +1221,16 @@ describe('delight follow moments', () => {
           .findByType(FollowButton)
           .findAll((n) => n.type === Text && n.props.variant === 'footnote'),
       ).toHaveLength(0);
-      // Each change in the line's presence is preceded by a 200 ms ease-out
-      // layout animation, so the content below slides instead of jumping.
-      const layout = jest
-        .spyOn(LayoutAnimation, 'configureNext')
-        .mockImplementation(() => before.push(shown()));
-      const before: boolean[] = [];
+      // The line opens its height over 200 ms with the standard ease once it
+      // has measured, so the content below eases down instead of jumping.
+      const { calls, timing: heights } = heightAnimations(shown);
       await act(async () => r.root.findByType(Button).props.onPress());
       expect(shown()).toBe(true);
-      expect(before).toEqual([false]);
-      expect(layout.mock.calls[0]![0]).toMatchObject({
-        duration: 200,
-        update: { type: 'easeOut' },
-        create: { type: 'easeOut', property: 'opacity' },
-        delete: { type: 'easeOut', property: 'opacity' },
-      });
+      expect(calls).toEqual([]);
+      layOut(r, 'moment', 18);
+      expect(calls).toEqual([[18, true]]);
+      expect(heights.mock.calls[0]![1]).toBe(revealMotion);
+      expect(revealMotion.duration).toBe(200);
       expect(r.root.findByType(Button).props).toMatchObject({
         label: 'Following',
         symbol: 'checkmark',
@@ -1161,16 +1252,26 @@ describe('delight follow moments', () => {
           .findAllByType(Text)
           .some((n) => n.props.testID === 'moment-message'),
       ).toBe(true);
+      // The line fades, then goes the same way it came: its height closes
+      // while it is still drawn, and only then is it removed.
       act(() => jest.advanceTimersByTime(500));
+      expect(calls).toEqual([
+        [18, true],
+        [0, true],
+      ]);
+      act(() => jest.advanceTimersByTime(revealMotion.duration - 1));
+      expect(shown()).toBe(true);
+      act(() => jest.advanceTimersByTime(1));
       expect(
         r.root
           .findAllByType(Text)
           .some((n) => n.props.testID === 'moment-message'),
       ).toBe(false);
       expect(shown()).toBe(false);
-      // The line goes the same way it came: animated before it is removed.
-      expect(before).toEqual([false, true]);
-      expect(layout.mock.calls[1]![0]).toMatchObject({ duration: 200 });
+      // Nothing is left reserved under the button.
+      expect(
+        r.root.findAll((n) => n.props.testID === 'moment-reveal-content'),
+      ).toHaveLength(0);
       act(() => r.unmount());
       for (const id of ['fixture-two', 'fixture-three'])
         await follow({ kind: 'party', id, title: id });
@@ -1194,16 +1295,17 @@ describe('delight follow moments', () => {
     jest.useFakeTimers();
     jest.spyOn(accessibility, 'useReduceMotion').mockReturnValue(true);
     const timing = jest.spyOn(Animated, 'timing');
-    const layout = jest.spyOn(LayoutAnimation, 'configureNext');
+    const { calls } = heightAnimations(() => true);
     const r = await mount(
       <FollowButton kind="party" id="fixture-party" title="Fixture party" />,
     );
     await act(async () => r.root.findByType(Button).props.onPress());
+    layOut(r, 'follow', 18);
     expect(timing.mock.calls.map(([, config]) => config.duration)).toEqual([
       0, 0,
     ]);
-    // The line takes its height at once: no height animation at all.
-    expect(layout).not.toHaveBeenCalled();
+    // The line takes its height in one step: no height animation at all.
+    expect(calls).toEqual([]);
     act(() => jest.advanceTimersByTime(3999));
     expect(
       r.root
@@ -1216,11 +1318,11 @@ describe('delight follow moments', () => {
         .findAllByType(Text)
         .some((n) => n.props.testID === 'follow-message'),
     ).toBe(false);
-    expect(layout).not.toHaveBeenCalled();
+    expect(calls).toEqual([]);
     act(() => r.unmount());
   });
   test.each(['ios', 'android'] as const)(
-    '%s limit and save-error messages arrive and go with the same layout animation',
+    '%s limit and save-error messages arrive and go with the same height animation',
     async (platform) => {
       jest.replaceProperty(Platform, 'OS', platform);
       for (let i = 1; i <= FOLLOW_LIMIT; i++)
@@ -1236,21 +1338,29 @@ describe('delight follow moments', () => {
       const editFollowing = () =>
         r.root.findAll((n) => n.props.testID === 'follow-edit-following')
           .length > 0;
-      const before: [boolean, boolean][] = [];
-      const layout = jest
-        .spyOn(LayoutAnimation, 'configureNext')
-        .mockImplementation(() => before.push([!!message(), editFollowing()]));
+      const { calls, timing } = heightAnimations(() => [
+        !!message(),
+        editFollowing(),
+      ]);
       expect(message()).toBeUndefined();
       await act(async () => button().props.onPress());
       expect(message()!.props.children).toBe(
         `You can follow up to ${FOLLOW_LIMIT}. Unfollow one to add this.`,
       );
       expect(editFollowing()).toBe(true);
-      // The message and its Edit Following button arrive in one animated
-      // change.
-      expect(before).toEqual([[false, false]]);
-      // A save error replaces it: the limit message goes (animated), then the
-      // error arrives (animated).
+      // The message and its Edit Following button sit in one reveal and
+      // open in one animated change.
+      const reveal = r.root.find(
+        (n) => n.props.testID === 'follow-reveal-content',
+      );
+      expect(
+        reveal.findAll((n) => n.props.testID === 'follow-edit-following')
+          .length,
+      ).toBeGreaterThan(0);
+      layOut(r, 'follow', 60);
+      expect(calls).toEqual([[60, [true, true]]]);
+      // A save error replaces it: the limit message closes (animated, still
+      // drawn as it goes), then the error opens (animated).
       await clearFollows();
       mockChanges = 0;
       mockFailAt = 1;
@@ -1261,16 +1371,15 @@ describe('delight follow moments', () => {
       }
       expect(String(message()!.props.children)).toMatch(/could not be saved/);
       expect(editFollowing()).toBe(false);
-      expect(before).toEqual([
-        [false, false],
-        [true, true],
-        [false, false],
+      layOut(r, 'follow', 24);
+      expect(calls).toEqual([
+        [60, [true, true]],
+        [0, [true, true]],
+        [60, [true, false]],
+        [24, [true, false]],
       ]);
-      for (const [config] of layout.mock.calls)
-        expect(config).toMatchObject({
-          duration: 200,
-          update: { type: 'easeOut' },
-        });
+      for (const [, config] of timing.mock.calls)
+        expect(config).toBe(revealMotion);
       act(() => r.unmount());
     },
   );

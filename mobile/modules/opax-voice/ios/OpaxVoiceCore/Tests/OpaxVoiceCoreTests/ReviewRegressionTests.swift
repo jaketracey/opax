@@ -17,17 +17,18 @@ import XCTest
         try await rig.live(); let status = await rig.controller.latestStatus
         XCTAssertNil(status?.totalSeconds); XCTAssertEqual(status?.unlimited, true); await rig.close()
     }
-    func testUnknownSessionStateAndNullableFieldsStillRefuseStartAndBridgeHasNoID() async throws {
+    func testUnknownSessionStateAndNullableFieldsStillStartAndBridgeHasNoID() async throws {
         var body = try JSONSerialization.jsonObject(with: signedStatus(active: "future-open")) as! [String: Any]
         var open = body["active_session"] as! [String: Any]; open["expires_at"] = NSNull(); body["active_session"] = open
         body["total_seconds"] = NSNull(); body["unlimited"] = NSNull(); body["budget_open"] = NSNull()
         let status = try JSONDecoder().decode(VoiceStatus.self, from: json(body))
-        XCTAssertEqual(status.activeSession?.state, .unknown("future-open")); XCTAssertEqual(status.refusal, .callOpen)
+        XCTAssertEqual(status.activeSession?.state, .unknown("future-open")); XCTAssertNil(status.refusal)
         let snapshot = String(data: try JSONEncoder().encode(status.bridgeValue), encoding: .utf8)!
         XCTAssertFalse(snapshot.contains(fixtureID)); XCTAssertFalse(snapshot.contains("\"id\""))
-        let rig = try await Rig.make(); await rig.http.configure(status: json(body)); await rig.controller.start()
-        let state = await rig.controller.state; XCTAssertEqual(state, .unavailable)
-        let starts = await rig.http.count(.voiceStart); XCTAssertEqual(starts, 0)
+        // The open session is the server's to take over: Start still reserves.
+        let rig = try await Rig.make(); await rig.http.configure(status: json(body)); try await rig.live()
+        let starts = await rig.http.count(.voiceStart); XCTAssertEqual(starts, 1)
+        let refused = await rig.recorder.hasError(.callOpen); XCTAssertFalse(refused)
         await rig.close()
     }
     func testDisabledPrecedesSignedOutAndStartDuringRefreshHasSpecificError() async throws {

@@ -8,7 +8,6 @@
 export interface AssociatedFields {
   associatedTag?: unknown;
   associatedWith?: unknown;
-  withheld?: unknown;
 }
 export const AEC_ASSOCIATED_REGISTER =
   'https://transparency.aec.gov.au/RegisterOfEntities?clientType=associatedentity';
@@ -44,7 +43,6 @@ export const sentenceCase = (text: string) =>
 export function donorAssociated(
   record: AssociatedFields | null | undefined,
 ): { tag: string; url: string } | null {
-  if (record?.withheld) return null;
   const tag = decodeAssociatedTag(record?.associatedTag);
   if (!tag) return null;
   return {

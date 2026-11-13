@@ -1,6 +1,5 @@
 import type { Href } from 'expo-router';
 import type { SourceOriginal } from '../../design/source';
-import { isOrganisationDonor } from '../../privacy/donorEntity';
 import { askRoute } from '../../navigation/routes/ask';
 import { moneyRoute } from '../../navigation/routes/money-map';
 import { partyRoute } from '../../navigation/routes/people';
@@ -9,21 +8,9 @@ import { methodsRoute } from '../../navigation/routes/reference';
 import { topicRoute } from '../../navigation/routes/search';
 import type { Question } from './quiz-model';
 
-/** Donor records stay on the web, behind the donor organisation gate. */
-export function quizRecordPath(href: string): string | null {
-  const path = href
-    .replace(/^#/, '')
-    .replace(/^\/search\?/, '/ask?view=search&');
-  const donor = /^\/subject\/donor\/([^/?#]+)$/.exec(path);
-  if (donor) {
-    try {
-      if (!isOrganisationDonor({ label: decodeURIComponent(donor[1]!) }))
-        return null;
-    } catch {
-      return null;
-    }
-  }
-  return path;
+/** A quiz link as an in-app web path; every donor's record opens, as on the web. */
+export function quizRecordPath(href: string): string {
+  return href.replace(/^#/, '').replace(/^\/search\?/, '/ask?view=search&');
 }
 
 type AskScope = Parameters<typeof askRoute>[0];
@@ -36,8 +23,7 @@ type AskScope = Parameters<typeof askRoute>[0];
  *   Methods ("How OPAX is built").
  * - `ask`: a speaker's year in the record, drafted in Ask through
  *   `useOpenAsk` and never sent.
- * Null means no row: a donor withheld by the organisation gate, or a link
- * with no native page.
+ * Null means no row: a link with no native page.
  */
 export type QuizDestination =
   | { kind: 'original'; original: SourceOriginal; route: () => Href }

@@ -1,5 +1,5 @@
 import { act } from 'react';
-import { SectionList } from 'react-native';
+import { SectionList, StyleSheet } from 'react-native';
 import {
   mockVic,
   renderVic,
@@ -11,6 +11,10 @@ import type { SearchBarProps } from 'react-native-screens';
 import { router } from 'expo-router';
 import { getPathFromState } from 'expo-router/react-navigation';
 import { ContentUnavailable } from '../src/design/states';
+import * as accessibility from '../src/design/accessibility';
+import { PartyLabel } from '../src/design/people';
+import { minimumTarget } from '../src/design/tokens';
+import { SeatRow } from '../src/features/vic-election/rows';
 import Hub from '../src/features/vic-election/Hub';
 import { Finder } from '../src/features/vic-election/Finder';
 import { ElectionUnavailable } from '../src/features/vic-election/reads';
@@ -364,4 +368,108 @@ test('finder failure keeps matching saved districts', async () => {
   const r = await find('Albert', null, true);
   expect(words(r)).toContain('Places couldn’t be searched.');
   expect(words(r)).toContain('Albert Park');
+});
+
+test.each([false, true])(
+  'a seat row draws its party on the member line (accessibility size %s)',
+  (large) => {
+    const size = jest
+      .spyOn(accessibility, 'useAccessibilitySize')
+      .mockReturnValue(large);
+    try {
+      const district = mockVic.overview.record!.data.districts.find(
+        (d) => d.slug === 'albert-park',
+      )!;
+      const r = renderVic(<SeatRow district={district} share={0.55} />);
+      const party = r.root.findByType(PartyLabel);
+      // Drawn only, as a row's party is: no 44 pt link box of its own to be
+      // centred half a line below the name, and the row stays one element.
+      expect(party.props.nested).toBe(true);
+      expect(party.props.linked).toBeUndefined();
+      const host = (test: (props: Record<string, unknown>) => boolean) =>
+        r.root.findAll((n) => n.type === 'View' && test(n.props));
+      expect(host((p) => p.accessible === true)).toHaveLength(1);
+      // Only the row itself keeps the 44 pt minimum.
+      expect(
+        host(
+          (p) =>
+            StyleSheet.flatten(p.style as never)?.minHeight === minimumTarget,
+        ),
+      ).toHaveLength(1);
+      // The name and party share one line, or at accessibility sizes the
+      // party takes its own line under the name.
+      const line = party.parent!;
+      const style = StyleSheet.flatten(line.props.style);
+      expect(words({ root: line } as never)).toContain(district.member.name);
+      expect(style).toMatchObject(
+        large
+          ? { flexDirection: 'column', alignItems: 'flex-start' }
+          : { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' },
+      );
+    } finally {
+      size.mockRestore();
+    }
+  },
+);
+test('finder results start at the page top below the header, from a scrolled hub', async () => {
+  jest.useFakeTimers();
+  try {
+    let searchBar!: SearchBarProps;
+    const observe = (options: Record<string, unknown>) => {
+      searchBar = options.headerSearchBarOptions as SearchBarProps;
+      (searchBar.ref as { current: unknown }).current = { setText: jest.fn() };
+    };
+    mockVic.find.mockImplementation(async (q: string) => ({
+      data: decodeFind(q.startsWith('3350') ? postcode : finder),
+      stale: false,
+    }));
+    const r = renderVic(<Hub />, observe);
+    const list = () => r.root.findByType(SectionList);
+    const scrollTo = jest.fn();
+    jest
+      .spyOn(list().instance as SectionList, 'getScrollResponder')
+      .mockReturnValue({ scrollTo } as never);
+    const scrolled = (y: number) =>
+      act(() =>
+        list().props.onScroll({ nativeEvent: { contentOffset: { y } } }),
+      );
+    const type = async (text: string) => {
+      act(() => {
+        searchBar.onChangeText!({ nativeEvent: { text } } as never);
+      });
+      await act(async () => jest.runOnlyPendingTimers());
+    };
+    // No header height in the harness: status bar 47 plus a 44 pt bar.
+    const top = { y: -(47 + 44), animated: false };
+
+    // At its resting top the page is already where results belong.
+    scrolled(top.y);
+    await type('3350');
+    expect(words(r)).toContain('Wendouree');
+    expect(scrollTo).not.toHaveBeenCalled();
+    await type('');
+    expect(list().props.scrollToOverflowEnabled).toBe(false);
+
+    // Far down the districts, the hub's offset is past the results' end.
+    scrolled(2400);
+    scrollTo.mockClear();
+    await type('3350');
+    expect(list().props.scrollToOverflowEnabled).toBe(true);
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+    expect(scrollTo).toHaveBeenLastCalledWith(top);
+    expect(words(r)).toContain('Wendouree');
+
+    // A new query from scrolled results starts at the top again.
+    scrolled(300);
+    await type('St Kilda');
+    expect(scrollTo).toHaveBeenCalledTimes(2);
+    expect(scrollTo).toHaveBeenLastCalledWith(top);
+
+    // Clearing still returns the hub to where the reader left it.
+    await type('');
+    expect(list().props.scrollToOverflowEnabled).toBe(false);
+    expect(scrollTo).toHaveBeenLastCalledWith({ y: 2400, animated: false });
+  } finally {
+    jest.useRealTimers();
+  }
 });

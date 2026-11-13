@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { minimumTarget } from '../design/tokens';
 import { setConsent } from '../features/talk/bridge';
 import type {
   TranscriptTurn,
@@ -279,10 +280,12 @@ export default function VoiceBridgeTestScreen() {
 }
 const styles = StyleSheet.create({
   page: { paddingHorizontal: 20, gap: 12, backgroundColor: '#ffffff' },
+  // a11y-ok(raw-font-size): voice bridge e2e harness, never in production.
   title: { fontSize: 22, fontWeight: '600', color: '#152334' },
+  // a11y-ok(raw-font-size): voice bridge e2e harness, never in production.
   text: { fontSize: 16, color: '#152334' },
   button: {
-    minHeight: 44,
+    minHeight: minimumTarget,
     padding: 12,
     borderWidth: 1,
     borderColor: '#526477',
@@ -294,6 +297,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderWidth: 1,
     borderColor: '#526477',
+    // a11y-ok(raw-font-size): voice bridge e2e harness, never in production.
     fontSize: 16,
   },
 });
