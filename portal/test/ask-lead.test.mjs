@@ -6,7 +6,7 @@ import assert from 'node:assert/strict'
 import {readFileSync} from 'node:fs'
 import {build} from 'esbuild'
 
-const built=await build({stdin:{contents:"export {leadWithAuthority,leadWithModelAnswer,restatesOpening} from './src/research-answer-shape';export {sentenceParts} from './src/research-claim-audit.mjs'",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm'})
+const built=await build({stdin:{contents:"export {attributeSpokenFindings,ACCOUNTABILITY_QUESTION,leadWithAuthority,leadWithModelAnswer,restatesOpening} from './src/research-answer-shape';export {sentenceParts} from './src/research-claim-audit.mjs'",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm'})
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
 const stored=JSON.parse(readFileSync(new URL('./fixtures/ask-lead-payloads.json',import.meta.url),'utf8'))
 
@@ -206,4 +206,27 @@ test('a finding beats a metadata line; the body as subject beats a member report
   assert.equal(api.leadWithAuthority(plain,q),plain)
   const direct=at(['Example Minister approved the scheme in 2015.',own].join('\n'),[undefined,'fact-1/t/body/0'])
   assert.equal(api.leadWithAuthority(direct,q),direct)
+})
+
+// A body's finding cited only to one member's speech is that member's claim (BACKLOG A39). Invented members and bodies.
+test('a finding resting only on one speech is attributed to its speaker, chamber and date; record findings stay',()=>{
+  const speech={resource:'speech-910031',kind:'speech',speaker:'Rowan Ellery',date:'2026-02-04',chamber:'senate',title:'Rowan Ellery — STATEMENTS — 2026-02-04'}
+  const report={resource:'fact-2',kind:'record',title:'Inquiry into Example Ports, report, page 12 [finding]'}
+  const answer='- The Ombudsman found the port authority ignored four complaints.\n- The inquiry found the tender was not assessed on merit.\n- Rowan Ellery said the Ombudsman found the board was misled.'
+  const lines=answer.split('\n'),at=i=>Array.from(lines.slice(0,i).join('\n')).length+(i?1:0),span=i=>[at(i)+2,at(i)+Array.from(lines[i]).length]
+  const out=api.attributeSpokenFindings({answer,citations:{'speech-910031/t/body/0-90':[span(0),span(2)],'fact-2/t/body/0':[span(1)]},sources:[speech,report]})
+  const [first,second,third]=out.answer.split('\n')
+  assert.equal(first,'- Rowan Ellery told the Senate on 4 February 2026 that the Ombudsman found the port authority ignored four complaints.')
+  assert.equal(second,lines[1],'a finding cited to the record stays the body\'s finding')
+  assert.equal(third,lines[2],'a line already naming its speaker stays')
+  // The citation covers the whole attributed line.
+  const [[a,b]]=out.citations['speech-910031/t/body/0-90'],chars=Array.from(out.answer)
+  assert.equal(chars.slice(a,b).join(''),first.slice(2))
+  assert.match(chars.slice(...out.citations['fact-2/t/body/0'][0]).join(''),/^The inquiry found/)
+  // Two speakers, or a passage with no recorded speaker, leave the line as written.
+  const two=api.attributeSpokenFindings({answer:lines[0],citations:{'speech-910031/t/body/0-9':[[2,40]],'speech-910032/t/body/0-9':[[40,60]]},sources:[speech,{...speech,resource:'speech-910032',speaker:'Dana Whitlow'}]})
+  assert.equal(two.answer,lines[0])
+  const unnamed=api.attributeSpokenFindings({answer:lines[0],citations:{'speech-910031/t/body/0-9':[[2,40]]},sources:[{...speech,speaker:undefined}]})
+  assert.equal(unnamed.answer,lines[0])
+  assert.match('who was held accountable for the port tender',api.ACCOUNTABILITY_QUESTION)
 })
