@@ -52,6 +52,17 @@ function day(value: unknown): string {
 }
 const isoDay = (value: unknown) => { const m = /^(\d{4})-?(\d{2})-?(\d{2})/.exec(String(value ?? '')); return m ? `${m[1]}-${m[2]}-${m[3]}` : '' }
 const time = (value: unknown) => isoDay(value) ? `<time datetime="${isoDay(value)}">${esc(day(value))}</time>` : esc(value)
+/** Keep the source's precision: a month or year does not establish a day. */
+function reportPeriod(value: unknown): string {
+  if (!value || typeof value !== 'object') return esc(value)
+  const period = object(value)
+  const raw = typeof period.value === 'string' ? period.value : ''
+  const month = /^(\d{4})-(\d{2})$/.exec(raw)
+  const label = period.precision === 'month' && month && +month[2] >= 1 && +month[2] <= 12
+    ? `${MONTHS[+month[2] - 1]} ${month[1]}`
+    : period.precision === 'day' ? day(raw) : raw
+  return [esc(label), typeof period.basis === 'string' ? esc(period.basis) : ''].filter(Boolean).join('. ')
+}
 const group = (digits: string) => digits.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 const finite = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value)
 function figure(n: number): string { const [i, f] = String(Math.abs(n)).split('.'); return (n < 0 ? '-' : '') + group(i) + (f ? '.' + f : '') }
@@ -548,7 +559,7 @@ export function renderReport(r: ReportDetail) {
     if (docs.length && !lone) parts.push({ id: 'documents', title: 'Official documents', count: docs.length, html: documentList(docs, mainDocument) })
     const heard = transcriptsPart(r)
     if (heard) parts.push(heard)
-    const about = kv([['Period', esc(c.period)], ['How OPAX got it', esc(c.acquisition)], ['Rights', esc(typeof c.rights === 'object' ? object(c.rights).statement : c.rights)]])
+    const about = kv([['Period', reportPeriod(c.period)], ['How OPAX got it', esc(c.acquisition)], ['Rights', esc(typeof c.rights === 'object' ? object(c.rights).statement : c.rights)]])
     if (about) parts.push({ id: 'about', title: 'About the report', html: about })
   } else if (type === 'annual_report') {
     // The Portal's delivery API is the citable source the record holds; say plainly that it is data.

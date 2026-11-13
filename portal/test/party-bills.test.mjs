@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
 import {sponsoredBills} from '../../scripts/build_party_index.mjs';
-import {partyBills, partyBillsHTML} from '../public/party-page.js';
+import {partyBills, partyBillsHTML, partyMembers, partyMembersHTML, PARTY_NO_MEMBERS} from '../public/party-page.js';
 
 const read = path => JSON.parse(readFileSync(new URL(`../public${path}`, import.meta.url), 'utf8'));
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[c]);
@@ -49,8 +49,26 @@ test('the shipped index: the three sponsor-only parties and their newest bills',
     const bills = partyBills(label, divisions);
     assert.equal(bills.length, count, label);
     assert.equal(bills[0].title, title, label);
+    const members = partyMembers(label, {roster:read('/parliamentarians.json'), divisions});
+    assert.equal(members.current.length + members.former.length, 0, label);
+    assert.ok(partyMembersHTML(label, members, h).includes(esc(PARTY_NO_MEMBERS)), label);
   }
   // Every listed bill has its own page file.
   const index = new Set(read('/bills/index.json').bills.map(b => b.key));
   for (const bills of Object.values(divisions.bills)) for (const b of bills) assert.ok(index.has(b.key), b.key);
+});
+
+test('server: sponsor-only parties disclose the missing roster alongside their bills', async () => {
+  const {loadWorker, offline} = await import('./worker-harness.mjs');
+  const restore = offline();
+  try {
+    const worker = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, new URL('../public/', import.meta.url).pathname);
+    for (const slug of ['nick-xenophon-team', 'palmer-united-party', 'rex-patrick-team']) {
+      const response = await worker.fetch('/subject/party/' + slug);
+      assert.equal(response.status, 200);
+      const core = new JSDOM(await response.text()).window.document.querySelector('#prerender');
+      assert.ok(core.textContent.includes(PARTY_NO_MEMBERS), slug);
+      assert.ok(core.querySelector('a[href^="/bill/"]'), slug);
+    }
+  } finally { restore(); }
 });
