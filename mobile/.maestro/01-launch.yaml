@@ -61,12 +61,12 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
       TAB_ID: tab-ask
 - assertVisible:
     id: today-screen-message
-# Signed-out readers have no Talk composer button; its deep link shows the gate.
+# Signed-out readers see Talk in the composer; its deep link shows the gate.
 - tapOn:
     id: tab-ask
 - assertVisible:
     id: ask-question
-- assertNotVisible:
+- assertVisible:
     id: ask-talk
 - openLink: opax://talk
 - tapOn:
