@@ -34,6 +34,7 @@ import { fileURLToPath } from 'node:url'
 import { runInNewContext } from 'node:vm'
 import { buildSpaShell, SPA_SHELL_FILES } from './build_spa_shell.mjs'
 import { buildMethods, METHODS_PAGE } from './build_methods.mjs'
+import { SEARCH_CATALOG_MANIFEST } from './build_coverage.mjs'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const PUBLIC = join(ROOT, 'portal', 'public')
@@ -425,9 +426,9 @@ function stampPage({ chrome, bare, files }, html, index) {
   return (chrome ? syncHomeChrome(html, index) : html).replace(pattern, (_, file) => `/${file}?v=${hashOf(file)}`)
 }
 
-/** Every file `node scripts/stamp_assets.mjs` writes, and every file whose content hash it
- *  writes into another, repo-relative and sorted (--fonts also rewrites fonts/; that refresh is
- *  run by hand). The deploy job commits whichever of these its build changed
+/** Every file `node scripts/stamp_assets.mjs` writes, every file whose content hash it writes
+ *  into another, and the search-catalogue manifest the build rebuilds and the coverage table
+ *  counts, repo-relative and sorted (--fonts also rewrites fonts/; that refresh is run by hand). The deploy job commits whichever of these its build changed
  *  (scripts/restamp_commit.sh): a stamp committed without the file it was made from fails
  *  --check on main (13 Nov 2026: index.html went in without spa-shell.js). */
 export function stampFiles() {
@@ -438,7 +439,7 @@ export function stampFiles() {
   ]
   const hashed = [...STAMPED, ...stamps.map(([, mod]) => mod), ...PAGES.flatMap(({ files }) => files)]
   const repoPath = (file) => relative(ROOT, join(PUBLIC, file)).split(sep).join('/')
-  return [...new Set([...written, ...hashed].map(repoPath))].sort()
+  return [...new Set([...written, ...hashed, SEARCH_CATALOG_MANIFEST].map(repoPath))].sort()
 }
 
 function stamp({ check }) {

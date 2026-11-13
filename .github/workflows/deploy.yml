@@ -222,10 +222,10 @@ jobs:
 
       - name: Commit restamped assets back to main
         # also after a failed table reload: the Worker carrying these stamps is live.
-        # Commits every file stamp_assets.mjs writes or hashes that the build changed
-        # (`stamp_assets.mjs --files`), then checks the commit out on its own: if
-        # `stamp_assets.mjs --check` fails there or stamping leaves it dirty, nothing is pushed
-        # and the job fails. A push that keeps being rejected is only a warning.
+        # Commits every file on `stamp_assets.mjs --files` that the build changed, then checks
+        # the commit out on its own, before the first push and again after every rebase onto a
+        # newer main: if `stamp_assets.mjs --check` fails there or stamping leaves it dirty,
+        # nothing is pushed and the job fails. A push that keeps being rejected is only a warning.
         if: ${{ !cancelled() && steps.production.outcome == 'success' && steps.duplicate.outputs.skip != 'true' }}
         working-directory: .
         run: bash scripts/restamp_commit.sh

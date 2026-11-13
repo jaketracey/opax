@@ -4,7 +4,7 @@
 // index.html without spa-shell.js, so main failed stamp_assets --check until #312.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync,writeFileSync,mkdirSync,mkdtempSync,copyFileSync,rmSync} from 'node:fs';
+import {readFileSync,writeFileSync,mkdirSync,mkdtempSync,copyFileSync,rmSync,chmodSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {dirname,join} from 'node:path';
 import {spawnSync} from 'node:child_process';
@@ -16,8 +16,9 @@ const workflow=readFileSync(join(repo,'.github/workflows/deploy.yml'),'utf8');
 
 // No CI or hook state leaks into the fixture repositories (GIT_DIR, the job summary, RUNNER_TEMP).
 const baseEnv=Object.fromEntries(Object.entries(process.env).filter(([k])=>!/^(GIT_|GITHUB_|RUNNER_)/.test(k)));
+// ${dir}/bin holds a no-op sleep, so the push retries do not wait.
 const env=(dir,extra={})=>({...baseEnv,GIT_CONFIG_GLOBAL:'/dev/null',GIT_CONFIG_NOSYSTEM:'1',TMPDIR:dir,
-  PATH:`${dirname(process.execPath)}:${process.env.PATH}`,GITHUB_STEP_SUMMARY:join(dir,'summary.md'),...extra});
+  PATH:`${join(dir,'bin')}:${dirname(process.execPath)}:${process.env.PATH}`,GITHUB_STEP_SUMMARY:join(dir,'summary.md'),...extra});
 function git(dir,cwd,...args){
   const r=spawnSync('git',['-c','user.name=Fixture','-c','user.email=fixture@example.invalid',...args],{cwd,env:env(dir),encoding:'utf8'});
   assert.equal(r.status,0,`git ${args.join(' ')}: ${r.stderr}`);
@@ -51,6 +52,7 @@ for(const [f,t] of stale)writeFileSync(new URL(f,pub),t)
 function fixture(t,{nightly=true}={}){
   const dir=mkdtempSync(join(tmpdir(),'opax-restamp-commit-'));
   t.after(()=>rmSync(dir,{recursive:true,force:true}));
+  mkdirSync(join(dir,'bin'));writeFileSync(join(dir,'bin/sleep'),'#!/bin/sh\nexit 0\n');chmodSync(join(dir,'bin/sleep'),0o755);
   const origin=join(dir,'origin.git'),work=join(dir,'work'),pub=join(work,'portal/public');
   git(dir,dir,'init','-q','--bare','-b','main',origin);
   git(dir,dir,'init','-q','-b','main',work);
@@ -95,6 +97,8 @@ test('stamp_assets --files lists everything the stamp writes or hashes, every on
   for(const f of ['index.html','spa-shell.js','seo-links.json','_headers','home.html','community.html','press.html','map.html','ui-workbench.html','app.js','analytics.js','events.js','gtm.js','style.css','tokens.css'])
     assert.ok(files.includes(`portal/public/${f}`),`${f} is missing from stamp_assets --files`);
   assert.ok(files.includes('portal/src/app-banner.ts'));
+  // build:search rebuilds it and the coverage table in index.html shows its report count
+  assert.ok(files.includes('portal/public/search-catalog/manifest.json'));
   for(const [importer,mod] of MODULE_STAMPS)for(const f of [importer,mod])assert.ok(files.includes(`portal/public/${f}`),f);
   // esbuild's path-dependent output is never committed back
   assert.ok(!files.some(f=>/\/voice\.js$|\/chunks\//.test(f)));
@@ -155,4 +159,38 @@ test('main already failing the check, with no stamp change to commit, fails the 
   assert.equal(r.status,1,r.stdout+r.stderr);
   assert.match(r.stdout,/Stamps unchanged; nothing to commit\./);
   assert.match(r.stdout,/::error::the restamp commit fails the stamp check on its own/);
+});
+
+// Data pushed to main while the deploy runs (a second clone, as the nightly box would).
+function pushDuringDeploy(f,changes){
+  const other=join(f.dir,'other');git(f.dir,f.dir,'clone','-q',f.origin,other);
+  for(const [file,text] of changes){
+    writeFileSync(join(other,file),text);git(f.dir,other,'add','--',file);git(f.dir,other,'commit','-q','-m',`Data push: ${file}`);git(f.dir,other,'push','-q','origin','main');
+  }
+  return git(f.dir,f.origin,'rev-parse','main');
+}
+
+test('two data pushes during the deploy: the rebased restamp is checked again and main passes', t=>{
+  const f=fixture(t);
+  const moved=pushDuringDeploy(f,[['portal/public/a.json','{"a":1}\n'],['portal/public/b.json','{"b":1}\n']]);
+  const r=f.restamp();
+  assert.equal(r.status,0,r.stdout+r.stderr);
+  assert.match(r.stdout,/push rejected \(attempt 1\)/);
+  assert.equal((r.stdout.match(/passes stamp_assets --check on its own/g)||[]).length,2);
+  assert.equal(git(f.dir,f.origin,'rev-parse','main^'),moved);
+  assert.equal(git(f.dir,f.origin,'log','-1','--format=%s','main'),'Restamp assets after deploy [skip ci]');
+  const fresh=join(f.dir,'fresh');git(f.dir,f.dir,'clone','-q',f.origin,fresh);
+  const check=spawnSync(process.execPath,['scripts/stamp_assets.mjs','--check'],{cwd:fresh,env:env(f.dir),encoding:'utf8'});
+  assert.equal(check.status,0,check.stderr);
+});
+
+test('a data push during the deploy that changes what the stamp reads: the rebased restamp is not pushed', t=>{
+  const f=fixture(t);
+  const moved=pushDuringDeploy(f,[['portal/public/a.json','{"a":1}\n'],['portal/public/corpus.json','{"records":3}\n']]);
+  const r=f.restamp();
+  assert.equal(r.status,1,r.stdout+r.stderr);
+  assert.match(r.stdout,/::error::the restamp commit fails the stamp check on its own \(stamp_assets --check failed; stamping it changes portal\/public\/index\.html portal\/public\/spa-shell\.js\)\. Nothing was pushed; production is already deployed\. main moved during the deploy \(rebased on attempt 1\)/);
+  assert.equal(git(f.dir,f.origin,'rev-parse','main'),moved);
+  assert.match(readFileSync(join(f.dir,'summary.md'),'utf8'),/### Restamp not pushed/);
+  assert.equal(git(f.dir,f.work,'worktree','list','--porcelain').split('\n').filter(l=>l.startsWith('worktree ')).length,1);
 });

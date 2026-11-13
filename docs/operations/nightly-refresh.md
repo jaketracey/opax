@@ -769,9 +769,11 @@ the design tokens; the full list is the workflow's `paths`), so merged portal an
 token). Concurrency group `deploy-production`, no cancellation. The restamp commit it pushes back is pushed with
 the job's `GITHUB_TOKEN` (whose pushes start no workflows), carries `[skip ci]`, and the job refuses to run for the bot's own pushes, so it cannot loop. The restamp
 (`scripts/restamp_commit.sh`) commits every file `stamp_assets.mjs` writes or hashes that the build changed, as listed by
-`node scripts/stamp_assets.mjs --files` (the pages, `spa-shell.js`, `seo-links.json`, `_headers`, the module importers and the
-stamped bundles), then checks that commit out on its own: if `stamp_assets.mjs --check` fails there or stamping leaves it
-dirty, nothing is pushed and the job fails (13 Nov 2026: a fixed file pattern committed `index.html` without `spa-shell.js`).
+`node scripts/stamp_assets.mjs --files` (the pages, `spa-shell.js`, `seo-links.json`, `_headers`, the module importers, the
+stamped bundles and `search-catalog/manifest.json`, whose report count the coverage table shows), then checks that commit
+out on its own, before the first push and again after every rebase onto a newer main: if `stamp_assets.mjs --check` fails
+there or stamping leaves it dirty, nothing is pushed on that or any later attempt and the job fails (13 Nov 2026: a fixed
+file pattern committed `index.html` without `spa-shell.js`).
 `voice.js` and `chunks/` are never committed because esbuild bakes the absolute checkout path into their hashes, so a CI
 build never matches the committed one. The `skip_tests` input is an
 emergency escape hatch. It always uses `npm run deploy`, never a bare `wrangler deploy`.
