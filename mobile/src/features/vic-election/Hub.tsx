@@ -1,13 +1,15 @@
 import { setElectionClock } from '../today/launch-fixture';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Animated, SectionList, View } from 'react-native';
+import { Animated, Platform, SectionList, View } from 'react-native';
 import type { SearchBarCommands } from 'react-native-screens';
 import { FigureBlock } from '../../design/record';
 import { Skeleton, OfflineLine } from '../../design/states';
 import { Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
 import { useListSearchBar } from '../../design/search-bar';
+import { scrollToTop } from '../../design/scroll-to-top';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { RouteOptions } from '../../navigation/preview';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useOffline } from '../../api/useOffline';
@@ -82,6 +84,9 @@ export default function Hub() {
       null,
     );
   const scroll = useRef(0);
+  // The live offset, finder included; `scroll` keeps the hub's for clearing.
+  const offset = useRef<number | null>(null);
+  const headerBottom = useHeaderBottom();
   const writeQuery = (text: string) =>
     navigation.setParams({
       q: text.slice(0, 60).trim() || undefined,
@@ -121,6 +126,21 @@ export default function Hub() {
     );
   }, [routeQuery, searchBar.ref]);
   const finding = q.trim().length >= 3 || (submit > 0 && !!q.trim());
+  // Results replace the hub inside the same list, which keeps its offset.
+  // From far down the districts, that offset lies past the end of the shorter
+  // results, leaving the first match under the search field. Each new query
+  // starts at the page's top, below the native header. A list that hasn't
+  // moved since it mounted is already there.
+  useEffect(() => {
+    const rest = Platform.OS === 'ios' ? -headerBottom : 0;
+    if (!finding || offset.current === null || offset.current <= rest + 1)
+      return;
+    requestAnimationFrame(() =>
+      scrollToTop(listRef.current?.getScrollResponder() ?? null, headerBottom),
+    );
+    // Only a new query moves the page; a settling header height doesn't.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [finding, q]);
   const state = o ? phase(o, now) : null;
   const header = (
     <>
@@ -247,8 +267,10 @@ export default function Hub() {
         }
         testID="vic-election-screen"
         listRef={listRef}
+        scrollToOverflowEnabled={finding}
         onScroll={(y) => {
           title.onScroll(y);
+          offset.current = y;
           if (!finding) scroll.current = y;
         }}
       />

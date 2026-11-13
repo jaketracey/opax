@@ -411,3 +411,65 @@ test.each([false, true])(
     }
   },
 );
+test('finder results start at the page top below the header, from a scrolled hub', async () => {
+  jest.useFakeTimers();
+  try {
+    let searchBar!: SearchBarProps;
+    const observe = (options: Record<string, unknown>) => {
+      searchBar = options.headerSearchBarOptions as SearchBarProps;
+      (searchBar.ref as { current: unknown }).current = { setText: jest.fn() };
+    };
+    mockVic.find.mockImplementation(async (q: string) => ({
+      data: decodeFind(q.startsWith('3350') ? postcode : finder),
+      stale: false,
+    }));
+    const r = renderVic(<Hub />, observe);
+    const list = () => r.root.findByType(SectionList);
+    const scrollTo = jest.fn();
+    jest
+      .spyOn(list().instance as SectionList, 'getScrollResponder')
+      .mockReturnValue({ scrollTo } as never);
+    const scrolled = (y: number) =>
+      act(() =>
+        list().props.onScroll({ nativeEvent: { contentOffset: { y } } }),
+      );
+    const type = async (text: string) => {
+      act(() => {
+        searchBar.onChangeText!({ nativeEvent: { text } } as never);
+      });
+      await act(async () => jest.runOnlyPendingTimers());
+    };
+    // No header height in the harness: status bar 47 plus a 44 pt bar.
+    const top = { y: -(47 + 44), animated: false };
+
+    // At its resting top the page is already where results belong.
+    scrolled(top.y);
+    await type('3350');
+    expect(words(r)).toContain('Wendouree');
+    expect(scrollTo).not.toHaveBeenCalled();
+    await type('');
+    expect(list().props.scrollToOverflowEnabled).toBe(false);
+
+    // Far down the districts, the hub's offset is past the results' end.
+    scrolled(2400);
+    scrollTo.mockClear();
+    await type('3350');
+    expect(list().props.scrollToOverflowEnabled).toBe(true);
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+    expect(scrollTo).toHaveBeenLastCalledWith(top);
+    expect(words(r)).toContain('Wendouree');
+
+    // A new query from scrolled results starts at the top again.
+    scrolled(300);
+    await type('St Kilda');
+    expect(scrollTo).toHaveBeenCalledTimes(2);
+    expect(scrollTo).toHaveBeenLastCalledWith(top);
+
+    // Clearing still returns the hub to where the reader left it.
+    await type('');
+    expect(list().props.scrollToOverflowEnabled).toBe(false);
+    expect(scrollTo).toHaveBeenLastCalledWith({ y: 2400, animated: false });
+  } finally {
+    jest.useRealTimers();
+  }
+});
