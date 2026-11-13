@@ -62,10 +62,11 @@ test('the public JSON and stream boundary both repair the saved who-answer offli
   assert.deepEqual(frame.citations,out.citations)
 })
 
-for(const ending of ['.".','.".".','.”.',".'."])test('a closing quote with its own full stop gets no extra stop: '+ending,()=>{
-  const text='The report said "The scheme failed'+ending
+for(const ending of ['.".','."."','.".".','.”.',".'."])test('a closing quote with its own full stop gets no extra stop: '+ending,()=>{
+  const opening=ending[1]==='”'?'“':ending[1]
+  const text='The report said '+opening+'The scheme failed'+ending
   const out=api.displayAnswerPayload(payload([text]))
-  assert.equal(out.answer,'The report said "The scheme failed'+ending.slice(0,2))
+  assert.equal(out.answer,'The report said '+opening+'The scheme failed'+ending.slice(0,2))
   valid(out)
 })
 
