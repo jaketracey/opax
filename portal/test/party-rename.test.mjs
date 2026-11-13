@@ -259,16 +259,23 @@ test('money.json: one Libertarian Party node, answering to its former names, its
   assert.deepEqual([own.firstYear, own.lastYear], [2013, 2024]);
   assert.deepEqual(LIB.return_by_name, {'Liberal Democratic Party': [1787862, 34, '2013-14', '2022-23'], 'Libertarian Party': [396832, 10, '2023-24', '2024-25']});
   assert.equal(Object.values(LIB.return_by_name).reduce((a, [d]) => a + d, 0), own.total, 'the names\' parts add to the headline');
-  // The donor side is held back, so no donor total moved and no flow reaches the node.
-  assert.deepEqual(money.meta.donor_side_held, ['Libertarian Party']);
-  assert.ok(!money.edges.some(e => e.target === LIB.id));
+  // Its donors count it like any other party's: 15 map donors, each flow typed from the party's own returns.
+  assert.equal(money.meta.donor_side_held, undefined);
+  const flows = money.edges.filter(e => e.target === LIB.id);
+  assert.equal(flows.length, 15);
+  const typedFlow = id => Object.values(flows.find(e => e.source === id)?.by_type || {}).reduce((a, b) => a + b, 0);
+  const donorId = label => money.nodes.find(n => n.kind === 'donor' && n.label === label).id;
+  assert.equal(typedFlow(donorId('Mineralogy Pty Ltd')), 250000, 'Donation Received, 2021-22, lodged as Liberal Democratic Party');
+  assert.equal(typedFlow(donorId('Philip Morris Limited')), 170000, 'six lines on the party\'s returns; the donor\'s own declarations are not added');
+  assert.deepEqual(flows.find(e => e.source === donorId('Westpac Banking Corporation')).by_type, {other_receipt: 15706}, 'St George Bank, an Other Receipt');
+  assert.equal(Object.values(LIB.by_type).reduce((a, b) => a + b, 0), 501562, 'the donors drawn on the map');
   assert.ok(!money.nodes.some(n => n !== LIB && (n.return_by_name || (n.kind === 'party' && n.aliases))), 'no other node carries the new fields');
   for (const jur of ['qld', 'vic']) {
     const state = readJson(`/graph/money.${jur}.json`);
     const node = state.nodes.find(n => n.id === 'party:Libertarian Party');
     assert.ok(node && node.total > 0, jur);
-    assert.ok(!state.edges.some(e => e.target === node.id), `${jur}: no flow while the donor side is held`);
   }
+  assert.equal(readJson('/graph/money.vic.json').edges.filter(e => e.target === 'party:Libertarian Party').length, 3);
 });
 
 function renderParty(path) {
@@ -300,7 +307,12 @@ test('the merged Libertarian Party page shows its money: the headline, the scope
   assert.ok(scope.startsWith('Itemised receipts in the party\'s own federal returns, 2013-14 to 2024-25, each counted once.'));
   assert.ok(text.replace(/Measured as\s*/, 'Measured as ').includes(`Measured as ${scope}`), 'the standard scope line');
   assert.match(text, /Lodged as\s*Liberal Democratic Party \$1\.8m in 34 receipts, 2013-14 to 2022-23; Libertarian Party \S+ in 10 receipts, 2023-24 to 2024-25/);
-  assert.match(text, /The money map draws no donor to this party/);
+  // Its donors are listed, each by the party's own returns.
+  assert.doesNotMatch(text, /The money map draws no donor to this party/);
+  // The six with lines on the party's own returns; the nine whose only rows are their own declarations are not rows.
+  for (const name of [/Mineralogy PTY LTD/i, /Philip Morris Limited/, /JJ Richards & Sons/, /Nioa Nominees/i, /Sporting Shooters Association/, /Westpac Banking Corporation/])
+    assert.match(text, name);
+  for (const name of [/Ancora Topco/, /Chevron Australia/, /IT Alliance/]) assert.doesNotMatch(text, name);
   // The name history stays on the page now that it takes the money path.
   assert.match(doc.querySelector('.party-history')?.textContent || '', /renamed Libertarian Party\. The AEC deregistered the Liberal Democratic Party on 19 July 2022/);
   assert.doesNotMatch(text, /—/, 'no em dashes');
