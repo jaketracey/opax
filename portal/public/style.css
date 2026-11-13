@@ -4492,7 +4492,7 @@ html[data-panel="chat"] footer { display: none; }
 .evidence-locations small {display:block;margin-top:var(--sp-4)}
 /* Programs & places: the list of connections (ui-list rows) beside the open
    one, which reads as a column of its own, unboxed. One column on a phone,
-   the list a short scroller above the open connection. */
+   the list in the page's flow, a connection opening as the next view. */
 .connections-page { min-width: 0; }
 .connections-layout { display: grid; grid-template-columns: minmax(calc(var(--size-control) * 5), 1fr) minmax(0, 2fr); gap: var(--space-group); align-items: start; margin-top: var(--space-heading); }
 .connection-choice { display: grid; gap: var(--space-line); width: 100%; min-height: var(--size-target); margin: 0; padding: 0; border: 0; background: none; color: inherit; text-align: left; cursor: pointer; }
@@ -4516,10 +4516,20 @@ html[data-panel="chat"] footer { display: none; }
 .connection-detail-art .wb-wrap { margin: 0 auto var(--space-heading); }
 .connection-detail-art .wb-label { display: none; }
 .connection-picks { justify-content: center; }
+/* "Show 20 more" and the way back belong to a phone's reading only. */
+.connection-more, .connection-back { display: none; }
 @media (max-width: 700px) {
-  .connections-layout { grid-template-columns: minmax(0, 1fr); }
-  #connection-list { max-height: 20rem; overflow: auto; }
-  .connection-detail-empty { display: none; }
+  /* One column in the page's own flow (no inner scroller): the starting card
+     above the list as a short invitation, then twenty rows and "Show 20 more". */
+  .connections-layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-block); }
+  #connection-detail:has(> .connection-detail-empty) { position: static; order: -1; }
+  .connection-detail-empty { padding-block: var(--space-block); }
+  .connection-detail-empty .connection-detail-art .wb-wrap { margin-bottom: var(--space-tight); }
+  .connection-more:not([hidden]) { display: inline-flex; justify-self: start; }
+  /* A connection opened on a phone is the next view: the list and its controls step aside. */
+  .connections-reading :is(.ui-filter-bar, #connection-status, #connection-list, .connection-more) { display: none; }
+  .connections-reading .connection-back { display: inline-flex; margin: 0 0 var(--space-tight); }
+  .connections-reading .connection-back::before { content: "‹" / ""; margin-right: var(--sp-8); }
 }
 .evidence-years meter::-webkit-meter-optimum-value {background:var(--chart-mark)}
 .evidence-years meter::-moz-meter-bar {background:var(--chart-mark)}
