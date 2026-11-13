@@ -223,3 +223,96 @@ test('in a call with captions hidden from ⋯, the large orb is on the stage and
   expect(has('talk-mute')).toBe(true);
   act(() => renderer.unmount());
 });
+
+// The call row eases open above the captions in a HeightReveal (LayoutAnimation
+// does nothing on iOS under Reanimated 4.5, so the captions jumped). It goes at
+// once: the stage's large orb is back in the same commit.
+test('the call row eases in with the body gap folded in, and goes at once when captions hide', async () => {
+  /* eslint-disable @typescript-eslint/no-require-imports */
+  const { SafeAreaProvider } = require('react-native-safe-area-context');
+  const { StyleSheet } = require('react-native');
+  const Reanimated = require('react-native-reanimated');
+  const { HeightReveal, revealMotion } = require('../src/design/reveal');
+  const { rhythm } = require('../src/design/tokens');
+  const TalkScreen = require('../src/features/talk/TalkScreen').default;
+  /* eslint-enable @typescript-eslint/no-require-imports */
+  let renderer!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(
+      <SafeAreaProvider
+        initialMetrics={{
+          frame: { x: 0, y: 0, width: 402, height: 874 },
+          insets: { top: 0, left: 0, right: 0, bottom: 34 },
+        }}
+      >
+        {withNavigationOptions(<TalkScreen />, (options) => {
+          mockOptions = options;
+        })}
+      </SafeAreaProvider>,
+    );
+  });
+  const heights: number[] = [];
+  const timing = jest
+    .spyOn(Reanimated, 'withTiming')
+    .mockImplementation((to) => {
+      heights.push(to as number);
+      return to;
+    });
+  try {
+    const orbs = () =>
+      renderer.root
+        .findAll((node) => node.type === ('VoiceOrb' as never))
+        .map((node) => node.props.size as number);
+    const callRow = () =>
+      renderer.root
+        .findAllByType(HeightReveal)
+        .find(
+          (reveal: TestRenderer.ReactTestInstance) =>
+            reveal.findAll((node) => node.type === ('VoiceOrb' as never))
+              .length > 0,
+        );
+    const layOut = (height: number) =>
+      act(() =>
+        callRow()!
+          .find(
+            (node) =>
+              typeof node.type === 'string' &&
+              typeof node.props.onLayout === 'function' &&
+              /-content$/.test(String(node.props.testID ?? 'x-content')),
+          )
+          .props.onLayout({
+            nativeEvent: { layout: { x: 0, y: 0, width: 370, height } },
+          }),
+      );
+    const menu = (label: string) =>
+      (
+        mockOptions.unstable_headerLeftItems as () => {
+          menu?: { items: { label: string; onPress: () => void }[] };
+        }[]
+      )()[0]!.menu!.items.find((item) => item.label === label)!;
+    // Open at mount: the 72 pt orb in its reveal, shown at once, and the
+    // body's gap folded into the reveal.
+    expect(orbs()).toEqual([72]);
+    const clip = callRow()!.find((node) => typeof node.type === 'string');
+    expect(StyleSheet.flatten(clip.props.style).marginBottom).toBe(
+      -rhythm.group,
+    );
+    layOut(80);
+    expect(heights).toEqual([]);
+    // Captions hidden: the row goes in the same commit as the stage's orb
+    // returns, though it had measured, so two orbs never show.
+    await act(async () => menu('Hide captions').onPress());
+    expect(callRow()).toBeUndefined();
+    expect(orbs()).not.toContain(72);
+    expect(heights).toEqual([]);
+    // Shown again: the row opens over 200 ms with the standard ease.
+    await act(async () => menu('Show captions').onPress());
+    expect(orbs()).toEqual([72]);
+    layOut(96);
+    expect(heights).toEqual([96]);
+    expect(timing.mock.calls[0]![1]).toBe(revealMotion);
+  } finally {
+    timing.mockRestore();
+    act(() => renderer.unmount());
+  }
+});
