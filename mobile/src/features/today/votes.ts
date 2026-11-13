@@ -10,7 +10,7 @@ import {
   type Decoded,
 } from '../../api/validation';
 import { formatDate, unbroken } from '../../design/format';
-import { isProcedural, outcomeWord } from '../bills/divisions';
+import { divisionTitle, isProcedural, outcomeWord } from '../bills/divisions';
 
 /**
  * `/divisions/recent.json` (data lane D1): the newest divisions with their
@@ -65,9 +65,7 @@ export function chamberWord(chamber: string | null | undefined): string | null {
 /** "Second reading", "Third reading": the stage as a reader says it. */
 export function stageWords(stage: string | null | undefined): string | null {
   const match = READING.exec(String(stage ?? '').replace(/_/g, ' '));
-  return match
-    ? `${match[1]![0]!.toUpperCase()}${match[1]!.slice(1).toLowerCase()} reading`
-    : null;
+  return match ? divisionTitle({ stage: match[0] }) : null;
 }
 
 /** The block's rows: the newest reading votes, newest first. */

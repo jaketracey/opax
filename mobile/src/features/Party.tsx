@@ -59,7 +59,12 @@ import {
 } from '../navigation/routes';
 import type { PartySection } from '../navigation/routes/people';
 import { shareRecord } from '../navigation/share';
-import { isProcedural, stageTitle } from './bills/divisions';
+import {
+  divisionMeta,
+  divisionMotion,
+  divisionTitle,
+  isProcedural,
+} from './bills/divisions';
 import { chamberLabel } from './bills/filters';
 import { useCatalogRecord } from './bills/useCatalogRecord';
 import { CachedPortrait } from './CachedPortrait';
@@ -1035,7 +1040,7 @@ function PartyVotes({
 const sameMotion = (row: DivisionData, other: DivisionData | undefined) =>
   !!other &&
   other.billKey === row.billKey &&
-  (other.division.stage ?? '') === (row.division.stage ?? '') &&
+  divisionTitle(other.division) === divisionTitle(row.division) &&
   other.division.date === row.division.date &&
   other.division.house === row.division.house;
 
@@ -1050,8 +1055,12 @@ function which(
 ): string | null {
   const twins = neighbours.filter((other) => sameMotion(row, other));
   if (!twins.length) return null;
-  if (row.question && twins.every((other) => other!.question !== row.question))
-    return row.question;
+  const motion = divisionMotion(row.question);
+  if (
+    motion &&
+    twins.every((other) => divisionMotion(other!.question) !== motion)
+  )
+    return motion;
   return `Chamber: ${formatCount(row.division.ayes)} for, ${formatCount(row.division.noes)} against`;
 }
 
@@ -1081,13 +1090,16 @@ function PartyDivision({
 }) {
   const outcome =
     row.division.outcome === 'affirmative' ? 'Agreed to' : 'Not agreed to';
-  const stage = stageTitle(row.division.stage) || 'Division';
+  const stage = divisionTitle(row.division);
   const block = !(row.ayes && row.noes);
   return (
     <DivisionRow
       title={row.title}
       meta={[
-        `${stage} · ${chamberLabel(row.division.house)} · ${formatDate(row.division.date, 'short')}`,
+        divisionMeta(
+          row.division,
+          `${stage} · ${chamberLabel(row.division.house)} · ${formatDate(row.division.date, 'short')}`,
+        ),
         which,
       ]
         .filter(Boolean)
