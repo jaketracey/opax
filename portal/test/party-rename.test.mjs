@@ -4,10 +4,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {build} from 'esbuild';
+import {Worker} from 'node:worker_threads';
+import {JSDOM} from 'jsdom';
 import {PARTY_RENAMES, PARTY_MAP, partyLabelHTML, partyShortName, partyNames, partyFormerName} from '../public/labels.js';
 import {PARTY_URL_RENAMES, partyUrl} from '../public/canonical-urls.js';
 import {canonicalPartyPages, resolvePartyPage, partyMembers, partyMembersHTML, partyBills, partyBillsHTML,
-  partyHistory, partyHistoryHTML, recordedAsText, partyReturns, partyStateMoneyHTML, readPartyPages} from '../public/party-page.js';
+  partyHistory, partyHistoryHTML, recordedAsText, partyReturns, partyStateMoneyHTML, readPartyPages, partyLodgedAsText} from '../public/party-page.js';
+import {partyReturnFigures, partyReturnScopeLabel} from '../public/register-tables.js';
 
 const publicDir = new URL('../public/', import.meta.url);
 const readJson = path => JSON.parse(readFileSync(new URL(path.replace(/^\//, ''), publicDir), 'utf8'));
@@ -214,4 +217,75 @@ test('search catalog: one party entry for the renamed party, found by its former
   assert.match(ldp[0].extra.aliases, /Liberal Democrats/);
   const invented = renamedPartyRecords(INVENTED);
   assert.deepEqual(invented.map(r => [r.key, r.href, r.extra.aliases]), [['party-rename:FIX', '/subject/party/fixture-freedom-party', 'Fixture Liberty Party Fixture Liberty']]);
+});
+
+test('money map node: an invented renamed party\'s own-return total, said under each name it was lodged as', () => {
+  const fmt = n => `$${Math.round(n).toLocaleString('en-AU')}`;
+  const node = {label: 'Fixture Freedom Party', return_by_name: {
+    'Fixture Freedom Party': [300, 1, '2023-24', '2023-24'], 'Fixture Liberty Party': [1050, 2, '2019-20', '2020-21']}};
+  assert.equal(partyLodgedAsText(node, fmt), 'Fixture Liberty Party $1,050 in 2 receipts, 2019-20 to 2020-21; Fixture Freedom Party $300 in 1 receipt, 2023-24');
+  assert.equal(partyLodgedAsText({return_by_name: {'Fixture Freedom Party': [300, 1, '2023-24', '2023-24']}}, fmt), '', 'one name, no line');
+  assert.equal(partyLodgedAsText({label: 'Labor'}, fmt), '');
+});
+
+// The released money graph: one Libertarian Party node, its former names as aliases, its own returns under both.
+const money = readJson('/graph/money.json');
+const LIB = money.nodes.find(n => n.id === 'party:Libertarian Party');
+
+test('money.json: one Libertarian Party node, answering to its former names, its own returns under both', () => {
+  assert.ok(LIB, 'the party has a federal money node');
+  assert.ok(!money.nodes.some(n => n.kind === 'party' && /liberal democrat/i.test(n.label)), 'no node under the former name');
+  assert.deepEqual(LIB.aliases, ['Liberal Democratic Party', 'Liberal Democrats']);
+  const own = partyReturnFigures(LIB);
+  assert.equal(own.typed, true);
+  assert.equal(Math.round(own.total), 2184694);
+  assert.equal(own.count, 44);
+  assert.deepEqual([own.firstYear, own.lastYear], [2013, 2024]);
+  assert.deepEqual(LIB.return_by_name, {'Liberal Democratic Party': [1787862, 34, '2013-14', '2022-23'], 'Libertarian Party': [396832, 10, '2023-24', '2024-25']});
+  assert.equal(Object.values(LIB.return_by_name).reduce((a, [d]) => a + d, 0), own.total, 'the names\' parts add to the headline');
+  // The donor side is held back, so no donor total moved and no flow reaches the node.
+  assert.deepEqual(money.meta.donor_side_held, ['Libertarian Party']);
+  assert.ok(!money.edges.some(e => e.target === LIB.id));
+  assert.ok(!money.nodes.some(n => n !== LIB && (n.return_by_name || (n.kind === 'party' && n.aliases))), 'no other node carries the new fields');
+  for (const jur of ['qld', 'vic']) {
+    const state = readJson(`/graph/money.${jur}.json`);
+    const node = state.nodes.find(n => n.id === 'party:Libertarian Party');
+    assert.ok(node && node.total > 0, jur);
+    assert.ok(!state.edges.some(e => e.target === node.id), `${jur}: no flow while the donor side is held`);
+  }
+});
+
+function renderParty(path) {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(new URL('./helpers/directory-shell.mjs', import.meta.url), {
+      execArgv: ['--experimental-vm-modules', '--disable-warning=ExperimentalWarning'],
+      workerData: {kind: 'party', path, selector: '#entry-flows', html: true, settleMs: 1500},
+    });
+    let result;
+    worker.once('message', message => { result = message; });
+    worker.once('error', reject);
+    worker.once('exit', () => result?.error ? reject(Error(result.error)) : resolve(result));
+  });
+}
+
+test('the merged Libertarian Party page shows its money: the headline, the scope line and each name\'s part', {timeout: 120_000}, async () => {
+  const result = await renderParty('/subject/party/libertarian-party');
+  // JSDOM has no canvas, so the page's map cannot draw; nothing else may fail.
+  assert.deepEqual(result.errors.filter(e => !/getContext\(\) method/.test(e)), []);
+  const doc = new JSDOM(result.html).window.document;
+  assert.equal(doc.querySelector('#subject-title').textContent.trim(), 'Libertarian Party');
+  const flows = doc.querySelector('#entry-flows');
+  assert.ok(flows, 'a money section');
+  assert.equal(flows.getAttribute('data-rail-figure'), '$2.2m');
+  const text = flows.textContent.replace(/\s+/g, ' ');
+  assert.match(text, /Received \(disclosed\)\s*\$2\.2m/);
+  assert.match(text, /Receipts counted\s*44/);
+  const scope = partyReturnScopeLabel(partyReturnFigures(LIB));
+  assert.ok(scope.startsWith('Itemised receipts in the party\'s own federal returns, 2013-14 to 2024-25, each counted once.'));
+  assert.ok(text.replace(/Measured as\s*/, 'Measured as ').includes(`Measured as ${scope}`), 'the standard scope line');
+  assert.match(text, /Lodged as\s*Liberal Democratic Party \$1\.8m in 34 receipts, 2013-14 to 2022-23; Libertarian Party \S+ in 10 receipts, 2023-24 to 2024-25/);
+  assert.match(text, /The money map draws no donor to this party/);
+  // The name history stays on the page now that it takes the money path.
+  assert.match(doc.querySelector('.party-history')?.textContent || '', /renamed Libertarian Party\. The AEC deregistered the Liberal Democratic Party on 19 July 2022/);
+  assert.doesNotMatch(text, /—/, 'no em dashes');
 });

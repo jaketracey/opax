@@ -375,6 +375,20 @@ function combinedNode(nodes) {
   return {...nodes[0], total: nodes.reduce((a, n) => a + (n.total || 0), 0), count: nodes.reduce((a, n) => a + (n.count || 0), 0),
     firstYear: years[0], lastYear: years.at(-1), lodgedAs: `Lodged as ${parts.join('; as ')}`};
 }
+/** A renamed party's money-map node: the part of its own-return total lodged under each name
+ *  (money.json `return_by_name`, {name: [AUD, lines, first year, last year]}), oldest first, as one line:
+ *  "Liberal Democratic Party $1.8m in 34 receipts, 2013-14 to 2022-23; Libertarian Party ...".
+ *  Empty when the node has one name or no split. */
+export function partyLodgedAsText(node, fmtMoney) {
+  const parts = Object.entries(node?.return_by_name || {})
+    .filter(([, cell]) => Array.isArray(cell) && Number(cell[1]) > 0)
+    .sort((a, b) => String(a[1][2] || '').localeCompare(String(b[1][2] || '')));
+  if (parts.length < 2) return '';
+  return parts.map(([name, [amount, lines, first, last]]) => {
+    const span = !first ? '' : first === last || !last ? `, ${first}` : `, ${first} to ${last}`;
+    return `${name} ${fmtMoney(Number(amount) || 0)} in ${Number(lines).toLocaleString('en-AU')} ${Number(lines) === 1 ? 'receipt' : 'receipts'}${span}`;
+  }).join('; ');
+}
 /** A renamed party's AEC annual-return rows (aec-extras.json `parties`) under every name it lodged as,
  *  one row per year (figures summed where two names lodged for one year), with which name each year
  *  was lodged under. `rows` are app.js partyReceiptsHTML's [year, receipts, ...] tuples. */

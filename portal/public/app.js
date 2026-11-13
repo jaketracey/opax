@@ -5388,7 +5388,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=b29e734361'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=e0a6265d56'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -6111,7 +6111,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     }
     if (currentSubjectKey !== key) return;
     const flows = moneyData.edges.filter((e) => (isParty ? e.target : e.source) === node.id);
-    await registerTablesReady;
+    // A party page also says a renamed party's name history and which name its returns were lodged under.
+    const [partyPage] = await Promise.all([isParty ? loadPartyPage() : null, registerTablesReady]);
     if (currentSubjectKey !== key) return;
     // One measure for every donor figure on this page, the map card's: the
     // parties' own returns, all receipt types (receiptFigures says why).
@@ -6156,10 +6157,13 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     // A party's head says who it is in its meta line; its figures and their
     // one source line sit with "Where it came from", so the page says the
     // map's date once (principle 4).
+    // A renamed party's own-return total under each name it was lodged as (money.json return_by_name).
+    const lodgedAs = isParty && own?.typed ? partyPage.partyLodgedAsText(node, fmtMoney) : "";
     const entryFacts = [
       [isParty ? "Received (disclosed)" : "Received by parties (disclosed)", `<b>${esc(fmtMoney((own ? own.total : node.total) || 0))}</b>`],
       ["Receipts counted", esc(((own ? own.count : node.count) || 0).toLocaleString())],
       ["Measured as", esc(ownScope)],
+      lodgedAs && ["Lodged as", esc(lodgedAs)],
       node.via === "public_money"
         ? ["On the map for", `${esc(fmtMoney(node.publicMoney || 0))} in Commonwealth contracts and grants`]
         : ["Rank", esc(`#${rank} of ${donors.length} ${isParty ? "parties" : "disclosed receipt sources"}`)],
@@ -6178,6 +6182,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       notes: [entryNote, "The parties with the largest disclosed sums."],
       licence: 'AEC Transparency Register returns, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener" target="_blank">CC BY 4.0 ↗︎</a>.',
     }));
+    // A renamed party: its name history from the registers' notices, as on the roster-only page.
+    const history = isParty ? partyPage.partyHistoryHTML(node.label, partyPageHelpers()) : "";
+    if (history) head.insertAdjacentHTML("beforeend", history);
     const askAbout = isParty
       ? { href: askHash(`What has parliament said about ${partyAskName(node.label)}?`), label: "Ask what parliament said about them" }
       : ["individual", "other", ""].includes(String(node.industry || "").toLowerCase())
@@ -6197,7 +6204,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     box.innerHTML = entryRailHTML();
     const rail = isParty ? PARTY_RAIL : DONOR_RAIL;
     sections.insertAdjacentHTML("beforeend", `<section id="entry-flows" data-accent="money" data-rail-figure="${esc(fmtMoney((own ? own.total : node.total) || 0))}">
-      ${isParty ? `<h3 class="subject-section-title">Where it came from</h3>${partyMoney?.scope ? `<p class="entry-scope">${esc(partyMoney.scope)}</p>` : ""}${partyTable}` : barList(flowRows, {
+      ${isParty ? `<h3 class="subject-section-title">Where it came from</h3>${partyMoney?.scope ? `<p class="entry-scope">${esc(partyMoney.scope)}</p>` : ""}${partyMoney?.rows.length ? partyTable
+        : `<p class="entry-scope">The money map draws no donor to this party, so no donor rows are listed. The figures below count its own returns.</p>`}` : barList(flowRows, {
         fmt: fmtMoney,
         heading: isParty ? "Where it came from" : "Where the money went",
         scope: donorScope,

@@ -137,7 +137,7 @@ async function main() {
  }
  // A renamed party (labels.js PARTY_RENAMES) is one search entry under its current name, found by every
  // former name, at its one page. A party the money map holds already has its entry above.
- for(const r of renamedPartyRecords(PARTY_RENAMES)) if(!ids.has(r.key)) add(r.key,'party',r.title,r.href,r.snippet,r.extra);
+ for(const r of renamedPartyRecords(PARTY_RENAMES)) if(!ids.has(r.key) && !ids.has('federal:party:'+r.title)) add(r.key,'party',r.title,r.href,r.snippet,r.extra);
  for(const node of (await read('graph/donor-index.json')).donors || []){const r=donorSearchRecord(node.jurisdiction || 'federal',node);add(r.key,r.kind,r.title,r.href,r.snippet,r.extra);}
  const suppliers=await read('suppliers.json');
  // a supplier with no counted contract (every notice cancelled at source or held for review) keeps its page, not a search entry
