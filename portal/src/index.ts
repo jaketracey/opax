@@ -11,10 +11,10 @@ import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
-import { guardAnswerAttribution } from './ask-attribution'
+import { withoutSaLabel } from './ask-attribution'
 import { identityAnswer, identityResponse } from './ask-identity'
-import { loosePositionPoints, claimAttributionOk, repairCausal } from './research-evidence'
-import {ServerTiming, timed, withTiming} from './server-timing'
+import { repairQuotes } from './research-evidence'
+import {ServerTiming, timed, timedSync, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import { chamberLabel, PARTY_MAP } from '../public/party-page.js'
 import {partySpeechLabel, partyMembers, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, readPartyPages, resolvePartyPage, type PartyPage} from '../public/party-page.js'
@@ -24,7 +24,7 @@ import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { fundingResearchFollowUp, rankedMoneyAnswer } from './ask-money'
-import { paidAnswer, mentionsPay } from './ask-pay'
+import { paidAnswer, mentionsPay, mentionsOfficePay } from './ask-pay'
 import { rewriteFollowUp, clarifyPayload, REWRITE_SYSTEM, type FollowUpRewrite } from './ask-rewrite'
 import { buildPersonOverview, isPersonOverviewCandidate, isPersonOverviewIntent, isPersonRecentCandidate, isPersonRecentIntent, OVERVIEW_INSTRUCTIONS, OVERVIEW_CAPS, OVERVIEW_RETRIEVAL_MS, OVERVIEW_FIRST_ANSWER_MS, OVERVIEW_VERIFICATION_MS, type OverviewPack, type OverviewSpeech, type PersonContext } from './ask-person-overview'
 import { researchModelId, researchProvider, researchReasoning, researchModelOverride, researchModelKey } from './research-model'
@@ -53,6 +53,7 @@ import {saGrantsPage,saGrantsReader} from './sa-grants'
 import {actInvoicesPage} from './act-invoices'
 import {GRANTS_COVERAGE} from '../public/grants-table.js'
 import {resolveProgram, programKey, type GrantProgram} from '../public/facts/grant-programs.js'
+import {grantCoreBody, agencyCoreBody, firstAgencySuppliers, topicCoreBody, topicSummary, type GrantDetail, type AgencyDetail, type TopicCounts, type TopicSpeech} from './seo-record-content'
 import sponsorParties from '../public/facts/sponsor-parties.json' with {type:'json'}
 import { hubPage } from './hubs'
 import { estimatesPage, readEstimatesRecord, type EstimatesCommittee, type EstimatesRecord, type EstimatesRound, type EstimatesRounds } from './estimates'
@@ -82,7 +83,7 @@ import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, sp
  *  - exclude da-* fields from citations (enrichment output must not cite itself)
  */
 
-import { ASK_PIPELINE_VERSION, EVIDENCE_GAP_ANSWER, isEvidenceGap, isPositionBody, guardPositionAnswer, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, quoteRecoveryAsk, evidenceExcerpt, stripListingBoilerplate, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
+import { ASK_PIPELINE_VERSION, EVIDENCE_GAP_ANSWER, isEvidenceGap, isPositionBody, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, quoteRecoveryAsk, evidenceExcerpt, stripListingBoilerplate, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
 import { resolveAskScope, needsAskPeople, askRetrievalQuery, isNamedPositionQuestion, POSITION_GROUNDING, type AskScope } from './ask-scope'
 import { communityRoute } from './community'
 import { reviewerLoginEnabled } from './community-auth'
@@ -432,6 +433,8 @@ async function sha256Hex(text: string): Promise<string> {
   return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('')
 }
 
+/** Bumped when the answer checks change, so stored answers made under the old checks are not served again. */
+const ASK_ANSWER_CACHE_VERSION = 'ask-answers-2-minimum-checks'
 /** A cache key that can never collide with a real route. */
 const cacheRequest = (kind: string, id: string): Request => new Request(`${CACHE_ORIGIN}/${kind}/${id}`)
 
@@ -569,11 +572,11 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   // from page 1's entry; the window key drops them so paging and re-sorting
   // inside one result set costs no upstream call and no rate-limit quota.
   const keyParams = (drop: string[]) => cacheKeyParams(url.searchParams, drop)
-  // Retire older snippets and windows without retrieval-mode metadata.
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1\n${keyParams(['nocache'])}`))
+  // Retire older snippets, windows without retrieval-mode metadata, and rows without recorded source URLs.
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
-    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
+    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
@@ -876,7 +879,7 @@ async function searchWindow(
       // Divisions carry their date on origin.created rather than in metadata.
       date: (meta.date as string) ?? (resource.origin as { created?: string } | undefined)?.created?.slice(0, 10) ?? null,
       url: resource.origin?.url || null,
-      ...((label(resource, 'state') === 'sa' || label(resource, 'source') === 'sa_hansard') && typeof meta.source_url === 'string' ? {source_url:meta.source_url} : {}), // official record, for exports/citations
+      ...(typeof meta.source_url === 'string' ? {source_url:meta.source_url} : {}), // Recorded official URL, reused by topic pages and citations.
       snippet: windowed,
       // BASIC already includes resource and computed field classifications.
       // Reuse them; never fetch each result separately just to draw its chips.
@@ -1045,11 +1048,11 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
       (party ? `These records are indexed under ${party}. Attribute each passage to its explicit speaker and affiliation; describe uncertain attribution as a passage in records indexed under ${party}. ` : '') +
       (turns.length ? 'Answer the latest follow-up, using earlier user turns for its subject. For a request for more, add relevant findings beyond the earlier answers. A changed subject receives a fresh answer. ' : '') +
       (records.coverage ? `Published-record coverage: ${records.coverage} ` : '') +
-      'The first sentence must answer the question with the requested name, figure, date or outcome. Give the supported part first when evidence is partial. Use plain prose for the substantive answer, with complete sentences in Australian English and commas or full stops. State each fact once. Give each figure one supporting citation at the claim. ' +
+      'Answer the question asked directly and fully, citing the passages where they support a point and using general knowledge for context and for anything they leave out. The first sentence must answer the question with the requested name, figure, date or outcome. Give the supported part first when evidence is partial. Use plain prose for the substantive answer, with complete sentences in Australian English and commas or full stops. State each fact once. Give each figure one supporting citation at the claim. ' +
       'Choose passages identifying the institution, bill or policy asked about. For broader overviews include relevant legislation, policy debates and committee records, with dates and attribution. Treat a place or river as a topic unless the reader names a person. Summarise substantive evidence in your own words; quote literal source text when the wording itself helps. ' +
       'For why and connection questions, open with the explanation supported by the passages. Attribute each account and label an inference with “taken together” or “the record suggests”. When accounts conflict, lead with who attributes the outcome to what, then compare their cited evidence. ' +
       'A ranked retrieval describes these matches. After an empty or partial lookup, state which records and years were searched and the next useful lookup. Relevant limitations belong in the response coverage note, and only when the answer depends on them. Keep financial totals with their supplied measure labels and periods. ' +
-      'Attribute combined debates using explicit speaking turns. Distinguish contemporaneous statements from later recollections, with their dates. If a paraphrase needs more support, give the relevant cited record titles and dates. Keep to about 300 words. For a wholly unrelated retrieval, reply: The record retrieved for this question does not discuss it. ' + FOOTNOTE_INSTRUCTIONS,
+      'Attribute combined debates using explicit speaking turns. Distinguish contemporaneous statements from later recollections, with their dates. Keep to about 300 words. When no passage mentions the subject, answer from general knowledge and add one short line saying the retrieved record does not discuss it. ' + FOOTNOTE_INSTRUCTIONS,
   }
   // `reasoned`: the ordinary prompt on a named-politician question, for the
   // fallback that runs when the strict documented-position path cannot verify
@@ -1063,7 +1066,7 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
       system: 'You explain Australian politicians’ documented positions from primary records. ' + POSITION_GROUNDING,
       user: `${provenance}Source passages:\n{context}\n\nQuestion: ${JSON.stringify(question)}\n\n` +
         'The first sentence answers the question with the person’s name and documented position, date or outcome. Follow it with up to three distinct concrete policy positions or proposals, each in a complete paraphrased sentence with its own citation. Use that person’s explicit speaking turns on the exact topic. Attribute disputed effects as their argument. Preserve proposal eligibility, duration, limits and amounts. Use past tense and put each recorded date beside its position. Keep to 180 words. Relevant limitations belong in the response coverage note, only when the answer depends on them. ' +
-        'For a selection requiring further evidence of the exact position, return this sentence: ' + EVIDENCE_GAP_ANSWER + ' ' + FOOTNOTE_INSTRUCTIONS,
+        'When the passages hold no position on that exact topic, give the closest position they do record and say so in one line. ' + FOOTNOTE_INSTRUCTIONS,
     }
   }
 
@@ -1305,7 +1308,9 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
     epoch,
     pipeline: ASK_PIPELINE_VERSION + (input.speaker && input.kind === 'speech' && isPositionBody(buildAskBody(input)) ? ':original-turns-v7' + (input.from || input.to ? ':dated-topic-v1' : '') : '')
       // Pay evidence arrived on 2026-09-17: answers written without it retire, and only those.
-      + (mentionsPay(input.question) ? ':pay-v1' : '') + ':witness-split-v1:mixed-speakers-v1',
+      + (mentionsPay(input.question) ? ':pay-v1' : '')
+      // Secretaries' and agency heads' rates arrived on 2026-11-13: loose questions about them retire too.
+      + (mentionsOfficePay(input.question) ? ':office-pay-v1' : '') + ':witness-split-v1:mixed-speakers-v1',
     question: str(input.question).toLowerCase(),
     kind: kind && kind !== 'all' ? kind : 'all',
     speaker: str(input.speaker) ? canonicalSpeaker(input.speaker as string) : '',
@@ -1644,7 +1649,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
         const res = await kbFetch(env, '/ask', { body: b, headers: { 'x-synchronous': 'true' }, signal })
         if (res.headers.get(MODEL_BUDGET_HEADER)) return modelBudgetBusy()
         if (!res.ok) return json({ error: `ask failed (${res.status})` }, 502)
-        return guardPositionAnswer((await res.json()) as AskAnswer, b)
+        return (await res.json()) as AskAnswer
       }
       return firstBudget ? await firstBudget.run(work,timeoutMs) : await work(AbortSignal.timeout(timeoutMs))
     } catch (err) {
@@ -1677,7 +1682,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   payload = withAskedAs(payload, askedAs)
   payload = await overviewPayload(payload, overview, env, overviewIntent, overviewIntent || recentIntent)
   await joinMixedSpeakers(payload.sources as SearchResult[], env.ASSETS)
-  payload = guardAnswerAttribution(payload, await loadPeople(env))
+  payload = withoutSaLabel(payload)
   store(payload)
   return timed(withCacheStatus(json(payload), status, false))
 }
@@ -1848,8 +1853,7 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
   const payload: AskPayload = {...gap,sources}
   // A paraphrase must not invent who qualifies. Quote the recorded criteria
   // and any deferred thresholds directly, without another generation call.
-  if(isPositionEligibilityQuestion(input.question || ''))return quotedPositionAnswer(payload,query,input.question) || {...gap,answer:'I couldn’t verify who would qualify from these selected speeches. Try naming the proposal more specifically.'}
-  if(isPositionCostQuestion(input.question || '')) {
+  if(isPositionEligibilityQuestion(input.question || '')||isPositionCostQuestion(input.question || '')) {
     const quoted=quotedPositionAnswer(payload,query,input.question)
     if(quoted)return quoted
   }
@@ -1861,7 +1865,7 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
   const recovered = await recoverPositionAnswer(payload,{...body,position_question:input.question},env,progress)
   if (recovered && recovered.answer_status !== 'uncited') return recovered
   return quotedPositionAnswer(payload,query,input.question) || recovered
-    || await reasonedPositionAnswer(input, payload, env) || positionExcerptsAnswer(payload,query) || gap
+    || await reasonedPositionAnswer(input, payload, env) || gap
 }
 
 /**
@@ -1887,10 +1891,8 @@ async function reasonedPositionAnswer(input: AskInput, verified: AskPayload, env
     // Loosened 16 Oct as looseAnswer: a misquote becomes paraphrase and an
     // answer without citations stands, marked uncited. The hard lines hold:
     // no other named person speaking, no unattributed causation.
-    const payload = guardAnswerAttribution(looseAnswer(askPayload(answer, undefined, verified.scope, people), answer), people)
+    const payload = withoutSaLabel(looseAnswer(askPayload(answer, undefined, verified.scope, people), answer))
     if (isEvidenceGap(payload.answer) || !payload.answer.trim()) return null
-    const lines = payload.answer.split('\n').filter(line => /[\p{L}\p{N}]/u.test(line))
-    if (lines.some(line => !claimAttributionOk(line, speaker, people) || repairCausal(line, speaker, () => {}) !== line)) return null
     return { ...payload, answer_status: Object.keys(payload.citations).length ? 'reasoned' : 'uncited' }
   } catch { return null }
 }
@@ -1930,31 +1932,6 @@ function quotedPositionAnswer(payload: AskPayload, query: string, question = '')
   return {answer:answer.trim(),citations,scope:payload.scope,answer_status:'evidence_only',evidence_kind:'original_position_proposal',sources:sources.map(source => ({
     ...rows.find(row => row.href === source.href)!,resource:source.id,snippet:source.quotes.join(' … '),cited:true,
   }))}
-}
-
-/** Neither a verified summary nor a proposal quote: list the originals read,
- * with an on-topic excerpt from each of the top three, as the ordinary path
- * does when it cannot verify a summary. Never a bare gap over real evidence. */
-function positionExcerptsAnswer(payload: AskPayload, query: string): AskPayload | null {
-  type Source = { resource?: string; slug?: string; snippet?: string; cited?: boolean }
-  const rows = payload.sources.filter((s): s is Source => !!s && typeof s === 'object')
-  const excerpts = rows.flatMap(row => {
-    const id = row.resource || row.slug || ''
-    const excerpt = typeof row.snippet === 'string' && id ? evidenceExcerpt(row.snippet, query, 440, true) : { text: '', relevance: 0 }
-    return excerpt.text && excerpt.relevance ? [{ id, text: excerpt.text, relevance: excerpt.relevance }] : []
-  }).sort((a, b) => b.relevance - a.relevance).slice(0, 3)
-  if (!excerpts.length) return null
-  let answer = 'I couldn’t verify a summary of their position this time. These passages from their speeches may help.'
-  const citations: Record<string, number[][]> = {}
-  for (const excerpt of excerpts) {
-    answer += `\n\n> ${excerpt.text}`
-    const end = Array.from(answer).length
-    citations[excerpt.id] = [[end - 1, end]]
-  }
-  const used = new Map(excerpts.map(e => [e.id, e.text]))
-  return { ...payload, answer, citations, answer_status: 'evidence_only',
-    evidence_excerpts: excerpts.map(({ id, text }) => ({ resource: id, text })),
-    sources: rows.map(row => { const id = row.resource || row.slug || ''; return used.has(id) ? { ...row, resource: id, cited: true, snippet: used.get(id) } : { ...row, resource: id, cited: false } }) }
 }
 
 /** Recover a position with exact source excerpts, rather than inventing citation IDs. */
@@ -2027,8 +2004,13 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
     // or an excerpt that is not verbatim). Since 16 Oct the draft answers as it
     // stands, uncited, unless it crosses a hard line; only a draft with nothing
     // left gets one more try, told what went wrong.
-    const loose = !summary?.points.length && points.length ? loosePositionPoints(points, sources, payload.scope?.speaker || '', question, await loadPeople(env)) : null
-    if (loose) {
+    // Each drafted point stands as an uncited line; quotation marks stay only around words its passages hold.
+    const loose = !summary?.points.length && points.length ? points.slice(0, 4).flatMap(point => {
+      const ids = point.citations.map(c => c.id).filter(id => sources.some(s => s.id === id)), own = sources.filter(s => ids.includes(s.id))
+      const text = repairQuotes(point.text.replace(/\s+/g, ' ').trim(), (own.length ? own : sources).map(s => s.snippet).join('\n'), () => {})
+      return /[\p{L}\p{N}]/u.test(text) ? [{ text, ids }] : []
+    }) : null
+    if (loose?.length) {
       let text = '**From their speeches**\n\n'
       for (const point of loose) {
         const dates = [...new Set(point.ids.flatMap(id => {
@@ -2458,7 +2440,6 @@ function apiAskStream(
           const again = opts.firstBudget ? await attempt(body,ASK_STALL_MS) : await streamAskOnce(env, body, checkedSend, upstream.signal)
           if (!isRefusal(again)) result = again
         }
-        result = guardPositionAnswer(result, body)
         let payload = askPayload(result, opts.records, opts.scope, await loadPeople(env), !!opts.overview)
         if (!clientGone && isPositionBody(body) && payload.sources.length && (isEvidenceGap(payload.answer) || !Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, result))) {
           payload = await recoverPositionAnswer(payload, body, env) || payload
@@ -2468,7 +2449,7 @@ function apiAskStream(
           try {
             const retryBody = Object.keys(payload.citations).length ? body : legacyCitationsAsk(body)
             const fallback = await attempt(hasUnsupportedQuotes(payload, result) ? quoteRecoveryAsk(retryBody) : retryBody, ASK_STALL_MS,true)
-            if (!isRefusal(fallback)) { result = guardPositionAnswer(fallback, body); payload = askPayload(result, opts.records, opts.scope, await loadPeople(env), !!opts.overview) }
+            if (!isRefusal(fallback)) { result = fallback; payload = askPayload(result, opts.records, opts.scope, await loadPeople(env), !!opts.overview) }
           } catch {
             // The final quotation check below falls back to evidence if recovery fails.
           }
@@ -2477,7 +2458,7 @@ function apiAskStream(
         payload = withAskedAs(payload, opts.askedAs)
         payload = await overviewPayload(payload, opts.overview, env, opts.overviewIntent, opts.overviewIntent || opts.recentIntent)
         await joinMixedSpeakers(payload.sources as SearchResult[], env.ASSETS)
-        payload = guardAnswerAttribution(payload, await loadPeople(env))
+        payload = withoutSaLabel(payload)
         await send('done', payload)
         // Cached from the `done` payload — the same bytes the reader got —
         // even when the reader left early (the answer was paid for).
@@ -4581,9 +4562,9 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
     case 'static': {
       // Existing shared query links retain their behavior and point search engines
       // to the standalone recipient profile as the canonical record.
-      const jurisdiction = url.searchParams.get('jur'), recipientId = url.searchParams.get('open')
+      const jurisdiction = url.searchParams.get('jur') || 'federal', recipientId = url.searchParams.get('open')
       if (route.page === 'money/grants' && !url.searchParams.has('program') && (jurisdiction === 'federal' || jurisdiction === 'qld') && recipientId && GRANT_RECIPIENT_ID_RE.test(recipientId)) return grantRecipientMeta(jurisdiction, recipientId, url, env)
-      if (route.page === 'money/grants' && jurisdiction === 'federal' && url.searchParams.get('program')) return grantProgramMeta(url.searchParams.get('program') as string, url, env)
+      if (route.page === 'money/grants' && (jurisdiction === 'federal' || jurisdiction === 'qld') && url.searchParams.get('program')) return grantProgramMeta(url.searchParams.get('program') as string, url, env)
       if (route.page === 'money/grants' && jurisdiction === 'federal' && url.searchParams.get('largest')) return grantLargestMeta(url.searchParams.get('largest') as string, url, env)
       const researchSearch = route.page === 'ask' && url.searchParams.get('view') === 'search'
       const page = STATIC_PAGES[researchSearch ? 'search' : route.page]
@@ -4700,20 +4681,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
     case 'topic': {
       const name = TOPIC_NAMES[route.slug]
       if (!name) return base({ title: 'Topic not found · OPAX', description: STATIC_PAGES.search.description, status: 404 })
-      const lower = name.toLowerCase()
-      const description = withTail(
-        `Parliament on ${lower}: every speech labelled ${lower} in the Australian parliamentary record, split by party and by year.`,
-        'Newest first, each with its source.',
-      )
-      const canonical = canonicalFor(url, false)
-      return base({
-        title: `${name} · Topics · OPAX`,
-        description,
-        canonical,
-        jsonLd: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: `${name} in the parliamentary record`, about: name, description, url: canonical, isPartOf: { '@type': 'WebSite', name: 'OPAX', url: SITE_ORIGIN } },
-        prerender: prerenderBlock(name, `Speeches on ${lower} in the Australian parliamentary record, by party and by year, with the newest labelled speeches and a link to the official source for each.`),
-        card: { kicker: 'Topic', title: name, lines: [`Parliament on ${lower}: every speech labelled ${lower} in the record, by party and by year.`] },
-      })
+      return topicMeta(route.slug, name, url, request, env, ctx)
     }
 
     case 'subject':
@@ -4739,6 +4707,26 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
           '<p><a href="/ask?view=search">Search the record</a> · <a href="/">Home</a></p>', [{ label: 'Page not found' }]),
       })
   }
+}
+
+/** Reuse the topic panel's two existing cached responses, including its search window key. */
+async function topicMeta(slug: string, name: string, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<PageMeta> {
+  const canonical = `${SITE_ORIGIN}/subject/topic/${slug}`
+  const phrase = slug === 'indigenous-affairs' ? 'Indigenous affairs' : name.toLowerCase().replace(/ & /g, ' and ')
+  const search = new URL('/api/search', url)
+  search.search = new URLSearchParams({q:phrase,kind:'speech',mode:'hybrid',page:'1',per:'200',sort:'newest',topic:slug}).toString()
+  const content = await timed('topic-content', async () => {
+    const [countResponse, speechResponse] = await Promise.all([apiTopic(slug,env,ctx),apiSearch(new Request(search, {headers:request.headers}),search,env,ctx)])
+    if (!countResponse.ok || !speechResponse.ok) return null
+    const counts = await countResponse.json() as TopicCounts
+    const speeches = await speechResponse.json() as {results: TopicSpeech[]}
+    return Number.isFinite(counts.count) && Number.isFinite(counts.labelled) && Array.isArray(speeches.results) ? {counts,speeches:speeches.results} : null
+  }).catch(()=>null)
+  const description = content ? topicSummary(name,content.counts) : `${name}: topic records could not be loaded. Please try again.`
+  return {title:`${name} · Topics · OPAX`,description,canonical,ogType:'website',status:content ? 200 : 503,
+    jsonLd: content ? {'@context':'https://schema.org','@type':'CollectionPage',name,description,url:canonical,about:name} : null,
+    prerender:prerenderBlock(name,description,content ? timedSync('topic-html', () => topicCoreBody(slug,content.counts,content.speeches,search.pathname+search.search)) : ''),
+    card:{kicker:'Topic',title:name,lines:[description]}}
 }
 
 /**
@@ -4862,6 +4850,15 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
     }
   }
   if ((route.kind==='static' && route.page==='money/contracts' || route.kind==='subject' && route.dir==='supplier' || route.kind==='index' && route.dir==='supplier') && [...url.searchParams.keys()].some(key=>key.startsWith('t.') || key==='contract' || key==='donor')) meta.noindex=true
+  // These previews remain the page's overview while the interactive records load below.
+  // Keeping the same DOM through boot avoids replacing a factual answer with a skeleton.
+  const recordCore = route.kind === 'grant-recipient' && !url.searchParams.has('award') || route.kind === 'topic'
+    || route.kind === 'subject' && route.dir === 'agency'
+    || route.kind === 'static' && route.page === 'money/grants' && (url.searchParams.has('program') || url.searchParams.has('open'))
+  if (recordCore && meta.status === 200 && meta.prerender) {
+    const identity = new URL(meta.canonical)
+    meta.prerender = meta.prerender.replace('id="prerender"', `id="prerender" data-record-core data-record-path="${escHtml(identity.pathname+identity.search)}"`)
+  }
   // Every non-home path has a single answer, including unavailable/not-found pages.
   meta.prerender ??= answerBlock(meta.title.replace(/ · OPAX$/, ''),meta.description)
   // The page's one trail, from the menus' own list: what a server-only
@@ -5122,8 +5119,10 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
     if(!route.id && path==='/instruments') return path
   }
   if(route?.kind==='grant-recipient') {
-    const meta=await grantRecipientMeta(route.jurisdiction,route.id,candidate,env)
-    if(meta.status===200 && meta.canonical) return new URL(meta.canonical).pathname
+    // Address normalisation needs only identity. Rendering here would read the
+    // award shard and build the entire preview twice on every recipient request.
+    const recipients=await loadGrantRecipients(route.jurisdiction,env).catch(()=>null)
+    if(recipients?.some(row=>row.id===route.id)) return `/money/grants/${route.jurisdiction}/recipient/${encodeURIComponent(route.id)}`
   }
   return url.pathname
 }
@@ -5260,10 +5259,10 @@ const grantRecipientsMemo = new Map<string, Promise<GrantRecipientSummary[]>>()
 function loadGrantRecipients(jurisdiction: 'federal' | 'qld', env: Env): Promise<GrantRecipientSummary[]> {
   let pending = grantRecipientsMemo.get(jurisdiction)
   if (!pending) {
-    pending = assetJson<{ recipients: GrantRecipientSummary[] }>(env, `/graph/grants.${jurisdiction}.json`).then(data => {
+    pending = loadGrantCatalogue(jurisdiction, env).then(data => {
       if (!Array.isArray(data.recipients) || data.recipients.some(r => !GRANT_RECIPIENT_ID_RE.test(r.id) || typeof r.n !== 'string' || !Number.isFinite(r.t) || !Number.isInteger(r.c) || !Number.isInteger(r.sh))) throw new Error('Invalid grant recipient index')
       return data.recipients
-    }).catch(error => { grantRecipientsMemo.delete(jurisdiction); throw error })
+    }).catch(error => { grantRecipientsMemo.delete(jurisdiction); grantCataloguesMemo.delete(jurisdiction); throw error })
     grantRecipientsMemo.set(jurisdiction, pending)
   }
   return pending
@@ -5275,78 +5274,83 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
   if (!recipient) return { title: recipients ? 'Grant recipient not found · OPAX' : 'Grant recipient temporarily unavailable · OPAX',
     description: recipients ? 'This recipient is not in the current grant records. Browse the grants directory.' : 'Grant recipient records could not be loaded. Please try again.',
     canonical, ogType: 'website', status: recipients ? 404 : 503, jsonLd: null, prerender: null, card: null }
+  const fileKey = id.toLowerCase().replace(':', '-').replace(/[^a-z0-9-]+/g, '-').replace(/-+$/g, '')
+  const shardPath = `/grants/${jurisdiction}/shard-${String(recipient.sh).padStart(2, '0')}.json`
+  const detail = await timed('recipient-content', () => recordAssetJson<Record<string, GrantDetail>>(env, shardPath)).then(shard=>shard[fileKey]).catch(()=>null)
+  if (!detail || detail.id !== id || typeof detail.n !== 'string' || !Number.isFinite(detail.t) || !Number.isInteger(detail.c) || !Array.isArray(detail.grants)) return {title: 'Grant recipient temporarily unavailable · OPAX', description: 'Recipient award records could not be loaded. Please try again.', canonical, ogType: 'website', status: 503, jsonLd: null, prerender: null, card: null}
   const awardId = url.searchParams.get('award')
   if (awardId) {
     // Resolve the source shard, not the rotating publication shortlist: old
     // shared awards must keep working after they are no longer recent candidates.
-    type Award = { id: string; v: number; n?: string; desc?: string; s?: string; guid?: string }
-    const fileKey = id.toLowerCase().replace(':', '-').replace(/[^a-z0-9-]+/g, '-').replace(/-+$/g, '')
-    const data = jurisdiction === 'federal' && /^GA\d+(?:-A\d+)?$/.test(awardId)
-      ? await assetJson<Record<string, { grants?: Award[] }>>(env, `/grants/federal/shard-${String(recipient.sh).padStart(2, '0')}.json`).catch(() => null) : null
-    const award = data?.[fileKey]?.grants?.find(g => g.id === awardId)
+    const award = jurisdiction === 'federal' && /^GA\d+(?:-A\d+)?$/.test(awardId) ? detail.grants.find(g=>g.id===awardId) : null
     const selected = `${canonical}?award=${encodeURIComponent(awardId)}`
     if (!award || !Number.isFinite(award.v)) return { title: 'Grant award not found · OPAX', description: 'This award is not available on this recipient page.', canonical: selected, ogType: 'website', status: 404, jsonLd: null, prerender: null, card: null }
     const purpose = award.desc || award.n || award.id
-    const description = `${money(award.v)} published award value for ${recipient.n}. ${purpose}${award.s ? ` Agreement starts ${award.s}.` : ''} Award value does not establish payments received.`
+    const description = `${money(award.v!)} published award value for ${recipient.n}. ${purpose}${award.s ? ` Agreement starts ${award.s}.` : ''} Award value does not establish payments received.`
     const original = award.guid ? `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(award.guid)}` : `https://www.grants.gov.au/Ga/ListResult?Type=Ga&AgencyStatus=-1&GaId=${encodeURIComponent(award.id)}`
     return { title: `${award.id}: ${recipient.n} · OPAX`, description, canonical: selected, ogType: 'article', status: 200,
       jsonLd: { '@context': 'https://schema.org', '@type': 'Article', headline: `${award.id}: ${recipient.n}`, description, url: selected, citation: original },
-      prerender: prerenderBlock(`${award.id}: ${recipient.n}`, description),
-      card: { kicker: `${award.id}${award.s ? ` · Starts ${award.s}` : ''}`, title: recipient.n, lines: [purpose, 'Award value, not payments received.'], stat: { value: money(award.v), label: 'published grant award' } } }
+      prerender: prerenderBlock(`${award.id}: ${recipient.n}`, description, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath))),
+      card: { kicker: `${award.id}${award.s ? ` · Starts ${award.s}` : ''}`, title: recipient.n, lines: [purpose, 'Award value, not payments received.'], stat: { value: money(award.v!), label: 'published grant award' } } }
   }
   const qld = jurisdiction === 'qld'
   const basis = qld ? 'recorded Queensland expenditure' : 'published Commonwealth grant award values'
   const countBasis = qld ? 'expenditure rows' : 'award records'
   const facts = `${recipient.n}: ${money(recipient.t)} in ${basis} across ${num(recipient.c)} ${countBasis}.`
   const caveat = qld ? 'A multi-year funding agreement can appear in several financial years; rows are not distinct grants.' : 'Published award values do not establish payments received.'
-  const description = withTail(facts, 'Explore programs, agencies and source records.')
-  return { title: `${clip(recipient.n, 90)} · Grant recipient · OPAX`, description, canonical, ogType: 'profile', status: 200,
+  const description = facts
+  return { title: `${recipient.n} · Grant recipient · OPAX`, description, canonical, ogType: 'profile', status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': 'ProfilePage', name: recipient.n, url: canonical, description,
       mainEntity: { '@type': 'Thing', name: recipient.n, ...(id.startsWith('abn:') ? { identifier: { '@type': 'PropertyValue', propertyID: 'ABN', value: id.slice(4) } } : {}) } },
-    prerender: prerenderBlock(recipient.n, `${facts} ${caveat}`),
+    prerender: prerenderBlock(recipient.n, `${facts} ${caveat}`, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath))),
     card: { kicker: 'Grant recipient', title: recipient.n, lines: [`${money(recipient.t)} in ${basis}`, `${num(recipient.c)} ${countBasis}`, caveat] } }
 }
 
 /** The figures the daily edition posts about a program, when it has been told by seat (scripts/build_social_catalog.mjs). */
 interface SocialProgram { key: string; n: string; t: number; c: number; y0?: string | null; y1?: string | null; mapped: [number, number]; groups: Record<string, [number, number]>; seatShare: Record<string, number> }
 const PROGRAM_KEY_RE = /^[a-z0-9][a-z0-9-]*$/
-let grantProgramsMemo: Promise<{programs: GrantProgram[]}> | null = null
-function loadGrantPrograms(env: Env): Promise<{programs: GrantProgram[]}> {
-  grantProgramsMemo ??= assetJson<{programs: GrantProgram[]}>(env, '/graph/grants.federal.json')
-    .catch(error => { grantProgramsMemo = null; throw error })
-  return grantProgramsMemo
+const grantCataloguesMemo = new Map<string, Promise<{programs: GrantProgram[]; recipients: GrantRecipientSummary[]}>>()
+function loadGrantCatalogue(jurisdiction: 'federal' | 'qld', env: Env) {
+  let pending = grantCataloguesMemo.get(jurisdiction)
+  if (!pending) {
+    pending = assetJson<{programs: GrantProgram[]; recipients: GrantRecipientSummary[]}>(env, `/graph/grants.${jurisdiction}.json`)
+      .catch(error => { grantCataloguesMemo.delete(jurisdiction); throw error })
+    grantCataloguesMemo.set(jurisdiction, pending)
+  }
+  return pending
 }
 const MONTH_RE = /^\d{4}-(0[1-9]|1[0-2])$/
 const MONTH_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
 /** /money/grants?jur=federal&program=<key>: one program's file, opened in the grants explorer. */
 async function grantProgramMeta(raw: string, url: URL, env: Env): Promise<PageMeta> {
-  const catalogue = await loadGrantPrograms(env).catch(() => null)
+  const jurisdiction = url.searchParams.get('jur') === 'qld' ? 'qld' : 'federal'
+  const catalogue = await loadGrantCatalogue(jurisdiction, env).catch(() => null)
   const row = resolveProgram(catalogue?.programs, raw)
   const key = row ? row.key || programKey(row.id) : ''
-  const canonical = `${SITE_ORIGIN}/money/grants?jur=federal&program=${encodeURIComponent(row?.id || raw)}`
+  const canonical = `${SITE_ORIGIN}/money/grants?jur=${jurisdiction}&program=${encodeURIComponent(row?.id || raw)}`
   const program = row && PROGRAM_KEY_RE.test(key)
-    ? await assetJson<{ id: string; n: string; ag?: string; t: number; c: number; r?: number; y0?: string; y1?: string }>(env, `/grants/federal/programs/${key}.json`).catch(() => null) : null
-  if (!program || program.id !== row?.id || typeof program.n !== 'string' || !Number.isFinite(program.t)) {
+    ? await timed('program-content', () => recordAssetJson<GrantDetail>(env, `/grants/${jurisdiction}/programs/${key}.json`)).catch(() => null) : null
+  if (!program || program.id !== row?.id || typeof program.n !== 'string' || !Number.isFinite(program.t) || !Number.isInteger(program.c) || !Array.isArray(program.grants)) {
     return { title: 'Grant program not found · OPAX', description: STATIC_PAGES['money/grants'].description, canonical, ogType: 'website', status: 404, jsonLd: null, prerender: null, card: null }
   }
-  const social = await assetJson<{ programs?: SocialProgram[] }>(env, '/social/programs.json').catch(() => null)
+  const social = jurisdiction === 'federal' ? await recordAssetJson<{ programs?: SocialProgram[] }>(env, '/social/programs.json').catch(() => null) : null
   const told = social?.programs?.find(p => p.key === key) ?? null
   const years = program.y0 && program.y1 && program.y0 !== program.y1 ? `${program.y0} to ${program.y1}` : (program.y0 || program.y1 || '')
-  const facts = `${program.n}: ${money(program.t)} in ${num(program.c)} published Commonwealth grant awards${program.r ? ` to ${num(program.r)} recipients` : ''}${years ? `, financial years ${years}` : ''}.`
+  const facts = `${program.n}: ${money(program.t)} in ${num(program.c)} ${jurisdiction === 'qld' ? 'recorded Queensland expenditure rows' : 'published Commonwealth grant awards'}${program.r ? ` to ${num(program.r)} ${program.r === 1 ? 'recipient' : 'recipients'}` : ''}${years ? `, financial years ${years}` : ''}.`
   let split = ''
   if (told && told.mapped?.[0] > 0) {
     const pct = (g: string) => Math.round((told.groups?.[g]?.[0] ?? 0) / told.mapped[0] * 100)
     const seats = (g: string) => Math.round((told.seatShare?.[g] ?? 0) * 100)
     split = `By who held the seat: Labor ${pct('Labor')}% (${seats('Labor')}% of seats) · Coalition ${pct('Coalition')}% (${seats('Coalition')}%) · crossbench ${pct('Crossbench')}% (${seats('Crossbench')}%)`
   }
-  const description = withTail(facts, 'Where the money went: recipients, selection process, electorates and the members who held them.')
-  return { title: `${clip(program.n, 80)} · Grant program · OPAX`, description, canonical, ogType: 'article', status: 200,
-    jsonLd: { '@context': 'https://schema.org', '@type': 'Dataset', name: program.n, description: facts, url: canonical, creator: publisher, license: 'https://creativecommons.org/licenses/by/3.0/au/' },
-    prerender: prerenderBlock(program.n, `${facts} Award values, not payments.`),
+  const description = facts
+  return { title: `${program.n} · Grant program · OPAX`, description, canonical, ogType: 'article', status: 200,
+    jsonLd: { '@context': 'https://schema.org', '@type': 'Dataset', name: program.n, description: facts, url: canonical, creator: publisher, license: jurisdiction === 'qld' ? 'https://creativecommons.org/licenses/by/4.0/' : 'https://creativecommons.org/licenses/by/3.0/au/' },
+    prerender: prerenderBlock(program.n, facts, timedSync('program-html', () => grantCoreBody(program, jurisdiction, canonical, true, `/grants/${jurisdiction}/programs/${key}.json`))),
     card: { kicker: told ? 'Where did the money go?' : 'Grant program', title: program.n,
-      lines: [years ? `${num(program.c)} grants, ${years}` : `${num(program.c)} grants`, split || (program.ag ?? 'Published award values, not payments.')],
-      stat: { value: money(program.t), label: 'published grant awards' } } }
+      lines: [`${num(program.c)} ${jurisdiction === 'qld' ? 'expenditure rows' : 'grants'}${years ? `, ${years}` : ''}`, split || (program.ag ?? (jurisdiction === 'qld' ? 'Recorded annual expenditure.' : 'Published award values, not payments.'))],
+      stat: { value: money(program.t), label: jurisdiction === 'qld' ? 'recorded expenditure' : 'published grant awards' } } }
 }
 
 /** /money/grants?jur=federal&largest=YYYY-MM: the month's largest awards, one per recipient. */
@@ -5368,11 +5372,11 @@ async function grantLargestMeta(month: string, url: URL, env: Env): Promise<Page
 
 interface AgencyRow {
   id: string; name: string; total: number; count: number; supplier_count: number
-  first_year?: number | null; last_year?: number | null
+  profile_path?: string; first_year?: number | null; last_year?: number | null
 }
-let agenciesMemo: Promise<{ meta?: { generated_at?: string }; agencies: AgencyRow[] }> | null = null
+let agenciesMemo: Promise<{ meta?: { generated_at?: string; source?: string; source_url?: string }; agencies: AgencyRow[] }> | null = null
 function loadAgencies(env: Env) {
-  agenciesMemo ??= assetJson<{ meta?: { generated_at?: string }; agencies: AgencyRow[] }>(env, '/agencies.json').then(data => {
+  agenciesMemo ??= assetJson<{ meta?: { generated_at?: string; source?: string; source_url?: string }; agencies: AgencyRow[] }>(env, '/agencies.json').then(data => {
     if (!Array.isArray(data.agencies) || data.agencies.some(a => !/^a-[a-f0-9]{20}$/.test(a.id) || typeof a.name !== 'string' || !a.name.trim() || !Number.isFinite(a.total) || !Number.isFinite(a.count) || !Number.isFinite(a.supplier_count))) throw new Error('Invalid agency directory')
     return data
   }).catch(error => { agenciesMemo = null; throw error })
@@ -5385,12 +5389,14 @@ async function agencyMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     description: data ? 'Browse the government agency directory for available contract records.' : 'Agency records could not be loaded. Please try again.',
     canonical: canonicalFor(url, false), ogType: 'website', status: data ? 404 : 503, jsonLd: null, prerender: null, card: null }
   const canonical = `${SITE_ORIGIN}/subject/agency/${agency.id}`
+  const profile = await timed('agency-content', () => recordAssetJson<AgencyDetail>(env, `/agencies/${agency.id}.json`)).catch(()=>null)
+  if (!profile || profile.id !== agency.id || !Array.isArray(profile.contracts) || !Array.isArray(profile.suppliers)) return {title: 'Agency temporarily unavailable · OPAX', description: 'Agency source records could not be loaded. Please try again.', canonical, ogType: 'website', status: 503, jsonLd: null, prerender: null, card: null}
   const facts = `${agency.name}: ${money(agency.total)} in recorded contract commitments across ${num(agency.count)} contracts and ${num(agency.supplier_count)} suppliers.`
-  const description = withTail(facts, 'Explore supplier relationships and source notices.')
-  return { title: `${clip(agency.name, 90)} · Government agency · OPAX`, description, canonical, ogType: 'profile', status: 200,
+  const description = facts
+  return { title: `${agency.name} · Government agency · OPAX`, description, canonical, ogType: 'profile', status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': 'ProfilePage', name: agency.name, url: canonical, description,
       mainEntity: { '@type': 'GovernmentOrganization', name: agency.name } },
-    prerender: prerenderBlock(agency.name, `${facts} Award values are not expenditure. Agency names remain separate as recorded.`),
+    prerender: prerenderBlock(agency.name, facts, timedSync('agency-html', () => agencyCoreBody(profile, canonical, data?.meta))),
     card: { kicker: 'Government agency', title: agency.name, lines: [`${money(agency.total)} in recorded commitments`, `${num(agency.count)} contracts · ${num(agency.supplier_count)} suppliers`, 'Recorded awards, not expenditure.'] } }
 }
 
@@ -5409,6 +5415,23 @@ function keptAssetJson<T>(memo: Map<string, Promise<unknown>>, limit: number, en
     kept = read
   }
   return kept as Promise<T>
+}
+const recordFileMemo = new Map<string, Promise<unknown>>()
+const agencyFileMemo = new Map<string, Promise<unknown>>()
+function recordAssetJson<T>(env: Env, path: string): Promise<T> {
+  if (!path.startsWith('/agencies/')) return keptAssetJson<T>(recordFileMemo, 4, env, path)
+  // The largest agency file is 16 MB. Keep only the preview, not its parsed
+  // lifetime contract list; the browser continues to read the original file.
+  let pending = agencyFileMemo.get(path)
+  if (!pending) {
+    if (agencyFileMemo.size >= 8) agencyFileMemo.delete(agencyFileMemo.keys().next().value!)
+    pending = assetJson<AgencyDetail>(env,path).then(profile=>({id:profile.id,name:profile.name,total:profile.total,count:profile.count,
+      supplier_count:profile.suppliers.length,suppliers:firstAgencySuppliers(profile.suppliers),
+      contracts:profile.contracts.filter(c=> !((!c.start_date || !/^\d{4}-\d{2}-\d{2}/.test(c.start_date) || Number(c.start_date.slice(0,4))<=1900) && !(Number(c.amount)>0))).slice(0,20)}))
+    agencyFileMemo.set(path,pending)
+    pending.catch(()=>{if(agencyFileMemo.get(path)===pending)agencyFileMemo.delete(path)})
+  }
+  return pending as Promise<T>
 }
 const supplierBucketMemo = new Map<string, Promise<unknown>>()
 const supplierBucket = <T>(env: Env, path: string): Promise<T> => keptAssetJson<T>(supplierBucketMemo, 16, env, path)
@@ -6803,7 +6826,8 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     // declines unsafe scopes; qualitative research verifies original passages.
     const privateTurn = Array.isArray(input.context) && input.context.length > 0
     const loopLimits = researchLimits({ steps: env.RESEARCH_LOOP_STEPS, tokens: env.RESEARCH_LOOP_TOKENS, wallMs: env.RESEARCH_LOOP_MS })
-    const loopVersion = loopRoute ? `${AGENTIC_TOOLS_VERSION}/${ANSWER_WRITING_VERSION}/loop/${researchModelKey(env.RESEARCH_LOOP_MODEL_ID, env.RESEARCH_LOOP_PROVIDER, env.RESEARCH_LOOP_REASONING)}/${loopLimits.rounds}/${loopLimits.tokens}/${loopLimits.wallMs}/${String(input.kind ?? 'all')}` : AGENTIC_TOOLS_VERSION
+    // ASK_ANSWER_CACHE_VERSION retires answers stored under earlier answer checks.
+    const loopVersion = loopRoute ? `${ASK_ANSWER_CACHE_VERSION}/${AGENTIC_TOOLS_VERSION}/${ANSWER_WRITING_VERSION}/loop/${researchModelKey(env.RESEARCH_LOOP_MODEL_ID, env.RESEARCH_LOOP_PROVIDER, env.RESEARCH_LOOP_REASONING)}/${loopLimits.rounds}/${loopLimits.tokens}/${loopLimits.wallMs}/${String(input.kind ?? 'all')}` : `${ASK_ANSWER_CACHE_VERSION}/${AGENTIC_TOOLS_VERSION}`
     const key = namedScope.unresolved || namedScope.ambiguous || namedScope.bills.length || loopRoute && Array.isArray(input.prior_resources) && input.prior_resources.length ? undefined : new Request(await agenticCacheKey(question, env.CACHE_EPOCH, env.ASK_MODEL || 'openai-compatible', agenticPeriod(input, loopRoute), loopVersion, agenticFilters(input), classifyAgentic(question).shape, namedScope))
     const streaming = url.searchParams.get('stream') === '1' || (request.headers.get('accept') ?? '').includes('text/event-stream')
     if (key && !privateTurn && !cacheBypass(request, url)) {
