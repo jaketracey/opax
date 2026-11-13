@@ -1,4 +1,4 @@
-import {donorDisclosure} from './donor-disclosure.js?v=2e8209b6ec';
+import {donorDisclosure} from './donor-disclosure.js?v=b601705758';
 import {subjectUrl} from './canonical-urls.js?v=e32f13c6c8';
 import {moneyFlowType, filterMoneyEdges, readMoneyFilters} from './money-records.js';
 

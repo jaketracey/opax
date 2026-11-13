@@ -1,6 +1,6 @@
 import {hydrateRecordCore} from './record-core.js';
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=2e8209b6ec';
-import {loadDonorViewIndex} from './donor-views.js?v=a3bd4b7d12';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=b601705758';
+import {loadDonorViewIndex} from './donor-views.js?v=914db51bc1';
 import {subjectUrl} from './canonical-urls.js?v=e32f13c6c8';
 import {programKey, resolveProgram, resolveProgramId} from './facts/grant-programs.js?v=5b8dddc342';
 export {programKey, resolveProgram, resolveProgramId};
