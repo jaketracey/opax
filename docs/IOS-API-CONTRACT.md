@@ -312,7 +312,7 @@ For atomic replacement, stage the required catalogs under `data_version`, verify
 
 These readers add no migration or secret; the existing voice/journal schemas are required. W12 remains the separate votes-date launch dependency.
 
-**Parliament today widget file (widgets spec 2.3, lane B; branch `im/widget-today-api`, not deployed).** `GET /api/app/v1/widget/today` is the one file the Parliament today home-screen widget fetches: the same bytes for every reader, within 4 KB, already reduced to the words the app shows so the widget only lays out strings. It follows the app-reader rules above (GET and HEAD only, 405, 400 `invalid_query`, weak SHA-256 ETag and 304 on any matching `If-None-Match` form, no stale grace, network block `N`) with `Cache-Control: public, max-age=900`. It sets no cookie and reads no query string, cookie or client header beyond `If-None-Match`.
+**Parliament today widget file (widgets spec 2.3, lane B; live on main from PR #326).** `GET /api/app/v1/widget/today` is the one file the Parliament today home-screen widget fetches: the same bytes for every reader, within 4 KB, already reduced to the words the app shows so the widget only lays out strings. It follows the app-reader rules above (GET and HEAD only, 405, 400 `invalid_query`, weak SHA-256 ETag and 304 on any matching `If-None-Match` form, no stale grace, network block `N`) with `Cache-Control: public, max-age=900`. It sets no cookie and reads no query string, cookie or client header beyond `If-None-Match`.
 
 ```ts
 type WidgetTodayV1 = {
