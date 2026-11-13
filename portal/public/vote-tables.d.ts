@@ -5,6 +5,7 @@ export function divisionTableConfig(params?: Record<string,string>, caption?: st
 export function voteTableConfig(person: string | string[], caption?: string): DataTableConfig;
 export function personVoteKeys(name: string, personId?: string, votes?: Record<string,unknown> | null): string[];
 export function personVoteRecords(keys?: string[], votes?: Record<string,unknown> | null, recentData?: object | null): {rows: object[]; recorded: boolean};
+export function divisionIdentity(division?: object | null): string;
 export function divisionRows(divisions?: object[], deduplicate?: boolean): Row[];
 export function votingRows(votes?: object[], bills?: object[]): Row[];
 export function voteTablePage(rows: Row[], config: DataTableConfig, query?: Query): Page;

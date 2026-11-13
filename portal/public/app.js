@@ -31,7 +31,7 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=45f00fccb7").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=59ae545e14").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
@@ -8867,11 +8867,9 @@ function billRowHTML(b) {
     : b.sponsor && !b.portfolio
       ? `${billSponsorName(b.sponsor)}${others ? ` and ${others} other${others === 1 ? "" : "s"}` : ""}` : "";
   const figures = [
-    // Not "28 divisions": the index counts the register's division records, and
-    // the source records one division several times, so the bill page folds
-    // that same Medibank bill to eight. The list cannot fold — it would have to
-    // open every file — so it says which number this is instead of asserting a
-    // count the next page denies.
+    // The index counts the register's division records. Each is one division of
+    // the house (they are keyed by chamber, day and division number), and the
+    // bill page shows every one, so this count matches the bill page's table.
     Number(b.divisions) ? `${b.divisions} division record${b.divisions === 1 ? "" : "s"}` : "",
     Number(b.speeches) ? `${b.speeches} speech${b.speeches === 1 ? "" : "es"}` : "",
     Number(b.acts) ? "became law" : "",
@@ -8893,9 +8891,8 @@ const BILLS_FINEPRINT =
   `Bills, their dates and their divisions come from the parliamentary record; each bill page links the
    official source it was read from. Summaries are written by a model from the explanatory memorandum or
    the Bills Digest, are marked as such wherever they appear, and are not the record. A bill missing from
-   this list is not evidence it does not exist: the register is still being built. The source records
-   some divisions more than once, so a division record here is a row in the register rather than a
-   separate vote of the house; a bill page folds the duplicates and usually shows fewer.`;
+   this list is not evidence it does not exist: the register is still being built. Each division record
+   counted here is one division of the house, and the bill's page shows every one of them.`;
 
 /** /bills — the whole list, searchable by name, filtered by parliament, status and year. */
 /** APH writes a sponsor as "SMITH, Sen Dean" or "BURKE, the Hon Tony, MP"; readers want "Dean Smith". */
@@ -9264,15 +9261,15 @@ function billQuestionParts(division, bill) {
   return { head: `${plain.slice(0, 105).trimEnd()}…`, note: raw };
 }
 
-/* TheyVoteForYou records the same division several times — the Medibank bill's
-   third reading appears ten times, nine of them saying so in the question
-   field. Copied straight out, the page shows ten third readings and a reader
-   counts ten. Rows identical in day, stage and counts are one division; the
-   one that carries the motion is kept and the section says this is happening. */
+/* A division can reach a bill's file more than once. Records of one division
+   share its chamber, day and division number (vote-tables.js divisionIdentity)
+   and are one row; the one that carries the motion is kept and the section says
+   this is happening. Two divisions with the same day, stage and counts are two
+   divisions: two amendments can both go 11 to 24 on one day. */
 function billDedupeDivisions(divisions, bill) {
   const groups = new Map();
   for (const d of divisions || []) {
-    const k = [d.date, String(d.stage || "").toLowerCase(), d.ayes, d.noes].join("|");
+    const k = voteTables.divisionIdentity(d) || `row:${groups.size}`;
     if (!groups.has(k)) groups.set(k, []);
     groups.get(k).push(d);
   }
@@ -9373,8 +9370,8 @@ function billDivisionsHTML(bill) {
         `Ayes and noes are each division's own totals. Party is each member's recorded affiliation, not a
           reconstruction of who they sat with on the day, and a member the record does not name is counted but
           not attributed. Only formal divisions leave a per-member record.`,
-        collapsed ? `The source records some divisions more than once; ${collapsed} row${collapsed === 1 ? "" : "s"}
-          identical in day, stage and counts ${collapsed === 1 ? "is" : "are"} shown here once.` : "",
+        collapsed ? `The source records some divisions more than once; ${collapsed} repeated record${collapsed === 1 ? "" : "s"}
+          of the same division ${collapsed === 1 ? "is" : "are"} shown here once.` : "",
         "A division's title is its recorded stage. Open a division for its count on They Vote For You and the question put, in the record's words.",
       ],
       licence: "Division records: They Vote For You, OpenAustralia Foundation, ODbL.",
