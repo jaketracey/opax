@@ -1,8 +1,26 @@
-/** Scan suffixes once rather than retrying an unanchored end-of-string regex. */
+/**
+ * Scan suffixes once rather than retrying an unanchored end-of-string regex. Compares UTF-16
+ * code units, so a long run costs no per-character string or search.
+ */
 export function trimQuestionEnd(text, marks = '?!.') {
   let end = text.length
-  while (end && marks.includes(text[end - 1])) end--
+  while (end && trailingMark(marks, text.charCodeAt(end - 1))) end--
   return text.slice(0, end)
+}
+
+function trailingMark(marks, code) {
+  for (let i = 0; i < marks.length; i++) if (marks.charCodeAt(i) === code) return true
+  return false
+}
+
+/**
+ * Shorten a trailing run of marks to its first and last mark. Parsers that trim with
+ * trimQuestionEnd get the same result, and a check on the final mark still sees it, but a
+ * 100,000-mark tail is scanned once here instead of copied by every normalise or regex pass.
+ */
+export function shortTrailingMarks(text, marks = '?!.') {
+  const end = trimQuestionEnd(text, marks).length
+  return text.length - end > 2 ? text.slice(0, end + 1) + text[text.length - 1] : text
 }
 
 export const questionSpaces = text => text.replace(/\s+/g, ' ').trim()
