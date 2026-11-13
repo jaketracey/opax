@@ -1,0 +1,189 @@
+{
+ "id": "accountability-robodebt",
+ "question": "Who was responsible for robodebt?",
+ "input": {
+  "kind": "speech"
+ },
+ "model": [
+  {
+   "tool_calls": [
+    {
+     "name": "search",
+     "args": {
+      "query": "robodebt responsibility ministers unlawful"
+     }
+    }
+   ]
+  },
+  {
+   "tool_calls": [
+    {
+     "name": "answer",
+     "args": {
+      "points": [
+       {
+        "claim": "Robin Example told the House the former government \"knew this scheme was unlawful and it kept going anyway\".",
+        "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/t/body/0-160",
+        "quote": "knew this scheme was unlawful and it kept going anyway"
+       },
+       {
+        "claim": "The Royal Commission into the Robodebt Scheme found the scheme was a crude and cruel mechanism, neither fair nor legal, and that the government of the time continued to raise debts despite warnings."
+       },
+       {
+        "claim": "Morgan Sample told the Senate the department's warnings about income averaging were ignored by the ministers who kept defending the scheme.",
+        "id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/t/body/0-150",
+        "quote": "the warnings were ignored by the ministers who kept defending the scheme"
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "services": [
+  {
+   "path": "/find",
+   "match": [
+    "robodebt"
+   ],
+   "response": {
+    "resources": {
+     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": {
+      "slug": "speech-910011",
+      "title": "Robodebt",
+      "origin": {
+       "created": "2023-07-11T00:00:00Z",
+       "collaborators": [
+        "Robin Example"
+       ]
+      },
+      "extra": {
+       "metadata": {
+        "kind": "speech"
+       }
+      },
+      "fields": {
+       "body": {
+        "paragraphs": {
+         "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/t/body/0-160": {
+          "text": "The former government knew this scheme was unlawful and it kept going anyway, because it cared more about the budget bottom line than about the people it hurt."
+         }
+        }
+       }
+      }
+     },
+     "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": {
+      "slug": "speech-910012",
+      "title": "Robodebt",
+      "origin": {
+       "created": "2023-07-12T00:00:00Z",
+       "collaborators": [
+        "Morgan Sample"
+       ]
+      },
+      "extra": {
+       "metadata": {
+        "kind": "speech"
+       }
+      },
+      "fields": {
+       "body": {
+        "paragraphs": {
+         "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/t/body/0-150": {
+          "text": "The department was warned about income averaging, and the warnings were ignored by the ministers who kept defending the scheme in this chamber."
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "path": "/slug/speech-910011",
+   "response": {
+    "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "title": "Robodebt",
+    "origin": {
+     "created": "2023-07-11T00:00:00Z",
+     "collaborators": [
+      "Robin Example"
+     ]
+    },
+    "extra": {
+     "metadata": {
+      "date": "2023-07-11",
+      "speaker": "Robin Example"
+     }
+    },
+    "data": {
+     "texts": {
+      "body": {
+       "value": {
+        "body": "The former government knew this scheme was unlawful and it kept going anyway, because it cared more about the budget bottom line than about the people it hurt."
+       }
+      }
+     }
+    },
+    "usermetadata": {
+     "classifications": [
+      {
+       "labelset": "kind",
+       "label": "speech"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "path": "/slug/speech-910012",
+   "response": {
+    "id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "title": "Robodebt",
+    "origin": {
+     "created": "2023-07-12T00:00:00Z",
+     "collaborators": [
+      "Morgan Sample"
+     ]
+    },
+    "extra": {
+     "metadata": {
+      "date": "2023-07-12",
+      "speaker": "Morgan Sample"
+     }
+    },
+    "data": {
+     "texts": {
+      "body": {
+       "value": {
+        "body": "The department was warned about income averaging, and the warnings were ignored by the ministers who kept defending the scheme in this chamber."
+       }
+      }
+     }
+    },
+    "usermetadata": {
+     "classifications": [
+      {
+       "labelset": "kind",
+       "label": "speech"
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "assets": {},
+ "expect": {
+  "answered": true,
+  "lead": "^The Royal Commission into the Robodebt Scheme found",
+  "includes": [
+   "Robin Example",
+   "Morgan Sample"
+  ],
+  "citations": 2,
+  "cited": [
+   "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+   "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  ]
+ }
+}

@@ -9,9 +9,10 @@ import {sitemapFiles, latestDate, exportDate, personPaths} from '../../scripts/b
 const root = new URL('../public/', import.meta.url);
 const read = async path => JSON.parse(await readFile(new URL(path.replace(/^\//, ''), root), 'utf8'));
 const paths = xml => [...xml.matchAll(/<loc>https:\/\/opax.com.au([^<]+)<\/loc>/g)].map(m => m[1]);
-// Finding 13's seven labels outside both the live directory and sitemap.
+// Finding 13's seven labels outside both the live directory and sitemap. The Liberal Democratic Party's page
+// is the Libertarian Party's since the rename (labels.js PARTY_RENAMES): one page, at the current name.
 const missing = ["Australia's Voice", 'Australian Conservatives', 'Australian Motoring Enthusiast Party',
-  "Derryn Hinch's Justice Party", 'Gerard Rennick People First', 'Jacqui Lambie Network', 'Liberal Democratic Party'];
+  "Derryn Hinch's Justice Party", 'Gerard Rennick People First', 'Jacqui Lambie Network', 'Libertarian Party'];
 
 test('party directory and sitemap use the same canonical inventory, including the seven audit gaps', async () => {
   const pages = await readPartyPages(read);
@@ -30,6 +31,11 @@ test('party directory and sitemap use the same canonical inventory, including th
   assert.equal(pages.filter(p => p.aliases.includes('JLN') || p.aliases.includes('Jacqui Lambie Network')).length, 1);
   assert.equal(resolvePartyPage('jln', pages).href, '/subject/party/jacqui-lambie-network');
   assert.ok(!paths(xml).includes('/subject/party/jln'));
+  // A renamed party: one entry at its current address, none at the old one.
+  assert.equal(pages.filter(p => p.aliases.includes('Liberal Democratic Party') || p.aliases.includes('Libertarian Party')).length, 1);
+  assert.ok(paths(xml).includes('/subject/party/libertarian-party'));
+  assert.ok(!paths(xml).includes('/subject/party/liberal-democratic-party'));
+  assert.ok(!directory.html.includes('/subject/party/liberal-democratic-party'));
 });
 
 test('party_now, recorded roster labels and division parties survive without money or live counts', () => {
@@ -63,9 +69,11 @@ test('directory discovery uses the small party-member export and tolerates its a
 
 test('directory coverage is exact, capitalised, and distinguishes independents from organisations', async () => {
   const pages = await readPartyPages(read);
-  for (const label of ['Australian Conservatives', 'Australian Motoring Enthusiast Party', "Derryn Hinch's Justice Party", 'Gerard Rennick People First', 'Liberal Democratic Party']) {
+  for (const label of ['Australian Conservatives', 'Australian Motoring Enthusiast Party', "Derryn Hinch's Justice Party", 'Gerard Rennick People First']) {
     assert.equal(partyPageCoverage(pages.find(p => p.label === label)), 'Recorded divisions. No party-level disclosure file held by OPAX.');
   }
+  // The Libertarian Party's page holds the roster (its current name) and the divisions (its former one).
+  assert.equal(partyPageCoverage(pages.find(p => p.label === 'Libertarian Party')), 'Parliamentary roster and recorded divisions. No party-level disclosure file held by OPAX.');
   assert.equal(partyPageCoverage(pages.find(p => p.label === 'Independent')), 'Parliamentarians who sat without a party. Not a party organisation.');
   assert.equal(pages.find(p => p.label === 'DLP').name, 'Democratic Labour Party');
   const directory = await renderDirectory('party', new URL('https://opax.test/subject/party'), read, [], new Map(), {});

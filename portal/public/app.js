@@ -32,13 +32,13 @@ let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=5c244f645b").then(module => { growthModules = module; });
+const growthModulesReady = import("/growth-modules.js?v=b080de058e").then(module => { growthModules = module; });
 let registerTables;
 const registerTablesReady = import('/register-tables.js?v=8fd4480ee8').then(module => { registerTables = module; });
 let askPerson;
-const askPersonReady = import('/ask-person.js?v=ca17c92d07').then(module => { askPerson = module; });
+const askPersonReady = import('/ask-person.js?v=fae51a8e69').then(module => { askPerson = module; });
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=75e6c65ff7').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=89dda4a520').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
@@ -230,7 +230,8 @@ function partyClass(party) {
 function partyDotHTML(party) {
   const cls = partyClass(party);
   if (!cls) return "";
-  const name = uiLabels.PARTY_NAMES[uiLabels.PARTY_MAP[String(party).toLowerCase()][1]]?.[1] || String(party);
+  // A former name is spoken as recorded (labels.js partyNames), never as the party's later name.
+  const name = uiLabels.partyNames(party)[1] || String(party);
   return `<span class="party party-${cls} party-dot-only" role="img" aria-label="${esc(name)}" title="${esc(name)}"><i aria-hidden="true"></i></span>`;
 }
 
@@ -3955,7 +3956,7 @@ function votesFor(name, pid) {
 
 let personUrls = null;
 const personUrl = name => personUrls?.personUrl(name) || '/subject/person';
-const personUrlsReady = import('/canonical-urls.js?v=e32f13c6c8').then(module => { personUrls = module; });
+const personUrlsReady = import('/canonical-urls.js?v=c40e3d805e').then(module => { personUrls = module; });
 
 function subjectHash(kind, label) {
   // Person links use the roster's verified slugs and reviewed name aliases.
@@ -5407,7 +5408,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=f646d68c59'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=b29e734361'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -5496,10 +5497,13 @@ async function renderPartyDebts(label, sections) {
   const slot = document.createElement("div");
   slot.id = "subject-party-debts";
   sections.appendChild(slot);
-  const extras = await loadAecExtras();
+  const [extras, partyPage] = await Promise.all([loadAecExtras(), loadPartyPage()]);
   if (currentSubjectKey !== key || !slot.isConnected) return;
-  const p = extras?.parties?.[label];
-  const returns = p?.returns || [];
+  // A renamed party's returns under each name it lodged as, combined, with which name each part was
+  // under (party-page.js partyReturns). Debts and entities stay the single entry's: they are not summed.
+  const lodged = partyPage.partyReturns(label, extras?.parties, samePartyLabel);
+  const p = extras?.parties?.[label] || lodged.entry;
+  const returns = lodged.names.length > 1 ? lodged.rows : p?.returns || [];
   const d = p?.debts, b = p?.benefits, ents = p?.associated_entities || [];
   if (!returns.length && !d && !b && !ents.length) { slot.remove(); return; }
   const endOf = (fy) => String(Number(String(fy).slice(0, 4)) + 1); // "2024-25" -> "2025"
@@ -5510,6 +5514,7 @@ async function renderPartyDebts(label, sections) {
   const returnsTo = extras.meta?.latest_year ? ` to ${String(extras.meta.latest_year).replace("-", "–")}` : "";
   const originals = [{ label: "AEC Transparency Register", href: reg || "https://transparency.aec.gov.au/" }];
   let html = partyReceiptsHTML(returns, reg, updated, returnsTo);
+  if (html && lodged.note) html = html.replace(/<\/section>\s*$/, `<p class="party-lodged-as">${esc(lodged.note)}</p></section>`);
   if (d || b) {
     const lenders = (d?.top || []).map((l) => [l.type === "Financial" ? `${l.name} (financial institution)` : l.name, l.amount || 0]);
     const top = (b?.top || []).slice(0, 3).map((t) => `${t.name} ${fmtMoney(t.amount || 0)}`).join(", ");
@@ -5679,6 +5684,9 @@ async function renderRosterParty(segment, key, body) {
     independent ? `<span>${esc(partyPage.INDEPENDENTS_DESCRIPTION)}</span>` : partyChipHTML(label, { full: true }) || `<span>${esc(label)}</span>`,
     first < 9999 ? `<span class="entry-active">${independent ? 'Parliamentarians' : 'Members'} in the record ${esc(yearSpan(first, last))}</span>` : "",
   ].filter(Boolean).join(" · ");
+  // A renamed party: its name history, from the registers' notices (labels.js PARTY_RENAMES).
+  const history = partyPage.partyHistoryHTML(label, partyPageHelpers());
+  if (history) body.querySelector(".subject-head").insertAdjacentHTML("beforeend", history);
   body.querySelector(".subject-head").insertAdjacentHTML("beforeend", `<div class="page-actions entry-actions">
     ${speeches ? actionBtn("search", partySpeechSearch(speeches.label), "Their speeches", { primary: true }) : ""}
     ${moreMenuHTML([
@@ -7456,7 +7464,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=fa59925d1e").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=f422337d4b").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -9642,13 +9650,15 @@ async function renderPartyBillDivisions(label, sections, key) {
       const hit = Object.entries(d.party_splits || {})
         .find(([party]) => samePartyLabel(party, label));
       if (!hit) continue;
-      const [, split] = hit;
+      const [party, split] = hit;
       const ayes = Number(split?.ayes) || 0, noes = Number(split?.noes) || 0;
       if (!ayes && !noes) continue;
-      rows.push({ bill, d, ayes, noes });
+      rows.push({ bill, d, ayes, noes, party });
     }
   }
   if (!rows.length) { slot.remove(); return; }
+  const partyPage = await loadPartyPage().catch(() => null);
+  if (currentSubjectKey !== key || !slot.isConnected) return;
   rows.sort((a, b) => String(b.d.date || "").localeCompare(String(a.d.date || "")));
   const max = Math.max(...rows.map((r) => Math.max(r.ayes, r.noes)), 1);
   /* A party often divides more than once on one bill, and loop 2 gave those
@@ -9667,6 +9677,8 @@ async function renderPartyBillDivisions(label, sections, key) {
     <span class="result-meta">${[
       r.d.title ? esc(r.d.title) : r.d.stage ? esc(billStage(r.d.stage)) : "", r.d.date ? esc(fmtDate(r.d.date)) : "",
       r.d.outcome ? `<b>${esc(billOutcome(r.d.outcome))}</b>` : "",
+      // A renamed party's division keeps the name it voted under (party-page.js recordedAsText).
+      partyPage?.recordedAsText(label, [r.party]) ? esc(partyPage.recordedAsText(label, [r.party])) : "",
     ].filter(Boolean).join("&nbsp;· ")}</span>
     <span class="bill-split-n party-bill-n">${r.ayes} for, ${r.noes} against</span>
     <span class="bill-split-bars party-bill-bars" aria-hidden="true">
@@ -9825,14 +9837,14 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=9a86f6eb05", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=71e902e752", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=be6407a8d3", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=fccb8c9f74", mount: "mountLedger" },
   grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=12dc79654e", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=3f70f2a4d0", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=4097da66f7", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=e4cee22e35", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {

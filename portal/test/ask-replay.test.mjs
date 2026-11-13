@@ -123,6 +123,8 @@ for(const fixture of fixtures)test(`replay ${fixture.id}: ${fixture.question}`,a
     if(expect.answered!==undefined)assert.equal(body.answered??true,expect.answered,context())
     for(const name of expect.includes??[])assert.match(body.answer,new RegExp(name),`answer keeps ${name} ${context()}`)
     for(const name of expect.excludes??[])assert.doesNotMatch(body.answer,new RegExp(name,'i'),name)
+    // An accountability answer opens on the finding, not on a member's claim in debate.
+    if(expect.lead)assert.match(lines(body.answer)[0],new RegExp(expect.lead),`the answer leads with ${expect.lead} ${context()}`)
   }
   if(expect.mode)assert.equal(body.research?.mode,expect.mode,context())
 

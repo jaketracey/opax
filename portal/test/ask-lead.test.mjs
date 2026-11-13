@@ -6,7 +6,7 @@ import assert from 'node:assert/strict'
 import {readFileSync} from 'node:fs'
 import {build} from 'esbuild'
 
-const built=await build({stdin:{contents:"export {leadWithModelAnswer,restatesOpening} from './src/research-answer-shape';export {sentenceParts} from './src/research-claim-audit.mjs'",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm'})
+const built=await build({stdin:{contents:"export {leadWithAuthority,leadWithModelAnswer,restatesOpening} from './src/research-answer-shape';export {sentenceParts} from './src/research-claim-audit.mjs'",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm'})
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
 const stored=JSON.parse(readFileSync(new URL('./fixtures/ask-lead-payloads.json',import.meta.url),'utf8'))
 
@@ -133,4 +133,41 @@ test('an inquiry opening is recognised by name or as "the commission"; a finding
   const answer=record+'\n'+points
   const out=api.leadWithModelAnswer({answer,citations:{'fact-1/t/body/0':[[0,Array.from(record).length]]}},{answer:points,citations:{}},'Who was responsible for the Example Scheme?')
   assert.equal(out.answer,'The royal commission found the scheme unlawful.\n\nThe Royal Commission into the Example Scheme was established on 1 March 2022.\n\nTaylor Example told the House the Example Integrity Commission cleared the minister.')
+})
+
+// Accountability questions (13 Nov 2026): the fourth stored robodebt run opened on Bill Shorten's claim in the House,
+// ahead of the Commission's finding two lines later. A finding or an official record leads; nothing else moves.
+test('robodebt, fourth run: the Commission\'s finding leads, not a member\'s claim in the House; every line and citation is kept',()=>{
+  const fixture=stored['event-01-run4'],payload={answer:fixture.answer,citations:fixture.citations,sources:fixture.sources}
+  assert.match(fixture.answer,/^Bill Shorten told the House/)
+  const out=api.leadWithAuthority(payload,fixture.question)
+  assert.match(out.answer,/^The commission found the scheme was "a crude and cruel mechanism, neither fair nor legal"/)
+  assert.match(out.answer,/\n\nBill Shorten told the House that hearings/,'the member\'s claim stays, after the finding')
+  const lines=s=>s.split(/\n+/).sort()
+  assert.deepEqual(lines(out.answer),lines(fixture.answer),'no line is added, dropped or reworded')
+  for(const [id,ranges] of Object.entries(fixture.citations))
+    assert.deepEqual(cited(out,id).sort(),ranges.map(([a,b])=>Array.from(fixture.answer).slice(a,b).join('')).sort(),id)
+  assert.match(cited(out,'speech-1514430/t/body/0-649')[0],/^Catryna Bilyk told the Senate/)
+})
+
+test('accountability lead: who is to blame and who decided read the same way; other questions and other leads are left alone',()=>{
+  const at=(answer,ranges)=>({answer,citations:ranges,sources:[{resource:'speech-1',kind:'speech',speaker:'Pat Example'},{resource:'fact-1',kind:'record',title:'Example Inquiry report'}]})
+  const answer='Pat Example told the House the minister signed it off.\n\nThe inquiry found the department ignored legal advice.',claim=[[0,55]]
+  const payload=at(answer,{'speech-1/t/body/0':claim})
+  for(const q of ['Who was responsible for the Example scheme?','Who is to blame for the Example scheme?','Who decided to start the Example scheme?','Who approved the Example grants?'])
+    assert.match(api.leadWithAuthority(payload,q).answer,/^The inquiry found/,q)
+  // Not an accountability question: the order is the model's.
+  for(const q of ['What did the Example inquiry find?','Who is Pat Example?'])assert.equal(api.leadWithAuthority(payload,q),payload,q)
+  // A member relaying a finding is still a member's claim; with no finding or official record to lead, nothing moves.
+  const relayed=at('Pat Example told the House the inquiry found the minister misled Cabinet.\n\nSam Sample said the scheme was cruel.',{'speech-1/t/body/0':[[0,73]]})
+  assert.equal(api.leadWithAuthority(relayed,'Who was responsible for the Example scheme?'),relayed)
+  // An official record leads when no line reports a finding; an anaphoric line never leads.
+  const text='Pat Example told the House the minister signed it off.\nThat report was tabled in 2021.\nThe Example Inquiry report names the department as the scheme\'s owner.',from=text.indexOf('The Example')
+  const record=at(text,{'speech-1/t/body/0':[[0,55]],'fact-1/t/body/0':[[from,text.length]]})
+  const led=api.leadWithAuthority(record,'Who was responsible for the Example scheme?')
+  assert.equal(led.answer,'The Example Inquiry report names the department as the scheme\'s owner.\nPat Example told the House the minister signed it off.\nThat report was tabled in 2021.')
+  assert.deepEqual(cited(led,'fact-1/t/body/0'),['The Example Inquiry report names the department as the scheme\'s owner.'])
+  // A lead that is not a member's claim stays first, even when a finding follows.
+  const own=at('Example Minister approved the scheme in 2015.\nThe inquiry found the scheme unlawful.',{})
+  assert.equal(api.leadWithAuthority(own,'Who was responsible for the Example scheme?'),own)
 })
