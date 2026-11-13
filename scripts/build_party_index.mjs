@@ -3,9 +3,11 @@
 // label, how often, and when last. The roster (parliamentarians.json) records one
 // party per person, so a member who sat for a minor party ("Gerard Rennick People
 // First") is listed under it only here. Party pages join this to the roster in the
-// browser, so the file never goes stale against the roster. The division export
-// labels a member with their latest party on every vote, so a row says who sat
-// under a label, not from when: no start date is published.
+// browser, so the file never goes stale against the roster. Many division rows
+// give a member's latest party on every vote; the export replaces those a dated
+// record contradicts (scripts/vote_parties.py), but where no dated record covers
+// the date the latest party stays. So a row says who sat under a label, not from
+// when: no start date is published.
 import {readFileSync,readdirSync,writeFileSync} from 'node:fs';
 import {dirname,join,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
