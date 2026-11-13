@@ -57,13 +57,17 @@ function keyboardFloats(event: KeyboardEvent) {
  * height cap, the band behind the composer). The composer itself follows the
  * keyboard frame by frame through KeyboardLift.
  */
-export function useKeyboardOverlap(ref: RefObject<View | null>) {
+export function useKeyboardOverlap(
+  ref: RefObject<View | null>,
+  layoutKey = '',
+) {
   const [overlap, setOverlap] = useState(0);
   const [visible, setVisible] = useState(false);
   const { height: windowHeight } = useWindowDimensions();
   // Android resizes the native window with the IME. Measure the remaining
-  // overlap after that resize, including when the window changes late, so
-  // its height is never subtracted a second time in JS.
+  // overlap after that resize, so its height is never subtracted twice.
+  // Edge-to-edge can keep the window dimensions unchanged while hiding the
+  // tab bar grows this view after keyboardDidShow. Remeasure its layout too.
   useEffect(() => {
     if (Platform.OS !== 'android') return;
     let active = true;
@@ -89,7 +93,7 @@ export function useKeyboardOverlap(ref: RefObject<View | null>) {
       show.remove();
       hide.remove();
     };
-  }, [ref, windowHeight]);
+  }, [ref, windowHeight, layoutKey]);
   // iOS says where the keyboard is going before it moves.
   useEffect(() => {
     if (Platform.OS === 'android') return;

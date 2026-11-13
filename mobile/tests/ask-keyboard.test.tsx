@@ -501,6 +501,47 @@ test('Android: unchanged, laid out above the IME after the resize, with no keybo
   expect(mockKeyboard.calls).toBe(0);
 });
 
+test('Android remeasures after the tab bar hides, even when the edge-to-edge window does not resize', () => {
+  Object.defineProperty(Platform, 'OS', {
+    value: 'android',
+    configurable: true,
+  });
+  let bottom = AREA;
+  let layoutKey = `402x${bottom}`;
+  let result!: ReturnType<typeof useKeyboardOverlap>;
+  const event = docked(336);
+  const metrics = jest.spyOn(Keyboard, 'metrics').mockReturnValue(undefined);
+  jest.spyOn(Keyboard, 'isVisible').mockReturnValue(true);
+  jest
+    .mocked(View.prototype.measureInWindow)
+    .mockImplementation((callback) => callback(0, 0, WINDOW.width, bottom));
+  function Probe() {
+    const ref = useRef<View>(null);
+    result = useKeyboardOverlap(ref, layoutKey);
+    return <View ref={ref} />;
+  }
+  const { rerender } = render(() => <Probe />);
+  metrics.mockReturnValue(event.endCoordinates);
+  emit('keyboardDidShow', event);
+  expect(result).toEqual({ overlap: 253, visible: true });
+  // Hiding the tab bar grows Ask's area after keyboardDidShow. API 36
+  // keeps the same window dimensions, so they cannot trigger this measure.
+  bottom = WINDOW.height;
+  layoutKey = `402x${bottom}`;
+  rerender();
+  expect(Dimensions.get('window').height).toBe(WINDOW.height);
+  expect(result).toEqual({ overlap: 336, visible: true });
+  // A native adjustResize path already clears the IME: no second lift.
+  bottom = event.endCoordinates.screenY;
+  layoutKey = `402x${bottom}`;
+  rerender();
+  expect(result).toEqual({ overlap: 0, visible: true });
+  metrics.mockReturnValue(undefined);
+  emit('keyboardDidHide');
+  expect(result).toEqual({ overlap: 0, visible: false });
+  expect(mockKeyboard.calls).toBe(0);
+});
+
 test('keyboard frames come from one provider at the root, on iOS only, without preloading the keyboard', () => {
   const child = <View testID="fixture-app" />;
   let tree!: TestRenderer.ReactTestRenderer;
