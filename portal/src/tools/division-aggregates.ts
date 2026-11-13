@@ -43,9 +43,22 @@ const aliases: Record<string, string> = {
   'one nation': 'One Nation', "pauline hanson's one nation": 'One Nation',
 }
 
+// A party recorded under more than one name (labels.js PARTY_RENAMES): either name finds the tallies, and the
+// answer keeps the label the division records carry (the name the party voted under).
+const renamed: string[][] = [['Libertarian Party', 'Liberal Democratic Party', 'Liberal Democrats', 'Libertarian', 'LDP']]
+
 export function resolveDivisionParty(value: unknown, divisions: DivisionSummary[]): string | undefined {
   if (typeof value !== 'string' || !value.trim()) return undefined
   const requested = value.trim()
+  const family = renamed.find(names => names.some(n => n.toLowerCase() === requested.toLowerCase()))
+  if (family) {
+    const held = new Set(family.map(n => n.toLowerCase()))
+    for (const division of divisions) {
+      const tally = division.party_tallies.find(t => held.has(t.party.toLowerCase()))
+      if (tally) return tally.party
+    }
+    return family[0]
+  }
   const canonical = aliases[requested.toLowerCase()] ?? requested
   for (const division of divisions) {
     const tally = division.party_tallies.find(t => t.party.toLowerCase() === canonical.toLowerCase())

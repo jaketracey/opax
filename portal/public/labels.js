@@ -119,6 +119,38 @@ export const PARTY_ALIASES = {
   'Libertarian (formerly Liberal Democrats)': 'LDP',
   'Christian Alliance Party - Reform AU': 'CAP',
 };
+/** A party that changed its name: one party, one page, one code. Its former names join
+ *  the code (one identity: the party page, its address, Ask and search) but a record
+ *  made under a former name keeps that name wherever it is shown: a vote, a
+ *  candidacy, a speech or a return is labelled as it was at the time.
+ *  The dates are the registers' own: `until` is the last day the former name was
+ *  registered, `since` the first day of the current one. Federally the AEC record
+ *  is a deregistration and a new registration, not a change of name on the
+ *  register, so the line says what each register did. */
+export const PARTY_RENAMES = [{
+  code: 'LDP',
+  name: 'Libertarian Party',
+  since: '2024-01-12',
+  former: [{ name: 'Liberal Democratic Party', aliases: ['Liberal Democrats'], until: '2022-07-19' }],
+  history: 'Liberal Democratic Party (Liberal Democrats), renamed Libertarian Party. The AEC deregistered the Liberal Democratic Party on 19 July 2022 and registered the Libertarian Party on 12 January 2024.',
+  sources: [
+    { label: 'AEC notice deregistering the Liberal Democratic Party (19 July 2022)', href: 'https://www.aec.gov.au/Parties_and_Representatives/Party_Registration/Deregistered_parties/files/statement-of-reasons-liberal-democratic-party-s137-deregistration-statement-of-reasons.pdf' },
+    { label: 'AEC notice registering the Libertarian Party (12 January 2024)', href: 'https://www.aec.gov.au/Parties_and_Representatives/Party_Registration/Registration_Decisions/2024/Registration-approved-Notice-Libertarian-Party.pdf' },
+  ],
+}];
+const renameFold = name => String(name ?? '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
+/** A former name, folded, to its rename entry and the former-name record. */
+const FORMER_NAMES = new Map(PARTY_RENAMES.flatMap(r => r.former.flatMap(f => [f.name, ...(f.aliases || [])].map(n => [renameFold(n), { rename: r, former: f }]))));
+/** The rename a party label belongs to (current or former name), or null. */
+export function partyRename(label) {
+  const key = renameFold(label);
+  return FORMER_NAMES.get(key)?.rename || PARTY_RENAMES.find(r => renameFold(r.name) === key || PARTY_MAP[key]?.[1] === r.code) || null;
+}
+/** The former-name record a label names ({name, aliases, until}), or null for a current or unrenamed name. */
+export function partyFormerName(label) {
+  return FORMER_NAMES.get(renameFold(label))?.former || null;
+}
+for (const r of PARTY_RENAMES) for (const f of r.former) for (const name of [f.name, ...(f.aliases || [])]) PARTY_ALIASES[name] = r.code;
 // Expand aliases into the existing map so every consumer uses one identity table.
 const partyByCode = {};
 for (const [code, [short, long]] of Object.entries(PARTY_NAMES)) {
@@ -127,12 +159,17 @@ for (const [code, [short, long]] of Object.entries(PARTY_NAMES)) {
   for (const name of [short, long]) PARTY_MAP[name.toLowerCase()] = partyByCode[code];
 }
 for (const [name, code] of Object.entries(PARTY_ALIASES)) PARTY_MAP[name.toLowerCase()] = partyByCode[code];
+/** [the name a label shows, the name it says] for one party label. A former name is
+ *  shown as it was recorded: the record keeps the name it had at the time. */
+export function partyNames(party) {
+  const name = String(party ?? '').trim();
+  if (partyFormerName(name)) return [name, name];
+  const hit = PARTY_MAP[name.toLowerCase()];
+  return (hit && PARTY_NAMES[hit[1]]) || [name, name];
+}
 /** The short readable name, including combined Council group names. */
 export function partyShortName(party) {
-  return String(party ?? '').trim().split(' / ').map(name => {
-    const code = PARTY_MAP[name.toLowerCase()]?.[1];
-    return PARTY_NAMES[code]?.[0] || name;
-  }).join(' / ');
+  return String(party ?? '').trim().split(' / ').map(name => partyNames(name)[0]).join(' / ');
 }
 /* A party field that says there is no party is not a party: no dot, no label. */
 const PARTY_PLACEHOLDER = /^(?:not recorded|unknown|none|n\/?a|-|—)$/i;
@@ -143,7 +180,7 @@ export function partyLabelHTML(party, { full = false } = {}) {
   const name = String(party ?? '').trim();
   if (!name || PARTY_PLACEHOLDER.test(name)) return '';
   const hit = PARTY_MAP[name.toLowerCase()];
-  const [short, long] = (hit && PARTY_NAMES[hit[1]]) || [name, name];
+  const [short, long] = partyNames(name);
   const shown = full ? long : short;
   const text = shown === long ? esc(shown)
     : `<span aria-hidden="true">${esc(shown)}</span><span class="visually-hidden">${esc(long)}</span>`;

@@ -1,8 +1,8 @@
-import {subjectUrl} from './canonical-urls.js?v=e32f13c6c8';
+import {subjectUrl} from './canonical-urls.js?v=c40e3d805e';
 /* Homepage adapters: source exports, never editorial selections. Each block's
    figures carry the date of the export they came from, in its source line. */
 import {shortDate} from './format.js';
-import {partyLabelHTML, statusLabelHTML, sourceLineHTML, coverageLineHTML} from './labels.js?v=75e6c65ff7';
+import {partyLabelHTML, statusLabelHTML, sourceLineHTML, coverageLineHTML} from './labels.js?v=89dda4a520';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const count = value => Number(value).toLocaleString('en-AU');
 const date = value => shortDate(String(value).slice(0,10));

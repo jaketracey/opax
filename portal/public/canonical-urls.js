@@ -11,6 +11,14 @@ export function entitySlug(name) {
 }
 // Never invent a profile from a display name. Unknown identities open the directory.
 export const personUrl = name => PERSON_PATHS.exact[name] || PERSON_PATHS.folded[personNameKey(name)] || '/subject/person';
-export const partyUrl = name => `/subject/party/${entitySlug(name)}`;
+/** Every name a renamed party was recorded under, to its current name: one page, one address.
+ *  The same parties and names as labels.js PARTY_RENAMES (checked by tests/party-rename.test.mjs);
+ *  kept here so this module does not load the label tables. Old addresses still answer: the
+ *  Worker sends them to the current one with a 301. */
+export const PARTY_URL_RENAMES = {
+  'liberal democratic party': 'Libertarian Party', 'liberal democrats': 'Libertarian Party',
+  'libertarian party (formerly liberal democrats)': 'Libertarian Party', 'libertarian (formerly liberal democrats)': 'Libertarian Party',
+};
+export const partyUrl = name => `/subject/party/${entitySlug(PARTY_URL_RENAMES[personNameKey(name)] || name)}`;
 export const subjectUrl = (kind, name) => kind === 'person' ? personUrl(name)
   : kind === 'party' ? partyUrl(name) : `/subject/${kind}/${encodeURIComponent(name)}`;
