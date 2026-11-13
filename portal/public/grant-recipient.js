@@ -1,4 +1,5 @@
 import {hydrateRecordCore} from './record-core.js';
+import {recipientMetaLine} from './record-core-content.js';
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
 import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
 import {partyUrl} from './canonical-urls.js?v=e32f13c6c8';
@@ -117,7 +118,7 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     const header = node('div', null, 'grant-recipient-header');
     // When the server's record core leads the page, it is the header; the meta line belongs under the client's own title.
     const title = node('h1', data.n); title.tabIndex = -1;
-    if (!coreActive) header.append(title, node('p', `${JURISDICTIONS[jurisdiction]} · ${kindLabel(data.k)}`, 'grant-recipient-meta'));
+    if (!coreActive) header.append(title, node('p', recipientMetaLine(jurisdiction, data.k), 'grant-recipient-meta'));
     header.append(node('p', qld
       ? 'Published annual expenditure, including grants, service agreements and other assistance.'
       : 'Published Commonwealth grant awards. Award values do not establish payments received.', 'grant-recipient-intro'));
