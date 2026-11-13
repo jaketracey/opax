@@ -10893,9 +10893,7 @@ exports[`iOS design at font scale 2 FollowButton retains its iOS output 1`] = `
           "borderRadius": 22,
         },
         null,
-        {
-          "alignItems": "flex-start",
-        },
+        null,
         {
           "backgroundColor": "transparent",
           "borderColor": "transparent",
@@ -11002,9 +11000,14 @@ exports[`iOS design at font scale 2 FollowButton retains its iOS output 1`] = `
             },
             null,
             null,
-            {
-              "flexShrink": 1,
-            },
+            [
+              {
+                "flexShrink": 1,
+              },
+              {
+                "textAlign": "center",
+              },
+            ],
           ]
         }
       >
