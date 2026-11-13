@@ -1658,7 +1658,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="ui-status-line money-map-status" role="status">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=2e9dfab24a"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=2fa8fbe642"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=2e9dfab24a"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=20acce6c66"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -3920,7 +3920,7 @@ function votesFor(name, pid) {
 
 let personUrls = null;
 const personUrl = name => personUrls?.personUrl(name) || '/subject/person';
-const personUrlsReady = import('/canonical-urls.js?v=6c889d487d').then(module => { personUrls = module; });
+const personUrlsReady = import('/canonical-urls.js?v=e32f13c6c8').then(module => { personUrls = module; });
 
 function subjectHash(kind, label) {
   // Person links use the roster's verified slugs and reviewed name aliases.
@@ -3940,6 +3940,11 @@ const personSlugs = { byName: new Map(), bySlug: new Map(), ready: null };
 function personSlug(name) {
   return String(name ?? "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
     .replace(/['’‘ʼ`.]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+/** The suffixed slug a spelling twin held (src/person-slug.ts twinSlug), kept as a forward once folded. */
+function twinPersonSlug(name) {
+  return `${personSlug(name)}-${Array.from(String(name ?? "")).map((c) => c.codePointAt(0).toString(16)).join("")}`;
 }
 
 /** Point each sponsor link at the roster row the bill names (sponsor-person.js: the bill's person ID
@@ -5911,7 +5916,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       const roster = await loadParliamentarians();
       if (!stillHere()) return;
       name = (roster?.people || []).filter((p) => personSlug(p.name) === segment)
-        .sort((a, b) => (b.speeches || 0) - (a.speeches || 0))[0]?.name ?? segment;
+        .sort((a, b) => (b.speeches || 0) - (a.speeches || 0))[0]?.name
+        // A row folded into its person keeps its old slug, its own or a spelling twin's suffixed one
+        // (src/person-slug.ts formerSlugs): open the person.
+        ?? (roster?.people || []).find((p) => (p.prints || []).some((n) => personSlug(n) === segment || twinPersonSlug(n) === segment))?.name
+        ?? segment;
     }
     const slug = personSlugs.byName.get(name);
     if (slug && slug !== segment) {

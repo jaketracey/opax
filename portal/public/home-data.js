@@ -1,4 +1,4 @@
-import {subjectUrl} from './canonical-urls.js?v=6c889d487d';
+import {subjectUrl} from './canonical-urls.js?v=e32f13c6c8';
 /* Homepage adapters: source exports, never editorial selections. Each block's
    figures carry the date of the export they came from, in its source line. */
 import {shortDate} from './format.js';

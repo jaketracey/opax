@@ -4002,7 +4002,7 @@ interface Person {
   representation?: { electorate: string; jurisdiction: string; chamber: string; state?: string | null }[]
   rosterOnly?: { asOf?: string; seats: string[] }
 }
-interface PeopleData { generated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person>; addresses: Map<string, Person>; bySlug: Map<string, Person>; slugOf: Map<string, string> }
+interface PeopleData { generated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person>; addresses: Map<string, Person>; bySlug: Map<string, Person>; slugOf: Map<string, string>; formerSlugs: Map<string, Person> }
 
 async function speakerAttribution(env: Env, raw: string | null | undefined): Promise<SpeechScope | null> {
   if (!raw) return null
@@ -4150,7 +4150,7 @@ function loadPeople(env: Env): Promise<PeopleData> {
   peopleMemo ??= assetJson<{ meta?: { generated?: string }; people: Person[] }>(env, '/parliamentarians.json')
     .then(async (raw) => {
       const reference = await loadElectorates(env).catch(() => null)
-      const names = new Set(raw.people.flatMap((p) => [p.name, ...splitSpeakers(p)].map(foldName)))
+      const names = new Set(raw.people.flatMap((p) => [p.name, ...splitSpeakers(p), ...(p.prints ?? [])].map(foldName)))
       for (const p of reference?.people || []) {
         if ([p.name, ...p.aliases].some((n) => names.has(foldName(n)))) continue
         const seats = p.electorates.filter((e) => e.current)
@@ -5007,6 +5007,8 @@ async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMet
 /** The person a /subject/person/<segment> names: by slug, by name, by folded name. */
 function personAt(people: PeopleData, segment: string): Person | null {
   return people.byName.get(segment) ?? people.bySlug.get(segment.toLowerCase()) ?? people.byFold.get(foldName(segment))
+    // A row folded into its person keeps its old slug as a forward ("mark-christopher-butler").
+    ?? people.formerSlugs.get(segment.toLowerCase())
     // Older clients slugified reviewed full-name aliases such as Jess Pugh.
     ?? people.byFold.get(foldName(segment.replace(/-/g,' ')))
     // A surname row's own full name ("david-crisafulli" for "Crisafulli"): the address only, never a speaker.
