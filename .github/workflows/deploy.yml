@@ -16,9 +16,9 @@
 # skips a run when main's head is already deployed or deploying, so they collapse to one deploy.
 # A human's own `npm run deploy` from a laptop still works as before.
 #
-# The restamp commit this job pushes back touches portal/public/, but it cannot start another
-# run: it carries [skip ci], it is pushed with the job's GITHUB_TOKEN (whose pushes never start
-# workflows), and the job's `if` below skips any push by github-actions[bot].
+# The restamp commit this job pushes back (scripts/restamp_commit.sh) touches portal/, but it
+# cannot start another run: it carries [skip ci], it is pushed with the job's GITHUB_TOKEN (whose
+# pushes never start workflows), and the job's `if` below skips any push by github-actions[bot].
 #
 # Secrets (Settings > Secrets and variables > Actions):
 #   CLOUDFLARE_API_TOKEN    Workers Scripts / Routes / KV / R2 / Tail / Observability write,
@@ -221,40 +221,14 @@ jobs:
             } catch (error) { core.warning(`Could not record deployment outcome: ${error.message}`); }
 
       - name: Commit restamped assets back to main
-        # also after a failed table reload: the Worker carrying these stamps is live
+        # also after a failed table reload: the Worker carrying these stamps is live.
+        # Commits every file on `stamp_assets.mjs --files` that the build changed, then checks
+        # the commit out on its own, before the first push and again after every rebase onto a
+        # newer main: if `stamp_assets.mjs --check` fails there or stamping leaves it dirty,
+        # nothing is pushed and the job fails. A push that keeps being rejected is only a warning.
         if: ${{ !cancelled() && steps.production.outcome == 'success' && steps.duplicate.outputs.skip != 'true' }}
         working-directory: .
-        run: |
-          set -euo pipefail
-          # The build rewrites this file's line endings; it is never a real change.
-          git checkout -- portal/public/grants-map-LICENSE.txt 2>/dev/null || true
-          # Content-hash stamps in the entry pages, and the analytics bundles. NOT voice.js or
-          # chunks/: esbuild bakes the absolute checkout path into their hashes, so a CI build
-          # never matches what was committed and committing it would only add churn.
-          stamped=$(git diff --name-only | grep -E '^portal/public/([^/]+\.html|analytics\.js|events\.js|ga\.js|gtm\.js)$' || true)
-          other=$(git diff --name-only | grep -vxF -f <(printf '%s\n' "$stamped") || true)
-          if [ -n "$other" ]; then
-            echo "::notice::tracked files changed by the build and not committed: $(echo "$other" | tr '\n' ' ')"
-          fi
-          if [ -z "$stamped" ]; then
-            echo "Stamps unchanged; nothing to commit."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          echo "$stamped" | xargs git add --
-          git commit -m "Restamp assets after deploy [skip ci]"
-          for attempt in 1 2 3 4 5; do
-            if git push origin HEAD:main; then exit 0; fi
-            echo "push rejected (attempt $attempt); rebasing onto origin/main"
-            if ! git pull --rebase --autostash origin main; then
-              echo "::warning::restamp rebase failed (attempt $attempt); production is already deployed"
-              git rebase --abort 2>/dev/null || true
-            fi
-            sleep $((attempt * 5))
-          done
-          echo "::warning::could not push the restamp commit; production is already deployed"
-          exit 0
+        run: bash scripts/restamp_commit.sh
 
       - name: Summary
         if: ${{ success() && steps.duplicate.outputs.skip != 'true' }}
