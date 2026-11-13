@@ -1,8 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {JSDOM} from 'jsdom';
 import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML, noHansardHeldHTML, NO_HANSARD_HELD} from '../public/held-back-transcripts.js';
 import {renderPersonAnswer, panelPrerender} from '../src/seo-content.ts';
+import {workerFetch} from './helpers/worker-fetch.mjs';
 
 const person = {name: 'Example Member', pid: 'fixture-member', states: ['federal'], chambers: ['representatives'], speeches: 0};
 const readCounts = (counts, chairCounts) => async path => {
@@ -114,4 +116,20 @@ test('a list-only profile says no Hansard is held, in the browser and server ali
   assert.equal(noHansardHeldHTML(person), '');
   assert.equal(noHansardHeldHTML(null), '');
   assert.equal(NO_HANSARD_HELD, 'No Hansard held for this period.');
+});
+
+test('Mira El Dannawi’s rendered profile states the missing speeches once', async () => {
+  const response = await workerFetch('/subject/person/mira-el-dannawi');
+  assert.equal(response.status, 200);
+  const dom = new JSDOM(await response.text());
+  try {
+    const profile = dom.window.document.querySelector('#prerender');
+    const notices = profile.querySelectorAll('.person-no-hansard');
+    assert.equal(notices.length, 1);
+    assert.equal(notices[0].textContent, 'No Hansard held for this period. This profile comes from the parliament’s member list.');
+    assert.equal(profile.textContent.split(NO_HANSARD_HELD).length - 1, 1);
+    assert.doesNotMatch(profile.textContent, /no speeches in the record are attributed|0 speeches/i);
+  } finally {
+    dom.window.close();
+  }
 });

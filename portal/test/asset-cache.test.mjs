@@ -51,12 +51,12 @@ const cacheFor = (path) => rules.filter((rule) => matches(rule.pattern, path)).r
   return out;
 }, []).join(', ');
 
-test('the bill index the app reads on every profile open is fresh for 15 minutes; bill files still revalidate', async () => {
+test('the bill index used by profiles and Following is fresh for at most one minute, then must revalidate', async () => {
   const config = await readFile(new URL('../wrangler.jsonc', import.meta.url), 'utf8');
   const runFirst = JSON.parse(config.match(/"run_worker_first": (\[[^\]]*\])/)[1]);
   for (const path of ['/bills/index.json', '/bills/au-federal-r7537.json', '/bills/au-federal-alrc-2326.json'])
     assert.ok(!runFirst.some((pattern) => matches(pattern, path)), `${path} is served by the assets binding, not the Worker`);
-  assert.equal(cacheFor('/bills/index.json'), 'public, max-age=900, stale-while-revalidate=3600');
+  assert.equal(cacheFor('/bills/index.json'), 'public, max-age=60, must-revalidate');
   for (const path of ['/bills/au-federal-r7537.json', '/bills/au-federal-s1234.json', '/bills/au-federal-alrc-2326.json'])
     assert.equal(cacheFor(path), 'public, max-age=0, must-revalidate', path);
   // The other catalogs the app reads keep their revalidation.

@@ -22,7 +22,7 @@ export function chairRoleTranscriptsHTML(personId, counts) {
 export const NO_HANSARD_HELD = 'No Hansard held for this period.';
 export function noHansardHeldHTML(person) {
   if (!person?.roster_only) return '';
-  return `<p class="person-no-hansard fineprint">${NO_HANSARD_HELD} This profile comes from the parliament’s member list; no speeches in the record are attributed to them.</p>`;
+  return `<p class="person-no-hansard fineprint">${NO_HANSARD_HELD} This profile comes from the parliament’s member list.</p>`;
 }
 
 /** Where a person's speeches in the record stop, said plainly above the list: "Speeches in the record
