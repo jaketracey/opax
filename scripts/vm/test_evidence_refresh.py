@@ -331,9 +331,11 @@ import argparse,hashlib,json,os,pathlib,shutil,sqlite3,sys,time
 parser=argparse.ArgumentParser()
 parser.add_argument('--source',type=pathlib.Path,required=True)
 parser.add_argument('--bundle-root',type=pathlib.Path,required=True)
+parser.add_argument('--timeout-seconds',type=float,required=True)
 args=parser.parse_args()
 assert os.environ['OPAX_SYNC_KB']=='0'
 with (pathlib.Path(os.environ['HOME'])/'evidence-build.calls').open('a') as stream: stream.write('build\\n')
+(pathlib.Path(os.environ['HOME'])/'evidence-build.budget').write_text(repr(args.timeout_seconds))
 mode=os.environ.get('EVIDENCE_BUILD_MODE','ok')
 args.bundle_root.mkdir(parents=True,exist_ok=True)
 number=len((pathlib.Path(os.environ['HOME'])/'evidence-build.calls').read_text().splitlines())
@@ -505,6 +507,15 @@ else: print(json.dumps(report))
         result = self.run_refresh('at_threshold')
         self.assertNotIn('FAIL:', result)
         self.assertFalse(self.pending.exists())
+
+    def test_builder_budget_follows_the_build_timeout(self):
+        budget = self.home / 'evidence-build.budget'
+        for limit, seconds in ((None, 5400.0), ('5h', 18000.0), ('270m', 16200.0), ('900s', 900.0), ('10', 10.0)):
+            with self.subTest(limit=limit):
+                self.pending.touch()  # catch-up owed, so every run builds
+                budget.unlink(missing_ok=True)
+                self.run_refresh('ok', OPAX_EVIDENCE_BUILD='1', **({'OPAX_EVIDENCE_BUILD_TIMEOUT': limit} if limit else {}))
+                self.assertEqual(float(budget.read_text()), seconds)
 
     def test_build_is_opt_in_and_default_ignores_active_bundle(self):
         self.active.write_text('{"old":"retained"}')

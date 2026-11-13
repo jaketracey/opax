@@ -28,6 +28,17 @@ print(f"{day.day} {months[day.month - 1]} {day.year}")
 PYEOF
 }
 
+# A GNU timeout duration (90m, 5h, 300s) in seconds: the builder's own budget matches the outer limit.
+evidence_seconds() {
+  case $1 in
+    *d) echo $(( ${1%d} * 86400 )) ;;
+    *h) echo $(( ${1%h} * 3600 )) ;;
+    *m) echo $(( ${1%m} * 60 )) ;;
+    *s) echo "${1%s}" ;;
+    *) echo "$1" ;;
+  esac
+}
+
 evidence_build_candidate() (
   # A separately invoked daily/weekly writer shares these locks. This subshell
   # releases both automatically before export from the frozen bundle starts.
@@ -51,7 +62,7 @@ evidence_build_candidate() (
   OPAX_SYNC_KB=0 timeout --kill-after=60 "${OPAX_EVIDENCE_BUILD_TIMEOUT:-90m}" "$PY" \
     scripts/vm/build_evidence_bundle.py \
     --source "${OPAX_DB:-${OPAX_EVIDENCE_SOURCE:-$HOME/.cache/autoresearch/parli.db}}" \
-    --bundle-root "$EVIDENCE_BUNDLE_ROOT"
+    --bundle-root "$EVIDENCE_BUNDLE_ROOT" --timeout-seconds "$(evidence_seconds "${OPAX_EVIDENCE_BUILD_TIMEOUT:-90m}")"
 )
 
 evidence_refresh() {
