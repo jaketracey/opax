@@ -1,4 +1,5 @@
 import { useEffect, useSyncExternalStore } from 'react';
+import { track } from '../../analytics';
 import { billKey, electorateId, personId } from '../../api/ids';
 import { partySlug } from '../../design/party';
 import { readCopies, TwoSlotStore, writeCopy } from '../../storage/two-slot';
@@ -9,7 +10,8 @@ import type { FollowState } from './markers';
 /**
  * Local follows: what this iPhone follows and the change markers it last
  * showed for each. Saved in the app's documents beside the saved seat; never
- * sent anywhere. Device backups may include the file.
+ * sent anywhere. Device backups may include the file. Analytics counts a
+ * saved follow or unfollow and its kind only (`opax_follow`), never which.
  */
 export type FollowKind = 'person' | 'bill' | 'electorate' | 'party';
 /** One marker as last seen: a comparable value, its words and its date. */
@@ -314,12 +316,22 @@ export function followWithFeedback(item: {
       ],
       { status: 'followed', showMessage: firstFollowCount < 3 },
     ];
+  }).then((result) => {
+    // Only a follow that was saved; "already" and "limit" change nothing.
+    if (result.status === 'followed')
+      track('opax_follow', { action: 'follow', kind: item.kind });
+    return result;
   });
 }
 export function unfollow(key: string): Promise<void> {
   return update((follows) => {
     const next = follows.filter((f) => followKey(f) !== key);
-    return [next.length === follows.length ? follows : next, undefined];
+    const removed = next.length !== follows.length;
+    return [removed ? next : follows, removed];
+  }).then((removed) => {
+    // The key's kind prefix only ("person"), never its ID.
+    if (removed)
+      track('opax_follow', { action: 'unfollow', kind: key.split(':')[0] });
   });
 }
 export function clearFollows(): Promise<void> {

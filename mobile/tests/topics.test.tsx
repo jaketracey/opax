@@ -61,6 +61,7 @@ jest.mock('../src/api/runtime', () => ({
   },
 }));
 jest.mock('../src/navigation/share', () => ({
+  trackShare: jest.fn(),
   canShare: true,
   shareRecord: jest.fn(),
   shareHeaderItem: jest.fn(() => ({ type: 'button', label: 'Share' })),

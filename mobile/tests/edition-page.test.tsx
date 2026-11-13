@@ -130,6 +130,7 @@ jest.mock('../src/navigation/external', () => ({
 }));
 let mockCanShare = true;
 jest.mock('../src/navigation/share', () => ({
+  trackShare: jest.fn(),
   get canShare() {
     return mockCanShare;
   },

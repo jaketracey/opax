@@ -7,6 +7,7 @@ import {
   Screen,
   Text,
 } from '../../design/primitives';
+import { trackSourceOpen } from '../../navigation/external';
 import type { VoiceSource } from '../../voice';
 import { chooseSource, useTalkLive } from './live';
 import { talkCopy } from './model';
@@ -87,6 +88,7 @@ export function TalkSourcesScreen() {
                         : 'Opens on opax.com.au'
                 }
                 onPress={() => {
+                  trackSourceOpen(native ? 'app' : 'browser', 'talk_sources');
                   chooseSource(source);
                   router.back();
                 }}

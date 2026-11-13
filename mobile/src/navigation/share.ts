@@ -1,6 +1,8 @@
 import type { NativeStackHeaderItem } from 'expo-router';
 import { Alert } from 'react-native';
 import { OpaxShare } from '../../modules/opax-share';
+import { track } from '../analytics';
+import type { ShareRecordType } from '../analytics/events';
 import { isE2E, webOrigin } from '../design/environment';
 import { haptic } from '../design/haptics';
 import { currentChromeColours } from '../design/tokens';
@@ -22,6 +24,39 @@ export interface ShareTarget {
 }
 
 /**
+ * The coarse type of a shared web path, for analytics: which kind of page,
+ * never which record. Anything unlisted is "other".
+ */
+export function shareRecordType(path: string): ShareRecordType {
+  let pathname: string;
+  try {
+    pathname = new URL(path, 'https://opax.invalid').pathname;
+  } catch {
+    return 'other';
+  }
+  const [first, second] = pathname.split('/').filter(Boolean);
+  if (first === 'subject')
+    return second === 'person' || second === 'party' || second === 'electorate'
+      ? second
+      : 'other';
+  if (first === 'bill' || first === 'bills') return 'bill';
+  if (first === 'doc') return 'doc';
+  if (first === 'money') return 'money';
+  return 'other';
+}
+
+/** One `opax_share`: what was shared, as categories only. */
+export function trackShare(
+  kind: 'record' | 'question' | 'answer' | 'copy_link',
+  path?: string,
+) {
+  track('opax_share', {
+    kind,
+    ...(path === undefined ? {} : { record_type: shareRecordType(path) }),
+  });
+}
+
+/**
  * Shares the canonical opax.com.au URL with link metadata built from loaded
  * data (title and app icon), so the share sheet never fetches the page or its
  * /og/* image. E2E builds show the link locally instead of the system sheet.
@@ -36,6 +71,8 @@ export async function shareRecord({
   const url = question
     ? questionShareURL(question.text, question.options)
     : canonicalUrl(path, anchor);
+  if (question) trackShare('question');
+  else trackShare('record', path);
   haptic('light');
   if (isE2E) {
     Alert.alert(`Share: ${title}`, url);
@@ -80,5 +117,6 @@ export function shareHeaderItem(target: ShareTarget): NativeStackHeaderItem {
 export async function copyRecordLink(path: string): Promise<void> {
   if (!OpaxShare) return;
   await OpaxShare.copyText(canonicalUrl(path));
+  trackShare('copy_link', path);
   haptic('success');
 }

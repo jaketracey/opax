@@ -87,6 +87,7 @@ jest.mock('../src/navigation/sheets', () => ({
   presentSheet: jest.fn(),
 }));
 jest.mock('../src/navigation/share', () => ({
+  trackShare: jest.fn(),
   shareRecord: jest.fn().mockResolvedValue(undefined),
 }));
 jest.mock('../src/features/records/actions', () => ({

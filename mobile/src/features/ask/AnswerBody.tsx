@@ -7,11 +7,19 @@ import { webOrigin } from '../../design/environment';
 import { Text } from '../../design/text';
 import { colors, hairline, rhythm } from '../../design/tokens';
 import { fromWebPath } from '../../navigation/routes';
-import { openSource, sourceUrl } from '../../navigation/external';
+import {
+  openSource,
+  sourceUrl,
+  trackSourceOpen,
+} from '../../navigation/external';
+import type { SourcePlacement } from '../../analytics/events';
 import type { Block, Inline } from './answer-markdown';
 
-/** Opens a link in an answer: native pages in the Ask stack, else the browser. */
-export function openAnswerLink(path: string) {
+/**
+ * Opens a link in an answer: native pages in the Ask stack, else the browser.
+ * A `placement` marks a source opened from the answer, for analytics.
+ */
+export function openAnswerLink(path: string, placement?: SourcePlacement) {
   if (!path.trim()) return;
   try {
     const url = new URL(path, webOrigin);
@@ -21,8 +29,10 @@ export function openAnswerLink(path: string) {
         ? fromWebPath(url.pathname + url.search + url.hash) ||
           fromWebPath(url.pathname)
         : null;
-    if (route) router.push(route);
-    else void openSource(sourceUrl(url.toString()));
+    if (route) {
+      router.push(route);
+      if (placement) trackSourceOpen('app', placement);
+    } else void openSource(sourceUrl(url.toString()), undefined, placement);
   } catch {
     /* Malformed model/source links never navigate. */
   }
@@ -40,7 +50,7 @@ export function AnswerBody({
   streaming = false,
   selectionMode = false,
   onCite,
-  onLink = openAnswerLink,
+  onLink = (href) => openAnswerLink(href),
   titleFor,
   claim,
   selected,
