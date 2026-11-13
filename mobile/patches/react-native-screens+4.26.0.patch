@@ -99,7 +99,7 @@
    // provides additional padding to account for possible header, and in the case when screen is
 --- a/node_modules/react-native-screens/ios/RNSSearchBar.mm
 +++ b/node_modules/react-native-screens/ios/RNSSearchBar.mm
-@@ -14,9 +14,110 @@
+@@ -14,9 +14,114 @@
 
  namespace react = facebook::react;
 
@@ -154,7 +154,11 @@
 +    // Ordinary sizes belong to UIKit. Only undo a fit we still own; UIKit
 +    // may already have refreshed the placeholder for the new category.
 +    if (_fittedPlaceholder && [current isEqualToAttributedString:_fittedPlaceholder]) {
-+      field.attributedPlaceholder = _originalPlaceholder ?: [[NSAttributedString alloc] initWithString:field.placeholder];
++      NSMutableAttributedString *restored = _originalPlaceholder.mutableCopy ?: [[NSMutableAttributedString alloc] initWithString:field.placeholder];
++      // The saved font may belong to AX. Keep the other attributes and let
++      // UIKit supply its current font after the live category change.
++      [restored removeAttribute:NSFontAttributeName range:NSMakeRange(0, restored.length)];
++      field.attributedPlaceholder = restored;
 +    }
 +    _originalPlaceholder = nil;
 +    _fittedPlaceholder = nil;
@@ -210,7 +214,7 @@
 
    // We use those booleans to log a warning if user attempts to restore
    // default behavior after setting explicit value for the prop.
-@@ -46,6 +147,11 @@
+@@ -46,6 +151,11 @@
  #endif
 
    _controller.searchBar.delegate = self;
@@ -222,7 +226,7 @@
 
    _isObscureBackgroundSet = NO;
    _isHideNavigationBarSet = NO;
-@@ -152,6 +258,9 @@
+@@ -152,6 +262,9 @@
  - (void)setPlaceholder:(NSString *)placeholder
  {
    [_controller.searchBar setPlaceholder:placeholder];

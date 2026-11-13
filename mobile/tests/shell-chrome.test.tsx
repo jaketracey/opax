@@ -1608,6 +1608,36 @@ test.each([false, true])(
     }),
 );
 
+test.each([
+  ['AX3', 2.643],
+  ['AX5', 3.571],
+])(
+  'iPad Today with a large title at %s keeps its glass chrome',
+  (_size, fontScale) =>
+    withGlass(() => {
+      const isPad = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(true);
+      const window = Dimensions.get('window');
+      const { navigation, page, ground } = fadePage('index', '(today)');
+      const renderer = tree(page(120));
+      try {
+        act(() => Dimensions.set({ window: { ...window, fontScale } }));
+        expect(navigation.setOptions).toHaveBeenLastCalledWith(
+          expect.objectContaining({
+            ...largeTitleBar(ground),
+            headerLargeTitleEnabled: true,
+          }),
+        );
+        scrollTo(renderer, 400);
+        expect(edgeCalls(navigation)).not.toContain('hidden');
+        expect(RootBar!.setSolid).not.toHaveBeenCalled();
+      } finally {
+        act(() => renderer.unmount());
+        act(() => Dimensions.set({ window }));
+        isPad.mockRestore();
+      }
+    }),
+);
+
 test.each([41, 52, 85])(
   'a pinned search field with a %s pt title never adds a backing',
   (titleHeight) =>
